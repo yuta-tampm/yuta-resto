@@ -574,6 +574,7 @@ async function sendToKitchen(
           plan.copies,
           settings,
           categoryByMenuItemId,
+          plan.includeAllItems,
         ),
         idempotencyKey: index === 0 ? command.idempotencyKey : null,
       })),
@@ -851,11 +852,6 @@ function buildTicketPlans(items: OrderItem[], settings: PrintSettings) {
   const kitchenItems = items.filter(
     (item) => item.kitchenStationSnapshot === 'kitchen',
   );
-  const counterItems = items.filter(
-    (item) =>
-      item.kitchenStationSnapshot === 'bar' ||
-      item.kitchenStationSnapshot === 'dessert',
-  );
   const plans = [
     ...(kitchenItems.length > 0
       ? [
@@ -863,18 +859,16 @@ function buildTicketPlans(items: OrderItem[], settings: PrintSettings) {
             destination: 'kitchen' as const,
             items: kitchenItems,
             copies: settings.kitchenCopies,
+            includeAllItems: false,
           },
         ]
       : []),
-    ...(counterItems.length > 0
-      ? [
-          {
-            destination: 'counter' as const,
-            items: counterItems,
-            copies: settings.counterCopies,
-          },
-        ]
-      : []),
+    {
+      destination: 'counter' as const,
+      items,
+      copies: settings.counterCopies,
+      includeAllItems: true,
+    },
   ];
   return plans.length > 0
     ? plans
@@ -883,6 +877,7 @@ function buildTicketPlans(items: OrderItem[], settings: PrintSettings) {
           destination: 'kitchen' as const,
           items,
           copies: settings.kitchenCopies,
+          includeAllItems: false,
         },
       ];
 }
@@ -894,6 +889,7 @@ function buildKitchenPayload(
   copies: number,
   settings: PrintSettings,
   categoryByMenuItemId: Map<string, string>,
+  includeAllItems = false,
 ) {
   return {
     orderId: order.id,
@@ -906,6 +902,7 @@ function buildKitchenPayload(
     allergyAcknowledgedAt: order.allergyAcknowledgedAt?.toISOString() ?? null,
     createdAt: new Date().toISOString(),
     ticketDestination,
+    includeAllItems,
     copies,
     fontSizePreset: settings.fontSizePreset,
     topPaddingLines: settings.topPaddingLines,

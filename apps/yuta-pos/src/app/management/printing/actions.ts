@@ -97,7 +97,7 @@ export async function createTestPrintJobAction(
     revalidatePath('/management/printing');
     return {
       error: null,
-      success: 'Ticket de test ajouté à la file d’impression.',
+      success: 'Tests Cuisine et BAR ajoutés à la file d’impression.',
     };
   } catch (error: unknown) {
     return toActionError(error);

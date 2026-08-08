@@ -375,7 +375,7 @@ The MVP print flow is site-agent-owned:
 
 ```txt
 POS send to kitchen
-Create independent Cuisine and Boissons/Desserts print_jobs rows when present
+Create a Cuisine job when kitchen items are present and one full-batch BAR job
 Local printer adapter claims the pending job
 Adapter renders one station ticket and sends ESC/POS to the configured device
 Adapter marks the job printed or failed
@@ -387,16 +387,17 @@ Kitchen ticket jobs are batch-based. If an order is sent to kitchen, then more i
 the physical device write. The selected local transport is one Linux-hosted
 EPSON TM-m30 Bluetooth RFCOMM character device, configured with
 `POS_PRINTER_DEVICE` (currently `/dev/rfcomm1` at Luna). Each kitchen send
-creates a Cuisine job for `kitchen` items and a Boissons & Desserts job for
-`bar`/`dessert` items when those stations are present. The single TM-m30 prints
-and cuts those tickets sequentially. Jobs snapshot their configured copy count
-font preset, and ticket spacing so retries remain stable after settings change.
+creates a Cuisine job for `kitchen` items when present and a BAR job containing
+the complete sent batch for service-wide visibility. The single TM-m30 prints
+and fully cuts those tickets sequentially. Jobs snapshot their configured copy
+count, font preset, and ticket spacing so retries remain stable after settings
+change.
 The renderer groups Cuisine output into `ENTREES`, `SUPPLEMENTS`, then `PLATS`,
-and counter output into `BOISSONS`, then `DESSERTS`. Each station ticket ends
-with an Epson feed-and-cut command so Cuisine and counter receive separate
-paper tickets. Items with
-station `none` do not print. Payment capture does not create a customer receipt
-job.
+and BAR output into `ENTREES`, `SUPPLEMENTS`, `PLATS`, `BOISSONS`, then
+`DESSERTS`. Each station ticket ends with the Epson full-cut command so Cuisine
+and BAR receive separate paper tickets. Items with station `none` do not print.
+The manual print test renders both a Cuisine ticket and a full BAR ticket, with
+a cut after each. Payment capture does not create a customer receipt job.
 
 `@yuta/core` is now database-independent. Its legacy repositories,
 transactions, print worker, environment loading, and filesystem code have been

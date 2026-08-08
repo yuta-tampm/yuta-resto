@@ -46,6 +46,7 @@ const kitchenPrintPayloadSchema = z
         .passthrough(),
     ),
     ticketDestination: z.enum(['kitchen', 'counter']).optional(),
+    includeAllItems: z.boolean().default(false),
     copies: z.number().int().min(1).max(3).default(1),
     fontSizePreset: z
       .enum(['compact', 'standard', 'large'])
@@ -170,7 +171,9 @@ export function renderInternalKitchenTicket(job: PrintJob): Buffer | null {
     const items = payload.items.filter((item) =>
       destination === 'kitchen'
         ? item.station === 'kitchen'
-        : item.station === 'bar' || item.station === 'dessert',
+        : payload.includeAllItems
+          ? item.station !== 'none'
+          : item.station === 'bar' || item.station === 'dessert',
     );
     if (items.length === 0) return [];
     return Array.from({ length: payload.copies }, () =>
@@ -252,8 +255,12 @@ function renderProductionTicket(
   if (destination === 'kitchen') {
     write('CUISINE');
   } else {
-    write('BOISSONS');
-    write('& DESSERTS');
+    if (payload.includeAllItems) {
+      write('BAR');
+    } else {
+      write('BOISSONS');
+      write('& DESSERTS');
+    }
   }
   setSize(0x00);
   setBold(false);
@@ -287,7 +294,9 @@ function renderProductionTicket(
   const sectionOrder =
     destination === 'kitchen'
       ? ['ENTREES', 'SUPPLEMENTS', 'PLATS']
-      : ['BOISSONS', 'DESSERTS'];
+      : payload.includeAllItems
+        ? ['ENTREES', 'SUPPLEMENTS', 'PLATS', 'BOISSONS', 'DESSERTS']
+        : ['BOISSONS', 'DESSERTS'];
   for (const sectionName of sectionOrder) {
     const categoryItems = groupedItems.get(sectionName);
     if (!categoryItems) continue;
@@ -348,7 +357,7 @@ function renderProductionTicket(
   }
   write(separator(contentWidth), leftPadding);
   for (let line = 0; line < payload.bottomPaddingLines; line += 1) write('');
-  command(0x1d, 0x56, 0x41, 0x03);
+  command(0x1d, 0x56, 0x00);
   return Buffer.concat(chunks);
 }
 
@@ -372,7 +381,7 @@ function printSectionName(
   station: 'kitchen' | 'bar' | 'dessert' | 'none',
   destination: 'kitchen' | 'counter',
 ): string {
-  if (destination === 'counter')
+  if (destination === 'counter' && (station === 'bar' || station === 'dessert'))
     return station === 'dessert' ? 'DESSERTS' : 'BOISSONS';
   const normalizedCategory = ascii(categoryName).toLowerCase();
   if (normalizedCategory.includes('entree')) return 'ENTREES';

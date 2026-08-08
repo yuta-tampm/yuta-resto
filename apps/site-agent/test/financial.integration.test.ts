@@ -246,6 +246,8 @@ integrationTest('site-agent financial transaction integration', () => {
     expect(output[0]?.toString('ascii')).toContain('CUISINE');
     expect(output[0]?.toString('ascii')).not.toContain('BOISSONS');
     expect(output[1]?.toString('ascii')).toContain('BOISSONS');
+    expect(output[1]?.toString('ascii')).toContain('BAR');
+    expect(output[1]?.toString('ascii')).toContain('Integration Main');
     const [printedJob] = await db
       .select({ status: printJobs.status })
       .from(printJobs)

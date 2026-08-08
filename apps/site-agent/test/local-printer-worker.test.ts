@@ -100,7 +100,7 @@ describe('local TM-m30 print rendering', () => {
     const text = output.toString('ascii');
 
     expect([...output.subarray(0, 2)]).toEqual([0x1b, 0x40]);
-    expect([...output.subarray(-4)]).toEqual([0x1d, 0x56, 0x41, 0x03]);
+    expect([...output.subarray(-3)]).toEqual([0x1d, 0x56, 0x00]);
     expect(text).toContain('CUISINE');
     expect(text).toContain('ENTREES');
     expect(text).toContain('  2 x Pho special');
@@ -138,8 +138,31 @@ describe('local TM-m30 print rendering', () => {
     );
     expect(firstBoissonsSection).toBeGreaterThan(-1);
     expect(firstDessertsSection).toBeGreaterThan(firstBoissonsSection);
-    expect(countSequence(output, [0x1d, 0x56, 0x41, 0x03])).toBe(2);
+    expect(countSequence(output, [0x1d, 0x56, 0x00])).toBe(2);
     expect(text).not.toContain('Pho special');
+  });
+
+  it('renders a full BAR ticket with kitchen, drink, and dessert items', () => {
+    const output = renderInternalKitchenTicket({
+      ...baseJob,
+      payload: {
+        ...baseJob.payload,
+        ticketDestination: 'counter',
+        includeAllItems: true,
+        copies: 1,
+      },
+    });
+    expect(output).not.toBeNull();
+    if (!output) throw new Error('Expected a full BAR ticket.');
+    const text = output.toString('ascii');
+    expect(text).toContain('BAR');
+    expect(text).toContain('ENTREES');
+    expect(text).toContain('Pho special');
+    expect(text).toContain('BOISSONS');
+    expect(text).toContain('Coca-Cola');
+    expect(text).toContain('DESSERTS');
+    expect(text).toContain('Mochi glace');
+    expect(countSequence(output, [0x1d, 0x56, 0x00])).toBe(1);
   });
 
   it('orders kitchen sections as entrees, supplements, then plats', () => {
@@ -209,11 +232,17 @@ describe('local TM-m30 print rendering', () => {
     expect(text).not.toContain('?');
   });
 
-  it('keeps legacy combined jobs printable as two cut tickets', () => {
-    const output = renderInternalKitchenTicket(baseJob);
+  it('renders a combined test job as two full-cut tickets', () => {
+    const output = renderInternalKitchenTicket({
+      ...baseJob,
+      jobType: 'test',
+      payload: { ...baseJob.payload, includeAllItems: true },
+    });
     expect(output).not.toBeNull();
-    if (!output) throw new Error('Expected legacy tickets.');
-    expect(countSequence(output, [0x1d, 0x56, 0x41, 0x03])).toBe(2);
+    if (!output) throw new Error('Expected two test tickets.');
+    expect(output.toString('ascii')).toContain('CUISINE');
+    expect(output.toString('ascii')).toContain('BAR');
+    expect(countSequence(output, [0x1d, 0x56, 0x00])).toBe(2);
   });
 
   it('skips a physical ticket without internal production items', () => {

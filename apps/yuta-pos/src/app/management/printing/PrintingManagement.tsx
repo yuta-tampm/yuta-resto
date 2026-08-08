@@ -140,8 +140,8 @@ function PrintSettingsCard({ settings }: { settings: LocalPrintSettings }) {
         <div>
           <h2 className="text-lg font-black">Paramètres des tickets</h2>
           <p className="mt-1 text-sm text-secondary">
-            Les tickets Cuisine et Boissons &amp; Desserts sont imprimés et
-            coupés séparément sur l’EPSON TM-m30.
+            Le ticket Cuisine et le ticket BAR complet sont imprimés et coupés
+            séparément sur l’EPSON TM-m30.
           </p>
         </div>
       </div>
@@ -171,7 +171,7 @@ function PrintSettingsCard({ settings }: { settings: LocalPrintSettings }) {
               </SelectContent>
             </Select>
           </FormField>
-          <FormField label="Copies Boissons & Desserts">
+          <FormField label="Copies BAR (commande complète)">
             <Select value={counterCopies} onValueChange={setCounterCopies}>
               <SelectTrigger>
                 <SelectValue />
@@ -230,7 +230,7 @@ function PrintSettingsCard({ settings }: { settings: LocalPrintSettings }) {
             bottomPaddingLines={Number(bottomPaddingLines)}
           />
           <TicketPreview
-            title="BOISSONS & DESSERTS"
+            title="BAR — COMMANDE COMPLÈTE"
             subtitle={`${counterCopies} copie${counterCopies === '1' ? '' : 's'}`}
             preset={fontSizePreset}
             topPaddingLines={Number(topPaddingLines)}
