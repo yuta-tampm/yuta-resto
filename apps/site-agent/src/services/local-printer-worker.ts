@@ -58,14 +58,18 @@ const kitchenPrintPayloadSchema = z
   .passthrough();
 
 type PrinterWriter = (devicePath: string, data: Buffer) => Promise<void>;
+const defaultInterTicketDelayMs = 800;
 
 export function createLocalPrinterWorker(input: {
   db: PosDatabaseExecutor;
   devicePath: string;
   pollIntervalMs: number;
   write?: PrinterWriter;
+  interTicketDelayMs?: number;
 }) {
   const write = input.write ?? writePrinterDevice;
+  const interTicketDelayMs =
+    input.interTicketDelayMs ?? defaultInterTicketDelayMs;
   let timer: NodeJS.Timeout | null = null;
   let activeRun: Promise<void> | null = null;
   let stopped = true;
@@ -90,8 +94,11 @@ export function createLocalPrinterWorker(input: {
     if (!claimed) return false;
 
     try {
-      const output = renderInternalKitchenTicket(claimed);
-      if (output) await write(input.devicePath, output);
+      const outputs = renderInternalKitchenTickets(claimed);
+      for (const output of outputs) {
+        await write(input.devicePath, output);
+        await wait(interTicketDelayMs);
+      }
       await input.db
         .update(printJobs)
         .set({
@@ -163,6 +170,11 @@ export function createLocalPrinterWorker(input: {
 }
 
 export function renderInternalKitchenTicket(job: PrintJob): Buffer | null {
+  const tickets = renderInternalKitchenTickets(job);
+  return tickets.length > 0 ? Buffer.concat(tickets) : null;
+}
+
+export function renderInternalKitchenTickets(job: PrintJob): Buffer[] {
   const payload = kitchenPrintPayloadSchema.parse(job.payload);
   const destinations = payload.ticketDestination
     ? [payload.ticketDestination]
@@ -180,7 +192,12 @@ export function renderInternalKitchenTicket(job: PrintJob): Buffer | null {
       renderProductionTicket(payload, destination, items),
     );
   });
-  return tickets.length > 0 ? Buffer.concat(tickets) : null;
+  return tickets;
+}
+
+async function wait(milliseconds: number): Promise<void> {
+  if (milliseconds <= 0) return;
+  await new Promise<void>((resolve) => setTimeout(resolve, milliseconds));
 }
 
 async function writePrinterDevice(
@@ -357,6 +374,7 @@ function renderProductionTicket(
   }
   write(separator(contentWidth), leftPadding);
   for (let line = 0; line < payload.bottomPaddingLines; line += 1) write('');
+  command(0x1b, 0x64, 0x03);
   command(0x1d, 0x56, 0x00);
   return Buffer.concat(chunks);
 }

@@ -695,7 +695,9 @@ kitchen items, plus an independent `BAR` ticket containing the complete sent
 batch. The single TM-m30 prints and fully cuts them sequentially; station
 `none` is excluded. Cuisine is grouped in the fixed order Entrées, Suppléments,
 Plats. BAR is grouped Boissons, Entrées, Suppléments, Plats, then Desserts,
-regardless of item insertion order.
+regardless of item insertion order. Every ticket and configured copy is written
+separately; the adapter feeds before the full cut and waits 800 ms before the
+next write to stabilize the Bluetooth cutter.
 Raw payloads and the device path never reach the browser. The current Luna host
 exposes the paired TM-m30 as `/dev/rfcomm1` through a systemd binding.
 

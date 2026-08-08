@@ -1,6 +1,9 @@
 import type { PrintJob } from '@yuta/db-pos/schema';
 import { describe, expect, it } from 'vitest';
-import { renderInternalKitchenTicket } from '../src/services/local-printer-worker';
+import {
+  renderInternalKitchenTicket,
+  renderInternalKitchenTickets,
+} from '../src/services/local-printer-worker';
 
 const baseJob: PrintJob = {
   id: '019fa0b8-e6e2-7353-b6e8-c9a5698eb8e5',
@@ -101,6 +104,7 @@ describe('local TM-m30 print rendering', () => {
 
     expect([...output.subarray(0, 2)]).toEqual([0x1b, 0x40]);
     expect([...output.subarray(-3)]).toEqual([0x1d, 0x56, 0x00]);
+    expect(countSequence(output, [0x1b, 0x64, 0x03])).toBe(1);
     expect(text).toContain('CUISINE');
     expect(text).toContain('ENTREES');
     expect(text).toContain('  2 x Pho special');
@@ -267,13 +271,16 @@ describe('local TM-m30 print rendering', () => {
   });
 
   it('renders a combined test job as two full-cut tickets', () => {
-    const output = renderInternalKitchenTicket({
+    const testJob = {
       ...baseJob,
       jobType: 'test',
       payload: { ...baseJob.payload, includeAllItems: true },
-    });
+    } satisfies PrintJob;
+    const tickets = renderInternalKitchenTickets(testJob);
+    const output = renderInternalKitchenTicket(testJob);
     expect(output).not.toBeNull();
     if (!output) throw new Error('Expected two test tickets.');
+    expect(tickets).toHaveLength(2);
     expect(output.toString('ascii')).toContain('CUISINE');
     expect(output.toString('ascii')).toContain('BAR');
     expect(countSequence(output, [0x1d, 0x56, 0x00])).toBe(2);

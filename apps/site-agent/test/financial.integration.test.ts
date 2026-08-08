@@ -239,6 +239,7 @@ integrationTest('site-agent financial transaction integration', () => {
       write: async (_devicePath, data) => {
         output.push(data);
       },
+      interTicketDelayMs: 0,
     });
     expect(await worker.processNext()).toBe(true);
     expect(await worker.processNext()).toBe(true);
