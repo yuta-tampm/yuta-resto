@@ -62,7 +62,8 @@ type PrinterWriter = (devicePath: string, data: Buffer) => Promise<void>;
 const defaultInterTicketDelayMs = 800;
 const printerBodyChunkSize = 128;
 const printerBodyChunkDelayMs = 20;
-const printerCutSettleDelayMs = 800;
+const printerDeviceOpenDelayMs = 300;
+const printerCutSettleDelayMs = 1_000;
 const printerCutSequence = Buffer.from([0x1b, 0x64, 0x03, 0x1d, 0x56, 0x00]);
 
 export function createLocalPrinterWorker(input: {
@@ -209,6 +210,20 @@ async function writePrinterDevice(
   devicePath: string,
   data: Buffer,
 ): Promise<void> {
+  const phases = planPrinterPhases(data);
+  for (let index = 0; index < phases.length; index += 1) {
+    const phase = phases[index];
+    if (!phase) continue;
+    if (index > 0) await wait(printerCutSettleDelayMs);
+    await writePrinterPhase(devicePath, phase.data, phase.paced);
+  }
+}
+
+async function writePrinterPhase(
+  devicePath: string,
+  data: Buffer,
+  paced: boolean,
+): Promise<void> {
   await new Promise<void>((resolve, reject) => {
     const writer = spawn(
       'timeout',
@@ -237,27 +252,26 @@ async function writePrinterDevice(
         ),
       );
     });
-    void writePacedTicket(writer.stdin, data).catch((error: unknown) => {
+    void writePhaseData(writer.stdin, data, paced).catch((error: unknown) => {
       writer.stdin.destroy();
       reject(error);
     });
   });
 }
 
-async function writePacedTicket(
+async function writePhaseData(
   stream: NodeJS.WritableStream,
-  ticket: Buffer,
+  data: Buffer,
+  paced: boolean,
 ): Promise<void> {
-  const { body, cut } = splitPrinterTicket(ticket);
-  for (let offset = 0; offset < body.length; offset += printerBodyChunkSize) {
-    const chunk = body.subarray(offset, offset + printerBodyChunkSize);
+  await wait(printerDeviceOpenDelayMs);
+  const chunkSize = paced ? printerBodyChunkSize : data.length;
+  for (let offset = 0; offset < data.length; offset += chunkSize) {
+    const chunk = data.subarray(offset, offset + chunkSize);
     if (!stream.write(chunk)) await once(stream, 'drain');
-    await wait(printerBodyChunkDelayMs);
+    if (paced) await wait(printerBodyChunkDelayMs);
   }
-  if (cut.length > 0) {
-    await wait(printerCutSettleDelayMs);
-  }
-  stream.end(cut);
+  stream.end();
 }
 
 export function splitPrinterTicket(ticket: Buffer): {
@@ -272,6 +286,17 @@ export function splitPrinterTicket(ticket: Buffer): {
     };
   }
   return { body: ticket, cut: Buffer.alloc(0) };
+}
+
+export function planPrinterPhases(ticket: Buffer): Array<{
+  data: Buffer;
+  paced: boolean;
+}> {
+  const { body, cut } = splitPrinterTicket(ticket);
+  return [
+    { data: body, paced: true },
+    ...(cut.length > 0 ? [{ data: cut, paced: false }] : []),
+  ];
 }
 
 function renderProductionTicket(

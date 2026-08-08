@@ -396,10 +396,11 @@ The renderer groups Cuisine output into `ENTREES`, `SUPPLEMENTS`, then `PLATS`,
 and BAR output into `BOISSONS`, `ENTREES`, `SUPPLEMENTS`, `PLATS`, then
 `DESSERTS`. Each station ticket ends with the Epson full-cut command so Cuisine
 and BAR receive separate paper tickets. The physical writer throttles each
-ticket body in 128-byte chunks, pauses 800 ms before sending the feed/full-cut
-trailer separately, then waits another 800 ms before the next ticket. This
-prevents a longer production ticket from overrunning the Bluetooth RFCOMM
-buffer and losing its final cutter bytes.
+ticket body in 128-byte chunks and closes that RFCOMM writer phase. It then
+waits one second, opens a fresh writer phase, and sends only the feed/full-cut
+trailer before waiting 800 ms for the next ticket. This prevents a longer
+production ticket from overrunning the Bluetooth buffer or leaving its cutter
+bytes behind a busy body stream.
 Items with station `none` do not print.
 The manual print test renders both a Cuisine ticket and a full BAR ticket, with
 a cut after each. Payment capture does not create a customer receipt job.

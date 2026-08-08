@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   renderInternalKitchenTicket,
   renderInternalKitchenTickets,
+  planPrinterPhases,
   splitPrinterTicket,
 } from '../src/services/local-printer-worker';
 
@@ -298,6 +299,10 @@ describe('local TM-m30 print rendering', () => {
     expect(body.length).toBeGreaterThan(0);
     expect([...cut]).toEqual([0x1b, 0x64, 0x03, 0x1d, 0x56, 0x00]);
     expect(Buffer.concat([body, cut])).toEqual(firstTicket);
+    const phases = planPrinterPhases(firstTicket);
+    expect(phases).toHaveLength(2);
+    expect(phases[0]).toEqual({ data: body, paced: true });
+    expect(phases[1]).toEqual({ data: cut, paced: false });
   });
 
   it('skips a physical ticket without internal production items', () => {

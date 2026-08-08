@@ -199,7 +199,7 @@ N/A       not applicable for this run
 | Compact section grouping                  | Cuisine: Entrées, Suppléments, Plats; BAR: Boissons first, Desserts last    |        |       |
 | Full BAR batch                            | BAR ticket contains every production item in the sent batch                 |        |       |
 | Physical station separation               | Full cut executes once after each Cuisine or BAR copy                       |        |       |
-| Bluetooth cutter pacing                   | Long body is chunked; feed/full-cut is delayed and sent as the final phase  |        |       |
+| Bluetooth cutter pacing                   | Body and delayed feed/full-cut use two separate RFCOMM writer phases        |        |       |
 | Test print action                         | One test job prints and cuts separate Cuisine and full BAR samples          |        |       |
 | ESC/POS punctuation                       | Curly apostrophes and dash variants print as `'` and `-`, never `?`         |        |       |
 | Printed allergy severity                  | Intolerance, allergy, and severe-no-traces jobs render without failure      |        |       |
