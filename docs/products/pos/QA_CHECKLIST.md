@@ -183,29 +183,31 @@ N/A       not applicable for this run
 
 ## Print Jobs
 
-| Case                                      | Expected Result                                                         | Result | Notes |
-| ----------------------------------------- | ----------------------------------------------------------------------- | -----: | ----- |
-| Kitchen send creates station print jobs   | Queue shows separate Cuisine and Boissons/Desserts jobs when applicable |        |       |
-| Second kitchen send prints only new items | Later kitchen ticket excludes items printed by the earlier send         |        |       |
-| Payment creates print job                 | Payment succeeds and creates no print job                               |        |       |
-| Printer adapter processes pending jobs    | Job status changes to `printed`                                         |        |       |
-| One-printer station routing               | TM-m30 prints and cuts Cuisine then Boissons/Desserts separately        |        |       |
-| Print copy settings                       | Each station prints the configured 1 to 3 copies                        |        |       |
-| Print font preset                         | Compact, Standard, and Large change new ticket item typography          |        |       |
-| Print spacing settings                    | Top, left, and bottom values from 0 to 8 change new ticket layout       |        |       |
-| Compact section grouping                  | Ticket uses Entrées/Suppléments, Plats, and Boissons/Desserts headings  |        |       |
-| Physical station separation               | Feed-and-cut executes once after each station copy                      |        |       |
-| Print settings snapshot                   | Retried old job keeps its original copies, font, and spacing            |        |       |
-| Station `none` item                       | Item is not present on the physical ticket                              |        |       |
-| Mark job failed manually                  | Job status changes to `failed`                                          |        |       |
-| Retry failed job                          | Job status changes back to `pending`                                    |        |       |
-| Kitchen send is atomic                    | Forced print insert failure leaves the item pending and creates no job  |        |       |
-| Final payment is atomic                   | Payment and paid order/check state commit without a receipt job         |        |       |
-| Kitchen retry is idempotent               | Replaying one command UUID creates one kitchen ticket job               |        |       |
-| Payment retry is idempotent               | Replaying one command UUID creates one payment and no receipt job       |        |       |
-| Concurrent full payments are serialized   | Only one competing full payment succeeds for an order                   |        |       |
-| Cancellation versus payment is serialized | The order ends cancelled without payment or paid with one payment       |        |       |
-| Site-agent heartbeat is healthy           | Site-agent health reports the local database available                  |        |       |
+| Case                                      | Expected Result                                                               | Result | Notes |
+| ----------------------------------------- | ----------------------------------------------------------------------------- | -----: | ----- |
+| Kitchen send creates station print jobs   | Queue shows separate Cuisine and Boissons/Desserts jobs when applicable       |        |       |
+| Second kitchen send prints only new items | Later kitchen ticket excludes items printed by the earlier send               |        |       |
+| Payment creates print job                 | Payment succeeds and creates no print job                                     |        |       |
+| Printer adapter processes pending jobs    | Job status changes to `printed`                                               |        |       |
+| One-printer station routing               | TM-m30 prints and cuts Cuisine then Boissons/Desserts separately              |        |       |
+| Print copy settings                       | Each station prints the configured 1 to 3 copies                              |        |       |
+| Print font preset                         | Compact, Standard, and Large change new ticket item typography                |        |       |
+| Print spacing settings                    | Top, left, and bottom values from 0 to 8 change new ticket layout             |        |       |
+| Compact section grouping                  | Cuisine orders Entrées, Suppléments, Plats; counter orders Boissons, Desserts |        |       |
+| Physical station separation               | Feed-and-cut executes once after each station copy                            |        |       |
+| Test print action                         | One test job prints saved font/spacing, punctuation, allergy, and cut         |        |       |
+| ESC/POS punctuation                       | Curly apostrophes and dash variants print as `'` and `-`, never `?`           |        |       |
+| Print settings snapshot                   | Retried old job keeps its original copies, font, and spacing                  |        |       |
+| Station `none` item                       | Item is not present on the physical ticket                                    |        |       |
+| Mark job failed manually                  | Job status changes to `failed`                                                |        |       |
+| Retry failed job                          | Job status changes back to `pending`                                          |        |       |
+| Kitchen send is atomic                    | Forced print insert failure leaves the item pending and creates no job        |        |       |
+| Final payment is atomic                   | Payment and paid order/check state commit without a receipt job               |        |       |
+| Kitchen retry is idempotent               | Replaying one command UUID creates one kitchen ticket job                     |        |       |
+| Payment retry is idempotent               | Replaying one command UUID creates one payment and no receipt job             |        |       |
+| Concurrent full payments are serialized   | Only one competing full payment succeeds for an order                         |        |       |
+| Cancellation versus payment is serialized | The order ends cancelled without payment or paid with one payment             |        |       |
+| Site-agent heartbeat is healthy           | Site-agent health reports the local database available                        |        |       |
 
 ## Edge Offline Acceptance
 

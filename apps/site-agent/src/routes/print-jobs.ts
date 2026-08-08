@@ -23,6 +23,11 @@ export const handlePrintJobRoutes: RouteHandler = async ({
     sendJson(response, 200, await service.listPrintJobs(query));
     return true;
   }
+  if (url.pathname === localPosRoutes.printTest && request.method === 'POST') {
+    await requireLocalManagementSession(request.headers.authorization, service);
+    sendJson(response, 201, await service.createTestPrintJob());
+    return true;
+  }
   const commandMatch = /^\/api\/v1\/print-jobs\/([^/]+)\/commands$/.exec(
     url.pathname,
   );

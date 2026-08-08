@@ -88,6 +88,22 @@ export async function savePrintSettingsAction(
   }
 }
 
+export async function createTestPrintJobAction(
+  _previousState: PrintingActionState,
+): Promise<PrintingActionState> {
+  try {
+    const { token } = await requireLocalManagementCredentials();
+    await siteAgentClient.createTestPrintJob(token);
+    revalidatePath('/management/printing');
+    return {
+      error: null,
+      success: 'Ticket de test ajouté à la file d’impression.',
+    };
+  } catch (error: unknown) {
+    return toActionError(error);
+  }
+}
+
 function successMessage(action: PrintJobCommand['action']): string {
   if (action === 'mark_printing') return 'Impression démarrée.';
   if (action === 'mark_printed') return 'Ticket marqué comme imprimé.';

@@ -1,6 +1,6 @@
 import type { PosDatabaseExecutor } from '@yuta/db-pos/client';
 import { printJobs, type PrintJob } from '@yuta/db-pos/schema';
-import { and, asc, eq } from 'drizzle-orm';
+import { and, asc, eq, inArray } from 'drizzle-orm';
 import { spawn } from 'node:child_process';
 import { z } from 'zod';
 
@@ -65,7 +65,7 @@ export function createLocalPrinterWorker(input: {
     const candidate = await input.db.query.printJobs.findFirst({
       where: and(
         eq(printJobs.status, 'pending'),
-        eq(printJobs.jobType, 'kitchen_ticket'),
+        inArray(printJobs.jobType, ['kitchen_ticket', 'test']),
       ),
       orderBy: [asc(printJobs.createdAt), asc(printJobs.id)],
     });
@@ -133,7 +133,7 @@ export function createLocalPrinterWorker(input: {
         .where(
           and(
             eq(printJobs.status, 'printing'),
-            eq(printJobs.jobType, 'kitchen_ticket'),
+            inArray(printJobs.jobType, ['kitchen_ticket', 'test']),
           ),
         );
     } catch (error: unknown) {
@@ -267,12 +267,22 @@ function renderProductionTicket(
 
   const groupedItems = new Map<string, typeof items>();
   for (const item of items) {
-    const sectionName = printSectionName(item.categoryName, destination);
+    const sectionName = printSectionName(
+      item.categoryName,
+      item.station,
+      destination,
+    );
     const group = groupedItems.get(sectionName) ?? [];
     group.push(item);
     groupedItems.set(sectionName, group);
   }
-  for (const [sectionName, categoryItems] of groupedItems) {
+  const sectionOrder =
+    destination === 'kitchen'
+      ? ['ENTREES', 'SUPPLEMENTS', 'PLATS']
+      : ['BOISSONS', 'DESSERTS'];
+  for (const sectionName of sectionOrder) {
+    const categoryItems = groupedItems.get(sectionName);
+    if (!categoryItems) continue;
     setAlign(0);
     setBold(true);
     setReverse(true);
@@ -336,14 +346,15 @@ function renderProductionTicket(
 
 function printSectionName(
   categoryName: string,
+  station: 'kitchen' | 'bar' | 'dessert' | 'none',
   destination: 'kitchen' | 'counter',
 ): string {
-  if (destination === 'counter') return 'BOISSONS / DESSERTS';
+  if (destination === 'counter')
+    return station === 'dessert' ? 'DESSERTS' : 'BOISSONS';
   const normalizedCategory = ascii(categoryName).toLowerCase();
-  return normalizedCategory.includes('entree') ||
-    normalizedCategory.includes('supplement')
-    ? 'ENTREES / SUPPLEMENTS'
-    : 'PLATS';
+  if (normalizedCategory.includes('entree')) return 'ENTREES';
+  if (normalizedCategory.includes('supplement')) return 'SUPPLEMENTS';
+  return 'PLATS';
 }
 
 function orderType(value: 'dine_in' | 'takeaway' | 'delivery'): string {
@@ -404,6 +415,18 @@ function wrapText(value: string, width: number): string[] {
 
 function ascii(value: string): string {
   return value
+    .replace(/[‘’‚‛′]/g, "'")
+    .replace(/[“”„‟″]/g, '"')
+    .replace(/[‐‑‒–—―−]/g, '-')
+    .replace(/[\u00A0\u202F]/g, ' ')
+    .replaceAll('…', '...')
+    .replaceAll('×', 'x')
+    .replaceAll('•', '*')
+    .replaceAll('€', 'EUR')
+    .replaceAll('œ', 'oe')
+    .replaceAll('Œ', 'OE')
+    .replaceAll('đ', 'd')
+    .replaceAll('Đ', 'D')
     .replaceAll('œ', 'oe')
     .replaceAll('Œ', 'OE')
     .replaceAll('đ', 'd')

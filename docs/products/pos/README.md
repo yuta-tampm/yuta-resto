@@ -391,9 +391,10 @@ creates a Cuisine job for `kitchen` items and a Boissons & Desserts job for
 `bar`/`dessert` items when those stations are present. The single TM-m30 prints
 and cuts those tickets sequentially. Jobs snapshot their configured copy count
 font preset, and ticket spacing so retries remain stable after settings change.
-The renderer groups output into `ENTREES / SUPPLEMENTS`, `PLATS`, and
-`BOISSONS / DESSERTS`; each station ticket ends with an Epson feed-and-cut
-command so Cuisine and counter receive separate paper tickets. Items with
+The renderer groups Cuisine output into `ENTREES`, `SUPPLEMENTS`, then `PLATS`,
+and counter output into `BOISSONS`, then `DESSERTS`. Each station ticket ends
+with an Epson feed-and-cut command so Cuisine and counter receive separate
+paper tickets. Items with
 station `none` do not print. Payment capture does not create a customer receipt
 job.
 
@@ -461,3 +462,8 @@ The same screen manages Cuisine and Boissons/Desserts copy counts and the
 compact, standard, or large ESC/POS font preset. It also manages zero-to-eight
 line top/bottom spacing and zero-to-eight character left spacing. Physical
 device paths and printer routing remain outside browser control.
+An authenticated `Impression test` action creates a one-copy local test job
+using the saved font and spacing. Its fixture covers accents, typographic
+apostrophes, dash variants, ligatures, indentation, allergy emphasis, and the
+paper cutter. ESC/POS rendering transliterates those punctuation variants to
+printable ASCII instead of replacing them with question marks.

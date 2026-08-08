@@ -23,6 +23,7 @@ export const localPosRoutes = {
   orderItems: `${localPosApiBasePath}/order-items`,
   payments: `${localPosApiBasePath}/payments`,
   printJobs: `${localPosApiBasePath}/print-jobs`,
+  printTest: `${localPosApiBasePath}/print-jobs/test`,
   printSettings: `${localPosApiBasePath}/print-settings`,
 } as const;
 
@@ -712,6 +713,7 @@ export const localPaymentSchema = z
 export const printJobTypeSchema = z.enum([
   'kitchen_ticket',
   'customer_receipt',
+  'test',
 ]);
 export const printJobStatusSchema = z.enum([
   'pending',

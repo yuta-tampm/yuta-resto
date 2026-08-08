@@ -8,9 +8,57 @@ import {
 import type { PosDatabaseExecutor } from '@yuta/db-pos/client';
 import { printJobs } from '@yuta/db-pos/schema';
 import { asc, desc, eq } from 'drizzle-orm';
+import { v7 as uuidv7 } from 'uuid';
 import { HttpError } from '../http';
+import { ensurePrintSettings } from './print-settings-service';
 
 export function createPrintJobService(db: PosDatabaseExecutor) {
+  async function createTestPrintJob() {
+    const settings = await ensurePrintSettings(db);
+    const now = new Date();
+    const [created] = await db
+      .insert(printJobs)
+      .values({
+        id: uuidv7(),
+        source: 'manual',
+        printerName: 'tm-m30-test',
+        jobType: 'test',
+        payload: {
+          orderNumber: 'TEST',
+          tableLabel: 'Test imprimante',
+          orderType: 'dine_in',
+          orderNote: 'Police - marges - coupe',
+          createdAt: now.toISOString(),
+          ticketDestination: 'kitchen',
+          copies: 1,
+          fontSizePreset: settings.fontSizePreset,
+          topPaddingLines: settings.topPaddingLines,
+          leftPaddingChars: settings.leftPaddingChars,
+          bottomPaddingLines: settings.bottomPaddingLines,
+          items: [
+            {
+              name: 'Test – tiret - apostrophe ’ droite',
+              quantity: 1,
+              note: 'Crème brûlée – l’été',
+              quickInstructions: [
+                { labelSnapshot: "Sans oignon – à l'ancienne" },
+              ],
+              selectedVariants: [{ labelSnapshot: 'Bœuf × 2', quantity: 2 }],
+              hasAllergy: true,
+              allergenCodes: ['arachides'],
+              allergySeverity: 'severe',
+              allergyNote: 'test uniquement',
+              station: 'kitchen',
+              categoryName: 'Entrées',
+            },
+          ],
+        },
+      })
+      .returning();
+    if (!created) throw new Error('Test print job was not created.');
+    return localPrintJobSchema.parse(toPrintJob(created));
+  }
+
   async function listPrintJobs(input: PrintJobsQuery) {
     const query = printJobsQuerySchema.parse(input);
     const rows = query.status
@@ -102,7 +150,7 @@ export function createPrintJobService(db: PosDatabaseExecutor) {
     return localPrintJobSchema.parse(toPrintJob(updated));
   }
 
-  return { listPrintJobs, executePrintJobCommand };
+  return { createTestPrintJob, listPrintJobs, executePrintJobCommand };
 }
 
 function toPrintJob(job: typeof printJobs.$inferSelect) {

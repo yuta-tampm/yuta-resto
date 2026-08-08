@@ -312,6 +312,18 @@ describe('site-agent HTTP boundary', () => {
     expect(list.status).toBe(200);
     expect(await list.json()).toEqual({ printJobs: [printJobSnapshot] });
 
+    const unauthorizedTest = await fetch(`${baseUrl}/api/v1/print-jobs/test`, {
+      method: 'POST',
+    });
+    expect(unauthorizedTest.status).toBe(401);
+
+    const testPrint = await fetch(`${baseUrl}/api/v1/print-jobs/test`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${sessionToken}` },
+    });
+    expect(testPrint.status).toBe(201);
+    expect(await testPrint.json()).toEqual(printJobSnapshot);
+
     const unauthorizedCommand = await fetch(
       `${baseUrl}/api/v1/print-jobs/${sessionId}/commands`,
       {
@@ -620,6 +632,7 @@ function createMockService(): SiteAgentService {
       throw new Error('Not called by this test.');
     },
     listPrintJobs: async () => ({ printJobs: [printJobSnapshot] }),
+    createTestPrintJob: async () => printJobSnapshot,
     executePrintJobCommand: async () => printJobSnapshot,
     getPrintSettings: async () => ({
       kitchenCopies: 1,

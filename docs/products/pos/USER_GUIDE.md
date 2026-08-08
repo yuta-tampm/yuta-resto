@@ -675,6 +675,10 @@ preset, and spacing snapshot, so retrying an older failed job does not silently
 change its layout. Paper width remains fixed at 80 mm. The physical device path is trusted
 site-agent configuration and cannot be edited in the browser.
 
+Select `Impression test` after saving settings to enqueue one test page. The
+page includes accented words, apostrophes, dashes, options, allergy emphasis,
+and a final cut. It does not create or modify a customer order.
+
 ## Physical Printer Adapter
 
 When `POS_PRINTER_DEVICE` is configured, `site-agent` claims pending
@@ -683,9 +687,9 @@ the bound Linux RFCOMM character device, and marks the job `printed` or
 `failed`. A kitchen send creates an independent `CUISINE` ticket and an
 independent `BOISSONS & DESSERTS` ticket when each destination has items. The
 single TM-m30 prints and cuts them sequentially; station `none` is excluded.
-The cutter runs after each station ticket. Printed items are grouped into
-Entrées/Suppléments, Plats, and Boissons/Desserts instead of every menu
-category receiving its own heading.
+The cutter runs after each station ticket. Cuisine is grouped in the fixed
+order Entrées, Suppléments, Plats. The counter ticket is grouped Boissons then
+Desserts, regardless of item insertion order.
 Raw payloads and the device path never reach the browser. The current Luna host
 exposes the paired TM-m30 as `/dev/rfcomm1` through a systemd binding.
 

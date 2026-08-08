@@ -753,11 +753,15 @@ creates separate `CUISINE` and `BOISSONS & DESSERTS` jobs for the stations that
 have items; station `none` is excluded. The one TM-m30 prints and cuts the jobs
 sequentially. Local managers configure 1 to 3 copies per destination and a
 compact, standard, or large font preset, plus top, left, and bottom ticket
-spacing. Jobs snapshot those presentation settings. The printed sections are
-collapsed into Entrées/Suppléments, Plats, and Boissons/Desserts, with one
-feed-and-cut at the end of each station ticket. Payment never creates a
+spacing. Jobs snapshot those presentation settings. Cuisine sections are
+ordered Entrées, Suppléments, then Plats; counter sections are ordered Boissons
+then Desserts. One feed-and-cut runs at the end of each station ticket. Payment never creates a
 customer receipt job, and the POS browser
 receives no device path or access.
+Local managers can enqueue a one-copy test job from printing management. The
+test uses persisted presentation settings and validates punctuation
+transliteration, allergy emphasis, and the physical cut without creating an
+order.
 
 ## 15. Implementation Order
 

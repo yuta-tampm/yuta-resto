@@ -35,6 +35,19 @@ const baseJob: PrintJob = {
         categoryName: 'Nos entrées',
       },
       {
+        name: 'Coca-Cola',
+        quantity: 1,
+        note: null,
+        quickInstructions: [],
+        selectedVariants: [],
+        hasAllergy: false,
+        allergenCodes: [],
+        allergySeverity: null,
+        allergyNote: null,
+        station: 'bar',
+        categoryName: 'Nos boissons',
+      },
+      {
         name: 'Mochi glacé',
         quantity: 1,
         note: null,
@@ -89,7 +102,7 @@ describe('local TM-m30 print rendering', () => {
     expect([...output.subarray(0, 2)]).toEqual([0x1b, 0x40]);
     expect([...output.subarray(-4)]).toEqual([0x1d, 0x56, 0x41, 0x03]);
     expect(text).toContain('CUISINE');
-    expect(text).toContain('ENTREES / SUPPLEMENTS');
+    expect(text).toContain('ENTREES');
     expect(text).toContain('  2 x Pho special');
     expect(text).toContain('    !!! ALLERGIE: GRAVE, arachides');
     expect(text).not.toContain('BOISSONS');
@@ -112,10 +125,88 @@ describe('local TM-m30 print rendering', () => {
     if (!output) throw new Error('Expected counter tickets.');
     const text = output.toString('ascii');
     expect(text.match(/BOISSONS/g)).toHaveLength(4);
-    expect(text.match(/BOISSONS \/ DESSERTS/g)).toHaveLength(2);
+    expect(text.match(/DESSERTS/g)).toHaveLength(4);
+    expect(text.match(/Coca-Cola/g)).toHaveLength(2);
     expect(text.match(/Mochi glace/g)).toHaveLength(2);
+    const firstBoissonsSection = text.indexOf(
+      'BOISSONS',
+      text.indexOf('BOISSONS') + 1,
+    );
+    const firstDessertsSection = text.indexOf(
+      'DESSERTS',
+      text.indexOf('& DESSERTS') + '& DESSERTS'.length,
+    );
+    expect(firstBoissonsSection).toBeGreaterThan(-1);
+    expect(firstDessertsSection).toBeGreaterThan(firstBoissonsSection);
     expect(countSequence(output, [0x1d, 0x56, 0x41, 0x03])).toBe(2);
     expect(text).not.toContain('Pho special');
+  });
+
+  it('orders kitchen sections as entrees, supplements, then plats', () => {
+    const kitchenItem = (
+      name: string,
+      categoryName: string,
+    ): Record<string, unknown> => ({
+      name,
+      quantity: 1,
+      note: null,
+      quickInstructions: [],
+      selectedVariants: [],
+      hasAllergy: false,
+      allergenCodes: [],
+      allergySeverity: null,
+      allergyNote: null,
+      station: 'kitchen',
+      categoryName,
+    });
+    const output = renderInternalKitchenTicket({
+      ...baseJob,
+      payload: {
+        ...baseJob.payload,
+        ticketDestination: 'kitchen',
+        items: [
+          kitchenItem('Plat test', 'Plats'),
+          kitchenItem('Supplément test', 'Suppléments'),
+          kitchenItem('Entrée test', 'Entrées'),
+        ],
+      },
+    });
+    expect(output).not.toBeNull();
+    if (!output) throw new Error('Expected an ordered kitchen ticket.');
+    const text = output.toString('ascii');
+    expect(text.indexOf('ENTREES')).toBeLessThan(text.indexOf('SUPPLEMENTS'));
+    expect(text.indexOf('SUPPLEMENTS')).toBeLessThan(text.indexOf('PLATS'));
+  });
+
+  it('transliterates receipt punctuation instead of printing question marks', () => {
+    const output = renderInternalKitchenTicket({
+      ...baseJob,
+      payload: {
+        ...baseJob.payload,
+        ticketDestination: 'kitchen',
+        items: [
+          {
+            name: 'Tiret \u2013 apostrophe \u2019 droite',
+            quantity: 1,
+            note: 'B\u0153uf \u00d7 2 \u2013 l\u2019\u00e9t\u00e9',
+            quickInstructions: [],
+            selectedVariants: [],
+            hasAllergy: false,
+            allergenCodes: [],
+            allergySeverity: null,
+            allergyNote: null,
+            station: 'kitchen',
+            categoryName: 'Entr\u00e9es',
+          },
+        ],
+      },
+    });
+    expect(output).not.toBeNull();
+    if (!output) throw new Error('Expected a punctuation test ticket.');
+    const text = output.toString('ascii');
+    expect(text).toContain("Tiret - apostrophe ' droite");
+    expect(text).toContain("> NOTE: Boeuf x 2 - l'ete");
+    expect(text).not.toContain('?');
   });
 
   it('keeps legacy combined jobs printable as two cut tickets', () => {

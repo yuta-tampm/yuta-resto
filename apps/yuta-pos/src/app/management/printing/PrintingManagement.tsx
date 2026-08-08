@@ -33,6 +33,7 @@ import {
 import {
   CheckCircle2,
   CirclePlay,
+  FlaskConical,
   Printer,
   RefreshCw,
   Settings2,
@@ -43,6 +44,7 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { useActionState, useEffect, useState } from 'react';
 import {
+  createTestPrintJobAction,
   failPrintJobAction,
   runPrintJobCommandAction,
   savePrintSettingsAction,
@@ -255,7 +257,44 @@ function PrintSettingsCard({ settings }: { settings: LocalPrintSettings }) {
           </Button>
         </div>
       </form>
+      <TestPrintControl />
     </Card>
+  );
+}
+
+function TestPrintControl() {
+  const [state, action, pending] = useActionState(
+    createTestPrintJobAction,
+    initialState,
+  );
+  return (
+    <div className="grid gap-3 border-t border-border pt-5">
+      <div>
+        <p className="font-bold">Test de l’imprimante</p>
+        <p className="mt-1 text-sm text-secondary">
+          Imprime une page avec accents, apostrophes, tirets, marges et coupe.
+          Enregistrez d’abord les paramètres ci-dessus.
+        </p>
+      </div>
+      {state.error && (
+        <Alert tone="danger">
+          <TriangleAlert className="h-4 w-4" />
+          <AlertDescription>{state.error}</AlertDescription>
+        </Alert>
+      )}
+      {state.success && (
+        <Alert tone="success">
+          <CheckCircle2 className="h-4 w-4" />
+          <AlertDescription>{state.success}</AlertDescription>
+        </Alert>
+      )}
+      <form action={action}>
+        <Button type="submit" variant="secondary" loading={pending}>
+          <FlaskConical className="h-4 w-4" />
+          Impression test
+        </Button>
+      </form>
+    </div>
   );
 }
 

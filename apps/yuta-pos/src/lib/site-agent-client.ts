@@ -429,6 +429,12 @@ export function createSiteAgentClient(input?: {
         headers: { Authorization: `Bearer ${token}` },
       });
     },
+    async createTestPrintJob(token: string) {
+      return request(localPosRoutes.printTest, localPrintJobSchema, {
+        method: 'POST',
+        headers: managementJsonHeaders(token),
+      });
+    },
     async updatePrintSettings(
       token: string,
       input: UpdateLocalPrintSettingsInput,

@@ -358,6 +358,7 @@ describe('yuta-pos site-agent client', () => {
     const fetchImplementation = vi
       .fn<typeof fetch>()
       .mockResolvedValueOnce(Response.json({ printJobs: [printJob] }))
+      .mockResolvedValueOnce(Response.json({ ...printJob, type: 'test' }))
       .mockResolvedValueOnce(
         Response.json({ ...printJob, status: 'printing' }),
       );
@@ -367,12 +368,14 @@ describe('yuta-pos site-agent client', () => {
     });
 
     await client.listPrintJobs(sessionToken, { status: 'pending', limit: 25 });
+    await client.createTestPrintJob(sessionToken);
     await client.executePrintJobCommand(sessionToken, printJob.id, {
       action: 'mark_printing',
     });
 
     expect(fetchImplementation.mock.calls.map(([url]) => url)).toEqual([
       'http://site-agent.test/api/v1/print-jobs?limit=25&status=pending',
+      'http://site-agent.test/api/v1/print-jobs/test',
       `http://site-agent.test/api/v1/print-jobs/${printJob.id}/commands`,
     ]);
     for (const [, init] of fetchImplementation.mock.calls) {
@@ -381,6 +384,9 @@ describe('yuta-pos site-agent client', () => {
       });
     }
     expect(fetchImplementation.mock.calls[1]?.[1]).toMatchObject({
+      method: 'POST',
+    });
+    expect(fetchImplementation.mock.calls[2]?.[1]).toMatchObject({
       method: 'POST',
       body: JSON.stringify({ action: 'mark_printing' }),
     });
