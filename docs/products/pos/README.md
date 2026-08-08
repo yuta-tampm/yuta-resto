@@ -467,3 +467,6 @@ using the saved font and spacing. Its fixture covers accents, typographic
 apostrophes, dash variants, ligatures, indentation, allergy emphasis, and the
 paper cutter. ESC/POS rendering transliterates those punctuation variants to
 printable ASCII instead of replacing them with question marks.
+Printer payload validation accepts the canonical item-allergy severities
+`intolerance`, `allergy`, and `severe_no_traces`, while retaining read support
+for legacy `mild` and `severe` queued jobs.

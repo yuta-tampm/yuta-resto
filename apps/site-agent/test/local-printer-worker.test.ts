@@ -29,7 +29,7 @@ const baseJob: PrintJob = {
         selectedVariants: [],
         hasAllergy: true,
         allergenCodes: ['arachides'],
-        allergySeverity: 'severe',
+        allergySeverity: 'allergy',
         allergyNote: null,
         station: 'kitchen',
         categoryName: 'Nos entrées',
@@ -104,7 +104,7 @@ describe('local TM-m30 print rendering', () => {
     expect(text).toContain('CUISINE');
     expect(text).toContain('ENTREES');
     expect(text).toContain('  2 x Pho special');
-    expect(text).toContain('    !!! ALLERGIE: GRAVE, arachides');
+    expect(text).toContain('    !!! ALLERGIE: ALLERGIE, arachides');
     expect(text).not.toContain('BOISSONS');
     expect(text).not.toContain('Mochi glace');
     expect(text).not.toContain('Sac papier');

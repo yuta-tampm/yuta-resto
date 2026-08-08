@@ -17,6 +17,7 @@ import {
   DialogTitle,
   DialogTrigger,
   IconButton,
+  cn,
 } from '@yuta/ui';
 import { List, Minus, Plus, TriangleAlert } from 'lucide-react';
 import {
@@ -40,6 +41,7 @@ type MobileOrderDialogItem = {
   allergyDisplay: string;
   totalLabel: string;
   isPending: boolean;
+  requiresAttention: boolean;
   statusLabel: string;
 };
 
@@ -88,7 +90,11 @@ export function MobileOrderDialog({
             items.map((item) => (
               <div
                 key={item.id}
-                className="grid gap-1 border-b border-border-default py-4 last:border-b-0"
+                className={cn(
+                  'grid gap-1 border-b border-border-default px-3 py-4 last:border-b-0',
+                  item.requiresAttention &&
+                    'rounded-lg border border-status-danger-border bg-status-danger-soft',
+                )}
               >
                 <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-3">
                   <OrderItemQuantityControls
@@ -145,6 +151,7 @@ export function MobileOrderDialog({
                         initialAllergenCodes={item.allergenCodes}
                         initialAllergySeverity={item.allergySeverity}
                         initialAllergyNote={item.allergyNote}
+                        requiresAttention={item.requiresAttention}
                       />
                     )}
                   </div>

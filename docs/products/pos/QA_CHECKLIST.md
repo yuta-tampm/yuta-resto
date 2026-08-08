@@ -77,23 +77,24 @@ N/A       not applicable for this run
 
 ## Order Item Entry
 
-| Case                                | Expected Result                                                | Result | Notes |
-| ----------------------------------- | -------------------------------------------------------------- | -----: | ----- |
-| Select menu category                | Item grid changes to selected category                         |        |       |
-| Add item                            | Item appears in `Commande en cours`                            |        |       |
-| Add same item twice                 | Two rows or expected quantity behavior is visible              |        |       |
-| Item total displays correctly       | Row amount equals snapshot unit price times quantity           |        |       |
-| Order total displays correctly      | Total equals sum of active non-cancelled items minus discounts |        |       |
-| Add or edit pending item note       | Note appears below the item and persists                       |        |       |
-| Nems quick options                  | Nems shows specific choices and never `Sans legumes`           |        |       |
-| Open `Autres`                       | Additional choices appear without replacing current choices    |        |       |
-| Select conflicting options          | New option automatically removes the incompatible option       |        |       |
-| Structured option persistence       | Code and label snapshot persist on the order item              |        |       |
-| Select Mochi flavours               | Flavor quantities equal two per ordered portion                |        |       |
-| Send with incomplete Mochi flavours | French recovery alert appears and kitchen send stays disabled  |        |       |
-| Edit sent item note                 | Note action is unavailable after kitchen send                  |        |       |
-| Item allergy without details        | Form validation blocks saving the instructions                 |        |       |
-| Add allergies to different items    | Each warning stays attached to its own item                    |        |       |
+| Case                                | Expected Result                                                  | Result | Notes |
+| ----------------------------------- | ---------------------------------------------------------------- | -----: | ----- |
+| Select menu category                | Item grid changes to selected category                           |        |       |
+| Add item                            | Item appears in `Commande en cours`                              |        |       |
+| Add same item twice                 | Two rows or expected quantity behavior is visible                |        |       |
+| Item total displays correctly       | Row amount equals snapshot unit price times quantity             |        |       |
+| Order total displays correctly      | Total equals sum of active non-cancelled items minus discounts   |        |       |
+| Add or edit pending item note       | Note appears below the item and persists                         |        |       |
+| Nems quick options                  | Nems shows specific choices and never `Sans legumes`             |        |       |
+| Open `Autres`                       | Additional choices appear without replacing current choices      |        |       |
+| Select conflicting options          | New option automatically removes the incompatible option         |        |       |
+| Structured option persistence       | Code and label snapshot persist on the order item                |        |       |
+| Select Mochi flavours               | Flavor quantities equal two per ordered portion                  |        |       |
+| Send with incomplete Mochi flavours | French recovery alert appears and kitchen send stays disabled    |        |       |
+| Locate incomplete Mochi item        | Exact desktop/mobile row is highlighted until flavours are valid |        |       |
+| Edit sent item note                 | Note action is unavailable after kitchen send                    |        |       |
+| Item allergy without details        | Form validation blocks saving the instructions                   |        |       |
+| Add allergies to different items    | Each warning stays attached to its own item                      |        |       |
 
 ## Quantity, Cancel, Restore
 
@@ -197,6 +198,7 @@ N/A       not applicable for this run
 | Physical station separation               | Feed-and-cut executes once after each station copy                            |        |       |
 | Test print action                         | One test job prints saved font/spacing, punctuation, allergy, and cut         |        |       |
 | ESC/POS punctuation                       | Curly apostrophes and dash variants print as `'` and `-`, never `?`           |        |       |
+| Printed allergy severity                  | Intolerance, allergy, and severe-no-traces jobs render without failure        |        |       |
 | Print settings snapshot                   | Retried old job keeps its original copies, font, and spacing                  |        |       |
 | Station `none` item                       | Item is not present on the physical ticket                                    |        |       |
 | Mark job failed manually                  | Job status changes to `failed`                                                |        |       |

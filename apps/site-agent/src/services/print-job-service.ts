@@ -46,7 +46,7 @@ export function createPrintJobService(db: PosDatabaseExecutor) {
               selectedVariants: [{ labelSnapshot: 'Bœuf × 2', quantity: 2 }],
               hasAllergy: true,
               allergenCodes: ['arachides'],
-              allergySeverity: 'severe',
+              allergySeverity: 'severe_no_traces',
               allergyNote: 'test uniquement',
               station: 'kitchen',
               categoryName: 'Entrées',

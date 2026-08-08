@@ -30,7 +30,15 @@ const kitchenPrintPayloadSchema = z
           ),
           hasAllergy: z.boolean(),
           allergenCodes: z.array(z.string()),
-          allergySeverity: z.enum(['mild', 'severe']).nullable(),
+          allergySeverity: z
+            .enum([
+              'intolerance',
+              'allergy',
+              'severe_no_traces',
+              'mild',
+              'severe',
+            ])
+            .nullable(),
           allergyNote: z.string().nullable(),
           station: z.enum(['kitchen', 'bar', 'dessert', 'none']),
           categoryName: z.string().min(1).default('Autres'),
@@ -321,7 +329,7 @@ function renderProductionTicket(
       }
       if (item.hasAllergy) {
         const allergy = [
-          item.allergySeverity === 'severe' ? 'GRAVE' : 'LEGERE',
+          allergySeverityLabel(item.allergySeverity),
           ...item.allergenCodes,
           item.allergyNote,
         ].filter((value): value is string => Boolean(value));
@@ -342,6 +350,21 @@ function renderProductionTicket(
   for (let line = 0; line < payload.bottomPaddingLines; line += 1) write('');
   command(0x1d, 0x56, 0x41, 0x03);
   return Buffer.concat(chunks);
+}
+
+function allergySeverityLabel(
+  value:
+    | 'intolerance'
+    | 'allergy'
+    | 'severe_no_traces'
+    | 'mild'
+    | 'severe'
+    | null,
+): string {
+  if (value === 'severe_no_traces' || value === 'severe')
+    return 'GRAVE - SANS TRACES';
+  if (value === 'allergy') return 'ALLERGIE';
+  return 'INTOLERANCE';
 }
 
 function printSectionName(

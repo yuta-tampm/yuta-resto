@@ -26,6 +26,7 @@ import { MobileOrderDialog } from './MobileOrderDialog';
 import { OrderItemNoteDialog } from './OrderItemNoteDialog';
 import {
   hasIncompleteMochiSelection,
+  isIncompleteMochiSelection,
   kitchenSendFeedback,
 } from './kitchen-send-validation';
 import { posApi } from '../../../../lib/pos-api';
@@ -108,6 +109,9 @@ export default async function OrderItemsPage({
     !incompleteMochiSelection;
   const activeOrderItems = order.items.filter(
     (item) => item.status !== 'cancelled',
+  );
+  const requiredInstructionItemIds = new Set(
+    activeOrderItems.filter(isIncompleteMochiSelection).map((item) => item.id),
   );
 
   return (
@@ -235,6 +239,7 @@ export default async function OrderItemsPage({
                   item.unitPriceCentsSnapshot * item.quantity,
                 ),
                 isPending: item.status === 'pending',
+                requiresAttention: requiredInstructionItemIds.has(item.id),
                 statusLabel: orderItemStatusLabel(item.status),
               }))}
               subtotalLabel={formatEuros(order.subtotalCents)}
@@ -261,7 +266,10 @@ export default async function OrderItemsPage({
                   <div
                     key={item.id}
                     className={cn(
-                      'grid gap-1 py-3',
+                      'grid gap-1 rounded-lg border px-3 py-3 transition-colors',
+                      requiredInstructionItemIds.has(item.id)
+                        ? 'border-status-danger-border bg-status-danger-soft'
+                        : 'border-transparent',
                       item.status === 'cancelled' && 'opacity-60',
                     )}
                   >
@@ -334,6 +342,9 @@ export default async function OrderItemsPage({
                             initialAllergenCodes={item.allergenCodes}
                             initialAllergySeverity={item.allergySeverity}
                             initialAllergyNote={item.allergyNote}
+                            requiresAttention={requiredInstructionItemIds.has(
+                              item.id,
+                            )}
                           />
                         )}
                       </div>

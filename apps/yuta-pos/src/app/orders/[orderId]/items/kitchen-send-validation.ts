@@ -15,15 +15,20 @@ export type KitchenSendFeedback = {
 export function hasIncompleteMochiSelection(
   items: PendingOrderItemForKitchenValidation[],
 ): boolean {
-  return items.some(
-    (item) =>
-      item.status === 'pending' &&
-      item.itemNameSnapshot === MOCHI_ITEM_NAME &&
-      item.selectedVariants.reduce(
-        (total, variant) => total + variant.quantity,
-        0,
-      ) !==
-        item.quantity * 2,
+  return items.some(isIncompleteMochiSelection);
+}
+
+export function isIncompleteMochiSelection(
+  item: PendingOrderItemForKitchenValidation,
+): boolean {
+  return (
+    item.status === 'pending' &&
+    item.itemNameSnapshot === MOCHI_ITEM_NAME &&
+    item.selectedVariants.reduce(
+      (total, variant) => total + variant.quantity,
+      0,
+    ) !==
+      item.quantity * 2
   );
 }
 

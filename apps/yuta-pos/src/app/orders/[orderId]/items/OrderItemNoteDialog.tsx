@@ -74,6 +74,7 @@ type OrderItemNoteDialogProps = {
   initialAllergenCodes: string[];
   initialAllergySeverity: AllergySeverity | null;
   initialAllergyNote: string | null;
+  requiresAttention?: boolean;
   disabled?: boolean;
 };
 
@@ -90,6 +91,7 @@ export function OrderItemNoteDialog({
   initialAllergenCodes,
   initialAllergySeverity,
   initialAllergyNote,
+  requiresAttention = false,
   disabled = false,
 }: OrderItemNoteDialogProps) {
   const [note, setNote] = useState(initialNote ?? '');
@@ -187,14 +189,21 @@ export function OrderItemNoteDialog({
       }}
     >
       <DialogTrigger asChild>
-        <Button type="button" variant="ghost" size="sm" disabled={disabled}>
+        <Button
+          type="button"
+          variant={requiresAttention ? 'danger' : 'ghost'}
+          size="sm"
+          disabled={disabled}
+        >
           <MessageSquarePlus className="h-3.5 w-3.5" />
-          {initialNote ||
-          initialHasAllergy ||
-          initialQuickInstructions.length > 0 ||
-          initialVariants.length > 0
-            ? 'Modifier les instructions'
-            : 'Notes / allergie'}
+          {requiresAttention
+            ? 'Choisir les parfums'
+            : initialNote ||
+                initialHasAllergy ||
+                initialQuickInstructions.length > 0 ||
+                initialVariants.length > 0
+              ? 'Modifier les instructions'
+              : 'Notes / allergie'}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-2xl">

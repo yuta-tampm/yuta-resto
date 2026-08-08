@@ -244,7 +244,9 @@ The total must equal two pieces per ordered portion before kitchen send.
 When a pending Mochi selection is incomplete, the order screen displays a
 French recovery alert and disables `Envoyer en cuisine`. Open
 `Notes / allergie` under the Mochi, select the required flavours, and save; the
-send action becomes available without losing the order.
+send action becomes available without losing the order. The exact Mochi row is
+highlighted with a danger background and a `Choisir les parfums` action on both
+desktop and mobile order views; the highlight clears after a valid save.
 
 ### Send To Kitchen
 
