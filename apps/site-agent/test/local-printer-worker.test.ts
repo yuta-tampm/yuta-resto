@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   renderInternalKitchenTicket,
   renderInternalKitchenTickets,
+  splitPrinterTicket,
 } from '../src/services/local-printer-worker';
 
 const baseJob: PrintJob = {
@@ -284,6 +285,19 @@ describe('local TM-m30 print rendering', () => {
     expect(output.toString('ascii')).toContain('CUISINE');
     expect(output.toString('ascii')).toContain('BAR');
     expect(countSequence(output, [0x1d, 0x56, 0x00])).toBe(2);
+  });
+
+  it('separates the cut command from the printable ticket body', () => {
+    const output = renderInternalKitchenTicket(baseJob);
+    expect(output).not.toBeNull();
+    if (!output) throw new Error('Expected a physical ticket.');
+    const firstTicket = renderInternalKitchenTickets(baseJob)[0];
+    expect(firstTicket).toBeDefined();
+    if (!firstTicket) throw new Error('Expected the first ticket.');
+    const { body, cut } = splitPrinterTicket(firstTicket);
+    expect(body.length).toBeGreaterThan(0);
+    expect([...cut]).toEqual([0x1b, 0x64, 0x03, 0x1d, 0x56, 0x00]);
+    expect(Buffer.concat([body, cut])).toEqual(firstTicket);
   });
 
   it('skips a physical ticket without internal production items', () => {

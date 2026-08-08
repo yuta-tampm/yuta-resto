@@ -2,6 +2,7 @@ import type { PosDatabaseExecutor } from '@yuta/db-pos/client';
 import { printJobs, type PrintJob } from '@yuta/db-pos/schema';
 import { and, asc, eq, inArray } from 'drizzle-orm';
 import { spawn } from 'node:child_process';
+import { once } from 'node:events';
 import { z } from 'zod';
 
 const kitchenPrintPayloadSchema = z
@@ -59,6 +60,10 @@ const kitchenPrintPayloadSchema = z
 
 type PrinterWriter = (devicePath: string, data: Buffer) => Promise<void>;
 const defaultInterTicketDelayMs = 800;
+const printerBodyChunkSize = 128;
+const printerBodyChunkDelayMs = 20;
+const printerCutSettleDelayMs = 800;
+const printerCutSequence = Buffer.from([0x1b, 0x64, 0x03, 0x1d, 0x56, 0x00]);
 
 export function createLocalPrinterWorker(input: {
   db: PosDatabaseExecutor;
@@ -207,7 +212,7 @@ async function writePrinterDevice(
   await new Promise<void>((resolve, reject) => {
     const writer = spawn(
       'timeout',
-      ['--kill-after=2s', '10s', 'tee', devicePath],
+      ['--kill-after=2s', '15s', 'tee', devicePath],
       {
         stdio: ['pipe', 'ignore', 'pipe'],
       },
@@ -232,8 +237,41 @@ async function writePrinterDevice(
         ),
       );
     });
-    writer.stdin.end(data);
+    void writePacedTicket(writer.stdin, data).catch((error: unknown) => {
+      writer.stdin.destroy();
+      reject(error);
+    });
   });
+}
+
+async function writePacedTicket(
+  stream: NodeJS.WritableStream,
+  ticket: Buffer,
+): Promise<void> {
+  const { body, cut } = splitPrinterTicket(ticket);
+  for (let offset = 0; offset < body.length; offset += printerBodyChunkSize) {
+    const chunk = body.subarray(offset, offset + printerBodyChunkSize);
+    if (!stream.write(chunk)) await once(stream, 'drain');
+    await wait(printerBodyChunkDelayMs);
+  }
+  if (cut.length > 0) {
+    await wait(printerCutSettleDelayMs);
+  }
+  stream.end(cut);
+}
+
+export function splitPrinterTicket(ticket: Buffer): {
+  body: Buffer;
+  cut: Buffer;
+} {
+  const cutStart = ticket.length - printerCutSequence.length;
+  if (cutStart >= 0 && ticket.subarray(cutStart).equals(printerCutSequence)) {
+    return {
+      body: ticket.subarray(0, cutStart),
+      cut: ticket.subarray(cutStart),
+    };
+  }
+  return { body: ticket, cut: Buffer.alloc(0) };
 }
 
 function renderProductionTicket(
@@ -374,8 +412,7 @@ function renderProductionTicket(
   }
   write(separator(contentWidth), leftPadding);
   for (let line = 0; line < payload.bottomPaddingLines; line += 1) write('');
-  command(0x1b, 0x64, 0x03);
-  command(0x1d, 0x56, 0x00);
+  chunks.push(printerCutSequence);
   return Buffer.concat(chunks);
 }
 

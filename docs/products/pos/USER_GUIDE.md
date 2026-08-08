@@ -692,7 +692,7 @@ emphasis. It does not create or modify a customer order.
 ## Physical Printer Adapter
 
 When `POS_PRINTER_DEVICE` is configured, `site-agent` claims pending
-`kitchen_ticket` jobs, renders an ASCII-safe ESC/POS ticket, writes it once to
+`kitchen_ticket` jobs, renders an ASCII-safe ESC/POS ticket, writes it through
 the bound Linux RFCOMM character device, and marks the job `printed` or
 `failed`. A kitchen send creates a `CUISINE` ticket when the sent batch contains
 kitchen items, plus an independent `BAR` ticket containing the complete sent
@@ -700,8 +700,9 @@ batch. The single TM-m30 prints and fully cuts them sequentially; station
 `none` is excluded. Cuisine is grouped in the fixed order Entrées, Suppléments,
 Plats. BAR is grouped Boissons, Entrées, Suppléments, Plats, then Desserts,
 regardless of item insertion order. Every ticket and configured copy is written
-separately; the adapter feeds before the full cut and waits 800 ms before the
-next write to stabilize the Bluetooth cutter.
+separately. The adapter throttles long bodies in small chunks, waits 800 ms,
+sends the feed/full-cut trailer separately, then waits another 800 ms before
+the next ticket to stabilize the Bluetooth cutter.
 Raw payloads and the device path never reach the browser. The current Luna host
 exposes the paired TM-m30 as `/dev/rfcomm1` through a systemd binding.
 
