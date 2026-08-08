@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { getItemInstructionConfig } from '../src/item-instructions';
+import {
+  getItemInstructionConfig,
+  requiresSeparateOrderItem,
+} from '../src/item-instructions';
 
 describe('Luna item instruction configuration', () => {
   it('requires the three approved flavours for Mochi', () => {
@@ -10,6 +13,11 @@ describe('Luna item instruction configuration', () => {
       { code: 'MATCHA', label: 'Matcha' },
       { code: 'CACAO', label: 'Cacao' },
     ]);
+  });
+
+  it('keeps every Mochi portion as a separate order item', () => {
+    expect(requiresSeparateOrderItem('Mochi glacé (2 pcs)')).toBe(true);
+    expect(requiresSeparateOrderItem('Gâteau banane')).toBe(false);
   });
 
   it('supports every split spring-roll product', () => {

@@ -6,6 +6,7 @@ import type {
   ItemVariantSelection,
   SelectedItemInstruction,
 } from '@yuta/core';
+import { requiresSeparateOrderItem } from '@yuta/core';
 
 import {
   Button,
@@ -102,6 +103,7 @@ export function MobileOrderDialog({
                     orderItemId={item.id}
                     quantity={item.quantity}
                     canEdit={canEditItems && item.isPending}
+                    allowIncrease={!requiresSeparateOrderItem(item.name)}
                   />
                   <div className="min-w-0">
                     <p className="font-black">{item.name}</p>
@@ -218,11 +220,13 @@ function OrderItemQuantityControls({
   orderItemId,
   quantity,
   canEdit,
+  allowIncrease,
 }: {
   orderId: string;
   orderItemId: string;
   quantity: number;
   canEdit: boolean;
+  allowIncrease: boolean;
 }) {
   if (!canEdit) {
     return <span className="min-w-6 text-center font-black">{quantity}</span>;
@@ -252,19 +256,21 @@ function OrderItemQuantityControls({
         </IconButton>
       </form>
       <span className="min-w-5 text-center font-black">{quantity}</span>
-      <form action={updateOrderItemQuantityAction}>
-        <input type="hidden" name="orderId" value={orderId} />
-        <input type="hidden" name="orderItemId" value={orderItemId} />
-        <input type="hidden" name="quantity" value={quantity + 1} />
-        <IconButton
-          type="submit"
-          variant="outline"
-          size="sm"
-          aria-label="Ajouter un article"
-        >
-          <Plus className="h-3.5 w-3.5" />
-        </IconButton>
-      </form>
+      {allowIncrease && (
+        <form action={updateOrderItemQuantityAction}>
+          <input type="hidden" name="orderId" value={orderId} />
+          <input type="hidden" name="orderItemId" value={orderItemId} />
+          <input type="hidden" name="quantity" value={quantity + 1} />
+          <IconButton
+            type="submit"
+            variant="outline"
+            size="sm"
+            aria-label="Ajouter un article"
+          >
+            <Plus className="h-3.5 w-3.5" />
+          </IconButton>
+        </form>
+      )}
     </div>
   );
 }

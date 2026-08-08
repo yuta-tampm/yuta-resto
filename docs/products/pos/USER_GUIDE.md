@@ -210,8 +210,12 @@ recorded partial payment     all item changes are locked
 active split checks          all item changes are locked
 ```
 
-Repeated taps on the same menu item merge into its existing pending row. They
-never change the quantity of an item already sent to the kitchen. If an unpaid
+Repeated taps on the same menu item normally merge into its existing pending
+row. Mochi is the exception: every tap creates a separate quantity-one row so
+the two flavours for each plate remain distinguishable in the order and on the
+kitchen ticket. The plus control is therefore unavailable on a Mochi row; tap
+the menu product again to add another plate. Repeated taps never change the
+quantity of an item already sent to the kitchen. If an unpaid
 split is cancelled and the order returns to single-payment mode, item editing
 is available again as long as no payment has been recorded. Quantity changes
 keep the row in its original display position; order items are displayed by
@@ -239,8 +243,9 @@ kitchen ticket. Instructions can be changed only while the item is pending;
 they are locked after the item is sent to the kitchen. Never promise that
 cross-contamination is impossible without confirmation from the kitchen.
 
-For `Mochi glacé (2 pcs)`, choose quantities of `Mangue`, `Matcha`, and `Cacao`.
-The total must equal two pieces per ordered portion before kitchen send.
+For each separate `Mochi glacé (2 pcs)` row, choose quantities of `Mangue`,
+`Matcha`, and `Cacao`. The total must equal two pieces for that plate before
+kitchen send.
 When a pending Mochi selection is incomplete, the order screen displays a
 French recovery alert and disables `Envoyer en cuisine`. Open
 `Notes / allergie` under the Mochi, select the required flavours, and save; the

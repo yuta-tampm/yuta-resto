@@ -90,6 +90,8 @@ N/A       not applicable for this run
 | Select conflicting options          | New option automatically removes the incompatible option         |        |       |
 | Structured option persistence       | Code and label snapshot persist on the order item                |        |       |
 | Select Mochi flavours               | Flavor quantities equal two per ordered portion                  |        |       |
+| Add two Mochi portions              | Two quantity-one rows retain independent two-flavour selections  |        |       |
+| Increase Mochi row quantity         | No plus control is shown and the API rejects quantity above one  |        |       |
 | Send with incomplete Mochi flavours | French recovery alert appears and kitchen send stays disabled    |        |       |
 | Locate incomplete Mochi item        | Exact desktop/mobile row is highlighted until flavours are valid |        |       |
 | Edit sent item note                 | Note action is unavailable after kitchen send                    |        |       |

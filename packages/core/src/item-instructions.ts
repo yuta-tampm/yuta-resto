@@ -36,6 +36,12 @@ export type ItemInstructionConfig = {
   variantOptions: Array<{ code: string; label: string }>;
 };
 
+const separatelyPortionedItemNames = new Set(['Mochi glacé (2 pcs)']);
+
+export function requiresSeparateOrderItem(itemName: string): boolean {
+  return separatelyPortionedItemNames.has(itemName);
+}
+
 export const allergyOptions = [
   { code: 'PEANUTS', label: 'Cacahuètes' },
   { code: 'GLUTEN', label: 'Gluten' },

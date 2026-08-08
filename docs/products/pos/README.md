@@ -300,7 +300,9 @@ Keep payment totals clear
 Order cancellation is allowed only before payment. Cancelling an order marks active articles as cancelled, voids unpaid split checks, and marks the order cancelled. Paid orders or partially paid orders are not cancellable in the MVP because refund handling is out of scope.
 
 Order item quantity changes are allowed only for `pending` rows before payment
-starts. Repeated additions merge into the matching pending row; additions after
+starts. Repeated additions normally merge into the matching pending row;
+individually plated products such as `Mochi glacé (2 pcs)` always create a new
+quantity-one row so each plate keeps its own flavour selection. Additions after
 a kitchen send create a separate pending row so kitchen tickets remain
 batch-accurate. Sent or later kitchen states are immutable from the quantity
 controls. Any recorded payment or active split locks all item mutations. A
@@ -310,7 +312,7 @@ Preparation preferences use `order_items.quick_instructions` for structured
 code/label snapshots and `order_items.note` for optional free text. Product or
 category configuration determines the visible choices; conflicting codes are
 also rejected by the service. `order_items.selected_variants` stores structured
-quantity snapshots for Mochi flavours.
+quantity snapshots for Mochi flavours on each separate plate row.
 
 Allergies are stored per item with `has_allergy`, `allergen_codes`,
 `allergy_severity`, and `allergy_note`. `allergy_acknowledged_at/by` records the

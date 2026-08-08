@@ -7,6 +7,7 @@ import {
   type LocalOrderItemCommand,
   type UpdateLocalOrderItemInput,
 } from '@yuta/contracts/local-pos';
+import { requiresSeparateOrderItem } from '@yuta/core';
 import type { PosDatabaseExecutor } from '@yuta/db-pos/client';
 import {
   checks,
@@ -70,14 +71,25 @@ export function createOrderCommandService(db: PosDatabaseExecutor) {
       );
     }
 
-    const existing = await db.query.orderItems.findFirst({
-      where: and(
-        eq(orderItems.orderId, orderId),
-        eq(orderItems.menuItemId, menuItem.id),
-        eq(orderItems.status, 'pending'),
-        sql`${orderItems.note} is null`,
-      ),
-    });
+    const requiresSeparatePortion = requiresSeparateOrderItem(menuItem.name);
+    if (requiresSeparatePortion && input.quantity !== 1) {
+      throw new HttpError(
+        422,
+        'SEPARATE_PORTION_QUANTITY_REQUIRED',
+        'This menu item must be added one portion at a time.',
+      );
+    }
+
+    const existing = requiresSeparatePortion
+      ? undefined
+      : await db.query.orderItems.findFirst({
+          where: and(
+            eq(orderItems.orderId, orderId),
+            eq(orderItems.menuItemId, menuItem.id),
+            eq(orderItems.status, 'pending'),
+            sql`${orderItems.note} is null`,
+          ),
+        });
     let item: OrderItem;
     if (existing && !input.note) {
       [item] = await db
@@ -121,6 +133,17 @@ export function createOrderCommandService(db: PosDatabaseExecutor) {
     }
 
     const quantity = input.quantity ?? item.quantity;
+    if (
+      requiresSeparateOrderItem(item.itemNameSnapshot) &&
+      input.quantity !== undefined &&
+      quantity !== 1
+    ) {
+      throw new HttpError(
+        422,
+        'SEPARATE_PORTION_QUANTITY_REQUIRED',
+        'This menu item must remain a single portion.',
+      );
+    }
     const requestedAllergens = input.allergenCodes ?? item.allergenCodes;
     if (requestedAllergens.some((code) => !knownAllergenCodes.has(code))) {
       throw new HttpError(422, 'UNKNOWN_ALLERGEN', 'Unknown allergen.');
