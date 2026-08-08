@@ -72,6 +72,9 @@ export async function savePrintSettingsAction(
     kitchenCopies: formData.get('kitchenCopies'),
     counterCopies: formData.get('counterCopies'),
     fontSizePreset: formData.get('fontSizePreset'),
+    topPaddingLines: formData.get('topPaddingLines'),
+    leftPaddingChars: formData.get('leftPaddingChars'),
+    bottomPaddingLines: formData.get('bottomPaddingLines'),
   });
   if (!input.success) return validationError();
 

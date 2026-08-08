@@ -34,6 +34,9 @@ function toPrintSettings(settings: typeof printSettings.$inferSelect) {
     kitchenCopies: settings.kitchenCopies,
     counterCopies: settings.counterCopies,
     fontSizePreset: settings.fontSizePreset,
+    topPaddingLines: settings.topPaddingLines,
+    leftPaddingChars: settings.leftPaddingChars,
+    bottomPaddingLines: settings.bottomPaddingLines,
   };
 }
 

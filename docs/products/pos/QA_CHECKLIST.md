@@ -192,7 +192,10 @@ N/A       not applicable for this run
 | One-printer station routing               | TM-m30 prints and cuts Cuisine then Boissons/Desserts separately        |        |       |
 | Print copy settings                       | Each station prints the configured 1 to 3 copies                        |        |       |
 | Print font preset                         | Compact, Standard, and Large change new ticket item typography          |        |       |
-| Print settings snapshot                   | Retried old job keeps its original copies and font preset               |        |       |
+| Print spacing settings                    | Top, left, and bottom values from 0 to 8 change new ticket layout       |        |       |
+| Compact section grouping                  | Ticket uses Entrées/Suppléments, Plats, and Boissons/Desserts headings  |        |       |
+| Physical station separation               | Feed-and-cut executes once after each station copy                      |        |       |
+| Print settings snapshot                   | Retried old job keeps its original copies, font, and spacing            |        |       |
 | Station `none` item                       | Item is not present on the physical ticket                              |        |       |
 | Mark job failed manually                  | Job status changes to `failed`                                          |        |       |
 | Retry failed job                          | Job status changes back to `pending`                                    |        |       |

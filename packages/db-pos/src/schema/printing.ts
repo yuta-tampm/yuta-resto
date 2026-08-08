@@ -29,6 +29,9 @@ export const printSettings = pgTable(
     })
       .default('standard')
       .notNull(),
+    topPaddingLines: integer('top_padding_lines').default(1).notNull(),
+    leftPaddingChars: integer('left_padding_chars').default(2).notNull(),
+    bottomPaddingLines: integer('bottom_padding_lines').default(3).notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
       .defaultNow()
       .notNull()
@@ -47,6 +50,18 @@ export const printSettings = pgTable(
     check(
       'print_settings_font_size_preset_check',
       sql`${table.fontSizePreset} in ('compact', 'standard', 'large')`,
+    ),
+    check(
+      'print_settings_top_padding_lines_check',
+      sql`${table.topPaddingLines} between 0 and 8`,
+    ),
+    check(
+      'print_settings_left_padding_chars_check',
+      sql`${table.leftPaddingChars} between 0 and 8`,
+    ),
+    check(
+      'print_settings_bottom_padding_lines_check',
+      sql`${table.bottomPaddingLines} between 0 and 8`,
     ),
   ],
 );

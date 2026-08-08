@@ -77,6 +77,9 @@ describe('local TM-m30 print rendering', () => {
         ticketDestination: 'kitchen',
         copies: 1,
         fontSizePreset: 'large',
+        topPaddingLines: 2,
+        leftPaddingChars: 4,
+        bottomPaddingLines: 2,
       },
     });
     expect(output).not.toBeNull();
@@ -84,11 +87,11 @@ describe('local TM-m30 print rendering', () => {
     const text = output.toString('ascii');
 
     expect([...output.subarray(0, 2)]).toEqual([0x1b, 0x40]);
-    expect([...output.subarray(-3)]).toEqual([0x1d, 0x56, 0x00]);
+    expect([...output.subarray(-4)]).toEqual([0x1d, 0x56, 0x41, 0x03]);
     expect(text).toContain('CUISINE');
-    expect(text).toContain('NOS ENTREES');
-    expect(text).toContain('2 x Pho special');
-    expect(text).toContain('!!! ALLERGIE: GRAVE, arachides');
+    expect(text).toContain('ENTREES / SUPPLEMENTS');
+    expect(text).toContain('  2 x Pho special');
+    expect(text).toContain('    !!! ALLERGIE: GRAVE, arachides');
     expect(text).not.toContain('BOISSONS');
     expect(text).not.toContain('Mochi glace');
     expect(text).not.toContain('Sac papier');
@@ -108,9 +111,10 @@ describe('local TM-m30 print rendering', () => {
     expect(output).not.toBeNull();
     if (!output) throw new Error('Expected counter tickets.');
     const text = output.toString('ascii');
-    expect(text.match(/BOISSONS/g)).toHaveLength(2);
+    expect(text.match(/BOISSONS/g)).toHaveLength(4);
+    expect(text.match(/BOISSONS \/ DESSERTS/g)).toHaveLength(2);
     expect(text.match(/Mochi glace/g)).toHaveLength(2);
-    expect(countSequence(output, [0x1d, 0x56, 0x00])).toBe(2);
+    expect(countSequence(output, [0x1d, 0x56, 0x41, 0x03])).toBe(2);
     expect(text).not.toContain('Pho special');
   });
 
@@ -118,7 +122,7 @@ describe('local TM-m30 print rendering', () => {
     const output = renderInternalKitchenTicket(baseJob);
     expect(output).not.toBeNull();
     if (!output) throw new Error('Expected legacy tickets.');
-    expect(countSequence(output, [0x1d, 0x56, 0x00])).toBe(2);
+    expect(countSequence(output, [0x1d, 0x56, 0x41, 0x03])).toBe(2);
   });
 
   it('skips a physical ticket without internal production items', () => {

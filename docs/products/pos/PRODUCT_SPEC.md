@@ -752,8 +752,11 @@ Physical printer integration remains behind `apps/site-agent`. Each send batch
 creates separate `CUISINE` and `BOISSONS & DESSERTS` jobs for the stations that
 have items; station `none` is excluded. The one TM-m30 prints and cuts the jobs
 sequentially. Local managers configure 1 to 3 copies per destination and a
-compact, standard, or large font preset. Jobs snapshot those presentation
-settings. Payment never creates a customer receipt job, and the POS browser
+compact, standard, or large font preset, plus top, left, and bottom ticket
+spacing. Jobs snapshot those presentation settings. The printed sections are
+collapsed into Entrées/Suppléments, Plats, and Boissons/Desserts, with one
+feed-and-cut at the end of each station ticket. Payment never creates a
+customer receipt job, and the POS browser
 receives no device path or access.
 
 ## 15. Implementation Order

@@ -349,6 +349,9 @@ describe('site-agent HTTP boundary', () => {
       kitchenCopies: 1,
       counterCopies: 1,
       fontSizePreset: 'standard',
+      topPaddingLines: 1,
+      leftPaddingChars: 2,
+      bottomPaddingLines: 3,
     });
 
     const updated = await fetch(`${baseUrl}/api/v1/print-settings`, {
@@ -361,6 +364,9 @@ describe('site-agent HTTP boundary', () => {
         kitchenCopies: 2,
         counterCopies: 1,
         fontSizePreset: 'large',
+        topPaddingLines: 2,
+        leftPaddingChars: 4,
+        bottomPaddingLines: 5,
       }),
     });
     expect(updated.status).toBe(200);
@@ -368,6 +374,9 @@ describe('site-agent HTTP boundary', () => {
       kitchenCopies: 2,
       counterCopies: 1,
       fontSizePreset: 'large',
+      topPaddingLines: 2,
+      leftPaddingChars: 4,
+      bottomPaddingLines: 5,
     });
 
     const invalid = await fetch(`${baseUrl}/api/v1/print-settings`, {
@@ -380,6 +389,9 @@ describe('site-agent HTTP boundary', () => {
         kitchenCopies: 4,
         counterCopies: 1,
         fontSizePreset: 'standard',
+        topPaddingLines: 1,
+        leftPaddingChars: 2,
+        bottomPaddingLines: 3,
       }),
     });
     expect(invalid.status).toBe(400);
@@ -613,6 +625,9 @@ function createMockService(): SiteAgentService {
       kitchenCopies: 1,
       counterCopies: 1,
       fontSizePreset: 'standard',
+      topPaddingLines: 1,
+      leftPaddingChars: 2,
+      bottomPaddingLines: 3,
     }),
     updatePrintSettings: async (input) => input,
   };

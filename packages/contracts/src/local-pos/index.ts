@@ -812,6 +812,9 @@ export const localPrintSettingsSchema = z
     kitchenCopies: z.number().int().min(1).max(3),
     counterCopies: z.number().int().min(1).max(3),
     fontSizePreset: printFontSizePresetSchema,
+    topPaddingLines: z.number().int().min(0).max(8),
+    leftPaddingChars: z.number().int().min(0).max(8),
+    bottomPaddingLines: z.number().int().min(0).max(8),
   })
   .strict();
 export const updateLocalPrintSettingsInputSchema = z
@@ -819,6 +822,9 @@ export const updateLocalPrintSettingsInputSchema = z
     kitchenCopies: z.coerce.number().int().min(1).max(3),
     counterCopies: z.coerce.number().int().min(1).max(3),
     fontSizePreset: printFontSizePresetSchema,
+    topPaddingLines: z.coerce.number().int().min(0).max(8),
+    leftPaddingChars: z.coerce.number().int().min(0).max(8),
+    bottomPaddingLines: z.coerce.number().int().min(0).max(8),
   })
   .strict();
 

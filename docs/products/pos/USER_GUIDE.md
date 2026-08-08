@@ -665,11 +665,14 @@ The top of the same page contains the persisted ticket settings:
 Cuisine copies: 1 to 3
 Boissons & Desserts copies: 1 to 3
 Text size: Compact, Standard, or Large
+Top spacing: 0 to 8 lines
+Left spacing: 0 to 8 characters
+Bottom spacing: 0 to 8 lines
 ```
 
-Settings apply to newly created jobs. Each job keeps its copy count and font
-preset snapshot, so retrying an older failed job does not silently change its
-layout. Paper width remains fixed at 80 mm. The physical device path is trusted
+Settings apply to newly created jobs. Each job keeps its copy count, font
+preset, and spacing snapshot, so retrying an older failed job does not silently
+change its layout. Paper width remains fixed at 80 mm. The physical device path is trusted
 site-agent configuration and cannot be edited in the browser.
 
 ## Physical Printer Adapter
@@ -680,6 +683,9 @@ the bound Linux RFCOMM character device, and marks the job `printed` or
 `failed`. A kitchen send creates an independent `CUISINE` ticket and an
 independent `BOISSONS & DESSERTS` ticket when each destination has items. The
 single TM-m30 prints and cuts them sequentially; station `none` is excluded.
+The cutter runs after each station ticket. Printed items are grouped into
+Entrées/Suppléments, Plats, and Boissons/Desserts instead of every menu
+category receiving its own heading.
 Raw payloads and the device path never reach the browser. The current Luna host
 exposes the paired TM-m30 as `/dev/rfcomm1` through a systemd binding.
 

@@ -70,17 +70,26 @@ describe('@yuta/contracts', () => {
         kitchenCopies: '2',
         counterCopies: '1',
         fontSizePreset: 'large',
+        topPaddingLines: '1',
+        leftPaddingChars: '3',
+        bottomPaddingLines: '4',
       }),
     ).toEqual({
       kitchenCopies: 2,
       counterCopies: 1,
       fontSizePreset: 'large',
+      topPaddingLines: 1,
+      leftPaddingChars: 3,
+      bottomPaddingLines: 4,
     });
     expect(
       localPrintSettingsSchema.safeParse({
         kitchenCopies: 4,
         counterCopies: 1,
         fontSizePreset: 'standard',
+        topPaddingLines: 1,
+        leftPaddingChars: 2,
+        bottomPaddingLines: 3,
       }).success,
     ).toBe(false);
   });

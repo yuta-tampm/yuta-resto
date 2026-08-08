@@ -572,7 +572,7 @@ async function sendToKitchen(
           plan.items,
           plan.destination,
           plan.copies,
-          settings.fontSizePreset,
+          settings,
           categoryByMenuItemId,
         ),
         idempotencyKey: index === 0 ? command.idempotencyKey : null,
@@ -892,7 +892,7 @@ function buildKitchenPayload(
   items: OrderItem[],
   ticketDestination: 'kitchen' | 'counter',
   copies: number,
-  fontSizePreset: PrintSettings['fontSizePreset'],
+  settings: PrintSettings,
   categoryByMenuItemId: Map<string, string>,
 ) {
   return {
@@ -907,7 +907,10 @@ function buildKitchenPayload(
     createdAt: new Date().toISOString(),
     ticketDestination,
     copies,
-    fontSizePreset,
+    fontSizePreset: settings.fontSizePreset,
+    topPaddingLines: settings.topPaddingLines,
+    leftPaddingChars: settings.leftPaddingChars,
+    bottomPaddingLines: settings.bottomPaddingLines,
     items: items.map((item) => ({
       orderItemId: item.id,
       name: item.itemNameSnapshot,

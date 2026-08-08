@@ -390,7 +390,10 @@ EPSON TM-m30 Bluetooth RFCOMM character device, configured with
 creates a Cuisine job for `kitchen` items and a Boissons & Desserts job for
 `bar`/`dessert` items when those stations are present. The single TM-m30 prints
 and cuts those tickets sequentially. Jobs snapshot their configured copy count
-and font preset so retries remain stable after settings change. Items with
+font preset, and ticket spacing so retries remain stable after settings change.
+The renderer groups output into `ENTREES / SUPPLEMENTS`, `PLATS`, and
+`BOISSONS / DESSERTS`; each station ticket ends with an Epson feed-and-cut
+command so Cuisine and counter receive separate paper tickets. Items with
 station `none` do not print. Payment capture does not create a customer receipt
 job.
 
@@ -455,5 +458,6 @@ safe print-job summaries and applies the persisted state machine:
 commands require a local admin or manager session. Raw payloads remain inside
 `site-agent`; the browser receives only order/table/item-count summaries.
 The same screen manages Cuisine and Boissons/Desserts copy counts and the
-compact, standard, or large ESC/POS font preset. Physical device paths and
-printer routing remain outside browser control.
+compact, standard, or large ESC/POS font preset. It also manages zero-to-eight
+line top/bottom spacing and zero-to-eight character left spacing. Physical
+device paths and printer routing remain outside browser control.

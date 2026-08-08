@@ -391,6 +391,9 @@ describe('yuta-pos site-agent client', () => {
       kitchenCopies: 1,
       counterCopies: 1,
       fontSizePreset: 'standard' as const,
+      topPaddingLines: 1,
+      leftPaddingChars: 2,
+      bottomPaddingLines: 3,
     };
     const updated = { ...settings, kitchenCopies: 2 };
     const fetchImplementation = vi

@@ -50,6 +50,7 @@ import {
 } from './actions';
 
 const initialState: PrintingActionState = { error: null, success: null };
+const paddingOptions = Array.from({ length: 9 }, (_, value) => String(value));
 
 export function PrintingManagement({
   jobs,
@@ -116,6 +117,15 @@ function PrintSettingsCard({ settings }: { settings: LocalPrintSettings }) {
   const [fontSizePreset, setFontSizePreset] = useState<PrintFontSizePreset>(
     settings.fontSizePreset,
   );
+  const [topPaddingLines, setTopPaddingLines] = useState(
+    String(settings.topPaddingLines),
+  );
+  const [leftPaddingChars, setLeftPaddingChars] = useState(
+    String(settings.leftPaddingChars),
+  );
+  const [bottomPaddingLines, setBottomPaddingLines] = useState(
+    String(settings.bottomPaddingLines),
+  );
   const [state, action, pending] = useActionState(
     savePrintSettingsAction,
     initialState,
@@ -138,6 +148,13 @@ function PrintSettingsCard({ settings }: { settings: LocalPrintSettings }) {
         <input type="hidden" name="kitchenCopies" value={kitchenCopies} />
         <input type="hidden" name="counterCopies" value={counterCopies} />
         <input type="hidden" name="fontSizePreset" value={fontSizePreset} />
+        <input type="hidden" name="topPaddingLines" value={topPaddingLines} />
+        <input type="hidden" name="leftPaddingChars" value={leftPaddingChars} />
+        <input
+          type="hidden"
+          name="bottomPaddingLines"
+          value={bottomPaddingLines}
+        />
 
         <div className="grid gap-4 md:grid-cols-3">
           <FormField label="Copies Cuisine">
@@ -183,16 +200,40 @@ function PrintSettingsCard({ settings }: { settings: LocalPrintSettings }) {
           </FormField>
         </div>
 
+        <div className="grid gap-4 md:grid-cols-3">
+          <PaddingSelect
+            label="Marge haute (lignes)"
+            value={topPaddingLines}
+            onValueChange={setTopPaddingLines}
+          />
+          <PaddingSelect
+            label="Marge gauche (caractères)"
+            value={leftPaddingChars}
+            onValueChange={setLeftPaddingChars}
+          />
+          <PaddingSelect
+            label="Marge basse (lignes)"
+            value={bottomPaddingLines}
+            onValueChange={setBottomPaddingLines}
+          />
+        </div>
+
         <div className="grid gap-3 sm:grid-cols-2">
           <TicketPreview
             title="CUISINE"
             subtitle={`${kitchenCopies} copie${kitchenCopies === '1' ? '' : 's'}`}
             preset={fontSizePreset}
+            topPaddingLines={Number(topPaddingLines)}
+            leftPaddingChars={Number(leftPaddingChars)}
+            bottomPaddingLines={Number(bottomPaddingLines)}
           />
           <TicketPreview
             title="BOISSONS & DESSERTS"
             subtitle={`${counterCopies} copie${counterCopies === '1' ? '' : 's'}`}
             preset={fontSizePreset}
+            topPaddingLines={Number(topPaddingLines)}
+            leftPaddingChars={Number(leftPaddingChars)}
+            bottomPaddingLines={Number(bottomPaddingLines)}
           />
         </div>
 
@@ -218,14 +259,47 @@ function PrintSettingsCard({ settings }: { settings: LocalPrintSettings }) {
   );
 }
 
+function PaddingSelect({
+  label,
+  value,
+  onValueChange,
+}: {
+  label: string;
+  value: string;
+  onValueChange: (value: string) => void;
+}) {
+  return (
+    <FormField label={label}>
+      <Select value={value} onValueChange={onValueChange}>
+        <SelectTrigger>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {paddingOptions.map((option) => (
+            <SelectItem key={option} value={option}>
+              {option}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </FormField>
+  );
+}
+
 function TicketPreview({
   title,
   subtitle,
   preset,
+  topPaddingLines,
+  leftPaddingChars,
+  bottomPaddingLines,
 }: {
   title: string;
   subtitle: string;
   preset: PrintFontSizePreset;
+  topPaddingLines: number;
+  leftPaddingChars: number;
+  bottomPaddingLines: number;
 }) {
   const itemClass =
     preset === 'large'
@@ -234,7 +308,14 @@ function TicketPreview({
         ? 'text-sm font-semibold'
         : 'text-base font-bold';
   return (
-    <div className="rounded-lg border border-border bg-surface p-4">
+    <div
+      className="rounded-lg border border-border bg-surface p-4"
+      style={{
+        paddingTop: `${16 + topPaddingLines * 4}px`,
+        paddingLeft: `${16 + leftPaddingChars * 3}px`,
+        paddingBottom: `${16 + bottomPaddingLines * 4}px`,
+      }}
+    >
       <p className="text-center text-xl font-black">{title}</p>
       <Separator className="my-3" />
       <p className="text-xs font-semibold uppercase text-secondary">

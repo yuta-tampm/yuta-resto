@@ -42,6 +42,9 @@ const kitchenPrintPayloadSchema = z
     fontSizePreset: z
       .enum(['compact', 'standard', 'large'])
       .default('standard'),
+    topPaddingLines: z.number().int().min(0).max(8).default(1),
+    leftPaddingChars: z.number().int().min(0).max(8).default(2),
+    bottomPaddingLines: z.number().int().min(0).max(8).default(3),
   })
   .passthrough();
 
@@ -211,18 +214,30 @@ function renderProductionTicket(
   items: z.infer<typeof kitchenPrintPayloadSchema>['items'],
 ): Buffer {
   const chunks: Buffer[] = [];
-  const write = (value: string) => {
-    chunks.push(Buffer.from(ascii(`${value}\r\n`), 'ascii'));
+  const write = (value: string, indentation = 0) => {
+    chunks.push(
+      Buffer.from(ascii(`${' '.repeat(indentation)}${value}\r\n`), 'ascii'),
+    );
   };
   const command = (...bytes: number[]) => chunks.push(Buffer.from(bytes));
   const setAlign = (value: 0 | 1) => command(0x1b, 0x61, value);
   const setBold = (enabled: boolean) => command(0x1b, 0x45, enabled ? 1 : 0);
   const setReverse = (enabled: boolean) => command(0x1d, 0x42, enabled ? 1 : 0);
   const setSize = (value: number) => command(0x1d, 0x21, value);
+  const leftPadding = payload.leftPaddingChars;
+  const contentWidth = 42 - leftPadding;
   const itemSize = payload.fontSizePreset === 'large' ? 0x11 : 0x00;
-  const itemWidth = payload.fontSizePreset === 'large' ? 21 : 42;
+  const itemIndent =
+    payload.fontSizePreset === 'large'
+      ? Math.floor(leftPadding / 2)
+      : leftPadding;
+  const itemWidth =
+    payload.fontSizePreset === 'large'
+      ? Math.floor(contentWidth / 2)
+      : contentWidth;
 
   command(0x1b, 0x40);
+  for (let line = 0; line < payload.topPaddingLines; line += 1) write('');
   setAlign(1);
   setBold(true);
   setSize(0x11);
@@ -238,29 +253,33 @@ function renderProductionTicket(
 
   setAlign(0);
   setBold(true);
-  if (payload.tableLabel) write(`TABLE       ${payload.tableLabel}`);
-  write(orderType(payload.orderType));
-  write(formatDateTime(payload.createdAt));
-  write(`${items.reduce((sum, item) => sum + item.quantity, 0)} ARTICLES`);
-  if (payload.orderNote) write(`NOTE: ${payload.orderNote}`);
+  if (payload.tableLabel)
+    write(`TABLE       ${payload.tableLabel}`, leftPadding);
+  write(orderType(payload.orderType), leftPadding);
+  write(formatDateTime(payload.createdAt), leftPadding);
+  write(
+    `${items.reduce((sum, item) => sum + item.quantity, 0)} ARTICLES`,
+    leftPadding,
+  );
+  if (payload.orderNote) write(`NOTE: ${payload.orderNote}`, leftPadding);
   setBold(false);
-  write(separator());
+  write(separator(contentWidth), leftPadding);
 
   const groupedItems = new Map<string, typeof items>();
   for (const item of items) {
-    const group = groupedItems.get(item.categoryName) ?? [];
+    const sectionName = printSectionName(item.categoryName, destination);
+    const group = groupedItems.get(sectionName) ?? [];
     group.push(item);
-    groupedItems.set(item.categoryName, group);
+    groupedItems.set(sectionName, group);
   }
-  for (const [categoryName, categoryItems] of groupedItems) {
-    setAlign(1);
+  for (const [sectionName, categoryItems] of groupedItems) {
+    setAlign(0);
     setBold(true);
     setReverse(true);
-    write(centerText(categoryName.toUpperCase(), 42));
+    write(centerText(sectionName, contentWidth), leftPadding);
     setReverse(false);
     setBold(false);
-    write(separator());
-    setAlign(0);
+    write(separator(contentWidth), leftPadding);
     for (const item of categoryItems) {
       setSize(itemSize);
       setBold(payload.fontSizePreset !== 'compact');
@@ -268,19 +287,28 @@ function renderProductionTicket(
         `${item.quantity > 1 ? `${item.quantity} x ` : ''}${item.name}`,
         itemWidth,
       )) {
-        write(line);
+        write(line, itemIndent);
       }
       setSize(0x00);
       setBold(false);
+      const detailIndent = Math.min(10, leftPadding + 4);
+      const detailWidth = 42 - detailIndent;
       for (const instruction of item.quickInstructions) {
-        write(`  > ${instruction.labelSnapshot}`);
+        for (const line of wrapText(
+          `> ${instruction.labelSnapshot}`,
+          detailWidth,
+        ))
+          write(line, detailIndent);
       }
       for (const variant of item.selectedVariants) {
-        write(
-          `  > ${variant.labelSnapshot}${variant.quantity > 1 ? ` x${variant.quantity}` : ''}`,
-        );
+        const text = `> ${variant.labelSnapshot}${variant.quantity > 1 ? ` x${variant.quantity}` : ''}`;
+        for (const line of wrapText(text, detailWidth))
+          write(line, detailIndent);
       }
-      if (item.note) write(`  > NOTE: ${item.note}`);
+      if (item.note) {
+        for (const line of wrapText(`> NOTE: ${item.note}`, detailWidth))
+          write(line, detailIndent);
+      }
       if (item.hasAllergy) {
         const allergy = [
           item.allergySeverity === 'severe' ? 'GRAVE' : 'LEGERE',
@@ -289,19 +317,33 @@ function renderProductionTicket(
         ].filter((value): value is string => Boolean(value));
         setBold(true);
         setReverse(true);
-        write(`!!! ALLERGIE: ${allergy.join(', ')}`);
+        for (const line of wrapText(
+          `!!! ALLERGIE: ${allergy.join(', ')}`,
+          contentWidth,
+        ))
+          write(line, leftPadding);
         setReverse(false);
         setBold(false);
       }
       write('');
     }
   }
-  write(separator());
-  write('');
-  write('');
-  write('');
-  command(0x1d, 0x56, 0x00);
+  write(separator(contentWidth), leftPadding);
+  for (let line = 0; line < payload.bottomPaddingLines; line += 1) write('');
+  command(0x1d, 0x56, 0x41, 0x03);
   return Buffer.concat(chunks);
+}
+
+function printSectionName(
+  categoryName: string,
+  destination: 'kitchen' | 'counter',
+): string {
+  if (destination === 'counter') return 'BOISSONS / DESSERTS';
+  const normalizedCategory = ascii(categoryName).toLowerCase();
+  return normalizedCategory.includes('entree') ||
+    normalizedCategory.includes('supplement')
+    ? 'ENTREES / SUPPLEMENTS'
+    : 'PLATS';
 }
 
 function orderType(value: 'dine_in' | 'takeaway' | 'delivery'): string {
@@ -325,8 +367,8 @@ function formatDateTime(value: string): string {
   return `${time} - ${day}`;
 }
 
-function separator(): string {
-  return '-'.repeat(42);
+function separator(width = 42): string {
+  return '-'.repeat(width);
 }
 
 function centerText(value: string, width: number): string {
