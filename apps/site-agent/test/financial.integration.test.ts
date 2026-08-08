@@ -253,6 +253,14 @@ integrationTest('site-agent financial transaction integration', () => {
       .from(printJobs)
       .where(eq(printJobs.id, kitchenJob.id));
     expect(printedJob?.status).toBe('printed');
+    const requeuedJob = await service.executePrintJobCommand(kitchenJob.id, {
+      action: 'reprint',
+    });
+    expect(requeuedJob.status).toBe('pending');
+    expect(requeuedJob.printedAt).toBeNull();
+    expect(await worker.processNext()).toBe(true);
+    expect(output).toHaveLength(3);
+    expect(output[2]?.toString('ascii')).toContain('CUISINE');
     const singleSummary = await service.getPaymentSummary(orderId);
     expect(singleSummary.order.totalCents).toBe(1400);
     const discountedDetail = await service.getOrderDetail(orderId);

@@ -295,7 +295,7 @@ function renderProductionTicket(
     destination === 'kitchen'
       ? ['ENTREES', 'SUPPLEMENTS', 'PLATS']
       : payload.includeAllItems
-        ? ['ENTREES', 'SUPPLEMENTS', 'PLATS', 'BOISSONS', 'DESSERTS']
+        ? ['BOISSONS', 'ENTREES', 'SUPPLEMENTS', 'PLATS', 'DESSERTS']
         : ['BOISSONS', 'DESSERTS'];
   for (const sectionName of sectionOrder) {
     const categoryItems = groupedItems.get(sectionName);

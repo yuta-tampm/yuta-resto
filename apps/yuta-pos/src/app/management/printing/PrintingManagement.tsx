@@ -412,9 +412,18 @@ function PrintJobRow({ job }: { job: LocalPrintJob }) {
 function JobActions({ job }: { job: LocalPrintJob }) {
   if (job.status === 'printed') {
     return (
-      <div className="flex items-center gap-2 text-sm font-semibold text-status-success">
-        <CheckCircle2 className="h-4 w-4" />
-        Terminé
+      <div className="flex flex-wrap items-center justify-start gap-2 xl:justify-end">
+        <div className="flex items-center gap-2 text-sm font-semibold text-status-success">
+          <CheckCircle2 className="h-4 w-4" />
+          Terminé
+        </div>
+        <CommandButton
+          jobId={job.id}
+          command={{ action: 'reprint' }}
+          label="Réimprimer"
+          icon={<RefreshCw className="h-4 w-4" />}
+          variant="secondary"
+        />
       </div>
     );
   }

@@ -148,6 +148,13 @@ export function createPrintJobService(db: PosDatabaseExecutor) {
         'Only failed jobs can be retried.',
       );
     }
+    if (command.action === 'reprint' && job.status !== 'printed') {
+      throw new HttpError(
+        409,
+        'INVALID_PRINT_STATUS',
+        'Only printed jobs can be reprinted.',
+      );
+    }
 
     const values =
       command.action === 'mark_printing'

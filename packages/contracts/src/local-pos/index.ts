@@ -803,6 +803,7 @@ export const printJobCommandSchema = z.discriminatedUnion('action', [
     })
     .strict(),
   z.object({ action: z.literal('retry') }).strict(),
+  z.object({ action: z.literal('reprint') }).strict(),
 ]);
 export const printFontSizePresetSchema = z.enum([
   'compact',

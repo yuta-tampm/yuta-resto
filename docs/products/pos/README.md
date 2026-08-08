@@ -393,11 +393,13 @@ and fully cuts those tickets sequentially. Jobs snapshot their configured copy
 count, font preset, and ticket spacing so retries remain stable after settings
 change.
 The renderer groups Cuisine output into `ENTREES`, `SUPPLEMENTS`, then `PLATS`,
-and BAR output into `ENTREES`, `SUPPLEMENTS`, `PLATS`, `BOISSONS`, then
+and BAR output into `BOISSONS`, `ENTREES`, `SUPPLEMENTS`, `PLATS`, then
 `DESSERTS`. Each station ticket ends with the Epson full-cut command so Cuisine
 and BAR receive separate paper tickets. Items with station `none` do not print.
 The manual print test renders both a Cuisine ticket and a full BAR ticket, with
 a cut after each. Payment capture does not create a customer receipt job.
+Printed jobs can be explicitly requeued from local print management; the
+original payload snapshot is reused so the reprint matches the first ticket.
 
 `@yuta/core` is now database-independent. Its legacy repositories,
 transactions, print worker, environment loading, and filesystem code have been

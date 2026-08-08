@@ -108,6 +108,7 @@ function successMessage(action: PrintJobCommand['action']): string {
   if (action === 'mark_printing') return 'Impression démarrée.';
   if (action === 'mark_printed') return 'Ticket marqué comme imprimé.';
   if (action === 'retry') return 'Ticket remis en attente.';
+  if (action === 'reprint') return 'Ticket remis en attente pour réimpression.';
   return 'État d’impression mis à jour.';
 }
 

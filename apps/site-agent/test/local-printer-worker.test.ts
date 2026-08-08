@@ -150,6 +150,35 @@ describe('local TM-m30 print rendering', () => {
         ticketDestination: 'counter',
         includeAllItems: true,
         copies: 1,
+        items: [
+          ...(baseJob.payload.items as Record<string, unknown>[]),
+          {
+            name: 'Supplement test',
+            quantity: 1,
+            note: null,
+            quickInstructions: [],
+            selectedVariants: [],
+            hasAllergy: false,
+            allergenCodes: [],
+            allergySeverity: null,
+            allergyNote: null,
+            station: 'kitchen',
+            categoryName: 'Supplements',
+          },
+          {
+            name: 'Plat test',
+            quantity: 1,
+            note: null,
+            quickInstructions: [],
+            selectedVariants: [],
+            hasAllergy: false,
+            allergenCodes: [],
+            allergySeverity: null,
+            allergyNote: null,
+            station: 'kitchen',
+            categoryName: 'Plats',
+          },
+        ],
       },
     });
     expect(output).not.toBeNull();
@@ -157,11 +186,16 @@ describe('local TM-m30 print rendering', () => {
     const text = output.toString('ascii');
     expect(text).toContain('BAR');
     expect(text).toContain('ENTREES');
+    expect(text).toContain('SUPPLEMENTS');
     expect(text).toContain('Pho special');
     expect(text).toContain('BOISSONS');
     expect(text).toContain('Coca-Cola');
     expect(text).toContain('DESSERTS');
     expect(text).toContain('Mochi glace');
+    expect(text.indexOf('BOISSONS')).toBeLessThan(text.indexOf('ENTREES'));
+    expect(text.indexOf('ENTREES')).toBeLessThan(text.indexOf('SUPPLEMENTS'));
+    expect(text.indexOf('SUPPLEMENTS')).toBeLessThan(text.indexOf('PLATS'));
+    expect(text.indexOf('PLATS')).toBeLessThan(text.indexOf('DESSERTS'));
     expect(countSequence(output, [0x1d, 0x56, 0x00])).toBe(1);
   });
 

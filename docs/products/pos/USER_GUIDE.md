@@ -654,9 +654,11 @@ Démarrer     pending -> printing
 Imprimé      printing -> printed
 Échec        pending/printing -> failed
 Réessayer    failed -> pending
+Réimprimer   printed -> pending
 ```
 
-The failure reason remains visible until the job is retried. The screen also
+The failure reason remains visible until the job is retried. A completed row
+offers `Réimprimer`, which requeues the same saved ticket snapshot. The screen also
 shows the printer-name snapshot, source, linked order, creation time, and a
 safe summary of the ticket payload. Raw print payloads are not exposed to the
 browser.
@@ -692,7 +694,7 @@ the bound Linux RFCOMM character device, and marks the job `printed` or
 kitchen items, plus an independent `BAR` ticket containing the complete sent
 batch. The single TM-m30 prints and fully cuts them sequentially; station
 `none` is excluded. Cuisine is grouped in the fixed order Entrées, Suppléments,
-Plats. BAR is grouped Entrées, Suppléments, Plats, Boissons, then Desserts,
+Plats. BAR is grouped Boissons, Entrées, Suppléments, Plats, then Desserts,
 regardless of item insertion order.
 Raw payloads and the device path never reach the browser. The current Luna host
 exposes the paired TM-m30 as `/dev/rfcomm1` through a systemd binding.

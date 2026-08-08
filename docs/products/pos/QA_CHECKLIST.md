@@ -194,7 +194,7 @@ N/A       not applicable for this run
 | Print copy settings                       | Each station prints the configured 1 to 3 copies                            |        |       |
 | Print font preset                         | Compact, Standard, and Large change new ticket item typography              |        |       |
 | Print spacing settings                    | Top, left, and bottom values from 0 to 8 change new ticket layout           |        |       |
-| Compact section grouping                  | Cuisine groups Entrées, Suppléments, Plats; BAR adds Boissons then Desserts |        |       |
+| Compact section grouping                  | Cuisine: Entrées, Suppléments, Plats; BAR: Boissons first, Desserts last    |        |       |
 | Full BAR batch                            | BAR ticket contains every production item in the sent batch                 |        |       |
 | Physical station separation               | Full cut executes once after each Cuisine or BAR copy                       |        |       |
 | Test print action                         | One test job prints and cuts separate Cuisine and full BAR samples          |        |       |
@@ -204,6 +204,7 @@ N/A       not applicable for this run
 | Station `none` item                       | Item is not present on the physical ticket                                  |        |       |
 | Mark job failed manually                  | Job status changes to `failed`                                              |        |       |
 | Retry failed job                          | Job status changes back to `pending`                                        |        |       |
+| Reprint completed job                     | `Réimprimer` changes a printed job back to `pending` with the same snapshot |        |       |
 | Kitchen send is atomic                    | Forced print insert failure leaves the item pending and creates no job      |        |       |
 | Final payment is atomic                   | Payment and paid order/check state commit without a receipt job             |        |       |
 | Kitchen retry is idempotent               | Replaying one command UUID creates one kitchen ticket job                   |        |       |
