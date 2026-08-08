@@ -403,6 +403,10 @@ The manual print test renders both a Cuisine ticket and a full BAR ticket, with
 a cut after each. Payment capture does not create a customer receipt job.
 Printed jobs can be explicitly requeued from local print management; the
 original payload snapshot is reused so the reprint matches the first ticket.
+While local print management is visible, it refreshes its server data every two
+seconds and immediately on tab visibility/focus changes. Printer-worker status
+updates therefore appear without a full browser reload, while hidden tabs do
+not poll.
 
 `@yuta/core` is now database-independent. Its legacy repositories,
 transactions, print worker, environment loading, and filesystem code have been

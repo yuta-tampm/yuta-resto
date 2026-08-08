@@ -663,6 +663,10 @@ shows the printer-name snapshot, source, linked order, creation time, and a
 safe summary of the ticket payload. Raw print payloads are not exposed to the
 browser.
 
+The queue refreshes automatically every two seconds while the page is visible,
+and refreshes immediately when returning to its tab. Operators do not need to
+reload the whole page to see pending, printing, printed, or failed transitions.
+
 The top of the same page contains the persisted ticket settings:
 
 ```txt

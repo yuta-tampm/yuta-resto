@@ -190,6 +190,8 @@ N/A       not applicable for this run
 | Second kitchen send prints only new items | Later kitchen ticket excludes items printed by the earlier send             |        |       |
 | Payment creates print job                 | Payment succeeds and creates no print job                                   |        |       |
 | Printer adapter processes pending jobs    | Job status changes to `printed`                                             |        |       |
+| Visible queue auto-refresh                | Pending/printing/printed changes appear within two seconds without F5       |        |       |
+| Hidden queue polling                      | Hidden tab stops polling and refreshes immediately when visible again       |        |       |
 | One-printer station routing               | TM-m30 prints and fully cuts Cuisine then BAR separately                    |        |       |
 | Print copy settings                       | Each station prints the configured 1 to 3 copies                            |        |       |
 | Print font preset                         | Compact, Standard, and Large change new ticket item typography              |        |       |

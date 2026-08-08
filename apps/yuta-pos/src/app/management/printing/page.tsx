@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { siteAgentClient } from '../../../lib/site-agent-client';
 import { requireLocalManagementCredentials } from '../../../server/local-management-session';
 import { PrintingManagement } from './PrintingManagement';
+import { PrintingAutoRefresh } from './PrintingAutoRefresh';
 
 export default async function LocalPrintingManagementPage() {
   const { token } = await requireLocalManagementCredentials();
@@ -39,7 +40,7 @@ export default async function LocalPrintingManagementPage() {
         <PageHeader
           eyebrow="Gestion locale"
           title="File d’impression"
-          description="Suivez les tickets internes cuisine, boissons et desserts stockés dans la base POS locale."
+          description="Suivez les tickets internes Cuisine et BAR stockés dans la base POS locale."
           media={
             <IconTile tone="neutral">
               <Printer className="h-5 w-5" />
@@ -54,6 +55,7 @@ export default async function LocalPrintingManagementPage() {
             </Button>
           }
         />
+        <PrintingAutoRefresh />
         <PrintingManagement jobs={jobs} settings={settings} />
       </div>
     </main>
