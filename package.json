@@ -55,6 +55,7 @@
     "test:pos:offline": "node ./scripts/test-pos-offline.mjs",
     "test:pos": "pnpm --filter @yuta/pos test",
     "test:site-agent": "pnpm --filter @yuta/site-agent test",
+    "test:ui-pack": "node --test ./scripts/ui-pack-tooling.test.mjs",
     "typecheck": "pnpm --filter @yuta/web typecheck",
     "typecheck:backoffice": "pnpm --filter @yuta/backoffice typecheck",
     "typecheck:booking": "pnpm --filter @yuta/booking-web typecheck",
@@ -64,6 +65,8 @@
     "typecheck:display": "pnpm --filter @yuta/display typecheck",
     "typecheck:pos": "pnpm --filter @yuta/pos typecheck",
     "typecheck:site-agent": "pnpm --filter @yuta/site-agent typecheck",
+    "ui:pack:new": "node ./scripts/create-ui-pack.mjs",
+    "ui:pack:check": "node ./scripts/check-ui-pack.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

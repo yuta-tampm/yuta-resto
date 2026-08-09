@@ -20,6 +20,8 @@ Current packages:
 - `establishment-general-information/` — integrated establishment profile editor
   at `/etablissement/informations-generales`.
 - `today/` — integrated authenticated Backoffice dashboard at `/aujourdhui`.
+- `pos-management-printing/` — Phase 0 inventory for the existing local POS
+  device-coupled screen at `/management/printing`; design approval is pending.
 
 Every package follows `../PAGE_PACK_PROTOCOL.md`.
 

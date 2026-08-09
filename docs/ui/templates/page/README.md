@@ -8,13 +8,29 @@ Owner: YUTA product and engineering
 
 Application: `<apps/...>`
 
+Target type: `UNKNOWN`
+
 Route / entry point: `<real route or screen entry>`
 
 Runtime family: `<cloud | public cloud | local POS | standalone local | repository-defined value>`
 
-Page classification: `<NEW_PAGE | EXISTING_PAGE>`
+Page classification: `UNKNOWN`
 
-Implementation class: `<visual-only | interactive | integrated | device-coupled>`
+Implementation class: `UNKNOWN`
+
+Package status: `design`
+
+Scope status: `DRAFT`
+
+Reference status: `NONE`
+
+Inventory status: `PENDING`
+
+Baseline status: `PENDING`
+
+Design prompt status: `PENDING`
+
+No-image reference reason: `<required when Reference status is NONE after design approval>`
 
 ## Current implementation
 
@@ -29,12 +45,14 @@ Read in order:
 2. nearest application `AGENTS.md`;
 3. `docs/CURRENT_STATE.md` and relevant architecture, product, feature,
    operations, and QA docs;
-4. implemented contracts, schema, session/authorization, business logic, and
+4. `docs/ui/README.md`, `docs/ui/DESIGN_TO_CODE_WORKFLOW.md`, and
+   `docs/ui/YUTA_FRONTEND_RULES.md`;
+5. implemented contracts, schema, session/authorization, business logic, and
    tests;
-5. target-application UI rules;
-6. this page package;
-7. `@yuta/ui` exports and semantic tokens;
-8. visual references.
+6. target-application UI rules;
+7. this page package;
+8. `@yuta/ui` exports and semantic tokens;
+9. visual references.
 
 Application-specific UI rules: `<path or "none; use nearest AGENTS/product docs">`.
 
@@ -43,6 +61,7 @@ Application-specific UI rules: `<path or "none; use nearest AGENTS/product docs"
 - `PRODUCT_SCOPE.md`
 - `UI_SPEC.md`
 - `DATA_AND_INTERACTION_SPEC.md`
+- `DESIGN_HANDOFF.md`
 - `IMPLEMENTATION_PLAN.md`
 - `ACCEPTANCE_CHECKLIST.md`
 
@@ -56,6 +75,24 @@ Images are non-authoritative.
 
 Summarize the runtime, business, session, data, polling, offline, and device
 invariants discovered in Phase 0 that UI work must preserve.
+
+## Change impact
+
+```text
+Files expected to modify:
+Files expected to create:
+Packages affected:
+Cross-application impact:
+Database change: YES | NO | PROPOSAL
+API or contract change: YES | NO | PROPOSAL
+Permission/auth change: YES | NO | PROPOSAL
+Runtime/device change: YES | NO | PROPOSAL
+```
+
+## Design approval
+
+Record the approved scope/reference, approval date, and reviewer or the explicit
+no-image decision. A draft reference is not implementation authority.
 
 ## Prompt order
 
@@ -74,3 +111,21 @@ Stop and request approval when implementation would require an unsupported
 product capability, field, enum, permission, contract, API route,
 schema/migration, runtime dependency, hardware/device setting, or change to a
 protected business invariant.
+
+## Final delivery and as-built status
+
+Complete only after implementation and QA:
+
+Final implementation locations/files changed: `<required>`
+
+Verification commands and results: `<required>`
+
+Functional/regression QA result: `<required>`
+
+Visual/browser/device evidence: `<required when UI changed>`
+
+Intentional deviations: `<required; use NONE when applicable>`
+
+Deferred proposals and risks: `<required; use NONE when applicable>`
+
+As-built documentation status: `PENDING | COMPLETE`

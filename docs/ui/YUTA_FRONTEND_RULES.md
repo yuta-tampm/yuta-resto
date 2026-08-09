@@ -153,6 +153,16 @@ They do not authorize copying or inventing:
 - Prefer composition over page-specific boolean props on shared primitives.
 - Do not maintain a second component export catalog in documentation.
 
+When implementation needs a component, decide in this order:
+
+1. reuse an existing target-feature component;
+2. reuse an existing target-application component;
+3. compose existing components and `@yuta/ui` primitives;
+4. extend an existing application component when the need is genuinely shared;
+5. create a feature/application component;
+6. create or change a shared primitive only for proven domain-neutral reuse
+   across independent consumers.
+
 ### Page and screen composition
 
 A route-level page or screen entry should primarily orchestrate its current
@@ -254,6 +264,10 @@ Unless explicitly authorized, do not:
 - discard working authorization, runtime boundaries, or data integration;
 - create duplicate `v2`, `new`, `final`, or `latest` documents.
 
+Stop for review when a UI change unexpectedly requires architecture, database,
+contract, authorization, cross-application, runtime, provider, or device
+changes outside the approved impact boundary.
+
 ## Responsive design and accessibility
 
 There is no project-wide fixed viewport matrix. Use, in order, the target
@@ -286,6 +300,8 @@ operational rules change:
 - update `docs/README.md` when a current document path changes;
 - remove obsolete links after moving files;
 - do not add overlapping completion reports.
+- synchronize the stable page package and intentional deviations with the
+  as-built implementation before marking it implemented.
 
 Durable behavior belongs in current product, feature, architecture, and page
 documentation. Completed implementation history belongs in Git history.

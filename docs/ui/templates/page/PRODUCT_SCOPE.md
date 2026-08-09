@@ -20,6 +20,12 @@ Describe the application and runtime boundary relevant to this screen. Include
 cloud tenant scope, public resolution, local POS site/session, standalone-local
 ownership, device ownership, or provider boundaries only when they apply.
 
+## Approved change boundary
+
+Record expected files/packages and whether database, API/contract,
+permission/auth, cross-application, provider, or runtime/device change is
+approved, excluded, or remains a proposal.
+
 ## Out of scope
 
 List unsupported capabilities and adjacent modules.

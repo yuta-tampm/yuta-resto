@@ -13,7 +13,13 @@ Do not continue while the target application/runtime, classification,
 data/session boundary, protected invariants, current visual baseline, or
 required commands remain ambiguous.
 
-## Phase 1 — Visual baseline
+After the inventory, complete `DESIGN_HANDOFF.md`: capture the current visual
+baseline for an existing target (or record a truthful blocker), then prepare a
+self-contained design-generation prompt for ChatGPT/ImageGen or another
+approved design tool. This handoff is documentation/design preparation, not UI
+implementation.
+
+## Phase 1 — Approved visual baseline implementation
 
 For `NEW_PAGE`, typed fixtures may be used only when explicitly approved.
 
@@ -41,10 +47,18 @@ data rewrite for a visual refactor. Stop for approval before adding fields,
 enums, permissions, contracts, APIs, schema/migrations, runtime dependencies,
 or privileged device settings.
 
+## Functional and regression verification gate
+
+Before Phase 5, run applicable behavior-protecting tests, target-application
+typecheck/tests/build, and affected contract/domain/database/runtime/device
+checks. Resolve regressions before declaring visual parity.
+
 ## Phase 5 — Visual and responsive QA
 
 Use the target application's viewport/device matrix and operational QA
-requirements. Run exact existing repository checks and attach evidence.
+requirements only after the functional/regression gate. Run exact existing
+repository checks, attach evidence, and synchronize the page package with the
+as-built result.
 
 ## Delivery evidence
 

@@ -102,6 +102,7 @@ docs/ui/pages/<page-slug>/
 ├── PRODUCT_SCOPE.md
 ├── UI_SPEC.md
 ├── DATA_AND_INTERACTION_SPEC.md
+├── DESIGN_HANDOFF.md
 ├── IMPLEMENTATION_PLAN.md
 ├── ACCEPTANCE_CHECKLIST.md
 ├── references/
@@ -124,6 +125,7 @@ Shared authority remains:
 
 ```text
 docs/ui/README.md
+docs/ui/DESIGN_TO_CODE_WORKFLOW.md
 docs/ui/YUTA_FRONTEND_RULES.md
 packages/ui/src/index.ts
 packages/ui/src/styles/global.css
@@ -138,7 +140,68 @@ POS packages link to `docs/ui/POS_FRONTEND_RULES.md` and the current
 Page documents link to these sources rather than reproducing the component
 export catalog, application rules, or design-token implementation.
 
-## Required file responsibilities
+## Lifecycle metadata
+
+Every new or actively migrated package README uses these exact fields:
+
+```text
+Target type: PAGE | SCREEN | SURFACE | FLOW | UNKNOWN
+Page classification: NEW_PAGE | EXISTING_PAGE | UNKNOWN
+Implementation class: visual-only | interactive | integrated | device-coupled | UNKNOWN
+Package status: design | approved | implementation-ready | implemented
+Scope status: DRAFT | REVIEWED | APPROVED
+Reference status: NONE | DRAFT | REVIEWED | APPROVED
+Inventory status: PENDING | COMPLETE
+Baseline status: PENDING | CAPTURED | BLOCKED | NOT_APPLICABLE
+Design prompt status: PENDING | READY
+```
+
+`UNKNOWN` is allowed only while repository analysis is incomplete. Package
+status and document `Status:` metadata are independent; tooling reads `Package
+status`, not the document status.
+
+For `EXISTING_PAGE`, Phase 0 produces a current authenticated browser/device
+baseline under `references/` and a ready-to-use design-generation prompt in
+`DESIGN_HANDOFF.md`. If capture is temporarily impossible, use `Baseline status:
+BLOCKED` and record the exact resume condition. `NEW_PAGE` uses `NOT_APPLICABLE`
+because no current screen exists. Repository-derived layout descriptions are
+not baseline images.
+
+Lifecycle meaning:
+
+- `design`: repository analysis and design are in progress;
+- `approved`: product scope and visual direction are approved;
+- `implementation-ready`: Phase 0, protected invariants, change impact,
+  verification commands, and reference approval/no-image decision are complete;
+- `implemented`: functional/regression QA, visual/device evidence where
+  applicable, and as-built synchronization are complete.
+
+An approved or implementation-ready package uses an `APPROVED` reference or
+sets `Reference status: NONE` with a non-placeholder no-image reason.
+It also uses `Design prompt status: READY`; an existing page uses `Baseline
+status: CAPTURED`, while a new page may use `NOT_APPLICABLE`.
+
+## Design approval and delivery gates
+
+The implementation-ready package is finalized after design approval. It must
+include the expected change impact:
+
+```text
+Files expected to modify:
+Files expected to create:
+Packages affected:
+Cross-application impact:
+Database change: YES | NO | PROPOSAL
+API or contract change: YES | NO | PROPOSAL
+Permission/auth change: YES | NO | PROPOSAL
+Runtime/device change: YES | NO | PROPOSAL
+```
+
+Functional and regression QA precede Phase 05 visual parity review. A package
+may use `Package status: implemented` only after its final delivery evidence and
+current documentation match the as-built implementation.
+
+## Phase 0 gate
 
 Before these files are completed, `prompts/00_REPOSITORY_ANALYSIS.md` must
 produce a read-only Implementation Inventory covering:
@@ -158,9 +221,21 @@ produce a read-only Implementation Inventory covering:
 - conflicts and unsupported proposals;
 - exact repository verification commands.
 
+After the inventory, Phase 0 also completes the design handoff:
+
+- capture the real current target for `EXISTING_PAGE`, with route/state,
+  viewport/device, date, and runtime/session conditions;
+- record a precise blocker instead of fabricating visual evidence when capture
+  is unavailable;
+- prepare a self-contained design-generation prompt grounded in current
+  capabilities, protected invariants, required states, YUTA UI constraints,
+  and explicitly unsupported concepts.
+
 No later phase may assume a Backoffice tenant model, POS local model, API,
 permission, schema, device capability, or business rule absent from this
 inventory and higher-authority documentation.
+
+## Required file responsibilities
 
 ### `README.md`
 
@@ -193,7 +268,7 @@ Contains:
 - current visual and behavioral baseline;
 - page hierarchy;
 - content structure;
-- French UI copy;
+- application-appropriate UI copy;
 - responsive behavior;
 - accessibility;
 - visual acceptance;
@@ -214,6 +289,20 @@ Contains:
 - explicit gaps requiring product/schema decisions.
 
 A UI model is not a database schema.
+
+### `DESIGN_HANDOFF.md`
+
+Contains:
+
+- the Phase 0 inventory source;
+- current baseline capture metadata or a precise blocker;
+- a self-contained prompt ready for ChatGPT/ImageGen or another approved
+  design tool;
+- the generated-reference and review handoff result.
+
+For an existing target, repository-derived prose is not a substitute for an
+authenticated browser/device capture. The prompt prepares design input; it does
+not approve the generated result.
 
 ### `IMPLEMENTATION_PLAN.md`
 
@@ -303,6 +392,10 @@ It must not define:
 - exact colors.
 
 ## Verification before delivery
+
+Use `pnpm ui:pack:check <page-slug>` to validate repository structure and the
+declared lifecycle state. This does not replace product/design review or
+browser/device evidence.
 
 Before delivering a ZIP:
 

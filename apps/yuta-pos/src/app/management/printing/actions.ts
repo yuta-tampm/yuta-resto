@@ -15,6 +15,7 @@ import { requireLocalManagementCredentials } from '../../../server/local-managem
 export type PrintingActionState = {
   error: string | null;
   success: string | null;
+  recovery?: 'refresh';
 };
 
 export async function runPrintJobCommandAction(
@@ -125,10 +126,15 @@ function toActionError(error: unknown): PrintingActionState {
       return {
         error: 'Ce ticket a déjà changé d’état. Rechargez la page.',
         success: null,
+        recovery: 'refresh',
       };
     }
     if (error.code === 'PRINT_JOB_NOT_FOUND') {
-      return { error: 'Ce ticket n’existe plus.', success: null };
+      return {
+        error: 'Ce ticket n’existe plus.',
+        success: null,
+        recovery: 'refresh',
+      };
     }
     return { error: error.message, success: null };
   }

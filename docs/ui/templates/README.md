@@ -19,6 +19,10 @@ The templates are not product authority. Before using them:
 - classify the target as `NEW_PAGE` or `EXISTING_PAGE` and as visual-only,
   interactive, integrated, or device-coupled;
 - replace all placeholders;
+- capture the current baseline for an existing target and prepare the
+  repository-grounded design prompt in `DESIGN_HANDOFF.md`;
+- keep lifecycle metadata in the exact form defined by
+  `../PAGE_PACK_PROTOCOL.md`;
 - remove non-applicable sections rather than filling them with Backoffice
   assumptions;
 - do not copy unsupported behavior from visual references.

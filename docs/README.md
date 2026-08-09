@@ -70,10 +70,13 @@ the shared operations documents until a dedicated product document is needed.
 ### UI implementation
 
 - [`ui/README.md`](ui/README.md)
+- [`ui/DESIGN_TO_CODE_WORKFLOW.md`](ui/DESIGN_TO_CODE_WORKFLOW.md)
 - [`ui/YUTA_FRONTEND_RULES.md`](ui/YUTA_FRONTEND_RULES.md)
 - [`ui/BACKOFFICE_FRONTEND_RULES.md`](ui/BACKOFFICE_FRONTEND_RULES.md)
 - [`ui/POS_FRONTEND_RULES.md`](ui/POS_FRONTEND_RULES.md)
 - [`ui/PAGE_PACK_PROTOCOL.md`](ui/PAGE_PACK_PROTOCOL.md)
+- [`ui/UI_PACK_TOOLING_SPEC.md`](ui/UI_PACK_TOOLING_SPEC.md)
+- [`ui/UI_WORKFLOW_DELIVERY_CHECKLIST.md`](ui/UI_WORKFLOW_DELIVERY_CHECKLIST.md)
 - [`ui/pages/hours-services/README.md`](ui/pages/hours-services/README.md)
 - [`ui/pages/establishment-general-information/README.md`](ui/pages/establishment-general-information/README.md)
 - [`ui/pages/today/README.md`](ui/pages/today/README.md)
