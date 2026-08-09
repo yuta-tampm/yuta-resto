@@ -22,17 +22,19 @@ describe('local order instruction snapshots', () => {
     ).toThrowError(HttpError);
   });
 
-  it('requires exactly two Mochi flavours for one separate portion', () => {
+  it('uses catalog variant policy without matching an item name', () => {
+    const options = [
+      { code: 'MANGUE', label: 'Mangue' },
+      { code: 'MATCHA', label: 'Matcha' },
+    ];
     expect(
-      buildVariantSnapshots('Mochi glacé (2 pcs)', 1, [
+      buildVariantSnapshots(options, 2, 1, [
         { code: 'MANGUE', quantity: 1 },
         { code: 'MATCHA', quantity: 1 },
       ]),
     ).toHaveLength(2);
     expect(() =>
-      buildVariantSnapshots('Mochi glacé (2 pcs)', 1, [
-        { code: 'MANGUE', quantity: 3 },
-      ]),
+      buildVariantSnapshots(options, 2, 1, [{ code: 'MANGUE', quantity: 3 }]),
     ).toThrowError(HttpError);
   });
 });

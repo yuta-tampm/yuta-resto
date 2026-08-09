@@ -84,6 +84,9 @@ export async function seedPosData(
       description: itemSeed.description ?? null,
       priceCents: itemSeed.priceCents,
       kitchenStation: itemSeed.kitchenStation,
+      orderingPolicy: itemSeed.orderingPolicy ?? 'merge',
+      variantOptions: itemSeed.variantOptions ?? [],
+      requiredVariantQuantity: itemSeed.requiredVariantQuantity ?? 0,
       isAvailable: itemSeed.isAvailable ?? true,
       sortOrder: itemSeed.sortOrder,
     });
@@ -197,6 +200,9 @@ async function upsertMenuItem(
     description: string | null;
     priceCents: number;
     kitchenStation: 'kitchen' | 'bar' | 'dessert' | 'none';
+    orderingPolicy: 'merge' | 'separate';
+    variantOptions: Array<{ code: string; label: string }>;
+    requiredVariantQuantity: number;
     isAvailable: boolean;
     sortOrder: number;
   },

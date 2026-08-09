@@ -6,8 +6,6 @@ import type {
   ItemVariantSelection,
   SelectedItemInstruction,
 } from '@yuta/core';
-import { requiresSeparateOrderItem } from '@yuta/core';
-
 import {
   Button,
   Dialog,
@@ -35,6 +33,8 @@ type MobileOrderDialogItem = {
   quickInstructions: SelectedItemInstruction[];
   selectedVariants: ItemVariantSelection[];
   instructionConfig: ItemInstructionConfig;
+  orderingPolicy: 'merge' | 'separate';
+  requiredVariantQuantity: number;
   hasAllergy: boolean;
   allergenCodes: string[];
   allergySeverity: AllergySeverity | null;
@@ -103,7 +103,7 @@ export function MobileOrderDialog({
                     orderItemId={item.id}
                     quantity={item.quantity}
                     canEdit={canEditItems && item.isPending}
-                    allowIncrease={!requiresSeparateOrderItem(item.name)}
+                    allowIncrease={item.orderingPolicy !== 'separate'}
                   />
                   <div className="min-w-0">
                     <p className="font-black">{item.name}</p>
@@ -121,7 +121,7 @@ export function MobileOrderDialog({
                     )}
                     {item.selectedVariants.length > 0 && (
                       <p className="mt-1 text-xs font-black text-primary/65">
-                        Parfums:{' '}
+                        Options:{' '}
                         {item.selectedVariants
                           .map(
                             (variant) =>
@@ -146,6 +146,7 @@ export function MobileOrderDialog({
                         itemName={item.name}
                         quantity={item.quantity}
                         instructionConfig={item.instructionConfig}
+                        requiredVariantQuantity={item.requiredVariantQuantity}
                         initialNote={item.note}
                         initialQuickInstructions={item.quickInstructions}
                         initialVariants={item.selectedVariants}

@@ -67,6 +67,7 @@ type OrderItemNoteDialogProps = {
   itemName: string;
   quantity: number;
   instructionConfig: ItemInstructionConfig;
+  requiredVariantQuantity: number;
   initialNote: string | null;
   initialQuickInstructions: SelectedItemInstruction[];
   initialVariants: ItemVariantSelection[];
@@ -84,6 +85,7 @@ export function OrderItemNoteDialog({
   itemName,
   quantity,
   instructionConfig,
+  requiredVariantQuantity,
   initialNote,
   initialQuickInstructions,
   initialVariants,
@@ -125,7 +127,7 @@ export function OrderItemNoteDialog({
       quantity: variantQuantities[variant.code] ?? 0,
     }))
     .filter((variant) => variant.quantity > 0);
-  const requiredVariantCount = quantity * 2;
+  const requiredVariantCount = quantity * requiredVariantQuantity;
   const selectedVariantCount = selectedVariants.reduce(
     (total, variant) => total + variant.quantity,
     0,
@@ -136,7 +138,7 @@ export function OrderItemNoteDialog({
       Boolean(allergySeverity) &&
       (!allergenCodes.includes('OTHER') || Boolean(allergyNote.trim())));
   const variantsValid =
-    instructionConfig.variantOptions.length === 0 ||
+    requiredVariantQuantity === 0 ||
     selectedVariantCount === requiredVariantCount;
 
   function resetState() {
@@ -295,9 +297,9 @@ export function OrderItemNoteDialog({
           {instructionConfig.variantOptions.length > 0 && (
             <section className="grid gap-3 rounded-lg border border-border-default p-4">
               <div>
-                <Label>Parfums Mochi</Label>
+                <Label>Options de l’article</Label>
                 <p className="mt-1 text-sm font-semibold text-secondary">
-                  Choisissez {requiredVariantCount} pièce(s) au total —{' '}
+                  Choisissez {requiredVariantCount} option(s) au total —{' '}
                   {selectedVariantCount}/{requiredVariantCount} sélectionnée(s).
                 </p>
               </div>

@@ -1,10 +1,9 @@
-const MOCHI_ITEM_NAME = 'Mochi glacé (2 pcs)';
-
 type PendingOrderItemForKitchenValidation = {
-  itemNameSnapshot: string;
   quantity: number;
   status: string;
-  selectedVariants: Array<{ quantity: number }>;
+  selectedVariants: Array<{ code: string; quantity: number }>;
+  requiredVariantQuantity: number;
+  variantOptionCodes: string[];
 };
 
 export type KitchenSendFeedback = {
@@ -12,35 +11,38 @@ export type KitchenSendFeedback = {
   description: string;
 };
 
-export function hasIncompleteMochiSelection(
+export function hasIncompleteVariantSelection(
   items: PendingOrderItemForKitchenValidation[],
 ): boolean {
-  return items.some(isIncompleteMochiSelection);
+  return items.some(isIncompleteVariantSelection);
 }
 
-export function isIncompleteMochiSelection(
+export function isIncompleteVariantSelection(
   item: PendingOrderItemForKitchenValidation,
 ): boolean {
   return (
     item.status === 'pending' &&
-    item.itemNameSnapshot === MOCHI_ITEM_NAME &&
-    item.selectedVariants.reduce(
-      (total, variant) => total + variant.quantity,
-      0,
-    ) !==
-      item.quantity * 2
+    (item.selectedVariants.some(
+      ({ code }) => !item.variantOptionCodes.includes(code),
+    ) ||
+      (item.requiredVariantQuantity > 0 &&
+        item.selectedVariants.reduce(
+          (total, variant) => total + variant.quantity,
+          0,
+        ) !==
+          item.quantity * item.requiredVariantQuantity))
   );
 }
 
 export function kitchenSendFeedback(
   errorCode: string | undefined,
-  incompleteMochiSelection: boolean,
+  incompleteVariantSelection: boolean,
 ): KitchenSendFeedback | null {
-  if (incompleteMochiSelection || errorCode === 'INVALID_VARIANT_QUANTITY') {
+  if (incompleteVariantSelection || errorCode === 'INVALID_VARIANT_QUANTITY') {
     return {
-      title: 'Parfums Mochi requis',
+      title: 'Choix requis',
       description:
-        'Ouvrez « Notes / allergie » sous le Mochi et choisissez exactement deux parfums par portion avant l’envoi.',
+        'Ouvrez « Notes / allergie » sous l’article signalé et complétez les choix requis avant l’envoi.',
     };
   }
 

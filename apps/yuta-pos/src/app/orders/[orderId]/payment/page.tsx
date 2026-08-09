@@ -229,7 +229,7 @@ export default async function PaymentPage({
                   )}
                   {item.selectedVariants.length > 0 && (
                     <p className="mt-1 text-xs font-black text-primary/65">
-                      Parfums:{' '}
+                      Options:{' '}
                       {item.selectedVariants
                         .map(
                           (variant) =>

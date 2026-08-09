@@ -132,6 +132,17 @@ export const kitchenStationSchema = z.enum([
   'none',
 ]);
 
+export const itemOrderingPolicySchema = z.enum(['merge', 'separate']);
+export const catalogItemVariantOptionSchema = z
+  .object({
+    code: z
+      .string()
+      .trim()
+      .regex(/^[A-Z0-9_]{1,50}$/),
+    label: z.string().trim().min(1).max(100),
+  })
+  .strict();
+
 export const localCatalogItemSchema = z
   .object({
     id: identifierSchema,
@@ -140,6 +151,9 @@ export const localCatalogItemSchema = z
     description: z.string().nullable(),
     priceCents: z.number().int().nonnegative(),
     kitchenStation: kitchenStationSchema,
+    orderingPolicy: itemOrderingPolicySchema,
+    variantOptions: z.array(catalogItemVariantOptionSchema).max(20),
+    requiredVariantQuantity: z.number().int().min(0).max(100),
     isAvailable: z.boolean(),
     sortOrder: z.number().int(),
   })
@@ -224,6 +238,9 @@ export const createLocalCatalogItemInputSchema = z
     description: z.string().trim().max(2000).nullable().default(null),
     priceCents: catalogPriceCentsSchema,
     kitchenStation: kitchenStationSchema,
+    orderingPolicy: itemOrderingPolicySchema.default('merge'),
+    variantOptions: z.array(catalogItemVariantOptionSchema).max(20).default([]),
+    requiredVariantQuantity: z.number().int().min(0).max(100).default(0),
     isAvailable: z.boolean().default(true),
     sortOrder: catalogSortOrderSchema.default(0),
   })
@@ -236,6 +253,9 @@ export const updateLocalCatalogItemInputSchema = z
     description: z.string().trim().max(2000).nullable().optional(),
     priceCents: catalogPriceCentsSchema.optional(),
     kitchenStation: kitchenStationSchema.optional(),
+    orderingPolicy: itemOrderingPolicySchema.optional(),
+    variantOptions: z.array(catalogItemVariantOptionSchema).max(20).optional(),
+    requiredVariantQuantity: z.number().int().min(0).max(100).optional(),
     isAvailable: z.boolean().optional(),
     sortOrder: catalogSortOrderSchema.optional(),
   })

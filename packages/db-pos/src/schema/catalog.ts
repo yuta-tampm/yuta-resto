@@ -1,14 +1,22 @@
 import {
   boolean,
+  check,
   index,
   integer,
+  jsonb,
   pgTable,
   text,
   timestamp,
   uuid,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { kitchenStationEnum } from './enums';
+import { sql } from 'drizzle-orm';
+import { itemOrderingPolicyEnum, kitchenStationEnum } from './enums';
+
+export type MenuItemVariantOption = {
+  code: string;
+  label: string;
+};
 
 const createdAt = () =>
   timestamp('created_at', { withTimezone: true }).defaultNow().notNull();
@@ -45,6 +53,16 @@ export const menuItems = pgTable(
     description: text('description'),
     priceCents: integer('price_cents').notNull(),
     kitchenStation: kitchenStationEnum('kitchen_station').notNull(),
+    orderingPolicy: itemOrderingPolicyEnum('ordering_policy')
+      .default('merge')
+      .notNull(),
+    variantOptions: jsonb('variant_options')
+      .$type<MenuItemVariantOption[]>()
+      .default([])
+      .notNull(),
+    requiredVariantQuantity: integer('required_variant_quantity')
+      .default(0)
+      .notNull(),
     isAvailable: boolean('is_available').default(true).notNull(),
     sortOrder: integer('sort_order').default(0).notNull(),
     createdAt: createdAt(),
@@ -55,6 +73,10 @@ export const menuItems = pgTable(
     index('menu_items_kitchen_station_idx').on(table.kitchenStation),
     index('menu_items_is_available_idx').on(table.isAvailable),
     index('menu_items_sort_order_idx').on(table.sortOrder),
+    check(
+      'menu_items_required_variant_quantity_non_negative_check',
+      sql`${table.requiredVariantQuantity} >= 0`,
+    ),
   ],
 );
 

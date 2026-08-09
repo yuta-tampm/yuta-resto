@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   apiErrorSchema,
   createInternalNoteSchema,
+  createLocalCatalogItemInputSchema,
   establishmentProfileInputSchema,
   createLocalOrderInputSchema,
   createOrderInputSchema,
@@ -92,6 +93,25 @@ describe('@yuta/contracts', () => {
         bottomPaddingLines: 3,
       }).success,
     ).toBe(false);
+  });
+
+  it('validates catalog-driven item ordering policies', () => {
+    const parsed = createLocalCatalogItemInputSchema.parse({
+      categoryId: id,
+      name: 'Dessert à partager',
+      priceCents: 900,
+      kitchenStation: 'dessert',
+      orderingPolicy: 'separate',
+      variantOptions: [
+        { code: 'MANGUE', label: 'Mangue' },
+        { code: 'MATCHA', label: 'Matcha' },
+      ],
+      requiredVariantQuantity: 2,
+    });
+
+    expect(parsed.orderingPolicy).toBe('separate');
+    expect(parsed.variantOptions).toHaveLength(2);
+    expect(parsed.requiredVariantQuantity).toBe(2);
   });
 
   it('validates strict common and order contracts', () => {

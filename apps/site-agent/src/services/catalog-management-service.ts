@@ -53,6 +53,7 @@ export function createCatalogManagementService(db: PosDatabaseClient) {
   async function createCatalogItem(input: CreateLocalCatalogItemInput) {
     await requireCategory(input.categoryId);
     await assertItemNameAvailable(input.categoryId, input.name);
+    assertOrderingConfiguration(input);
     const [created] = await db
       .insert(menuItems)
       .values({ id: uuidv7(), ...input })
@@ -80,6 +81,7 @@ export function createCatalogManagementService(db: PosDatabaseClient) {
         itemId,
       );
     }
+    assertOrderingConfiguration({ ...current, ...input });
     const [updated] = await db
       .update(menuItems)
       .set(input)
@@ -178,7 +180,38 @@ function toItem(item: typeof menuItems.$inferSelect) {
     description: item.description,
     priceCents: item.priceCents,
     kitchenStation: item.kitchenStation,
+    orderingPolicy: item.orderingPolicy,
+    variantOptions: item.variantOptions,
+    requiredVariantQuantity: item.requiredVariantQuantity,
     isAvailable: item.isAvailable,
     sortOrder: item.sortOrder,
   };
+}
+
+function assertOrderingConfiguration(input: {
+  variantOptions: Array<{ code: string; label: string }>;
+  requiredVariantQuantity: number;
+}): void {
+  const codes = input.variantOptions.map(({ code }) => code);
+  if (new Set(codes).size !== codes.length) {
+    throw new HttpError(
+      422,
+      'DUPLICATE_VARIANT_CODE',
+      'Variant option codes must be unique.',
+    );
+  }
+  if (input.requiredVariantQuantity > 0 && input.variantOptions.length === 0) {
+    throw new HttpError(
+      422,
+      'VARIANT_OPTIONS_REQUIRED',
+      'Required variant quantity needs at least one variant option.',
+    );
+  }
+  if (input.requiredVariantQuantity === 0 && input.variantOptions.length > 0) {
+    throw new HttpError(
+      422,
+      'VARIANT_QUANTITY_REQUIRED',
+      'Variant options need a required quantity per portion.',
+    );
+  }
 }

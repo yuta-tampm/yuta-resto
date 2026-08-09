@@ -1,25 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import {
-  getItemInstructionConfig,
-  requiresSeparateOrderItem,
-} from '../src/item-instructions';
+import { getItemInstructionConfig } from '../src/item-instructions';
 
 describe('Luna item instruction configuration', () => {
-  it('requires the three approved flavours for Mochi', () => {
-    const config = getItemInstructionConfig('Mochi glacé (2 pcs)', 'Desserts');
-
-    expect(config.variantOptions).toEqual([
-      { code: 'MANGUE', label: 'Mangue' },
-      { code: 'MATCHA', label: 'Matcha' },
-      { code: 'CACAO', label: 'Cacao' },
-    ]);
-  });
-
-  it('keeps every Mochi portion as a separate order item', () => {
-    expect(requiresSeparateOrderItem('Mochi glacé (2 pcs)')).toBe(true);
-    expect(requiresSeparateOrderItem('Gâteau banane')).toBe(false);
-  });
-
   it('supports every split spring-roll product', () => {
     const config = getItemInstructionConfig(
       'Rouleaux de printemps – Tofu',

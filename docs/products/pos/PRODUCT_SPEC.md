@@ -306,6 +306,9 @@ menuItems {
   description?: string;
   priceCents: number;
   kitchenStation: 'kitchen' | 'bar' | 'dessert' | 'none';
+  orderingPolicy: 'merge' | 'separate';
+  variantOptions: Array<{ code: string; label: string }>;
+  requiredVariantQuantity: number;
   isAvailable: boolean;
   sortOrder: number;
   createdAt: Date;
@@ -313,7 +316,11 @@ menuItems {
 }
 ```
 
-Menu items are real sellable items. Do not represent combo rules as normal menu items for MVP.
+Menu items are real sellable items. `orderingPolicy` controls whether repeated
+pending additions merge or create one quantity-one row per portion.
+`variantOptions` and `requiredVariantQuantity` define catalog-driven choices;
+the service validates the configured total per ordered portion without
+matching item names. Do not represent combo rules as normal menu items for MVP.
 
 ### 8.4 orders
 

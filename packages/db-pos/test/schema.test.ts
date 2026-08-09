@@ -9,6 +9,7 @@ import {
   comboRuleGroupItems,
   comboRuleGroups,
   comboRules,
+  itemOrderingPolicyEnum,
   localAuthLoginAttempts,
   localAuthSessions,
   localUserRoleEnum,
@@ -66,6 +67,10 @@ describe('POS schema boundaries', () => {
       'staff',
       'kitchen',
     ]);
+  });
+
+  it('supports catalog-driven item ordering policies', () => {
+    expect(itemOrderingPolicyEnum.enumValues).toEqual(['merge', 'separate']);
   });
 
   it('uses an RFC UUIDv7 generator for seed-created records', () => {

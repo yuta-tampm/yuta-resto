@@ -306,7 +306,7 @@ function ArticlesPanel({
                 )}
                 {item.selectedVariants.length > 0 && (
                   <p className="mt-1 text-sm font-black text-primary/65">
-                    Parfums:{' '}
+                    Options:{' '}
                     {item.selectedVariants
                       .map(
                         (variant) =>

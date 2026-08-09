@@ -143,9 +143,28 @@ function readCatalogItemForm(formData: FormData) {
     description: optionalText(formData.get('description')),
     priceCents: parsePriceCents(formData.get('price')),
     kitchenStation: formData.get('kitchenStation'),
+    orderingPolicy: formData.get('orderingPolicy'),
+    variantOptions: parseVariantOptions(formData.get('variantOptions')),
+    requiredVariantQuantity: Number(formData.get('requiredVariantQuantity')),
     isAvailable: formData.get('isAvailable') !== 'false',
     sortOrder: Number(formData.get('sortOrder')),
   };
+}
+
+function parseVariantOptions(value: FormDataEntryValue | null) {
+  if (typeof value !== 'string' || !value.trim()) return [];
+  return value
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const separatorIndex = line.indexOf('=');
+      if (separatorIndex < 1) return { code: '', label: '' };
+      return {
+        code: line.slice(0, separatorIndex).trim().toUpperCase(),
+        label: line.slice(separatorIndex + 1).trim(),
+      };
+    });
 }
 
 function parsePriceCents(value: FormDataEntryValue | null): number {
@@ -178,6 +197,11 @@ function toActionError(error: unknown): CatalogActionState {
         'Un article avec ce nom existe déjà dans cette catégorie.',
       CATALOG_CATEGORY_NOT_FOUND: "La catégorie n'existe plus.",
       CATALOG_ITEM_NOT_FOUND: "L'article n'existe plus.",
+      DUPLICATE_VARIANT_CODE: 'Chaque option doit utiliser un code unique.',
+      VARIANT_OPTIONS_REQUIRED:
+        'Ajoutez au moins une option lorsque des choix sont requis.',
+      VARIANT_QUANTITY_REQUIRED:
+        'Indiquez le nombre de choix requis pour utiliser des options.',
     };
     return {
       error: messages[error.code] ?? "L'opération n'a pas pu être effectuée.",

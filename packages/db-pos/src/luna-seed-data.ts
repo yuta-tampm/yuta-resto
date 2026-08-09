@@ -9,6 +9,9 @@ export type LunaMenuItemSeed = {
   description?: string;
   priceCents: number;
   kitchenStation: 'kitchen' | 'bar' | 'dessert' | 'none';
+  orderingPolicy?: 'merge' | 'separate';
+  variantOptions?: Array<{ code: string; label: string }>;
+  requiredVariantQuantity?: number;
   isAvailable?: boolean;
   sortOrder: number;
 };
@@ -247,6 +250,13 @@ export const lunaMenuItemSeeds: readonly LunaMenuItemSeed[] = [
     description: 'Au choix : mangue, matcha ou cacao',
     priceCents: 550,
     kitchenStation: 'dessert',
+    orderingPolicy: 'separate',
+    variantOptions: [
+      { code: 'MANGUE', label: 'Mangue' },
+      { code: 'MATCHA', label: 'Matcha' },
+      { code: 'CACAO', label: 'Cacao' },
+    ],
+    requiredVariantQuantity: 2,
     sortOrder: 20,
   },
   {

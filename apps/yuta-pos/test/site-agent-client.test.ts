@@ -209,6 +209,9 @@ describe('yuta-pos site-agent client', () => {
       description: null,
       priceCents: 1290,
       kitchenStation: 'kitchen' as const,
+      orderingPolicy: 'merge' as const,
+      variantOptions: [],
+      requiredVariantQuantity: 0,
       isAvailable: true,
       sortOrder: 10,
     };
@@ -236,6 +239,9 @@ describe('yuta-pos site-agent client', () => {
       description: null,
       priceCents: item.priceCents,
       kitchenStation: item.kitchenStation,
+      orderingPolicy: item.orderingPolicy,
+      variantOptions: item.variantOptions,
+      requiredVariantQuantity: item.requiredVariantQuantity,
       isAvailable: true,
       sortOrder: item.sortOrder,
     });

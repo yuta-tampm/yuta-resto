@@ -313,7 +313,7 @@ export default async function KitchenPage({ searchParams }: KitchenPageProps) {
                         )}
                         {item.selectedVariants.length > 0 && (
                           <p className="mt-2 text-sm font-black text-primary">
-                            Parfums:{' '}
+                            Options:{' '}
                             {item.selectedVariants
                               .map(
                                 (variant) =>

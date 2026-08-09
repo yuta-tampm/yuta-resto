@@ -301,8 +301,8 @@ Order cancellation is allowed only before payment. Cancelling an order marks act
 
 Order item quantity changes are allowed only for `pending` rows before payment
 starts. Repeated additions normally merge into the matching pending row;
-individually plated products such as `Mochi glacé (2 pcs)` always create a new
-quantity-one row so each plate keeps its own flavour selection. Additions after
+items configured with `orderingPolicy = separate` always create a new
+quantity-one row so each plate keeps its own option selection. Additions after
 a kitchen send create a separate pending row so kitchen tickets remain
 batch-accurate. Sent or later kitchen states are immutable from the quantity
 controls. Any recorded payment or active split locks all item mutations. A
@@ -312,7 +312,7 @@ Preparation preferences use `order_items.quick_instructions` for structured
 code/label snapshots and `order_items.note` for optional free text. Product or
 category configuration determines the visible choices; conflicting codes are
 also rejected by the service. `order_items.selected_variants` stores structured
-quantity snapshots for Mochi flavours on each separate plate row.
+quantity snapshots for catalog-configured options on each order-item row.
 
 Allergies are stored per item with `has_allergy`, `allergen_codes`,
 `allergy_severity`, and `allergy_note`. `allergy_acknowledged_at/by` records the
@@ -456,7 +456,11 @@ until the operator-login cutover is designed.
 `/management/catalog` provides authenticated local management for categories
 and menu items. Admins and managers can create or edit categories and items,
 change prices and kitchen stations, reorder entries, hide a category, or mark
-an item unavailable. The workflow performs no physical deletes. Existing POS
+an item unavailable. Each item also owns an ordering policy (`merge` or
+`separate`), stable `CODE = Libellé` option definitions, and the number of
+options required per portion. This allows another individually plated product
+to reuse the Mochi behavior without a code change. The workflow performs no
+physical deletes. Existing POS
 order entry already filters inactive categories and unavailable items, so
 catalog changes take effect on the next server render without cloud access.
 

@@ -7,7 +7,6 @@ import {
   type LocalOrderItemCommand,
   type UpdateLocalOrderItemInput,
 } from '@yuta/contracts/local-pos';
-import { requiresSeparateOrderItem } from '@yuta/core';
 import type { PosDatabaseExecutor } from '@yuta/db-pos/client';
 import {
   checks,
@@ -71,7 +70,7 @@ export function createOrderCommandService(db: PosDatabaseExecutor) {
       );
     }
 
-    const requiresSeparatePortion = requiresSeparateOrderItem(menuItem.name);
+    const requiresSeparatePortion = menuItem.orderingPolicy === 'separate';
     if (requiresSeparatePortion && input.quantity !== 1) {
       throw new HttpError(
         422,
@@ -123,6 +122,12 @@ export function createOrderCommandService(db: PosDatabaseExecutor) {
   ) {
     const item = await getRequiredOrderItem(db, orderItemId);
     const order = await getRequiredOrder(db, item.orderId);
+    const menuItem = await db.query.menuItems.findFirst({
+      where: eq(menuItems.id, item.menuItemId),
+    });
+    if (!menuItem) {
+      throw new HttpError(404, 'MENU_ITEM_NOT_FOUND', 'Menu item not found.');
+    }
     await assertOrderCanChangeItems(db, order);
     if (item.status !== 'pending') {
       throw new HttpError(
@@ -134,7 +139,7 @@ export function createOrderCommandService(db: PosDatabaseExecutor) {
 
     const quantity = input.quantity ?? item.quantity;
     if (
-      requiresSeparateOrderItem(item.itemNameSnapshot) &&
+      menuItem.orderingPolicy === 'separate' &&
       input.quantity !== undefined &&
       quantity !== 1
     ) {
@@ -183,7 +188,8 @@ export function createOrderCommandService(db: PosDatabaseExecutor) {
       : item.quickInstructions;
     const selectedVariants = input.selectedVariants
       ? buildVariantSnapshots(
-          item.itemNameSnapshot,
+          menuItem.variantOptions,
+          menuItem.requiredVariantQuantity,
           quantity,
           input.selectedVariants,
         )
@@ -491,6 +497,8 @@ async function sendToKitchen(
       .select({
         menuItemId: menuItems.id,
         categoryName: menuCategories.name,
+        requiredVariantQuantity: menuItems.requiredVariantQuantity,
+        variantOptions: menuItems.variantOptions,
       })
       .from(menuItems)
       .innerJoin(menuCategories, eq(menuItems.categoryId, menuCategories.id))
@@ -504,20 +512,34 @@ async function sendToKitchen(
   const categoryByMenuItemId = new Map(
     itemCategories.map((item) => [item.menuItemId, item.categoryName]),
   );
-  const incompleteMochi = pendingItems.find(
-    (item) =>
-      item.itemNameSnapshot === 'Mochi glacé (2 pcs)' &&
-      item.selectedVariants.reduce(
-        (sum, variant) => sum + variant.quantity,
-        0,
-      ) !==
-        item.quantity * 2,
+  const variantPolicyByMenuItemId = new Map(
+    itemCategories.map((item) => [item.menuItemId, item]),
   );
-  if (incompleteMochi) {
+  const incompleteVariantItem = pendingItems.find((item) => {
+    const policy = variantPolicyByMenuItemId.get(item.menuItemId);
+    const requiredPerPortion = policy?.requiredVariantQuantity ?? 0;
+    const allowedCodes = new Set(
+      policy?.variantOptions.map(({ code }) => code) ?? [],
+    );
+    return (
+      item.selectedVariants.some(({ code }) => !allowedCodes.has(code)) ||
+      (requiredPerPortion > 0 &&
+        item.selectedVariants.reduce(
+          (sum, variant) => sum + variant.quantity,
+          0,
+        ) !==
+          item.quantity * requiredPerPortion)
+    );
+  });
+  if (incompleteVariantItem) {
+    const requiredTotal =
+      incompleteVariantItem.quantity *
+      (variantPolicyByMenuItemId.get(incompleteVariantItem.menuItemId)
+        ?.requiredVariantQuantity ?? 0);
     throw new HttpError(
       422,
       'INVALID_VARIANT_QUANTITY',
-      `Select exactly ${incompleteMochi.quantity * 2} Mochi flavours before sending.`,
+      `Select exactly ${requiredTotal} item variants before sending.`,
     );
   }
 

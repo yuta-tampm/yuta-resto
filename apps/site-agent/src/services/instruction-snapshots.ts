@@ -94,12 +94,13 @@ export function buildInstructionSnapshots(
 }
 
 export function buildVariantSnapshots(
-  itemName: string,
+  variantOptions: Array<{ code: string; label: string }>,
+  requiredVariantQuantity: number,
   itemQuantity: number,
   selections: Array<{ code: string; quantity: number }>,
 ): ItemVariantSnapshot[] {
   const selected = selections.filter(({ quantity }) => quantity > 0);
-  if (itemName !== 'Mochi glacé (2 pcs)') {
+  if (variantOptions.length === 0) {
     if (selected.length > 0) {
       throw new HttpError(
         422,
@@ -110,20 +111,19 @@ export function buildVariantSnapshots(
     return [];
   }
 
-  const labels: Record<string, string> = {
-    MANGUE: 'Mangue',
-    MATCHA: 'Matcha',
-    CACAO: 'Cacao',
-  };
+  const labels = Object.fromEntries(
+    variantOptions.map(({ code, label }) => [code, label]),
+  );
   if (selected.some(({ code }) => !labels[code])) {
-    throw new HttpError(422, 'UNKNOWN_VARIANT', 'Unknown Mochi variant.');
+    throw new HttpError(422, 'UNKNOWN_VARIANT', 'Unknown item variant.');
   }
   const total = selected.reduce((sum, item) => sum + item.quantity, 0);
-  if (total !== itemQuantity * 2) {
+  const requiredTotal = itemQuantity * requiredVariantQuantity;
+  if (requiredVariantQuantity > 0 && total !== requiredTotal) {
     throw new HttpError(
       422,
       'INVALID_VARIANT_QUANTITY',
-      `Select exactly ${itemQuantity * 2} Mochi flavours.`,
+      `Select exactly ${requiredTotal} item variants.`,
     );
   }
 

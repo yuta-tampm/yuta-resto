@@ -39,6 +39,7 @@ import {
 type Category = LocalCatalogResponse['categories'][number];
 type Item = Category['items'][number];
 type Station = Item['kitchenStation'];
+type OrderingPolicy = Item['orderingPolicy'];
 
 const initialState: CatalogActionState = { error: null, success: null };
 const stations: Station[] = ['kitchen', 'bar', 'dessert', 'none'];
@@ -119,6 +120,11 @@ function CategorySection({
                   <p className="font-bold">{item.name}</p>
                   <Badge tone={item.isAvailable ? 'success' : 'warning'}>
                     {item.isAvailable ? 'Disponible' : 'Indisponible'}
+                  </Badge>
+                  <Badge tone="neutral" variant="outline">
+                    {item.orderingPolicy === 'separate'
+                      ? 'Une ligne par portion'
+                      : 'Quantités regroupées'}
                   </Badge>
                 </div>
                 <p className="mt-1 text-sm text-secondary">
@@ -307,6 +313,9 @@ function ItemFields({
     item?.kitchenStation ?? 'kitchen',
   );
   const [isAvailable, setIsAvailable] = useState(item?.isAvailable ?? true);
+  const [orderingPolicy, setOrderingPolicy] = useState<OrderingPolicy>(
+    item?.orderingPolicy ?? 'merge',
+  );
 
   return (
     <>
@@ -378,6 +387,52 @@ function ItemFields({
           </SelectContent>
         </Select>
       </FormField>
+      <FormField
+        label="Politique d’ajout"
+        hint="Séparez les portions lorsque chaque assiette doit conserver ses propres choix."
+      >
+        <input type="hidden" name="orderingPolicy" value={orderingPolicy} />
+        <Select
+          value={orderingPolicy}
+          onValueChange={(value) => setOrderingPolicy(value as OrderingPolicy)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="merge">Regrouper les quantités</SelectItem>
+            <SelectItem value="separate">Une ligne par portion</SelectItem>
+          </SelectContent>
+        </Select>
+      </FormField>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <FormField
+          label="Choix requis par portion"
+          hint="0 si aucun choix n’est obligatoire."
+        >
+          <Input
+            name="requiredVariantQuantity"
+            type="number"
+            min={0}
+            max={100}
+            defaultValue={item?.requiredVariantQuantity ?? 0}
+            required
+          />
+        </FormField>
+        <FormField
+          label="Options disponibles"
+          hint="Une ligne par option : CODE = Libellé. Exemple : MANGUE = Mangue."
+        >
+          <Textarea
+            name="variantOptions"
+            defaultValue={item?.variantOptions
+              .map(({ code, label }) => `${code} = ${label}`)
+              .join('\n')}
+            rows={4}
+            placeholder={'MANGUE = Mangue\nMATCHA = Matcha'}
+          />
+        </FormField>
+      </div>
       <FormField label="Disponibilité">
         <input
           type="hidden"

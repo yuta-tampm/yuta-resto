@@ -2,7 +2,6 @@ import {
   allergySummary,
   formatEuros,
   getItemInstructionConfig,
-  requiresSeparateOrderItem,
 } from '@yuta/core';
 import {
   Alert,
@@ -26,8 +25,8 @@ import { MenuItemBrowser } from './MenuItemBrowser';
 import { MobileOrderDialog } from './MobileOrderDialog';
 import { OrderItemNoteDialog } from './OrderItemNoteDialog';
 import {
-  hasIncompleteMochiSelection,
-  isIncompleteMochiSelection,
+  hasIncompleteVariantSelection,
+  isIncompleteVariantSelection,
   kitchenSendFeedback,
 } from './kitchen-send-validation';
 import { posApi } from '../../../../lib/pos-api';
@@ -63,10 +62,16 @@ export default async function OrderItemsPage({
   const menuItemConfigs = catalog.categories.flatMap((category) =>
     category.items.map((item) => ({ ...item, category })),
   );
+  const menuItemConfigById = new Map(
+    menuItemConfigs.map((item) => [item.id, item]),
+  );
   const instructionConfigByMenuItemId = new Map(
     menuItemConfigs.map((item) => [
       item.id,
-      getItemInstructionConfig(item.name, item.category.name),
+      {
+        ...getItemInstructionConfig(item.name, item.category.name),
+        variantOptions: item.variantOptions,
+      },
     ]),
   );
   const selectedCategoryId = category ?? 'all';
@@ -93,10 +98,21 @@ export default async function OrderItemsPage({
   const pendingItemCount = order.items.filter(
     (item) => item.status === 'pending',
   ).length;
-  const incompleteMochiSelection = hasIncompleteMochiSelection(order.items);
+  const itemsWithVariantPolicy = order.items.map((item) => ({
+    ...item,
+    requiredVariantQuantity:
+      menuItemConfigById.get(item.menuItemId)?.requiredVariantQuantity ?? 0,
+    variantOptionCodes:
+      menuItemConfigById
+        .get(item.menuItemId)
+        ?.variantOptions.map(({ code }) => code) ?? [],
+  }));
+  const incompleteVariantSelection = hasIncompleteVariantSelection(
+    itemsWithVariantPolicy,
+  );
   const sendFeedback =
     pendingItemCount > 0
-      ? kitchenSendFeedback(sendError, incompleteMochiSelection)
+      ? kitchenSendFeedback(sendError, incompleteVariantSelection)
       : null;
   const canEditItems =
     order.status !== 'paid' &&
@@ -107,12 +123,15 @@ export default async function OrderItemsPage({
     order.status !== 'paid' &&
     order.status !== 'cancelled' &&
     pendingItemCount > 0 &&
-    !incompleteMochiSelection;
+    !incompleteVariantSelection;
   const activeOrderItems = order.items.filter(
     (item) => item.status !== 'cancelled',
   );
   const requiredInstructionItemIds = new Set(
-    activeOrderItems.filter(isIncompleteMochiSelection).map((item) => item.id),
+    itemsWithVariantPolicy
+      .filter((item) => item.status !== 'cancelled')
+      .filter(isIncompleteVariantSelection)
+      .map((item) => item.id),
   );
 
   return (
@@ -227,6 +246,12 @@ export default async function OrderItemsPage({
                 instructionConfig:
                   instructionConfigByMenuItemId.get(item.menuItemId) ??
                   getItemInstructionConfig(item.itemNameSnapshot, ''),
+                orderingPolicy:
+                  menuItemConfigById.get(item.menuItemId)?.orderingPolicy ??
+                  'merge',
+                requiredVariantQuantity:
+                  menuItemConfigById.get(item.menuItemId)
+                    ?.requiredVariantQuantity ?? 0,
                 hasAllergy: item.hasAllergy,
                 allergenCodes: item.allergenCodes,
                 allergySeverity: item.allergySeverity,
@@ -281,7 +306,8 @@ export default async function OrderItemsPage({
                         quantity={item.quantity}
                         canEdit={canEditItems && item.status === 'pending'}
                         allowIncrease={
-                          !requiresSeparateOrderItem(item.itemNameSnapshot)
+                          menuItemConfigById.get(item.menuItemId)
+                            ?.orderingPolicy !== 'separate'
                         }
                       />
                       <div className="min-w-0">
@@ -302,7 +328,7 @@ export default async function OrderItemsPage({
                         )}
                         {item.selectedVariants.length > 0 && (
                           <p className="mt-1 text-xs font-black text-primary/65">
-                            Parfums:{' '}
+                            Options:{' '}
                             {item.selectedVariants
                               .map(
                                 (variant) =>
@@ -338,6 +364,10 @@ export default async function OrderItemsPage({
                                 item.itemNameSnapshot,
                                 '',
                               )
+                            }
+                            requiredVariantQuantity={
+                              menuItemConfigById.get(item.menuItemId)
+                                ?.requiredVariantQuantity ?? 0
                             }
                             initialNote={item.note}
                             initialQuickInstructions={item.quickInstructions}

@@ -94,6 +94,8 @@ N/A       not applicable for this run
 | Increase Mochi row quantity         | No plus control is shown and the API rejects quantity above one  |        |       |
 | Send with incomplete Mochi flavours | French recovery alert appears and kitchen send stays disabled    |        |       |
 | Locate incomplete Mochi item        | Exact desktop/mobile row is highlighted until flavours are valid |        |       |
+| Configure another separate item     | Catalog policy works without adding an item-name code rule       |        |       |
+| Save invalid variant policy         | Duplicate codes or required count without options is rejected    |        |       |
 | Edit sent item note                 | Note action is unavailable after kitchen send                    |        |       |
 | Item allergy without details        | Form validation blocks saving the instructions                   |        |       |
 | Add allergies to different items    | Each warning stays attached to its own item                      |        |       |

@@ -211,10 +211,10 @@ active split checks          all item changes are locked
 ```
 
 Repeated taps on the same menu item normally merge into its existing pending
-row. Mochi is the exception: every tap creates a separate quantity-one row so
-the two flavours for each plate remain distinguishable in the order and on the
-kitchen ticket. The plus control is therefore unavailable on a Mochi row; tap
-the menu product again to add another plate. Repeated taps never change the
+row. An item configured as `Une ligne par portion` is the exception: every tap
+creates a separate quantity-one row so each plate keeps its own choices in the
+order and on the kitchen ticket. The plus control is unavailable on that row;
+tap the menu product again to add another plate. Repeated taps never change the
 quantity of an item already sent to the kitchen. If an unpaid
 split is cancelled and the order returns to single-payment mode, item editing
 is available again as long as no payment has been recorded. Quantity changes
@@ -243,15 +243,17 @@ kitchen ticket. Instructions can be changed only while the item is pending;
 they are locked after the item is sent to the kitchen. Never promise that
 cross-contamination is impossible without confirmation from the kitchen.
 
-For each separate `Mochi glacé (2 pcs)` row, choose quantities of `Mangue`,
-`Matcha`, and `Cacao`. The total must equal two pieces for that plate before
-kitchen send.
-When a pending Mochi selection is incomplete, the order screen displays a
-French recovery alert and disables `Envoyer en cuisine`. Open
-`Notes / allergie` under the Mochi, select the required flavours, and save; the
-send action becomes available without losing the order. The exact Mochi row is
-highlighted with a danger background and a `Choisir les parfums` action on both
-desktop and mobile order views; the highlight clears after a valid save.
+For each item with catalog options, select the configured number of options per
+portion before kitchen send. Luna configures `Mochi glacé (2 pcs)` as one row
+per portion with `Mangue`, `Matcha`, and `Cacao`, and requires two choices for
+that plate. When a pending selection is incomplete, the order screen displays
+a French recovery alert and disables `Envoyer en cuisine`. Open
+`Notes / allergie` under the highlighted item, complete the required choices,
+and save; the send action becomes available without losing the order.
+
+Admins and managers configure this behavior in `/management/catalog` using
+`Politique d’ajout`, `Choix requis par portion`, and `Options disponibles`.
+Option lines use `CODE = Libellé`; codes must be unique uppercase identifiers.
 
 ### Send To Kitchen
 
