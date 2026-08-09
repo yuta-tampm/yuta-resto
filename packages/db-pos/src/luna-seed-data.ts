@@ -486,6 +486,10 @@ export const lunaEntryNames = lunaMenuItemSeeds
   .filter(({ category }) => category === 'Entrées')
   .map(({ name }) => name);
 
+const lunaFormulaEntryNames = lunaEntryNames.filter(
+  (name) => name !== 'Assortiment – Mix LUNA (11 pcs)',
+);
+
 export const lunaDessertNames = lunaMenuItemSeeds
   .filter(({ category }) => category === 'Desserts')
   .map(({ name }) => name);
@@ -526,7 +530,7 @@ export const lunaComboSeeds: readonly LunaComboSeed[] = [
         minQuantity: 1,
         maxQuantity: 1,
         sortOrder: 20,
-        items: groupItems(lunaEntryNames),
+        items: groupItems(lunaFormulaEntryNames),
       },
       {
         name: 'Dessert',
@@ -585,7 +589,7 @@ export const lunaComboSeeds: readonly LunaComboSeed[] = [
         minQuantity: 1,
         maxQuantity: 1,
         sortOrder: 20,
-        items: groupItems([...lunaEntryNames, ...lunaDessertNames]),
+        items: groupItems([...lunaFormulaEntryNames, ...lunaDessertNames]),
       },
     ],
   },

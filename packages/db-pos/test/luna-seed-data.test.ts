@@ -79,6 +79,14 @@ describe('Luna POS seed data', () => {
     ).toContain(icedTeaName);
     expect(express?.priceDeltaCents).toBe(400);
     expect(gourmand?.priceDeltaCents).toBe(800);
+
+    const mixLunaName = 'Assortiment – Mix LUNA (11 pcs)';
+    expect(
+      express?.groups.flatMap(({ items }) => items.map(({ name }) => name)),
+    ).not.toContain(mixLunaName);
+    expect(
+      gourmand?.groups.flatMap(({ items }) => items.map(({ name }) => name)),
+    ).not.toContain(mixLunaName);
   });
 
   it('requires one pork-or-vegan nem choice for every child menu', () => {

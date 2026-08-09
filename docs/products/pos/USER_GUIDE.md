@@ -603,6 +603,9 @@ Menu Gourmand  = selected plat price + 8 EUR
 Combo Ete      = selected plat price + 2.50 EUR
 ```
 
+At Luna, `Assortiment – Mix LUNA (11 pcs)` is sold at its standalone price and
+is not eligible as the entry in Menu Express or Menu Gourmand.
+
 The `Groupe base` field must match the combo group that contains the priced
 main dish, usually `Plat`.
 
@@ -611,6 +614,9 @@ items. Group structure and eligible-item prices can be changed only while the
 rule is inactive. Before activation, `site-agent` verifies that the rule has
 at least one group, every required group has an eligible item, and a
 `Plat + supplement` rule names an existing base group.
+
+To change an active formula, deactivate it, edit the groups or eligible items,
+then activate it again. Existing paid-order discount snapshots are preserved.
 
 Rules are never physically deleted because paid orders may reference their
 discount history. Deactivate a retired rule instead. Groups and eligible-item

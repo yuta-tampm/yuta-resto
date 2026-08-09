@@ -260,14 +260,15 @@ N/A       not applicable for this run
 
 ## Local Combo Management
 
-| Case                                 | Expected Result                        | Result | Notes |
-| ------------------------------------ | -------------------------------------- | -----: | ----- |
-| Open local combo UI                  | Combo management page loads            |        |       |
-| Create combo rule                    | Rule appears in combo list             |        |       |
-| Add combo group                      | Group appears under rule               |        |       |
-| Add eligible item                    | Item can be used by combo optimizer    |        |       |
-| Combo applies at full payment        | Order total reflects discount          |        |       |
-| Combo applies at split check payment | Eligible check total reflects discount |        |       |
+| Case                                 | Expected Result                                          | Result | Notes |
+| ------------------------------------ | -------------------------------------------------------- | -----: | ----- |
+| Open local combo UI                  | Combo management page loads                              |        |       |
+| Create combo rule                    | Rule appears in combo list                               |        |       |
+| Add combo group                      | Group appears under rule                                 |        |       |
+| Add eligible item                    | Item can be used by combo optimizer                      |        |       |
+| Check Luna entry eligibility         | Mix LUNA is excluded from Menu Express and Menu Gourmand |        |       |
+| Combo applies at full payment        | Order total reflects discount                            |        |       |
+| Combo applies at split check payment | Eligible check total reflects discount                   |        |       |
 
 ## Local Operational Reports
 
