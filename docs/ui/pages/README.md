@@ -4,11 +4,15 @@ Status: Current
 
 Visibility: Engineering
 
-Each active page-specific design package has one stable lowercase slug directory.
+Last updated: 2026-08-09
 
-The current packages all target `apps/backoffice`. Read both
-`../YUTA_FRONTEND_RULES.md` and `../BACKOFFICE_FRONTEND_RULES.md` before using
-them.
+Page packages under this directory may target any YUTA frontend application.
+Every package identifies its application, real route or screen, runtime
+boundary, current implementation status, and application-specific rules in its
+`README.md`.
+
+Current Backoffice packages remain in their stable folders. Do not rename them
+merely because UI governance now applies project-wide.
 
 Current packages:
 
@@ -19,6 +23,14 @@ Current packages:
 
 Every package follows `../PAGE_PACK_PROTOCOL.md`.
 
+For new packages, choose a globally unambiguous slug. When route vocabulary
+could collide across applications, use an application or feature qualifier
+such as `pos-management` or `pos-order-entry`.
+
+Every package also follows `../YUTA_FRONTEND_RULES.md`, the nearest application
+`AGENTS.md`, and application-specific UI rules when present.
+
 Do not add flat page specifications directly under `docs/ui/pages/`.
 
-Do not create `v2`, `new`, `final`, or `latest` directories. Update current packages in place.
+Do not create parallel `v2`, `v3`, `new`, `final`, or `latest` directories.
+Update the canonical page package in place.

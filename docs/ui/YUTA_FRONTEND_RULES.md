@@ -6,7 +6,9 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-08
+Last updated: 2026-08-09
+
+Protocol revision: 3
 
 ## Scope
 
@@ -28,6 +30,27 @@ typography, runtime ownership, authorization, and required states. They extend
 these rules and take precedence when they are more specific.
 
 Backoffice UI work must also follow `BACKOFFICE_FRONTEND_RULES.md`.
+
+POS UI work must also follow `POS_FRONTEND_RULES.md`.
+
+## Governance model
+
+UI work resolves authority through three layers when a page package exists or
+the requested scope warrants one:
+
+```text
+repository and shared rules
+        ↓
+application rules and current product/runtime docs
+        ↓
+page or screen package
+```
+
+A page package may specialize presentation and approved interactions. It may
+not override architecture, runtime ownership, implemented business invariants,
+authorization/session rules, or current contracts without explicit approval.
+Small maintenance changes do not require creating a page package solely to
+satisfy this model.
 
 ## Required reading
 
@@ -61,6 +84,9 @@ Before editing:
 
 Before changing UI:
 
+- classify the target as `NEW_PAGE` or `EXISTING_PAGE`;
+- classify the implementation as visual-only, interactive, integrated, or
+  device-coupled;
 - inspect the real route or entry point, application shell, page container, and
   nearby screens;
 - inspect current runtime scope, authorization, data access, mutations, forms,
@@ -72,8 +98,24 @@ Before changing UI:
 - report conflicts between current behavior, documentation, and the requested
   design.
 
+When a page package is used, Phase 0 produces a read-only Implementation
+Inventory before implementation. It records the applicable trust/session
+boundary, data owner, transport/contracts, mutations, polling/offline/device
+behavior, protected invariants, tests, current visual baseline, and exact
+verification commands.
+
 Improve an existing integrated screen in place. Do not replace real data or
 working behavior with fixtures merely to match a visual-baseline workflow.
+
+For an existing integrated or device-coupled screen, preserve current loading,
+transport, mutations, validation, transactions, polling, retry, recovery,
+hardware boundaries, and behavior-protecting tests. Do not reimplement domain
+calculations in presentation code when an established domain or service owner
+already exists.
+
+For a new page, typed fixtures may establish a visual baseline only when the
+page specification explicitly permits them. Fixtures must not simulate an
+integrated capability as if it were implemented.
 
 ## Reference-image policy
 
@@ -214,6 +256,11 @@ Unless explicitly authorized, do not:
 
 ## Responsive design and accessibility
 
+There is no project-wide fixed viewport matrix. Use, in order, the target
+application's rules, current product/operator documentation, and the page
+package. If none defines a matrix, record a reasonable QA assumption during
+repository analysis before implementation.
+
 Verify the widths and input conditions relevant to the target product. Include
 mobile, tablet, and desktop coverage when the application supports them, and
 restaurant touch or playback conditions for local products where applicable.
@@ -260,3 +307,5 @@ database, domain, device, and integration tests when their behavior changes.
 Use browser or device-level QA when visual layout or interaction changes.
 Report exact results, failures, skipped checks, screenshots or observations,
 and remaining risks. Never claim visual parity without visual evidence.
+Never report lint or another check unless the corresponding repository command
+exists and was actually run.

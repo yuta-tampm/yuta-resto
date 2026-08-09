@@ -1,4 +1,4 @@
-# <Page name>
+# <Page or screen name>
 
 Status: Draft design package
 
@@ -6,32 +6,37 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Route: `<real route>`
+Application: `<apps/...>`
 
-Application: `<application>`
+Route / entry point: `<real route or screen entry>`
 
-## Current status
+Runtime family: `<cloud | public cloud | local POS | standalone local | repository-defined value>`
 
-State whether the route is:
+Page classification: `<NEW_PAGE | EXISTING_PAGE>`
 
-- new and not implemented;
-- visually implemented but not integrated;
-- interactive;
-- already integrated and in production-like use.
+Implementation class: `<visual-only | interactive | integrated | device-coupled>`
+
+## Current implementation
+
+Complete this section from Phase 0. List the real route/shell files and
+summarize current behavior without guessing.
 
 ## Authority
 
-Read:
+Read in order:
 
-- root `AGENTS.md`;
-- nearest application `AGENTS.md`;
-- `docs/CURRENT_STATE.md`;
-- relevant feature/product documentation;
-- `docs/ui/README.md`;
-- `docs/ui/YUTA_FRONTEND_RULES.md`;
-- the target application's frontend rules (for Backoffice,
-  `docs/ui/BACKOFFICE_FRONTEND_RULES.md`);
-- this package.
+1. root `AGENTS.md`;
+2. nearest application `AGENTS.md`;
+3. `docs/CURRENT_STATE.md` and relevant architecture, product, feature,
+   operations, and QA docs;
+4. implemented contracts, schema, session/authorization, business logic, and
+   tests;
+5. target-application UI rules;
+6. this page package;
+7. `@yuta/ui` exports and semantic tokens;
+8. visual references.
+
+Application-specific UI rules: `<path or "none; use nearest AGENTS/product docs">`.
 
 ## Documents
 
@@ -47,6 +52,11 @@ List page-specific images and their purpose.
 
 Images are non-authoritative.
 
+## Protected invariants
+
+Summarize the runtime, business, session, data, polling, offline, and device
+invariants discovered in Phase 0 that UI work must preserve.
+
 ## Prompt order
 
 1. `prompts/00_REPOSITORY_ANALYSIS.md`
@@ -56,6 +66,11 @@ Images are non-authoritative.
 5. `prompts/04_DATA_INTEGRATION.md`
 6. `prompts/05_VISUAL_QA.md`
 
-Do not run a later phase before reviewing the previous phase.
+Review each phase before starting the next.
 
-For an existing integrated route, preserve current authorization, data access, mutations, and tests.
+## Stop conditions
+
+Stop and request approval when implementation would require an unsupported
+product capability, field, enum, permission, contract, API route,
+schema/migration, runtime dependency, hardware/device setting, or change to a
+protected business invariant.

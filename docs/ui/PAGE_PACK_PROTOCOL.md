@@ -6,11 +6,15 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-08-08
+Last updated: 2026-08-09
+
+Protocol revision: 3
 
 ## Purpose
 
-This protocol defines the required artifact shape when an external design assistant or coding agent creates a YUTA UI page package.
+This protocol defines repository-ready UI/Codex page packages for every YUTA
+frontend application. It prevents a Backoffice template from being applied
+blindly to POS, Display, public web, or another runtime.
 
 It prevents flat, ambiguous packs and ensures that visual references, product decisions, implementation instructions, and acceptance criteria remain scoped to one stable page directory.
 
@@ -23,6 +27,9 @@ Lên UI + Codex pack chuẩn cho page `<route or page name>`.
 ```
 
 The resulting package must comply with this document.
+
+When the application is ambiguous, identify the target from repository
+evidence before implementation. Do not infer it from the mockup alone.
 
 ## ZIP root rule
 
@@ -72,7 +79,20 @@ Examples:
 /equipe/taches-quotidiennes        -> daily-tasks
 ```
 
-Do not create `v2`, `new`, `final`, or `latest` page directories.
+Because `docs/ui/pages/` is shared across applications, new slugs must be
+unambiguous repository-wide. If vocabulary can collide, include an application
+or feature qualifier:
+
+```text
+apps/yuta-pos /management           -> pos-management
+apps/yuta-pos /management/printing  -> pos-management-printing
+apps/yuta-pos /pos                  -> pos-order-entry
+```
+
+Do not rename existing stable Backoffice packages solely to match this
+recommendation.
+
+Do not create `v2`, `v3`, `new`, `final`, or `latest` page directories.
 
 ## Required page structure
 
@@ -112,10 +132,35 @@ packages/ui/src/styles/global.css
 Each package also links to the target application's specific rules. Backoffice
 packages link to `docs/ui/BACKOFFICE_FRONTEND_RULES.md`.
 
+POS packages link to `docs/ui/POS_FRONTEND_RULES.md` and the current
+`docs/products/pos/*` documents relevant to the screen.
+
 Page documents link to these sources rather than reproducing the component
 export catalog, application rules, or design-token implementation.
 
 ## Required file responsibilities
+
+Before these files are completed, `prompts/00_REPOSITORY_ANALYSIS.md` must
+produce a read-only Implementation Inventory covering:
+
+- target application and real route or screen;
+- `NEW_PAGE` or `EXISTING_PAGE`;
+- visual-only, interactive, integrated, or device-coupled classification;
+- route, shell, and container files;
+- the applicable auth, tenant, public-resolution, local-session, or
+  standalone-local boundary;
+- data owner, persistence boundary, and transport/contracts;
+- loaders, actions, mutations, validation, and transactions;
+- polling, offline, retry, provider, printer, or device behavior;
+- current shared UI primitives and tokens;
+- current visual baseline for an existing screen;
+- tests, authoritative documentation, and protected invariants;
+- conflicts and unsupported proposals;
+- exact repository verification commands.
+
+No later phase may assume a Backoffice tenant model, POS local model, API,
+permission, schema, device capability, or business rule absent from this
+inventory and higher-authority documentation.
 
 ### `README.md`
 
@@ -222,6 +267,9 @@ When it exists and is integrated:
 - treat unsupported mockup fields as proposals;
 - separate visual improvement from data-model extension.
 
+For a device-coupled screen, also preserve current worker, queue, hardware,
+polling, visibility/focus, retry, and physical-success boundaries.
+
 ## New-route rule
 
 When the route does not exist:
@@ -230,6 +278,8 @@ When the route does not exist:
 - define product scope before persistence;
 - typed fixtures may establish the visual baseline;
 - do not add contracts, permissions, or schema fields before mapping and approval.
+
+Typed fixtures cannot masquerade as an implemented backend capability.
 
 ## Reference-image rule
 
@@ -262,9 +312,11 @@ Before delivering a ZIP:
 4. confirm there is no outer wrapper directory;
 5. confirm page references are inside the page package;
 6. confirm shared documents are not duplicated;
-7. confirm the prompts distinguish new and existing route behavior;
+7. confirm the prompts distinguish new, existing, integrated, and
+   device-coupled behavior;
 8. confirm the package uses current repository command names;
-9. report any intentionally omitted file.
+9. print the actual archive tree;
+10. report any intentionally omitted file.
 
 ## Updating an existing page package
 

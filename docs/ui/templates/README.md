@@ -4,16 +4,23 @@ Status: Current
 
 Visibility: Engineering
 
-Use `page/` as a starting structure for a new current page package.
+Last updated: 2026-08-09
+
+Use `page/` as the application-neutral starting structure for a new current
+page package.
 
 The templates are not product authority. Before using them:
 
-- inspect the real route and current implementation;
-- read root and application `AGENTS.md`;
-- read current feature documentation;
-- determine whether the route is new or already integrated;
+- read root and nearest application `AGENTS.md`;
+- read `docs/CURRENT_STATE.md` and current product, feature, operations, and QA
+  documentation;
+- read shared UI rules and target-application UI rules;
+- inspect the real route, current implementation, and tests;
+- classify the target as `NEW_PAGE` or `EXISTING_PAGE` and as visual-only,
+  interactive, integrated, or device-coupled;
 - replace all placeholders;
-- delete sections that do not apply;
-- do not copy unsupported sample behavior.
+- remove non-applicable sections rather than filling them with Backoffice
+  assumptions;
+- do not copy unsupported behavior from visual references.
 
 The canonical packaging rules are in `../PAGE_PACK_PROTOCOL.md`.

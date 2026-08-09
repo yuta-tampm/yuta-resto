@@ -6,17 +6,18 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-08-08
+Last updated: 2026-08-09
+
+Protocol revision: 3
 
 ## Purpose
 
-This directory governs design-to-code work for YUTA frontend applications.
-
-The shared rules cover public cloud applications, the restaurant Backoffice,
-the local POS client, and the standalone Display. Current page packages are
-Backoffice-specific; other applications remain governed by their nearest
-`AGENTS.md` and current product or feature documentation until they receive a
-page package.
+This directory governs design-to-code work for every YUTA frontend
+application. UI implementation resolves repository/shared rules,
+target-application rules, and an optional page or screen package. Current
+Backoffice page packages keep their stable paths; new packages may target any
+frontend application when their metadata identifies the application and
+runtime unambiguously.
 
 It turns an approved visual direction into maintainable UI without treating a screenshot as authority for product scope, navigation, data, authorization, or persistence.
 
@@ -28,8 +29,9 @@ Read this directory together with:
 - the relevant current feature or product documentation;
 - `YUTA_FRONTEND_RULES.md`;
 - the target application's frontend rules, including
-  `BACKOFFICE_FRONTEND_RULES.md` for Backoffice work;
-- the current page package under `pages/<page-slug>/`;
+  `BACKOFFICE_FRONTEND_RULES.md` for Backoffice work and
+  `POS_FRONTEND_RULES.md` for POS work;
+- the current page package under `pages/<page-slug>/` when one exists;
 - `packages/ui/src/index.ts` and `packages/ui/src/styles/global.css`.
 
 ## Authority order
@@ -39,10 +41,11 @@ When sources conflict, use this order:
 1. root and nearest nested `AGENTS.md`;
 2. `docs/CURRENT_STATE.md`, current architecture, and approved feature/product documentation;
 3. implemented contracts, schemas, authorization, tests, and route conventions;
-4. the current page-specific product, UI, and interaction specifications;
-5. `@yuta/ui` exports and semantic tokens;
-6. visual reference images;
-7. model judgment.
+4. the target application's UI rules;
+5. the current page-specific product, UI, and interaction specifications;
+6. `@yuta/ui` exports and semantic tokens;
+7. visual reference images;
+8. model judgment.
 
 Images may guide hierarchy, proportions, density, spacing, and visual tone. They must not be used to infer navigation, permissions, domain fields, API design, or unsupported product capabilities.
 
@@ -53,6 +56,7 @@ docs/ui/
 ├── README.md
 ├── YUTA_FRONTEND_RULES.md
 ├── BACKOFFICE_FRONTEND_RULES.md
+├── POS_FRONTEND_RULES.md
 ├── PAGE_PACK_PROTOCOL.md
 ├── references/
 │   ├── README.md
@@ -88,7 +92,7 @@ docs/ui/
 
 ## Page packages
 
-Each current UI initiative receives one stable directory:
+When an initiative warrants a page package, it receives one stable directory:
 
 ```text
 docs/ui/pages/<page-slug>/
@@ -100,16 +104,25 @@ The required artifact shape and packaging rules are defined in `PAGE_PACK_PROTOC
 
 ## Repository-first workflow
 
-### Phase 0 — Inspect
+### Phase 0 — Repository analysis gate
 
-Before editing:
+Phase 0 makes no code changes. Before editing, produce an Implementation
+Inventory that:
 
-- identify the real route, shell, page container, and nearby pages;
-- read root and application instructions;
-- inspect current authorization, tenant scope, persistence, forms, and tests;
-- inspect `@yuta/ui` exports and semantic tokens;
-- identify whether the route is new, static, interactive, or already integrated;
-- report conflicts between the design and the implemented domain.
+- classifies the target as `NEW_PAGE` or `EXISTING_PAGE` and as visual-only,
+  interactive, integrated, or device-coupled;
+- identifies the real route, shell, page container, and nearby pages;
+- reads root and application instructions;
+- inspects the applicable authorization, public-resolution, local-session, or
+  standalone-local boundary;
+- identifies the data owner, transport/contracts, forms, mutations,
+  transactions, polling, offline/retry, provider, printing, and device behavior
+  that apply;
+- inspects `@yuta/ui` exports and semantic tokens;
+- identifies protected business/runtime invariants and tests;
+- captures or records the current visual baseline for an existing screen;
+- reports conflicts between the design and the implemented domain;
+- records exact repository commands available for verification.
 
 For an existing integrated route, improve it in place. Do not replace working behavior with fixture data merely because a generic design workflow begins with a static phase.
 
@@ -124,6 +137,9 @@ For an existing route:
 - preserve authorization, server boundaries, data loading, and mutations;
 - make the smallest visual change that establishes the approved hierarchy.
 
+For a device-coupled route, also preserve worker, queue, hardware,
+focus/visibility, polling, retry, and physical-success boundaries.
+
 For current Backoffice page packages, use:
 
 ```text
@@ -132,6 +148,10 @@ For current Backoffice page packages, use:
 768 px
 390 px
 ```
+
+Other applications use their application rules, current product/operator
+documentation, and page package. Do not apply the Backoffice viewport matrix
+globally.
 
 ### Phase 2 — Improve component boundaries
 

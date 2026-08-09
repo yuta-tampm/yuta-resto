@@ -1,13 +1,26 @@
 # Codex Prompt — Phase 1: Visual Baseline
 
-Use the approved Phase 0 report.
+Use the approved Phase 0 Implementation Inventory as the behavioral and visual
+baseline.
 
-If the route is new, implement only the approved typed responsive composition.
+If `NEW_PAGE`, typed fixture data may be used only when this page package
+explicitly permits it.
 
-If the route already exists and is integrated, improve it in place. Preserve authorization, tenant scope, loading, data access, mutations, validation, and tests.
+If `EXISTING_PAGE`, refactor the real implementation in place. Preserve the
+identified auth/session boundary, data loading/transport, actions/mutations,
+validation, business invariants, polling/offline/device behavior, and tests. Do
+not replace real data with fixtures.
 
-Use `@yuta/ui`, semantic tokens, and `lucide-react`.
+Use the reference image only for hierarchy, proportions, density, spacing, and
+visual tone. Do not copy navigation, raw colors, fields, permissions, APIs, or
+device behavior from it.
 
-Do not change contracts, permissions, schema, the application shell, or unrelated routes.
+Reuse the current application shell, `@yuta/ui`, semantic tokens,
+`lucide-react`, and app-specific typography.
 
-Capture browser evidence at approved widths and report files, commands, results, deviations, and risks.
+Use the target application's viewport/device profile. Do not assume Backoffice
+widths for another application.
+
+Report files changed, preserved invariants, commands, browser/device evidence,
+intentional deviations, and unresolved conflicts. Do not perform Phase 2
+automatically.

@@ -1,11 +1,19 @@
 # Codex Prompt — Phase 2: Component Refactor
 
-Refactor only meaningful page-level units after the visual baseline is approved.
+Refactor only after the Phase 1 visual baseline is reviewed. Preserve the
+approved appearance and all Phase 0 protected behavior.
 
-Preserve visual output and behavior.
+Extract components by business responsibility, state/mutation ownership,
+testability, or server/client/runtime boundary. Keep page-specific components
+near the route, keep Server Components by default, isolate minimal client
+boundaries, and reuse `@yuta/ui`.
 
-Reuse shared primitives, keep page components near the route, keep Server Components by default, and isolate minimal client boundaries.
+Do not create thin wrappers solely to reduce line count or promote a component
+to `@yuta/ui` before independent reuse is demonstrated.
 
-Do not create wrapper-only abstractions, move components into `@yuta/ui` without proven reuse, or modify unrelated files.
+Do not move trusted data loading, authorization/local-session checks,
+transaction logic, printer/device ownership, or domain calculations into
+client presentation code.
 
-Run current checks and provide before/after browser evidence.
+Run affected existing typechecks/tests and provide browser evidence. Do not
+perform Phase 3 automatically.

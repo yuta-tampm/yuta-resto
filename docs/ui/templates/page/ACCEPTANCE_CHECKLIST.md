@@ -1,50 +1,72 @@
-# <Page name> — Acceptance Checklist
+# <Page or screen name> — Acceptance Checklist
 
-## Repository and scope
+## Repository and application
 
-- [ ] Root and application instructions were read.
-- [ ] Current feature documentation was read.
+- [ ] Root and nearest application instructions were read.
+- [ ] `docs/CURRENT_STATE.md` and relevant current product, feature, operations,
+      and QA docs were read.
+- [ ] Target application, route/screen, runtime boundary, and app-specific UI
+      rules are identified.
+- [ ] Page is classified `NEW_PAGE` or `EXISTING_PAGE`.
+- [ ] Implementation class is recorded.
+- [ ] Phase 0 Implementation Inventory and current visual baseline are complete
+      before code changes.
+
+## Scope and invariants
+
 - [ ] Product scope is preserved.
-- [ ] Tenant and establishment boundaries are preserved.
-- [ ] No unsupported module is introduced.
+- [ ] Current auth/session/trust boundary is preserved.
+- [ ] Current data owner and transport boundary are preserved.
+- [ ] Existing business, transaction, polling, offline, and device invariants
+      are preserved where applicable.
+- [ ] No unsupported mockup module, field, permission, API, schema, or device
+      capability is implemented as fact.
+
+## Existing-page protection
+
+- [ ] Real data was not replaced with fixture data.
+- [ ] Existing loading, actions, mutations, validation, and transactions are
+      preserved or deliberately changed with approval.
+- [ ] Existing polling, offline, retry, and device behavior is preserved where
+      applicable.
+- [ ] Existing tests protecting the screen remain valid.
 
 ## UI
 
-- [ ] Existing shell is reused.
-- [ ] `@yuta/ui` is reused.
-- [ ] Semantic tokens are used.
-- [ ] `lucide-react` is used.
+- [ ] Existing application shell is reused unless shell work is explicitly in
+      scope.
+- [ ] `@yuta/ui` and semantic tokens are reused where applicable.
 - [ ] No raw colors are copied from references.
 - [ ] No duplicate shared primitive is created.
+- [ ] Core actions match target-application interaction priorities.
+- [ ] Loading, disabled, pending, error, success, and recovery states are
+      truthful.
 
 ## Behavior
 
-- [ ] Current authorization is preserved.
-- [ ] Current loading and mutations are preserved for existing routes.
 - [ ] Unsupported mockup concepts remain proposals.
 - [ ] Destructive behavior is confirmed.
 - [ ] Validation is truthful.
 - [ ] Save errors preserve input.
 
-## Responsive and accessibility
+## Responsive, touch, and accessibility
 
-- [ ] 1440 px checked.
-- [ ] 1024 px checked.
-- [ ] 768 px checked.
-- [ ] 390 px checked.
+- [ ] Target application/page viewport or device matrix was used; Backoffice
+      widths were not assumed globally.
 - [ ] No horizontal overflow.
-- [ ] Keyboard and focus behavior work.
+- [ ] Keyboard/focus behavior works where supported.
+- [ ] Touch targets and touch feedback work for touch-oriented screens.
 - [ ] Status includes text.
 - [ ] Icon-only controls have accessible names.
 
 ## Verification
 
-- [ ] `pnpm docs:check`
-- [ ] `pnpm format:check`
-- [ ] `pnpm architecture:check`
-- [ ] Backoffice typecheck
-- [ ] Backoffice tests
-- [ ] Backoffice build
-- [ ] Relevant domain tests
-- [ ] Browser evidence attached
-- [ ] No lint result is claimed unless a real lint command exists
+- [ ] `pnpm docs:check` was run if documentation changed.
+- [ ] `pnpm format:check` was run.
+- [ ] `pnpm architecture:check` was run when relevant.
+- [ ] Target-application typecheck, tests, and build commands were discovered
+      and run as required.
+- [ ] Affected runtime, domain, contract, database, offline, and device tests
+      were run when behavior changed.
+- [ ] Browser/device evidence is attached.
+- [ ] No lint result is claimed unless a real lint command exists.

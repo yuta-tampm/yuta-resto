@@ -1,39 +1,52 @@
-# <Page name> — Implementation Plan
+# <Page or screen name> — Implementation Plan
 
 Status: Draft
 
 Visibility: Engineering
 
-## Phase 0 — Repository analysis
+## Phase 0 — Repository analysis gate
 
-Inspect route, shell, current implementation, authorization, data, `@yuta/ui`, tokens, tests, and references.
+Run `prompts/00_REPOSITORY_ANALYSIS.md`. Produce the complete Implementation
+Inventory. Make no code changes.
 
-No code changes.
+Do not continue while the target application/runtime, classification,
+data/session boundary, protected invariants, current visual baseline, or
+required commands remain ambiguous.
 
 ## Phase 1 — Visual baseline
 
-For a new route, implement a typed responsive composition if approved.
+For `NEW_PAGE`, typed fixtures may be used only when explicitly approved.
 
-For an existing integrated route, improve the current route in place and preserve behavior.
+For `EXISTING_PAGE`, improve the real implementation in place. Preserve real
+data, authorization/session, mutations/actions, validation, transport,
+polling/offline/device behavior, and tests.
 
 Do not change contracts, permissions, schema, or unrelated routes.
 
-## Phase 2 — Component boundaries
+## Phase 2 — Component refactor
 
-Extract meaningful page-level components without visual or behavioral regression.
+Extract meaningful units by responsibility while preserving appearance and
+behavior. Reuse `@yuta/ui`; do not prematurely promote feature-specific
+components to the shared package.
 
 ## Phase 3 — Approved interactions
 
-Implement only approved interaction semantics.
+Implement only approved interactions and current state transitions. Preserve
+authoritative business logic and the current trusted boundary.
 
 ## Phase 4 — Data integration or extension
 
-Map current domain fields first. Stop for approval when a new field, enum, route, permission, contract, or migration is required.
+Map the current domain and transport first. Existing pages normally require no
+data rewrite for a visual refactor. Stop for approval before adding fields,
+enums, permissions, contracts, APIs, schema/migrations, runtime dependencies,
+or privileged device settings.
 
 ## Phase 5 — Visual and responsive QA
 
-Capture requested widths, compare, fix major differences, and run repository checks.
+Use the target application's viewport/device matrix and operational QA
+requirements. Run exact existing repository checks and attach evidence.
 
 ## Delivery evidence
 
-For each phase report files, commands, results, screenshots, deviations, and risks.
+Report files changed, protected invariants, commands/results, browser/device
+evidence, deviations, blocked proposals, and risks.

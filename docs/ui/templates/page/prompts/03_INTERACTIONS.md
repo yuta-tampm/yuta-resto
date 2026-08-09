@@ -1,11 +1,20 @@
 # Codex Prompt — Phase 3: Approved Interactions
 
-Implement only interactions approved in the page specifications.
+Implement only interactions approved by current product documentation and this
+page package.
 
-Do not guess destructive confirmation, merge/replace, dirty-state, preview, or persistence semantics.
+Preserve the target application's actual trust model: cloud
+authorization/tenant scope, public-resolution boundary, local POS session,
+standalone-local ownership, or another repository-defined boundary. Do not
+assume a Backoffice tenant model.
 
-Preserve server authorization and trusted tenant scope.
+Preserve current mutation/action/transaction ownership, validation,
+destructive confirmation, merge/replace rules, dirty-state behavior, polling,
+retry, offline recovery, device behavior, and idempotency where applicable.
 
-Do not add a state or form library for one page.
+Do not add a state/form/data library for one page when the repository already
+has an established approach.
 
-Test keyboard, focus, pending, validation, success, error, retry, and mobile behavior.
+Test applicable keyboard, touch, focus, pending, validation, success, error,
+degraded, retry, and recovery behavior. Report exact commands and results. Do
+not perform Phase 4 automatically.
