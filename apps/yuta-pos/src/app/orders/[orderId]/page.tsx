@@ -1,4 +1,4 @@
-import { allergySummary, formatEuros } from '@yuta/core';
+import { formatEuros } from '@yuta/core';
 import { Badge, Button, Card, Separator, cn } from '@yuta/ui';
 import {
   Clock,
@@ -17,6 +17,7 @@ import { v7 as uuidv7 } from 'uuid';
 import type { ReactNode } from 'react';
 import { cancelOrderAction } from '../../actions';
 import { PosPageShell } from '../../components/PosPageShell';
+import { allergySummaryFromSnapshots } from '../../_pos-helpers';
 import { AllergyAlert } from '../../components/AllergyAlert';
 import { SendToKitchenButton } from '../../components/SendToKitchenButton';
 import { posApi, type PosOrderDetail } from '../../../lib/pos-api';
@@ -195,8 +196,8 @@ function SendOrderButton({
         )
         .map((item) => ({
           itemName: item.itemNameSnapshot,
-          allergyNote: allergySummary(
-            item.allergenCodes,
+          allergyNote: allergySummaryFromSnapshots(
+            item.selectedAllergens,
             item.allergySeverity,
             item.allergyNote,
           ),
@@ -318,8 +319,8 @@ function ArticlesPanel({
                 {item.hasAllergy && (
                   <p className="mt-1 inline-flex items-start gap-1 rounded-md bg-status-danger-soft px-2 py-1 text-xs font-black text-status-danger">
                     <TriangleAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-                    {allergySummary(
-                      item.allergenCodes,
+                    {allergySummaryFromSnapshots(
+                      item.selectedAllergens,
                       item.allergySeverity,
                       item.allergyNote,
                     )}

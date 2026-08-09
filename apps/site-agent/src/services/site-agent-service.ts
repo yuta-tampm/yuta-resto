@@ -30,6 +30,11 @@ import { createLocalAuthService } from './local-auth-service';
 import { createLocalUserManagementService } from './local-user-management-service';
 import { createPrintJobService } from './print-job-service';
 import { createPrintSettingsService } from './print-settings-service';
+import {
+  createInstructionSettingsService,
+  ensureInstructionSettings,
+  resolveInstructionConfig,
+} from './instruction-settings-service';
 
 export function createSiteAgentService(db: PosDatabaseClient) {
   const orderCommands = createOrderCommandService(db);
@@ -40,6 +45,7 @@ export function createSiteAgentService(db: PosDatabaseClient) {
   const userManagement = createLocalUserManagementService(db);
   const catalogManagement = createCatalogManagementService(db);
   const comboManagement = createComboManagementService(db);
+  const instructionSettings = createInstructionSettingsService(db);
   async function getHealth() {
     try {
       await db.execute(sql`select 1`);
@@ -77,26 +83,37 @@ export function createSiteAgentService(db: PosDatabaseClient) {
   }
 
   async function getCatalog() {
-    const [categoryRows, itemRows, ruleRows, groupRows, groupItemRows] =
-      await Promise.all([
-        db
-          .select()
-          .from(menuCategories)
-          .orderBy(asc(menuCategories.sortOrder), asc(menuCategories.name)),
-        db
-          .select()
-          .from(menuItems)
-          .orderBy(asc(menuItems.sortOrder), asc(menuItems.name)),
-        db
-          .select()
-          .from(comboRules)
-          .orderBy(asc(comboRules.priority), asc(comboRules.name)),
-        db
-          .select()
-          .from(comboRuleGroups)
-          .orderBy(asc(comboRuleGroups.sortOrder), asc(comboRuleGroups.name)),
-        db.select().from(comboRuleGroupItems),
-      ]);
+    const [
+      categoryRows,
+      itemRows,
+      ruleRows,
+      groupRows,
+      groupItemRows,
+      instructionSettingsRow,
+    ] = await Promise.all([
+      db
+        .select()
+        .from(menuCategories)
+        .orderBy(asc(menuCategories.sortOrder), asc(menuCategories.name)),
+      db
+        .select()
+        .from(menuItems)
+        .orderBy(asc(menuItems.sortOrder), asc(menuItems.name)),
+      db
+        .select()
+        .from(comboRules)
+        .orderBy(asc(comboRules.priority), asc(comboRules.name)),
+      db
+        .select()
+        .from(comboRuleGroups)
+        .orderBy(asc(comboRuleGroups.sortOrder), asc(comboRuleGroups.name)),
+      db.select().from(comboRuleGroupItems),
+      ensureInstructionSettings(db),
+    ]);
+    const instructionSettingsValue = {
+      quickInstructionOptions: instructionSettingsRow.quickInstructionOptions,
+      allergenOptions: instructionSettingsRow.allergenOptions,
+    };
     const itemsByCategory = new Map<string, typeof itemRows>();
     for (const item of itemRows) {
       const categoryItems = itemsByCategory.get(item.categoryId) ?? [];
@@ -122,6 +139,8 @@ export function createSiteAgentService(db: PosDatabaseClient) {
         name: category.name,
         sortOrder: category.sortOrder,
         isActive: category.isActive,
+        defaultInstructionCodes: category.defaultInstructionCodes,
+        additionalInstructionCodes: category.additionalInstructionCodes,
         items: (itemsByCategory.get(category.id) ?? []).map((item) => ({
           id: item.id,
           categoryId: item.categoryId,
@@ -132,6 +151,13 @@ export function createSiteAgentService(db: PosDatabaseClient) {
           orderingPolicy: item.orderingPolicy,
           variantOptions: item.variantOptions,
           requiredVariantQuantity: item.requiredVariantQuantity,
+          defaultInstructionCodes: item.defaultInstructionCodes,
+          additionalInstructionCodes: item.additionalInstructionCodes,
+          instructionConfig: resolveInstructionConfig(
+            instructionSettingsValue,
+            category,
+            item,
+          ),
           isAvailable: item.isAvailable,
           sortOrder: item.sortOrder,
         })),
@@ -159,6 +185,7 @@ export function createSiteAgentService(db: PosDatabaseClient) {
           })),
         })),
       })),
+      instructionSettings: instructionSettingsValue,
     });
   }
 
@@ -220,6 +247,7 @@ export function createSiteAgentService(db: PosDatabaseClient) {
     ...userManagement,
     ...catalogManagement,
     ...comboManagement,
+    ...instructionSettings,
     ...orderCommands,
     ...financial,
     ...printing,

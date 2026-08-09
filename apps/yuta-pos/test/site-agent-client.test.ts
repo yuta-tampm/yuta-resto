@@ -47,6 +47,7 @@ const orderItemSnapshot = {
   selectedVariants: [],
   hasAllergy: false,
   allergenCodes: [],
+  selectedAllergens: [],
   allergySeverity: null,
   allergyNote: null,
   allergyAcknowledgedAt: null,
@@ -200,6 +201,8 @@ describe('yuta-pos site-agent client', () => {
       name: 'Lunch',
       sortOrder: 10,
       isActive: true,
+      defaultInstructionCodes: [],
+      additionalInstructionCodes: [],
       items: [],
     };
     const item = {
@@ -212,6 +215,9 @@ describe('yuta-pos site-agent client', () => {
       orderingPolicy: 'merge' as const,
       variantOptions: [],
       requiredVariantQuantity: 0,
+      defaultInstructionCodes: null,
+      additionalInstructionCodes: null,
+      instructionConfig: { defaultOptions: [], additionalOptions: [] },
       isAvailable: true,
       sortOrder: 10,
     };
@@ -229,6 +235,8 @@ describe('yuta-pos site-agent client', () => {
     await client.createCatalogCategory(sessionToken, {
       name: category.name,
       sortOrder: category.sortOrder,
+      defaultInstructionCodes: [],
+      additionalInstructionCodes: [],
     });
     await client.updateCatalogCategory(sessionToken, category.id, {
       isActive: false,
@@ -242,6 +250,8 @@ describe('yuta-pos site-agent client', () => {
       orderingPolicy: item.orderingPolicy,
       variantOptions: item.variantOptions,
       requiredVariantQuantity: item.requiredVariantQuantity,
+      defaultInstructionCodes: null,
+      additionalInstructionCodes: null,
       isAvailable: true,
       sortOrder: item.sortOrder,
     });
@@ -466,7 +476,16 @@ describe('yuta-pos site-agent client', () => {
   it('uses the versioned order-entry endpoints', async () => {
     const fetchImplementation = vi
       .fn<typeof fetch>()
-      .mockResolvedValueOnce(Response.json({ categories: [], comboRules: [] }))
+      .mockResolvedValueOnce(
+        Response.json({
+          categories: [],
+          comboRules: [],
+          instructionSettings: {
+            quickInstructionOptions: [],
+            allergenOptions: [],
+          },
+        }),
+      )
       .mockResolvedValueOnce(Response.json({ orders: [orderSnapshot] }))
       .mockResolvedValueOnce(
         Response.json({

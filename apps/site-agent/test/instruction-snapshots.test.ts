@@ -7,7 +7,18 @@ import {
 
 describe('local order instruction snapshots', () => {
   it('persists stable labels for known quick instructions', () => {
-    expect(buildInstructionSnapshots(['SANS_SAUCE'])).toEqual([
+    expect(
+      buildInstructionSnapshots(
+        [
+          {
+            code: 'SANS_SAUCE',
+            label: 'Sans sauce',
+            conflictsWith: ['SAUCE_A_PART'],
+          },
+        ],
+        ['SANS_SAUCE'],
+      ),
+    ).toEqual([
       {
         instructionId: 'qi_sans_sauce',
         code: 'SANS_SAUCE',
@@ -18,7 +29,21 @@ describe('local order instruction snapshots', () => {
 
   it('rejects conflicting quick instructions', () => {
     expect(() =>
-      buildInstructionSnapshots(['SANS_SAUCE', 'SAUCE_A_PART']),
+      buildInstructionSnapshots(
+        [
+          {
+            code: 'SANS_SAUCE',
+            label: 'Sans sauce',
+            conflictsWith: ['SAUCE_A_PART'],
+          },
+          {
+            code: 'SAUCE_A_PART',
+            label: 'Sauce à part',
+            conflictsWith: ['SANS_SAUCE'],
+          },
+        ],
+        ['SANS_SAUCE', 'SAUCE_A_PART'],
+      ),
     ).toThrowError(HttpError);
   });
 

@@ -2,10 +2,11 @@
 
 import type {
   AllergySeverity,
-  ItemInstructionConfig,
-  ItemVariantSelection,
-  SelectedItemInstruction,
-} from '@yuta/core';
+  ItemVariantSnapshot,
+  LocalInstructionSettings,
+  LocalItemInstructionConfig,
+  SelectedInstructionSnapshot,
+} from '@yuta/contracts/local-pos';
 import {
   Button,
   Dialog,
@@ -30,9 +31,11 @@ type MobileOrderDialogItem = {
   quantity: number;
   name: string;
   note: string | null;
-  quickInstructions: SelectedItemInstruction[];
-  selectedVariants: ItemVariantSelection[];
-  instructionConfig: ItemInstructionConfig;
+  quickInstructions: SelectedInstructionSnapshot[];
+  selectedVariants: ItemVariantSnapshot[];
+  instructionConfig: LocalItemInstructionConfig & {
+    variantOptions: Array<{ code: string; label: string }>;
+  };
   orderingPolicy: 'merge' | 'separate';
   requiredVariantQuantity: number;
   hasAllergy: boolean;
@@ -53,6 +56,7 @@ type MobileOrderDialogProps = {
   totalLabel: string;
   orderId: string;
   canEditItems: boolean;
+  allergyOptions: LocalInstructionSettings['allergenOptions'];
 };
 
 export function MobileOrderDialog({
@@ -62,6 +66,7 @@ export function MobileOrderDialog({
   totalLabel,
   orderId,
   canEditItems,
+  allergyOptions,
 }: MobileOrderDialogProps) {
   return (
     <Dialog>
@@ -146,6 +151,7 @@ export function MobileOrderDialog({
                         itemName={item.name}
                         quantity={item.quantity}
                         instructionConfig={item.instructionConfig}
+                        allergyOptions={allergyOptions}
                         requiredVariantQuantity={item.requiredVariantQuantity}
                         initialNote={item.note}
                         initialQuickInstructions={item.quickInstructions}

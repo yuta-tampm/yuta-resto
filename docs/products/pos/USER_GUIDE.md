@@ -230,6 +230,18 @@ Choices behave as toggles, and selecting an incompatible choice automatically
 removes the previous one. A free-text note of up to 300 characters remains
 available. Quick choices are stored as structured code and label snapshots.
 
+The available quick choices and allergen names are local settings. An
+administrator or manager can open `Gestion locale > Menu et categories`, then
+`Options notes / allergies`, to add, rename, or remove definitions. Quick
+instruction lines use `CODE = Libelle | CONFLICT_1, CONFLICT_2`; allergen lines
+use `CODE = Libelle`. Codes are stable uppercase identifiers. Remove an
+instruction from every category and item before deleting its definition.
+
+Each category selects its common choices and the choices shown under `Autres`.
+An item inherits its category by default, but can use a custom list when its
+preparation differs. For Luna, `Cocktails & mocktails` includes `Sans alcool`.
+These settings stay in the local POS database and are not copied to the cloud.
+
 `Sans cacahuetes` is only a preparation request and never enables the allergy
 workflow by itself. If the client reports an allergy, enable `Allergie pour cet
 article`, select at least one allergen, and select `Intolerance`, `Allergie`, or

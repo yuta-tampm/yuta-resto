@@ -248,15 +248,22 @@ N/A       not applicable for this run
 
 ## Local Menu Management
 
-| Case                   | Expected Result                                                   | Result | Notes |
-| ---------------------- | ----------------------------------------------------------------- | -----: | ----- |
-| Open local menu UI     | Menu management page loads                                        |        |       |
-| Create category        | Category appears in POS category tabs                             |        |       |
-| Create menu item       | Item appears in POS item grid when available                      |        |       |
-| Edit menu item price   | New orders use new price; old order item snapshots stay unchanged |        |       |
-| Change kitchen station | New order items use updated station snapshot                      |        |       |
-| Deactivate item        | Item disappears from POS item grid                                |        |       |
-| Reactivate item        | Item appears again in POS item grid                               |        |       |
+| Case                   | Expected Result                                                    | Result | Notes |
+| ---------------------- | ------------------------------------------------------------------ | -----: | ----- |
+| Open local menu UI     | Menu management page loads                                         |        |       |
+| Create category        | Category appears in POS category tabs                              |        |       |
+| Create menu item       | Item appears in POS item grid when available                       |        |       |
+| Edit menu item price   | New orders use new price; old order item snapshots stay unchanged  |        |       |
+| Change kitchen station | New order items use updated station snapshot                       |        |       |
+| Deactivate item        | Item disappears from POS item grid                                 |        |       |
+| Reactivate item        | Item appears again in POS item grid                                |        |       |
+| Add quick instruction  | New definition can be assigned to a category or item               |        |       |
+| Add local allergen     | New allergen appears in the item allergy selector                  |        |       |
+| Category inheritance   | Item without an override receives the category instruction lists   |        |       |
+| Item override          | Custom item lists replace the inherited category lists             |        |       |
+| Delete assigned option | Save is blocked until the option is removed from all assignments   |        |       |
+| Rename selected option | Existing order keeps its snapshotted label; new order uses new one |        |       |
+| Cocktail instructions  | `Sans alcool` is offered for `Cocktails & mocktails`               |        |       |
 
 ## Local Combo Management
 

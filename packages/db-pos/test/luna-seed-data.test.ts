@@ -7,6 +7,10 @@ import {
   lunaMainDishNames,
   lunaMenuItemSeeds,
 } from '../src/luna-seed-data';
+import {
+  lunaCategoryInstructionConfigs,
+  lunaQuickInstructionOptions,
+} from '../src/luna-instruction-seed-data';
 
 describe('Luna POS seed data', () => {
   it('contains the approved complete menu without duplicate names', () => {
@@ -100,5 +104,17 @@ describe('Luna POS seed data', () => {
         { code: 'NEMS_VEGAN', label: '2 nems vegan' },
       ],
     });
+  });
+
+  it('configures alcohol-free cocktails through local instruction data', () => {
+    expect(lunaQuickInstructionOptions).toContainEqual({
+      code: 'SANS_ALCOOL',
+      label: 'Sans alcool',
+      conflictsWith: [],
+    });
+    expect(
+      lunaCategoryInstructionConfigs['Cocktails & mocktails']
+        .defaultInstructionCodes,
+    ).toContain('SANS_ALCOOL');
   });
 });

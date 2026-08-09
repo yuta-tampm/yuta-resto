@@ -24,7 +24,14 @@ import {
   SelectValue,
   Textarea,
 } from '@yuta/ui';
-import { Eye, EyeOff, PackagePlus, Pencil, Plus } from 'lucide-react';
+import {
+  Eye,
+  EyeOff,
+  PackagePlus,
+  Pencil,
+  Plus,
+  SlidersHorizontal,
+} from 'lucide-react';
 import { useActionState, useEffect, useRef, useState } from 'react';
 import {
   createCatalogCategoryAction,
@@ -33,6 +40,7 @@ import {
   setCatalogItemAvailableAction,
   updateCatalogCategoryAction,
   updateCatalogItemAction,
+  updateInstructionSettingsAction,
   type CatalogActionState,
 } from './actions';
 
@@ -40,14 +48,22 @@ type Category = LocalCatalogResponse['categories'][number];
 type Item = Category['items'][number];
 type Station = Item['kitchenStation'];
 type OrderingPolicy = Item['orderingPolicy'];
+type InstructionSettings = LocalCatalogResponse['instructionSettings'];
 
 const initialState: CatalogActionState = { error: null, success: null };
 const stations: Station[] = ['kitchen', 'bar', 'dessert', 'none'];
 
-export function CatalogManagement({ categories }: { categories: Category[] }) {
+export function CatalogManagement({
+  categories,
+  instructionSettings,
+}: {
+  categories: Category[];
+  instructionSettings: InstructionSettings;
+}) {
   return (
     <div className="grid gap-5">
       <div className="flex flex-wrap justify-end gap-2">
+        <InstructionSettingsDialog settings={instructionSettings} />
         <CreateCategoryDialog />
         <ItemDialog categories={categories} />
       </div>
@@ -90,6 +106,11 @@ function CategorySection({
             </Badge>
             <Badge tone="neutral" variant="outline">
               Ordre {category.sortOrder}
+            </Badge>
+            <Badge tone="neutral" variant="outline">
+              {category.defaultInstructionCodes.length +
+                category.additionalInstructionCodes.length}{' '}
+              suggestions
             </Badge>
           </div>
           <p className="mt-1 text-xs text-secondary">
@@ -184,6 +205,72 @@ function CreateCategoryDialog() {
   );
 }
 
+function InstructionSettingsDialog({
+  settings,
+}: {
+  settings: InstructionSettings;
+}) {
+  const [open, setOpen] = useState(false);
+  const [state, action, pending] = useActionState(
+    updateInstructionSettingsAction,
+    initialState,
+  );
+  useCloseOnSuccess(state, setOpen);
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline">
+          <SlidersHorizontal className="h-4 w-4" />
+          Options notes / allergies
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>Options locales</DialogTitle>
+          <DialogDescription>
+            Ces définitions appartiennent uniquement à ce POS local. Retirez
+            d’abord une suggestion des catégories et articles avant de la
+            supprimer ici.
+          </DialogDescription>
+        </DialogHeader>
+        <form action={action} className="grid gap-4">
+          <FormField
+            label="Suggestions rapides"
+            hint="Une ligne : CODE = Libellé | CONFLIT_1, CONFLIT_2. La partie conflit est facultative."
+          >
+            <Textarea
+              name="quickInstructionOptions"
+              defaultValue={settings.quickInstructionOptions
+                .map(
+                  ({ code, label, conflictsWith }) =>
+                    `${code} = ${label}${
+                      conflictsWith.length > 0
+                        ? ` | ${conflictsWith.join(', ')}`
+                        : ''
+                    }`,
+                )
+                .join('\n')}
+              rows={14}
+            />
+          </FormField>
+          <FormField label="Allergènes" hint="Une ligne : CODE = Libellé.">
+            <Textarea
+              name="allergenOptions"
+              defaultValue={settings.allergenOptions
+                .map(({ code, label }) => `${code} = ${label}`)
+                .join('\n')}
+              rows={8}
+            />
+          </FormField>
+          <Feedback state={state} />
+          <EditorFooter pending={pending} onCancel={() => setOpen(false)} />
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function EditCategoryDialog({ category }: { category: Category }) {
   const [open, setOpen] = useState(false);
   const [state, action, pending] = useActionState(
@@ -236,6 +323,27 @@ function CategoryFields({ category }: { category?: Category }) {
           min={-100000}
           max={100000}
           required
+        />
+      </FormField>
+      <FormField
+        label="Suggestions principales"
+        hint="Codes séparés par des espaces, virgules ou retours à la ligne."
+      >
+        <Textarea
+          name="defaultInstructionCodes"
+          defaultValue={category?.defaultInstructionCodes.join('\n')}
+          rows={5}
+          placeholder="SANS_ALCOOL"
+        />
+      </FormField>
+      <FormField
+        label="Suggestions supplémentaires"
+        hint="Affichées sous Autres."
+      >
+        <Textarea
+          name="additionalInstructionCodes"
+          defaultValue={category?.additionalInstructionCodes.join('\n')}
+          rows={4}
         />
       </FormField>
     </>
@@ -316,6 +424,9 @@ function ItemFields({
   const [orderingPolicy, setOrderingPolicy] = useState<OrderingPolicy>(
     item?.orderingPolicy ?? 'merge',
   );
+  const [instructionSource, setInstructionSource] = useState<
+    'category' | 'custom'
+  >(item?.defaultInstructionCodes === null ? 'category' : 'custom');
 
   return (
     <>
@@ -369,6 +480,51 @@ function ItemFields({
           />
         </FormField>
       </div>
+      <FormField
+        label="Suggestions de notes"
+        hint="Héritez de la catégorie ou définissez des choix propres à cet article."
+      >
+        <input
+          type="hidden"
+          name="instructionSource"
+          value={instructionSource}
+        />
+        <Select
+          value={instructionSource}
+          onValueChange={(value) =>
+            setInstructionSource(value as 'category' | 'custom')
+          }
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="category">Hériter de la catégorie</SelectItem>
+            <SelectItem value="custom">Options propres à l’article</SelectItem>
+          </SelectContent>
+        </Select>
+      </FormField>
+      {instructionSource === 'custom' && (
+        <div className="grid gap-4 sm:grid-cols-2">
+          <FormField label="Suggestions principales" hint="Une ligne par code.">
+            <Textarea
+              name="defaultInstructionCodes"
+              defaultValue={item?.defaultInstructionCodes?.join('\n')}
+              rows={5}
+            />
+          </FormField>
+          <FormField
+            label="Suggestions supplémentaires"
+            hint="Affichées sous Autres."
+          >
+            <Textarea
+              name="additionalInstructionCodes"
+              defaultValue={item?.additionalInstructionCodes?.join('\n')}
+              rows={5}
+            />
+          </FormField>
+        </div>
+      )}
       <FormField label="Poste de préparation">
         <input type="hidden" name="kitchenStation" value={station} />
         <Select

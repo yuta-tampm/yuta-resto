@@ -1,8 +1,4 @@
-import {
-  allergySummary,
-  formatEuros,
-  getItemInstructionConfig,
-} from '@yuta/core';
+import { formatEuros } from '@yuta/core';
 import {
   Alert,
   AlertDescription,
@@ -30,6 +26,7 @@ import {
   kitchenSendFeedback,
 } from './kitchen-send-validation';
 import { posApi } from '../../../../lib/pos-api';
+import { allergySummaryFromSnapshots } from '../../../_pos-helpers';
 
 type OrderItemsPageProps = {
   params: Promise<{
@@ -69,11 +66,16 @@ export default async function OrderItemsPage({
     menuItemConfigs.map((item) => [
       item.id,
       {
-        ...getItemInstructionConfig(item.name, item.category.name),
+        ...item.instructionConfig,
         variantOptions: item.variantOptions,
       },
     ]),
   );
+  const emptyInstructionConfig = {
+    defaultOptions: [],
+    additionalOptions: [],
+    variantOptions: [],
+  };
   const selectedCategoryId = category ?? 'all';
   const categoryTabs: CategoryTab[] = [
     { id: 'all', name: 'Toutes' },
@@ -158,8 +160,8 @@ export default async function OrderItemsPage({
               )
               .map((item) => ({
                 itemName: item.itemNameSnapshot,
-                allergyNote: allergySummary(
-                  item.allergenCodes,
+                allergyNote: allergySummaryFromSnapshots(
+                  item.selectedAllergens,
                   item.allergySeverity,
                   item.allergyNote,
                 ),
@@ -236,6 +238,7 @@ export default async function OrderItemsPage({
             <MobileOrderDialog
               orderId={order.id}
               canEditItems={canEditItems}
+              allergyOptions={catalog.instructionSettings.allergenOptions}
               items={activeOrderItems.map((item) => ({
                 id: item.id,
                 quantity: item.quantity,
@@ -245,7 +248,7 @@ export default async function OrderItemsPage({
                 selectedVariants: item.selectedVariants,
                 instructionConfig:
                   instructionConfigByMenuItemId.get(item.menuItemId) ??
-                  getItemInstructionConfig(item.itemNameSnapshot, ''),
+                  emptyInstructionConfig,
                 orderingPolicy:
                   menuItemConfigById.get(item.menuItemId)?.orderingPolicy ??
                   'merge',
@@ -256,8 +259,8 @@ export default async function OrderItemsPage({
                 allergenCodes: item.allergenCodes,
                 allergySeverity: item.allergySeverity,
                 allergyNote: item.allergyNote,
-                allergyDisplay: allergySummary(
-                  item.allergenCodes,
+                allergyDisplay: allergySummaryFromSnapshots(
+                  item.selectedAllergens,
                   item.allergySeverity,
                   item.allergyNote,
                 ),
@@ -340,8 +343,8 @@ export default async function OrderItemsPage({
                         {item.hasAllergy && (
                           <p className="mt-1 inline-flex items-start gap-1 rounded-md bg-status-danger-soft px-2 py-1 text-xs font-black text-status-danger">
                             <TriangleAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-                            {allergySummary(
-                              item.allergenCodes,
+                            {allergySummaryFromSnapshots(
+                              item.selectedAllergens,
                               item.allergySeverity,
                               item.allergyNote,
                             )}
@@ -359,11 +362,10 @@ export default async function OrderItemsPage({
                             instructionConfig={
                               instructionConfigByMenuItemId.get(
                                 item.menuItemId,
-                              ) ??
-                              getItemInstructionConfig(
-                                item.itemNameSnapshot,
-                                '',
-                              )
+                              ) ?? emptyInstructionConfig
+                            }
+                            allergyOptions={
+                              catalog.instructionSettings.allergenOptions
                             }
                             requiredVariantQuantity={
                               menuItemConfigById.get(item.menuItemId)

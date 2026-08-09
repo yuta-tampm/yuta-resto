@@ -16,6 +16,7 @@ export const localPosRoutes = {
   catalog: `${localPosApiBasePath}/catalog`,
   catalogCategories: `${localPosApiBasePath}/catalog/categories`,
   catalogItems: `${localPosApiBasePath}/catalog/items`,
+  instructionSettings: `${localPosApiBasePath}/catalog/instruction-settings`,
   comboRules: `${localPosApiBasePath}/catalog/combo-rules`,
   comboRuleGroups: `${localPosApiBasePath}/catalog/combo-groups`,
   comboRuleGroupItems: `${localPosApiBasePath}/catalog/combo-group-items`,
@@ -133,13 +134,42 @@ export const kitchenStationSchema = z.enum([
 ]);
 
 export const itemOrderingPolicySchema = z.enum(['merge', 'separate']);
+const catalogOptionCodeSchema = z
+  .string()
+  .trim()
+  .regex(/^[A-Z0-9_]{1,50}$/);
 export const catalogItemVariantOptionSchema = z
   .object({
-    code: z
-      .string()
-      .trim()
-      .regex(/^[A-Z0-9_]{1,50}$/),
+    code: catalogOptionCodeSchema,
     label: z.string().trim().min(1).max(100),
+  })
+  .strict();
+
+export const localQuickInstructionOptionSchema = z
+  .object({
+    code: catalogOptionCodeSchema,
+    label: z.string().trim().min(1).max(100),
+    conflictsWith: z.array(catalogOptionCodeSchema).max(20),
+  })
+  .strict();
+export const localAllergenOptionSchema = z
+  .object({
+    code: catalogOptionCodeSchema,
+    label: z.string().trim().min(1).max(100),
+  })
+  .strict();
+export const localInstructionSettingsSchema = z
+  .object({
+    quickInstructionOptions: z
+      .array(localQuickInstructionOptionSchema)
+      .max(200),
+    allergenOptions: z.array(localAllergenOptionSchema).max(100),
+  })
+  .strict();
+export const localItemInstructionConfigSchema = z
+  .object({
+    defaultOptions: z.array(localQuickInstructionOptionSchema).max(100),
+    additionalOptions: z.array(localQuickInstructionOptionSchema).max(100),
   })
   .strict();
 
@@ -154,6 +184,15 @@ export const localCatalogItemSchema = z
     orderingPolicy: itemOrderingPolicySchema,
     variantOptions: z.array(catalogItemVariantOptionSchema).max(20),
     requiredVariantQuantity: z.number().int().min(0).max(100),
+    defaultInstructionCodes: z
+      .array(catalogOptionCodeSchema)
+      .max(100)
+      .nullable(),
+    additionalInstructionCodes: z
+      .array(catalogOptionCodeSchema)
+      .max(100)
+      .nullable(),
+    instructionConfig: localItemInstructionConfigSchema,
     isAvailable: z.boolean(),
     sortOrder: z.number().int(),
   })
@@ -165,6 +204,8 @@ export const localCatalogCategorySchema = z
     name: z.string().min(1),
     sortOrder: z.number().int(),
     isActive: z.boolean(),
+    defaultInstructionCodes: z.array(catalogOptionCodeSchema).max(100),
+    additionalInstructionCodes: z.array(catalogOptionCodeSchema).max(100),
     items: z.array(localCatalogItemSchema),
   })
   .strict();
@@ -206,6 +247,7 @@ export const localCatalogResponseSchema = z
   .object({
     categories: z.array(localCatalogCategorySchema),
     comboRules: z.array(localComboRuleSchema),
+    instructionSettings: localInstructionSettingsSchema,
   })
   .strict();
 
@@ -217,6 +259,14 @@ export const createLocalCatalogCategoryInputSchema = z
   .object({
     name: catalogNameSchema,
     sortOrder: catalogSortOrderSchema.default(0),
+    defaultInstructionCodes: z
+      .array(catalogOptionCodeSchema)
+      .max(100)
+      .default([]),
+    additionalInstructionCodes: z
+      .array(catalogOptionCodeSchema)
+      .max(100)
+      .default([]),
   })
   .strict();
 
@@ -225,6 +275,14 @@ export const updateLocalCatalogCategoryInputSchema = z
     name: catalogNameSchema.optional(),
     sortOrder: catalogSortOrderSchema.optional(),
     isActive: z.boolean().optional(),
+    defaultInstructionCodes: z
+      .array(catalogOptionCodeSchema)
+      .max(100)
+      .optional(),
+    additionalInstructionCodes: z
+      .array(catalogOptionCodeSchema)
+      .max(100)
+      .optional(),
   })
   .strict()
   .refine((values) => Object.keys(values).length > 0, {
@@ -241,6 +299,16 @@ export const createLocalCatalogItemInputSchema = z
     orderingPolicy: itemOrderingPolicySchema.default('merge'),
     variantOptions: z.array(catalogItemVariantOptionSchema).max(20).default([]),
     requiredVariantQuantity: z.number().int().min(0).max(100).default(0),
+    defaultInstructionCodes: z
+      .array(catalogOptionCodeSchema)
+      .max(100)
+      .nullable()
+      .default(null),
+    additionalInstructionCodes: z
+      .array(catalogOptionCodeSchema)
+      .max(100)
+      .nullable()
+      .default(null),
     isAvailable: z.boolean().default(true),
     sortOrder: catalogSortOrderSchema.default(0),
   })
@@ -256,6 +324,16 @@ export const updateLocalCatalogItemInputSchema = z
     orderingPolicy: itemOrderingPolicySchema.optional(),
     variantOptions: z.array(catalogItemVariantOptionSchema).max(20).optional(),
     requiredVariantQuantity: z.number().int().min(0).max(100).optional(),
+    defaultInstructionCodes: z
+      .array(catalogOptionCodeSchema)
+      .max(100)
+      .nullable()
+      .optional(),
+    additionalInstructionCodes: z
+      .array(catalogOptionCodeSchema)
+      .max(100)
+      .nullable()
+      .optional(),
     isAvailable: z.boolean().optional(),
     sortOrder: catalogSortOrderSchema.optional(),
   })
@@ -271,6 +349,9 @@ export const localCatalogCategoryResponseSchema = z
 export const localCatalogItemResponseSchema = z
   .object({ item: localCatalogItemSchema })
   .strict();
+
+export const updateLocalInstructionSettingsInputSchema =
+  localInstructionSettingsSchema;
 
 const comboRuleNameSchema = z.string().trim().min(1).max(255);
 const comboMoneySchema = z.number().int().min(0).max(100_000_000);
@@ -471,6 +552,12 @@ export const itemVariantSnapshotSchema = z
     quantity: z.number().int().positive(),
   })
   .strict();
+export const allergenSnapshotSchema = z
+  .object({
+    code: z.string().min(1),
+    labelSnapshot: z.string().min(1),
+  })
+  .strict();
 export const localOrderItemSchema = z
   .object({
     id: identifierSchema,
@@ -485,6 +572,7 @@ export const localOrderItemSchema = z
     selectedVariants: z.array(itemVariantSnapshotSchema),
     hasAllergy: z.boolean(),
     allergenCodes: z.array(z.string()),
+    selectedAllergens: z.array(allergenSnapshotSchema),
     allergySeverity: allergySeveritySchema.nullable(),
     allergyNote: z.string().nullable(),
     allergyAcknowledgedAt: isoDateTimeSchema.nullable(),
@@ -863,6 +951,21 @@ export type ResetLocalUserPinInput = z.infer<
 export type LocalAuthLoginInput = z.infer<typeof localAuthLoginInputSchema>;
 export type LocalAuthSession = z.infer<typeof localAuthSessionSchema>;
 export type LocalCatalogResponse = z.infer<typeof localCatalogResponseSchema>;
+export type LocalItemInstructionConfig = z.infer<
+  typeof localItemInstructionConfigSchema
+>;
+export type SelectedInstructionSnapshot = z.infer<
+  typeof selectedInstructionSnapshotSchema
+>;
+export type ItemVariantSnapshot = z.infer<typeof itemVariantSnapshotSchema>;
+export type AllergenSnapshot = z.infer<typeof allergenSnapshotSchema>;
+export type AllergySeverity = z.infer<typeof allergySeveritySchema>;
+export type LocalInstructionSettings = z.infer<
+  typeof localInstructionSettingsSchema
+>;
+export type UpdateLocalInstructionSettingsInput = z.infer<
+  typeof updateLocalInstructionSettingsInputSchema
+>;
 export type CreateLocalCatalogCategoryInput = z.infer<
   typeof createLocalCatalogCategoryInputSchema
 >;

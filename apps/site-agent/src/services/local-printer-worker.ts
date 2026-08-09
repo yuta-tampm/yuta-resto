@@ -31,6 +31,14 @@ const kitchenPrintPayloadSchema = z
           ),
           hasAllergy: z.boolean(),
           allergenCodes: z.array(z.string()),
+          selectedAllergens: z
+            .array(
+              z.object({
+                code: z.string().min(1),
+                labelSnapshot: z.string().min(1),
+              }),
+            )
+            .default([]),
           allergySeverity: z
             .enum([
               'intolerance',
@@ -419,7 +427,9 @@ function renderProductionTicket(
       if (item.hasAllergy) {
         const allergy = [
           allergySeverityLabel(item.allergySeverity),
-          ...item.allergenCodes,
+          ...(item.selectedAllergens.length > 0
+            ? item.selectedAllergens.map(({ labelSnapshot }) => labelSnapshot)
+            : item.allergenCodes),
           item.allergyNote,
         ].filter((value): value is string => Boolean(value));
         setBold(true);

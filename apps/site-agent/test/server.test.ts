@@ -302,6 +302,38 @@ describe('site-agent HTTP boundary', () => {
     expect(invalidGroup.status).toBe(400);
   });
 
+  it('protects and validates local instruction settings', async () => {
+    const input = {
+      quickInstructionOptions: [
+        { code: 'SANS_ALCOOL', label: 'Sans alcool', conflictsWith: [] },
+      ],
+      allergenOptions: [{ code: 'ARACHIDES', label: 'Arachides' }],
+    };
+    const unauthorized = await fetch(
+      `${baseUrl}/api/v1/catalog/instruction-settings`,
+      {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(input),
+      },
+    );
+    expect(unauthorized.status).toBe(401);
+
+    const updated = await fetch(
+      `${baseUrl}/api/v1/catalog/instruction-settings`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${sessionToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(input),
+      },
+    );
+    expect(updated.status).toBe(200);
+    expect(await updated.json()).toEqual(input);
+  });
+
   it('protects print queue reads and commands', async () => {
     const unauthorizedList = await fetch(`${baseUrl}/api/v1/print-jobs`);
     expect(unauthorizedList.status).toBe(401);
@@ -487,13 +519,23 @@ function createMockService(): SiteAgentService {
       },
     }),
     resetLocalUserPin: async () => ({ user: localSession.user }),
-    getCatalog: async () => ({ categories: [], comboRules: [] }),
+    getCatalog: async () => ({
+      categories: [],
+      comboRules: [],
+      instructionSettings: {
+        quickInstructionOptions: [],
+        allergenOptions: [],
+      },
+    }),
+    updateInstructionSettings: async (input) => input,
     createCatalogCategory: async (input) => ({
       category: {
         id: userId,
         name: input.name,
         sortOrder: input.sortOrder,
         isActive: true,
+        defaultInstructionCodes: input.defaultInstructionCodes,
+        additionalInstructionCodes: input.additionalInstructionCodes,
         items: [],
       },
     }),
@@ -503,6 +545,8 @@ function createMockService(): SiteAgentService {
         name: input.name ?? 'Category',
         sortOrder: input.sortOrder ?? 0,
         isActive: input.isActive ?? true,
+        defaultInstructionCodes: input.defaultInstructionCodes ?? [],
+        additionalInstructionCodes: input.additionalInstructionCodes ?? [],
         items: [],
       },
     }),
@@ -510,6 +554,10 @@ function createMockService(): SiteAgentService {
       item: {
         id: orderId,
         ...input,
+        instructionConfig: {
+          defaultOptions: [],
+          additionalOptions: [],
+        },
       },
     }),
     updateCatalogItem: async (_itemId, input) => ({
@@ -523,6 +571,12 @@ function createMockService(): SiteAgentService {
         orderingPolicy: input.orderingPolicy ?? 'merge',
         variantOptions: input.variantOptions ?? [],
         requiredVariantQuantity: input.requiredVariantQuantity ?? 0,
+        defaultInstructionCodes: input.defaultInstructionCodes ?? null,
+        additionalInstructionCodes: input.additionalInstructionCodes ?? null,
+        instructionConfig: {
+          defaultOptions: [],
+          additionalOptions: [],
+        },
         isAvailable: input.isAvailable ?? true,
         sortOrder: input.sortOrder ?? 0,
       },

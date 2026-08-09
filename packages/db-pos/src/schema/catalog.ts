@@ -18,6 +18,17 @@ export type MenuItemVariantOption = {
   label: string;
 };
 
+export type QuickInstructionOption = {
+  code: string;
+  label: string;
+  conflictsWith: string[];
+};
+
+export type AllergenOption = {
+  code: string;
+  label: string;
+};
+
 const createdAt = () =>
   timestamp('created_at', { withTimezone: true }).defaultNow().notNull();
 const updatedAt = () =>
@@ -33,6 +44,14 @@ export const menuCategories = pgTable(
     name: varchar('name', { length: 255 }).notNull(),
     sortOrder: integer('sort_order').default(0).notNull(),
     isActive: boolean('is_active').default(true).notNull(),
+    defaultInstructionCodes: jsonb('default_instruction_codes')
+      .$type<string[]>()
+      .default([])
+      .notNull(),
+    additionalInstructionCodes: jsonb('additional_instruction_codes')
+      .$type<string[]>()
+      .default([])
+      .notNull(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
@@ -63,6 +82,12 @@ export const menuItems = pgTable(
     requiredVariantQuantity: integer('required_variant_quantity')
       .default(0)
       .notNull(),
+    defaultInstructionCodes: jsonb('default_instruction_codes').$type<
+      string[] | null
+    >(),
+    additionalInstructionCodes: jsonb('additional_instruction_codes').$type<
+      string[] | null
+    >(),
     isAvailable: boolean('is_available').default(true).notNull(),
     sortOrder: integer('sort_order').default(0).notNull(),
     createdAt: createdAt(),
@@ -80,5 +105,28 @@ export const menuItems = pgTable(
   ],
 );
 
+export const posInstructionSettings = pgTable(
+  'pos_instruction_settings',
+  {
+    id: varchar('id', { length: 32 }).primaryKey(),
+    quickInstructionOptions: jsonb('quick_instruction_options')
+      .$type<QuickInstructionOption[]>()
+      .default([])
+      .notNull(),
+    allergenOptions: jsonb('allergen_options')
+      .$type<AllergenOption[]>()
+      .default([])
+      .notNull(),
+    updatedAt: updatedAt(),
+  },
+  (table) => [
+    check(
+      'pos_instruction_settings_singleton_check',
+      sql`${table.id} = 'default'`,
+    ),
+  ],
+);
+
 export type MenuCategory = typeof menuCategories.$inferSelect;
 export type MenuItem = typeof menuItems.$inferSelect;
+export type PosInstructionSettings = typeof posInstructionSettings.$inferSelect;

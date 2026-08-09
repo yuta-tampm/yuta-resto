@@ -27,23 +27,16 @@ import { and, asc, eq, inArray, ne, sql } from 'drizzle-orm';
 import { v7 as uuidv7 } from 'uuid';
 import { HttpError } from '../http';
 import {
+  buildAllergenSnapshots,
   buildInstructionSnapshots,
   buildVariantSnapshots,
 } from './instruction-snapshots';
+import {
+  ensureInstructionSettings,
+  resolveInstructionConfig,
+} from './instruction-settings-service';
 import { toOrderSummary } from './site-agent-service';
 import { ensurePrintSettings } from './print-settings-service';
-
-const knownAllergenCodes = new Set([
-  'PEANUTS',
-  'GLUTEN',
-  'SOY',
-  'CRUSTACEANS',
-  'EGGS',
-  'MILK',
-  'SESAME',
-  'FISH',
-  'OTHER',
-]);
 
 export function createOrderCommandService(db: PosDatabaseExecutor) {
   async function getOrderDetail(orderId: string) {
@@ -128,6 +121,19 @@ export function createOrderCommandService(db: PosDatabaseExecutor) {
     if (!menuItem) {
       throw new HttpError(404, 'MENU_ITEM_NOT_FOUND', 'Menu item not found.');
     }
+    const [category, instructionSettings] = await Promise.all([
+      db.query.menuCategories.findFirst({
+        where: eq(menuCategories.id, menuItem.categoryId),
+      }),
+      ensureInstructionSettings(db),
+    ]);
+    if (!category) {
+      throw new HttpError(
+        404,
+        'MENU_CATEGORY_NOT_FOUND',
+        'Menu category not found.',
+      );
+    }
     await assertOrderCanChangeItems(db, order);
     if (item.status !== 'pending') {
       throw new HttpError(
@@ -150,9 +156,6 @@ export function createOrderCommandService(db: PosDatabaseExecutor) {
       );
     }
     const requestedAllergens = input.allergenCodes ?? item.allergenCodes;
-    if (requestedAllergens.some((code) => !knownAllergenCodes.has(code))) {
-      throw new HttpError(422, 'UNKNOWN_ALLERGEN', 'Unknown allergen.');
-    }
     const hasAllergy = input.hasAllergy ?? item.hasAllergy;
     const allergySeverity = hasAllergy
       ? (input.allergySeverity ?? item.allergySeverity)
@@ -161,6 +164,12 @@ export function createOrderCommandService(db: PosDatabaseExecutor) {
       ? (input.allergyNote ?? item.allergyNote)
       : null;
     const allergenCodes = hasAllergy ? requestedAllergens : [];
+    const selectedAllergens = hasAllergy
+      ? buildAllergenSnapshots(
+          instructionSettings.allergenOptions,
+          allergenCodes,
+        )
+      : [];
     if (hasAllergy && allergenCodes.length === 0) {
       throw new HttpError(
         422,
@@ -183,8 +192,19 @@ export function createOrderCommandService(db: PosDatabaseExecutor) {
       );
     }
 
+    const instructionConfig = resolveInstructionConfig(
+      instructionSettings,
+      category,
+      menuItem,
+    );
     const quickInstructions = input.selectedInstructionCodes
-      ? buildInstructionSnapshots(input.selectedInstructionCodes)
+      ? buildInstructionSnapshots(
+          [
+            ...instructionConfig.defaultOptions,
+            ...instructionConfig.additionalOptions,
+          ],
+          input.selectedInstructionCodes,
+        )
       : item.quickInstructions;
     const selectedVariants = input.selectedVariants
       ? buildVariantSnapshots(
@@ -208,6 +228,7 @@ export function createOrderCommandService(db: PosDatabaseExecutor) {
         selectedVariants,
         hasAllergy,
         allergenCodes,
+        selectedAllergens,
         allergySeverity,
         allergyNote,
         allergyAcknowledgedAt: allergyChanged
@@ -848,6 +869,7 @@ function toOrderItem(item: OrderItem) {
     selectedVariants: item.selectedVariants,
     hasAllergy: item.hasAllergy,
     allergenCodes: item.allergenCodes,
+    selectedAllergens: item.selectedAllergens,
     allergySeverity: item.allergySeverity,
     allergyNote: item.allergyNote,
     allergyAcknowledgedAt: item.allergyAcknowledgedAt?.toISOString() ?? null,
@@ -962,6 +984,7 @@ function buildKitchenPayload(
       selectedVariants: item.selectedVariants,
       hasAllergy: item.hasAllergy,
       allergenCodes: item.allergenCodes,
+      selectedAllergens: item.selectedAllergens,
       allergySeverity: item.allergySeverity,
       allergyNote: item.allergyNote,
       allergyAcknowledgedAt: item.allergyAcknowledgedAt?.toISOString() ?? null,

@@ -50,6 +50,13 @@
       "when": 1786261117801,
       "tag": "0006_exclude_mix_luna_from_formulas",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1786261815851,
+      "tag": "0007_local_instruction_settings",
+      "breakpoints": true
     }
   ]
 }

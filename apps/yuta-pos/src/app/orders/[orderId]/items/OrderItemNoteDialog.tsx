@@ -2,10 +2,11 @@
 
 import type {
   AllergySeverity,
-  ItemInstructionConfig,
-  ItemVariantSelection,
-  SelectedItemInstruction,
-} from '@yuta/core';
+  ItemVariantSnapshot,
+  LocalInstructionSettings,
+  LocalItemInstructionConfig,
+  SelectedInstructionSnapshot,
+} from '@yuta/contracts/local-pos';
 import {
   Alert,
   AlertDescription,
@@ -37,18 +38,6 @@ import {
 import { useMemo, useState } from 'react';
 import { updateOrderItemInstructionsAction } from '../../../actions';
 
-const allergyOptions = [
-  { code: 'PEANUTS', label: 'Cacahuètes' },
-  { code: 'GLUTEN', label: 'Gluten' },
-  { code: 'SOY', label: 'Soja' },
-  { code: 'CRUSTACEANS', label: 'Crustacés' },
-  { code: 'EGGS', label: 'Œufs' },
-  { code: 'MILK', label: 'Lait' },
-  { code: 'SESAME', label: 'Sésame' },
-  { code: 'FISH', label: 'Poisson' },
-  { code: 'OTHER', label: 'Autre' },
-] as const;
-
 const allergySeverityOptions: Array<{
   value: AllergySeverity;
   label: string;
@@ -66,11 +55,14 @@ type OrderItemNoteDialogProps = {
   orderItemId: string;
   itemName: string;
   quantity: number;
-  instructionConfig: ItemInstructionConfig;
+  instructionConfig: LocalItemInstructionConfig & {
+    variantOptions: Array<{ code: string; label: string }>;
+  };
+  allergyOptions: LocalInstructionSettings['allergenOptions'];
   requiredVariantQuantity: number;
   initialNote: string | null;
-  initialQuickInstructions: SelectedItemInstruction[];
-  initialVariants: ItemVariantSelection[];
+  initialQuickInstructions: SelectedInstructionSnapshot[];
+  initialVariants: ItemVariantSnapshot[];
   initialHasAllergy: boolean;
   initialAllergenCodes: string[];
   initialAllergySeverity: AllergySeverity | null;
@@ -85,6 +77,7 @@ export function OrderItemNoteDialog({
   itemName,
   quantity,
   instructionConfig,
+  allergyOptions,
   requiredVariantQuantity,
   initialNote,
   initialQuickInstructions,

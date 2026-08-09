@@ -176,6 +176,7 @@ The initial implemented API is:
 GET  /health
 GET  /api/v1/local-users
 GET  /api/v1/catalog
+PATCH /api/v1/catalog/instruction-settings
 POST /api/v1/catalog/combo-rules
 PATCH /api/v1/catalog/combo-rules/:ruleId
 POST /api/v1/catalog/combo-groups
@@ -313,6 +314,14 @@ code/label snapshots and `order_items.note` for optional free text. Product or
 category configuration determines the visible choices; conflicting codes are
 also rejected by the service. `order_items.selected_variants` stores structured
 quantity snapshots for catalog-configured options on each order-item row.
+
+The quick-instruction and allergen catalogs are owned by the local POS database
+through `pos_instruction_settings`. Categories select their common and
+additional quick-instruction codes; items either inherit those lists or replace
+them. This configuration is exposed only by `site-agent` and is intentionally
+absent from `@yuta/core` and all cloud persistence. Labels selected on an order
+item are snapshotted so later local configuration changes do not rewrite
+historical tickets.
 
 Allergies are stored per item with `has_allergy`, `allergen_codes`,
 `allergy_severity`, and `allergy_note`. `allergy_acknowledged_at/by` records the
@@ -456,7 +465,9 @@ until the operator-login cutover is designed.
 `/management/catalog` provides authenticated local management for categories
 and menu items. Admins and managers can create or edit categories and items,
 change prices and kitchen stations, reorder entries, hide a category, or mark
-an item unavailable. Each item also owns an ordering policy (`merge` or
+an item unavailable. The same page manages the local quick-instruction and
+allergen definitions, category assignments, and optional item overrides. Each
+item also owns an ordering policy (`merge` or
 `separate`), stable `CODE = Libellé` option definitions, and the number of
 options required per portion. This allows another individually plated product
 to reuse the Mochi behavior without a code change. The workflow performs no

@@ -8,9 +8,9 @@ import { CatalogManagement } from './CatalogManagement';
 export default async function LocalCatalogManagementPage() {
   await requireLocalManagementSession();
 
-  let categories;
+  let catalog;
   try {
-    categories = (await siteAgentClient.getCatalog()).categories;
+    catalog = await siteAgentClient.getCatalog();
   } catch {
     return (
       <main className="grid min-h-dvh place-items-center bg-canvas p-4">
@@ -48,7 +48,10 @@ export default async function LocalCatalogManagementPage() {
             </Button>
           }
         />
-        <CatalogManagement categories={categories} />
+        <CatalogManagement
+          categories={catalog.categories}
+          instructionSettings={catalog.instructionSettings}
+        />
       </div>
     </main>
   );

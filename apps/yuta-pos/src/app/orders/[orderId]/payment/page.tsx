@@ -1,4 +1,4 @@
-import { allergySummary, formatEuros } from '@yuta/core';
+import { formatEuros } from '@yuta/core';
 import { Badge, Button, Card, Separator } from '@yuta/ui';
 import { Tags, TriangleAlert } from 'lucide-react';
 import { v7 as uuidv7 } from 'uuid';
@@ -10,6 +10,7 @@ import {
   splitOrderEquallyAction,
 } from '../../../actions';
 import { PosPageShell } from '../../../components/PosPageShell';
+import { allergySummaryFromSnapshots } from '../../../_pos-helpers';
 import { AllergyAlert } from '../../../components/AllergyAlert';
 import { EqualSplitDialogContent } from './EqualSplitDialogContent';
 import { ItemSplitDialogContent } from './ItemSplitDialogContent';
@@ -241,8 +242,8 @@ export default async function PaymentPage({
                   {item.hasAllergy && (
                     <p className="mt-1 inline-flex items-start gap-1 rounded-md bg-status-danger-soft px-2 py-1 text-xs font-black text-status-danger">
                       <TriangleAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-                      {allergySummary(
-                        item.allergenCodes,
+                      {allergySummaryFromSnapshots(
+                        item.selectedAllergens,
                         item.allergySeverity,
                         item.allergyNote,
                       )}

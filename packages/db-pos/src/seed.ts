@@ -11,12 +11,19 @@ import {
   lunaMenuItemSeeds,
 } from './luna-seed-data';
 import {
+  lunaAllergenOptions,
+  lunaCategoryInstructionConfigs,
+  lunaItemInstructionConfigs,
+  lunaQuickInstructionOptions,
+} from './luna-instruction-seed-data';
+import {
   comboRuleGroupItems,
   comboRuleGroups,
   comboRules,
   localUsers,
   menuCategories,
   menuItems,
+  posInstructionSettings,
   type ComboRule,
   type ComboRuleGroup,
   type LocalUser,
@@ -44,6 +51,7 @@ export async function seedPosData(
   const kitchenPin = readSeedPin('YUTA_POS_SEED_KITCHEN_PIN');
   const activeDb =
     seedDb ?? (await import('./client')).createPosDatabaseClient(process.env);
+  await upsertInstructionSettings(activeDb);
   const [adminPinHash, staffPinHash, kitchenPinHash] = await Promise.all([
     hashLocalPin(adminPin),
     hashLocalPin(staffPin),
@@ -70,14 +78,21 @@ export async function seedPosData(
 
   const categories: Record<string, MenuCategory> = {};
   for (const categorySeed of lunaCategorySeeds) {
-    categories[categorySeed.name] = await upsertCategory(
-      activeDb,
-      categorySeed,
-    );
+    const instructionConfig = lunaCategoryInstructionConfigs[
+      categorySeed.name
+    ] ?? {
+      defaultInstructionCodes: [],
+      additionalInstructionCodes: [],
+    };
+    categories[categorySeed.name] = await upsertCategory(activeDb, {
+      ...categorySeed,
+      ...instructionConfig,
+    });
   }
 
   const seededMenuItems: Record<string, MenuItem> = {};
   for (const itemSeed of lunaMenuItemSeeds) {
+    const instructionConfig = lunaItemInstructionConfigs[itemSeed.name];
     seededMenuItems[itemSeed.name] = await upsertMenuItem(activeDb, {
       categoryId: categories[itemSeed.category].id,
       name: itemSeed.name,
@@ -87,6 +102,10 @@ export async function seedPosData(
       orderingPolicy: itemSeed.orderingPolicy ?? 'merge',
       variantOptions: itemSeed.variantOptions ?? [],
       requiredVariantQuantity: itemSeed.requiredVariantQuantity ?? 0,
+      defaultInstructionCodes:
+        instructionConfig?.defaultInstructionCodes ?? null,
+      additionalInstructionCodes:
+        instructionConfig?.additionalInstructionCodes ?? null,
       isAvailable: itemSeed.isAvailable ?? true,
       sortOrder: itemSeed.sortOrder,
     });
@@ -170,7 +189,12 @@ function readSeedPin(environmentKey: string): string {
 
 async function upsertCategory(
   seedDb: PosDatabaseClient,
-  values: { name: string; sortOrder: number },
+  values: {
+    name: string;
+    sortOrder: number;
+    defaultInstructionCodes: string[];
+    additionalInstructionCodes: string[];
+  },
 ): Promise<MenuCategory> {
   const existing = await seedDb.query.menuCategories.findFirst({
     where: eq(menuCategories.name, values.name),
@@ -179,7 +203,7 @@ async function upsertCategory(
   if (existing) {
     const [updated] = await seedDb
       .update(menuCategories)
-      .set({ sortOrder: values.sortOrder, isActive: true })
+      .set({ ...values, isActive: true })
       .where(eq(menuCategories.id, existing.id))
       .returning();
     return updated;
@@ -203,6 +227,8 @@ async function upsertMenuItem(
     orderingPolicy: 'merge' | 'separate';
     variantOptions: Array<{ code: string; label: string }>;
     requiredVariantQuantity: number;
+    defaultInstructionCodes: string[] | null;
+    additionalInstructionCodes: string[] | null;
     isAvailable: boolean;
     sortOrder: number;
   },
@@ -225,6 +251,25 @@ async function upsertMenuItem(
     .values({ id: uuidv7(), ...values })
     .returning();
   return created;
+}
+
+async function upsertInstructionSettings(
+  seedDb: PosDatabaseClient,
+): Promise<void> {
+  await seedDb
+    .insert(posInstructionSettings)
+    .values({
+      id: 'default',
+      quickInstructionOptions: lunaQuickInstructionOptions,
+      allergenOptions: lunaAllergenOptions,
+    })
+    .onConflictDoUpdate({
+      target: posInstructionSettings.id,
+      set: {
+        quickInstructionOptions: lunaQuickInstructionOptions,
+        allergenOptions: lunaAllergenOptions,
+      },
+    });
 }
 
 async function upsertComboRule(

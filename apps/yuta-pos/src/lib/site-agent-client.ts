@@ -51,6 +51,8 @@ import {
   updateLocalUserInputSchema,
   updateLocalOrderItemInputSchema,
   updateLocalPrintSettingsInputSchema,
+  updateLocalInstructionSettingsInputSchema,
+  localInstructionSettingsSchema,
   type AddLocalOrderItemInput,
   type CreateLocalCatalogCategoryInput,
   type CreateLocalCatalogItemInput,
@@ -77,6 +79,7 @@ import {
   type UpdateLocalUserInput,
   type UpdateLocalOrderItemInput,
   type UpdateLocalPrintSettingsInput,
+  type UpdateLocalInstructionSettingsInput,
 } from '@yuta/contracts/local-pos';
 import { z } from 'zod';
 
@@ -239,6 +242,21 @@ export function createSiteAgentClient(input?: {
     },
     async getCatalog() {
       return request(localPosRoutes.catalog, localCatalogResponseSchema);
+    },
+    async updateInstructionSettings(
+      token: string,
+      input: UpdateLocalInstructionSettingsInput,
+    ) {
+      const body = updateLocalInstructionSettingsInputSchema.parse(input);
+      return request(
+        localPosRoutes.instructionSettings,
+        localInstructionSettingsSchema,
+        {
+          method: 'PATCH',
+          headers: managementJsonHeaders(token),
+          body: JSON.stringify(body),
+        },
+      );
     },
     async createCatalogCategory(
       token: string,

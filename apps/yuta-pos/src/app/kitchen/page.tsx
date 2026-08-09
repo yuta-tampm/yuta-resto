@@ -1,4 +1,4 @@
-import { allergySummary, getServiceDayWindow } from '@yuta/core';
+import { getServiceDayWindow } from '@yuta/core';
 import { Badge, Button, Card, SegmentedNav, Separator } from '@yuta/ui';
 import {
   ChefHat,
@@ -22,6 +22,7 @@ import {
   confirmOrderItemAllergyAction,
 } from '../actions';
 import { PosPageShell } from '../components/PosPageShell';
+import { allergySummaryFromSnapshots } from '../_pos-helpers';
 import { AllergyAlert } from '../components/AllergyAlert';
 import { KitchenAutoRefresh } from './KitchenAutoRefresh';
 import { posApi, type PosOrder, type PosOrderItem } from '../../lib/pos-api';
@@ -264,8 +265,8 @@ export default async function KitchenPage({ searchParams }: KitchenPageProps) {
                             <p className="inline-flex max-w-full items-start gap-2 text-sm font-black uppercase">
                               <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" />
                               <span className="min-w-0 break-words">
-                                {allergySummary(
-                                  item.allergenCodes,
+                                {allergySummaryFromSnapshots(
+                                  item.selectedAllergens,
                                   item.allergySeverity,
                                   item.allergyNote,
                                 )}
