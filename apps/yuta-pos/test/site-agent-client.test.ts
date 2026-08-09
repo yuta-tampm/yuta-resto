@@ -373,7 +373,18 @@ describe('yuta-pos site-agent client', () => {
     };
     const fetchImplementation = vi
       .fn<typeof fetch>()
-      .mockResolvedValueOnce(Response.json({ printJobs: [printJob] }))
+      .mockResolvedValueOnce(
+        Response.json({
+          printJobs: [printJob],
+          summary: { pending: 1, printing: 0, printed: 0, failed: 0 },
+          pagination: {
+            page: 1,
+            pageSize: 25,
+            totalItems: 1,
+            totalPages: 1,
+          },
+        }),
+      )
       .mockResolvedValueOnce(Response.json({ ...printJob, type: 'test' }))
       .mockResolvedValueOnce(
         Response.json({ ...printJob, status: 'printing' }),
@@ -390,7 +401,7 @@ describe('yuta-pos site-agent client', () => {
     });
 
     expect(fetchImplementation.mock.calls.map(([url]) => url)).toEqual([
-      'http://site-agent.test/api/v1/print-jobs?limit=25&status=pending',
+      'http://site-agent.test/api/v1/print-jobs?page=1&limit=25&status=pending',
       'http://site-agent.test/api/v1/print-jobs/test',
       `http://site-agent.test/api/v1/print-jobs/${printJob.id}/commands`,
     ]);

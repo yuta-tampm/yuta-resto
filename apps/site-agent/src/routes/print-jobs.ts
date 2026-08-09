@@ -18,6 +18,7 @@ export const handlePrintJobRoutes: RouteHandler = async ({
     await requireLocalManagementSession(request.headers.authorization, service);
     const query = printJobsQuerySchema.parse({
       status: url.searchParams.get('status') ?? undefined,
+      page: url.searchParams.get('page') ?? undefined,
       limit: url.searchParams.get('limit') ?? undefined,
     });
     sendJson(response, 200, await service.listPrintJobs(query));

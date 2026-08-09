@@ -6,20 +6,36 @@ import { requireLocalManagementCredentials } from '../../../server/local-managem
 import { PrintingManagement } from './PrintingManagement';
 import { PrintingAutoRefresh } from './PrintingAutoRefresh';
 
-export default async function LocalPrintingManagementPage() {
+type LocalPrintingManagementPageProps = {
+  searchParams: Promise<{ page?: string }>;
+};
+
+const printJobsPageSize = 10;
+
+export default async function LocalPrintingManagementPage({
+  searchParams,
+}: LocalPrintingManagementPageProps) {
   const { token } = await requireLocalManagementCredentials();
+  const requestedPage = positivePage((await searchParams).page);
 
   let jobs;
+  let summary;
+  let pagination;
   let settings;
   let printerStatus;
   try {
     const [jobsResponse, settingsResponse, printerStatusResponse] =
       await Promise.all([
-        siteAgentClient.listPrintJobs(token, { limit: 100 }),
+        siteAgentClient.listPrintJobs(token, {
+          page: requestedPage,
+          limit: printJobsPageSize,
+        }),
         siteAgentClient.getPrintSettings(token),
         siteAgentClient.getPrinterStatus(),
       ]);
     jobs = jobsResponse.printJobs;
+    summary = jobsResponse.summary;
+    pagination = jobsResponse.pagination;
     settings = settingsResponse;
     printerStatus = printerStatusResponse;
   } catch {
@@ -62,10 +78,17 @@ export default async function LocalPrintingManagementPage() {
         <PrintingAutoRefresh />
         <PrintingManagement
           jobs={jobs}
+          summary={summary}
+          pagination={pagination}
           settings={settings}
           printerStatus={printerStatus}
         />
       </div>
     </main>
   );
+}
+
+function positivePage(value: string | undefined): number {
+  const page = Number(value);
+  return Number.isInteger(page) && page > 0 ? page : 1;
 }

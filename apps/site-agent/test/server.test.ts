@@ -357,7 +357,16 @@ describe('site-agent HTTP boundary', () => {
       headers: { Authorization: `Bearer ${sessionToken}` },
     });
     expect(list.status).toBe(200);
-    expect(await list.json()).toEqual({ printJobs: [printJobSnapshot] });
+    expect(await list.json()).toEqual({
+      printJobs: [printJobSnapshot],
+      summary: { pending: 1, printing: 0, printed: 0, failed: 0 },
+      pagination: {
+        page: 1,
+        pageSize: 25,
+        totalItems: 1,
+        totalPages: 1,
+      },
+    });
 
     const unauthorizedTest = await fetch(`${baseUrl}/api/v1/print-jobs/test`, {
       method: 'POST',
@@ -712,7 +721,16 @@ function createMockService(): SiteAgentService {
     getPaymentSummary: async () => {
       throw new Error('Not called by this test.');
     },
-    listPrintJobs: async () => ({ printJobs: [printJobSnapshot] }),
+    listPrintJobs: async (query) => ({
+      printJobs: [printJobSnapshot],
+      summary: { pending: 1, printing: 0, printed: 0, failed: 0 },
+      pagination: {
+        page: query.page,
+        pageSize: query.limit,
+        totalItems: 1,
+        totalPages: 1,
+      },
+    }),
     createTestPrintJob: async () => printJobSnapshot,
     executePrintJobCommand: async () => printJobSnapshot,
     getPrintSettings: async () => ({

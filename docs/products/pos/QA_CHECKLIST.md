@@ -209,6 +209,8 @@ N/A       not applicable for this run
 | Printer adapter processes pending jobs    | Job status changes to `printed`                                             |        |       |
 | Visible queue auto-refresh                | Queue and printer status changes appear within five seconds without F5      |        |       |
 | Hidden queue polling                      | Hidden tab stops polling and refreshes immediately when visible again       |        |       |
+| Print queue pagination                    | Newest 10 tickets load and older pages use Previous/Next navigation         |        |       |
+| Print queue total counters                | Status cards count the complete queue rather than only the visible page     |        |       |
 | Printer ready status                      | Writable RFCOMM character device shows ready without opening the device     |        |       |
 | Printer unavailable status                | Missing, invalid, or non-writable RFCOMM device shows unavailable           |        |       |
 | Printer attention status                  | Failed or stale pending work shows attention with queue counts              |        |       |

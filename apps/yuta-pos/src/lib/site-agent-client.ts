@@ -435,7 +435,10 @@ export function createSiteAgentClient(input?: {
     },
     async listPrintJobs(token: string, input: Partial<PrintJobsQuery> = {}) {
       const query = printJobsQuerySchema.parse(input);
-      const search = new URLSearchParams({ limit: String(query.limit) });
+      const search = new URLSearchParams({
+        page: String(query.page),
+        limit: String(query.limit),
+      });
       if (query.status) search.set('status', query.status);
       return request(
         `${localPosRoutes.printJobs}?${search.toString()}`,

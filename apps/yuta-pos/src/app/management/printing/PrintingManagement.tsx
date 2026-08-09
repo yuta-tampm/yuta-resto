@@ -2,6 +2,7 @@
 
 import type {
   LocalPrintJob,
+  LocalPrintJobsResponse,
   LocalPrinterStatus,
   LocalPrintSettings,
   PrintFontSizePreset,
@@ -23,6 +24,7 @@ import {
   EmptyState,
   FormField,
   Input,
+  Pagination,
   Select,
   SelectContent,
   SelectItem,
@@ -42,6 +44,7 @@ import {
   XCircle,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { useActionState, useEffect, useState } from 'react';
 import {
@@ -57,19 +60,18 @@ const paddingOptions = Array.from({ length: 9 }, (_, value) => String(value));
 
 export function PrintingManagement({
   jobs,
+  summary,
+  pagination,
   settings,
   printerStatus,
 }: {
   jobs: LocalPrintJob[];
+  summary: LocalPrintJobsResponse['summary'];
+  pagination: LocalPrintJobsResponse['pagination'];
   settings: LocalPrintSettings;
   printerStatus: LocalPrinterStatus;
 }) {
-  const counters = {
-    pending: jobs.filter((job) => job.status === 'pending').length,
-    printing: jobs.filter((job) => job.status === 'printing').length,
-    printed: jobs.filter((job) => job.status === 'printed').length,
-    failed: jobs.filter((job) => job.status === 'failed').length,
-  };
+  const router = useRouter();
 
   return (
     <div className="grid gap-5">
@@ -77,18 +79,18 @@ export function PrintingManagement({
       <PrintSettingsCard settings={settings} />
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="En attente" value={String(counters.pending)} />
-        <StatCard label="En impression" value={String(counters.printing)} />
-        <StatCard label="Imprimés" value={String(counters.printed)} />
-        <StatCard label="Échecs" value={String(counters.failed)} />
+        <StatCard label="En attente" value={String(summary.pending)} />
+        <StatCard label="En impression" value={String(summary.printing)} />
+        <StatCard label="Imprimés" value={String(summary.printed)} />
+        <StatCard label="Échecs" value={String(summary.failed)} />
       </section>
 
       <Card padding="none" className="overflow-hidden">
         <div className="px-5 py-4">
           <h2 className="text-lg font-black">Tickets récents</h2>
           <p className="mt-1 text-sm text-secondary">
-            {jobs.length} ticket{jobs.length === 1 ? '' : 's'} chargé
-            {jobs.length === 1 ? '' : 's'}
+            {jobs.length} sur {pagination.totalItems} ticket
+            {pagination.totalItems === 1 ? '' : 's'}
           </p>
         </div>
         <Separator />
@@ -107,6 +109,32 @@ export function PrintingManagement({
               </div>
             ))}
           </div>
+        )}
+        {pagination.totalPages > 1 && (
+          <>
+            <Separator />
+            <Pagination
+              className="px-5 py-4"
+              page={pagination.page}
+              pageCount={pagination.totalPages}
+              previousLabel="Précédent"
+              nextLabel="Suivant"
+              pageLabel={(page, pageCount) => `Page ${page} sur ${pageCount}`}
+              onPrevious={() =>
+                router.push(
+                  `/management/printing?page=${Math.max(1, pagination.page - 1)}`,
+                )
+              }
+              onNext={() =>
+                router.push(
+                  `/management/printing?page=${Math.min(
+                    pagination.totalPages,
+                    pagination.page + 1,
+                  )}`,
+                )
+              }
+            />
+          </>
         )}
       </Card>
     </div>

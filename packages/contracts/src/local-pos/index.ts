@@ -839,6 +839,7 @@ export const printJobSourceSchema = z.enum([
 export const printJobsQuerySchema = z
   .object({
     status: printJobStatusSchema.optional(),
+    page: z.coerce.number().int().min(1).default(1),
     limit: z.coerce.number().int().min(1).max(200).default(50),
   })
   .strict();
@@ -900,7 +901,25 @@ export const localPaymentSummaryResponseSchema = z
   })
   .strict();
 export const localPrintJobsResponseSchema = z
-  .object({ printJobs: z.array(localPrintJobSchema) })
+  .object({
+    printJobs: z.array(localPrintJobSchema),
+    summary: z
+      .object({
+        pending: z.number().int().nonnegative(),
+        printing: z.number().int().nonnegative(),
+        printed: z.number().int().nonnegative(),
+        failed: z.number().int().nonnegative(),
+      })
+      .strict(),
+    pagination: z
+      .object({
+        page: z.number().int().positive(),
+        pageSize: z.number().int().positive(),
+        totalItems: z.number().int().nonnegative(),
+        totalPages: z.number().int().positive(),
+      })
+      .strict(),
+  })
   .strict();
 export const printerOperationalStatusSchema = z.enum([
   'ready',
@@ -1046,6 +1065,9 @@ export type CreateLocalChecksByItemsInput = z.infer<
 >;
 export type CreatePrintJobInput = z.infer<typeof createPrintJobInputSchema>;
 export type PrintJobsQuery = z.infer<typeof printJobsQuerySchema>;
+export type LocalPrintJobsResponse = z.infer<
+  typeof localPrintJobsResponseSchema
+>;
 export type PrintJobCommand = z.infer<typeof printJobCommandSchema>;
 export type PrintFontSizePreset = z.infer<typeof printFontSizePresetSchema>;
 export type LocalPrintSettings = z.infer<typeof localPrintSettingsSchema>;

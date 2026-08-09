@@ -490,6 +490,9 @@ safe print-job summaries and applies the persisted state machine:
 `pending/printing -> failed -> pending` through retry. Queue reads and manual
 commands require a local admin or manager session. Raw payloads remain inside
 `site-agent`; the browser receives only order/table/item-count summaries.
+The queue is ordered newest first and paginated server-side at 10 tickets per
+page. Total status counters are calculated across the complete local queue,
+not only the visible page.
 The same screen manages Cuisine and Boissons/Desserts copy counts and the
 compact, standard, or large ESC/POS font preset. It also manages zero-to-eight
 line top/bottom spacing and zero-to-eight character left spacing. Physical

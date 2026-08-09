@@ -695,9 +695,12 @@ shows the printer-name snapshot, source, linked order, creation time, and a
 safe summary of the ticket payload. Raw print payloads are not exposed to the
 browser.
 
-The queue and printer status refresh automatically every five seconds while the page is visible,
-and refreshes immediately when returning to its tab. Operators do not need to
-reload the whole page to see pending, printing, printed, or failed transitions.
+The queue shows 10 tickets per page, newest first. Use `Précédent` and `Suivant`
+to browse older tickets; the status counters continue to represent the complete
+local queue. The visible page and printer status refresh automatically every
+five seconds while the page is visible, and refresh immediately when returning
+to its tab. Operators do not need to reload the whole page to see pending,
+printing, printed, or failed transitions.
 
 The `État de l’imprimante` card shows the RFCOMM channel, local worker, pending,
 printing and failed queue counts, and the latest successful print. `Prête à

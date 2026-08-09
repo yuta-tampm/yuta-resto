@@ -7,7 +7,7 @@ import {
 } from '@yuta/contracts/local-pos';
 import type { PosDatabaseExecutor } from '@yuta/db-pos/client';
 import { printJobs } from '@yuta/db-pos/schema';
-import { asc, desc, eq } from 'drizzle-orm';
+import { asc, desc, eq, sql } from 'drizzle-orm';
 import { v7 as uuidv7 } from 'uuid';
 import { HttpError } from '../http';
 import { ensurePrintSettings } from './print-settings-service';
@@ -87,6 +87,30 @@ export function createPrintJobService(db: PosDatabaseExecutor) {
 
   async function listPrintJobs(input: PrintJobsQuery) {
     const query = printJobsQuerySchema.parse(input);
+    const statusRows = await db
+      .select({
+        status: printJobs.status,
+        count: sql<number>`count(*)::int`,
+      })
+      .from(printJobs)
+      .groupBy(printJobs.status);
+    const countByStatus = new Map(
+      statusRows.map((row) => [row.status, Number(row.count)]),
+    );
+    const summary = {
+      pending: countByStatus.get('pending') ?? 0,
+      printing: countByStatus.get('printing') ?? 0,
+      printed: countByStatus.get('printed') ?? 0,
+      failed: countByStatus.get('failed') ?? 0,
+    };
+    const totalItems = query.status
+      ? summary[query.status]
+      : Object.values(summary).reduce((total, count) => total + count, 0);
+    const { page, totalPages, offset } = resolvePrintJobPagination({
+      requestedPage: query.page,
+      pageSize: query.limit,
+      totalItems,
+    });
     const rows = query.status
       ? await db
           .select()
@@ -94,13 +118,22 @@ export function createPrintJobService(db: PosDatabaseExecutor) {
           .where(eq(printJobs.status, query.status))
           .orderBy(desc(printJobs.createdAt), asc(printJobs.id))
           .limit(query.limit)
+          .offset(offset)
       : await db
           .select()
           .from(printJobs)
           .orderBy(desc(printJobs.createdAt), asc(printJobs.id))
-          .limit(query.limit);
+          .limit(query.limit)
+          .offset(offset);
     return localPrintJobsResponseSchema.parse({
       printJobs: rows.map(toPrintJob),
+      summary,
+      pagination: {
+        page,
+        pageSize: query.limit,
+        totalItems,
+        totalPages,
+      },
     });
   }
 
@@ -200,6 +233,20 @@ function toPrintJob(job: typeof printJobs.$inferSelect) {
     errorMessage: job.errorMessage,
     createdAt: job.createdAt.toISOString(),
     printedAt: job.printedAt?.toISOString() ?? null,
+  };
+}
+
+export function resolvePrintJobPagination(input: {
+  requestedPage: number;
+  pageSize: number;
+  totalItems: number;
+}) {
+  const totalPages = Math.max(1, Math.ceil(input.totalItems / input.pageSize));
+  const page = Math.min(input.requestedPage, totalPages);
+  return {
+    page,
+    totalPages,
+    offset: (page - 1) * input.pageSize,
   };
 }
 
