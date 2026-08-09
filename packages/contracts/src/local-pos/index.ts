@@ -26,6 +26,7 @@ export const localPosRoutes = {
   printJobs: `${localPosApiBasePath}/print-jobs`,
   printTest: `${localPosApiBasePath}/print-jobs/test`,
   printSettings: `${localPosApiBasePath}/print-settings`,
+  printerStatus: `${localPosApiBasePath}/printer-status`,
 } as const;
 
 export const siteAgentHealthResponseSchema = z
@@ -901,6 +902,37 @@ export const localPaymentSummaryResponseSchema = z
 export const localPrintJobsResponseSchema = z
   .object({ printJobs: z.array(localPrintJobSchema) })
   .strict();
+export const printerOperationalStatusSchema = z.enum([
+  'ready',
+  'printing',
+  'attention',
+  'unavailable',
+  'not_configured',
+]);
+export const printerDeviceStatusSchema = z.enum([
+  'ready',
+  'missing',
+  'not_writable',
+  'invalid',
+  'not_configured',
+]);
+export const localPrinterStatusSchema = z
+  .object({
+    status: printerOperationalStatusSchema,
+    worker: z.enum(['running', 'disabled']),
+    device: printerDeviceStatusSchema,
+    queue: z
+      .object({
+        pending: z.number().int().nonnegative(),
+        printing: z.number().int().nonnegative(),
+        failed: z.number().int().nonnegative(),
+      })
+      .strict(),
+    lastPrintedAt: isoDateTimeSchema.nullable(),
+    lastFailureAt: isoDateTimeSchema.nullable(),
+    checkedAt: isoDateTimeSchema,
+  })
+  .strict();
 export const printJobCommandSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('mark_printing') }).strict(),
   z.object({ action: z.literal('mark_printed') }).strict(),
@@ -1017,6 +1049,7 @@ export type PrintJobsQuery = z.infer<typeof printJobsQuerySchema>;
 export type PrintJobCommand = z.infer<typeof printJobCommandSchema>;
 export type PrintFontSizePreset = z.infer<typeof printFontSizePresetSchema>;
 export type LocalPrintSettings = z.infer<typeof localPrintSettingsSchema>;
+export type LocalPrinterStatus = z.infer<typeof localPrinterStatusSchema>;
 export type UpdateLocalPrintSettingsInput = z.infer<
   typeof updateLocalPrintSettingsInputSchema
 >;

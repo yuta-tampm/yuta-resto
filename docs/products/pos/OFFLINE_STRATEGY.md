@@ -147,6 +147,11 @@ The local health surface must distinguish:
 
 Internet availability must not determine the POS service health result.
 
+Printer visibility is derived locally from worker configuration, a read-only
+stat/access check of the configured character device, and persisted queue
+state. Status polling must never open, read, or write the RFCOMM channel; only
+an explicit print or test-print job may claim the physical transport.
+
 ## Security
 
 - Bind `site-agent` only to configured trusted local interfaces.

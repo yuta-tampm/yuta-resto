@@ -440,6 +440,32 @@ describe('yuta-pos site-agent client', () => {
     });
   });
 
+  it('reads validated printer status without exposing device configuration', async () => {
+    const status = {
+      status: 'ready' as const,
+      worker: 'running' as const,
+      device: 'ready' as const,
+      queue: { pending: 0, printing: 0, failed: 1 },
+      lastPrintedAt: checkedAt,
+      lastFailureAt: null,
+      checkedAt,
+    };
+    const fetchImplementation = vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(Response.json(status));
+    const client = createSiteAgentClient({
+      baseUrl: 'http://site-agent.test',
+      fetchImplementation,
+    });
+
+    await client.getPrinterStatus();
+
+    expect(fetchImplementation).toHaveBeenCalledWith(
+      'http://site-agent.test/api/v1/printer-status',
+      expect.objectContaining({ cache: 'no-store' }),
+    );
+  });
+
   it('sends validated create-order input to the versioned API', async () => {
     const fetchImplementation = vi.fn<typeof fetch>().mockResolvedValue(
       Response.json(

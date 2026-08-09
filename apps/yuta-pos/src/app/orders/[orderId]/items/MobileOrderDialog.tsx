@@ -24,6 +24,7 @@ import {
   removePendingOrderItemAction,
   updateOrderItemQuantityAction,
 } from '../../../actions';
+import { SendToKitchenButton } from '../../../components/SendToKitchenButton';
 import { OrderItemNoteDialog } from './OrderItemNoteDialog';
 
 type MobileOrderDialogItem = {
@@ -56,6 +57,15 @@ type MobileOrderDialogProps = {
   totalLabel: string;
   orderId: string;
   canEditItems: boolean;
+  canSendToKitchen: boolean;
+  sendIdempotencyKey: string;
+  hasAllergy: boolean;
+  allergyNote: string | null;
+  allergyAcknowledged: boolean;
+  itemAllergyWarnings: Array<{
+    itemName: string;
+    allergyNote: string;
+  }>;
   allergyOptions: LocalInstructionSettings['allergenOptions'];
 };
 
@@ -66,6 +76,12 @@ export function MobileOrderDialog({
   totalLabel,
   orderId,
   canEditItems,
+  canSendToKitchen,
+  sendIdempotencyKey,
+  hasAllergy,
+  allergyNote,
+  allergyAcknowledged,
+  itemAllergyWarnings,
   allergyOptions,
 }: MobileOrderDialogProps) {
   return (
@@ -178,6 +194,19 @@ export function MobileOrderDialog({
             <span className="text-lg font-black">Total</span>
             <span className="text-xl font-black">{totalLabel}</span>
           </div>
+          <SendToKitchenButton
+            orderId={orderId}
+            idempotencyKey={sendIdempotencyKey}
+            disabled={!canSendToKitchen}
+            hasAllergy={hasAllergy}
+            allergyNote={allergyNote}
+            allergyAcknowledged={allergyAcknowledged}
+            itemAllergyWarnings={itemAllergyWarnings}
+            label="Envoyer en cuisine"
+            icon="chef"
+            variant="primary"
+            fullWidth
+          />
           <DialogClose asChild>
             <Button type="button" variant="secondary" className="mt-1 w-full">
               Fermer

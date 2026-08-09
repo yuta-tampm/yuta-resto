@@ -271,7 +271,9 @@ choice between `2 nems porc` and `2 nems vegan`.
 
 ### Send To Kitchen
 
-Use `Envoyer`.
+On desktop, use `Envoyer en cuisine` at the bottom of `Commande actuelle`,
+beside the order-detail action. On smaller screens, open the `Commande actuelle`
+drawer and use the same action in its footer, above `Fermer`.
 
 This does three things:
 
@@ -382,7 +384,10 @@ Activite aujourd hui
 
 Use this page to reopen old or active orders.
 
-`Payees aujourd hui` uses the payment date. `Activite aujourd hui` shows orders created today or paid today.
+The command list uses the same service day as the kitchen screen: 05:00 local
+time until 04:59 the next morning. `Ouvertes` shows only unfinished orders
+created during that service day. `Payees aujourd hui` uses the payment time;
+`Activite aujourd hui` shows orders created or paid during the service day.
 
 ## Payment
 
@@ -690,9 +695,16 @@ shows the printer-name snapshot, source, linked order, creation time, and a
 safe summary of the ticket payload. Raw print payloads are not exposed to the
 browser.
 
-The queue refreshes automatically every two seconds while the page is visible,
+The queue and printer status refresh automatically every five seconds while the page is visible,
 and refreshes immediately when returning to its tab. Operators do not need to
 reload the whole page to see pending, printing, printed, or failed transitions.
+
+The `État de l’imprimante` card shows the RFCOMM channel, local worker, pending,
+printing and failed queue counts, and the latest successful print. `Prête à
+envoyer` means Linux can access the configured character device; it does not
+confirm paper, cover, or cutter state. Use `Impression test` for that physical
+check. The compact printer badge in the global status strip updates every 15
+seconds while the POS tab is visible.
 
 The top of the same page contains the persisted ticket settings:
 

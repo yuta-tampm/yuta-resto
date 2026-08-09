@@ -202,6 +202,7 @@ GET  /api/v1/print-jobs
 POST /api/v1/print-jobs/:printJobId/commands
 GET  /api/v1/print-settings
 PATCH /api/v1/print-settings
+GET  /api/v1/printer-status
 ```
 
 Request and response schemas live under `@yuta/contracts/local-pos`. Contracts
@@ -295,6 +296,7 @@ Make Send to kitchen and Payment easy to reach
 Show kitchen items grouped by table label/order
 Keep the kitchen screen as a station/status work queue, not a full command list
 Limit the kitchen screen to the current service day, using a 05:00 local cutoff
+Limit all command-list views to that same 05:00 local service-day cutoff
 Keep payment totals clear
 ```
 
@@ -492,6 +494,13 @@ The same screen manages Cuisine and Boissons/Desserts copy counts and the
 compact, standard, or large ESC/POS font preset. It also manages zero-to-eight
 line top/bottom spacing and zero-to-eight character left spacing. Physical
 device paths and printer routing remain outside browser control.
+The screen also presents a safe operational status derived by `site-agent` from
+the configured worker, a read-only character-device stat/access check, and
+local queue state. It refreshes every five seconds only while visible. The
+global POS status strip includes the same summarized printer state through the
+POS health endpoint and refreshes every 15 seconds only while visible. Neither
+poll opens, reads, or writes the RFCOMM channel; a successful test print remains
+the physical paper, cover, and cutter check.
 An authenticated `Impression test` action creates a one-copy local test job
 using the saved font and spacing. Its fixture covers accents, typographic
 apostrophes, dash variants, ligatures, indentation, allergy emphasis, and the

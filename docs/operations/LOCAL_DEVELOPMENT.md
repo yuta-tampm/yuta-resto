@@ -122,6 +122,8 @@ Run `pnpm dev:site-agent` after the POS database schema is available. The
 service validates `POS_DATABASE_URL` at startup and exposes `/health`; it does
 not receive `CLOUD_DATABASE_URL`. The POS health endpoint now checks this local
 API instead of opening a database connection for its connectivity probe.
+`GET /api/v1/printer-status` exposes only safe worker, device, and queue state.
+Its device probe uses stat/access checks and never opens the RFCOMM channel.
 When `POS_PRINTER_DEVICE` is unset, kitchen ticket jobs remain in the local
 queue for manual inspection. When set, the path must already be a character
 device (`test -c /dev/rfcomm1`) accessible to the `site-agent` process.

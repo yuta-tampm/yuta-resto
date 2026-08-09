@@ -75,6 +75,16 @@ N/A       not applicable for this run
 | Create delivery order   | Order type saves as delivery                         |        |       |
 | Missing table/reference | Form validation prevents empty order creation        |        |       |
 
+## Command List Service Day
+
+| Case                        | Expected Result                                                    | Result | Notes |
+| --------------------------- | ------------------------------------------------------------------ | -----: | ----- |
+| Open list after 05:00       | Unfinished orders created before 05:00 are hidden                  |        |       |
+| Open list before 05:00      | Orders created after 05:00 on the previous calendar day remain     |        |       |
+| Paid-today list             | Only orders paid during the current 05:00 service day appear       |        |       |
+| Activity-today list         | Orders created or paid during the current 05:00 service day appear |        |       |
+| Order exactly at next 05:00 | Order belongs to the next service day and not the previous one     |        |       |
+
 ## Order Item Entry
 
 | Case                                | Expected Result                                                  | Result | Notes |
@@ -119,6 +129,8 @@ N/A       not applicable for this run
 | Case                                        | Expected Result                                         | Result | Notes |
 | ------------------------------------------- | ------------------------------------------------------- | -----: | ----- |
 | Send pending items to kitchen               | Items become `Cuisine`; kitchen ticket job is created   |        |       |
+| Desktop kitchen-send placement              | Send action is at the bottom of `Commande actuelle`     |        |       |
+| Mobile kitchen-send placement               | Send action appears in the order drawer above `Fermer`  |        |       |
 | Send button with no pending items           | Button is disabled                                      |        |       |
 | Send allergic item without confirmation     | Kitchen send is blocked                                 |        |       |
 | Confirm allergy and send                    | Acknowledgement is stored on the affected item          |        |       |
@@ -195,8 +207,12 @@ N/A       not applicable for this run
 | Second kitchen send prints only new items | Later kitchen ticket excludes items printed by the earlier send             |        |       |
 | Payment creates print job                 | Payment succeeds and creates no print job                                   |        |       |
 | Printer adapter processes pending jobs    | Job status changes to `printed`                                             |        |       |
-| Visible queue auto-refresh                | Pending/printing/printed changes appear within two seconds without F5       |        |       |
+| Visible queue auto-refresh                | Queue and printer status changes appear within five seconds without F5      |        |       |
 | Hidden queue polling                      | Hidden tab stops polling and refreshes immediately when visible again       |        |       |
+| Printer ready status                      | Writable RFCOMM character device shows ready without opening the device     |        |       |
+| Printer unavailable status                | Missing, invalid, or non-writable RFCOMM device shows unavailable           |        |       |
+| Printer attention status                  | Failed or stale pending work shows attention with queue counts              |        |       |
+| Global printer badge                      | POS shell updates summarized printer state every 15 seconds while visible   |        |       |
 | One-printer station routing               | TM-m30 prints and fully cuts Cuisine then BAR separately                    |        |       |
 | Print copy settings                       | Each station prints the configured 1 to 3 copies                            |        |       |
 | Print font preset                         | Compact, Standard, and Large change new ticket item typography              |        |       |

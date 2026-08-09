@@ -32,6 +32,7 @@ import {
   localPaymentSummaryResponseSchema,
   localPrintJobsResponseSchema,
   localPrintJobSchema,
+  localPrinterStatusSchema,
   localPrintSettingsSchema,
   localPosRoutes,
   localUserResponseSchema,
@@ -446,6 +447,9 @@ export function createSiteAgentClient(input?: {
       return request(localPosRoutes.printSettings, localPrintSettingsSchema, {
         headers: { Authorization: `Bearer ${token}` },
       });
+    },
+    async getPrinterStatus() {
+      return request(localPosRoutes.printerStatus, localPrinterStatusSchema);
     },
     async createTestPrintJob(token: string) {
       return request(localPosRoutes.printTest, localPrintJobSchema, {

@@ -107,7 +107,9 @@ async function startSiteAgent(): Promise<void> {
     : null;
   const server = createSiteAgentServer({
     env,
-    service: createSiteAgentService(db),
+    service: createSiteAgentService(db, {
+      printerDevicePath: env.POS_PRINTER_DEVICE,
+    }),
   });
 
   await new Promise<void>((resolveListen, rejectListen) => {

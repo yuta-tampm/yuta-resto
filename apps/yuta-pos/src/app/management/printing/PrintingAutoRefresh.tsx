@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-const refreshIntervalMs = 2_000;
+const refreshIntervalMs = 5_000;
 
 export function PrintingAutoRefresh() {
   const router = useRouter();

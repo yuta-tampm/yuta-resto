@@ -30,13 +30,17 @@ import { createLocalAuthService } from './local-auth-service';
 import { createLocalUserManagementService } from './local-user-management-service';
 import { createPrintJobService } from './print-job-service';
 import { createPrintSettingsService } from './print-settings-service';
+import { createPrinterStatusService } from './printer-status-service';
 import {
   createInstructionSettingsService,
   ensureInstructionSettings,
   resolveInstructionConfig,
 } from './instruction-settings-service';
 
-export function createSiteAgentService(db: PosDatabaseClient) {
+export function createSiteAgentService(
+  db: PosDatabaseClient,
+  options: { printerDevicePath?: string } = {},
+) {
   const orderCommands = createOrderCommandService(db);
   const financial = createFinancialService(db);
   const printing = createPrintJobService(db);
@@ -46,6 +50,9 @@ export function createSiteAgentService(db: PosDatabaseClient) {
   const catalogManagement = createCatalogManagementService(db);
   const comboManagement = createComboManagementService(db);
   const instructionSettings = createInstructionSettingsService(db);
+  const printerStatus = createPrinterStatusService(db, {
+    devicePath: options.printerDevicePath,
+  });
   async function getHealth() {
     try {
       await db.execute(sql`select 1`);
@@ -252,6 +259,7 @@ export function createSiteAgentService(db: PosDatabaseClient) {
     ...financial,
     ...printing,
     ...printSettings,
+    ...printerStatus,
   };
 }
 

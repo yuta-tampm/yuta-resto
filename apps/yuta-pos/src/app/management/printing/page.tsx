@@ -11,13 +11,17 @@ export default async function LocalPrintingManagementPage() {
 
   let jobs;
   let settings;
+  let printerStatus;
   try {
-    const [jobsResponse, settingsResponse] = await Promise.all([
-      siteAgentClient.listPrintJobs(token, { limit: 100 }),
-      siteAgentClient.getPrintSettings(token),
-    ]);
+    const [jobsResponse, settingsResponse, printerStatusResponse] =
+      await Promise.all([
+        siteAgentClient.listPrintJobs(token, { limit: 100 }),
+        siteAgentClient.getPrintSettings(token),
+        siteAgentClient.getPrinterStatus(),
+      ]);
     jobs = jobsResponse.printJobs;
     settings = settingsResponse;
+    printerStatus = printerStatusResponse;
   } catch {
     return (
       <main className="grid min-h-dvh place-items-center bg-canvas p-4">
@@ -56,7 +60,11 @@ export default async function LocalPrintingManagementPage() {
           }
         />
         <PrintingAutoRefresh />
-        <PrintingManagement jobs={jobs} settings={settings} />
+        <PrintingManagement
+          jobs={jobs}
+          settings={settings}
+          printerStatus={printerStatus}
+        />
       </div>
     </main>
   );

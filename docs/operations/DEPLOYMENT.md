@@ -346,6 +346,7 @@ For the selected Luna printer transport, verify before starting `site-agent`:
 systemctl is-active yuta-tm-m30.service
 rfcomm
 test -c /dev/rfcomm1
+curl -fsS http://127.0.0.1:3100/api/v1/printer-status
 ```
 
 The expected RFCOMM peer is `00:01:90:7B:79:DD` on channel `1`. The systemd
@@ -357,6 +358,10 @@ TTY twice can leave the second open blocked or make a connected TTY report
 `Device or resource busy`. If the printer is unavailable, the worker marks the
 claimed job failed and an administrator can retry it from
 `/management/printing` after recovery.
+The status endpoint and POS UI inspect only worker configuration, queue state,
+and character-device metadata/access. Their periodic checks must not open,
+read, or write `/dev/rfcomm1`; explicit print jobs are the only code path that
+claims the Bluetooth transport.
 
 `apps/yuta-pos/docker-compose.yml` now builds only the POS client service. It
 requires `SITE_AGENT_URL` and joins the external trusted local network; it has

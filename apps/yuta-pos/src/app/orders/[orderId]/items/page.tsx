@@ -135,6 +135,21 @@ export default async function OrderItemsPage({
       .filter(isIncompleteVariantSelection)
       .map((item) => item.id),
   );
+  const pendingAllergyWarnings = order.items
+    .filter(
+      (item) =>
+        item.status === 'pending' &&
+        item.hasAllergy &&
+        !item.allergyAcknowledgedAt,
+    )
+    .map((item) => ({
+      itemName: item.itemNameSnapshot,
+      allergyNote: allergySummaryFromSnapshots(
+        item.selectedAllergens,
+        item.allergySeverity,
+        item.allergyNote,
+      ),
+    }));
 
   return (
     <PosPageShell
@@ -143,41 +158,12 @@ export default async function OrderItemsPage({
       title={order.tableLabel}
       description={order.orderNumber}
       actions={
-        <>
-          <SendToKitchenButton
-            orderId={order.id}
-            idempotencyKey={uuidv7()}
-            disabled={!canSendToKitchen}
-            hasAllergy={order.hasAllergy}
-            allergyNote={order.allergyNote}
-            allergyAcknowledged={Boolean(order.allergyAcknowledgedAt)}
-            itemAllergyWarnings={order.items
-              .filter(
-                (item) =>
-                  item.status === 'pending' &&
-                  item.hasAllergy &&
-                  !item.allergyAcknowledgedAt,
-              )
-              .map((item) => ({
-                itemName: item.itemNameSnapshot,
-                allergyNote: allergySummaryFromSnapshots(
-                  item.selectedAllergens,
-                  item.allergySeverity,
-                  item.allergyNote,
-                ),
-              }))}
-            label="Envoyer en cuisine"
-            icon="chef"
-            variant="primary"
-            className="border border-white/10"
-          />
-          <Button asChild variant="secondary">
-            <Link href={`/orders/${order.id}/payment`}>
-              <CreditCard className="h-4 w-4" />
-              Paiement
-            </Link>
-          </Button>
-        </>
+        <Button asChild variant="secondary">
+          <Link href={`/orders/${order.id}/payment`}>
+            <CreditCard className="h-4 w-4" />
+            Paiement
+          </Link>
+        </Button>
       }
       contentClassName="p-0 lg:overflow-hidden"
       maxWidthClassName="max-w-7xl"
@@ -238,6 +224,12 @@ export default async function OrderItemsPage({
             <MobileOrderDialog
               orderId={order.id}
               canEditItems={canEditItems}
+              canSendToKitchen={canSendToKitchen}
+              sendIdempotencyKey={uuidv7()}
+              hasAllergy={order.hasAllergy}
+              allergyNote={order.allergyNote}
+              allergyAcknowledged={Boolean(order.allergyAcknowledgedAt)}
+              itemAllergyWarnings={pendingAllergyWarnings}
               allergyOptions={catalog.instructionSettings.allergenOptions}
               items={activeOrderItems.map((item) => ({
                 id: item.id,
@@ -407,6 +399,21 @@ export default async function OrderItemsPage({
                 </span>
               </div>
               <div className="mt-3 border-t border-border-default" />
+              <div className="hidden lg:block">
+                <SendToKitchenButton
+                  orderId={order.id}
+                  idempotencyKey={uuidv7()}
+                  disabled={!canSendToKitchen}
+                  hasAllergy={order.hasAllergy}
+                  allergyNote={order.allergyNote}
+                  allergyAcknowledged={Boolean(order.allergyAcknowledgedAt)}
+                  itemAllergyWarnings={pendingAllergyWarnings}
+                  label="Envoyer en cuisine"
+                  icon="chef"
+                  variant="primary"
+                  fullWidth
+                />
+              </div>
               <Button asChild variant="secondary">
                 <Link href={`/orders/${order.id}`}>Voir details</Link>
               </Button>

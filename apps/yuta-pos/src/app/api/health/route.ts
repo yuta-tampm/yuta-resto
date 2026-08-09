@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import type { LocalPrinterStatus } from '@yuta/contracts/local-pos';
 import {
   SiteAgentClientError,
   siteAgentClient,
@@ -10,6 +11,7 @@ type InternetStatus = 'available' | 'unavailable' | 'unknown';
 
 export async function GET() {
   const checkedAt = new Date().toISOString();
+  let printer: LocalPrinterStatus['status'] = 'unavailable';
 
   try {
     const health = await siteAgentClient.getHealth();
@@ -19,6 +21,7 @@ export async function GET() {
           status: 'unavailable',
           siteAgent: health.status,
           database: health.database,
+          printer,
           internet: 'unknown' satisfies InternetStatus,
           checkedAt,
         },
@@ -31,6 +34,7 @@ export async function GET() {
         status: 'unavailable',
         siteAgent: 'unavailable',
         database: 'unknown',
+        printer,
         errorCode:
           error instanceof SiteAgentClientError
             ? error.code
@@ -42,6 +46,12 @@ export async function GET() {
     );
   }
 
+  try {
+    printer = (await siteAgentClient.getPrinterStatus()).status;
+  } catch {
+    printer = 'unavailable';
+  }
+
   const internet = await checkInternet();
 
   return NextResponse.json(
@@ -49,6 +59,7 @@ export async function GET() {
       status: 'available',
       siteAgent: 'ok',
       database: 'available',
+      printer,
       internet,
       checkedAt,
     },

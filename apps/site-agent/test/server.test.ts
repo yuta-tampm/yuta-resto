@@ -89,6 +89,21 @@ describe('site-agent HTTP boundary', () => {
     });
   });
 
+  it('serves safe printer status without exposing the device path', async () => {
+    const response = await fetch(`${baseUrl}/api/v1/printer-status`);
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({
+      status: 'ready',
+      worker: 'running',
+      device: 'ready',
+      queue: { pending: 0, printing: 0, failed: 0 },
+      lastPrintedAt: null,
+      lastFailureAt: null,
+      checkedAt,
+    });
+  });
+
   it('rejects invalid order commands before calling a service', async () => {
     const response = await fetch(`${baseUrl}/api/v1/orders`, {
       method: 'POST',
@@ -496,6 +511,15 @@ function createMockService(): SiteAgentService {
       database: 'ready',
       service: 'site-agent',
       apiVersion: 'v1',
+      checkedAt,
+    }),
+    getPrinterStatus: async () => ({
+      status: 'ready',
+      worker: 'running',
+      device: 'ready',
+      queue: { pending: 0, printing: 0, failed: 0 },
+      lastPrintedAt: null,
+      lastFailureAt: null,
       checkedAt,
     }),
     signIn: async () => ({ token: sessionToken, session: localSession }),

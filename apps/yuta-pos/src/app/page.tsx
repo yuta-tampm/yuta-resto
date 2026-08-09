@@ -1,4 +1,4 @@
-import { formatEuros, startOfToday } from '@yuta/core';
+import { formatEuros, getServiceDayWindow } from '@yuta/core';
 import { Badge, Button, Card, Input, SegmentedNav, Separator } from '@yuta/ui';
 import {
   ChefHat,
@@ -19,6 +19,10 @@ import {
 import Link from 'next/link';
 import { PosMobileFab, PosPageShell } from './components/PosPageShell';
 import { posApi } from '../lib/pos-api';
+import {
+  isOrderVisibleInServiceDay,
+  type OrdersHomeView,
+} from './orders-service-day';
 
 type OrdersHomePageProps = {
   searchParams: Promise<{
@@ -27,7 +31,7 @@ type OrdersHomePageProps = {
   }>;
 };
 
-type OrderView = 'open' | 'paid_today' | 'all_today';
+type OrderView = OrdersHomeView;
 
 type OrderRow = Awaited<ReturnType<typeof getOrders>>[number];
 
@@ -51,11 +55,11 @@ export default async function OrdersHomePage({
   const { view, q } = await searchParams;
   const selectedView = parseView(view);
   const searchQuery = q?.trim() ?? '';
-  const today = startOfToday();
+  const serviceDay = getServiceDayWindow(new Date());
   const [openOrders, paidTodayOrders, todayOrders] = await Promise.all([
-    getOrders('open', today),
-    getOrders('paid_today', today),
-    getOrders('all_today', today),
+    getOrders('open', serviceDay),
+    getOrders('paid_today', serviceDay),
+    getOrders('all_today', serviceDay),
   ]);
   const sourceRows =
     selectedView === 'open'
@@ -160,28 +164,16 @@ export default async function OrdersHomePage({
   );
 }
 
-async function getOrders(selectedView: OrderView, today: Date) {
+async function getOrders(
+  selectedView: OrderView,
+  serviceDay: { start: Date; end: Date },
+) {
   const details = await posApi.listOrderDetails();
   return details
     .map((detail) => ({ ...detail.order, items: detail.items }))
-    .filter((order) => {
-      if (selectedView === 'open') {
-        return ['draft', 'sent', 'preparing', 'ready', 'served'].includes(
-          order.status,
-        );
-      }
-      if (selectedView === 'paid_today') {
-        return (
-          order.status === 'paid' &&
-          order.paidAt !== null &&
-          order.paidAt >= today
-        );
-      }
-      return (
-        order.createdAt >= today ||
-        (order.paidAt !== null && order.paidAt >= today)
-      );
-    })
+    .filter((order) =>
+      isOrderVisibleInServiceDay(order, selectedView, serviceDay),
+    )
     .toSorted((left, right) => {
       const leftDate =
         selectedView === 'paid_today'

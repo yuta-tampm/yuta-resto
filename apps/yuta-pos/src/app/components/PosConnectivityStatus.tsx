@@ -1,7 +1,13 @@
 'use client';
 
 import { Badge } from '@yuta/ui';
-import { CloudOff, DatabaseZap, ServerCrash, Wifi } from 'lucide-react';
+import {
+  CloudOff,
+  DatabaseZap,
+  Printer,
+  ServerCrash,
+  Wifi,
+} from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 
 type HealthResponse = {
@@ -9,7 +15,15 @@ type HealthResponse = {
   siteAgent?: 'ok' | 'degraded' | 'unavailable';
   database: 'available' | 'unavailable' | 'unknown';
   internet: 'available' | 'unavailable' | 'unknown';
+  printer?: PrinterStatus;
 };
+
+type PrinterStatus =
+  | 'ready'
+  | 'printing'
+  | 'attention'
+  | 'unavailable'
+  | 'not_configured';
 
 type ConnectivityState =
   | 'checking'
@@ -21,11 +35,13 @@ type ConnectivityState =
 
 export function PosConnectivityStatus() {
   const [state, setState] = useState<ConnectivityState>('checking');
+  const [printer, setPrinter] = useState<PrinterStatus | null>(null);
 
   const checkHealth = useCallback(async () => {
     try {
       const response = await fetch('/api/health', { cache: 'no-store' });
       const health = (await response.json()) as HealthResponse;
+      setPrinter(health.printer ?? null);
 
       if (health.siteAgent === 'unavailable') {
         setState('server-unavailable');
@@ -40,35 +56,50 @@ export function PosConnectivityStatus() {
       }
     } catch {
       setState('server-unavailable');
+      setPrinter('unavailable');
     }
   }, []);
 
   useEffect(() => {
     void checkHealth();
-    const interval = window.setInterval(() => void checkHealth(), 15000);
+    const checkIfVisible = () => {
+      if (document.visibilityState === 'visible') void checkHealth();
+    };
+    const interval = window.setInterval(checkIfVisible, 15000);
     window.addEventListener('online', checkHealth);
     window.addEventListener('offline', checkHealth);
+    window.addEventListener('focus', checkIfVisible);
+    document.addEventListener('visibilitychange', checkIfVisible);
 
     return () => {
       window.clearInterval(interval);
       window.removeEventListener('online', checkHealth);
       window.removeEventListener('offline', checkHealth);
+      window.removeEventListener('focus', checkIfVisible);
+      document.removeEventListener('visibilitychange', checkIfVisible);
     };
   }, [checkHealth]);
 
   const status = statusByState[state];
   const Icon = status.icon;
+  const printerStatus = printer ? printerStatusByState[printer] : null;
 
   return (
     <div
       role="status"
-      className="flex shrink-0 items-center justify-center gap-2 border-b border-border-default bg-surface-muted px-3 py-1.5 text-xs text-secondary"
+      className="flex shrink-0 flex-wrap items-center justify-center gap-2 border-b border-border-default bg-surface-muted px-3 py-1.5 text-xs text-secondary"
     >
       <Icon className="h-3.5 w-3.5" aria-hidden="true" />
       <span>{status.label}</span>
       <Badge tone={status.tone} size="sm">
         {status.badge}
       </Badge>
+      {printerStatus && (
+        <Badge tone={printerStatus.tone} size="sm">
+          <Printer className="h-3 w-3" aria-hidden="true" />
+          {printerStatus.label}
+        </Badge>
+      )}
     </div>
   );
 }
@@ -118,4 +149,18 @@ const statusByState: Record<
     tone: 'danger',
     icon: ServerCrash,
   },
+};
+
+const printerStatusByState: Record<
+  PrinterStatus,
+  {
+    label: string;
+    tone: 'neutral' | 'success' | 'warning' | 'danger' | 'info';
+  }
+> = {
+  ready: { label: 'Imprimante prête', tone: 'success' },
+  printing: { label: 'Impression en cours', tone: 'info' },
+  attention: { label: 'Imprimante à vérifier', tone: 'warning' },
+  unavailable: { label: 'Imprimante indisponible', tone: 'danger' },
+  not_configured: { label: 'Imprimante non configurée', tone: 'neutral' },
 };
