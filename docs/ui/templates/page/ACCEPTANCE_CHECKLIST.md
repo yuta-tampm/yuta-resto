@@ -11,6 +11,11 @@
 - [ ] Implementation class is recorded.
 - [ ] Phase 0 Implementation Inventory and current visual baseline are complete
       before code changes.
+- [ ] Target type and expected change impact are recorded.
+- [ ] Existing target baseline is captured with route, state, viewport/device,
+      date, and runtime/session conditions, or a precise blocker is recorded.
+- [ ] `DESIGN_HANDOFF.md` contains a ready-to-use design-generation prompt based
+      on the Phase 0 inventory and protected invariants.
 
 ## Scope and invariants
 
@@ -30,6 +35,16 @@
 - [ ] Existing polling, offline, retry, and device behavior is preserved where
       applicable.
 - [ ] Existing tests protecting the screen remain valid.
+
+## Design approval
+
+- [ ] Existing-page baseline status is `CAPTURED` (`NEW_PAGE` may use
+      `NOT_APPLICABLE`).
+- [ ] Design prompt status is `READY`.
+- [ ] Product scope is `APPROVED`.
+- [ ] Reference status is `APPROVED`, or `NONE` has an explicit no-image reason.
+- [ ] Package status becomes `implementation-ready` only after inventory,
+      invariants, impact, commands, scope, and reference gates are complete.
 
 ## UI
 
@@ -70,3 +85,10 @@
       were run when behavior changed.
 - [ ] Browser/device evidence is attached.
 - [ ] No lint result is claimed unless a real lint command exists.
+
+## Completion
+
+- [ ] Functional/regression QA completed before final visual parity review.
+- [ ] Intentional deviations and deferred risks are recorded.
+- [ ] Stable page package matches the as-built implementation.
+- [ ] Package status is `implemented` only after as-built synchronization.

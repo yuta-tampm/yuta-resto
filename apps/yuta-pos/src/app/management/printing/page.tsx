@@ -3,8 +3,9 @@ import { ArrowLeft, Printer } from 'lucide-react';
 import Link from 'next/link';
 import { siteAgentClient } from '../../../lib/site-agent-client';
 import { requireLocalManagementCredentials } from '../../../server/local-management-session';
-import { PrintingManagement } from './PrintingManagement';
 import { PrintingAutoRefresh } from './PrintingAutoRefresh';
+import { PrintingManagement } from './PrintingManagement';
+import { PrintingManagementHeader } from './PrintingManagementHeader';
 
 type LocalPrintingManagementPageProps = {
   searchParams: Promise<{ page?: string }>;
@@ -15,7 +16,7 @@ const printJobsPageSize = 10;
 export default async function LocalPrintingManagementPage({
   searchParams,
 }: LocalPrintingManagementPageProps) {
-  const { token } = await requireLocalManagementCredentials();
+  const { session, token } = await requireLocalManagementCredentials();
   const requestedPage = positivePage((await searchParams).page);
 
   let jobs;
@@ -56,7 +57,19 @@ export default async function LocalPrintingManagementPage({
 
   return (
     <main className="min-h-dvh bg-canvas text-primary">
-      <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-6 md:px-8">
+      <PrintingManagementHeader
+        userName={session.user.name}
+        userRole={session.user.role}
+      />
+
+      <div className="mx-auto grid w-full max-w-7xl gap-3 px-4 py-4 md:px-6">
+        <Link
+          href="/management"
+          className="inline-flex min-h-11 w-fit items-center gap-2 text-sm font-semibold text-status-success hover:underline focus:outline-none focus:ring-2 focus:ring-focus-ring focus:ring-offset-2"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Retour à la gestion
+        </Link>
         <PageHeader
           eyebrow="Gestion locale"
           title="File d’impression"
@@ -65,14 +78,6 @@ export default async function LocalPrintingManagementPage({
             <IconTile tone="neutral">
               <Printer className="h-5 w-5" />
             </IconTile>
-          }
-          actions={
-            <Button asChild variant="secondary">
-              <Link href="/management">
-                <ArrowLeft className="h-4 w-4" />
-                Retour
-              </Link>
-            </Button>
           }
         />
         <PrintingAutoRefresh />

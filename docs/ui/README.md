@@ -27,12 +27,28 @@ Read this directory together with:
 - the nearest application `AGENTS.md`;
 - `docs/CURRENT_STATE.md`;
 - the relevant current feature or product documentation;
+- `DESIGN_TO_CODE_WORKFLOW.md` for meaningful design-to-code initiatives;
 - `YUTA_FRONTEND_RULES.md`;
 - the target application's frontend rules, including
   `BACKOFFICE_FRONTEND_RULES.md` for Backoffice work and
   `POS_FRONTEND_RULES.md` for POS work;
 - the current page package under `pages/<page-slug>/` when one exists;
 - `packages/ui/src/index.ts` and `packages/ui/src/styles/global.css`.
+
+`UI_WORKFLOW_DELIVERY_CHECKLIST.md` is the short daily gate from repository
+analysis through as-built completion. `UI_PACK_TOOLING_SPEC.md` documents the
+page-pack generator and validator lifecycle.
+
+Current page-pack tooling commands are:
+
+```bash
+pnpm ui:pack:new --app <application> --slug <page-slug> --target <route-or-id> [--type <target-type>]
+pnpm ui:pack:check [<page-slug>]
+pnpm test:ui-pack
+```
+
+The generator creates mechanics and unresolved metadata only. The validator
+does not infer product decisions or silently migrate legacy packages.
 
 ## Authority order
 
@@ -54,10 +70,13 @@ Images may guide hierarchy, proportions, density, spacing, and visual tone. They
 ```text
 docs/ui/
 ├── README.md
+├── DESIGN_TO_CODE_WORKFLOW.md
 ├── YUTA_FRONTEND_RULES.md
 ├── BACKOFFICE_FRONTEND_RULES.md
 ├── POS_FRONTEND_RULES.md
 ├── PAGE_PACK_PROTOCOL.md
+├── UI_PACK_TOOLING_SPEC.md
+├── UI_WORKFLOW_DELIVERY_CHECKLIST.md
 ├── references/
 │   ├── README.md
 │   └── yuta-shell-brand-reference.png
@@ -68,8 +87,10 @@ docs/ui/
 │       ├── PRODUCT_SCOPE.md
 │       ├── UI_SPEC.md
 │       ├── DATA_AND_INTERACTION_SPEC.md
+│       ├── DESIGN_HANDOFF.md
 │       ├── IMPLEMENTATION_PLAN.md
 │       ├── ACCEPTANCE_CHECKLIST.md
+│       ├── references/
 │       └── prompts/
 │           ├── 00_REPOSITORY_ANALYSIS.md
 │           ├── 01_VISUAL_BASELINE.md
@@ -84,6 +105,7 @@ docs/ui/
         ├── PRODUCT_SCOPE.md
         ├── UI_SPEC.md
         ├── DATA_AND_INTERACTION_SPEC.md
+        ├── DESIGN_HANDOFF.md
         ├── IMPLEMENTATION_PLAN.md
         ├── ACCEPTANCE_CHECKLIST.md
         ├── references/
@@ -103,6 +125,25 @@ Do not create parallel `v2`, `new`, `final`, or `latest` directories. Update the
 The required artifact shape and packaging rules are defined in `PAGE_PACK_PROTOCOL.md`.
 
 ## Repository-first workflow
+
+The canonical lifecycle is defined in `DESIGN_TO_CODE_WORKFLOW.md`:
+
+```text
+target identification
+-> repository analysis
+-> product and implementation scope
+-> UI design
+-> design approval
+-> implementation-ready package
+-> implementation
+-> functional and regression QA
+-> visual and responsive QA
+-> as-built documentation sync
+```
+
+Repository analysis happens before final design even when a mockup is supplied.
+The final implementation-ready package follows design approval. The concise
+phase summary below does not replace the canonical lifecycle.
 
 ### Phase 0 — Repository analysis gate
 

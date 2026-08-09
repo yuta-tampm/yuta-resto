@@ -48,7 +48,8 @@ disabled/pending states, and target-size needs appropriate to the screen.
 
 ## Visual acceptance
 
-List measurable visual outcomes and intentional deviations.
+Identify the `APPROVED` reference or explicit no-image decision. List measurable
+visual outcomes and intentional deviations from the approved visual state.
 
 ## Out of scope
 
