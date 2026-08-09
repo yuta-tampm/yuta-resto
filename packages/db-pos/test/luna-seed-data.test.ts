@@ -80,4 +80,17 @@ describe('Luna POS seed data', () => {
     expect(express?.priceDeltaCents).toBe(400);
     expect(gourmand?.priceDeltaCents).toBe(800);
   });
+
+  it('requires one pork-or-vegan nem choice for every child menu', () => {
+    expect(
+      lunaMenuItemSeeds.find(({ name }) => name === 'Menu Petit Enfant'),
+    ).toMatchObject({
+      orderingPolicy: 'separate',
+      requiredVariantQuantity: 1,
+      variantOptions: [
+        { code: 'NEMS_PORC', label: '2 nems porc' },
+        { code: 'NEMS_VEGAN', label: '2 nems vegan' },
+      ],
+    });
+  });
 });

@@ -453,9 +453,15 @@ export const lunaMenuItemSeeds: readonly LunaMenuItemSeed[] = [
   {
     name: 'Menu Petit Enfant',
     category: 'Formules',
-    description: '1 brioche porc laqué + 2 nems porc + 1 compote',
+    description: '1 brioche porc laqué + 2 nems porc ou vegan + 1 compote',
     priceCents: 650,
     kitchenStation: 'kitchen',
+    orderingPolicy: 'separate',
+    variantOptions: [
+      { code: 'NEMS_PORC', label: '2 nems porc' },
+      { code: 'NEMS_VEGAN', label: '2 nems vegan' },
+    ],
+    requiredVariantQuantity: 1,
     sortOrder: 10,
   },
 ];

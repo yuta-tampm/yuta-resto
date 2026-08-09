@@ -254,6 +254,8 @@ and save; the send action becomes available without losing the order.
 Admins and managers configure this behavior in `/management/catalog` using
 `Politique d’ajout`, `Choix requis par portion`, and `Options disponibles`.
 Option lines use `CODE = Libellé`; codes must be unique uppercase identifiers.
+Luna configures `Menu Petit Enfant` as one row per portion and requires one
+choice between `2 nems porc` and `2 nems vegan`.
 
 ### Send To Kitchen
 
