@@ -6,9 +6,9 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-08-09
+Last updated: 2026-08-10
 
-Protocol revision: 3
+Protocol revision: 4
 
 ## Purpose
 
@@ -127,6 +127,7 @@ Shared authority remains:
 docs/ui/README.md
 docs/ui/DESIGN_TO_CODE_WORKFLOW.md
 docs/ui/YUTA_FRONTEND_RULES.md
+docs/ui/references/
 packages/ui/src/index.ts
 packages/ui/src/styles/global.css
 ```
@@ -145,6 +146,7 @@ export catalog, application rules, or design-token implementation.
 Every new or actively migrated package README uses these exact fields:
 
 ```text
+Protocol revision: 4
 Target type: PAGE | SCREEN | SURFACE | FLOW | UNKNOWN
 Page classification: NEW_PAGE | EXISTING_PAGE | UNKNOWN
 Implementation class: visual-only | interactive | integrated | device-coupled | UNKNOWN
@@ -154,6 +156,7 @@ Reference status: NONE | DRAFT | REVIEWED | APPROVED
 Inventory status: PENDING | COMPLETE
 Baseline status: PENDING | CAPTURED | BLOCKED | NOT_APPLICABLE
 Design prompt status: PENDING | READY
+Shared context status: PENDING | RESOLVED | BLOCKED
 ```
 
 `UNKNOWN` is allowed only while repository analysis is incomplete. Package
@@ -167,6 +170,12 @@ BLOCKED` and record the exact resume condition. `NEW_PAGE` uses `NOT_APPLICABLE`
 because no current screen exists. Repository-derived layout descriptions are
 not baseline images.
 
+Every package also resolves the applicable shared UI context before its design
+prompt becomes `READY`. Resolution covers YUTA-global, application,
+section/flow, and page layers plus an exact shell/navigation mode from
+`DESIGN_TO_CODE_WORKFLOW.md`. A missing shared context is never permission for
+the design tool to invent one.
+
 Lifecycle meaning:
 
 - `design`: repository analysis and design are in progress;
@@ -179,7 +188,9 @@ Lifecycle meaning:
 An approved or implementation-ready package uses an `APPROVED` reference or
 sets `Reference status: NONE` with a non-placeholder no-image reason.
 It also uses `Design prompt status: READY`; an existing page uses `Baseline
-status: CAPTURED`, while a new page may use `NOT_APPLICABLE`.
+status: CAPTURED`, while a new page may use `NOT_APPLICABLE`. It uses
+`Shared context status: RESOLVED` before design approval or implementation
+readiness is claimed.
 
 ## Design approval and delivery gates
 
@@ -210,6 +221,9 @@ produce a read-only Implementation Inventory covering:
 - `NEW_PAGE` or `EXISTING_PAGE`;
 - visual-only, interactive, integrated, or device-coupled classification;
 - route, shell, and container files;
+- global/application/section shared UI sources and their approval states;
+- exact shell/navigation mode, owner, real routes, responsive behavior, and
+  forbidden invented elements;
 - the applicable auth, tenant, public-resolution, local-session, or
   standalone-local boundary;
 - data owner, persistence boundary, and transport/contracts;
@@ -229,7 +243,9 @@ After the inventory, Phase 0 also completes the design handoff:
   is unavailable;
 - prepare a self-contained design-generation prompt grounded in current
   capabilities, protected invariants, required states, YUTA UI constraints,
-  and explicitly unsupported concepts.
+  resolved shared UI context, and explicitly unsupported concepts;
+- set `Shared context status: RESOLVED` only after the context matrix and
+  curated design-tool input bundle are complete.
 
 No later phase may assume a Backoffice tenant model, POS local model, API,
 permission, schema, device capability, or business rule absent from this
@@ -295,6 +311,10 @@ A UI model is not a database schema.
 Contains:
 
 - the Phase 0 inventory source;
+- the shared context matrix for global, application, section/flow, and page
+  layers;
+- the exact shell/navigation decision and real-route inventory;
+- shared references and constraints that must be supplied to the design tool;
 - current baseline capture metadata or a precise blocker;
 - a self-contained prompt ready for ChatGPT/ImageGen or another approved
   design tool;
@@ -336,6 +356,10 @@ Global shell or brand references belong in:
 ```text
 docs/ui/references/
 ```
+
+Shared references must identify their ownership layer, scope, review status,
+elements to reuse, allowed adaptations, and non-authoritative boundaries. A
+page package links them; it does not copy or silently reinterpret them.
 
 Each reference must be described in the page `README.md`. Images are non-authoritative.
 
@@ -390,6 +414,10 @@ It must not define:
 - mutation behavior;
 - unsupported modules;
 - exact colors.
+
+It also must not promote a page-local header, sidebar, navigation, account
+area, or common state treatment into shared application UI. Shared changes need
+their own ownership and approval record before page packages consume them.
 
 ## Verification before delivery
 

@@ -26,6 +26,10 @@ Record expected files/packages and whether database, API/contract,
 permission/auth, cross-application, provider, or runtime/device change is
 approved, excluded, or remains a proposal.
 
+State whether shell, header, navigation, sidebar, account/session presentation,
+or another shared cross-page element is in scope. A page-local change must not
+silently redefine application-level UI.
+
 ## Out of scope
 
 List unsupported capabilities and adjacent modules.

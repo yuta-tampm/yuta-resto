@@ -1,4 +1,4 @@
-# <Page or screen name> — Acceptance Checklist
+# POS management catalog — Acceptance Checklist
 
 ## Repository and application
 
@@ -16,15 +16,6 @@
       date, and runtime/session conditions, or a precise blocker is recorded.
 - [ ] `DESIGN_HANDOFF.md` contains a ready-to-use design-generation prompt based
       on the Phase 0 inventory and protected invariants.
-- [ ] Global, application, section/flow, and page UI context layers are
-      inventoried with owner, source, approval state, reuse/adaptation rules,
-      exclusions, and blockers.
-- [ ] `Shared context status` is `RESOLVED` before design generation or design
-      approval.
-- [ ] Exactly one shell/navigation mode is recorded, with real allowed routes
-      and forbidden invented elements.
-- [ ] The design tool receives the curated baseline/shared-reference bundle,
-      not only a prose description.
 
 ## Scope and invariants
 
@@ -59,10 +50,6 @@
 
 - [ ] Existing application shell is reused unless shell work is explicitly in
       scope.
-- [ ] A page-local design does not create or redefine shared header, sidebar,
-      navigation, account area, or common state patterns.
-- [ ] Every visible navigation item maps to an approved real route or is
-      explicitly presented as unavailable; no dead link is invented.
 - [ ] `@yuta/ui` and semantic tokens are reused where applicable.
 - [ ] No raw colors are copied from references.
 - [ ] No duplicate shared primitive is created.

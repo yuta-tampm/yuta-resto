@@ -9,6 +9,37 @@ Visibility: Engineering
 Link to the completed Implementation Inventory and summarize the target,
 classification, implementation class, user goal, and protected invariants.
 
+## Shared UI context resolution
+
+Shared context status: `PENDING | RESOLVED | BLOCKED`
+
+Complete this matrix before preparing the design prompt:
+
+| Layer        | Owner/source | Reference status       | Reuse exactly | May adapt | Excluded | Decision/blocker |
+| ------------ | ------------ | ---------------------- | ------------- | --------- | -------- | ---------------- |
+| YUTA global  |              | MISSING/DRAFT/APPROVED |               |           |          |                  |
+| Application  |              | MISSING/DRAFT/APPROVED |               |           |          |                  |
+| Section/flow |              | MISSING/DRAFT/APPROVED |               |           |          |                  |
+| Page/screen  |              | MISSING/DRAFT/APPROVED |               |           |          |                  |
+
+Choose exactly one shell mode:
+
+```text
+REUSE_CURRENT_TARGET
+REUSE_APPROVED_SHARED_SHELL
+SEPARATE_SHELL_PROPOSAL
+NO_APPLICATION_SHELL
+```
+
+Record the shell owner/reference, header, primary navigation, sidebar, mobile
+navigation, account/session area, allowed real routes, unavailable/placeholder
+routes, and forbidden invented elements. If a shared decision is missing and
+would materially change the design, use `BLOCKED`; do not ask the design tool to
+fill the gap.
+
+List the curated shared references and constraints that will be supplied to the
+design tool. Do not copy the full component export catalog or raw token source.
+
 ## Current baseline capture
 
 Baseline status: `PENDING | CAPTURED | BLOCKED | NOT_APPLICABLE`
@@ -38,6 +69,9 @@ approved design tool. It must include:
 
 - target application, route/screen, viewport, and operator/customer context;
 - current baseline capture(s) when applicable;
+- the resolved global/application/section/page context matrix;
+- the exact shell/navigation mode, real routes, and forbidden invented UI;
+- the curated approved shared visual references;
 - approved capabilities and content hierarchy;
 - protected auth/data/runtime/polling/offline/device invariants;
 - required states and interactions;
@@ -49,6 +83,8 @@ approved design tool. It must include:
 The prompt must ask for a design proposal, not implementation code. It must not
 authorize new product capability, raw production data, provider integration,
 schema, API, permission, or device behavior.
+
+Do not mark the prompt `READY` while shared context is `PENDING` or `BLOCKED`.
 
 ### Ready-to-use prompt
 

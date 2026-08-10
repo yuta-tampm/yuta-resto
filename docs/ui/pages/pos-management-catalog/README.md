@@ -1,0 +1,237 @@
+# POS Management Catalog
+
+Status: Draft design package
+
+Visibility: Engineering
+
+Owner: YUTA product and engineering
+
+Application: `apps/yuta-pos`
+
+Target type: `SCREEN`
+
+Route / entry point: `/management/catalog`
+
+Runtime family: `local POS`
+
+Page classification: `EXISTING_PAGE`
+
+Implementation class: `integrated`
+
+Package status: `design`
+
+Scope status: `DRAFT`
+
+Reference status: `DRAFT`
+
+Inventory status: `COMPLETE`
+
+Baseline status: `CAPTURED`
+
+Design prompt status: `READY`
+
+No-image reference reason: Not applicable while the authenticated baseline is
+the current draft reference and the generated design has not been reviewed.
+
+## Current implementation
+
+The existing Server Component route is
+`apps/yuta-pos/src/app/management/catalog/page.tsx`. It requires a validated
+local admin or manager session, loads the local catalogue from `site-agent`,
+shows a truthful service-unavailable recovery state, and renders the
+route-local client editor in `CatalogManagement.tsx`.
+
+The screen manages categories, articles, prices, kitchen stations, display
+order, visibility/availability, note and allergen definitions,
+category/article instruction assignments, ordering policy, per-portion variant
+options, and required option quantities. Server actions validate transport
+input with `@yuta/contracts/local-pos`, forward the HttpOnly management session
+token from the Next.js server to `site-agent`, and revalidate the catalogue,
+order-entry, and order routes after successful writes.
+
+## Authority
+
+Read in order:
+
+1. root `AGENTS.md`;
+2. `apps/yuta-pos/AGENTS.md`;
+3. `docs/CURRENT_STATE.md`, POS product/operator/offline/QA and local operations
+   documentation;
+4. `docs/ui/README.md`, `docs/ui/DESIGN_TO_CODE_WORKFLOW.md`, and
+   `docs/ui/YUTA_FRONTEND_RULES.md`;
+5. implemented contracts, schema, session authorization, service logic, and
+   tests;
+6. `docs/ui/POS_FRONTEND_RULES.md`;
+7. this page package;
+8. `packages/ui/src/index.ts` and semantic tokens;
+9. reviewed visual references.
+
+## Documents
+
+- `PRODUCT_SCOPE.md`
+- `UI_SPEC.md`
+- `DATA_AND_INTERACTION_SPEC.md`
+- `DESIGN_HANDOFF.md`
+- `IMPLEMENTATION_PLAN.md`
+- `ACCEPTANCE_CHECKLIST.md`
+
+## References
+
+- `references/current-baseline-1366x768.png` — authenticated populated top
+  viewport.
+- `references/current-baseline-1366x768-full-page.png` — authenticated complete
+  current catalogue.
+- `references/current-baseline-edit-item-dialog-1366x768.png` — authenticated
+  edit-item dialog opened without submitting a mutation.
+
+These captures are evidence of the current implementation, not approved design
+authority.
+
+## Protected invariants
+
+- Keep the local-only chain `apps/yuta-pos -> apps/site-agent -> @yuta/db-pos`;
+  do not introduce cloud tenancy, persistence, or synchronization.
+- Require the existing HttpOnly `yuta_pos_management_session`, validated by
+  `site-agent`, and allow only active `admin` or `manager` roles.
+- Keep bearer credentials server-side and preserve Zod validation in
+  `@yuta/contracts/local-pos` plus authoritative service/database validation.
+- Preserve no-hard-delete behavior: categories are hidden and articles are
+  made unavailable so historical orders remain truthful.
+- Preserve category/article uniqueness, instruction assignment/conflict rules,
+  variant-code and required-quantity rules, kitchen stations, ordering policy,
+  integer-cent prices, and UUIDv7 service-created identifiers.
+- Preserve the current effect boundary: successful changes appear on the next
+  POS server render and revalidate `/management/catalog`, `/pos`, and the
+  `/orders` layout.
+- Preserve truthful empty, pending, success, validation, conflict, not-found,
+  and site-agent-unavailable states. Do not replace real data with fixtures.
+
+## Change impact
+
+```text
+Files expected to modify: after design approval, only apps/yuta-pos/src/app/management/catalog/* and this stable page package
+Files expected to create: none approved; route-local components may be proposed in Phase 2
+Packages affected: apps/yuta-pos; documentation only in Phase 0
+Cross-application impact: none
+Database change: NO
+API or contract change: NO
+Permission/auth change: NO
+Runtime/device change: NO
+```
+
+## Phase 0 Implementation Inventory
+
+1. **Target application and route:** `apps/yuta-pos`, `/management/catalog`.
+2. **Target type:** `SCREEN`.
+3. **Classification:** `EXISTING_PAGE`.
+4. **Implementation class:** `integrated`; the Next.js route uses the local
+   authenticated `site-agent` transport and local POS persistence, with no
+   direct device coupling or polling.
+5. **Route/shell/container and conventions:** `page.tsx` is the Server Component
+   gate/loader; `CatalogManagement.tsx` is the route-local Client Component;
+   `actions.ts` owns Server Actions. The screen composes `@yuta/ui`, semantic
+   tokens, Lucide icons, French copy, dialogs, confirm dialogs, action state,
+   and server revalidation. Nearby management routes use the same local session
+   and route-local components.
+6. **Trust boundary:** `requireLocalManagementSession()` reads the HttpOnly
+   cookie and validates it through `site-agent`; only active admin/manager
+   sessions proceed. This is single-site local infrastructure, not cloud
+   organization/establishment tenancy.
+7. **Data owner/persistence:** `apps/site-agent` owns catalogue operations;
+   `packages/db-pos` owns `menu_categories`, `menu_items`, and singleton
+   `pos_instruction_settings` in local PostgreSQL.
+8. **Transport/contracts:** `packages/contracts/src/local-pos/index.ts` owns
+   local routes, response schemas, create/update input schemas, kitchen station
+   and ordering-policy enums, instruction/variant structures, and
+   serialization-safe types. `site-agent-client.ts` validates responses and
+   sends bearer-authenticated management mutations.
+9. **Loading/actions/mutations:** the route calls `getCatalog()` and renders an
+   `ErrorState` if the local service cannot load. Server Actions create/update
+   categories and articles, update local instruction settings, toggle category
+   visibility, and toggle article availability. Input is parsed from
+   `FormData`, validated by Zod, forwarded to `site-agent`, then the catalogue,
+   POS, and order layout are revalidated.
+10. **Polling/offline/retry/device:** there is no page polling, provider, printer,
+    worker, or device interaction. The screen requires the local Next.js server,
+    LAN/local service, and POS database; Internet and cloud services are not
+    required. Local-service failure is a truthful blocking state with return
+    navigation.
+11. **Reusable UI:** current `PageHeader`, `IconTile`, `Card`, `Alert`, `Badge`,
+    `Button`, `Dialog`, `ConfirmDialog`, `FormField`, `Input`, `Textarea`, and
+    `Select` are already exported by `@yuta/ui`. Reuse them before adding
+    route-local components; do not add a shared primitive without independent
+    domain-neutral reuse.
+12. **Tests:** `apps/yuta-pos/test/site-agent-client.test.ts` protects response
+    validation and bearer-authenticated catalogue mutations;
+    `apps/site-agent/test/server.test.ts` protects management authorization,
+    route validation, and instruction settings;
+    `packages/contracts/test/contracts.test.ts` protects ordering-policy and
+    variant validation; `packages/db-pos/test/schema.test.ts` protects catalogue
+    schema support; order-entry validation tests protect downstream variant
+    behavior.
+13. **Authoritative docs:** root and POS `AGENTS.md`, `docs/CURRENT_STATE.md`,
+    `docs/products/pos/README.md`, `PRODUCT_SPEC.md`, `USER_GUIDE.md`,
+    `OFFLINE_STRATEGY.md`, `QA_CHECKLIST.md`, `docs/operations/LOCAL_DEVELOPMENT.md`,
+    and shared/POS UI governance.
+14. **Protected invariants:** local-only ownership, trusted role/session,
+    server-only credential forwarding, real integrated data, no hard delete,
+    validated catalogue/instruction/variant rules, downstream order-entry
+    behavior, and current revalidation semantics.
+15. **Baseline evidence:** captured on 2026-08-09 at 1366 × 768 from the real
+    authenticated populated page. It shows 12 categories and 53 catalogue rows,
+    including the unavailable zero-price Saturday special, plus the current
+    scrollable item editor. See `DESIGN_HANDOFF.md` for runtime conditions.
+16. **Current design conflicts:** no supplied mockup exists yet. The current
+    page is a very long undifferentiated stack and the item editor is a tall
+    single-column dialog, but any visual simplification must retain every field,
+    action, status, and recovery path.
+17. **Unsupported concepts:** image/media upload, stock/inventory, tax or cost
+    accounting, physical deletion, drag-and-drop persistence, bulk actions,
+    search/filter/category navigation, import/export, scheduling, modifiers
+    beyond current instruction/variant contracts, combo editing, cloud sync,
+    new roles, audit history, and analytics require separate approval.
+18. **Expected impact:** Phase 0 changes only this documentation package and
+    baseline images. A later approved UI pass should remain route-local and
+    affect no other application.
+19. **Change flags:** database `NO`; API/contract `NO`; permission/auth `NO`;
+    runtime/device `NO`.
+20. **Exact verification commands:** `pnpm ui:pack:check pos-management-catalog`,
+    `pnpm docs:check`, `pnpm architecture:check`,
+    `pnpm -r --if-present typecheck`, and `pnpm format:check`. Later runtime work
+    also requires `pnpm typecheck:pos`, `pnpm test:pos`, `pnpm build:pos`,
+    `pnpm typecheck:site-agent`, `pnpm test:site-agent`, and affected contract or
+    db-pos checks when those boundaries are touched.
+21. **Later-phase candidate files:**
+    `apps/yuta-pos/src/app/management/catalog/page.tsx`,
+    `CatalogManagement.tsx`, `actions.ts` only if approved interaction behavior
+    needs it, possible route-local components in the same directory, and this
+    page package. Fixture replacement is forbidden.
+
+## Design approval
+
+No generated proposal is approved. Phase 0 is complete; the product owner must
+approve the design direction before the package advances beyond `design`.
+
+## Prompt order
+
+1. `prompts/00_REPOSITORY_ANALYSIS.md`
+2. `prompts/01_VISUAL_BASELINE.md`
+3. `prompts/02_COMPONENT_REFACTOR.md`
+4. `prompts/03_INTERACTIONS.md`
+5. `prompts/04_DATA_INTEGRATION.md`
+6. `prompts/05_VISUAL_QA.md`
+
+Each phase requires explicit product-owner approval before the next begins.
+
+## Stop conditions
+
+Stop and request approval for any new product capability, field, enum,
+permission, contract, API, schema/migration, runtime dependency, local-service
+behavior, cloud relationship, destructive behavior, or change to a protected
+catalogue/order-entry invariant.
+
+## Final delivery and as-built status
+
+Not applicable during Phase 0. Runtime implementation and QA have not started.
+
+As-built documentation status: `PENDING`

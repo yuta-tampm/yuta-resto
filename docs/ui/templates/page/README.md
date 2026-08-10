@@ -6,6 +6,8 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
+Protocol revision: 4
+
 Application: `<apps/...>`
 
 Target type: `UNKNOWN`
@@ -29,6 +31,8 @@ Inventory status: `PENDING`
 Baseline status: `PENDING`
 
 Design prompt status: `PENDING`
+
+Shared context status: `PENDING`
 
 No-image reference reason: `<required when Reference status is NONE after design approval>`
 
@@ -70,6 +74,12 @@ Application-specific UI rules: `<path or "none; use nearest AGENTS/product docs"
 List page-specific images and their purpose.
 
 Images are non-authoritative.
+
+## Shared UI context
+
+Summarize the resolved YUTA-global, application, section/flow, and page layers.
+Link approved shared references, identify the exact shell/navigation mode, and
+state which common elements must be reused, may adapt, or are forbidden.
 
 ## Protected invariants
 

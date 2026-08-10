@@ -23,6 +23,10 @@ Current packages:
 - `pos-management-printing/` — Phase 0 inventory for the existing local POS
   device-coupled screen at `/management/printing`; design approval is pending.
 
+- `pos-management-catalog/` — Phase 0 inventory and authenticated baseline for
+  the existing integrated local POS screen at `/management/catalog`; generated
+  design approval is pending.
+
 Every package follows `../PAGE_PACK_PROTOCOL.md`.
 
 For new packages, choose a globally unambiguous slug. When route vocabulary

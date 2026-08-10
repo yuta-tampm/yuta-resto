@@ -6,9 +6,9 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-09
+Last updated: 2026-08-10
 
-Protocol revision: 3
+Protocol revision: 4
 
 ## Purpose
 
@@ -73,7 +73,8 @@ The generator must:
    not leave a partial package;
 6. copy the canonical page template;
 7. create `references/` with a reference metadata README;
-8. create `DESIGN_HANDOFF.md` with unresolved baseline and prompt states;
+8. create `DESIGN_HANDOFF.md` with unresolved shared-context, baseline, and
+   prompt states;
 9. populate only safe mechanical metadata such as application, target, slug,
    initial package status, and unresolved implementation classification;
 10. leave repository-derived fields as explicit placeholders for Phase 0;
@@ -90,6 +91,7 @@ A new generated package should start with values equivalent to:
 
 ```text
 Application: <app>
+Protocol revision: 4
 Target type: <PAGE | SCREEN | SURFACE | FLOW or unresolved>
 Route / entry point: <target>
 Page classification: UNKNOWN
@@ -100,6 +102,7 @@ Reference status: DRAFT or NONE
 Inventory status: PENDING
 Baseline status: PENDING
 Design prompt status: PENDING
+Shared context status: PENDING
 No-image reference reason: <required after approval when status is NONE>
 ```
 
@@ -165,15 +168,25 @@ PENDING
 COMPLETE
 ```
 
+Validate shared-context states:
+
+```text
+PENDING
+RESOLVED
+BLOCKED
+```
+
 Rules:
 
 - `design` may use `DRAFT`, `REVIEWED`, `APPROVED`, or `NONE` references;
 - `approved` requires `Scope status: APPROVED` and either `APPROVED` visual
-  reference or an explicit declaration that no image reference is required;
+  reference or an explicit declaration that no image reference is required,
+  plus `Shared context status: RESOLVED`;
 - `implementation-ready` requires completed Phase 0 inventory, resolved
   `NEW_PAGE`/`EXISTING_PAGE`, resolved implementation class, protected
-  invariants, change impact, exact verification commands, and approved/no-image
-  reference declaration;
+  invariants, resolved shared UI context and shell/navigation decision, change
+  impact, exact verification commands, and approved/no-image reference
+  declaration;
 - `implemented` additionally requires delivery evidence and as-built sync.
 
 The validator should not attempt to prove subjective visual parity. It checks
@@ -209,11 +222,15 @@ When status is `implementation-ready`, also require:
 - exact repository verification commands;
 - approved visual reference metadata or explicit no-image statement;
 - `DESIGN_HANDOFF.md` with a captured existing-page baseline (or
-  `NOT_APPLICABLE` for a new page) and a ready design-generation prompt.
+  `NOT_APPLICABLE` for a new page), resolved shared-context bundle and
+  shell/navigation decision, and a ready design-generation prompt.
 
 `UNKNOWN`, unresolved placeholders, missing `Inventory status: COMPLETE`, a
 blocked/pending required baseline, or a pending design prompt are errors for
-`implementation-ready` and `implemented` packages.
+`implementation-ready` and `implemented` packages. A present but unresolved
+`Shared context status` is also an error for `approved` or later states. Older
+packages without the revision-4 field receive a compatibility warning until
+they are actively migrated.
 
 ### Implemented checks
 
@@ -282,8 +299,9 @@ The generator/validator owns package mechanics only. It must never:
 - A generated package cannot overwrite an existing stable package.
 - Invalid slugs and unknown applications fail clearly.
 - Missing required files/prompts fail validation.
-- An `implementation-ready` claim fails until Phase 0, invariants, change
-  impact, verification commands, and approved reference metadata are complete.
+- An `implementation-ready` claim fails until Phase 0, shared context,
+  shell/navigation decision, invariants, change impact, verification commands,
+  and approved reference metadata are complete.
 - An `implemented` claim fails until delivery/QA/as-built evidence is present.
 - Existing stable page-package paths remain unchanged.
 - Existing root command names are reported truthfully; no lint command is

@@ -1,4 +1,4 @@
-# <Page or screen name> — Implementation Plan
+# POS management catalog — Implementation Plan
 
 Status: Draft
 
@@ -13,16 +13,16 @@ Do not continue while the target application/runtime, classification,
 data/session boundary, protected invariants, current visual baseline, or
 required commands remain ambiguous.
 
-Resolve the YUTA-global, application, section/flow, and page UI context. Record
-the shell/navigation mode, real routes, approved shared references, reusable
-patterns, allowed adaptations, and explicit exclusions. Set
-`Shared context status: RESOLVED` before the design prompt becomes `READY`.
-
 After the inventory, complete `DESIGN_HANDOFF.md`: capture the current visual
 baseline for an existing target (or record a truthful blocker), then prepare a
 self-contained design-generation prompt for ChatGPT/ImageGen or another
 approved design tool. This handoff is documentation/design preparation, not UI
 implementation.
+
+Phase 0 completed on 2026-08-09 with no runtime-code changes. The package now
+contains the repository inventory, authenticated 1366 × 768 populated/full-page
+and editor-dialog captures, and a ready design prompt. Stop here for explicit
+product-owner approval before generating a draft design.
 
 ## Phase 1 — Approved visual baseline implementation
 

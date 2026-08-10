@@ -117,11 +117,29 @@ test('generates a complete design package without overwriting an existing one', 
 
   const readme = readFileSync(join(result.destination, 'README.md'), 'utf8');
   assert.match(readme, /Application: `apps\/yuta-pos`/u);
+  assert.match(readme, /Protocol revision: 4/u);
   assert.match(readme, /Target type: `SCREEN`/u);
   assert.match(readme, /Page classification: `UNKNOWN`/u);
   assert.match(readme, /Package status: `design`/u);
   assert.match(readme, /Baseline status: `PENDING`/u);
   assert.match(readme, /Design prompt status: `PENDING`/u);
+  assert.match(readme, /Shared context status: `PENDING`/u);
+
+  const withoutSharedContext = readme.replace(
+    /\nShared context status: `PENDING`\n/u,
+    '\n',
+  );
+  writeFileSync(join(result.destination, 'README.md'), withoutSharedContext);
+  const missingSharedContextValidation = validateUiPacks({
+    repositoryRoot: root,
+    slug: 'pos-management-printing',
+  });
+  assert.ok(
+    missingSharedContextValidation.errors.some(
+      (error) => error.rule === 'missing-shared-context',
+    ),
+  );
+  writeFileSync(join(result.destination, 'README.md'), readme);
   assert.match(readme, /POS_FRONTEND_RULES\.md/u);
 
   assert.throws(() => createUiPack(options), /already exists/u);
@@ -219,6 +237,24 @@ test('rejects unresolved implementation-ready metadata and unknown commands', ()
     slug: 'pos-order-entry',
   });
   assert.deepEqual(validation.errors, []);
+
+  writeFileSync(
+    readmePath,
+    readme.replace(
+      'Shared context status: `RESOLVED`',
+      'Shared context status: `BLOCKED`',
+    ),
+  );
+  validation = validateUiPacks({
+    repositoryRoot: root,
+    slug: 'pos-order-entry',
+  });
+  assert.ok(
+    validation.errors.some(
+      (error) => error.rule === 'incomplete-shared-context',
+    ),
+  );
+  writeFileSync(readmePath, readme);
 
   writeFileSync(
     readmePath,
@@ -376,6 +412,10 @@ function makeImplementationReady(readme) {
     .replace('Inventory status: `PENDING`', 'Inventory status: `COMPLETE`')
     .replace('Baseline status: `PENDING`', 'Baseline status: `CAPTURED`')
     .replace('Design prompt status: `PENDING`', 'Design prompt status: `READY`')
+    .replace(
+      'Shared context status: `PENDING`',
+      'Shared context status: `RESOLVED`',
+    )
     .replace(
       'No-image reference reason: `<required when Reference status is NONE after design approval>`',
       'No-image reference reason: `Approved without an image reference`',

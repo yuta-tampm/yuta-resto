@@ -6,9 +6,9 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-08-09
+Last updated: 2026-08-10
 
-Protocol revision: 3
+Protocol revision: 4
 
 ## Purpose
 
@@ -48,6 +48,8 @@ business logic.
 0. Target identification
         ↓
 1. Repository analysis
+        ↓
+1A. Shared UI context resolution
         ↓
 2. Product + implementation scope
         ↓
@@ -112,6 +114,85 @@ Produce an Implementation Inventory covering, as applicable:
 
 No implementation begins in this step.
 
+## Step 1A — Shared UI context resolution gate
+
+Repository analysis identifies what the target does. Before a design-generation
+prompt is considered ready, assemble the approved visual and interaction context
+that the target must inherit. This gate prevents a page-level design tool from
+inventing an application shell, navigation, header, sidebar, account area,
+responsive pattern, shared state treatment, or adjacent product capability.
+
+Resolve context in this order:
+
+```text
+YUTA global foundation
+-> target-application foundation
+-> section, feature, or multi-page-flow context
+-> target page or screen
+```
+
+For each applicable layer, record:
+
+- implementation owner and current source files;
+- approved documentation and visual references;
+- status as `MISSING`, `DRAFT`, or `APPROVED`;
+- elements to reuse exactly;
+- elements that may adapt within the target viewport;
+- elements explicitly excluded from the page design;
+- responsive, touch, keyboard, accessibility, and state conventions;
+- unresolved conflicts and the approval owner.
+
+The page package records the result with:
+
+```text
+Shared context status: PENDING | RESOLVED | BLOCKED
+```
+
+Use `RESOLVED` only when every applicable layer has an explicit source or an
+explicit decision that the layer does not exist for this target. `MISSING` at a
+layer does not authorize invention: either define and approve that shared
+context as a separate cross-page initiative or explicitly keep the current
+target implementation. Use `BLOCKED` when a missing or conflicting shared
+decision would materially change the generated design.
+
+### Required shell and navigation decision
+
+Every page or screen handoff must choose exactly one shell mode:
+
+```text
+REUSE_CURRENT_TARGET
+REUSE_APPROVED_SHARED_SHELL
+SEPARATE_SHELL_PROPOSAL
+NO_APPLICATION_SHELL
+```
+
+Record the shell owner/reference, header, primary navigation, sidebar, mobile
+navigation, account/session area, allowed real routes, unavailable or
+placeholder routes, and forbidden/invented elements. A route-local header is
+not a shared application shell unless repository ownership and product approval
+explicitly make it one.
+
+`SEPARATE_SHELL_PROPOSAL` is cross-page scope. Stop the page design until that
+proposal is independently reviewed or explicitly excluded. Do not let one page
+mockup silently become application information architecture.
+
+### Design-tool input bundle
+
+The prompt handoff must provide a curated bundle, not merely general prose:
+
+- current target baseline for an existing page;
+- applicable approved shared references from `docs/ui/references/`;
+- exact shell and navigation decision;
+- real route/navigation inventory when navigation is in scope;
+- shared typography, semantic-token, icon, component, density, responsive,
+  accessibility, and common-state constraints;
+- page-specific content/data hierarchy and protected invariants;
+- explicit exclusions and unsupported concepts.
+
+Do not dump the complete component export catalog or raw token implementation
+into every prompt. Link the authoritative sources and include only the visual
+examples and constraints needed by the design tool.
+
 ### Required Phase 0 design handoff
 
 After the Implementation Inventory, complete `DESIGN_HANDOFF.md` before UI
@@ -122,13 +203,16 @@ design begins. The Phase 0 handoff output is:
    route/state, viewport or device, capture date, and runtime/session conditions;
 3. a truthful `BLOCKED` record with the exact resume condition when the current
    baseline cannot be captured, or `NOT_APPLICABLE` for `NEW_PAGE`;
-4. a self-contained design-generation prompt ready for ChatGPT/ImageGen or
-   another approved design tool.
+4. a completed shared UI context resolution with an exact shell/navigation
+   decision and `Shared context status: RESOLVED`;
+5. a self-contained design-generation prompt ready for ChatGPT/ImageGen or
+   another approved design tool, accompanied by the curated context bundle.
 
 Repository-derived layout notes do not count as visual evidence. Baseline
 capture is read-only and must not require replacing real data, bypassing auth,
 or changing application code. The design-generation prompt must preserve the
-inventory's protected invariants and explicitly exclude unsupported concepts.
+inventory's protected invariants, apply the resolved shared context, and
+explicitly exclude unsupported concepts.
 
 A blocked baseline may remain in a `design` package, but an existing-page pack
 cannot advance to `approved` or `implementation-ready` until the baseline is
@@ -189,6 +273,7 @@ The design is based on:
 
 ```text
 current application shell
++ resolved global/application/section UI context
 + current capabilities
 + current shared/application components
 + approved product scope
@@ -198,6 +283,10 @@ current application shell
 For `EXISTING_PAGE`, redesign the real target rather than imagining a separate
 replacement implementation.
 
+Do not generate a page design while `Shared context status` is `PENDING` or
+`BLOCKED`. When shared shell/navigation is out of scope, state that directly and
+forbid the design tool from adding or replacing it.
+
 For `NEW_PAGE`, a static or typed-fixture visual baseline may be designed when
 explicitly allowed by the page specification. Fixtures must not imply that an
 unimplemented capability already exists.
@@ -206,6 +295,11 @@ unimplemented capability already exists.
 
 A page package may be drafted while design is being reviewed, but it is not
 implementation-ready until the visual direction is approved.
+
+Design approval also verifies shared-context fidelity. Reject or revise a
+reference that invents or changes shell, navigation, account/session UI,
+cross-page components, common states, real route ownership, or page data
+hierarchy beyond the resolved context.
 
 Use these reference states:
 
@@ -357,6 +451,7 @@ implementation <-> current page package <-> approved visual reference
 
 ```text
 repository analysis
+-> resolve shared UI context
 -> preserve current behavior and protected invariants
 -> design against real capabilities
 -> approve reference
@@ -372,6 +467,7 @@ Do not replace real integration with fixtures to obtain visual parity.
 
 ```text
 repository analysis
+-> resolve shared UI context
 -> define approved scope
 -> design
 -> approve reference
@@ -403,6 +499,11 @@ supplied reference
 When the reference conflicts with protected behavior, preserve the behavior and
 document the required visual deviation or request a product decision.
 
+When a reference introduces a header, sidebar, navigation item, account area,
+shared state pattern, or cross-page component absent from the resolved context,
+treat it as an unsupported proposal. Do not approve the page reference until
+the element is removed or separately approved at its real ownership level.
+
 ## Responsibilities
 
 ### Product/design preparation
@@ -410,6 +511,8 @@ document the required visual deviation or request a product decision.
 The party preparing the UI package is responsible for:
 
 - understanding repository reality before finalizing design;
+- resolving and supplying the applicable shared UI context before page-specific
+  design generation;
 - defining product scope and protected invariants;
 - producing or curating the visual reference;
 - resolving design iterations with the product owner;

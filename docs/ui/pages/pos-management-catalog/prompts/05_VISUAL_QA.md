@@ -12,11 +12,6 @@ hierarchy/reference. Fix major differences in shell alignment, proportions,
 density, spacing, typography, semantic color, responsive behavior, overflow,
 focus, and touch behavior without changing protected business/runtime behavior.
 
-Compare global/application/section shared UI separately from page-specific
-content. Confirm that shell, navigation, account/session presentation, common
-states, and responsive behavior match the resolved shared context and that no
-page-local design has introduced cross-page UI or dead navigation.
-
 Verify truthful loading, empty, unauthorized/forbidden, pending, validation,
 conflict, error, degraded/offline, device, success, retry, and recovery states
 that apply to the target.

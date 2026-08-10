@@ -6,9 +6,9 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-08-09
+Last updated: 2026-08-10
 
-Protocol revision: 3
+Protocol revision: 4
 
 ## Purpose
 
@@ -165,6 +165,13 @@ Inventory that:
 - reports conflicts between the design and the implemented domain;
 - records exact repository commands available for verification.
 
+Phase 0 also resolves the shared UI context supplied to the design tool. Record
+YUTA-global, application, section/flow, and page layers; select the exact
+shell/navigation mode; inventory real routes; and assemble the curated baseline
+and shared-reference bundle. A missing header, sidebar, navigation, account
+area, responsive convention, or common state pattern is a blocker or separate
+cross-page proposal, not permission for the design tool to invent one.
+
 For an existing integrated route, improve it in place. Do not replace working behavior with fixture data merely because a generic design workflow begins with a static phase.
 
 ### Phase 1 — Establish the visual baseline
@@ -221,12 +228,13 @@ A missing field is a product/schema proposal, not permission to add a column, co
 
 Review in this order:
 
-1. shell and page-container alignment;
-2. hierarchy and content proportions;
-3. spacing and density;
-4. typography and semantic color;
-5. responsive stacking and overflow;
-6. keyboard, focus, labels, and state communication.
+1. global/application/section shared-context fidelity;
+2. shell, navigation, and page-container alignment;
+3. page-specific hierarchy and content/data fidelity;
+4. spacing and density;
+5. typography and semantic color;
+6. responsive stacking and overflow;
+7. keyboard, focus, labels, and state communication.
 
 Separate visual corrections from backend refactors.
 
@@ -240,6 +248,12 @@ Use:
 - semantic tokens defined in `packages/ui/src/styles/global.css`;
 - `lucide-react`;
 - the typography approved by the target application's current instructions.
+
+Before page design, also resolve the applicable shared visual context from
+`docs/ui/references/`, the current application/section implementation, and
+approved page packages. Supply that curated context to the design tool before
+page-specific requirements. Never infer application-wide ownership from a
+single route screenshot.
 
 Use role-based classes such as:
 

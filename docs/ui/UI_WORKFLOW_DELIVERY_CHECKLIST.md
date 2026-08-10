@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-08-09
+Last updated: 2026-08-10
 
 ## Before design
 
@@ -17,6 +17,17 @@ Last updated: 2026-08-09
 - [ ] Target is classified `NEW_PAGE` or `EXISTING_PAGE`.
 - [ ] Implementation class is identified.
 - [ ] Current shell/components/data/actions/tests are inventoried.
+- [ ] YUTA-global, application, section/flow, and page context layers identify
+      their owners, sources, approval states, exact reuse, allowed adaptation,
+      exclusions, and blockers.
+- [ ] Exactly one shell/navigation mode is selected and records the header,
+      sidebar, mobile navigation, account/session area, real routes,
+      unavailable routes, and forbidden invented elements.
+- [ ] Missing shared context is blocked or handled as a separate cross-page
+      proposal; the page design tool is not asked to invent it.
+- [ ] The curated design-tool bundle contains the target baseline, applicable
+      approved shared references, common responsive/state constraints, page
+      hierarchy, and explicit exclusions.
 - [ ] Protected invariants are recorded.
 - [ ] Unsupported mockup concepts are separated from current capabilities.
 - [ ] Expected change impact is recorded.
@@ -32,6 +43,7 @@ Last updated: 2026-08-09
 - [ ] Existing-page `Baseline status` is `CAPTURED`; new-page status is
       `NOT_APPLICABLE`.
 - [ ] `Design prompt status` is `READY`.
+- [ ] `Shared context status` is `RESOLVED`.
 - [ ] Product/interaction scope is approved.
 - [ ] `Scope status` is `APPROVED`.
 - [ ] Visual direction is approved or an explicit no-image-reference decision
@@ -39,6 +51,10 @@ Last updated: 2026-08-09
 - [ ] Reference metadata is `APPROVED` where an image is used.
 - [ ] Design does not infer new API/schema/permission/runtime/device capability.
 - [ ] Existing application shell is preserved unless shell work is in scope.
+- [ ] Shared-context fidelity and page-specific fidelity are reviewed
+      separately.
+- [ ] Every navigation item maps to an approved real route or is explicitly
+      unavailable; no page mockup creates application IA or dead links.
 - [ ] Final package uses the stable page slug.
 - [ ] Required files and six prompts are present.
 - [ ] `pnpm ui:pack:check <page-slug>` passes for the declared lifecycle state.

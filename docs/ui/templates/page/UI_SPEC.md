@@ -11,6 +11,12 @@ classification, and implementation class.
 
 The implementation and current product documentation remain behavior authority. Visual references guide hierarchy and proportions only.
 
+## Shared UI context
+
+Record the resolved global, application, and section/flow context that this
+target inherits. Identify shell/navigation mode, shared references, elements to
+reuse exactly, allowed responsive adaptations, and excluded shared changes.
+
 ## Current baseline
 
 Describe the current shell, layout, components, runtime states, and high-level

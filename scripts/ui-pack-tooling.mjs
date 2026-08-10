@@ -45,6 +45,7 @@ const baselineStates = new Set([
   'NOT_APPLICABLE',
 ]);
 const designPromptStates = new Set(['PENDING', 'READY']);
+const sharedContextStates = new Set(['PENDING', 'RESOLVED', 'BLOCKED']);
 const pageClassifications = new Set(['NEW_PAGE', 'EXISTING_PAGE', 'UNKNOWN']);
 const implementationClasses = new Set([
   'visual-only',
@@ -489,6 +490,29 @@ function validatePackage({
   const inventoryStatus = unquote(metadata.get('Inventory status'));
   const baselineStatus = unquote(metadata.get('Baseline status'));
   const designPromptStatus = unquote(metadata.get('Design prompt status'));
+  const protocolRevisionValue = metadata.has('Protocol revision')
+    ? Number(unquote(metadata.get('Protocol revision')))
+    : undefined;
+  const requiresSharedContext =
+    protocolRevisionValue !== undefined && protocolRevisionValue >= 4;
+  const sharedContextStatus = metadata.has('Shared context status')
+    ? unquote(metadata.get('Shared context status'))
+    : undefined;
+
+  if (sharedContextStatus === undefined) {
+    const target = requiresSharedContext ? errors : warnings;
+    target.push(
+      issue(
+        requiresSharedContext
+          ? 'missing-shared-context'
+          : 'legacy-shared-context',
+        readmePath,
+        requiresSharedContext
+          ? 'Protocol revision 4 requires Shared context status.'
+          : 'Add Protocol revision 4 and Shared context status when this lifecycle package is next actively migrated.',
+      ),
+    );
+  }
 
   validateEnum(
     packageStates,
@@ -541,6 +565,15 @@ function validatePackage({
     readmePath,
     errors,
   );
+  if (sharedContextStatus !== undefined) {
+    validateEnum(
+      sharedContextStates,
+      sharedContextStatus,
+      'Shared context status',
+      readmePath,
+      errors,
+    );
+  }
 
   if (!packageStates.has(packageStatus)) return;
   if (packageStatus === 'design') return;
@@ -556,6 +589,7 @@ function validatePackage({
     inventoryStatus,
     baselineStatus,
     designPromptStatus,
+    sharedContextStatus,
     errors,
   });
   validateReferenceMetadata({
@@ -644,6 +678,7 @@ function requireResolvedLifecycle({
   inventoryStatus,
   baselineStatus,
   designPromptStatus,
+  sharedContextStatus,
   errors,
 }) {
   if (
@@ -671,6 +706,16 @@ function requireResolvedLifecycle({
         'incomplete-design-handoff',
         readmePath,
         'Approved or later status requires a captured existing-page baseline (or NOT_APPLICABLE for NEW_PAGE) and Design prompt status READY.',
+      ),
+    );
+  }
+
+  if (sharedContextStatus !== undefined && sharedContextStatus !== 'RESOLVED') {
+    errors.push(
+      issue(
+        'incomplete-shared-context',
+        readmePath,
+        'Approved or later status requires Shared context status: RESOLVED.',
       ),
     );
   }
