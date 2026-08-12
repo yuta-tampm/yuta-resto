@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-08-10
+Last updated: 2026-08-12
 
 ## Before design
 
@@ -15,6 +15,8 @@ Last updated: 2026-08-10
 - [ ] Real route/entry point is located when it exists.
 - [ ] Phase 0 repository analysis is read-only.
 - [ ] Target is classified `NEW_PAGE` or `EXISTING_PAGE`.
+- [ ] The applicable mode from `DELIVERY_WORKFLOW_MODES.md` is recorded as
+      `EXISTING_CAPABILITY_RENEWAL` or `NEW_CAPABILITY_DISCOVERY`.
 - [ ] Implementation class is identified.
 - [ ] Current shell/components/data/actions/tests are inventoried.
 - [ ] YUTA-global, application, section/flow, and page context layers identify
@@ -93,5 +95,10 @@ Last updated: 2026-08-10
 - [ ] Package status is `implemented` only after as-built sync.
 - [ ] Documentation index and consistency checks include every new current
       workflow document.
+- [ ] If workflow lifecycle, phases, classifications, fixture rules, approval
+      gates, vertical slices, completion criteria, page-pack behavior,
+      templates, prompts, checklist, or tooling changed,
+      `DELIVERY_WORKFLOW_MODES.md` and every affected canonical workflow
+      artifact were updated in the same change.
 - [ ] No duplicate `v2`, `v3`, `new`, `final`, or `latest` package was created.
 - [ ] No non-existent or unexecuted command is reported as passed.

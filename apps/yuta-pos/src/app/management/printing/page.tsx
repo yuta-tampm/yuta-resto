@@ -3,9 +3,9 @@ import { ArrowLeft, Printer } from 'lucide-react';
 import Link from 'next/link';
 import { siteAgentClient } from '../../../lib/site-agent-client';
 import { requireLocalManagementCredentials } from '../../../server/local-management-session';
+import { ManagementHeader } from '../_components/ManagementHeader';
 import { PrintingAutoRefresh } from './PrintingAutoRefresh';
 import { PrintingManagement } from './PrintingManagement';
-import { PrintingManagementHeader } from './PrintingManagementHeader';
 
 type LocalPrintingManagementPageProps = {
   searchParams: Promise<{ page?: string }>;
@@ -57,7 +57,7 @@ export default async function LocalPrintingManagementPage({
 
   return (
     <main className="min-h-dvh bg-canvas text-primary">
-      <PrintingManagementHeader
+      <ManagementHeader
         userName={session.user.name}
         userRole={session.user.role}
       />

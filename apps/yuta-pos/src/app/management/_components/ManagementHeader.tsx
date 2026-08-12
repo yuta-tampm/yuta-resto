@@ -12,7 +12,7 @@ import { ArrowLeft, ChevronDown, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { signOutManagementAction } from '../actions';
 
-export function PrintingManagementHeader({
+export function ManagementHeader({
   userName,
   userRole,
 }: {

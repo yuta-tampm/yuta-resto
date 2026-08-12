@@ -28,6 +28,8 @@ Read this directory together with:
 - `docs/CURRENT_STATE.md`;
 - the relevant current feature or product documentation;
 - `DESIGN_TO_CODE_WORKFLOW.md` for meaningful design-to-code initiatives;
+- `DELIVERY_WORKFLOW_MODES.md` to select the existing-capability or
+  new-capability delivery mode;
 - `YUTA_FRONTEND_RULES.md`;
 - the target application's frontend rules, including
   `BACKOFFICE_FRONTEND_RULES.md` for Backoffice work and
@@ -38,6 +40,12 @@ Read this directory together with:
 `UI_WORKFLOW_DELIVERY_CHECKLIST.md` is the short daily gate from repository
 analysis through as-built completion. `UI_PACK_TOOLING_SPEC.md` documents the
 page-pack generator and validator lifecycle.
+
+Workflow documentation is maintained as one synchronized system. Changes to
+the lifecycle, modes, phases, classifications, fixtures, approval gates,
+templates, prompts, checklist, page-pack protocol, or tooling must update
+`DELIVERY_WORKFLOW_MODES.md` and every other affected current workflow artifact
+in the same change.
 
 Current page-pack tooling commands are:
 

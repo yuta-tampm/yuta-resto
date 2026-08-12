@@ -39,7 +39,8 @@ The existing Server Component route is
 `apps/yuta-pos/src/app/management/printing/page.tsx`. It requires a valid local
 admin or manager session, loads paginated jobs, print settings, and safe printer
 status from `apps/site-agent`, and renders the current management shell. The
-route-local Phase 2 structure separates `PrintingManagementHeader.tsx`,
+Phase 2 structure uses the shared
+`apps/yuta-pos/src/app/management/_components/ManagementHeader.tsx` alongside
 `PrinterStatusCard.tsx`, `PrintSettingsCard.tsx`, and `PrintJobsCard.tsx` behind
 the server-side composition in `PrintingManagement.tsx`. Client state is limited
 to settings/test-print actions, queue/job actions and pagination, plus the
@@ -171,8 +172,8 @@ behavior:
 
 - `page.tsx` retains trusted session validation, site-agent loading, error
   handling, and route orchestration;
-- `PrintingManagementHeader.tsx` owns the route-local server-rendered management
-  shell header and existing sign-out action;
+- `apps/yuta-pos/src/app/management/_components/ManagementHeader.tsx` owns the
+  shared server-rendered POS Management header and existing sign-out action;
 - `PrinterStatusCard.tsx` owns truthful printer-state presentation without a
   client boundary;
 - `PrintSettingsCard.tsx` owns settings, preview, save state, and explicit test
@@ -193,6 +194,11 @@ browser reload was blocked by the browser localhost URL policy; the production
 build itself completed successfully. Phase 1 visual evidence remains applicable
 because Phase 2 made no visual changes. Clean browser/viewport sign-off remains
 part of Phase 5.
+
+On 2026-08-12 the proven header was promoted to the shared POS Management owner
+while implementing catalogue Phase 1. Authenticated production-browser QA of
+`/management/printing` confirmed the same heading, brand, return-to-POS and
+account behavior with no horizontal overflow or console warnings/errors.
 
 ## Phase 3 implementation status
 

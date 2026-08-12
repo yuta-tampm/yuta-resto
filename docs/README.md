@@ -71,6 +71,7 @@ the shared operations documents until a dedicated product document is needed.
 
 - [`ui/README.md`](ui/README.md)
 - [`ui/DESIGN_TO_CODE_WORKFLOW.md`](ui/DESIGN_TO_CODE_WORKFLOW.md)
+- [`ui/DELIVERY_WORKFLOW_MODES.md`](ui/DELIVERY_WORKFLOW_MODES.md)
 - [`ui/YUTA_FRONTEND_RULES.md`](ui/YUTA_FRONTEND_RULES.md)
 - [`ui/BACKOFFICE_FRONTEND_RULES.md`](ui/BACKOFFICE_FRONTEND_RULES.md)
 - [`ui/POS_FRONTEND_RULES.md`](ui/POS_FRONTEND_RULES.md)

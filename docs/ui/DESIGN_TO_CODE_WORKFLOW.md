@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-08-10
+Last updated: 2026-08-12
 
 Protocol revision: 4
 
@@ -27,6 +27,13 @@ product/architecture documentation, and application frontend rules.
 Small maintenance changes that do not warrant a page package still follow the
 shared and application rules, but they do not need to manufacture lifecycle
 artifacts solely to satisfy this workflow.
+
+Select the applicable delivery mode from `DELIVERY_WORKFLOW_MODES.md` after
+repository analysis establishes whether the capability already exists. Any
+change to this lifecycle, its phases, approval gates, fixture rules, or
+completion criteria must review and synchronize the delivery-mode document,
+page-pack protocol, templates, prompts, daily checklist, and tooling in the
+same change when affected.
 
 ## Core principle
 

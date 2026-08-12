@@ -1,6 +1,6 @@
 # POS management catalog — Implementation Plan
 
-Status: Implementation ready
+Status: Phase 2 implemented; Phase 3 approval pending
 
 Visibility: Engineering
 
@@ -24,7 +24,7 @@ no runtime-code changes. On 2026-08-11 the package was migrated to protocol
 revision 4: shared UI context was resolved and the no-sidebar POS Management
 dark header direction was approved. On 2026-08-11 proposals 01 and 02 were
 approved as visual-direction references with documented raster deviations.
-Stop here for explicit Phase 1 approval before runtime changes.
+Phase 1 was explicitly approved on 2026-08-12.
 
 ## Phase 1 — Approved visual baseline implementation
 
@@ -71,11 +71,41 @@ Phase 1 stops after the approved visual baseline is implemented and verified.
 Do not perform the broader catalogue component decomposition in Phase 2
 automatically.
 
+Phase 1 completed on 2026-08-12. The shared management header now serves both
+catalogue and printing, the authenticated catalogue uses the approved dense
+expandable hierarchy, and the article editor uses contained two-column desktop
+sections with a stacked full-width mobile treatment. Existing live data,
+session authorization, server actions, fields, confirmations, validation and
+recovery behavior were preserved; no contract, permission, schema, API,
+site-agent, database or device boundary changed.
+
+Authenticated production-build evidence is recorded in `references/` at
+1366 x 768 and 390 x 844 for both the catalogue and article editor. Browser QA
+also verified category disclosure, the printing route after shared-header
+extraction, absence of horizontal overflow, and an empty warning/error console.
+Stop here for explicit Phase 2 approval.
+
 ## Phase 2 — Component refactor
 
 Extract meaningful units by responsibility while preserving appearance and
 behavior. Reuse `@yuta/ui`; do not prematurely promote feature-specific
 components to the shared package.
+
+Phase 2 was explicitly approved and completed on 2026-08-12. The route-local
+client implementation is now separated by responsibility:
+
+- `CatalogManagement.tsx` owns page-level catalogue composition only;
+- `CatalogOverview.tsx` owns category disclosure, metrics and article rows;
+- `CatalogCategoryDialogs.tsx` owns category, instruction-settings and
+  reversible category-state mutations;
+- `CatalogItemDialog.tsx` owns article editing and reversible availability;
+- `CatalogDialogSupport.tsx` owns shared route-local feedback/footer behavior;
+- `catalog-model.ts` owns inferred catalogue aliases and pure presentation
+  helpers.
+
+`page.tsx`, `actions.ts`, authorization, data loading, validation, transport,
+revalidation and local persistence ownership were not changed. No component was
+promoted to `@yuta/ui`. Stop here for explicit Phase 3 approval.
 
 ## Phase 3 — Approved interactions
 

@@ -41,6 +41,7 @@ const currentDocuments = [
   'docs/features/reputation/STATUS.md',
   'docs/ui/README.md',
   'docs/ui/DESIGN_TO_CODE_WORKFLOW.md',
+  'docs/ui/DELIVERY_WORKFLOW_MODES.md',
   'docs/ui/YUTA_FRONTEND_RULES.md',
   'docs/ui/BACKOFFICE_FRONTEND_RULES.md',
   'docs/ui/POS_FRONTEND_RULES.md',

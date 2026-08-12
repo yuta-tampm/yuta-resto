@@ -43,7 +43,9 @@ The existing Server Component route is
 `apps/yuta-pos/src/app/management/catalog/page.tsx`. It requires a validated
 local admin or manager session, loads the local catalogue from `site-agent`,
 shows a truthful service-unavailable recovery state, and renders the
-route-local client editor in `CatalogManagement.tsx`.
+route-local composition in `CatalogManagement.tsx`. Catalogue disclosure,
+category/settings dialogs, article editing, shared dialog feedback and pure
+presentation helpers remain separate route-local modules in the same folder.
 
 The screen manages categories, articles, prices, kitchen stations, display
 order, visibility/availability, note and allergen definitions,
@@ -271,10 +273,33 @@ permission, contract, API, schema/migration, runtime dependency, local-service
 behavior, cloud relationship, destructive behavior, or change to a protected
 catalogue/order-entry invariant.
 
-## Final delivery and as-built status
+## Phase 1 implementation status
 
-Runtime implementation and QA have not started. The package is
-`implementation-ready` but Phase 1 still requires explicit product-owner
-approval.
+Phase 1 was approved and completed on 2026-08-12. The real authenticated route
+now reuses the POS Management header with `/management/printing`, presents live
+categories and articles in the approved dense disclosure hierarchy, and uses
+the approved contained article editor at desktop and mobile widths. All
+existing fields, server actions, confirmations, validation, recovery states and
+local POS boundaries remain intact.
 
-As-built documentation status: `PENDING`
+Authenticated production-build evidence is available in `references/` for the
+catalogue and editor at 1366 x 768 and 390 x 844. The browser pass also verified
+category expansion, no horizontal overflow, the printing route after header
+reuse, and no console warnings or errors.
+
+## Phase 2 implementation status
+
+Phase 2 was approved and completed on 2026-08-12 without changing the Phase 1
+appearance or behavior. The previous monolithic client module was separated
+into page composition, catalogue overview, category/settings dialogs, article
+editor, dialog support and pure model/formatting helpers. These boundaries
+follow state and mutation ownership rather than creating thin wrappers.
+
+The trusted Server Component, `actions.ts`, live data, contracts, validation,
+confirmations, pending/error behavior, authorization, site-agent transport and
+revalidation remain unchanged. All extracted components stay route-local; no
+feature component was promoted to `@yuta/ui`.
+
+Phase 3 has not started and requires explicit product-owner approval.
+
+As-built documentation status: `PHASE_2_REVIEW_PENDING`
