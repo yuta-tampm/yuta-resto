@@ -1,6 +1,6 @@
 # POS management catalog — Design Handoff
 
-Status: Draft
+Status: Approved visual direction
 
 Visibility: Engineering
 
@@ -11,6 +11,53 @@ existing integrated local POS screen `/management/catalog`. It lets an
 authenticated local admin or manager maintain the real single-site catalogue
 without cloud access while preserving `yuta-pos -> site-agent -> db-pos`,
 validated mutations, no-hard-delete history, and downstream POS ordering rules.
+
+## Shared UI context resolution
+
+Shared context status: `RESOLVED`
+
+| Layer        | Owner/source                                                                       | Reference status | Reuse exactly                                                                                                                                 | May adapt                                                                   | Excluded                                                                     | Decision/blocker                                                                                                           |
+| ------------ | ---------------------------------------------------------------------------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| YUTA global  | `@yuta/ui`, semantic tokens, `YutaBrandMark`, frontend rules                       | APPROVED         | typography, semantic states, focus, accessible primitives, Lucide icons                                                                       | density and responsive composition                                          | Backoffice shell/navigation and raw reference colors                         | No blocker; use only the global foundation relevant to POS.                                                                |
+| Application  | `apps/yuta-pos/AGENTS.md`, POS UI rules, current management routes                 | APPROVED         | French operational copy, local-session context, touch/keyboard conventions                                                                    | compact header layout by viewport                                           | cloud tenancy, cloud Backoffice, marketing navigation                        | No blocker.                                                                                                                |
+| Section/flow | `/management`, `PrintingManagementHeader.tsx`, approved printing as-built evidence | APPROVED         | dark POS Management top header direction, YUTA POS identity, `Gestion locale`, user/role context, return-to-POS and account/sign-out behavior | compress labels on small widths using the existing responsive pattern       | left sidebar, mobile drawer, persistent module tabs, invented modules        | Product owner approved this shared direction on 2026-08-11. Runtime reuse is deferred to an approved implementation phase. |
+| Page/screen  | current catalogue baselines plus proposals 01 and 02                               | APPROVED         | real catalogue hierarchy, fields, actions, states, and return to `/management`                                                                | overview density, category disclosure, editor grouping, responsive stacking | invented data, routes, fields, drag persistence, bulk/search/filter features | Visual direction approved on 2026-08-11 with documented raster text/data deviations.                                       |
+
+Shell mode: `REUSE_APPROVED_SHARED_SHELL`
+
+Shell owner/reference: the approved POS Management direction is evidenced by
+`apps/yuta-pos/src/app/management/printing/PrintingManagementHeader.tsx` and
+the accepted printing as-built captures, especially
+`../pos-management-printing/references/phase-05-as-built-1366x768.png` and
+`../pos-management-printing/references/phase-05-as-built-390x844.png`.
+
+- Header: compact dark top header with YUTA POS identity, `Gestion locale`,
+  authenticated user/role context, `Retour au POS`, and account/sign-out.
+- Primary navigation: `/management` is the module hub; do not reproduce all
+  modules as persistent navigation on the catalogue screen.
+- Sidebar and mobile navigation: none. Do not add a left rail, drawer, or bottom
+  module navigation.
+- Page navigation: expose `Retour à la gestion` from the catalogue content to
+  `/management`.
+- Allowed real destinations: `/`, `/management`, `/management/users`,
+  `/management/catalog`, `/management/combos`, and `/management/printing`.
+- Unavailable route: `Rapports locaux` has no href and must not be presented as
+  a working destination.
+- Forbidden invented elements: unrelated POS sections, cloud modules, new
+  roles, tenant switching, notification/help controls, or any navigation not
+  supported by current routes.
+
+Curated design-tool input bundle:
+
+1. the three authenticated catalogue baseline captures in this package;
+2. draft `design-proposal-01.png` for overview composition and
+   `design-proposal-02.png` for editor composition;
+3. the two approved POS printing as-built references named above for shared
+   header behavior at desktop and mobile widths;
+4. the exact shell/navigation decision, route inventory, and exclusions in
+   this section;
+5. `PRODUCT_SCOPE.md`, `UI_SPEC.md`, and `DATA_AND_INTERACTION_SPEC.md` for the
+   real page hierarchy, states, and protected invariants.
 
 ## Current baseline capture
 
@@ -55,6 +102,15 @@ dashboard and not the cloud Backoffice. Use the attached authenticated baseline
 images as the current-state visual input. Produce the primary design at
 1366 × 768, plus concise responsive annotations for 1024 × 768, 768 × 1024,
 and 390 × 844. Also produce a companion view of the article editor dialog.
+
+Use the approved POS Management shared shell shown by the supplied printing
+as-built references: a compact dark top header with YUTA POS identity,
+`Gestion locale`, signed-in user/role context, `Retour au POS`, and the existing
+account/sign-out pattern. `/management` is the module hub, and this child page
+must expose `Retour à la gestion` in page content. There is no left sidebar,
+mobile drawer, bottom module navigation, or persistent module tab bar. Do not
+invent one. The real available management routes are users, catalogue, combos,
+and printing; `Rapports locaux` is unavailable and has no route.
 
 Preserve the existing product scope and real data hierarchy:
 
@@ -124,6 +180,12 @@ audit history, new roles, cloud sync, new fields, new API/schema/contract
 capabilities, or unrelated POS navigation. Those concepts are excluded unless
 separately proposed and approved.
 
+Treat generated images as composition studies, not factual data authority.
+Preserve the real 12-category/53-row hierarchy, use no drag handles, do not
+invent fields or behavior, and keep every current editor field and operational
+state reachable. Runtime data, contracts, and repository-owned French copy
+override all generated raster text.
+
 Return design images and brief visual annotations only, not implementation
 code. Label the output `DRAFT`. Review criteria are: all current capabilities
 remain visible/reachable; hierarchy and density are materially clearer than the
@@ -133,7 +195,20 @@ use are supported; and the proposal introduces no unsupported product concept.
 
 ## Handoff result
 
-No generated design exists yet. The next action, only after product-owner
-approval to proceed, is to run this prompt with the three baseline images.
-Generated output remains `DRAFT` until explicitly reviewed and approved. Phase
-1 implementation must not start automatically.
+Approved visual-direction references:
+
+- `references/design-proposal-01.png` — catalogue overview composition;
+- `references/design-proposal-02.png` — article editor composition.
+
+Product-owner approval was recorded on 2026-08-11. Proposal 01 owns the
+catalogue overview direction; proposal 02 owns the article-editor direction.
+The approval covers the dark shared header, no-sidebar shell, hierarchy,
+density, disclosure, editor grouping, responsive behavior, action hierarchy,
+and state treatment.
+
+Documented non-authoritative raster deviations are the incorrect `13,60 €` Mix
+LUNA price in proposal 01, inaccurate generated item descriptions in proposal
+02, and internal `design-proposal-03/04` labels that differ from the stored
+filenames. Phase 1 must use live catalogue data, current contracts, and
+repository-owned French copy. The package is implementation-ready, but Phase 1
+must not start without a separate explicit approval.

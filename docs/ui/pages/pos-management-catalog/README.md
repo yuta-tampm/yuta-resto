@@ -1,10 +1,12 @@
 # POS Management Catalog
 
-Status: Draft design package
+Status: Approved design package
 
 Visibility: Engineering
 
 Owner: YUTA product and engineering
+
+Protocol revision: 4
 
 Application: `apps/yuta-pos`
 
@@ -18,11 +20,11 @@ Page classification: `EXISTING_PAGE`
 
 Implementation class: `integrated`
 
-Package status: `design`
+Package status: `implementation-ready`
 
-Scope status: `DRAFT`
+Scope status: `APPROVED`
 
-Reference status: `DRAFT`
+Reference status: `APPROVED`
 
 Inventory status: `COMPLETE`
 
@@ -30,8 +32,10 @@ Baseline status: `CAPTURED`
 
 Design prompt status: `READY`
 
-No-image reference reason: Not applicable while the authenticated baseline is
-the current draft reference and the generated design has not been reviewed.
+Shared context status: `RESOLVED`
+
+No-image reference reason: Not applicable; proposals 01 and 02 are approved as
+visual-direction references with documented raster text/data deviations.
 
 ## Current implementation
 
@@ -83,9 +87,40 @@ Read in order:
   current catalogue.
 - `references/current-baseline-edit-item-dialog-1366x768.png` — authenticated
   edit-item dialog opened without submitting a mutation.
+- `references/design-proposal-01.png` — approved catalogue overview direction.
+- `references/design-proposal-02.png` — approved article-editor direction.
 
-These captures are evidence of the current implementation, not approved design
-authority.
+The baseline captures are current implementation evidence. The generated
+proposals are approved only for shell, hierarchy, density, responsive behavior,
+state treatment, category disclosure, and editor composition. Current runtime
+data, contracts, French copy, prices, names, counts, and business behavior
+remain authoritative over raster text.
+
+## Shared UI context
+
+- **YUTA global:** reuse `@yuta/ui`, semantic tokens, `YutaBrandMark`, Geist
+  Sans with the approved fallback, Lucide icons, visible focus, textual states,
+  and accessible touch targets. The Backoffice shell shown in the shared brand
+  reference is excluded from this local POS screen.
+- **POS application:** preserve the local operational tone, French copy,
+  validated local management session, and the existing dark management-header
+  direction proven by `/management/printing`.
+- **POS Management section:** shell mode is
+  `REUSE_APPROVED_SHARED_SHELL`. Use a compact dark top header with YUTA POS
+  identity, `Gestion locale`, signed-in user/role context, `Retour au POS`, and
+  the existing account/sign-out menu. Use no left sidebar. `/management` remains
+  the module hub; child pages expose `Retour à la gestion` in page content.
+- **Catalogue page:** proposal 01 covers the overview and proposal 02 covers the
+  editor only. They may adapt responsive density and grouping, but may not
+  invent navigation, fields, drag persistence, sample data, routes, or states.
+
+Allowed real destinations are `/`, `/management`, `/management/users`,
+`/management/catalog`, `/management/combos`, and `/management/printing`.
+`Rapports locaux` is unavailable and has no route. The catalogue design must
+not add a module sidebar, mobile drawer, permanent module tabs, or links to
+unimplemented areas. The currently route-local printing header is source
+evidence for the approved direction; any runtime extraction or reuse belongs
+to a later approved implementation phase.
 
 ## Protected invariants
 
@@ -109,10 +144,10 @@ authority.
 ## Change impact
 
 ```text
-Files expected to modify: after design approval, only apps/yuta-pos/src/app/management/catalog/* and this stable page package
-Files expected to create: none approved; route-local components may be proposed in Phase 2
+Files expected to modify: apps/yuta-pos/src/app/management/catalog/page.tsx, apps/yuta-pos/src/app/management/catalog/CatalogManagement.tsx, apps/yuta-pos/src/app/management/printing/page.tsx, and this stable page package
+Files expected to create: apps/yuta-pos/src/app/management/_components/ManagementHeader.tsx; route-local catalogue components may be proposed in Phase 2
 Packages affected: apps/yuta-pos; documentation only in Phase 0
-Cross-application impact: none
+Cross-application impact: none; cross-route POS Management header reuse affects catalogue and printing only
 Database change: NO
 API or contract change: NO
 Permission/auth change: NO
@@ -203,14 +238,20 @@ Runtime/device change: NO
     db-pos checks when those boundaries are touched.
 21. **Later-phase candidate files:**
     `apps/yuta-pos/src/app/management/catalog/page.tsx`,
-    `CatalogManagement.tsx`, `actions.ts` only if approved interaction behavior
-    needs it, possible route-local components in the same directory, and this
-    page package. Fixture replacement is forbidden.
+    `CatalogManagement.tsx`, the printing page/header import, a shared
+    POS Management header component, `actions.ts` only if approved interaction
+    behavior needs it, possible route-local components in the catalogue
+    directory, and this page package. Fixture replacement is forbidden.
 
 ## Design approval
 
-No generated proposal is approved. Phase 0 is complete; the product owner must
-approve the design direction before the package advances beyond `design`.
+Product-owner approval recorded on 2026-08-11. Proposal 01 is approved for the
+catalogue overview and proposal 02 for the article editor. Approval is limited
+to visual direction; documented raster deviations include the incorrect
+`13,60 €` Mix LUNA price in proposal 01, inaccurate generated item descriptions
+in proposal 02, and internal `design-proposal-03/04` labels that do not match the
+stored filenames. Implementation must use live catalogue data, current
+contracts, and repository-owned French copy instead of those pixels.
 
 ## Prompt order
 
@@ -232,6 +273,8 @@ catalogue/order-entry invariant.
 
 ## Final delivery and as-built status
 
-Not applicable during Phase 0. Runtime implementation and QA have not started.
+Runtime implementation and QA have not started. The package is
+`implementation-ready` but Phase 1 still requires explicit product-owner
+approval.
 
 As-built documentation status: `PENDING`

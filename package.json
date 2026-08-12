@@ -48,6 +48,7 @@
     "test:booking": "pnpm --filter @yuta/booking test",
     "test:booking-web": "pnpm --filter @yuta/booking-web test",
     "test:booking-web:e2e": "pnpm --filter @yuta/booking-web test:e2e",
+    "test:booking:reliability": "pnpm --filter @yuta/db-cloud test:booking-reliability",
     "test:db-cloud": "pnpm --filter @yuta/db-cloud test",
     "test:db-pos": "pnpm --filter @yuta/db-pos test",
     "test:cloud": "pnpm --filter @yuta/auth test && pnpm --filter @yuta/core test && pnpm --filter @yuta/contracts test && pnpm --filter @yuta/booking test && pnpm --filter @yuta/booking-web test && pnpm --filter @yuta/tenant test && pnpm --filter @yuta/db-cloud test && pnpm --filter @yuta/backoffice test",

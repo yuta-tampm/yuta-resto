@@ -38,6 +38,10 @@ Return an **Implementation Inventory** with exactly these sections:
     `YES`, `NO`, or `PROPOSAL`.
 20. Exact repository commands that exist for verification.
 21. Proposed files to change in later phases.
+22. Shared UI context sources at YUTA-global, application, section/flow, and
+    page levels, including approval state and conflicts.
+23. Exact shell/navigation mode, owner, header/sidebar/account behavior, real
+    routes, responsive rules, and forbidden invented elements.
 
 For an existing integrated or device-coupled screen, explicitly state that
 fixture replacement is forbidden.
@@ -45,19 +49,27 @@ fixture replacement is forbidden.
 After the inventory, complete `DESIGN_HANDOFF.md` without changing application
 code:
 
-1. For `EXISTING_PAGE`, capture the current authenticated browser/device
+1. Complete the shared-context matrix and select exactly one shell/navigation
+   mode. If a missing or conflicting shared decision would materially change
+   the design, set `Shared context status: BLOCKED` and stop; never ask the
+   design tool to invent the missing context.
+2. Assemble a curated design-tool bundle containing applicable approved shared
+   references, exact reuse/adaptation/exclusion rules, real routes, common
+   responsive/state constraints, and the page-specific hierarchy.
+3. For `EXISTING_PAGE`, capture the current authenticated browser/device
    baseline and record route, state, viewport/device, date, and runtime/session
    conditions. If capture is unavailable, record the exact blocker and set the
    baseline status to `BLOCKED`; do not substitute a code-derived description
    for visual evidence.
-2. For `NEW_PAGE`, set the baseline status to `NOT_APPLICABLE` and record that
+4. For `NEW_PAGE`, set the baseline status to `NOT_APPLICABLE` and record that
    no current screen exists.
-3. Prepare a self-contained, ready-to-use design-generation prompt for
+5. Prepare a self-contained, ready-to-use design-generation prompt for
    ChatGPT/ImageGen or another approved design tool. Ground it in the inventory,
-   approved capabilities, protected invariants, current UI system, required
-   states, target viewport/device, and unsupported concepts.
+   approved capabilities, protected invariants, resolved shared context,
+   required states, target viewport/device, and unsupported concepts.
 
-The Phase 0 handoff output is therefore the Implementation Inventory, current
-baseline evidence (or explicit blocker), and the design-generation prompt.
+The Phase 0 handoff output is therefore the Implementation Inventory, resolved
+shared-context bundle (or explicit blocker), current baseline evidence, and the
+design-generation prompt.
 Stop after this handoff. Do not generate a mockup or implement Phase 1
 automatically.

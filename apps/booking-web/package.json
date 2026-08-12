@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start -p 3005",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest run --exclude e2e/**",
     "test:e2e": "playwright test"
   },
   "dependencies": {

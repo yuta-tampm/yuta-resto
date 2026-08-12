@@ -2,19 +2,23 @@
 
 ## Repository and application
 
-- [ ] Root and nearest application instructions were read.
-- [ ] `docs/CURRENT_STATE.md` and relevant current product, feature, operations,
+- [x] Root and nearest application instructions were read.
+- [x] `docs/CURRENT_STATE.md` and relevant current product, feature, operations,
       and QA docs were read.
-- [ ] Target application, route/screen, runtime boundary, and app-specific UI
+- [x] Target application, route/screen, runtime boundary, and app-specific UI
       rules are identified.
-- [ ] Page is classified `NEW_PAGE` or `EXISTING_PAGE`.
-- [ ] Implementation class is recorded.
-- [ ] Phase 0 Implementation Inventory and current visual baseline are complete
+- [x] Page is classified `NEW_PAGE` or `EXISTING_PAGE`.
+- [x] Implementation class is recorded.
+- [x] Phase 0 Implementation Inventory and current visual baseline are complete
       before code changes.
-- [ ] Target type and expected change impact are recorded.
-- [ ] Existing target baseline is captured with route, state, viewport/device,
+- [x] Shared UI context is `RESOLVED` across global, application, section/flow,
+      and page layers before design approval or implementation.
+- [x] Exactly one shell/navigation mode is recorded with real routes,
+      responsive behavior, account/session treatment, and forbidden elements.
+- [x] Target type and expected change impact are recorded.
+- [x] Existing target baseline is captured with route, state, viewport/device,
       date, and runtime/session conditions, or a precise blocker is recorded.
-- [ ] `DESIGN_HANDOFF.md` contains a ready-to-use design-generation prompt based
+- [x] `DESIGN_HANDOFF.md` contains a ready-to-use design-generation prompt based
       on the Phase 0 inventory and protected invariants.
 
 ## Scope and invariants
@@ -38,18 +42,20 @@
 
 ## Design approval
 
-- [ ] Existing-page baseline status is `CAPTURED` (`NEW_PAGE` may use
+- [x] Existing-page baseline status is `CAPTURED` (`NEW_PAGE` may use
       `NOT_APPLICABLE`).
-- [ ] Design prompt status is `READY`.
-- [ ] Product scope is `APPROVED`.
-- [ ] Reference status is `APPROVED`, or `NONE` has an explicit no-image reason.
-- [ ] Package status becomes `implementation-ready` only after inventory,
+- [x] Design prompt status is `READY`.
+- [x] Product scope is `APPROVED`.
+- [x] Reference status is `APPROVED`, or `NONE` has an explicit no-image reason.
+- [x] Package status becomes `implementation-ready` only after inventory,
       invariants, impact, commands, scope, and reference gates are complete.
 
 ## UI
 
 - [ ] Existing application shell is reused unless shell work is explicitly in
       scope.
+- [ ] The approved POS Management top header is used without inventing a left
+      sidebar, mobile drawer, module tab bar, or unavailable route.
 - [ ] `@yuta/ui` and semantic tokens are reused where applicable.
 - [ ] No raw colors are copied from references.
 - [ ] No duplicate shared primitive is created.

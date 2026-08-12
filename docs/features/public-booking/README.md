@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-08
+Last updated: 2026-08-12
 
 ## Implemented scope
 
@@ -64,8 +64,10 @@ domains, and channel synchronization are intentionally outside Phase 1.
 
 ## Current implementation limits
 
-- Guest email is required by the current contract and persistence model even
-  though the master specification describes it as optional.
+- Phase 0/1 intentionally requires guest email across the public contract,
+  persistence, Backoffice operations, and notification outbox. Optional email
+  remains later-phase behavior and requires an explicit product decision plus
+  coordinated contract, migration, UI, and notification changes.
 - Cover image and visible public email are resolved but not rendered in the
   current public flow. Custom themes and multilingual content are not
   implemented.
@@ -110,6 +112,14 @@ transactional history/audit/outbox writes, valid and invalid management tokens,
 cancellation, and database-backed rate limiting. It is skipped unless the
 documented database integration flag is explicitly enabled.
 
+A separately guarded database reliability harness exercises repeated concurrent
+availability reads, a same-slot creation burst through the PostgreSQL advisory
+lock, exact capacity enforcement, and one pending outbox row per committed
+reservation. The approved acceptance baseline is 100 concurrent availability
+reads with p95 at or below 500 ms, plus 30 same-slot creation attempts with p95
+at or below 1,000 ms, zero unexpected errors, zero overbooking, and exactly one
+outbox row per committed reservation.
+
 Weekly day numbers follow JavaScript/PostgreSQL convention: Sunday is `0` and
 Saturday is `6`. Overnight periods are rejected in Phase 1.
 
@@ -150,6 +160,23 @@ must install Playwright Chromium before running the same command. The suite
 creates unique automatic, manual, and disabled establishments and removes all
 associated data afterward.
 
+Run the isolated reliability baseline against the local cloud database with:
+
+```bash
+YUTA_ALLOW_BOOKING_RELIABILITY_TESTS=true pnpm test:booking:reliability
+```
+
+The default acceptance run performs 100 concurrent availability reads and a
+burst of 30
+same-slot creation attempts. Override the bounded request counts with
+`BOOKING_RELIABILITY_AVAILABILITY_READS` (1-500) and
+`BOOKING_RELIABILITY_CREATION_BURST` (2-100). The harness creates a unique
+organization and establishment, reports observed p50/p95/max durations, checks
+capacity and outbox invariants, and deletes its tenant data afterward. It does
+not exercise an email worker. Passing locally proves the functional invariants
+and approved latency baseline on that machine; production capacity approval
+still requires the same run in a target-like environment.
+
 Required production variables for `apps/booking-web`:
 
 ```env
@@ -173,7 +200,10 @@ Platform/system roles never bypass restaurant membership checks.
 
 ## Operational checks
 
-Before launch, verify `/api/health`, migrate the cloud database, configure the
+Before launch, verify process liveness through `/api/health` and cloud-database
+readiness through `/api/ready`, migrate the cloud database, configure the
 production domain and variables, test a concurrent last-capacity booking, and
-confirm that reservation URLs are not indexed. Public tokens are stored only
-as SHA-256 hashes and cannot be recovered from the database.
+confirm that reservation URLs are not indexed. `/api/ready` fails closed with
+`503 not_ready` after a two-second database deadline and never returns database
+error details. Public tokens are stored only as SHA-256 hashes and cannot be
+recovered from the database.

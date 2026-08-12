@@ -1,6 +1,6 @@
 # POS management catalog — Product Scope
 
-Status: Draft
+Status: Approved
 
 Visibility: Engineering
 
@@ -31,11 +31,11 @@ other devices do not participate.
 
 ## Approved change boundary
 
-Phase 0 approves documentation and authenticated baseline capture only. A later
-visual implementation may be proposed inside the existing route after a design
-is explicitly approved. Database, API/contract, permissions, authentication,
-cross-application behavior, runtime ownership, and device behavior remain
-unchanged.
+The visual redesign scope is approved, but runtime implementation starts only
+after explicit Phase 1 approval. It may redesign the existing catalogue route
+and reuse the approved POS Management header across catalogue and printing.
+Database, API/contract, permissions, authentication, cross-application
+behavior, runtime ownership, and device behavior remain unchanged.
 
 ## Out of scope
 

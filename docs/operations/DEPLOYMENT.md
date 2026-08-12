@@ -413,10 +413,12 @@ access-control facilities. Do not copy POS operational data into cloud backups.
 ## Health checks
 
 - Cloud health checks validate only cloud runtime dependencies.
-- The current booking-web `/api/health` response is process liveness only; it
-  does not prove database readiness or successful booking queries. Do not use
-  it as the sole production readiness gate until an approved dependency-safe
-  readiness contract is implemented and externally monitored.
+- Booking Web exposes `/api/health` for process liveness and `/api/ready` for
+  cloud-database readiness. The readiness probe performs a tenant-independent
+  database query with a two-second response deadline, returns `503 not_ready`
+  on dependency failure/timeout, disables caching, and does not expose error or
+  credential details. Monitor both endpoints externally; only `/api/ready`
+  qualifies as the readiness gate.
 - `site-agent` health validates the local API, POS DB, and relevant device
   subsystems.
 - POS health must not fail merely because Internet or cloud is unavailable.

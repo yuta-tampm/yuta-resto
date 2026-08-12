@@ -4,7 +4,8 @@ Use the approved Phase 0 Implementation Inventory as the behavioral and visual
 baseline.
 
 Do not begin until product scope and the visual reference/no-image decision are
-approved and the package is `implementation-ready`.
+approved, shared UI context is `RESOLVED`, the exact shell/navigation mode is
+recorded, and the package is `implementation-ready`.
 
 If `NEW_PAGE`, typed fixture data may be used only when this page package
 explicitly permits it.
@@ -18,8 +19,10 @@ Use the reference image only for hierarchy, proportions, density, spacing, and
 visual tone. Do not copy navigation, raw colors, fields, permissions, APIs, or
 device behavior from it.
 
-Reuse the current application shell, `@yuta/ui`, semantic tokens,
-`lucide-react`, and app-specific typography.
+Apply the resolved shared context and exact shell/navigation mode from
+`DESIGN_HANDOFF.md`. Reuse `@yuta/ui`, semantic tokens, `lucide-react`, and
+app-specific typography. Do not invent a sidebar, navigation, account area, or
+unavailable route.
 
 Use the target application's viewport/device profile. Do not assume Backoffice
 widths for another application.

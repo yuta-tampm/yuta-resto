@@ -1,6 +1,6 @@
 # POS management catalog — UI Specification
 
-Status: Draft design reference
+Status: Approved visual direction
 
 Visibility: Engineering
 
@@ -20,8 +20,9 @@ tall single column. The authenticated populated catalogue is very long.
 
 ## Visual hierarchy
 
-Design is pending. Preserve management context and return, then prioritize the
-title, catalogue-wide actions, category identity/status, article identity and
+Use the approved POS Management dark top-header direction with no sidebar.
+Preserve management context and return, then prioritize the title,
+catalogue-wide actions, category identity/status, article identity and
 availability, price/station/order details, and direct edit/toggle actions. Error
 and conflict recovery must outrank decorative content.
 
@@ -54,11 +55,17 @@ Touch-critical controls should target at least 44 CSS pixels where practical.
 
 ## Visual acceptance
 
-No generated reference is approved. Phase 0 baseline captures are current-state
-evidence. Visual acceptance begins only after a generated proposal is reviewed
-and explicitly approved.
+Proposal 01 is approved for the shared header, dense catalogue overview,
+category disclosure, action hierarchy, responsive annotations, and state
+treatment. Proposal 02 is approved for the two-column editor, contained
+scrolling, empty-variant treatment, responsive stacking, and sticky actions.
+
+Approval does not make raster text authoritative. Use current catalogue data,
+contracts, and French copy. Known deviations are the incorrect `13,60 €` Mix
+LUNA price in proposal 01, generated item-description errors in proposal 02,
+and internal proposal labels that differ from the stored filenames.
 
 ## Out of scope
 
 No backend, contract, schema, auth, runtime, device, cloud, unrelated route, or
-new catalogue capability is authorized by this draft.
+new catalogue capability is authorized by this approval.
