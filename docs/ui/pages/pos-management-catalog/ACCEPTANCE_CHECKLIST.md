@@ -75,8 +75,8 @@
 - [x] Target application/page viewport or device matrix was used; Backoffice
       widths were not assumed globally.
 - [x] No horizontal overflow.
-- [ ] Keyboard/focus behavior works where supported.
-- [ ] Touch targets and touch feedback work for touch-oriented screens.
+- [x] Keyboard/focus behavior works where supported.
+- [x] Touch targets and touch feedback work for touch-oriented screens.
 - [x] Status includes text.
 - [x] Icon-only controls have accessible names.
 
@@ -100,7 +100,19 @@
       shared UI surface.
 - [x] Phase 1 appearance and protected behavior remain unchanged after the
       component refactor.
-- [ ] Functional/regression QA completed before final visual parity review.
-- [ ] Intentional deviations and deferred risks are recorded.
-- [ ] Stable page package matches the as-built implementation.
-- [ ] Package status is `implemented` only after as-built synchronization.
+- [x] Conflict and validation responses keep the editor open and preserve
+      submitted values.
+- [x] Success feedback is accessible, dismissible and auto-expires without
+      hiding the updated catalogue state.
+- [x] Stale-resource and load-failure recovery actions use existing refresh and
+      route behavior.
+- [x] Reversible visibility/availability confirmation supports cancel and
+      Escape without mutation.
+- [x] Every approved UI field and mutation is mapped through current contracts,
+      site-agent ownership and db-pos persistence.
+- [x] Phase 4 introduced no speculative data field, API, permission, schema,
+      runtime dependency, cloud relationship or persistence owner.
+- [x] Functional/regression QA completed before final visual parity review.
+- [x] Intentional deviations and deferred risks are recorded.
+- [x] Stable page package matches the as-built implementation.
+- [x] Package status is `implemented` only after as-built synchronization.

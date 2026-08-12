@@ -19,9 +19,14 @@ export default async function LocalCatalogManagementPage() {
           title="Site-agent indisponible"
           description="Impossible de charger le catalogue POS local."
           action={
-            <Button asChild variant="secondary">
-              <Link href="/management">Retour à la gestion</Link>
-            </Button>
+            <div className="flex flex-wrap justify-center gap-2">
+              <Button asChild>
+                <Link href="/management/catalog">Réessayer</Link>
+              </Button>
+              <Button asChild variant="secondary">
+                <Link href="/management">Retour à la gestion</Link>
+              </Button>
+            </div>
           }
         />
       </main>

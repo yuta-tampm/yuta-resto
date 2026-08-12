@@ -16,6 +16,10 @@ merely because UI governance now applies project-wide.
 
 Current packages:
 
+- `backoffice-equipe-salaries/` — Phase 0 new-capability discovery package for
+  the planned authenticated Backoffice route `/equipe/salaries`; product and
+  visual approval are pending.
+
 - `hours-services/` — integrated Backoffice route `/etablissement/horaires-services`.
 - `establishment-general-information/` — integrated establishment profile editor
   at `/etablissement/informations-generales`.
@@ -26,6 +30,11 @@ Current packages:
 - `pos-management-catalog/` — Phase 0 inventory and authenticated baseline for
   the existing integrated local POS screen at `/management/catalog`; generated
   design approval is pending.
+
+- `pos-management-combos/` — completed Phase 0 inventory, authenticated
+  baseline, resolved catalog/printing shared UI context, and design prompt for
+  the existing integrated local POS screen at `/management/combos`; design
+  generation and approval are pending.
 
 Every package follows `../PAGE_PACK_PROTOCOL.md`.
 

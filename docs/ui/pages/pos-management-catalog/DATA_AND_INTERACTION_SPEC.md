@@ -1,6 +1,6 @@
 # POS management catalog — Data and Interaction Specification
 
-Status: Draft
+Status: Implemented and Phase 4 audited
 
 Visibility: Engineering
 
@@ -57,6 +57,13 @@ inheritance are rejected; variant codes are unique and required quantity/options
 must agree. The current UI returns French action-level errors and closes editors
 on success.
 
+Phase 3 presentation behavior keeps editor values after action errors, exposes
+errors as assertive alerts, presents successful writes as a dismissible
+five-second status message, and offers router refresh for stale category/item
+responses. The blocking load failure exposes a direct retry. These additions
+do not change action payloads, service validation, transaction ownership or
+revalidation paths.
+
 ## Operational and UI states
 
 Current states include populated, no categories, category with no articles,
@@ -80,3 +87,31 @@ scope, new roles, or mutation batching. Each requires separate approval.
 ## Proposed persistence/contract changes
 
 None in the current scope.
+
+## Phase 4 integration audit
+
+The approved screen is fully mapped by the existing local integration:
+
+| UI responsibility                               | Contract and transport                                      | Service and persistence                                                                                | Result   |
+| ----------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | -------- |
+| load categories, items and instruction settings | `localCatalogResponseSchema`; `GET /api/v1/catalog`         | `site-agent-service`; ordered `menu_categories` and `menu_items`; singleton `pos_instruction_settings` | complete |
+| create/edit category and visibility             | category create/update schemas; protected POST/PATCH routes | catalogue management service; `menu_categories`                                                        | complete |
+| create/edit article and availability            | item create/update schemas; protected POST/PATCH routes     | catalogue management service; `menu_items`                                                             | complete |
+| instruction inheritance and assignments         | nullable item code arrays and category code arrays          | instruction settings validation and resolved configuration                                             | complete |
+| variants and required quantity                  | variant and quantity contract fields                        | catalogue ordering-configuration validation; `menu_items` JSONB/integer columns                        | complete |
+| note/allergen definitions and conflicts         | instruction-settings schema; protected PATCH route          | instruction settings service; singleton local settings row                                             | complete |
+
+The management session remains an HttpOnly local cookie validated through the
+site-agent. Server Actions alone forward its opaque bearer token for mutations.
+The browser receives serialization-safe catalogue data and never gains database
+credentials or trusted authorization input.
+
+The audit found no approved data gap. Physical deletion, search/filter
+persistence, drag ordering, bulk operations, media, inventory, tax/cost data,
+publication, new modifiers, cloud sync and new roles remain unsupported and
+would require a new approval cycle.
+
+`localCatalogResponseSchema` also carries combo rules for the separate
+`/management/combos` and order-entry workflows. Catalogue management does not
+render or mutate them, which is an intentional route ownership boundary rather
+than a missing catalogue mapping.

@@ -1,6 +1,6 @@
 # POS Management Catalog
 
-Status: Approved design package
+Status: Implemented
 
 Visibility: Engineering
 
@@ -20,7 +20,7 @@ Page classification: `EXISTING_PAGE`
 
 Implementation class: `integrated`
 
-Package status: `implementation-ready`
+Package status: `implemented`
 
 Scope status: `APPROVED`
 
@@ -300,6 +300,55 @@ confirmations, pending/error behavior, authorization, site-agent transport and
 revalidation remain unchanged. All extracted components stay route-local; no
 feature component was promoted to `@yuta/ui`.
 
-Phase 3 has not started and requires explicit product-owner approval.
+## Phase 3 implementation status
 
-As-built documentation status: `PHASE_2_REVIEW_PENDING`
+Phase 3 was approved and completed on 2026-08-12. Editor forms now preserve
+submitted values after validation, conflict and local-service failures while
+continuing to use the existing Server Actions. Successful mutations close the
+editor and display a dismissible, auto-expiring accessible confirmation.
+Stale category/article errors provide explicit refresh recovery, and the
+catalogue load failure provides a direct retry action.
+
+Authenticated production-browser verification used a real duplicate article
+name to exercise conflict handling without writing invalid data, then saved the
+unchanged article to verify success feedback. It also verified confirmation
+Escape behavior, mobile feedback at 390 x 844, no horizontal overflow and an
+empty warning/error console. Typed tests cover stale-resource, conflict and
+site-agent-unavailable action-state mappings.
+
+## Phase 4 integration status
+
+Phase 4 was approved and completed on 2026-08-12 as an evidence-backed runtime
+no-op. Every approved field and mutation was traced from the authenticated POS
+route and Server Actions through `@yuta/contracts/local-pos`, the site-agent
+client and protected catalogue routes, service validation, and the existing
+`@yuta/db-pos` catalogue tables.
+
+The audit found no missing mapping and therefore introduced no field, enum,
+permission, contract, API, schema/migration, transaction rule, dependency,
+database access, device behavior or cloud relationship. Contract, db-pos,
+site-agent and POS tests protect the current chain; database integration tests
+were not required because Phase 4 changed no schema, query or migration.
+
+## Final delivery and as-built status
+
+Phase 5 was approved and completed on 2026-08-12 against the authenticated
+production build with live local catalogue data. The catalogue overview was
+verified at 1366 x 768, 1024 x 768, 768 x 1024 and 390 x 844. The article
+editor was verified at the same matrix: it keeps two columns at desktop widths,
+stacks to one column at tablet/mobile widths, contains its own scroll, and
+keeps its footer actions visible without horizontal overflow.
+
+The final pass also verified initial dialog focus, keyboard focus containment,
+Escape dismissal and accessible icon labels. Touch-oriented viewports now give
+catalogue action controls a minimum 44 CSS-pixel target while preserving the
+approved compact desktop density. Final overview and editor evidence is stored
+under `references/`.
+
+The visual QA introduced no new field, behavior, contract, API, permission,
+schema, persistence, device dependency or cloud relationship. Loading, empty,
+unauthorized, unavailable, validation, conflict, pending, success and stale
+recovery states remain backed by the implemented route/action paths and the
+behavior verification completed before this visual gate.
+
+As-built documentation status: `COMPLETE`

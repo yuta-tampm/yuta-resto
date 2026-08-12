@@ -18,7 +18,7 @@ import {
   Textarea,
 } from '@yuta/ui';
 import { PackagePlus, Pencil } from 'lucide-react';
-import { useActionState, useState } from 'react';
+import { useState } from 'react';
 import {
   createCatalogItemAction,
   setCatalogItemAvailableAction,
@@ -26,9 +26,10 @@ import {
 } from './actions';
 import {
   CatalogActionFeedback,
+  CatalogActionSuccess,
   CatalogEditorFooter,
   CatalogToggleDialog,
-  initialCatalogActionState,
+  useCatalogEditorAction,
   useCloseCatalogDialogOnSuccess,
 } from './CatalogDialogSupport';
 import {
@@ -53,54 +54,57 @@ export function CatalogItemDialog({
   const actionFunction = item
     ? updateCatalogItemAction.bind(null, item.id)
     : createCatalogItemAction;
-  const [state, action, pending] = useActionState(
-    actionFunction,
-    initialCatalogActionState,
-  );
+  const { state, submit, pending } = useCatalogEditorAction(actionFunction);
   useCloseCatalogDialogOnSuccess(state, setOpen);
   const label = item ? `Modifier ${item.name}` : 'Nouvel article';
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant={item ? 'outline' : 'primary'}
-          size={item ? 'sm' : 'md'}
-          disabled={categories.length === 0}
-          aria-label={label}
-        >
-          {item ? (
-            <Pencil className="h-4 w-4" />
-          ) : (
-            <PackagePlus className="h-4 w-4" />
-          )}
-          {!item && 'Nouvel article'}
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="flex max-h-[94dvh] max-w-5xl flex-col overflow-hidden p-0">
-        <DialogHeader className="shrink-0 border-b border-border-default px-5 py-4 pr-12 sm:px-6">
-          <DialogTitle>{label}</DialogTitle>
-          <DialogDescription>
-            Les changements apparaissent au prochain chargement du POS.
-          </DialogDescription>
-        </DialogHeader>
-        <form action={action} className="flex min-h-0 flex-1 flex-col">
-          <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6">
-            <CatalogItemFields
-              categories={categories}
-              item={item}
-              defaultCategoryId={defaultCategoryId}
+    <>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button
+            variant={item ? 'outline' : 'primary'}
+            size={item ? 'sm' : 'md'}
+            className={
+              item ? 'min-h-11 min-w-11 lg:min-h-9 lg:min-w-9' : 'min-h-11'
+            }
+            disabled={categories.length === 0}
+            aria-label={label}
+          >
+            {item ? (
+              <Pencil className="h-4 w-4" />
+            ) : (
+              <PackagePlus className="h-4 w-4" />
+            )}
+            {!item && 'Nouvel article'}
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="flex max-h-[94dvh] max-w-5xl flex-col overflow-hidden p-0">
+          <DialogHeader className="shrink-0 border-b border-border-default px-5 py-4 pr-12 sm:px-6">
+            <DialogTitle>{label}</DialogTitle>
+            <DialogDescription>
+              Les changements apparaissent au prochain chargement du POS.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={submit} className="flex min-h-0 flex-1 flex-col">
+            <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6">
+              <CatalogItemFields
+                categories={categories}
+                item={item}
+                defaultCategoryId={defaultCategoryId}
+              />
+              <CatalogActionFeedback state={state} />
+            </div>
+            <CatalogEditorFooter
+              pending={pending}
+              onCancel={() => setOpen(false)}
+              sticky
             />
-            <CatalogActionFeedback state={state} />
-          </div>
-          <CatalogEditorFooter
-            pending={pending}
-            onCancel={() => setOpen(false)}
-            sticky
-          />
-        </form>
-      </DialogContent>
-    </Dialog>
+          </form>
+        </DialogContent>
+      </Dialog>
+      <CatalogActionSuccess state={state} />
+    </>
   );
 }
 

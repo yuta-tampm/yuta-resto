@@ -81,6 +81,7 @@ the shared operations documents until a dedicated product document is needed.
 - [`ui/pages/hours-services/README.md`](ui/pages/hours-services/README.md)
 - [`ui/pages/establishment-general-information/README.md`](ui/pages/establishment-general-information/README.md)
 - [`ui/pages/today/README.md`](ui/pages/today/README.md)
+- [`ui/pages/backoffice-equipe-salaries/README.md`](ui/pages/backoffice-equipe-salaries/README.md)
 
 ### Operations and process
 

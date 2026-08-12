@@ -1,6 +1,6 @@
 # POS management catalog — UI Specification
 
-Status: Approved visual direction
+Status: Implemented
 
 Visibility: Engineering
 
@@ -10,13 +10,18 @@ Target: existing integrated `apps/yuta-pos` screen `/management/catalog`.
 Implementation and current POS documentation remain behavior authority;
 baseline and future design images guide visual hierarchy only.
 
-## Current baseline
+## As-built implementation
 
-The page uses a centered `max-w-6xl` stack: page header, three top actions, and
-one full-width card per category. Category headers contain badges and compact
-actions; article rows contain identity/status/detail text and icon actions. All
-create/edit work occurs in dialogs, with the article editor scrolling inside a
-tall single column. The authenticated populated catalogue is very long.
+The page reuses the dark POS Management header without a sidebar, followed by
+return navigation, a title card, catalogue-wide actions and a dense expandable
+catalogue. Desktop article rows expose labelled columns and compact direct
+actions. Tablet and mobile layouts stack category metrics and article metadata
+into touch-oriented cards while retaining the same real actions and states.
+
+Create/edit work remains dialog-based. The article editor uses two contained
+columns at 1024 CSS pixels and above, one contained column below that breakpoint,
+internal scrolling and a visible action footer. The authenticated populated
+catalogue remains backed by live local data rather than design fixtures.
 
 ## Visual hierarchy
 

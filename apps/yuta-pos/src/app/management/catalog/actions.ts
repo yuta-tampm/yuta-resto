@@ -8,16 +8,14 @@ import {
   updateLocalInstructionSettingsInputSchema,
 } from '@yuta/contracts/local-pos';
 import { revalidatePath } from 'next/cache';
-import {
-  siteAgentClient,
-  SiteAgentClientError,
-} from '../../../lib/site-agent-client';
+import { siteAgentClient } from '../../../lib/site-agent-client';
 import { requireLocalManagementCredentials } from '../../../server/local-management-session';
+import {
+  toCatalogActionError,
+  type CatalogActionState,
+} from './catalog-action-state';
 
-export type CatalogActionState = {
-  error: string | null;
-  success: string | null;
-};
+export type { CatalogActionState } from './catalog-action-state';
 
 export async function createCatalogCategoryAction(
   _previousState: CatalogActionState,
@@ -41,7 +39,7 @@ export async function createCatalogCategoryAction(
     revalidateCatalog();
     return { error: null, success: 'Catégorie créée.' };
   } catch (error: unknown) {
-    return toActionError(error);
+    return toCatalogActionError(error);
   }
 }
 
@@ -68,7 +66,7 @@ export async function updateCatalogCategoryAction(
     revalidateCatalog();
     return { error: null, success: 'Catégorie mise à jour.' };
   } catch (error: unknown) {
-    return toActionError(error);
+    return toCatalogActionError(error);
   }
 }
 
@@ -90,7 +88,7 @@ export async function updateInstructionSettingsAction(
     revalidateCatalog();
     return { error: null, success: 'Options mises à jour.' };
   } catch (error: unknown) {
-    return toActionError(error);
+    return toCatalogActionError(error);
   }
 }
 
@@ -110,7 +108,7 @@ export async function setCatalogCategoryActiveAction(
       success: isActive ? 'Catégorie activée.' : 'Catégorie masquée.',
     };
   } catch (error: unknown) {
-    return toActionError(error);
+    return toCatalogActionError(error);
   }
 }
 
@@ -129,7 +127,7 @@ export async function createCatalogItemAction(
     revalidateCatalog();
     return { error: null, success: 'Article créé.' };
   } catch (error: unknown) {
-    return toActionError(error);
+    return toCatalogActionError(error);
   }
 }
 
@@ -149,7 +147,7 @@ export async function updateCatalogItemAction(
     revalidateCatalog();
     return { error: null, success: 'Article mis à jour.' };
   } catch (error: unknown) {
-    return toActionError(error);
+    return toCatalogActionError(error);
   }
 }
 
@@ -167,7 +165,7 @@ export async function setCatalogItemAvailableAction(
       success: isAvailable ? 'Article disponible.' : 'Article indisponible.',
     };
   } catch (error: unknown) {
-    return toActionError(error);
+    return toCatalogActionError(error);
   }
 }
 
@@ -273,37 +271,4 @@ function validationError(): CatalogActionState {
     error: 'Vérifiez les informations saisies.',
     success: null,
   };
-}
-
-function toActionError(error: unknown): CatalogActionState {
-  if (error instanceof SiteAgentClientError) {
-    const messages: Record<string, string> = {
-      CATALOG_CATEGORY_NAME_CONFLICT: 'Cette catégorie existe déjà.',
-      CATALOG_ITEM_NAME_CONFLICT:
-        'Un article avec ce nom existe déjà dans cette catégorie.',
-      CATALOG_CATEGORY_NOT_FOUND: "La catégorie n'existe plus.",
-      CATALOG_ITEM_NOT_FOUND: "L'article n'existe plus.",
-      DUPLICATE_VARIANT_CODE: 'Chaque option doit utiliser un code unique.',
-      VARIANT_OPTIONS_REQUIRED:
-        'Ajoutez au moins une option lorsque des choix sont requis.',
-      VARIANT_QUANTITY_REQUIRED:
-        'Indiquez le nombre de choix requis pour utiliser des options.',
-      DUPLICATE_OPTION_CODE: 'Chaque option doit utiliser un code unique.',
-      UNKNOWN_INSTRUCTION_CONFLICT:
-        'Une option référence un conflit qui n’existe pas.',
-      INSTRUCTION_OPTION_IN_USE:
-        'Retirez cette option des catégories et articles avant de la supprimer.',
-      UNKNOWN_INSTRUCTION_ASSIGNMENT:
-        'Une catégorie ou un article utilise une option inconnue.',
-      DUPLICATE_INSTRUCTION_ASSIGNMENT:
-        'Une même option ne peut apparaître qu’une seule fois.',
-      INSTRUCTION_INHERITANCE_INVALID:
-        'Les deux listes doivent hériter ensemble de la catégorie.',
-    };
-    return {
-      error: messages[error.code] ?? "L'opération n'a pas pu être effectuée.",
-      success: null,
-    };
-  }
-  return { error: 'Site-agent indisponible.', success: null };
 }

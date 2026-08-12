@@ -1,6 +1,6 @@
 # POS management catalog — Implementation Plan
 
-Status: Phase 2 implemented; Phase 3 approval pending
+Status: Implemented
 
 Visibility: Engineering
 
@@ -112,12 +112,57 @@ promoted to `@yuta/ui`. Stop here for explicit Phase 3 approval.
 Implement only approved interactions and current state transitions. Preserve
 authoritative business logic and the current trusted boundary.
 
+Phase 3 was explicitly approved and completed on 2026-08-12. It closes the
+approved interaction-state gaps without changing mutation ownership:
+
+- editor submissions use the existing Server Actions through a controlled
+  transition so conflict, validation and service errors keep submitted values;
+- successful category, article, settings and reversible-state mutations close
+  their dialog and expose a dismissible, five-second `role="status"`
+  confirmation;
+- stale category/article errors expose `Actualiser` recovery metadata and use
+  the existing Next.js router refresh;
+- the blocking catalogue load state now offers both `Réessayer` and return to
+  management;
+- errors use `role="alert"`, pending buttons remain disabled through the
+  existing loading behavior, and reversible actions retain confirmation and
+  Escape cancellation.
+
+No field, contract, API, permission, schema, persistence, site-agent service,
+revalidation path or local runtime boundary changed. Stop here for explicit
+Phase 4 approval.
+
 ## Phase 4 — Data integration or extension
 
 Map the current domain and transport first. Existing pages normally require no
 data rewrite for a visual refactor. Stop for approval before adding fields,
 enums, permissions, contracts, APIs, schema/migrations, runtime dependencies,
 or privileged device settings.
+
+Phase 4 was explicitly approved and completed on 2026-08-12 as an
+evidence-backed runtime no-op. The audit followed every displayed field and
+mutation through:
+
+```text
+authenticated POS route / Server Action
+  -> @yuta/contracts/local-pos input and response schemas
+  -> site-agent client and protected catalogue route
+  -> catalogue or instruction-settings service validation
+  -> @yuta/db-pos menu_categories, menu_items or pos_instruction_settings
+```
+
+The current chain completely covers category identity/order/visibility and
+instruction assignments; article identity/description/price/station/order,
+ordering policy, variants, required choices and availability; plus local note
+and allergen definitions. Existing service rules cover case-insensitive names,
+missing resources, inheritance, unknown/duplicate instructions, conflicts and
+variant consistency. No approved UI requirement needs another field, enum,
+permission, API, schema, migration, transaction, dependency or persistence
+owner.
+
+No runtime file changed in Phase 4. Database integration tests were not required
+because no query, schema, migration or database configuration changed. Stop
+here for explicit Phase 5 approval.
 
 ## Functional and regression verification gate
 
@@ -131,6 +176,19 @@ Use the target application's viewport/device matrix and operational QA
 requirements only after the functional/regression gate. Run exact existing
 repository checks, attach evidence, and synchronize the page package with the
 as-built result.
+
+Phase 5 was explicitly approved and completed on 2026-08-12. Authenticated
+production-browser QA covered the catalogue overview at 1366 x 768,
+1024 x 768, 768 x 1024 and 390 x 844, plus the article editor at the same
+matrix. No page or dialog overflow was found. The editor retained its approved
+two-column desktop composition and one-column tablet/mobile composition, with
+the action footer visible at every tested size.
+
+Keyboard verification confirmed initial focus inside the dialog, focus
+containment after Tab and Escape dismissal at every tested viewport. The final
+accessibility correction raises touch-oriented catalogue actions to a minimum
+44 CSS-pixel target while retaining compact desktop controls. Final captures
+and the stable page package were synchronized after the production build.
 
 ## Delivery evidence
 
