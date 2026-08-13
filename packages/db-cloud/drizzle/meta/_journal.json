@@ -36,6 +36,20 @@
       "when": 1786039807788,
       "tag": "0004_previous_gravity",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1786619086608,
+      "tag": "0005_lean_zzzax",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1786627169608,
+      "tag": "0006_aromatic_boom_boom",
+      "breakpoints": true
     }
   ]
 }

@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-05
+Last updated: 2026-08-13
 
 Authority: current Drizzle schemas and `docs/architecture/DATABASE_BOUNDARIES.md`
 
@@ -344,6 +344,25 @@ transactional, and browser-provided scope is never authoritative.
 `booking_settings` owns reservation availability and policy only. Public
 booking branding and visible contact/address values are read from the canonical
 establishment profile and filtered by its visibility flags.
+
+### Cloud personnel read foundation
+
+`personnel_employee_dossiers` stores the approved minimum employment facts for
+one establishment. Every row carries `organization_id` and `establishment_id`;
+a composite foreign key prevents pairing an establishment with the wrong
+organization. Repository reads repeat both scope predicates even when the
+employee ID is globally unique.
+
+The table stores names, poste, qualification, employment-term type, optional
+expected end date, work-time category, entry date, optional departure date,
+revision, and server timestamps. Display name, employment view, completeness,
+filters, and summary counts are derived rather than stored.
+
+The development create slice also owns `personnel_employee_audit_events` and
+`personnel_command_receipts`. One transaction creates the dossier, appends the
+allowlisted creation/duplicate-override audit event, and stores the hashed
+idempotency receipt. Receipts contain no duplicate employee payload. Editing,
+departure, documents, payroll, register, and Formalités data are not active.
 
 ## 6. Local POS schema
 

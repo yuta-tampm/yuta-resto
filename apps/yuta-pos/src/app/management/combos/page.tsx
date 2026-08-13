@@ -3,10 +3,12 @@ import { ArrowLeft, Layers3 } from 'lucide-react';
 import Link from 'next/link';
 import { siteAgentClient } from '../../../lib/site-agent-client';
 import { requireLocalManagementSession } from '../../../server/local-management-session';
+import { ManagementHeader } from '../_components/ManagementHeader';
 import { ComboManagement } from './ComboManagement';
+import { CreateComboRuleButton } from './ComboRuleDialogs';
 
 export default async function LocalComboManagementPage() {
-  await requireLocalManagementSession();
+  const session = await requireLocalManagementSession();
 
   let catalog;
   try {
@@ -29,9 +31,19 @@ export default async function LocalComboManagementPage() {
 
   return (
     <main className="min-h-dvh bg-canvas text-primary">
-      <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-6 md:px-8">
+      <ManagementHeader
+        userName={session.user.name}
+        userRole={session.user.role}
+      />
+      <div className="mx-auto grid w-full max-w-7xl gap-3 px-4 py-4 md:px-6">
+        <Link
+          href="/management"
+          className="inline-flex min-h-11 w-fit items-center gap-2 text-sm font-semibold text-status-success hover:underline focus:outline-none focus:ring-2 focus:ring-focus-ring focus:ring-offset-2"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Retour à la gestion
+        </Link>
         <PageHeader
-          eyebrow="Gestion locale"
           title="Formules et combos"
           description="Configurez les groupes éligibles, les suppléments, la priorité et le mode de prix."
           media={
@@ -39,14 +51,7 @@ export default async function LocalComboManagementPage() {
               <Layers3 className="h-5 w-5" />
             </IconTile>
           }
-          actions={
-            <Button asChild variant="secondary">
-              <Link href="/management">
-                <ArrowLeft className="h-4 w-4" />
-                Retour
-              </Link>
-            </Button>
-          }
+          actions={<CreateComboRuleButton />}
         />
         <ComboManagement
           comboRules={catalog.comboRules}

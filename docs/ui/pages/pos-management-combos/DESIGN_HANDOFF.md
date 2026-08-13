@@ -1,6 +1,6 @@
 # POS management combos — Design Handoff
 
-Status: Phase 0 complete; generated reference pending approval
+Status: Visual direction approved; Phase 1 implemented
 
 Visibility: Engineering
 
@@ -81,7 +81,7 @@ current code/contracts and label them as state studies, not captured evidence.
 5. `PRODUCT_SCOPE.md`, `UI_SPEC.md`, and `DATA_AND_INTERACTION_SPEC.md` for the
    real hierarchy, fields, states, and protected invariants.
 
-The generated images will be `DRAFT` references. They may govern hierarchy,
+The generated images are `DRAFT` references. They may govern hierarchy,
 density, proportions, spacing, and tone only after review. Runtime copy, data,
 permissions, contracts, and behavior remain repository-authoritative.
 
@@ -142,7 +142,56 @@ Avoid: no bottom navigation, drawer, sidebar, hidden primary action, hover-only 
 
 ## Review gate
 
-Do not generate or implement automatically. The product owner must approve the
-Phase 0 package and then review generated `DRAFT` images. A generated reference
-that invents navigation, fields, permissions, persistence, pricing behavior, or
-unsupported modules must be rejected or revised.
+The product owner approved proceeding to Phase 1 on 2026-08-13. That approval
+accepts the selected hierarchy and disclosure direction subject to the
+repository-authoritative deviations below. It does not approve invented
+navigation, fields, permissions, persistence, pricing behavior, or unsupported
+modules.
+
+## Generated-reference handoff
+
+Reference status: `APPROVED`
+
+Generated on 2026-08-13 with the built-in ImageGen path and the curated local
+reference bundle. The selected files are:
+
+- `references/design-proposal-01-desktop.png` — desktop operational overview;
+- `references/design-proposal-02-rule-editor.png` — rule-editor pending state;
+- `references/design-proposal-03-narrow.png` — narrow responsive companion.
+
+The first desktop generation was rejected because it introduced drag handles,
+an incorrect inactive rule, incorrect seed values, and enabled-looking locked
+controls. The first editor generation was rejected because it invented a
+`Prêt` banner and field-level success validation. The selected drafts remove
+those unsupported details.
+
+Phase 1 decisions:
+
+1. page-local rule/group disclosure is the approved density strategy;
+2. the derived runtime summary remains and uses the real rule count;
+3. narrow rule/group headers stack more strongly than the raster proposal;
+4. hierarchy, spacing, and destructive-action emphasis use repository semantic
+   tokens and primitives rather than generated styling.
+
+Known non-authoritative raster deviations:
+
+- generated logo geometry must not replace repository `YutaBrandMark`;
+- generated colors, shadows, gradients, typography metrics, icons, and focus
+  treatment are illustrative only; implementation uses semantic tokens,
+  `@yuta/ui`, and Lucide;
+- generated text/data must not override runtime French copy, real catalogue
+  values, contract fields, disabled behavior, or permissions;
+- the editor backdrop reflects the current baseline rather than authorizing a
+  second shell variant. Phase 1 must use the approved shared management header.
+
+## Phase 1 as-built evidence
+
+Captured on 2026-08-13 through the real authenticated local management flow:
+
+- `references/phase-01-implementation-1366x768.png`;
+- `references/phase-01-implementation-390x844.png`.
+
+The captures use real seed-backed data and submit no mutation. Desktop and
+narrow layouts retain the shared header, content return, primary create action,
+active-rule locks, real rule/group/item actions, and French runtime values.
+The narrow capture has no horizontal document overflow.

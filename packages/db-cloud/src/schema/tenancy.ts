@@ -120,6 +120,10 @@ export const establishments = pgTable(
   },
   (table) => [
     uniqueIndex('establishments_slug_unique_idx').on(sql`lower(${table.slug})`),
+    uniqueIndex('establishments_organization_id_id_unique_idx').on(
+      table.organizationId,
+      table.id,
+    ),
     index('establishments_organization_id_idx').on(table.organizationId),
     index('establishments_status_idx').on(table.status),
   ],

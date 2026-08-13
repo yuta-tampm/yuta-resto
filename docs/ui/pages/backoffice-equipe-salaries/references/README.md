@@ -1,14 +1,15 @@
 # Backoffice Équipe — Salariés — Reference Metadata
 
-Status: Draft design reference
+Status: Approved design reference
 
 Visibility: Engineering
 
 Reference file: `design-proposal-desktop-01.png`; `design-proposal-mobile-01.png`
 
-Reference status: `DRAFT`
+Reference status: `APPROVED`
 
-Approved scope/date or review note: Generated on 2026-08-12; product-owner review is pending.
+Approved scope/date or review note: Generated on 2026-08-12 and approved for
+Phase 1 visual direction on 2026-08-13 after selective feedback reconciliation.
 
 Purpose: Explore page hierarchy, proportions, density, action priority,
 responsive behavior, and visual tone for desktop and mobile.
@@ -42,3 +43,5 @@ changes, backend fields, authorization, persistence, legal behavior, or exact
 generated copy. They contain no production data.
 
 Shared reference: `docs/ui/references/yuta-shell-brand-reference.png`.
+
+Selective feedback review: `CURRENT_UI_AUDIT.md`.

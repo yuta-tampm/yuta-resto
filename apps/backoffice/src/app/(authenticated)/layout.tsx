@@ -32,6 +32,9 @@ export default async function AuthenticatedLayout({
         tenant.actor.type === 'user' &&
         (tenant.actor.role === 'OWNER' || tenant.actor.role === 'MANAGER')
       }
+      canReadPersonnel={
+        tenant.actor.type === 'user' && tenant.actor.role === 'OWNER'
+      }
       canManageBookingSettings={
         tenant.actor.type === 'user' &&
         (tenant.actor.role === 'OWNER' || tenant.actor.role === 'MANAGER')

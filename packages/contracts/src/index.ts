@@ -4,6 +4,7 @@ export * from './display';
 export * from './establishment-profile';
 export * from './local-pos';
 export * from './orders';
+export * from './personnel';
 export * from './reputation';
 export * from './reservations';
 export * from './tenant-foundation';

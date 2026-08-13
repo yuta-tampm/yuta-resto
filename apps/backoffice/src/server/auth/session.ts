@@ -20,6 +20,7 @@ import { cache } from 'react';
 import { cloudDatabase } from '../cloud-database';
 import { requireReputationPermission } from './permissions';
 import { requireBookingPermission } from './permissions';
+import { requirePersonnelPermission } from './permissions';
 
 export const BACKOFFICE_SESSION_COOKIE = 'yuta_backoffice_session';
 export const BACKOFFICE_SELECTION_COOKIE = 'yuta_backoffice_selection';
@@ -129,6 +130,15 @@ export async function requireBookingTenant(returnTo = '/reservations') {
   requireEstablishment(context.tenant);
   requireEntitlement(context.tenant, 'booking.enabled');
   requireBookingPermission(context.tenant, 'booking.read');
+  return context as typeof context & {
+    tenant: typeof context.tenant & { establishmentId: string };
+  };
+}
+
+export async function requirePersonnelTenant(returnTo = '/equipe/salaries') {
+  const context = await requireAuthenticatedTenant(returnTo);
+  requireEstablishment(context.tenant);
+  requirePersonnelPermission(context.tenant, 'personnel.employee.read');
   return context as typeof context & {
     tenant: typeof context.tenant & { establishmentId: string };
   };

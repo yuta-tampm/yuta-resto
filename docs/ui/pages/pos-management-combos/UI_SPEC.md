@@ -1,6 +1,6 @@
 # POS management combos — UI Specification
 
-Status: Phase 0 design input
+Status: Implemented as-built specification
 
 Visibility: Engineering
 
@@ -12,9 +12,11 @@ shows status, priority, pricing, group count, rule actions, an inactive-editing
 notice, group cards, and every eligible item. At capture, the document height
 was approximately 3257 CSS pixels at `1366 × 768`.
 
-The current rule editor is a centered scroll-safe dialog with rule name,
-pricing mode, fixed price, price delta, base group name, priority, maximum
-applications, and cancel/save actions.
+The current rule editor is a centered, viewport-contained dialog with rule
+name, pricing mode, fixed price, price delta, base group name, priority, and
+maximum applications. Its field region scrolls independently while the header
+and cancel/save actions remain visible. Group and eligible-item editors use the
+same containment pattern.
 
 ## Required hierarchy for the proposal
 
@@ -63,3 +65,20 @@ success, invalid-session redirect, and site-agent unavailable.
 Visual references may not invent a toast, global notification center, working
 search, new field, or new route. Generated text and sample values are
 non-authoritative; repository French copy and runtime data win.
+
+## As-built visual resolution
+
+The implementation follows the approved hierarchy and density while retaining
+repository-owned cards, badges, buttons, dialogs, semantic tokens, icons, and
+real French content instead of copying raster styling. On desktop and tablet,
+the expanded rule keeps compact nested group cards. At the narrow breakpoint,
+title/actions, rule metadata/actions, group metadata/actions, and eligible-item
+rows stack into one readable column rather than reproducing the generated
+reference's table-like geometry.
+
+Authenticated Phase 5 evidence confirms zero document-level horizontal
+overflow at all four QA viewports. Route-local action targets are at least
+`44 × 44`; the shared shell keeps its established responsive sizing. The
+`390 × 844` editor uses the full available width, stays within 16 CSS pixels of
+the top and bottom viewport edges, scrolls its field region independently, and
+keeps save/cancel actions visible.

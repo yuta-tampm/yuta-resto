@@ -1,8 +1,10 @@
 # POS management combos — References
 
-Status: Current Phase 0 evidence
+Status: Current baseline, approved design direction, and final as-built evidence
 
 Visibility: Engineering
+
+Reference status: `APPROVED`
 
 ## Current baseline
 
@@ -30,5 +32,85 @@ evidence:
 - `../../pos-management-printing/references/phase-05-as-built-1366x768.png`;
 - `../../pos-management-printing/references/phase-05-as-built-390x844.png`.
 
-Generated proposals are intentionally absent in Phase 0. `Reference status` is
-`NONE` until the product owner authorizes generation and approves a result.
+## Generated draft proposals
+
+- `design-proposal-01-desktop.png`
+  - Purpose: desktop hierarchy and density proposal.
+  - Native image: `1672 × 941`; represents the `1366 × 768` design viewport.
+  - Direction: approved shared shell, in-content return, four compact active
+    rules, nested page-local disclosure, and visibly locked structural actions.
+  - Status: `APPROVED` for hierarchy and density only.
+
+- `design-proposal-02-rule-editor.png`
+  - Purpose: rule editor grouping and pending-submit proposal.
+  - Native image: `1672 × 941`; represents the `1366 × 768` design viewport.
+  - Direction: current fields only, neutral inputs, no invented validation
+    banner, and persistent cancel/save actions.
+  - Status: `APPROVED` for hierarchy and density only.
+
+- `design-proposal-03-narrow.png`
+  - Purpose: narrow responsive companion.
+  - Native image: `853 × 1844`; represents the `390 × 844` design viewport.
+  - Direction: approved narrow shell, one-column rule flow, direct primary
+    action, disclosure hierarchy, and locked structural controls.
+  - Status: `APPROVED`; implementation uses stronger narrow stacking.
+
+Generated on 2026-08-13 with the built-in ImageGen path. The prompts are stored
+in `../DESIGN_HANDOFF.md`. The selected drafts use repository baselines as
+references, not edit targets. Rejected generations remain outside the workspace
+and are not package references.
+
+Reference status is `APPROVED` for visual hierarchy, density, and responsive
+direction. Generated logo geometry, exact colors, shadows, gradients,
+typography, icons, text, and sample data are non-authoritative. Implementation
+must use repository `YutaBrandMark`, semantic tokens, `@yuta/ui`, Lucide, real
+runtime data, and current French copy.
+
+## Phase 1 as-built
+
+- `phase-01-implementation-1366x768.png`
+  - Purpose: authenticated Phase 1 desktop top viewport.
+  - State: first real rule and first group expanded; long item list previewed;
+    active structural controls disabled.
+  - Captured: 2026-08-13; `1366 × 768`; DPR 1.
+
+- `phase-01-implementation-390x844.png`
+  - Purpose: authenticated Phase 1 narrow top viewport.
+  - State: same real populated state with stacked headers/actions.
+  - Captured: 2026-08-13; `390 × 844`; DPR 1; no horizontal document overflow.
+
+Both captures use the real local session and seed-backed site-agent response.
+No mutation was submitted during capture.
+
+## Phase 5 final as-built
+
+- `phase-05-as-built-1366x768.png`
+- `phase-05-as-built-1024x768.png`
+- `phase-05-as-built-768x1024.png`
+- `phase-05-as-built-390x844.png`
+  - Purpose: authenticated populated top-viewport evidence across the complete
+    POS QA matrix.
+  - State: four real local rules; first rule and first group expanded; active
+    structural controls visibly disabled; route-local actions use final
+    `44 × 44` minimum targets.
+  - Captured: 2026-08-13; DPR 1; zero document-level horizontal overflow at
+    every viewport.
+
+- `phase-05-rule-dialog-390x844.png`
+  - Purpose: final narrow rule-editor containment evidence.
+  - State: `Nouvelle formule` opened with initial focus on `Nom`; fields scroll
+    independently and the save/cancel footer remains visible.
+  - Captured: 2026-08-13; `390 × 844`; dialog `390 × 812` with 16 CSS pixel
+    vertical margins.
+
+These captures use the authenticated local admin session, local PostgreSQL,
+the running site-agent, and the production POS build. No mutation was submitted:
+the empty create attempt was blocked by native required-field validation, the
+dialog was dismissed with Escape, and focus returned to `Nouvelle formule`.
+
+Intentional deviations from generated references preserve repository truth:
+the approved shared shell and route-local `@yuta/ui` composition replace raster
+logo/color/shadow details, real seed-backed content replaces sample content,
+and narrow layouts use stronger card/action stacking for readability and touch
+access. Generated imagery remains authority for hierarchy, density, and
+responsive direction only.

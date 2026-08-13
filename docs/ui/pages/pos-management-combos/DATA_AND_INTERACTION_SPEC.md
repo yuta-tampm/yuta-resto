@@ -1,6 +1,6 @@
 # POS management combos — Data and Interaction Specification
 
-Status: Phase 0 repository mapping
+Status: Phase 4 integration verified
 
 Visibility: Engineering
 
@@ -37,6 +37,8 @@ commands to site-agent. Site-agent owns db-pos reads, validation, and writes.
 - Confirmations precede activation/deactivation and group/item removal.
 - Successful dialog actions close the dialog and revalidate combos and order
   layouts. Errors remain visible in the dialog/confirmation surface.
+- Editor dialogs prevent dismissal while a submission is pending. Their field
+  region scrolls independently while cancel/save actions remain reachable.
 
 ## Validation and service rules
 
@@ -58,10 +60,40 @@ Site-agent owns transactions. Deleting a group deletes its mappings and group
 atomically. There is no rule-delete action because order/payment discount
 history may reference rule snapshots. UI redesign cannot change these rules.
 
+Order and check optimization call the shared `calculateComboDiscounts` through
+the site-agent persistence service. Callers that mutate payment/split state pass
+their transaction executor, so discount rows, item applications, and totals are
+committed with the enclosing operation. Persisted discount names and amounts
+remain snapshots when a rule is later renamed or deactivated.
+
 ## Failure and recovery
 
 Invalid/expired sessions redirect to `/management/login`. Initial load failure
 shows `Site-agent indisponible`. Mutation failures map known service codes to
 French messages; unknown local-service failures use the generic service
-message. No polling, optimistic persistence, offline queue, retry worker,
-printer, or cloud fallback exists for this page.
+message. Stale rule, group, eligible-item, and catalogue-item references expose
+an `Actualiser` action that refreshes the current Server Component route. Name,
+structure, quantity, active-lock, and duplicate-item conflicts remain in the
+current editor or confirmation without discarding the submitted fields. No
+polling, optimistic persistence, offline queue, retry worker, printer, or cloud
+fallback exists for this page.
+
+## Phase 4 verification note
+
+The current local chain is verified as:
+
+```text
+authenticated yuta-pos page
+-> Server Action with trusted HttpOnly token
+-> Zod-validated site-agent client request
+-> bearer-authenticated site-agent route
+-> combo management or persistence service
+-> db-pos transaction/local PostgreSQL
+-> @yuta/core for deterministic discount calculation
+```
+
+Residual concurrency risk: rule/group/item uniqueness checks and activation
+structure validation are service-level read-then-write operations. The current
+db-pos tables do not add matching unique constraints or row locks, so concurrent
+management requests could race. Phase 4 does not authorize a schema or service
+locking change; hardening this requires a separately approved backend change.

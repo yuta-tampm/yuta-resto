@@ -34,6 +34,7 @@ export function BackofficeFrame({
   currentUser,
   tenantSwitcher,
   canManageUsers,
+  canReadPersonnel,
   canManageBookingSettings,
   bookingEnabled,
   reputationEnabled,
@@ -45,6 +46,7 @@ export function BackofficeFrame({
     currentMembershipId: string;
   };
   canManageUsers: boolean;
+  canReadPersonnel: boolean;
   canManageBookingSettings: boolean;
   bookingEnabled: boolean;
   reputationEnabled: boolean;
@@ -97,6 +99,7 @@ export function BackofficeFrame({
               reputationEnabled,
               canManageBookingSettings,
               canManageUsers,
+              canReadPersonnel,
             }}
           />
         </AppSidebar>
@@ -184,6 +187,7 @@ export function BackofficeFrame({
         pathname={pathname}
         tenantSwitcher={tenantSwitcher}
         canManageUsers={canManageUsers}
+        canReadPersonnel={canReadPersonnel}
         canManageBookingSettings={canManageBookingSettings}
         bookingEnabled={bookingEnabled}
         reputationEnabled={reputationEnabled}
@@ -251,6 +255,7 @@ function MobileMenuDrawer({
   pathname,
   tenantSwitcher,
   canManageUsers,
+  canReadPersonnel,
   canManageBookingSettings,
   bookingEnabled,
   reputationEnabled,
@@ -263,6 +268,7 @@ function MobileMenuDrawer({
     currentMembershipId: string;
   };
   canManageUsers: boolean;
+  canReadPersonnel: boolean;
   canManageBookingSettings: boolean;
   bookingEnabled: boolean;
   reputationEnabled: boolean;
@@ -325,6 +331,7 @@ function MobileMenuDrawer({
               reputationEnabled,
               canManageBookingSettings,
               canManageUsers,
+              canReadPersonnel,
             }}
             onNavigate={onClose}
           />

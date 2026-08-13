@@ -6,7 +6,7 @@ import type {
 } from '@yuta/contracts/cloud-admin';
 import { Button } from '@yuta/ui';
 import { Plus } from 'lucide-react';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { BackofficePage } from '../../../../components/backoffice-page';
 import { CreateUserDialog } from './create-user-dialog';
 import {
@@ -23,6 +23,7 @@ export function UsersPage({
   currentMembershipId,
   currentEstablishmentId,
   actorRole,
+  auditHistory,
 }: {
   users: OrganizationUser[];
   establishments: ManageableEstablishment[];
@@ -30,6 +31,7 @@ export function UsersPage({
   currentMembershipId: string;
   currentEstablishmentId: string;
   actorRole: UserManagementActorRole;
+  auditHistory?: ReactNode;
 }) {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
@@ -60,6 +62,8 @@ export function UsersPage({
         currentUserId={currentUserId}
         currentMembershipId={currentMembershipId}
       />
+
+      {auditHistory}
 
       <CreateUserDialog
         open={createDialogOpen}

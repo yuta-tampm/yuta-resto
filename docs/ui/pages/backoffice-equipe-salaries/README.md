@@ -1,12 +1,12 @@
 # Backoffice Équipe — Salariés
 
-Status: Draft design package
+Status: Partially integrated — real read and development create slices
 
 Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-08-12
+Last updated: 2026-08-13
 
 Protocol revision: 4
 
@@ -22,11 +22,11 @@ Page classification: `NEW_PAGE`
 
 Implementation class: `integrated`
 
-Package status: `design`
+Package status: `implementation-ready`
 
-Scope status: `DRAFT`
+Scope status: `APPROVED`
 
-Reference status: `DRAFT`
+Reference status: `APPROVED`
 
 Inventory status: `COMPLETE`
 
@@ -40,20 +40,27 @@ No-image reference reason: `NOT_APPLICABLE`; draft desktop and mobile references
 
 ## Current implementation
 
-The canonical route exists, but it renders only `PlannedBackofficePage` inside
-the authenticated Backoffice shell. Repository analysis found no employee/HR
-domain, transport contract, cloud repository, loader, mutation, dedicated
-permission, secure employee-document storage, OCR service, HR audit history,
-personnel-register model, Formalités engine, or PDF generator.
+The canonical route now uses the first real read-only vertical slice. It has a
+personnel list contract, cloud-owned employee dossier table and migration,
+OWNER-only read permission, trusted establishment context, tenant-scoped
+repository, real summary/list/search/filter states, and truthful loading,
+empty, forbidden, and error behavior. Typed fictional fixtures and the state
+simulator have been removed.
 
-The route is therefore a `NEW_PAGE` under `NEW_CAPABILITY_DISCOVERY`, not an
-existing capability renewal. `users` and `tenant_memberships` remain login and
-restaurant-access records; they are not employee records.
+Employee creation is implemented for development with validation, duplicate
+review, idempotent retry, and atomic minimal audit. Editing and departure remain
+disabled. No production seed, secure document storage, OCR, personnel-register
+model, Formalités engine, or PDF generator exists.
+
+The route remains under `NEW_CAPABILITY_DISCOVERY` until the approved write
+slices and final QA are complete. `users` and `tenant_memberships` remain login
+and restaurant-access records; they are not employee records.
 
 Current sources:
 
 - route: `apps/backoffice/src/app/(authenticated)/equipe/salaries/page.tsx`;
-- placeholder: `apps/backoffice/src/components/planned-backoffice-page.tsx`;
+- integrated read composition/model:
+  `apps/backoffice/src/app/(authenticated)/equipe/salaries/`;
 - authenticated layout: `apps/backoffice/src/app/(authenticated)/layout.tsx`;
 - shell/navigation: `apps/backoffice/src/components/backoffice-frame.tsx` and
   `apps/backoffice/src/components/backoffice-navigation.ts`;
@@ -95,6 +102,8 @@ input only. It is not repository authority and must not be copied mechanically.
   operational employee list, and contained detail composition.
 - `references/design-proposal-mobile-01.png` — responsive mobile list-card
   composition using the current no-sidebar mobile shell behavior.
+- `references/CURRENT_UI_AUDIT.md` — selectively merged review of what to keep,
+  refine, defer, and never infer from the draft references.
 - `references/README.md` records review metadata and non-authoritative limits.
 - `../../references/yuta-shell-brand-reference.png` provides approved shared
   Backoffice shell and brand direction only.
@@ -179,9 +188,19 @@ Runtime/device change: NO
 
 ## Design approval
 
-Product scope and visual direction remain pending. The generated desktop and
-mobile references are `DRAFT`; generating them does not approve Phase 1 or
-production integration.
+Product scope and visual direction were approved by the product owner on
+2026-08-13 for the typed-fixture Phase 1 prototype. The generated desktop and
+mobile references are `APPROVED` as visual direction only; this does not
+approve production integration.
+
+The external feedback pack reviewed on 2026-08-13 was not copied into the
+repository. Its useful UI findings were reconciled in place. Documents,
+Formalités, register/PDF, apprenticeship, and other sensitive/legal concepts
+remain explicit future capability waves rather than Phase 1 scope.
+
+The approved first slice is establishment-owned and `OWNER`-only. `STAFF` is
+denied; manager access remains deferred until a dedicated personnel-management
+authorization decision exists.
 
 ## Prompt order
 
@@ -215,3 +234,95 @@ Intentional deviations: `PENDING`
 Deferred proposals and risks: See `PRODUCT_SCOPE.md`.
 
 As-built documentation status: `PENDING`
+
+## Phase 1 prototype evidence
+
+Phase 1 completed on 2026-08-13. The route uses typed fictional employee view
+fixtures, derived active/upcoming/former views, explainable completeness,
+search/filtering, selected-row quick view, responsive cards, simulated form
+validation/success, and explicitly selectable loading/empty/forbidden/error/
+conflict/success review states.
+
+No schema, migration, API/contract, repository, server action, permission,
+entitlement, provider, persistence, or production document behavior was added.
+The package remains `implementation-ready`, not `implemented`, until approved
+real-data vertical slices replace fixtures and complete functional/security QA.
+
+## Phase 2 discovery evidence
+
+Phase 2 completed on 2026-08-13 as documentation-only discovery. The canonical
+interaction map and data dictionary are in `DATA_AND_INTERACTION_SPEC.md`.
+They classify stored, derived, transient UI, and integration-owned values and
+record proposed aggregate, multiple-establishment, duplicate, concurrency,
+idempotency, departure, audit, and state-transition semantics.
+
+The Phase 1 fixture type remains a presentation read model and is explicitly
+not a contract/table blueprint. All Phase 2 domain/security choices remain
+`PROPOSAL` pending the Phase 3 approval register.
+
+## Phase 3 review evidence
+
+Phase 3 review material was completed on 2026-08-13. The canonical
+`DATA_AND_INTERACTION_SPEC.md` now contains:
+
+- establishment ownership and aggregate transaction boundaries;
+- proposed `personnel.employee.read` and `personnel.employee.manage`
+  permissions with OWNER-only role/action/field matrices;
+- no invented feature entitlement;
+- approved-for-review minimum fields and validation semantics;
+- audit, concurrency, idempotency, duplicate, departure, retention/archive,
+  security-control, and cross-tenant test proposals;
+- current CNIL and Légifrance constraints with a clear non-compliance-claim boundary.
+
+The product boundary was approved on 2026-08-13 for technical preparation and
+the first real read-only slice. External controller/legal and operational-
+security sign-offs are still pending, so employee writes are not authorized.
+
+## Phase 4 technical-design evidence
+
+Phase 4 technical preparation was completed on 2026-08-13 in
+`IMPLEMENTATION_PLAN.md`. It describes, without creating anything:
+
+- the proposed employee, change-history, and safe-retry storage groups;
+- how a request is checked, read, changed, and reported back to the page;
+- the proposed contract, repository, permission, and application boundaries;
+- five small future delivery slices and their rollback approach;
+- the permission, cross-establishment, conflict, retry, and audit tests required
+  before any slice can be called real.
+
+This preparation created no database table, schema, migration, API, permission
+code, repository, server action, or real data-storage behavior. Documents,
+Formalites, register/PDF, apprenticeship, OCR, and sensitive contract data stay
+recorded as later capability waves with their own approval gates.
+
+## Phase 4 read-slice evidence
+
+The first real slice was implemented on 2026-08-13 after explicit delivery
+approval. It adds the minimum personnel contract, cloud schema and migration,
+composite establishment ownership constraint, OWNER-only read permission,
+server-loaded list repository, real empty/list/search/filter UI, navigation
+filtering, and tenant-isolation tests.
+
+Migration `0005_lean_zzzax.sql` was applied to the local development database.
+The integration test proves that an employee from another establishment or
+organization is not returned and that a mismatched organization/establishment
+pair is rejected by PostgreSQL. No employee record was seeded.
+
+This is partial integration, not completion of Phase 4. Writes and sensitive
+later waves remain blocked as described above.
+
+## Phase 4 create-slice evidence
+
+The development create slice was implemented on 2026-08-13. Migration
+`0006_aromatic_boom_boom.sql` adds scoped employee audit events and hashed
+command receipts. The OWNER-only form validates minimum identity/employment
+facts, requires an expected end date for CDD, preserves failed input, reviews
+same-establishment duplicate candidates, and requires a bounded reason before
+creating a confirmed homonym.
+
+The dossier, creation audit, optional duplicate-override audit, and retry
+receipt commit in one transaction. Retrying the same committed command returns
+the same employee; reusing its key with different values fails. Integration
+tests clean their data and prove scoped creation, duplicate review, audit, and
+idempotency behavior. Production employee collection remains blocked by the
+existing controller/legal and operational-security approvals.

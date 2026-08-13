@@ -10,6 +10,7 @@ const allCapabilities = {
   reputationEnabled: true,
   canManageBookingSettings: true,
   canManageUsers: true,
+  canReadPersonnel: true,
 };
 
 describe('back-office navigation', () => {
@@ -92,6 +93,7 @@ describe('back-office navigation', () => {
       reputationEnabled: false,
       canManageBookingSettings: false,
       canManageUsers: false,
+      canReadPersonnel: false,
     });
     const labels = sections.flatMap((section) =>
       section.items.map((item) => item.label),
@@ -104,6 +106,7 @@ describe('back-office navigation', () => {
     expect(labels).not.toContain('Avis & commentaires');
     expect(labels).not.toContain('Satisfaction client');
     expect(labels).not.toContain('Utilisateurs & accès');
+    expect(labels).not.toContain('Salariés');
     expect(labels).toContain('Informations générales');
     expect(sections.map((section) => section.title)).not.toContain(
       'Réservations',

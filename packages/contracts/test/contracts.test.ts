@@ -3,8 +3,12 @@ import {
   apiErrorSchema,
   createInternalNoteSchema,
   createLocalCatalogItemInputSchema,
+  createLocalComboGroupInputSchema,
+  createLocalComboGroupItemInputSchema,
+  createLocalComboRuleInputSchema,
   establishmentProfileInputSchema,
   createLocalOrderInputSchema,
+  createLocalUserInputSchema,
   createOrderInputSchema,
   createReservationInputSchema,
   bookingExceptionInputSchema,
@@ -19,7 +23,11 @@ import {
   publicFeedbackSubmissionSchema,
   saveReplySchema,
   updateFeedbackSchema,
+  updateLocalComboRuleInputSchema,
+  updateLocalUserInputSchema,
   updateLocalPrintSettingsInputSchema,
+  resetLocalUserPinInputSchema,
+  localUserResponseSchema,
   uuidV7Schema,
   tenantMembershipContractSchema,
 } from '../src';
@@ -95,6 +103,38 @@ describe('@yuta/contracts', () => {
     ).toBe(false);
   });
 
+  it('keeps local user fields and PINs inside their transport boundaries', () => {
+    expect(
+      createLocalUserInputSchema.parse({
+        name: '  Local Staff  ',
+        email: ' staff@example.test ',
+        role: 'staff',
+        pin: ' 2468 ',
+      }),
+    ).toEqual({
+      name: 'Local Staff',
+      email: 'staff@example.test',
+      role: 'staff',
+      pin: '2468',
+    });
+    expect(updateLocalUserInputSchema.safeParse({}).success).toBe(false);
+    expect(
+      resetLocalUserPinInputSchema.safeParse({ pin: '12ab' }).success,
+    ).toBe(false);
+    expect(
+      localUserResponseSchema.safeParse({
+        user: {
+          id: '01981f90-8e60-7000-8000-000000000001',
+          name: 'Local Staff',
+          email: null,
+          role: 'staff',
+          isActive: true,
+          pinHash: 'must-not-cross-the-boundary',
+        },
+      }).success,
+    ).toBe(false);
+  });
+
   it('validates catalog-driven item ordering policies', () => {
     const parsed = createLocalCatalogItemInputSchema.parse({
       categoryId: id,
@@ -112,6 +152,52 @@ describe('@yuta/contracts', () => {
     expect(parsed.orderingPolicy).toBe('separate');
     expect(parsed.variantOptions).toHaveLength(2);
     expect(parsed.requiredVariantQuantity).toBe(2);
+  });
+
+  it('validates combo-management money, quantity, and application limits', () => {
+    expect(
+      createLocalComboRuleInputSchema.parse({
+        name: '  Menu midi  ',
+        pricingMode: 'base_item_plus_delta',
+        comboPriceCents: 0,
+        priceDeltaCents: -250,
+        basePricingGroupName: 'Plat',
+        maxApplications: 2,
+      }),
+    ).toEqual({
+      name: 'Menu midi',
+      pricingMode: 'base_item_plus_delta',
+      comboPriceCents: 0,
+      priceDeltaCents: -250,
+      basePricingGroupName: 'Plat',
+      priority: 0,
+      maxApplications: 2,
+      isActive: false,
+    });
+    expect(
+      createLocalComboRuleInputSchema.safeParse({
+        name: 'Invalid cap',
+        pricingMode: 'fixed',
+        comboPriceCents: 1000,
+        maxApplications: 0,
+      }).success,
+    ).toBe(false);
+    expect(updateLocalComboRuleInputSchema.safeParse({}).success).toBe(false);
+    expect(
+      createLocalComboGroupInputSchema.safeParse({
+        comboRuleId: id,
+        name: 'Plat',
+        minQuantity: 2,
+        maxQuantity: 1,
+      }).success,
+    ).toBe(false);
+    expect(
+      createLocalComboGroupItemInputSchema.safeParse({
+        comboRuleGroupId: id,
+        menuItemId: id,
+        extraPriceCents: -1,
+      }).success,
+    ).toBe(false);
   });
 
   it('validates strict common and order contracts', () => {

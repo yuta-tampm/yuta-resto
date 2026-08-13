@@ -139,6 +139,24 @@ Membership creation, attachment, role changes, and suspension are recorded in
 `auth_audit_events`. Audit metadata contains identifiers, roles, and statuses;
 it never stores plaintext passwords or session tokens.
 
+The same route exposes an owner-only access history read from those persisted
+events. The server derives the organization, actor role, and currently
+manageable active establishments from the authenticated session. The audit
+query is constrained by both organization and that establishment allowlist;
+user, establishment, and action values received from the browser are display
+filters only. Managers and staff cannot read the history.
+
+The history supports the existing `tenant.user.created`,
+`tenant.user.attached`, and `tenant.membership.updated` events with stable
+`created_at` plus event-ID cursor pagination. Its response projects only the
+event timestamp, actor and subject display identity, action, allowed
+establishment names, and previous/next role and membership status. Raw audit
+metadata, password hashes, tokens, IP hashes, user-agent values, and unrelated
+metadata are never returned to the page. No historical seed backfill is
+created, so an organization without persisted events receives the truthful
+empty state. Login, logout, and session auditing remain outside this access
+management history.
+
 ## Local development
 
 Run the database migration and seed before signing in:

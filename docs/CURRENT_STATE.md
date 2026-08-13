@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-08
+Last updated: 2026-08-13
 
 ## Product scope
 
@@ -106,11 +106,25 @@ currently visible and do not present fabricated totals or pagination.
 Integrating one requires an approved product scope, data owner, authorization
 model, contracts, persistence, and tests.
 
+### Integrated read-only foundations
+
+- `/equipe/salaries` now reads the establishment-owned personnel dossier table
+  through an OWNER-only, server-authorized, organization-and-establishment-
+  scoped repository. The former employee fixtures and simulated states are
+  removed. The empty, loading, forbidden, error, search/filter, summary, and
+  responsive list states use the real read path.
+
+Employee creation is implemented for development as an atomic, OWNER-only
+vertical slice with validation, duplicate review, idempotent retry, and a
+minimal creation audit event. Production data collection remains blocked by
+the recorded privacy, retention, and operational-security gates. Editing,
+departure, and audit-history UI remain disabled.
+
 ### Planned empty surfaces
 
 - menu content and internal resources;
 - technical sheets;
-- employees, planning, time tracking, daily tasks, and personnel formalities;
+- planning, time tracking, daily tasks, and personnel formalities;
 - marketing content creation;
 - modules and subscription.
 

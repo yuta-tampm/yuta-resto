@@ -263,6 +263,10 @@ N/A       not applicable for this run
 | Deactivate staff user | User becomes inactive and is hidden from POS selector              |        |       |
 | Reactivate staff user | User becomes active and appears when role is selectable            |        |       |
 | Kitchen role user     | User can be managed but is not shown in POS order creator selector |        |       |
+| Manager role boundary | Manager can manage only Service and Cuisine users                  |        |       |
+| Duplicate local email | Normalized duplicate email is rejected without losing form values  |        |       |
+| Last active admin     | Concurrent demotion/deactivation leaves one active administrator   |        |       |
+| Reset local PIN       | PIN is hashed and existing sessions are invalidated                |        |       |
 
 ## Local Menu Management
 

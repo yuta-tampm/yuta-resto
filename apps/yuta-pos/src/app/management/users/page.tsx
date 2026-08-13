@@ -3,6 +3,8 @@ import { ArrowLeft, Users } from 'lucide-react';
 import Link from 'next/link';
 import { siteAgentClient } from '../../../lib/site-agent-client';
 import { requireLocalManagementSession } from '../../../server/local-management-session';
+import { ManagementHeader } from '../_components/ManagementHeader';
+import { CreateUserDialog } from './UserDialogs';
 import { UsersManagement } from './UsersManagement';
 
 export default async function LocalUsersManagementPage() {
@@ -18,9 +20,14 @@ export default async function LocalUsersManagementPage() {
           title="Site-agent indisponible"
           description="Impossible de charger les utilisateurs POS locaux."
           action={
-            <Button asChild variant="secondary">
-              <Link href="/management">Retour à la gestion</Link>
-            </Button>
+            <div className="flex flex-wrap justify-center gap-2">
+              <Button asChild>
+                <Link href="/management/users">Réessayer</Link>
+              </Button>
+              <Button asChild variant="secondary">
+                <Link href="/management">Retour à la gestion</Link>
+              </Button>
+            </div>
           }
         />
       </main>
@@ -29,24 +36,28 @@ export default async function LocalUsersManagementPage() {
 
   return (
     <main className="min-h-dvh bg-canvas text-primary">
-      <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-6 md:px-8">
+      <ManagementHeader
+        userName={session.user.name}
+        userRole={session.user.role}
+      />
+      <div className="mx-auto grid w-full max-w-7xl gap-3 px-4 py-4 md:px-6">
+        <Link
+          href="/management"
+          className="inline-flex min-h-11 w-fit items-center gap-2 text-sm font-semibold text-status-success hover:underline focus:outline-none focus:ring-2 focus:ring-focus-ring focus:ring-offset-2"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Retour à la gestion
+        </Link>
         <PageHeader
-          eyebrow="Gestion locale"
           title="Équipe POS"
           description="Gérez les utilisateurs, les rôles, les PIN et l’accès au terminal."
+          className="[&>div:last-child]:w-full sm:[&>div:last-child]:w-auto"
           media={
             <IconTile tone="brand">
               <Users className="h-5 w-5" />
             </IconTile>
           }
-          actions={
-            <Button asChild variant="secondary">
-              <Link href="/management">
-                <ArrowLeft className="h-4 w-4" />
-                Retour
-              </Link>
-            </Button>
-          }
+          actions={<CreateUserDialog actorRole={session.user.role} />}
         />
         <UsersManagement users={users} actorRole={session.user.role} />
       </div>

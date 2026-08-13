@@ -6,16 +6,14 @@ import {
   updateLocalUserInputSchema,
 } from '@yuta/contracts/local-pos';
 import { revalidatePath } from 'next/cache';
-import {
-  siteAgentClient,
-  SiteAgentClientError,
-} from '../../../lib/site-agent-client';
+import { siteAgentClient } from '../../../lib/site-agent-client';
 import { requireLocalManagementCredentials } from '../../../server/local-management-session';
+import {
+  toLocalUserActionError,
+  type LocalUserActionState,
+} from './users-action-state';
 
-export type LocalUserActionState = {
-  error: string | null;
-  success: string | null;
-};
+export type { LocalUserActionState } from './users-action-state';
 
 export async function createLocalUserAction(
   _previousState: LocalUserActionState,
@@ -29,13 +27,13 @@ export async function createLocalUserAction(
   });
   if (!input.success) return validationError();
 
+  const { token } = await requireLocalManagementCredentials();
   try {
-    const { token } = await requireLocalManagementCredentials();
     await siteAgentClient.createLocalUser(token, input.data);
     revalidatePath('/management/users');
     return { error: null, success: 'Utilisateur créé.' };
   } catch (error: unknown) {
-    return toActionError(error);
+    return toLocalUserActionError(error);
   }
 }
 
@@ -52,13 +50,13 @@ export async function updateLocalUserAction(
   });
   if (!input.success) return validationError();
 
+  const { token } = await requireLocalManagementCredentials();
   try {
-    const { token } = await requireLocalManagementCredentials();
     await siteAgentClient.updateLocalUser(token, userId, input.data);
     revalidatePath('/management/users');
     return { error: null, success: 'Utilisateur mis à jour.' };
   } catch (error: unknown) {
-    return toActionError(error);
+    return toLocalUserActionError(error);
   }
 }
 
@@ -67,8 +65,8 @@ export async function setLocalUserActiveAction(
   isActive: boolean,
   _previousState: LocalUserActionState,
 ): Promise<LocalUserActionState> {
+  const { token } = await requireLocalManagementCredentials();
   try {
-    const { token } = await requireLocalManagementCredentials();
     await siteAgentClient.updateLocalUser(token, userId, { isActive });
     revalidatePath('/management/users');
     return {
@@ -76,7 +74,7 @@ export async function setLocalUserActiveAction(
       success: isActive ? 'Utilisateur activé.' : 'Utilisateur désactivé.',
     };
   } catch (error: unknown) {
-    return toActionError(error);
+    return toLocalUserActionError(error);
   }
 }
 
@@ -96,13 +94,13 @@ export async function resetLocalUserPinAction(
     };
   }
 
+  const { token } = await requireLocalManagementCredentials();
   try {
-    const { token } = await requireLocalManagementCredentials();
     await siteAgentClient.resetLocalUserPin(token, userId, { pin: pin.data });
     revalidatePath('/management/users');
     return { error: null, success: 'Code PIN modifié.' };
   } catch (error: unknown) {
-    return toActionError(error);
+    return toLocalUserActionError(error);
   }
 }
 
@@ -113,27 +111,6 @@ function optionalEmail(value: FormDataEntryValue | null): string | null {
 function validationError(): LocalUserActionState {
   return {
     error: 'Vérifiez les informations saisies.',
-    success: null,
-  };
-}
-
-function toActionError(error: unknown): LocalUserActionState {
-  if (error instanceof SiteAgentClientError) {
-    const messages: Record<string, string> = {
-      LOCAL_USER_EMAIL_CONFLICT: 'Cette adresse e-mail est déjà utilisée.',
-      LAST_ACTIVE_ADMIN_REQUIRED:
-        'Le dernier administrateur actif ne peut pas être désactivé ou rétrogradé.',
-      LOCAL_USER_MANAGEMENT_FORBIDDEN:
-        "Vous n'avez pas le droit de gérer ce rôle.",
-      LOCAL_USER_NOT_FOUND: "L'utilisateur n'existe plus.",
-    };
-    return {
-      error: messages[error.code] ?? "L'opération n'a pas pu être effectuée.",
-      success: null,
-    };
-  }
-  return {
-    error: 'Site-agent indisponible.',
     success: null,
   };
 }

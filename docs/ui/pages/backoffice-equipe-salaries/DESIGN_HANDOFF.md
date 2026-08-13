@@ -1,6 +1,6 @@
 # Backoffice Équipe — Salariés — Design Handoff
 
-Status: Draft
+Status: Approved visual direction
 
 Visibility: Engineering
 
@@ -20,7 +20,7 @@ Shared context status: `RESOLVED`
 | YUTA global | `@yuta/ui`, tokens, shared references           | APPROVED | Typography, semantic/component language | Page density     | Raw colors/new system  |
 | Application | `BackofficeFrame`, navigation, Backoffice rules | APPROVED | Shell, tenant/account/session UI        | Content stacking | Shell redesign         |
 | Section     | Équipe navigation and `equipe/layout.tsx`       | APPROVED | Real labels/routes                      | Page hierarchy   | Invented section shell |
-| Page        | This package                                    | DRAFT    | Approved constraints after review       | New composition  | Deferred capabilities  |
+| Page        | This package                                    | APPROVED | Approved Phase 1 visual constraints     | New composition  | Deferred capabilities  |
 
 Shell mode: `REUSE_APPROVED_SHARED_SHELL`.
 
@@ -51,7 +51,8 @@ context but is not a capability baseline.
 
 Design prompt status: `READY`
 
-Running this prompt is a separate approval gate. Output remains `DRAFT`.
+Running this prompt was a separate approval gate. New output starts as `DRAFT`;
+the reviewed stored references are now `APPROVED` visual direction.
 
 ### Ready-to-use prompt
 
@@ -126,7 +127,7 @@ Generated draft references:
   responsive topbar, compact metrics, filters, segmented views, and scannable
   employee cards.
 
-Reference status is `DRAFT`. The first desktop generation was rejected because
+Reference status is `APPROVED` for Phase 1 visual direction. The first desktop generation was rejected because
 it invented navigation and an unapproved manager field. The stored desktop
 reference is the corrected iteration: it uses the repository's real navigation
 labels and removes that field.
@@ -136,6 +137,6 @@ labels, contract labels, establishment/account examples, and generated copy are
 fictional/non-authoritative. Repository data, approved contracts, permissions,
 French copy, and shared shell implementation override raster content.
 
-Product-owner review must approve or reject the hierarchy, density, responsive
-behavior, action priority, and state treatment before the references become
-`APPROVED` or Phase 1 begins.
+Product-owner review approved the hierarchy, density, responsive behavior,
+action priority, and state treatment on 2026-08-13. Repository rules and the
+selective feedback audit remain authoritative over generated details.

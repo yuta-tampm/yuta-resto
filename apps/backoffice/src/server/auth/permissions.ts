@@ -23,6 +23,10 @@ export type EstablishmentPermission =
   | 'establishment.profile.read'
   | 'establishment.profile.manage';
 
+export type PersonnelPermission =
+  | 'personnel.employee.read'
+  | 'personnel.employee.manage';
+
 const permissionRoles: Record<ReputationPermission, readonly TenantRole[]> = {
   'reputation.read': ['OWNER', 'MANAGER', 'STAFF'],
   'reputation.feedback.manage': ['OWNER', 'MANAGER'],
@@ -49,6 +53,14 @@ const establishmentPermissionRoles: Record<
 > = {
   'establishment.profile.read': ['OWNER', 'MANAGER', 'STAFF'],
   'establishment.profile.manage': ['OWNER', 'MANAGER'],
+};
+
+const personnelPermissionRoles: Record<
+  PersonnelPermission,
+  readonly TenantRole[]
+> = {
+  'personnel.employee.read': ['OWNER'],
+  'personnel.employee.manage': ['OWNER'],
 };
 
 export function requireReputationPermission(
@@ -105,6 +117,29 @@ export function requireEstablishmentPermission(
   permission: EstablishmentPermission,
 ): void {
   if (!hasEstablishmentPermission(context, permission)) {
+    throw new TenantError(
+      'Permission denied.',
+      'CROSS_TENANT_ACCESS_DENIED',
+      403,
+    );
+  }
+}
+
+export function hasPersonnelPermission(
+  context: TenantContext,
+  permission: PersonnelPermission,
+): boolean {
+  return (
+    context.actor.type === 'user' &&
+    personnelPermissionRoles[permission].includes(context.actor.role)
+  );
+}
+
+export function requirePersonnelPermission(
+  context: TenantContext,
+  permission: PersonnelPermission,
+): void {
+  if (!hasPersonnelPermission(context, permission)) {
     throw new TenantError(
       'Permission denied.',
       'CROSS_TENANT_ACCESS_DENIED',

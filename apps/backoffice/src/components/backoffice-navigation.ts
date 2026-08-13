@@ -31,6 +31,7 @@ export type NavigationCapabilities = {
   reputationEnabled: boolean;
   canManageBookingSettings: boolean;
   canManageUsers: boolean;
+  canReadPersonnel: boolean;
 };
 
 export type BackofficeNavigationItem = {
@@ -122,7 +123,12 @@ export const backofficeNavigationSections: readonly BackofficeNavigationSection[
     {
       title: 'Gestion de l’équipe',
       items: [
-        { label: 'Salariés', icon: Users, href: '/equipe/salaries' },
+        {
+          label: 'Salariés',
+          icon: Users,
+          href: '/equipe/salaries',
+          requires: ['canReadPersonnel'],
+        },
         { label: 'Planning', icon: CalendarDays, href: '/equipe/planning' },
         { label: 'Pointage', icon: Clock, href: '/equipe/pointage' },
         {

@@ -16,6 +16,9 @@ import {
   feedbackReplies,
   organizations,
   passwordResetTokens,
+  personnelEmployeeDossiers,
+  personnelEmployeeAuditEvents,
+  personnelCommandReceipts,
   reputationAuditEvents,
   reputationConnectors,
   reputationSettings,
@@ -42,6 +45,9 @@ const tablesWithBusinessIds: PgTable[] = [
   reputationConnectors,
   reputationSettings,
   reputationAuditEvents,
+  personnelEmployeeDossiers,
+  personnelEmployeeAuditEvents,
+  personnelCommandReceipts,
 ];
 
 describe('cloud schema boundaries', () => {
@@ -60,6 +66,23 @@ describe('cloud schema boundaries', () => {
 
   it('keeps POS-only roles out of cloud memberships', () => {
     expect(cloudRoleEnum.enumValues).toEqual(['OWNER', 'MANAGER', 'STAFF']);
+  });
+
+  it('keeps personnel dossiers establishment-owned and revision-protected', () => {
+    const columns = getTableConfig(personnelEmployeeDossiers).columns.map(
+      (column) => column.name,
+    );
+    expect(columns).toEqual(
+      expect.arrayContaining([
+        'organization_id',
+        'establishment_id',
+        'entry_date',
+        'revision',
+      ]),
+    );
+    expect(columns).not.toContain('tenant_id');
+    expect(columns).not.toContain('status');
+    expect(columns).not.toContain('display_name');
   });
 
   it('keeps general profile ownership on establishments', () => {
