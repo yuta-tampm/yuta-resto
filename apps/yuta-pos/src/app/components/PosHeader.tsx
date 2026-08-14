@@ -11,6 +11,7 @@ type PosHeaderProps = {
   actions?: ReactNode;
   backHref?: string;
   backLabel?: string;
+  prominent?: boolean;
   className?: string;
 };
 
@@ -21,12 +22,16 @@ export function PosHeader({
   actions,
   backHref,
   backLabel = 'Retour',
+  prominent = false,
   className,
 }: PosHeaderProps) {
   return (
     <header
       className={cn(
-        'relative flex flex-wrap items-center justify-between gap-3 bg-primary px-4 py-3 text-white',
+        'relative flex flex-wrap items-center justify-between bg-primary text-white',
+        prominent
+          ? 'gap-4 px-4 py-3 sm:px-6 sm:py-4 lg:px-8'
+          : 'gap-3 px-4 py-3',
         className,
       )}
     >
@@ -46,7 +51,12 @@ export function PosHeader({
         <Link
           href="/"
           aria-label="Retour aux commandes"
-          className="grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-lg border border-white/15 bg-white transition-colors hover:bg-surface-muted"
+          className={cn(
+            'grid shrink-0 place-items-center overflow-hidden border border-white/15 bg-white transition-colors hover:bg-surface-muted',
+            prominent
+              ? 'h-11 w-11 rounded-lg sm:h-14 sm:w-14 sm:rounded-xl'
+              : 'h-11 w-11 rounded-lg',
+          )}
         >
           <Image
             src="/images/logo.svg"
@@ -54,7 +64,10 @@ export function PosHeader({
             width={36}
             height={36}
             priority
-            className="h-9 w-9 object-contain"
+            className={cn(
+              'object-contain',
+              prominent ? 'h-9 w-9 sm:h-12 sm:w-12' : 'h-9 w-9',
+            )}
           />
         </Link>
         <div className="min-w-0">
@@ -64,12 +77,22 @@ export function PosHeader({
             </p>
           )}
           <div className="flex min-w-0 flex-wrap items-center gap-3">
-            <h1 className="truncate text-xl font-black tracking-normal md:text-2xl">
+            <h1
+              className={cn(
+                'truncate font-black tracking-normal',
+                prominent ? 'text-xl sm:text-3xl' : 'text-xl md:text-2xl',
+              )}
+            >
               {title}
             </h1>
           </div>
           {description && (
-            <p className="mt-0.5 text-xs font-semibold text-white/60">
+            <p
+              className={cn(
+                'mt-0.5 font-semibold text-white/60',
+                prominent ? 'text-xs sm:text-sm' : 'text-xs',
+              )}
+            >
               {description}
             </p>
           )}
@@ -78,10 +101,17 @@ export function PosHeader({
 
       {actions && (
         <>
-          <div className="hidden flex-wrap items-center gap-2 sm:flex">
+          <div
+            className={cn(
+              'hidden flex-wrap items-center',
+              prominent ? 'gap-3 lg:flex' : 'gap-2 sm:flex',
+            )}
+          >
             {actions}
           </div>
-          <details className="group sm:hidden">
+          <details
+            className={cn('group', prominent ? 'lg:hidden' : 'sm:hidden')}
+          >
             <summary className="grid h-11 w-11 cursor-pointer list-none place-items-center rounded-lg text-white transition-colors hover:bg-white/10 [&::-webkit-details-marker]:hidden">
               <Menu className="h-6 w-6" />
               <span className="sr-only">Menu</span>

@@ -1,6 +1,6 @@
 # POS Management Home
 
-Status: Phase 0 design preparation
+Status: Implemented and QA verified
 
 Visibility: Engineering
 
@@ -20,7 +20,7 @@ Page classification: `EXISTING_PAGE`
 
 Implementation class: `integrated`
 
-Package status: `design`
+Package status: `implemented`
 
 Scope status: `APPROVED`
 
@@ -114,6 +114,19 @@ card-grid presentation.
 20. **Shell decision:** `REUSE_APPROVED_SHARED_SHELL`, owned by
     `management/_components/ManagementHeader.tsx` and approved sibling evidence.
 
+## Change impact
+
+```text
+Files expected to modify: apps/yuta-pos/src/app/management/page.tsx, apps/site-agent/test/server.test.ts, and the stable docs/ui/pages/pos-management-home package
+Files expected to create: apps/yuta-pos/src/app/management/ManagementModules.tsx and authenticated design/implementation/as-built reference images
+Packages affected: apps/yuta-pos, apps/site-agent test coverage, and docs/ui/pages/pos-management-home
+Cross-application impact: site-agent HTTP boundary test coverage only; no production cross-application behavior change
+Database change: NO
+API or contract change: NO
+Permission/auth change: NO
+Runtime/device change: NO
+```
+
 ## Protected invariants
 
 - Preserve local-only session authorization and server-only credentials.
@@ -181,6 +194,89 @@ action, contract, API, permission, persistence, cloud, or device behavior was
 introduced. Authenticated production-build regression at 1366x768 and 390x844
 confirmed the same four real module links, no reports link, unchanged
 orientation copy, zero horizontal overflow, and an empty browser console.
+
+## Phase 3 interaction status
+
+Phase 3 was approved and completed on 2026-08-13 without a runtime-code change.
+Authenticated production-build QA verified that the four module links retain
+their exact destinations, the reports card contains no link or button, and the
+first module navigates to `/management/users`. The account menu opens by
+keyboard, Escape closes it and restores focus to the `Admin` trigger, and the
+sign-out menu item remains present without submitting the destructive action.
+
+At 390x844, Return-to-POS, account, all module actions, and the sign-out item
+measure at least 44 CSS pixels. The shared brand/home link measures 40 pixels;
+this is an existing approved-shell detail shared by all management routes and
+is not changed route-locally in this phase. The page retains zero horizontal
+overflow and an empty browser warning/error console.
+
+An unauthenticated request to both `/management` and `/management/users`
+returns `307` to `/management/login`, confirming the fail-closed missing-session
+state. A real sign-out was intentionally not submitted because it would revoke
+the active local acceptance session; its existing Server Action path remains
+covered by source and prior management-session behavior.
+
+## Phase 4 integration audit status
+
+Phase 4 was approved and completed on 2026-08-13. The complete read path is:
+HttpOnly `yuta_pos_management_session` cookie -> Next.js server-only session
+resolver -> bearer `GET /api/v1/auth/session` -> strict local-pos contract ->
+site-agent auth service -> hashed-token lookup in db-pos. A valid result must
+be unrevoked, unexpired, attached to an active user, and match that user's
+current `authVersion`; the hub then additionally allows only `admin` or
+`manager`. Any missing, invalid, expired, revoked, inactive, stale-version, or
+service-error result fails closed to `/management/login`.
+
+The sign-out path is: shared account-menu form -> Server Action -> optional
+bearer `DELETE /api/v1/auth/session` -> hashed-token `revoked_at` update ->
+unconditional cookie deletion -> `/management/login`. Logout remains
+idempotent when no bearer is supplied, and a site-agent revocation failure does
+not prevent local cookie cleanup.
+
+No browser bundle receives a bearer token, database driver, URL, hash, or
+trusted role input. No cloud database, tenant, organization, establishment, or
+membership participates. Phase 4 changed no production code, contract, API,
+schema, permission, session policy, or persistence behavior. It added one
+site-agent HTTP boundary test proving authenticated revocation delegation and
+anonymous logout idempotency.
+
+Site-agent, POS, contracts, and db-pos scoped typechecks/tests pass. Database
+integration suites remain intentionally skipped because this phase was not
+given a disposable `POS_DATABASE_URL` plus
+`YUTA_ALLOW_DATABASE_INTEGRATION_TESTS=true`; the persisted revoke update was
+verified from the current service/schema implementation rather than claimed as
+a live database run.
+
+## Final delivery and as-built status
+
+Phase 5 was approved and completed on 2026-08-13. Functional regression ran
+before visual review and confirmed all four real module destinations, the
+non-interactive reports state, keyboard account-menu opening, Escape focus
+return, sign-out affordance, and fail-closed missing-session redirects.
+
+Authenticated production-build evidence covers 1366x768, 1024x768, 768x1024,
+and 390x844. Every viewport renders five modules, four available actions, and
+zero horizontal document overflow. The complete hub fits without vertical
+scrolling at 1366x768 and 1024x768; 768x1024 fits the complete two-column
+composition; 390x844 uses deliberate one-column vertical scrolling.
+
+All route-local module actions remain at least 44 CSS pixels high. The shared
+header uses 40-pixel Return-to-POS/account controls only at the desktop
+`xl` breakpoint and 44 pixels at 1024 and below. Its narrow brand/home link
+remains 40 pixels, as recorded in Phase 3. These are existing approved-shell
+details and were not changed route-locally.
+
+The first verification origin exposed stale cached chunks left by prior builds
+on the reused port. Final evidence and the complete functional/viewport pass
+were rerun on a fresh origin; browser warning/error collection was empty. The
+final rasters preserve repository French copy, semantic tokens, shared-shell
+ownership, real routes, and the approved unavailable-state treatment.
+
+POS typecheck, 44 POS tests, the POS production build, site-agent typecheck and
+38 active tests, contracts and db-pos checks, workspace typecheck, docs,
+architecture, page-pack validation, formatting of affected files, and diff
+validation pass. Guarded database integration remains explicitly outside this
+run. As-built documentation status: `COMPLETE`.
 
 ## Stop conditions
 

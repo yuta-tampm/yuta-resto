@@ -358,11 +358,30 @@ expected end date, work-time category, entry date, optional departure date,
 revision, and server timestamps. Display name, employment view, completeness,
 filters, and summary counts are derived rather than stored.
 
-The development create slice also owns `personnel_employee_audit_events` and
+The development create/edit slices also own `personnel_employee_audit_events` and
 `personnel_command_receipts`. One transaction creates the dossier, appends the
 allowlisted creation/duplicate-override audit event, and stores the hashed
-idempotency receipt. Receipts contain no duplicate employee payload. Editing,
-departure, documents, payroll, register, and Formalités data are not active.
+idempotency receipt. Approved minimum edits compare and increment the dossier
+revision atomically, then append identity and/or employment field-group events
+without copying full dossier values into audit metadata. Receipts contain no
+employee payload. Departure writes update only the nullable effective date and
+revision; corrections append previous/new dates and a bounded reason to the
+immutable audit event. Documents, payroll, register, and Formalités data are
+not active.
+
+The employee-detail history reads at most the 50 most recent known events under
+the same organization-and-establishment scope. The repository maps stored
+events to an allowlisted presentation contract: event type, changed field
+labels, actor display name, time, and the approved bounded reason/date values.
+Raw metadata, operation IDs, actor IDs, and tenant identifiers are not returned
+to the browser.
+
+Completeness is not persisted. The read repository derives stable reason codes
+from missing minimum names, poste, and qualification values, uses the same
+predicate for counts and filtering, and returns those codes for the UI to
+explain. Create and edit commands still require every approved minimum field;
+the incomplete read state supports correction of older or externally repaired
+rows without weakening write validation.
 
 ## 6. Local POS schema
 

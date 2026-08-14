@@ -44,8 +44,10 @@ area, cross-establishment selector, global tabs/search behavior, or new route.
 
 Baseline status: `NOT_APPLICABLE`
 
-No employee-management screen exists. The placeholder supplies route/shell
-context but is not a capability baseline.
+At Phase 0 no employee-management screen existed; the placeholder supplied
+route/shell context but was not a capability baseline. The approved design has
+since been implemented for the development MVP. The prompt below is retained
+as historical design input, not as a statement of current runtime capability.
 
 ## Design-generation prompt
 

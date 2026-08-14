@@ -1,6 +1,6 @@
 # Backoffice Équipe — Salariés — Data and Interaction Specification
 
-Status: Real read and development create slices implemented; production approval pending
+Status: Real read/create/edit/departure slices implemented for development; production approval pending
 
 Visibility: Engineering
 
@@ -9,12 +9,12 @@ Visibility: Engineering
 The server validates the Backoffice session and active membership, then resolves
 trusted organization and establishment context. Browser state, form fields,
 URLs, cookies, roles, permissions, entitlements, and identifiers are never
-authorization proof. Future employee access fails closed for wrong or missing
+authorization proof. Employee access fails closed for wrong or missing
 scope, suspended/stale membership, or missing personnel authorization.
 
 ## Data ownership and transport
 
-No employee owner or transport exists today. Proposed future boundary:
+The implemented development boundary is:
 
 ```text
 apps/backoffice server -> approved @yuta/contracts schemas
@@ -27,17 +27,19 @@ resource-ID lookups. Browser bundles receive no database or trusted scope.
 `users` and `tenant_memberships` are login/access records, not employees.
 Employee creation must not create login access implicitly, or vice versa.
 
-## Phase 2 decision status
+## Decision and implementation status
 
-Phase 2 maps the approved prototype into domain proposals. It does not approve
-contracts, persistence, migrations, mutations, permissions, retention, or
-production collection. Phase 3 must approve the proposals below before any
-integration design begins.
+Phase 2 mapped the prototype into domain proposals. The approved MVP subset is
+now implemented for development: contracts, cloud persistence, migrations,
+OWNER-only permissions, tenant-scoped reads/mutations, concurrency,
+idempotency receipts, and mutation audit. Production collection remains
+blocked by the readiness decisions recorded below.
 
-The Phase 1 `EmployeeFixture` is a read-model convenience only. It must not be
-copied into a transport contract or database table.
+The former Phase 1 `EmployeeFixture` was discovery evidence only and has been
+removed from the integrated route. Current contracts and schema were reconciled
+against repository boundaries rather than copied from that fixture.
 
-## Proposed aggregate boundary
+## Implemented MVP aggregate boundary
 
 The MVP aggregate root is an establishment employee dossier: one operational
 employment relationship for one person at one establishment. It owns the
@@ -57,9 +59,10 @@ worker, POS staff record, document folder, or legal personnel register entry.
 The identity snapshot and employment relationship are distinct conceptual
 parts of the dossier even if a future approved transaction saves them together.
 
-## MVP data dictionary proposal
+## MVP data dictionary
 
-This is not a database schema.
+This dictionary explains ownership and meaning; executable schema authority
+remains `packages/db-cloud/src/schema/personnel.ts`.
 
 | Concept                                   | Classification                       | Proposed source and semantics                                                          | Phase 1 mapping / Phase 3 gate                                               |
 | ----------------------------------------- | ------------------------------------ | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
@@ -98,15 +101,16 @@ work-authorization files, apprenticeship, interns, and provider/Formalités data
 | I-01 | Enter `/equipe/salaries`                         | Resolve trusted session, membership, organization, establishment, role/permission, then read an establishment-scoped list | Loading; missing scope; forbidden without data disclosure; service error and retry; first-use empty                     | Real read implemented       |
 | I-02 | Select active/upcoming/former view               | Re-query only the authorized result by derived status                                                                     | Selected view remains textual; empty-filter result differs from first-use empty                                         | Real read implemented       |
 | I-03 | Search or filter completeness                    | Change transient list criteria and re-query; never change domain data                                                     | Reset; no-result state; pending controls disabled                                                                       | Real read implemented       |
-| I-04 | Select a row/card                                | Change selected dossier and read-only quick view; no mutation                                                             | Selected feedback; full-width mobile detail; closing clears selection                                                   | Real read implemented       |
-| I-05 | Change dossier detail tab                        | Change transient quick-view section                                                                                       | Keyboard/focus state; no route or mutation implication                                                                  | Real read implemented       |
-| I-06 | Start employee creation                          | Open progressive minimum-dossier form                                                                                     | Validation preserves values; duplicate candidate warning; cancel has no effect                                          | Form simulation only        |
-| I-07 | Submit employee creation                         | Future atomic creation of one establishment dossier plus audit event                                                      | Pending; idempotent retry; duplicate confirmation if approved; persisted success only after commit; recoverable failure | No real mutation authorized |
-| I-08 | Edit approved identity/employment facts          | Future scoped update using expected concurrency token plus audit event                                                    | Validation; pending; conflict preserves input and offers reload/compare; committed success                              | Not implemented             |
-| I-09 | Record departure                                 | Future scoped update of effective departure date plus audit event; never delete                                           | Confirmation with date/non-deletion copy; validation; conflict; success; correction path                                | Not implemented             |
-| I-10 | Correct or clear a scheduled/incorrect departure | Future privileged correction with before/after audit                                                                      | Explicit reason policy and authorization require Phase 3 approval                                                       | Not implemented             |
-| I-11 | Retry list/read                                  | Repeat safe read under freshly resolved trusted scope                                                                     | Loading then success/empty/error; no stale browser scope reuse                                                          | Prototype recovery only     |
+| I-04 | Select a row/card                                | Explicitly select a dossier and open its read-only right drawer; no employee mutation                                     | Nothing selected on initial load; selected feedback; wide desktop/full-width mobile drawer; closing clears selection    | Real read implemented       |
+| I-05 | Change dossier detail tab                        | Change the transient drawer section                                                                                       | Keyboard/focus state; no route or mutation implication                                                                  | Real read implemented       |
+| I-06 | Start employee creation                          | Open progressive minimum-dossier form                                                                                     | Validation preserves values; duplicate candidate warning; cancel has no effect                                          | Implemented for development |
+| I-07 | Submit employee creation                         | Atomic creation of one establishment dossier plus audit event                                                             | Pending; idempotent retry; duplicate confirmation if approved; persisted success only after commit; recoverable failure | Implemented for development |
+| I-08 | Edit approved identity/employment facts          | Scoped update using expected revision, idempotent retry, and field-group audit                                            | Validation; pending; conflict preserves input and requires current-version reload; committed success                    | Implemented for development |
+| I-09 | Record departure                                 | Scoped update of effective departure date plus audit event; never delete                                                  | Confirmation with date/non-deletion copy; validation; conflict; success; correction path                                | Implemented for development |
+| I-10 | Correct or clear a scheduled/incorrect departure | Scoped correction with before/after date, bounded reason, revision guard, and immutable audit                             | Reason required; conflict preserves input and requires current-version reload; committed success                        | Implemented for development |
+| I-11 | Retry list/read                                  | Repeat safe read under freshly resolved trusted scope                                                                     | Loading then success/empty/error; no stale browser scope reuse                                                          | Implemented                 |
 | I-12 | Resolve edit conflict                            | Keep submitted values separately, fetch current record, then user reloads or reapplies intentionally                      | Never silently overwrite; no success until a new guarded commit                                                         | Prototype explanation only  |
+| I-13 | View employee history                            | On demand, read at most 50 allowlisted audit events under the full trusted employee scope                                 | Loading; newest first; empty; unavailable and retry; no raw metadata, operation ID, actor ID, or tenant ID              | Real read implemented       |
 
 Operational sorting and filtering never define future personnel-register
 ordering. Pagination follows approved repository behavior; the raster
@@ -269,7 +273,7 @@ entitled, that is a separate decision and migration.
 | Action                                                            | OWNER                       | MANAGER | STAFF | Notes                                                              |
 | ----------------------------------------------------------------- | --------------------------- | ------- | ----- | ------------------------------------------------------------------ |
 | See Salariés navigation                                           | Allow                       | Hide    | Hide  | Visibility is convenience only; route still enforces authorization |
-| List/search/filter/read quick view                                | `personnel.employee.read`   | Deny    | Deny  | Requires active establishment membership and trusted scope         |
+| List/search/filter/read dossier drawer                            | `personnel.employee.read`   | Deny    | Deny  | Requires active establishment membership and trusted scope         |
 | Read minimal history                                              | `personnel.employee.read`   | Deny    | Deny  | Only approved personnel events, not generic auth/provider logs     |
 | Create/edit minimum dossier                                       | `personnel.employee.manage` | Deny    | Deny  | Actor and tenant scope are server-derived                          |
 | Record/correct departure                                          | `personnel.employee.manage` | Deny    | Deny  | Confirmation and correction reason/audit required                  |
@@ -343,7 +347,9 @@ register capability, not every Salariés field, document, or audit payload.
 The production retention schedule remains a blocking controller/legal sign-off
 because exact archival periods for the professional dossier depend on purpose,
 applicable obligation, and limitation period. Phase 4 mutations must not start
-until a per-class schedule and deletion/archive operational owner are approved.
+in production until a per-class schedule and deletion/archive operational owner
+are approved. Development-only mutations already exist and do not satisfy this
+production gate.
 
 ### Security controls required before persistence
 
@@ -366,6 +372,16 @@ Event semantics proposed for approval:
 - `employee.departure_recorded`;
 - `employee.departure_corrected`;
 - `employee.duplicate_override_confirmed`.
+
+Approved sensitive-read events:
+
+- `employee.dossier_viewed` when OWNER opens the selected dossier detail;
+- `employee.history_viewed` when OWNER opens/retries the history read.
+
+Sensitive-read events use the same trusted organization, establishment,
+employee, actor, operation ID, and server timestamp rules. They are security
+audit evidence and are excluded from the employee's business-change timeline.
+Repeated delivery with the same operation ID records one access event.
 
 Every event carries a server-created event ID, occurred-at timestamp, trusted
 organization and establishment scope, employee dossier ID, actor user ID when
@@ -393,8 +409,10 @@ retention class rather than inheriting the dossier or register duration.
 - server scope is actor user, organization, establishment, command type, and key;
 - same key and same validated payload returns the original committed outcome;
   same key with a different payload returns conflict;
-- a 24-hour online retry window is proposed for MVP, after which a fresh
-  explicit submission is required; exact cleanup storage remains a Phase 4 design;
+- idempotency receipts persist an `expiresAt` value 24 hours after creation,
+  and every personnel mutation first removes expired receipts for its trusted
+  organization/establishment scope; replay queries therefore see only active
+  receipts after cleanup;
 - domain mutation, idempotency outcome, and audit event commit atomically.
 
 ## Domain validation approval proposal
@@ -467,9 +485,9 @@ remains required before production collection.
 Not applicable. No polling, offline queue, provider, local service, printer,
 worker, or hardware owner exists.
 
-## Phase 3 approval register
+## Implemented decision register and production gates
 
-Ready for explicit product/security approval:
+Implemented for the approved development MVP:
 
 1. establishment employee dossier is the transaction/ownership boundary;
 2. minimum identity and employment facts save atomically for create;
@@ -480,24 +498,31 @@ Ready for explicit product/security approval:
 7. business-date departure semantics use the establishment timezone and become
    former on the day after the effective departure date;
 8. duplicate candidates are advisory; OWNER override requires reason and audit;
-9. opaque revision, compare-and-set conflict, and 24-hour idempotent retry are recommended;
-10. the six-event audit taxonomy, atomic append, minimization, and access model are recommended;
+9. opaque revision and compare-and-set conflict are active; idempotent retry
+   records a 24-hour expiry and tenant-scoped mutation entry points remove
+   expired receipts before replay evaluation;
+10. the six-event mutation-audit taxonomy, atomic append, minimization, and
+    OWNER history access are active;
 11. active/archive separation, legal hold, deletion, backup, and incident controls
-    are required, with a per-class retention schedule before production writes;
+    are required, with a per-class retention schedule before production launch;
 12. documents, Formalités, events, register/PDF, apprenticeship, OCR, sensitive
     fields, manager delegation, transfers, merges, and hard delete remain deferred.
 
-Still blocking Phase 4 production mutations even after product approval:
+Still blocking production deployment/collection:
 
 - controller/DPO/legal sign-off on purpose, legal bases, employee notice,
   recipients, rights workflow, and per-class retention/deletion schedule;
 - security owner sign-off on encryption, least privilege, logs, backup/restore,
   incident response, and audit access operations;
-- persistence/contract design review, migration/rollback plan, and executable
-  cross-tenant/concurrency/idempotency test plan.
+- production migration/rollback review and deployment evidence for the already
+  implemented schema and executable tests.
 
-## Proposed persistence/contract changes
+## Persistence/contract implementation status
 
-All domain, contracts, repositories, schema, migrations, authorization, and
-audit changes remain `PROPOSAL`. This Phase 3 package defines the approval
-target but authorizes no implementation by itself.
+The approved MVP contracts, repositories, schema, local migrations,
+authorization, idempotency receipts, and mutation audit are implemented for
+development. Sensitive dossier/history reads are audited locally and excluded
+from the business-change timeline. Archive/deletion jobs, legal hold, a global
+maintenance scheduler for inactive establishments, and production
+backup/restore evidence are not implemented or approved. Deferred capability
+waves remain proposals and receive separate approval.

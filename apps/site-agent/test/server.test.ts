@@ -41,8 +41,10 @@ const printJobSnapshot = {
 describe('site-agent HTTP boundary', () => {
   let server: ReturnType<typeof createSiteAgentServer>;
   let baseUrl: string;
+  let revokedSessionTokens: string[];
 
   beforeEach(async () => {
+    revokedSessionTokens = [];
     server = createSiteAgentServer({
       env: {
         NODE_ENV: 'test',
@@ -52,7 +54,12 @@ describe('site-agent HTTP boundary', () => {
         SITE_AGENT_ALLOWED_ORIGIN: 'http://localhost:3003',
         POS_PRINT_POLL_INTERVAL_MS: 1_000,
       },
-      service: createMockService(),
+      service: {
+        ...createMockService(),
+        revokeSession: async (token) => {
+          revokedSessionTokens.push(token);
+        },
+      },
     });
     await new Promise<void>((resolve, reject) => {
       server.once('error', reject);
@@ -166,6 +173,28 @@ describe('site-agent HTTP boundary', () => {
     expect(await response.json()).toMatchObject({
       error: { code: 'LOCAL_SESSION_REQUIRED' },
     });
+  });
+
+  it('revokes bearer sessions and keeps logout idempotent without a token', async () => {
+    const authenticatedResponse = await fetch(
+      `${baseUrl}/api/v1/auth/session`,
+      {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${sessionToken}` },
+      },
+    );
+
+    expect(authenticatedResponse.status).toBe(200);
+    expect(await authenticatedResponse.json()).toEqual({ success: true });
+    expect(revokedSessionTokens).toEqual([sessionToken]);
+
+    const anonymousResponse = await fetch(`${baseUrl}/api/v1/auth/session`, {
+      method: 'DELETE',
+    });
+
+    expect(anonymousResponse.status).toBe(200);
+    expect(await anonymousResponse.json()).toEqual({ success: true });
+    expect(revokedSessionTokens).toEqual([sessionToken]);
   });
 
   it('protects local-user mutations with a management session', async () => {

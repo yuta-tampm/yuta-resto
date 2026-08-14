@@ -4,6 +4,8 @@ import type {
   PersonnelCompletenessFilter,
   PersonnelEmployeeListQuery,
   PersonnelEmployeeListResponse,
+  PersonnelEmployeeAuditHistory,
+  PersonnelEmployeeAuditEvent,
   PersonnelEmployeeSummary,
   PersonnelEmployeeView,
 } from '@yuta/contracts/personnel';
@@ -14,6 +16,9 @@ import {
   Badge,
   Button,
   Card,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   EmptyState,
   Input,
   MetricCard,
@@ -32,17 +37,28 @@ import {
 } from '@yuta/ui';
 import {
   CheckCircle2,
+  CalendarDays,
+  CalendarX2,
+  Clock3,
   ChevronRight,
   Database,
   FileWarning,
+  LoaderCircle,
+  Pencil,
   Plus,
+  RotateCcw,
   Search,
   UsersRound,
-  X,
 } from 'lucide-react';
 import { useEffect, useState, useTransition, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { EmployeeCreateDialog } from './employee-create-dialog';
+import { EmployeeDepartureDialog } from './employee-departure-dialog';
+import { EmployeeEditDialog } from './employee-edit-dialog';
+import {
+  loadEmployeeHistoryAction,
+  recordEmployeeDossierViewAction,
+} from './actions';
 import {
   formatEmployeeDate,
   getContractSummary,
@@ -52,7 +68,15 @@ import {
   isEmployeeComplete,
 } from './salaries-model';
 
-type DetailTab = 'overview' | 'identity' | 'employment';
+type DetailTab = 'overview' | 'identity' | 'employment' | 'history';
+type HistoryLoadState =
+  | { status: 'idle' | 'loading'; history: null; message: null }
+  | {
+      status: 'success';
+      history: PersonnelEmployeeAuditHistory;
+      message: null;
+    }
+  | { status: 'error'; history: null; message: string };
 
 const viewOptions: ReadonlyArray<{
   value: PersonnelEmployeeView;
@@ -67,26 +91,109 @@ export function SalariesPage({
   data,
   query,
   locale,
+  businessDate,
 }: {
   data: PersonnelEmployeeListResponse;
   query: PersonnelEmployeeListQuery;
   locale: string;
+  businessDate: string;
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [search, setSearch] = useState(query.search);
-  const [selectedId, setSelectedId] = useState<string | null>(
-    data.items[0]?.id ?? null,
-  );
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detailTab, setDetailTab] = useState<DetailTab>('overview');
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [editingEmployee, setEditingEmployee] =
+    useState<PersonnelEmployeeSummary | null>(null);
+  const [departureEmployee, setDepartureEmployee] =
+    useState<PersonnelEmployeeSummary | null>(null);
+  const [historyState, setHistoryState] = useState<HistoryLoadState>({
+    status: 'idle',
+    history: null,
+    message: null,
+  });
+  const [historyOperationId, setHistoryOperationId] = useState('');
+  const [dossierAccessRequest, setDossierAccessRequest] = useState<{
+    employeeId: string;
+    operationId: string;
+  } | null>(null);
+  const [dossierAccessError, setDossierAccessError] = useState<string | null>(
+    null,
+  );
 
   useEffect(() => {
-    if (!data.items.some((employee) => employee.id === selectedId)) {
-      setSelectedId(data.items[0]?.id ?? null);
+    if (
+      selectedId &&
+      !data.items.some((employee) => employee.id === selectedId)
+    ) {
+      setSelectedId(null);
       setDetailTab('overview');
     }
   }, [data.items, selectedId]);
+
+  useEffect(() => {
+    if (!selectedId) {
+      setDossierAccessRequest(null);
+      return;
+    }
+    setDossierAccessRequest((current) =>
+      current?.employeeId === selectedId
+        ? current
+        : { employeeId: selectedId, operationId: crypto.randomUUID() },
+    );
+  }, [selectedId]);
+
+  useEffect(() => {
+    if (!dossierAccessRequest) return;
+    let active = true;
+    setDossierAccessError(null);
+    void recordEmployeeDossierViewAction(
+      dossierAccessRequest.employeeId,
+      dossierAccessRequest.operationId,
+    )
+      .then((result) => {
+        if (active && result.status === 'error') {
+          setDossierAccessError(result.message);
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setDossierAccessError(
+            'La traçabilité du dossier est indisponible. Réessayez.',
+          );
+        }
+      });
+    return () => {
+      active = false;
+    };
+  }, [dossierAccessRequest]);
+
+  useEffect(() => {
+    if (detailTab !== 'history' || !selectedId || !historyOperationId) return;
+    let active = true;
+    setHistoryState({ status: 'loading', history: null, message: null });
+    void loadEmployeeHistoryAction(selectedId, historyOperationId)
+      .then((result) => {
+        if (!active) return;
+        setHistoryState(
+          result.status === 'success'
+            ? { status: 'success', history: result.history, message: null }
+            : { status: 'error', history: null, message: result.message },
+        );
+      })
+      .catch(() => {
+        if (!active) return;
+        setHistoryState({
+          status: 'error',
+          history: null,
+          message: 'Impossible de charger l’historique. Réessayez.',
+        });
+      });
+    return () => {
+      active = false;
+    };
+  }, [detailTab, historyOperationId, selectedId]);
 
   const selectedEmployee =
     data.items.find((employee) => employee.id === selectedId) ?? null;
@@ -129,8 +236,9 @@ export function SalariesPage({
         <AlertTitle>Liste connectée aux données de l’établissement</AlertTitle>
         <AlertDescription>
           Les données de démonstration ont été retirées. L’ajout enregistre
-          maintenant le dossier minimum et son historique. La modification et le
-          départ restent désactivés à cette étape.
+          maintenant le dossier minimum et son historique. La modification est
+          également enregistrée avec contrôle de version. Le départ conserve le
+          dossier et son historique.
         </AlertDescription>
       </Alert>
 
@@ -152,7 +260,7 @@ export function SalariesPage({
         />
       </section>
 
-      <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_420px]">
+      <div>
         <Card padding="none" className="min-w-0 overflow-hidden">
           <div className="border-b border-border-default p-4">
             <form
@@ -280,6 +388,16 @@ export function SalariesPage({
               onSelect={(id) => {
                 setSelectedId(id);
                 setDetailTab('overview');
+                setDossierAccessRequest({
+                  employeeId: id,
+                  operationId: crypto.randomUUID(),
+                });
+                setHistoryOperationId('');
+                setHistoryState({
+                  status: 'idle',
+                  history: null,
+                  message: null,
+                });
               }}
             />
           )}
@@ -304,8 +422,24 @@ export function SalariesPage({
             employee={selectedEmployee}
             activeTab={detailTab}
             locale={locale}
-            onTabChange={setDetailTab}
+            historyState={historyState}
+            dossierAccessError={dossierAccessError}
+            onTabChange={(tab) => {
+              setDetailTab(tab);
+              if (tab === 'history') {
+                setHistoryOperationId(crypto.randomUUID());
+              }
+            }}
             onClose={() => setSelectedId(null)}
+            onEdit={() => setEditingEmployee(selectedEmployee)}
+            onDeparture={() => setDepartureEmployee(selectedEmployee)}
+            onRetryHistory={() => setHistoryOperationId(crypto.randomUUID())}
+            onRetryDossierAccess={() =>
+              setDossierAccessRequest({
+                employeeId: selectedEmployee.id,
+                operationId: crypto.randomUUID(),
+              })
+            }
           />
         )}
       </div>
@@ -315,6 +449,26 @@ export function SalariesPage({
           open
           onOpenChange={setCreateDialogOpen}
           locale={locale}
+        />
+      )}
+      {editingEmployee && (
+        <EmployeeEditDialog
+          employee={editingEmployee}
+          open
+          onOpenChange={(open) => {
+            if (!open) setEditingEmployee(null);
+          }}
+        />
+      )}
+      {departureEmployee && (
+        <EmployeeDepartureDialog
+          employee={departureEmployee}
+          businessDate={businessDate}
+          locale={locale}
+          open
+          onOpenChange={(open) => {
+            if (!open) setDepartureEmployee(null);
+          }}
         />
       )}
     </div>
@@ -433,111 +587,413 @@ function EmployeeDetails({
   locale,
   onTabChange,
   onClose,
+  onEdit,
+  onDeparture,
+  historyState,
+  dossierAccessError,
+  onRetryHistory,
+  onRetryDossierAccess,
 }: {
   employee: PersonnelEmployeeSummary;
   activeTab: DetailTab;
   locale: string;
   onTabChange: (tab: DetailTab) => void;
   onClose: () => void;
+  onEdit: () => void;
+  onDeparture: () => void;
+  historyState: HistoryLoadState;
+  dossierAccessError: string | null;
+  onRetryHistory: () => void;
+  onRetryDossierAccess: () => void;
 }) {
   const tabs: ReadonlyArray<{ value: DetailTab; label: string }> = [
     { value: 'overview', label: 'Vue d’ensemble' },
     { value: 'identity', label: 'Identité' },
     { value: 'employment', label: 'Relation de travail' },
+    { value: 'history', label: 'Historique' },
   ];
   return (
-    <Card padding="none" className="overflow-hidden xl:sticky xl:top-4">
-      <div className="flex items-start justify-between gap-4 border-b border-border-default p-5">
-        <div className="flex min-w-0 items-center gap-3">
-          <EmployeeAvatar employee={employee} large />
-          <div className="min-w-0">
-            <h2 className="truncate text-lg font-black">
-              {getEmployeeName(employee)}
-            </h2>
-            <p className="text-sm text-secondary">{employee.position}</p>
-            <div className="mt-2">
-              <EmploymentBadge employee={employee} />
+    <Dialog
+      open
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+    >
+      <DialogContent
+        variant="right-panel"
+        closeLabel="Fermer le dossier"
+        className="w-full max-w-none overflow-hidden p-0 sm:w-[min(92vw,48rem)]"
+      >
+        <div className="flex h-full min-h-0 flex-col">
+          <div className="flex flex-col gap-5 border-b border-border-default bg-surface p-5 pr-14 sm:flex-row sm:items-center sm:justify-between sm:p-6 sm:pr-14">
+            <div className="flex min-w-0 items-center gap-3">
+              <EmployeeAvatar employee={employee} large />
+              <div className="min-w-0">
+                <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted">
+                  Dossier salarié
+                </p>
+                <DialogTitle asChild>
+                  <h2 className="truncate text-xl font-black">
+                    {getEmployeeName(employee)}
+                  </h2>
+                </DialogTitle>
+                <div className="mt-1 flex flex-wrap items-center gap-2">
+                  <p className="text-sm font-medium text-secondary">
+                    {employee.position}
+                  </p>
+                  <EmploymentBadge employee={employee} />
+                </div>
+              </div>
+            </div>
+            <div className="flex shrink-0 flex-wrap items-center gap-1 sm:justify-end">
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={onEdit}
+              >
+                <Pencil className="h-4 w-4" aria-hidden />
+                Modifier
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={onDeparture}
+              >
+                <CalendarX2 className="h-4 w-4" aria-hidden />
+                {employee.departureDate ? 'Corriger le départ' : 'Départ'}
+              </Button>
             </div>
           </div>
-        </div>
-        <button
-          type="button"
-          onClick={onClose}
-          className="rounded-md p-2 text-secondary hover:bg-surface-muted focus:outline-none focus:ring-2 focus:ring-focus-ring"
-        >
-          <X className="h-4 w-4" aria-hidden />
-          <span className="sr-only">Fermer l’aperçu</span>
-        </button>
-      </div>
-      <nav
-        className="flex gap-1 overflow-x-auto border-b border-border-default px-3"
-        aria-label="Dossier salarié"
-      >
-        {tabs.map((tab) => (
-          <button
-            key={tab.value}
-            type="button"
-            onClick={() => onTabChange(tab.value)}
-            className={cn(
-              'shrink-0 border-b-2 px-2 py-3 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-focus-ring',
-              activeTab === tab.value
-                ? 'border-action-primary text-action-primary'
-                : 'border-transparent text-secondary',
-            )}
-            aria-current={activeTab === tab.value ? 'page' : undefined}
+          <nav
+            className="flex shrink-0 gap-1 overflow-x-auto border-b border-border-default bg-surface px-3 sm:px-5"
+            aria-label="Dossier salarié"
           >
-            {tab.label}
-          </button>
+            {tabs.map((tab) => (
+              <button
+                key={tab.value}
+                type="button"
+                onClick={() => onTabChange(tab.value)}
+                className={cn(
+                  'shrink-0 border-b-2 px-3 py-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-focus-ring',
+                  activeTab === tab.value
+                    ? 'border-action-primary text-action-primary'
+                    : 'border-transparent text-secondary',
+                )}
+                aria-current={activeTab === tab.value ? 'page' : undefined}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </nav>
+          <div className="min-h-0 flex-1 overflow-y-auto bg-surface-muted p-4 sm:p-6">
+            {dossierAccessError && (
+              <Alert tone="danger" className="mb-4">
+                <AlertTitle>Traçabilité indisponible</AlertTitle>
+                <AlertDescription>{dossierAccessError}</AlertDescription>
+                <div className="mt-3">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={onRetryDossierAccess}
+                  >
+                    <RotateCcw className="h-4 w-4" aria-hidden />
+                    Réessayer
+                  </Button>
+                </div>
+              </Alert>
+            )}
+            {activeTab === 'overview' && (
+              <section className="rounded-xl border border-border-default bg-surface p-5 shadow-sm sm:p-6">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <h3 className="text-base font-bold">Informations clés</h3>
+                    <p className="mt-1 text-sm text-secondary">
+                      Situation actuelle du dossier salarié.
+                    </p>
+                  </div>
+                  <CompletenessBadge employee={employee} />
+                </div>
+                <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                  <OverviewFact
+                    icon={<CalendarDays className="h-4 w-4" aria-hidden />}
+                    label="Entrée"
+                    value={formatEmployeeDate(employee.entryDate, locale)}
+                  />
+                  <OverviewFact
+                    icon={<CalendarX2 className="h-4 w-4" aria-hidden />}
+                    label={employee.departureDate ? 'Départ' : 'Fin attendue'}
+                    value={
+                      employee.departureDate
+                        ? formatEmployeeDate(employee.departureDate, locale)
+                        : employee.expectedEndDate
+                          ? formatEmployeeDate(employee.expectedEndDate, locale)
+                          : 'Non renseignée'
+                    }
+                  />
+                  <OverviewFact
+                    icon={<Clock3 className="h-4 w-4" aria-hidden />}
+                    label="Temps de travail"
+                    value={getWorkTimeLabel(employee)}
+                  />
+                  <OverviewFact
+                    icon={
+                      isEmployeeComplete(employee) ? (
+                        <CheckCircle2 className="h-4 w-4" aria-hidden />
+                      ) : (
+                        <FileWarning className="h-4 w-4" aria-hidden />
+                      )
+                    }
+                    label="État du dossier"
+                    value={
+                      isEmployeeComplete(employee) ? 'Complet' : 'À compléter'
+                    }
+                  />
+                </div>
+                <div className="mt-5 border-t border-border-default pt-4">
+                  <CompletenessGuidance employee={employee} onEdit={onEdit} />
+                </div>
+              </section>
+            )}
+            {activeTab === 'identity' && (
+              <DetailSection title="Identité minimale">
+                <DetailRow label="Prénoms" value={employee.givenNames} />
+                <DetailRow label="Nom" value={employee.familyName} />
+              </DetailSection>
+            )}
+            {activeTab === 'employment' && (
+              <DetailSection title="Relation de travail">
+                <DetailRow label="Poste" value={employee.position} />
+                <DetailRow
+                  label="Qualification"
+                  value={employee.qualification}
+                />
+                <DetailRow
+                  label="Contrat"
+                  value={getContractSummary(employee)}
+                />
+                <DetailRow
+                  label="Temps de travail"
+                  value={getWorkTimeLabel(employee)}
+                />
+              </DetailSection>
+            )}
+            {activeTab === 'history' && (
+              <EmployeeHistory
+                state={historyState}
+                locale={locale}
+                onRetry={onRetryHistory}
+              />
+            )}
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function EmployeeHistory({
+  state,
+  locale,
+  onRetry,
+}: {
+  state: HistoryLoadState;
+  locale: string;
+  onRetry: () => void;
+}) {
+  if (state.status === 'idle' || state.status === 'loading') {
+    return (
+      <DetailSection title="Historique du dossier">
+        <p
+          className="flex items-center gap-2 text-sm text-secondary"
+          role="status"
+        >
+          <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden />
+          Chargement de l’historique…
+        </p>
+      </DetailSection>
+    );
+  }
+  if (state.status === 'error') {
+    return (
+      <DetailSection title="Historique du dossier">
+        <Alert tone="danger">
+          <AlertTitle>Historique indisponible</AlertTitle>
+          <AlertDescription>{state.message}</AlertDescription>
+        </Alert>
+        <Button type="button" variant="secondary" size="sm" onClick={onRetry}>
+          <RotateCcw className="h-4 w-4" aria-hidden />
+          Réessayer
+        </Button>
+      </DetailSection>
+    );
+  }
+  if (!state.history) return null;
+  const { history } = state;
+  if (history.items.length === 0) {
+    return (
+      <DetailSection title="Historique du dossier">
+        <p className="text-sm text-secondary">
+          Aucun événement n’a encore été enregistré pour ce dossier.
+        </p>
+      </DetailSection>
+    );
+  }
+  return (
+    <DetailSection title="Historique du dossier">
+      <ol className="grid gap-4">
+        {history.items.map((event) => (
+          <li key={event.id} className="flex gap-3">
+            <span className="mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-surface-muted text-secondary">
+              <Clock3 className="h-3.5 w-3.5" aria-hidden />
+            </span>
+            <div className="min-w-0 text-sm">
+              <p className="font-bold">{auditEventLabel(event.eventType)}</p>
+              <p className="mt-1 text-xs text-secondary">
+                {formatAuditDateTime(event.occurredAt, locale)} ·{' '}
+                {event.actorDisplayName ?? 'Utilisateur supprimé'}
+              </p>
+              {event.changedFields.length > 0 && (
+                <p className="mt-2 text-xs text-secondary">
+                  Champs : {event.changedFields.map(auditFieldLabel).join(', ')}
+                </p>
+              )}
+              {(event.previousDepartureDate || event.newDepartureDate) && (
+                <p className="mt-2 text-xs text-secondary">
+                  Départ :{' '}
+                  {event.previousDepartureDate
+                    ? formatEmployeeDate(event.previousDepartureDate, locale)
+                    : 'non renseigné'}{' '}
+                  →{' '}
+                  {event.newDepartureDate
+                    ? formatEmployeeDate(event.newDepartureDate, locale)
+                    : 'annulé'}
+                </p>
+              )}
+              {event.reason && (
+                <p className="mt-2 rounded-md bg-surface-muted px-2 py-1 text-xs">
+                  Motif : {event.reason}
+                </p>
+              )}
+            </div>
+          </li>
         ))}
-      </nav>
-      <div className="p-5">
-        {activeTab === 'overview' && (
-          <DetailSection title="Informations clés">
-            <DetailRow
-              label="Entrée"
-              value={formatEmployeeDate(employee.entryDate, locale)}
-            />
-            {employee.expectedEndDate && (
-              <DetailRow
-                label="Fin attendue"
-                value={formatEmployeeDate(employee.expectedEndDate, locale)}
-              />
-            )}
-            {employee.departureDate && (
-              <DetailRow
-                label="Départ"
-                value={formatEmployeeDate(employee.departureDate, locale)}
-              />
-            )}
-            <DetailRow
-              label="Temps de travail"
-              value={getWorkTimeLabel(employee)}
-            />
-            <DetailRow
-              label="Dossier"
-              value={<CompletenessBadge employee={employee} />}
-            />
-          </DetailSection>
-        )}
-        {activeTab === 'identity' && (
-          <DetailSection title="Identité minimale">
-            <DetailRow label="Prénoms" value={employee.givenNames} />
-            <DetailRow label="Nom" value={employee.familyName} />
-          </DetailSection>
-        )}
-        {activeTab === 'employment' && (
-          <DetailSection title="Relation de travail">
-            <DetailRow label="Poste" value={employee.position} />
-            <DetailRow label="Qualification" value={employee.qualification} />
-            <DetailRow label="Contrat" value={getContractSummary(employee)} />
-            <DetailRow
-              label="Temps de travail"
-              value={getWorkTimeLabel(employee)}
-            />
-          </DetailSection>
-        )}
+      </ol>
+      {history.truncated && (
+        <p className="mt-4 text-xs text-secondary">
+          Seuls les 50 événements les plus récents sont affichés.
+        </p>
+      )}
+    </DetailSection>
+  );
+}
+
+function CompletenessGuidance({
+  employee,
+  onEdit,
+}: {
+  employee: PersonnelEmployeeSummary;
+  onEdit: () => void;
+}) {
+  if (employee.completenessReasons.length === 0) {
+    return (
+      <p className="text-xs text-secondary">
+        Toutes les informations minimales sont renseignées.
+      </p>
+    );
+  }
+  const labels = {
+    given_names_missing: 'prénoms',
+    family_name_missing: 'nom',
+    position_missing: 'poste',
+    qualification_missing: 'qualification',
+  } as const;
+  return (
+    <Alert
+      tone="warning"
+      icon={<FileWarning className="h-4 w-4" aria-hidden />}
+    >
+      <AlertTitle>Informations à compléter</AlertTitle>
+      <AlertDescription>
+        Champs manquants :{' '}
+        {employee.completenessReasons
+          .map((reason) => labels[reason])
+          .join(', ')}
+        .
+      </AlertDescription>
+      <div className="mt-3">
+        <Button type="button" variant="secondary" size="sm" onClick={onEdit}>
+          <Pencil className="h-4 w-4" aria-hidden />
+          Compléter le dossier
+        </Button>
       </div>
-    </Card>
+    </Alert>
+  );
+}
+
+function auditEventLabel(eventType: PersonnelEmployeeAuditEvent['eventType']) {
+  const labels: Record<PersonnelEmployeeAuditEvent['eventType'], string> = {
+    'employee.created': 'Dossier créé',
+    'employee.duplicate_override_confirmed': 'Doublon potentiel confirmé',
+    'employee.identity_updated': 'Identité modifiée',
+    'employee.employment_updated': 'Relation de travail modifiée',
+    'employee.departure_recorded': 'Départ enregistré',
+    'employee.departure_corrected': 'Départ corrigé ou annulé',
+  };
+  return labels[eventType];
+}
+
+function auditFieldLabel(
+  field: PersonnelEmployeeAuditEvent['changedFields'][number],
+) {
+  const labels: Record<
+    PersonnelEmployeeAuditEvent['changedFields'][number],
+    string
+  > = {
+    identity: 'identité',
+    givenNames: 'prénoms',
+    familyName: 'nom',
+    position: 'poste',
+    qualification: 'qualification',
+    employmentTermType: 'type de contrat',
+    expectedEndDate: 'fin prévue',
+    workTimeCategory: 'temps de travail',
+    entryDate: 'date d’entrée',
+    departureDate: 'date de départ',
+  };
+  return labels[field];
+}
+
+function formatAuditDateTime(value: string, locale: string) {
+  return new Intl.DateTimeFormat(locale, {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(new Date(value));
+}
+
+function OverviewFact({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-lg border border-border-default bg-surface-muted p-4">
+      <div className="flex items-center gap-2 text-secondary">
+        <span className="grid h-7 w-7 place-items-center rounded-md bg-surface text-action-primary">
+          {icon}
+        </span>
+        <span className="text-xs font-semibold uppercase tracking-wide">
+          {label}
+        </span>
+      </div>
+      <div className="mt-3 text-base font-bold text-primary">{value}</div>
+    </div>
   );
 }
 
@@ -549,7 +1005,7 @@ function DetailSection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-lg border border-border-default p-4">
+    <section className="rounded-xl border border-border-default bg-surface p-5 shadow-sm">
       <h3 className="text-sm font-bold">{title}</h3>
       <div className="mt-4 grid gap-3">{children}</div>
     </section>

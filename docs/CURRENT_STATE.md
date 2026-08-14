@@ -106,7 +106,7 @@ currently visible and do not present fabricated totals or pagination.
 Integrating one requires an approved product scope, data owner, authorization
 model, contracts, persistence, and tests.
 
-### Integrated read-only foundations
+### Integrated personnel foundation
 
 - `/equipe/salaries` now reads the establishment-owned personnel dossier table
   through an OWNER-only, server-authorized, organization-and-establishment-
@@ -116,9 +116,18 @@ model, contracts, persistence, and tests.
 
 Employee creation is implemented for development as an atomic, OWNER-only
 vertical slice with validation, duplicate review, idempotent retry, and a
-minimal creation audit event. Production data collection remains blocked by
-the recorded privacy, retention, and operational-security gates. Editing,
-departure, and audit-history UI remain disabled.
+minimal creation audit event. Editing of the approved minimum identity and
+employment fields is also implemented with optimistic revision checks,
+idempotent retry, and field-group audit events. Non-destructive departure,
+correction, and reopening are implemented with the same revision and retry
+guards plus immutable reasoned audit events. Production data collection remains
+blocked by the recorded privacy, retention, and operational-security gates.
+The employee detail now exposes a bounded, read-only history of these approved
+events. It resolves the actor display name server-side and never exposes raw
+audit metadata, operation IDs, or tenant identifiers. History is loaded only
+when its detail tab is opened and has explicit loading, failure, and retry
+states. Minimum-field completeness is derived, filterable, explained by field,
+and links to the supported edit action.
 
 ### Planned empty surfaces
 

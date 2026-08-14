@@ -19,6 +19,12 @@ export const personnelWorkTimeCategorySchema = z.enum([
   'full_time',
   'part_time',
 ]);
+export const personnelCompletenessReasonSchema = z.enum([
+  'given_names_missing',
+  'family_name_missing',
+  'position_missing',
+  'qualification_missing',
+]);
 
 const dateOnlySchema = z.string().date();
 const personnelRequiredTextSchema = z
@@ -43,17 +49,17 @@ export const personnelEmployeeListQuerySchema = z
 export const personnelEmployeeSummarySchema = z
   .object({
     id: identifierSchema,
-    givenNames: z.string().min(1).max(120),
-    familyName: z.string().min(1).max(120),
-    position: z.string().min(1).max(120),
-    qualification: z.string().min(1).max(120),
+    givenNames: z.string().max(120),
+    familyName: z.string().max(120),
+    position: z.string().max(120),
+    qualification: z.string().max(120),
     employmentTermType: personnelEmploymentTermTypeSchema,
     expectedEndDate: dateOnlySchema.nullable(),
     workTimeCategory: personnelWorkTimeCategorySchema,
     entryDate: dateOnlySchema,
     departureDate: dateOnlySchema.nullable(),
     view: personnelEmployeeViewSchema,
-    completenessReasons: z.array(z.string().min(1).max(120)),
+    completenessReasons: z.array(personnelCompletenessReasonSchema),
     revision: z.number().int().positive(),
     createdAt: isoDateTimeSchema,
     updatedAt: isoDateTimeSchema,
@@ -123,6 +129,56 @@ export const createPersonnelEmployeeInputSchema = z
     }
   });
 
+export const updatePersonnelEmployeeInputSchema = z
+  .object({
+    idempotencyKey: identifierSchema,
+    employeeId: identifierSchema,
+    expectedRevision: z.coerce.number().int().positive(),
+    givenNames: personnelRequiredTextSchema,
+    familyName: personnelRequiredTextSchema,
+    position: personnelRequiredTextSchema,
+    qualification: personnelRequiredTextSchema,
+    employmentTermType: personnelEmploymentTermTypeSchema,
+    expectedEndDate: dateOnlySchema.nullable(),
+    workTimeCategory: personnelWorkTimeCategorySchema,
+    entryDate: dateOnlySchema,
+  })
+  .strict()
+  .superRefine((input, context) => {
+    if (input.employmentTermType === 'fixed_term' && !input.expectedEndDate) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['expectedEndDate'],
+        message: 'An expected end date is required for a fixed term.',
+      });
+    }
+    if (input.employmentTermType === 'indefinite' && input.expectedEndDate) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['expectedEndDate'],
+        message: 'An indefinite term must not have an expected end date.',
+      });
+    }
+    if (input.expectedEndDate && input.expectedEndDate < input.entryDate) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['expectedEndDate'],
+        message: 'The expected end date must be on or after the entry date.',
+      });
+    }
+  });
+
+export const setPersonnelEmployeeDepartureInputSchema = z
+  .object({
+    idempotencyKey: identifierSchema,
+    employeeId: identifierSchema,
+    expectedRevision: z.coerce.number().int().positive(),
+    departureDate: dateOnlySchema.nullable(),
+    correctionReason: z.string().trim().min(3).max(250).nullable(),
+    confirmNonDeletion: z.literal(true),
+  })
+  .strict();
+
 export const personnelDuplicateCandidateSchema = z
   .object({
     id: identifierSchema,
@@ -133,7 +189,52 @@ export const personnelDuplicateCandidateSchema = z
   })
   .strict();
 
+export const personnelEmployeeAuditEventTypeSchema = z.enum([
+  'employee.created',
+  'employee.duplicate_override_confirmed',
+  'employee.identity_updated',
+  'employee.employment_updated',
+  'employee.departure_recorded',
+  'employee.departure_corrected',
+]);
+
+export const personnelEmployeeAuditFieldSchema = z.enum([
+  'identity',
+  'givenNames',
+  'familyName',
+  'position',
+  'qualification',
+  'employmentTermType',
+  'expectedEndDate',
+  'workTimeCategory',
+  'entryDate',
+  'departureDate',
+]);
+
+export const personnelEmployeeAuditEventSchema = z
+  .object({
+    id: identifierSchema,
+    eventType: personnelEmployeeAuditEventTypeSchema,
+    changedFields: z.array(personnelEmployeeAuditFieldSchema),
+    actorDisplayName: z.string().min(1).max(200).nullable(),
+    occurredAt: isoDateTimeSchema,
+    reason: z.string().min(3).max(250).nullable(),
+    previousDepartureDate: dateOnlySchema.nullable(),
+    newDepartureDate: dateOnlySchema.nullable(),
+  })
+  .strict();
+
+export const personnelEmployeeAuditHistorySchema = z
+  .object({
+    items: z.array(personnelEmployeeAuditEventSchema).max(50),
+    truncated: z.boolean(),
+  })
+  .strict();
+
 export type PersonnelEmployeeView = z.infer<typeof personnelEmployeeViewSchema>;
+export type PersonnelCompletenessReason = z.infer<
+  typeof personnelCompletenessReasonSchema
+>;
 export type PersonnelCompletenessFilter = z.infer<
   typeof personnelCompletenessFilterSchema
 >;
@@ -149,6 +250,18 @@ export type PersonnelEmployeeListResponse = z.infer<
 export type CreatePersonnelEmployeeInput = z.infer<
   typeof createPersonnelEmployeeInputSchema
 >;
+export type UpdatePersonnelEmployeeInput = z.infer<
+  typeof updatePersonnelEmployeeInputSchema
+>;
+export type SetPersonnelEmployeeDepartureInput = z.infer<
+  typeof setPersonnelEmployeeDepartureInputSchema
+>;
 export type PersonnelDuplicateCandidate = z.infer<
   typeof personnelDuplicateCandidateSchema
+>;
+export type PersonnelEmployeeAuditEvent = z.infer<
+  typeof personnelEmployeeAuditEventSchema
+>;
+export type PersonnelEmployeeAuditHistory = z.infer<
+  typeof personnelEmployeeAuditHistorySchema
 >;

@@ -4,7 +4,7 @@ Status: Current
 
 Visibility: Engineering
 
-Last updated: 2026-08-09
+Last updated: 2026-08-14
 
 Page packages under this directory may target any YUTA frontend application.
 Every package identifies its application, real route or screen, runtime
@@ -35,6 +35,11 @@ Current packages:
   baseline, resolved catalog/printing shared UI context, and design prompt for
   the existing integrated local POS screen at `/management/combos`; design
   generation and approval are pending.
+
+- `pos-order-entry/` - implemented existing-capability renewal for the local
+  POS `/pos` order-entry page, including approved visual renewal, route-local
+  form boundary, recoverable interactions, production-build responsive QA, and
+  complete as-built evidence.
 
 Every package follows `../PAGE_PACK_PROTOCOL.md`.
 

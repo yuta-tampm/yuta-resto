@@ -1,6 +1,6 @@
 # Backoffice Équipe — Salariés — UI Specification
 
-Status: Approved direction with real read slice
+Status: Approved direction with real read, create, edit, departure, and history slices
 
 Visibility: Engineering
 
@@ -19,8 +19,11 @@ semantic tokens, and navigation. The Équipe section has no second shell.
 ## Current baseline
 
 The route began as a planned placeholder, so the original baseline status
-remains `NOT_APPLICABLE`. It now hosts a real read-only employee-list slice;
-creation, editing, departure, and audit behavior are not integrated yet.
+remains `NOT_APPLICABLE`. It now hosts real employee list, minimum creation,
+minimum editing, and confirmed non-destructive departure slices. Audit-history
+presentation is integrated as a bounded read-only detail tab.
+It loads on demand and provides loading, unavailable, retry, and truthful empty
+states rather than delaying the initial employee list.
 
 ## Discovery hierarchy
 
@@ -40,9 +43,14 @@ prototype unless repository constraints require a documented deviation:
 - three compact summary cards, without KPI inflation;
 - search, restrained filters, and employment-status views;
 - dense operational table/list with selected-row feedback;
-- right-side desktop quick view for fast consultation, not a large editor;
-- mobile list cards and a separate full-width detail surface rather than a
-  squeezed split layout.
+- no dossier selected or opened on initial page load;
+- a right-side overlay drawer, opened only by explicit row/card selection,
+  wide enough for the four dossier sections without shrinking the list layout;
+- a structured dossier header with identity/status separated from secondary
+  actions, followed by a stable tab bar and a responsive two-column key-fact
+  grid on the overview tab;
+- mobile list cards and a full-width detail drawer rather than a squeezed split
+  layout.
 
 After approval, typed fictional fixtures must use a demonstration-data notice
 and must not imply implemented persistence, upload, export, or generation.
@@ -53,8 +61,9 @@ Favor desktop scan speed and reachable filters/actions. Mobile may use list
 cards instead of a wide table. Progressive disclosure should hide deferred HR
 complexity. Departure requires confirmation and clear non-deletion copy.
 
-Selecting an employee row changes only the selected quick-view content; it must
-not mutate data. Pagination follows approved repository/product semantics. The
+Selecting an employee row opens the read-only dossier drawer; it must not mutate
+employee data. Closing the drawer clears the selection. Pagination follows
+approved repository/product semantics. The
 draft image's `10 / page` control does not authorize configurable page size.
 
 ## Completeness and actionable issues
@@ -63,6 +72,10 @@ The MVP completeness state must explain what approved minimum information is
 missing and which available action resolves it. Do not persist or present only
 an unexplained `Complet / À compléter` boolean.
 
+The integrated state derives stable reasons for missing minimum names, poste,
+or qualification, applies the same rule to count/filter results, and offers the
+existing `Modifier` action from the detail.
+
 Future expiry, contract, document, or formality alerts are distinct from MVP
 completeness. When their capability waves are approved, use a compact `À
 traiter` surface only when concrete actionable items exist; do not reserve a
@@ -70,8 +83,8 @@ large empty panel or add a fourth summary card.
 
 ## Future dossier sections and actions
 
-The Phase 1 detail sections remain `Vue d'ensemble`, `Identité`, `Relation de
-travail`, and `Historique` using approved fixture concepts only.
+The MVP detail sections remain `Vue d'ensemble`, `Identité`, `Relation de
+travail`, and the integrated read-only `Historique`.
 
 Future-wave UX intent, not Phase 1 scope:
 
@@ -81,8 +94,8 @@ Future-wave UX intent, not Phase 1 scope:
   authorization exist;
 - add a `Registre du personnel` header or dossier action only after its route,
   domain, historical ordering, and legal/security boundaries are approved;
-- keep the desktop quick view concise and use a larger route/drawer/dialog for
-  a full editor only when the repository establishes that interaction owner.
+- keep the dossier drawer focused on consultation; create/edit/departure remain
+  separate confirmed dialogs rather than turning the drawer into one large form.
 
 ## Required discovery states
 

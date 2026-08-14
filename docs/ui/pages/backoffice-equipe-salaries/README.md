@@ -1,12 +1,12 @@
 # Backoffice Équipe — Salariés
 
-Status: Partially integrated — real read and development create slices
+Status: Partially integrated — real read, create, edit, departure, and history slices
 
 Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-08-13
+Last updated: 2026-08-14
 
 Protocol revision: 4
 
@@ -48,9 +48,18 @@ empty, forbidden, and error behavior. Typed fictional fixtures and the state
 simulator have been removed.
 
 Employee creation is implemented for development with validation, duplicate
-review, idempotent retry, and atomic minimal audit. Editing and departure remain
-disabled. No production seed, secure document storage, OCR, personnel-register
-model, Formalités engine, or PDF generator exists.
+review, idempotent retry, and atomic minimal audit. Editing of the approved
+minimum fields is implemented with revision-conflict recovery, idempotent retry,
+and atomic field-group audit. Non-destructive departure, correction, and
+reopening are implemented with explicit confirmation, reasoned correction,
+revision-conflict recovery, and atomic audit. No production seed, secure
+document storage, OCR, personnel-register model, Formalités engine, or PDF
+generator exists. The explicitly opened dossier drawer exposes the 50 most
+recent approved audit events in a read-only history without returning raw audit
+or tenant metadata. History is requested only when the selected employee's tab is opened and has
+loading, unavailable, retry, and empty states. Completeness counts, filtering,
+reason labels, and the supported edit action use the same derived minimum-field
+rules.
 
 The route remains under `NEW_CAPABILITY_DISCOVERY` until the approved write
 slices and final QA are complete. `users` and `tenant_memberships` remain login

@@ -41,4 +41,20 @@ describe('personnel permissions', () => {
       ).toThrow('Permission denied.');
     }
   });
+
+  it('denies public and service actors', () => {
+    const ownerContext = context('OWNER');
+    for (const actor of [
+      { type: 'public' as const },
+      { type: 'service' as const, serviceName: 'test-service' },
+    ]) {
+      const actorContext = { ...ownerContext, actor };
+      expect(
+        hasPersonnelPermission(actorContext, 'personnel.employee.read'),
+      ).toBe(false);
+      expect(() =>
+        requirePersonnelPermission(actorContext, 'personnel.employee.read'),
+      ).toThrow('Permission denied.');
+    }
+  });
 });

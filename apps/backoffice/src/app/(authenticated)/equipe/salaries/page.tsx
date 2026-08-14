@@ -34,14 +34,21 @@ export default async function Page({
   const query = parsedQuery.success
     ? parsedQuery.data
     : personnelEmployeeListQuerySchema.parse({});
+  const businessDate = getBusinessDate(tenant.timezone);
   const data = await listPersonnelEmployees(
     cloudDatabase,
     tenant,
     query,
-    getBusinessDate(tenant.timezone),
+    businessDate,
   );
-
-  return <SalariesPage data={data} query={query} locale={tenant.locale} />;
+  return (
+    <SalariesPage
+      data={data}
+      query={query}
+      locale={tenant.locale}
+      businessDate={businessDate}
+    />
+  );
 }
 
 function first(value: string | string[] | undefined): string | undefined {
