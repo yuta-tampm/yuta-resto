@@ -17,6 +17,7 @@ type PosPageShellProps = {
   className?: string;
   contentClassName?: string;
   headerClassName?: string;
+  prominentHeader?: boolean;
   maxWidthClassName?: string;
 };
 
@@ -39,6 +40,7 @@ export function PosPageShell({
   className,
   contentClassName,
   headerClassName,
+  prominentHeader = false,
   maxWidthClassName = 'max-w-6xl',
 }: PosPageShellProps) {
   return (
@@ -57,6 +59,7 @@ export function PosPageShell({
           actions={actions}
           backHref={backHref}
           backLabel={backLabel}
+          prominent={prominentHeader}
           className={headerClassName}
         />
         <PosConnectivityStatus />

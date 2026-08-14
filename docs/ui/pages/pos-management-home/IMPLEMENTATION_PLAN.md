@@ -1,6 +1,6 @@
 # POS Management Home - Implementation Plan
 
-Status: Phase 2 complete; awaiting Phase 3 approval
+Status: Complete
 
 Visibility: Engineering
 
@@ -32,12 +32,25 @@ are unchanged.
 Verify keyboard, touch, focus, sign-out, unavailable state, responsive behavior,
 and expired-session routing. Stop for approval.
 
+Completed on 2026-08-13 as authenticated production-build QA. No hub runtime
+change was required; the shared 40-pixel brand/home link is recorded as a
+cross-route shell follow-up rather than changed locally.
+
 ## Phase 4 - Integration audit
 
 Trace session resolution and sign-out through the existing server/site-agent
 boundary. No API, contract, schema, or permission change is expected. Stop for approval.
 
+Completed on 2026-08-13. The audit confirmed the existing server-only bearer,
+strict-contract, site-agent, token-hash, revocation, expiry, active-user,
+`authVersion`, and role boundaries. One site-agent HTTP boundary test was added;
+production behavior remains unchanged.
+
 ## Phase 5 - Functional, visual, responsive, and as-built QA
 
 Run exact checks, capture the viewport matrix, reconcile docs with the final
 implementation, and mark the package implemented only after approval.
+
+Completed on 2026-08-13. Functional regression preceded the clean-origin
+production-build visual pass at 1366x768, 1024x768, 768x1024, and 390x844. The
+package and references now match the as-built implementation.

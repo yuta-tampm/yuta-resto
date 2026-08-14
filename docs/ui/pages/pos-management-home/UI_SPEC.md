@@ -1,6 +1,6 @@
 # POS Management Home - UI Specification
 
-Status: Phase 0 design input
+Status: As-built verified
 
 Visibility: Engineering
 

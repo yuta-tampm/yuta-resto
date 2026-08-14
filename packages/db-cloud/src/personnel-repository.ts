@@ -1,12 +1,23 @@
+import { identifierSchema } from '@yuta/contracts';
 import {
   createPersonnelEmployeeInputSchema,
+  personnelEmployeeAccessEventTypeSchema,
+  personnelEmployeeAuditEventTypeSchema,
+  personnelEmployeeAuditFieldSchema,
   personnelEmployeeListQuerySchema,
+  setPersonnelEmployeeDepartureInputSchema,
+  updatePersonnelEmployeeInputSchema,
   type CreatePersonnelEmployeeInput,
   type PersonnelDuplicateCandidate,
+  type PersonnelEmployeeAccessEvent,
+  type PersonnelEmployeeAccessHistory,
   type PersonnelEmployeeListQuery,
   type PersonnelEmployeeListResponse,
+  type PersonnelEmployeeAuditHistory,
   type PersonnelEmployeeSummary,
   type PersonnelEmployeeView,
+  type SetPersonnelEmployeeDepartureInput,
+  type UpdatePersonnelEmployeeInput,
 } from '@yuta/contracts/personnel';
 import { requireEstablishment, type TenantContext } from '@yuta/tenant';
 import {
@@ -14,6 +25,7 @@ import {
   desc,
   eq,
   ilike,
+  inArray,
   isNotNull,
   isNull,
   lt,
@@ -30,12 +42,16 @@ import {
   personnelCommandReceipts,
   personnelEmployeeAuditEvents,
   personnelEmployeeDossiers,
+  users,
 } from './schema';
 
 type PersonnelTenantContext = TenantContext & { establishmentId: string };
 
 const cursorPayloadSchema = z
   .object({ entryDate: z.string().date(), id: z.string().uuid() })
+  .strict();
+const accessCursorPayloadSchema = z
+  .object({ createdAt: z.string().datetime(), id: z.string().uuid() })
   .strict();
 
 export async function listPersonnelEmployees(
@@ -76,8 +92,13 @@ export async function listPersonnelEmployees(
         ),
       )
     : undefined;
+  const incompleteCondition = getIncompleteCondition();
   const completenessCondition =
-    query.completeness === 'incomplete' ? sql`false` : undefined;
+    query.completeness === 'incomplete'
+      ? incompleteCondition
+      : query.completeness === 'complete'
+        ? sql`not (${incompleteCondition})`
+        : undefined;
   const cursorCondition = cursor
     ? or(
         lt(personnelEmployeeDossiers.entryDate, cursor.entryDate),
@@ -120,6 +141,10 @@ export async function listPersonnelEmployees(
           sql<number>`count(*) filter (where ${getViewCondition('former', businessDate)})`.mapWith(
             Number,
           ),
+        incomplete:
+          sql<number>`count(*) filter (where ${incompleteCondition})`.mapWith(
+            Number,
+          ),
       })
       .from(personnelEmployeeDossiers)
       .where(scope),
@@ -128,11 +153,16 @@ export async function listPersonnelEmployees(
   const hasMore = rows.length > query.limit;
   const pageRows = hasMore ? rows.slice(0, query.limit) : rows;
   const lastRow = pageRows.at(-1);
-  const counts = countsRows[0] ?? { active: 0, upcoming: 0, former: 0 };
+  const counts = countsRows[0] ?? {
+    active: 0,
+    upcoming: 0,
+    former: 0,
+    incomplete: 0,
+  };
 
   return {
     items: pageRows.map((row) => toSummary(row, businessDate)),
-    counts: { ...counts, incomplete: 0 },
+    counts,
     pageInfo: {
       hasMore,
       nextCursor:
@@ -162,6 +192,218 @@ export async function findPersonnelEmployee(
     )
     .limit(1);
   return row ? toSummary(row, businessDate) : null;
+}
+
+export async function listPersonnelEmployeeAuditHistory(
+  db: CloudDatabaseClient,
+  context: TenantContext,
+  rawEmployeeId: string,
+): Promise<PersonnelEmployeeAuditHistory> {
+  requireEstablishment(context);
+  const employeeId = identifierSchema.parse(rawEmployeeId);
+  const rows = await db
+    .select({
+      id: personnelEmployeeAuditEvents.id,
+      eventType: personnelEmployeeAuditEvents.eventType,
+      changedFields: personnelEmployeeAuditEvents.changedFields,
+      metadata: personnelEmployeeAuditEvents.metadata,
+      createdAt: personnelEmployeeAuditEvents.createdAt,
+      actorDisplayName: users.displayName,
+    })
+    .from(personnelEmployeeAuditEvents)
+    .leftJoin(users, eq(personnelEmployeeAuditEvents.actorUserId, users.id))
+    .where(
+      and(
+        eq(personnelEmployeeAuditEvents.employeeId, employeeId),
+        eq(personnelEmployeeAuditEvents.organizationId, context.organizationId),
+        eq(
+          personnelEmployeeAuditEvents.establishmentId,
+          context.establishmentId,
+        ),
+        inArray(
+          personnelEmployeeAuditEvents.eventType,
+          personnelEmployeeAuditEventTypeSchema.options,
+        ),
+      ),
+    )
+    .orderBy(
+      desc(personnelEmployeeAuditEvents.createdAt),
+      desc(personnelEmployeeAuditEvents.id),
+    )
+    .limit(51);
+
+  const items = rows.slice(0, 50).flatMap((row) => {
+    const eventType = personnelEmployeeAuditEventTypeSchema.safeParse(
+      row.eventType,
+    );
+    if (!eventType.success) return [];
+    const changedFields = row.changedFields.flatMap((field) => {
+      const parsed = personnelEmployeeAuditFieldSchema.safeParse(field);
+      return parsed.success ? [parsed.data] : [];
+    });
+    const metadata = safeAuditMetadata(row.metadata);
+    return [
+      {
+        id: row.id,
+        eventType: eventType.data,
+        changedFields,
+        actorDisplayName: row.actorDisplayName,
+        occurredAt: row.createdAt.toISOString(),
+        reason: metadata.reason,
+        previousDepartureDate: metadata.previousDepartureDate,
+        newDepartureDate: metadata.newDepartureDate,
+      },
+    ];
+  });
+  return { items, truncated: rows.length > 50 };
+}
+
+export async function listPersonnelEmployeeAccessHistory(
+  db: CloudDatabaseClient,
+  context: TenantContext,
+  rawEmployeeId: string,
+  rawCursor?: string,
+): Promise<PersonnelEmployeeAccessHistory> {
+  requireEstablishment(context);
+  const employeeId = identifierSchema.parse(rawEmployeeId);
+  const cursor = rawCursor ? decodeAccessCursor(rawCursor) : null;
+  const rows = await db
+    .select({
+      id: personnelEmployeeAuditEvents.id,
+      eventType: personnelEmployeeAuditEvents.eventType,
+      createdAt: personnelEmployeeAuditEvents.createdAt,
+      actorUserId: personnelEmployeeAuditEvents.actorUserId,
+      actorDisplayName: users.displayName,
+    })
+    .from(personnelEmployeeAuditEvents)
+    .leftJoin(users, eq(personnelEmployeeAuditEvents.actorUserId, users.id))
+    .where(
+      and(
+        eq(personnelEmployeeAuditEvents.employeeId, employeeId),
+        eq(personnelEmployeeAuditEvents.organizationId, context.organizationId),
+        eq(
+          personnelEmployeeAuditEvents.establishmentId,
+          context.establishmentId,
+        ),
+        inArray(
+          personnelEmployeeAuditEvents.eventType,
+          personnelEmployeeAccessEventTypeSchema.options,
+        ),
+        cursor
+          ? or(
+              lt(
+                personnelEmployeeAuditEvents.createdAt,
+                new Date(cursor.createdAt),
+              ),
+              and(
+                eq(
+                  personnelEmployeeAuditEvents.createdAt,
+                  new Date(cursor.createdAt),
+                ),
+                lt(personnelEmployeeAuditEvents.id, cursor.id),
+              ),
+            )
+          : undefined,
+      ),
+    )
+    .orderBy(
+      desc(personnelEmployeeAuditEvents.createdAt),
+      desc(personnelEmployeeAuditEvents.id),
+    )
+    .limit(21);
+
+  const visibleRows = collapseAccessNavigationPairs(rows);
+  const pageRows = visibleRows.slice(0, 10);
+  const items = pageRows.flatMap(({ row }) => {
+    const eventType = personnelEmployeeAccessEventTypeSchema.safeParse(
+      row.eventType,
+    );
+    if (!eventType.success) return [];
+    const item: PersonnelEmployeeAccessEvent = {
+      id: row.id,
+      eventType: eventType.data,
+      actorDisplayName: row.actorDisplayName,
+      occurredAt: row.createdAt.toISOString(),
+    };
+    return [item];
+  });
+  const lastPageRow = pageRows.at(-1);
+  return {
+    items,
+    pageInfo: {
+      hasMore: visibleRows.length > 10,
+      nextCursor:
+        visibleRows.length > 10 && lastPageRow
+          ? encodeAccessCursor({
+              createdAt: lastPageRow.consumedThrough.createdAt.toISOString(),
+              id: lastPageRow.consumedThrough.id,
+            })
+          : null,
+    },
+  };
+}
+
+export type PersonnelEmployeeAccessEventType =
+  PersonnelEmployeeAccessEvent['eventType'];
+
+export async function recordPersonnelEmployeeAccess(
+  db: CloudDatabaseClient,
+  context: TenantContext,
+  rawEmployeeId: string,
+  eventType: PersonnelEmployeeAccessEventType,
+  rawOperationId: string,
+  now = new Date(),
+): Promise<boolean> {
+  requireEstablishment(context);
+  if (context.actor.type !== 'user') {
+    throw new PersonnelRepositoryError(
+      'A user actor is required.',
+      'ACTOR_REQUIRED',
+    );
+  }
+  const actorUserId = context.actor.userId;
+  const employeeId = identifierSchema.parse(rawEmployeeId);
+  const operationId = identifierSchema.parse(rawOperationId);
+  return db.transaction(async (transaction) => {
+    await transaction.execute(
+      sql`select pg_advisory_xact_lock(hashtextextended(${`${context.organizationId}:${context.establishmentId}:${actorUserId}:${eventType}:${operationId}`}, 0))`,
+    );
+    const employee = await findScopedEmployee(transaction, context, employeeId);
+    if (!employee) return false;
+    const [existing] = await transaction
+      .select({ id: personnelEmployeeAuditEvents.id })
+      .from(personnelEmployeeAuditEvents)
+      .where(
+        and(
+          eq(
+            personnelEmployeeAuditEvents.organizationId,
+            context.organizationId,
+          ),
+          eq(
+            personnelEmployeeAuditEvents.establishmentId,
+            context.establishmentId,
+          ),
+          eq(personnelEmployeeAuditEvents.employeeId, employeeId),
+          eq(personnelEmployeeAuditEvents.actorUserId, actorUserId),
+          eq(personnelEmployeeAuditEvents.eventType, eventType),
+          eq(personnelEmployeeAuditEvents.operationId, operationId),
+        ),
+      )
+      .limit(1);
+    if (!existing) {
+      await transaction.insert(personnelEmployeeAuditEvents).values({
+        id: uuidv7(),
+        organizationId: context.organizationId,
+        establishmentId: context.establishmentId,
+        employeeId,
+        actorUserId,
+        eventType,
+        operationId,
+        createdAt: now,
+      });
+    }
+    return true;
+  });
 }
 
 export type CreatePersonnelEmployeeResult = {
@@ -200,6 +442,8 @@ export async function createPersonnelEmployee(
       duplicateOverrideReason: input.duplicateOverrideReason,
     }),
   );
+
+  await cleanupExpiredPersonnelCommandReceipts(db, context, now);
 
   return db.transaction(async (transaction) => {
     await transaction.execute(
@@ -335,9 +579,427 @@ export async function createPersonnelEmployee(
   });
 }
 
+export type UpdatePersonnelEmployeeResult = {
+  employee: PersonnelEmployeeSummary;
+  idempotentReplay: boolean;
+  updated: boolean;
+};
+
+export async function updatePersonnelEmployee(
+  db: CloudDatabaseClient,
+  context: TenantContext,
+  rawInput: UpdatePersonnelEmployeeInput,
+  businessDate: string,
+  now = new Date(),
+): Promise<UpdatePersonnelEmployeeResult> {
+  requireEstablishment(context);
+  if (context.actor.type !== 'user') {
+    throw new PersonnelRepositoryError(
+      'A user actor is required.',
+      'ACTOR_REQUIRED',
+    );
+  }
+  const actorUserId = context.actor.userId;
+  const input = updatePersonnelEmployeeInputSchema.parse(rawInput);
+  const idempotencyHash = hash(input.idempotencyKey);
+  const fingerprint = hash(JSON.stringify(input));
+
+  await cleanupExpiredPersonnelCommandReceipts(db, context, now);
+
+  return db.transaction(async (transaction) => {
+    await transaction.execute(
+      sql`select pg_advisory_xact_lock(hashtextextended(${`${context.organizationId}:${context.establishmentId}:${actorUserId}:personnel.employee.update:${idempotencyHash}`}, 0))`,
+    );
+
+    const [receipt] = await transaction
+      .select()
+      .from(personnelCommandReceipts)
+      .where(
+        and(
+          eq(personnelCommandReceipts.organizationId, context.organizationId),
+          eq(personnelCommandReceipts.establishmentId, context.establishmentId),
+          eq(personnelCommandReceipts.actorUserId, actorUserId),
+          eq(personnelCommandReceipts.commandType, 'personnel.employee.update'),
+          eq(personnelCommandReceipts.idempotencyHash, idempotencyHash),
+        ),
+      )
+      .limit(1);
+    if (receipt) {
+      if (
+        receipt.requestFingerprint !== fingerprint ||
+        receipt.employeeId !== input.employeeId
+      ) {
+        throw new PersonnelRepositoryError(
+          'The idempotency key was reused for a different request.',
+          'IDEMPOTENCY_CONFLICT',
+        );
+      }
+      const replayed = await findScopedEmployee(
+        transaction,
+        context,
+        receipt.employeeId,
+      );
+      if (!replayed) {
+        throw new PersonnelRepositoryError(
+          'The committed employee could not be found.',
+          'IDEMPOTENCY_CONFLICT',
+        );
+      }
+      return {
+        employee: toSummary(replayed, businessDate),
+        idempotentReplay: true,
+        updated: true,
+      };
+    }
+
+    const current = await findScopedEmployee(
+      transaction,
+      context,
+      input.employeeId,
+    );
+    if (!current) {
+      throw new PersonnelRepositoryError('Employee not found.', 'NOT_FOUND');
+    }
+    if (current.revision !== input.expectedRevision) {
+      throw new PersonnelConflictError(toSummary(current, businessDate));
+    }
+    if (current.departureDate && input.entryDate > current.departureDate) {
+      throw new PersonnelRepositoryError(
+        'The entry date must not be after the recorded departure date.',
+        'INVALID_EMPLOYMENT_DATES',
+      );
+    }
+
+    const identityFields = [
+      ...(current.givenNames !== input.givenNames ? ['givenNames'] : []),
+      ...(current.familyName !== input.familyName ? ['familyName'] : []),
+    ];
+    const employmentFields = [
+      ...(current.position !== input.position ? ['position'] : []),
+      ...(current.qualification !== input.qualification
+        ? ['qualification']
+        : []),
+      ...(current.employmentTermType !== input.employmentTermType
+        ? ['employmentTermType']
+        : []),
+      ...(current.expectedEndDate !== input.expectedEndDate
+        ? ['expectedEndDate']
+        : []),
+      ...(current.workTimeCategory !== input.workTimeCategory
+        ? ['workTimeCategory']
+        : []),
+      ...(current.entryDate !== input.entryDate ? ['entryDate'] : []),
+    ];
+    if (identityFields.length === 0 && employmentFields.length === 0) {
+      return {
+        employee: toSummary(current, businessDate),
+        idempotentReplay: false,
+        updated: false,
+      };
+    }
+
+    const [updated] = await transaction
+      .update(personnelEmployeeDossiers)
+      .set({
+        givenNames: input.givenNames,
+        familyName: input.familyName,
+        position: input.position,
+        qualification: input.qualification,
+        employmentTermType: input.employmentTermType,
+        expectedEndDate: input.expectedEndDate,
+        workTimeCategory: input.workTimeCategory,
+        entryDate: input.entryDate,
+        revision: sql`${personnelEmployeeDossiers.revision} + 1`,
+        updatedAt: now,
+      })
+      .where(
+        and(
+          eq(personnelEmployeeDossiers.id, input.employeeId),
+          eq(personnelEmployeeDossiers.organizationId, context.organizationId),
+          eq(
+            personnelEmployeeDossiers.establishmentId,
+            context.establishmentId,
+          ),
+          eq(personnelEmployeeDossiers.revision, input.expectedRevision),
+        ),
+      )
+      .returning();
+    if (!updated) {
+      const concurrent = await findScopedEmployee(
+        transaction,
+        context,
+        input.employeeId,
+      );
+      if (!concurrent) {
+        throw new PersonnelRepositoryError('Employee not found.', 'NOT_FOUND');
+      }
+      throw new PersonnelConflictError(toSummary(concurrent, businessDate));
+    }
+
+    const operationId = uuidv7();
+    const auditEvents = [
+      ...(identityFields.length > 0
+        ? [
+            {
+              eventType: 'employee.identity_updated',
+              changedFields: identityFields,
+            },
+          ]
+        : []),
+      ...(employmentFields.length > 0
+        ? [
+            {
+              eventType: 'employee.employment_updated',
+              changedFields: employmentFields,
+            },
+          ]
+        : []),
+    ];
+    await transaction.insert(personnelEmployeeAuditEvents).values(
+      auditEvents.map((event) => ({
+        id: uuidv7(),
+        organizationId: context.organizationId,
+        establishmentId: context.establishmentId,
+        employeeId: input.employeeId,
+        actorUserId,
+        eventType: event.eventType,
+        operationId,
+        changedFields: event.changedFields,
+        metadata: {
+          previousRevision: current.revision,
+          newRevision: updated.revision,
+        },
+      })),
+    );
+    await transaction.insert(personnelCommandReceipts).values({
+      id: uuidv7(),
+      organizationId: context.organizationId,
+      establishmentId: context.establishmentId,
+      actorUserId,
+      commandType: 'personnel.employee.update',
+      idempotencyHash,
+      requestFingerprint: fingerprint,
+      employeeId: input.employeeId,
+      expiresAt: new Date(now.getTime() + 24 * 60 * 60 * 1000),
+    });
+
+    return {
+      employee: toSummary(updated, businessDate),
+      idempotentReplay: false,
+      updated: true,
+    };
+  });
+}
+
+export type SetPersonnelEmployeeDepartureResult = {
+  employee: PersonnelEmployeeSummary;
+  idempotentReplay: boolean;
+  updated: boolean;
+};
+
+export async function setPersonnelEmployeeDeparture(
+  db: CloudDatabaseClient,
+  context: TenantContext,
+  rawInput: SetPersonnelEmployeeDepartureInput,
+  businessDate: string,
+  now = new Date(),
+): Promise<SetPersonnelEmployeeDepartureResult> {
+  requireEstablishment(context);
+  if (context.actor.type !== 'user') {
+    throw new PersonnelRepositoryError(
+      'A user actor is required.',
+      'ACTOR_REQUIRED',
+    );
+  }
+  const actorUserId = context.actor.userId;
+  const input = setPersonnelEmployeeDepartureInputSchema.parse(rawInput);
+  const idempotencyHash = hash(input.idempotencyKey);
+  const fingerprint = hash(JSON.stringify(input));
+
+  await cleanupExpiredPersonnelCommandReceipts(db, context, now);
+
+  return db.transaction(async (transaction) => {
+    await transaction.execute(
+      sql`select pg_advisory_xact_lock(hashtextextended(${`${context.organizationId}:${context.establishmentId}:${actorUserId}:personnel.employee.departure:${idempotencyHash}`}, 0))`,
+    );
+
+    const [receipt] = await transaction
+      .select()
+      .from(personnelCommandReceipts)
+      .where(
+        and(
+          eq(personnelCommandReceipts.organizationId, context.organizationId),
+          eq(personnelCommandReceipts.establishmentId, context.establishmentId),
+          eq(personnelCommandReceipts.actorUserId, actorUserId),
+          eq(
+            personnelCommandReceipts.commandType,
+            'personnel.employee.departure',
+          ),
+          eq(personnelCommandReceipts.idempotencyHash, idempotencyHash),
+        ),
+      )
+      .limit(1);
+    if (receipt) {
+      if (
+        receipt.requestFingerprint !== fingerprint ||
+        receipt.employeeId !== input.employeeId
+      ) {
+        throw new PersonnelRepositoryError(
+          'The idempotency key was reused for a different request.',
+          'IDEMPOTENCY_CONFLICT',
+        );
+      }
+      const replayed = await findScopedEmployee(
+        transaction,
+        context,
+        receipt.employeeId,
+      );
+      if (!replayed) {
+        throw new PersonnelRepositoryError(
+          'The committed employee could not be found.',
+          'IDEMPOTENCY_CONFLICT',
+        );
+      }
+      return {
+        employee: toSummary(replayed, businessDate),
+        idempotentReplay: true,
+        updated: true,
+      };
+    }
+
+    const current = await findScopedEmployee(
+      transaction,
+      context,
+      input.employeeId,
+    );
+    if (!current) {
+      throw new PersonnelRepositoryError('Employee not found.', 'NOT_FOUND');
+    }
+    if (current.revision !== input.expectedRevision) {
+      throw new PersonnelConflictError(toSummary(current, businessDate));
+    }
+    if (
+      current.departureDate !== null &&
+      current.departureDate === input.departureDate
+    ) {
+      return {
+        employee: toSummary(current, businessDate),
+        idempotentReplay: false,
+        updated: false,
+      };
+    }
+    if (input.departureDate && input.departureDate < current.entryDate) {
+      throw new PersonnelRepositoryError(
+        'The departure date must not be before the entry date.',
+        'INVALID_EMPLOYMENT_DATES',
+      );
+    }
+    const isCorrection = current.departureDate !== null;
+    if (isCorrection && !input.correctionReason) {
+      throw new PersonnelRepositoryError(
+        'A reason is required to correct or clear a departure.',
+        'REASON_REQUIRED',
+      );
+    }
+    if (!isCorrection && input.departureDate === null) {
+      throw new PersonnelRepositoryError(
+        'A departure date is required.',
+        'DEPARTURE_DATE_REQUIRED',
+      );
+    }
+
+    const [updated] = await transaction
+      .update(personnelEmployeeDossiers)
+      .set({
+        departureDate: input.departureDate,
+        revision: sql`${personnelEmployeeDossiers.revision} + 1`,
+        updatedAt: now,
+      })
+      .where(
+        and(
+          eq(personnelEmployeeDossiers.id, input.employeeId),
+          eq(personnelEmployeeDossiers.organizationId, context.organizationId),
+          eq(
+            personnelEmployeeDossiers.establishmentId,
+            context.establishmentId,
+          ),
+          eq(personnelEmployeeDossiers.revision, input.expectedRevision),
+        ),
+      )
+      .returning();
+    if (!updated) {
+      const concurrent = await findScopedEmployee(
+        transaction,
+        context,
+        input.employeeId,
+      );
+      if (!concurrent) {
+        throw new PersonnelRepositoryError('Employee not found.', 'NOT_FOUND');
+      }
+      throw new PersonnelConflictError(toSummary(concurrent, businessDate));
+    }
+
+    await transaction.insert(personnelEmployeeAuditEvents).values({
+      id: uuidv7(),
+      organizationId: context.organizationId,
+      establishmentId: context.establishmentId,
+      employeeId: input.employeeId,
+      actorUserId,
+      eventType: isCorrection
+        ? 'employee.departure_corrected'
+        : 'employee.departure_recorded',
+      operationId: uuidv7(),
+      changedFields: ['departureDate'],
+      metadata: {
+        previousRevision: current.revision,
+        newRevision: updated.revision,
+        previousDepartureDate: current.departureDate,
+        newDepartureDate: updated.departureDate,
+        ...(isCorrection ? { reason: input.correctionReason } : {}),
+      },
+    });
+    await transaction.insert(personnelCommandReceipts).values({
+      id: uuidv7(),
+      organizationId: context.organizationId,
+      establishmentId: context.establishmentId,
+      actorUserId,
+      commandType: 'personnel.employee.departure',
+      idempotencyHash,
+      requestFingerprint: fingerprint,
+      employeeId: input.employeeId,
+      expiresAt: new Date(now.getTime() + 24 * 60 * 60 * 1000),
+    });
+
+    return {
+      employee: toSummary(updated, businessDate),
+      idempotentReplay: false,
+      updated: true,
+    };
+  });
+}
+
 type PersonnelTransaction = Parameters<
   Parameters<CloudDatabaseClient['transaction']>[0]
 >[0];
+
+async function findScopedEmployee(
+  transaction: PersonnelTransaction,
+  context: TenantContext & { establishmentId: string },
+  employeeId: string,
+) {
+  const [employee] = await transaction
+    .select()
+    .from(personnelEmployeeDossiers)
+    .where(
+      and(
+        eq(personnelEmployeeDossiers.id, employeeId),
+        eq(personnelEmployeeDossiers.organizationId, context.organizationId),
+        eq(personnelEmployeeDossiers.establishmentId, context.establishmentId),
+      ),
+    )
+    .limit(1);
+  return employee ?? null;
+}
 
 async function findDuplicateCandidates(
   transaction: PersonnelTransaction,
@@ -405,21 +1067,41 @@ function toSummary(
 ): PersonnelEmployeeSummary {
   return {
     id: row.id,
-    givenNames: row.givenNames,
-    familyName: row.familyName,
-    position: row.position,
-    qualification: row.qualification,
+    givenNames: row.givenNames.trim(),
+    familyName: row.familyName.trim(),
+    position: row.position.trim(),
+    qualification: row.qualification.trim(),
     employmentTermType: row.employmentTermType,
     expectedEndDate: row.expectedEndDate,
     workTimeCategory: row.workTimeCategory,
     entryDate: row.entryDate,
     departureDate: row.departureDate,
     view: getEmployeeView(row, businessDate),
-    completenessReasons: [],
+    completenessReasons: getCompletenessReasons(row),
     revision: row.revision,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };
+}
+
+function getIncompleteCondition(): SQL {
+  return or(
+    sql`length(trim(${personnelEmployeeDossiers.givenNames})) = 0`,
+    sql`length(trim(${personnelEmployeeDossiers.familyName})) = 0`,
+    sql`length(trim(${personnelEmployeeDossiers.position})) = 0`,
+    sql`length(trim(${personnelEmployeeDossiers.qualification})) = 0`,
+  )!;
+}
+
+function getCompletenessReasons(
+  row: typeof personnelEmployeeDossiers.$inferSelect,
+): PersonnelEmployeeSummary['completenessReasons'] {
+  const reasons: PersonnelEmployeeSummary['completenessReasons'] = [];
+  if (!row.givenNames.trim()) reasons.push('given_names_missing');
+  if (!row.familyName.trim()) reasons.push('family_name_missing');
+  if (!row.position.trim()) reasons.push('position_missing');
+  if (!row.qualification.trim()) reasons.push('qualification_missing');
+  return reasons;
 }
 
 function getEmployeeView(
@@ -458,16 +1140,50 @@ function decodeCursor(value: string): z.infer<typeof cursorPayloadSchema> {
   }
 }
 
+function encodeAccessCursor(
+  value: z.infer<typeof accessCursorPayloadSchema>,
+): string {
+  return Buffer.from(JSON.stringify(value), 'utf8').toString('base64url');
+}
+
+function decodeAccessCursor(
+  value: string,
+): z.infer<typeof accessCursorPayloadSchema> {
+  try {
+    return accessCursorPayloadSchema.parse(
+      JSON.parse(Buffer.from(value, 'base64url').toString('utf8')),
+    );
+  } catch {
+    throw new PersonnelRepositoryError(
+      'Invalid access-history pagination cursor.',
+      'INVALID_CURSOR',
+    );
+  }
+}
+
 export class PersonnelRepositoryError extends Error {
   constructor(
     message: string,
     public readonly code:
       | 'INVALID_CURSOR'
       | 'ACTOR_REQUIRED'
-      | 'IDEMPOTENCY_CONFLICT',
+      | 'IDEMPOTENCY_CONFLICT'
+      | 'NOT_FOUND'
+      | 'INVALID_EMPLOYMENT_DATES'
+      | 'REASON_REQUIRED'
+      | 'DEPARTURE_DATE_REQUIRED',
   ) {
     super(message);
     this.name = 'PersonnelRepositoryError';
+  }
+}
+
+export class PersonnelConflictError extends Error {
+  readonly code = 'REVISION_CONFLICT';
+
+  constructor(public readonly currentEmployee: PersonnelEmployeeSummary) {
+    super('The employee was updated by another request.');
+    this.name = 'PersonnelConflictError';
   }
 }
 
@@ -482,4 +1198,71 @@ export class PersonnelDuplicateError extends Error {
 
 function hash(value: string): string {
   return createHash('sha256').update(value).digest('hex');
+}
+
+async function cleanupExpiredPersonnelCommandReceipts(
+  db: CloudDatabaseClient,
+  context: PersonnelTenantContext,
+  now: Date,
+): Promise<void> {
+  await db
+    .delete(personnelCommandReceipts)
+    .where(
+      and(
+        eq(personnelCommandReceipts.organizationId, context.organizationId),
+        eq(personnelCommandReceipts.establishmentId, context.establishmentId),
+        lte(personnelCommandReceipts.expiresAt, now),
+      ),
+    );
+}
+
+function safeAuditMetadata(value: Record<string, unknown>) {
+  return {
+    reason:
+      typeof value.reason === 'string' &&
+      value.reason.length >= 3 &&
+      value.reason.length <= 250
+        ? value.reason
+        : null,
+    previousDepartureDate: safeDateOnly(value.previousDepartureDate),
+    newDepartureDate: safeDateOnly(value.newDepartureDate),
+  };
+}
+
+function safeDateOnly(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  return /^\d{4}-\d{2}-\d{2}$/u.test(value) ? value : null;
+}
+
+function collapseAccessNavigationPairs<
+  T extends {
+    id: string;
+    actorUserId: string | null;
+    createdAt: Date;
+    eventType: string;
+  },
+>(rows: readonly T[]): Array<{ row: T; consumedThrough: T }> {
+  const visibleRows: Array<{ row: T; consumedThrough: T }> = [];
+  for (let index = 0; index < rows.length; index += 1) {
+    const current = rows[index];
+    if (!current) continue;
+
+    const next = rows[index + 1];
+    const opensSpecificHistory =
+      current.eventType === 'employee.history_viewed' ||
+      current.eventType === 'employee.access_history_viewed';
+    if (
+      opensSpecificHistory &&
+      next?.eventType === 'employee.dossier_viewed' &&
+      current.actorUserId === next.actorUserId &&
+      current.createdAt.getTime() >= next.createdAt.getTime() &&
+      current.createdAt.getTime() - next.createdAt.getTime() <= 120_000
+    ) {
+      visibleRows.push({ row: current, consumedThrough: next });
+      index += 1;
+      continue;
+    }
+    visibleRows.push({ row: current, consumedThrough: current });
+  }
+  return visibleRows;
 }

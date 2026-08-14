@@ -120,3 +120,16 @@ The production capture preserves all four real links and renders no link for
 the page uses natural vertical scrolling. Both viewports report document
 `scrollWidth` equal to `clientWidth`, so there is no horizontal overflow. No
 mutation was submitted.
+
+## Phase 5 as-built evidence
+
+Final clean-origin authenticated production-build captures are stored at
+1366x768, 1024x768, 768x1024, and 390x844. The visual review confirmed the
+approved shared shell, orientation header, desktop/tablet grid transitions,
+narrow single-column flow, text-backed availability, distinct reports state,
+and repository-authoritative French copy.
+
+All viewports have zero horizontal document overflow and all module actions are
+44 pixels high. The existing shared-shell desktop 40-pixel header controls and
+narrow 40-pixel brand/home link remain documented exceptions outside
+route-local ownership. Clean-origin browser warning/error collection was empty.

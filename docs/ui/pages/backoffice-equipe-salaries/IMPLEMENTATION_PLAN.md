@@ -234,8 +234,12 @@ Each item is a separate reviewable vertical slice:
    atomic audit, and preserved input.
 4. **Departure:** record effective date without deletion, correct departure
    with reason, derived former view, and atomic audit.
-5. **Hardening:** retention/archive job design after legal approval, backup/
-   restore verification, access-log review, performance checks, and full QA.
+5. **Read-only history:** bounded approved events, server-resolved actor display
+   name, repeated tenant scope, and no raw audit metadata.
+6. **Development hardening:** on-demand history with recovery states,
+   explainable completeness, authorization/tenant regressions, performance
+   review, and full development QA. Retention/archive, backup/restore, and
+   access-log operations remain production gates after owner approval.
 
 Delivery status on 2026-08-13:
 
@@ -247,10 +251,25 @@ Delivery status on 2026-08-13:
 - slice 2 create is complete for development: validated minimum form,
   same-establishment duplicate review, reasoned override, idempotent retry,
   atomic create audit, persisted success, and failure recovery;
+- slice 3 edit is complete for development: approved identity/employment
+  fields, full-scope compare-and-set revision guard, preserved input, current-
+  version reload after conflict, idempotent retry, and atomic field-group audit;
+- slice 4 departure is complete for development: non-deletion confirmation,
+  establishment-local effective date, correction/reopening with bounded reason,
+  derived former view, compare-and-set conflict recovery, idempotent retry, and
+  atomic audit;
 - migrations `0005_lean_zzzax.sql` and
   `0006_aromatic_boom_boom.sql` are applied locally;
-- slices 3-5 remain pending. No employee edit/departure write or audit-history
-  UI exists yet.
+- slice 5 read-only history is complete for development: at most 50 known
+  events, newest first, repeated organization/establishment/employee scope,
+  safe actor display name, and allowlisted reason/date details only;
+- slice 6 development hardening is complete: initial list rendering no longer
+  loads history for every employee, history has loading/error/retry states,
+  completeness count/filter/detail use one derived rule, and permission,
+  missing-establishment, suspended-membership, tenant-switch, responsive, test,
+  typecheck, and build evidence is recorded;
+- production retention/archive, backup/restore, access-log review, legal, and
+  operational-security approvals remain blocking release gates.
 
 Do not build all tables/backend first or leave the UI on fixtures while claiming
 integration. Each completed slice replaces only the corresponding fixture behavior.
@@ -282,16 +301,53 @@ integration. Each completed slice replaces only the corresponding fixture behavi
 - Server Component/action error mapping and preserved-input tests;
 - Backoffice typecheck, tests, build, responsive and browser QA.
 
-### Blocking approvals before implementation
+### Blocking approvals before production deployment
 
-The development create slice is complete, but production collection and later
-employee writes do not start until:
+The development MVP slices are complete, but production collection does not
+start until:
 
 1. controller/legal owner provides the employee notice, legal bases, rights
    workflow, recipients, and per-data-class retention/deletion schedule;
 2. security owner confirms access review, encryption, logging, backup/restore,
    incident response, audit access, and idempotency cleanup operations;
-3. product/security owner authorizes the first real slice and its migration.
+3. release/security owners review the already implemented migrations, rollback,
+   production database target, and release evidence.
+
+Repository audit on 2026-08-14:
+
+- cloud operations documentation delegates backup, point-in-time recovery,
+  encryption, and access control to the managed provider, but this repository
+  contains no provider/project-specific restore-drill evidence for Salariés;
+- personnel mutation events are persisted and OWNER-readable; opening dossier
+  detail, business history, or the OWNER-only consultation history appends a
+  dedicated sensitive-read event, while a list scan is not expanded into one
+  event per returned employee;
+- `auth_audit_events` is scoped to authentication/membership administration and
+  must not be repurposed as employee dossier access history;
+- no employee archive/deletion/legal-hold job exists because the per-class
+  retention schedule and operational owner are not approved;
+- idempotency receipts store a 24-hour `expiresAt`; each create/edit/departure
+  entry point removes expired receipts inside the current trusted
+  organization/establishment before replay evaluation. A future global
+  maintenance scheduler is unnecessary for correctness but may be approved to
+  clean inactive establishments.
+
+### Deferred production tasks
+
+- `SALARIES-RETENTION-01` — **deferred:** controller/legal owner defines the
+  per-data-class active/archive/deletion schedule, legal-hold workflow, employee
+  notice, recipients, rights workflow, and operational deletion owner. Do not
+  implement archive or hard deletion before approval.
+- `SALARIES-NEON-RESTORE-01` — **deferred:** on the production Neon project,
+  verify backup/PITR configuration and perform a documented restore drill into
+  an isolated recovery target. Current work remains local; do not access or
+  mutate Neon production until the target, owner, and drill window are approved.
+- `SALARIES-SENSITIVE-AUDIT-01` — **future-wave requirement:** before enabling
+  Documents, export/download, archive, legal hold, rights-response, or audit-log
+  administration, define and test an allowlisted audit event for each sensitive
+  action. Current scope records dossier-detail, business-history, and
+  consultation-history opens, exposes an allowlisted OWNER-only consultation
+  timeline, and records every create/edit/departure/duplicate-override mutation.
 
 ### Later capability waves
 

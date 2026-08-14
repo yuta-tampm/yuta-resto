@@ -29,7 +29,12 @@
 - [x] Approved typed fixtures are fictional with a prototype notice.
 - [x] No control implies production persistence/upload/export/generation/compliance.
 - [x] Required loading/empty/forbidden/validation/conflict/pending/success/error/recovery states exist.
-- [x] Row selection updates quick view without mutation.
+- [x] Row selection opens the read-only dossier drawer without employee mutation.
+- [x] Initial page load leaves every employee unselected and the dossier closed.
+- [x] Explicit row/card selection opens a wider right-side drawer without
+      reserving or shrinking the list column.
+- [x] The drawer separates identity, actions, tabs, and overview facts into
+      scannable responsive regions without adding unsupported employee data.
 - [x] Quick view remains concise rather than becoming a monolithic editor.
 - [x] Completeness exposes reasons and supported actions.
 - [x] Missing-data and future actionable-event semantics are not conflated.
@@ -69,7 +74,7 @@
       rights workflow, and per-class retention/deletion schedule.
 - [ ] Security owner approves encryption, least privilege, logging,
       backup/restore, incident response, and audit-access operations.
-- [ ] Cross-tenant, suspended, stale, and missing-permission tests exist.
+- [x] Cross-tenant, suspended, stale, and missing-permission tests exist.
 - [ ] No production collection/mutation starts before all Phase 3 sign-offs.
 - [x] No PDF-only electronic-register compliance claim is made.
 
@@ -80,17 +85,25 @@
       delivery order, rollback approach, and required tests are documented.
 - [x] Documents, Formalites, register/PDF, apprenticeship, OCR, and sensitive
       contract data remain explicit later waves with separate approval gates.
-- [x] Technical preparation creates no schema, migration, API, permission,
-      repository, server action, or real storage behavior.
+- [x] Technical preparation preceded implementation; the approved development
+      slices now include schema, migrations, contracts, permissions,
+      repositories, server actions, and real local storage behavior.
 - [ ] Controller/legal and operational-security owners approve production use.
-- [ ] Product/security owner explicitly authorizes the first real delivery slice.
+- [x] Product scope authorized the implemented development slices; this does not
+      authorize production deployment.
 
 ## MVP behavior after implementation
 
 - [x] Authorized list/read uses real establishment-scoped data.
-- [x] Create validates and preserves failed input; edit/conflict remains pending.
-- [ ] Departure records a date without hard deletion.
-- [ ] Completeness is explainable/actionable.
+- [x] Create and edit validate and preserve failed input.
+- [x] Edit detects a stale revision and requires current-version reload before retry.
+- [x] Departure records a date without hard deletion.
+- [x] Departure correction or reopening requires a bounded reason and new audit event.
+- [x] Employee history is read-only, bounded, newest-first, and tenant-scoped.
+- [x] The effective date remains active through that date and becomes former the next day.
+- [x] The final five calendar days use text-backed warning badges in list/card
+      and dossier views, with `Dernier jour` on the effective departure date.
+- [x] Completeness is explainable/actionable and uses the same count/filter rule.
 - [x] Fixtures are removed from the integrated read slice.
 
 Read-slice evidence:
@@ -102,7 +115,21 @@ Read-slice evidence:
 - [x] No production/demo employee row is seeded.
 - [x] Create commits dossier, minimal audit, and retry receipt atomically.
 - [x] Same-establishment duplicate candidates require an explicit reasoned override.
+- [x] Edit increments the revision and audits only changed field groups.
+- [x] Cross-establishment edit attempts fail without exposing another dossier.
 - [x] Repeated identical create returns one committed dossier.
+- [x] History exposes only approved event fields and no raw audit/tenant metadata.
+- [x] History loads only when opened and provides loading, error, and retry states.
+- [x] OWNER dossier-detail, business-history, and consultation-history opens
+      append deduplicated sensitive-read audit events.
+- [x] Sensitive-read audit events do not pollute the business-change history timeline.
+- [x] The OWNER-only Consultations tab loads 10 collapsed access entries per
+      cursor page with previous/next controls and no raw actor/tenant/operation
+      metadata.
+- [x] Immediate same-actor dossier/history navigation pairs render as one
+      specific consultation entry while both immutable audit rows are retained.
+- [x] Expired command receipts are removed in trusted establishment scope before mutation replay checks.
+- [x] Missing establishment, non-user actor, suspended membership, and tenant-switch denial are covered by scoped foundation/personnel tests.
 
 ## UI, responsive, accessibility, and verification
 
@@ -111,5 +138,14 @@ Read-slice evidence:
 - [x] Keyboard, focus, labels/errors, dialog focus, and text statuses work in the prototype.
 - [x] UI pack, tooling, docs, format, and architecture checks pass or unrelated
       baseline failures are reported.
-- [ ] Later affected typecheck/test/build/security/database checks pass.
-- [ ] Functional/security QA precedes visual parity and as-built sync.
+- [x] Affected typecheck/test/build/security/database checks pass for development.
+- [x] Functional/security QA precedes visual parity and as-built sync.
+
+## Deferred production tasks
+
+- [ ] `SALARIES-RETENTION-01`: approve per-class retention, archive, deletion,
+      legal hold, notice/rights workflow, and operational owner.
+- [ ] `SALARIES-NEON-RESTORE-01`: run a production Neon backup/PITR restore
+      drill into an isolated target after explicit infrastructure approval.
+- [ ] `SALARIES-SENSITIVE-AUDIT-01`: add allowlisted audit events before each
+      future Documents/export/archive/legal-hold/rights administration action.

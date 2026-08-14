@@ -11,11 +11,36 @@ import { posApi } from '../../lib/pos-api';
 import { SiteAgentClientError } from '../../lib/site-agent-client';
 
 const createOrderFormSchema = z.object({
-  tableLabel: z.string().trim().min(1).max(255),
-  orderType: z.enum(['dine_in', 'takeaway', 'delivery']),
-  staffUserId: z.string().uuid().optional(),
-  note: z.string().trim().max(2000).optional(),
+  tableLabel: z
+    .string()
+    .trim()
+    .min(1, 'Indiquez une table ou un repere.')
+    .max(255, 'La table ou le repere ne peut pas depasser 255 caracteres.'),
+  orderType: z.enum(['dine_in', 'takeaway', 'delivery'], {
+    message: 'Choisissez un type de commande.',
+  }),
+  staffUserId: z.string().uuid('Choisissez un employe valide.').optional(),
+  note: z
+    .string()
+    .trim()
+    .max(2000, 'La note ne peut pas depasser 2 000 caracteres.')
+    .optional(),
 });
+
+export type CreateOrderActionState = {
+  revision: number;
+  status: 'idle' | 'validation_error' | 'staff_unavailable' | 'service_error';
+  message: string | null;
+  fieldErrors: Partial<
+    Record<'staffUserId' | 'tableLabel' | 'orderType' | 'note', string>
+  >;
+  values: {
+    staffUserId: string;
+    tableLabel: string;
+    orderType: string;
+    note: string;
+  };
+};
 
 const addOrderItemFormSchema = z.object({
   orderId: z.string().uuid(),
@@ -66,24 +91,96 @@ const restoreOrderItemFormSchema = z.object({
   orderItemId: z.string().uuid(),
 });
 
-export async function createOrderAction(formData: FormData): Promise<void> {
-  const values = createOrderFormSchema.parse({
-    tableLabel: formData.get('tableLabel'),
-    orderType: formData.get('orderType'),
-    staffUserId: formData.get('staffUserId') || undefined,
-    note: formData.get('note') || undefined,
-  });
-  const staffUser = values.staffUserId
-    ? await getSelectableStaffUserById(values.staffUserId)
-    : await getSelectedStaffUser();
-  const { order } = await posApi.createOrder({
-    tableLabel: values.tableLabel,
-    orderType: values.orderType,
-    staffUserId: staffUser.id,
-    note: values.note,
+export async function createOrderAction(
+  previousState: CreateOrderActionState,
+  formData: FormData,
+): Promise<CreateOrderActionState> {
+  const submittedValues = {
+    staffUserId: formString(formData, 'staffUserId'),
+    tableLabel: formString(formData, 'tableLabel'),
+    orderType: formString(formData, 'orderType'),
+    note: formString(formData, 'note'),
+  };
+  const parsed = createOrderFormSchema.safeParse({
+    ...submittedValues,
+    staffUserId: submittedValues.staffUserId || undefined,
+    note: submittedValues.note || undefined,
   });
 
-  redirect(`/orders/${order.id}/items`);
+  if (!parsed.success) {
+    const flattenedErrors = parsed.error.flatten().fieldErrors;
+    return {
+      revision: previousState.revision + 1,
+      status: 'validation_error',
+      message: 'Verifiez les champs signales avant de continuer.',
+      fieldErrors: {
+        staffUserId: flattenedErrors.staffUserId?.[0],
+        tableLabel: flattenedErrors.tableLabel?.[0],
+        orderType: flattenedErrors.orderType?.[0],
+        note: flattenedErrors.note?.[0],
+      },
+      values: submittedValues,
+    };
+  }
+
+  let orderId: string;
+  try {
+    const staffUser = parsed.data.staffUserId
+      ? await getSelectableStaffUserById(parsed.data.staffUserId)
+      : await getSelectedStaffUser();
+    const { order } = await posApi.createOrder({
+      tableLabel: parsed.data.tableLabel,
+      orderType: parsed.data.orderType,
+      staffUserId: staffUser.id,
+      note: parsed.data.note,
+    });
+    orderId = order.id;
+  } catch (error: unknown) {
+    if (isStaffUnavailableError(error)) {
+      return {
+        revision: previousState.revision + 1,
+        status: 'staff_unavailable',
+        message:
+          "Cet employe n'est plus disponible. Actualisez la liste puis choisissez un employe actif.",
+        fieldErrors: {
+          staffUserId: "L'employe selectionne n'est plus disponible.",
+        },
+        values: submittedValues,
+      };
+    }
+
+    console.error('POS order creation failed.', error);
+    return {
+      revision: previousState.revision + 1,
+      status: 'service_error',
+      message:
+        'Creation non confirmee. Verifiez le service local et la liste des commandes avant de soumettre de nouveau.',
+      fieldErrors: {},
+      values: submittedValues,
+    };
+  }
+
+  redirect(`/orders/${orderId}/items`);
+}
+
+function formString(formData: FormData, key: string): string {
+  const value = formData.get(key);
+  return typeof value === 'string' ? value : '';
+}
+
+function isStaffUnavailableError(error: unknown): boolean {
+  if (
+    error instanceof SiteAgentClientError &&
+    error.code === 'STAFF_USER_UNAVAILABLE'
+  ) {
+    return true;
+  }
+  return (
+    error instanceof Error &&
+    (error.message === 'Selected staff user is not available.' ||
+      error.message ===
+        'No active staff user found. Seed the local POS database first.')
+  );
 }
 
 export async function addOrderItemAction(formData: FormData): Promise<void> {

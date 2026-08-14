@@ -20,6 +20,42 @@ export function getWorkTimeLabel(employee: PersonnelEmployeeSummary): string {
     : 'Temps partiel';
 }
 
+export type EmploymentStatusPresentation = {
+  label: string;
+  tone: 'success' | 'info' | 'warning' | 'neutral';
+};
+
+export function getEmploymentStatusPresentation(
+  employee: PersonnelEmployeeSummary,
+  businessDate: string,
+): EmploymentStatusPresentation {
+  if (employee.view === 'former') {
+    return { label: 'Ancien salarié', tone: 'neutral' };
+  }
+  if (employee.view === 'upcoming') {
+    return { label: 'Entrée à venir', tone: 'info' };
+  }
+  if (employee.departureDate) {
+    const daysUntilDeparture = differenceInCalendarDays(
+      employee.departureDate,
+      businessDate,
+    );
+    if (daysUntilDeparture === 0) {
+      return { label: 'Dernier jour', tone: 'warning' };
+    }
+    if (daysUntilDeparture === 1) {
+      return { label: 'Départ demain', tone: 'warning' };
+    }
+    if (daysUntilDeparture >= 2 && daysUntilDeparture <= 5) {
+      return {
+        label: `Départ dans ${daysUntilDeparture} jours`,
+        tone: 'warning',
+      };
+    }
+  }
+  return { label: 'Actif', tone: 'success' };
+}
+
 export function isEmployeeComplete(
   employee: PersonnelEmployeeSummary,
 ): boolean {
@@ -44,4 +80,12 @@ export function getBusinessDate(timezone: string, date = new Date()): string {
   }).formatToParts(date);
   const values = new Map(parts.map((part) => [part.type, part.value]));
   return `${values.get('year')}-${values.get('month')}-${values.get('day')}`;
+}
+
+function differenceInCalendarDays(laterDate: string, earlierDate: string) {
+  return Math.round(
+    (Date.parse(`${laterDate}T00:00:00Z`) -
+      Date.parse(`${earlierDate}T00:00:00Z`)) /
+      86_400_000,
+  );
 }
