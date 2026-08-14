@@ -1,8 +1,14 @@
 # POS Order Items - Reference Metadata
 
-Status: Draft design reference
+Status: Approved design reference
 
 Visibility: Engineering
+
+Reference status: `APPROVED`
+
+Approved scope/date or review note: The product owner approved the corrected
+desktop, narrow, and post-send success directions on 2026-08-15. Approval is
+limited to hierarchy, density, spacing, responsive behavior, and visual tone.
 
 ## `phase-0-current-1366x768.png`
 
@@ -22,7 +28,7 @@ ownership, business logic, or raw color values. It is not an approved design.
 
 ## `design-proposal-01-desktop-v2.png`
 
-Reference status: `DRAFT`
+Reference status: `APPROVED`
 
 Purpose: desktop visual renewal and separate locked, validation/allergy,
 local-service, and kitchen-send state studies.
@@ -32,7 +38,7 @@ and per-item overflow menus from the first desktop draft.
 
 ## `design-proposal-02-narrow-v2.png`
 
-Reference status: `DRAFT`
+Reference status: `APPROVED`
 
 Purpose: narrow catalog, existing current-order dialog, and recovery/attention
 state studies.
@@ -48,7 +54,7 @@ per-item overflow controls lacked current repository behavior.
 
 ## `design-proposal-03-send-success.png`
 
-Reference status: `DRAFT`
+Reference status: `APPROVED`
 
 Purpose: product-requested post-kitchen-send success screen at desktop and
 narrow widths. It shows `Créer une autre commande` to `/pos` and `Retour aux

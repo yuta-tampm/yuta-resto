@@ -3,11 +3,12 @@ import {
   Alert,
   AlertDescription,
   AlertTitle,
+  Badge,
   Button,
   IconButton,
   cn,
 } from '@yuta/ui';
-import { CreditCard, Minus, Plus, TriangleAlert } from 'lucide-react';
+import { CreditCard, List, Minus, Plus, TriangleAlert } from 'lucide-react';
 import Link from 'next/link';
 import { v7 as uuidv7 } from 'uuid';
 import {
@@ -158,7 +159,7 @@ export default async function OrderItemsPage({
       title={order.tableLabel}
       description={order.orderNumber}
       actions={
-        <Button asChild variant="secondary">
+        <Button asChild variant="secondary" className="h-11">
           <Link href={`/orders/${order.id}/payment`}>
             <CreditCard className="h-4 w-4" />
             Paiement
@@ -166,7 +167,7 @@ export default async function OrderItemsPage({
         </Button>
       }
       contentClassName="p-0 lg:overflow-hidden"
-      maxWidthClassName="max-w-7xl"
+      maxWidthClassName="max-w-[1600px]"
     >
       <div className="flex min-h-full min-w-0 flex-col lg:h-full lg:min-h-0">
         {sendFeedback && (
@@ -183,20 +184,20 @@ export default async function OrderItemsPage({
             className="m-4 mb-0 shrink-0"
           />
         )}
-        <div className="grid min-h-0 min-w-0 flex-1 overflow-x-hidden lg:grid-cols-[190px_minmax(0,1fr)_360px] lg:grid-rows-[minmax(0,1fr)]">
+        <div className="grid min-h-0 min-w-0 flex-1 overflow-x-hidden lg:grid-cols-[180px_minmax(0,1fr)_minmax(340px,380px)] lg:grid-rows-[minmax(0,1fr)]">
           <aside className="min-w-0 overflow-hidden border-b border-border-default bg-white lg:flex lg:min-h-0 lg:flex-col lg:border-b-0 lg:border-r">
-            <div className="hidden px-5 pb-3 pt-6 lg:block">
-              <h2 className="text-sm font-black text-primary/55">Categories</h2>
+            <div className="hidden px-5 pb-4 pt-5 lg:block">
+              <h2 className="text-sm font-black text-primary/65">Catégories</h2>
             </div>
-            <nav className="flex gap-2 overflow-x-auto px-4 py-3 max-lg:[scrollbar-width:none] max-lg:[&::-webkit-scrollbar]:hidden lg:grid lg:min-h-0 lg:flex-1 lg:content-start lg:gap-3 lg:overflow-x-hidden lg:overflow-y-scroll lg:overscroll-contain lg:px-4 lg:pb-6 lg:pt-0">
+            <nav className="flex gap-2 overflow-x-auto px-4 py-3 max-lg:[scrollbar-width:none] max-lg:[&::-webkit-scrollbar]:hidden lg:grid lg:min-h-0 lg:flex-1 lg:content-start lg:gap-1 lg:overflow-x-hidden lg:overflow-y-scroll lg:overscroll-contain lg:px-3 lg:pb-6 lg:pt-0">
               {categoryTabs.map((categoryItem) => (
                 <Link
                   key={categoryItem.id}
                   href={categoryHref(order.id, categoryItem.id)}
                   className={cn(
-                    'shrink-0 rounded-lg px-3 py-2 text-xs font-black transition-colors sm:px-4 sm:text-sm lg:w-full lg:py-3',
+                    'shrink-0 rounded-lg border-l-4 border-transparent px-3 py-2.5 text-xs font-black transition-colors sm:px-4 sm:text-sm lg:w-full lg:py-3',
                     categoryItem.id === selectedCategoryId
-                      ? 'bg-status-info-soft text-primary'
+                      ? 'border-action-primary bg-status-success-soft text-primary'
                       : 'text-primary hover:bg-surface-muted',
                   )}
                 >
@@ -274,10 +275,15 @@ export default async function OrderItemsPage({
           </section>
 
           <aside className="hidden min-h-0 overflow-hidden bg-white lg:flex lg:flex-col">
-            <div className="px-6 py-6">
-              <h2 className="text-lg font-black">Commande actuelle</h2>
+            <div className="flex items-center justify-between gap-3 px-5 py-5 xl:px-6">
+              <h2 className="text-xl font-black">Commande actuelle</h2>
+              <Badge tone={pendingItemCount > 0 ? 'success' : 'neutral'}>
+                {pendingItemCount > 0
+                  ? 'En attente'
+                  : orderStatusLabel(order.status)}
+              </Badge>
             </div>
-            <div className="grid min-h-0 flex-1 content-start overflow-y-auto px-6">
+            <div className="grid min-h-0 flex-1 content-start overflow-y-auto px-5 xl:px-6">
               {activeOrderItems.length === 0 ? (
                 <p className="rounded-lg border border-border-default bg-canvas p-3 text-sm font-semibold text-primary/55">
                   Aucun article pour le moment.
@@ -287,10 +293,10 @@ export default async function OrderItemsPage({
                   <div
                     key={item.id}
                     className={cn(
-                      'grid gap-1 rounded-lg border px-3 py-3 transition-colors',
+                      'grid gap-1 border-b px-0 py-4 transition-colors last:border-b-0',
                       requiredInstructionItemIds.has(item.id)
-                        ? 'border-status-danger-border bg-status-danger-soft'
-                        : 'border-transparent',
+                        ? 'rounded-lg border border-status-danger-border bg-status-danger-soft px-3'
+                        : 'border-border-default',
                       item.status === 'cancelled' && 'opacity-60',
                     )}
                   >
@@ -411,11 +417,15 @@ export default async function OrderItemsPage({
                   label="Envoyer en cuisine"
                   icon="chef"
                   variant="primary"
+                  className="h-11"
                   fullWidth
                 />
               </div>
-              <Button asChild variant="secondary">
-                <Link href={`/orders/${order.id}`}>Voir details</Link>
+              <Button asChild variant="secondary" className="h-11">
+                <Link href={`/orders/${order.id}`}>
+                  <List className="h-4 w-4" />
+                  Voir détails
+                </Link>
               </Button>
             </div>
           </aside>
@@ -471,7 +481,8 @@ function OrderItemQuantityControls({
         <IconButton
           type="submit"
           variant="outline"
-          size="sm"
+          size="md"
+          className="h-11 w-11"
           aria-label="Retirer un article"
         >
           <Minus className="h-3.5 w-3.5" />
@@ -486,7 +497,8 @@ function OrderItemQuantityControls({
           <IconButton
             type="submit"
             variant="outline"
-            size="sm"
+            size="md"
+            className="h-11 w-11"
             aria-label="Ajouter un article"
           >
             <Plus className="h-3.5 w-3.5" />
@@ -516,4 +528,18 @@ function orderItemStatusLabel(
   } satisfies Record<typeof status, string>;
 
   return labels[status];
+}
+
+function orderStatusLabel(status: string): string {
+  const labels: Record<string, string> = {
+    draft: 'Brouillon',
+    sent: 'Envoyée',
+    preparing: 'En préparation',
+    ready: 'Prête',
+    served: 'Servie',
+    paid: 'Payée',
+    cancelled: 'Annulée',
+  };
+
+  return labels[status] ?? status;
 }

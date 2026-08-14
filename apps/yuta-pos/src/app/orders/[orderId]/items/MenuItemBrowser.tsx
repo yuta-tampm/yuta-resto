@@ -44,8 +44,8 @@ export function MenuItemBrowser({
 
   return (
     <>
-      <div className="shrink-0 border-b border-border-default px-4 py-3 lg:px-5 lg:py-5">
-        <div className="relative max-w-xl">
+      <div className="shrink-0 border-b border-border-default px-4 py-3 lg:px-5 lg:py-4">
+        <div className="relative">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary/35 lg:left-4 lg:h-5 lg:w-5" />
           <Input
             type="search"
@@ -70,7 +70,7 @@ export function MenuItemBrowser({
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-2 p-4 pb-24 sm:gap-4 md:grid-cols-3 lg:min-h-0 lg:flex-1 lg:auto-rows-max lg:overflow-y-auto lg:overscroll-contain lg:p-5 lg:pb-5 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2 p-4 pb-24 sm:gap-3 md:grid-cols-3 lg:min-h-0 lg:flex-1 lg:auto-rows-max lg:overflow-y-auto lg:overscroll-contain lg:p-4 lg:pb-5 xl:grid-cols-4">
           {visibleItems.map((item) => (
             <form key={item.id} action={addOrderItemAction}>
               <input type="hidden" name="orderId" value={orderId} />
@@ -78,14 +78,14 @@ export function MenuItemBrowser({
               <Button
                 type="submit"
                 variant="secondary"
-                className="relative h-32 w-full flex-col gap-0 overflow-hidden rounded-lg p-0 text-center sm:h-40"
+                className="relative h-36 w-full flex-col gap-0 overflow-hidden rounded-xl p-0 text-center sm:h-40"
                 disabled={!canEditItems}
               >
                 <MenuItemArtwork
                   name={item.name}
                   selectedQuantity={item.selectedQuantity}
                 />
-                <span className="grid w-full gap-1 px-3 pb-3 pt-2">
+                <span className="grid w-full gap-1 px-3 pb-3 pt-2.5">
                   <span className="line-clamp-2 min-h-7 text-xs font-black leading-tight sm:min-h-9 sm:text-sm">
                     {item.name}
                   </span>
@@ -110,16 +110,16 @@ function MenuItemArtwork({
   selectedQuantity: number;
 }) {
   return (
-    <span className="relative grid h-16 w-full place-items-center overflow-hidden bg-canvas sm:h-24">
+    <span className="relative grid h-20 w-full place-items-center overflow-hidden bg-canvas sm:h-24">
       <span
         className={cn(
-          'grid h-14 w-14 place-items-center rounded-full border border-border-default text-sm font-black shadow-sm sm:h-20 sm:w-20 sm:text-lg',
+          'grid h-14 w-14 place-items-center rounded-full border border-border-default text-sm font-black shadow-sm sm:h-[4.5rem] sm:w-[4.5rem] sm:text-lg',
           menuItemArtworkClass(name),
         )}
       >
         {menuItemInitials(name)}
       </span>
-      <span className="absolute right-2 top-2 grid h-5 w-5 place-items-center rounded-full bg-action-primary text-[11px] font-black text-primary shadow-sm">
+      <span className="absolute right-2 top-2 grid h-5 min-w-5 place-items-center rounded-full bg-status-success px-1 text-[11px] font-black text-inverse shadow-sm">
         {selectedQuantity}
       </span>
     </span>

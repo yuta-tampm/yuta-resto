@@ -1,6 +1,6 @@
 # POS Order Items
 
-Status: Draft design package
+Status: Phase 1 ready for review
 
 Visibility: Engineering
 
@@ -22,11 +22,11 @@ Implementation class: `integrated`
 
 Delivery mode: `EXISTING_CAPABILITY_RENEWAL`
 
-Package status: `design`
+Package status: `implementation-ready`
 
 Scope status: `APPROVED`
 
-Reference status: `DRAFT`
+Reference status: `APPROVED`
 
 Inventory status: `COMPLETE`
 
@@ -173,12 +173,12 @@ Fixture replacement is forbidden for this existing integrated page.
 - `references/phase-0-current-1366x768.png` - current real operational
   baseline, evidence only.
 - `references/design-proposal-01-desktop-v2.png` - corrected desktop renewal,
-  `DRAFT` pending design approval.
+  approved for hierarchy, density, spacing, and responsive direction.
 - `references/design-proposal-02-narrow-v2.png` - corrected narrow catalog,
-  order-dialog, and recovery studies, `DRAFT` pending design approval.
+  order-dialog, and recovery studies, approved as directional guidance.
 - `references/design-proposal-03-send-success.png` - product-requested
-  post-kitchen-send success screen for desktop and narrow layouts, `DRAFT`
-  pending design approval.
+  post-kitchen-send success screen for desktop and narrow layouts, approved for
+  the later interaction phase.
 - `references/design-proposal-01-desktop.png` and
   `design-proposal-02-narrow.png` - rejected first drafts retained as review
   evidence because they invented filter and per-item overflow controls.
@@ -216,8 +216,10 @@ Runtime/device change: NO
 
 Phase 0 inventory, baseline, shared context, protected invariants, and design
 prompt were approved by the product owner on 2026-08-14. Design generation may
-proceed. The corrected generated references are `DRAFT`; no design reference or
-implementation phase is approved yet.
+proceed. The product owner approved the three corrected visual references on
+2026-08-15 and authorized Phase 1. The references guide presentation only;
+repository copy, routes, data, validation, and operational behavior remain
+authoritative.
 
 The product owner additionally approved the product requirement that a
 successfully confirmed kitchen send replaces the item-entry workspace with a
@@ -225,6 +227,41 @@ dedicated success state. It contains exactly two navigation actions:
 `Créer une autre commande` to `/pos` and `Retour aux commandes` to `/`. This is
 an approved interaction requirement, not evidence that runtime behavior is
 implemented.
+
+## Phase 1 delivery
+
+Phase 1 renews only the existing route-local presentation. It widens the
+service workspace, strengthens the selected-category treatment, increases
+catalog density and visual hierarchy, adds a data-backed current-order status,
+aligns the desktop summary with the approved reference, and promotes the narrow
+`Voir commande` action. Service-critical payment, quantity, instruction,
+kitchen-send, detail, and close controls now provide at least 44px effective
+targets.
+
+Changed runtime files are limited to:
+
+- `apps/yuta-pos/src/app/orders/[orderId]/items/page.tsx`;
+- `apps/yuta-pos/src/app/orders/[orderId]/items/MenuItemBrowser.tsx`;
+- `apps/yuta-pos/src/app/orders/[orderId]/items/MobileOrderDialog.tsx`;
+- `apps/yuta-pos/src/app/orders/[orderId]/items/OrderItemNoteDialog.tsx`.
+
+No loader, Server Action, route, contract, site-agent call, authorization,
+persistence, transaction, polling, offline, kitchen, payment, or printer
+behavior changed. The approved post-send success screen remains deferred to the
+interaction phase.
+
+Production-build browser verification used the real persisted draft order
+`POS-20260809-072857-FF6F24` without submitting a control or mutating data. At
+1366x768 and 390x844, the document had no horizontal overflow, stayed contained
+to the viewport, and exposed 44px service controls; the narrow order trigger was
+56px. The mobile current-order dialog remained scroll-contained at 728px in an
+844px viewport. No browser console warning or error was observed.
+
+Phase 1 verification passed: POS typecheck, 48 POS tests, POS production build,
+workspace typecheck, page-pack validation, documentation consistency,
+architecture boundaries, scoped Prettier, and `git diff --check`.
+
+Phase 2 is not approved.
 
 ## Prompt order
 

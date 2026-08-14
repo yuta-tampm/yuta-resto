@@ -187,7 +187,8 @@ export function OrderItemNoteDialog({
         <Button
           type="button"
           variant={requiresAttention ? 'danger' : 'ghost'}
-          size="sm"
+          size="md"
+          className="min-h-11"
           disabled={disabled}
         >
           <MessageSquarePlus className="h-3.5 w-3.5" />

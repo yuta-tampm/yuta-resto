@@ -1,6 +1,6 @@
 # POS Order Items - Design Handoff
 
-Status: Phase 0 ready for review
+Status: Approved for Phase 1
 
 Visibility: Engineering
 
@@ -14,12 +14,12 @@ be replaced by fixtures.
 
 Shared context status: `RESOLVED`
 
-| Layer           | Owner/source                                                 | Reference status | Reuse exactly                                                                 | May adapt                           | Excluded                                        | Decision/blocker      |
-| --------------- | ------------------------------------------------------------ | ---------------- | ----------------------------------------------------------------------------- | ----------------------------------- | ----------------------------------------------- | --------------------- |
-| YUTA global     | `@yuta/ui`, semantic tokens, shared rules                    | APPROVED         | primitives, focus, labels, Lucide, semantic states                            | route density/composition           | raw colors, another framework, Backoffice image | none                  |
-| POS application | POS rules, layout, `PosPageShell`, `PosHeader`, health strip | APPROVED         | compact dark header, logo/home, status semantics, French operational patterns | existing responsive action behavior | management shell, cloud tenancy, marketing UI   | none                  |
-| Order flow      | `/pos`, detail, items, kitchen, payment                      | APPROVED         | real routes, direct service actions, order/status vocabulary                  | route-local grouping                | table map, new route/capability                 | none                  |
-| Target page     | current route and Phase 0 baseline                           | REVIEWED         | real loader/actions/content hierarchy                                         | visual hierarchy after approval     | fixtures, invented fields/actions               | design review pending |
+| Layer           | Owner/source                                                 | Reference status | Reuse exactly                                                                 | May adapt                           | Excluded                                        | Decision/blocker |
+| --------------- | ------------------------------------------------------------ | ---------------- | ----------------------------------------------------------------------------- | ----------------------------------- | ----------------------------------------------- | ---------------- |
+| YUTA global     | `@yuta/ui`, semantic tokens, shared rules                    | APPROVED         | primitives, focus, labels, Lucide, semantic states                            | route density/composition           | raw colors, another framework, Backoffice image | none             |
+| POS application | POS rules, layout, `PosPageShell`, `PosHeader`, health strip | APPROVED         | compact dark header, logo/home, status semantics, French operational patterns | existing responsive action behavior | management shell, cloud tenancy, marketing UI   | none             |
+| Order flow      | `/pos`, detail, items, kitchen, payment                      | APPROVED         | real routes, direct service actions, order/status vocabulary                  | route-local grouping                | table map, new route/capability                 | none             |
+| Target page     | current route and Phase 0 baseline                           | APPROVED         | real loader/actions/content hierarchy                                         | approved visual hierarchy           | fixtures, invented fields/actions               | none             |
 
 Shell mode: `REUSE_CURRENT_TARGET`.
 
@@ -100,16 +100,18 @@ Targeted revisions removed only those unsupported controls:
 - `references/design-proposal-02-narrow-v2.png` - corrected narrow catalog,
   current-order dialog, and recovery/attention studies.
 
-Both corrected outputs remain `DRAFT` until product-owner design approval.
-Generated text rendering and pixels remain directional and do not override
-repository copy, semantic tokens, route behavior, contracts, or protected
-invariants. Phase 1 implementation is not approved.
+The product owner approved both corrected outputs on 2026-08-15 for hierarchy,
+density, spacing, and responsive direction. Generated text rendering and pixels
+remain directional and do not override repository copy, semantic tokens, route
+behavior, contracts, or protected invariants. Phase 1 implementation is
+authorized; Phase 2 is not authorized.
 
 The product owner then requested a dedicated screen after successful kitchen
 send, with a return-to-main action and a create-another-order action. Repository
 route resolution maps these to `/` and `/pos`. ImageGen produced
 `references/design-proposal-03-send-success.png`, showing desktop and narrow
-states with exactly those two actions. This reference is also `DRAFT` pending
-design approval. The success state is authorized only after trusted
+states with exactly those two actions. The product owner approved this visual
+direction on 2026-08-15 for the later interaction phase. The success state is
+authorized only after trusted
 site-agent/Server Action success; it does not authorize a new route, contract,
 schema field, automatic redirect, payment action, or physical-print claim.

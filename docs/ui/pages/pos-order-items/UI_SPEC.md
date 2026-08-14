@@ -1,6 +1,6 @@
 # POS Order Items - UI Specification
 
-Status: Draft design reference
+Status: Approved Phase 1 reference
 
 Visibility: Engineering
 
@@ -71,9 +71,10 @@ and at least 44px effective touch targets for service-critical controls.
 
 ## Visual acceptance
 
-No design reference is approved. Phase 0 acceptance is limited to the truthful
-baseline and ready prompt. `design-proposal-03-send-success.png` is the `DRAFT`
-visual proposal for the approved post-send success requirement.
+The product owner approved the desktop, narrow, and post-send success visual
+references on 2026-08-15. They authorize hierarchy, density, spacing, and
+responsive direction only. The post-send success visual remains scheduled for
+the later interaction phase and does not authorize an untrusted success flag.
 
 ## Out of scope
 

@@ -86,14 +86,14 @@ export function MobileOrderDialog({
 }: MobileOrderDialogProps) {
   return (
     <Dialog>
-      <div className="fixed bottom-0 left-1/2 z-40 w-full max-w-7xl -translate-x-1/2 border-t border-border-default bg-white/95 px-4 py-3 shadow-sm backdrop-blur lg:hidden">
+      <div className="fixed bottom-0 left-1/2 z-40 w-full max-w-[1600px] -translate-x-1/2 border-t border-border-default bg-white/95 px-4 py-3 shadow-sm backdrop-blur lg:hidden">
         <MobileOrderDialogTrigger
           itemCount={items.length}
           totalLabel={totalLabel}
         />
       </div>
 
-      <DialogContent className="bottom-0 left-0 top-auto flex max-h-[85dvh] w-full max-w-none translate-x-0 translate-y-0 flex-col gap-0 overflow-hidden rounded-b-none rounded-t-2xl p-0 lg:hidden">
+      <DialogContent className="bottom-0 left-0 top-auto flex max-h-[92dvh] w-full max-w-none translate-x-0 translate-y-0 flex-col gap-0 overflow-hidden rounded-b-none rounded-t-2xl p-0 lg:hidden">
         <DialogHeader className="shrink-0 border-b border-border-default px-5 py-5 pr-12 text-left">
           <DialogTitle className="text-lg font-black">
             Commande actuelle
@@ -205,10 +205,15 @@ export function MobileOrderDialog({
             label="Envoyer en cuisine"
             icon="chef"
             variant="primary"
+            className="h-11"
             fullWidth
           />
           <DialogClose asChild>
-            <Button type="button" variant="secondary" className="mt-1 w-full">
+            <Button
+              type="button"
+              variant="secondary"
+              className="mt-1 h-11 w-full"
+            >
               Fermer
             </Button>
           </DialogClose>
@@ -229,8 +234,8 @@ function MobileOrderDialogTrigger({
     <DialogTrigger asChild>
       <Button
         type="button"
-        variant="secondary"
-        className="h-12 w-full justify-between rounded-lg px-4"
+        variant="primary"
+        className="h-14 w-full justify-between rounded-lg px-4"
       >
         <span className="inline-flex items-center gap-2 font-black">
           <List className="h-4 w-4" />
@@ -285,7 +290,8 @@ function OrderItemQuantityControls({
         <IconButton
           type="submit"
           variant="outline"
-          size="sm"
+          size="md"
+          className="h-11 w-11"
           aria-label="Retirer un article"
         >
           <Minus className="h-3.5 w-3.5" />
@@ -300,7 +306,8 @@ function OrderItemQuantityControls({
           <IconButton
             type="submit"
             variant="outline"
-            size="sm"
+            size="md"
+            className="h-11 w-11"
             aria-label="Ajouter un article"
           >
             <Plus className="h-3.5 w-3.5" />
