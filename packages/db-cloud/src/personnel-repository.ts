@@ -1,6 +1,7 @@
 import { identifierSchema } from '@yuta/contracts';
 import {
   createPersonnelEmployeeInputSchema,
+  personnelEmployeeAccessEventTypeSchema,
   personnelEmployeeAuditEventTypeSchema,
   personnelEmployeeAuditFieldSchema,
   personnelEmployeeListQuerySchema,
@@ -8,6 +9,8 @@ import {
   updatePersonnelEmployeeInputSchema,
   type CreatePersonnelEmployeeInput,
   type PersonnelDuplicateCandidate,
+  type PersonnelEmployeeAccessEvent,
+  type PersonnelEmployeeAccessHistory,
   type PersonnelEmployeeListQuery,
   type PersonnelEmployeeListResponse,
   type PersonnelEmployeeAuditHistory,
@@ -46,6 +49,9 @@ type PersonnelTenantContext = TenantContext & { establishmentId: string };
 
 const cursorPayloadSchema = z
   .object({ entryDate: z.string().date(), id: z.string().uuid() })
+  .strict();
+const accessCursorPayloadSchema = z
+  .object({ createdAt: z.string().datetime(), id: z.string().uuid() })
   .strict();
 
 export async function listPersonnelEmployees(
@@ -252,9 +258,93 @@ export async function listPersonnelEmployeeAuditHistory(
   return { items, truncated: rows.length > 50 };
 }
 
+export async function listPersonnelEmployeeAccessHistory(
+  db: CloudDatabaseClient,
+  context: TenantContext,
+  rawEmployeeId: string,
+  rawCursor?: string,
+): Promise<PersonnelEmployeeAccessHistory> {
+  requireEstablishment(context);
+  const employeeId = identifierSchema.parse(rawEmployeeId);
+  const cursor = rawCursor ? decodeAccessCursor(rawCursor) : null;
+  const rows = await db
+    .select({
+      id: personnelEmployeeAuditEvents.id,
+      eventType: personnelEmployeeAuditEvents.eventType,
+      createdAt: personnelEmployeeAuditEvents.createdAt,
+      actorUserId: personnelEmployeeAuditEvents.actorUserId,
+      actorDisplayName: users.displayName,
+    })
+    .from(personnelEmployeeAuditEvents)
+    .leftJoin(users, eq(personnelEmployeeAuditEvents.actorUserId, users.id))
+    .where(
+      and(
+        eq(personnelEmployeeAuditEvents.employeeId, employeeId),
+        eq(personnelEmployeeAuditEvents.organizationId, context.organizationId),
+        eq(
+          personnelEmployeeAuditEvents.establishmentId,
+          context.establishmentId,
+        ),
+        inArray(
+          personnelEmployeeAuditEvents.eventType,
+          personnelEmployeeAccessEventTypeSchema.options,
+        ),
+        cursor
+          ? or(
+              lt(
+                personnelEmployeeAuditEvents.createdAt,
+                new Date(cursor.createdAt),
+              ),
+              and(
+                eq(
+                  personnelEmployeeAuditEvents.createdAt,
+                  new Date(cursor.createdAt),
+                ),
+                lt(personnelEmployeeAuditEvents.id, cursor.id),
+              ),
+            )
+          : undefined,
+      ),
+    )
+    .orderBy(
+      desc(personnelEmployeeAuditEvents.createdAt),
+      desc(personnelEmployeeAuditEvents.id),
+    )
+    .limit(21);
+
+  const visibleRows = collapseAccessNavigationPairs(rows);
+  const pageRows = visibleRows.slice(0, 10);
+  const items = pageRows.flatMap(({ row }) => {
+    const eventType = personnelEmployeeAccessEventTypeSchema.safeParse(
+      row.eventType,
+    );
+    if (!eventType.success) return [];
+    const item: PersonnelEmployeeAccessEvent = {
+      id: row.id,
+      eventType: eventType.data,
+      actorDisplayName: row.actorDisplayName,
+      occurredAt: row.createdAt.toISOString(),
+    };
+    return [item];
+  });
+  const lastPageRow = pageRows.at(-1);
+  return {
+    items,
+    pageInfo: {
+      hasMore: visibleRows.length > 10,
+      nextCursor:
+        visibleRows.length > 10 && lastPageRow
+          ? encodeAccessCursor({
+              createdAt: lastPageRow.consumedThrough.createdAt.toISOString(),
+              id: lastPageRow.consumedThrough.id,
+            })
+          : null,
+    },
+  };
+}
+
 export type PersonnelEmployeeAccessEventType =
-  | 'employee.dossier_viewed'
-  | 'employee.history_viewed';
+  PersonnelEmployeeAccessEvent['eventType'];
 
 export async function recordPersonnelEmployeeAccess(
   db: CloudDatabaseClient,
@@ -1050,6 +1140,27 @@ function decodeCursor(value: string): z.infer<typeof cursorPayloadSchema> {
   }
 }
 
+function encodeAccessCursor(
+  value: z.infer<typeof accessCursorPayloadSchema>,
+): string {
+  return Buffer.from(JSON.stringify(value), 'utf8').toString('base64url');
+}
+
+function decodeAccessCursor(
+  value: string,
+): z.infer<typeof accessCursorPayloadSchema> {
+  try {
+    return accessCursorPayloadSchema.parse(
+      JSON.parse(Buffer.from(value, 'base64url').toString('utf8')),
+    );
+  } catch {
+    throw new PersonnelRepositoryError(
+      'Invalid access-history pagination cursor.',
+      'INVALID_CURSOR',
+    );
+  }
+}
+
 export class PersonnelRepositoryError extends Error {
   constructor(
     message: string,
@@ -1121,4 +1232,37 @@ function safeAuditMetadata(value: Record<string, unknown>) {
 function safeDateOnly(value: unknown): string | null {
   if (typeof value !== 'string') return null;
   return /^\d{4}-\d{2}-\d{2}$/u.test(value) ? value : null;
+}
+
+function collapseAccessNavigationPairs<
+  T extends {
+    id: string;
+    actorUserId: string | null;
+    createdAt: Date;
+    eventType: string;
+  },
+>(rows: readonly T[]): Array<{ row: T; consumedThrough: T }> {
+  const visibleRows: Array<{ row: T; consumedThrough: T }> = [];
+  for (let index = 0; index < rows.length; index += 1) {
+    const current = rows[index];
+    if (!current) continue;
+
+    const next = rows[index + 1];
+    const opensSpecificHistory =
+      current.eventType === 'employee.history_viewed' ||
+      current.eventType === 'employee.access_history_viewed';
+    if (
+      opensSpecificHistory &&
+      next?.eventType === 'employee.dossier_viewed' &&
+      current.actorUserId === next.actorUserId &&
+      current.createdAt.getTime() >= next.createdAt.getTime() &&
+      current.createdAt.getTime() - next.createdAt.getTime() <= 120_000
+    ) {
+      visibleRows.push({ row: current, consumedThrough: next });
+      index += 1;
+      continue;
+    }
+    visibleRows.push({ row: current, consumedThrough: current });
+  }
+  return visibleRows;
 }

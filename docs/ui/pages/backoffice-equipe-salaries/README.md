@@ -56,8 +56,10 @@ revision-conflict recovery, and atomic audit. No production seed, secure
 document storage, OCR, personnel-register model, Formalités engine, or PDF
 generator exists. The explicitly opened dossier drawer exposes the 50 most
 recent approved audit events in a read-only history without returning raw audit
-or tenant metadata. History is requested only when the selected employee's tab is opened and has
-loading, unavailable, retry, and empty states. Completeness counts, filtering,
+or tenant metadata. History is requested only when the selected employee's tab
+is opened and has loading, unavailable, retry, and empty states. The OWNER-only
+`Consultations` tab separately exposes allowlisted dossier/history access events
+in server-backed pages of 10 and records access to that timeline. Completeness counts, filtering,
 reason labels, and the supported edit action use the same derived minimum-field
 rules.
 
@@ -230,19 +232,36 @@ legal-compliance claim without its explicit approval.
 
 ## Final delivery and as-built status
 
-Final implementation locations/files changed: `PENDING`
+Final implementation locations/files changed: the authenticated salaries route
+and route-local dialogs/actions under
+`apps/backoffice/src/app/(authenticated)/equipe/salaries/`, personnel contracts
+under `packages/contracts/src/personnel/`, and the tenant-scoped repository,
+schema/migration evidence, and integration tests under `packages/db-cloud/`.
 
-Verification commands and results: `PENDING`
+Verification commands and results: Backoffice typecheck/build and 84 tests pass;
+contracts typecheck and 21 tests pass; the guarded local db-cloud suite passes
+37 tests with 2 intentional skips; `docs:check`, the page-pack check,
+`architecture:check`, scoped Prettier, and scoped `git diff --check` pass.
 
-Functional/regression QA result: `PENDING`
+Functional/regression QA result: OWNER-only list/create/edit/departure,
+conflict/idempotent retry, duplicate override, business history, dossier access
+audit, and the on-demand consultation history are verified with local persisted
+data and tenant-isolation coverage.
 
-Visual/browser/device evidence: `PENDING`
+Visual/browser/device evidence: signed-in local browser QA verifies the initially
+closed dossier, explicit row selection, wide right-side drawer, redesigned
+overview, existing create dialog, Escape close, business-history loading, and
+the new `Consultations` timeline. Responsive classes preserve the approved
+full-width mobile drawer and single-column overview facts.
 
-Intentional deviations: `PENDING`
+Intentional deviations: the former permanently visible 420 px desktop quick
+view was replaced by an explicitly opened overlay drawer following product
+review; no employee is selected on initial load. No deferred HR/legal capability
+was introduced.
 
 Deferred proposals and risks: See `PRODUCT_SCOPE.md`.
 
-As-built documentation status: `PENDING`
+As-built documentation status: `COMPLETE`
 
 ## Phase 1 prototype evidence
 

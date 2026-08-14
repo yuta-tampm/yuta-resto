@@ -6,6 +6,7 @@ import {
   getContractSummary,
   getEmployeeInitials,
   getEmployeeName,
+  getEmploymentStatusPresentation,
   getWorkTimeLabel,
 } from './salaries-model';
 
@@ -40,5 +41,30 @@ describe('salaries view model', () => {
     expect(
       getBusinessDate('Europe/Paris', new Date('2026-08-12T22:30:00Z')),
     ).toBe('2026-08-13');
+  });
+
+  it('warns during the five calendar days before departure', () => {
+    const departingEmployee = {
+      ...employee,
+      departureDate: '2026-08-14',
+    };
+    expect(
+      getEmploymentStatusPresentation(departingEmployee, '2026-08-08'),
+    ).toEqual({ label: 'Actif', tone: 'success' });
+    expect(
+      getEmploymentStatusPresentation(departingEmployee, '2026-08-09'),
+    ).toEqual({ label: 'Départ dans 5 jours', tone: 'warning' });
+    expect(
+      getEmploymentStatusPresentation(departingEmployee, '2026-08-13'),
+    ).toEqual({ label: 'Départ demain', tone: 'warning' });
+    expect(
+      getEmploymentStatusPresentation(departingEmployee, '2026-08-14'),
+    ).toEqual({ label: 'Dernier jour', tone: 'warning' });
+    expect(
+      getEmploymentStatusPresentation(
+        { ...departingEmployee, view: 'former' },
+        '2026-08-15',
+      ),
+    ).toEqual({ label: 'Ancien salarié', tone: 'neutral' });
   });
 });

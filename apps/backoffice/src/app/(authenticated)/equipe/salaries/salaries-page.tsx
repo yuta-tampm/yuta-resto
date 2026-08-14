@@ -4,6 +4,8 @@ import type {
   PersonnelCompletenessFilter,
   PersonnelEmployeeListQuery,
   PersonnelEmployeeListResponse,
+  PersonnelEmployeeAccessEvent,
+  PersonnelEmployeeAccessHistory,
   PersonnelEmployeeAuditHistory,
   PersonnelEmployeeAuditEvent,
   PersonnelEmployeeSummary,
@@ -40,9 +42,11 @@ import {
   CalendarDays,
   CalendarX2,
   Clock3,
+  ChevronLeft,
   ChevronRight,
   Database,
   FileWarning,
+  Eye,
   LoaderCircle,
   Pencil,
   Plus,
@@ -56,6 +60,7 @@ import { EmployeeCreateDialog } from './employee-create-dialog';
 import { EmployeeDepartureDialog } from './employee-departure-dialog';
 import { EmployeeEditDialog } from './employee-edit-dialog';
 import {
+  loadEmployeeAccessHistoryAction,
   loadEmployeeHistoryAction,
   recordEmployeeDossierViewAction,
 } from './actions';
@@ -64,16 +69,25 @@ import {
   getContractSummary,
   getEmployeeInitials,
   getEmployeeName,
+  getEmploymentStatusPresentation,
   getWorkTimeLabel,
   isEmployeeComplete,
 } from './salaries-model';
 
-type DetailTab = 'overview' | 'identity' | 'employment' | 'history';
+type DetailTab = 'overview' | 'identity' | 'employment' | 'history' | 'access';
 type HistoryLoadState =
   | { status: 'idle' | 'loading'; history: null; message: null }
   | {
       status: 'success';
       history: PersonnelEmployeeAuditHistory;
+      message: null;
+    }
+  | { status: 'error'; history: null; message: string };
+type AccessHistoryLoadState =
+  | { status: 'idle' | 'loading'; history: null; message: null }
+  | {
+      status: 'success';
+      history: PersonnelEmployeeAccessHistory;
       message: null;
     }
   | { status: 'error'; history: null; message: string };
@@ -114,6 +128,20 @@ export function SalariesPage({
     message: null,
   });
   const [historyOperationId, setHistoryOperationId] = useState('');
+  const [accessHistoryState, setAccessHistoryState] =
+    useState<AccessHistoryLoadState>({
+      status: 'idle',
+      history: null,
+      message: null,
+    });
+  const [accessHistoryOperationId, setAccessHistoryOperationId] = useState('');
+  const [accessHistoryCursor, setAccessHistoryCursor] = useState<
+    string | undefined
+  >(undefined);
+  const [accessHistoryCursorStack, setAccessHistoryCursorStack] = useState<
+    string[]
+  >(['']);
+  const [accessHistoryPageIndex, setAccessHistoryPageIndex] = useState(0);
   const [dossierAccessRequest, setDossierAccessRequest] = useState<{
     employeeId: string;
     operationId: string;
@@ -194,6 +222,38 @@ export function SalariesPage({
       active = false;
     };
   }, [detailTab, historyOperationId, selectedId]);
+
+  useEffect(() => {
+    if (detailTab !== 'access' || !selectedId || !accessHistoryOperationId) {
+      return;
+    }
+    let active = true;
+    setAccessHistoryState({ status: 'loading', history: null, message: null });
+    void loadEmployeeAccessHistoryAction(
+      selectedId,
+      accessHistoryOperationId,
+      accessHistoryCursor,
+    )
+      .then((result) => {
+        if (!active) return;
+        setAccessHistoryState(
+          result.status === 'success'
+            ? { status: 'success', history: result.history, message: null }
+            : { status: 'error', history: null, message: result.message },
+        );
+      })
+      .catch(() => {
+        if (!active) return;
+        setAccessHistoryState({
+          status: 'error',
+          history: null,
+          message: 'Impossible de charger les consultations. Réessayez.',
+        });
+      });
+    return () => {
+      active = false;
+    };
+  }, [accessHistoryCursor, accessHistoryOperationId, detailTab, selectedId]);
 
   const selectedEmployee =
     data.items.find((employee) => employee.id === selectedId) ?? null;
@@ -385,6 +445,7 @@ export function SalariesPage({
               employees={data.items}
               selectedId={selectedId}
               locale={locale}
+              businessDate={businessDate}
               onSelect={(id) => {
                 setSelectedId(id);
                 setDetailTab('overview');
@@ -394,6 +455,15 @@ export function SalariesPage({
                 });
                 setHistoryOperationId('');
                 setHistoryState({
+                  status: 'idle',
+                  history: null,
+                  message: null,
+                });
+                setAccessHistoryOperationId('');
+                setAccessHistoryCursor(undefined);
+                setAccessHistoryCursorStack(['']);
+                setAccessHistoryPageIndex(0);
+                setAccessHistoryState({
                   status: 'idle',
                   history: null,
                   message: null,
@@ -422,18 +492,53 @@ export function SalariesPage({
             employee={selectedEmployee}
             activeTab={detailTab}
             locale={locale}
+            businessDate={businessDate}
             historyState={historyState}
+            accessHistoryState={accessHistoryState}
+            accessHistoryPageIndex={accessHistoryPageIndex}
             dossierAccessError={dossierAccessError}
             onTabChange={(tab) => {
               setDetailTab(tab);
               if (tab === 'history') {
                 setHistoryOperationId(crypto.randomUUID());
               }
+              if (tab === 'access') {
+                setAccessHistoryCursor(undefined);
+                setAccessHistoryCursorStack(['']);
+                setAccessHistoryPageIndex(0);
+                setAccessHistoryOperationId(crypto.randomUUID());
+              }
             }}
             onClose={() => setSelectedId(null)}
             onEdit={() => setEditingEmployee(selectedEmployee)}
             onDeparture={() => setDepartureEmployee(selectedEmployee)}
             onRetryHistory={() => setHistoryOperationId(crypto.randomUUID())}
+            onRetryAccessHistory={() =>
+              setAccessHistoryOperationId(crypto.randomUUID())
+            }
+            onPreviousAccessHistory={() => {
+              const previousIndex = Math.max(0, accessHistoryPageIndex - 1);
+              setAccessHistoryPageIndex(previousIndex);
+              setAccessHistoryCursor(
+                accessHistoryCursorStack[previousIndex] || undefined,
+              );
+              setAccessHistoryOperationId(crypto.randomUUID());
+            }}
+            onNextAccessHistory={() => {
+              const nextCursor =
+                accessHistoryState.status === 'success'
+                  ? accessHistoryState.history.pageInfo.nextCursor
+                  : null;
+              if (!nextCursor) return;
+              const nextIndex = accessHistoryPageIndex + 1;
+              setAccessHistoryCursorStack((current) => [
+                ...current.slice(0, nextIndex),
+                nextCursor,
+              ]);
+              setAccessHistoryPageIndex(nextIndex);
+              setAccessHistoryCursor(nextCursor);
+              setAccessHistoryOperationId(crypto.randomUUID());
+            }}
             onRetryDossierAccess={() =>
               setDossierAccessRequest({
                 employeeId: selectedEmployee.id,
@@ -479,11 +584,13 @@ function EmployeeList({
   employees,
   selectedId,
   locale,
+  businessDate,
   onSelect,
 }: {
   employees: readonly PersonnelEmployeeSummary[];
   selectedId: string | null;
   locale: string;
+  businessDate: string;
   onSelect: (id: string) => void;
 }) {
   return (
@@ -523,7 +630,13 @@ function EmployeeList({
                 </SimpleTableCell>
                 <SimpleTableCell>{employee.position}</SimpleTableCell>
                 <SimpleTableCell>
-                  {getContractSummary(employee)}
+                  <span className="flex flex-wrap items-center gap-2">
+                    <span>{getContractSummary(employee)}</span>
+                    <DepartureNoticeBadge
+                      employee={employee}
+                      businessDate={businessDate}
+                    />
+                  </span>
                 </SimpleTableCell>
                 <SimpleTableCell>
                   {formatEmployeeDate(employee.entryDate, locale)}
@@ -569,6 +682,10 @@ function EmployeeList({
             </span>
             <span className="mt-3 flex flex-wrap items-center gap-2">
               <Badge tone="neutral">{getContractSummary(employee)}</Badge>
+              <DepartureNoticeBadge
+                employee={employee}
+                businessDate={businessDate}
+              />
               <CompletenessBadge employee={employee} />
             </span>
             <span className="mt-3 block text-xs font-medium text-secondary">
@@ -585,25 +702,37 @@ function EmployeeDetails({
   employee,
   activeTab,
   locale,
+  businessDate,
   onTabChange,
   onClose,
   onEdit,
   onDeparture,
   historyState,
+  accessHistoryState,
+  accessHistoryPageIndex,
   dossierAccessError,
   onRetryHistory,
+  onRetryAccessHistory,
+  onPreviousAccessHistory,
+  onNextAccessHistory,
   onRetryDossierAccess,
 }: {
   employee: PersonnelEmployeeSummary;
   activeTab: DetailTab;
   locale: string;
+  businessDate: string;
   onTabChange: (tab: DetailTab) => void;
   onClose: () => void;
   onEdit: () => void;
   onDeparture: () => void;
   historyState: HistoryLoadState;
+  accessHistoryState: AccessHistoryLoadState;
+  accessHistoryPageIndex: number;
   dossierAccessError: string | null;
   onRetryHistory: () => void;
+  onRetryAccessHistory: () => void;
+  onPreviousAccessHistory: () => void;
+  onNextAccessHistory: () => void;
   onRetryDossierAccess: () => void;
 }) {
   const tabs: ReadonlyArray<{ value: DetailTab; label: string }> = [
@@ -611,6 +740,7 @@ function EmployeeDetails({
     { value: 'identity', label: 'Identité' },
     { value: 'employment', label: 'Relation de travail' },
     { value: 'history', label: 'Historique' },
+    { value: 'access', label: 'Consultations' },
   ];
   return (
     <Dialog
@@ -641,7 +771,10 @@ function EmployeeDetails({
                   <p className="text-sm font-medium text-secondary">
                     {employee.position}
                   </p>
-                  <EmploymentBadge employee={employee} />
+                  <EmploymentBadge
+                    employee={employee}
+                    businessDate={businessDate}
+                  />
                 </div>
               </div>
             </div>
@@ -787,6 +920,16 @@ function EmployeeDetails({
                 onRetry={onRetryHistory}
               />
             )}
+            {activeTab === 'access' && (
+              <EmployeeAccessHistory
+                state={accessHistoryState}
+                locale={locale}
+                pageIndex={accessHistoryPageIndex}
+                onRetry={onRetryAccessHistory}
+                onPrevious={onPreviousAccessHistory}
+                onNext={onNextAccessHistory}
+              />
+            )}
           </div>
         </div>
       </DialogContent>
@@ -890,6 +1033,110 @@ function EmployeeHistory({
   );
 }
 
+function EmployeeAccessHistory({
+  state,
+  locale,
+  pageIndex,
+  onRetry,
+  onPrevious,
+  onNext,
+}: {
+  state: AccessHistoryLoadState;
+  locale: string;
+  pageIndex: number;
+  onRetry: () => void;
+  onPrevious: () => void;
+  onNext: () => void;
+}) {
+  if (state.status === 'idle' || state.status === 'loading') {
+    return (
+      <DetailSection title="Historique des consultations">
+        <p
+          className="flex items-center gap-2 text-sm text-secondary"
+          role="status"
+        >
+          <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden />
+          Chargement des consultations…
+        </p>
+      </DetailSection>
+    );
+  }
+  if (state.status === 'error') {
+    return (
+      <DetailSection title="Historique des consultations">
+        <Alert tone="danger">
+          <AlertTitle>Consultations indisponibles</AlertTitle>
+          <AlertDescription>{state.message}</AlertDescription>
+        </Alert>
+        <Button type="button" variant="secondary" size="sm" onClick={onRetry}>
+          <RotateCcw className="h-4 w-4" aria-hidden />
+          Réessayer
+        </Button>
+      </DetailSection>
+    );
+  }
+  if (!state.history) return null;
+  const { history } = state;
+  if (history.items.length === 0) {
+    return (
+      <DetailSection title="Historique des consultations">
+        <p className="text-sm text-secondary">
+          Aucune consultation n’a encore été enregistrée pour ce dossier.
+        </p>
+      </DetailSection>
+    );
+  }
+  return (
+    <DetailSection title="Historique des consultations">
+      <p className="text-sm text-secondary">
+        Ouvertures récentes du dossier et de ses historiques par les
+        propriétaires autorisés.
+      </p>
+      <ol className="grid gap-4">
+        {history.items.map((event) => (
+          <li key={event.id} className="flex gap-3">
+            <span className="mt-1 grid h-8 w-8 shrink-0 place-items-center rounded-full bg-surface-muted text-action-primary">
+              <Eye className="h-4 w-4" aria-hidden />
+            </span>
+            <div className="min-w-0 text-sm">
+              <p className="font-bold">{accessEventLabel(event.eventType)}</p>
+              <p className="mt-1 text-xs text-secondary">
+                {formatAuditDateTime(event.occurredAt, locale)} ·{' '}
+                {event.actorDisplayName ?? 'Utilisateur supprimé'}
+              </p>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <div className="mt-2 flex items-center justify-between gap-3 border-t border-border-default pt-4">
+        <Button
+          type="button"
+          variant="secondary"
+          size="sm"
+          onClick={onPrevious}
+          disabled={pageIndex === 0}
+        >
+          <ChevronLeft className="h-4 w-4" aria-hidden />
+          Précédent
+        </Button>
+        <span className="text-xs font-semibold text-secondary">
+          Page {pageIndex + 1} · 10 par page
+        </span>
+        <Button
+          type="button"
+          variant="secondary"
+          size="sm"
+          onClick={onNext}
+          disabled={!history.pageInfo.hasMore}
+        >
+          Suivant
+          <ChevronRight className="h-4 w-4" aria-hidden />
+        </Button>
+      </div>
+    </DetailSection>
+  );
+}
+
 function CompletenessGuidance({
   employee,
   onEdit,
@@ -931,6 +1178,17 @@ function CompletenessGuidance({
       </div>
     </Alert>
   );
+}
+
+function accessEventLabel(
+  eventType: PersonnelEmployeeAccessEvent['eventType'],
+): string {
+  const labels: Record<PersonnelEmployeeAccessEvent['eventType'], string> = {
+    'employee.dossier_viewed': 'Dossier consulté',
+    'employee.history_viewed': 'Historique des modifications consulté',
+    'employee.access_history_viewed': 'Historique des consultations consulté',
+  };
+  return labels[eventType];
 }
 
 function auditEventLabel(eventType: PersonnelEmployeeAuditEvent['eventType']) {
@@ -1065,15 +1323,26 @@ function CompletenessBadge({
   );
 }
 
-function EmploymentBadge({ employee }: { employee: PersonnelEmployeeSummary }) {
-  const config = {
-    active: { label: 'Actif', tone: 'success' },
-    upcoming: { label: 'Entrée à venir', tone: 'info' },
-    former: { label: 'Ancien salarié', tone: 'neutral' },
-  } as const;
-  return (
-    <Badge tone={config[employee.view].tone}>
-      {config[employee.view].label}
-    </Badge>
-  );
+function EmploymentBadge({
+  employee,
+  businessDate,
+}: {
+  employee: PersonnelEmployeeSummary;
+  businessDate: string;
+}) {
+  const presentation = getEmploymentStatusPresentation(employee, businessDate);
+  return <Badge tone={presentation.tone}>{presentation.label}</Badge>;
+}
+
+function DepartureNoticeBadge({
+  employee,
+  businessDate,
+}: {
+  employee: PersonnelEmployeeSummary;
+  businessDate: string;
+}) {
+  const presentation = getEmploymentStatusPresentation(employee, businessDate);
+  return presentation.tone === 'warning' ? (
+    <Badge tone="warning">{presentation.label}</Badge>
+  ) : null;
 }

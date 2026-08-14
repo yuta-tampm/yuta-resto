@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   createPersonnelEmployeeInputSchema,
+  personnelEmployeeAccessHistorySchema,
   personnelEmployeeAuditHistorySchema,
   personnelEmployeeListQuerySchema,
   personnelEmployeeSummarySchema,
@@ -118,6 +119,31 @@ describe('personnel contracts', () => {
     expect(parsed.items[0]).not.toHaveProperty('metadata');
     expect(
       personnelEmployeeAuditHistorySchema.safeParse({
+        ...parsed,
+        items: [{ ...parsed.items[0], eventType: 'employee.password_viewed' }],
+      }).success,
+    ).toBe(false);
+  });
+
+  it('exposes only allowlisted employee access-history fields', () => {
+    const parsed = personnelEmployeeAccessHistorySchema.parse({
+      items: [
+        {
+          id: '11111111-1111-4111-8111-111111111111',
+          eventType: 'employee.dossier_viewed',
+          actorDisplayName: 'Propriétaire test',
+          occurredAt: '2026-08-14T10:00:00.000Z',
+        },
+      ],
+      pageInfo: { hasMore: false, nextCursor: null },
+    });
+
+    expect(parsed.items[0]).not.toHaveProperty('organizationId');
+    expect(parsed.items[0]).not.toHaveProperty('establishmentId');
+    expect(parsed.items[0]).not.toHaveProperty('operationId');
+    expect(parsed.items[0]).not.toHaveProperty('metadata');
+    expect(
+      personnelEmployeeAccessHistorySchema.safeParse({
         ...parsed,
         items: [{ ...parsed.items[0], eventType: 'employee.password_viewed' }],
       }).success,

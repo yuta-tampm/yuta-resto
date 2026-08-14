@@ -9,6 +9,7 @@ import {
 } from '../src/client';
 import {
   findPersonnelEmployee,
+  listPersonnelEmployeeAccessHistory,
   listPersonnelEmployeeAuditHistory,
   listPersonnelEmployees,
   createPersonnelEmployee,
@@ -363,6 +364,7 @@ integrationTest('personnel repository tenant isolation', () => {
     const tenant = context(organizationAId, establishmentAId);
     const dossierOperationId = uuidv7();
     const historyOperationId = uuidv7();
+    const accessHistoryOperationId = uuidv7();
     await expect(
       recordPersonnelEmployeeAccess(
         db,
@@ -370,6 +372,17 @@ integrationTest('personnel repository tenant isolation', () => {
         employeeAId,
         'employee.dossier_viewed',
         dossierOperationId,
+        new Date('2026-08-14T10:00:00.000Z'),
+      ),
+    ).resolves.toBe(true);
+    await expect(
+      recordPersonnelEmployeeAccess(
+        db,
+        tenant,
+        employeeAId,
+        'employee.access_history_viewed',
+        accessHistoryOperationId,
+        new Date('2026-08-14T10:00:10.000Z'),
       ),
     ).resolves.toBe(true);
     await expect(
@@ -379,6 +392,7 @@ integrationTest('personnel repository tenant isolation', () => {
         employeeAId,
         'employee.dossier_viewed',
         dossierOperationId,
+        new Date('2026-08-14T10:00:20.000Z'),
       ),
     ).resolves.toBe(true);
     await expect(
@@ -388,6 +402,7 @@ integrationTest('personnel repository tenant isolation', () => {
         employeeAId,
         'employee.history_viewed',
         historyOperationId,
+        new Date('2026-08-14T10:05:00.000Z'),
       ),
     ).resolves.toBe(true);
     await expect(
@@ -409,17 +424,86 @@ integrationTest('personnel repository tenant isolation', () => {
           inArray(personnelEmployeeAuditEvents.eventType, [
             'employee.dossier_viewed',
             'employee.history_viewed',
+            'employee.access_history_viewed',
           ]),
         ),
       );
-    expect(accessEvents).toHaveLength(2);
+    expect(accessEvents).toHaveLength(3);
     expect(accessEvents.map((event) => event.eventType).sort()).toEqual([
+      'employee.access_history_viewed',
       'employee.dossier_viewed',
       'employee.history_viewed',
     ]);
+    const accessHistory = await listPersonnelEmployeeAccessHistory(
+      db,
+      tenant,
+      employeeAId,
+    );
+    expect(accessHistory.pageInfo).toEqual({
+      hasMore: false,
+      nextCursor: null,
+    });
+    expect(accessHistory.items).toHaveLength(2);
+    expect(accessHistory.items.map((event) => event.eventType)).toEqual([
+      'employee.history_viewed',
+      'employee.access_history_viewed',
+    ]);
+    expect(accessHistory.items[0]).not.toHaveProperty('operationId');
+    await expect(
+      listPersonnelEmployeeAccessHistory(db, tenant, employeeA2Id),
+    ).resolves.toEqual({
+      items: [],
+      pageInfo: { hasMore: false, nextCursor: null },
+    });
     await expect(
       listPersonnelEmployeeAuditHistory(db, tenant, employeeAId),
     ).resolves.toEqual({ items: [], truncated: false });
+  });
+
+  it('paginates employee access history ten visible entries at a time', async () => {
+    const tenant = context(organizationAId, establishmentAId);
+    const created = await createPersonnelEmployee(
+      db,
+      tenant,
+      createInput(uuidv7(), 'Access pagination'),
+      '2026-08-13',
+    );
+    for (let index = 0; index < 12; index += 1) {
+      await recordPersonnelEmployeeAccess(
+        db,
+        tenant,
+        created.employee.id,
+        'employee.dossier_viewed',
+        uuidv7(),
+        new Date(Date.UTC(2026, 7, 14, 8, index * 3)),
+      );
+    }
+
+    const firstPage = await listPersonnelEmployeeAccessHistory(
+      db,
+      tenant,
+      created.employee.id,
+    );
+    expect(firstPage.items).toHaveLength(10);
+    expect(firstPage.pageInfo.hasMore).toBe(true);
+    expect(firstPage.pageInfo.nextCursor).toEqual(expect.any(String));
+
+    const secondPage = await listPersonnelEmployeeAccessHistory(
+      db,
+      tenant,
+      created.employee.id,
+      firstPage.pageInfo.nextCursor ?? undefined,
+    );
+    expect(secondPage.items).toHaveLength(2);
+    expect(secondPage.pageInfo).toEqual({
+      hasMore: false,
+      nextCursor: null,
+    });
+    expect(
+      new Set(
+        [...firstPage.items, ...secondPage.items].map((event) => event.id),
+      ).size,
+    ).toBe(12);
   });
 
   it('requires an explicit reason before creating a possible duplicate', async () => {

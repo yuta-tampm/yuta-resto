@@ -319,8 +319,9 @@ Repository audit on 2026-08-14:
   encryption, and access control to the managed provider, but this repository
   contains no provider/project-specific restore-drill evidence for Salariés;
 - personnel mutation events are persisted and OWNER-readable; opening dossier
-  detail and history now appends dedicated sensitive-read events, while a list
-  scan is not expanded into one event per returned employee;
+  detail, business history, or the OWNER-only consultation history appends a
+  dedicated sensitive-read event, while a list scan is not expanded into one
+  event per returned employee;
 - `auth_audit_events` is scoped to authentication/membership administration and
   must not be repurposed as employee dossier access history;
 - no employee archive/deletion/legal-hold job exists because the per-class
@@ -344,8 +345,9 @@ Repository audit on 2026-08-14:
 - `SALARIES-SENSITIVE-AUDIT-01` — **future-wave requirement:** before enabling
   Documents, export/download, archive, legal hold, rights-response, or audit-log
   administration, define and test an allowlisted audit event for each sensitive
-  action. Current scope records dossier-detail and history opens plus every
-  create/edit/departure/duplicate-override mutation.
+  action. Current scope records dossier-detail, business-history, and
+  consultation-history opens, exposes an allowlisted OWNER-only consultation
+  timeline, and records every create/edit/departure/duplicate-override mutation.
 
 ### Later capability waves
 

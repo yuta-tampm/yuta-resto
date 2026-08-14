@@ -33,7 +33,8 @@ states rather than delaying the initial employee list.
 4. `Actifs`, `Entrées à venir`, and `Anciens salariés` views.
 5. Responsive list: name, poste, qualification, minimal contract summary,
    entry/expected end dates, and completeness.
-6. Detail: `Vue d'ensemble`, `Identité`, `Relation de travail`, `Historique`.
+6. Detail: `Vue d'ensemble`, `Identité`, `Relation de travail`, `Historique`,
+   `Consultations`.
 7. Progressive manual create/edit flow.
 8. Confirmed non-destructive departure flow.
 
@@ -43,9 +44,11 @@ prototype unless repository constraints require a documented deviation:
 - three compact summary cards, without KPI inflation;
 - search, restrained filters, and employment-status views;
 - dense operational table/list with selected-row feedback;
+- a text-backed warning badge in the list and dossier during the final five
+  calendar days: `Départ dans X jours`, `Départ demain`, then `Dernier jour`;
 - no dossier selected or opened on initial page load;
 - a right-side overlay drawer, opened only by explicit row/card selection,
-  wide enough for the four dossier sections without shrinking the list layout;
+  wide enough for the five dossier sections without shrinking the list layout;
 - a structured dossier header with identity/status separated from secondary
   actions, followed by a stable tab bar and a responsive two-column key-fact
   grid on the overview tab;
@@ -83,8 +86,9 @@ large empty panel or add a fourth summary card.
 
 ## Future dossier sections and actions
 
-The MVP detail sections remain `Vue d'ensemble`, `Identité`, `Relation de
-travail`, and the integrated read-only `Historique`.
+The MVP detail sections are `Vue d'ensemble`, `Identité`, `Relation de travail`,
+the integrated read-only business `Historique`, and the OWNER-only
+`Consultations` access history.
 
 Future-wave UX intent, not Phase 1 scope:
 

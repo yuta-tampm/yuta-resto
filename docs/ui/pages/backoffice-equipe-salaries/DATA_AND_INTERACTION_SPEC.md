@@ -111,6 +111,7 @@ work-authorization files, apprenticeship, interns, and provider/Formalités data
 | I-11 | Retry list/read                                  | Repeat safe read under freshly resolved trusted scope                                                                     | Loading then success/empty/error; no stale browser scope reuse                                                          | Implemented                 |
 | I-12 | Resolve edit conflict                            | Keep submitted values separately, fetch current record, then user reloads or reapplies intentionally                      | Never silently overwrite; no success until a new guarded commit                                                         | Prototype explanation only  |
 | I-13 | View employee history                            | On demand, read at most 50 allowlisted audit events under the full trusted employee scope                                 | Loading; newest first; empty; unavailable and retry; no raw metadata, operation ID, actor ID, or tenant ID              | Real read implemented       |
+| I-14 | Page employee consultation history               | Read 10 collapsed access entries at a time with an opaque server cursor under the full trusted employee scope             | Newest first; previous/next; stable page boundaries; no raw actor/tenant/operation metadata                             | Real read implemented       |
 
 Operational sorting and filtering never define future personnel-register
 ordering. Pagination follows approved repository behavior; the raster
@@ -376,12 +377,23 @@ Event semantics proposed for approval:
 Approved sensitive-read events:
 
 - `employee.dossier_viewed` when OWNER opens the selected dossier detail;
-- `employee.history_viewed` when OWNER opens/retries the history read.
+- `employee.history_viewed` when OWNER opens/retries the business history read;
+- `employee.access_history_viewed` when OWNER opens/retries the consultation
+  history itself.
 
 Sensitive-read events use the same trusted organization, establishment,
 employee, actor, operation ID, and server timestamp rules. They are security
 audit evidence and are excluded from the employee's business-change timeline.
 Repeated delivery with the same operation ID records one access event.
+The OWNER-only `Consultations` tab reads 10 collapsed sensitive-read entries per
+page on demand using an opaque server cursor. It returns only the action label,
+server time, actor display name, and minimal next-page information; tenant IDs,
+actor IDs, operation IDs, metadata, IP address, and user-agent are not exposed
+to the browser.
+For readability, the consultation timeline collapses an immediately preceding
+`employee.dossier_viewed` from the same actor into the more specific history
+open that followed within two minutes. Both immutable source events remain in
+the database; a standalone dossier open remains visible.
 
 Every event carries a server-created event ID, occurred-at timestamp, trusted
 organization and establishment scope, employee dossier ID, actor user ID when
@@ -430,6 +442,10 @@ retention class rather than inheriting the dossier or register duration.
 - departure is on/after entry; on the effective departure date the dossier
   remains active through that establishment-local business day and becomes
   former on the following day;
+- a recorded departure derives a warning badge during the final five calendar
+  days: days 5 through 2 show `Départ dans X jours`, day 1 shows `Départ demain`,
+  and day 0 shows `Dernier jour`; this presentation does not change persistence
+  or active/former semantics;
 - future departure remains visible in active operations with its scheduled date;
 - completeness derives from missing/invalid approved facts using stable codes,
   not a stored boolean;

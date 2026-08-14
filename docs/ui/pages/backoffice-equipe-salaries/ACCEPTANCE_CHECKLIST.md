@@ -101,6 +101,8 @@
 - [x] Departure correction or reopening requires a bounded reason and new audit event.
 - [x] Employee history is read-only, bounded, newest-first, and tenant-scoped.
 - [x] The effective date remains active through that date and becomes former the next day.
+- [x] The final five calendar days use text-backed warning badges in list/card
+      and dossier views, with `Dernier jour` on the effective departure date.
 - [x] Completeness is explainable/actionable and uses the same count/filter rule.
 - [x] Fixtures are removed from the integrated read slice.
 
@@ -118,8 +120,14 @@ Read-slice evidence:
 - [x] Repeated identical create returns one committed dossier.
 - [x] History exposes only approved event fields and no raw audit/tenant metadata.
 - [x] History loads only when opened and provides loading, error, and retry states.
-- [x] OWNER dossier-detail and history opens append deduplicated sensitive-read audit events.
+- [x] OWNER dossier-detail, business-history, and consultation-history opens
+      append deduplicated sensitive-read audit events.
 - [x] Sensitive-read audit events do not pollute the business-change history timeline.
+- [x] The OWNER-only Consultations tab loads 10 collapsed access entries per
+      cursor page with previous/next controls and no raw actor/tenant/operation
+      metadata.
+- [x] Immediate same-actor dossier/history navigation pairs render as one
+      specific consultation entry while both immutable audit rows are retained.
 - [x] Expired command receipts are removed in trusted establishment scope before mutation replay checks.
 - [x] Missing establishment, non-user actor, suspended membership, and tenant-switch denial are covered by scoped foundation/personnel tests.
 

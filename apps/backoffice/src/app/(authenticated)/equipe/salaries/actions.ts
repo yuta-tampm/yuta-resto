@@ -4,11 +4,13 @@ import {
   createPersonnelEmployeeInputSchema,
   setPersonnelEmployeeDepartureInputSchema,
   updatePersonnelEmployeeInputSchema,
+  type PersonnelEmployeeAccessHistory,
   type PersonnelEmployeeAuditHistory,
   type PersonnelEmployeeSummary,
 } from '@yuta/contracts/personnel';
 import {
   createPersonnelEmployee,
+  listPersonnelEmployeeAccessHistory,
   listPersonnelEmployeeAuditHistory,
   PersonnelConflictError,
   PersonnelDuplicateError,
@@ -54,6 +56,48 @@ export type DepartureEmployeeActionState = {
 export type LoadEmployeeHistoryActionResult =
   | { status: 'success'; history: PersonnelEmployeeAuditHistory }
   | { status: 'error'; message: string };
+
+export type LoadEmployeeAccessHistoryActionResult =
+  | { status: 'success'; history: PersonnelEmployeeAccessHistory }
+  | { status: 'error'; message: string };
+
+export async function loadEmployeeAccessHistoryAction(
+  employeeId: string,
+  operationId: string,
+  cursor?: string,
+): Promise<LoadEmployeeAccessHistoryActionResult> {
+  const { tenant } = await requirePersonnelTenant('/equipe/salaries');
+  requirePersonnelPermission(tenant, 'personnel.employee.read');
+
+  try {
+    const allowed = await recordPersonnelEmployeeAccess(
+      cloudDatabase,
+      tenant,
+      employeeId,
+      'employee.access_history_viewed',
+      operationId,
+    );
+    if (!allowed) {
+      return {
+        status: 'error',
+        message: 'Impossible de charger les consultations. Réessayez.',
+      };
+    }
+    const history = await listPersonnelEmployeeAccessHistory(
+      cloudDatabase,
+      tenant,
+      employeeId,
+      cursor,
+    );
+    return { status: 'success', history };
+  } catch (error: unknown) {
+    console.error('Failed to load personnel employee access history.', error);
+    return {
+      status: 'error',
+      message: 'Impossible de charger les consultations. Réessayez.',
+    };
+  }
+}
 
 export async function loadEmployeeHistoryAction(
   employeeId: string,

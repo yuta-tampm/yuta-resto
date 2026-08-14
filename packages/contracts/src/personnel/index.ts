@@ -231,6 +231,28 @@ export const personnelEmployeeAuditHistorySchema = z
   })
   .strict();
 
+export const personnelEmployeeAccessEventTypeSchema = z.enum([
+  'employee.dossier_viewed',
+  'employee.history_viewed',
+  'employee.access_history_viewed',
+]);
+
+export const personnelEmployeeAccessEventSchema = z
+  .object({
+    id: identifierSchema,
+    eventType: personnelEmployeeAccessEventTypeSchema,
+    actorDisplayName: z.string().min(1).max(200).nullable(),
+    occurredAt: isoDateTimeSchema,
+  })
+  .strict();
+
+export const personnelEmployeeAccessHistorySchema = z
+  .object({
+    items: z.array(personnelEmployeeAccessEventSchema).max(10),
+    pageInfo: pageInfoSchema,
+  })
+  .strict();
+
 export type PersonnelEmployeeView = z.infer<typeof personnelEmployeeViewSchema>;
 export type PersonnelCompletenessReason = z.infer<
   typeof personnelCompletenessReasonSchema
@@ -264,4 +286,10 @@ export type PersonnelEmployeeAuditEvent = z.infer<
 >;
 export type PersonnelEmployeeAuditHistory = z.infer<
   typeof personnelEmployeeAuditHistorySchema
+>;
+export type PersonnelEmployeeAccessEvent = z.infer<
+  typeof personnelEmployeeAccessEventSchema
+>;
+export type PersonnelEmployeeAccessHistory = z.infer<
+  typeof personnelEmployeeAccessHistorySchema
 >;
