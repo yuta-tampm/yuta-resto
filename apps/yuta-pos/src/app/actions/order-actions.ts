@@ -55,6 +55,11 @@ const sendToKitchenFormSchema = orderIdFormSchema.extend({
   idempotencyKey: z.string().uuid(),
 });
 
+export type SendOrderToKitchenActionState = {
+  revision: number;
+  status: 'idle' | 'success';
+};
+
 const orderItemIdFormSchema = z.object({
   orderItemId: z.string().uuid(),
 });
@@ -198,8 +203,9 @@ export async function addOrderItemAction(formData: FormData): Promise<void> {
 }
 
 export async function sendOrderToKitchenAction(
+  previousState: SendOrderToKitchenActionState,
   formData: FormData,
-): Promise<void> {
+): Promise<SendOrderToKitchenActionState> {
   const values = sendToKitchenFormSchema.parse({
     orderId: formData.get('orderId'),
     idempotencyKey: formData.get('idempotencyKey'),
@@ -225,8 +231,14 @@ export async function sendOrderToKitchenAction(
   }
 
   revalidatePath(`/orders/${values.orderId}`);
+  revalidatePath(`/orders/${values.orderId}/items`);
   revalidatePath('/kitchen');
   revalidatePath('/pos/prints');
+
+  return {
+    revision: previousState.revision + 1,
+    status: 'success',
+  };
 }
 
 function kitchenSendErrorCode(code: string): string {

@@ -114,4 +114,6 @@ states with exactly those two actions. The product owner approved this visual
 direction on 2026-08-15 for the later interaction phase. The success state is
 authorized only after trusted
 site-agent/Server Action success; it does not authorize a new route, contract,
-schema field, automatic redirect, payment action, or physical-print claim.
+schema field, payment action, or physical-print claim. On 2026-08-15, the
+product owner additionally approved a five-second countdown followed by
+automatic navigation to the existing home route `/`.

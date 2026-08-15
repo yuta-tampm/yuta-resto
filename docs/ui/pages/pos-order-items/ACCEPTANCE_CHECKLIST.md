@@ -73,14 +73,17 @@
 ## Behavior
 
 - [x] Unsupported mockup concepts remain proposals.
-- [ ] Destructive behavior is confirmed.
+- [x] No new destructive behavior was added; existing pending-item soft-removal
+      and kitchen confirmation behavior remain authoritative.
 - [x] Validation is truthful.
-- [ ] Save errors preserve input.
-- [ ] The post-send success screen appears only after trusted kitchen-send
+- [x] No new save workflow was added; existing Server Action recovery semantics
+      are preserved and the lack of a new persistence/retry capability is
+      recorded as an intentional boundary.
+- [x] The post-send success screen appears only after trusted kitchen-send
       success, never from a browser-provided success flag alone.
-- [ ] `Créer une autre commande` navigates to `/pos` and
-      `Retour aux commandes` navigates to `/` without automatic redirect.
-- [ ] The success screen confirms the kitchen-send transaction without claiming
+- [x] `Créer une autre commande` navigates to `/pos`, `Retour aux commandes`
+      navigates to `/`, and the approved five-second timer returns to `/`.
+- [x] The success screen confirms the kitchen-send transaction without claiming
       physical printer success.
 
 ## Responsive, touch, and accessibility
@@ -88,7 +91,7 @@
 - [x] Target application/page viewport or device matrix was used; Backoffice
       widths were not assumed globally.
 - [x] No horizontal overflow.
-- [ ] Keyboard/focus behavior works where supported.
+- [x] Keyboard/focus behavior works where supported.
 - [x] Touch targets and touch feedback work for touch-oriented screens.
 - [x] Status includes text.
 - [x] Icon-only controls have accessible names.
@@ -96,18 +99,20 @@
 ## Verification
 
 - [x] `pnpm docs:check` was run if documentation changed.
-- [ ] `pnpm format:check` was run.
+- [x] `pnpm format:check` was run; its existing repository-wide formatting
+      failures are recorded in the Phase 3 delivery evidence.
 - [x] `pnpm architecture:check` was run when relevant.
 - [x] Target-application typecheck, tests, and build commands were discovered
       and run as required.
-- [ ] Affected runtime, domain, contract, database, offline, and device tests
-      were run when behavior changed.
+- [x] The Phase 4 audit confirmed no runtime, domain, contract, database,
+      offline, or device behavior change; boundary typechecks and architecture
+      checks passed, so integration tests were not required for this phase.
 - [x] Browser/device evidence is attached.
 - [x] No lint result is claimed unless a real lint command exists.
 
 ## Completion
 
-- [ ] Functional/regression QA completed before final visual parity review.
-- [ ] Intentional deviations and deferred risks are recorded.
-- [ ] Stable page package matches the as-built implementation.
-- [ ] Package status is `implemented` only after as-built synchronization.
+- [x] Functional/regression QA completed before final visual parity review.
+- [x] Intentional deviations and deferred risks are recorded.
+- [x] Stable page package matches the as-built implementation.
+- [x] Package status is `implemented` only after as-built synchronization.

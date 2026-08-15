@@ -70,7 +70,7 @@ export function MenuItemBrowser({
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-2 p-4 pb-24 sm:gap-3 md:grid-cols-3 lg:min-h-0 lg:flex-1 lg:auto-rows-max lg:overflow-y-auto lg:overscroll-contain lg:p-4 lg:pb-5 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2 p-4 pb-24 sm:gap-3 md:grid-cols-3 lg:min-h-0 lg:flex-1 lg:auto-rows-max lg:grid-cols-2 lg:overflow-y-auto lg:overscroll-contain lg:p-4 lg:pb-5 xl:grid-cols-4 2xl:grid-cols-[repeat(auto-fill,minmax(210px,1fr))]">
           {visibleItems.map((item) => (
             <form key={item.id} action={addOrderItemAction}>
               <input type="hidden" name="orderId" value={orderId} />

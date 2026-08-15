@@ -1,12 +1,6 @@
 'use client';
 
-import type {
-  AllergySeverity,
-  ItemVariantSnapshot,
-  LocalInstructionSettings,
-  LocalItemInstructionConfig,
-  SelectedInstructionSnapshot,
-} from '@yuta/contracts/local-pos';
+import type { LocalInstructionSettings } from '@yuta/contracts/local-pos';
 import {
   Button,
   Dialog,
@@ -16,42 +10,18 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  IconButton,
   cn,
 } from '@yuta/ui';
-import { List, Minus, Plus, TriangleAlert } from 'lucide-react';
-import {
-  removePendingOrderItemAction,
-  updateOrderItemQuantityAction,
-} from '../../../actions';
+import { List } from 'lucide-react';
 import { SendToKitchenButton } from '../../../components/SendToKitchenButton';
-import { OrderItemNoteDialog } from './OrderItemNoteDialog';
-
-type MobileOrderDialogItem = {
-  id: string;
-  quantity: number;
-  name: string;
-  note: string | null;
-  quickInstructions: SelectedInstructionSnapshot[];
-  selectedVariants: ItemVariantSnapshot[];
-  instructionConfig: LocalItemInstructionConfig & {
-    variantOptions: Array<{ code: string; label: string }>;
-  };
-  orderingPolicy: 'merge' | 'separate';
-  requiredVariantQuantity: number;
-  hasAllergy: boolean;
-  allergenCodes: string[];
-  allergySeverity: AllergySeverity | null;
-  allergyNote: string | null;
-  allergyDisplay: string;
-  totalLabel: string;
-  isPending: boolean;
-  requiresAttention: boolean;
-  statusLabel: string;
-};
+import {
+  OrderItemDetails,
+  OrderItemQuantityControls,
+  type OrderItemPresentation,
+} from './OrderItemPresentation';
 
 type MobileOrderDialogProps = {
-  items: MobileOrderDialogItem[];
+  items: OrderItemPresentation[];
   subtotalLabel: string;
   discountLabel: string;
   totalLabel: string;
@@ -121,65 +91,15 @@ export function MobileOrderDialog({
                 <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-3">
                   <OrderItemQuantityControls
                     orderId={orderId}
-                    orderItemId={item.id}
-                    quantity={item.quantity}
-                    canEdit={canEditItems && item.isPending}
-                    allowIncrease={item.orderingPolicy !== 'separate'}
+                    item={item}
+                    canEditItems={canEditItems}
                   />
-                  <div className="min-w-0">
-                    <p className="font-black">{item.name}</p>
-                    {item.note && (
-                      <p className="mt-1 text-xs font-semibold text-primary/55">
-                        Note: {item.note}
-                      </p>
-                    )}
-                    {item.quickInstructions.length > 0 && (
-                      <p className="mt-1 text-xs font-black text-status-info">
-                        {item.quickInstructions
-                          .map((instruction) => instruction.labelSnapshot)
-                          .join(' · ')}
-                      </p>
-                    )}
-                    {item.selectedVariants.length > 0 && (
-                      <p className="mt-1 text-xs font-black text-primary/65">
-                        Options:{' '}
-                        {item.selectedVariants
-                          .map(
-                            (variant) =>
-                              `${variant.quantity}× ${variant.labelSnapshot}`,
-                          )
-                          .join(' · ')}
-                      </p>
-                    )}
-                    {item.hasAllergy && (
-                      <p className="mt-1 inline-flex items-start gap-1 rounded-md bg-status-danger-soft px-2 py-1 text-xs font-black text-status-danger">
-                        <TriangleAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-                        {item.allergyDisplay}
-                      </p>
-                    )}
-                    <p className="mt-1 text-xs font-semibold text-primary/45">
-                      {item.statusLabel}
-                    </p>
-                    {item.isPending && canEditItems && (
-                      <OrderItemNoteDialog
-                        orderId={orderId}
-                        orderItemId={item.id}
-                        itemName={item.name}
-                        quantity={item.quantity}
-                        instructionConfig={item.instructionConfig}
-                        allergyOptions={allergyOptions}
-                        requiredVariantQuantity={item.requiredVariantQuantity}
-                        initialNote={item.note}
-                        initialQuickInstructions={item.quickInstructions}
-                        initialVariants={item.selectedVariants}
-                        initialHasAllergy={item.hasAllergy}
-                        initialAllergenCodes={item.allergenCodes}
-                        initialAllergySeverity={item.allergySeverity}
-                        initialAllergyNote={item.allergyNote}
-                        requiresAttention={item.requiresAttention}
-                      />
-                    )}
-                  </div>
+                  <OrderItemDetails
+                    item={item}
+                    orderId={orderId}
+                    canEditItems={canEditItems}
+                    allergyOptions={allergyOptions}
+                  />
                   <span className="font-black">{item.totalLabel}</span>
                 </div>
               </div>
@@ -207,6 +127,7 @@ export function MobileOrderDialog({
             variant="primary"
             className="h-11"
             fullWidth
+            showSuccessOnCompletion
           />
           <DialogClose asChild>
             <Button
@@ -252,68 +173,6 @@ function AmountRow({ label, value }: { label: string; value: string }) {
     <div className="flex items-center justify-between gap-3 text-sm">
       <span className="font-semibold text-primary/60">{label}</span>
       <span className="font-black">{value}</span>
-    </div>
-  );
-}
-
-function OrderItemQuantityControls({
-  orderId,
-  orderItemId,
-  quantity,
-  canEdit,
-  allowIncrease,
-}: {
-  orderId: string;
-  orderItemId: string;
-  quantity: number;
-  canEdit: boolean;
-  allowIncrease: boolean;
-}) {
-  if (!canEdit) {
-    return <span className="min-w-6 text-center font-black">{quantity}</span>;
-  }
-
-  return (
-    <div className="flex items-center gap-1">
-      <form
-        action={
-          quantity === 1
-            ? removePendingOrderItemAction
-            : updateOrderItemQuantityAction
-        }
-      >
-        <input type="hidden" name="orderId" value={orderId} />
-        <input type="hidden" name="orderItemId" value={orderItemId} />
-        {quantity > 1 && (
-          <input type="hidden" name="quantity" value={quantity - 1} />
-        )}
-        <IconButton
-          type="submit"
-          variant="outline"
-          size="md"
-          className="h-11 w-11"
-          aria-label="Retirer un article"
-        >
-          <Minus className="h-3.5 w-3.5" />
-        </IconButton>
-      </form>
-      <span className="min-w-5 text-center font-black">{quantity}</span>
-      {allowIncrease && (
-        <form action={updateOrderItemQuantityAction}>
-          <input type="hidden" name="orderId" value={orderId} />
-          <input type="hidden" name="orderItemId" value={orderItemId} />
-          <input type="hidden" name="quantity" value={quantity + 1} />
-          <IconButton
-            type="submit"
-            variant="outline"
-            size="md"
-            className="h-11 w-11"
-            aria-label="Ajouter un article"
-          >
-            <Plus className="h-3.5 w-3.5" />
-          </IconButton>
-        </form>
-      )}
     </div>
   );
 }

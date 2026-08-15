@@ -142,3 +142,227 @@ French copy, and shared shell implementation override raster content.
 Product-owner review approved the hierarchy, density, responsive behavior,
 action priority, and state treatment on 2026-08-13. Repository rules and the
 selective feedback audit remain authoritative over generated details.
+
+## Documents capability Phase 0 handoff
+
+Capability mode: `NEW_CAPABILITY_DISCOVERY`
+
+Capability scope status: `APPROVED FOR PHASE 1 PROTOTYPE ONLY`
+
+Documents design prompt status: `EXECUTED — REFERENCES APPROVED FOR PHASE 1`
+
+The containing `/equipe/salaries` page is integrated, but the `Documents`
+surface and its cloud storage/domain do not exist. The design target is a new
+tab/flow inside the current explicitly opened employee drawer, not a new page.
+The current authenticated page was inspected on 2026-08-15 at
+`http://localhost:3001/equipe/salaries` with the local OWNER LUNA session. It
+confirmed the current overlay drawer, five tabs, former-employee state, and no
+Documents tab. Because the target surface itself is absent, its baseline status
+is `NOT_APPLICABLE`; the containing page and approved references supply context.
+
+### Documents curated design-tool bundle
+
+- the current authenticated `/equipe/salaries` drawer and implemented tab order;
+- `references/design-proposal-desktop-01.png` and
+  `references/design-proposal-mobile-01.png` for approved page composition only;
+- `UI_SPEC.md`, the Documents Phase 0 sections in `PRODUCT_SCOPE.md` and
+  `DATA_AND_INTERACTION_SPEC.md`, and the current Backoffice UI rules;
+- `@yuta/ui` semantic component language, Geist Sans, and Lucide-style icons;
+- exact shell mode `REUSE_APPROVED_SHARED_SHELL` and viewports 1440, 1024, 768,
+  and 390 px.
+
+### Ready-to-run Documents design prompt
+
+```text
+Create responsive DRAFT design images and short annotations, not implementation
+code, for a new `Documents` tab inside the existing employee dossier drawer on
+YUTA Backoffice route `/equipe/salaries`.
+
+This is NEW_CAPABILITY_DISCOVERY inside an integrated existing page. No cloud
+employee-document table, contract, permission, API, private object-storage
+adapter, malware-processing flow, upload/download action, OCR service, or
+document test currently exists. Do not imply that files are persisted or that
+the capability is already available.
+
+Preserve the supplied current Backoffice shell and current Salaries page exactly:
+sidebar/topbar, tenant and account controls, explicitly opened right overlay
+drawer, employee dossier header/status/actions, responsive width, and existing
+tabs `Vue d'ensemble`, `Identité`, `Relation de travail`, `Historique`, and
+`Consultations`. Add `Documents` as the sixth dossier tab for exploration only.
+Do not redesign the shell, employee list, create/edit/departure flows, or invent
+a new route, HR hub, global document library, organization-wide selector, or
+second drawer.
+
+Primary operator: OWNER of the currently selected establishment. MANAGER,
+STAFF, employee self-service, public users, service actors, and cross-
+establishment access are denied in this proposal. Show an OWNER-forbidden study
+without leaking employee or document metadata. Every example belongs only to
+the selected employee dossier and establishment.
+
+Explore the smallest proposed MVP:
+1. An empty `Documents` tab with concise privacy copy and one primary
+   `Ajouter un document` action.
+2. A compact populated list using fictional neutral categories approved only
+   for design study, such as an employment supporting document and applicable
+   work-authorization evidence. Do not present category examples as legal
+   requirements.
+3. Safe visible metadata: localized category label, sanitized filename,
+   verified type/size, upload date, availability state, and optional relevant
+   or expiry date only when the example clearly says the category supports it.
+4. Restrained per-row actions: `Consulter` or `Télécharger`, and `Remplacer`.
+5. Add/replace dialog with category selection, file picker, explicit limits/help,
+   upload progress, security processing, validation rejection, retry, conflict,
+   and persisted-success studies.
+6. Truthful states: loading, empty, forbidden, upload pending, processing,
+   available, rejected, unavailable, service failure, expired download link,
+   retry, and success. A file is not available while still uploading or being
+   security-processed.
+
+Replacement must look deliberate and must not imply silent overwrite. Do not
+show document deletion, archive/legal-hold administration, public/share links,
+email delivery, bulk import/export, ZIP download, camera scanning, OCR,
+automatic extraction/prefill, AI classification, e-signature, contract
+generation, Formalités, DPAE/DSN, payroll, RIB, NIR/social-security data,
+medical or disciplinary material, manager delegation, or employee self-service.
+Do not show missing/expiry alert dashboards before a real category requirement
+and resolving action exist.
+
+Use French user-facing copy, Geist Sans, current YUTA semantic roles and
+Card/Badge/Button/Dialog/Alert/Tabs patterns, and Lucide-style icons. Use no raw
+hex colors, gradients, glassmorphism, or new component system. Keep visible
+focus, labels and connected errors, keyboard-safe dialogs, text-backed statuses,
+long-filename truncation with accessible full name, and no hover-only meaning.
+
+Return desktop and mobile studies for 1440, 1024, 768, and 390 px. At desktop,
+keep the current drawer width and avoid shrinking the employee list beneath it.
+At tablet/mobile, use the existing full-width drawer, stack metadata and actions,
+keep file controls reachable, and prevent horizontal overflow. Label all output
+DRAFT. Success means the proposal fits the current drawer, shows honest file
+states, protects sensitive data boundaries, and does not invent backend,
+authorization, storage, legal requirements, or deferred capabilities.
+```
+
+The prompt stopped after draft image generation. Product review then approved
+the hierarchy, category examples, action priority, copy, responsive behavior,
+and state treatment before the Phase 1 prototype was built.
+
+### Documents prompt execution result
+
+The product owner approved Phase 0 and authorized prompt execution on
+2026-08-15. Built-in image generation produced these responsive references:
+
+- `references/documents-design-proposal-desktop-01.png` — wide desktop drawer;
+- `references/documents-design-proposal-tablet-1024-01.png` — compact desktop/tablet;
+- `references/documents-design-proposal-tablet-768-01.png` — tablet portrait;
+- `references/documents-design-proposal-mobile-01.png` — 390 px mobile composition.
+
+The references consistently preserve the dossier header/actions, existing five
+tabs, sixth active `Documents` tab, OWNER-focused add/view/replace actions,
+available/processing states, category caveat, and deferred-capability boundary.
+The product owner approved their hierarchy, actions, fictional category
+examples, copy, state treatment, and responsive direction for a typed-fixture
+Phase 1 prototype. They remain design evidence only and do not authorize a real
+document capability.
+
+After in-app review, the product owner requested more working room than the
+historical 48 rem baseline. The approved as-built adjustment caps the drawer at
+60 rem on wide screens, allows up to 88% of the viewport at 1024 px, and keeps
+the drawer full-width at 768 px and below.
+
+## Documents Wave B Phase 0 handoff — signed amendments
+
+Capability mode: `NEW_CAPABILITY_DISCOVERY`
+
+Capability scope status: `DRAFT — AWAITING PRODUCT APPROVAL`
+
+Design prompt status: `READY — NOT AUTHORIZED TO RUN`
+
+The containing `/equipe/salaries` page and Documents tab are integrated locally.
+The amendment flow itself is absent, so its capability baseline is
+`NOT_APPLICABLE`. Current as-built evidence is supplied by:
+
+- `references/documents-phase-5-as-built-1024x768.png`;
+- `references/documents-phase-5-as-built-768x1024.png`;
+- `references/documents-phase-5-as-built-390x844.png`.
+
+Shell mode remains `REUSE_APPROVED_SHARED_SHELL`. The design must preserve the
+Backoffice shell, Salaries list, explicit-open dossier drawer, employee header,
+actions, existing tab order, protected-access notice, signed-contract section,
+and current responsive widths. No shared shell or navigation work is in scope.
+
+### Ready-to-run signed-amendments design prompt
+
+```text
+Create responsive DRAFT design images and short annotations, not implementation
+code, for a new signed-contract-amendments flow inside the existing `Documents`
+tab of the employee dossier drawer on YUTA Backoffice route
+`/equipe/salaries`.
+
+This is NEW_CAPABILITY_DISCOVERY inside an integrated local-only Documents
+surface. The current implementation supports only one category,
+`Contrat de travail signé`, PDF up to 10 MiB. No amendment category, amendment
+identifier, metadata fields, list behavior, schema value, contract, repository
+mutation, or test exists. Do not imply that amendments are already persisted.
+
+Use shell mode REUSE_APPROVED_SHARED_SHELL. Preserve the supplied Backoffice
+shell and current Salaries drawer exactly: employee identity/status/actions,
+tab order with `Documents` active, current drawer widths, `Accès protégé`
+notice, signed-contract card, French file-picker pattern, and server-mediated
+`Consulter`/`Télécharger` behavior. Do not redesign the employee list, shell,
+navigation, account/establishment controls, or create another route, document
+library, drawer, or HR hub.
+
+Primary operator: OWNER of the active establishment. MANAGER, STAFF, employee
+self-service, public users, and service actors are denied. Every fictional item
+belongs only to the selected employee dossier and establishment. Include a
+non-disclosing forbidden study.
+
+Explore the smallest proposed local MVP:
+1. Keep the existing `Contrat de travail signé` area distinct.
+2. Add a separate `Avenants signés` area that can contain zero or more items.
+3. Show an empty state with one `Ajouter un avenant` action.
+4. Show compact fictional amendment rows/cards with a neutral display label,
+   sanitized filename, PDF size, availability, upload date, and a clearly
+   labelled proposed effective date for chronological discovery.
+5. Provide restrained per-amendment `Consulter`, `Télécharger`, and deliberate
+   `Remplacer` actions.
+6. Reuse the current PDF-only, 10 MiB file picker as proposal copy.
+7. Show loading, empty, forbidden, validation with preserved input, uploading,
+   security processing, rejected, unavailable, conflict, success, and retry.
+
+Treat every later legal amendment as its own document. Never show it replacing
+the base contract or another amendment. `Remplacer` means correcting the scan
+of that same amendment while preserving version history. Do not infer or update
+salary, work time, role, dates, contract type, or any structured employee field
+from PDF content.
+
+Effective date, signature date, amendment number, required/optional status,
+ordering rules, completeness, and retention are product/legal decisions. The
+design may label effective date as a proposal for review but must not present
+it as approved law, schema, or validation. Do not invent free-form sensitive
+descriptions.
+
+Do not show generation/editing, clause templates, e-signature, Formalités,
+DPAE/DSN, email delivery, OCR, extracted fields, AI classification, automatic
+record updates, missing/expiry alerts, delete/archive/legal hold, rights tools,
+bulk import/export, ZIP, share/public links, manager delegation, employee
+self-service, production provider details, or other document categories.
+
+Use French copy, Geist Sans, YUTA semantic roles and existing
+Card/Badge/Button/Alert/form patterns, and Lucide-style icons. Use no raw hex
+colors, gradients, glassmorphism, or new component system. Keep visible focus,
+connected labels/errors, text-backed states, touch-sized actions, long filename
+truncation with accessible full text, and no hover-only meaning.
+
+Return studies at 1440, 1024, 768, and 390 px. Preserve the current 60 rem wide
+drawer cap, up to 88% at 1024, and full-width drawer at 768/390. Stack amendment
+metadata/actions without page overflow; horizontal scrolling remains limited
+to the existing dossier-tab navigation where needed. Label every output DRAFT.
+Success means the distinction between base contract, distinct amendments, and
+correction versions is obvious without inventing backend, legal, or production
+capability.
+```
+
+Stop after Phase 0. Running this prompt requires explicit product-owner
+authorization. Generated output starts as `DRAFT` and cannot authorize schema,
+contracts, migrations, permissions, storage, or implementation.

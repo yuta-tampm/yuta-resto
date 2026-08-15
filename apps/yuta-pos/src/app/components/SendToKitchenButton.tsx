@@ -16,8 +16,13 @@ import {
   cn,
 } from '@yuta/ui';
 import { ChefHat, Send, TriangleAlert } from 'lucide-react';
-import { useState } from 'react';
-import { sendOrderToKitchenAction } from '../actions';
+import { useRouter } from 'next/navigation';
+import { useActionState, useEffect, useState } from 'react';
+import {
+  sendOrderToKitchenAction,
+  type SendOrderToKitchenActionState,
+} from '../actions';
+import { useKitchenSendSuccess } from './KitchenSendSuccessBoundary';
 
 type SendToKitchenButtonProps = {
   orderId: string;
@@ -35,6 +40,12 @@ type SendToKitchenButtonProps = {
   variant?: 'primary' | 'secondary';
   className?: string;
   fullWidth?: boolean;
+  showSuccessOnCompletion?: boolean;
+};
+
+const initialActionState: SendOrderToKitchenActionState = {
+  revision: 0,
+  status: 'idle',
 };
 
 export function SendToKitchenButton({
@@ -50,24 +61,48 @@ export function SendToKitchenButton({
   variant = 'secondary',
   className,
   fullWidth = false,
+  showSuccessOnCompletion = false,
 }: SendToKitchenButtonProps) {
   const [confirmed, setConfirmed] = useState(false);
+  const [state, formAction, pending] = useActionState(
+    sendOrderToKitchenAction,
+    initialActionState,
+  );
+  const showSuccess = useKitchenSendSuccess();
+  const router = useRouter();
   const needsConfirmation =
     (hasAllergy && !allergyAcknowledged) || itemAllergyWarnings.length > 0;
   const Icon = icon === 'chef' ? ChefHat : Send;
 
+  useEffect(() => {
+    if (state.status !== 'success') return;
+
+    if (showSuccessOnCompletion && showSuccess) {
+      showSuccess();
+      return;
+    }
+
+    router.refresh();
+  }, [
+    router,
+    showSuccess,
+    showSuccessOnCompletion,
+    state.revision,
+    state.status,
+  ]);
+
   if (!needsConfirmation) {
     return (
-      <form action={sendOrderToKitchenAction}>
+      <form action={formAction}>
         <KitchenFields orderId={orderId} idempotencyKey={idempotencyKey} />
         <Button
           type="submit"
           variant={variant}
-          disabled={disabled}
+          disabled={disabled || pending}
           className={cn(fullWidth && 'w-full', className)}
         >
           <Icon className="h-4 w-4" />
-          {label}
+          {pending ? 'Envoi en cours…' : label}
         </Button>
       </form>
     );
@@ -79,7 +114,7 @@ export function SendToKitchenButton({
         <Button
           type="button"
           variant="danger"
-          disabled={disabled}
+          disabled={disabled || pending}
           className={cn(fullWidth && 'w-full', className)}
         >
           <TriangleAlert className="h-4 w-4" />
@@ -110,7 +145,7 @@ export function SendToKitchenButton({
           </AlertDescription>
         </Alert>
 
-        <form action={sendOrderToKitchenAction} className="mt-4 grid gap-4">
+        <form action={formAction} className="mt-4 grid gap-4">
           <KitchenFields orderId={orderId} idempotencyKey={idempotencyKey} />
           <input
             type="hidden"
@@ -132,9 +167,13 @@ export function SendToKitchenButton({
             </span>
           </label>
           <DialogFooter>
-            <Button type="submit" variant="danger" disabled={!confirmed}>
+            <Button
+              type="submit"
+              variant="danger"
+              disabled={!confirmed || pending}
+            >
               <ChefHat className="h-4 w-4" />
-              Confirmer et envoyer
+              {pending ? 'Envoi en cours…' : 'Confirmer et envoyer'}
             </Button>
           </DialogFooter>
         </form>

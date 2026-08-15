@@ -50,6 +50,13 @@
       "when": 1786627169608,
       "tag": "0006_aromatic_boom_boom",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1786784203863,
+      "tag": "0007_happy_master_chief",
+      "breakpoints": true
     }
   ]
 }

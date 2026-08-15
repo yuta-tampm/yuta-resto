@@ -47,8 +47,9 @@ prototype unless repository constraints require a documented deviation:
 - a text-backed warning badge in the list and dossier during the final five
   calendar days: `Départ dans X jours`, `Départ demain`, then `Dernier jour`;
 - no dossier selected or opened on initial page load;
-- a right-side overlay drawer, opened only by explicit row/card selection,
-  wide enough for the five dossier sections without shrinking the list layout;
+- a right-side overlay drawer, opened only by explicit row/card selection, with
+  a 60 rem desktop maximum so the six dossier sections and document content have
+  enough working space;
 - a structured dossier header with identity/status separated from secondary
   actions, followed by a stable tab bar and a responsive two-column key-fact
   grid on the overview tab;
@@ -86,20 +87,89 @@ large empty panel or add a fourth summary card.
 
 ## Future dossier sections and actions
 
-The MVP detail sections are `Vue d'ensemble`, `Identité`, `Relation de travail`,
-the integrated read-only business `Historique`, and the OWNER-only
-`Consultations` access history.
+The integrated MVP detail sections are `Vue d'ensemble`, `Identité`, `Relation
+de travail`, the read-only business `Historique`, and the OWNER-only
+`Consultations` access history. A sixth `Documents` tab now exposes the
+local-development signed-contract slice with real loading, empty, upload,
+replacement, available, validation, conflict, scanner rejection, service error,
+success, and recovery states.
 
-Future-wave UX intent, not Phase 1 scope:
+Documents local-slice UX:
 
-- add `Documents` as a first-class dossier section only after secure storage,
-  document authorization, actions, audit, and retention are approved;
+- enable add/replace only for a signed-contract PDF up to 10 MiB;
+- show that missing written-contract evidence does not automatically make the
+  employee dossier incomplete;
+- keep view/download server mediated and make scanner or storage failure
+  explicit without exposing operational details;
+- retain the approved Phase 1 hierarchy while removing all fictional files and
+  the prototype notice;
 - surface Formalités status/navigation only after a real route contract and
   authorization exist;
 - add a `Registre du personnel` header or dossier action only after its route,
   domain, historical ordering, and legal/security boundaries are approved;
 - keep the dossier drawer focused on consultation; create/edit/departure remain
   separate confirmed dialogs rather than turning the drawer into one large form.
+
+### Documents Phase 0 UI discovery scope
+
+The next design exercise may explore a sixth `Documents` tab inside the existing
+employee drawer. It must preserve the current explicit-open overlay drawer,
+header, employee identity/status, action hierarchy, responsive width, and the
+five implemented tabs. It does not redesign the list, Backoffice shell, or
+employee creation flow.
+
+The proposed tab may show:
+
+- a concise explanation that files belong to the selected employee and establishment;
+- an empty state with one `Ajouter un document` action for an authorized OWNER;
+- a compact list grouped or labelled by an approved category, with document
+  name, availability/status, verified type/size, upload date, and optional
+  relevant/expiry date only where its meaning is approved;
+- restrained row actions for `Consulter`/`Télécharger` and `Remplacer`;
+- a separate add/replace dialog with category, file selection, limits/help,
+  confirmation, upload progress, processing, validation rejection, retry, and
+  persisted-success states;
+- text-backed unavailable, rejected, expiring, or failed states; no color-only meaning;
+- an OWNER-forbidden study demonstrating that no metadata is disclosed.
+
+The design must not show delete/archive/share/email/export-all controls, OCR or
+prefilled extracted data, electronic signature, contract generation,
+Formalités, manager/self-service access, stable public URLs, storage-provider
+details, or generic drag-and-drop success before the server has accepted and
+security-processed the file. Missing/expiring warnings stay out until category
+requirements and resolving actions are approved.
+
+At 1440 px, cap the drawer at 60 rem. At 1024 px, allow it to use up to 88% of
+the viewport so the underlying page remains recognizable without squeezing the
+dossier content. At 768 and 390 px, use the full-width drawer, stack
+metadata/actions safely, keep file controls reachable, and prevent long
+filenames from causing horizontal overflow.
+
+### Documents Wave B Phase 0 UI discovery scope
+
+The next design exercise may extend the implemented Documents tab with a
+separate `Avenants signés` section. It must preserve the current drawer,
+employee header/actions, tab order, signed-contract card, protected-access
+notice, server-mediated file actions, responsive behavior, and French copy.
+It must not redesign the Salaries page or add a route/global document library.
+
+The proposal may explore:
+
+- a clearly separate base-contract area and zero-or-more amendment area;
+- an amendment empty state with one `Ajouter un avenant` action;
+- compact amendment rows/cards ordered by an explicitly labelled date;
+- safe metadata such as a neutral display label, sanitized filename, PDF size,
+  availability, upload date, and proposed effective date;
+- `Consulter`, `Télécharger`, and deliberate `Remplacer` actions per amendment;
+- add/replace UI reusing the current French file picker and PDF/10 MiB help;
+- loading, empty, forbidden, validation, uploading, processing, rejected,
+  unavailable, conflict, success, and retry studies.
+
+The design must not present a new legal amendment as a replacement version of
+the base contract or another amendment. It must not infer salary, work-time,
+role, contract, or other structured employee changes from the file. Amendment
+number, signature date, effective date, required/optional rules, and ordering
+remain visibly non-authoritative proposals until approved.
 
 ## Required discovery states
 
@@ -128,7 +198,8 @@ contracts, permissions, persistence, or legal behavior.
 
 ## Out of scope
 
-Shell/navigation changes, POS data, documents, OCR, remuneration, payroll,
+Shell/navigation changes, POS data, real document storage/actions, OCR,
+remuneration, payroll,
 Formalités, contract generation, DPAE/DSN, apprenticeship, register/PDF,
 legal-compliance claims, and backend/schema design are out of Phase 1. They are
 retained as future capability waves in `PRODUCT_SCOPE.md`.

@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-08-14
+Last updated: 2026-08-15
 
 Protocol revision: 4
 
@@ -62,6 +62,23 @@ is opened and has loading, unavailable, retry, and empty states. The OWNER-only
 in server-backed pages of 10 and records access to that timeline. Completeness counts, filtering,
 reason labels, and the supported edit action use the same derived minimum-field
 rules.
+
+The drawer also contains a local-development `Documents` vertical slice for one
+approved product category: `Contrat de travail signé`. OWNER can add, replace,
+view, and download a verified PDF up to 10 MiB. Metadata is establishment scoped
+in cloud persistence; bytes remain outside PostgreSQL in private local storage
+and must pass Microsoft Defender before becoming available. Production fails
+closed until the external storage, scanner, retention, and operations gates are
+approved.
+
+Documents Wave B now has a completed read-only Phase 0 for
+`Avenants signés`. Repository analysis confirms that this is a new capability:
+the current category enum, contracts, repository, action, UI, and tests support
+only the base signed employment contract. Phase 0 proposes an OWNER-only local
+flow for multiple amendments, keeps each amendment distinct from the base
+contract and from correction versions, records date/ordering questions, and
+provides a ready design prompt. The prompt has not been authorized or executed,
+and no runtime, schema, migration, API, permission, or storage change was made.
 
 The route remains under `NEW_CAPABILITY_DISCOVERY` until the approved write
 slices and final QA are complete. `users` and `tenant_memberships` remain login
@@ -230,6 +247,112 @@ any employee field, enum, permission, entitlement, contract, API, repository,
 schema, migration, storage provider, audit model, retention behavior, or
 legal-compliance claim without its explicit approval.
 
+## Documents capability Phase 2 — technical design prepared
+
+Phase 0 for Wave A `Secure employee documents` was completed read-only on
+2026-08-15. The stable package remains `backoffice-equipe-salaries`; no second
+page pack or route was created because Documents is a proposed dossier tab/flow
+inside `/equipe/salaries`.
+
+Documents capability metadata:
+
+```text
+Documents target: SURFACE + FLOW inside the existing PAGE
+Documents implementation status: PHASE 3 LOCAL-ONLY REAL VERTICAL SLICE
+Documents delivery mode: NEW_CAPABILITY_DISCOVERY
+Documents scope status: LOCAL QA — PRODUCTION RELEASE BLOCKED
+Documents baseline status: NOT_APPLICABLE
+Documents prompt status: EXECUTED — REFERENCES APPROVED FOR PHASE 1
+```
+
+Repository findings:
+
+- the containing Salaries page is integrated and OWNER-only, with trusted
+  organization and establishment scope and a current five-tab employee drawer;
+- no Backoffice/cloud document domain, private object storage, permission,
+  contract, schema, API/action, security-processing flow, or test exists;
+- the standalone local Display upload directory belongs to another runtime and
+  cannot be reused for cloud employee files;
+- document ownership is proposed at the employee dossier's organization plus
+  establishment scope, never by resource ID or browser-provided storage key;
+- every employee document is confidential; more sensitive categories remain
+  category-by-category decisions rather than a generic upload bucket;
+- no real-file work may begin before product, privacy/legal, retention,
+  security, provider, audit, backup/restore, and incident-response approvals.
+
+The proposed MVP is OWNER-only list, upload, view/download, and explicit
+replacement for approved categories, with truthful quarantine/processing/error
+states and allowlisted audit events. Delete/archive/legal hold, OCR, camera
+scanning, generation/signature/Formalités, sharing/export, manager delegation,
+employee self-service, RIB/NIR/payroll/medical/disciplinary files, and generic
+missing/expiry alerts remain deferred.
+
+The current authenticated containing page was inspected on 2026-08-15 using the
+local LUNA OWNER session at `http://localhost:3001/equipe/salaries`. The new
+Documents surface has no baseline because it does not exist. After explicit
+product approval, the prompt in `DESIGN_HANDOFF.md` was executed and produced
+four responsive visual references. The product owner approved those references
+and the typed-fixture prototype on 2026-08-15. This approval does not authorize
+real document implementation.
+
+### Documents Phase 1 prototype evidence
+
+The existing employee drawer now includes a `Documents` tab backed only by a
+route-local typed fixture. It contains two explicitly fictional examples, a
+persistent demonstration notice, and disabled add, view, and replace controls.
+The fixture carries no resource ID, URL, storage key, tenant value, transport
+contract, or persistence behavior. Tabs remain horizontally scrollable on
+narrow screens, long labels truncate, and document actions stack responsively.
+The right-side drawer is capped at 60 rem on wide desktop screens, uses up to
+88% of the viewport at the 1024 px breakpoint, and remains full-width at 768 px
+and below.
+
+### Documents Phase 2 technical-design status
+
+Phase 2 was authorized on 2026-08-15 for documentation only. The page pack now
+proposes a conceptual document/version aggregate, private-storage and
+quarantine boundary, failure-safe replacement lifecycle, document-specific
+OWNER permissions, allowlisted audit events, stable error semantics, and a
+narrow first real slice. These are not schemas, contracts, routes, migrations,
+provider selections, or implementation approval.
+
+The product owner selected `Contrat de travail signé` as the first category and
+PDF up to 10 MiB as the initial file boundary on 2026-08-15. A signed amendment
+is a separate deferred category. Legal/privacy must still approve the category,
+and security must still approve the file-processing and version limits. The
+remaining document-permission, private-storage/provider, delivery, audit,
+retention, replacement, and scanning decisions also remain open. Real-file work
+is blocked until the required product, legal/privacy, security, operations, and
+engineering approvals are complete. Scaleway Paris is a provisional
+engineering recommendation only; no provider has been selected or connected.
+
+### Documents Phase 3 local implementation
+
+The product owner authorized implementation on 2026-08-15. The Phase 1 fixture
+was removed and replaced by one local end-to-end slice:
+
+- `signed_employment_contract` only, PDF only, 10 MiB maximum;
+- separate OWNER-only `personnel.document.read` and
+  `personnel.document.manage` permissions;
+- organization + establishment + employee scope on every metadata operation;
+- migration `0007_happy_master_chief.sql` with document, immutable-version, and
+  bounded idempotency-receipt metadata;
+- private local filesystem adapter outside Neon/PostgreSQL, with quarantine and
+  Microsoft Defender inspection before promotion;
+- server-mediated add, replace, inline view, and download without a stable
+  provider/public URL;
+- safe document events for tab access, successful/rejected upload, replacement,
+  view, and download grants;
+- optimistic revision conflict handling, retry-safe commands, and cleanup when
+  scanning or metadata persistence fails.
+
+This is not production authorization. The application deliberately rejects the
+document runtime when `NODE_ENV=production`. Provider-neutral storage and
+scanner interfaces isolate the later EU adapters. Legal/privacy category and
+retention approval, production EU storage/scanner selection, backup/restore,
+deletion/rights handling, incident ownership, and superseded-version retention
+remain deferred release tasks.
+
 ## Final delivery and as-built status
 
 Final implementation locations/files changed: the authenticated salaries route
@@ -238,21 +361,29 @@ and route-local dialogs/actions under
 under `packages/contracts/src/personnel/`, and the tenant-scoped repository,
 schema/migration evidence, and integration tests under `packages/db-cloud/`.
 
-Verification commands and results: Backoffice typecheck/build and 84 tests pass;
-contracts typecheck and 21 tests pass; the guarded local db-cloud suite passes
-37 tests with 2 intentional skips; `docs:check`, the page-pack check,
-`architecture:check`, scoped Prettier, and scoped `git diff --check` pass.
+Verification commands and results: Backoffice typecheck/build and 87 tests pass;
+contracts typecheck and 22 tests pass; the targeted guarded local document/schema
+suite passes 4 tests, and `test:cloud` passes with its intentional guarded skips.
+`docs:check`, the page-pack check, `architecture:check`, recursive typecheck,
+scoped Prettier, and scoped `git diff --check` pass. Repository-wide
+`format:check` still reports 35 unrelated pre-existing files outside this slice.
 
 Functional/regression QA result: OWNER-only list/create/edit/departure,
 conflict/idempotent retry, duplicate override, business history, dossier access
 audit, and the on-demand consultation history are verified with local persisted
-data and tenant-isolation coverage.
+data and tenant-isolation coverage. The Documents browser flow additionally
+verified empty state, Defender-checked upload, available metadata, server-mediated
+view/download, safe access events, and cleanup of the QA file and metadata.
 
 Visual/browser/device evidence: signed-in local browser QA verifies the initially
 closed dossier, explicit row selection, wide right-side drawer, redesigned
 overview, existing create dialog, Escape close, business-history loading, and
 the new `Consultations` timeline. Responsive classes preserve the approved
-full-width mobile drawer and single-column overview facts.
+full-width mobile drawer and single-column overview facts. The Documents slice
+was browser-verified at 1024 x 768, 768 x 1024, and 390 x 844. Its empty state,
+protected-access notice, actions, horizontal dossier navigation, and French file
+picker remain reachable without content overflow. The final evidence is stored
+under `references/documents-phase-5-as-built-*.png`.
 
 Intentional deviations: the former permanently visible 420 px desktop quick
 view was replaced by an explicitly opened overlay drawer following product

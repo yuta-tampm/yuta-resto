@@ -38,13 +38,14 @@ workspace with a dedicated success screen in the current POS shell. Show:
 - `Commande envoyée en cuisine`;
 - the confirmed sent-item count and current order number;
 - `La commande reste ouverte pour le suivi et le paiement.`;
+- a visible five-second countdown followed by navigation to `/`;
 - primary `Créer une autre commande` to `/pos`;
 - secondary `Retour aux commandes` to `/`.
 
-Do not auto-redirect, add a third payment action, claim physical printing
-success, or show this state for pending, validation, conflict, timeout, or
-failure results. Both actions remain visible and touch-accessible at every
-supported width.
+Do not redirect before the approved five-second delay, add a third payment
+action, claim physical printing success, or show this state for pending,
+validation, conflict, timeout, or failure results. Both actions remain visible
+and touch-accessible at every supported width.
 
 ## Content and copy
 

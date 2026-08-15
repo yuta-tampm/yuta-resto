@@ -129,6 +129,15 @@ when its detail tab is opened and has explicit loading, failure, and retry
 states. Minimum-field completeness is derived, filterable, explained by field,
 and links to the supported edit action.
 
+The employee dossier also has a local-development secure-document slice for one
+category: signed employment contracts in PDF up to 10 MiB. OWNER-only actions
+list, add, replace, view, and download through the Backoffice server. Metadata
+is establishment scoped in cloud persistence; binary content is kept outside
+PostgreSQL in a private local adapter, quarantined, and checked by Microsoft
+Defender before becoming available. The runtime fails closed in production;
+EU object storage, an EU-approved scanning service, retention/deletion rules,
+backup/restore, and operational ownership remain release blockers.
+
 ### Planned empty surfaces
 
 - menu content and internal resources;

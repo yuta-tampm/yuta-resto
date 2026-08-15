@@ -253,6 +253,52 @@ export const personnelEmployeeAccessHistorySchema = z
   })
   .strict();
 
+export const personnelDocumentCategorySchema = z.enum([
+  'signed_employment_contract',
+]);
+
+export const personnelDocumentSchema = z
+  .object({
+    id: identifierSchema,
+    employeeId: identifierSchema,
+    category: personnelDocumentCategorySchema,
+    filename: z.string().min(1).max(180),
+    mediaType: z.literal('application/pdf'),
+    byteSize: z
+      .number()
+      .int()
+      .positive()
+      .max(10 * 1024 * 1024),
+    version: z.number().int().positive(),
+    revision: z.number().int().positive(),
+    uploadedAt: isoDateTimeSchema,
+  })
+  .strict();
+
+export const personnelDocumentListSchema = z
+  .object({
+    items: z.array(personnelDocumentSchema).max(1),
+  })
+  .strict();
+
+export const savePersonnelDocumentMetadataInputSchema = z
+  .object({
+    idempotencyKey: identifierSchema,
+    employeeId: identifierSchema,
+    expectedRevision: z.number().int().positive().nullable(),
+    category: personnelDocumentCategorySchema,
+    filename: z.string().trim().min(1).max(180),
+    mediaType: z.literal('application/pdf'),
+    byteSize: z
+      .number()
+      .int()
+      .positive()
+      .max(10 * 1024 * 1024),
+    checksum: z.string().regex(/^[a-f0-9]{64}$/u),
+    storageKey: identifierSchema,
+  })
+  .strict();
+
 export type PersonnelEmployeeView = z.infer<typeof personnelEmployeeViewSchema>;
 export type PersonnelCompletenessReason = z.infer<
   typeof personnelCompletenessReasonSchema
@@ -292,4 +338,12 @@ export type PersonnelEmployeeAccessEvent = z.infer<
 >;
 export type PersonnelEmployeeAccessHistory = z.infer<
   typeof personnelEmployeeAccessHistorySchema
+>;
+export type PersonnelDocumentCategory = z.infer<
+  typeof personnelDocumentCategorySchema
+>;
+export type PersonnelDocument = z.infer<typeof personnelDocumentSchema>;
+export type PersonnelDocumentList = z.infer<typeof personnelDocumentListSchema>;
+export type SavePersonnelDocumentMetadataInput = z.infer<
+  typeof savePersonnelDocumentMetadataInputSchema
 >;

@@ -19,6 +19,9 @@ import {
   personnelEmployeeDossiers,
   personnelEmployeeAuditEvents,
   personnelCommandReceipts,
+  personnelDocumentCommandReceipts,
+  personnelDocumentVersions,
+  personnelDocuments,
   reputationAuditEvents,
   reputationConnectors,
   reputationSettings,
@@ -48,6 +51,9 @@ const tablesWithBusinessIds: PgTable[] = [
   personnelEmployeeDossiers,
   personnelEmployeeAuditEvents,
   personnelCommandReceipts,
+  personnelDocuments,
+  personnelDocumentVersions,
+  personnelDocumentCommandReceipts,
 ];
 
 describe('cloud schema boundaries', () => {
@@ -114,6 +120,23 @@ describe('cloud schema boundaries', () => {
       ]),
     );
     expect(establishmentServiceModeEnum.enumValues).toContain('RESERVATION');
+  });
+
+  it('keeps personnel document metadata establishment and employee scoped', () => {
+    for (const table of [personnelDocuments, personnelDocumentVersions]) {
+      const columns = getTableConfig(table).columns.map(
+        (column) => column.name,
+      );
+      expect(columns).toEqual(
+        expect.arrayContaining([
+          'organization_id',
+          'establishment_id',
+          'employee_id',
+        ]),
+      );
+      expect(columns).not.toContain('tenant_id');
+      expect(columns).not.toContain('content');
+    }
   });
 
   it('uses an RFC UUIDv7 generator for seed-created records', () => {

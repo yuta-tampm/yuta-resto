@@ -5,6 +5,8 @@ import {
   personnelEmployeeAuditHistorySchema,
   personnelEmployeeListQuerySchema,
   personnelEmployeeSummarySchema,
+  personnelDocumentListSchema,
+  savePersonnelDocumentMetadataInputSchema,
   setPersonnelEmployeeDepartureInputSchema,
   updatePersonnelEmployeeInputSchema,
 } from '../src/personnel';
@@ -205,5 +207,53 @@ describe('personnel contracts', () => {
         correctionReason: 'x',
       }).success,
     ).toBe(false);
+  });
+
+  it('limits the first personnel document slice to a bounded signed-contract PDF', () => {
+    const metadata = {
+      idempotencyKey: '11111111-1111-4111-8111-111111111111',
+      employeeId: '22222222-2222-4222-8222-222222222222',
+      expectedRevision: null,
+      category: 'signed_employment_contract',
+      filename: 'contrat-signe.pdf',
+      mediaType: 'application/pdf',
+      byteSize: 428_000,
+      checksum: 'a'.repeat(64),
+      storageKey: '33333333-3333-4333-8333-333333333333',
+    };
+    expect(savePersonnelDocumentMetadataInputSchema.parse(metadata)).toEqual(
+      metadata,
+    );
+    expect(
+      savePersonnelDocumentMetadataInputSchema.safeParse({
+        ...metadata,
+        mediaType: 'image/png',
+      }).success,
+    ).toBe(false);
+    expect(
+      savePersonnelDocumentMetadataInputSchema.safeParse({
+        ...metadata,
+        byteSize: 10 * 1024 * 1024 + 1,
+      }).success,
+    ).toBe(false);
+
+    const response = personnelDocumentListSchema.parse({
+      items: [
+        {
+          id: '44444444-4444-4444-8444-444444444444',
+          employeeId: metadata.employeeId,
+          category: metadata.category,
+          filename: metadata.filename,
+          mediaType: metadata.mediaType,
+          byteSize: metadata.byteSize,
+          version: 1,
+          revision: 1,
+          uploadedAt: '2026-08-15T10:00:00.000Z',
+        },
+      ],
+    });
+    expect(response.items[0]).not.toHaveProperty('storageKey');
+    expect(response.items[0]).not.toHaveProperty('checksum');
+    expect(response.items[0]).not.toHaveProperty('organizationId');
   });
 });

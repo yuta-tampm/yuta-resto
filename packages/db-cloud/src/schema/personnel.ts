@@ -9,6 +9,7 @@ import {
   pgEnum,
   pgTable,
   timestamp,
+  unique,
   uuid,
   uniqueIndex,
   varchar,
@@ -23,6 +24,10 @@ export const personnelEmploymentTermTypeEnum = pgEnum(
 export const personnelWorkTimeCategoryEnum = pgEnum(
   'personnel_work_time_category',
   ['full_time', 'part_time'],
+);
+export const personnelDocumentCategoryEnum = pgEnum(
+  'personnel_document_category',
+  ['signed_employment_contract'],
 );
 
 export const personnelEmployeeDossiers = pgTable(
@@ -177,5 +182,175 @@ export const personnelCommandReceipts = pgTable(
       ],
       name: 'personnel_command_receipts_employee_scope_fk',
     }).onDelete('restrict'),
+  ],
+);
+
+export const personnelDocuments = pgTable(
+  'personnel_documents',
+  {
+    id: uuid('id').primaryKey(),
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'restrict' }),
+    establishmentId: uuid('establishment_id').notNull(),
+    employeeId: uuid('employee_id').notNull(),
+    category: personnelDocumentCategoryEnum('category').notNull(),
+    currentVersion: integer('current_version').notNull(),
+    revision: integer('revision').default(1).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdateFn(() => new Date()),
+  },
+  (table) => [
+    uniqueIndex('personnel_documents_scope_employee_category_unique_idx').on(
+      table.organizationId,
+      table.establishmentId,
+      table.employeeId,
+      table.category,
+    ),
+    unique('personnel_documents_scope_id_unique').on(
+      table.organizationId,
+      table.establishmentId,
+      table.employeeId,
+      table.id,
+    ),
+    foreignKey({
+      columns: [table.organizationId, table.establishmentId, table.employeeId],
+      foreignColumns: [
+        personnelEmployeeDossiers.organizationId,
+        personnelEmployeeDossiers.establishmentId,
+        personnelEmployeeDossiers.id,
+      ],
+      name: 'personnel_documents_employee_scope_fk',
+    }).onDelete('restrict'),
+    check(
+      'personnel_documents_current_version_check',
+      sql`${table.currentVersion} > 0`,
+    ),
+    check('personnel_documents_revision_check', sql`${table.revision} > 0`),
+  ],
+);
+
+export const personnelDocumentVersions = pgTable(
+  'personnel_document_versions',
+  {
+    id: uuid('id').primaryKey(),
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'restrict' }),
+    establishmentId: uuid('establishment_id').notNull(),
+    employeeId: uuid('employee_id').notNull(),
+    documentId: uuid('document_id').notNull(),
+    version: integer('version').notNull(),
+    filename: varchar('filename', { length: 180 }).notNull(),
+    mediaType: varchar('media_type', { length: 100 }).notNull(),
+    byteSize: integer('byte_size').notNull(),
+    checksum: varchar('checksum', { length: 64 }).notNull(),
+    storageKey: uuid('storage_key').notNull(),
+    uploadedByUserId: uuid('uploaded_by_user_id').references(() => users.id, {
+      onDelete: 'set null',
+    }),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    uniqueIndex('personnel_document_versions_document_version_unique_idx').on(
+      table.documentId,
+      table.version,
+    ),
+    uniqueIndex('personnel_document_versions_storage_key_unique_idx').on(
+      table.storageKey,
+    ),
+    index('personnel_document_versions_scope_employee_idx').on(
+      table.organizationId,
+      table.establishmentId,
+      table.employeeId,
+      table.createdAt,
+    ),
+    foreignKey({
+      columns: [
+        table.organizationId,
+        table.establishmentId,
+        table.employeeId,
+        table.documentId,
+      ],
+      foreignColumns: [
+        personnelDocuments.organizationId,
+        personnelDocuments.establishmentId,
+        personnelDocuments.employeeId,
+        personnelDocuments.id,
+      ],
+      name: 'personnel_document_versions_document_scope_fk',
+    }).onDelete('restrict'),
+    check(
+      'personnel_document_versions_version_check',
+      sql`${table.version} > 0`,
+    ),
+    check(
+      'personnel_document_versions_byte_size_check',
+      sql`${table.byteSize} > 0 and ${table.byteSize} <= 10485760`,
+    ),
+    check(
+      'personnel_document_versions_media_type_check',
+      sql`${table.mediaType} = 'application/pdf'`,
+    ),
+  ],
+);
+
+export const personnelDocumentCommandReceipts = pgTable(
+  'personnel_document_command_receipts',
+  {
+    id: uuid('id').primaryKey(),
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'restrict' }),
+    establishmentId: uuid('establishment_id').notNull(),
+    employeeId: uuid('employee_id').notNull(),
+    actorUserId: uuid('actor_user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'restrict' }),
+    idempotencyHash: varchar('idempotency_hash', { length: 64 }).notNull(),
+    requestFingerprint: varchar('request_fingerprint', {
+      length: 64,
+    }).notNull(),
+    documentId: uuid('document_id').notNull(),
+    version: integer('version').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+  },
+  (table) => [
+    uniqueIndex('personnel_document_receipts_scope_key_unique_idx').on(
+      table.organizationId,
+      table.establishmentId,
+      table.actorUserId,
+      table.idempotencyHash,
+    ),
+    index('personnel_document_receipts_expires_at_idx').on(table.expiresAt),
+    foreignKey({
+      columns: [
+        table.organizationId,
+        table.establishmentId,
+        table.employeeId,
+        table.documentId,
+      ],
+      foreignColumns: [
+        personnelDocuments.organizationId,
+        personnelDocuments.establishmentId,
+        personnelDocuments.employeeId,
+        personnelDocuments.id,
+      ],
+      name: 'personnel_document_receipts_document_scope_fk',
+    }).onDelete('restrict'),
+    check(
+      'personnel_document_receipts_version_check',
+      sql`${table.version} > 0`,
+    ),
   ],
 );

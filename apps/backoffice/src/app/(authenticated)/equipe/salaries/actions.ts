@@ -7,6 +7,8 @@ import {
   type PersonnelEmployeeAccessHistory,
   type PersonnelEmployeeAuditHistory,
   type PersonnelEmployeeSummary,
+  type PersonnelDocument,
+  type PersonnelDocumentList,
 } from '@yuta/contracts/personnel';
 import {
   createPersonnelEmployee,
@@ -18,12 +20,21 @@ import {
   recordPersonnelEmployeeAccess,
   setPersonnelEmployeeDeparture,
   updatePersonnelEmployee,
+  listPersonnelDocuments,
+  PersonnelDocumentRepositoryError,
+  recordPersonnelDocumentUploadRejected,
+  savePersonnelDocumentMetadata,
 } from '@yuta/db-cloud';
 import { revalidatePath } from 'next/cache';
+import { createHash } from 'node:crypto';
 import { z } from 'zod';
 import { requirePersonnelPermission } from '../../../../server/auth/permissions';
 import { requirePersonnelTenant } from '../../../../server/auth/session';
 import { cloudDatabase } from '../../../../server/cloud-database';
+import {
+  getPersonnelDocumentRuntime,
+  PersonnelDocumentScannerError,
+} from '../../../../server/personnel-documents/runtime';
 import { getBusinessDate } from './salaries-model';
 
 export type CreateEmployeeActionState = {
@@ -60,6 +71,166 @@ export type LoadEmployeeHistoryActionResult =
 export type LoadEmployeeAccessHistoryActionResult =
   | { status: 'success'; history: PersonnelEmployeeAccessHistory }
   | { status: 'error'; message: string };
+
+export type LoadEmployeeDocumentsActionResult =
+  | { status: 'success'; documents: PersonnelDocumentList }
+  | { status: 'error'; message: string };
+
+export type SaveEmployeeDocumentActionState = {
+  status: 'idle' | 'error' | 'conflict' | 'success';
+  message: string | null;
+  document: PersonnelDocument | null;
+};
+
+export async function loadEmployeeDocumentsAction(
+  employeeId: string,
+  operationId: string,
+): Promise<LoadEmployeeDocumentsActionResult> {
+  const { tenant } = await requirePersonnelTenant('/equipe/salaries');
+  requirePersonnelPermission(tenant, 'personnel.document.read');
+  try {
+    const documents = await listPersonnelDocuments(
+      cloudDatabase,
+      tenant,
+      employeeId,
+      operationId,
+    );
+    return { status: 'success', documents };
+  } catch (error: unknown) {
+    console.error('Failed to load personnel documents.', error);
+    return {
+      status: 'error',
+      message: 'Impossible de charger les documents. Réessayez.',
+    };
+  }
+}
+
+export async function saveEmployeeDocumentAction(
+  _previousState: SaveEmployeeDocumentActionState,
+  formData: FormData,
+): Promise<SaveEmployeeDocumentActionState> {
+  const { tenant } = await requirePersonnelTenant('/equipe/salaries');
+  requirePersonnelPermission(tenant, 'personnel.document.manage');
+  const employeeId = String(formData.get('employeeId') ?? '');
+  const idempotencyKey = String(formData.get('idempotencyKey') ?? '');
+  let storageKey: string | null = null;
+  try {
+    const file = formData.get('file');
+    if (!(file instanceof File) || file.size === 0) {
+      return documentError('Sélectionnez un fichier PDF.');
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      await recordRejectedSafe(employeeId, idempotencyKey, 'invalid_file');
+      return documentError('Le fichier ne doit pas dépasser 10 Mo.');
+    }
+    const content = new Uint8Array(await file.arrayBuffer());
+    if (
+      file.type !== 'application/pdf' ||
+      new TextDecoder('ascii').decode(content.slice(0, 5)) !== '%PDF-'
+    ) {
+      await recordRejectedSafe(employeeId, idempotencyKey, 'invalid_file');
+      return documentError('Seuls les fichiers PDF valides sont acceptés.');
+    }
+
+    const runtime = await getPersonnelDocumentRuntime();
+    storageKey = await runtime.storage.putQuarantinedObject(content);
+    const quarantined = await runtime.storage.readQuarantinedObject(storageKey);
+    await runtime.scanner.inspectQuarantinedObject(quarantined);
+    await runtime.storage.promoteVerifiedObject(storageKey);
+
+    const rawRevision = String(formData.get('expectedRevision') ?? '').trim();
+    const result = await savePersonnelDocumentMetadata(cloudDatabase, tenant, {
+      idempotencyKey,
+      employeeId,
+      expectedRevision: rawRevision ? Number(rawRevision) : null,
+      category: 'signed_employment_contract',
+      filename: sanitizeDocumentFilename(file.name),
+      mediaType: 'application/pdf',
+      byteSize: file.size,
+      checksum: createHash('sha256').update(content).digest('hex'),
+      storageKey,
+    });
+    if (result.idempotentReplay) {
+      await runtime.storage.removeObject(storageKey);
+    }
+    revalidatePath('/equipe/salaries');
+    return {
+      status: 'success',
+      message: result.idempotentReplay
+        ? 'Ce fichier avait déjà été enregistré.'
+        : 'Le contrat signé a été vérifié et enregistré.',
+      document: result.document,
+    };
+  } catch (error: unknown) {
+    if (storageKey) {
+      try {
+        const runtime = await getPersonnelDocumentRuntime();
+        await runtime.storage.removeObject(storageKey);
+      } catch {
+        console.error('Failed to clean up a personnel document object.');
+      }
+    }
+    if (
+      error instanceof PersonnelDocumentRepositoryError &&
+      error.code === 'CONFLICT'
+    ) {
+      return {
+        status: 'conflict',
+        message:
+          'Le document a changé depuis son ouverture. Rechargez la liste avant de réessayer.',
+        document: null,
+      };
+    }
+    if (error instanceof PersonnelDocumentScannerError) {
+      await recordRejectedSafe(employeeId, idempotencyKey, 'scanner_rejected');
+      return documentError(
+        'Le fichier n’a pas été accepté par le contrôle de sécurité.',
+      );
+    }
+    if (error instanceof z.ZodError) {
+      await recordRejectedSafe(employeeId, idempotencyKey, 'invalid_file');
+      return documentError('Vérifiez le fichier puis réessayez.');
+    }
+    await recordRejectedSafe(employeeId, idempotencyKey, 'storage_failure');
+    console.error('Failed to save a personnel document.', error);
+    return documentError(
+      'Impossible d’enregistrer le document pour le moment. Réessayez.',
+    );
+  }
+
+  async function recordRejectedSafe(
+    rejectedEmployeeId: string,
+    operationId: string,
+    reasonCode: 'invalid_file' | 'scanner_rejected' | 'storage_failure',
+  ) {
+    try {
+      await recordPersonnelDocumentUploadRejected(
+        cloudDatabase,
+        tenant,
+        rejectedEmployeeId,
+        operationId,
+        reasonCode,
+      );
+    } catch {
+      console.error('Failed to record a rejected personnel document upload.');
+    }
+  }
+}
+
+function documentError(message: string): SaveEmployeeDocumentActionState {
+  return { status: 'error', message, document: null };
+}
+
+function sanitizeDocumentFilename(value: string): string {
+  const normalized = value
+    .replaceAll('\\', '/')
+    .split('/')
+    .at(-1)
+    ?.replace(/[\u0000-\u001F\u007F]/gu, '')
+    .trim();
+  const base = normalized?.replace(/\.pdf$/iu, '').trim() || 'contrat-signe';
+  return `${base.slice(0, 176)}.pdf`;
+}
 
 export async function loadEmployeeAccessHistoryAction(
   employeeId: string,

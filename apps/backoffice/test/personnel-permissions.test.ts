@@ -30,6 +30,8 @@ describe('personnel permissions', () => {
     for (const permission of [
       'personnel.employee.read',
       'personnel.employee.manage',
+      'personnel.document.read',
+      'personnel.document.manage',
     ] as const) {
       expect(hasPersonnelPermission(context('OWNER'), permission)).toBe(true);
       expect(hasPersonnelPermission(context('MANAGER'), permission)).toBe(

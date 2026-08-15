@@ -58,6 +58,7 @@ import { useEffect, useState, useTransition, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { EmployeeCreateDialog } from './employee-create-dialog';
 import { EmployeeDepartureDialog } from './employee-departure-dialog';
+import { EmployeeDocuments } from './employee-documents';
 import { EmployeeEditDialog } from './employee-edit-dialog';
 import {
   loadEmployeeAccessHistoryAction,
@@ -74,7 +75,13 @@ import {
   isEmployeeComplete,
 } from './salaries-model';
 
-type DetailTab = 'overview' | 'identity' | 'employment' | 'history' | 'access';
+type DetailTab =
+  | 'overview'
+  | 'identity'
+  | 'employment'
+  | 'history'
+  | 'access'
+  | 'documents';
 type HistoryLoadState =
   | { status: 'idle' | 'loading'; history: null; message: null }
   | {
@@ -741,6 +748,7 @@ function EmployeeDetails({
     { value: 'employment', label: 'Relation de travail' },
     { value: 'history', label: 'Historique' },
     { value: 'access', label: 'Consultations' },
+    { value: 'documents', label: 'Documents' },
   ];
   return (
     <Dialog
@@ -752,7 +760,7 @@ function EmployeeDetails({
       <DialogContent
         variant="right-panel"
         closeLabel="Fermer le dossier"
-        className="w-full max-w-none overflow-hidden p-0 sm:w-[min(92vw,48rem)]"
+        className="w-full max-w-none overflow-hidden p-0 lg:w-[min(88vw,60rem)]"
       >
         <div className="flex h-full min-h-0 flex-col">
           <div className="flex flex-col gap-5 border-b border-border-default bg-surface p-5 pr-14 sm:flex-row sm:items-center sm:justify-between sm:p-6 sm:pr-14">
@@ -929,6 +937,9 @@ function EmployeeDetails({
                 onPrevious={onPreviousAccessHistory}
                 onNext={onNextAccessHistory}
               />
+            )}
+            {activeTab === 'documents' && (
+              <EmployeeDocuments employeeId={employee.id} locale={locale} />
             )}
           </div>
         </div>

@@ -1,6 +1,6 @@
 # POS Order Items - Reference Metadata
 
-Status: Approved design reference
+Status: Approved design and final as-built evidence
 
 Visibility: Engineering
 
@@ -58,7 +58,9 @@ Reference status: `APPROVED`
 
 Purpose: product-requested post-kitchen-send success screen at desktop and
 narrow widths. It shows `Créer une autre commande` to `/pos` and `Retour aux
-commandes` to `/`, with no automatic redirect or physical-print claim.
+commandes` to `/`, with no physical-print claim. The later approved interaction
+adds a visible five-second countdown and automatic navigation to `/`; it does
+not alter the visual reference's two-action hierarchy.
 
 Behavioral boundary: this visual may appear only after the trusted existing
 kitchen-send transaction succeeds. It does not define the Server Action state
@@ -67,3 +69,24 @@ mechanism or authorize a new route, endpoint, contract, or persistence field.
 All generated images are visual proposals only. They do not define routes,
 product scope, authorization, contracts, APIs, persistence, device ownership,
 business rules, exact copy, or raw colors.
+
+## Final Phase 5 as-built evidence
+
+Evidence status: `AS-BUILT`
+
+Captured on 2026-08-15 from the production build using real persisted order
+`POS-20260815-080849-A4505C`. Site-agent and database were available; the
+printer was not configured. Capture did not submit a control or create a new
+kitchen transaction, payment, or print job.
+
+- `phase-5-as-built-1366x768.png`: desktop three-panel layout;
+- `phase-5-as-built-1024x768.png`: compact desktop with two readable catalog
+  cards per row;
+- `phase-5-as-built-768x1024.png`: tablet stacked layout and mobile-order
+  action;
+- `phase-5-as-built-390x844.png`: narrow two-card layout and horizontal category
+  menu.
+
+All four captures had zero document overflow and no browser warning or error.
+They document the final presentation only and do not extend product or runtime
+authority.

@@ -17,9 +17,11 @@ has an established approach.
 
 Implement the approved post-kitchen-send success screen only from a trusted
 successful Server Action result. It contains exactly `Créer une autre commande`
-to `/pos` and `Retour aux commandes` to `/`, with no automatic redirect. Do not
-use an untrusted query parameter as proof of success, add a new route or API, or
-claim that a durable kitchen-send transaction proves physical printing.
+to `/pos` and `Retour aux commandes` to `/`. Keep both actions visible while a
+five-second countdown runs, then automatically navigate to the existing home
+route `/`. Do not use an untrusted query parameter as proof of success, add a
+new route or API, or claim that a durable kitchen-send transaction proves
+physical printing.
 
 Test applicable keyboard, touch, focus, pending, validation, success, error,
 degraded, retry, and recovery behavior. Report exact commands and results. Do

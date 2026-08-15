@@ -1,6 +1,6 @@
 # POS Order Items - Data and Interaction Specification
 
-Status: Draft
+Status: Phase 4 audited
 
 Visibility: Engineering
 
@@ -40,7 +40,9 @@ navigate to detail/payment, and confirm/send the pending batch to kitchen.
 Approved later interaction: after and only after the existing site-agent
 kitchen-send command returns confirmed success, present a dedicated route-local
 success screen. `Créer une autre commande` navigates to `/pos`; `Retour aux
-commandes` navigates to `/`. There is no automatic redirect.
+commandes` navigates to `/`. The screen counts down for five seconds and then
+automatically navigates to the approved home route `/` if the operator has not
+already chosen an action.
 
 ## Mutations / actions / transactions
 
@@ -62,6 +64,23 @@ payment locks, availability, ordering policy, instruction conflicts/variants,
 allergy completeness, active staff, and idempotency. Existing action errors are
 partially mapped for kitchen send; later design may propose recovery UI but not
 new semantics.
+
+## Phase 4 integration audit
+
+- Data owner remains `packages/db-pos`, accessed only by `apps/site-agent`.
+- Transport remains `@yuta/contracts/local-pos` through the server-only
+  site-agent client and `posApi` facade.
+- The route still combines existing payment-summary, order-detail, and catalog
+  responses; no browser database, device, or trusted-scope access was added.
+- Category navigation/search and the shared order-item presentation model use
+  existing catalog and snapshot fields only.
+- Kitchen-send success derives from the resolved existing order command. Its
+  action state, focus transition, countdown, and navigation are ephemeral and
+  introduce no persisted success flag.
+- Staff selection remains local attribution resolved by the Server Action, not
+  authentication or browser-provided authorization.
+- Contract, API, schema, permission, transaction, offline, printer, and runtime
+  extensions are all `NO` for this phase.
 
 ## Operational and UI states
 

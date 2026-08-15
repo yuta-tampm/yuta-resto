@@ -364,8 +364,155 @@ approval, continue independently:
 6. PDF export only after structured register data and legal boundaries exist;
 7. optional OCR only after provider/security/privacy approval.
 
+### Documents Wave A Phase 0 gate — completed read-only
+
+On 2026-08-15 repository analysis confirmed that secure employee Documents are
+a new capability inside the integrated Salaries dossier. No cloud file storage,
+document contracts/schema/permissions, upload/download actions, security
+processing, or tests exist. The standalone Display upload directory is outside
+the cloud runtime and cannot be reused.
+
+Phase 0 records the proposed OWNER-only list/upload/view/download/replace MVP,
+establishment ownership, sensitive-data boundary, deferred capabilities, UI
+discovery scope, truthful states, and ready design prompt. It creates no runtime
+code or production data behavior.
+
+Before a Documents Phase 1 prototype:
+
+1. product owner approves/revises the MVP actions and category examples;
+2. product owner authorizes running the Documents design prompt;
+3. generated references return as `DRAFT` for review;
+4. no prototype control may imply a real upload or persisted file.
+
+Steps 1–3 and the visual review were completed on 2026-08-15. The Phase 1
+prototype uses only a route-local typed fixture, and step 4 remains a protected
+invariant. No real document persistence or action is implemented.
+
+Phase 2 technical-design preparation was authorized on 2026-08-15. Real
+vertical slices still require separate approval of category purpose/retention,
+document-specific authorization, private cloud storage/provider
+responsibilities, malware quarantine, audit events, backup/restore, incident
+response, and rights/deletion operations.
+
 Do not combine these into Phase 1 or treat their ordering as authorization to
 implement them automatically.
+
+### Documents Wave A Phase 2 — technical design only
+
+Phase 2 maps the approved prototype to a provider-neutral domain proposal. It
+does not create runtime files or modify personnel implementation.
+
+```text
+Files expected to modify now: existing page-pack Markdown only
+Files expected to create now: none
+Packages affected now: none
+Cross-application impact now: none
+Database change: PROPOSAL
+API or contract change: PROPOSAL
+Permission/auth change: PROPOSAL
+Runtime/provider change: PROPOSAL
+```
+
+The design reuses the current employee dossier scope, OWNER-only personnel
+guard pattern, optimistic revision/idempotency patterns, and personnel audit
+infrastructure. It proposes new document-specific permissions, metadata and
+version persistence, a private object-storage adapter, quarantine/verification
+processing, and application-controlled file delivery only for a later approved
+implementation.
+
+Recommended later vertical-slice order:
+
+1. **Real empty/list foundation:** approved category allowlist, document read
+   permission, tenant-scoped metadata repository, empty/error/forbidden states,
+   and cross-tenant tests.
+2. **One-category add:** server-mediated bounded upload, private quarantine,
+   verification, idempotent command, processing/rejected/available states, and
+   cleanup compensation.
+3. **Content access:** fresh scope/permission check, application-controlled
+   view/download, one access-grant audit event, expiry/retry behavior, and no
+   stable URL.
+4. **Explicit replacement:** expected revision, immutable new version,
+   verification before current-pointer swap, previous version safe on failure,
+   and atomic metadata/audit update.
+5. **Document activity:** safe allowlisted OWNER projection separated from the
+   employee business-change timeline.
+
+Before slice 1, approve or revise D2-01 through D2-09 in
+`DATA_AND_INTERACTION_SPEC.md`. Before slice 2, additionally select the private
+storage and scanning providers, define secrets/region and operational ownership,
+and approve the category purpose plus retention schedule. No implementation is
+implicitly authorized by this sequence.
+
+On 2026-08-15 the product owner selected `Contrat de travail signé` as the first
+category and PDF up to 10 MiB as the first-slice file boundary. A signed
+amendment remains a separate deferred category. Legal/privacy and security
+approvals for these choices are still required, so this decision does not open
+slice 1 or authorize runtime work.
+
+The future application boundary must expose separate provider-neutral
+`PersonnelDocumentStorage` and `PersonnelDocumentScanner` services. Provider
+SDK imports and credentials stay inside their infrastructure adapters. A
+storage-provider change may alter the adapter, configuration, dependency, and
+provider contract tests, but not the document domain, permissions, audit,
+contracts, server actions, or UI behavior.
+
+### Documents Wave A Phase 3 — local vertical slice implemented
+
+The product owner authorized local implementation on 2026-08-15. The first
+slice is complete in code and local database migration `0007`:
+
+1. replace the fictional Documents fixture with a real lazy-loaded tab;
+2. add signed-contract metadata, immutable versions, and idempotency receipts;
+3. enforce separate OWNER-only document read/manage permissions;
+4. quarantine PDF bytes in private local storage and require Microsoft Defender
+   before promotion;
+5. commit metadata/audit only after verification and clean orphaned objects on
+   failure;
+6. mediate inline view/download through a fresh tenant and permission check;
+7. keep production fail-closed until the deferred external-provider, legal,
+   retention, backup, deletion, and incident gates are approved.
+
+Do not interpret the local adapter as the selected EU production provider. The
+next delivery step is functional/security and visual QA of this slice, followed
+by production-readiness decisions in a separately approved phase.
+
+### Documents Wave B Phase 0 — signed amendments, read-only
+
+Repository analysis classifies signed amendments as
+`NEW_CAPABILITY_DISCOVERY` inside the integrated Documents surface. Phase 0
+updates this stable page pack only and stops before prompt execution or runtime
+implementation.
+
+```text
+Files expected to modify now: existing page-pack Markdown only
+Files expected to create now: none
+Packages affected now: none
+Cross-application impact now: none
+Database change: NO (later PROPOSAL)
+API or contract change: NO (later PROPOSAL)
+Permission/auth change: NO (reuse requires later approval)
+Runtime/provider change: NO
+```
+
+Phase 0 records:
+
+1. OWNER-only local MVP and establishment-owned employee-dossier boundary;
+2. distinction between a later legal amendment and a correction version of the
+   same uploaded amendment;
+3. sensitive-data, audit, authorization, and storage/scanner invariants;
+4. decisions still needed for amendment identity, labels, ordering, effective
+   date versus signature date, applicability, and retention;
+5. explicit exclusions and truthful UI states;
+6. a ready design prompt based on the current as-built Documents drawer.
+
+Approval sequence after this gate:
+
+1. product owner approves or revises the Phase 0 MVP and proposed date/label
+   discovery scope;
+2. product owner separately authorizes running the design prompt;
+3. generated references return as `DRAFT` for review;
+4. no schema, enum, contract, migration, repository, server action, file
+   mutation, or implementation begins without a later phase approval.
 
 ## Verification gate
 

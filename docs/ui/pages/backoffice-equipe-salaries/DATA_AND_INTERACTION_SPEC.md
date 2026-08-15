@@ -153,16 +153,379 @@ only when its wave provides a real employee, issue/event type, relevant date,
 urgency where meaningful, and supported resolution. Missing data must not be
 silently conflated with an upcoming expiry, contract, or formality event.
 
-## Future Documents interaction proposal
+## Documents capability discovery and Phase 2 proposal
 
-After secure-document approval, an employee dossier may expose a `Documents`
-section with only repository-backed view, add/upload, replace, and download
-actions. Each action requires server-derived scope and field/action permission.
-Failed uploads must remain visible and retryable without pretending success.
+Status: `PHASE 3 LOCAL VERTICAL SLICE IMPLEMENTED — PRODUCTION APPROVAL BLOCKED`.
+
+Repository analysis on 2026-08-15 found no Backoffice/cloud upload service,
+private object-storage adapter, document contract, document table, document
+permission, malware-processing flow, or document test. The only physical upload
+implementation belongs to the standalone local Display runtime and is not a
+reusable cloud personnel boundary.
+
+The Phase 1 presentation prototype therefore uses only route-local typed
+fictional objects. Those objects contain no resource ID, URL, storage key,
+tenant value, or transport shape. All document actions are disabled. This
+fixture shape is not a database schema, API contract, or persistence design.
+
+### Proposed interaction map
+
+| ID   | User action               | Required server behavior after later approval                                                                                  | Truthful UI states                                                        |
+| ---- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| D-01 | Open `Documents`          | Reauthorize OWNER and resolve employee by organization + establishment + employee ID before returning safe metadata            | Loading, empty, forbidden without disclosure, service error and retry     |
+| D-02 | Add one document          | Validate category and metadata, accept a bounded file, quarantine it, verify type/content, then make it available atomically   | Selecting, uploading, processing, rejected, failed with retry, available  |
+| D-03 | View or download          | Reauthorize every request, resolve the scoped document, record access, and deliver through a private short-lived mechanism     | Pending, opened/downloaded, expired delivery, unavailable, retry          |
+| D-04 | Replace current document  | Validate a new file, preserve explicit version/audit semantics, and switch current version only after safe processing succeeds | Confirmation, processing, success, rejected, conflict, prior version safe |
+| D-05 | Inspect document activity | Return only allowlisted document events and safe actor labels; never return storage keys, raw metadata, or file content        | Loading, empty, unavailable, retry                                        |
+
+No action is implemented or authorized by this proposal. Delete, archive,
+legal hold, rights administration, bulk export, sharing, OCR, and generation
+have no UI action in this MVP.
+
+### Proposed UI/data dictionary — not a schema
+
+| Concept                       | Classification          | Purpose and boundary                                                                                           |
+| ----------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Employee dossier ID           | Server-owned reference  | Must resolve with trusted organization and establishment scope; never authorizes access alone                  |
+| Document ID                   | Server-owned identifier | Opaque resource identifier; every lookup repeats full trusted scope                                            |
+| Approved category code        | Stored proposal         | Stable allowlist approved category-by-category; never arbitrary user text or inferred from filename            |
+| Display label                 | Derived/localized       | French category label from the approved code                                                                   |
+| Original filename             | Sensitive metadata      | Sanitized for display; never used as a storage path or placed in URL/logs                                      |
+| Media type and byte size      | Verified metadata       | Derived and verified server-side; browser declaration is untrusted                                             |
+| Optional relevant/expiry date | Stored proposal         | Exists only for an approved category with defined meaning and resolving action                                 |
+| Availability state            | Derived workflow state  | Proposed values: uploading/processing/available/rejected/unavailable; must reflect real storage/security state |
+| Current version and revision  | Server-owned state      | Supports explicit replace/conflict behavior; does not authorize indefinite retention of old binaries           |
+| Storage provider key          | Infrastructure secret   | Never exposed as UI data, accepted from the browser, or stored in generic audit metadata                       |
+| Uploader/actor and timestamps | Server-owned metadata   | Resolved from session/server time and projected only as safe display identity                                  |
+
+Document binary content is not PostgreSQL row content. A later design may keep
+safe metadata in cloud persistence and encrypted binary objects in a private
+cloud storage service, but provider choice, region, keys, lifecycle, backup,
+restore, deletion, and contractual responsibilities remain unapproved.
+
+### Proposed authorization matrix
+
+| Action                              | OWNER | MANAGER | STAFF/public/service/self-service | Boundary                                                                   |
+| ----------------------------------- | ----- | ------- | --------------------------------- | -------------------------------------------------------------------------- |
+| List safe document metadata         | Allow | Deny    | Deny                              | Trusted organization + establishment + employee scope                      |
+| Upload into an approved category    | Allow | Deny    | Deny                              | Fresh server authorization; category/file checks; quarantine               |
+| View/download an available document | Allow | Deny    | Deny                              | Fresh check for each request; short-lived private delivery; audit required |
+| Replace current document            | Allow | Deny    | Deny                              | Explicit version/conflict behavior and audit required                      |
+| Delete/archive/share/export/OCR     | Deny  | Deny    | Deny                              | Deferred or separately prohibited capability                               |
+
+This proposal may later introduce document-specific permissions rather than
+silently broadening `personnel.employee.read/manage`. That naming and mapping is
+a Phase 3 authorization decision; Phase 0 does not add permissions.
+
+### Proposed document audit events
+
+Every successful sensitive access or mutation needs an allowlisted event, at
+minimum: document list opened, document viewed, document downloaded, upload
+completed, upload rejected, and document replaced. Denied access and security
+processing failures require operational security traces without copying file
+content, filenames, provider keys, URLs, or extracted values into generic audit
+metadata. Event retention and who may inspect document audit history remain
+separate approvals.
+
+### Privacy, retention, and security gates
+
+- approve each category's purpose, required/optional status, recipients,
+  relevant/expiry date semantics, and rights workflow;
+- approve a per-category and per-version active/archive/deletion schedule; do
+  not infer one blanket duration for every document;
+- keep files private, encrypted in transit and at rest, and isolated by least
+  privilege; delivery must not create a stable public URL;
+- quarantine new files and verify content/type before they become available;
+- define limits for count, size, MIME/content types, filenames, and processing
+  time during the later technical-design phase;
+- define provider region/responsibilities, secret/key management, backups,
+  restore tests, incident response, and deletion propagation before production;
+- support data-subject access/rectification workflows without exposing another
+  employee or establishment.
+
+CNIL guidance limits personnel access to people who need it, requires defined
+retention and rights information, and recommends authorization management,
+operation tracing, backups, incident preparation, encryption, and cloud risk
+assessment. These references guide the approval gates; this page pack does not
+claim legal compliance:
+
+- <https://www.cnil.fr/fr/les-regles-pour-la-gestion-du-personnel>
+- <https://www.cnil.fr/fr/guide-de-la-securite-des-donnees-personnelles>
+- <https://www.cnil.fr/fr/referentiel-durees-conservation-donnees-rh>
 
 Document categories, requirements, expiry dates, and completeness rules are
 not defined by the UI or external feedback. OCR suggestions remain untrusted
-until user review and normal validation succeed.
+until user review and normal validation succeed in a separately approved wave.
+
+### Documents Wave A Phase 2 technical design — proposal only
+
+Phase 2 was authorized on 2026-08-15 for technical design and decision
+preparation only. It creates no schema, migration, contract, API, permission,
+provider connection, storage object, background worker, or real-file behavior.
+
+#### Repository reuse and new boundaries
+
+- reuse the current trusted Backoffice session, OWNER-only personnel guard,
+  employee dossier, organization/establishment scoping, UUIDv7 convention,
+  optimistic revision pattern, idempotent command pattern, and allowlisted
+  personnel audit projection;
+- do not reuse `users`, `tenant_memberships`, `auth_audit_events`, Neon database
+  rows, or the local Display upload directory as document storage;
+- keep safe document metadata in the future cloud personnel persistence
+  boundary and binary content in a separate private object-storage boundary;
+- keep provider credentials, object keys, checksums, quarantine results, and
+  delivery details server-only;
+- do not convert the Phase 1 fixture objects directly into contracts or tables.
+
+#### Provider-neutral storage and scanner services
+
+Later application logic must depend on two stable service boundaries rather
+than a provider SDK:
+
+```text
+PersonnelDocumentStorage
+  putQuarantinedObject
+  openAvailableObject
+  promoteVerifiedObject
+  removeObject
+
+PersonnelDocumentScanner
+  inspectQuarantinedObject
+```
+
+The provider-specific storage adapter owns endpoint, region, credentials,
+bucket naming, encryption options, and SDK error translation. The scanner
+adapter separately owns malware/content inspection. Switching storage provider
+must require only a new storage adapter, configuration, provider dependency,
+and provider contract tests; document domain, authorization, audit, UI, and
+scanner logic must remain unchanged. Switching scanner follows the same rule.
+
+#### Private EU storage shortlist — no provider selected
+
+| Option                            | Repository fit                                                                 | Required review before selection                                                     |
+| --------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| Scaleway Object Storage `fr-par`  | Provisional recommendation: EU-native, S3-compatible, encryption and lifecycle | Public service endpoint, IAM, DPA/subprocessors, backup residency, exit and restore  |
+| OVHcloud Object Storage EU region | EU-native and S3-compatible with managed or customer-provided encryption       | Exact region, effective bucket isolation/IAM, replication, DPA, deletion and restore |
+| Amazon S3 Paris `eu-west-3`       | Mature IAM, encryption, logging, lifecycle, and security ecosystem             | Non-EU parent transfer assessment, DPA/subprocessors, cost and service complexity    |
+| Cloudflare R2 `eu` jurisdiction   | S3-compatible EU jurisdiction and portable adapter surface                     | EU jurisdiction at bucket creation, DPA/transfer review, logging and scanner flow    |
+
+Official product evidence used for this shortlist:
+
+- Scaleway regions, lifecycle and object-lock concepts:
+  <https://www.scaleway.com/en/docs/object-storage/concepts/>;
+- Scaleway bucket encryption:
+  <https://www.scaleway.com/en/docs/object-storage/how-to/enable-sse-one/>;
+- OVHcloud server-side encryption:
+  <https://help.ovhcloud.com/csm/fr-ca-public-cloud-storage-s3-encrypt-objects-sse-c?id=kb_article_view&sysparm_article=KB0047326>;
+- Amazon S3 region and object-location behavior:
+  <https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html>;
+- Cloudflare R2 EU jurisdiction restrictions:
+  <https://developers.cloudflare.com/r2/reference/data-location/>.
+
+`Scaleway fr-par` is the provisional engineering recommendation for the first
+slice, not an approved provider. Provider selection requires current pricing,
+contract, DPA/subprocessor, security, operations, backup/restore, incident, and
+exit review. S3 compatibility helps portability but does not by itself make
+providers behaviorally identical.
+
+#### Mandatory provider requirements
+
+- effective object, replica, backup, security-processing, and disaster-recovery
+  location remains inside the approved EU/EEA perimeter;
+- private buckets with public access disabled, least-privilege service
+  identities, separated quarantine/available namespaces, TLS, and encryption
+  at rest;
+- no employee name, original filename, tenant ID, or other personal value in
+  object keys, provider tags, public URLs, metrics, or unrestricted logs;
+- documented DPA, subprocessors, support/administrative access, incident notice,
+  deletion propagation, return/export, and contract termination behavior;
+- versioning/lifecycle configuration consistent with the approved retention
+  schedule, without accidental indefinite backup or replica retention;
+- auditable access and configuration changes, secret rotation, capacity/cost
+  monitoring, restore tests, and provider outage/retry behavior;
+- scanner processing location and any scanner subprocessors follow the same
+  approved residency and contractual rules;
+- an export-and-delete exit test proves that a replacement adapter can migrate
+  objects without changing domain identifiers or browser behavior.
+
+These requirements follow the CNIL cloud and processor guidance on effective
+location, encryption, access control, logging, backup, contractual allocation,
+and verification of processor guarantees:
+<https://www.cnil.fr/fr/securite-cloud-informatique-en-nuage> and
+<https://www.cnil.fr/fr/securite-gerer-la-sous-traitance>.
+
+#### Conceptual aggregate — not database tables
+
+| Concept                  | Responsibility                                                                                                |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| Employee document        | Establishment-owned category slot, current safe version pointer, availability state, revision, and timestamps |
+| Document version         | Immutable version number, sanitized display filename, verified type/size, content checksum, processing result |
+| Private binary object    | Provider-owned encrypted bytes addressed only by a server-side opaque key; never a browser or audit value     |
+| Document command receipt | Bounded idempotency result for add/replace commands, following the existing personnel command pattern         |
+| Personnel document event | Immutable allowlisted access/mutation event scoped by organization, establishment, and employee dossier       |
+| Processing job           | Infrastructure-owned quarantine/verification attempt with bounded retry and operational diagnostics           |
+
+The recommended MVP allows at most one current document per approved category.
+Replacement creates a new immutable version and changes the current pointer
+only after the new version is verified as available. The prior available
+version remains current when processing fails. Retention of superseded binaries
+is still a legal/security decision, not an automatic indefinite history rule.
+
+#### Proposed file and category limits
+
+- category is a server-side allowlisted code; no unrestricted `Autre` category
+  and no user-authored category name;
+- the product-approved first-slice category is
+  `signed_employment_contract` (`Contrat de travail signé`); it remains blocked
+  until legal/privacy approves its purpose, recipients, applicability,
+  required/optional status, rights handling, and retention class;
+- absence of this document must not make a dossier incomplete when no written
+  contract exists or collection is not applicable;
+- a signed contract amendment is a distinct future category, not a replacement
+  version of the employment contract; unrestricted employment-supporting files
+  and work-authorization evidence remain deferred category decisions;
+- the product-approved first-slice format is PDF only, with a 10 MiB maximum;
+  JPEG, PNG, Office files, archives, executables, scripts, password-protected
+  files, and other formats are denied in this slice;
+- one current signed employment contract is proposed for the enabled category;
+  correction uploads use immutable versions and do not redefine a legal
+  amendment as a replacement;
+- filename length, page/image limits, content/type verification, and processing
+  timeout require security-owner confirmation before implementation.
+
+#### Proposed lifecycle
+
+```text
+selected locally
+-> authenticated upload accepted into private quarantine
+-> uploading
+-> processing and verified type/content checks
+-> available OR rejected/unavailable
+```
+
+For replacement, the existing available version remains readable throughout
+upload and processing. A successful verification switches the current version
+inside one metadata transaction. A rejected or timed-out replacement never
+overwrites the current version.
+
+Database and object storage cannot share one transaction. The later
+implementation therefore needs explicit compensation: remove abandoned
+quarantine objects, retry bounded processing, mark unresolved objects for
+operator review, and never report success until both metadata and storage state
+agree. Cleanup must always repeat trusted organization and establishment scope.
+
+#### Proposed server request boundaries
+
+1. every list, add, access, and replace request rederives the tenant and actor
+   from the validated server session;
+2. the employee is resolved by organization + establishment + employee ID
+   before document metadata is read or changed;
+3. add/replace validates the category, idempotency key, expected revision,
+   filename, declared size/type, and actual received content;
+4. files enter a private quarantine namespace; a quarantined or processing
+   object is never deliverable;
+5. view/download performs a fresh permission and scope check, records an
+   allowlisted access grant, and uses an application-controlled response for
+   the first slice; stable or public URLs are forbidden;
+6. the response exposes only localized category, sanitized filename, verified
+   type/size, safe status, version, relevant date when approved, and server
+   timestamps.
+
+The recommended first slice uses a server-mediated upload and download for the
+10 MiB limit because it keeps authorization, auditing, and provider details in
+one server boundary. Direct browser-to-provider upload and short-lived signed
+delivery remain later scaling options requiring separate threat review.
+
+#### Proposed document-specific permissions
+
+Introduce separate future permissions `personnel.document.read` and
+`personnel.document.manage`, both mapped only to OWNER initially. This avoids
+silently treating generic employee read access as authorization for file
+content and allows a later manager decision without broadening all personnel
+permissions. The names and mapping are proposals only; current
+`personnel.employee.read/manage` behavior remains unchanged.
+
+#### Proposed allowlisted events
+
+Reuse the personnel audit infrastructure and its strict organization,
+establishment, employee, actor, operation-ID, and safe-projection rules; do not
+reuse authentication audit events. Proposed document event types are:
+
+- `employee.documents_viewed`, deduplicated per explicit Documents-tab open;
+- `employee.document_viewed` and `employee.document_download_granted`, recorded
+  for every successful content-access grant;
+- `employee.document_upload_completed` and
+  `employee.document_upload_rejected`;
+- `employee.document_replaced` only after the new version becomes current.
+
+The employee business-change history must continue filtering out sensitive
+access events. A later document activity view may project only safe event type,
+localized category, version number, actor display name, and timestamp. It must
+not expose filenames, content, provider keys, checksums, tenant IDs, operation
+IDs, scanner output, or raw metadata. Denied attempts and scanner failures use
+restricted operational security logs rather than the employee-facing history.
+
+#### Proposed stable error semantics
+
+| Condition                              | Safe result/state                                                   |
+| -------------------------------------- | ------------------------------------------------------------------- |
+| Wrong tenant, employee, or document    | One non-disclosing not-found/forbidden result                       |
+| Category not enabled                   | Category unavailable; no upload starts                              |
+| Unsupported, oversized, or locked file | Field-level rejection preserving the user's category selection      |
+| Storage unavailable                    | Retryable upload/access failure; no success or current-version swap |
+| Processing rejected or timed out       | Rejected/unavailable with safe reason code and recovery guidance    |
+| Stale document revision                | Conflict requiring current metadata reload before replace retry     |
+| Expired delivery                       | Fresh authorization and a new delivery request                      |
+
+#### Phase 2 decisions awaiting approval
+
+| Decision | Recommended choice                                                                      | Required approver       |
+| -------- | --------------------------------------------------------------------------------------- | ----------------------- |
+| D2-01    | First category: signed employment contract; no generic attachment category              | Product + legal/privacy |
+| D2-02    | Separate document read/manage permissions, OWNER-only initially                         | Product + security      |
+| D2-03    | PDF only, 10 MiB maximum, one current file for the first approved category              | Product + security      |
+| D2-04    | Private EU-region object storage separate from Neon; server-side adapter and quarantine | Security + operations   |
+| D2-05    | Server-mediated first-slice upload/download; no stable public or provider URL           | Security + engineering  |
+| D2-06    | Reuse personnel audit infrastructure with separate document event projection            | Product + security      |
+| D2-07    | Per-category/version retention; no automatic hard delete or indefinite retention        | Legal/privacy + ops     |
+| D2-08    | Replacement becomes current only after verification; prior version survives failure     | Product + engineering   |
+| D2-09    | Separate EU-approved scanner adapter; storage provider does not imply malware scanning  | Security + operations   |
+
+D2-01's category and D2-03's PDF/10 MiB product choices were approved by the
+product owner on 2026-08-15. A signed amendment remains a separate deferred
+category. D2-01 still requires legal/privacy approval, and D2-03 still requires
+security approval plus confirmation of version and processing limits. Neither
+decision is a real-file implementation authorization.
+
+No production-capable vertical slice may start while D2-01 through D2-09 or
+their approved revisions remain unresolved. Provider selection,
+malware-scanning service, retention durations, backup/restore procedure,
+rights/deletion operations, and incident ownership remain release blockers. The
+later local-only authorization below does not resolve those production gates.
+
+#### Phase 3 local implementation reconciliation
+
+Product implementation authority was granted on 2026-08-15 for local
+development only. The delivered slice follows the provider-neutral proposal but
+does not resolve production-provider or legal/operations decisions:
+
+- D2-01/D2-03 product choice is implemented as
+  `signed_employment_contract`, PDF only, 10 MiB maximum;
+- D2-02 is implemented locally with separate read/manage permissions mapped to
+  OWNER only;
+- D2-05 uses server-mediated upload and delivery with no public or stable file
+  URL;
+- D2-06/D2-08 use allowlisted personnel events, bounded idempotency receipts,
+  immutable versions, expected revision, and verification before current-version
+  replacement;
+- D2-04/D2-09 use replaceable interfaces with private local filesystem storage
+  and Microsoft Defender; production adapters remain unselected;
+- D2-07 remains unresolved, so production collection and release are blocked.
+
+The local runtime removes failed quarantine/available objects when scanning or
+metadata persistence fails. Superseded versions remain inaccessible through the
+current-content endpoint; their final retention/deletion behavior must be
+approved before production.
 
 ## Future Formalités and register interactions
 
@@ -479,6 +842,67 @@ Property/integration tests must generate at least two organizations and two
 establishments and cover list, read, create, edit, departure, correction,
 duplicate override, audit, conflict, and retry. Navigation tests are additional
 UX coverage, not security evidence.
+
+## Documents Wave B Phase 0 — signed amendments
+
+Capability status: `PROPOSAL — READ-ONLY DISCOVERY`
+
+Repository reality on 2026-08-15:
+
+- `personnelDocumentCategorySchema` and the PostgreSQL category enum allow only
+  `signed_employment_contract`;
+- the UI and save action hard-code that category and support one current
+  category slot with immutable correction versions;
+- no signed-amendment category, relationship, metadata, list behavior, mutation,
+  or test exists;
+- the current private local storage, scanner, server delivery, document
+  permissions, audit infrastructure, and full trusted tenant scope are reusable
+  boundaries only after later approval.
+
+### Proposed interaction map — not implemented
+
+| ID   | Operator intent               | Proposed safe behavior                                                                  | Required states                                                      |
+| ---- | ----------------------------- | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| AB-1 | Inspect signed amendments     | Load only amendment metadata for the trusted employee dossier, separately from contract | Loading, empty, ready, forbidden, unavailable, retry                 |
+| AB-2 | Add a distinct amendment      | Validate proposed metadata and one bounded PDF, quarantine/check, then make available   | Selecting, validation, uploading, processing, success/rejected/retry |
+| AB-3 | View or download an amendment | Fresh authorization and scoped lookup for every access; server-mediated local delivery  | Pending, available, unavailable, retry                               |
+| AB-4 | Correct one amendment scan    | Create a new immutable version for that same amendment; never replace another amendment | Confirmation, conflict, processing, success/failure                  |
+
+### Proposed UI/data dictionary — not a schema
+
+| Concept                    | Classification         | Phase 0 boundary                                                                     |
+| -------------------------- | ---------------------- | ------------------------------------------------------------------------------------ |
+| Employee dossier reference | Server-owned           | Always resolved with trusted organization + establishment scope                      |
+| Amendment reference        | Server-owned proposal  | Distinguishes multiple amendments; opaque ID alone never authorizes access           |
+| Category code              | Stored proposal        | Separate allowlisted signed-amendment category; not implemented in enum/contracts    |
+| Display label              | Product proposal       | Neutral French label; no unrestricted sensitive description                          |
+| Effective/signature date   | Product/legal decision | One or both may support ordering, but neither is approved as mandatory               |
+| Amendment number           | Product/legal decision | Must not be invented or inferred from filename/content                               |
+| Filename/type/size/status  | Sensitive safe view    | Same sanitization, verification, and safe projection principles as the contract flow |
+| Correction version         | Server-owned proposal  | Corrects the same amendment scan; not a later legal amendment                        |
+
+The design may temporarily order fictional examples by a clearly labelled
+proposed effective date. It must not treat that choice as a contract or schema
+decision. Before Phase 2, product/legal must decide the minimum distinguishing
+metadata and whether chronology uses effective date, signature date, explicit
+sequence, or a combination.
+
+### Authorization, audit, and sensitive boundary
+
+The Phase 0 proposal is OWNER-only. MANAGER, STAFF, self-service, public, and
+service actors remain denied. Every later repository request must carry trusted
+organization + establishment + employee scope and must not accept browser role,
+permission, tenant, category, or storage keys as authority.
+
+Proposed successful events mirror the existing document taxonomy while safely
+identifying the allowlisted amendment category: list opened, upload completed or
+rejected, viewed, download granted, and correction replacement completed. Safe
+employee-facing projections must omit filenames, dates/meaning, storage keys,
+checksums, scanner output, raw metadata, tenant IDs, and operation IDs.
+
+Signed amendments are confidential contractual personal data. Phase 0 adds no
+retention rule, completeness rule, automatic employee-field update, production
+provider, or legal-compliance claim.
 
 ## External compliance references
 

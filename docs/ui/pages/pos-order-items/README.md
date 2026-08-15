@@ -1,6 +1,6 @@
 # POS Order Items
 
-Status: Phase 1 ready for review
+Status: Implemented
 
 Visibility: Engineering
 
@@ -22,7 +22,7 @@ Implementation class: `integrated`
 
 Delivery mode: `EXISTING_CAPABILITY_RENEWAL`
 
-Package status: `implementation-ready`
+Package status: `implemented`
 
 Scope status: `APPROVED`
 
@@ -179,6 +179,14 @@ Fixture replacement is forbidden for this existing integrated page.
 - `references/design-proposal-03-send-success.png` - product-requested
   post-kitchen-send success screen for desktop and narrow layouts, approved for
   the later interaction phase.
+- `references/phase-5-as-built-1366x768.png` - final desktop operational
+  evidence.
+- `references/phase-5-as-built-1024x768.png` - final compact-desktop
+  operational evidence.
+- `references/phase-5-as-built-768x1024.png` - final tablet operational
+  evidence.
+- `references/phase-5-as-built-390x844.png` - final narrow operational
+  evidence.
 - `references/design-proposal-01-desktop.png` and
   `design-proposal-02-narrow.png` - rejected first drafts retained as review
   evidence because they invented filter and per-item overflow controls.
@@ -225,8 +233,8 @@ The product owner additionally approved the product requirement that a
 successfully confirmed kitchen send replaces the item-entry workspace with a
 dedicated success state. It contains exactly two navigation actions:
 `Créer une autre commande` to `/pos` and `Retour aux commandes` to `/`. This is
-an approved interaction requirement, not evidence that runtime behavior is
-implemented.
+an approved interaction requirement. The product owner authorized Phase 3 on
+2026-08-15.
 
 ## Phase 1 delivery
 
@@ -261,7 +269,185 @@ Phase 1 verification passed: POS typecheck, 48 POS tests, POS production build,
 workspace typecheck, page-pack validation, documentation consistency,
 architecture boundaries, scoped Prettier, and `git diff --check`.
 
-Phase 2 is not approved.
+## Phase 2 delivery
+
+Phase 2 extracts the duplicated order-item presentation and quantity controls
+from the desktop summary and narrow current-order dialog into the route-local
+`OrderItemPresentation.tsx` responsibility component. The Server Component
+continues to load trusted data and now builds one serialized presentation model
+for both layouts; mutation forms remain client-side only where interaction is
+required.
+
+The refactor preserves the Phase 1 catalog/order composition, French copy,
+routes, accessibility names, edit locks, ordering-policy behavior,
+instruction/allergy dialog, Server Actions, site-agent calls, and all
+operational boundaries. Product-owner review restored the category submenu as
+the first column of the fixed desktop workspace and retained it as a horizontal
+row on narrow layouts. It remains backed by the existing category query routes,
+marks the current category, and scrolls horizontally without document overflow
+when space is constrained. The change introduces no contract, authorization,
+persistence, transaction, kitchen, payment, printer, polling, or offline
+behavior. The approved post-send success screen remains deferred to Phase 3.
+
+Browser verification on the clean local development instance reused the
+persisted draft order `POS-20260814-223049-B857B6` from product-owner review
+without submitting a control. At 1366x768 the rendered desktop grid measured
+`190px / 816px / 360px`; at 1024x768 it measured `190px / 474px / 360px`. Both
+retained the three visible category, catalog, and current-order columns with
+zero document overflow. At 768x1024 and 390x844 the 13 category links changed
+to the approved horizontal scroller with 44px targets and zero document
+overflow. No browser console warning or error was observed on the clean origin.
+
+Phase 2 verification passed: scoped Prettier and diff checks, POS typecheck, 48
+POS tests, POS production build, workspace typecheck, page-pack validation,
+documentation consistency, and architecture boundaries.
+
+## Phase 3 delivery
+
+Phase 3 adds the approved post-kitchen-send success state without changing the
+site-agent command, contract, idempotency key, database transaction, kitchen
+batch, print-job ownership, or error mapping. The existing Server Action now
+returns a typed success result only after its schema-validated site-agent call
+resolves. A route-scoped client boundary consumes that trusted result and
+replaces the item-entry workspace; browser-provided query parameters cannot
+activate the state.
+
+While the command is pending, kitchen-send controls are disabled and display a
+truthful progress label. Existing allergy confirmation and service-error
+recovery remain in place. The shared kitchen-send component preserves its
+existing refresh behavior on routes that do not opt into the item-route success
+screen.
+
+The success state moves focus to its status region and shows a five-second
+countdown before automatically navigating to the approved home route `/`. The
+two immediate navigation actions remain available: `Créer une autre commande`
+to `/pos` and `Retour aux commandes` to `/`. Its copy confirms that the command
+was transmitted to the kitchen and that the order remains open for tracking
+and payment; it does not claim physical printer success. The product owner
+approved the timed home redirect on 2026-08-15.
+
+The countdown is presented as a text-backed success pill with a high-contrast,
+large seconds badge so the remaining time is immediately scannable without
+relying on color alone.
+
+Product-owner desktop review also corrected the route canvas to match the
+approved reference: the service workspace now uses the full available desktop
+width instead of stopping at 1600px, and category, catalog, and current-order
+areas render as three distinct bordered panels with responsive gaps. At the
+`2xl` breakpoint the category and order panels widen to 220px and 440px, while
+the catalog grid adds columns as space becomes available so item cards do not
+stretch across ultra-wide displays. Narrow layouts retain the existing stacked
+composition.
+
+Clean production-build browser QA measured the reference-width 1680px layout
+at `220px / 956px / 440px`, with four 218px catalog cards in the first row. At
+2560px the shell occupied the complete viewport, the catalog adapted to eight
+213px cards, and the fixed side panels remained 220px and 440px. Both viewports
+had three distinct 12px-radius bordered panels, zero document overflow, and no
+browser warning or error.
+
+The narrow category row now has an explicit pointer-drag interaction in
+addition to native scrolling, so touch, stylus, and mouse dragging can move the
+horizontal menu without activating a category link. At 390px browser QA
+measured 1330px of category content in a 375px viewport and a leftward drag
+moved the row from `scrollLeft=0` to `scrollLeft=295` while keeping the selected
+category and URL unchanged. Vertical page gestures remain available through
+`touch-action: pan-y`.
+
+Focused tests verify the trusted action result, preserved empty-send error,
+exact success routes, and exclusion of a printer-success claim. Clean-origin
+browser inspection verified that a forged `sendSuccess=true` query parameter
+leaves the normal item-entry workspace visible, with no success heading, no
+document overflow, and no console error. No real kitchen command or print job
+was created solely for Phase 3 browser evidence.
+
+Phase 3 verification passed: scoped Prettier, POS typecheck, 51 POS tests, POS
+production build, workspace typecheck, page-pack validation, documentation
+consistency, architecture boundaries, and `git diff --check`. Repository-wide
+`format:check` was run and remains blocked by 36 pre-existing or out-of-scope
+files; the Phase 3 runtime files pass the scoped Prettier check.
+
+## Phase 4 delivery
+
+Phase 4 completed as a no-change integration audit. The renewed route still
+loads the existing payment summary, order detail, and catalog through
+`posApi.getPaymentViewData()`, which delegates to the schema-validated
+site-agent client. Catalog categories/items, order-item snapshots, payment
+locks, totals, discounts, instruction settings, allergy data, and order status
+continue to come from the current local contracts and service-owned models.
+
+The Phase 2–3 presentation model, category scroller, pending action state, and
+timed success navigation use only already-loaded serialization-safe data or
+ephemeral browser state. The trusted kitchen-send result is not persisted as a
+new field and an untrusted URL parameter still cannot establish success. Staff
+attribution remains resolved by the existing Server Action immediately before
+the existing `send_to_kitchen` command.
+
+Repository diff and import audits found no change to `packages/contracts`,
+`apps/site-agent`, `packages/db-pos`, package manifests, or the lockfile. No
+field, enum, permission, API route, transport contract, schema/migration,
+transaction rule, runtime dependency, offline queue, printer/device setting, or
+persistence owner was added or changed. Cloud organization/establishment
+tenancy was not introduced into the local POS boundary.
+
+Phase 4 verification passed contracts, site-agent, and db-pos typechecks plus
+the repository architecture boundary check. Boundary integration tests were
+not rerun because Phase 4 changed no contract, service, database, offline, or
+device behavior; the Phase 3 delivery already passed POS typecheck, 51 POS
+tests, and the production build.
+
+## Phase 5 delivery
+
+Phase 5 ran after the functional/regression gate passed. Clean
+production-build browser QA used the real persisted order
+`POS-20260815-080849-A4505C` with the local service/database available and the
+printer truthfully shown as not configured. No item, kitchen command, payment,
+or print job was created for final visual evidence.
+
+The final viewport matrix passed:
+
+- 1366x768: three `190px / 768px / 360px` panels, four 171px catalog cards per
+  row, desktop payment/current-order controls, and zero document overflow;
+- 1024x768: three `190px / 426px / 360px` panels and two 183px catalog cards per
+  row. Phase 5 changed this breakpoint from three 118px cards to two usable
+  cards without changing the three-panel workflow;
+- 768x1024: stacked 753px content, three 232px catalog cards, horizontally
+  scrollable 44px category targets, 56px mobile-order action, and zero document
+  overflow;
+- 390x844: stacked 375px content, two 168px catalog cards, horizontally
+  draggable 44px category targets, 56px mobile-order action, and zero document
+  overflow.
+
+All four viewports retained the current compact POS shell, truthful text-backed
+local-service/printer state, real category/search routes, accessible names, and
+the approved desktop versus narrow order composition. Browser logs contained
+no warning or error. The 1680px and 2560px evidence recorded during product
+review additionally protects the approved full-width panel hierarchy and
+ultra-wide catalog adaptation.
+
+The product owner exercised the trusted success transition during Phase 3.
+Phase 5 did not submit another real order solely to recapture it; focused tests
+protect trusted action success, the exact two routes, the five-second home
+timer copy, and the absence of a physical-print claim. A forged success query
+was separately verified to leave the normal workspace visible.
+
+Intentional as-built adaptations and deferred risks:
+
+- 1024px uses two catalog cards per row to preserve readable touch density;
+- ultra-wide screens add catalog columns instead of stretching four cards;
+- catalog artwork remains generated initials because the current domain has no
+  approved image capability;
+- native offline order mutation remains unsupported and unchanged;
+- physical printer delivery was not tested because no printer is configured,
+  and the UI makes no success claim about physical output;
+- existing action recovery semantics were preserved; Phase 5 did not expand
+  form persistence or add a new retry/offline capability.
+
+Final verification passed: scoped Prettier, POS typecheck, 51 POS tests, POS
+production build, workspace typecheck, contracts/site-agent/db-pos typechecks,
+architecture boundaries, page-pack validation, documentation consistency, and
+`git diff --check`. Repository-wide `format:check` remains red only for the
+previously recorded baseline/out-of-scope files.
 
 ## Prompt order
 
@@ -276,4 +462,4 @@ transaction, kitchen, or payment change.
 
 ## Final delivery and as-built status
 
-As-built documentation status: `PENDING`
+As-built documentation status: `COMPLETE`

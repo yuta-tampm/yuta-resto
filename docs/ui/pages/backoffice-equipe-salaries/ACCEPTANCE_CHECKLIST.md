@@ -55,6 +55,134 @@
 - [ ] PDF remains an export of structured register data and does not imply
       electronic-register compliance.
 
+## Documents Wave A Phase 0 approval gate
+
+- [x] Existing Salaries drawer, tabs, authorization, tenant scope, contracts,
+      schema, audit behavior, tests, and current visual context were inspected.
+- [x] No Backoffice/cloud document storage, upload/download flow, document
+      contract/schema/permission, malware-processing flow, or document test exists.
+- [x] The local Display upload directory is recorded as a separate runtime and
+      forbidden for cloud employee documents.
+- [x] Capability mode is `NEW_CAPABILITY_DISCOVERY` inside the stable
+      `backoffice-equipe-salaries` page pack; no duplicate pack or route was created.
+- [x] Proposed MVP, users, establishment ownership, sensitive data, deferred
+      capabilities, UI discovery scope, states, and ready design prompt are recorded.
+- [x] Phase 0 created no schema, migration, API, permission, provider, storage,
+      upload/download action, or implementation code.
+- [x] Product owner approved OWNER-only list/upload/view/download/replace actions
+      and category examples for visual discovery only.
+- [x] Product owner authorized and the Documents design prompt was executed.
+- [x] Desktop, 1024, 768, and 390 px references were stored as `DRAFT` for review.
+- [x] Product owner approved the generated Documents hierarchy, actions,
+      category examples, copy, states, and responsive direction for Phase 1.
+- [x] The sixth `Documents` tab uses typed fictional fixtures and a visible
+      demonstration notice.
+- [x] Add, view, and replace controls are disabled; no fake success is shown.
+- [x] Fixtures contain no ID, URL, storage key, tenant value, transport contract,
+      or persistence behavior.
+- [x] Existing employee authorization, audit, history, and persisted behavior
+      remain unchanged.
+- [ ] Controller/DPO or legal owner approves each enabled category's purpose,
+      recipients, rights workflow, and per-category/version retention schedule.
+- [ ] Security owner approves private storage, encryption/key separation,
+      malware quarantine, short-lived delivery, audit, backup/restore, provider,
+      incident, and deletion behavior before real-file implementation.
+- [ ] Manager delegation, OCR, generation, sharing/export, delete/archive/legal
+      hold, employee self-service, and actionable expiry alerts remain deferred.
+
+## Documents Wave A Phase 2 technical-design gate
+
+- [x] Product owner authorized technical design and decision preparation only.
+- [x] Repository reuse and new private-storage boundaries are identified.
+- [x] Conceptual document/version/processing/audit responsibilities are mapped
+      without treating them as tables or contracts.
+- [x] Tenant scope repeats organization + establishment + employee on every
+      metadata, mutation, processing, cleanup, and delivery operation.
+- [x] Neon/PostgreSQL rows, authentication audit events, and local Display
+      uploads are explicitly rejected as binary document storage.
+- [x] Upload, quarantine, processing, available, rejected, replacement,
+      conflict, access, retry, and compensation behavior are proposed.
+- [x] The later delivery order uses narrow end-to-end vertical slices.
+- [x] Scaleway Paris, OVHcloud EU, AWS S3 Paris, and Cloudflare R2 EU are
+      compared without selecting or connecting a provider.
+- [x] Storage and malware scanning are separate provider-neutral service
+      boundaries, so either provider can change independently.
+- [x] Residency covers objects, replicas, backups, scanner processing, logs,
+      support access, deletion, and disaster recovery rather than bucket region alone.
+- [x] D2-01 product choice: first category is the signed employment contract;
+      no generic attachment category, and signed amendments remain separate.
+- [ ] D2-01 legal/privacy approval: confirm purpose, applicability, recipients,
+      rights handling, required/optional status, and retention class.
+- [ ] D2-02: product and security approve separate document read/manage
+      permissions, initially OWNER-only.
+- [x] D2-03 product choice: the first slice accepts PDF only, up to 10 MiB.
+- [ ] D2-03 security approval: confirm content verification, filename/page
+      limits, processing timeout, and current/version behavior.
+- [ ] D2-04/D2-05: security, operations, and engineering approve private EU
+      storage, quarantine/scanning, and server-mediated first-slice delivery.
+- [ ] D2-06: product and security approve the personnel document event taxonomy
+      and its separate safe projection.
+- [ ] D2-07: legal/privacy and operations approve per-category/version
+      retention, deletion propagation, backup, restore, and rights handling.
+- [ ] D2-08: product and engineering approve verification-before-swap replacement
+      semantics and prior-version behavior.
+- [ ] D2-09: security and operations select an EU-approved malware/content
+      scanner or approve an operated scanner boundary and its incident handling.
+- [x] No schema, migration, contract, API, permission, provider, storage object,
+      worker, or runtime implementation was created in Phase 2.
+
+## Documents Wave A Phase 3 local implementation
+
+- [x] Product owner authorized implementation after selecting the first category
+      and PDF/10 MiB boundary.
+- [x] Fictional document items and disabled prototype actions were removed.
+- [x] Document list/add/replace/view/download is OWNER-only and reauthorizes on
+      the server.
+- [x] Every metadata query includes organization + establishment + employee.
+- [x] Binary content is outside Neon/PostgreSQL and has no public/stable URL.
+- [x] Local private storage quarantines each file and promotes it only after
+      Microsoft Defender succeeds.
+- [x] Storage and scanner remain separate replaceable service interfaces.
+- [x] PDF signature, declared type, 10 MiB limit, sanitized filename, checksum,
+      expected revision, and idempotency are enforced.
+- [x] Failed scan/persistence cleans the new object and never replaces the
+      current version.
+- [x] Tab, upload/rejection, replacement, view, and download access events avoid
+      filenames, storage keys, checksums, and scanner details.
+- [x] Migration `0007_happy_master_chief.sql` was generated and applied only to
+      `localhost:55431/yuta_cloud`.
+- [x] Production runtime fails closed; no external provider is implied.
+- [ ] Legal/privacy approves category purpose and retention/deletion behavior.
+- [ ] Security/operations approves EU storage, EU scanner, backup/restore,
+      incident ownership, monitoring, and provider exit.
+- [x] Desktop browser QA covers empty, verified upload, available, view,
+      download, access events, and test-data cleanup.
+- [x] Responsive visual QA at 1024, 768, and 390 px is complete.
+
+## Documents Wave B Phase 0 — signed amendments
+
+- [x] Current category enum, contracts, repository, action, UI, audit, tests,
+      local storage/scanner, and as-built Documents evidence were inspected.
+- [x] Signed amendments are classified as `NEW_CAPABILITY_DISCOVERY` inside the
+      stable integrated Salaries page pack.
+- [x] The proposed MVP is OWNER-only and scoped by trusted organization +
+      establishment + employee dossier.
+- [x] A distinct later legal amendment is separated from the base contract and
+      from a correction version of the same amendment scan.
+- [x] Sensitive data, audit minimization, local-only storage boundary, truthful
+      states, UI discovery scope, and deferred capabilities are recorded.
+- [x] Effective date, signature date, amendment number, ordering, applicability,
+      completeness, and retention remain explicit decisions rather than inferred
+      fields.
+- [x] Current as-built Documents captures provide the containing-surface context;
+      the absent amendment flow has baseline `NOT_APPLICABLE`.
+- [x] A self-contained responsive design prompt is ready and not yet executed.
+- [x] Phase 0 created no schema, enum, migration, contract, API, permission,
+      repository, action, storage object, or implementation code.
+- [ ] Product owner approves or revises the proposed local MVP and date/label
+      discovery scope.
+- [ ] Product owner authorizes running the signed-amendments design prompt.
+
 ## Domain, tenant, security, and privacy gates
 
 - [x] Phase 2 proposes an establishment dossier aggregate without creating a global person.

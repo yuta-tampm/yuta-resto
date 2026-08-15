@@ -25,7 +25,9 @@ export type EstablishmentPermission =
 
 export type PersonnelPermission =
   | 'personnel.employee.read'
-  | 'personnel.employee.manage';
+  | 'personnel.employee.manage'
+  | 'personnel.document.read'
+  | 'personnel.document.manage';
 
 const permissionRoles: Record<ReputationPermission, readonly TenantRole[]> = {
   'reputation.read': ['OWNER', 'MANAGER', 'STAFF'],
@@ -61,6 +63,8 @@ const personnelPermissionRoles: Record<
 > = {
   'personnel.employee.read': ['OWNER'],
   'personnel.employee.manage': ['OWNER'],
+  'personnel.document.read': ['OWNER'],
+  'personnel.document.manage': ['OWNER'],
 };
 
 export function requireReputationPermission(
