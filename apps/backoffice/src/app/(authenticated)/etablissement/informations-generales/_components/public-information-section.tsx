@@ -3,7 +3,7 @@ import type {
   GeneralInformationProfile,
   SetProfileBoolean,
   SetProfileText,
-} from './general-information-model';
+} from '../general-information-model';
 
 export function PublicInformationSection({
   draft,

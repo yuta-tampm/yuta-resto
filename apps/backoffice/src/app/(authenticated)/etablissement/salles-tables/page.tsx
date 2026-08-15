@@ -1,4 +1,4 @@
-import { TablesPage } from './tables-page';
+import { TablesPage } from './_components/tables-page';
 import { requireBookingTenant } from '../../../../server/auth/session';
 
 export default async function Page() {

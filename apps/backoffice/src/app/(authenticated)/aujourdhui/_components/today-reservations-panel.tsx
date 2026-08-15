@@ -1,7 +1,7 @@
 import { Badge, Button, EmptyState, Panel } from '@yuta/ui';
 import { ArrowRight, CalendarCheck } from 'lucide-react';
 import Link from 'next/link';
-import type { TodayReservationItem, TodaySection } from './today-data';
+import type { TodayReservationItem, TodaySection } from '../today-data';
 import { TodaySectionUnavailable } from './today-section-unavailable';
 
 type TodayReservationsSection = TodaySection<{

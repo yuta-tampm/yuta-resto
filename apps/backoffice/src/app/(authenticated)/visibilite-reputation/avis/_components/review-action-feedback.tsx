@@ -2,7 +2,7 @@
 
 import { Button } from '@yuta/ui';
 import { useFormStatus } from 'react-dom';
-import type { ReputationActionState } from './actions';
+import type { ReputationActionState } from '../actions';
 
 export const initialReputationActionState: ReputationActionState = {
   error: null,

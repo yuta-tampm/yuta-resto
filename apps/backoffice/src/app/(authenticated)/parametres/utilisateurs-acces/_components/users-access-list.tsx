@@ -8,7 +8,7 @@ import { UserAccessCard } from './user-access-card';
 import {
   filterOrganizationUsers,
   type UserManagementActorRole,
-} from './user-access-model';
+} from '../user-access-model';
 
 export function UsersAccessList({
   users,

@@ -5,14 +5,14 @@ import { useActionState, useState, type ChangeEvent } from 'react';
 import {
   ReservationActionMessage,
   ReservationSubmitButton,
-} from '../reservation-action-feedback';
-import { initialReservationActionState } from '../reservation-action-state';
-import { updateReservationDetailsAction } from '../reservation-actions';
+} from '../../_components/reservation-action-feedback';
+import { initialReservationActionState } from '../../reservation-action-state';
+import { updateReservationDetailsAction } from '../../reservation-actions';
 import {
   reservationFieldError,
   reservationFieldErrorId,
-} from '../reservation-field-accessibility';
-import type { ReservationDetailRecord } from './reservation-detail-model';
+} from '../../_components/reservation-field-accessibility';
+import type { ReservationDetailRecord } from '../reservation-detail-model';
 
 export function ReservationEditForm({
   reservation,

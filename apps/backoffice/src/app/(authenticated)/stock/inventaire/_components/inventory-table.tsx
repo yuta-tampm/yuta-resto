@@ -13,13 +13,13 @@ import {
   cn,
 } from '@yuta/ui';
 import { Boxes, MoreVertical } from 'lucide-react';
-import { StockPrototypeTableFooter } from '../stock-prototype-table-footer';
+import { StockPrototypeTableFooter } from '../../_components/stock-prototype-table-footer';
 import {
   formatInventoryCurrency,
   formatInventoryStock,
   type InventoryItem,
-} from './inventory-model';
-import { inventoryStatusTones } from './inventory-presentation';
+} from '../inventory-model';
+import { inventoryStatusTones } from '../inventory-presentation';
 
 export function InventoryTable({
   items,

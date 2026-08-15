@@ -1,11 +1,11 @@
 import { Badge, Button, Card, IconButton } from '@yuta/ui';
 import { Printer, X } from 'lucide-react';
-import { movementTypePresentation } from './stock-movement-presentation';
+import { movementTypePresentation } from '../stock-movement-presentation';
 import {
   formatStockCurrency,
   formatStockQuantity,
   type StockMovement,
-} from './stock-movements-model';
+} from '../stock-movements-model';
 
 export function StockMovementDetails({
   movement,

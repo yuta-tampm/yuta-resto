@@ -6,8 +6,8 @@ import {
   Utensils,
 } from 'lucide-react';
 import Link from 'next/link';
-import type { TodayDashboardData } from './today-data';
-import { BOOKING_SCHEDULE_HREF } from './today-view-model';
+import type { TodayDashboardData } from '../today-data';
+import { BOOKING_SCHEDULE_HREF } from '../today-view-model';
 
 type TodaySummary = {
   label: string;

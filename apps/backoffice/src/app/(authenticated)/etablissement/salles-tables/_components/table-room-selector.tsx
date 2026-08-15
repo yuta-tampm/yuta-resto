@@ -1,5 +1,5 @@
 import { Button } from '@yuta/ui';
-import { tableRooms, type TableRoom } from './tables-model';
+import { tableRooms, type TableRoom } from '../tables-model';
 
 export function TableRoomSelector({
   room,

@@ -6,7 +6,7 @@ import {
   Timer,
   type LucideIcon,
 } from 'lucide-react';
-import type { BookingSettings } from './booking-administration-model';
+import type { BookingSettings } from '../booking-administration-model';
 
 type BookingRuleFieldsProps = {
   settings: BookingSettings | null;

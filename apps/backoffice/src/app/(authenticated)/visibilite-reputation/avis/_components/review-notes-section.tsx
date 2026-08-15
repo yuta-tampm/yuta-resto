@@ -4,12 +4,12 @@ import { Button, Textarea } from '@yuta/ui';
 import { StickyNote } from 'lucide-react';
 import { useActionState, useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { createInternalNoteAction } from './actions';
+import { createInternalNoteAction } from '../actions';
 import {
   initialReputationActionState,
   ReviewActionMessage,
 } from './review-action-feedback';
-import { formatAbsoluteDate, type ReviewDetailRecord } from './reviews-model';
+import { formatAbsoluteDate, type ReviewDetailRecord } from '../reviews-model';
 
 export function ReviewNotesSection({
   review,

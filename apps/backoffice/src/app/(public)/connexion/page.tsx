@@ -1,6 +1,6 @@
 import { getCurrentSession, safeReturnTo } from '../../../server/auth/session';
 import { redirect } from 'next/navigation';
-import { LoginForm } from './login-form';
+import { LoginForm } from './_components/login-form';
 
 export const dynamic = 'force-dynamic';
 

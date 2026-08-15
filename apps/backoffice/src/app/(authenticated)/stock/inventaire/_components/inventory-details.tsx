@@ -4,8 +4,8 @@ import {
   formatInventoryCurrency,
   formatInventoryStock,
   type InventoryItem,
-} from './inventory-model';
-import { inventoryStatusTones } from './inventory-presentation';
+} from '../inventory-model';
+import { inventoryStatusTones } from '../inventory-presentation';
 
 export function InventoryDetails({
   item,

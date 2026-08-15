@@ -29,8 +29,8 @@ import { useRouter } from 'next/navigation';
 import {
   createEmployeeAction,
   type CreateEmployeeActionState,
-} from './actions';
-import { formatEmployeeDate } from './salaries-model';
+} from '../actions';
+import { formatEmployeeDate } from '../salaries-model';
 
 const initialCreateEmployeeActionState: CreateEmployeeActionState = {
   status: 'idle',

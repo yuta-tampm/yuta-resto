@@ -2,8 +2,8 @@
 
 import { useActionState } from 'react';
 import { ReservationSubmitButton } from './reservation-action-feedback';
-import { initialReservationActionState } from './reservation-action-state';
-import { updateReservationStatusAction } from './reservation-actions';
+import { initialReservationActionState } from '../reservation-action-state';
+import { updateReservationStatusAction } from '../reservation-actions';
 
 export function ReservationStatusActionForm({
   reservationId,

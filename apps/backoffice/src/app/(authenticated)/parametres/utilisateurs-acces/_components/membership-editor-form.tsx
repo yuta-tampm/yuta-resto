@@ -14,14 +14,14 @@ import {
 } from '@yuta/ui';
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { updateTenantMembershipAction } from './actions';
+import { updateTenantMembershipAction } from '../actions';
 import {
   getAssignableRoles,
   getMembershipStatusLabel,
   initialUserManagementActionState,
   roleLabels,
   type UserManagementActorRole,
-} from './user-access-model';
+} from '../user-access-model';
 
 export function MembershipEditorForm({
   membership,

@@ -1,5 +1,5 @@
 import { FormField, Label, Textarea } from '@yuta/ui';
-import type { BookingSettings } from './booking-administration-model';
+import type { BookingSettings } from '../booking-administration-model';
 
 export function BookingPublicInformationFields({
   settings,

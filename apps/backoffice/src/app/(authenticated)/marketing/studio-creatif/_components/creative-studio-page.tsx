@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { PrototypeBackofficeNotice } from '../../../../components/backoffice/prototype-backoffice-notice';
+import { PrototypeBackofficeNotice } from '../../../../../components/backoffice/prototype-backoffice-notice';
 import { CreativeGeneratorPanel } from './creative-generator-panel';
 import { CreativeInspirationCard } from './creative-inspiration-card';
 import { CreativeStudioContent } from './creative-studio-content';
 import { CreativeStudioHeader } from './creative-studio-header';
-import type { CreativeStudioTab } from './creative-studio-model';
+import type { CreativeStudioTab } from '../creative-studio-model';
 
 const initialPrompt =
   'Annonce pour notre Happy Hour :\n-20% sur tous les cocktails de 17h à 19h,\ndu lundi au jeudi.\nAmbiance chaleureuse et moderne.\nInclure notre logo.';

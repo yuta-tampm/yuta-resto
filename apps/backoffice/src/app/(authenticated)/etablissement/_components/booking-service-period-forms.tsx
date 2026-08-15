@@ -6,7 +6,7 @@ import { useActionState, useEffect, useRef } from 'react';
 import {
   createServicePeriodAction,
   deleteServicePeriodAction,
-} from './booking-service-period-actions';
+} from '../booking-service-period-actions';
 import {
   BookingAdministrationActionMessage,
   BookingAdministrationSubmitButton,

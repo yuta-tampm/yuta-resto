@@ -22,13 +22,13 @@ import {
 import { ShieldCheck } from 'lucide-react';
 import { useActionState, useState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { createTenantUserAction } from './actions';
+import { createTenantUserAction } from '../actions';
 import {
   getAssignableRoles,
   initialUserManagementActionState,
   roleLabels,
   type UserManagementActorRole,
-} from './user-access-model';
+} from '../user-access-model';
 
 export function CreateUserDialog({
   open,

@@ -1,7 +1,7 @@
 import type {
   GoogleBusinessAccount,
   GoogleBusinessLocation,
-} from '../../../../server/reputation/google-business-profile-client';
+} from '../../../../../server/reputation/google-business-profile-client';
 import {
   Alert,
   AlertDescription,
@@ -13,11 +13,11 @@ import {
 } from '@yuta/ui';
 import { Building2, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
-import { selectGoogleLocationAction } from './actions';
+import { selectGoogleLocationAction } from '../actions';
 import {
   formatGoogleLocationAddress,
   type GoogleConnectorSummary,
-} from './integrations-model';
+} from '../integrations-model';
 
 export function GoogleLocationSelectorPanel({
   accounts,

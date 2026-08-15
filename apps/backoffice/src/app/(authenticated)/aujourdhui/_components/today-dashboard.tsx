@@ -1,12 +1,12 @@
 import { Button } from '@yuta/ui';
 import { CalendarPlus } from 'lucide-react';
 import Link from 'next/link';
-import type { TodayDashboardData } from './today-data';
+import type { TodayDashboardData } from '../today-data';
 import { TodayReservationsPanel } from './today-reservations-panel';
 import { TodayReviewsPanel } from './today-reviews-panel';
 import { TodayServicesPanel } from './today-services-panel';
 import { TodaySummaryCards } from './today-summary-cards';
-import { formatLocalDateHeading } from './today-view-model';
+import { formatLocalDateHeading } from '../today-view-model';
 
 export function TodayDashboard({ data }: { data: TodayDashboardData }) {
   return (

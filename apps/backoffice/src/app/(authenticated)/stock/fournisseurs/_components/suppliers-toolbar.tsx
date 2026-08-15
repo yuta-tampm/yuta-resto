@@ -15,7 +15,7 @@ import {
   supplierTabs,
   type SupplierFilters,
   type SupplierTab,
-} from './suppliers-model';
+} from '../suppliers-model';
 
 export function SuppliersToolbar({
   activeTab,

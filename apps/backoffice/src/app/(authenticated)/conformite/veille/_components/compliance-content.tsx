@@ -3,7 +3,7 @@
 import { Card, cn } from '@yuta/ui';
 import { ClipboardCheck } from 'lucide-react';
 import { ComplianceOverview } from './compliance-overview';
-import { complianceTabs, type ComplianceTab } from './compliance-model';
+import { complianceTabs, type ComplianceTab } from '../compliance-model';
 
 export function ComplianceContent({
   activeTab,

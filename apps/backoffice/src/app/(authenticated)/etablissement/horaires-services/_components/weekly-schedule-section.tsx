@@ -9,12 +9,12 @@ import {
 import {
   AddServiceForm,
   DeleteServicePeriodButton,
-} from '../booking-service-period-forms';
+} from '../../_components/booking-service-period-forms';
 import {
   formatMinutes,
   formatTimeRange,
   orderedWeekDays,
-} from '../booking-schedule-view-model';
+} from '../../booking-schedule-view-model';
 
 export type WeeklyServicePeriod = {
   id: string;

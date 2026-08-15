@@ -2,9 +2,9 @@
 
 import { Card } from '@yuta/ui';
 import { useMemo, useState } from 'react';
-import { PrototypeBackofficeNotice } from '../../../../components/backoffice/prototype-backoffice-notice';
+import { PrototypeBackofficeNotice } from '../../../../../components/backoffice/prototype-backoffice-notice';
 import { StockMovementDetails } from './stock-movement-details';
-import { stockMovementFixtures } from './stock-movements-fixtures';
+import { stockMovementFixtures } from '../stock-movements-fixtures';
 import { StockMovementsFilters } from './stock-movements-filters';
 import { StockMovementsHeader } from './stock-movements-header';
 import {
@@ -13,7 +13,7 @@ import {
   getSelectedStockMovement,
   toggleStockMovementSelection,
   type StockMovementFilters as StockMovementFiltersValue,
-} from './stock-movements-model';
+} from '../stock-movements-model';
 import { StockMovementsSummary } from './stock-movements-summary';
 import { StockMovementsTable } from './stock-movements-table';
 

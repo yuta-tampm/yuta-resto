@@ -1,7 +1,7 @@
 import { Badge, Button, Card, IconButton } from '@yuta/ui';
 import { MessageCircle, PackageCheck, Pencil, X } from 'lucide-react';
 import { SupplierLogo } from './supplier-logo';
-import type { Supplier } from './suppliers-model';
+import type { Supplier } from '../suppliers-model';
 
 export function SupplierDetails({
   supplier,

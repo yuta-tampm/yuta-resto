@@ -7,8 +7,8 @@ import {
   ReservationActionMessage,
   ReservationSubmitButton,
 } from './reservation-action-feedback';
-import { initialReservationActionState } from './reservation-action-state';
-import { createManualReservationAction } from './reservation-actions';
+import { initialReservationActionState } from '../reservation-action-state';
+import { createManualReservationAction } from '../reservation-actions';
 import {
   reservationFieldError,
   reservationFieldErrorId,

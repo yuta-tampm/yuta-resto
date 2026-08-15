@@ -1,4 +1,4 @@
-import { loadReviewsPage } from '../avis/reviews-loader';
+import { loadReviewsPage } from '../avis/_components/reviews-loader';
 
 export const dynamic = 'force-dynamic';
 

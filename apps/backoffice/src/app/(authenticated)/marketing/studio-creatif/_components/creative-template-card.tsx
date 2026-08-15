@@ -1,6 +1,6 @@
 import { cn } from '@yuta/ui';
 import Image from 'next/image';
-import type { CreativeTemplate } from './creative-studio-model';
+import type { CreativeTemplate } from '../creative-studio-model';
 
 export function CreativeTemplateCard({
   template,

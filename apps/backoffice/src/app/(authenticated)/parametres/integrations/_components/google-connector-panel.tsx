@@ -2,7 +2,7 @@ import { Badge, Panel } from '@yuta/ui';
 import {
   getGoogleConnectorPresentation,
   type GoogleConnectorSummary,
-} from './integrations-model';
+} from '../integrations-model';
 
 export function GoogleConnectorPanel({
   connector,

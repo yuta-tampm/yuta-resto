@@ -4,12 +4,12 @@ import { Button, Badge, Textarea } from '@yuta/ui';
 import { Bot, FilePenLine, Send } from 'lucide-react';
 import { useActionState, useState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { saveReplyDraftAction } from './actions';
+import { saveReplyDraftAction } from '../actions';
 import {
   initialReputationActionState,
   ReviewActionMessage,
 } from './review-action-feedback';
-import type { ReviewDetailRecord } from './reviews-model';
+import type { ReviewDetailRecord } from '../reviews-model';
 
 export function ReviewReplyForm({
   review,

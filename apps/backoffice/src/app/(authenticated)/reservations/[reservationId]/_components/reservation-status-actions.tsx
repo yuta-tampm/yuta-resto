@@ -1,5 +1,5 @@
-import { ReservationStatusActionForm } from '../reservation-status-action-form';
-import { getReservationStatusTransitions } from '../reservation-status-model';
+import { ReservationStatusActionForm } from '../../_components/reservation-status-action-form';
+import { getReservationStatusTransitions } from '../../reservation-status-model';
 
 export function ReservationStatusActions({
   reservationId,

@@ -64,7 +64,7 @@ import {
   loadEmployeeAccessHistoryAction,
   loadEmployeeHistoryAction,
   recordEmployeeDossierViewAction,
-} from './actions';
+} from '../actions';
 import {
   formatEmployeeDate,
   getContractSummary,
@@ -73,7 +73,7 @@ import {
   getEmploymentStatusPresentation,
   getWorkTimeLabel,
   isEmployeeComplete,
-} from './salaries-model';
+} from '../salaries-model';
 
 type DetailTab =
   | 'overview'

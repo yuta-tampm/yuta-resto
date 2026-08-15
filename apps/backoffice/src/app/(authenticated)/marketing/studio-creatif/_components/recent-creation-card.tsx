@@ -9,7 +9,7 @@ import Image from 'next/image';
 import {
   getCreationStatusTone,
   type RecentCreation,
-} from './creative-studio-model';
+} from '../creative-studio-model';
 
 export function RecentCreationCard({ creation }: { creation: RecentCreation }) {
   return (

@@ -1,7 +1,7 @@
 import { Badge, Card } from '@yuta/ui';
 import { Armchair } from 'lucide-react';
-import type { RestaurantTable } from './tables-model';
-import { tableAvailabilityTones } from './tables-presentation';
+import type { RestaurantTable } from '../tables-model';
+import { tableAvailabilityTones } from '../tables-presentation';
 
 export function TableDetails({ table }: { table: RestaurantTable | null }) {
   return (

@@ -12,9 +12,9 @@ import {
   cn,
 } from '@yuta/ui';
 import { MoreVertical, Truck } from 'lucide-react';
-import { StockPrototypeTableFooter } from '../stock-prototype-table-footer';
+import { StockPrototypeTableFooter } from '../../_components/stock-prototype-table-footer';
 import { SupplierLogo } from './supplier-logo';
-import type { Supplier } from './suppliers-model';
+import type { Supplier } from '../suppliers-model';
 
 export function SuppliersTable({
   suppliers,

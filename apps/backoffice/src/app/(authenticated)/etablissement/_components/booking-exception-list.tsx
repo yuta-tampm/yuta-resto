@@ -2,9 +2,9 @@ import { BookingAdministrationDeleteButton } from './booking-administration-dele
 import {
   formatBookingExceptionDate,
   type BookingException,
-} from './booking-administration-model';
-import { deleteExceptionAction } from './booking-exception-actions';
-import { exceptionKindLabels } from './booking-schedule-view-model';
+} from '../booking-administration-model';
+import { deleteExceptionAction } from '../booking-exception-actions';
+import { exceptionKindLabels } from '../booking-schedule-view-model';
 
 export function BookingExceptionList({
   exceptions,

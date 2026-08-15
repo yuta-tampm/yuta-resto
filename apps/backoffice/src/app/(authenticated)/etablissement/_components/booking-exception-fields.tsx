@@ -5,7 +5,7 @@ import {
   getBookingExceptionFieldVisibility,
   type BookingException,
   type ServicePeriodOption,
-} from './booking-administration-model';
+} from '../booking-administration-model';
 
 export function BookingExceptionFields({
   kind,

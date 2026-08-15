@@ -6,7 +6,7 @@ import { useFormStatus } from 'react-dom';
 import {
   selectEstablishmentAction,
   type EstablishmentSelectionActionState,
-} from './actions';
+} from '../actions';
 
 const initialState: EstablishmentSelectionActionState = { error: null };
 

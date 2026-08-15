@@ -10,11 +10,11 @@ import {
   SelectValue,
 } from '@yuta/ui';
 import { CalendarDays, ChevronDown, Filter, Search } from 'lucide-react';
-import { movementTypePresentation } from './stock-movement-presentation';
+import { movementTypePresentation } from '../stock-movement-presentation';
 import type {
   StockMovement,
   StockMovementFilters as StockMovementFiltersValue,
-} from './stock-movements-model';
+} from '../stock-movements-model';
 
 export function StockMovementsFilters({
   filters,

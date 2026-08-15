@@ -27,7 +27,7 @@ import {
   statusTones,
   type ReviewsPageData,
   type UpdateReviewsQuery,
-} from './reviews-model';
+} from '../reviews-model';
 
 export function ReviewsListPanel({
   data,

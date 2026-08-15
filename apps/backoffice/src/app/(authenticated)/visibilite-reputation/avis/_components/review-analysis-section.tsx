@@ -6,7 +6,7 @@ import {
   urgencyLabels,
   urgencyTone,
   type ReviewDetailRecord,
-} from './reviews-model';
+} from '../reviews-model';
 
 export function ReviewAnalysisSection({
   review,

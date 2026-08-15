@@ -16,8 +16,8 @@ import {
   type InventoryFilters,
   type InventoryItem,
   type InventoryTab,
-} from './inventory-model';
-import { inventoryStatusTones } from './inventory-presentation';
+} from '../inventory-model';
+import { inventoryStatusTones } from '../inventory-presentation';
 
 export function InventoryToolbar({
   activeTab,

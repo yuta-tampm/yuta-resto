@@ -16,7 +16,7 @@ import type {
   ReviewsPageData,
   ReviewsPageMode,
   UpdateReviewsQuery,
-} from './reviews-model';
+} from '../reviews-model';
 
 export function ReviewsPage({
   data,

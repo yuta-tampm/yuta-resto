@@ -13,7 +13,7 @@ import { ArrowRight, LockKeyhole, Mail } from 'lucide-react';
 import Link from 'next/link';
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { loginAction, type LoginActionState } from './actions';
+import { loginAction, type LoginActionState } from '../actions';
 
 const initialState: LoginActionState = { error: null };
 

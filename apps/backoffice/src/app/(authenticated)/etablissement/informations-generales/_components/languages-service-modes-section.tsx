@@ -18,7 +18,7 @@ import {
   languageOptions,
   serviceModeOptions,
   type GeneralInformationProfile,
-} from './general-information-model';
+} from '../general-information-model';
 
 export function LanguagesServiceModesSection({
   draft,

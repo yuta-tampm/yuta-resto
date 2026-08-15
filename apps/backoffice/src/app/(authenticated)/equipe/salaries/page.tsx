@@ -7,7 +7,7 @@ import { hasPersonnelPermission } from '../../../../server/auth/permissions';
 import { requireAuthenticatedTenant } from '../../../../server/auth/session';
 import { cloudDatabase } from '../../../../server/cloud-database';
 import { getBusinessDate } from './salaries-model';
-import { SalariesPage } from './salaries-page';
+import { SalariesPage } from './_components/salaries-page';
 
 type PageSearchParams = Promise<Record<string, string | string[] | undefined>>;
 

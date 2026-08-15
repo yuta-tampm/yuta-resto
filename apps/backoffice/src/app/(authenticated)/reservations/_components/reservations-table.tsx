@@ -13,8 +13,8 @@ import { ReservationStatusActionForm } from './reservation-status-action-form';
 import {
   getReservationStatusTone,
   getReservationStatusTransitions,
-} from './reservation-status-model';
-import type { ReservationListItem } from './reservations-list-model';
+} from '../reservation-status-model';
+import type { ReservationListItem } from '../reservations-list-model';
 
 export function ReservationsTable({
   reservations,

@@ -1,7 +1,7 @@
 import type { OrganizationUser } from '@yuta/contracts/cloud-admin';
 import { Avatar, Badge, Card } from '@yuta/ui';
 import { MembershipEditorForm } from './membership-editor-form';
-import type { UserManagementActorRole } from './user-access-model';
+import type { UserManagementActorRole } from '../user-access-model';
 
 export function UserAccessCard({
   user,

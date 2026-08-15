@@ -13,7 +13,7 @@ import {
   statusTones,
   type ReviewDetailRecord,
   type ReviewsPageData,
-} from './reviews-model';
+} from '../reviews-model';
 
 export function ReviewDetail({
   review,

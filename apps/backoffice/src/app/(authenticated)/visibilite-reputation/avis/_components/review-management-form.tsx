@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from '@yuta/ui';
 import { useActionState } from 'react';
-import { updateFeedbackAction } from './actions';
+import { updateFeedbackAction } from '../actions';
 import {
   initialReputationActionState,
   ReviewActionMessage,
@@ -20,7 +20,7 @@ import {
   statusLabels,
   type ReviewDetailRecord,
   type ReviewsPageData,
-} from './reviews-model';
+} from '../reviews-model';
 
 export function ReviewManagementForm({
   review,

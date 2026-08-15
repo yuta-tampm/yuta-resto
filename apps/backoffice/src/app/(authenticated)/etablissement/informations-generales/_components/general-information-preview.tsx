@@ -15,7 +15,7 @@ import {
   safeHttpUrl,
   serviceModeLabel,
   type GeneralInformationProfile,
-} from './general-information-model';
+} from '../general-information-model';
 
 export function GeneralInformationPreview({
   profile,

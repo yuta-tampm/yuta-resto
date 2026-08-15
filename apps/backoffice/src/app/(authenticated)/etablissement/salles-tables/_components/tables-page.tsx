@@ -1,17 +1,17 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { BackofficePage } from '../../../../components/backoffice/backoffice-page';
-import { PrototypeBackofficeNotice } from '../../../../components/backoffice/prototype-backoffice-notice';
+import { BackofficePage } from '../../../../../components/backoffice/backoffice-page';
+import { PrototypeBackofficeNotice } from '../../../../../components/backoffice/prototype-backoffice-notice';
 import { TableDetails } from './table-details';
 import { TableMap } from './table-map';
 import { TableRoomSelector } from './table-room-selector';
-import { restaurantTableFixtures } from './tables-fixtures';
+import { restaurantTableFixtures } from '../tables-fixtures';
 import {
   getRoomTables,
   getSelectedRoomTable,
   type TableRoom,
-} from './tables-model';
+} from '../tables-model';
 
 export function TablesPage() {
   const [room, setRoom] = useState<TableRoom>('Salle principale');

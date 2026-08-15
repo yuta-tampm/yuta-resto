@@ -3,7 +3,7 @@ import { CalendarClock } from 'lucide-react';
 import type {
   BookingException,
   ServicePeriodOption,
-} from './booking-administration-model';
+} from '../booking-administration-model';
 import { BookingExceptionForm } from './booking-exception-form';
 import { BookingExceptionList } from './booking-exception-list';
 

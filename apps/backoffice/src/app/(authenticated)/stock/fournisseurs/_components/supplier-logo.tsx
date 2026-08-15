@@ -1,5 +1,5 @@
 import { cn } from '@yuta/ui';
-import type { Supplier } from './suppliers-model';
+import type { Supplier } from '../suppliers-model';
 
 export function SupplierLogo({
   supplier,

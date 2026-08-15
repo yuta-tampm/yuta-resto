@@ -1,15 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { PrototypeBackofficeNotice } from '../../../../components/backoffice/prototype-backoffice-notice';
+import { PrototypeBackofficeNotice } from '../../../../../components/backoffice/prototype-backoffice-notice';
 import { ComplianceContent } from './compliance-content';
 import { ComplianceDetails } from './compliance-details';
-import { priorityActionFixtures } from './compliance-fixtures';
+import { priorityActionFixtures } from '../compliance-fixtures';
 import { ComplianceHeader } from './compliance-header';
 import {
   getSelectedPriorityAction,
   type ComplianceTab,
-} from './compliance-model';
+} from '../compliance-model';
 import { ComplianceSummary } from './compliance-summary';
 
 export function CompliancePage() {

@@ -1,6 +1,6 @@
 import { Alert, AlertDescription, AlertTitle } from '@yuta/ui';
 import { KeyRound, TriangleAlert } from 'lucide-react';
-import type { IntegrationResultMessage } from './integrations-model';
+import type { IntegrationResultMessage } from '../integrations-model';
 
 export function IntegrationStatusAlerts({
   resultMessage,

@@ -1,4 +1,4 @@
-import { TodayDashboard } from './today-dashboard';
+import { TodayDashboard } from './_components/today-dashboard';
 import { loadTodayDashboard } from './today-data';
 
 export default async function TodayPage() {

@@ -5,12 +5,12 @@ import { ChevronRight } from 'lucide-react';
 import {
   complianceDomainFixtures,
   priorityActionFixtures,
-} from './compliance-fixtures';
+} from '../compliance-fixtures';
 import {
   getComplianceDomainBorder,
   getComplianceDueClass,
   type ComplianceDomain,
-} from './compliance-model';
+} from '../compliance-model';
 
 export function ComplianceOverview({
   selectedId,

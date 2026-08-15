@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import { StockPrototypeTableFooter } from '../src/app/(authenticated)/stock/stock-prototype-table-footer';
+import { StockPrototypeTableFooter } from '../src/app/(authenticated)/stock/_components/stock-prototype-table-footer';
 
 describe('StockPrototypeTableFooter', () => {
   it('reports only the visible fixture count without fake pagination', () => {

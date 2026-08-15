@@ -2,16 +2,16 @@
 
 import { Card } from '@yuta/ui';
 import { useMemo, useState } from 'react';
-import { PrototypeBackofficeNotice } from '../../../../components/backoffice/prototype-backoffice-notice';
+import { PrototypeBackofficeNotice } from '../../../../../components/backoffice/prototype-backoffice-notice';
 import { SupplierDetails } from './supplier-details';
-import { supplierFixtures } from './suppliers-fixtures';
+import { supplierFixtures } from '../suppliers-fixtures';
 import { SuppliersHeader } from './suppliers-header';
 import {
   filterSuppliers,
   getSelectedSupplier,
   type SupplierFilters,
   type SupplierTab,
-} from './suppliers-model';
+} from '../suppliers-model';
 import { SuppliersSummary } from './suppliers-summary';
 import { SuppliersTable } from './suppliers-table';
 import { SuppliersToolbar } from './suppliers-toolbar';

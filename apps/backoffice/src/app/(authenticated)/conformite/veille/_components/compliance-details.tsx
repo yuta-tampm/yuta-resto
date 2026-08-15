@@ -10,7 +10,7 @@ import {
   Pencil,
   X,
 } from 'lucide-react';
-import type { PriorityAction } from './compliance-model';
+import type { PriorityAction } from '../compliance-model';
 
 export function ComplianceDetails({
   action,

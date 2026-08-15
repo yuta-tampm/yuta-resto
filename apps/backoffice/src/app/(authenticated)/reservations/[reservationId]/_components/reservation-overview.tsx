@@ -1,6 +1,6 @@
 import { Badge, Card } from '@yuta/ui';
-import { getReservationStatusTone } from '../reservation-status-model';
-import type { ReservationDetailRecord } from './reservation-detail-model';
+import { getReservationStatusTone } from '../../reservation-status-model';
+import type { ReservationDetailRecord } from '../reservation-detail-model';
 import { ReservationStatusActions } from './reservation-status-actions';
 
 export function ReservationOverview({

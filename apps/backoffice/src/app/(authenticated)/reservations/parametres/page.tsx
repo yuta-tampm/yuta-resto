@@ -6,7 +6,7 @@ import { BackofficePage } from '../../../../components/backoffice/backoffice-pag
 import { hasBookingPermission } from '../../../../server/auth/permissions';
 import { requireBookingTenant } from '../../../../server/auth/session';
 import { cloudDatabase } from '../../../../server/cloud-database';
-import { BookingRules } from '../../etablissement/booking-rules-form';
+import { BookingRules } from '../../etablissement/_components/booking-rules-form';
 
 export default async function Page() {
   const { tenant } = await requireBookingTenant('/reservations/parametres');

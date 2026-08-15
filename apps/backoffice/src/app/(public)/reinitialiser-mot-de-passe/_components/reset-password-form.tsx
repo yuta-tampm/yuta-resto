@@ -13,7 +13,7 @@ import { LockKeyhole } from 'lucide-react';
 import Link from 'next/link';
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { resetPasswordAction, type ResetPasswordState } from './actions';
+import { resetPasswordAction, type ResetPasswordState } from '../actions';
 
 const initialState: ResetPasswordState = { error: null };
 

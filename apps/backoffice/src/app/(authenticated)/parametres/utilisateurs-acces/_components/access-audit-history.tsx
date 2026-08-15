@@ -25,10 +25,10 @@ import {
   accessAuditActionLabels,
   buildAccessAuditHref,
   type AccessAuditQuery,
-} from './access-audit-model';
-import { loadAccessAuditHistory } from './access-audit-loader';
+} from '../access-audit-model';
+import { loadAccessAuditHistory } from '../access-audit-loader';
 import { AccessAuditRetryButton } from './access-audit-retry-button';
-import { getMembershipStatusLabel, roleLabels } from './user-access-model';
+import { getMembershipStatusLabel, roleLabels } from '../user-access-model';
 
 export async function AccessAuditHistory({
   tenant,

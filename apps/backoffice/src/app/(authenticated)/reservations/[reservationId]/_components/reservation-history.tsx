@@ -2,7 +2,7 @@ import { Card } from '@yuta/ui';
 import {
   formatReservationEventDate,
   type ReservationHistoryRecord,
-} from './reservation-detail-model';
+} from '../reservation-detail-model';
 
 export function ReservationHistory({
   history,

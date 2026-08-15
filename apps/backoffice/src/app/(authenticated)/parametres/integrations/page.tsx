@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { BackofficePage } from '../../../../components/backoffice/backoffice-page';
 import { requireReputationPermission } from '../../../../server/auth/permissions';
 import { requireReputationTenant } from '../../../../server/auth/session';
-import { GoogleConnectorPanel } from './google-connector-panel';
+import { GoogleConnectorPanel } from './_components/google-connector-panel';
 import { loadGoogleIntegrationPageData } from './google-integration-loader';
-import { GoogleLocationSelectorPanel } from './google-location-selector-panel';
-import { IntegrationStatusAlerts } from './integration-status-alerts';
+import { GoogleLocationSelectorPanel } from './_components/google-location-selector-panel';
+import { IntegrationStatusAlerts } from './_components/integration-status-alerts';
 import type { IntegrationSearchParams } from './integrations-model';
 
 export const dynamic = 'force-dynamic';

@@ -8,10 +8,10 @@ import {
   BookingAdministrationSubmitButton,
   initialBookingAdministrationActionState,
 } from './booking-administration-action-feedback';
-import type { BookingSettings } from './booking-administration-model';
+import type { BookingSettings } from '../booking-administration-model';
 import { BookingPublicInformationFields } from './booking-public-information-fields';
 import { BookingRuleFields } from './booking-rule-fields';
-import { saveBookingSettingsAction } from './booking-settings-actions';
+import { saveBookingSettingsAction } from '../booking-settings-actions';
 
 export function BookingRules({
   settings,

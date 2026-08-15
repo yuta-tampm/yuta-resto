@@ -1,7 +1,7 @@
 import { Badge, Button, EmptyState, Panel } from '@yuta/ui';
 import { MessageSquareText, Star } from 'lucide-react';
 import Link from 'next/link';
-import type { TodayReviewItem, TodaySection } from './today-data';
+import type { TodayReviewItem, TodaySection } from '../today-data';
 import { TodaySectionUnavailable } from './today-section-unavailable';
 
 export function TodayReviewsPanel({

@@ -10,8 +10,8 @@ import {
 import type {
   BookingException,
   ServicePeriodOption,
-} from './booking-administration-model';
-import { createExceptionAction } from './booking-exception-actions';
+} from '../booking-administration-model';
+import { createExceptionAction } from '../booking-exception-actions';
 import { BookingExceptionFields } from './booking-exception-fields';
 
 export function BookingExceptionForm({

@@ -2,7 +2,7 @@
 
 import { Alert, AlertDescription, Button } from '@yuta/ui';
 import { useFormStatus } from 'react-dom';
-import type { ReservationActionState } from './reservation-action-state';
+import type { ReservationActionState } from '../reservation-action-state';
 
 export function ReservationActionMessage({
   state,

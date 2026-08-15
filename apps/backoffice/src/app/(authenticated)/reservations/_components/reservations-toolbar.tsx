@@ -1,6 +1,6 @@
 import { Button, Input } from '@yuta/ui';
 import Link from 'next/link';
-import type { ReservationListView } from './reservations-list-model';
+import type { ReservationListView } from '../reservations-list-model';
 
 export function ReservationsToolbar({
   selectedDate,

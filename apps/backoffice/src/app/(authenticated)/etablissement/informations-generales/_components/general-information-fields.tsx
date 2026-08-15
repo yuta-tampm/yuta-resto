@@ -4,7 +4,7 @@ import {
   countryOptions,
   type GeneralInformationProfile,
   type SetProfileText,
-} from './general-information-model';
+} from '../general-information-model';
 
 export function ProfileSection({
   number,

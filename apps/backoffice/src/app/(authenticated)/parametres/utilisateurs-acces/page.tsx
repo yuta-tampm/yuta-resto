@@ -2,13 +2,13 @@ import { createTenantUserRepository } from '@yuta/db-cloud';
 import { Suspense } from 'react';
 import { requireUserManagementTenant } from '../../../../server/auth/session';
 import { cloudDatabase } from '../../../../server/cloud-database';
-import { AccessAuditHistory } from './access-audit-history';
-import { AccessAuditLoading } from './access-audit-loading';
+import { AccessAuditHistory } from './_components/access-audit-history';
+import { AccessAuditLoading } from './_components/access-audit-loading';
 import {
   parseAccessAuditQuery,
   type AccessAuditSearchParams,
 } from './access-audit-model';
-import { UsersPage } from './users-page';
+import { UsersPage } from './_components/users-page';
 
 export const dynamic = 'force-dynamic';
 

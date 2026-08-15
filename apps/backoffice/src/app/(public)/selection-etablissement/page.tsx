@@ -8,7 +8,7 @@ import {
   authRepository,
   safeReturnTo,
 } from '../../../server/auth/session';
-import { EstablishmentSelectionForm } from './establishment-selection-form';
+import { EstablishmentSelectionForm } from './_components/establishment-selection-form';
 
 export const dynamic = 'force-dynamic';
 

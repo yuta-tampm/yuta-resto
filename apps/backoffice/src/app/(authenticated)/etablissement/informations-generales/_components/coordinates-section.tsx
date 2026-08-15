@@ -6,7 +6,7 @@ import {
 import type {
   GeneralInformationProfile,
   SetProfileText,
-} from './general-information-model';
+} from '../general-information-model';
 
 export function CoordinatesSection({
   draft,

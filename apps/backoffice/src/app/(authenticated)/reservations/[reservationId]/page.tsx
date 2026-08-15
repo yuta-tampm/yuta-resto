@@ -6,10 +6,10 @@ import { z } from 'zod';
 import { BackofficePage } from '../../../../components/backoffice/backoffice-page';
 import { requireBookingTenant } from '../../../../server/auth/session';
 import { cloudDatabase } from '../../../../server/cloud-database';
-import { ReservationEditForm } from './reservation-edit-form';
-import { ReservationHistory } from './reservation-history';
-import { ReservationNotes } from './reservation-notes';
-import { ReservationOverview } from './reservation-overview';
+import { ReservationEditForm } from './_components/reservation-edit-form';
+import { ReservationHistory } from './_components/reservation-history';
+import { ReservationNotes } from './_components/reservation-notes';
+import { ReservationOverview } from './_components/reservation-overview';
 
 type PageProps = { params: Promise<{ reservationId: string }> };
 

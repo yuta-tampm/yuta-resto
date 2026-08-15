@@ -27,11 +27,11 @@ import {
   loadEmployeeDocumentsAction,
   saveEmployeeDocumentAction,
   type SaveEmployeeDocumentActionState,
-} from './actions';
+} from '../actions';
 import {
   formatDocumentSize,
   getDocumentFileSelectionLabel,
-} from './employee-documents-model';
+} from '../employee-documents-model';
 
 type LoadState =
   | { status: 'loading'; message: null }

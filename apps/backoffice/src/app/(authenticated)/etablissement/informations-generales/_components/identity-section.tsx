@@ -6,7 +6,7 @@ import {
   safeHttpUrl,
   type GeneralInformationProfile,
   type SetProfileText,
-} from './general-information-model';
+} from '../general-information-model';
 
 export function IdentitySection({
   draft,

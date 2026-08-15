@@ -5,8 +5,8 @@ import {
   creativeFormatCards,
   popularCreativeTemplates,
   recentCreativeCreations,
-} from './creative-studio-fixtures';
-import { creativeStudioFilters } from './creative-studio-model';
+} from '../creative-studio-fixtures';
+import { creativeStudioFilters } from '../creative-studio-model';
 import { CreativeTemplateCard } from './creative-template-card';
 import { RecentCreationCard } from './recent-creation-card';
 

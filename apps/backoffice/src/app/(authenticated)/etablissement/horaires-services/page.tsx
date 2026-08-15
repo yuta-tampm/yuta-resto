@@ -5,7 +5,7 @@ import { BackofficePage } from '../../../../components/backoffice/backoffice-pag
 import { requireBookingPermission } from '../../../../server/auth/permissions';
 import { requireBookingTenant } from '../../../../server/auth/session';
 import { cloudDatabase } from '../../../../server/cloud-database';
-import { ExceptionsPanel } from '../booking-exceptions-panel';
+import { ExceptionsPanel } from '../_components/booking-exceptions-panel';
 import {
   exceptionKindLabels,
   formatTimeRange,
@@ -14,7 +14,7 @@ import {
   getDayOfWeekInTimezone,
   getNextDatedItem,
 } from '../booking-schedule-view-model';
-import { WeeklyScheduleSection } from './weekly-schedule-section';
+import { WeeklyScheduleSection } from './_components/weekly-schedule-section';
 
 type AdministrationData = Awaited<ReturnType<typeof getBookingAdministration>>;
 type ServicePeriod = AdministrationData['periods'][number];

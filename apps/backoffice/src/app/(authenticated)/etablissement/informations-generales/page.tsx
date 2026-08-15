@@ -8,7 +8,7 @@ import {
 } from '../../../../server/auth/permissions';
 import { requireAuthenticatedTenant } from '../../../../server/auth/session';
 import { cloudDatabase } from '../../../../server/cloud-database';
-import { GeneralInformationForm } from './general-information-form';
+import { GeneralInformationForm } from './_components/general-information-form';
 
 export default async function GeneralInformationPage() {
   const { tenant } = await requireAuthenticatedTenant(

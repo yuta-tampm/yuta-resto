@@ -2,15 +2,15 @@ import { findBookingEstablishmentSlug, listReservations } from '@yuta/db-cloud';
 import { BackofficePage } from '../../../components/backoffice/backoffice-page';
 import { requireBookingTenant } from '../../../server/auth/session';
 import { cloudDatabase } from '../../../server/cloud-database';
-import { ManualReservationForm } from './manual-reservation-form';
-import { ReservationsFeedback } from './reservations-feedback';
+import { ManualReservationForm } from './_components/manual-reservation-form';
+import { ReservationsFeedback } from './_components/reservations-feedback';
 import {
   getReservationListEndDate,
   resolveReservationListDate,
   resolveReservationListView,
 } from './reservations-list-model';
-import { ReservationsTable } from './reservations-table';
-import { ReservationsToolbar } from './reservations-toolbar';
+import { ReservationsTable } from './_components/reservations-table';
+import { ReservationsToolbar } from './_components/reservations-toolbar';
 
 type PageProps = {
   searchParams: Promise<{ date?: string; view?: string; created?: string }>;

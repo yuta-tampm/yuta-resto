@@ -28,7 +28,7 @@ import { useRouter } from 'next/navigation';
 import {
   updateEmployeeAction,
   type UpdateEmployeeActionState,
-} from './actions';
+} from '../actions';
 
 const initialUpdateEmployeeActionState: UpdateEmployeeActionState = {
   status: 'idle',

@@ -14,13 +14,13 @@ import {
   cn,
 } from '@yuta/ui';
 import { ArrowLeftRight, MoreVertical } from 'lucide-react';
-import { StockPrototypeTableFooter } from '../stock-prototype-table-footer';
-import { movementTypePresentation } from './stock-movement-presentation';
+import { StockPrototypeTableFooter } from '../../_components/stock-prototype-table-footer';
+import { movementTypePresentation } from '../stock-movement-presentation';
 import {
   formatStockCurrency,
   formatStockQuantity,
   type StockMovement,
-} from './stock-movements-model';
+} from '../stock-movements-model';
 
 export function StockMovementsTable({
   movements,

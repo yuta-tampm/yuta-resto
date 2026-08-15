@@ -25,8 +25,8 @@ import { useRouter } from 'next/navigation';
 import {
   setEmployeeDepartureAction,
   type DepartureEmployeeActionState,
-} from './actions';
-import { formatEmployeeDate, getEmployeeName } from './salaries-model';
+} from '../actions';
+import { formatEmployeeDate, getEmployeeName } from '../salaries-model';
 
 const initialDepartureActionState: DepartureEmployeeActionState = {
   status: 'idle',

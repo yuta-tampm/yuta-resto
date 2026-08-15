@@ -5,14 +5,14 @@ import {
   listAssignableReputationUsers,
   listFeedback,
 } from '@yuta/db-cloud';
-import { requireReputationTenant } from '../../../../server/auth/session';
-import { cloudDatabase as db } from '../../../../server/cloud-database';
+import { requireReputationTenant } from '../../../../../server/auth/session';
+import { cloudDatabase as db } from '../../../../../server/cloud-database';
 import { ReviewsPage } from './reviews-page';
 import type {
   ReviewDetailRecord,
   ReviewsPageData,
   ReviewsPageMode,
-} from './reviews-model';
+} from '../reviews-model';
 
 type ReviewSearchParams = Record<string, string | string[] | undefined>;
 

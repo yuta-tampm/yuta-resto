@@ -6,7 +6,7 @@ import { CreativeStudioHome } from './creative-studio-home';
 import {
   creativeStudioTabs,
   type CreativeStudioTab,
-} from './creative-studio-model';
+} from '../creative-studio-model';
 
 export function CreativeStudioContent({
   activeTab,

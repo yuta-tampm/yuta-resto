@@ -8,7 +8,7 @@ import { useFormStatus } from 'react-dom';
 import {
   saveGeneralInformationAction,
   type GeneralInformationActionState,
-} from './actions';
+} from '../actions';
 import { CoordinatesSection } from './coordinates-section';
 import { GeneralInformationPreview } from './general-information-preview';
 import { IdentitySection } from './identity-section';
@@ -16,7 +16,7 @@ import { LanguagesServiceModesSection } from './languages-service-modes-section'
 import {
   calculateCompletion,
   type GeneralInformationProfile,
-} from './general-information-model';
+} from '../general-information-model';
 import { PublicInformationSection } from './public-information-section';
 
 const initialState: GeneralInformationActionState = {

@@ -4,11 +4,11 @@ import type {
   RestaurantTable,
   TableAvailability,
   TableRoom,
-} from './tables-model';
+} from '../tables-model';
 import {
   tableAvailabilityStyles,
   tableAvailabilityTones,
-} from './tables-presentation';
+} from '../tables-presentation';
 
 const availabilityLegend: readonly TableAvailability[] = [
   'Disponible',
