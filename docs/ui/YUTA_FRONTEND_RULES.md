@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-09
+Last updated: 2026-08-15
 
 Protocol revision: 3
 
@@ -185,6 +185,34 @@ count.
 Keep one-route components near that route. Add `_components`, `_hooks`, `_lib`,
 or similar folders only when the implementation needs them and the convention
 fits nearby code. Do not create empty folders preemptively.
+
+### Next.js application structure
+
+For Next.js applications, use ownership scope to choose component placement:
+
+```text
+src/app
+  routing, layouts, actions, and route-owned code
+
+src/components/<domain>/
+  components reused across the application
+
+src/app/<route-group>/_components/
+  components shared by the nearest route group or route subtree
+
+src/app/<route>/_components/
+  components used by one route
+```
+
+Route-local non-UI logic may use `_lib`, `_utils`, or another name that makes
+its ownership clear. Do not create a generic `src/app/components` folder.
+Existing application-wide component folders should be organized by meaningful
+domain rather than becoming a second shared primitive library.
+
+Business-specific components remain in the owning application even when they
+are reused by several routes. Promote a component to `@yuta/ui` only when it
+is a reusable, business-domain-neutral presentation primitive with proven
+independent consumers.
 
 ### Server and client boundaries
 

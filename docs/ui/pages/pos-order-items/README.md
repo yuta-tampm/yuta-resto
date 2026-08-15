@@ -249,9 +249,9 @@ targets.
 Changed runtime files are limited to:
 
 - `apps/yuta-pos/src/app/orders/[orderId]/items/page.tsx`;
-- `apps/yuta-pos/src/app/orders/[orderId]/items/MenuItemBrowser.tsx`;
-- `apps/yuta-pos/src/app/orders/[orderId]/items/MobileOrderDialog.tsx`;
-- `apps/yuta-pos/src/app/orders/[orderId]/items/OrderItemNoteDialog.tsx`.
+- `apps/yuta-pos/src/app/orders/[orderId]/items/_components/MenuItemBrowser.tsx`;
+- `apps/yuta-pos/src/app/orders/[orderId]/items/_components/MobileOrderDialog.tsx`;
+- `apps/yuta-pos/src/app/orders/[orderId]/items/_components/OrderItemNoteDialog.tsx`.
 
 No loader, Server Action, route, contract, site-agent call, authorization,
 persistence, transaction, polling, offline, kitchen, payment, or printer

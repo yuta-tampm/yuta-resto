@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { siteAgentClient } from '../../../lib/site-agent-client';
 import { requireLocalManagementSession } from '../../../server/local-management-session';
 import { ManagementHeader } from '../_components/ManagementHeader';
-import { CreateUserDialog } from './UserDialogs';
-import { UsersManagement } from './UsersManagement';
+import { CreateUserDialog } from './_components/UserDialogs';
+import { UsersManagement } from './_components/UsersManagement';
 
 export default async function LocalUsersManagementPage() {
   const session = await requireLocalManagementSession();

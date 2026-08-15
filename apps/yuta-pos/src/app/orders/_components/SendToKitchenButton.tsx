@@ -21,7 +21,7 @@ import { useActionState, useEffect, useState } from 'react';
 import {
   sendOrderToKitchenAction,
   type SendOrderToKitchenActionState,
-} from '../actions';
+} from '../../actions';
 import { useKitchenSendSuccess } from './KitchenSendSuccessBoundary';
 
 type SendToKitchenButtonProps = {

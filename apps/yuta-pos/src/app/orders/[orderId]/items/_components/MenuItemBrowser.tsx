@@ -3,7 +3,7 @@
 import { Button, Input, cn } from '@yuta/ui';
 import { Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { addOrderItemAction } from '../../../actions';
+import { addOrderItemAction } from '../../../../actions';
 
 type MenuItemBrowserItem = {
   id: string;

@@ -10,7 +10,7 @@ import {
 import { RefreshCw, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useActionState, useEffect, useRef, useState } from 'react';
-import type { ComboActionState } from './combo-action-state';
+import type { ComboActionState } from '../combo-action-state';
 
 export const initialComboActionState: ComboActionState = {
   error: null,

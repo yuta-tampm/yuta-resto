@@ -23,7 +23,7 @@ import {
   createComboRuleAction,
   setComboRuleActiveAction,
   updateComboRuleAction,
-} from './actions';
+} from '../actions';
 import {
   ComboActionFeedback,
   ComboEditorFooter,
@@ -31,7 +31,7 @@ import {
   initialComboActionState,
   useCloseComboDialogOnSuccess,
 } from './ComboDialogSupport';
-import type { ComboRule } from './combo-model';
+import type { ComboRule } from '../combo-model';
 
 export function CreateComboRuleButton() {
   return <ComboRuleDialog />;

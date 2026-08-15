@@ -17,7 +17,7 @@ import {
   User,
 } from 'lucide-react';
 import Link from 'next/link';
-import { PosMobileFab, PosPageShell } from './components/PosPageShell';
+import { PosMobileFab, PosPageShell } from '../components/pos/PosPageShell';
 import { posApi } from '../lib/pos-api';
 import {
   isOrderVisibleInServiceDay,

@@ -17,7 +17,7 @@ import {
   getStationLabel,
   type Category,
   type Item,
-} from './catalog-model';
+} from '../catalog-model';
 
 export function CatalogOverview({ categories }: { categories: Category[] }) {
   return categories.map((category, index) => (

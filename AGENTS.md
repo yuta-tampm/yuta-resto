@@ -145,6 +145,26 @@ Public YUTA websites and the restaurant back-office use Geist Sans with
 Code, identifiers, comments, logs, commits, and technical documentation are
 English. User-facing language follows the nearest application instructions.
 
+### Next.js component placement
+
+For Next.js applications, keep `src/app` focused on routing, layouts, actions,
+and code owned by a route or route group.
+
+- Put components reused across the application in
+  `src/components/<domain>/`.
+- Put components shared by a route group or route subtree in the nearest
+  `src/app/<route-group>/_components/` folder.
+- Put components used by only one route in
+  `src/app/<route>/_components/`.
+- Put route-local non-UI logic in `_lib`, `_utils`, or another clearly named
+  ownership folder when extraction is useful.
+- Do not create a generic `src/app/components` folder.
+- Keep business-specific components in their owning application; do not
+  promote them to `@yuta/ui`.
+
+`packages/ui` continues to own only reusable, business-domain-neutral
+presentation primitives.
+
 ## Task workflow
 
 For meaningful work:

@@ -19,7 +19,7 @@ import {
   setCatalogCategoryActiveAction,
   updateCatalogCategoryAction,
   updateInstructionSettingsAction,
-} from './actions';
+} from '../actions';
 import {
   CatalogActionFeedback,
   CatalogActionSuccess,
@@ -28,7 +28,7 @@ import {
   useCatalogEditorAction,
   useCloseCatalogDialogOnSuccess,
 } from './CatalogDialogSupport';
-import type { Category, InstructionSettings } from './catalog-model';
+import type { Category, InstructionSettings } from '../catalog-model';
 
 export function CreateCategoryDialog() {
   const [open, setOpen] = useState(false);

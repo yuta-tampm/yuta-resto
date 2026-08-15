@@ -81,7 +81,7 @@ remain unchanged.
    printer command, although the shared shell truthfully displays local printer
    status.
 5. **Route, shell, and conventions:** `pos/page.tsx` composes
-   `components/PosPageShell.tsx`, `PosHeader.tsx`, and
+   `src/components/pos/PosPageShell.tsx`, `PosHeader.tsx`, and
    `PosConnectivityStatus.tsx`. Related service routes `/`, `/kitchen`,
    `/orders/[orderId]`, and `/orders/[orderId]/items` use the same shell and
    French operational presentation.

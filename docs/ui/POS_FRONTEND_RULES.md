@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering and restaurant operations
 
-Last updated: 2026-08-09
+Last updated: 2026-08-15
 
 Application: `apps/yuta-pos`
 
@@ -68,6 +68,25 @@ not recreate the screen using fixture data and reconnect behavior later.
 
 Before editing, identify the exact actions, endpoints, and contracts currently
 used by the target and the tests that protect them.
+
+## POS component placement
+
+Apply the shared Next.js ownership convention without changing the local POS
+runtime boundary:
+
+- POS-wide shell and application components live in
+  `src/components/<domain>/`;
+- components shared by an operational route subtree live in the nearest
+  `_components` folder, such as `src/app/orders/_components/`;
+- components used by one POS route live in that route's `_components` folder;
+- extracted route-local non-UI logic uses `_lib`, `_utils`, or another
+  ownership-specific folder;
+- do not create `src/app/components`;
+- keep order, kitchen, payment, printing, and management business components
+  inside `apps/yuta-pos` rather than promoting them to `@yuta/ui`.
+
+Moving a component does not authorize changing its Server/Client boundary,
+markup, actions, contracts, polling, offline behavior, or service ownership.
 
 ## Protected POS invariants
 

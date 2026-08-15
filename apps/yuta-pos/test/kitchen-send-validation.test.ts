@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   hasIncompleteVariantSelection,
   kitchenSendFeedback,
-} from '../src/app/orders/[orderId]/items/kitchen-send-validation';
+} from '../src/app/orders/[orderId]/items/_lib/kitchen-send-validation';
 
 describe('kitchen send validation', () => {
   it('blocks a pending item until its configured choices are selected', () => {

@@ -4,9 +4,9 @@ import { ChefHat, ClipboardList } from 'lucide-react';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { selectedStaffCookieName, staffSelectableRoles } from '../_pos-helpers';
-import { PosPageShell } from '../components/PosPageShell';
+import { PosPageShell } from '../../components/pos/PosPageShell';
 import { posApi } from '../../lib/pos-api';
-import { OrderEntryForm } from './OrderEntryForm';
+import { OrderEntryForm } from './_components/OrderEntryForm';
 
 export const dynamic = 'force-dynamic';
 

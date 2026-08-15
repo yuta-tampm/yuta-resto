@@ -12,7 +12,7 @@ import {
   getItemCount,
   type Category,
   type InstructionSettings,
-} from './catalog-model';
+} from '../catalog-model';
 
 export function CatalogManagement({
   categories,

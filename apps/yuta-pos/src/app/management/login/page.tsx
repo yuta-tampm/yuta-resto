@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { posApi } from '../../../lib/pos-api';
 import { getLocalManagementSession } from '../../../server/local-management-session';
-import { ManagementLoginForm } from './ManagementLoginForm';
+import { ManagementLoginForm } from './_components/ManagementLoginForm';
 
 export default async function ManagementLoginPage() {
   if (await getLocalManagementSession()) {

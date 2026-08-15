@@ -30,7 +30,7 @@ import {
   createTestPrintJobAction,
   savePrintSettingsAction,
   type PrintingActionState,
-} from './actions';
+} from '../actions';
 
 const initialState: PrintingActionState = { error: null, success: null };
 const paddingOptions = Array.from({ length: 9 }, (_, value) => String(value));

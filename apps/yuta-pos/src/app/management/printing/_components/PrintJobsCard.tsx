@@ -40,7 +40,7 @@ import {
   failPrintJobAction,
   runPrintJobCommandAction,
   type PrintingActionState,
-} from './actions';
+} from '../actions';
 
 const initialState: PrintingActionState = { error: null, success: null };
 

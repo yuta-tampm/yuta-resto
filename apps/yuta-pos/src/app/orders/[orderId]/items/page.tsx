@@ -10,24 +10,24 @@ import {
 import { CreditCard, List, TriangleAlert } from 'lucide-react';
 import Link from 'next/link';
 import { v7 as uuidv7 } from 'uuid';
-import { PosPageShell } from '../../../components/PosPageShell';
-import { AllergyAlert } from '../../../components/AllergyAlert';
-import { KitchenSendSuccessBoundary } from '../../../components/KitchenSendSuccessBoundary';
-import { SendToKitchenButton } from '../../../components/SendToKitchenButton';
-import { CategoryScroller } from './CategoryScroller';
-import { MenuItemBrowser } from './MenuItemBrowser';
-import { MobileOrderDialog } from './MobileOrderDialog';
-import { OrderItemsSendSuccess } from './OrderItemsSendSuccess';
+import { PosPageShell } from '../../../../components/pos/PosPageShell';
+import { AllergyAlert } from '../../../../components/orders/AllergyAlert';
+import { KitchenSendSuccessBoundary } from '../../_components/KitchenSendSuccessBoundary';
+import { SendToKitchenButton } from '../../_components/SendToKitchenButton';
+import { CategoryScroller } from './_components/CategoryScroller';
+import { MenuItemBrowser } from './_components/MenuItemBrowser';
+import { MobileOrderDialog } from './_components/MobileOrderDialog';
+import { OrderItemsSendSuccess } from './_components/OrderItemsSendSuccess';
 import {
   OrderItemDetails,
   OrderItemQuantityControls,
   type OrderItemPresentation,
-} from './OrderItemPresentation';
+} from './_components/OrderItemPresentation';
 import {
   hasIncompleteVariantSelection,
   isIncompleteVariantSelection,
   kitchenSendFeedback,
-} from './kitchen-send-validation';
+} from './_lib/kitchen-send-validation';
 import { posApi } from '../../../../lib/pos-api';
 import { allergySummaryFromSnapshots } from '../../../_pos-helpers';
 

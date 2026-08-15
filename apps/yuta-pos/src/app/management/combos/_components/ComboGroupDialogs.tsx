@@ -23,14 +23,14 @@ import {
   createComboGroupItemAction,
   updateComboGroupAction,
   updateComboGroupItemAction,
-} from './actions';
+} from '../actions';
 import {
   ComboActionFeedback,
   ComboEditorFooter,
   initialComboActionState,
   useCloseComboDialogOnSuccess,
 } from './ComboDialogSupport';
-import type { CatalogItem, ComboGroup, GroupItem } from './combo-model';
+import type { CatalogItem, ComboGroup, GroupItem } from '../combo-model';
 
 export function ComboGroupDialog({
   ruleId,

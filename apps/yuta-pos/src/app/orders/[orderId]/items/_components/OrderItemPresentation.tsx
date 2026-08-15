@@ -12,7 +12,7 @@ import { Minus, Plus, TriangleAlert } from 'lucide-react';
 import {
   removePendingOrderItemAction,
   updateOrderItemQuantityAction,
-} from '../../../actions';
+} from '../../../../actions';
 import { OrderItemNoteDialog } from './OrderItemNoteDialog';
 
 export type OrderItemPresentation = {

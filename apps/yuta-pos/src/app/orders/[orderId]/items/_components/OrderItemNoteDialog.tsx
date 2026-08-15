@@ -36,7 +36,7 @@ import {
   TriangleAlert,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { updateOrderItemInstructionsAction } from '../../../actions';
+import { updateOrderItemInstructionsAction } from '../../../../actions';
 
 const allergySeverityOptions: Array<{
   value: AllergySeverity;

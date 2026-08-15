@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { siteAgentClient } from '../../../lib/site-agent-client';
 import { requireLocalManagementSession } from '../../../server/local-management-session';
 import { ManagementHeader } from '../_components/ManagementHeader';
-import { ComboManagement } from './ComboManagement';
-import { CreateComboRuleButton } from './ComboRuleDialogs';
+import { ComboManagement } from './_components/ComboManagement';
+import { CreateComboRuleButton } from './_components/ComboRuleDialogs';
 
 export default async function LocalComboManagementPage() {
   const session = await requireLocalManagementSession();

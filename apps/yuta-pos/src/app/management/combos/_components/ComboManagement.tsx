@@ -3,7 +3,7 @@
 import { Card } from '@yuta/ui';
 import { useState } from 'react';
 import { ComboOverview } from './ComboOverview';
-import type { CatalogItem, ComboRule } from './combo-model';
+import type { CatalogItem, ComboRule } from '../combo-model';
 
 export function ComboManagement({
   comboRules,

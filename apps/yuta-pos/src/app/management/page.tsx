@@ -2,7 +2,7 @@ import { IconTile, PageHeader } from '@yuta/ui';
 import { ListChecks } from 'lucide-react';
 import { requireLocalManagementSession } from '../../server/local-management-session';
 import { ManagementHeader } from './_components/ManagementHeader';
-import { ManagementModules } from './ManagementModules';
+import { ManagementModules } from './_components/ManagementModules';
 
 export default async function ManagementHomePage() {
   const session = await requireLocalManagementSession();

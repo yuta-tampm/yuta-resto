@@ -23,7 +23,7 @@ import {
   createCatalogItemAction,
   setCatalogItemAvailableAction,
   updateCatalogItemAction,
-} from './actions';
+} from '../actions';
 import {
   CatalogActionFeedback,
   CatalogActionSuccess,
@@ -39,7 +39,7 @@ import {
   type Item,
   type OrderingPolicy,
   type Station,
-} from './catalog-model';
+} from '../catalog-model';
 
 export function CatalogItemDialog({
   categories,

@@ -9,13 +9,13 @@ import {
   payFullOrderAction,
   splitOrderEquallyAction,
 } from '../../../actions';
-import { PosPageShell } from '../../../components/PosPageShell';
+import { PosPageShell } from '../../../../components/pos/PosPageShell';
 import { allergySummaryFromSnapshots } from '../../../_pos-helpers';
-import { AllergyAlert } from '../../../components/AllergyAlert';
-import { EqualSplitDialogContent } from './EqualSplitDialogContent';
-import { ItemSplitDialogContent } from './ItemSplitDialogContent';
-import { PaymentCaptureForm } from './PaymentCaptureForm';
-import { PaymentChoiceDialogs } from './PaymentChoiceDialogs';
+import { AllergyAlert } from '../../../../components/orders/AllergyAlert';
+import { EqualSplitDialogContent } from './_components/EqualSplitDialogContent';
+import { ItemSplitDialogContent } from './_components/ItemSplitDialogContent';
+import { PaymentCaptureForm } from './_components/PaymentCaptureForm';
+import { PaymentChoiceDialogs } from './_components/PaymentChoiceDialogs';
 import { posApi } from '../../../../lib/pos-api';
 
 type PaymentPageProps = {

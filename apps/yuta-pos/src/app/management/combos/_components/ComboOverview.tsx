@@ -3,7 +3,7 @@
 import { Badge, Card } from '@yuta/ui';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
-import { deleteComboGroupAction, deleteComboGroupItemAction } from './actions';
+import { deleteComboGroupAction, deleteComboGroupItemAction } from '../actions';
 import { ComboDeleteAction } from './ComboDialogSupport';
 import { ComboGroupDialog, ComboGroupItemDialog } from './ComboGroupDialogs';
 import {
@@ -12,7 +12,7 @@ import {
   type CatalogItem,
   type ComboGroup,
   type ComboRule,
-} from './combo-model';
+} from '../combo-model';
 import { ComboRuleDialog, ToggleComboRuleDialog } from './ComboRuleDialogs';
 
 export function ComboOverview({

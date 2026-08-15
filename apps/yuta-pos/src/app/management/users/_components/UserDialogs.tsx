@@ -39,12 +39,12 @@ import {
   resetLocalUserPinAction,
   setLocalUserActiveAction,
   updateLocalUserAction,
-} from './actions';
-import { manageableRoles, roleLabel } from './users-model';
+} from '../actions';
+import { manageableRoles, roleLabel } from '../users-model';
 import {
   initialLocalUserActionState,
   type LocalUserActionState,
-} from './users-action-state';
+} from '../users-action-state';
 
 const dialogContentClassName =
   '[&>button:last-child]:inline-flex [&>button:last-child]:min-h-11 [&>button:last-child]:min-w-11 [&>button:last-child]:items-center [&>button:last-child]:justify-center';

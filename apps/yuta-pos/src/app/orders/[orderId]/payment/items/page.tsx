@@ -3,7 +3,7 @@ import { Badge, Button, Card, Input, Label } from '@yuta/ui';
 import { Users } from 'lucide-react';
 import Link from 'next/link';
 import { createChecksByItemsAction } from '../../../../actions';
-import { PosPageShell } from '../../../../components/PosPageShell';
+import { PosPageShell } from '../../../../../components/pos/PosPageShell';
 import { posApi } from '../../../../../lib/pos-api';
 
 type SplitItemsPageProps = {

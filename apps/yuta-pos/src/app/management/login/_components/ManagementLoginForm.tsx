@@ -15,7 +15,10 @@ import {
 } from '@yuta/ui';
 import { LockKeyhole } from 'lucide-react';
 import { useActionState, useState } from 'react';
-import { signInManagementAction, type ManagementLoginState } from '../actions';
+import {
+  signInManagementAction,
+  type ManagementLoginState,
+} from '../../actions';
 
 const initialState: ManagementLoginState = { error: null };
 

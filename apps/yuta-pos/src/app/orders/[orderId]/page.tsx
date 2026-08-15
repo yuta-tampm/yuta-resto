@@ -16,10 +16,10 @@ import Link from 'next/link';
 import { v7 as uuidv7 } from 'uuid';
 import type { ReactNode } from 'react';
 import { cancelOrderAction } from '../../actions';
-import { PosPageShell } from '../../components/PosPageShell';
+import { PosPageShell } from '../../../components/pos/PosPageShell';
 import { allergySummaryFromSnapshots } from '../../_pos-helpers';
-import { AllergyAlert } from '../../components/AllergyAlert';
-import { SendToKitchenButton } from '../../components/SendToKitchenButton';
+import { AllergyAlert } from '../../../components/orders/AllergyAlert';
+import { SendToKitchenButton } from '../_components/SendToKitchenButton';
 import { posApi, type PosOrderDetail } from '../../../lib/pos-api';
 
 type OrderPageProps = {

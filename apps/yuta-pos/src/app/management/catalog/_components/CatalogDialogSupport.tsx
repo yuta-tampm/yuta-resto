@@ -19,7 +19,7 @@ import {
   useState,
   type FormEvent,
 } from 'react';
-import type { CatalogActionState } from './actions';
+import type { CatalogActionState } from '../actions';
 
 export const initialCatalogActionState: CatalogActionState = {
   error: null,

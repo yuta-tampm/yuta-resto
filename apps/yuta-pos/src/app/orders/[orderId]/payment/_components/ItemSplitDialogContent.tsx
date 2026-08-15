@@ -5,7 +5,7 @@ import { Button, Separator, cn } from '@yuta/ui';
 import { Minus, Plus } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useMemo, useState } from 'react';
-import { calculateItemSplitDiscountCents } from './item-split-combos';
+import { calculateItemSplitDiscountCents } from '../item-split-combos';
 
 type SplitItem = {
   id: string;

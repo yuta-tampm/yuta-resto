@@ -21,10 +21,10 @@ import {
   markOrderItemSentAction,
   confirmOrderItemAllergyAction,
 } from '../actions';
-import { PosPageShell } from '../components/PosPageShell';
+import { PosPageShell } from '../../components/pos/PosPageShell';
 import { allergySummaryFromSnapshots } from '../_pos-helpers';
-import { AllergyAlert } from '../components/AllergyAlert';
-import { KitchenAutoRefresh } from './KitchenAutoRefresh';
+import { AllergyAlert } from '../../components/orders/AllergyAlert';
+import { KitchenAutoRefresh } from './_components/KitchenAutoRefresh';
 import { posApi, type PosOrder, type PosOrderItem } from '../../lib/pos-api';
 
 type KitchenPageProps = {

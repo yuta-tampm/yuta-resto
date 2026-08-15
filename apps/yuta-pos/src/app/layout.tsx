@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { IBM_Plex_Sans } from 'next/font/google';
 import './globals.css';
-import { PwaInstallPrompt } from './components/PwaInstallPrompt';
+import { PwaInstallPrompt } from '../components/pos/PwaInstallPrompt';
 
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ['latin', 'vietnamese'],

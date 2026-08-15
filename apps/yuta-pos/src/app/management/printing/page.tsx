@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { siteAgentClient } from '../../../lib/site-agent-client';
 import { requireLocalManagementCredentials } from '../../../server/local-management-session';
 import { ManagementHeader } from '../_components/ManagementHeader';
-import { PrintingAutoRefresh } from './PrintingAutoRefresh';
-import { PrintingManagement } from './PrintingManagement';
+import { PrintingAutoRefresh } from './_components/PrintingAutoRefresh';
+import { PrintingManagement } from './_components/PrintingManagement';
 
 type LocalPrintingManagementPageProps = {
   searchParams: Promise<{ page?: string }>;

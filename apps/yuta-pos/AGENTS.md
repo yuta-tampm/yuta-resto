@@ -41,6 +41,14 @@ operational rather than marketing-oriented. Preserve usable focus, status,
 loading, disabled, pending, retry, local-service, and device-disconnected
 states.
 
+Follow the repository Next.js component-placement convention. POS-wide
+components belong in `src/components/<domain>/`; route-subtree components
+belong in the nearest `_components`; one-route components belong in that
+route's `_components`; and extracted route-local non-UI logic belongs in
+`_lib`, `_utils`, or another clearly owned folder. Do not recreate
+`src/app/components`, and do not promote POS business components to
+`@yuta/ui`.
+
 Reference images are visual guidance only. They do not authorize changes to
 station routing, print classification, order/payment logic, roles, contracts,
 APIs, schema, or hardware settings.

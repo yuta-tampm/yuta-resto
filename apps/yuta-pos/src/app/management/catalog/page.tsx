@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { siteAgentClient } from '../../../lib/site-agent-client';
 import { requireLocalManagementSession } from '../../../server/local-management-session';
 import { ManagementHeader } from '../_components/ManagementHeader';
-import { CatalogManagement } from './CatalogManagement';
+import { CatalogManagement } from './_components/CatalogManagement';
 
 export default async function LocalCatalogManagementPage() {
   const session = await requireLocalManagementSession();

@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   AUTO_HOME_REDIRECT_SECONDS,
   OrderItemsSendSuccess,
-} from '../src/app/orders/[orderId]/items/OrderItemsSendSuccess';
+} from '../src/app/orders/[orderId]/items/_components/OrderItemsSendSuccess';
 
 describe('OrderItemsSendSuccess', () => {
   it('renders exactly the two approved routes without claiming print success', () => {

@@ -21,7 +21,7 @@ import {
   isLastActiveAdmin,
   roleLabel,
   roleTone,
-} from './users-model';
+} from '../users-model';
 
 export function UsersOverview({
   users,

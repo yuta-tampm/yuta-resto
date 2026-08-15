@@ -13,7 +13,7 @@ import {
   cn,
 } from '@yuta/ui';
 import { List } from 'lucide-react';
-import { SendToKitchenButton } from '../../../components/SendToKitchenButton';
+import { SendToKitchenButton } from '../../../_components/SendToKitchenButton';
 import {
   OrderItemDetails,
   OrderItemQuantityControls,
