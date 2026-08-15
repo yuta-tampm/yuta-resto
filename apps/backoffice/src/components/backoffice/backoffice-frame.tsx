@@ -20,7 +20,7 @@ import { Bell, ChevronLeft, LogOut, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState, type ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
-import { logoutAction } from '../app/(authenticated)/actions';
+import { logoutAction } from '../../app/(authenticated)/actions';
 import {
   getActiveNavigationHref,
   getVisibleNavigationSections,

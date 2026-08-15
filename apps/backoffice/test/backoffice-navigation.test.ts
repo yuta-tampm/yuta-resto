@@ -3,7 +3,7 @@ import {
   backofficeNavigationSections,
   getActiveNavigationHref,
   getVisibleNavigationSections,
-} from '../src/components/backoffice-navigation';
+} from '../src/components/backoffice/backoffice-navigation';
 
 const allCapabilities = {
   bookingEnabled: true,

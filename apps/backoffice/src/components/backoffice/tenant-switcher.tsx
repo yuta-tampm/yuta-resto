@@ -19,7 +19,7 @@ import { useFormStatus } from 'react-dom';
 import {
   switchTenantAction,
   type TenantSwitchActionState,
-} from '../app/(authenticated)/actions';
+} from '../../app/(authenticated)/actions';
 
 const initialState: TenantSwitchActionState = { error: null };
 

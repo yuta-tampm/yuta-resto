@@ -1,8 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { DisplayPlaylistItem } from '../../types/display-media';
-import { uiText } from '../../constants/ui-text';
+import type { DisplayPlaylistItem } from '../../../types/display-media';
+import { uiText } from '../../../constants/ui-text';
 
 const REFRESH_INTERVAL_MS = 60_000;
 

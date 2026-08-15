@@ -7,7 +7,7 @@ import type {
 import { Button } from '@yuta/ui';
 import { Plus } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
-import { BackofficePage } from '../../../../components/backoffice-page';
+import { BackofficePage } from '../../../../components/backoffice/backoffice-page';
 import { CreateUserDialog } from './create-user-dialog';
 import {
   countActiveMemberships,

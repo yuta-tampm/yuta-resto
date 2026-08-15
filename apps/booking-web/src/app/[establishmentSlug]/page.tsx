@@ -3,7 +3,7 @@ import { Card } from '@yuta/ui';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { cloudDatabase } from '../../server/cloud-database';
-import { BookingFlow } from './booking-flow';
+import { BookingFlow } from './_components/booking-flow';
 
 type PageProps = {
   params: Promise<{ establishmentSlug: string }>;

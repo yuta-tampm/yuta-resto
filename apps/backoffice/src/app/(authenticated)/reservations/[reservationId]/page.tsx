@@ -3,7 +3,7 @@ import { Button } from '@yuta/ui';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { z } from 'zod';
-import { BackofficePage } from '../../../../components/backoffice-page';
+import { BackofficePage } from '../../../../components/backoffice/backoffice-page';
 import { requireBookingTenant } from '../../../../server/auth/session';
 import { cloudDatabase } from '../../../../server/cloud-database';
 import { ReservationEditForm } from './reservation-edit-form';

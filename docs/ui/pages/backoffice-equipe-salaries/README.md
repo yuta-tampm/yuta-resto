@@ -90,8 +90,9 @@ Current sources:
 - integrated read composition/model:
   `apps/backoffice/src/app/(authenticated)/equipe/salaries/`;
 - authenticated layout: `apps/backoffice/src/app/(authenticated)/layout.tsx`;
-- shell/navigation: `apps/backoffice/src/components/backoffice-frame.tsx` and
-  `apps/backoffice/src/components/backoffice-navigation.ts`;
+- shell/navigation:
+  `apps/backoffice/src/components/backoffice/backoffice-frame.tsx` and
+  `apps/backoffice/src/components/backoffice/backoffice-navigation.ts`;
 - session/tenant resolution: `apps/backoffice/src/server/auth/session.ts`;
 - permissions: `apps/backoffice/src/server/auth/permissions.ts`;
 - cloud schema authority: `packages/db-cloud/src/schema/`.

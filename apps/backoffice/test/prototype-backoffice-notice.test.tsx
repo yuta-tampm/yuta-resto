@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import { PrototypeBackofficeNotice } from '../src/components/prototype-backoffice-notice';
+import { PrototypeBackofficeNotice } from '../src/components/backoffice/prototype-backoffice-notice';
 
 describe('PrototypeBackofficeNotice', () => {
   it('identifies fixture-backed surfaces and unavailable persisted actions', () => {

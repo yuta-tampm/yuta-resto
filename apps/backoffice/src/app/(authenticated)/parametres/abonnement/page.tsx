@@ -1,4 +1,4 @@
-import { PlannedBackofficePage } from '../../../../components/planned-backoffice-page';
+import { PlannedBackofficePage } from '../../../../components/backoffice/planned-backoffice-page';
 
 export default function Page() {
   return (

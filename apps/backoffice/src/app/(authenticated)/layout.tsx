@@ -1,4 +1,4 @@
-import { BackofficeFrame } from '../../components/backoffice-frame';
+import { BackofficeFrame } from '../../components/backoffice/backoffice-frame';
 import {
   authRepository,
   requireAuthenticatedTenant,

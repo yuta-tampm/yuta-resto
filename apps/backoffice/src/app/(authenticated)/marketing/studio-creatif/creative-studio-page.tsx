@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { PrototypeBackofficeNotice } from '../../../../components/prototype-backoffice-notice';
+import { PrototypeBackofficeNotice } from '../../../../components/backoffice/prototype-backoffice-notice';
 import { CreativeGeneratorPanel } from './creative-generator-panel';
 import { CreativeInspirationCard } from './creative-inspiration-card';
 import { CreativeStudioContent } from './creative-studio-content';

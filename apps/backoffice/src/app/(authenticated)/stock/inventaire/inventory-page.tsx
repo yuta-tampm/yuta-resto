@@ -2,7 +2,7 @@
 
 import { Card } from '@yuta/ui';
 import { useMemo, useState } from 'react';
-import { PrototypeBackofficeNotice } from '../../../../components/prototype-backoffice-notice';
+import { PrototypeBackofficeNotice } from '../../../../components/backoffice/prototype-backoffice-notice';
 import { InventoryDetails } from './inventory-details';
 import { inventoryItemFixtures } from './inventory-fixtures';
 import { InventoryHeader } from './inventory-header';

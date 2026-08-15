@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { cloudDatabase as db } from '../../server/cloud-database';
 import { resolveFeedbackTenant } from '../../server/resolve-public-feedback';
-import { FeedbackForm } from './feedback-form';
+import { FeedbackForm } from './_components/feedback-form';
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {

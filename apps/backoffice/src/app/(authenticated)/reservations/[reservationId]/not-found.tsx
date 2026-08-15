@@ -1,7 +1,7 @@
 import { Button, Card, EmptyState } from '@yuta/ui';
 import { CalendarX } from 'lucide-react';
 import Link from 'next/link';
-import { BackofficePage } from '../../../../components/backoffice-page';
+import { BackofficePage } from '../../../../components/backoffice/backoffice-page';
 
 export default function NotFound() {
   return (

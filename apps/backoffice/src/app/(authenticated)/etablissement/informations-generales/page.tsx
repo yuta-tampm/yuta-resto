@@ -1,7 +1,7 @@
 import { getEstablishmentProfile } from '@yuta/db-cloud';
 import { requireEstablishment } from '@yuta/tenant';
 import { notFound } from 'next/navigation';
-import { BackofficePage } from '../../../../components/backoffice-page';
+import { BackofficePage } from '../../../../components/backoffice/backoffice-page';
 import {
   hasEstablishmentPermission,
   requireEstablishmentPermission,

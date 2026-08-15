@@ -1,7 +1,7 @@
 import { getBookingAdministration } from '@yuta/db-cloud';
 import { Card, Separator } from '@yuta/ui';
 import { CalendarDays, CheckCircle2 } from 'lucide-react';
-import { BackofficePage } from '../../../../components/backoffice-page';
+import { BackofficePage } from '../../../../components/backoffice/backoffice-page';
 import { requireBookingPermission } from '../../../../server/auth/permissions';
 import { requireBookingTenant } from '../../../../server/auth/session';
 import { cloudDatabase } from '../../../../server/cloud-database';

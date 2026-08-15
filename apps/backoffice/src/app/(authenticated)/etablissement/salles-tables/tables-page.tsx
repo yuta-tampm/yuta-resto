@@ -1,8 +1,8 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { BackofficePage } from '../../../../components/backoffice-page';
-import { PrototypeBackofficeNotice } from '../../../../components/prototype-backoffice-notice';
+import { BackofficePage } from '../../../../components/backoffice/backoffice-page';
+import { PrototypeBackofficeNotice } from '../../../../components/backoffice/prototype-backoffice-notice';
 import { TableDetails } from './table-details';
 import { TableMap } from './table-map';
 import { TableRoomSelector } from './table-room-selector';

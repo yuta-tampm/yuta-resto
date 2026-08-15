@@ -1,7 +1,7 @@
 import { Button } from '@yuta/ui';
 import { ExternalLink, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
-import { BackofficePage } from '../../../../components/backoffice-page';
+import { BackofficePage } from '../../../../components/backoffice/backoffice-page';
 import { requireReputationPermission } from '../../../../server/auth/permissions';
 import { requireReputationTenant } from '../../../../server/auth/session';
 import { GoogleConnectorPanel } from './google-connector-panel';

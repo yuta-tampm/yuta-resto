@@ -7,7 +7,7 @@ import { CalendarDays, Users } from 'lucide-react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { cloudDatabase } from '../../../../server/cloud-database';
-import { CancelReservationButton } from './cancel-reservation-button';
+import { CancelReservationButton } from './_components/cancel-reservation-button';
 
 type PageProps = {
   params: Promise<{ establishmentSlug: string; publicToken: string }>;
