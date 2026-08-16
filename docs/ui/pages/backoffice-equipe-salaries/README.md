@@ -622,3 +622,10 @@ legacy nullable CDD editing, tenant isolation, idempotency, conflict, and
 minimized audit tests pass. Signed-in browser QA passed at 1440 x 1000,
 1024 x 768, 768 x 1024, and 390 x 844 with no horizontal page/drawer overflow
 or console errors. The four as-built captures are listed in `references/README.md`.
+
+A Phase 5 visual correction replaced the sparse edge-aligned rows in `Identité`
+and the primary `Relation de travail` section with the same responsive key-fact
+card language as the overview. Signed-in follow-up QA covered both tabs at the
+same four viewport sizes. All eight states have no page or drawer horizontal
+overflow and no browser console errors; the correction captures are listed in
+`references/README.md`. No personnel data or behavior changed.

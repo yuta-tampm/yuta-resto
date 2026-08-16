@@ -441,6 +441,9 @@ Read-slice evidence:
 - [x] 1440/1024/768/390 layouts have no page or drawer horizontal overflow.
 - [x] Select dismissal keeps its containing modal open; no console error occurs.
 - [x] Four local as-built captures are retained in `references/`.
+- [x] The corrected `Identité` and `Relation de travail` tabs use responsive
+      key-fact cards at 1440/1024/768/390 without page or drawer overflow.
+- [x] Eight correction captures retain both corrected tabs at all four sizes.
 - [x] Temporary QA dossier, audit events, command receipts, and cleanup script
       are removed after capture.
 - [ ] Production legal/privacy/security/retention/operations approval is recorded.

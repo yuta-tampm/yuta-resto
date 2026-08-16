@@ -201,3 +201,22 @@ drawer, scrollable mobile tabs, and stacked narrow cards without horizontal
 drawer overflow. `QA Wave C Phase 5` and every displayed employment value are
 non-personal test evidence. The exact dossier, audit events, and retry receipts
 were removed after capture. These images do not authorize production use.
+
+### Wave C Phase 5 visual-correction evidence
+
+The following signed-in local captures record the corrected `Identité` and
+primary `Relation de travail` key-fact cards:
+
+- `wave-c-phase-5-as-built-identity-1440x1000.png`;
+- `wave-c-phase-5-as-built-employment-1440x1000.png`;
+- `wave-c-phase-5-as-built-identity-1024x768.png`;
+- `wave-c-phase-5-as-built-employment-1024x768.png`;
+- `wave-c-phase-5-as-built-identity-768x1024.png`;
+- `wave-c-phase-5-as-built-employment-768x1024.png`;
+- `wave-c-phase-5-as-built-identity-390x844.png`;
+- `wave-c-phase-5-as-built-employment-390x844.png`.
+
+These captures verify two-column cards where space permits, one-column narrow
+layout, preserved drawer/tab behavior, and no page or drawer horizontal
+overflow. They reuse existing non-personal local evidence and introduce no data
+mutation or production approval.
