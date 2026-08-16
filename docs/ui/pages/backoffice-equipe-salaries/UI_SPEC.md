@@ -53,6 +53,8 @@ prototype unless repository constraints require a documented deviation:
 - a structured dossier header with identity/status separated from secondary
   actions, followed by a stable tab bar and a responsive two-column key-fact
   grid on the overview tab;
+- the `Identité` and `Relation de travail` tabs use the same responsive key-fact
+  card language instead of stretching label/value rows across the wide drawer;
 - mobile list cards and a full-width detail drawer rather than a squeezed split
   layout.
 
@@ -171,6 +173,35 @@ role, contract, or other structured employee changes from the file. Amendment
 number, signature date, effective date, required/optional rules, and ordering
 remain visibly non-authoritative proposals until approved.
 
+The generated 1440/1024/768/390 references are `APPROVED FOR PHASE 1 PROTOTYPE
+ONLY`. They keep the base contract separate, introduce an `Avenants signés`
+section, and stack amendment actions responsively. The local prototype must add
+a visible `Prototype` badge and `Aperçu sans sauvegarde` notice, use obviously
+fictional filenames, label the date as proposed, and disable every amendment
+action so it cannot be mistaken for persisted behavior.
+
+### Documents Wave B Phase 2 proposed interaction contract
+
+For a later approved real-data slice, each card represents one distinct legal
+amendment. The effective date becomes required display/order metadata, while an
+optional bounded reference may be shown only when supplied by the operator.
+Cards are ordered by newest effective date and loaded ten at a time with
+previous/next cursor controls only when another page exists.
+
+`Remplacer` must identify the selected amendment and explain that it corrects
+that amendment's scan without creating a new legal amendment. Add and replace
+preserve submitted metadata after validation, scan, storage, or conflict errors.
+The existing protected-access notice and PDF/10 MiB help remain authoritative.
+No UI control may edit amendment metadata, delete/archive an amendment, infer
+employee fields from PDF content, or expose a stable file URL in this phase.
+
+The Phase 3 local implementation replaces the fixture cards with this real
+interaction contract. Empty, loading, load failure/retry, validation, scanning,
+persisted success, conflict, available, and paged states are active. Add and
+replace use an inline bounded form; mobile actions stack and long filenames
+truncate without hiding their accessible title. Production-only and deferred
+controls remain absent.
+
 ## Required discovery states
 
 Loading, first-use empty, forbidden, validation, conflict, pending,
@@ -203,3 +234,81 @@ remuneration, payroll,
 Formalités, contract generation, DPAE/DSN, apprenticeship, register/PDF,
 legal-compliance claims, and backend/schema design are out of Phase 1. They are
 retained as future capability waves in `PRODUCT_SCOPE.md`.
+
+## Wave C Phase 0 UI discovery scope
+
+Use the current employee drawer and its existing `Relation de travail` tab.
+Preserve the employee header, actions, tab order, drawer widths, Backoffice
+shell, French copy, semantic components/tokens, and current real employment
+summary. Do not add another route, tab, KPI, global HR navigation item, or
+Formalités action.
+
+The proposed design may add one clearly separated section named
+`Informations contractuelles complémentaires` containing:
+
+- a CDD-reason row/control shown only when the existing contract is CDD, with
+  an explicit not-applicable state for CDI;
+- contractual weekly duration in `heures par semaine`, without deriving it from
+  full-/part-time category, Planning, or Pointage;
+- concise missing-information help and a neutral statement that Formalités is
+  not yet available, with no link or workflow action.
+
+Design loading, complete, incomplete, not-applicable, forbidden, validation,
+pending, conflict, save-error/retry, and success studies. Because Phase 0 does
+not authorize implementation, generated edit/success states are interaction
+proposals only and must be marked DRAFT. Use no remuneration, probation,
+part-time-distribution, apprenticeship, document extraction, Formalités status,
+generation, alert, register, PDF, OCR, manager, or self-service controls.
+
+Produce DRAFT studies at 1440, 1024, 768, and 390 px. At smaller widths, stack
+field content and actions, keep labels/errors connected, retain visible focus,
+avoid horizontal overflow, and preserve the current dossier-tab scrolling
+behavior. Product approval allowed prompt execution and the selected visual
+direction authorized a local Phase 1 prototype on 2026-08-16. The implemented
+section is read-only, labelled `Prototype` and `Aperçu sans sauvegarde`, and
+uses no persistence, permission, contract, or server behavior.
+
+### Wave C Phase 1 prototype fidelity
+
+The real employment summary remains unchanged. A separate complementary card
+shows the two fictional values and a neutral Formalités-unavailable notice. It
+does not duplicate the header edit action or render an open edit form. The
+existing `Modifier` action continues to edit only supported real fields. CDI
+renders the CDD reason as not applicable; CDD renders the clearly fictional
+example. Both tablet and mobile layouts stack safely using the existing drawer
+and tab-strip behavior.
+
+### Wave C Phase 2 proposed interaction contract
+
+The real read state would replace the prototype disclosure only after a safe
+read slice exists. Missing legacy values display `Non renseigné`; CDI displays
+`Non applicable — contrat CDI` for the reason. Neither state changes current
+completeness. The Salaries list, KPIs, filters, tabs, and drawer header remain
+unchanged.
+
+The existing `Modifier` dialog remains the single edit surface. When contract
+type is CDD, it shows one controlled reason select containing the four approved
+labels and separate numeric `Heures` / `Minutes` inputs for contractual weekly
+duration. CDI hides the reason control and explains that saving a CDD-to-CDI
+change clears the previous reason. No free-text fallback is offered; an
+unsupported case presents `Cas non pris en charge` and blocks that update.
+
+Preserve submitted values after validation, conflict, or save failure. Show a
+confirmation before clearing a CDD reason, existing pending behavior while
+saving, existing stale-revision recovery, and a persisted success message only
+after the real server mutation commits. Do not infer full-/part-time category,
+open a second dialog, add a local save button, or expose Formalités actions.
+
+Required Phase 3 QA covers CDD supported/unsupported, CDI not-applicable,
+legacy missing values, 1-minute and 48-hour boundaries, invalid minutes,
+contract-type transitions, conflict, retry, forbidden, narrow layouts, focus,
+labels/errors, and preserved input.
+
+### Wave C Phase 3 local as-built UI
+
+The complementary card now displays persisted employee values and no longer
+shows `Prototype` or `Aperçu sans sauvegarde`. Missing legacy values display
+`Non renseigné`; CDI keeps the reason not-applicable message. The existing
+`Modifier` dialog contains the controlled CDD reason and separate weekly hours
+and minutes inputs. A CDD-to-CDI change with a stored reason exposes a required
+confirmation checkbox. No second edit action or Formalités control was added.

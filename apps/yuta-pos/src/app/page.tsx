@@ -1,39 +1,37 @@
-import { formatEuros, getServiceDayWindow } from '@yuta/core';
+import type { LocalOrdersHomeView } from '@yuta/contracts/local-pos';
+import { formatEuros } from '@yuta/core';
 import { Badge, Button, Card, Input, SegmentedNav, Separator } from '@yuta/ui';
 import {
   ChefHat,
+  ChevronLeft,
+  ChevronRight,
   Clock,
   CreditCard,
   ExternalLink,
   Eye,
-  MoreHorizontal,
   Plus,
   ReceiptText,
   Search,
   Send,
   Settings,
-  SlidersHorizontal,
   TriangleAlert,
   User,
 } from 'lucide-react';
 import Link from 'next/link';
 import { PosMobileFab, PosPageShell } from '../components/pos/PosPageShell';
-import { posApi } from '../lib/pos-api';
-import {
-  isOrderVisibleInServiceDay,
-  type OrdersHomeView,
-} from './orders-service-day';
+import { posApi, type PosOrderHomeRow } from '../lib/pos-api';
 
 type OrdersHomePageProps = {
   searchParams: Promise<{
     view?: string;
     q?: string;
+    page?: string;
   }>;
 };
 
-type OrderView = OrdersHomeView;
+type OrderView = LocalOrdersHomeView;
 
-type OrderRow = Awaited<ReturnType<typeof getOrders>>[number];
+type OrderRow = PosOrderHomeRow;
 
 const views: Array<{ value: OrderView; label: string; shortLabel: string }> = [
   { value: 'open', label: 'Ouvertes', shortLabel: 'Ouvertes' },
@@ -52,50 +50,31 @@ const views: Array<{ value: OrderView; label: string; shortLabel: string }> = [
 export default async function OrdersHomePage({
   searchParams,
 }: OrdersHomePageProps) {
-  const { view, q } = await searchParams;
+  const { view, q, page } = await searchParams;
   const selectedView = parseView(view);
   const searchQuery = q?.trim() ?? '';
-  const serviceDay = getServiceDayWindow(new Date());
-  const [openOrders, paidTodayOrders, todayOrders] = await Promise.all([
-    getOrders('open', serviceDay),
-    getOrders('paid_today', serviceDay),
-    getOrders('all_today', serviceDay),
-  ]);
-  const sourceRows =
-    selectedView === 'open'
-      ? openOrders
-      : selectedView === 'paid_today'
-        ? paidTodayOrders
-        : todayOrders;
-  const orderRows = filterOrders(sourceRows, searchQuery);
+  const homeData = await posApi.listOrdersHome({
+    view: selectedView,
+    q: searchQuery,
+    page: parsePage(page),
+    limit: 50,
+  });
+  const orderRows = homeData.orders;
   return (
     <PosPageShell
       title="Commandes"
       description="Suivi des commandes du service"
       actions={
-        <>
-          <Button asChild variant="primary" size="lg">
-            <Link href="/pos">
-              <Plus className="h-4 w-4" />
-              Nouvelle commande
-            </Link>
-          </Button>
-          <Button asChild variant="secondary" size="lg">
-            <Link href="/kitchen">
-              <ChefHat className="h-4 w-4" />
-              Cuisine
-            </Link>
-          </Button>
-          <Button asChild variant="secondary" size="lg">
-            <Link href="/management">
-              <Settings className="h-4 w-4" />
-              Gestion
-            </Link>
-          </Button>
-        </>
+        <Button asChild variant="primary" size="lg">
+          <Link href="/pos">
+            <Plus className="h-4 w-4" />
+            Nouvelle commande
+          </Link>
+        </Button>
       }
+      secondaryActions={<HomeSecondaryActions />}
       subHeader={
-        <div className="grid gap-4 px-4 py-4">
+        <div className="grid w-full gap-4 px-4 py-4">
           <div className="flex items-center gap-3">
             <SegmentedNav className="[scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {views.map((item) => (
@@ -105,7 +84,7 @@ export default async function OrdersHomePage({
                   variant={
                     item.value === selectedView ? 'primary' : 'secondary'
                   }
-                  className="shrink-0 px-3 text-xs sm:px-4 sm:text-sm"
+                  className="min-h-11 shrink-0 px-3 text-xs sm:px-4 sm:text-sm"
                 >
                   <Link href={homeUrl(item.value, searchQuery)}>
                     <span className="sm:hidden">{item.shortLabel}</span>
@@ -113,8 +92,8 @@ export default async function OrdersHomePage({
                     {item.value !== 'all_today' && (
                       <span className="rounded-full bg-surface-muted px-1.5 py-0.5 text-[10px] font-black text-primary">
                         {item.value === 'open'
-                          ? openOrders.length
-                          : paidTodayOrders.length}
+                          ? homeData.counts.open
+                          : homeData.counts.paidToday}
                       </span>
                     )}
                   </Link>
@@ -131,12 +110,17 @@ export default async function OrdersHomePage({
                 name="q"
                 defaultValue={searchQuery}
                 placeholder="Rechercher (table, n commande...)"
-                className="pl-10"
+                className="min-h-11 pl-10"
               />
             </div>
-            <Button variant="secondary" className="shrink-0">
-              <SlidersHorizontal className="h-4 w-4" />
-              <span className="hidden xl:inline">Filtres</span>
+            <Button
+              type="submit"
+              variant="secondary"
+              aria-label="Rechercher"
+              className="min-h-11 shrink-0"
+            >
+              <Search className="h-4 w-4" />
+              <span className="hidden xl:inline">Rechercher</span>
             </Button>
           </form>
         </div>
@@ -149,42 +133,47 @@ export default async function OrdersHomePage({
         />
       }
       contentClassName="px-4 py-4"
-      maxWidthClassName="max-w-7xl"
+      prominentHeader
     >
-      {orderRows.length === 0 ? (
-        <EmptyOrders />
-      ) : (
-        <>
-          <MobileOrderList orders={orderRows} />
-          <TabletOrderList orders={orderRows} />
-          <DesktopOrderTable orders={orderRows} />
-        </>
-      )}
+      <div className="w-full">
+        {orderRows.length === 0 ? (
+          <EmptyOrders />
+        ) : (
+          <>
+            <MobileOrderList orders={orderRows} />
+            <TabletOrderList orders={orderRows} />
+            <DesktopOrderTable orders={orderRows} />
+          </>
+        )}
+        {homeData.pagination.totalPages > 1 && (
+          <OrdersPagination
+            view={selectedView}
+            searchQuery={searchQuery}
+            pagination={homeData.pagination}
+          />
+        )}
+      </div>
     </PosPageShell>
   );
 }
 
-async function getOrders(
-  selectedView: OrderView,
-  serviceDay: { start: Date; end: Date },
-) {
-  const details = await posApi.listOrderDetails();
-  return details
-    .map((detail) => ({ ...detail.order, items: detail.items }))
-    .filter((order) =>
-      isOrderVisibleInServiceDay(order, selectedView, serviceDay),
-    )
-    .toSorted((left, right) => {
-      const leftDate =
-        selectedView === 'paid_today'
-          ? (left.paidAt ?? left.createdAt)
-          : left.createdAt;
-      const rightDate =
-        selectedView === 'paid_today'
-          ? (right.paidAt ?? right.createdAt)
-          : right.createdAt;
-      return rightDate.getTime() - leftDate.getTime();
-    });
+function HomeSecondaryActions() {
+  return (
+    <>
+      <Button asChild variant="secondary" size="lg" className="w-full">
+        <Link href="/kitchen">
+          <ChefHat className="h-4 w-4" />
+          Cuisine
+        </Link>
+      </Button>
+      <Button asChild variant="secondary" size="lg" className="w-full">
+        <Link href="/management">
+          <Settings className="h-4 w-4" />
+          Gestion
+        </Link>
+      </Button>
+    </>
+  );
 }
 
 function MobileOrderList({ orders: orderRows }: { orders: OrderRow[] }) {
@@ -247,13 +236,18 @@ function DesktopOrderTable({ orders: orderRows }: { orders: OrderRow[] }) {
                 {formatTime(order.createdAt)}
               </p>
               <p className="self-center text-sm text-primary/65">
-                {order.items.length} article(s)
+                {order.itemCount} article(s)
               </p>
               <p className="self-center font-black">
                 {formatEuros(order.totalCents)}
               </p>
               <div className="flex items-center justify-end gap-2">
-                <Button asChild variant="secondary" size="sm">
+                <Button
+                  asChild
+                  variant="secondary"
+                  size="sm"
+                  className="min-h-11"
+                >
                   <Link href={`/orders/${order.id}`}>
                     {order.status === 'paid' ? (
                       <Eye className="h-4 w-4" />
@@ -264,9 +258,6 @@ function DesktopOrderTable({ orders: orderRows }: { orders: OrderRow[] }) {
                   </Link>
                 </Button>
                 {renderPrimaryOrderAction(order)}
-                <Button variant="ghost" size="sm" aria-label="Options">
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
               </div>
             </div>
             {index < orderRows.length - 1 && <Separator />}
@@ -289,7 +280,6 @@ function OrderCard({ order }: { order: OrderRow }) {
             <p className="mt-2 truncate text-sm font-semibold text-primary/55">
               {order.orderNumber}
             </p>
-            {orderHasAllergy(order) && <OrderAllergyBadge />}
           </div>
           <StatusBadge status={order.status} />
           {orderHasAllergy(order) && <OrderAllergyBadge />}
@@ -301,13 +291,13 @@ function OrderCard({ order }: { order: OrderRow }) {
           </span>
           <span className="inline-flex items-center gap-1">
             <User className="h-3.5 w-3.5" />
-            {order.items.length} article(s)
+            {order.itemCount} article(s)
           </span>
         </div>
         <div className="flex items-center justify-between gap-3">
           <p className="text-xl font-black">{formatEuros(order.totalCents)}</p>
           <div className="flex gap-2">
-            <Button asChild variant="secondary" size="sm">
+            <Button asChild variant="secondary" size="sm" className="min-h-11">
               <Link href={`/orders/${order.id}`}>
                 <ExternalLink className="h-4 w-4" />
                 Ouvrir
@@ -331,7 +321,7 @@ function OrderAllergyBadge() {
 }
 
 function orderHasAllergy(order: OrderRow): boolean {
-  return order.hasAllergy || order.items.some((item) => item.hasAllergy);
+  return order.hasAllergy;
 }
 
 function TabletOrderRow({ order }: { order: OrderRow }) {
@@ -355,13 +345,13 @@ function TabletOrderRow({ order }: { order: OrderRow }) {
         </div>
         <div className="mt-2 flex items-center gap-4 text-xs font-semibold text-primary/55">
           <span>{formatTime(order.createdAt)}</span>
-          <span>{order.items.length} article(s)</span>
+          <span>{order.itemCount} article(s)</span>
         </div>
       </div>
       <div className="grid justify-items-end gap-2">
         <p className="font-black">{formatEuros(order.totalCents)}</p>
         <div className="flex gap-2">
-          <Button asChild variant="secondary" size="sm">
+          <Button asChild variant="secondary" size="sm" className="min-h-11">
             <Link href={`/orders/${order.id}`}>
               <ExternalLink className="h-4 w-4" />
               Ouvrir
@@ -383,7 +373,7 @@ function EmptyOrders() {
         <p className="mt-1 text-sm text-primary/55">
           Cette vue est vide pour le moment.
         </p>
-        <Button asChild variant="primary" className="mt-4">
+        <Button asChild variant="primary" className="mt-4 min-h-11">
           <Link href="/pos">
             <Plus className="h-4 w-4" />
             Nouvelle commande
@@ -405,7 +395,7 @@ function renderPrimaryOrderAction(order: OrderRow) {
 
   if (order.status === 'draft') {
     return (
-      <Button asChild variant="primary" size="sm">
+      <Button asChild variant="primary" size="sm" className="min-h-11">
         <Link href={`/orders/${order.id}`}>
           <Send className="h-4 w-4" />
           Envoyer
@@ -415,7 +405,7 @@ function renderPrimaryOrderAction(order: OrderRow) {
   }
 
   return (
-    <Button asChild variant="primary" size="sm">
+    <Button asChild variant="primary" size="sm" className="min-h-11">
       <Link href={`/orders/${order.id}/payment`}>
         <CreditCard className="h-4 w-4" />
         Payer
@@ -424,28 +414,69 @@ function renderPrimaryOrderAction(order: OrderRow) {
   );
 }
 
-function filterOrders(orderRows: OrderRow[], searchQuery: string): OrderRow[] {
-  if (searchQuery.length === 0) {
-    return orderRows;
-  }
-
-  const normalizedQuery = searchQuery.toLocaleLowerCase('fr-FR');
-
-  return orderRows.filter(
-    (order) =>
-      order.tableLabel.toLocaleLowerCase('fr-FR').includes(normalizedQuery) ||
-      order.orderNumber.toLocaleLowerCase('fr-FR').includes(normalizedQuery),
-  );
-}
-
-function homeUrl(view: OrderView, searchQuery: string): string {
+function homeUrl(view: OrderView, searchQuery: string, page?: number): string {
   const params = new URLSearchParams({ view });
 
   if (searchQuery.length > 0) {
     params.set('q', searchQuery);
   }
+  if (page && page > 1) {
+    params.set('page', String(page));
+  }
 
   return `/?${params.toString()}`;
+}
+
+function OrdersPagination({
+  view,
+  searchQuery,
+  pagination,
+}: {
+  view: OrderView;
+  searchQuery: string;
+  pagination: {
+    page: number;
+    totalPages: number;
+    totalItems: number;
+  };
+}) {
+  return (
+    <nav
+      aria-label="Pagination des commandes"
+      className="mt-4 flex items-center justify-between gap-3 border-t border-border-default pt-4"
+    >
+      {pagination.page > 1 ? (
+        <Button asChild variant="secondary" className="min-h-11">
+          <Link href={homeUrl(view, searchQuery, pagination.page - 1)}>
+            <ChevronLeft className="h-4 w-4" />
+            Précédent
+          </Link>
+        </Button>
+      ) : (
+        <Button variant="secondary" className="min-h-11" disabled>
+          <ChevronLeft className="h-4 w-4" />
+          Précédent
+        </Button>
+      )}
+      <p className="text-center text-sm font-semibold text-primary/65">
+        Page {pagination.page} sur {pagination.totalPages} ·{' '}
+        {pagination.totalItems} commande(s)
+      </p>
+      {pagination.page < pagination.totalPages ? (
+        <Button asChild variant="secondary" className="min-h-11">
+          <Link href={homeUrl(view, searchQuery, pagination.page + 1)}>
+            Suivant
+            <ChevronRight className="h-4 w-4" />
+          </Link>
+        </Button>
+      ) : (
+        <Button variant="secondary" className="min-h-11" disabled>
+          Suivant
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      )}
+    </nav>
+  );
 }
 
 function parseView(value: string | undefined): OrderView {
@@ -454,6 +485,11 @@ function parseView(value: string | undefined): OrderView {
   }
 
   return 'open';
+}
+
+function parsePage(value: string | undefined): number {
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : 1;
 }
 
 function statusLabel(status: string): string {

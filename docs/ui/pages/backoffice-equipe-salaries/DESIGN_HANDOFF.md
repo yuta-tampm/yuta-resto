@@ -273,9 +273,9 @@ the drawer full-width at 768 px and below.
 
 Capability mode: `NEW_CAPABILITY_DISCOVERY`
 
-Capability scope status: `DRAFT — AWAITING PRODUCT APPROVAL`
+Capability scope status: `APPROVED FOR PHASE 1 PROTOTYPE ONLY`
 
-Design prompt status: `READY — NOT AUTHORIZED TO RUN`
+Design prompt status: `EXECUTED — REFERENCES APPROVED FOR PHASE 1`
 
 The containing `/equipe/salaries` page and Documents tab are integrated locally.
 The amendment flow itself is absent, so its capability baseline is
@@ -363,6 +363,104 @@ correction versions is obvious without inventing backend, legal, or production
 capability.
 ```
 
-Stop after Phase 0. Running this prompt requires explicit product-owner
-authorization. Generated output starts as `DRAFT` and cannot authorize schema,
-contracts, migrations, permissions, storage, or implementation.
+The product owner approved Phase 0 and authorized prompt execution on
+2026-08-15. Built-in ImageGen produced:
+
+- `references/documents-wave-b-design-draft-desktop-1440-02.png`;
+- `references/documents-wave-b-design-draft-tablet-1024-01.png`;
+- `references/documents-wave-b-design-draft-tablet-768-01.png`;
+- `references/documents-wave-b-design-draft-mobile-390-01.png`.
+
+The first desktop output was revised to remove redundant row chevrons, and the
+first mobile output was revised to remove a redundant three-dot menu while
+keeping the three visible amendment actions. The product owner approved the
+selected four references and a typed-fixture local Phase 1 prototype on
+2026-08-15. They do not authorize schema, contracts, migrations, permissions,
+storage, real file actions, or data implementation.
+
+## Wave C Phase 0 handoff — complementary employment facts
+
+Status: `EXECUTED — DRAFT REFERENCES AWAITING REVIEW`
+
+Wave C is `NEW_CAPABILITY_DISCOVERY` within the integrated Salaries dossier.
+Use `REUSE_APPROVED_SHARED_SHELL`: the Backoffice shell, Salaries list, employee
+drawer, employee header/actions, existing tabs, and current `Relation de
+travail` content remain authoritative. Generated references may explore
+presentation only; they cannot approve fields, enums, validation, permissions,
+persistence, or a Formalités workflow.
+
+### Ready-to-run Wave C design prompt
+
+```text
+Create responsive DRAFT design images and short annotations, not implementation
+code, for Wave C inside the existing employee dossier drawer on YUTA
+Backoffice route `/equipe/salaries`.
+
+This is NEW_CAPABILITY_DISCOVERY for complementary employment facts within an
+already integrated page. Reuse the approved Backoffice shell and current
+Salaries employee drawer. Preserve the employee identity/status/actions, tab
+order, current responsive drawer widths, and existing real content in the
+`Relation de travail` tab. Do not redesign the shell, navigation, employee
+list, KPIs, drawer header, or create another route, tab, HR hub, or Formalités
+page.
+
+Primary operator: OWNER of the active establishment. MANAGER, STAFF, employee
+self-service, public users, and service actors are denied. Every example
+belongs to the selected organization + establishment + employee dossier. Show
+a non-disclosing forbidden study.
+
+Explore only a clearly separated section named `Informations contractuelles
+complémentaires` with two proposed facts:
+1. `Motif du CDD`, using a controlled-choice pattern only when the existing
+   contract is CDD and a clear not-applicable presentation for CDI. Labels are
+   fictional discovery examples, not an approved enum. Do not use free text or
+   identify a replaced employee.
+2. `Durée hebdomadaire contractuelle`, displayed in hours per week. Do not
+   derive it from `Temps plein`/`Temps partiel`, Planning, Pointage, a document,
+   or an uploaded filename.
+
+Keep the existing contract type, expected end date, work-time category, entry
+date, departure date, and revision authoritative. Show present, missing,
+not-applicable, loading, forbidden, validation with preserved input, pending,
+conflict, save failure with retry, and success proposals. Mark edit and success
+states DRAFT because no persistence is approved. A neutral message may say
+that Formalités is not yet available, but include no link, status, badge,
+generated document, or action.
+
+Do not show remuneration, payroll, bank/tax/social-security data, probation,
+probation renewal, detailed part-time distribution, apprenticeship, schedule
+generation, Formalités templates/clauses/status/generation/e-signature,
+DPAE/DSN, provider or government submission, alerts, register/PDF, OCR,
+extraction, automatic employee updates, manager delegation, employee
+self-service, transfer, merge, public sharing, or production claims.
+
+Use French UI copy, Geist Sans, existing YUTA semantic roles and current
+Card/Badge/Button/Alert/form patterns, and Lucide-style icons. Use no raw hex
+colors, gradients, glassmorphism, or new component system. Preserve keyboard
+operation, visible focus, connected labels/errors, text-backed states, touch
+targets, and truthful disabled/pending behavior.
+
+Return DRAFT studies at 1440, 1024, 768, and 390 px. Stack fields and actions
+safely at narrow widths, avoid page/drawer overflow, and retain the current
+dossier-tab horizontal scrolling behavior where needed. Success means OWNER
+can understand the two proposed reusable facts and their missing/not-applicable
+states without implying that Formalités, persistence, or sensitive deferred
+data already exists.
+```
+
+The product owner approved the Phase 0 MVP, boundary, deferred list, and prompt
+execution on 2026-08-16. Built-in ImageGen produced four selected DRAFT
+references:
+
+- `references/wave-c-design-draft-desktop-1440-01.png`;
+- `references/wave-c-design-draft-tablet-1024-01.png`;
+- `references/wave-c-design-draft-tablet-768-01.png`;
+- `references/wave-c-design-draft-mobile-390-01.png`.
+
+The first desktop generation was revised before selection: the duplicate local
+edit button was removed, complementary values became read-only by default, and
+the `Motif du CDD` label was corrected. The existing header `Modifier` action is
+now the only edit entry point in every selected study. These references remain
+DRAFT presentation evidence. The product owner approved them for a route-local
+Phase 1 prototype on 2026-08-16. That approval does not authorize schema,
+migration, contract, API, permission, repository, action, or real data.

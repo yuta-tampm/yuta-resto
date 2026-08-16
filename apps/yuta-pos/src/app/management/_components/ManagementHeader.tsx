@@ -21,7 +21,7 @@ export function ManagementHeader({
 }) {
   return (
     <header className="border-b border-primary bg-primary text-inverse shadow-sm">
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-4 py-3 md:px-6">
+      <div className="flex w-full items-center justify-between gap-3 px-4 py-3 md:px-6">
         <Link
           href="/management"
           aria-label="Retour à la gestion locale"

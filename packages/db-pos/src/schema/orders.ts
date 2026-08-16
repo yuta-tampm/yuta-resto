@@ -82,6 +82,7 @@ export const orders = pgTable(
   (table) => [
     uniqueIndex('orders_order_number_unique_idx').on(table.orderNumber),
     index('orders_status_idx').on(table.status),
+    index('orders_status_paid_at_idx').on(table.status, table.paidAt),
     index('orders_created_at_idx').on(table.createdAt),
     index('orders_created_by_idx').on(table.createdBy),
     check(

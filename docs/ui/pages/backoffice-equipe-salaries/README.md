@@ -1,12 +1,12 @@
 # Backoffice Équipe — Salariés
 
-Status: Partially integrated — real read, create, edit, departure, and history slices
+Status: Implemented locally — production gates remain open
 
 Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-08-15
+Last updated: 2026-08-16
 
 Protocol revision: 4
 
@@ -22,7 +22,7 @@ Page classification: `NEW_PAGE`
 
 Implementation class: `integrated`
 
-Package status: `implementation-ready`
+Package status: `implemented`
 
 Scope status: `APPROVED`
 
@@ -76,9 +76,12 @@ Documents Wave B now has a completed read-only Phase 0 for
 the current category enum, contracts, repository, action, UI, and tests support
 only the base signed employment contract. Phase 0 proposes an OWNER-only local
 flow for multiple amendments, keeps each amendment distinct from the base
-contract and from correction versions, records date/ordering questions, and
-provides a ready design prompt. The prompt has not been authorized or executed,
-and no runtime, schema, migration, API, permission, or storage change was made.
+contract and from correction versions, and records date/ordering questions. The
+product owner approved Phase 0 and authorized prompt execution on 2026-08-15.
+Four responsive references were approved for a typed-fixture local Phase 1
+prototype. The implemented preview shows two fictional amendments, a persistent
+no-save notice, and disabled add/view/download/replace controls. No runtime,
+schema, migration, API, permission, repository, or storage behavior was added.
 
 The route remains under `NEW_CAPABILITY_DISCOVERY` until the approved write
 slices and final QA are complete. `users` and `tenant_memberships` remain login
@@ -296,19 +299,77 @@ four responsive visual references. The product owner approved those references
 and the typed-fixture prototype on 2026-08-15. This approval does not authorize
 real document implementation.
 
-### Documents Phase 1 prototype evidence
+### Documents Wave B Phase 1 prototype evidence
 
 The existing employee drawer now includes a `Documents` tab backed only by a
 route-local typed fixture. It contains two explicitly fictional examples, a
 persistent demonstration notice, and disabled add, view, and replace controls.
+The download controls are disabled as well.
 The fixture carries no resource ID, URL, storage key, tenant value, transport
 contract, or persistence behavior. Tabs remain horizontally scrollable on
 narrow screens, long labels truncate, and document actions stack responsively.
 The right-side drawer is capped at 60 rem on wide desktop screens, uses up to
 88% of the viewport at the 1024 px breakpoint, and remains full-width at 768 px
-and below.
+and below. Signed-in browser QA passed at 1440 x 1000, 1024 x 768, 768 x 1024,
+and 390 x 844. The prototype remained readable at every size, its fictional
+actions remained disabled, and mobile cards stacked without horizontal page
+overflow.
 
-### Documents Phase 2 technical-design status
+### Documents Wave B Phase 2 technical-design status
+
+Phase 2 was authorized on 2026-08-15 for documentation only. The recommended
+local design uses a separate establishment-owned amendment aggregate because
+the implemented base-contract record intentionally allows only one current
+document for its category. Each legal amendment is distinct; replacing a bad
+scan creates an immutable version of that same amendment.
+
+The proposal requires an effective date, permits one optional bounded reference,
+orders newest effective date first, and returns ten items per cursor page. It
+reuses the existing OWNER-only document permissions and provider-neutral private
+storage/scanner boundaries. One Documents-open audit event covers both sections
+to avoid duplicate consultation entries. Real file actions, schemas, contracts,
+and repositories remain blocked pending AB2-01 through AB2-09 approval and a
+separate Phase 3 authorization. Production/legal/operations gates remain open.
+
+### Documents Wave B Phase 3 local implementation
+
+AB2-01 through AB2-09 and local implementation were approved on 2026-08-15.
+Migration `0008_omniscient_colonel_america.sql` adds a separate scoped amendment
+aggregate, immutable versions, and hashed retry receipts without changing the
+base signed-contract category. The Phase 1 fixture was removed.
+
+The Documents tab now loads real amendments ten at a time, adds a required
+effective date and optional reference, replaces only the selected amendment's
+scan, and reauthorizes every server-mediated view/download. It reuses the
+existing OWNER-only document permissions, private local storage, Defender
+inspection, minimized audit taxonomy, and production fail-closed runtime.
+AB2-10 and every production provider/retention/rights/operations task remain
+deferred. Signed-in browser QA passed for the real empty state, add form, cancel
+behavior, and responsive layout at 1440 x 1000, 1024 x 768, 768 x 1024, and
+390 x 844.
+
+### Documents Wave B Phase 5 local QA
+
+Phase 5 completed on 2026-08-15 against the signed-in local LUNA OWNER session.
+A generated non-personal PDF passed Defender inspection, was added as a real
+amendment, opened through the protected server route, downloaded as an
+attachment, and replaced to create immutable version 2. The guarded repository
+test also recreated more than ten scoped amendments, verified ten-item cursor
+pages, and removed its own data.
+
+QA found and corrected one recovery defect: a rejected file submission reset
+the effective date and reference. The action now returns only those two safe
+form values after an error, and the client restores them while still requiring
+the file to be selected again. The previous success notice is also cleared when
+a new add or replace form opens. Backoffice tests and typecheck pass after the
+correction.
+
+Responsive as-built evidence at 1440 x 1000, 1024 x 768, 768 x 1024, and
+390 x 844 confirms the real amendment card, version, actions, scroll behavior,
+and absence of page or drawer overflow. This completes local Wave B QA only;
+production remains blocked by AB2-10.
+
+### Documents Wave A Phase 2 technical-design status
 
 Phase 2 was authorized on 2026-08-15 for documentation only. The page pack now
 proposes a conceptual document/version aggregate, private-storage and
@@ -486,3 +547,78 @@ the same employee; reusing its key with different values fails. Integration
 tests clean their data and prove scoped creation, duplicate review, audit, and
 idempotency behavior. Production employee collection remains blocked by the
 existing controller/legal and operational-security approvals.
+
+## Wave C Phase 0 evidence
+
+Wave C read-only discovery was prepared on 2026-08-16 under
+`NEW_CAPABILITY_DISCOVERY`. It remains inside this stable Salaries page pack
+because it extends the existing employee dossier rather than implementing the
+planned `/equipe/formalites-personnel` page.
+
+The proposed smallest MVP adds no runtime behavior. It explores a controlled
+CDD reason and contractual weekly duration in the existing `Relation de
+travail` tab, for OWNER only and scoped to the active organization,
+establishment, and employee dossier. Salariés owns reusable employment facts;
+Documents remains evidence-only; future Formalités owns its legal validation,
+templates, clauses, generation, status, submission, and lifecycle.
+
+Remuneration, probation, detailed part-time distribution, apprenticeship,
+Formalités workflows, alerts/events, register/PDF, OCR, manager delegation,
+self-service, transfer, merge, and all production legal/security/retention work
+remain explicitly deferred. `DESIGN_HANDOFF.md` contains a ready-to-run French
+design prompt for 1440/1024/768/390 DRAFT studies.
+
+The product owner approved Wave C Phase 0 and design-prompt execution on
+2026-08-16. Four selected responsive references are stored as DRAFT. The first
+desktop proposal was corrected to remove a duplicate edit action and show
+complementary values as read-only by default.
+
+The product owner approved the selected visual direction and a local Phase 1
+prototype on 2026-08-16. The existing `Relation de travail` tab now includes a
+typed fictional complementary-information section with explicit `Prototype`
+and `Aperçu sans sauvegarde` disclosure. It uses the existing responsive drawer,
+adds no second edit action, and does not change the real edit dialog.
+
+The prototype creates no schema, migration, enum, contract, API, permission,
+repository, server action, audit event, Formalités workflow, or real employee
+data. Phase 2 interaction/data discovery requires separate approval.
+
+## Wave C Phase 2 evidence
+
+Phase 2 technical discovery was authorized and completed as documentation-only
+on 2026-08-16. `DATA_AND_INTERACTION_SPEC.md` now proposes:
+
+- nullable CDD-reason code and integer contractual weekly minutes;
+- four restaurant-relevant supported CDD reasons with no free-text fallback;
+- CDI/CDD transition, legacy-null, numeric, conflict, retry, and failure rules;
+- reuse of the establishment employee aggregate, OWNER-only permissions,
+  existing edit flow, revision/idempotency protection, minimized audit, and
+  dossier-open trace;
+- later read, edit, create, fixture-removal, and QA vertical slices.
+
+WC2-01 through WC2-12 and local Phase 3 were approved on 2026-08-16. The
+additive nullable migration, safe read projection, existing create/edit flow,
+CDD transition confirmation, minimized audit fields, and real detail card are
+implemented locally. The fictional fixture and no-save notice were removed.
+
+No new permission or route was introduced: the existing OWNER-only employee
+scope and organization + establishment repository predicates remain
+authoritative. Production deployment and collection remain blocked pending the
+separate legal, privacy, retention, security, and operations gates.
+
+## Wave C Phase 5 local QA
+
+Phase 5 completed on 2026-08-16 against the signed-in local LUNA OWNER session.
+A non-personal `QA Wave C Phase 5` dossier was created as CDD with a controlled
+reason and 24 h 30 weekly duration, read back through the real drawer, changed
+to CDI through the required confirmation, and removed with its exact local
+audit/retry records after capture.
+
+QA found and corrected one interaction defect: after an unconfirmed CDD-to-CDI
+submission the form could return to its original values. The save action is now
+disabled until the explicit confirmation is checked, while the server-side
+guard remains authoritative. Contract bounds, unsupported reason rejection,
+legacy nullable CDD editing, tenant isolation, idempotency, conflict, and
+minimized audit tests pass. Signed-in browser QA passed at 1440 x 1000,
+1024 x 768, 768 x 1024, and 390 x 844 with no horizontal page/drawer overflow
+or console errors. The four as-built captures are listed in `references/README.md`.

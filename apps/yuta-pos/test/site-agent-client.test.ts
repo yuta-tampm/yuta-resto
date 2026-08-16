@@ -573,6 +573,55 @@ describe('yuta-pos site-agent client', () => {
     });
   });
 
+  it('loads the bounded Home summary from one versioned endpoint', async () => {
+    const fetchImplementation = vi.fn<typeof fetch>().mockResolvedValue(
+      Response.json({
+        serviceDay: {
+          start: '2026-07-27T03:00:00.000Z',
+          end: '2026-07-28T03:00:00.000Z',
+        },
+        view: 'paid_today',
+        query: 'Terrasse',
+        orders: [
+          {
+            ...orderSnapshot,
+            status: 'paid',
+            paidAt: checkedAt,
+            itemCount: 2,
+          },
+        ],
+        counts: {
+          open: 1,
+          paidToday: 1,
+          allToday: 2,
+        },
+        pagination: {
+          page: 2,
+          pageSize: 50,
+          totalItems: 51,
+          totalPages: 2,
+        },
+      }),
+    );
+    const client = createSiteAgentClient({
+      baseUrl: 'http://site-agent.test',
+      fetchImplementation,
+    });
+
+    const result = await client.listOrdersHome({
+      view: 'paid_today',
+      q: 'Terrasse',
+      page: 2,
+      limit: 50,
+    });
+
+    expect(result.orders[0]?.itemCount).toBe(2);
+    expect(fetchImplementation).toHaveBeenCalledWith(
+      'http://site-agent.test/api/v1/orders/home?view=paid_today&page=2&limit=50&q=Terrasse',
+      expect.objectContaining({ cache: 'no-store' }),
+    );
+  });
+
   it('uses the versioned financial endpoints', async () => {
     const payment = {
       id: '019c9b83-7c2d-70e5-8000-000000000005',

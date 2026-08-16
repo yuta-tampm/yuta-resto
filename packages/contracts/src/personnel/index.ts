@@ -19,6 +19,12 @@ export const personnelWorkTimeCategorySchema = z.enum([
   'full_time',
   'part_time',
 ]);
+export const personnelFixedTermReasonCodeSchema = z.enum([
+  'employee_replacement',
+  'temporary_activity_increase',
+  'seasonal_employment',
+  'customary_use_employment',
+]);
 export const personnelCompletenessReasonSchema = z.enum([
   'given_names_missing',
   'family_name_missing',
@@ -55,7 +61,9 @@ export const personnelEmployeeSummarySchema = z
     qualification: z.string().max(120),
     employmentTermType: personnelEmploymentTermTypeSchema,
     expectedEndDate: dateOnlySchema.nullable(),
+    fixedTermReasonCode: personnelFixedTermReasonCodeSchema.nullable(),
     workTimeCategory: personnelWorkTimeCategorySchema,
+    contractWeeklyMinutes: z.number().int().min(1).max(2_880).nullable(),
     entryDate: dateOnlySchema,
     departureDate: dateOnlySchema.nullable(),
     view: personnelEmployeeViewSchema,
@@ -92,7 +100,9 @@ export const createPersonnelEmployeeInputSchema = z
     qualification: personnelRequiredTextSchema,
     employmentTermType: personnelEmploymentTermTypeSchema,
     expectedEndDate: dateOnlySchema.nullable(),
+    fixedTermReasonCode: personnelFixedTermReasonCodeSchema.nullable(),
     workTimeCategory: personnelWorkTimeCategorySchema,
+    contractWeeklyMinutes: z.number().int().min(1).max(2_880),
     entryDate: dateOnlySchema,
     confirmDuplicate: z.boolean().default(false),
     duplicateOverrideReason: z.string().trim().min(3).max(250).nullable(),
@@ -111,6 +121,26 @@ export const createPersonnelEmployeeInputSchema = z
         code: z.ZodIssueCode.custom,
         path: ['expectedEndDate'],
         message: 'An indefinite term must not have an expected end date.',
+      });
+    }
+    if (
+      input.employmentTermType === 'fixed_term' &&
+      !input.fixedTermReasonCode
+    ) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['fixedTermReasonCode'],
+        message: 'A supported reason is required for a fixed term.',
+      });
+    }
+    if (
+      input.employmentTermType === 'indefinite' &&
+      input.fixedTermReasonCode
+    ) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['fixedTermReasonCode'],
+        message: 'An indefinite term must not have a fixed-term reason.',
       });
     }
     if (input.expectedEndDate && input.expectedEndDate < input.entryDate) {
@@ -140,8 +170,11 @@ export const updatePersonnelEmployeeInputSchema = z
     qualification: personnelRequiredTextSchema,
     employmentTermType: personnelEmploymentTermTypeSchema,
     expectedEndDate: dateOnlySchema.nullable(),
+    fixedTermReasonCode: personnelFixedTermReasonCodeSchema.nullable(),
     workTimeCategory: personnelWorkTimeCategorySchema,
+    contractWeeklyMinutes: z.number().int().min(1).max(2_880).nullable(),
     entryDate: dateOnlySchema,
+    confirmFixedTermReasonClear: z.boolean().default(false),
   })
   .strict()
   .superRefine((input, context) => {
@@ -157,6 +190,16 @@ export const updatePersonnelEmployeeInputSchema = z
         code: z.ZodIssueCode.custom,
         path: ['expectedEndDate'],
         message: 'An indefinite term must not have an expected end date.',
+      });
+    }
+    if (
+      input.employmentTermType === 'indefinite' &&
+      input.fixedTermReasonCode
+    ) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['fixedTermReasonCode'],
+        message: 'An indefinite term must not have a fixed-term reason.',
       });
     }
     if (input.expectedEndDate && input.expectedEndDate < input.entryDate) {
@@ -206,7 +249,9 @@ export const personnelEmployeeAuditFieldSchema = z.enum([
   'qualification',
   'employmentTermType',
   'expectedEndDate',
+  'fixedTermReasonCode',
   'workTimeCategory',
+  'contractWeeklyMinutes',
   'entryDate',
   'departureDate',
 ]);
@@ -299,6 +344,73 @@ export const savePersonnelDocumentMetadataInputSchema = z
   })
   .strict();
 
+const personnelContractAmendmentReferenceSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(80)
+  .refine((value) => !/[\u0000-\u001F\u007F]/u.test(value), {
+    message: 'Control characters are not allowed.',
+  });
+
+const personnelContractAmendmentFileMetadataShape = {
+  filename: z.string().trim().min(1).max(180),
+  mediaType: z.literal('application/pdf'),
+  byteSize: z
+    .number()
+    .int()
+    .positive()
+    .max(10 * 1024 * 1024),
+  checksum: z.string().regex(/^[a-f0-9]{64}$/u),
+  storageKey: identifierSchema,
+} as const;
+
+export const personnelContractAmendmentSchema = z
+  .object({
+    id: identifierSchema,
+    employeeId: identifierSchema,
+    effectiveDate: dateOnlySchema,
+    reference: personnelContractAmendmentReferenceSchema.nullable(),
+    filename: z.string().min(1).max(180),
+    mediaType: z.literal('application/pdf'),
+    byteSize: z
+      .number()
+      .int()
+      .positive()
+      .max(10 * 1024 * 1024),
+    version: z.number().int().positive(),
+    revision: z.number().int().positive(),
+    uploadedAt: isoDateTimeSchema,
+  })
+  .strict();
+
+export const personnelContractAmendmentListSchema = z
+  .object({
+    items: z.array(personnelContractAmendmentSchema).max(10),
+    pageInfo: pageInfoSchema,
+  })
+  .strict();
+
+export const createPersonnelContractAmendmentMetadataInputSchema = z
+  .object({
+    idempotencyKey: identifierSchema,
+    employeeId: identifierSchema,
+    effectiveDate: dateOnlySchema,
+    reference: personnelContractAmendmentReferenceSchema.nullable(),
+    ...personnelContractAmendmentFileMetadataShape,
+  })
+  .strict();
+
+export const replacePersonnelContractAmendmentMetadataInputSchema = z
+  .object({
+    idempotencyKey: identifierSchema,
+    employeeId: identifierSchema,
+    amendmentId: identifierSchema,
+    expectedRevision: z.number().int().positive(),
+    ...personnelContractAmendmentFileMetadataShape,
+  })
+  .strict();
+
 export type PersonnelEmployeeView = z.infer<typeof personnelEmployeeViewSchema>;
 export type PersonnelCompletenessReason = z.infer<
   typeof personnelCompletenessReasonSchema
@@ -346,4 +458,16 @@ export type PersonnelDocument = z.infer<typeof personnelDocumentSchema>;
 export type PersonnelDocumentList = z.infer<typeof personnelDocumentListSchema>;
 export type SavePersonnelDocumentMetadataInput = z.infer<
   typeof savePersonnelDocumentMetadataInputSchema
+>;
+export type PersonnelContractAmendment = z.infer<
+  typeof personnelContractAmendmentSchema
+>;
+export type PersonnelContractAmendmentList = z.infer<
+  typeof personnelContractAmendmentListSchema
+>;
+export type CreatePersonnelContractAmendmentMetadataInput = z.infer<
+  typeof createPersonnelContractAmendmentMetadataInputSchema
+>;
+export type ReplacePersonnelContractAmendmentMetadataInput = z.infer<
+  typeof replacePersonnelContractAmendmentMetadataInputSchema
 >;

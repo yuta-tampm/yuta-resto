@@ -1,8 +1,6 @@
 import type { LocalUser } from '@yuta/contracts/local-pos';
-import { Badge, Button } from '@yuta/ui';
-import { ChefHat, ClipboardList } from 'lucide-react';
+import { Badge } from '@yuta/ui';
 import { cookies } from 'next/headers';
-import Link from 'next/link';
 import { selectedStaffCookieName, staffSelectableRoles } from '../_pos-helpers';
 import { PosPageShell } from '../../components/pos/PosPageShell';
 import { posApi } from '../../lib/pos-api';
@@ -49,32 +47,9 @@ export default async function PosHome() {
             />
             Service actif
           </Badge>
-          <Button
-            asChild
-            variant="secondary"
-            size="lg"
-            className="sm:min-h-14 sm:px-7"
-          >
-            <Link href="/">
-              <ClipboardList className="h-4 w-4" />
-              Commandes
-            </Link>
-          </Button>
-          <Button
-            asChild
-            variant="secondary"
-            size="lg"
-            className="sm:min-h-14 sm:px-7"
-          >
-            <Link href="/kitchen">
-              <ChefHat className="h-4 w-4" />
-              Cuisine
-            </Link>
-          </Button>
         </>
       }
       prominentHeader
-      maxWidthClassName="max-w-none"
       contentClassName="px-4 py-5 sm:px-6 sm:py-8"
     >
       <OrderEntryForm

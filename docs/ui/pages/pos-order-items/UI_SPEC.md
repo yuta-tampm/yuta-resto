@@ -11,9 +11,15 @@ behavior is authoritative; later images may guide hierarchy only.
 
 ## Shared UI context
 
-Use `REUSE_CURRENT_TARGET`: compact dark POS header, logo/home, back action,
-payment action, and truthful local-service strip. Keep current service-time
-density and adjacent route vocabulary; exclude Backoffice and management shells.
+Use `REUSE_APPROVED_SHARED_SHELL`: the shared prominent desktop
+`PosPageShell`/`PosHeader`, logo/home, payment action, and truthful local-service
+strip. The shared header has no leading back-arrow action. Below `lg`, retain
+the shared compact menu behavior. At every width, the three-line menu exposes
+the real `Commandes` -> `/`, `Cuisine` -> `/kitchen`, and `Gestion` ->
+`/management` destinations. Keep
+current service-time density and adjacent route vocabulary; exclude Backoffice
+and management shells. Do not add the Home-only direct `Nouvelle commande`
+action.
 
 ## Current baseline
 

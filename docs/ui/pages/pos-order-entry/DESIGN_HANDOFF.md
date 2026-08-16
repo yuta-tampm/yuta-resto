@@ -34,9 +34,11 @@ Shell mode: `REUSE_APPROVED_SHARED_SHELL`
 Owners are `PosPageShell.tsx`, `PosHeader.tsx`, and
 `PosConnectivityStatus.tsx`, supported by current `/pos` and related routes.
 
-- Header: YUTA logo/home, `Nouvelle commande`, current description,
-  `Service actif`, `Commandes`, and `Cuisine`.
-- Visible primary destinations: `/` and `/kitchen` only.
+- Header: YUTA logo/home, `Nouvelle commande`, current description, direct
+  route-owned `Service actif`, and the shared three-line navigation menu.
+- Menu destinations: `Commandes` -> `/`, `Cuisine` -> `/kitchen`, and
+  `Gestion` -> `/management`. Do not add a direct Home-only
+  `Nouvelle commande` navigation action.
 - Success continuation: `/orders/<created-id>/items` through the existing
   action redirect, not a static design link.
 - Sidebar, bottom navigation, tenant/account/session area: none.
@@ -97,9 +99,9 @@ Input images: Image 1 is `current-baseline-1366x768.png`, the current real opera
 Scene/backdrop: One 1366 x 768 application viewport, no browser chrome or device frame.
 Operator context: Restaurant service staff on a local desktop/tablet POS. Speed, legibility, touch reachability, and recovery matter more than decoration.
 Style/medium: Shippable French operational UI; compact, calm, restrained, high contrast; not a marketing/dashboard composition.
-Shell/navigation: Reuse the shared POS shell exactly in hierarchy: dark header with YUTA logo/home, `Nouvelle commande`, `Creer une commande pour le service`, `Service actif`, `Commandes` -> `/`, `Cuisine` -> `/kitchen`, then the truthful local-service status strip. No sidebar, bottom navigation, tenant/account area, management navigation, notifications, or replacement shell.
+Shell/navigation: Reuse the shared POS shell exactly in hierarchy: dark header with YUTA logo/home, `Nouvelle commande`, `Creer une commande pour le service`, direct route-owned `Service actif`, the three-line menu with `Commandes` -> `/`, `Cuisine` -> `/kitchen`, and `Gestion` -> `/management`, then the truthful local-service status strip. Do not add Home's direct `Nouvelle commande` navigation action. No sidebar, bottom navigation, tenant/account area, notifications, or replacement shell.
 Page hierarchy: One direct creation task. Employee attribution and table/reference first; all three order types visibly selectable; optional general note; one dominant create action. Blocking errors remain adjacent to the form. No steps, tabs, accordions, or dashboard cards.
-Text (verbatim): `Nouvelle commande`; `Creer une commande pour le service`; `Service actif`; `Commandes`; `Cuisine`; `Employe`; `Choisir employe`; `Table / Repere`; `Terrasse 5`; `Type de commande`; `Sur place`; `A emporter`; `Livraison`; `Note (optionnel)`; `Ex: Anniversaire, demande generale...`; `Creer la commande`; `Aucun employe actif disponible pour creer une commande.`
+Text (verbatim): `Nouvelle commande`; `Creer une commande pour le service`; `Service actif`; `Commandes`; `Cuisine`; `Gestion`; `Employe`; `Choisir employe`; `Table / Repere`; `Terrasse 5`; `Type de commande`; `Sur place`; `A emporter`; `Livraison`; `Note (optionnel)`; `Ex: Anniversaire, demande generale...`; `Creer la commande`; `Aucun employe actif disponible pour creer une commande.`
 Real data/content: A selected local employee such as `YuTa Staff` may illustrate the state, but generated names are non-authoritative. Use only employee, table/reference, order type, and optional note.
 Required state studies: healthy/default; no eligible employee with disabled creation; submit pending; field-associated required/validation feedback preserving values; employee became unavailable with refresh/reselect recovery; site-agent/database unavailable; Internet unavailable while local service remains usable. These are design states, not authorization for runtime changes. Success remains the redirect to `/orders/<id>/items`, not a new dashboard, toast, or receipt.
 Protected invariants: `apps/yuta-pos -> apps/site-agent -> packages/db-pos -> local PostgreSQL`; no cloud dependency/sync; selected employee is attribution, not authentication; site-agent validates active non-kitchen staff; exact types are dine-in, takeaway, delivery; table/reference is free text; new orders are draft; IDs are service-generated UUIDv7; browser receives no DB/device secrets; `/pos` performs no print command; printer failure does not redefine creation; no fixtures.

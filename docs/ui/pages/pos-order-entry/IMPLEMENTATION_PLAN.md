@@ -120,6 +120,11 @@ shared `PosHeader`/`PosPageShell` components and is enabled only by `/pos`;
 sibling routes keep their existing density. The compact menu begins below
 `lg`, preventing action wrapping at the 768px tablet viewport.
 
+Product-owner follow-up on 2026-08-16 standardizes the prominent desktop
+header across all non-management `PosPageShell` routes. `/pos` retains its
+existing content and actions; the direct `Nouvelle commande` navigation action
+remains exclusive to Home `/`.
+
 ## Delivery evidence
 
 Report files, invariants, exact commands/results, skipped guarded checks,

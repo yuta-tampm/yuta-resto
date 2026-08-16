@@ -16,8 +16,10 @@ hierarchy, density, proportions, spacing, responsive composition, and tone.
 Shell mode is `REUSE_APPROVED_SHARED_SHELL`.
 
 - Reuse `PosPageShell`, `PosHeader`, and `PosConnectivityStatus` hierarchy.
-- Keep logo/home, title/description, `Commandes`, `Cuisine`, responsive action
-  menu, and the truthful status strip.
+- Keep logo/home, title/description, the direct route-owned `Service actif`
+  badge, the shared three-line `Commandes`/`Cuisine`/`Gestion` navigation, and
+  the truthful status strip. Do not add the Home-only direct
+  `Nouvelle commande` navigation action.
 - Reuse POS typography, `@yuta/ui`, semantic tokens, Lucide, focus, keyboard,
   and touch conventions.
 - Adapt only page content density and form composition by viewport.
@@ -52,6 +54,7 @@ field-validation, and create-failure recovery have no dedicated page-level UI.
 
 Current repository copy is authoritative: `Nouvelle commande`,
 `Creer une commande pour le service`, `Service actif`, `Commandes`, `Cuisine`,
+`Gestion`,
 `Employe`, `Choisir employe`, `Table / Repere`, `Terrasse 5`,
 `Type de commande`, `Sur place`, `A emporter`, `Livraison`,
 `Note (optionnel)`, `Ex: Anniversaire, demande generale...`,

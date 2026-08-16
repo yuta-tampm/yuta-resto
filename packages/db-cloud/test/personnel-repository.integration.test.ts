@@ -560,8 +560,11 @@ integrationTest('personnel repository tenant isolation', () => {
       qualification: 'Employé qualifié',
       employmentTermType: 'fixed_term' as const,
       expectedEndDate: '2027-08-13',
+      fixedTermReasonCode: 'temporary_activity_increase' as const,
       workTimeCategory: 'part_time' as const,
+      contractWeeklyMinutes: 1_440,
       entryDate: '2026-01-01',
+      confirmFixedTermReasonClear: false,
     };
     const updated = await updatePersonnelEmployee(
       db,
@@ -602,7 +605,9 @@ integrationTest('personnel repository tenant isolation', () => {
         'qualification',
         'employmentTermType',
         'expectedEndDate',
+        'fixedTermReasonCode',
         'workTimeCategory',
+        'contractWeeklyMinutes',
       ]),
     );
 
@@ -631,13 +636,121 @@ integrationTest('personnel repository tenant isolation', () => {
           qualification: 'Denied',
           employmentTermType: 'indefinite',
           expectedEndDate: null,
+          fixedTermReasonCode: null,
           workTimeCategory: 'full_time',
+          contractWeeklyMinutes: null,
           entryDate: '2026-01-01',
+          confirmFixedTermReasonClear: false,
         },
         '2026-08-13',
       ),
     ).rejects.toMatchObject<Partial<PersonnelRepositoryError>>({
       code: 'NOT_FOUND',
+    });
+  });
+
+  it('requires confirmation before a CDD reason is cleared by a CDI change', async () => {
+    const tenant = context(organizationAId, establishmentAId);
+    const created = await createPersonnelEmployee(
+      db,
+      tenant,
+      {
+        ...createInput(uuidv7(), `CDD confirmation ${uuidv7()}`),
+        employmentTermType: 'fixed_term',
+        expectedEndDate: '2026-12-31',
+        fixedTermReasonCode: 'seasonal_employment',
+        contractWeeklyMinutes: 1_440,
+      },
+      '2026-08-13',
+    );
+    const updateInput = {
+      idempotencyKey: uuidv7(),
+      employeeId: created.employee.id,
+      expectedRevision: created.employee.revision,
+      givenNames: created.employee.givenNames,
+      familyName: created.employee.familyName,
+      position: created.employee.position,
+      qualification: created.employee.qualification,
+      employmentTermType: 'indefinite' as const,
+      expectedEndDate: null,
+      fixedTermReasonCode: null,
+      workTimeCategory: created.employee.workTimeCategory,
+      contractWeeklyMinutes: created.employee.contractWeeklyMinutes,
+      entryDate: created.employee.entryDate,
+      confirmFixedTermReasonClear: false,
+    };
+
+    await expect(
+      updatePersonnelEmployee(db, tenant, updateInput, '2026-08-13'),
+    ).rejects.toMatchObject<Partial<PersonnelRepositoryError>>({
+      code: 'FIXED_TERM_REASON_CLEAR_CONFIRMATION_REQUIRED',
+    });
+
+    const updated = await updatePersonnelEmployee(
+      db,
+      tenant,
+      {
+        ...updateInput,
+        idempotencyKey: uuidv7(),
+        confirmFixedTermReasonClear: true,
+      },
+      '2026-08-13',
+    );
+    expect(updated.employee).toMatchObject({
+      employmentTermType: 'indefinite',
+      expectedEndDate: null,
+      fixedTermReasonCode: null,
+    });
+  });
+
+  it('preserves a legacy CDD with missing Wave C facts during an unrelated edit', async () => {
+    const legacyEmployeeId = uuidv7();
+    await db.insert(personnelEmployeeDossiers).values({
+      ...employee(
+        legacyEmployeeId,
+        organizationAId,
+        establishmentAId,
+        'Legacy CDD',
+      ),
+      employmentTermType: 'fixed_term',
+      expectedEndDate: '2026-12-31',
+      fixedTermReasonCode: null,
+      contractWeeklyMinutes: null,
+    });
+    const tenant = context(organizationAId, establishmentAId);
+    const current = await findPersonnelEmployee(
+      db,
+      tenant,
+      legacyEmployeeId,
+      '2026-08-13',
+    );
+    expect(current).not.toBeNull();
+
+    const updated = await updatePersonnelEmployee(
+      db,
+      tenant,
+      {
+        idempotencyKey: uuidv7(),
+        employeeId: legacyEmployeeId,
+        expectedRevision: current!.revision,
+        givenNames: current!.givenNames,
+        familyName: current!.familyName,
+        position: 'Service du soir',
+        qualification: current!.qualification,
+        employmentTermType: 'fixed_term',
+        expectedEndDate: current!.expectedEndDate,
+        fixedTermReasonCode: null,
+        workTimeCategory: current!.workTimeCategory,
+        contractWeeklyMinutes: null,
+        entryDate: current!.entryDate,
+        confirmFixedTermReasonClear: false,
+      },
+      '2026-08-13',
+    );
+    expect(updated.employee).toMatchObject({
+      position: 'Service du soir',
+      fixedTermReasonCode: null,
+      contractWeeklyMinutes: null,
     });
   });
 
@@ -776,7 +889,9 @@ function employee(
     qualification: 'Employé',
     employmentTermType: 'indefinite' as const,
     expectedEndDate: null,
+    fixedTermReasonCode: null,
     workTimeCategory: 'full_time' as const,
+    contractWeeklyMinutes: null,
     entryDate: '2026-01-01',
     departureDate: null,
   };
@@ -791,7 +906,9 @@ function createInput(idempotencyKey: string, familyName: string) {
     qualification: 'Employée qualifiée',
     employmentTermType: 'indefinite' as const,
     expectedEndDate: null,
+    fixedTermReasonCode: null,
     workTimeCategory: 'full_time' as const,
+    contractWeeklyMinutes: 2_100,
     entryDate: '2026-08-13',
     confirmDuplicate: false,
     duplicateOverrideReason: null,

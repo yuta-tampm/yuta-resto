@@ -179,9 +179,76 @@
 - [x] A self-contained responsive design prompt is ready and not yet executed.
 - [x] Phase 0 created no schema, enum, migration, contract, API, permission,
       repository, action, storage object, or implementation code.
-- [ ] Product owner approves or revises the proposed local MVP and date/label
+- [x] Product owner approves the proposed local MVP and date/label
       discovery scope.
-- [ ] Product owner authorizes running the signed-amendments design prompt.
+- [x] Product owner authorizes running the signed-amendments design prompt.
+- [x] Four selected responsive references are stored as `DRAFT`; redundant
+      desktop chevrons and the mobile three-dot menu from initial generations
+      were removed before handoff.
+- [x] Product owner approves the selected generated visual direction.
+- [x] Product owner authorizes a typed-fixture local Phase 1 prototype only.
+- [x] The prototype uses fictional values, a persistent no-save notice, and
+      disabled add/view/download/replace controls.
+- [x] The prototype introduces no amendment ID, enum, schema, migration,
+      contract, API, permission, repository, action, URL, storage, or audit event.
+- [x] The proposed effective date is labelled as proposed rather than persisted.
+- [x] Route-local model tests cover fictional shape and timezone-safe French date
+      formatting.
+- [x] Responsive browser QA at 1440, 1024, 768, and 390 px is complete.
+- [x] Product owner authorizes Documents Wave B Phase 2 technical design only.
+- [x] The current base-contract single-category uniqueness rule is not reused
+      for multiple distinct amendments.
+- [x] A separate amendment aggregate with immutable correction versions is the
+      recommended persistence boundary.
+- [x] Required effective date, optional bounded reference, newest-first stable
+      ordering, and ten-item cursor pages are proposed for approval.
+- [x] Existing OWNER-only document read/manage permissions and provider-neutral
+      storage/scanner services are proposed for reuse without weakening scope.
+- [x] One Documents-open audit event avoids duplicate list-open entries; item
+      add/reject/view/download/replace events remain allowlisted and minimized.
+- [x] Add/replace idempotency, expected revision, scan-before-commit/swap,
+      cleanup, conflict, and safe retry behavior are documented.
+- [x] Product owner approves AB2-01 through AB2-09 and local Phase 3
+      implementation; local security reuses the already approved contract-file
+      boundary.
+- [ ] AB2-10 retention/rights/backup/restore/deletion and production providers
+      remain release blockers, not local implementation approval.
+- [x] Phase 2 creates no enum, schema, migration, contract, repository,
+      permission, API, server action, storage object, or real employee data.
+- [x] Separate Phase 3 local implementation approval was recorded before schema,
+      contract, repository, route, action, or real file behavior changed.
+- [x] Migration `0008` creates separate scoped amendment/version/receipt tables
+      without changing the signed-contract category or uniqueness rule.
+- [x] OWNER-only list/add/replace/view/download repeats organization +
+      establishment + employee scope and resource ID alone never authorizes.
+- [x] Required effective date, optional reference, stable newest-first ordering,
+      and ten-item cursor pagination are implemented.
+- [x] Add/replace verify the PDF before commit/swap; failure removes the new
+      object and replacement leaves the current version unchanged.
+- [x] Idempotent replay, stale revision conflict, immutable versions, safe
+      projection, cross-establishment denial, and content grants are tested.
+- [x] The Phase 1 amendment fixture and no-save notice are removed.
+- [x] Signed-in browser QA covers real empty/load/add-form/cancel states at
+      1440, 1024, 768, and 390 px without closing the employee drawer.
+- [x] Production remains fail-closed and AB2-10 remains deferred.
+
+## Documents Wave B Phase 5 — local QA and as-built
+
+- [x] A non-personal PDF is scanned, added, listed, opened, and downloaded
+      through the signed-in OWNER flow.
+- [x] Replacing the selected scan creates version 2 without replacing the base
+      contract or another amendment.
+- [x] Invalid-file feedback preserves the effective date and optional reference,
+      clears stale success feedback, and requires the file to be selected again.
+- [x] Guarded database QA verifies ten-item cursor pages, immutable versions,
+      idempotent retry, content grants, and cross-establishment denial.
+- [x] Responsive QA passes at 1440 x 1000, 1024 x 768, 768 x 1024, and
+      390 x 844 with no page or drawer overflow.
+- [x] Wave B as-built captures use the stable
+      `documents-wave-b-phase-5-as-built-*` naming convention.
+- [x] QA-only amendment metadata, audit events, storage objects, and temporary
+      source files are removed after evidence capture.
+- [x] Production remains fail-closed; AB2-10 is still an explicit release gate.
 
 ## Domain, tenant, security, and privacy gates
 
@@ -224,6 +291,8 @@
 
 - [x] Authorized list/read uses real establishment-scoped data.
 - [x] Create and edit validate and preserve failed input.
+- [x] A successful edit closes the edit dialog, keeps the dossier drawer open,
+      and immediately shows the committed employee while the route refreshes.
 - [x] Edit detects a stale revision and requires current-version reload before retry.
 - [x] Departure records a date without hard deletion.
 - [x] Departure correction or reopening requires a bounded reason and new audit event.
@@ -277,3 +346,101 @@ Read-slice evidence:
       drill into an isolated target after explicit infrastructure approval.
 - [ ] `SALARIES-SENSITIVE-AUDIT-01`: add allowlisted audit events before each
       future Documents/export/archive/legal-hold/rights administration action.
+
+## Wave C Phase 0 — complementary employment facts
+
+- [x] Repository inventory distinguishes the integrated Salaries dossier from
+      the planned Formalités placeholder.
+- [x] The smallest proposed MVP is limited to CDD reason and contractual weekly
+      duration in the existing `Relation de travail` tab.
+- [x] Organization + establishment + employee ownership and OWNER-only audience
+      are explicit; browser-trusted scope and ID-only lookup remain forbidden.
+- [x] Salariés, Documents, Formalités, Planning, Pointage, and payroll ownership
+      boundaries are separated.
+- [x] Confidential and more-sensitive fields have explicit handling and
+      minimized future-audit requirements.
+- [x] Remuneration, probation, detailed part-time distribution, apprenticeship,
+      Formalités workflows, Wave D events, Wave E register/PDF, OCR, delegation,
+      self-service, transfer, and merge are retained as deferred work.
+- [x] Loading, complete, incomplete, not-applicable, forbidden, validation,
+      pending, conflict, error/retry, success, responsive, and accessibility
+      discovery states are specified.
+- [x] A self-contained French design prompt was approved and run.
+- [x] Phase 0 creates no schema, migration, enum, contract, permission, API,
+      repository, server action, fixture, runtime behavior, or Formalités flow.
+- [x] Product owner approves the Wave C Phase 0 scope and authorizes
+      design-prompt execution.
+- [x] Four selected 1440/1024/768/390 references are stored and labelled DRAFT.
+- [x] The selected designs use one header edit action and read-only default
+      values instead of duplicating edit controls or showing an open form.
+- [x] Product owner approves the selected Wave C visual direction.
+- [x] Product owner authorizes Phase 1 local prototype work only.
+- [x] The prototype fixture is typed, fictional, route-local, and carries no ID,
+      tenant value, contract, URL, request payload, or persistence metadata.
+- [x] `Prototype` and `Aperçu sans sauvegarde` explain that values are fictional,
+      not attached to the employee, and cannot be edited or saved.
+- [x] CDI shows the CDD reason as not applicable; CDD shows only the fictional
+      discovery example.
+- [x] The existing header `Modifier` action is not duplicated or extended with
+      unsupported prototype fields.
+- [x] Focused tests cover CDD and CDI prototype presentation values.
+- [x] Product owner authorizes Phase 2 interaction/data discovery only.
+
+## Wave C Phase 2 — technical proposal
+
+- [x] Current Légifrance sources for CDD cases and weekly-duration context are
+      recorded without claiming legal compliance.
+- [x] Reason code and integer weekly minutes are classified as nullable,
+      confidential employee-dossier facts.
+- [x] Four restaurant-relevant CDD reasons are proposed; special cases remain
+      unsupported and no free-text `other` fallback exists.
+- [x] CDI/CDD applicability, legacy nulls, transition, and initial completeness
+      behavior are specified.
+- [x] Separate hours/minutes input and 1–2,880-minute validation are proposed as
+      an MVP boundary, not a legal guarantee.
+- [x] Existing employee aggregate, OWNER permissions, single edit action,
+      revision, idempotency, atomic update, audit, and dossier-open event are
+      proposed for reuse.
+- [x] Documents, Formalités, Planning, Pointage, payroll, unsupported CDD cases,
+      and production compliance remain outside the slice.
+- [x] Read, edit, create integration, fixture removal, and QA are split into
+      later vertical slices.
+- [x] Phase 2 creates no schema, migration, enum, contract, API, permission,
+      repository, action, audit event, fixture removal, or real employee data.
+- [x] Product owner approves WC2-01 through WC2-12 for local work.
+- [ ] Legal/security owners approve the applicable reason list, numeric boundary,
+      privacy, and production controls before production use.
+- [x] Product owner authorizes Phase 3 local real-data implementation.
+
+## Wave C Phase 3 — local implementation
+
+- [x] Nullable reason and weekly-minute fields are added without backfilling
+      existing dossiers.
+- [x] Read, create, and edit use trusted organization + establishment scope and
+      the existing OWNER-only permissions.
+- [x] Only four controlled CDD reasons are accepted; no free-text fallback exists.
+- [x] Weekly duration uses separate hours/minutes UI and a 1–2,880 minute boundary.
+- [x] CDD to CDI clears the reason only after explicit confirmation.
+- [x] Revision conflict, idempotent retry, and atomic audit behavior are reused.
+- [x] Audit records field names but not old/new reason or duration values.
+- [x] Documents and Formalités do not populate either employee fact.
+- [x] Fictional Wave C values and the no-save notice are removed.
+- [ ] Production legal/privacy/security/retention/operations approval is recorded.
+
+## Wave C Phase 5 — local QA and as-built
+
+- [x] Contract tests cover supported CDD values, unsupported values, and the
+      1-minute/48-hour weekly-duration boundaries.
+- [x] Guarded integration covers tenant scope, conflict/idempotency, minimized
+      audit, CDD-to-CDI confirmation, and legacy nullable CDD edits.
+- [x] Signed-in OWNER QA creates and reads one non-personal CDD test dossier.
+- [x] CDD-to-CDI save is disabled until confirmation and remains server guarded.
+- [x] Weekly duration survives the transition and the CDD reason becomes not
+      applicable after the committed CDI update.
+- [x] Employee history lists changed field labels without reason/duration values.
+- [x] 1440/1024/768/390 layouts have no page or drawer horizontal overflow.
+- [x] Select dismissal keeps its containing modal open; no console error occurs.
+- [x] Four local as-built captures are retained in `references/`.
+- [x] Temporary QA dossier, audit events, command receipts, and cleanup script
+      are removed after capture.
+- [ ] Production legal/privacy/security/retention/operations approval is recorded.

@@ -26,6 +26,8 @@ import {
   localOrderItemCommandSchema,
   localOrderItemResponseSchema,
   localOrderResponseSchema,
+  localOrdersHomeQuerySchema,
+  localOrdersHomeResponseSchema,
   localOrdersQuerySchema,
   localOrdersResponseSchema,
   localPaymentCaptureResponseSchema,
@@ -66,6 +68,7 @@ import {
   type LocalAuthLoginInput,
   type LocalOrderCommand,
   type LocalOrderItemCommand,
+  type LocalOrdersHomeQuery,
   type LocalOrdersQuery,
   type PayLocalCheckInput,
   type PayLocalOrderInput,
@@ -496,6 +499,21 @@ export function createSiteAgentClient(input?: {
       return request(
         `${localPosRoutes.orders}?${search.toString()}`,
         localOrdersResponseSchema,
+      );
+    },
+    async listOrdersHome(input: Partial<LocalOrdersHomeQuery> = {}) {
+      const query = localOrdersHomeQuerySchema.parse(input);
+      const search = new URLSearchParams({
+        view: query.view,
+        page: String(query.page),
+        limit: String(query.limit),
+      });
+      if (query.q) {
+        search.set('q', query.q);
+      }
+      return request(
+        `${localPosRoutes.ordersHome}?${search.toString()}`,
+        localOrdersHomeResponseSchema,
       );
     },
     async createOrder(input: CreateLocalOrderInput) {

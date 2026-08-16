@@ -16,6 +16,9 @@ import {
   feedbackReplies,
   organizations,
   passwordResetTokens,
+  personnelContractAmendmentCommandReceipts,
+  personnelContractAmendments,
+  personnelContractAmendmentVersions,
   personnelEmployeeDossiers,
   personnelEmployeeAuditEvents,
   personnelCommandReceipts,
@@ -54,6 +57,9 @@ const tablesWithBusinessIds: PgTable[] = [
   personnelDocuments,
   personnelDocumentVersions,
   personnelDocumentCommandReceipts,
+  personnelContractAmendments,
+  personnelContractAmendmentVersions,
+  personnelContractAmendmentCommandReceipts,
 ];
 
 describe('cloud schema boundaries', () => {
@@ -123,7 +129,12 @@ describe('cloud schema boundaries', () => {
   });
 
   it('keeps personnel document metadata establishment and employee scoped', () => {
-    for (const table of [personnelDocuments, personnelDocumentVersions]) {
+    for (const table of [
+      personnelDocuments,
+      personnelDocumentVersions,
+      personnelContractAmendments,
+      personnelContractAmendmentVersions,
+    ]) {
       const columns = getTableConfig(table).columns.map(
         (column) => column.name,
       );
@@ -137,6 +148,21 @@ describe('cloud schema boundaries', () => {
       expect(columns).not.toContain('tenant_id');
       expect(columns).not.toContain('content');
     }
+  });
+
+  it('keeps contract amendments separate from the single contract category slot', () => {
+    const amendmentColumns = getTableConfig(
+      personnelContractAmendments,
+    ).columns.map((column) => column.name);
+    expect(amendmentColumns).toEqual(
+      expect.arrayContaining([
+        'employee_id',
+        'effective_date',
+        'current_version',
+        'revision',
+      ]),
+    );
+    expect(amendmentColumns).not.toContain('category');
   });
 
   it('uses an RFC UUIDv7 generator for seed-created records', () => {

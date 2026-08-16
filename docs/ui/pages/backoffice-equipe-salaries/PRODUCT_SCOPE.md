@@ -234,7 +234,7 @@ category, contract value, schema value, repository behavior, action, or UI row.
 This flow therefore follows `NEW_CAPABILITY_DISCOVERY` inside the stable
 `backoffice-equipe-salaries` page pack.
 
-#### Proposed local MVP — awaiting approval
+#### Phase 0 local MVP — approved for design discovery only
 
 The smallest useful local discovery scope is OWNER-only and establishment-owned:
 
@@ -290,16 +290,178 @@ separate `Avenants signés` section and `Ajouter un avenant` action inside the
 current Documents tab. It must stop before schema, migration, enum, contract,
 repository, permission, server action, storage, or runtime code.
 
+The product owner approved this Phase 0 boundary, generated visual direction,
+and a typed-fixture local Phase 1 prototype on 2026-08-15. Phase 1 may show only
+fictional amendments with a persistent demonstration notice and disabled
+actions. It does not authorize contracts, persistence, storage, or real file
+behavior.
+
+#### Phase 1 presentation boundary
+
+- two fictional amendment examples may demonstrate the approved responsive
+  hierarchy;
+- filenames must visibly identify themselves as examples and contain no real
+  employee data;
+- `Ajouter un avenant`, `Consulter`, `Télécharger`, and `Remplacer` remain
+  disabled and make no request;
+- the proposed effective date is labelled as proposed and is not a stored or
+  validated business field;
+- no amendment ID, URL, storage key, tenant value, transport schema, or server
+  action is introduced.
+
+#### Phase 2 technical boundary — proposal awaiting approval
+
+Phase 2 was authorized on 2026-08-15 for documentation only. Repository reality
+rules out treating amendments as another single document-category slot: the
+implemented contract aggregate is unique by employee and category, while one
+employee may have several distinct amendments. The recommended later design is
+therefore a separate establishment-owned amendment aggregate with immutable file
+versions. It may reuse the existing storage, scanner, permission, audit,
+idempotency, and server-delivery patterns without changing the signed-contract
+record.
+
+The recommended minimum product model is:
+
+- one opaque server-owned amendment identity per distinct legal amendment;
+- one required effective date used for display and deterministic ordering;
+- an optional bounded amendment reference copied from the document when one is
+  present, never invented or inferred from the filename;
+- no free-form title, signature date, applicability period, extracted clause,
+  or automatic employee-field update in the local MVP;
+- newest effective date first, with server creation time and opaque identity as
+  stable tie-breakers; return at most ten items per cursor page;
+- a correction upload creates a new immutable version of the same amendment;
+  a later legal amendment always creates a new amendment identity.
+
+The effective date is presentation metadata only in this wave. It does not
+change employment status, contract dates, salary, working time, completeness,
+or any Formalités rule. The proposed category code
+`signed_employment_contract_amendment` is an allowlisted domain/audit label, not
+approval to extend the current PostgreSQL enum.
+
+The recommendation is to reuse `personnel.document.read` and
+`personnel.document.manage`, which are already OWNER-only, instead of adding
+equivalent amendment permissions. Every request still reauthorizes against the
+trusted organization + establishment + employee dossier. Storage remains PDF
+only, 10 MiB maximum, private, provider-neutral, quarantined, scanned, and
+server-mediated with no stable or public URL.
+
+The product owner must approve or revise the effective-date/reference model,
+ten-item ordering, separate aggregate, permission reuse, audit behavior, and
+local-only delivery boundary before Phase 3 implementation. Exact retention,
+deletion, legal hold, employee-rights handling, production storage/scanning,
+backup/restore, monitoring, and incident ownership remain production blockers.
+
+#### Phase 3 local implementation status
+
+AB2-01 through AB2-09 and local implementation were approved on 2026-08-15.
+The delivered slice follows the Phase 2 boundary:
+
+- each amendment is a separate establishment-owned aggregate and never changes
+  the base signed-contract record;
+- effective date is required, a bounded reference is optional, and no PDF field
+  is extracted into employee data;
+- list order is newest effective date first with ten-item cursor pages;
+- add and replace are OWNER-only, retry-safe, revision-protected, audited, and
+  scanned before metadata commit/current-version swap;
+- view/download reauthorize through the Backoffice server and expose no stable
+  storage URL;
+- the existing provider-neutral local storage and Microsoft Defender scanner
+  remain the only runtime implementation.
+
+The Phase 1 fixture and demonstration notice are removed. AB2-10 and production
+storage/scanning, retention, rights, deletion, backup/restore, monitoring, and
+incident ownership remain blocked and unimplemented.
+
 ### Wave C — Extended employment and Formalités reuse
 
-After the contract domain is approved, Salariés may expose the structured
-employment data needed by supported Formalités workflows. Formalités owns
-document-specific validation, templates, clauses, generation, and lifecycle.
-Salariés must not duplicate that engine.
+Wave C starts in read-only Phase 0 under `NEW_CAPABILITY_DISCOVERY`. The
+containing Salaries page is integrated, but the complementary employment facts
+and Formalités domain do not exist. This phase changes documentation only and
+does not authorize a schema, migration, contract, API, permission, repository,
+server action, fixture, or runtime implementation.
 
-Potential concepts include contract type/motif, working duration and part-time
-distribution, contractual remuneration, trial/probation, and apprenticeship-
-specific information. Each remains a domain proposal, not an inferred column or enum.
+#### Proposed smallest useful MVP
+
+The primary user remains an OWNER working in the active establishment. The MVP
+would extend the existing `Relation de travail` tab of one employee dossier;
+it would not create a route, a second employee record, or an HR hub. It explores
+only two complementary structured facts:
+
+1. a controlled fixed-term-contract reason, applicable only to CDD;
+2. the contractual weekly duration, displayed as hours per week and proposed
+   for later storage as integer minutes rather than floating-point hours.
+
+The existing employment term, expected end date, work-time category, entry
+date, departure date, and revision remain authoritative. The proposed fields
+must not be inferred from a filename, signed PDF, schedule, time-tracking
+record, or Formalités document.
+
+#### Product boundary
+
+- Salariés owns reusable, establishment-scoped structured employment facts.
+- A future Formalités capability owns formality-specific requirements, legal
+  validation, templates, clauses, generation, submission/status, and lifecycle.
+- Documents owns signed evidence and immutable file versions; it does not
+  extract or silently apply employee facts.
+- Planning owns planned schedules and Pointage owns observed time. Neither is
+  the source of contractual weekly duration.
+- Payroll, remuneration calculation, payment, declarations, and accounting are
+  outside the Salaries capability.
+
+Each dossier remains owned by one organization and one establishment. The same
+human at two establishments remains two dossiers unless a separately approved
+transfer/merge capability is designed. OWNER is the only proposed actor;
+MANAGER, STAFF, employee self-service, public users, and service actors are
+denied. No new permission is approved in Phase 0. Any later implementation must
+reassess whether the existing OWNER-only employee permissions are sufficient,
+especially before adding a more sensitive field.
+
+#### Sensitive data and deferred capability
+
+CDD reason and contracted duration are confidential employment facts.
+Remuneration, probation, and apprenticeship data are more sensitive and are
+not part of this MVP. Generic logs, URLs, analytics, and audit metadata must
+never expose old/new values for future sensitive fields. A later audit may name
+an allowlisted field group without copying the value.
+
+Explicitly deferred:
+
+- contractual remuneration, payroll, bank, tax, or social-security data;
+- probation periods, renewals, and legal eligibility rules;
+- detailed part-time distribution or schedule generation;
+- apprenticeship-specific data and workflows;
+- Formalités status, templates, clauses, generation, e-signature, DPAE/DSN,
+  provider, government submission, and external delivery;
+- missing-data alerts and dated events, retained for Wave D;
+- personnel register and PDF export, retained for Wave E;
+- OCR, extraction, classification, and automatic employee-field updates;
+- manager delegation, employee self-service, cross-establishment transfer,
+  dossier merge, or global-person identity;
+- production retention, deletion, legal, privacy, security, and operational
+  approvals.
+
+The design prompt may show a neutral explanation that Formalités is not yet
+available, but it must not show a link, status, generated form, or actionable
+workflow. The product owner approved this Phase 0 boundary, generated visual
+direction, and a local Phase 1 prototype on 2026-08-16. The prototype is an
+explicitly fictional, read-only presentation and does not authorize real data
+or later implementation work.
+
+#### Phase 2 proposed boundary
+
+Phase 2 keeps the two-field MVP but narrows real-data support. A later first
+slice may support only employee replacement, temporary activity increase,
+seasonal employment, and customary-use CDD. Unsupported or special legal cases
+must fail closed; no free-text `other` is allowed. Contractual weekly duration
+is represented as integer minutes and does not alter full-/part-time category,
+Planning, Pointage, or payroll.
+
+Existing dossiers may remain unfilled during rollout, and these fields do not
+change current dossier completeness initially. WC2-01 through WC2-12 were
+approved for local Phase 3 on 2026-08-16. The existing OWNER edit flow,
+employee aggregate, permissions, revision/idempotency protection, and minimized
+audit are now reused locally. Production use remains separately gated.
 
 ### Wave D — Actionable issues and events
 

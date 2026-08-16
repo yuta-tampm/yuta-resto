@@ -78,7 +78,6 @@ export default async function OrderPage({ params }: OrderPageProps) {
         </>
       }
       contentClassName="px-4 py-4 md:px-6 md:py-5"
-      maxWidthClassName="max-w-7xl"
     >
       <div className="grid gap-4">
         {order.hasAllergy && (

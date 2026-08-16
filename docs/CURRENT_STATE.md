@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-13
+Last updated: 2026-08-15
 
 ## Product scope
 
@@ -129,6 +129,14 @@ when its detail tab is opened and has explicit loading, failure, and retry
 states. Minimum-field completeness is derived, filterable, explained by field,
 and links to the supported edit action.
 
+The local employee dossier also stores an optional controlled CDD reason and
+optional contractual weekly duration in integer minutes. New dossiers require
+a weekly duration and supported CDD writes require one of four allowlisted
+reasons. Existing nullable rows remain valid and these fields do not yet affect
+dossier completeness. The existing OWNER-only, establishment-scoped edit flow
+uses revision/idempotency guards and records only changed field names in audit
+metadata. Production collection remains gated.
+
 The employee dossier also has a local-development secure-document slice for one
 category: signed employment contracts in PDF up to 10 MiB. OWNER-only actions
 list, add, replace, view, and download through the Backoffice server. Metadata
@@ -137,6 +145,16 @@ PostgreSQL in a private local adapter, quarantined, and checked by Microsoft
 Defender before becoming available. The runtime fails closed in production;
 EU object storage, an EU-approved scanning service, retention/deletion rules,
 backup/restore, and operational ownership remain release blockers.
+
+Signed employment-contract amendments are implemented as a second local-only
+document slice. Each amendment is a distinct establishment-owned record with a
+required effective date, optional bounded reference, immutable correction
+versions, optimistic revision, idempotent add/replace, and ten-item cursor
+pages. It reuses the OWNER-only document permissions, private local storage,
+Microsoft Defender quarantine check, server-mediated delivery, and minimized
+document audit events. It does not alter the base contract record or derive
+employment facts from PDF content. Production remains fail-closed under the
+same provider, retention, rights, backup/restore, and incident gates.
 
 ### Planned empty surfaces
 

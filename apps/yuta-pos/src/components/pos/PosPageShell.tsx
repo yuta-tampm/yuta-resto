@@ -1,4 +1,5 @@
 import { Button, cn } from '@yuta/ui';
+import { ChefHat, ClipboardList, Settings } from 'lucide-react';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { PosHeader } from './PosHeader';
@@ -10,15 +11,14 @@ type PosPageShellProps = {
   description?: ReactNode;
   eyebrow?: ReactNode;
   actions?: ReactNode;
-  backHref?: string;
-  backLabel?: string;
+  secondaryActions?: ReactNode;
+  secondaryMenuLabel?: string;
   subHeader?: ReactNode;
   floatingAction?: ReactNode;
   className?: string;
   contentClassName?: string;
   headerClassName?: string;
   prominentHeader?: boolean;
-  maxWidthClassName?: string;
 };
 
 type PosMobileFabProps = {
@@ -33,22 +33,20 @@ export function PosPageShell({
   description,
   eyebrow,
   actions,
-  backHref,
-  backLabel,
+  secondaryActions = <PosServiceNavigation />,
+  secondaryMenuLabel,
   subHeader,
   floatingAction,
   className,
   contentClassName,
   headerClassName,
-  prominentHeader = false,
-  maxWidthClassName = 'max-w-6xl',
+  prominentHeader = true,
 }: PosPageShellProps) {
   return (
     <main className="h-dvh overflow-hidden bg-canvas text-primary">
       <div
         className={cn(
-          'mx-auto flex h-dvh w-full flex-col bg-white',
-          maxWidthClassName,
+          'flex h-dvh w-full max-w-none flex-col bg-white',
           className,
         )}
       >
@@ -57,8 +55,8 @@ export function PosPageShell({
           description={description}
           eyebrow={eyebrow}
           actions={actions}
-          backHref={backHref}
-          backLabel={backLabel}
+          secondaryActions={secondaryActions}
+          secondaryMenuLabel={secondaryMenuLabel}
           prominent={prominentHeader}
           className={headerClassName}
         />
@@ -79,6 +77,31 @@ export function PosPageShell({
         {floatingAction}
       </div>
     </main>
+  );
+}
+
+function PosServiceNavigation() {
+  return (
+    <>
+      <Button asChild variant="secondary" size="lg" className="w-full">
+        <Link href="/">
+          <ClipboardList className="h-4 w-4" />
+          Commandes
+        </Link>
+      </Button>
+      <Button asChild variant="secondary" size="lg" className="w-full">
+        <Link href="/kitchen">
+          <ChefHat className="h-4 w-4" />
+          Cuisine
+        </Link>
+      </Button>
+      <Button asChild variant="secondary" size="lg" className="w-full">
+        <Link href="/management">
+          <Settings className="h-4 w-4" />
+          Gestion
+        </Link>
+      </Button>
+    </>
   );
 }
 

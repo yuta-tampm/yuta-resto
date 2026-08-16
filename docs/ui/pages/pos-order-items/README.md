@@ -129,10 +129,11 @@ real links to order detail and payment.
     was zero. No form/control was submitted. Loading the real route invoked the
     existing payment-summary combo optimization and advanced only the order's
     `updatedAt`; item/status/payment state remained unchanged.
-16. **Conflicts:** no mockup was supplied. The current page uses the compact POS
-    shell while `/pos` now opts into a route-local prominent variant in an
-    uncommitted sibling task; design must reuse the current target shell and
-    cannot silently propagate `/pos`'s variant. Current item cards use generated
+16. **Conflicts:** no mockup was supplied. Phase 0 captured the then-current
+    compact POS shell while `/pos` used a route-local prominent variant. The
+    product-owner follow-up on 2026-08-16 explicitly supersedes that shell-only
+    constraint and standardizes the prominent desktop header across
+    non-management service-time routes. Current item cards still use generated
     initials, not catalog images.
 17. **Unsupported proposals:** new product imagery/storage, table map, customer
     or delivery-provider data, VAT/fiscal receipt, new navigation, new roles or
@@ -159,12 +160,16 @@ real links to order detail and payment.
     the real `/pos` -> items -> detail/kitchen/payment flow; and the captured
     target are resolved in `DESIGN_HANDOFF.md`. The Backoffice shell reference
     and management shell do not apply.
-23. **Shell/navigation:** `REUSE_CURRENT_TARGET`. Keep the current compact
-    `PosPageShell`/`PosHeader`, logo link to `/`, back link to order detail,
-    payment link, and truthful connectivity strip. Desktop keeps category/menu/
+23. **Shell/navigation:** `REUSE_APPROVED_SHARED_SHELL`. Keep the shared
+    prominent desktop `PosPageShell`/`PosHeader`, logo link to `/`, payment link,
+    and truthful connectivity strip. The header has no leading back-arrow action.
+    The shared three-line menu exposes `Commandes` -> `/`, `Cuisine` ->
+    `/kitchen`, and `Gestion` -> `/management`; below `lg`, retain its compact
+    behavior. Desktop keeps category/menu/
     order columns; narrow widths keep horizontal categories and the existing
-    mobile order dialog. No sidebar replacement, bottom navigation, tenant/
-    account UI, management links, or invented routes.
+    mobile order dialog. The direct `Nouvelle commande` action remains Home-only.
+    No sidebar replacement, bottom navigation, tenant/account UI, management
+    links, or invented routes.
 
 Fixture replacement is forbidden for this existing integrated page.
 
@@ -424,6 +429,17 @@ the approved desktop versus narrow order composition. Browser logs contained
 no warning or error. The 1680px and 2560px evidence recorded during product
 review additionally protects the approved full-width panel hierarchy and
 ultra-wide catalog adaptation.
+
+Product-owner follow-up on 2026-08-16 supersedes only the historical compact
+desktop header choice: all non-management service-time routes now use the
+shared prominent desktop header and compact behavior below `lg`. The item-entry
+workflow, action ownership, and recorded Phase 5 content evidence remain
+unchanged; `Nouvelle commande` is not added to this route.
+
+The same follow-up removes the leading header back arrow from item, payment,
+and split-payment screens so their shared header aligns with Home. Logo/Home
+navigation, the shared three-line `Commandes`/`Cuisine`/`Gestion` menu, and
+approved route-owned workflow actions remain available.
 
 The product owner exercised the trusted success transition during Phase 3.
 Phase 5 did not submit another real order solely to recapture it; focused tests

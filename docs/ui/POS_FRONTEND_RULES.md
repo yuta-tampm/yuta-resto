@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering and restaurant operations
 
-Last updated: 2026-08-15
+Last updated: 2026-08-16
 
 Application: `apps/yuta-pos`
 
@@ -88,6 +88,25 @@ runtime boundary:
 Moving a component does not authorize changing its Server/Client boundary,
 markup, actions, contracts, polling, offline behavior, or service ownership.
 
+## Full-viewport POS layout
+
+The installed POS is an operational workstation application. Its route canvas,
+service header, health strip, subheader, management header, and route-level main
+content span the available viewport width on desktop instead of sitting inside
+a centered `max-width` website container.
+
+- `PosPageShell` owns a full-width operational canvas by default.
+- Management route headers and page-level content also span the viewport.
+- Preserve route padding, responsive grids, internal scrolling, and touch
+  targets when removing a shell constraint.
+- Task-focused content may remain intentionally bounded when stretching would
+  reduce usability. Examples include order-creation forms, login cards,
+  dialogs, success cards, alerts, and readable text blocks.
+- Do not interpret full viewport as permission to invoke the browser Fullscreen
+  API, hide browser/device controls, or change kiosk/deployment behavior.
+- Verify the shell at wide desktop, standard desktop, tablet, and narrow mobile
+  widths, including document overflow and real-data density.
+
 ## Protected POS invariants
 
 UI work must preserve every applicable current invariant, including:
@@ -117,6 +136,29 @@ packs unless current architecture explicitly changes.
 Management screens use the current local management session and role rules.
 Preserve server-side/local-service authorization and the HttpOnly session flow.
 Do not infer new roles or permissions from a mockup.
+
+## Service-time header consistency
+
+All non-management service-time routes that use `PosPageShell` share its
+prominent desktop header by default and the same compact menu behavior below
+`lg`. Route titles, status badges, and real workflow actions remain route-owned.
+The shared service-time header does not render a leading back-arrow action. The
+direct `Nouvelle commande` navigation action belongs only to POS Home `/`;
+sibling service-time routes must not duplicate it.
+
+Every sibling service-time route exposes the shared three-line navigation menu
+with the real `Commandes` -> `/`, `Cuisine` -> `/kitchen`, and `Gestion` ->
+`/management` destinations. Home may omit its own `Commandes` destination and
+keeps `Cuisine`/`Gestion` in the same menu. Route-owned status and workflow
+actions stay directly visible; they are not replaced by global navigation.
+In the prominent desktop header, every direct action or status control uses the
+same 48px height as the three-line menu trigger. The compact trigger remains a
+44px touch target below `lg`.
+
+The authenticated `ManagementHeader` and the management login surface remain
+separate because they own local session, role, return-to-POS, and sign-out
+behavior. Do not force those surfaces into `PosPageShell` merely for visual
+uniformity.
 
 ## Local-service status
 

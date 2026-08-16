@@ -6,7 +6,7 @@ Visibility: Local operator
 
 Owner: YUTA engineering and QA
 
-Last updated: 2026-08-08
+Last updated: 2026-08-16
 
 Use this checklist to stabilize the POS MVP before adding larger features.
 
@@ -46,15 +46,22 @@ N/A       not applicable for this run
 
 ## Preflight
 
-| Case                                | Expected Result                                                | Result | Notes |
-| ----------------------------------- | -------------------------------------------------------------- | -----: | ----- |
-| Local database container is running | `yuta-pos-db-dev` is healthy on port `55432`                   |        |       |
-| POS health endpoint is ready        | `/api/health` returns application and database availability    |        |       |
-| Local service strip is visible      | Strip distinguishes local, database, and server failure states |        |       |
-| POS dev server opens                | `http://localhost:3003` loads without error                    |        |       |
-| Site agent is ready                 | Local health endpoint reports POS DB readiness                 |        |       |
-| Local print worker starts           | `site-agent` reports printer queue processing ready            |        |       |
-| Seed data exists                    | POS shows menu categories/items and staff users                |        |       |
+| Case                                | Expected Result                                                                                                                                                 | Result | Notes |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | -----: | ----- |
+| Local database container is running | `yuta-pos-db-dev` is healthy on port `55432`                                                                                                                    |        |       |
+| POS health endpoint is ready        | `/api/health` returns application and database availability                                                                                                     |        |       |
+| Local service strip is visible      | Strip distinguishes local, database, and server failure states                                                                                                  |        |       |
+| POS dev server opens                | `http://localhost:3003` loads without error                                                                                                                     |        |       |
+| Site agent is ready                 | Local health endpoint reports POS DB readiness                                                                                                                  |        |       |
+| Local print worker starts           | `site-agent` reports printer queue processing ready                                                                                                             |        |       |
+| Seed data exists                    | POS shows menu categories/items and staff users                                                                                                                 |        |       |
+| POS shell uses the full viewport    | Route canvas/header/main content have no desktop max-width cap                                                                                                  |        |       |
+| Service-time headers are consistent | `/`, `/pos`, `/kitchen`, and `/orders/*` share prominent desktop geometry and compact behavior below `lg`                                                       |        |       |
+| New-order navigation is Home-only   | Only `/` exposes the direct `Nouvelle commande` navigation action                                                                                               |        |       |
+| Service header has no back arrow    | Non-management service-time headers do not render a leading arrow action                                                                                        |        |       |
+| Service navigation menu is present  | Every non-management service-time route exposes the three-line menu; sibling routes offer `Commandes`, `Cuisine`, and `Gestion`, while Home omits its self-link |        |       |
+| Header controls share one height    | Prominent desktop direct actions/status controls and the three-line trigger are all 48px high; compact trigger is 44px                                          |        |       |
+| Focused content remains readable    | Forms, login cards, dialogs, and success cards stay intentional                                                                                                 |        |       |
 
 ## POS Staff Selector
 
@@ -84,6 +91,11 @@ N/A       not applicable for this run
 | Paid-today list             | Only orders paid during the current 05:00 service day appear       |        |       |
 | Activity-today list         | Orders created or paid during the current 05:00 service day appear |        |       |
 | Order exactly at next 05:00 | Order belongs to the next service day and not the previous one     |        |       |
+| Home request count          | One `/api/v1/orders/home` request loads rows and all tab counts    |        |       |
+| Home search                 | Table/order-number query is applied server-side and preserves view |        |       |
+| Home pagination             | Results use 50 rows; Previous/Next preserve `view` and `q`         |        |       |
+| Out-of-range page           | Site-agent clamps to the last available page                       |        |       |
+| More than 200 orders        | Relevant service-day rows remain discoverable beyond old list cap  |        |       |
 
 ## Order Item Entry
 

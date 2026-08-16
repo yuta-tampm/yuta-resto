@@ -17,6 +17,8 @@ import {
   cloudUserSchema,
   moneySchema,
   localOrderCommandSchema,
+  localOrdersHomeQuerySchema,
+  localOrdersHomeResponseSchema,
   localPrintSettingsSchema,
   localPosApiBasePath,
   orderStatusSchema,
@@ -101,6 +103,43 @@ describe('@yuta/contracts', () => {
         bottomPaddingLines: 3,
       }).success,
     ).toBe(false);
+  });
+
+  it('validates paginated POS Home service-day transport', () => {
+    expect(
+      localOrdersHomeQuerySchema.parse({
+        view: 'paid_today',
+        q: '  POS-123  ',
+        page: '2',
+        limit: '25',
+      }),
+    ).toEqual({
+      view: 'paid_today',
+      q: 'POS-123',
+      page: 2,
+      limit: 25,
+    });
+    expect(
+      localOrdersHomeQuerySchema.safeParse({ view: 'unknown' }).success,
+    ).toBe(false);
+    expect(
+      localOrdersHomeResponseSchema.safeParse({
+        serviceDay: {
+          start: '2026-08-16T03:00:00.000Z',
+          end: '2026-08-17T03:00:00.000Z',
+        },
+        view: 'open',
+        query: '',
+        orders: [],
+        counts: { open: 0, paidToday: 0, allToday: 0 },
+        pagination: {
+          page: 1,
+          pageSize: 50,
+          totalItems: 0,
+          totalPages: 1,
+        },
+      }).success,
+    ).toBe(true);
   });
 
   it('keeps local user fields and PINs inside their transport boundaries', () => {

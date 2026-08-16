@@ -120,6 +120,84 @@ Documents tab, signed-contract boundary, protected-access treatment, action
 hierarchy, and responsive behavior. No amendment row/action exists, so the new
 capability baseline is `NOT_APPLICABLE`.
 
-No new image was generated in Phase 0. The ready prompt in `DESIGN_HANDOFF.md`
-must be explicitly authorized before execution, and every generated image will
-start as a `DRAFT` visual proposal.
+The product owner authorized the prompt on 2026-08-15. Built-in ImageGen created
+four references subsequently approved for the typed-fixture Phase 1 prototype:
+
+- `documents-wave-b-design-draft-desktop-1440-02.png` — selected wide drawer with the
+  base contract and two compact amendment rows;
+- `documents-wave-b-design-draft-tablet-1024-01.png` — compact landscape drawer
+  with visible row actions;
+- `documents-wave-b-design-draft-tablet-768-01.png` — portrait stacking with
+  amendment actions aligned beside each card;
+- `documents-wave-b-design-draft-mobile-390-01.png` — one-column mobile cards
+  with full-width visible actions.
+
+The initial desktop `-01` output invented redundant row chevrons and is rejected
+as visual authority; selected desktop `-02` removes them. The first mobile output
+invented a redundant three-dot menu even though all three actions were already
+visible; the stored mobile reference is the corrected iteration. All names,
+dates, filenames, sizes, and document values are fictional design examples. The
+references authorize only the labelled, non-persisting local prototype. They do
+not authorize a category enum, schema, API, permission, repository, file action,
+storage, or real-data implementation.
+
+## Documents Wave B Phase 5 as-built evidence
+
+The following signed-in local captures show the real, Defender-checked Wave B
+vertical slice after add, protected delivery, download, and version-2 replace
+QA:
+
+- `documents-wave-b-phase-5-as-built-1440x1000.png`;
+- `documents-wave-b-phase-5-as-built-1024x768.png`;
+- `documents-wave-b-phase-5-as-built-768x1024.png`;
+- `documents-wave-b-phase-5-as-built-390x844.png`.
+
+The visible `QA Phase 5` amendment and generated filename are non-personal test
+evidence; their local database records, audit events, storage objects, and source
+files were removed after capture. These images do not approve production file
+collection. AB2-10 and the EU provider, retention, rights, backup/restore,
+monitoring, deletion, and incident-response decisions remain release blockers.
+
+## Wave C DRAFT design references
+
+The product owner approved Phase 0 and prompt execution on 2026-08-16. Built-in
+ImageGen produced the following selected responsive studies:
+
+- `wave-c-design-draft-desktop-1440-01.png` — wide drawer with the existing
+  `Relation de travail` summary and a separate complementary-information card;
+- `wave-c-design-draft-tablet-1024-01.png` — landscape adaptation retaining
+  compact multi-column cards;
+- `wave-c-design-draft-tablet-768-01.png` — portrait adaptation with stacked
+  authoritative facts and compact complementary values;
+- `wave-c-design-draft-mobile-390-01.png` — full-width mobile drawer with a
+  scrollable tab strip and vertically stacked read-only values.
+
+The initial desktop output displayed a duplicate section-level edit button and
+form-like controls. It was rejected before storage. The selected desktop output
+uses only the existing header `Modifier` action and read-only default values;
+its CDD label was separately corrected. The tablet and mobile studies follow
+the same single-action rule.
+
+All employee names, dates, roles, and contract values are fictional visual
+examples. The DRAFT badge is a design-review marker, not a proposed production
+badge. The product owner approved these images only for the labelled,
+non-persisting Phase 1 prototype on 2026-08-16. They do not approve an enum,
+validation rule, schema, migration, contract, API, permission, repository,
+server action, persistence, Formalités workflow, or real employee data.
+
+## Wave C Phase 5 as-built evidence
+
+The following signed-in local captures show the implemented real-data drawer
+after a fictional CDD dossier was persisted and read back:
+
+- `wave-c-phase-5-as-built-1440x1000.png`;
+- `wave-c-phase-5-as-built-1024x768.png`;
+- `wave-c-phase-5-as-built-768x1024.png`;
+- `wave-c-phase-5-as-built-390x844.png`.
+
+They verify the single header edit action, controlled reason label, integer-
+minute duration formatting, wide desktop drawer, full-width tablet/mobile
+drawer, scrollable mobile tabs, and stacked narrow cards without horizontal
+drawer overflow. `QA Wave C Phase 5` and every displayed employment value are
+non-personal test evidence. The exact dossier, audit events, and retry receipts
+were removed after capture. These images do not authorize production use.

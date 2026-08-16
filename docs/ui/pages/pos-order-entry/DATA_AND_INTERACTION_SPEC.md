@@ -43,7 +43,9 @@ A future UI view model is not a database schema.
 
 ## Current interactions
 
-- Navigate home through logo or `Commandes`; navigate to `/kitchen`.
+- Navigate home through the logo or the shared three-line `Commandes` link;
+  navigate to `/kitchen` through `Cuisine` and to `/management` through
+  `Gestion`. These are navigation-only actions, not order mutations.
 - Select one eligible employee, enter table/reference and optional note, and
   select exactly one current order type.
 - Submit to create a real order, then redirect to item entry.

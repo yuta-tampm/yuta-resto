@@ -167,9 +167,11 @@ remain unchanged.
     `DESIGN_HANDOFF.md`. The Backoffice shell reference is not applicable.
 23. **Shell/navigation decision:** `REUSE_APPROVED_SHARED_SHELL`, owned by
     `PosPageShell.tsx`, `PosHeader.tsx`, and `PosConnectivityStatus.tsx`. Keep
-    logo/home, title/description, `Commandes`, `Cuisine`, responsive actions,
-    and status strip. Do not add a sidebar, bottom navigation, tenant/account
-    area, management navigation, or dead routes.
+    logo/home, title/description, the direct route-owned `Service actif` badge,
+    the shared three-line `Commandes`/`Cuisine`/`Gestion` navigation, responsive
+    behavior, and the status strip. Do not add a sidebar, bottom navigation,
+    tenant/account area, or dead routes. The direct `Nouvelle commande`
+    navigation action remains Home-only.
 
 ## Shared UI context
 
@@ -267,9 +269,11 @@ used the compact, centered shell dimensions rather than the approved visual
 direction. The `/pos` shell now opts into a route-scoped prominent header and
 full-width canvas: 90px desktop height, 56px logo, 30px title, 56px actions, and
 a text-backed green service indicator. At widths below `lg`, actions use the
-existing compact menu so the 768px and 390px layouts stay on one row. Other POS
-routes continue using the original shared-header density; navigation, status,
-and behavior are unchanged.
+existing compact menu so the 768px and 390px layouts stay on one row. A later
+product-owner decision on 2026-08-16 standardized this prominent desktop
+geometry across all non-management `PosPageShell` routes while preserving each
+route's navigation, status, and workflow actions. The direct `Nouvelle
+commande` navigation action remains exclusive to Home `/`.
 
 The previously approved Phase 3 clean-origin evidence covers real loader
 failure/recovery, stale employee handling, and cautious unconfirmed-create

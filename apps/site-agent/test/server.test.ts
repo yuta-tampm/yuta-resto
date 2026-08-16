@@ -1,5 +1,6 @@
 import type { AddressInfo } from 'node:net';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import type { LocalOrdersHomeQuery } from '@yuta/contracts/local-pos';
 import { createSiteAgentServer } from '../src/server';
 import type { SiteAgentService } from '../src/services/site-agent-service';
 
@@ -42,9 +43,11 @@ describe('site-agent HTTP boundary', () => {
   let server: ReturnType<typeof createSiteAgentServer>;
   let baseUrl: string;
   let revokedSessionTokens: string[];
+  let ordersHomeQueries: LocalOrdersHomeQuery[];
 
   beforeEach(async () => {
     revokedSessionTokens = [];
+    ordersHomeQueries = [];
     server = createSiteAgentServer({
       env: {
         NODE_ENV: 'test',
@@ -56,6 +59,25 @@ describe('site-agent HTTP boundary', () => {
       },
       service: {
         ...createMockService(),
+        listOrdersHome: async (query) => {
+          ordersHomeQueries.push(query);
+          return {
+            serviceDay: {
+              start: '2026-07-27T03:00:00.000Z',
+              end: '2026-07-28T03:00:00.000Z',
+            },
+            view: query.view,
+            query: query.q,
+            orders: [],
+            counts: { open: 2, paidToday: 1, allToday: 3 },
+            pagination: {
+              page: query.page,
+              pageSize: query.limit,
+              totalItems: 1,
+              totalPages: 1,
+            },
+          };
+        },
         revokeSession: async (token) => {
           revokedSessionTokens.push(token);
         },
@@ -93,6 +115,23 @@ describe('site-agent HTTP boundary', () => {
       service: 'site-agent',
       apiVersion: 'v1',
       checkedAt,
+    });
+  });
+
+  it('validates and serves the paginated POS Home read model', async () => {
+    const response = await fetch(
+      `${baseUrl}/api/v1/orders/home?view=paid_today&q=POS&page=2&limit=25`,
+    );
+
+    expect(response.status).toBe(200);
+    expect(ordersHomeQueries).toEqual([
+      { view: 'paid_today', q: 'POS', page: 2, limit: 25 },
+    ]);
+    expect(await response.json()).toMatchObject({
+      view: 'paid_today',
+      query: 'POS',
+      counts: { open: 2, paidToday: 1, allToday: 3 },
+      pagination: { page: 2, pageSize: 25 },
     });
   });
 
@@ -693,6 +732,22 @@ function createMockService(): SiteAgentService {
     }),
     deleteComboGroupItem: async () => ({ success: true as const }),
     listOrders: async () => ({ orders: [] }),
+    listOrdersHome: async (query) => ({
+      serviceDay: {
+        start: '2026-07-27T03:00:00.000Z',
+        end: '2026-07-28T03:00:00.000Z',
+      },
+      view: query.view,
+      query: query.q,
+      orders: [],
+      counts: { open: 0, paidToday: 0, allToday: 0 },
+      pagination: {
+        page: query.page,
+        pageSize: query.limit,
+        totalItems: 0,
+        totalPages: 1,
+      },
+    }),
     createOrder: async (input) => ({
       order: {
         id: orderId,

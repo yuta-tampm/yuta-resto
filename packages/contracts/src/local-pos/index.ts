@@ -21,6 +21,7 @@ export const localPosRoutes = {
   comboRuleGroups: `${localPosApiBasePath}/catalog/combo-groups`,
   comboRuleGroupItems: `${localPosApiBasePath}/catalog/combo-group-items`,
   orders: `${localPosApiBasePath}/orders`,
+  ordersHome: `${localPosApiBasePath}/orders/home`,
   orderItems: `${localPosApiBasePath}/order-items`,
   payments: `${localPosApiBasePath}/payments`,
   printJobs: `${localPosApiBasePath}/print-jobs`,
@@ -533,6 +534,56 @@ export const localOrdersQuerySchema = z
 
 export const localOrdersResponseSchema = z
   .object({ orders: z.array(localOrderSummarySchema) })
+  .strict();
+
+export const localOrdersHomeViewSchema = z.enum([
+  'open',
+  'paid_today',
+  'all_today',
+]);
+
+export const localOrdersHomeQuerySchema = z
+  .object({
+    view: localOrdersHomeViewSchema.default('open'),
+    q: z.string().trim().max(255).default(''),
+    page: z.coerce.number().int().positive().default(1),
+    limit: z.coerce.number().int().min(1).max(100).default(50),
+  })
+  .strict();
+
+export const localOrdersHomeRowSchema = localOrderSummarySchema
+  .extend({
+    itemCount: z.number().int().nonnegative(),
+  })
+  .strict();
+
+export const localOrdersHomeResponseSchema = z
+  .object({
+    serviceDay: z
+      .object({
+        start: isoDateTimeSchema,
+        end: isoDateTimeSchema,
+      })
+      .strict(),
+    view: localOrdersHomeViewSchema,
+    query: z.string(),
+    orders: z.array(localOrdersHomeRowSchema),
+    counts: z
+      .object({
+        open: z.number().int().nonnegative(),
+        paidToday: z.number().int().nonnegative(),
+        allToday: z.number().int().nonnegative(),
+      })
+      .strict(),
+    pagination: z
+      .object({
+        page: z.number().int().positive(),
+        pageSize: z.number().int().positive(),
+        totalItems: z.number().int().nonnegative(),
+        totalPages: z.number().int().positive(),
+      })
+      .strict(),
+  })
   .strict();
 
 export const localOrderResponseSchema = z
@@ -1050,6 +1101,12 @@ export type UpdateLocalComboGroupItemInput = z.infer<
 export type CreateLocalOrderInput = z.infer<typeof createLocalOrderInputSchema>;
 export type LocalOrderSummary = z.infer<typeof localOrderSummarySchema>;
 export type LocalOrdersQuery = z.infer<typeof localOrdersQuerySchema>;
+export type LocalOrdersHomeView = z.infer<typeof localOrdersHomeViewSchema>;
+export type LocalOrdersHomeQuery = z.infer<typeof localOrdersHomeQuerySchema>;
+export type LocalOrdersHomeRow = z.infer<typeof localOrdersHomeRowSchema>;
+export type LocalOrdersHomeResponse = z.infer<
+  typeof localOrdersHomeResponseSchema
+>;
 export type AddLocalOrderItemInput = z.infer<
   typeof addLocalOrderItemInputSchema
 >;

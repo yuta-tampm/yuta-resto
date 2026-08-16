@@ -187,6 +187,7 @@ PATCH /api/v1/catalog/combo-group-items/:groupItemId
 DELETE /api/v1/catalog/combo-group-items/:groupItemId
 GET  /api/v1/orders
 POST /api/v1/orders
+GET  /api/v1/orders/home
 GET  /api/v1/orders/:orderId
 POST /api/v1/orders/:orderId/items
 POST /api/v1/orders/:orderId/commands
@@ -209,6 +210,14 @@ Request and response schemas live under `@yuta/contracts/local-pos`. Contracts
 also define the existing order-item, kitchen, split-payment, payment-capture,
 and print-job commands so those workflows can move without inventing a second
 transport model.
+
+The POS Home uses `GET /api/v1/orders/home` as a read-only operational summary.
+The site-agent owns the 05:00 local service-day predicates, table/order-number
+search, sorting, tab counts, 50-row pagination, item row counts, and allergy
+aggregation. One Home render therefore performs one local HTTP request and a
+bounded set of database reads rather than fetching every order detail. Stored
+totals and statuses remain authoritative; this endpoint cannot transition or
+recalculate an order.
 
 Order-item editing, cancellation/restore, kitchen status changes, allergy
 confirmation, order cancellation, and send-to-kitchen are now implemented in
@@ -278,6 +287,12 @@ group name, usually `Plat`.
 ## UX Principles
 
 The POS is used during service, often on a tablet. Favor speed, clarity, and large touch targets.
+
+The application shell uses the full available viewport width across service,
+order, kitchen, payment, and local-management routes. Do not constrain a
+route-level canvas, header, health strip, or main content area with a centered
+desktop `max-width`. Focused forms, login cards, dialogs, success states, and
+similar task-specific content may retain an intentional readable width.
 
 Route convention:
 

@@ -6,6 +6,19 @@ Visibility: Engineering
 
 Reference status: `APPROVED`
 
+## Post-delivery shared-header verification
+
+Following product-owner approval on 2026-08-16, the route was rechecked
+read-only in the production POS stack after `PosPageShell` made the prominent
+desktop header the non-management default. Order item entry matched Home at
+90px header/56px logo on the available 1280px desktop viewport and at 70px on
+390×844, with zero document overflow. Its payment action remained, the leading
+header back arrow was removed, and no direct `Nouvelle commande` navigation
+action appeared. The shared three-line menu exposes `Commandes`, `Cuisine`, and
+`Gestion` without replacing the direct payment workflow action. Existing Phase
+5 captures below remain historical evidence of
+the earlier compact desktop header and unchanged item-entry content.
+
 Approved scope/date or review note: The product owner approved the corrected
 desktop, narrow, and post-send success directions on 2026-08-15. Approval is
 limited to hierarchy, density, spacing, responsive behavior, and visual tone.

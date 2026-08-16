@@ -6,6 +6,7 @@ export * from './env';
 export * from './establishment-profile-repository';
 export * from './personnel-repository';
 export * from './personnel-document-repository';
+export * from './personnel-contract-amendment-repository';
 export * from './reputation-repository';
 export * from './schema';
 export * from './tenant-adapters';

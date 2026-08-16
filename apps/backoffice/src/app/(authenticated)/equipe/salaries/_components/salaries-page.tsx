@@ -38,6 +38,8 @@ import {
   cn,
 } from '@yuta/ui';
 import {
+  BadgeCheck,
+  BriefcaseBusiness,
   CheckCircle2,
   CalendarDays,
   CalendarX2,
@@ -47,19 +49,29 @@ import {
   Database,
   FileWarning,
   Eye,
+  FileText,
   LoaderCircle,
   Pencil,
   Plus,
   RotateCcw,
   Search,
+  GraduationCap,
+  IdCard,
   UsersRound,
 } from 'lucide-react';
-import { useEffect, useState, useTransition, type FormEvent } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useState,
+  useTransition,
+  type FormEvent,
+} from 'react';
 import { useRouter } from 'next/navigation';
 import { EmployeeCreateDialog } from './employee-create-dialog';
 import { EmployeeDepartureDialog } from './employee-departure-dialog';
 import { EmployeeDocuments } from './employee-documents';
 import { EmployeeEditDialog } from './employee-edit-dialog';
+import { EmployeeEmploymentDetails } from './employee-employment-details';
 import {
   loadEmployeeAccessHistoryAction,
   loadEmployeeHistoryAction,
@@ -127,6 +139,11 @@ export function SalariesPage({
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [editingEmployee, setEditingEmployee] =
     useState<PersonnelEmployeeSummary | null>(null);
+  const [recentlySavedEmployee, setRecentlySavedEmployee] =
+    useState<PersonnelEmployeeSummary | null>(null);
+  const [editSuccessMessage, setEditSuccessMessage] = useState<string | null>(
+    null,
+  );
   const [departureEmployee, setDepartureEmployee] =
     useState<PersonnelEmployeeSummary | null>(null);
   const [historyState, setHistoryState] = useState<HistoryLoadState>({
@@ -160,12 +177,26 @@ export function SalariesPage({
   useEffect(() => {
     if (
       selectedId &&
-      !data.items.some((employee) => employee.id === selectedId)
+      !data.items.some((employee) => employee.id === selectedId) &&
+      recentlySavedEmployee?.id !== selectedId
     ) {
       setSelectedId(null);
       setDetailTab('overview');
     }
-  }, [data.items, selectedId]);
+  }, [data.items, recentlySavedEmployee, selectedId]);
+
+  useEffect(() => {
+    if (!recentlySavedEmployee) return;
+    const refreshedEmployee = data.items.find(
+      (employee) => employee.id === recentlySavedEmployee.id,
+    );
+    if (
+      refreshedEmployee &&
+      refreshedEmployee.revision >= recentlySavedEmployee.revision
+    ) {
+      setRecentlySavedEmployee(null);
+    }
+  }, [data.items, recentlySavedEmployee]);
 
   useEffect(() => {
     if (!selectedId) {
@@ -262,8 +293,15 @@ export function SalariesPage({
     };
   }, [accessHistoryCursor, accessHistoryOperationId, detailTab, selectedId]);
 
+  const displayedEmployees = data.items.map((employee) =>
+    recentlySavedEmployee?.id === employee.id &&
+    recentlySavedEmployee.revision > employee.revision
+      ? recentlySavedEmployee
+      : employee,
+  );
   const selectedEmployee =
-    data.items.find((employee) => employee.id === selectedId) ?? null;
+    displayedEmployees.find((employee) => employee.id === selectedId) ??
+    (recentlySavedEmployee?.id === selectedId ? recentlySavedEmployee : null);
   const isFirstUse =
     data.counts.active + data.counts.upcoming + data.counts.former === 0;
 
@@ -283,6 +321,17 @@ export function SalariesPage({
     event.preventDefault();
     navigate({ search: search.trim(), cursor: undefined });
   }
+
+  const handleEmployeeSaved = useCallback(
+    (employee: PersonnelEmployeeSummary, message: string | null) => {
+      setRecentlySavedEmployee(employee);
+      setEditingEmployee(null);
+      setEditSuccessMessage(
+        message ?? 'Les modifications ont été enregistrées.',
+      );
+    },
+    [],
+  );
 
   return (
     <div className="flex w-full flex-col gap-5" aria-busy={isPending}>
@@ -418,7 +467,13 @@ export function SalariesPage({
             </nav>
           </div>
 
-          {data.items.length === 0 ? (
+          {editSuccessMessage && (
+            <Alert tone="success" className="m-4 mb-0">
+              <AlertDescription>{editSuccessMessage}</AlertDescription>
+            </Alert>
+          )}
+
+          {displayedEmployees.length === 0 ? (
             <EmptyState
               icon={<UsersRound className="h-9 w-9" aria-hidden />}
               title={
@@ -449,11 +504,13 @@ export function SalariesPage({
             />
           ) : (
             <EmployeeList
-              employees={data.items}
+              employees={displayedEmployees}
               selectedId={selectedId}
               locale={locale}
               businessDate={businessDate}
               onSelect={(id) => {
+                setRecentlySavedEmployee(null);
+                setEditSuccessMessage(null);
                 setSelectedId(id);
                 setDetailTab('overview');
                 setDossierAccessRequest({
@@ -516,8 +573,14 @@ export function SalariesPage({
                 setAccessHistoryOperationId(crypto.randomUUID());
               }
             }}
-            onClose={() => setSelectedId(null)}
-            onEdit={() => setEditingEmployee(selectedEmployee)}
+            onClose={() => {
+              setSelectedId(null);
+              setRecentlySavedEmployee(null);
+            }}
+            onEdit={() => {
+              setEditSuccessMessage(null);
+              setEditingEmployee(selectedEmployee);
+            }}
             onDeparture={() => setDepartureEmployee(selectedEmployee)}
             onRetryHistory={() => setHistoryOperationId(crypto.randomUUID())}
             onRetryAccessHistory={() =>
@@ -567,6 +630,7 @@ export function SalariesPage({
         <EmployeeEditDialog
           employee={editingEmployee}
           open
+          onSaved={handleEmployeeSaved}
           onOpenChange={(open) => {
             if (!open) setEditingEmployee(null);
           }}
@@ -899,27 +963,51 @@ function EmployeeDetails({
               </section>
             )}
             {activeTab === 'identity' && (
-              <DetailSection title="Identité minimale">
-                <DetailRow label="Prénoms" value={employee.givenNames} />
-                <DetailRow label="Nom" value={employee.familyName} />
+              <DetailSection
+                title="Identité minimale"
+                description="Informations d’identité enregistrées dans le dossier salarié."
+              >
+                <OverviewFact
+                  icon={<IdCard className="h-4 w-4" aria-hidden />}
+                  label="Prénoms"
+                  value={employee.givenNames}
+                />
+                <OverviewFact
+                  icon={<BadgeCheck className="h-4 w-4" aria-hidden />}
+                  label="Nom"
+                  value={employee.familyName}
+                />
               </DetailSection>
             )}
             {activeTab === 'employment' && (
-              <DetailSection title="Relation de travail">
-                <DetailRow label="Poste" value={employee.position} />
-                <DetailRow
-                  label="Qualification"
-                  value={employee.qualification}
-                />
-                <DetailRow
-                  label="Contrat"
-                  value={getContractSummary(employee)}
-                />
-                <DetailRow
-                  label="Temps de travail"
-                  value={getWorkTimeLabel(employee)}
-                />
-              </DetailSection>
+              <>
+                <DetailSection
+                  title="Relation de travail"
+                  description="Situation contractuelle principale du salarié."
+                >
+                  <OverviewFact
+                    icon={<BriefcaseBusiness className="h-4 w-4" aria-hidden />}
+                    label="Poste"
+                    value={employee.position}
+                  />
+                  <OverviewFact
+                    icon={<GraduationCap className="h-4 w-4" aria-hidden />}
+                    label="Qualification"
+                    value={employee.qualification}
+                  />
+                  <OverviewFact
+                    icon={<FileText className="h-4 w-4" aria-hidden />}
+                    label="Contrat"
+                    value={getContractSummary(employee)}
+                  />
+                  <OverviewFact
+                    icon={<Clock3 className="h-4 w-4" aria-hidden />}
+                    label="Temps de travail"
+                    value={getWorkTimeLabel(employee)}
+                  />
+                </DetailSection>
+                <EmployeeEmploymentDetails employee={employee} />
+              </>
             )}
             {activeTab === 'history' && (
               <EmployeeHistory
@@ -1228,7 +1316,9 @@ function auditFieldLabel(
     qualification: 'qualification',
     employmentTermType: 'type de contrat',
     expectedEndDate: 'fin prévue',
+    fixedTermReasonCode: 'motif du CDD',
     workTimeCategory: 'temps de travail',
+    contractWeeklyMinutes: 'durée hebdomadaire contractuelle',
     entryDate: 'date d’entrée',
     departureDate: 'date de départ',
   };
@@ -1268,31 +1358,21 @@ function OverviewFact({
 
 function DetailSection({
   title,
+  description,
   children,
 }: {
   title: string;
+  description?: string;
   children: React.ReactNode;
 }) {
   return (
     <section className="rounded-xl border border-border-default bg-surface p-5 shadow-sm">
-      <h3 className="text-sm font-bold">{title}</h3>
-      <div className="mt-4 grid gap-3">{children}</div>
+      <h3 className="text-lg font-bold">{title}</h3>
+      {description && (
+        <p className="mt-1 text-sm text-secondary">{description}</p>
+      )}
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">{children}</div>
     </section>
-  );
-}
-
-function DetailRow({
-  label,
-  value,
-}: {
-  label: string;
-  value: React.ReactNode;
-}) {
-  return (
-    <div className="flex items-start justify-between gap-4 text-sm">
-      <span className="text-secondary">{label}</span>
-      <span className="text-right font-semibold">{value}</span>
-    </div>
   );
 }
 

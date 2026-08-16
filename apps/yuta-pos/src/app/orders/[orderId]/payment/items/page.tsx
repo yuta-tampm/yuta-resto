@@ -43,8 +43,6 @@ export default async function SplitItemsPage({
 
   return (
     <PosPageShell
-      backHref={`/orders/${order.id}/payment`}
-      backLabel="Retour paiement"
       title="Séparer par articles"
       description={order.tableLabel}
       actions={

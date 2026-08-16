@@ -1,5 +1,5 @@
 import { Button, cn } from '@yuta/ui';
-import { ArrowLeft, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
@@ -9,8 +9,8 @@ type PosHeaderProps = {
   description?: ReactNode;
   eyebrow?: ReactNode;
   actions?: ReactNode;
-  backHref?: string;
-  backLabel?: string;
+  secondaryActions?: ReactNode;
+  secondaryMenuLabel?: string;
   prominent?: boolean;
   className?: string;
 };
@@ -20,8 +20,8 @@ export function PosHeader({
   description,
   eyebrow,
   actions,
-  backHref,
-  backLabel = 'Retour',
+  secondaryActions,
+  secondaryMenuLabel = 'Navigation secondaire',
   prominent = false,
   className,
 }: PosHeaderProps) {
@@ -36,18 +36,6 @@ export function PosHeader({
       )}
     >
       <div className="flex min-w-0 items-center gap-3">
-        {backHref && (
-          <Button
-            asChild
-            variant="ghost"
-            size="sm"
-            className="shrink-0 text-white hover:bg-white/10"
-          >
-            <Link href={backHref} aria-label={backLabel}>
-              <ArrowLeft className="h-5 w-5" />
-            </Link>
-          </Button>
-        )}
         <Link
           href="/"
           aria-label="Retour aux commandes"
@@ -99,15 +87,33 @@ export function PosHeader({
         </div>
       </div>
 
-      {actions && (
+      {(actions || secondaryActions) && (
         <>
           <div
             className={cn(
               'hidden flex-wrap items-center',
-              prominent ? 'gap-3 lg:flex' : 'gap-2 sm:flex',
+              prominent
+                ? 'gap-3 lg:flex [&>*]:h-12 [&>form>button]:h-12'
+                : 'gap-2 sm:flex',
             )}
           >
             {actions}
+            {secondaryActions && (
+              <details className="group">
+                <summary
+                  className={cn(
+                    'grid cursor-pointer list-none place-items-center rounded-lg border border-border-default bg-white text-primary transition-colors hover:bg-surface-muted [&::-webkit-details-marker]:hidden',
+                    prominent ? 'h-12 w-12' : 'h-11 w-11',
+                  )}
+                >
+                  <Menu className="h-6 w-6" aria-hidden="true" />
+                  <span className="sr-only">{secondaryMenuLabel}</span>
+                </summary>
+                <div className="absolute right-4 top-full z-30 mt-2 grid min-w-64 gap-2 rounded-lg border border-border-default bg-white p-3 text-primary shadow-sm [&>a]:w-full [&>button]:w-full [&>form>button]:w-full [&>form]:w-full">
+                  {secondaryActions}
+                </div>
+              </details>
+            )}
           </div>
           <details
             className={cn('group', prominent ? 'lg:hidden' : 'sm:hidden')}
@@ -118,6 +124,7 @@ export function PosHeader({
             </summary>
             <div className="absolute right-4 top-full z-30 mt-2 grid min-w-64 gap-2 rounded-lg border border-border-default bg-white p-3 text-primary shadow-sm [&>a]:w-full [&>button]:w-full [&>form>button]:w-full [&>form]:w-full">
               {actions}
+              {secondaryActions}
             </div>
           </details>
         </>

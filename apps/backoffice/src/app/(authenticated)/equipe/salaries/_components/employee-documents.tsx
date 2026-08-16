@@ -32,6 +32,7 @@ import {
   formatDocumentSize,
   getDocumentFileSelectionLabel,
 } from '../employee-documents-model';
+import { EmployeeAmendments } from './employee-amendments';
 
 type LoadState =
   | { status: 'loading'; message: null }
@@ -293,6 +294,8 @@ export function EmployeeDocuments({
           <AlertDescription>{saveState.message}</AlertDescription>
         </Alert>
       )}
+
+      <EmployeeAmendments employeeId={employeeId} locale={locale} />
     </section>
   );
 }

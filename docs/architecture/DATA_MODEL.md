@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-13
+Last updated: 2026-08-15
 
 Authority: current Drizzle schemas and `docs/architecture/DATABASE_BOUNDARIES.md`
 
@@ -354,9 +354,13 @@ organization. Repository reads repeat both scope predicates even when the
 employee ID is globally unique.
 
 The table stores names, poste, qualification, employment-term type, optional
-expected end date, work-time category, entry date, optional departure date,
-revision, and server timestamps. Display name, employment view, completeness,
-filters, and summary counts are derived rather than stored.
+expected end date, an optional controlled fixed-term reason, work-time
+category, optional contractual weekly duration as integer minutes, entry date,
+optional departure date, revision, and server timestamps. Existing reason and
+duration values may remain null and do not affect completeness. CDI rows cannot
+store a fixed-term reason; weekly minutes, when present, are constrained to
+1–2,880. Display name, employment view, completeness, labels, filters, and
+summary counts are derived rather than stored.
 
 The development create/edit slices also own `personnel_employee_audit_events` and
 `personnel_command_receipts`. One transaction creates the dossier, appends the
@@ -366,8 +370,18 @@ revision atomically, then append identity and/or employment field-group events
 without copying full dossier values into audit metadata. Receipts contain no
 employee payload. Departure writes update only the nullable effective date and
 revision; corrections append previous/new dates and a bounded reason to the
-immutable audit event. Documents, payroll, register, and Formalités data are
-not active.
+immutable audit event.
+
+Local-development personnel documents use establishment-scoped metadata while
+PDF bytes remain outside PostgreSQL. `personnel_documents` and
+`personnel_document_versions` retain the single current signed-contract slot
+and immutable correction versions. `personnel_contract_amendments` represents
+zero or more distinct signed amendments with effective date, optional bounded
+reference, current version, and revision. Its version table stores sanitized
+file metadata and opaque private-storage keys; its command-receipt table stores
+hashed, 24-hour idempotency evidence without file or employee payload. Every
+table repeats organization, establishment, and employee scope with composite
+foreign keys. Payroll, register, and Formalités data are not active.
 
 The employee-detail history reads at most the 50 most recent known events under
 the same organization-and-establishment scope. The repository maps stored

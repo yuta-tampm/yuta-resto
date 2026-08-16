@@ -186,12 +186,9 @@ export default async function OrderItemsPage({
 
   const successContent = (
     <PosPageShell
-      backHref={`/orders/${order.id}`}
-      backLabel="Retour detail"
       title={order.tableLabel}
       description={order.orderNumber}
       contentClassName="p-0"
-      maxWidthClassName="max-w-none"
     >
       <OrderItemsSendSuccess orderNumber={order.orderNumber} />
     </PosPageShell>
@@ -200,8 +197,6 @@ export default async function OrderItemsPage({
   return (
     <KitchenSendSuccessBoundary successContent={successContent}>
       <PosPageShell
-        backHref={`/orders/${order.id}`}
-        backLabel="Retour detail"
         title={order.tableLabel}
         description={order.orderNumber}
         actions={
@@ -213,7 +208,6 @@ export default async function OrderItemsPage({
           </Button>
         }
         contentClassName="p-0 lg:overflow-hidden"
-        maxWidthClassName="max-w-none"
       >
         <div className="flex min-h-full min-w-0 flex-col lg:h-full lg:min-h-0">
           {sendFeedback && (

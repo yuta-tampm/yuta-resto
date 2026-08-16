@@ -1,5 +1,8 @@
 import type {
   LocalCatalogResponse,
+  LocalOrdersHomeQuery,
+  LocalOrdersHomeResponse,
+  LocalOrdersHomeRow,
   LocalOrderSummary,
 } from '@yuta/contracts/local-pos';
 import { siteAgentClient } from './site-agent-client';
@@ -54,6 +57,27 @@ export type PosOrderDetail = {
   discounts: IsoOrderDetail['discounts'];
 };
 
+export type PosOrderHomeRow = Omit<
+  LocalOrdersHomeRow,
+  | 'createdAt'
+  | 'updatedAt'
+  | 'sentAt'
+  | 'paidAt'
+  | 'cancelledAt'
+  | 'allergyAcknowledgedAt'
+> & {
+  createdAt: Date;
+  updatedAt: Date;
+  sentAt: Date | null;
+  paidAt: Date | null;
+  cancelledAt: Date | null;
+  allergyAcknowledgedAt: Date | null;
+};
+
+export type PosOrdersHomeResponse = Omit<LocalOrdersHomeResponse, 'orders'> & {
+  orders: PosOrderHomeRow[];
+};
+
 export const posApi = {
   listLocalUsers: () => siteAgentClient.listLocalUsers(),
   getCatalog: (): Promise<LocalCatalogResponse> => siteAgentClient.getCatalog(),
@@ -80,6 +104,16 @@ export const posApi = {
   async listOrderDetails(limit = 200): Promise<PosOrderDetail[]> {
     const { orders } = await siteAgentClient.listOrders({ limit });
     return Promise.all(orders.map(({ id }) => posApi.getOrderDetail(id)));
+  },
+
+  async listOrdersHome(
+    input: Partial<LocalOrdersHomeQuery>,
+  ): Promise<PosOrdersHomeResponse> {
+    const response = await siteAgentClient.listOrdersHome(input);
+    return {
+      ...response,
+      orders: response.orders.map(hydrateOrderHomeRow),
+    };
   },
 
   async getPaymentViewData(orderId: string) {
@@ -113,6 +147,13 @@ function hydrateOrder(order: IsoOrder): PosOrder {
     paidAt: toNullableDate(order.paidAt),
     cancelledAt: toNullableDate(order.cancelledAt),
     allergyAcknowledgedAt: toNullableDate(order.allergyAcknowledgedAt),
+  };
+}
+
+function hydrateOrderHomeRow(order: LocalOrdersHomeRow): PosOrderHomeRow {
+  return {
+    ...hydrateOrder(order),
+    itemCount: order.itemCount,
   };
 }
 

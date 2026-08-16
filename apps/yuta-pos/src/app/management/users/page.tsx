@@ -40,7 +40,7 @@ export default async function LocalUsersManagementPage() {
         userName={session.user.name}
         userRole={session.user.role}
       />
-      <div className="mx-auto grid w-full max-w-7xl gap-3 px-4 py-4 md:px-6">
+      <div className="grid w-full gap-3 px-4 py-4 md:px-6">
         <Link
           href="/management"
           className="inline-flex min-h-11 w-fit items-center gap-2 text-sm font-semibold text-status-success hover:underline focus:outline-none focus:ring-2 focus:ring-focus-ring focus:ring-offset-2"

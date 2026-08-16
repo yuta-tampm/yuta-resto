@@ -136,6 +136,9 @@ save-error -> retry-with-idempotency | return-to-editing
   active form;
 - `persisted success` is allowed only after the domain write and required audit
   event commit together;
+- a successful edit closes only the edit dialog, keeps the selected employee
+  dossier open, and immediately presents the committed employee returned by the
+  server while the route refresh reconciles the list in the background;
 - validation, conflict, and save errors preserve user-entered values;
 - retry must not create a second dossier or duplicate audit event.
 
@@ -904,6 +907,127 @@ Signed amendments are confidential contractual personal data. Phase 0 adds no
 retention rule, completeness rule, automatic employee-field update, production
 provider, or legal-compliance claim.
 
+### Documents Wave B Phase 1 prototype status
+
+The approved local prototype uses two typed fictional items with only filename,
+proposed effective date, and byte size. The UI derives localized date/size
+labels, adds a persistent demonstration notice, and disables all amendment
+actions. It creates no amendment resource identifier, category code, transport
+shape, server-owned state, storage metadata, audit event, or mutation. The
+prototype values are presentation evidence and must not be converted directly
+into a database table or contract.
+
+### Documents Wave B Phase 2 technical proposal
+
+Capability status: `TECHNICAL PROPOSAL — NO REAL DATA`
+
+#### Recommended aggregate and safe read model
+
+The implemented `personnel_documents` uniqueness rule represents one current
+document per employee/category and is correct for the base signed contract. It
+cannot represent several distinct amendments. Phase 2 therefore recommends a
+separate logical amendment aggregate and immutable amendment versions rather
+than weakening or overloading the signed-contract invariant.
+
+| Value                                             | Ownership                   | Recommended Phase 3 boundary                                                                         |
+| ------------------------------------------------- | --------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Amendment ID                                      | Server-owned                | Opaque identity for one distinct legal amendment; never authorizes access alone                      |
+| Organization, establishment, employee             | Trusted server scope        | Repeated on every lookup, mutation, version, receipt, audit, cleanup, and delivery operation         |
+| Effective date                                    | Stored, required proposal   | ISO business date; display/order only; does not mutate employment data                               |
+| Amendment reference                               | Stored, optional proposal   | Bounded value copied from the document when available; no inferred or free-form title                |
+| Current version and revision                      | Server-owned                | Positive counters for immutable correction versions and optimistic conflict detection                |
+| Filename, media type, size, checksum, storage key | Sensitive version metadata  | Same sanitization and server-only storage principles as the existing contract slice                  |
+| Upload/scan progress                              | Transient application state | Not a committed amendment; failure cleans the object and records only an allowlisted rejection event |
+
+The safe browser item would expose only the opaque amendment ID, proposed
+effective date, optional reference, sanitized filename, PDF type, byte size,
+current version, revision, and uploaded time. It must omit tenant IDs, storage
+key, checksum, scanner output, uploader ID, operation ID, and raw audit metadata.
+
+#### Ordering and paging
+
+- newest effective date first;
+- then newest server creation time and opaque ID for a stable order;
+- cursor pagination with ten items per page;
+- replacement does not change the amendment's effective date or list position;
+- changing metadata is deferred; a wrong effective date requires a separately
+  approved correction flow rather than silently rewriting history.
+
+#### Command and failure semantics
+
+Add receives employee ID, effective date, optional reference, idempotency key,
+and one bounded PDF. Replace additionally receives amendment ID and expected
+revision. Browser input never supplies trusted tenant, role, permission,
+category, storage key, checksum, or processing result.
+
+The later server flow is: authorize -> validate -> write private quarantine ->
+scan -> promote -> atomically commit scoped amendment/version/receipt/audit
+metadata -> return a safe item. A failure before metadata commit removes the
+new object and leaves no visible amendment. Replacement verifies the new object
+before swapping the current-version pointer; a failure preserves the old
+version. Duplicate retries return the committed result, while key reuse with a
+different payload returns a stable conflict.
+
+#### Authorization and audit recommendation
+
+Reuse the implemented OWNER-only `personnel.document.read` and
+`personnel.document.manage` permissions. MANAGER, STAFF, public, service, and
+self-service actors remain denied. Every list, item, mutation, and content grant
+must include trusted organization + establishment + employee scope; amendment
+ID alone always fails closed.
+
+Opening the Documents tab should append one deduplicated
+`employee.documents_viewed` event for the whole surface, not a second event just
+because the amendment section is present. Successful add, rejected upload,
+view, download grant, and replacement may reuse the existing document event
+taxonomy with the allowlisted amendment category and opaque amendment ID.
+Employee-facing audit projections omit the filename, effective date, reference,
+storage/scanner values, tenant IDs, and operation IDs.
+
+#### Phase 2 decision register
+
+| ID     | Recommended choice                                                                      | Approval state                      |
+| ------ | --------------------------------------------------------------------------------------- | ----------------------------------- |
+| AB2-01 | Separate amendment aggregate; do not alter the base-contract single-slot meaning        | Product/engineering pending         |
+| AB2-02 | Required effective date; optional bounded reference; no other structured legal metadata | Product/legal pending               |
+| AB2-03 | Effective-date descending cursor order, ten items per page                              | Product pending                     |
+| AB2-04 | Reuse existing OWNER-only document read/manage permissions                              | Product/security pending            |
+| AB2-05 | PDF only, 10 MiB, existing provider-neutral storage/scanner boundaries                  | Security pending for real-file work |
+| AB2-06 | One Documents-surface open event; reuse allowlisted item mutation/access events         | Product/security pending            |
+| AB2-07 | Verification-before-commit/add and verification-before-swap/replace                     | Engineering/security pending        |
+| AB2-08 | Local-only first vertical slices; production provider and release remain blocked        | Product/operations pending          |
+| AB2-09 | No metadata edit/delete/archive/legal hold in the local MVP                             | Product/legal pending               |
+| AB2-10 | Per-category/version retention, rights, backup, restore, incident and deletion rules    | Legal/security/operations pending   |
+
+Phase 2 creates no schema, migration, enum, transport contract, repository,
+permission, API, server action, storage object, or real employee data.
+
+### Documents Wave B Phase 3 local implementation reconciliation
+
+AB2-01 through AB2-09 were approved on 2026-08-15 for local implementation.
+Migration `0008_omniscient_colonel_america.sql` adds separate scoped amendment,
+immutable-version, and hashed command-receipt metadata. The current
+`signed_employment_contract` enum and its one-category uniqueness rule are
+unchanged.
+
+The implemented read contract exposes the safe Phase 2 fields and ten-item
+cursor page. Add stores required effective date and optional bounded reference;
+replace accepts amendment ID plus expected revision and preserves the aggregate
+metadata. Both commands use 24-hour actor/establishment-scoped idempotency
+receipts. File bytes use the existing local private storage and scanner, while
+content access uses a separate scoped server route and fresh authorization.
+
+Opening Documents still writes one deduplicated `employee.documents_viewed`
+event through the base document load. Amendment listing adds no second open
+event. Add/reject/view/download/replace reuse minimized document event names
+with the allowlisted amendment category. Phase 3 adds no metadata edit,
+delete/archive/legal hold, extraction, employment-field mutation, new role, new
+entitlement, production provider, or production release behavior.
+
+AB2-10 remains unresolved. Production stays fail-closed until retention,
+employee-rights handling, deletion propagation, backups/restores, providers,
+monitoring, and incident ownership are approved and implemented.
+
 ## External compliance references
 
 Reviewed 2026-08-13:
@@ -966,3 +1090,226 @@ from the business-change timeline. Archive/deletion jobs, legal hold, a global
 maintenance scheduler for inactive establishments, and production
 backup/restore evidence are not implemented or approved. Deferred capability
 waves remain proposals and receive separate approval.
+
+## Wave C Phase 0 — extended employment and Formalités reuse
+
+### Repository inventory
+
+The real employee dossier currently stores identity, position, qualification,
+CDI/CDD, expected CDD end date, full-/part-time category, entry/departure dates,
+and a revision. The `Relation de travail` tab displays the existing subset.
+`/equipe/formalites-personnel` is a truthful planned page: no Formalités domain,
+contract, persistence, workflow, generation service, status model, or test was
+found. Signed documents and amendments are separate evidence aggregates and do
+not update these employee facts.
+
+### Phase 0 conceptual dictionary
+
+This table is discovery input, not a database or transport design.
+
+| Concept                           | Classification                      | Proposed owner and boundary                                                      |
+| --------------------------------- | ----------------------------------- | -------------------------------------------------------------------------------- |
+| Employment term and expected end  | Existing stored employee facts      | Employee dossier, organization + establishment scoped                            |
+| Work-time category                | Existing stored employee fact       | Employee dossier; does not describe a schedule                                   |
+| CDD reason                        | Proposed stored confidential fact   | Employee dossier; controlled value, applicable only to CDD                       |
+| Contractual weekly duration       | Proposed stored confidential fact   | Employee dossier; display hours/week, later domain proposal uses integer minutes |
+| Completeness for Wave C           | Proposed derived value              | Derived from approved applicable fields; never stored as authority               |
+| Open section, draft input, errors | Transient UI state                  | Browser only; never authorization or domain authority                            |
+| Signed PDF and amendment files    | Existing integration-owned evidence | Documents aggregates; never a source for automatic extraction                    |
+| Formalités status/output          | Deferred integration-owned value    | Future Formalités domain, not Salariés                                           |
+
+No exact enum values for the CDD reason are approved. The design may use
+clearly fictional labels to test comprehension, but Phase 2 must define the
+allowlist, applicability, correction history, validation, and legal ownership
+before implementation. No free-text reason or named replacement employee is
+proposed. The exact minimum/maximum weekly duration and representation also
+remain Phase 2 decisions.
+
+### Authorization, ownership, and sensitive handling
+
+Every future read or mutation must derive the active organization,
+establishment, membership, role, and permissions from the trusted server
+session. Lookup by employee ID alone and browser-provided tenant or role values
+remain forbidden. The proposed Phase 0 audience is OWNER only; no permission or
+entitlement change is approved.
+
+CDD reason and contracted duration are confidential personnel data. Future
+mutation audit must record actor, employee, establishment, action, time, and an
+allowlisted changed-field group, but not copy sensitive old/new values into
+generic audit metadata. Reads, retention, employee rights, deletion, legal
+hold, backup/restore, and production monitoring require later approval.
+
+### Interaction proposal for design discovery
+
+1. OWNER opens an employee dossier and selects `Relation de travail`.
+2. Existing authoritative employment information loads unchanged.
+3. A distinct complementary-contract section explains present, missing, and
+   not-applicable information without implying persistence.
+4. CDD reason is not applicable for CDI. Contractual duration may be missing
+   without being guessed from `Temps plein` or `Temps partiel`.
+5. Any future edit would require server validation, expected revision,
+   idempotent retry, minimized audit, conflict recovery, and a fresh scoped
+   read. None of those mutations is authorized in Phase 0.
+
+Required discovery states are loading, ready, incomplete, not applicable,
+forbidden, validation, pending, conflict, save failure with preserved input and
+retry, and responsive layout. Remuneration, probation, weekly distribution,
+apprenticeship, Formalités workflow, alerts, register/PDF, OCR, delegation,
+self-service, transfer, and merge remain deferred.
+
+### Wave C Phase 1 local prototype status
+
+The approved prototype adds a route-local typed presentation fixture to the
+existing `Relation de travail` tab. It displays a fictional CDD reason and
+fictional weekly duration. For an existing CDI dossier, the CDD-reason
+presentation changes to `Non applicable — contrat CDI`; this is display logic,
+not a persisted completeness or legal rule.
+
+The section is labelled `Prototype` and `Aperçu sans sauvegarde`. It states that
+the values are fictional, are not attached to the selected employee, and cannot
+be edited or saved. The existing header `Modifier` action retains its current
+real minimum-field behavior and does not submit either prototype value. No
+fixture identity, tenant scope, request payload, action, URL, storage value, or
+server-owned state exists.
+
+Phase 1 creates no schema, migration, enum, contract, permission, API,
+repository, server action, audit event, Formalités status, or real employee
+data. The two fixture values remain presentation evidence and must not be copied
+directly into a later data model.
+
+### Wave C Phase 2 technical proposal
+
+Capability status: `APPROVED FOR LOCAL PHASE 3; PRODUCTION BLOCKED`
+
+Phase 2 was authorized on 2026-08-16 for documentation only. It maps the
+approved prototype to domain choices without changing the fixture or creating a
+schema, migration, enum, contract, permission, API, repository, action, or real
+employee data.
+
+#### Current legal-source boundary
+
+Reviewed on 2026-08-16:
+
+- Légifrance, [Code du travail, article L1242-2](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000037312980),
+  lists the principal cases in which a fixed-term contract may be concluded;
+- Légifrance, [Code du travail, article L1242-3](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000052437237),
+  contains additional special cases and changed on 2026-01-01;
+- Légifrance, [Code du travail, article L3121-27](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000033020376),
+  states the 35-hour statutory week for full-time work, while other provisions
+  and collective agreements may affect interpretation.
+
+YUTA records operator-declared contract facts; it does not certify that a CDD
+reason or weekly duration is legally valid. The controlled list must be
+versioned and re-reviewed before production. No free-text `other` choice is
+recommended because it would hide unsupported legal cases.
+
+#### Proposed safe domain values
+
+This is a contract proposal, not a table definition.
+
+| Value                      | Classification                    | Proposed Phase 3 rule                                                                       |
+| -------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------- |
+| `fixedTermReasonCode`      | Nullable confidential stored fact | Null for CDI; required for supported CDD writes                                             |
+| `contractWeeklyMinutes`    | Nullable confidential stored fact | Positive integer minutes; independent from Planning and Pointage                            |
+| Reason/duration labels     | Derived presentation              | French labels from stable codes and minute formatter                                        |
+| Applicability/completeness | Derived presentation              | Reason not applicable for CDI; neither field changes current dossier completeness initially |
+| Draft inputs/errors        | Transient UI state                | Preserved after validation, conflict, or save failure                                       |
+
+Recommended first allowlist for restaurant use:
+
+| Stable code                   | French label                        | Initial support    |
+| ----------------------------- | ----------------------------------- | ------------------ |
+| `employee_replacement`        | Remplacement d’un salarié           | Supported proposal |
+| `temporary_activity_increase` | Accroissement temporaire d’activité | Supported proposal |
+| `seasonal_employment`         | Emploi saisonnier                   | Supported proposal |
+| `customary_use_employment`    | CDD d’usage                         | Supported proposal |
+
+Replacement sub-reasons, the replaced person's identity, business-owner or
+agricultural replacement, defined-purpose CDD, recruitment/training/research/
+reconversion cases, and future legal categories remain unsupported. The UI must
+say `Cas non pris en charge` and stop rather than accepting free text or silently
+mapping the case to a supported code.
+
+`contractWeeklyMinutes` is proposed as an integer to avoid decimal-hour
+rounding. The UI uses separate `Heures` and `Minutes` inputs, accepts minutes
+from 0 to 59, and validates a total from 1 to 2,880 minutes (48 hours). This is
+a safe MVP input boundary, not a legal-compliance guarantee. Exceptions or
+collective-agreement interpretations are not handled automatically.
+
+#### Applicability and transition rules
+
+- existing rows remain null after a later additive migration and are displayed
+  as `Non renseigné`;
+- Wave C fields do not change the existing completeness count during rollout;
+- CDI requires a null CDD reason and displays `Non applicable — contrat CDI`;
+- changing CDD to CDI requires confirmation and clears the reason atomically;
+- changing CDI to CDD requires the existing expected end date plus one supported
+  reason before save;
+- weekly duration does not infer or rewrite `Temps plein`/`Temps partiel`;
+- a possible mismatch is not auto-corrected because collective rules are not
+  represented;
+- signed contracts and amendments never populate either field automatically.
+
+#### Mutation, authorization, and audit proposal
+
+Reuse the employee dossier aggregate and the existing OWNER-only
+`personnel.employee.read` / `personnel.employee.manage` permissions. Every read
+and mutation repeats trusted organization + establishment + employee scope.
+Resource ID alone, browser-provided scope, MANAGER, STAFF, public, service, and
+self-service actors remain denied.
+
+The existing header `Modifier` action is the only edit entry point. A later
+mutation extends the existing revision-protected, idempotent, atomic employee
+update instead of adding a second endpoint or save button. Validation failure
+preserves both fields; stale revision returns the existing conflict flow; retry
+with the same key returns the committed result.
+
+Reuse `employee.employment_updated`. Audit metadata may list the allowlisted
+field groups `fixedTermReasonCode` and `contractWeeklyMinutes`, but must not copy
+old/new reason or duration values. Opening the dossier already creates the
+deduplicated sensitive-read event; opening the employment tab adds no duplicate
+event. The employee history uses safe French field labels only.
+
+#### Phase 2 decision register
+
+| ID     | Recommended choice                                                            | Approval state             |
+| ------ | ----------------------------------------------------------------------------- | -------------------------- |
+| WC2-01 | Reuse the establishment-owned employee dossier aggregate                      | Approved for local Phase 3 |
+| WC2-02 | Add nullable reason-code and integer-minute concepts                          | Approved for local Phase 3 |
+| WC2-03 | Support only the four restaurant-relevant reason codes above                  | Approved for local Phase 3 |
+| WC2-04 | No free-text `other`; unsupported cases fail closed                           | Approved for local Phase 3 |
+| WC2-05 | Accept 1–2,880 minutes with separate hours/minutes inputs                     | Approved for local Phase 3 |
+| WC2-06 | Keep legacy nulls and exclude Wave C fields from completeness initially       | Approved for local Phase 3 |
+| WC2-07 | Reuse the single existing edit flow, revision, idempotency, and atomic update | Approved for local Phase 3 |
+| WC2-08 | Reuse existing OWNER-only employee permissions                                | Approved for local Phase 3 |
+| WC2-09 | Reuse minimized employment audit without old/new values                       | Approved for local Phase 3 |
+| WC2-10 | One dossier-open event; no employment-tab duplicate                           | Approved for local Phase 3 |
+| WC2-11 | Documents and Formalités cannot write these facts in this wave                | Approved for local Phase 3 |
+| WC2-12 | Deliver local vertical slices before any production consideration             | Approved for local Phase 3 |
+
+#### Proposed later vertical slices
+
+1. additive nullable storage + safe read projection + tenant-isolation tests;
+2. OWNER edit of supported fields through the existing dialog/action;
+3. extend employee creation with the same rules after edit behavior is proven;
+4. remove the Wave C fixture and no-save notice, then perform responsive,
+   authorization, conflict, retry, audit, and as-built QA.
+
+### Wave C Phase 3 local implementation reconciliation
+
+The product owner approved WC2-01 through WC2-12 and local Phase 3 on
+2026-08-16. Migration `0009_heavy_sauron.sql` adds the two nullable columns and
+the four-value reason enum. Existing rows remain null. Contracts, scoped reads,
+create/edit actions, revision/idempotency handling, and minimized employment
+audit now carry the approved fields.
+
+The existing `Modifier` dialog remains the only edit entry point. CDD creation
+requires a supported reason and weekly duration; edit preserves legacy nulls,
+requires a reason for new CDD transitions, and requires explicit confirmation
+before a stored CDD reason is cleared by switching to CDI. The detail card now
+reads persisted values and the fictional prototype/no-save notice is removed.
+Documents and Formalités do not write either value.
+
+This implementation is local only. The supported legal subset, production
+privacy/retention/operations, deployment, and production data collection still
+require separate approval.

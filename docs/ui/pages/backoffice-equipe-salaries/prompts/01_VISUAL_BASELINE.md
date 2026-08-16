@@ -19,3 +19,12 @@ view, and replace controls. Create no document IDs, URLs, storage keys,
 contracts, actions, permissions, providers, schema, migration, API, or
 persistence.
 Verify 1440/1024/768/390, accessibility, dialogs, and overflow; report and stop.
+
+## Documents Wave B — approved typed-fixture prototype
+
+Add the approved `Avenants signés` presentation beneath the real signed-contract
+slice. Use only typed fictional filenames/dates/sizes, a persistent `Prototype`
+badge and `Aperçu sans sauvegarde` notice, and disabled add/view/download/replace
+controls. Label effective date as proposed. Create no amendment resource ID,
+category enum, contract, schema, migration, repository, action, URL, storage
+object, audit event, permission, or real file behavior. Stop after UI QA.

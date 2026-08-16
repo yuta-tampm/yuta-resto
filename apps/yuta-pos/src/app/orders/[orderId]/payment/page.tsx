@@ -160,8 +160,6 @@ export default async function PaymentPage({
 
   return (
     <PosPageShell
-      backHref={`/orders/${order.id}`}
-      backLabel="Retour commande"
       title={`Paiement - ${order.tableLabel}`}
       description={order.orderNumber}
       actions={

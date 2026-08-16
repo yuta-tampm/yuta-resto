@@ -7,7 +7,6 @@ import {
   Flame,
   History,
   Martini,
-  Plus,
   RotateCcw,
   Soup,
   StickyNote,
@@ -117,15 +116,6 @@ export default async function KitchenPage({ searchParams }: KitchenPageProps) {
           >
             {items.length} article(s)
           </Badge>
-          <Button asChild variant="primary" size="lg">
-            <Link href="/pos">
-              <Plus className="h-4 w-4" />
-              Nouvelle commande
-            </Link>
-          </Button>
-          <Button asChild variant="secondary" size="lg">
-            <Link href="/">Commandes</Link>
-          </Button>
         </>
       }
       subHeader={

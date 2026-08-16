@@ -436,7 +436,9 @@ export async function createPersonnelEmployee(
       qualification: input.qualification,
       employmentTermType: input.employmentTermType,
       expectedEndDate: input.expectedEndDate,
+      fixedTermReasonCode: input.fixedTermReasonCode,
       workTimeCategory: input.workTimeCategory,
+      contractWeeklyMinutes: input.contractWeeklyMinutes,
       entryDate: input.entryDate,
       confirmDuplicate: input.confirmDuplicate,
       duplicateOverrideReason: input.duplicateOverrideReason,
@@ -522,7 +524,9 @@ export async function createPersonnelEmployee(
         qualification: input.qualification,
         employmentTermType: input.employmentTermType,
         expectedEndDate: input.expectedEndDate,
+        fixedTermReasonCode: input.fixedTermReasonCode,
         workTimeCategory: input.workTimeCategory,
+        contractWeeklyMinutes: input.contractWeeklyMinutes,
         entryDate: input.entryDate,
       })
       .returning();
@@ -541,7 +545,9 @@ export async function createPersonnelEmployee(
         'qualification',
         'employmentTermType',
         'expectedEndDate',
+        'fixedTermReasonCode',
         'workTimeCategory',
+        'contractWeeklyMinutes',
         'entryDate',
       ],
     });
@@ -669,6 +675,31 @@ export async function updatePersonnelEmployee(
         'INVALID_EMPLOYMENT_DATES',
       );
     }
+    const preservesLegacyFixedTermReason =
+      current.employmentTermType === 'fixed_term' &&
+      current.fixedTermReasonCode === null &&
+      input.employmentTermType === 'fixed_term' &&
+      input.fixedTermReasonCode === null;
+    if (
+      input.employmentTermType === 'fixed_term' &&
+      !input.fixedTermReasonCode &&
+      !preservesLegacyFixedTermReason
+    ) {
+      throw new PersonnelRepositoryError(
+        'A supported reason is required for a fixed term.',
+        'FIXED_TERM_REASON_REQUIRED',
+      );
+    }
+    if (
+      current.fixedTermReasonCode !== null &&
+      input.employmentTermType === 'indefinite' &&
+      !input.confirmFixedTermReasonClear
+    ) {
+      throw new PersonnelRepositoryError(
+        'Clearing the fixed-term reason requires explicit confirmation.',
+        'FIXED_TERM_REASON_CLEAR_CONFIRMATION_REQUIRED',
+      );
+    }
 
     const identityFields = [
       ...(current.givenNames !== input.givenNames ? ['givenNames'] : []),
@@ -685,8 +716,14 @@ export async function updatePersonnelEmployee(
       ...(current.expectedEndDate !== input.expectedEndDate
         ? ['expectedEndDate']
         : []),
+      ...(current.fixedTermReasonCode !== input.fixedTermReasonCode
+        ? ['fixedTermReasonCode']
+        : []),
       ...(current.workTimeCategory !== input.workTimeCategory
         ? ['workTimeCategory']
+        : []),
+      ...(current.contractWeeklyMinutes !== input.contractWeeklyMinutes
+        ? ['contractWeeklyMinutes']
         : []),
       ...(current.entryDate !== input.entryDate ? ['entryDate'] : []),
     ];
@@ -707,7 +744,9 @@ export async function updatePersonnelEmployee(
         qualification: input.qualification,
         employmentTermType: input.employmentTermType,
         expectedEndDate: input.expectedEndDate,
+        fixedTermReasonCode: input.fixedTermReasonCode,
         workTimeCategory: input.workTimeCategory,
+        contractWeeklyMinutes: input.contractWeeklyMinutes,
         entryDate: input.entryDate,
         revision: sql`${personnelEmployeeDossiers.revision} + 1`,
         updatedAt: now,
@@ -1073,7 +1112,9 @@ function toSummary(
     qualification: row.qualification.trim(),
     employmentTermType: row.employmentTermType,
     expectedEndDate: row.expectedEndDate,
+    fixedTermReasonCode: row.fixedTermReasonCode,
     workTimeCategory: row.workTimeCategory,
+    contractWeeklyMinutes: row.contractWeeklyMinutes,
     entryDate: row.entryDate,
     departureDate: row.departureDate,
     view: getEmployeeView(row, businessDate),
@@ -1170,6 +1211,8 @@ export class PersonnelRepositoryError extends Error {
       | 'IDEMPOTENCY_CONFLICT'
       | 'NOT_FOUND'
       | 'INVALID_EMPLOYMENT_DATES'
+      | 'FIXED_TERM_REASON_REQUIRED'
+      | 'FIXED_TERM_REASON_CLEAR_CONFIRMATION_REQUIRED'
       | 'REASON_REQUIRED'
       | 'DEPARTURE_DATE_REQUIRED',
   ) {

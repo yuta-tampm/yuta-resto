@@ -1,12 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
+  createPersonnelContractAmendmentMetadataInputSchema,
   createPersonnelEmployeeInputSchema,
+  personnelContractAmendmentListSchema,
   personnelEmployeeAccessHistorySchema,
   personnelEmployeeAuditHistorySchema,
   personnelEmployeeListQuerySchema,
   personnelEmployeeSummarySchema,
   personnelDocumentListSchema,
   savePersonnelDocumentMetadataInputSchema,
+  replacePersonnelContractAmendmentMetadataInputSchema,
   setPersonnelEmployeeDepartureInputSchema,
   updatePersonnelEmployeeInputSchema,
 } from '../src/personnel';
@@ -36,7 +39,9 @@ describe('personnel contracts', () => {
       qualification: 'Employée qualifiée',
       employmentTermType: 'indefinite',
       expectedEndDate: null,
+      fixedTermReasonCode: null,
       workTimeCategory: 'full_time',
+      contractWeeklyMinutes: 2_100,
       entryDate: '2026-08-13',
       confirmDuplicate: false,
       duplicateOverrideReason: null,
@@ -48,6 +53,41 @@ describe('personnel contracts', () => {
       createPersonnelEmployeeInputSchema.safeParse({
         ...base,
         employmentTermType: 'fixed_term',
+        expectedEndDate: '2026-12-31',
+      }).success,
+    ).toBe(false);
+    expect(
+      createPersonnelEmployeeInputSchema.safeParse({
+        ...base,
+        employmentTermType: 'fixed_term',
+        expectedEndDate: '2026-12-31',
+        fixedTermReasonCode: 'seasonal_employment',
+      }).success,
+    ).toBe(true);
+    expect(
+      createPersonnelEmployeeInputSchema.safeParse({
+        ...base,
+        contractWeeklyMinutes: 1,
+      }).success,
+    ).toBe(true);
+    expect(
+      createPersonnelEmployeeInputSchema.safeParse({
+        ...base,
+        contractWeeklyMinutes: 2_880,
+      }).success,
+    ).toBe(true);
+    expect(
+      createPersonnelEmployeeInputSchema.safeParse({
+        ...base,
+        contractWeeklyMinutes: 0,
+      }).success,
+    ).toBe(false);
+    expect(
+      createPersonnelEmployeeInputSchema.safeParse({
+        ...base,
+        employmentTermType: 'fixed_term',
+        expectedEndDate: '2026-12-31',
+        fixedTermReasonCode: 'other',
       }).success,
     ).toBe(false);
     expect(
@@ -67,7 +107,9 @@ describe('personnel contracts', () => {
       qualification: 'Employée qualifiée',
       employmentTermType: 'indefinite',
       expectedEndDate: null,
+      fixedTermReasonCode: null,
       workTimeCategory: 'full_time',
+      contractWeeklyMinutes: 2_100,
       entryDate: '2026-01-02',
       departureDate: null,
       view: 'active',
@@ -163,8 +205,11 @@ describe('personnel contracts', () => {
       qualification: 'Employée qualifiée',
       employmentTermType: 'indefinite',
       expectedEndDate: null,
+      fixedTermReasonCode: null,
       workTimeCategory: 'full_time',
+      contractWeeklyMinutes: null,
       entryDate: '2026-08-13',
+      confirmFixedTermReasonClear: false,
     };
     const parsed = updatePersonnelEmployeeInputSchema.parse(base);
     expect(parsed.expectedRevision).toBe(2);
@@ -179,6 +224,21 @@ describe('personnel contracts', () => {
       updatePersonnelEmployeeInputSchema.safeParse({
         ...base,
         employmentTermType: 'fixed_term',
+      }).success,
+    ).toBe(false);
+    expect(
+      updatePersonnelEmployeeInputSchema.safeParse({
+        ...base,
+        employmentTermType: 'fixed_term',
+        expectedEndDate: '2026-12-31',
+        fixedTermReasonCode: 'customary_use_employment',
+        contractWeeklyMinutes: 1,
+      }).success,
+    ).toBe(true);
+    expect(
+      updatePersonnelEmployeeInputSchema.safeParse({
+        ...base,
+        contractWeeklyMinutes: 2_881,
       }).success,
     ).toBe(false);
   });
@@ -255,5 +315,64 @@ describe('personnel contracts', () => {
     expect(response.items[0]).not.toHaveProperty('storageKey');
     expect(response.items[0]).not.toHaveProperty('checksum');
     expect(response.items[0]).not.toHaveProperty('organizationId');
+  });
+
+  it('keeps signed amendments distinct, bounded, and storage-safe', () => {
+    const createInput = {
+      idempotencyKey: '11111111-1111-4111-8111-111111111111',
+      employeeId: '22222222-2222-4222-8222-222222222222',
+      effectiveDate: '2026-09-01',
+      reference: 'Avenant 1',
+      filename: 'avenant-signe.pdf',
+      mediaType: 'application/pdf',
+      byteSize: 512_000,
+      checksum: 'b'.repeat(64),
+      storageKey: '33333333-3333-4333-8333-333333333333',
+    };
+    expect(
+      createPersonnelContractAmendmentMetadataInputSchema.parse(createInput),
+    ).toEqual(createInput);
+    expect(
+      createPersonnelContractAmendmentMetadataInputSchema.safeParse({
+        ...createInput,
+        effectiveDate: '01/09/2026',
+      }).success,
+    ).toBe(false);
+    const replacementInput = {
+      idempotencyKey: createInput.idempotencyKey,
+      employeeId: createInput.employeeId,
+      amendmentId: '44444444-4444-4444-8444-444444444444',
+      expectedRevision: 1,
+      filename: createInput.filename,
+      mediaType: createInput.mediaType,
+      byteSize: createInput.byteSize,
+      checksum: createInput.checksum,
+      storageKey: createInput.storageKey,
+    };
+    expect(
+      replacePersonnelContractAmendmentMetadataInputSchema.parse(
+        replacementInput,
+      ),
+    ).toEqual(replacementInput);
+    const page = personnelContractAmendmentListSchema.parse({
+      items: [
+        {
+          id: '44444444-4444-4444-8444-444444444444',
+          employeeId: createInput.employeeId,
+          effectiveDate: createInput.effectiveDate,
+          reference: createInput.reference,
+          filename: createInput.filename,
+          mediaType: createInput.mediaType,
+          byteSize: createInput.byteSize,
+          version: 1,
+          revision: 1,
+          uploadedAt: '2026-08-15T10:00:00.000Z',
+        },
+      ],
+      pageInfo: { hasMore: false, nextCursor: null },
+    });
+    expect(page.items[0]).not.toHaveProperty('storageKey');
+    expect(page.items[0]).not.toHaveProperty('checksum');
+    expect(page.items[0]).not.toHaveProperty('organizationId');
   });
 });

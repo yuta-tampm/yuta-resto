@@ -30,6 +30,7 @@ import {
   createEmployeeAction,
   type CreateEmployeeActionState,
 } from '../actions';
+import { fixedTermReasonOptions } from '../_lib/employee-employment';
 import { formatEmployeeDate } from '../salaries-model';
 
 const initialCreateEmployeeActionState: CreateEmployeeActionState = {
@@ -61,6 +62,10 @@ export function EmployeeCreateDialog({
   const [qualification, setQualification] = useState('');
   const [entryDate, setEntryDate] = useState('');
   const [expectedEndDate, setExpectedEndDate] = useState('');
+  const [fixedTermReasonCode, setFixedTermReasonCode] = useState('');
+  const [contractWeeklyHours, setContractWeeklyHours] = useState('');
+  const [contractWeeklyMinuteRemainder, setContractWeeklyMinuteRemainder] =
+    useState('0');
   const [duplicateReason, setDuplicateReason] = useState('');
   const [idempotencyKey, setIdempotencyKey] = useState('');
 
@@ -80,6 +85,9 @@ export function EmployeeCreateDialog({
       setIdempotencyKey('');
       setEmploymentTermType('indefinite');
       setWorkTimeCategory('full_time');
+      setFixedTermReasonCode('');
+      setContractWeeklyHours('');
+      setContractWeeklyMinuteRemainder('0');
     }
   }
 
@@ -156,7 +164,13 @@ export function EmployeeCreateDialog({
                 <Select
                   name="employmentTermType"
                   value={employmentTermType}
-                  onValueChange={setEmploymentTermType}
+                  onValueChange={(value) => {
+                    setEmploymentTermType(value);
+                    if (value === 'indefinite') {
+                      setExpectedEndDate('');
+                      setFixedTermReasonCode('');
+                    }
+                  }}
                 >
                   <SelectTrigger id="employee-term">
                     <SelectValue />
@@ -166,6 +180,45 @@ export function EmployeeCreateDialog({
                     <SelectItem value="fixed_term">CDD</SelectItem>
                   </SelectContent>
                 </Select>
+              </FormField>
+              <FormField
+                label={
+                  <Label htmlFor="employee-weekly-hours">
+                    Durée hebdomadaire contractuelle
+                  </Label>
+                }
+                error={state.fieldErrors.contractWeeklyMinutes}
+              >
+                <div className="grid grid-cols-2 gap-3">
+                  <Input
+                    id="employee-weekly-hours"
+                    name="contractWeeklyHours"
+                    type="number"
+                    min="0"
+                    max="48"
+                    inputMode="numeric"
+                    value={contractWeeklyHours}
+                    onChange={(event) =>
+                      setContractWeeklyHours(event.target.value)
+                    }
+                    aria-label="Heures par semaine"
+                    required
+                  />
+                  <Input
+                    name="contractWeeklyMinuteRemainder"
+                    type="number"
+                    min="0"
+                    max="59"
+                    inputMode="numeric"
+                    value={contractWeeklyMinuteRemainder}
+                    onChange={(event) =>
+                      setContractWeeklyMinuteRemainder(event.target.value)
+                    }
+                    aria-label="Minutes par semaine"
+                    required
+                  />
+                </div>
+                <p className="mt-1 text-xs text-secondary">Heures · Minutes</p>
               </FormField>
               <FormField
                 label={
@@ -203,21 +256,52 @@ export function EmployeeCreateDialog({
                 />
               </FormField>
               {employmentTermType === 'fixed_term' && (
-                <FormField
-                  label={
-                    <Label htmlFor="employee-end-date">Fin prévue du CDD</Label>
-                  }
-                  error={state.fieldErrors.expectedEndDate}
-                >
-                  <Input
-                    id="employee-end-date"
-                    name="expectedEndDate"
-                    type="date"
-                    value={expectedEndDate}
-                    onChange={(event) => setExpectedEndDate(event.target.value)}
-                    required
-                  />
-                </FormField>
+                <>
+                  <FormField
+                    label={
+                      <Label htmlFor="employee-end-date">
+                        Fin prévue du CDD
+                      </Label>
+                    }
+                    error={state.fieldErrors.expectedEndDate}
+                  >
+                    <Input
+                      id="employee-end-date"
+                      name="expectedEndDate"
+                      type="date"
+                      value={expectedEndDate}
+                      onChange={(event) =>
+                        setExpectedEndDate(event.target.value)
+                      }
+                      required
+                    />
+                  </FormField>
+                  <FormField
+                    label={
+                      <Label htmlFor="employee-fixed-term-reason">
+                        Motif du CDD
+                      </Label>
+                    }
+                    error={state.fieldErrors.fixedTermReasonCode}
+                  >
+                    <Select
+                      name="fixedTermReasonCode"
+                      value={fixedTermReasonCode}
+                      onValueChange={setFixedTermReasonCode}
+                    >
+                      <SelectTrigger id="employee-fixed-term-reason">
+                        <SelectValue placeholder="Choisir un motif" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {fixedTermReasonOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormField>
+                </>
               )}
             </div>
           </section>

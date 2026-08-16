@@ -514,6 +514,116 @@ Approval sequence after this gate:
 4. no schema, enum, contract, migration, repository, server action, file
    mutation, or implementation begins without a later phase approval.
 
+Steps 1–3 were completed on 2026-08-15: the product owner approved Phase 0,
+authorized the design prompt, and four responsive references were generated as
+`DRAFT`. Product review then approved the selected visual direction and a local
+typed-fixture Phase 1 prototype. Step 4 remains the active stop condition for
+every real data or file capability.
+
+### Documents Wave B Phase 1 — typed-fixture local prototype
+
+Phase 1 adds one route-local presentation component and one route-local fixture
+model/test. It renders two fictional amendment cards beneath the real signed-
+contract slice, with a persistent demonstration notice. Every amendment action
+is disabled and no browser event calls a server action, API, repository, storage
+service, or file chooser.
+
+```text
+Files expected to modify: existing Documents presentation and page-pack Markdown
+Files expected to create: route-local prototype component, model, and test
+Packages affected: apps/backoffice only
+Cross-application impact: none
+Database change: NO
+API or contract change: NO
+Permission/auth change: NO
+Runtime/provider change: NO
+```
+
+Stop after responsive/accessibility review. Phase 2 must derive and approve the
+minimum amendment identity/date/order model before any enum, schema, contract,
+repository, or real file action is considered.
+
+### Documents Wave B Phase 2 — technical design only
+
+Phase 2 was authorized on 2026-08-15 and changes page-pack documentation only.
+It maps the approved fixture flow to a provider-neutral proposal without
+creating real amendment behavior.
+
+```text
+Files expected to modify now: existing page-pack Markdown only
+Files expected to create now: none
+Packages affected now: none
+Cross-application impact now: none
+Database change: PROPOSAL
+API or contract change: PROPOSAL
+Permission/auth change: REUSE PROPOSAL
+Runtime/provider change: REUSE PROPOSAL
+```
+
+Recommended later local vertical-slice order:
+
+1. **Scoped empty/list:** separate amendment aggregate, safe read contract,
+   OWNER-only document read permission, effective-date ordering, ten-item cursor
+   page, and cross-tenant denial tests.
+2. **Add one amendment:** required effective date, optional reference, bounded
+   PDF, idempotent command, quarantine/scan/promotion, atomic metadata/audit,
+   cleanup compensation, and rejected/retry states.
+3. **View/download:** fresh scoped authorization for each content grant,
+   application-controlled delivery, no stable URL, and minimized access audit.
+4. **Replace one scan:** amendment ID plus expected revision, verification before
+   current-version swap, immutable prior version, conflict/retry behavior, and
+   no effect on other amendments.
+5. **Safe activity and paging QA:** one deduplicated Documents-open event,
+   allowlisted amendment events, ten-item navigation, and responsive/security
+   regression.
+
+Do not extend the current single-category uniqueness rule to represent multiple
+amendments. The recommended later persistence design uses a distinct logical
+amendment aggregate with immutable versions while sharing the implemented
+provider-neutral storage/scanner services and document permissions. The exact
+schema and contract names remain subject to the Phase 3 implementation review.
+
+Before slice 1, approve or revise AB2-01 through AB2-09 in
+`DATA_AND_INTERACTION_SPEC.md`. Before any real file is accepted, approve the
+local security boundary. AB2-10 and production provider/operations decisions
+remain release blockers and do not need to be resolved for a separately
+approved local-only implementation.
+
+Stop here. Phase 2 authorizes no enum, schema, migration, contract, repository,
+permission, action, API, storage object, fixture removal, or real data.
+
+### Documents Wave B Phase 3 — local vertical slices implemented
+
+The product owner approved AB2-01 through AB2-09 and local implementation on
+2026-08-15. The delivery follows the proposed slice order:
+
+1. safe OWNER-only list with ten-item effective-date cursor pages;
+2. idempotent add with required date, optional reference, PDF validation,
+   quarantine, Defender scan, promotion, atomic metadata/audit, and cleanup;
+3. fresh scoped server-mediated view/download;
+4. expected-revision replacement that verifies before current-version swap and
+   leaves prior versions immutable;
+5. cross-tenant, replay, conflict, paging, safe-projection, responsive, and
+   failure/recovery coverage.
+
+```text
+Migration: packages/db-cloud/drizzle/0008_omniscient_colonel_america.sql
+Contracts: packages/contracts/src/personnel/index.ts
+Schema/repository: packages/db-cloud/src/schema/personnel.ts and personnel-contract-amendment-repository.ts
+Application: Salaries actions, route-local amendment UI, and protected content route
+Database change: LOCAL APPLIED
+API or contract change: IMPLEMENTED FOR LOCAL DEVELOPMENT
+Permission/auth change: NONE; existing OWNER-only document permissions reused
+Runtime/provider change: NONE; existing local-only adapters reused
+Production release: BLOCKED
+```
+
+Rollback before production consists of removing the local UI/actions/routes and
+reverting migration `0008` in an explicitly disposable local database. Never
+drop these tables after real production collection without a separately
+approved export/retention/deletion plan. AB2-10 remains a deferred production
+task.
+
 ## Verification gate
 
 Use exact affected commands including:
@@ -541,3 +651,130 @@ Run functional/security checks before visual review. Verify 1440/1024/768/390,
 shell fidelity, hierarchy, states, keyboard/focus, overflow, dialogs, and input
 recovery. Test tenant/authorization denial cases, remove completed-slice
 fixtures, and synchronize docs before marking the package `implemented`.
+
+## Wave C Phase 0 — read-only discovery gate
+
+Wave C currently authorizes documentation and repository analysis only:
+
+1. inventory existing employee facts, permissions, ownership, dossier UI,
+   Documents boundary, and the planned Formalités route;
+2. approve or revise the two-field discovery MVP: controlled CDD reason and
+   contractual weekly duration;
+3. approve product ownership, OWNER-only audience, sensitive-data treatment,
+   explicit deferred capability, UI states, and ready-to-run design prompt;
+4. only after approval, run the design prompt and review DRAFT references;
+5. keep later interaction mapping, domain choices, technical design, and real
+   vertical slices behind their own approval gates.
+
+```text
+Files expected to modify in Phase 0: this existing page pack only
+Files expected to create in Phase 0: none
+Packages affected: documentation only
+Cross-application impact: none
+Database change: PROPOSAL; NO CHANGE AUTHORIZED
+API or contract change: PROPOSAL; NO CHANGE AUTHORIZED
+Permission/auth change: PROPOSAL; NO CHANGE AUTHORIZED
+Runtime/device change: NO
+Implementation code: NOT AUTHORIZED
+Design prompt: READY; EXECUTION AWAITS APPROVAL
+```
+
+Stop after Phase 0. Do not create a field, enum, schema, migration, contract,
+permission, repository, loader, action, API, fixture, Formalités link/status,
+or runtime implementation. Phase 1 begins only if the product owner explicitly
+approves Phase 0 and authorizes the design prompt.
+
+### Wave C Phase 1 — local prototype implemented
+
+The product owner approved the selected visual direction and local prototype on
+2026-08-16. The delivered slice contains only:
+
+1. a route-local typed fixture with fictional reason/duration values;
+2. a read-only complementary-information component in the existing employment
+   tab;
+3. explicit `Prototype` and no-save disclosure;
+4. CDI not-applicable presentation logic and focused unit tests;
+5. no new edit control and no change to the existing real edit action.
+
+Stop after prototype QA. Do not add inputs, save behavior, schema, migration,
+contract, permission, repository, action, API, audit event, or Formalités
+workflow. Phase 2 interaction/data decisions require separate authorization.
+
+### Wave C Phase 2 — technical design only
+
+Phase 2 was authorized on 2026-08-16 and changes documentation only. The
+recommended later design is:
+
+1. extend the existing employee aggregate with nullable CDD-reason code and
+   integer contractual weekly minutes;
+2. expose safe nullable read values under existing trusted tenant scope;
+3. reuse the current OWNER-only employee permissions and single edit action;
+4. extend the current atomic revision/idempotency-protected mutation rather than
+   creating a second update workflow;
+5. reuse minimized employment audit and the existing dossier-open event;
+6. keep Formalités, Documents, Planning, Pointage, and payroll as separate
+   owners.
+
+Proposed later implementation order:
+
+1. additive nullable persistence, safe contract projection, and cross-tenant
+   read tests;
+2. existing-employee edit with four supported CDD reasons, minute validation,
+   contract-transition rules, conflict/retry, and audit tests;
+3. employee-create integration after edit is proven;
+4. fixture removal and functional/security/responsive/as-built QA.
+
+Before slice 1, approve or revise WC2-01 through WC2-12 in
+`DATA_AND_INTERACTION_SPEC.md`. Legal review must confirm the supported reason
+subset and numeric boundary before production; a local Phase 3 approval does
+not constitute that review.
+
+```text
+Database change: PROPOSAL; NO CHANGE AUTHORIZED
+API or contract change: PROPOSAL; NO CHANGE AUTHORIZED
+Permission/auth change: NO; EXISTING OWNER-ONLY PERMISSIONS PROPOSED FOR REUSE
+Runtime/provider change: NO
+Prototype fixture: RETAINED
+Production: NOT AUTHORIZED
+```
+
+Stop here. Do not create a field, enum, migration, contract, repository,
+permission, action, API, audit event, fixture removal, or real-data behavior.
+
+### Wave C Phase 3 — local vertical slices implemented
+
+Approved on 2026-08-16 for local development only:
+
+1. additive nullable employee-dossier storage and safe read projection;
+2. four controlled CDD reason codes and 1–2,880 integer weekly minutes;
+3. existing OWNER-only create/edit flow with revision, idempotency, atomic
+   writes, transition confirmation, and minimized audit;
+4. real complementary-employment detail card and fixture removal;
+5. local migration and guarded tenant-scoped integration tests.
+
+```text
+Migration: packages/db-cloud/drizzle/0009_heavy_sauron.sql
+Permission/auth change: NO; existing OWNER-only permissions reused
+Runtime/provider change: NO
+Prototype fixture: REMOVED
+Production: NOT AUTHORIZED
+```
+
+Production rollout, data collection, legal validation of the controlled list,
+retention/privacy operations, and release evidence remain separate tasks.
+
+### Wave C Phase 5 — local QA and as-built complete
+
+Completed on 2026-08-16:
+
+1. contract boundaries cover 1 and 2,880 minutes, zero, and unsupported reason;
+2. guarded integration covers tenant isolation, CDD-to-CDI confirmation,
+   idempotency/conflict/audit, and an unrelated edit of a legacy nullable CDD;
+3. signed-in OWNER QA creates, reads, and transitions a fictional CDD dossier;
+4. save remains disabled until CDD-reason clearing is explicitly confirmed;
+5. the history exposes field labels without old/new sensitive values;
+6. 1440/1024/768/390 captures prove drawer width and no horizontal overflow;
+7. the temporary QA dossier, audit events, and command receipts are removed.
+
+This closes the approved local Wave C delivery. Production remains a separate,
+blocked release decision.

@@ -6,6 +6,7 @@ import {
   AlertDescription,
   AlertTitle,
   Button,
+  Checkbox,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -29,6 +30,10 @@ import {
   updateEmployeeAction,
   type UpdateEmployeeActionState,
 } from '../actions';
+import {
+  fixedTermReasonOptions,
+  splitContractWeeklyMinutes,
+} from '../_lib/employee-employment';
 
 const initialUpdateEmployeeActionState: UpdateEmployeeActionState = {
   status: 'idle',
@@ -41,10 +46,12 @@ export function EmployeeEditDialog({
   employee,
   open,
   onOpenChange,
+  onSaved,
 }: {
   employee: PersonnelEmployeeSummary;
   open: boolean;
   onOpenChange(open: boolean): void;
+  onSaved(employee: PersonnelEmployeeSummary, message: string | null): void;
 }) {
   const router = useRouter();
   const [state, formAction] = useActionState(
@@ -55,11 +62,22 @@ export function EmployeeEditDialog({
   const [revision, setRevision] = useState(employee.revision);
   const [idempotencyKey, setIdempotencyKey] = useState('');
   const [conflictDismissed, setConflictDismissed] = useState(false);
+  const [loadedFixedTermReasonCode, setLoadedFixedTermReasonCode] = useState(
+    employee.fixedTermReasonCode,
+  );
+  const [confirmFixedTermReasonClear, setConfirmFixedTermReasonClear] =
+    useState(false);
+  const needsFixedTermReasonClearConfirmation =
+    loadedFixedTermReasonCode !== null &&
+    values.employmentTermType === 'indefinite';
 
   useEffect(() => {
-    if (state.status === 'success') router.refresh();
+    if (state.status === 'success' && state.currentEmployee) {
+      onSaved(state.currentEmployee, state.message);
+      router.refresh();
+    }
     if (state.status === 'conflict') setConflictDismissed(false);
-  }, [router, state.status]);
+  }, [onSaved, router, state.currentEmployee, state.status]);
 
   useEffect(() => {
     if (open && !idempotencyKey) setIdempotencyKey(crypto.randomUUID());
@@ -73,6 +91,8 @@ export function EmployeeEditDialog({
     if (!state.currentEmployee) return;
     setValues(editableValues(state.currentEmployee));
     setRevision(state.currentEmployee.revision);
+    setLoadedFixedTermReasonCode(state.currentEmployee.fixedTermReasonCode);
+    setConfirmFixedTermReasonClear(false);
     setIdempotencyKey(crypto.randomUUID());
     setConflictDismissed(true);
   }
@@ -92,6 +112,11 @@ export function EmployeeEditDialog({
           <input type="hidden" name="idempotencyKey" value={idempotencyKey} />
           <input type="hidden" name="employeeId" value={employee.id} />
           <input type="hidden" name="expectedRevision" value={revision} />
+          <input
+            type="hidden"
+            name="confirmFixedTermReasonClear"
+            value={confirmFixedTermReasonClear ? 'true' : 'false'}
+          />
 
           <section className="grid gap-4" aria-labelledby="edit-identity">
             <h3 id="edit-identity" className="font-bold">
@@ -145,14 +170,19 @@ export function EmployeeEditDialog({
                 <Select
                   name="employmentTermType"
                   value={values.employmentTermType}
-                  onValueChange={(value) =>
+                  onValueChange={(value) => {
+                    setConfirmFixedTermReasonClear(false);
                     setValues((current) => ({
                       ...current,
                       employmentTermType: value as 'indefinite' | 'fixed_term',
                       expectedEndDate:
                         value === 'indefinite' ? '' : current.expectedEndDate,
-                    }))
-                  }
+                      fixedTermReasonCode:
+                        value === 'indefinite'
+                          ? ''
+                          : current.fixedTermReasonCode,
+                    }));
+                  }}
                 >
                   <SelectTrigger id="edit-term">
                     <SelectValue />
@@ -162,6 +192,48 @@ export function EmployeeEditDialog({
                     <SelectItem value="fixed_term">CDD</SelectItem>
                   </SelectContent>
                 </Select>
+              </FormField>
+              <FormField
+                label={
+                  <Label htmlFor="edit-weekly-hours">
+                    Durée hebdomadaire contractuelle
+                  </Label>
+                }
+                error={state.fieldErrors.contractWeeklyMinutes}
+              >
+                <div className="grid grid-cols-2 gap-3">
+                  <Input
+                    id="edit-weekly-hours"
+                    name="contractWeeklyHours"
+                    type="number"
+                    min="0"
+                    max="48"
+                    inputMode="numeric"
+                    value={values.contractWeeklyHours}
+                    onChange={(event) =>
+                      setValue('contractWeeklyHours', event.target.value)
+                    }
+                    aria-label="Heures par semaine"
+                  />
+                  <Input
+                    name="contractWeeklyMinuteRemainder"
+                    type="number"
+                    min="0"
+                    max="59"
+                    inputMode="numeric"
+                    value={values.contractWeeklyMinuteRemainder}
+                    onChange={(event) =>
+                      setValue(
+                        'contractWeeklyMinuteRemainder',
+                        event.target.value,
+                      )
+                    }
+                    aria-label="Minutes par semaine"
+                  />
+                </div>
+                <p className="mt-1 text-xs text-secondary">
+                  Heures · Minutes. Laissez vide si l’information est inconnue.
+                </p>
               </FormField>
               <FormField
                 label={<Label htmlFor="edit-work-time">Temps de travail</Label>}
@@ -197,26 +269,84 @@ export function EmployeeEditDialog({
                 />
               </FormField>
               {values.employmentTermType === 'fixed_term' && (
-                <FormField
-                  label={
-                    <Label htmlFor="edit-end-date">Fin prévue du CDD</Label>
-                  }
-                  error={state.fieldErrors.expectedEndDate}
-                >
-                  <Input
-                    id="edit-end-date"
-                    name="expectedEndDate"
-                    type="date"
-                    value={values.expectedEndDate}
-                    onChange={(event) =>
-                      setValue('expectedEndDate', event.target.value)
+                <>
+                  <FormField
+                    label={
+                      <Label htmlFor="edit-end-date">Fin prévue du CDD</Label>
                     }
-                    required
-                  />
-                </FormField>
+                    error={state.fieldErrors.expectedEndDate}
+                  >
+                    <Input
+                      id="edit-end-date"
+                      name="expectedEndDate"
+                      type="date"
+                      value={values.expectedEndDate}
+                      onChange={(event) =>
+                        setValue('expectedEndDate', event.target.value)
+                      }
+                      required
+                    />
+                  </FormField>
+                  <FormField
+                    label={
+                      <Label htmlFor="edit-fixed-term-reason">
+                        Motif du CDD
+                      </Label>
+                    }
+                    error={state.fieldErrors.fixedTermReasonCode}
+                  >
+                    <Select
+                      name="fixedTermReasonCode"
+                      value={values.fixedTermReasonCode}
+                      onValueChange={(value) =>
+                        setValue('fixedTermReasonCode', value)
+                      }
+                    >
+                      <SelectTrigger id="edit-fixed-term-reason">
+                        <SelectValue placeholder="Choisir un motif" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {fixedTermReasonOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormField>
+                </>
               )}
             </div>
           </section>
+
+          {needsFixedTermReasonClearConfirmation && (
+            <div>
+              <label
+                htmlFor="confirm-fixed-term-reason-clear"
+                className="flex cursor-pointer items-start gap-3 rounded-lg border border-border-default p-3 text-sm"
+              >
+                <Checkbox
+                  id="confirm-fixed-term-reason-clear"
+                  checked={confirmFixedTermReasonClear}
+                  onCheckedChange={(checked) =>
+                    setConfirmFixedTermReasonClear(checked === true)
+                  }
+                  aria-invalid={Boolean(
+                    state.fieldErrors.confirmFixedTermReasonClear,
+                  )}
+                />
+                <span>
+                  Je confirme le passage en CDI et la suppression du motif CDD
+                  enregistré.
+                </span>
+              </label>
+              {state.fieldErrors.confirmFixedTermReasonClear && (
+                <p className="mt-1 text-sm text-status-danger" role="alert">
+                  {state.fieldErrors.confirmFixedTermReasonClear}
+                </p>
+              )}
+            </div>
+          )}
 
           {state.status === 'conflict' && !conflictDismissed && (
             <Alert
@@ -245,26 +375,23 @@ export function EmployeeEditDialog({
               {state.message}
             </p>
           )}
-          {state.status === 'success' && (
-            <p
-              className="rounded-lg bg-status-success-soft px-3 py-2 text-sm font-medium text-status-success"
-              role="status"
-            >
-              {state.message}
-            </p>
-          )}
-
           <DialogFooter>
             <Button
               type="button"
               variant="secondary"
               onClick={() => onOpenChange(false)}
             >
-              {state.status === 'success' ? 'Fermer' : 'Annuler'}
+              Annuler
             </Button>
             {state.status !== 'success' &&
               (state.status !== 'conflict' || conflictDismissed) && (
-                <UpdateEmployeeSubmitButton ready={Boolean(idempotencyKey)} />
+                <UpdateEmployeeSubmitButton
+                  ready={
+                    Boolean(idempotencyKey) &&
+                    (!needsFixedTermReasonClearConfirmation ||
+                      confirmFixedTermReasonClear)
+                  }
+                />
               )}
           </DialogFooter>
         </form>
@@ -274,6 +401,9 @@ export function EmployeeEditDialog({
 }
 
 function editableValues(employee: PersonnelEmployeeSummary) {
+  const weeklyDuration = splitContractWeeklyMinutes(
+    employee.contractWeeklyMinutes,
+  );
   return {
     givenNames: employee.givenNames,
     familyName: employee.familyName,
@@ -281,7 +411,10 @@ function editableValues(employee: PersonnelEmployeeSummary) {
     qualification: employee.qualification,
     employmentTermType: employee.employmentTermType,
     expectedEndDate: employee.expectedEndDate ?? '',
+    fixedTermReasonCode: employee.fixedTermReasonCode ?? '',
     workTimeCategory: employee.workTimeCategory,
+    contractWeeklyHours: weeklyDuration.hours,
+    contractWeeklyMinuteRemainder: weeklyDuration.minutes,
     entryDate: employee.entryDate,
   };
 }

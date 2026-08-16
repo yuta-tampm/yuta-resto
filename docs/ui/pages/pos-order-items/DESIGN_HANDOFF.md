@@ -14,17 +14,21 @@ be replaced by fixtures.
 
 Shared context status: `RESOLVED`
 
-| Layer           | Owner/source                                                 | Reference status | Reuse exactly                                                                 | May adapt                           | Excluded                                        | Decision/blocker |
-| --------------- | ------------------------------------------------------------ | ---------------- | ----------------------------------------------------------------------------- | ----------------------------------- | ----------------------------------------------- | ---------------- |
-| YUTA global     | `@yuta/ui`, semantic tokens, shared rules                    | APPROVED         | primitives, focus, labels, Lucide, semantic states                            | route density/composition           | raw colors, another framework, Backoffice image | none             |
-| POS application | POS rules, layout, `PosPageShell`, `PosHeader`, health strip | APPROVED         | compact dark header, logo/home, status semantics, French operational patterns | existing responsive action behavior | management shell, cloud tenancy, marketing UI   | none             |
-| Order flow      | `/pos`, detail, items, kitchen, payment                      | APPROVED         | real routes, direct service actions, order/status vocabulary                  | route-local grouping                | table map, new route/capability                 | none             |
-| Target page     | current route and Phase 0 baseline                           | APPROVED         | real loader/actions/content hierarchy                                         | approved visual hierarchy           | fixtures, invented fields/actions               | none             |
+| Layer           | Owner/source                                                 | Reference status | Reuse exactly                                                                                                   | May adapt                           | Excluded                                        | Decision/blocker |
+| --------------- | ------------------------------------------------------------ | ---------------- | --------------------------------------------------------------------------------------------------------------- | ----------------------------------- | ----------------------------------------------- | ---------------- |
+| YUTA global     | `@yuta/ui`, semantic tokens, shared rules                    | APPROVED         | primitives, focus, labels, Lucide, semantic states                                                              | route density/composition           | raw colors, another framework, Backoffice image | none             |
+| POS application | POS rules, layout, `PosPageShell`, `PosHeader`, health strip | APPROVED         | prominent desktop header, compact behavior below `lg`, logo/home, status semantics, French operational patterns | existing responsive action behavior | management shell, cloud tenancy, marketing UI   | none             |
+| Order flow      | `/pos`, detail, items, kitchen, payment                      | APPROVED         | real routes, direct service actions, order/status vocabulary                                                    | route-local grouping                | table map, new route/capability                 | none             |
+| Target page     | current route and Phase 0 baseline                           | APPROVED         | real loader/actions/content hierarchy                                                                           | approved visual hierarchy           | fixtures, invented fields/actions               | none             |
 
-Shell mode: `REUSE_CURRENT_TARGET`.
+Shell mode: `REUSE_APPROVED_SHARED_SHELL`.
 
-Keep the compact current target header, back link to `/orders/<id>`, logo/home
-link to `/`, payment link to `/orders/<id>/payment`, and connectivity strip.
+Keep the prominent desktop shared header, logo/home link to `/`, payment link to
+`/orders/<id>/payment`, and connectivity strip; the shared header has no leading
+back-arrow action. The shared three-line menu exposes `Commandes` -> `/`,
+`Cuisine` -> `/kitchen`, and `Gestion` -> `/management`; below `lg`, keep the
+shared compact behavior. Do not add the Home-only direct `Nouvelle commande`
+action.
 Keep the current desktop category/menu/order composition and current narrow
 mobile order dialog. There is no sidebar, bottom navigation, tenant/account
 area, or service-time login. `/kitchen` is adjacent but not a new header link.
@@ -75,7 +79,7 @@ Asset type: high-fidelity UI renewal proposal for the existing integrated local 
 Primary request: Renew the real YUTA order-item entry workspace for faster touch-first restaurant service while preserving its exact current shell, real routes, data hierarchy, actions, validation, transactions, kitchen/payment boundaries, and local-only runtime.
 Input image: `phase-0-current-1366x768.png` is the current real 1366x768 operational baseline. It is visual evidence, not an edit target or behavioral authority. No Backoffice or management-shell image applies.
 Operator context: French-speaking restaurant service staff rapidly adding catalog items, checking the current order, recording instructions/allergies, and sending a pending batch to production.
-Shell mode: REUSE_CURRENT_TARGET. Preserve the compact dark POS header with logo/home -> `/`, back -> `/orders/<id>`, real order table label and number, payment -> `/orders/<id>/payment`, and truthful local-service/printer strip. Do not import the route-local prominent `/pos` header variant, replace the shell, or add a sidebar, bottom navigation, tenant/account area, login, management links, notifications, or dead routes.
+Shell mode: `REUSE_APPROVED_SHARED_SHELL`. Use the shared prominent desktop POS header with logo/home -> `/`, real order table label and number, payment -> `/orders/<id>/payment`, and truthful local-service/printer strip. Do not render a leading back-arrow action. The three-line menu exposes `Commandes` -> `/`, `Cuisine` -> `/kitchen`, and `Gestion` -> `/management`; below `lg`, retain the shared compact menu behavior. Do not add the Home-only direct `Nouvelle commande` action, replace the shell, or add a sidebar, bottom navigation, tenant/account area, login, notifications, or dead routes.
 Desktop content hierarchy: active category navigation; immediate catalog search; dense available-item grid with name, price, and selected quantity; current-order summary with quantity controls, item status, instructions/allergy attention, subtotal/discount/total, one direct `Envoyer en cuisine` action, and `Voir details` secondary action.
 Narrow behavior: retain the current horizontal category navigation, searchable item grid, and `Voir commande` mobile order dialog without losing category, search, or grid position. Keep send action and totals reachable. No essential hover-only behavior or document-level horizontal overflow.
 Real capabilities only: category selection; client-side search; add available item; merge or separate portions according to service-owned ordering policy; edit/remove pending items only when order/payment locks allow; edit note, quick instructions, exact required variants, and structured allergy; review service-owned totals; navigate to detail/payment; confirm allergies and send the exact pending batch with UUIDv7 replay and durable print-job creation.

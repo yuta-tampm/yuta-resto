@@ -4,6 +4,8 @@ import {
   createPersonnelEmployeeInputSchema,
   setPersonnelEmployeeDepartureInputSchema,
   updatePersonnelEmployeeInputSchema,
+  type PersonnelContractAmendment,
+  type PersonnelContractAmendmentList,
   type PersonnelEmployeeAccessHistory,
   type PersonnelEmployeeAuditHistory,
   type PersonnelEmployeeSummary,
@@ -24,6 +26,11 @@ import {
   PersonnelDocumentRepositoryError,
   recordPersonnelDocumentUploadRejected,
   savePersonnelDocumentMetadata,
+  createPersonnelContractAmendmentMetadata,
+  listPersonnelContractAmendments,
+  PersonnelContractAmendmentRepositoryError,
+  recordPersonnelContractAmendmentUploadRejected,
+  replacePersonnelContractAmendmentMetadata,
 } from '@yuta/db-cloud';
 import { revalidatePath } from 'next/cache';
 import { createHash } from 'node:crypto';
@@ -81,6 +88,34 @@ export type SaveEmployeeDocumentActionState = {
   message: string | null;
   document: PersonnelDocument | null;
 };
+
+export type LoadEmployeeAmendmentsActionResult =
+  | { status: 'success'; amendments: PersonnelContractAmendmentList }
+  | { status: 'error'; message: string };
+
+export type SaveEmployeeAmendmentActionState = {
+  status: 'idle' | 'error' | 'conflict' | 'success';
+  message: string | null;
+  fieldErrors: Record<string, string>;
+  amendment: PersonnelContractAmendment | null;
+  values: {
+    effectiveDate: string;
+    reference: string;
+  };
+};
+
+const createAmendmentFormSchema = z
+  .object({
+    effectiveDate: z.string().date(),
+    reference: z.string().trim().min(1).max(80).nullable(),
+  })
+  .strict();
+const replaceAmendmentFormSchema = z
+  .object({
+    amendmentId: z.string().uuid(),
+    expectedRevision: z.coerce.number().int().positive(),
+  })
+  .strict();
 
 export async function loadEmployeeDocumentsAction(
   employeeId: string,
@@ -217,18 +252,273 @@ export async function saveEmployeeDocumentAction(
   }
 }
 
+export async function loadEmployeeAmendmentsAction(
+  employeeId: string,
+  cursor?: string,
+): Promise<LoadEmployeeAmendmentsActionResult> {
+  const { tenant } = await requirePersonnelTenant('/equipe/salaries');
+  requirePersonnelPermission(tenant, 'personnel.document.read');
+  try {
+    const amendments = await listPersonnelContractAmendments(
+      cloudDatabase,
+      tenant,
+      employeeId,
+      cursor,
+    );
+    return { status: 'success', amendments };
+  } catch (error: unknown) {
+    console.error('Failed to load personnel contract amendments.', error);
+    return {
+      status: 'error',
+      message: 'Impossible de charger les avenants. Réessayez.',
+    };
+  }
+}
+
+export async function saveEmployeeAmendmentAction(
+  _previousState: SaveEmployeeAmendmentActionState,
+  formData: FormData,
+): Promise<SaveEmployeeAmendmentActionState> {
+  const { tenant } = await requirePersonnelTenant('/equipe/salaries');
+  requirePersonnelPermission(tenant, 'personnel.document.manage');
+  const employeeId = String(formData.get('employeeId') ?? '');
+  const amendmentId = nullableText(formData.get('amendmentId'));
+  const idempotencyKey = String(formData.get('idempotencyKey') ?? '');
+  const mode = formData.get('mode') === 'replace' ? 'replace' : 'create';
+  const values = {
+    effectiveDate: String(formData.get('effectiveDate') ?? ''),
+    reference: String(formData.get('reference') ?? ''),
+  };
+  let storageKey: string | null = null;
+  try {
+    const commandInput =
+      mode === 'replace'
+        ? replaceAmendmentFormSchema.parse({
+            amendmentId,
+            expectedRevision: formData.get('expectedRevision'),
+          })
+        : createAmendmentFormSchema.parse({
+            effectiveDate: formData.get('effectiveDate'),
+            reference: nullableText(formData.get('reference')),
+          });
+    const file = formData.get('file');
+    if (!(file instanceof File) || file.size === 0) {
+      return amendmentError(
+        'Sélectionnez un fichier PDF.',
+        {
+          file: 'Sélectionnez un fichier PDF.',
+        },
+        values,
+      );
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      await recordRejectedSafe('invalid_file');
+      return amendmentError(
+        'Le fichier ne doit pas dépasser 10 Mo.',
+        {
+          file: 'Choisissez un fichier de 10 Mo maximum.',
+        },
+        values,
+      );
+    }
+    const content = new Uint8Array(await file.arrayBuffer());
+    if (
+      file.type !== 'application/pdf' ||
+      new TextDecoder('ascii').decode(content.slice(0, 5)) !== '%PDF-'
+    ) {
+      await recordRejectedSafe('invalid_file');
+      return amendmentError(
+        'Seuls les fichiers PDF valides sont acceptés.',
+        {
+          file: 'Choisissez un fichier PDF valide.',
+        },
+        values,
+      );
+    }
+    const runtime = await getPersonnelDocumentRuntime();
+    storageKey = await runtime.storage.putQuarantinedObject(content);
+    const quarantined = await runtime.storage.readQuarantinedObject(storageKey);
+    await runtime.scanner.inspectQuarantinedObject(quarantined);
+    await runtime.storage.promoteVerifiedObject(storageKey);
+    const fileMetadata = {
+      idempotencyKey,
+      employeeId,
+      filename: sanitizeDocumentFilename(file.name, 'avenant-signe'),
+      mediaType: 'application/pdf' as const,
+      byteSize: file.size,
+      checksum: createHash('sha256').update(content).digest('hex'),
+      storageKey,
+    };
+    const result =
+      mode === 'replace'
+        ? await replacePersonnelContractAmendmentMetadata(
+            cloudDatabase,
+            tenant,
+            {
+              ...fileMetadata,
+              amendmentId:
+                'amendmentId' in commandInput ? commandInput.amendmentId : '',
+              expectedRevision:
+                'expectedRevision' in commandInput
+                  ? commandInput.expectedRevision
+                  : 0,
+            },
+          )
+        : await createPersonnelContractAmendmentMetadata(
+            cloudDatabase,
+            tenant,
+            {
+              ...fileMetadata,
+              effectiveDate:
+                'effectiveDate' in commandInput
+                  ? commandInput.effectiveDate
+                  : '',
+              reference:
+                'reference' in commandInput ? commandInput.reference : null,
+            },
+          );
+    if (result.idempotentReplay) {
+      await runtime.storage.removeObject(storageKey);
+    }
+    revalidatePath('/equipe/salaries');
+    return {
+      status: 'success',
+      message: result.idempotentReplay
+        ? 'Cet avenant avait déjà été enregistré.'
+        : mode === 'replace'
+          ? 'Le fichier de cet avenant a été vérifié et remplacé.'
+          : 'L’avenant signé a été vérifié et enregistré.',
+      fieldErrors: {},
+      amendment: result.amendment,
+      values: { effectiveDate: '', reference: '' },
+    };
+  } catch (error: unknown) {
+    if (storageKey) {
+      try {
+        const runtime = await getPersonnelDocumentRuntime();
+        await runtime.storage.removeObject(storageKey);
+      } catch {
+        console.error('Failed to clean up a personnel amendment object.');
+      }
+    }
+    if (
+      error instanceof PersonnelContractAmendmentRepositoryError &&
+      error.code === 'CONFLICT'
+    ) {
+      return {
+        status: 'conflict',
+        message:
+          'Cet avenant a changé depuis son ouverture. Rechargez la liste avant de réessayer.',
+        fieldErrors: {},
+        amendment: null,
+        values,
+      };
+    }
+    if (
+      error instanceof PersonnelContractAmendmentRepositoryError &&
+      error.code === 'IDEMPOTENCY_CONFLICT'
+    ) {
+      return amendmentError(
+        'Cette tentative a déjà été utilisée avec d’autres valeurs. Fermez puis rouvrez le formulaire.',
+        {},
+        values,
+      );
+    }
+    if (
+      error instanceof PersonnelContractAmendmentRepositoryError &&
+      error.code === 'NOT_FOUND'
+    ) {
+      return amendmentError(
+        'Cet avenant n’est plus disponible. Rechargez la liste puis réessayez.',
+        {},
+        values,
+      );
+    }
+    if (error instanceof PersonnelDocumentScannerError) {
+      await recordRejectedSafe('scanner_rejected');
+      return amendmentError(
+        'Le fichier n’a pas été accepté par le contrôle de sécurité.',
+        {},
+        values,
+      );
+    }
+    if (error instanceof z.ZodError) {
+      await recordRejectedSafe('invalid_file');
+      const fieldErrors: Record<string, string> = {};
+      for (const issue of error.issues) {
+        const field = String(issue.path[0] ?? 'form');
+        fieldErrors[field] ??=
+          field === 'effectiveDate'
+            ? 'Indiquez une date d’effet valide.'
+            : field === 'reference'
+              ? 'La référence doit contenir 80 caractères maximum.'
+              : 'Vérifiez cette valeur.';
+      }
+      return amendmentError(
+        'Certains champs doivent être corrigés.',
+        fieldErrors,
+        values,
+      );
+    }
+    await recordRejectedSafe('storage_failure');
+    console.error('Failed to save a personnel contract amendment.', error);
+    return amendmentError(
+      'Impossible d’enregistrer l’avenant pour le moment. Réessayez.',
+      {},
+      values,
+    );
+  }
+
+  async function recordRejectedSafe(
+    reasonCode: 'invalid_file' | 'scanner_rejected' | 'storage_failure',
+  ) {
+    try {
+      await recordPersonnelContractAmendmentUploadRejected(
+        cloudDatabase,
+        tenant,
+        employeeId,
+        idempotencyKey,
+        reasonCode,
+        mode === 'replace' ? (amendmentId ?? undefined) : undefined,
+      );
+    } catch {
+      console.error('Failed to record a rejected amendment upload.');
+    }
+  }
+}
+
 function documentError(message: string): SaveEmployeeDocumentActionState {
   return { status: 'error', message, document: null };
 }
 
-function sanitizeDocumentFilename(value: string): string {
+function amendmentError(
+  message: string,
+  fieldErrors: Record<string, string> = {},
+  values: SaveEmployeeAmendmentActionState['values'] = {
+    effectiveDate: '',
+    reference: '',
+  },
+): SaveEmployeeAmendmentActionState {
+  return {
+    status: 'error',
+    message,
+    fieldErrors,
+    amendment: null,
+    values,
+  };
+}
+
+function sanitizeDocumentFilename(
+  value: string,
+  fallback = 'contrat-signe',
+): string {
   const normalized = value
     .replaceAll('\\', '/')
     .split('/')
     .at(-1)
     ?.replace(/[\u0000-\u001F\u007F]/gu, '')
     .trim();
-  const base = normalized?.replace(/\.pdf$/iu, '').trim() || 'contrat-signe';
+  const base = normalized?.replace(/\.pdf$/iu, '').trim() || fallback;
   return `${base.slice(0, 176)}.pdf`;
 }
 
@@ -355,7 +645,12 @@ export async function createEmployeeAction(
         employmentTermType === 'fixed_term'
           ? nullableText(formData.get('expectedEndDate'))
           : null,
+      fixedTermReasonCode:
+        employmentTermType === 'fixed_term'
+          ? nullableText(formData.get('fixedTermReasonCode'))
+          : null,
       workTimeCategory: formData.get('workTimeCategory'),
+      contractWeeklyMinutes: contractWeeklyMinutes(formData),
       entryDate: formData.get('entryDate'),
       confirmDuplicate: formData.get('confirmDuplicate') === 'true',
       duplicateOverrideReason: nullableText(
@@ -442,8 +737,15 @@ export async function updateEmployeeAction(
         employmentTermType === 'fixed_term'
           ? nullableText(formData.get('expectedEndDate'))
           : null,
+      fixedTermReasonCode:
+        employmentTermType === 'fixed_term'
+          ? nullableText(formData.get('fixedTermReasonCode'))
+          : null,
       workTimeCategory: formData.get('workTimeCategory'),
+      contractWeeklyMinutes: contractWeeklyMinutes(formData),
       entryDate: formData.get('entryDate'),
+      confirmFixedTermReasonClear:
+        formData.get('confirmFixedTermReasonClear') === 'true',
     });
     const result = await updatePersonnelEmployee(
       cloudDatabase,
@@ -506,6 +808,33 @@ export async function updateEmployeeAction(
         message:
           'Cette tentative a déjà été utilisée avec d’autres valeurs. Fermez puis rouvrez le formulaire.',
         fieldErrors: {},
+        currentEmployee: null,
+      };
+    }
+    if (
+      error instanceof PersonnelRepositoryError &&
+      error.code === 'FIXED_TERM_REASON_REQUIRED'
+    ) {
+      return {
+        status: 'error',
+        message: 'Choisissez un motif pris en charge pour ce CDD.',
+        fieldErrors: {
+          fixedTermReasonCode: 'Choisissez le motif du CDD.',
+        },
+        currentEmployee: null,
+      };
+    }
+    if (
+      error instanceof PersonnelRepositoryError &&
+      error.code === 'FIXED_TERM_REASON_CLEAR_CONFIRMATION_REQUIRED'
+    ) {
+      return {
+        status: 'error',
+        message: 'Confirmez la suppression du motif CDD avant de continuer.',
+        fieldErrors: {
+          confirmFixedTermReasonClear:
+            'Confirmez que le motif CDD doit être supprimé.',
+        },
         currentEmployee: null,
       };
     }
@@ -634,6 +963,28 @@ function nullableText(value: FormDataEntryValue | null): string | null {
   return normalized || null;
 }
 
+function contractWeeklyMinutes(formData: FormData): number | null {
+  const hoursValue = String(formData.get('contractWeeklyHours') ?? '').trim();
+  const minutesValue = String(
+    formData.get('contractWeeklyMinuteRemainder') ?? '',
+  ).trim();
+  if (!hoursValue && !minutesValue) return null;
+
+  const hours = Number(hoursValue);
+  const minutes = Number(minutesValue);
+  if (
+    !Number.isInteger(hours) ||
+    !Number.isInteger(minutes) ||
+    hours < 0 ||
+    hours > 48 ||
+    minutes < 0 ||
+    minutes > 59
+  ) {
+    return Number.NaN;
+  }
+  return hours * 60 + minutes;
+}
+
 function frenchFieldError(field: string): string {
   const messages: Record<string, string> = {
     givenNames: 'Renseignez les prénoms (120 caractères maximum).',
@@ -642,8 +993,13 @@ function frenchFieldError(field: string): string {
     qualification: 'Renseignez la qualification (120 caractères maximum).',
     employmentTermType: 'Choisissez CDI ou CDD.',
     expectedEndDate: 'Renseignez une date de fin valide pour le CDD.',
+    fixedTermReasonCode: 'Choisissez le motif du CDD.',
     workTimeCategory: 'Choisissez le temps de travail.',
+    contractWeeklyMinutes:
+      'Renseignez une durée comprise entre 1 minute et 48 heures.',
     entryDate: 'Renseignez une date d’entrée valide.',
+    confirmFixedTermReasonClear:
+      'Confirmez que le motif CDD doit être supprimé.',
     duplicateOverrideReason:
       'Expliquez en quelques mots pourquoi il s’agit d’un dossier distinct.',
     departureDate: 'Renseignez une date de départ valide.',

@@ -14,7 +14,7 @@ export default async function ManagementHomePage() {
         userRole={session.user.role}
       />
 
-      <div className="mx-auto grid w-full max-w-7xl content-start gap-4 px-4 py-4 md:px-6">
+      <div className="grid w-full content-start gap-4 px-4 py-4 md:px-6">
         <PageHeader
           title="Gestion locale"
           description="Accédez aux paramètres et contenus essentiels de votre POS local."
