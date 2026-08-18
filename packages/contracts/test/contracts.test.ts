@@ -20,6 +20,7 @@ import {
   localOrdersHomeQuerySchema,
   localOrdersHomeResponseSchema,
   localPrintSettingsSchema,
+  localReceiptViewResponseSchema,
   localPosApiBasePath,
   orderStatusSchema,
   publicFeedbackSubmissionSchema,
@@ -29,6 +30,7 @@ import {
   updateLocalUserInputSchema,
   updateLocalPrintSettingsInputSchema,
   resetLocalUserPinInputSchema,
+  receiptJobCommandInputSchema,
   localUserResponseSchema,
   uuidV7Schema,
   tenantMembershipContractSchema,
@@ -103,6 +105,63 @@ describe('@yuta/contracts', () => {
         bottomPaddingLines: 3,
       }).success,
     ).toBe(false);
+  });
+
+  it('validates explicit customer receipt targets and retry intent', () => {
+    const operationId = '01981f90-8e60-7000-8000-000000000001';
+
+    expect(
+      receiptJobCommandInputSchema.parse({
+        operationId,
+        target: { kind: 'order' },
+        intent: 'print',
+      }),
+    ).toEqual({
+      operationId,
+      target: { kind: 'order' },
+      intent: 'print',
+    });
+    expect(
+      receiptJobCommandInputSchema.safeParse({
+        operationId,
+        target: { kind: 'order' },
+        intent: 'retry',
+      }).success,
+    ).toBe(false);
+    expect(
+      receiptJobCommandInputSchema.safeParse({
+        operationId,
+        target: { kind: 'check', checkId: id },
+        intent: 'print',
+        jobId: id,
+      }).success,
+    ).toBe(false);
+    expect(
+      localReceiptViewResponseSchema.safeParse({
+        orderId: id,
+        paymentMode: 'split_by_items',
+        targets: [
+          {
+            kind: 'check',
+            id,
+            label: 'Addition 1',
+            amountCents: 1290,
+            availability: 'available',
+            splitMode: 'items',
+            latestJob: null,
+          },
+        ],
+        printer: {
+          status: 'not_configured',
+          worker: 'disabled',
+          device: 'not_configured',
+          queue: { pending: 0, printing: 0, failed: 0 },
+          lastPrintedAt: null,
+          lastFailureAt: null,
+          checkedAt: '2026-08-18T12:00:00.000Z',
+        },
+      }).success,
+    ).toBe(true);
   });
 
   it('validates paginated POS Home service-day transport', () => {

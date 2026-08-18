@@ -1,5 +1,8 @@
 import { personnelEmployeeListQuerySchema } from '@yuta/contracts/personnel';
-import { listPersonnelEmployees } from '@yuta/db-cloud';
+import {
+  listPersonnelActionOverview,
+  listPersonnelEmployees,
+} from '@yuta/db-cloud';
 import { Alert, AlertDescription, AlertTitle, Card } from '@yuta/ui';
 import { requireEstablishment } from '@yuta/tenant';
 import { ShieldX } from 'lucide-react';
@@ -8,6 +11,8 @@ import { requireAuthenticatedTenant } from '../../../../server/auth/session';
 import { cloudDatabase } from '../../../../server/cloud-database';
 import { getBusinessDate } from './salaries-model';
 import { SalariesPage } from './_components/salaries-page';
+import { isContractExtractionPrototypeEnabled } from './_lib/contract-extraction-prototype-runtime';
+import { isPersonnelActionOverviewEnabled } from './_lib/personnel-action-overview-runtime';
 
 type PageSearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -41,12 +46,38 @@ export default async function Page({
     query,
     businessDate,
   );
+  const actionOverviewState =
+    isPersonnelActionOverviewEnabled() &&
+    hasPersonnelPermission(tenant, 'personnel.document.read')
+      ? await listPersonnelActionOverview(
+          cloudDatabase,
+          tenant,
+          {},
+          businessDate,
+        )
+          .then((overview) => ({ status: 'success' as const, overview }))
+          .catch((error: unknown) => {
+            console.error(
+              'Failed to load the initial personnel action overview.',
+              error,
+            );
+            return {
+              status: 'error' as const,
+              message: 'La liste des actions est indisponible. Réessayez.',
+            };
+          })
+      : null;
   return (
     <SalariesPage
       data={data}
       query={query}
       locale={tenant.locale}
       businessDate={businessDate}
+      actionOverviewState={actionOverviewState}
+      contractExtractionPrototypeEnabled={
+        isContractExtractionPrototypeEnabled() &&
+        hasPersonnelPermission(tenant, 'personnel.document.extract')
+      }
     />
   );
 }

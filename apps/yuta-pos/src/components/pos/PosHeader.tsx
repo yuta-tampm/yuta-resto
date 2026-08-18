@@ -1,8 +1,8 @@
-import { Button, cn } from '@yuta/ui';
-import { Menu } from 'lucide-react';
+import { cn } from '@yuta/ui';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import { PosHeaderMenu } from './PosHeaderMenu';
 
 type PosHeaderProps = {
   title: ReactNode;
@@ -10,6 +10,7 @@ type PosHeaderProps = {
   eyebrow?: ReactNode;
   actions?: ReactNode;
   secondaryActions?: ReactNode;
+  pageMenuActions?: ReactNode;
   secondaryMenuLabel?: string;
   prominent?: boolean;
   className?: string;
@@ -21,6 +22,7 @@ export function PosHeader({
   eyebrow,
   actions,
   secondaryActions,
+  pageMenuActions,
   secondaryMenuLabel = 'Navigation secondaire',
   prominent = false,
   className,
@@ -87,7 +89,7 @@ export function PosHeader({
         </div>
       </div>
 
-      {(actions || secondaryActions) && (
+      {(actions || secondaryActions || pageMenuActions) && (
         <>
           <div
             className={cn(
@@ -98,35 +100,26 @@ export function PosHeader({
             )}
           >
             {actions}
-            {secondaryActions && (
-              <details className="group">
-                <summary
-                  className={cn(
-                    'grid cursor-pointer list-none place-items-center rounded-lg border border-border-default bg-white text-primary transition-colors hover:bg-surface-muted [&::-webkit-details-marker]:hidden',
-                    prominent ? 'h-12 w-12' : 'h-11 w-11',
-                  )}
-                >
-                  <Menu className="h-6 w-6" aria-hidden="true" />
-                  <span className="sr-only">{secondaryMenuLabel}</span>
-                </summary>
-                <div className="absolute right-4 top-full z-30 mt-2 grid min-w-64 gap-2 rounded-lg border border-border-default bg-white p-3 text-primary shadow-sm [&>a]:w-full [&>button]:w-full [&>form>button]:w-full [&>form]:w-full">
-                  {secondaryActions}
-                </div>
-              </details>
+            {(pageMenuActions || secondaryActions) && (
+              <PosHeaderMenu
+                label={secondaryMenuLabel}
+                pageActions={pageMenuActions}
+                navigationActions={secondaryActions}
+                prominent={prominent}
+                compact={false}
+              />
             )}
           </div>
-          <details
-            className={cn('group', prominent ? 'lg:hidden' : 'sm:hidden')}
-          >
-            <summary className="grid h-11 w-11 cursor-pointer list-none place-items-center rounded-lg text-white transition-colors hover:bg-white/10 [&::-webkit-details-marker]:hidden">
-              <Menu className="h-6 w-6" />
-              <span className="sr-only">Menu</span>
-            </summary>
-            <div className="absolute right-4 top-full z-30 mt-2 grid min-w-64 gap-2 rounded-lg border border-border-default bg-white p-3 text-primary shadow-sm [&>a]:w-full [&>button]:w-full [&>form>button]:w-full [&>form]:w-full">
-              {actions}
-              {secondaryActions}
-            </div>
-          </details>
+          <div className={cn(prominent ? 'lg:hidden' : 'sm:hidden')}>
+            <PosHeaderMenu
+              label="Menu"
+              pageActions={pageMenuActions}
+              workflowActions={actions}
+              navigationActions={secondaryActions}
+              prominent={prominent}
+              compact
+            />
+          </div>
         </>
       )}
     </header>

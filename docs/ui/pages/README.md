@@ -4,7 +4,7 @@ Status: Current
 
 Visibility: Engineering
 
-Last updated: 2026-08-14
+Last updated: 2026-08-18
 
 Page packages under this directory may target any YUTA frontend application.
 Every package identifies its application, real route or screen, runtime
@@ -17,8 +17,12 @@ merely because UI governance now applies project-wide.
 Current packages:
 
 - `backoffice-equipe-salaries/` — Phase 0 new-capability discovery package for
-  the planned authenticated Backoffice route `/equipe/salaries`; product and
-  visual approval are pending.
+  the now-integrated authenticated Backoffice route `/equipe/salaries`, with
+  its approved and implemented local delivery waves.
+
+- `backoffice-equipe-registre-personnel/` — implemented Wave E local real-data,
+  hardening, and Phase 5 as-built pack for Backoffice route
+  `/equipe/registre-personnel`; production remains blocked.
 
 - `hours-services/` — integrated Backoffice route `/etablissement/horaires-services`.
 - `establishment-general-information/` — integrated establishment profile editor
@@ -40,6 +44,55 @@ Current packages:
   POS `/pos` order-entry page, including approved visual renewal, route-local
   form boundary, recoverable interactions, production-build responsive QA, and
   complete as-built evidence.
+
+- `pos-order-detail/` - implemented existing-capability renewal for local POS
+  route `/orders/[orderId]`, reopened for a device-coupled customer-receipt
+  flow. Receipt contracts, local queue/worker renderer, route action, read-only
+  preview tooling, and Phase 5 responsive browser QA are complete. Physical
+  TM-m30 output remains deferred because no configured device is available.
+
+## Local POS UI delivery backlog
+
+This is the current route/page backlog authority as of 2026-08-18. Reuse it
+before performing another broad POS route audit.
+
+Implemented page packs:
+
+- `/` -> `pos-orders-home/`
+- `/pos` -> `pos-order-entry/`
+- `/orders/[orderId]` -> `pos-order-detail/`
+- `/orders/[orderId]/items` -> `pos-order-items/`
+- `/management` -> `pos-management-home/`
+- `/management/users` -> `pos-management-users/`
+- `/management/catalog` -> `pos-management-catalog/`
+- `/management/combos` -> `pos-management-combos/`
+- `/management/printing` -> `pos-management-printing/`
+
+Prioritized remaining work:
+
+1. `/kitchen` - integrated `EXISTING_PAGE`; create its own
+   `EXISTING_CAPABILITY_RENEWAL` pack and preserve service-day, station/status,
+   allergy, polling, and kitchen transition behavior.
+2. `/management/establishment` - route absent; start a separate Phase 0 as
+   `NEW_PAGE` / `NEW_CAPABILITY_DISCOVERY`. First requested slice is an
+   authoritative local restaurant display name for receipt snapshots. Do not
+   infer cloud establishment identity or add runtime/schema work in Phase 0.
+3. `/management/reports` - route absent; the Management card remains
+   `Prochaine étape` with `href: null`. Start a separate Phase 0 as `NEW_PAGE` /
+   `NEW_CAPABILITY_DISCOVERY` for local db-pos operational reports.
+4. `/orders/[orderId]/payment` - integrated `EXISTING_PAGE`; create its own
+   `EXISTING_CAPABILITY_RENEWAL` pack and use safe persisted data. Preserve
+   payment/combo/idempotency and local transaction ownership.
+5. `/orders/[orderId]/payment/items` - integrated route without a page pack.
+   Phase 0 must first decide whether it remains a meaningful standalone screen
+   or is superseded by the item-split dialog on the main payment page.
+6. `/management/login` - integrated local-management authentication screen
+   without a dedicated page pack; renew only after the higher-priority
+   operational pages.
+
+`/orders` is only a canonical redirect to `/` and does not need a separate
+page package. Table maps, refunds, fiscal invoices, and a service-time staff
+login are outside the current POS page backlog unless product scope changes.
 
 Every package follows `../PAGE_PACK_PROTOCOL.md`.
 

@@ -96,8 +96,10 @@ Capture payment
   append the payment
   + update check/order state
 
-Payment capture does not create a customer receipt job. Printing is limited to
-internal production tickets for kitchen, bar, and dessert.
+Payment capture does not create a customer receipt job. A separate deliberate
+command may enqueue one paid non-fiscal customer receipt from an authoritative
+order/check snapshot. Internal production and customer-receipt jobs remain
+local and durable; neither depends on cloud availability.
 ```
 
 Requirements:

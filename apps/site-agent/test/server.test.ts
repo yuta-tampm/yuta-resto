@@ -1,6 +1,9 @@
 import type { AddressInfo } from 'node:net';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import type { LocalOrdersHomeQuery } from '@yuta/contracts/local-pos';
+import type {
+  LocalOrdersHomeQuery,
+  ReceiptJobCommandInput,
+} from '@yuta/contracts/local-pos';
 import { createSiteAgentServer } from '../src/server';
 import type { SiteAgentService } from '../src/services/site-agent-service';
 
@@ -44,10 +47,12 @@ describe('site-agent HTTP boundary', () => {
   let baseUrl: string;
   let revokedSessionTokens: string[];
   let ordersHomeQueries: LocalOrdersHomeQuery[];
+  let receiptCommands: ReceiptJobCommandInput[];
 
   beforeEach(async () => {
     revokedSessionTokens = [];
     ordersHomeQueries = [];
+    receiptCommands = [];
     server = createSiteAgentServer({
       env: {
         NODE_ENV: 'test',
@@ -81,6 +86,15 @@ describe('site-agent HTTP boundary', () => {
         revokeSession: async (token) => {
           revokedSessionTokens.push(token);
         },
+        getReceiptView: async () => receiptViewSnapshot(),
+        executeReceiptCommand: async (_orderId, command) => {
+          receiptCommands.push(command);
+          return receiptCommandSnapshot(false);
+        },
+        getReceiptJobStatus: async () => ({
+          printJob: receiptPrintJobSnapshot(),
+          printer: printerStatusSnapshot(),
+        }),
       },
     });
     await new Promise<void>((resolve, reject) => {
@@ -579,7 +593,100 @@ describe('site-agent HTTP boundary', () => {
       error: { code: 'VALIDATION_ERROR' },
     });
   });
+
+  it('serves order-scoped receipt commands without management auth', async () => {
+    const operationId = '019c9b83-7c2d-70e5-8000-000000000006';
+    const view = await fetch(`${baseUrl}/api/v1/orders/${orderId}/receipts`, {
+      headers: { Origin: 'http://localhost:3003' },
+    });
+    expect(view.status).toBe(200);
+    expect(await view.json()).toEqual(receiptViewSnapshot());
+
+    const command = await fetch(
+      `${baseUrl}/api/v1/orders/${orderId}/receipts`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Origin: 'http://localhost:3003',
+        },
+        body: JSON.stringify({
+          operationId,
+          target: { kind: 'order' },
+          intent: 'print',
+        }),
+      },
+    );
+    expect(command.status).toBe(201);
+    expect(await command.json()).toEqual(receiptCommandSnapshot(false));
+    expect(receiptCommands).toEqual([
+      {
+        operationId,
+        target: { kind: 'order' },
+        intent: 'print',
+      },
+    ]);
+
+    const status = await fetch(
+      `${baseUrl}/api/v1/orders/${orderId}/receipts/${sessionId}`,
+      { headers: { Origin: 'http://localhost:3003' } },
+    );
+    expect(status.status).toBe(200);
+    expect(await status.json()).toEqual({
+      printJob: receiptPrintJobSnapshot(),
+      printer: printerStatusSnapshot(),
+    });
+  });
 });
+
+function printerStatusSnapshot() {
+  return {
+    status: 'ready' as const,
+    worker: 'running' as const,
+    device: 'ready' as const,
+    queue: { pending: 1, printing: 0, failed: 0 },
+    lastPrintedAt: null,
+    lastFailureAt: null,
+    checkedAt,
+  };
+}
+
+function receiptPrintJobSnapshot() {
+  return {
+    ...printJobSnapshot,
+    type: 'customer_receipt' as const,
+    printerName: 'tm-m30-receipt',
+  };
+}
+
+function receiptViewSnapshot() {
+  return {
+    orderId,
+    paymentMode: 'single' as const,
+    targets: [
+      {
+        kind: 'order' as const,
+        id: orderId,
+        label: 'Commande complète',
+        amountCents: 1400,
+        availability: 'available' as const,
+        splitMode: 'single' as const,
+        latestJob: null,
+      },
+    ],
+    printer: printerStatusSnapshot(),
+  };
+}
+
+function receiptCommandSnapshot(replayed: boolean) {
+  const printJob = receiptPrintJobSnapshot();
+  return {
+    target: { ...receiptViewSnapshot().targets[0], latestJob: printJob },
+    printJob,
+    replayed,
+    printer: printerStatusSnapshot(),
+  };
+}
 
 function createMockService(): SiteAgentService {
   return {
@@ -803,6 +910,15 @@ function createMockService(): SiteAgentService {
       throw new Error('Not called by this test.');
     },
     getPaymentSummary: async () => {
+      throw new Error('Not called by this test.');
+    },
+    getReceiptView: async () => {
+      throw new Error('Not called by this test.');
+    },
+    executeReceiptCommand: async () => {
+      throw new Error('Not called by this test.');
+    },
+    getReceiptJobStatus: async () => {
       throw new Error('Not called by this test.');
     },
     listPrintJobs: async (query) => ({

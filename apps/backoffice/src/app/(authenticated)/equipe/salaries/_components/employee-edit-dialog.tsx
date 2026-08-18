@@ -129,6 +129,9 @@ export function EmployeeEditDialog({
                 label="Prénoms"
                 value={values.givenNames}
                 error={state.fieldErrors.givenNames}
+                autoFocus={
+                  employee.completenessReasons[0] === 'given_names_missing'
+                }
                 onValueChange={(value) => setValue('givenNames', value)}
               />
               <EditField
@@ -137,6 +140,9 @@ export function EmployeeEditDialog({
                 label="Nom"
                 value={values.familyName}
                 error={state.fieldErrors.familyName}
+                autoFocus={
+                  employee.completenessReasons[0] === 'family_name_missing'
+                }
                 onValueChange={(value) => setValue('familyName', value)}
               />
             </div>
@@ -153,6 +159,9 @@ export function EmployeeEditDialog({
                 label="Poste"
                 value={values.position}
                 error={state.fieldErrors.position}
+                autoFocus={
+                  employee.completenessReasons[0] === 'position_missing'
+                }
                 onValueChange={(value) => setValue('position', value)}
               />
               <EditField
@@ -161,6 +170,9 @@ export function EmployeeEditDialog({
                 label="Qualification"
                 value={values.qualification}
                 error={state.fieldErrors.qualification}
+                autoFocus={
+                  employee.completenessReasons[0] === 'qualification_missing'
+                }
                 onValueChange={(value) => setValue('qualification', value)}
               />
               <FormField
@@ -425,6 +437,7 @@ function EditField({
   label,
   value,
   error,
+  autoFocus = false,
   onValueChange,
 }: {
   id: string;
@@ -432,6 +445,7 @@ function EditField({
   label: string;
   value: string;
   error?: string;
+  autoFocus?: boolean;
   onValueChange(value: string): void;
 }) {
   return (
@@ -443,6 +457,7 @@ function EditField({
         value={value}
         onChange={(event) => onValueChange(event.target.value)}
         required
+        autoFocus={autoFocus}
         aria-invalid={Boolean(error)}
       />
     </FormField>

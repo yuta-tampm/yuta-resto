@@ -473,7 +473,7 @@ function statusTone(
 
 function typeLabel(type: LocalPrintJob['type']): string {
   if (type === 'kitchen_ticket') return 'Ticket interne';
-  if (type === 'customer_receipt') return 'Reçu client (historique)';
+  if (type === 'customer_receipt') return 'Reçu client';
   return 'Test';
 }
 

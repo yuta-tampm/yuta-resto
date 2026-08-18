@@ -42,6 +42,7 @@ import { v7 as uuidv7 } from 'uuid';
 import { HttpError } from '../http';
 import { createCatalogManagementService } from './catalog-management-service';
 import { createComboManagementService } from './combo-management-service';
+import { createCustomerReceiptService } from './customer-receipt-service';
 import { createOrderCommandService } from './order-command-service';
 import { createFinancialService } from './financial-service';
 import { createLocalAuthService } from './local-auth-service';
@@ -70,6 +71,9 @@ export function createSiteAgentService(
   const instructionSettings = createInstructionSettingsService(db);
   const printerStatus = createPrinterStatusService(db, {
     devicePath: options.printerDevicePath,
+  });
+  const customerReceipts = createCustomerReceiptService(db, {
+    getPrinterStatus: printerStatus.getPrinterStatus,
   });
   async function getHealth() {
     try {
@@ -394,6 +398,7 @@ export function createSiteAgentService(
     ...printing,
     ...printSettings,
     ...printerStatus,
+    ...customerReceipts,
   };
 }
 

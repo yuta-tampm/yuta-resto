@@ -35,6 +35,9 @@ import {
   localPrintJobsResponseSchema,
   localPrintJobSchema,
   localPrinterStatusSchema,
+  localReceiptCommandResponseSchema,
+  localReceiptJobStatusResponseSchema,
+  localReceiptViewResponseSchema,
   localPrintSettingsSchema,
   localPosRoutes,
   localUserResponseSchema,
@@ -43,6 +46,7 @@ import {
   payLocalOrderInputSchema,
   printJobCommandSchema,
   printJobsQuerySchema,
+  receiptJobCommandInputSchema,
   siteAgentHealthResponseSchema,
   splitLocalOrderEquallyInputSchema,
   updateLocalCatalogCategoryInputSchema,
@@ -74,6 +78,7 @@ import {
   type PayLocalOrderInput,
   type PrintJobCommand,
   type PrintJobsQuery,
+  type ReceiptJobCommandInput,
   type ResetLocalUserPinInput,
   type UpdateLocalCatalogCategoryInput,
   type UpdateLocalCatalogItemInput,
@@ -590,6 +595,33 @@ export function createSiteAgentClient(input?: {
       return request(
         `${localPosRoutes.orders}/${encodeURIComponent(orderId)}/payment-summary`,
         localPaymentSummaryResponseSchema,
+      );
+    },
+    async getReceiptView(orderId: string) {
+      return request(
+        `${localPosRoutes.orders}/${encodeURIComponent(orderId)}/receipts`,
+        localReceiptViewResponseSchema,
+      );
+    },
+    async executeReceiptCommand(
+      orderId: string,
+      input: ReceiptJobCommandInput,
+    ) {
+      const body = receiptJobCommandInputSchema.parse(input);
+      return request(
+        `${localPosRoutes.orders}/${encodeURIComponent(orderId)}/receipts`,
+        localReceiptCommandResponseSchema,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        },
+      );
+    },
+    async getReceiptJobStatus(orderId: string, jobId: string) {
+      return request(
+        `${localPosRoutes.orders}/${encodeURIComponent(orderId)}/receipts/${encodeURIComponent(jobId)}`,
+        localReceiptJobStatusResponseSchema,
       );
     },
     async splitOrderEqually(orderId: string, parts: number) {

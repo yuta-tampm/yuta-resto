@@ -464,3 +464,356 @@ now the only edit entry point in every selected study. These references remain
 DRAFT presentation evidence. The product owner approved them for a route-local
 Phase 1 prototype on 2026-08-16. That approval does not authorize schema,
 migration, contract, API, permission, repository, action, or real data.
+
+## Wave D Phase 0 handoff — `À traiter`
+
+Status: `EXECUTED — VISUAL DIRECTION APPROVED FOR PHASE 1 PROTOTYPE`
+
+Wave D is a new `SURFACE + FLOW` inside the integrated Salaries page and uses
+`NEW_CAPABILITY_DISCOVERY`. The capability itself has no baseline. The current
+signed-in containing page and drawer are evidenced by the Wave C Phase 5
+as-built captures, including the later `Identité` / `Relation de travail`
+visual-correction set under `references/`.
+
+### Shared context and shell decision
+
+| Layer       | Authority/input                                                             | Decision |
+| ----------- | --------------------------------------------------------------------------- | -------- |
+| YUTA global | shared frontend rules, Geist Sans, semantic tokens, `@yuta/ui`, Lucide      | reuse    |
+| Backoffice  | authenticated shell, sidebar, topbar, establishment selector, OWNER session | preserve |
+| Équipe      | current navigation labels and planned route boundaries                      | preserve |
+| Salariés    | header, three metrics, filters/list, drawer, actions, responsive as-built   | preserve |
+| Wave D      | proposed compact `À traiter` surface and DRAFT states only                  | explore  |
+
+Exact shell/navigation mode: `REUSE_APPROVED_SHARED_SHELL`. Do not create or
+redesign shell/navigation, add an HR dashboard, add another route/tab, or alter
+the existing three metrics.
+
+### Curated design input
+
+Provide the design tool with:
+
+- the current 1440/1024/768/390 Wave C Phase 5 as-built captures;
+- `PRODUCT_SCOPE.md` Wave D boundary;
+- `UI_SPEC.md` Wave D placement, state, responsive, and forbidden-inference rules;
+- `DATA_AND_INTERACTION_SPEC.md` derived source/action map;
+- shared Backoffice/YUTA visual rules and semantic component constraints.
+
+Generated employee names, counts, dates, issue examples, and contract presence
+must be visibly fictional design evidence. They do not define a contract,
+database, query, pagination rule, or legal requirement.
+
+### Ready-to-run Wave D design prompt
+
+```text
+Create responsive DRAFT design images and short state/responsive annotations,
+not implementation code, for a proposed `À traiter` surface inside the existing
+YUTA Backoffice page `/equipe/salaries`.
+
+This is NEW_CAPABILITY_DISCOVERY inside an already integrated, OWNER-only
+employee page. Reuse the supplied current signed-in Salaries as-built exactly
+for the shared Backoffice shell, page header, `Ajouter un salarié`, three summary
+cards, search/filter/list, selected-row behavior, right overlay drawer, employee
+header/actions/tabs, spacing, semantic colors, and responsive widths. Do not
+redesign the shell, navigation, list, drawer, or existing flows.
+
+Explore one compact section titled `À traiter` between the existing three-card
+summary and the employee search/list area. Do not add a fourth KPI, new route,
+sidebar item, page tab, drawer tab, notification bell, inbox, or HR dashboard.
+
+Primary user: OWNER of the active establishment. MANAGER, STAFF, employee
+self-service, public users, and service actors are denied. Every fictional item
+belongs only to the selected organization + establishment + employee dossier.
+Include a non-disclosing forbidden study with no employee names, counts, issue
+types, dates, or existence signal.
+
+Organize only these proposed MVP item families:
+
+1. `À corriger`
+   - `Dossier incomplet` for an active or upcoming employee, with one
+     `Compléter le dossier` action opening the existing edit flow;
+   - `Contrat signé manquant` for an active or upcoming employee, with one
+     `Ajouter le contrat` action opening the existing protected Documents flow.
+     Missing contract evidence must remain separate from dossier completeness.
+2. `Échéances proches`
+   - a recorded employee departure from today through the next five local
+     calendar days, using text such as `Dernier jour`, `Départ demain`, or
+     `Départ dans 5 jours`, plus the exact date and one `Voir le départ` action.
+     Present this as an event to review, not an error.
+
+Each item shows a fictional employee name, concise text-backed reason, optional
+date, and exactly one supported action. Actions navigate into existing flows;
+do not show a checkbox or local “completed” state. Use a small fictional set to
+study density, but do not invent final pagination, infinite scrolling,
+`Voir tout`, persisted priority, assignment, assignee, status, comment,
+acknowledgement, dismiss, snooze, bulk action, or saved task.
+
+Show DRAFT studies for:
+- loading;
+- ready with both groups;
+- only correction items;
+- only dated events;
+- compact no-items treatment that does not reserve a large empty panel;
+- document-source partial failure while employee-derived items remain truthful;
+- complete failure with retry;
+- forbidden with no data disclosure;
+- return from an existing resolving flow followed by a refreshed derived view.
+
+Do not imply polling, background jobs, scheduled notifications, email, SMS,
+push, calendar delivery, or an outbox. A normal authorized page read recomputes
+the overview. A source failure must never appear as a missing contract.
+
+Do not show CDD expected-end alerts, missing amendments, document expiry,
+Formalités status/deadlines/DPAE/DSN, generated documents, e-signature,
+government/provider state, probation, training, medical/disciplinary, payroll,
+remuneration, planning, pointage, register/PDF, OCR/extraction, manager
+delegation, cross-establishment totals, global-person identity, or production /
+legal-compliance claims.
+
+Use French UI copy, Geist Sans, current YUTA semantic roles, existing
+Card/Badge/Button/Alert/list/state patterns, and Lucide-style icons. Use no raw
+hex colors, gradients, glassmorphism, new component library, or color-only
+meaning. Preserve semantic headings/lists, visible focus, keyboard operation,
+accessible action names including employee context, touch-sized actions, and
+safe long-name wrapping/truncation.
+
+Return DRAFT studies at 1440 x 1000, 1024 x 768, 768 x 1024, and 390 x 844. At
+wide sizes, explore a restrained two-group composition that does not dominate
+the employee list. At narrow sizes, stack groups/items/actions without page
+overflow or nested horizontal scrolling. Preserve existing drawer-tab scrolling
+only inside the drawer.
+
+Success means the OWNER can quickly distinguish correctable issues from dated
+events and enter only currently supported resolving flows, while the design
+does not imply a task system, notification system, new data model, broader HR
+scope, or production approval.
+```
+
+Stop after generated DRAFT review. Prompt execution does not authorize a typed
+fixture, UI implementation, contract, repository aggregation, schema,
+migration, permission, audit event, API/action, task state, notification, or
+production rollout.
+
+### Wave D prompt execution record — 2026-08-16
+
+The product owner approved WD0-01 through WD0-08 and authorized prompt
+execution only. Built-in ImageGen produced four selected responsive DRAFT
+references:
+
+- `references/wave-d-design-draft-1440x1000-01.png`;
+- `references/wave-d-design-draft-1024x768-01.png`;
+- `references/wave-d-design-draft-768x1024-01.png`;
+- `references/wave-d-design-draft-390x844-01.png`.
+
+The selected wide studies keep exactly three metrics and place one compact,
+two-group surface before the existing filters/list. The 768 px study stacks
+the two groups, while the selected 390 px study first restores the containing
+page's real single-column metric layout and then stacks groups, items, and
+actions without horizontal overflow. A first mobile generation was rejected
+because it incorrectly compressed the three existing metrics into columns; it
+is not part of the page pack.
+
+These images use fictional presentation data and cover the ready state only.
+They do not settle loading, partial failure, complete failure, forbidden,
+no-items, refresh, ordering, item limits, or runtime behavior. Product review
+of the selected visual direction was recorded on 2026-08-16 for a route-local
+typed-fixture prototype only. That approval does not authorize real data,
+enabled actions, contracts, schema, API, permissions, audit, or production.
+
+## Wave E Phase 0 handoff — personnel register and PDF export
+
+### Phase 0 source and baseline
+
+Repository inventory on 2026-08-17 confirms that the Salariés containing page
+is integrated but no personnel-register page or electronic-register domain
+exists. Therefore the Wave E target baseline is `NOT_APPLICABLE`. Current
+`wave-d-phase-5-as-built-*` references may be supplied only as containing-page
+and Backoffice-shell context; they are not evidence of a register screen.
+
+Wave E uses `NEW_CAPABILITY_DISCOVERY`. It may explore a secondary Salariés
+header entry and a dedicated establishment-wide page, but neither the route nor
+runtime UI is approved. No generated reference may invent authorization,
+legally required values, PDF behavior, or compliance status.
+
+### Shared context and design-tool bundle
+
+- YUTA global: shared Geist typography, semantic tokens, `@yuta/ui`, and
+  `lucide-react` conventions;
+- Backoffice application: current authenticated topbar, sidebar, establishment
+  selector, content width, loading/error/forbidden patterns, and French copy;
+- Équipe section: real routes and current Salariés navigation ownership only;
+- containing page: current Salariés header, metrics, `À traiter`, filters/list,
+  explicit-open employee drawer, and responsive evidence;
+- proposed target: `/equipe/registre-personnel`, clearly marked DRAFT and
+  treated as a separate full-width page rather than a drawer tab.
+
+Exact shell decision: `REUSE_APPROVED_SHARED_SHELL`. Do not redesign the shell,
+sidebar, topbar, establishment selector, Salariés list, or employee drawer. Do
+not add a sidebar item until routing/navigation ownership is separately approved.
+
+### Executed Wave E design prompt
+
+Status: `EXECUTED — DRAFT REFERENCES PENDING VISUAL APPROVAL`.
+
+WE0-01 through WE0-10 and prompt execution were approved on 2026-08-17. The
+retained 1440, 1024, 768, and 390 studies and current design authority now live
+in the dedicated
+[`backoffice-equipe-registre-personnel`](../backoffice-equipe-registre-personnel/DESIGN_HANDOFF.md)
+pack. The prompt below remains the source prompt for traceability.
+
+```text
+Conçois uniquement des maquettes DRAFT, sans code, pour la Wave E « Registre du
+personnel » de YUTA Backoffice. La page Salariés existante se trouve sur
+/equipe/salaries. La nouvelle capacité est absente du produit et suit
+NEW_CAPABILITY_DISCOVERY. Explore une page dédiée proposée à
+/equipe/registre-personnel, ouverte depuis une action secondaire « Registre du
+personnel » dans l'en-tête de Salariés. Cette route et cette action sont des
+propositions de design, pas des fonctions existantes.
+
+Réutilise exactement le contexte visuel fourni : shell Backoffice authentifié,
+barre supérieure, navigation latérale, sélecteur d'établissement, typographie,
+tokens sémantiques, densité, largeur de contenu et états communs. Ne redessine
+pas le shell, la navigation, la liste Salariés, les indicateurs, « À traiter »
+ou le dossier salarié latéral. N'ajoute pas une entrée de navigation latérale.
+
+Utilisateur principal : OWNER de l'établissement actif. MANAGER, STAFF,
+salarié, utilisateur public et acteur technique sont hors périmètre. Le registre
+appartient à un seul établissement. Ne montre aucune vue multi-établissements,
+aucun compte externe pour le CSE ou l'inspection et aucun lien public.
+
+Objectif de la maquette : permettre au propriétaire de consulter un registre
+ordonné, comprendre les informations obligatoires manquantes et repérer une
+action protégée d'export PDF. Le registre structuré est la source. Le PDF n'est
+qu'une représentation générée à la demande ; il n'est ni modifiable, ni stocké
+par défaut, ni preuve visuelle de conformité.
+
+Produis quatre études cohérentes : 1440 x 1000, 1024 x 768, 768 x 1024 et
+390 x 844. La composition proposée contient :
+
+1. un en-tête « Registre du personnel », le contexte d'établissement actif et
+   un retour clair vers « Salariés » ;
+2. une explication courte : registre propre à cet établissement, construit à
+   partir des données structurées ;
+3. une carte de préparation distinguant les dossiers exploitables, les
+   informations manquantes et les catégories non encore prises en charge, sans
+   badge « Conforme » ;
+4. une liste dans l'ordre canonique d'embauche ou d'arrivée, avec une position
+   d'ordre visible et sans tri inventé ;
+5. une séparation explicite entre « Salariés » et la partie spécifique
+   « Stagiaires et service civique ». Cette seconde partie doit être présentée
+   comme non encore disponible, sans fausses personnes ni fausses données ;
+6. des lignes ou cartes lisibles regroupant identité, emploi/qualification,
+   entrée/sortie, mentions de contrat applicables et informations
+   conditionnelles. Utilise « Information manquante » à la place d'une valeur
+   inventée ;
+7. une action secondaire « Exporter en PDF », visible mais désactivée dans la
+   maquette de découverte, avec une aide indiquant que l'export sera protégé ;
+8. une notice concise sur l'accès restreint et la conservation.
+
+Utilise seulement des données fictives et non personnelles. Les valeurs
+nécessaires à la présentation ne doivent contenir aucun identifiant technique,
+numéro réel d'autorisation de travail, nom de fichier, URL, clé de stockage ou
+métadonnée de tenant. Ne déduis rien d'un contrat PDF.
+
+Montre au minimum l'état principal « informations manquantes ». Prévois dans la
+structure, sans multiplier les écrans, les états chargement, registre prêt,
+établissement vide, accès interdit, erreur avec réessai, export en cours, échec
+d'export et source modifiée nécessitant une actualisation. Tous les états ont
+un texte explicite et ne reposent jamais uniquement sur une couleur.
+
+À 1440 et 1024 px, privilégie une liste compacte et structurée. À 768 et 390 px,
+transforme-la en cartes empilées dans le même ordre. N'utilise pas de tableau
+horizontal inaccessible, ne masque pas une mention par survol, autorise les
+noms longs à revenir à la ligne, conserve des cibles tactiles d'au moins 44 px
+et évite tout débordement horizontal.
+
+Interdictions : badge ou sceau de conformité, signature/certification,
+horodatage de confiance, édition en grille, suppression/correction destructive,
+archive PDF, partage, email, lien public, import/export en masse, portail CSE ou
+inspection, vue organisation, accès manager, self-service salarié, Documents,
+OCR, extraction, ChatGPT/IA, remplissage automatique, Formalités, DPAE/DSN,
+paie, Planning, Pointage, fournisseur externe ou soumission administrative.
+
+Le résultat doit guider la hiérarchie, la densité, les proportions, les états
+et le responsive uniquement. Il ne définit ni route, ni permission, ni champ,
+ni schéma, ni API, ni règle juridique. Ajoute la mention « DRAFT — exploration
+sans données réelles » dans chaque étude.
+```
+
+### Stop condition
+
+Prompt execution and dedicated pack creation are complete. Stop before any
+prototype, runtime route, navigation, UI, fixture, schema, migration, contract,
+permission, audit, PDF, provider, real data, or production work until the DRAFT
+visual direction and a later phase are explicitly approved.
+
+## Wave F Phase 0 — design prompt executed
+
+Design prompt status: `EXECUTED 2026-08-18 — VISUAL DIRECTION APPROVED FOR PHASE 1 LOCAL PROTOTYPE`.
+
+Use the current Wave C/Documents Phase 5 as-built drawer captures as containing-
+surface authority. Repository reality overrides all fictional values in the
+prompt. The prompt explores only presentation and creates no AI capability.
+
+```text
+Conçois uniquement des maquettes DRAFT, sans code ni appel IA, pour une future
+fonction « Analyser le contrat » dans le tiroir salarié existant de YUTA
+Backoffice, route /equipe/salaries, onglet Documents.
+
+Conserve exactement le shell Backoffice, le tiroir salarié large, les onglets,
+la fiche du contrat de travail signé, les actions Consulter/Télécharger, la
+typographie, les tokens et la densité des captures as-built fournies. N'ajoute
+ni route, ni item de navigation, ni centre IA, ni chatbot.
+
+Utilisateur : OWNER autorisé de l'établissement actif. Le document appartient
+à une organisation, un établissement, un salarié et une version précise. Le
+fichier est déjà stocké en privé et contrôlé avant cette future étape. La
+maquette ne définit pas de fournisseur, de modèle, de stockage ou d'API.
+
+Ajoute une action secondaire « Analyser le contrat » sur le contrat signé, puis
+une zone « Suggestions à vérifier ». Montre clairement « Aperçu — aucune
+analyse réelle » et « Rien ne sera enregistré sans votre confirmation ».
+
+Utilise des données entièrement fictives pour illustrer trois suggestions :
+- Poste : valeur actuelle « Employé polyvalent », suggestion « Chef de rang »;
+- Type de contrat : valeur actuelle « CDI », suggestion « CDD »;
+- Durée hebdomadaire : valeur actuelle « Non renseignée », suggestion
+  « 35 h par semaine ».
+
+Pour chaque suggestion, affiche le champ, la valeur actuelle, la valeur détectée,
+une confiance textuelle (élevée/moyenne/faible), la page source, un court extrait
+fictif, et un choix explicite « Conserver la valeur actuelle » ou « Utiliser la
+suggestion ». Ne présélectionne aucune suggestion uniquement selon la confiance.
+Ajoute un récapitulatif des changements sélectionnés et un bouton désactivé
+« Appliquer les champs sélectionnés » portant la mention prototype.
+
+Prévois visuellement les états : prêt, analyse en cours, résultat partiel,
+aucun champ détecté, PDF image non pris en charge, service indisponible, version
+du document modifiée, dossier salarié modifié/conflit, validation impossible,
+application en cours, succès et réessai. L'échec de l'analyse ne bloque jamais
+Consulter ou Télécharger.
+
+Produis 1440x1000, 1024x768, 768x1024 et 390x844. Sur desktop/tablette, utilise
+des comparaisons alignées lisibles. À 390 px, empile les suggestions sans grille
+horizontale. Les valeurs longues, la confiance, la page et l'extrait doivent
+revenir à la ligne. Conserve des cibles tactiles de 44 px, un focus visible,
+des états textuels et aucun débordement horizontal.
+
+Interdictions : analyse réelle, fournisseur/modèle, prompt visible, token/coût,
+chat, enregistrement automatique, suggestion présélectionnée, création salarié
+depuis un fichier, pièce d'identité, passeport, titre de séjour, caméra, avenant,
+fusion de documents, mise à jour du registre, paie, Formalités, DPAE/DSN,
+Planning, Pointage, génération/signature de document, partage, lien public,
+traitement en masse, notification ou badge « Conforme » / « Vérifié par l'IA ».
+
+Le résultat guide uniquement la hiérarchie, la compréhension, les états et le
+responsive. Il n'autorise aucune implementation, transmission de fichier,
+permission, schéma, migration, API, audit ou comportement production.
+```
+
+### Wave F stop condition
+
+WF0-01 through WF0-12 and this prompt execution were approved on 2026-08-18.
+Stop after the four DRAFT references. Prompt execution does not authorize a prototype,
+file read, OCR/AI call, provider setup, runtime UI, contract, persistence,
+permission, audit, employee mutation, or production behavior.

@@ -54,6 +54,8 @@
     "test:cloud": "pnpm --filter @yuta/auth test && pnpm --filter @yuta/core test && pnpm --filter @yuta/contracts test && pnpm --filter @yuta/booking test && pnpm --filter @yuta/booking-web test && pnpm --filter @yuta/tenant test && pnpm --filter @yuta/db-cloud test && pnpm --filter @yuta/backoffice test",
     "test:local": "pnpm --filter @yuta/db-pos test && pnpm --filter @yuta/site-agent test && pnpm --filter @yuta/pos test && pnpm test:pos:offline",
     "test:pos:offline": "node ./scripts/test-pos-offline.mjs",
+    "test:receipt-preview": "node ./scripts/test-receipt-preview.mjs",
+    "receipt:preview": "pnpm --filter @yuta/site-agent receipt:preview --",
     "test:pos": "pnpm --filter @yuta/pos test",
     "test:site-agent": "pnpm --filter @yuta/site-agent test",
     "test:ui-pack": "node --test ./scripts/ui-pack-tooling.test.mjs",

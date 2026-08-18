@@ -66,6 +66,53 @@ const kitchenPrintPayloadSchema = z
   })
   .passthrough();
 
+export const customerReceiptPayloadSchema = z
+  .object({
+    version: z.literal(1),
+    documentType: z.literal('non_fiscal'),
+    orderNumber: z.string().min(1),
+    tableLabel: z.string().min(1),
+    orderType: z.enum(['dine_in', 'takeaway', 'delivery']),
+    targetKind: z.enum(['order', 'check']),
+    targetLabel: z.string().min(1),
+    createdAt: z.string().datetime(),
+    paidAt: z.string().datetime(),
+    items: z.array(
+      z.object({
+        name: z.string().min(1),
+        quantity: z.number().int().positive(),
+        unitPriceCents: z.number().int().nonnegative(),
+        totalCents: z.number().int().nonnegative(),
+      }),
+    ),
+    discounts: z.array(
+      z.object({
+        name: z.string().min(1),
+        amountCents: z.number().int().nonnegative(),
+      }),
+    ),
+    subtotalCents: z.number().int().nonnegative(),
+    discountCents: z.number().int().nonnegative(),
+    totalCents: z.number().int().nonnegative(),
+    payments: z.array(
+      z.object({
+        method: z.enum(['cash', 'card', 'ticket_resto', 'other']),
+        amountCents: z.number().int().positive(),
+        tenderedCents: z.number().int().nonnegative().nullable(),
+        changeCents: z.number().int().nonnegative().nullable(),
+        tipCents: z.number().int().nonnegative(),
+        paidBy: z.string().nullable(),
+        paidAt: z.string().datetime(),
+      }),
+    ),
+    copies: z.literal(1),
+    fontSizePreset: z.enum(['compact', 'standard', 'large']),
+    topPaddingLines: z.number().int().min(0).max(8),
+    leftPaddingChars: z.number().int().min(0).max(8),
+    bottomPaddingLines: z.number().int().min(0).max(8),
+  })
+  .passthrough();
+
 type PrinterWriter = (devicePath: string, data: Buffer) => Promise<void>;
 const defaultInterTicketDelayMs = 800;
 const printerBodyChunkSize = 128;
@@ -80,6 +127,7 @@ export function createLocalPrinterWorker(input: {
   pollIntervalMs: number;
   write?: PrinterWriter;
   interTicketDelayMs?: number;
+  orderIdScope?: string;
 }) {
   const write = input.write ?? writePrinterDevice;
   const interTicketDelayMs =
@@ -92,7 +140,14 @@ export function createLocalPrinterWorker(input: {
     const candidate = await input.db.query.printJobs.findFirst({
       where: and(
         eq(printJobs.status, 'pending'),
-        inArray(printJobs.jobType, ['kitchen_ticket', 'test']),
+        inArray(printJobs.jobType, [
+          'kitchen_ticket',
+          'customer_receipt',
+          'test',
+        ]),
+        ...(input.orderIdScope
+          ? [eq(printJobs.orderId, input.orderIdScope)]
+          : []),
       ),
       orderBy: [asc(printJobs.createdAt), asc(printJobs.id)],
     });
@@ -108,7 +163,7 @@ export function createLocalPrinterWorker(input: {
     if (!claimed) return false;
 
     try {
-      const outputs = renderInternalKitchenTickets(claimed);
+      const outputs = renderInternalPrintTickets(claimed);
       for (const output of outputs) {
         await write(input.devicePath, output);
         await wait(interTicketDelayMs);
@@ -163,7 +218,14 @@ export function createLocalPrinterWorker(input: {
         .where(
           and(
             eq(printJobs.status, 'printing'),
-            inArray(printJobs.jobType, ['kitchen_ticket', 'test']),
+            inArray(printJobs.jobType, [
+              'kitchen_ticket',
+              'customer_receipt',
+              'test',
+            ]),
+            ...(input.orderIdScope
+              ? [eq(printJobs.orderId, input.orderIdScope)]
+              : []),
           ),
         );
     } catch (error: unknown) {
@@ -186,6 +248,29 @@ export function createLocalPrinterWorker(input: {
 export function renderInternalKitchenTicket(job: PrintJob): Buffer | null {
   const tickets = renderInternalKitchenTickets(job);
   return tickets.length > 0 ? Buffer.concat(tickets) : null;
+}
+
+export function renderInternalPrintTickets(job: PrintJob): Buffer[] {
+  if (job.jobType === 'customer_receipt') {
+    const payload = customerReceiptPayloadSchema.parse(job.payload);
+    return Array.from({ length: payload.copies }, () =>
+      renderCustomerReceipt(payload),
+    );
+  }
+  return renderInternalKitchenTickets(job);
+}
+
+export function renderCustomerReceiptTicket(job: PrintJob): Buffer {
+  if (job.jobType !== 'customer_receipt') {
+    throw new Error('Expected a customer_receipt print job.');
+  }
+  return renderCustomerReceipt(customerReceiptPayloadSchema.parse(job.payload));
+}
+
+export function renderCustomerReceiptPayload(
+  payload: z.infer<typeof customerReceiptPayloadSchema>,
+): Buffer {
+  return renderCustomerReceipt(customerReceiptPayloadSchema.parse(payload));
 }
 
 export function renderInternalKitchenTickets(job: PrintJob): Buffer[] {
@@ -449,6 +534,111 @@ function renderProductionTicket(
   for (let line = 0; line < payload.bottomPaddingLines; line += 1) write('');
   chunks.push(printerCutSequence);
   return Buffer.concat(chunks);
+}
+
+function renderCustomerReceipt(
+  payload: z.infer<typeof customerReceiptPayloadSchema>,
+): Buffer {
+  const chunks: Buffer[] = [];
+  const command = (...bytes: number[]) => chunks.push(Buffer.from(bytes));
+  const write = (value = '', indentation = 0) => {
+    chunks.push(
+      Buffer.from(ascii(`${' '.repeat(indentation)}${value}\r\n`), 'ascii'),
+    );
+  };
+  const setAlign = (value: 0 | 1) => command(0x1b, 0x61, value);
+  const setBold = (enabled: boolean) => command(0x1b, 0x45, enabled ? 1 : 0);
+  const setSize = (value: number) => command(0x1d, 0x21, value);
+  const leftPadding = payload.leftPaddingChars;
+  const width = 42 - leftPadding;
+  const row = (label: string, value: string) =>
+    write(leftRight(label, value, width), leftPadding);
+
+  command(0x1b, 0x40);
+  for (let line = 0; line < payload.topPaddingLines; line += 1) write();
+  setAlign(1);
+  setBold(true);
+  setSize(0x11);
+  write('RECU DE PAIEMENT');
+  setSize(0x00);
+  setBold(false);
+  write(payload.targetLabel);
+  write(payload.orderNumber);
+  write(formatDateTime(payload.paidAt));
+  setAlign(0);
+  write(separator(width), leftPadding);
+  row('Service', orderType(payload.orderType));
+  row('Repere', payload.tableLabel);
+  write(separator(width), leftPadding);
+
+  if (payload.items.length === 0) {
+    write('Partage egal - detail articles non applicable', leftPadding);
+  } else {
+    for (const item of payload.items) {
+      setBold(payload.fontSizePreset === 'large');
+      for (const line of wrapText(
+        `${item.quantity} x ${item.name}`,
+        Math.max(12, width - 10),
+      )) {
+        write(line, leftPadding);
+      }
+      setBold(false);
+      row(
+        `${formatMoney(item.unitPriceCents)} x ${item.quantity}`,
+        formatMoney(item.totalCents),
+      );
+    }
+  }
+  write(separator(width), leftPadding);
+  row('Sous-total', formatMoney(payload.subtotalCents));
+  for (const discount of payload.discounts) {
+    row(`Remise ${discount.name}`, `-${formatMoney(discount.amountCents)}`);
+  }
+  if (payload.discounts.length === 0 && payload.discountCents > 0) {
+    row('Remise', `-${formatMoney(payload.discountCents)}`);
+  }
+  setBold(true);
+  row('TOTAL', formatMoney(payload.totalCents));
+  setBold(false);
+  write(separator(width), leftPadding);
+  for (const payment of payload.payments) {
+    row(paymentMethod(payment.method), formatMoney(payment.amountCents));
+    if (payment.tenderedCents !== null) {
+      row('Recu', formatMoney(payment.tenderedCents));
+    }
+    if (payment.changeCents !== null && payment.changeCents > 0) {
+      row('Rendu', formatMoney(payment.changeCents));
+    }
+    if (payment.tipCents > 0) row('Pourboire', formatMoney(payment.tipCents));
+  }
+  write(separator(width), leftPadding);
+  setAlign(1);
+  write('Document non fiscal');
+  write('Merci');
+  setAlign(0);
+  for (let line = 0; line < payload.bottomPaddingLines; line += 1) write();
+  chunks.push(printerCutSequence);
+  return Buffer.concat(chunks);
+}
+
+function formatMoney(cents: number): string {
+  return `${(cents / 100).toFixed(2).replace('.', ',')} EUR`;
+}
+
+function paymentMethod(
+  value: 'cash' | 'card' | 'ticket_resto' | 'other',
+): string {
+  if (value === 'cash') return 'Especes';
+  if (value === 'card') return 'Carte';
+  if (value === 'ticket_resto') return 'Titre restaurant';
+  return 'Autre paiement';
+}
+
+function leftRight(label: string, value: string, width: number): string {
+  const safeLabel = ascii(label);
+  const safeValue = ascii(value);
+  const available = Math.max(1, width - safeValue.length - 1);
+  return `${safeLabel.slice(0, available).padEnd(available, ' ')} ${safeValue}`;
 }
 
 function allergySeverityLabel(

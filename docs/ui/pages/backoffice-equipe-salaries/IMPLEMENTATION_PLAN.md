@@ -778,3 +778,358 @@ Completed on 2026-08-16:
 
 This closes the approved local Wave C delivery. Production remains a separate,
 blocked release decision.
+
+## Wave D Phase 0 — `À traiter` read-only discovery gate
+
+Status: `PHASE 2 TECHNICAL DESIGN COMPLETE FOR REVIEW — REAL DATA BLOCKED`
+
+Phase 0 work is limited to this existing page pack:
+
+1. classify the new surface as `NEW_CAPABILITY_DISCOVERY` inside the integrated
+   Salaries page;
+2. inventory current employee completeness, signed-base-contract availability,
+   recorded departure dates, permissions, tenant scope, existing resolving
+   flows, and absent task/notification infrastructure;
+3. propose the three-kind derived MVP and distinguish correctable issues from
+   dated events;
+4. record OWNER-only organization + establishment + employee ownership,
+   sensitive-data and audit requirements, date rules, truthful failures, and
+   production blockers;
+5. defer unsupported task, notification, CDD expiry, Formalités, manager,
+   cross-establishment, and compliance behavior;
+6. prepare the Wave D responsive design prompt;
+7. obtain product approval of WD0-01 through WD0-08 and prompt execution;
+8. store four selected responsive DRAFT studies and stop before implementation.
+
+```text
+Target: SURFACE + FLOW inside /equipe/salaries
+Delivery mode: NEW_CAPABILITY_DISCOVERY
+Containing page: EXISTING integrated page; preserve behavior
+Capability baseline: NOT_APPLICABLE; surface is absent
+Containing-page baseline: current Wave C Phase 5 as-built evidence
+Files expected to modify in Phase 0: existing page-pack Markdown only
+Files expected to create in Phase 0: none
+Packages affected: documentation only
+Cross-application impact: none
+Database change: NO; NO SCHEMA/TASK TABLE AUTHORIZED
+API or contract change: PROPOSAL; NO CHANGE AUTHORIZED
+Permission/auth change: PROPOSAL TO REUSE OWNER-ONLY READS; NO CHANGE AUTHORIZED
+Audit change: PROPOSAL; NO EVENT AUTHORIZED
+Runtime/device/provider change: NO
+Fixture/prototype/UI code: NOT AUTHORIZED
+Production: NOT AUTHORIZED
+Design prompt: EXECUTED; VISUAL DIRECTION APPROVED FOR PHASE 1 PROTOTYPE
+```
+
+### Phase 1 authorized local prototype
+
+The product owner approved the selected Wave D design and authorized a local
+typed-fixture prototype on 2026-08-16. Authorized files are limited to one
+route-local presentation component, its fixture-focused test, the containing
+page composition, and this stable page pack.
+
+```text
+Database change: NO
+API or contract change: NO
+Permission/auth change: NO
+Audit change: NO
+Runtime/provider change: NO
+Real employee/document data: NO
+Prototype actions: VISIBLE BUT DISABLED
+Production: NOT AUTHORIZED
+```
+
+Phase 1 implements only the approved ready state. It must preserve the
+integrated page loader, trusted OWNER scope, three real metrics, employee list,
+drawer, and every existing mutation. The prototype cannot consume employee
+records or document availability.
+
+### Phase 2 interaction/data design only
+
+The product owner approved the local Phase 1 prototype and authorized Phase 2
+documentation on 2026-08-16. The proposal now defines:
+
+1. a derived organization + establishment-scoped overview owner with bounded
+   employee and document-presence reads;
+2. five-item independent cursor pages for each group with no total or new
+   route;
+3. deterministic neutral correction order and earliest-departure event order;
+4. fresh server-authorized target resolution before entering an existing
+   edit, Documents-add, or departure-review flow;
+5. partial document failure, full employee failure, no-items, retry, stale
+   target, refresh, focus, and responsive behavior;
+6. existing OWNER-only employee/document permissions and a proposed minimized
+   cross-employee overview audit event;
+7. a required authorization, tenant-isolation, cursor, stale-source, audit,
+   state, accessibility, and responsive test matrix.
+
+```text
+Files expected to modify in Phase 2: existing page-pack Markdown only
+Files expected to create in Phase 2: none
+Packages affected: documentation only
+Cross-application impact: none
+Database change: NO; DERIVED READ PROPOSED, NO TASK TABLE
+API or contract change: PROPOSAL; NO CHANGE AUTHORIZED
+Permission/auth change: NO; EXISTING OWNER PERMISSIONS PROPOSED FOR REUSE
+Audit change: PROPOSAL; NEW ALLOWLISTED EVENT NOT AUTHORIZED
+Runtime/provider change: NO
+Fixture/prototype UI: RETAINED UNCHANGED
+Real employee/document data: NOT AUTHORIZED
+Production: NOT AUTHORIZED
+```
+
+WD2-01 through WD2-12 and the local real-data Phase 3 slice were approved on
+2026-08-17.
+
+### Phase 3 local real-data slice implemented
+
+1. Added the bounded action-overview contract and independent cursors.
+2. Added set-based employee/document-presence reads and one minimized overview
+   audit event using existing tables only.
+3. Added fresh scoped target revalidation before opening an existing flow.
+4. Replaced the fictional fixture with the real local UI, five-item paging,
+   retry, partial document-source warning, and empty state.
+5. Reused edit, Documents add, and departure review; successful document save
+   now refreshes route source truth.
+6. Kept production fail closed: no overview read, render, or action outside
+   development mode.
+
+No schema, migration, task persistence, notification, public API, or new
+permission was introduced. Production approval remains a separate later gate.
+
+### Wave D Phase 4 local integration audit completed
+
+Phase 4 was approved on 2026-08-17 without production authority. The audit:
+
+1. traced the authenticated OWNER, active-establishment, permission, repository,
+   transport, target-revalidation, and existing-flow boundaries;
+2. centralized page/action development gating in one tested helper;
+3. confirmed development renders the real overview and no fixture disclosure;
+4. built and served a production build on an isolated local port, confirming
+   Salariés renders but Wave D does not;
+5. introduced no data/schema/API/permission/audit/provider expansion;
+6. kept mutation-capable database integration tests disabled because the
+   explicit local database opt-in was not granted.
+
+Status: `COMPLETE_LOCAL_AUDIT — PRODUCTION BLOCKED`.
+
+### Wave D Phase 5 local QA and as-built completed
+
+Phase 5 was approved and completed on 2026-08-17 against the signed-in local
+LUNA OWNER session. Functional and visual QA confirmed:
+
+1. real configured establishment data with no fixture/DRAFT disclosure;
+2. one current correction item plus the truthful empty departures group;
+3. the existing Documents-add flow opens after fresh target validation;
+4. the employee drawer is exactly viewport width at 390 px with no page or
+   drawer horizontal overflow;
+5. 1440/1024/768/390 layouts preserve hierarchy and stack the action at the
+   narrow breakpoint;
+6. closing the action-opened drawer with Escape returns keyboard focus to the
+   originating overview button after a Phase 5 correction;
+7. no browser warning or error in a fresh QA session.
+
+The four current as-built captures are stored under `references/` with stable
+`wave-d-phase-5-as-built-*` names. Error, partial-source, and five-plus-item
+pagination states were not fabricated against real data for screenshots; their
+contracts and implementation remain covered by code/tests. The opt-in database
+integration suite was not forced. Status: `LOCAL QA COMPLETE — PRODUCTION
+BLOCKED`.
+
+### Later sequence, not yet authorized
+
+1. review production legal, privacy, retention, security, and operations gates;
+2. keep production behind the existing personnel/document legal, privacy,
+   retention, security, provider, backup/restore, and operations gates.
+
+Phase 2 itself remained documentation-only. The separately approved Phase 3
+work above is the sole authority for the local contract, repository, actions,
+audit event, fixture replacement, and real-data UI.
+
+## Wave E Phase 0 — personnel register and PDF export discovery gate
+
+Status: `PHASE 0 APPROVED; DESIGN PROMPT EXECUTED — NO IMPLEMENTATION`.
+
+Phase 0 completed these read-only tasks on 2026-08-17:
+
+1. reconciled the integrated Salariés employee/document/audit foundation with
+   the absent register, stagiaire/service-civique, retention, and PDF domains;
+2. reviewed current official Code du travail and CNIL sources without making a
+   legal-compliance claim;
+3. identified the current fields that may be reused and every required or
+   conditional field/domain currently missing;
+4. proposed a dedicated establishment-wide route entered from Salariés rather
+   than another per-employee drawer tab;
+5. proposed OWNER-only access, separate future register read/export permissions,
+   strict organization + establishment scope, and minimized access audit;
+6. separated structured register source data from transient protected PDF output;
+7. recorded stable order, non-destructive history, five-year retention review,
+   responsive/accessibility states, and production gates;
+8. retained OCR, document extraction, AI suggestions, and automatic field
+   updates for separately approved Wave F discovery;
+9. prepared the Wave E design prompt; product subsequently approved WE0-01
+   through WE0-10 and authorized prompt execution;
+10. created the dedicated `backoffice-equipe-registre-personnel` design pack
+    and retained four responsive DRAFT studies for visual review.
+
+No implementation inventory item authorizes a schema, migration, contract,
+route, navigation action, permission, repository, API, audit event, PDF
+generator, storage object, provider, fixture, test, or production behavior.
+
+### Proposed later sequence — not authorized
+
+1. product reviews and approves or revises the four DRAFT responsive studies in
+   the dedicated register page pack;
+2. after explicit approval, build a local typed-fixture prototype with disabled
+   export and no real personal data;
+3. Phase 2 defines the exact field dictionary, person categories, immutable
+   history/order model, permissions, audit, retention, PDF contract, and tests;
+4. legal/DPO, privacy, security, and operations owners approve the electronic-
+   register and production boundaries before any real-data implementation;
+5. deliver later vertical slices only after those approvals.
+
+```text
+Files expected to modify in Phase 0: existing page-pack Markdown only
+Files expected to create in Phase 0: none
+Packages affected: documentation only
+Cross-application impact: none
+Database change: NO
+API or contract change: NO
+Permission/auth change: NO
+Runtime/provider change: NO
+Operational data change: NO
+```
+
+## Wave F Phase 0 — document extraction discovery complete
+
+Status: `WAVE F PHASE 2 TECHNICAL DESIGN COMPLETE FOR REVIEW — IMPLEMENTATION BLOCKED`.
+
+Phase 0 reconciles the existing secure signed-contract storage, scanner,
+permissions, server delivery, employee fields, mutations, and audit boundaries
+with the absent OCR/AI capability. The recommended first scope is one verified
+base contract for one existing employee, reviewed suggestions for allowlisted
+employment fields, and no automatic save.
+
+### Proposed later sequence — separately gated
+
+1. product approved WF0-01 through WF0-12 on 2026-08-18;
+2. the separately authorized Wave F design prompt produced four DRAFT references;
+3. product approved the visual direction and Phase 1; the local typed-fixture
+   prototype is complete with no document read or provider call;
+4. Phase 2 decides extraction contracts, permission/audit, transient retention,
+   idempotency, provider/local OCR strategy, consent/disclosure, cost/rate limits,
+   test matrix, and production gates;
+5. only a separately approved Phase 3 may implement a local vertical slice;
+6. Phase 4 hardens security, tenant isolation, prompt-injection handling,
+   stale/version conflicts, retries, observability, and provider failure;
+7. Phase 5 performs functional, security, responsive, accessibility, and
+   as-built QA without using real personnel files solely for screenshots.
+
+No shared generic AI platform should be extracted before a second proven
+consumer exists. A first server-only application interface may be provider-
+neutral so its adapter can change without changing Documents UI or employee
+domain validation.
+
+```text
+Files expected to modify in Wave F Phase 0: existing backoffice-equipe-salaries page-pack Markdown only
+Files expected to create in Wave F Phase 0: none
+Packages affected: documentation only
+Cross-application impact: none
+Database change: NO
+API or contract change: NO
+Permission/auth change: NO
+Runtime/provider/AI call: NO
+File read/transmission: NO
+Operational data change: NO
+Production: NOT AUTHORIZED
+```
+
+### Wave F Phase 1 implementation evidence
+
+- development-only runtime gate is tested and fails closed for production/test;
+- the action is attached only to the signed base-contract card;
+- route-owned typed fixtures model three approved fictional suggestions;
+- choices are local presentation state with no preselection;
+- the apply action is always disabled;
+- no extraction service, file read, OCR/AI call, contract, schema, migration,
+  repository, permission, audit event, or employee mutation was added;
+- Backoffice component/model/runtime tests and four-width browser overflow
+  checks cover the prototype.
+
+## Wave F Phase 2 — technical delivery plan
+
+Status: `APPROVED; LOCAL SYNTHETIC PHASE 3 IMPLEMENTED`.
+
+### Proposed Phase 3 slices — separately gated
+
+1. **Pure contract and validation tests**
+   - define the strict versioned result and field discriminated union in
+     `@yuta/contracts` only after approval;
+   - test extra-key rejection, confidence/page/excerpt bounds, dependency codes,
+     and no arbitrary provider payload.
+2. **Server orchestration with test adapters**
+   - add route-owned preflight and extraction interfaces behind `server-only`;
+   - use synthetic PDFs and a deterministic adapter;
+   - prove authorization occurs before any content open or adapter invocation.
+3. **Development interaction vertical slice**
+   - replace the Phase 1 fixture button with a development-only server request;
+   - keep provider exercise synthetic unless WF2-06 is evidenced;
+   - implement pending, partial/no-result, unsupported, timeout, failure, and retry.
+4. **Bounded apply vertical slice**
+   - permit only `position` and `contractWeeklyMinutes`;
+   - reauthorize extraction and employee management;
+   - verify exact document version and employee revision;
+   - reuse the existing employee update validation, idempotency, conflict, and audit behavior.
+5. **Provider adapter evaluation**
+   - evaluate local PDF preparation and an optional OpenAI adapter behind the
+     same interface using synthetic/approved fixtures;
+   - measure extraction accuracy, refusal/invalid result rate, latency, and cost;
+   - do not promote an adapter to real personnel files or production without
+     WF2-06 and release gates.
+
+### Wave F Phase 3 implementation evidence
+
+Slices 1 through 4 are implemented locally. Slice 5 remains deferred because
+no provider call was authorized:
+
+- `@yuta/contracts` owns strict request, review-result, suggestion, scenario,
+  and bounded-apply schemas;
+- the Backoffice owns a server-only PDF preparer, deterministic synthetic
+  adapter, orchestration timeout, and development in-memory rate limiter;
+- the server generates a fictional three-page PDF and never opens the signed
+  personnel document for extraction;
+- the document UI offers complete, partial, no-result, unsupported, failure,
+  timeout, retry, review, and apply states only in development;
+- `position` and `contractWeeklyMinutes` reuse the existing scoped employee
+  update, validation, revision, idempotency, and audit transaction;
+- `employmentTermType` remains visible but blocked from apply;
+- the existing personnel audit table records minimized requested, completed,
+  failed, and applied outcomes without a migration;
+- production, real-file reads, remote calls, provider evaluation, and release
+  operations remain blocked.
+
+### Expected future ownership
+
+```text
+apps/backoffice route UI
+-> route actions and application orchestration
+-> server/personnel-contract-extraction interfaces and adapters
+-> existing db-cloud scoped document grant and employee repository
+-> existing private personnel-document storage runtime
+```
+
+`@yuta/contracts` may later own serialization-safe request/result schemas.
+`@yuta/db-cloud` continues to own only tenant-scoped persisted reads/mutations
+and audit transactions. `@yuta/ui` receives no personnel or AI business logic.
+No generic AI package should be created before a second independent consumer
+proves a reusable boundary.
+
+### Explicitly not authorized in Phase 2
+
+- code changes beyond the already approved Phase 1 prototype;
+- OpenAI or OCR SDK/library installation and API key/environment variables;
+- permission or audit enum changes;
+- schema, migration, result cache, queue, cron, worker, webhook, or background mode;
+- PDF content access for extraction or any outbound file/text transmission;
+- applying a suggestion or changing employee/register/document data;
+- production enablement, secrets, deployment, monitoring, billing, or legal claims.

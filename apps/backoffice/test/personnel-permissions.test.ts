@@ -32,6 +32,9 @@ describe('personnel permissions', () => {
       'personnel.employee.manage',
       'personnel.document.read',
       'personnel.document.manage',
+      'personnel.document.extract',
+      'personnel.register.read',
+      'personnel.register.export',
     ] as const) {
       expect(hasPersonnelPermission(context('OWNER'), permission)).toBe(true);
       expect(hasPersonnelPermission(context('MANAGER'), permission)).toBe(

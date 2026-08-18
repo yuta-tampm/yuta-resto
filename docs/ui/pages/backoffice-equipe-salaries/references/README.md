@@ -220,3 +220,111 @@ These captures verify two-column cards where space permits, one-column narrow
 layout, preserved drawer/tab behavior, and no page or drawer horizontal
 overflow. They reuse existing non-personal local evidence and introduce no data
 mutation or production approval.
+
+## Wave D Phase 0 containing-page context — `À traiter`
+
+The signed-in local OWNER page was re-inspected on 2026-08-16. It retains the
+three current summary cards and contains no `À traiter` surface. The Wave C
+Phase 5 responsive as-built captures, including the later identity/employment
+visual-correction set above, are the approved containing-page context.
+
+The proposed Wave D surface is absent, so its baseline is `NOT_APPLICABLE`.
+Current captures may guide shell fidelity, page hierarchy, spacing, responsive
+behavior, and drawer containment only. They do not authorize issue kinds,
+counts, task state, notification behavior, contract aggregation, audit,
+permissions, schema, or implementation.
+
+Containing-page captures used for the Wave D prompt:
+
+- `wave-d-phase-0-containing-page-1440x1000.png`;
+- `wave-d-phase-0-containing-page-1024x768.png`;
+- `wave-d-phase-0-containing-page-768x1024.png`;
+- `wave-d-phase-0-containing-page-390x844.png`.
+
+## Wave D DRAFT design references
+
+The product owner authorized design-prompt execution on 2026-08-16. The
+selected ready-state studies are:
+
+- `wave-d-design-draft-1440x1000-01.png`;
+- `wave-d-design-draft-1024x768-01.png`;
+- `wave-d-design-draft-768x1024-01.png`;
+- `wave-d-design-draft-390x844-01.png`.
+
+The 1440 and 1024 studies use a restrained two-group row. The 768 study stacks
+the groups while retaining the desktop shell. The selected 390 study preserves
+the real one-card-per-row metric layout and stacks each item action. The first
+mobile generation was rejected because it changed those existing metric cards
+to three columns; that rejected output is not stored here.
+
+All four images remain DRAFT presentation evidence with fictional names and
+values. Their visual direction was approved on 2026-08-16 for a route-local
+typed-fixture prototype only. They are not an as-built baseline and do not
+authorize real data, enabled actions, contract, schema, query, permission,
+audit, API/action, notification, or production work.
+
+## Wave D Phase 1 local prototype evidence
+
+Signed-in local OWNER browser QA captured the implemented typed-fixture
+prototype on 2026-08-16:
+
+- `wave-d-phase-1-prototype-1440x1000.png`;
+- `wave-d-phase-1-prototype-1024x768.png`;
+- `wave-d-phase-1-prototype-768x1024.png`;
+- `wave-d-phase-1-prototype-390x844.png`;
+- `wave-d-phase-1-prototype-390x844-detail.png`.
+
+The viewport checks found no horizontal overflow and no console warning or
+error. Every capture retains exactly three summary cards, two prototype
+groups, and three disabled actions. The additional 390 px detail capture shows
+the complete stacked prototype after scrolling past the existing page header
+and metrics. These captures evidence local presentation only; they do not
+authorize a real overview read or enabled resolving action.
+
+## Wave D Phase 5 local as-built evidence
+
+Signed-in local OWNER QA captured the real development-only overview on
+2026-08-17:
+
+- `wave-d-phase-5-as-built-1440x1000.png`;
+- `wave-d-phase-5-as-built-1024x768.png`;
+- `wave-d-phase-5-as-built-768x1024.png`;
+- `wave-d-phase-5-as-built-390x844.png`.
+
+The desktop and tablet captures show the real containing page, three existing
+metrics, one current missing-contract action, and a truthful empty departure
+group. The mobile capture is taken after scrolling the page-owned main region
+to the complete stacked Wave D card. All four widths have equal document
+scroll/client width and no horizontal page overflow. The local record shown is
+existing configured development data; no employee or document mutation was
+performed for these captures.
+
+The DRAFT design and Phase 1 fixture captures remain historical discovery
+evidence only. This Phase 5 set is the current Wave D as-built reference and
+does not authorize production delivery.
+
+## Wave F Phase 0 containing-surface and DRAFT design evidence
+
+The current approved Documents/Wave C Phase 5 as-built drawer captures remain
+the containing-surface authority. They evidence the existing contract card,
+document tab, drawer width, shell, responsive behavior, and real secure-document
+actions only.
+
+The separately approved design prompt produced these subordinate DRAFT
+references on 2026-08-18:
+
+- `wave-f-design-draft-1440x1000-01.png`;
+- `wave-f-design-draft-1024x768-01.png`;
+- `wave-f-design-draft-768x1024-01.png`;
+- `wave-f-design-draft-390x844-01.png`.
+
+The viewport names describe the requested responsive concepts; generated raster
+canvas dimensions may differ. The 1024 reference was regenerated after review
+so the analysis action belongs only to the signed base contract, never an
+amendment.
+
+They do not evidence or authorize OCR, AI analysis, suggestions, an apply
+action, a provider, a new employee file-first flow, amendment extraction, or
+production processing. These generated references guide hierarchy and states
+only, use distinct `wave-f-design-draft-*` names, and remain subordinate to
+repository behavior.

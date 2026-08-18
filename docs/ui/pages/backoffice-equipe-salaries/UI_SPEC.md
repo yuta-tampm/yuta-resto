@@ -312,3 +312,347 @@ shows `Prototype` or `Aperçu sans sauvegarde`. Missing legacy values display
 `Modifier` dialog contains the controlled CDD reason and separate weekly hours
 and minutes inputs. A CDD-to-CDI change with a stored reason exposes a required
 confirmation checkbox. No second edit action or Formalités control was added.
+
+## Wave D Phase 0 UI discovery — `À traiter`
+
+Status: `PHASE 1 LOCAL PROTOTYPE — REAL DATA NOT AUTHORIZED`
+
+The capability surface does not exist. The signed-in local OWNER baseline on
+2026-08-16 confirms the current page still has exactly three summary cards and
+no `À traiter` section. The containing-page baseline is the current Wave C
+Phase 5 responsive as-built set under `references/`; the new surface baseline
+is `NOT_APPLICABLE`.
+
+### Proposed placement and hierarchy
+
+Keep the shared Backoffice shell, page header, three summary cards, search,
+filters, employee list, and explicitly opened dossier drawer unchanged. Explore
+one compact `À traiter` section between the three-card summary and list/search
+area. Do not add a fourth metric card, sidebar item, page tab, drawer tab, or
+new route.
+
+Separate the content visually and semantically into:
+
+- `À corriger`: incomplete minimum dossiers and missing signed base contracts;
+- `Échéances proches`: recorded departures from today through the next five
+  establishment-local calendar days.
+
+An item contains an employee name, a short text-backed reason, an optional
+relevant date, and one supported action. Recommended French actions are
+`Compléter le dossier`, `Ajouter le contrat`, and `Voir le départ`. Actions open
+the existing employee flow; they do not complete or dismiss an item locally.
+
+The first design study may use a small bounded set of clearly fictional items
+to evaluate density. It must not invent final pagination, infinite scrolling,
+`Voir tout`, assignment, badges implying persisted priority, or task status.
+Item limit and navigation remain a Phase 2 interaction decision.
+
+### Truthful states
+
+Design these DRAFT states without implying runtime support:
+
+- loading of the derived overview;
+- ready with only correction items, only dated events, or both groups;
+- compact no-items treatment without reserving a large empty panel;
+- partial unavailability where document status cannot be loaded while employee
+  items remain truthful;
+- complete load failure with retry;
+- forbidden state that reveals no names, counts, issue types, or dates;
+- an employee/source record changing while the overview is open, resolved by a
+  fresh read rather than local dismissal.
+
+Do not show mutation pending/success as a property of `À traiter`; success
+belongs to the existing edit/document/departure flow. On return, the overview
+refreshes and the derived item remains or disappears according to authoritative
+data.
+
+### Responsive and accessibility scope
+
+At 1440 and 1024 px, explore a compact two-group layout without competing with
+the employee list. At 768 and 390 px, stack groups and item content, keep one
+visible action per item, and avoid nested horizontal scrolling. Preserve the
+existing horizontal drawer-tab scrolling only inside the drawer.
+
+Use semantic headings/lists, text-backed issue/event meaning, visible focus,
+44 px touch targets where applicable, accessible action names including the
+employee context, and no color-only urgency. Long names must wrap or truncate
+without hiding the accessible full name.
+
+### Forbidden visual inference
+
+Do not show CDD-expiry alerts, missing amendments, Formalités deadlines,
+notification bells/counts, inbox semantics, emails, task checkboxes,
+assignees, snooze/dismiss, manual priority, bulk selection, payroll/medical
+alerts, register/PDF actions, manager views, cross-establishment counts, or
+production/legal-compliance claims.
+
+### Phase 1 as-built prototype boundary
+
+The approved local prototype implements the selected ready-state hierarchy
+only. It adds one route-local card after the three metrics, with two semantic
+groups and the three fictional design examples. The card displays `DRAFT` and
+`Données fictives`; all three action buttons are disabled and their accessible
+names state that they are unavailable in the prototype.
+
+Loading, no-items, partial failure, complete failure, forbidden, retry, return
+refresh, ordering, and item-limit studies remain design requirements for later
+interaction mapping. They are not simulated as working states in Phase 1.
+
+### Wave D Phase 2 proposed interaction contract
+
+Phase 2 keeps the approved visual hierarchy and specifies later behavior only;
+the development fixture remains unchanged.
+
+- each group shows five items per page and owns its own `Précédent` / `Suivant`
+  controls only when needed;
+- do not add totals, hidden-item counts, `Voir tout`, infinite scroll, a route,
+  tab, filter, or fourth KPI;
+- pagination marks only the active group busy, disables its controls, and keeps
+  the current page visible until replacement succeeds;
+- correction items use neutral name ordering; dated events put the earliest
+  departure first;
+- `Compléter le dossier` opens the existing edit dialog only after a fresh
+  server check and focuses the first missing minimum field;
+- `Ajouter le contrat` opens the existing drawer on `Documents` and reveals the
+  existing add form only when the absence is revalidated;
+- `Voir le départ` opens the existing overview at the departure information;
+  it does not open the correction dialog automatically;
+- returning from a successful existing flow refreshes source data; no item is
+  removed or marked complete optimistically;
+- a changed/resolved item reports that the list was refreshed rather than
+  opening a stale flow.
+
+At narrow widths, stack group pagination and item actions without nested
+horizontal scrolling. Focus moves into the edit dialog or dossier drawer using
+their existing managed-dialog behavior; after closing, restore focus to the
+originating overview action when it still exists, otherwise to the `À traiter`
+heading.
+
+Document-source partial failure uses a text-backed warning inside `À corriger`
+and disables that group's pagination until retry. Employee-source failure
+replaces the whole surface with non-disclosing error + retry. A no-items result
+is one compact neutral row. The route-level forbidden state shows no Wave D
+heading, names, counts, kinds, dates, or source-status signal.
+
+### Wave D Phase 3 local as-built UI
+
+The approved development-only implementation replaces the fixture and its
+`DRAFT` disclosures with the real derived overview. Each group renders at most
+five items, owns independent previous/next controls, and exposes no total or
+new route. Loading disables controls; full failure shows retry; document-source
+failure retains only truthful employee-derived corrections with a warning; and
+the empty state makes no legal-completeness claim.
+
+Actions first revalidate the current tenant-scoped condition. They then open
+the existing edit dialog, Documents tab/add form, or dossier overview focused
+at the departure fact. Successful document save refreshes route source truth.
+Production renders no Wave D surface and performs no overview query.
+
+### Wave D Phase 5 visual correction and final local state
+
+Responsive QA retains the Phase 3 composition without spacing, density, color,
+or breakpoint changes. One accessibility correction records the originating
+Wave D button before asynchronous target resolution and restores focus to that
+connected button when the opened drawer/edit dialog closes. This is required
+because the dossier drawer is state-driven rather than opened by a colocated
+dialog trigger.
+
+The approved local as-built evidence covers 1440, 1024, 768, and 390 px. The
+current real-data state shows one missing-contract action and a truthful empty
+departure group. Error, partial-source, and pagination visuals remain specified
+truthful runtime states but are not represented with fixtures in the final
+evidence set.
+
+## Wave E Phase 0 UI discovery — personnel register and PDF export
+
+### Proposed placement and hierarchy
+
+Wave E explores an establishment-wide page rather than another employee-drawer
+tab. A secondary `Registre du personnel` action may appear in the Salariés page
+header and open the proposed `/equipe/registre-personnel` route. The Backoffice
+shell, establishment selector, Salariés list, metrics, `À traiter`, employee
+drawer, and current actions remain unchanged.
+
+The proposed page hierarchy is:
+
+1. title `Registre du personnel`, active establishment context, and a clear
+   return path to `Salariés`;
+2. a neutral explanation that the register is establishment-specific and that
+   PDF is generated from the structured register;
+3. a readiness card distinguishing ready data, missing required information,
+   and unsupported person categories without a compliance badge;
+4. a canonical ordered register list, with salariés and the separate
+   stagiaire/service-civique part visually distinguishable;
+5. a secondary `Exporter en PDF` action, disabled in the Phase 1 discovery
+   prototype and never represented as a public/share link;
+6. a concise protected-access and retention notice.
+
+The preferred PDF study may use one person per page, but must preserve the
+canonical establishment order and show that it is a generated representation,
+not the editable source or proof of compliance.
+
+### Proposed row/card content
+
+The design may group only legally motivated facts that are present in the
+Phase 0 data dictionary: identity, employment classification, entry/exit, and
+conditional mentions. Missing values use explicit `Information manquante`
+text. Do not invent real values, legal-status badges, document links, work-
+permit copies, payroll facts, or AI-extracted content.
+
+Search and filtering are not part of the first discovery MVP because they can
+obscure canonical order. A future display filter must never alter the complete
+ordered PDF export.
+
+### Truthful discovery states
+
+- loading skeleton that reveals no names before authorization;
+- ready register with canonical order and export affordance;
+- incomplete register with field/category counts and a clear explanation;
+- empty establishment with no fabricated row or compliant state;
+- separate unsupported stagiaire/service-civique explanation;
+- forbidden state that discloses no names, counts, or existence signal;
+- full read error with retry;
+- export pending, export unavailable, export failure with retry, and protected
+  download success;
+- source changed during export, requiring a fresh snapshot rather than silently
+  combining versions;
+- retained former-person state without presenting departure as deletion.
+
+### Responsive and accessibility scope
+
+At 1440 and 1024 px, use a compact ordered table or structured rows with the
+readiness card above it. At 768 and 390 px, preserve the same order using
+stacked cards; do not create a horizontally scrolling legal-data grid or hide
+required facts behind hover. Long names and conditional mentions must wrap.
+
+Every status needs text, not color alone. The ordered position, person category,
+missing-information reason, and export state require accessible names. Focus
+must return to the initiating control after any future export dialog closes.
+The design must preserve visible focus, keyboard access, 44 px touch targets,
+and no horizontal page overflow.
+
+### Forbidden visual inference
+
+Do not add a compliance seal, digital signature, certification, inspection/CSE
+portal, public URL, email/share control, organization-wide register, manager
+view, employee self-service, editing grid, destructive correction, PDF archive,
+OCR/AI action, Formalités, DPAE/DSN, payroll, Planning, or Pointage control.
+Phase 0 does not authorize the proposed route or header action in runtime code.
+
+## Wave F Phase 0 — extraction review UI discovery
+
+### Surface and hierarchy
+
+Wave F remains inside the existing employee drawer and `Documents` tab. It does
+not create a route, sidebar item, chatbot, global AI center, or creation wizard.
+The design scope is one existing verified signed-contract card plus a proposed
+secondary `Analyser le contrat` action and a review surface below that card.
+
+The review surface should show:
+
+1. `Suggestions à vérifier` heading and explicit AI/OCR uncertainty copy;
+2. exact analysed document/version and a stale-version warning when applicable;
+3. one row/card per allowlisted suggestion with field label, current value,
+   detected value, confidence text, source page, and bounded evidence;
+4. explicit `Conserver la valeur actuelle` or `Utiliser la suggestion` choice;
+5. a summary of selected changes and a future apply action;
+6. clear disclosure that nothing is saved until OWNER confirmation and normal
+   employee validation succeeds.
+
+Phase 1, if approved later, uses typed fictional suggestions and keeps analysis
+and apply disabled or explicitly `Aperçu sans analyse`. It must not read the
+current PDF or simulate a successful provider call.
+
+### States and truthful behavior
+
+Design ready, pending, partial result, no detected field, unsupported/image-only
+PDF, provider unavailable, stale document, employee conflict, forbidden,
+validation failure, apply pending, success, and retry. Current document access
+and download remain usable when extraction fails. No state says `Vérifié par
+l’IA`, `Conforme`, or claims legal accuracy.
+
+Selecting a suggestion must not save it. Confidence needs text and cannot be
+the only selection rule. Evidence stays collapsed by default on narrow screens
+but remains keyboard accessible. Error recovery preserves reviewed choices only
+when the document version and employee revision are unchanged.
+
+### Responsive and accessibility scope
+
+Study the containing drawer at 1440 x 1000, 1024 x 768, 768 x 1024, and
+390 x 844. Desktop/tablet may use aligned comparison columns; mobile uses
+stacked field cards in the same order. Current/detected values, confidence,
+source page, and choice labels must wrap without horizontal scrolling.
+
+Use 44 px touch targets, visible focus, keyboard-operable choices, textual
+pending/error feedback, live-region save outcomes, and focus return to the
+originating analysis/apply action after dialogs close. Do not hide source or
+uncertainty behind hover.
+
+### Forbidden visual inference
+
+No chat composer, model selector, prompt editor, token/cost dashboard, batch
+queue, background notification, identity-document upload, camera, amendment
+merge, register update, automatic checkbox selection, automatic save, payroll,
+Formalités, DPAE/DSN, public link, sharing, e-signature, or production-ready
+badge. The design is presentation discovery only.
+
+## Wave F Phase 1 — local typed-fixture prototype
+
+Status: `IMPLEMENTED LOCALLY — NO REAL ANALYSIS OR APPLY`.
+
+The signed base-contract card keeps `Consulter` and `Télécharger` and adds the
+development-only secondary action `Analyser le contrat`. The action reveals an
+in-place panel clearly labelled `Aperçu — aucune analyse réelle` and
+`Prototype avec données fictives`. It never appears on an amendment.
+
+The panel renders the three approved fictional suggestions with textual
+confidence, page, collapsed fictional evidence, and keyboard-operable keep/use
+choices. Choices update only the local summary. Nothing is preselected and
+`Appliquer les champs sélectionnés — Prototype` remains disabled even after a
+choice. Planned non-ready states are listed as design coverage, not simulated
+provider outcomes.
+
+Browser verification at 1440, 1024, 768, and 390 px reports no page or prototype
+horizontal overflow. At narrow widths, comparisons and decisions stack and
+retain 44 px touch targets.
+
+## Wave F Phase 2 — approved-direction interaction specification
+
+Status: `IMPLEMENTED LOCALLY WITH SYNTHETIC PDF — PRODUCTION BLOCKED`.
+
+### Start and pending
+
+- `Analyser le contrat` remains a secondary action on the available signed base contract only.
+- Starting a future request changes that action to a textual pending state and prevents a second concurrent request.
+- `Consulter`, `Télécharger`, drawer close, and other employee tabs remain available.
+- Pending copy progresses only through truthful coarse states such as
+  `Préparation du document` and `Analyse en cours`; it never displays provider,
+  model, token, prompt, or unsupported percentage claims.
+- Closing the drawer asks no destructive confirmation because no employee change exists; transient results are discarded.
+
+### Review
+
+- Every suggestion begins undecided even when confidence is high.
+- Current value, detected value, confidence, page, dependency/block reason, and evidence remain visible or keyboard-expandable.
+- Selecting `Conserver` or `Utiliser` changes only the transient summary.
+- `Type de contrat` is visibly non-applicable when its required CDD date/reason dependencies are absent.
+- The apply action becomes enabled only when at least one independently valid,
+  supported suggestion is selected and no document/employee stale state exists.
+- The first apply-capable UI fields are `Poste` and `Durée hebdomadaire`; other
+  returned fields remain review-only until separately approved.
+
+### Failure and recovery
+
+- timeout/provider failure: show a bounded error and explicit `Réessayer`; retain view/download;
+- partial result: show valid suggestions and count unresolved fields without inventing values;
+- no result: explain that no supported field was detected;
+- image-only/unsupported: explain that this processing path is unavailable;
+- document stale: discard all suggestions and require a fresh analysis;
+- employee conflict: preserve no apply-ready state; reload current employee and require re-review;
+- validation failure: identify the affected field/dependency without exposing provider internals;
+- rate limit: state when a later manual attempt is allowed, without an automatic retry countdown unless the server supplies one.
+
+After successful apply, close the extraction review, refresh the employee
+summary/detail, show the normal persisted success message, and restore focus to
+the signed-contract analysis action. The register and document metadata do not
+change.

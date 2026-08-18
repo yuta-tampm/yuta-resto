@@ -82,6 +82,8 @@ the shared operations documents until a dedicated product document is needed.
 - [`ui/pages/establishment-general-information/README.md`](ui/pages/establishment-general-information/README.md)
 - [`ui/pages/today/README.md`](ui/pages/today/README.md)
 - [`ui/pages/backoffice-equipe-salaries/README.md`](ui/pages/backoffice-equipe-salaries/README.md)
+- [`ui/pages/backoffice-equipe-registre-personnel/README.md`](ui/pages/backoffice-equipe-registre-personnel/README.md)
+- [`ui/pages/pos-order-detail/README.md`](ui/pages/pos-order-detail/README.md)
 
 ### Operations and process
 

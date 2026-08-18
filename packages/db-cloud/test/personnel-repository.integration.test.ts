@@ -17,6 +17,7 @@ import {
   PersonnelConflictError,
   PersonnelRepositoryError,
   recordPersonnelEmployeeAccess,
+  recordPersonnelContractExtractionAudit,
   setPersonnelEmployeeDeparture,
   updatePersonnelEmployee,
 } from '../src/personnel-repository';
@@ -506,6 +507,64 @@ integrationTest('personnel repository tenant isolation', () => {
     ).toBe(12);
   });
 
+  it('records minimized extraction outcomes once and denies another establishment', async () => {
+    const tenant = context(organizationAId, establishmentAId);
+    const requestId = uuidv7();
+    const documentId = uuidv7();
+    const input = {
+      employeeId: employeeAId,
+      requestId,
+      documentId,
+      documentVersion: 2,
+      eventType: 'employee.contract_extraction_completed' as const,
+      outcomeCode: 'complete' as const,
+      suggestionCount: 3,
+    };
+    await recordPersonnelContractExtractionAudit(db, tenant, input);
+    await recordPersonnelContractExtractionAudit(db, tenant, input);
+    await expect(
+      recordPersonnelContractExtractionAudit(
+        db,
+        context(organizationAId, establishmentA2Id),
+        input,
+      ),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' });
+
+    const events = await db
+      .select({
+        eventType: personnelEmployeeAuditEvents.eventType,
+        changedFields: personnelEmployeeAuditEvents.changedFields,
+        metadata: personnelEmployeeAuditEvents.metadata,
+      })
+      .from(personnelEmployeeAuditEvents)
+      .where(
+        and(
+          eq(personnelEmployeeAuditEvents.organizationId, organizationAId),
+          eq(personnelEmployeeAuditEvents.establishmentId, establishmentAId),
+          eq(personnelEmployeeAuditEvents.employeeId, employeeAId),
+          eq(personnelEmployeeAuditEvents.operationId, requestId),
+          eq(
+            personnelEmployeeAuditEvents.eventType,
+            'employee.contract_extraction_completed',
+          ),
+        ),
+      );
+    expect(events).toEqual([
+      {
+        eventType: 'employee.contract_extraction_completed',
+        changedFields: [],
+        metadata: {
+          documentId,
+          documentVersion: 2,
+          outcomeCode: 'complete',
+          suggestionCount: 3,
+        },
+      },
+    ]);
+    expect(JSON.stringify(events)).not.toContain('Chef de rang');
+    expect(JSON.stringify(events)).not.toContain('excerpt');
+  });
+
   it('requires an explicit reason before creating a possible duplicate', async () => {
     const tenant = context(organizationAId, establishmentAId);
     const first = createInput(uuidv7(), 'Duplicate');
@@ -566,17 +625,29 @@ integrationTest('personnel repository tenant isolation', () => {
       entryDate: '2026-01-01',
       confirmFixedTermReasonClear: false,
     };
+    const extractionAuditContext = {
+      requestId: uuidv7(),
+      documentId: uuidv7(),
+      documentVersion: 1,
+      selectedFields: ['position', 'contractWeeklyMinutes'] as Array<
+        'position' | 'contractWeeklyMinutes'
+      >,
+    };
     const updated = await updatePersonnelEmployee(
       db,
       tenant,
       input,
       '2026-08-13',
+      new Date(),
+      extractionAuditContext,
     );
     const replay = await updatePersonnelEmployee(
       db,
       tenant,
       input,
       '2026-08-13',
+      new Date(),
+      extractionAuditContext,
     );
     expect(updated.updated).toBe(true);
     expect(updated.employee.revision).toBe(before!.revision + 1);
@@ -591,10 +662,12 @@ integrationTest('personnel repository tenant isolation', () => {
           inArray(personnelEmployeeAuditEvents.eventType, [
             'employee.employment_updated',
             'employee.identity_updated',
+            'employee.contract_extraction_applied',
           ]),
         ),
       );
     expect(audit.map((event) => event.eventType).sort()).toEqual([
+      'employee.contract_extraction_applied',
       'employee.employment_updated',
       'employee.identity_updated',
     ]);

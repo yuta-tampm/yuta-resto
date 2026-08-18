@@ -555,3 +555,224 @@ export const personnelContractAmendmentCommandReceipts = pgTable(
     ),
   ],
 );
+
+export const personnelRegisterCounters = pgTable(
+  'personnel_register_counters',
+  {
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'restrict' }),
+    establishmentId: uuid('establishment_id').notNull(),
+    nextSequence: integer('next_sequence').default(1).notNull(),
+    revision: integer('revision').default(0).notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    unique('personnel_register_counters_scope_unique').on(
+      table.organizationId,
+      table.establishmentId,
+    ),
+    foreignKey({
+      columns: [table.organizationId, table.establishmentId],
+      foreignColumns: [establishments.organizationId, establishments.id],
+      name: 'personnel_register_counters_establishment_scope_fk',
+    }).onDelete('restrict'),
+    check(
+      'personnel_register_counters_next_check',
+      sql`${table.nextSequence} > 0`,
+    ),
+    check(
+      'personnel_register_counters_revision_check',
+      sql`${table.revision} >= 0`,
+    ),
+  ],
+);
+
+export const personnelRegisterEntries = pgTable(
+  'personnel_register_entries',
+  {
+    id: uuid('id').primaryKey(),
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'restrict' }),
+    establishmentId: uuid('establishment_id').notNull(),
+    employeeId: uuid('employee_id').notNull(),
+    sequence: integer('sequence').notNull(),
+    revision: integer('revision').default(1).notNull(),
+    initialFacts: jsonb('initial_facts')
+      .$type<Record<string, unknown>>()
+      .notNull(),
+    currentFacts: jsonb('current_facts')
+      .$type<Record<string, unknown>>()
+      .notNull(),
+    inscribedByUserId: uuid('inscribed_by_user_id').references(() => users.id, {
+      onDelete: 'set null',
+    }),
+    inscribedAt: timestamp('inscribed_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    uniqueIndex('personnel_register_entries_scope_employee_unique_idx').on(
+      table.organizationId,
+      table.establishmentId,
+      table.employeeId,
+    ),
+    uniqueIndex('personnel_register_entries_scope_sequence_unique_idx').on(
+      table.organizationId,
+      table.establishmentId,
+      table.sequence,
+    ),
+    unique('personnel_register_entries_scope_id_unique').on(
+      table.organizationId,
+      table.establishmentId,
+      table.id,
+    ),
+    foreignKey({
+      columns: [table.organizationId, table.establishmentId, table.employeeId],
+      foreignColumns: [
+        personnelEmployeeDossiers.organizationId,
+        personnelEmployeeDossiers.establishmentId,
+        personnelEmployeeDossiers.id,
+      ],
+      name: 'personnel_register_entries_employee_scope_fk',
+    }).onDelete('restrict'),
+    check(
+      'personnel_register_entries_sequence_check',
+      sql`${table.sequence} > 0`,
+    ),
+    check(
+      'personnel_register_entries_revision_check',
+      sql`${table.revision} > 0`,
+    ),
+  ],
+);
+
+export const personnelRegisterCorrections = pgTable(
+  'personnel_register_corrections',
+  {
+    id: uuid('id').primaryKey(),
+    organizationId: uuid('organization_id').notNull(),
+    establishmentId: uuid('establishment_id').notNull(),
+    entryId: uuid('entry_id').notNull(),
+    priorRevision: integer('prior_revision').notNull(),
+    newRevision: integer('new_revision').notNull(),
+    previousFacts: jsonb('previous_facts')
+      .$type<Record<string, unknown>>()
+      .notNull(),
+    newFacts: jsonb('new_facts').$type<Record<string, unknown>>().notNull(),
+    effectiveDate: date('effective_date').notNull(),
+    reason: varchar('reason', { length: 250 }).notNull(),
+    actorUserId: uuid('actor_user_id').references(() => users.id, {
+      onDelete: 'set null',
+    }),
+    recordedAt: timestamp('recorded_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index('personnel_register_corrections_scope_entry_idx').on(
+      table.organizationId,
+      table.establishmentId,
+      table.entryId,
+      table.newRevision,
+    ),
+    foreignKey({
+      columns: [table.organizationId, table.establishmentId, table.entryId],
+      foreignColumns: [
+        personnelRegisterEntries.organizationId,
+        personnelRegisterEntries.establishmentId,
+        personnelRegisterEntries.id,
+      ],
+      name: 'personnel_register_corrections_entry_scope_fk',
+    }).onDelete('restrict'),
+    check(
+      'personnel_register_corrections_revision_check',
+      sql`${table.priorRevision} > 0 and ${table.newRevision} = ${table.priorRevision} + 1`,
+    ),
+  ],
+);
+
+export const personnelRegisterCommandReceipts = pgTable(
+  'personnel_register_command_receipts',
+  {
+    id: uuid('id').primaryKey(),
+    organizationId: uuid('organization_id').notNull(),
+    establishmentId: uuid('establishment_id').notNull(),
+    actorUserId: uuid('actor_user_id')
+      .notNull()
+      .references(() => users.id, {
+        onDelete: 'restrict',
+      }),
+    commandType: varchar('command_type', { length: 80 }).notNull(),
+    operationId: uuid('operation_id').notNull(),
+    requestFingerprint: varchar('request_fingerprint', {
+      length: 64,
+    }).notNull(),
+    entryId: uuid('entry_id').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    uniqueIndex('personnel_register_receipts_scope_operation_unique_idx').on(
+      table.organizationId,
+      table.establishmentId,
+      table.actorUserId,
+      table.commandType,
+      table.operationId,
+    ),
+    foreignKey({
+      columns: [table.organizationId, table.establishmentId, table.entryId],
+      foreignColumns: [
+        personnelRegisterEntries.organizationId,
+        personnelRegisterEntries.establishmentId,
+        personnelRegisterEntries.id,
+      ],
+      name: 'personnel_register_receipts_entry_scope_fk',
+    }).onDelete('restrict'),
+  ],
+);
+
+export const personnelRegisterAuditEvents = pgTable(
+  'personnel_register_audit_events',
+  {
+    id: uuid('id').primaryKey(),
+    organizationId: uuid('organization_id').notNull(),
+    establishmentId: uuid('establishment_id').notNull(),
+    actorUserId: uuid('actor_user_id')
+      .notNull()
+      .references(() => users.id, {
+        onDelete: 'restrict',
+      }),
+    eventType: varchar('event_type', { length: 80 }).notNull(),
+    operationId: uuid('operation_id').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    uniqueIndex('personnel_register_audit_scope_operation_unique_idx').on(
+      table.organizationId,
+      table.establishmentId,
+      table.actorUserId,
+      table.eventType,
+      table.operationId,
+    ),
+    index('personnel_register_audit_scope_created_idx').on(
+      table.organizationId,
+      table.establishmentId,
+      table.createdAt,
+    ),
+    foreignKey({
+      columns: [table.organizationId, table.establishmentId],
+      foreignColumns: [establishments.organizationId, establishments.id],
+      name: 'personnel_register_audit_establishment_scope_fk',
+    }).onDelete('restrict'),
+  ],
+);

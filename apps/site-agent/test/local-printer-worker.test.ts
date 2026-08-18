@@ -1,6 +1,7 @@
 import type { PrintJob } from '@yuta/db-pos/schema';
 import { describe, expect, it } from 'vitest';
 import {
+  renderCustomerReceiptTicket,
   renderInternalKitchenTicket,
   renderInternalKitchenTickets,
   planPrinterPhases,
@@ -87,6 +88,112 @@ const baseJob: PrintJob = {
 };
 
 describe('local TM-m30 print rendering', () => {
+  it('renders one neutral non-fiscal customer receipt with payment totals', () => {
+    const output = renderCustomerReceiptTicket({
+      ...baseJob,
+      jobType: 'customer_receipt',
+      printerName: 'tm-m30-receipt',
+      payload: {
+        version: 1,
+        documentType: 'non_fiscal',
+        orderNumber: 'POS-1042',
+        tableLabel: 'Table 8',
+        orderType: 'dine_in',
+        targetKind: 'order',
+        targetLabel: 'Commande complète',
+        createdAt: '2026-08-08T17:35:00.000Z',
+        paidAt: '2026-08-08T18:02:00.000Z',
+        items: [
+          {
+            name: 'Combo Été',
+            quantity: 1,
+            unitPriceCents: 1590,
+            totalCents: 1590,
+          },
+        ],
+        discounts: [{ name: 'Combo Été', amountCents: 100 }],
+        subtotalCents: 1590,
+        discountCents: 100,
+        totalCents: 1490,
+        payments: [
+          {
+            method: 'card',
+            amountCents: 1490,
+            tenderedCents: null,
+            changeCents: null,
+            tipCents: 0,
+            paidBy: null,
+            paidAt: '2026-08-08T18:02:00.000Z',
+          },
+        ],
+        copies: 1,
+        fontSizePreset: 'standard',
+        topPaddingLines: 1,
+        leftPaddingChars: 2,
+        bottomPaddingLines: 2,
+      },
+    });
+    const text = output.toString('ascii');
+
+    expect(text).toContain('RECU DE PAIEMENT');
+    expect(text).toContain('Document non fiscal');
+    expect(text).toContain('1 x Combo Ete');
+    expect(text).toContain('Remise Combo Ete');
+    expect(text).toContain('-1,00 EUR');
+    expect(text).toContain('TOTAL');
+    expect(text).toContain('14,90 EUR');
+    expect(text).toContain('Carte');
+    expect(text).not.toContain('TVA');
+    expect(text).not.toContain('SIRET');
+    expect(countSequence(output, [0x1d, 0x56, 0x00])).toBe(1);
+  });
+
+  it('renders equal split receipts without inventing item allocation', () => {
+    const output = renderCustomerReceiptTicket({
+      ...baseJob,
+      checkId: '019fa0b8-e6e2-7353-b6e8-c9a5698eb8e8',
+      jobType: 'customer_receipt',
+      printerName: 'tm-m30-receipt',
+      payload: {
+        version: 1,
+        documentType: 'non_fiscal',
+        orderNumber: 'POS-1042',
+        tableLabel: 'Table 8',
+        orderType: 'dine_in',
+        targetKind: 'check',
+        targetLabel: 'Part 1/2',
+        createdAt: '2026-08-08T17:35:00.000Z',
+        paidAt: '2026-08-08T18:02:00.000Z',
+        items: [],
+        discounts: [],
+        subtotalCents: 745,
+        discountCents: 0,
+        totalCents: 745,
+        payments: [
+          {
+            method: 'cash',
+            amountCents: 745,
+            tenderedCents: 1000,
+            changeCents: 255,
+            tipCents: 0,
+            paidBy: null,
+            paidAt: '2026-08-08T18:02:00.000Z',
+          },
+        ],
+        copies: 1,
+        fontSizePreset: 'standard',
+        topPaddingLines: 1,
+        leftPaddingChars: 2,
+        bottomPaddingLines: 2,
+      },
+    });
+    const text = output.toString('ascii');
+
+    expect(text).toContain('Partage egal - detail articles non applicable');
+    expect(text).toContain('Recu');
+    expect(text).toContain('Rendu');
+  });
+
   it('renders a large kitchen ticket grouped by category', () => {
     const output = renderInternalKitchenTicket({
       ...baseJob,

@@ -159,6 +159,9 @@ describe('back-office navigation', () => {
     expect(
       getActiveNavigationHref('/visibilite-reputation/avis/review-1', sections),
     ).toBe('/visibilite-reputation/avis');
+    expect(
+      getActiveNavigationHref('/equipe/registre-personnel', sections),
+    ).toBe('/equipe/salaries');
   });
 
   it('uses canonical routes that match each owning group', () => {

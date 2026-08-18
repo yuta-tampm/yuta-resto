@@ -91,7 +91,7 @@ legacy `/clients/*` URLs redirect to their canonical equivalents.
 - room and table map;
 - stock inventory, stock movements, and suppliers;
 - compliance monitoring;
-- creative studio.
+- creative studio;
 
 These prototypes have local presentation state but no cloud repository or
 persisted mutation. Their export, create, edit, archive, verification,
@@ -146,6 +146,15 @@ Defender before becoming available. The runtime fails closed in production;
 EU object storage, an EU-approved scanning service, retention/deletion rules,
 backup/restore, and operational ownership remain release blockers.
 
+The signed-contract surface also has a development-only Wave F synthetic
+extraction slice. It generates a fictional three-page PDF in server memory,
+uses a replaceable local preparer and deterministic adapter, and never opens or
+transmits the employee's signed file. OWNER-only review supports bounded local
+states and may apply only position and contractual weekly minutes through the
+existing scoped revision/idempotency/audit update path. CDI/CDD remains
+review-only. Remote AI/OCR, real personnel-file processing, shared production
+rate limiting, provider configuration, and production release remain blocked.
+
 Signed employment-contract amendments are implemented as a second local-only
 document slice. Each amendment is a distinct establishment-owned record with a
 required effective date, optional bounded reference, immutable correction
@@ -155,6 +164,60 @@ Microsoft Defender quarantine check, server-mediated delivery, and minimized
 document audit events. It does not alter the base contract record or derive
 employment facts from PDF content. Production remains fail-closed under the
 same provider, retention, rights, backup/restore, and incident gates.
+
+In development mode, the page also contains the local Wave D real-data
+`À traiter` overview. It derives three approved item kinds from bounded,
+tenant-scoped employee and signed-contract metadata reads, revalidates targets,
+and reuses the existing edit, Documents-add, and departure-review flows. Each
+authorized overview read writes one minimized access-audit event. It adds no
+task state, reminder, notification, schema, migration, public API, or new
+permission, and is omitted entirely from production reads and rendering.
+Wave D Phase 4 additionally centralizes and tests that development-only gate;
+an authenticated local production-runtime check confirms Salariés renders with
+no Wave D surface or browser error. Production authorization remains blocked.
+Wave D Phase 5 retains responsive as-built evidence at 1440/1024/768/390 and
+restores keyboard focus to the originating overview action when its drawer or
+edit dialog closes. Local QA reports no horizontal overflow or browser error.
+
+Wave E adds an employee-only real-data personnel-register slice at
+`/equipe/registre-personnel` in local development. Existing employee dossiers
+remain unregistered candidates until an OWNER explicitly verifies the required
+and conditional facts. First inscription receives an atomic, irreversible
+establishment sequence; immutable initial facts and append-only reasoned
+corrections are stored separately from the mutable Salariés dossier. Reads use
+50-entry snapshot-bound cursor pages and distinct OWNER-only register read/
+export permissions. Successful reads and PDF responses emit minimized audit
+events. PDF is generated transiently through the Backoffice server with
+no-store headers and no stored or public URL. The page, mutations, and export
+endpoint fail closed outside development. Phase 4 keeps pagination cursors out
+of URLs, reconstructs original idempotent results, rejects no-op corrections,
+deduplicates minimized read/export audits, and embeds local Unicode PDF fonts;
+unsupported scripts fail explicitly without a file or successful-export audit.
+No additional schema or migration was introduced. This is not a compliance claim;
+intern/service-civic models, automated retention/legal hold/purge, legal/DPO/
+privacy/security/operations approval, and production enablement remain blocked.
+Wave E Phase 5 synchronizes the local as-built page at 1440/1024/768/390 with
+zero horizontal overflow or browser errors and restores keyboard focus to the
+originating register action after its review dialog closes. No register entry
+was created for visual evidence.
+
+Wave F Phase 0 and WF0-01 through WF0-12 are approved. Repository discovery confirms
+that signed personnel PDFs already use private storage, quarantine, malware
+scanning, OWNER authorization, and server-mediated delivery, but no OCR/AI
+service or provider exists. The proposed first slice is reviewed suggestions
+from one verified base contract for one existing employee; no file is read or
+transmitted and no suggestion is saved automatically. The separately authorized
+design prompt produced four DRAFT responsive references. Phase 1 adds a
+development-only typed-fixture review prototype on the signed base contract;
+it uses fictional values, keeps choices in browser memory, disables apply, and
+does not read/transmit a PDF or call OCR/AI. It is absent outside development.
+Phase 2 now defines, but does not implement, a provider-neutral server boundary,
+strict transient suggestion result, exact document/employee version checks,
+future OWNER-only extraction permission, minimized audit, synchronous limits,
+and synthetic-first provider evaluation. The first proposed apply fields are
+position and weekly minutes; CDI/CDD remains review-only until its coupled date
+and controlled-reason rules are supported. Remote personnel-file processing
+and Phase 3 remain approval-gated.
 
 ### Planned empty surfaces
 

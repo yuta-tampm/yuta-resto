@@ -27,7 +27,10 @@ export type PersonnelPermission =
   | 'personnel.employee.read'
   | 'personnel.employee.manage'
   | 'personnel.document.read'
-  | 'personnel.document.manage';
+  | 'personnel.document.manage'
+  | 'personnel.document.extract'
+  | 'personnel.register.read'
+  | 'personnel.register.export';
 
 const permissionRoles: Record<ReputationPermission, readonly TenantRole[]> = {
   'reputation.read': ['OWNER', 'MANAGER', 'STAFF'],
@@ -65,6 +68,9 @@ const personnelPermissionRoles: Record<
   'personnel.employee.manage': ['OWNER'],
   'personnel.document.read': ['OWNER'],
   'personnel.document.manage': ['OWNER'],
+  'personnel.document.extract': ['OWNER'],
+  'personnel.register.read': ['OWNER'],
+  'personnel.register.export': ['OWNER'],
 };
 
 export function requireReputationPermission(

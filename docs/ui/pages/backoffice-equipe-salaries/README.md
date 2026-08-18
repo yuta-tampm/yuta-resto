@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-08-16
+Last updated: 2026-08-17
 
 Protocol revision: 4
 
@@ -629,3 +629,182 @@ card language as the overview. Signed-in follow-up QA covered both tabs at the
 same four viewport sizes. All eight states have no page or drawer horizontal
 overflow and no browser console errors; the correction captures are listed in
 `references/README.md`. No personnel data or behavior changed.
+
+## Wave D delivery evidence — `À traiter`
+
+The selected design was approved for a local Phase 1 typed-fixture prototype
+on 2026-08-16. WD2-01 through WD2-12 and a local real-data Phase 3 slice were
+then approved on 2026-08-17. The route-local `À traiter` card now derives its
+three approved item kinds from real establishment-scoped employee and signed-
+contract metadata. The fictional examples and prototype labels were removed.
+
+The implementation uses bounded five-item group pages, deterministic ordering,
+fresh scoped action-target checks, truthful partial failure, source refresh,
+existing OWNER permissions, and one minimized cross-employee overview audit
+event. It adds no schema, migration, task table, notification, public API, or
+new permission. Development mode only is authorized; production performs no
+overview read and renders no Wave D surface.
+
+Wave D Phase 4 was completed on 2026-08-17 as a local integration and
+production-boundary audit. The loader and server actions now share one tested
+development-only gate. Backoffice reports 31 passing test files and 93 passing
+tests. A fresh production build was served on an isolated local port with the
+authenticated OWNER session: Salariés rendered, Wave D remained absent, and
+the browser reported no warning or error. Development still rendered the real
+overview and action with no fixture disclosure. No production authorization,
+schema, migration, API, permission, audit payload, task system, notification,
+or provider change was introduced. Database integration tests remain behind
+their explicit mutation opt-in and were not forced in this audit.
+
+Wave D Phase 5 completed on 2026-08-17 with authenticated local QA at
+1440/1024/768/390. The current real overview, mixed action/empty-group state,
+Documents-add entry point, narrow drawer, responsive stacking, accessible
+labels, and absence of horizontal overflow or console errors were verified.
+Phase 5 corrected Escape-close focus so it returns to the originating overview
+button. Four stable as-built captures are listed in `references/README.md`.
+No real employee/document mutation was performed for visual evidence, and no
+fixture was introduced to force unavailable error or pagination screenshots.
+Production remains blocked and Wave D remains absent there.
+
+Wave D read-only discovery was completed on 2026-08-16 under
+`NEW_CAPABILITY_DISCOVERY`. It remains a proposed `SURFACE + FLOW` inside the
+integrated `/equipe/salaries` page and this stable page pack. The Phase 0
+signed-in OWNER baseline contained no `À traiter` surface, personnel task
+state, acknowledgement, assignment, scheduled reminder, or personnel
+notification system. The later Phase 1 development-only fixture does not
+change those absent domain capabilities.
+
+The proposed smallest MVP is a derived, OWNER-only overview for the active
+organization and establishment. It distinguishes:
+
+- active/upcoming employee dossiers missing approved minimum fields;
+- active/upcoming employees missing the signed base employment contract;
+- active employees with a recorded departure from today through the next five
+  establishment-local calendar days.
+
+The first two are correctable issues; the last is a dated event to review.
+Every item enters an existing edit, Documents-add, or departure-review flow.
+The overview is not a persisted task list, does not change dossier completeness,
+does not treat CDD expected end as departure, and does not add a fourth KPI.
+
+Product boundaries, trusted organization + establishment + employee ownership,
+OWNER authorization, confidential-data treatment, partial-failure truth rules,
+later minimized access-audit requirement, deferred capability, responsive UI
+scope, and WD0-01 through WD0-08 are recorded across the page documents.
+`DESIGN_HANDOFF.md` contains a self-contained French prompt for DRAFT studies at
+1440/1024/768/390. The product owner approved WD0-01 through WD0-08 and
+authorized prompt execution on 2026-08-16. Four selected ready-state DRAFT
+references are now stored under `references/` for product review. The selected
+mobile study preserves the real single-column metric layout; an earlier mobile
+generation that changed those metrics was rejected and is not retained.
+
+Phase 0 and prompt execution changed documentation and design evidence only.
+No UI, fixture, route, tab, KPI, schema,
+migration, contract, repository query, loader, API/action, permission, audit
+event, task state, notification, scheduled job, provider, or production
+behavior was created.
+
+## Wave E Phase 0 evidence — personnel register and PDF export
+
+Wave E read-only discovery was prepared and approved on 2026-08-17 under
+`NEW_CAPABILITY_DISCOVERY`. The existing Salariés page remains integrated, but
+the establishment-wide register and PDF-export flow are absent. Phase 0 proposes
+a dedicated `/equipe/registre-personnel` page entered from Salariés. That
+proposal now has the dedicated
+[`backoffice-equipe-registre-personnel`](../backoffice-equipe-registre-personnel/README.md)
+page pack; the runtime route remains unimplemented.
+
+Repository reconciliation confirms that current employee records provide only
+part of the required register information and are mutable current-state rows.
+There is no immutable hiring/arrival sequence, complete legal field dictionary,
+stagiaire/service-civique aggregate, five-year register retention process,
+register-specific permission/audit, or PDF generator. Current employee history
+cannot be treated as a reconstructable legal register.
+
+`PRODUCT_SCOPE.md` records WE0-01 through WE0-10, establishment ownership,
+OWNER-only first use, sensitive-data controls, legal-source review, the PDF-as-
+representation boundary, and deferred Wave F OCR/AI work. `UI_SPEC.md` and
+`DATA_AND_INTERACTION_SPEC.md` record the discovery states and current/missing
+data. The approved French design prompt was executed, and four responsive
+DRAFT studies are stored in the dedicated register pack for visual review.
+
+The visual direction and Phase 1 local prototype were approved on 2026-08-18.
+The dedicated register pack now owns the later approved Phase 3 local real-data
+slice. Salariés exposes only its secondary entry and candidate dossier facts;
+it does not silently create register inscriptions. Register persistence,
+OWNER permissions, audit, corrections, and transient PDF remain owned by the
+dedicated register route and fail closed in production.
+
+WE2-01 through WE2-14 and the local Phase 3 slice were approved on 2026-08-18.
+Salariés remains the owner of reusable employee facts; it is not itself the
+reconstructable register or PDF source.
+
+## Wave F Phase 0 — document extraction and reviewed suggestions
+
+Wave F read-only discovery was completed on 2026-08-18 under
+`NEW_CAPABILITY_DISCOVERY`. It remains a proposed flow inside the existing
+employee drawer and Documents tab, not a new route or global AI capability.
+
+Repository reconciliation confirms the secure signed-contract and amendment
+storage flows, quarantine, Microsoft Defender scan, OWNER document permissions,
+server-mediated delivery, and existing revision/idempotency employee mutation.
+No OCR/AI SDK, provider, extraction interface, suggestion contract/store,
+permission, audit, job, or runtime control exists.
+
+The recommended first MVP analyses one verified signed base contract belonging
+to an existing employee and proposes only allowlisted employment-field changes.
+The OWNER must compare and explicitly accept/reject every suggestion; no AI
+output becomes authoritative or updates the employee/register automatically.
+File-first employee creation, amendments, identity/work-permit documents,
+multi-file reconciliation, chatbot, batch processing, and production provider
+use remain deferred.
+
+`PRODUCT_SCOPE.md` records WF0-01 through WF0-12, approved for design on
+2026-08-18. `DATA_AND_INTERACTION_SPEC.md`
+defines the proposed provider-neutral server boundary, field allowlist,
+sensitive handling, review/apply flow, minimized audit, and stale/conflict
+behavior. `UI_SPEC.md` and `DESIGN_HANDOFF.md` define the discovery states and a
+self-contained French design prompt. The separately authorized prompt was
+executed on 2026-08-18 and produced four responsive DRAFT references. Their
+visual direction and Phase 1 local prototype were subsequently approved.
+
+Phase 0 and prompt execution change page-pack documentation and DRAFT reference
+images only. They create no route, runtime UI, fixture,
+schema, migration, contract, permission, audit event, AI service/provider,
+file read/transmission, employee mutation, operational data, or production
+behavior.
+
+Wave F Phase 1 now adds a development-only typed-fixture prototype to the
+existing signed base-contract card. It is explicitly labelled as fictitious,
+keeps all choices in client memory, disables apply, and is absent outside
+development. It reads or transmits no PDF, calls no OCR/AI service, analyses no
+amendment, and adds no contract, API, persistence, permission, audit event, or
+employee/register mutation. Stop for separate Phase 2 approval.
+
+Wave F Phase 2 technical design was completed on 2026-08-18. WF2-01 through
+WF2-16 propose a server-only provider-neutral service, separate PDF preflight
+and extraction adapters, strict allowlisted results, transient review state,
+fresh version/revision validation, a distinct future extract permission,
+minimized audit, synchronous limits, and a synthetic-first Phase 3 sequence.
+The first apply slice is limited to `position` and
+`contractWeeklyMinutes`; CDI/CDD remains review-only until its required date and
+CDD-reason dependencies are supported.
+
+Official OpenAI documentation confirms that a future adapter could use inline
+PDF input plus strict structured output, but `store: false` alone does not
+satisfy the personnel-data privacy gate. Remote real-file processing remains
+blocked until European processing, approved retention controls, DPA,
+legal/DPO/privacy/security, cost, and operations evidence is accepted. Phase 2
+added documentation only and stopped for WF2 decision approval before Phase 3.
+
+Wave F Phase 3 was approved and implemented locally on 2026-08-18. The
+development-only server generates a fictional three-page PDF and processes it
+through a replaceable preparer and deterministic adapter. It does not open or
+transmit the signed employee contract. The UI exercises complete, partial,
+no-result, unsupported, failure, timeout, retry, transient review, stale/
+conflict, and bounded apply behavior. Only position and contractual weekly
+minutes may be applied; CDI/CDD remains review-only. OWNER authorization,
+exact employee/document versions, strict schemas, the existing employee update
+guards, minimized audit events, and a development in-memory rate limit are in
+place. No AI/OCR provider, API key, external call, schema, migration, result
+store, production runtime, or real-file extraction was added.

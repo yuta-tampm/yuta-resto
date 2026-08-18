@@ -82,7 +82,7 @@ export function createPrintJobService(db: PosDatabaseExecutor) {
       })
       .returning();
     if (!created) throw new Error('Test print job was not created.');
-    return localPrintJobSchema.parse(toPrintJob(created));
+    return localPrintJobSchema.parse(toLocalPrintJob(created));
   }
 
   async function listPrintJobs(input: PrintJobsQuery) {
@@ -126,7 +126,7 @@ export function createPrintJobService(db: PosDatabaseExecutor) {
           .limit(query.limit)
           .offset(offset);
     return localPrintJobsResponseSchema.parse({
-      printJobs: rows.map(toPrintJob),
+      printJobs: rows.map(toLocalPrintJob),
       summary,
       pagination: {
         page,
@@ -213,13 +213,13 @@ export function createPrintJobService(db: PosDatabaseExecutor) {
       .set(values)
       .where(eq(printJobs.id, printJobId))
       .returning();
-    return localPrintJobSchema.parse(toPrintJob(updated));
+    return localPrintJobSchema.parse(toLocalPrintJob(updated));
   }
 
   return { createTestPrintJob, listPrintJobs, executePrintJobCommand };
 }
 
-function toPrintJob(job: typeof printJobs.$inferSelect) {
+export function toLocalPrintJob(job: typeof printJobs.$inferSelect) {
   return {
     id: job.id,
     orderId: job.orderId,

@@ -701,6 +701,94 @@ describe('yuta-pos site-agent client', () => {
     ]);
   });
 
+  it('uses receipt endpoints without management authorization', async () => {
+    const operationId = '019c9b83-7c2d-70e5-8000-000000000006';
+    const printJob = {
+      id: orderItemId,
+      orderId,
+      checkId: null,
+      paymentId: null,
+      type: 'customer_receipt' as const,
+      source: 'pos' as const,
+      status: 'pending' as const,
+      printerName: 'tm-m30-receipt',
+      summary: {
+        orderNumber: 'POS-TEST',
+        tableLabel: 'Terrasse 5',
+        itemCount: 1,
+      },
+      errorMessage: null,
+      createdAt: checkedAt,
+      printedAt: null,
+    };
+    const printer = {
+      status: 'not_configured' as const,
+      worker: 'disabled' as const,
+      device: 'not_configured' as const,
+      queue: { pending: 1, printing: 0, failed: 0 },
+      lastPrintedAt: null,
+      lastFailureAt: null,
+      checkedAt,
+    };
+    const target = {
+      kind: 'order' as const,
+      id: orderId,
+      label: 'Commande complète',
+      amountCents: 1000,
+      availability: 'available' as const,
+      splitMode: 'single' as const,
+      latestJob: printJob,
+    };
+    const fetchImplementation = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(
+        Response.json({
+          orderId,
+          paymentMode: 'single',
+          targets: [{ ...target, latestJob: null }],
+          printer,
+        }),
+      )
+      .mockResolvedValueOnce(
+        Response.json({
+          target,
+          printJob,
+          replayed: false,
+          printer,
+        }),
+      )
+      .mockResolvedValueOnce(Response.json({ printJob, printer }));
+    const client = createSiteAgentClient({
+      baseUrl: 'http://site-agent.test',
+      fetchImplementation,
+    });
+
+    await client.getReceiptView(orderId);
+    await client.executeReceiptCommand(orderId, {
+      operationId,
+      target: { kind: 'order' },
+      intent: 'print',
+    });
+    await client.getReceiptJobStatus(orderId, printJob.id);
+
+    expect(fetchImplementation.mock.calls.map(([url]) => url)).toEqual([
+      `http://site-agent.test/api/v1/orders/${orderId}/receipts`,
+      `http://site-agent.test/api/v1/orders/${orderId}/receipts`,
+      `http://site-agent.test/api/v1/orders/${orderId}/receipts/${printJob.id}`,
+    ]);
+    expect(fetchImplementation.mock.calls[1]?.[1]).toMatchObject({
+      method: 'POST',
+      body: JSON.stringify({
+        operationId,
+        target: { kind: 'order' },
+        intent: 'print',
+      }),
+    });
+    expect(fetchImplementation.mock.calls[1]?.[1]?.headers).not.toMatchObject({
+      Authorization: expect.any(String),
+    });
+  });
+
   it('preserves structured site-agent errors', async () => {
     const fetchImplementation = vi.fn<typeof fetch>().mockResolvedValue(
       Response.json(

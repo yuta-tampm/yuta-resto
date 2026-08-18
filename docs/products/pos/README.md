@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering and restaurant operations
 
-Last updated: 2026-08-08
+Last updated: 2026-08-18
 
 `apps/yuta-pos` is the internal restaurant POS application for YuTa.
 
@@ -21,6 +21,15 @@ apps/yuta-pos -> apps/site-agent -> packages/db-pos -> local PostgreSQL
 
 The legacy shared database package has been removed. The POS must not reuse or
 modify the standalone database inside `apps/yuta-display`.
+
+## Governed UI backlog
+
+The canonical prioritized POS UI backlog is maintained in
+`docs/ui/pages/README.md` under `Local POS UI delivery backlog`. The next target
+is the integrated `/kitchen` page, starting at read-only Phase 0, followed by
+establishment settings, local reports, payment, the standalone split-items
+route decision, and management login. Do not repeat a broad route audit unless
+repository routes or product scope have changed.
 
 ## Scope
 
@@ -49,7 +58,6 @@ Certified cash-register behavior
 Table maps
 Advanced reservations
 Staff scheduling
-Physical ESC/POS printer integration
 ```
 
 ## UI Language
@@ -225,14 +233,23 @@ confirmation, order cancellation, and send-to-kitchen are now implemented in
 acknowledge pending allergy warnings, snapshot the ticket payload, and create
 the kitchen print job in one transaction.
 
-Payment capture, split checks, combo allocation, receipt creation, and
-print-job maintenance are now implemented in `site-agent`. Financial mutations
-lock the order and run in one transaction. Full-order and check payments
-validate UUIDv7 replay input; a fully paid target creates its receipt snapshot
-and print job in the same transaction. Payment summaries expose the persisted
-combo discount and item-allocation snapshots for both full orders and
-item-based split checks, so the POS can render the applied offer details
-without recalculating pricing in the client.
+Payment capture, split checks, combo allocation, and print-job maintenance are
+implemented in `site-agent`. Financial mutations lock the order and run in one
+transaction. Full-order and check payments validate UUIDv7 replay input and
+deliberately create no automatic customer-receipt snapshot or print job.
+Payment summaries expose the persisted combo discount and
+item-allocation snapshots for both full orders and item-based split checks, so
+the POS can render the applied offer details without recalculating pricing in
+the client.
+
+An explicit paid non-fiscal customer-receipt flow is implemented on the order-
+detail route, with the action inside that page's section of the three-line menu.
+Site-agent validates the paid full order or paid split check, saves an immutable
+authoritative snapshot in a durable idempotent print job, and the local worker
+renders one non-fiscal `REÇU DE PAIEMENT` copy. Queue acceptance, printer availability, job
+failure, and physical output remain distinct. Fiscal/VAT claims, automatic
+payment-triggered printing, cloud merchant lookup, and browser device ownership
+remain excluded; the governed scope is in `docs/ui/pages/pos-order-detail/`.
 
 The new financial integration tests have passed against a disposable
 PostgreSQL database. The POS connectivity/health slice now calls

@@ -2,12 +2,18 @@ import { describe, expect, it } from 'vitest';
 import {
   createPersonnelContractAmendmentMetadataInputSchema,
   createPersonnelEmployeeInputSchema,
+  applyPersonnelContractExtractionInputSchema,
   personnelContractAmendmentListSchema,
+  personnelContractExtractionReviewResultSchema,
+  personnelActionOverviewQuerySchema,
+  personnelActionOverviewResponseSchema,
   personnelEmployeeAccessHistorySchema,
   personnelEmployeeAuditHistorySchema,
   personnelEmployeeListQuerySchema,
   personnelEmployeeSummarySchema,
   personnelDocumentListSchema,
+  personnelRegisterFactsSchema,
+  personnelRegisterPageSchema,
   savePersonnelDocumentMetadataInputSchema,
   replacePersonnelContractAmendmentMetadataInputSchema,
   setPersonnelEmployeeDepartureInputSchema,
@@ -15,6 +21,212 @@ import {
 } from '../src/personnel';
 
 describe('personnel contracts', () => {
+  it('accepts only bounded, allowlisted contract extraction results', () => {
+    const result = {
+      schemaVersion: 1,
+      requestId: '11111111-1111-4111-8111-111111111111',
+      document: {
+        id: '22222222-2222-4222-8222-222222222222',
+        version: 2,
+      },
+      employeeRevision: 3,
+      status: 'complete',
+      pageCount: 3,
+      suggestions: [
+        {
+          field: 'position',
+          candidateValue: 'Chef de rang',
+          confidence: 'high',
+          sourcePage: 2,
+          excerpt: 'Le salarié exercera les fonctions de chef de rang.',
+          issueCodes: [],
+        },
+        {
+          field: 'employmentTermType',
+          candidateValue: 'fixed_term',
+          confidence: 'medium',
+          sourcePage: 1,
+          excerpt: 'Le présent contrat est conclu pour une durée déterminée.',
+          issueCodes: ['blocked_by_dependency'],
+        },
+      ],
+      warnings: [],
+      expiresAt: '2026-08-18T10:15:00.000Z',
+    } as const;
+
+    expect(personnelContractExtractionReviewResultSchema.parse(result)).toEqual(
+      result,
+    );
+    expect(
+      personnelContractExtractionReviewResultSchema.safeParse({
+        ...result,
+        providerPayload: { prompt: 'not allowed' },
+      }).success,
+    ).toBe(false);
+    expect(
+      personnelContractExtractionReviewResultSchema.safeParse({
+        ...result,
+        suggestions: [{ ...result.suggestions[0], sourcePage: 4 }],
+      }).success,
+    ).toBe(false);
+    expect(
+      personnelContractExtractionReviewResultSchema.safeParse({
+        ...result,
+        suggestions: [{ ...result.suggestions[0], excerpt: 'x'.repeat(241) }],
+      }).success,
+    ).toBe(false);
+  });
+
+  it('limits extraction apply input to supported fields and unique choices', () => {
+    const request = {
+      requestId: '11111111-1111-4111-8111-111111111111',
+      employeeId: '33333333-3333-4333-8333-333333333333',
+      documentId: '22222222-2222-4222-8222-222222222222',
+      documentVersion: 2,
+      employeeRevision: 3,
+      scenario: 'complete',
+    } as const;
+    expect(
+      applyPersonnelContractExtractionInputSchema.safeParse({
+        idempotencyKey: '44444444-4444-4444-8444-444444444444',
+        request,
+        selectedSuggestions: [
+          { field: 'position', candidateValue: 'Chef de rang' },
+          { field: 'contractWeeklyMinutes', candidateValue: 2_100 },
+        ],
+      }).success,
+    ).toBe(true);
+    expect(
+      applyPersonnelContractExtractionInputSchema.safeParse({
+        idempotencyKey: '44444444-4444-4444-8444-444444444444',
+        request,
+        selectedSuggestions: [
+          { field: 'employmentTermType', candidateValue: 'fixed_term' },
+        ],
+      }).success,
+    ).toBe(false);
+    expect(
+      applyPersonnelContractExtractionInputSchema.safeParse({
+        idempotencyKey: '44444444-4444-4444-8444-444444444444',
+        request,
+        selectedSuggestions: [
+          { field: 'position', candidateValue: 'Chef de rang' },
+          { field: 'position', candidateValue: 'Serveur' },
+        ],
+      }).success,
+    ).toBe(false);
+  });
+
+  it('validates complete register facts and keeps transport scope-free', () => {
+    const facts = personnelRegisterFactsSchema.parse({
+      givenNames: 'Camille',
+      familyName: 'Martin',
+      nationalityCode: 'FR',
+      nationalityLabel: 'Française',
+      birthDate: '1990-04-12',
+      sex: 'F',
+      position: 'Cheffe de rang',
+      qualification: 'Employée qualifiée',
+      entryDate: '2026-08-01',
+      departureDate: null,
+      protectedAuthorization: {
+        required: false,
+        authorizationDate: null,
+        requestDate: null,
+      },
+      workAuthorization: {
+        required: false,
+        titleType: null,
+        orderNumber: null,
+      },
+      employmentTermType: 'indefinite',
+      workTimeCategory: 'full_time',
+      temporaryWorkCompany: null,
+      employerGroup: null,
+      specialContract: 'none',
+    });
+    expect(
+      personnelRegisterFactsSchema.safeParse({
+        ...facts,
+        workAuthorization: {
+          required: true,
+          titleType: null,
+          orderNumber: null,
+        },
+      }).success,
+    ).toBe(false);
+    const page = personnelRegisterPageSchema.parse({
+      items: [
+        {
+          id: '11111111-1111-4111-8111-111111111111',
+          employeeId: '22222222-2222-4222-8222-222222222222',
+          sequence: 1,
+          revision: 1,
+          facts,
+          inscribedAt: '2026-08-18T10:00:00.000Z',
+          updatedAt: '2026-08-18T10:00:00.000Z',
+        },
+      ],
+      snapshotRevision: 1,
+      readiness: 'ready',
+      pageInfo: { hasMore: false, nextCursor: null },
+    });
+    expect(page.items[0]).not.toHaveProperty('organizationId');
+    expect(page.items[0]).not.toHaveProperty('actorUserId');
+  });
+
+  it('keeps the action overview bounded and free of tenant or file metadata', () => {
+    const overview = personnelActionOverviewResponseSchema.parse({
+      corrections: {
+        items: [
+          {
+            employeeId: '11111111-1111-4111-8111-111111111111',
+            employeeDisplayName: 'Camille Martin',
+            kind: 'missing_signed_base_contract',
+          },
+        ],
+        pageInfo: { hasMore: false, nextCursor: null },
+        documentSourceStatus: 'ready',
+      },
+      departures: {
+        items: [
+          {
+            employeeId: '22222222-2222-4222-8222-222222222222',
+            employeeDisplayName: 'Hugo Petit',
+            kind: 'departure_within_five_days',
+            departureDate: '2026-08-19',
+          },
+        ],
+        pageInfo: { hasMore: false, nextCursor: null },
+      },
+    });
+    expect(overview.corrections.items[0]).not.toHaveProperty('organizationId');
+    expect(overview.corrections.items[0]).not.toHaveProperty('filename');
+    expect(overview.corrections.items[0]).not.toHaveProperty('storageKey');
+    expect(
+      personnelActionOverviewResponseSchema.safeParse({
+        ...overview,
+        corrections: {
+          ...overview.corrections,
+          items: Array.from({ length: 6 }, () => overview.corrections.items[0]),
+        },
+      }).success,
+    ).toBe(false);
+  });
+
+  it('rejects unknown or oversized action-overview cursors', () => {
+    expect(personnelActionOverviewQuerySchema.parse({})).toEqual({});
+    expect(
+      personnelActionOverviewQuerySchema.safeParse({ unknown: 'value' })
+        .success,
+    ).toBe(false);
+    expect(
+      personnelActionOverviewQuerySchema.safeParse({
+        correctionCursor: 'x'.repeat(501),
+      }).success,
+    ).toBe(false);
+  });
+
   it('applies safe list defaults and rejects unbounded input', () => {
     expect(personnelEmployeeListQuerySchema.parse({})).toEqual({
       view: 'active',

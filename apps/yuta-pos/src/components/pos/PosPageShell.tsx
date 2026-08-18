@@ -12,6 +12,7 @@ type PosPageShellProps = {
   eyebrow?: ReactNode;
   actions?: ReactNode;
   secondaryActions?: ReactNode;
+  pageMenuActions?: ReactNode;
   secondaryMenuLabel?: string;
   subHeader?: ReactNode;
   floatingAction?: ReactNode;
@@ -34,6 +35,7 @@ export function PosPageShell({
   eyebrow,
   actions,
   secondaryActions = <PosServiceNavigation />,
+  pageMenuActions,
   secondaryMenuLabel,
   subHeader,
   floatingAction,
@@ -56,6 +58,7 @@ export function PosPageShell({
           eyebrow={eyebrow}
           actions={actions}
           secondaryActions={secondaryActions}
+          pageMenuActions={pageMenuActions}
           secondaryMenuLabel={secondaryMenuLabel}
           prominent={prominentHeader}
           className={headerClassName}

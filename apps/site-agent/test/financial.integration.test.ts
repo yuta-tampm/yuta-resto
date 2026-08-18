@@ -48,6 +48,8 @@ integrationTest('site-agent financial transaction integration', () => {
   const drinkOrderItemId = uuidv7();
   const kitchenSendKey = uuidv7();
   const paymentKey = uuidv7();
+  const receiptPrintKey = uuidv7();
+  const receiptReprintKey = uuidv7();
 
   beforeAll(async () => {
     db = createPosDatabaseClient(process.env);
@@ -240,6 +242,7 @@ integrationTest('site-agent financial transaction integration', () => {
         output.push(data);
       },
       interTicketDelayMs: 0,
+      orderIdScope: orderId,
     });
     expect(await worker.processNext()).toBe(true);
     expect(await worker.processNext()).toBe(true);
@@ -360,5 +363,62 @@ integrationTest('site-agent financial transaction integration', () => {
         ),
       );
     expect(receiptJobs).toHaveLength(0);
+
+    const receiptView = await service.getReceiptView(orderId);
+    expect(receiptView.targets).toEqual([
+      expect.objectContaining({
+        kind: 'check',
+        id: split.checks[0].id,
+        availability: 'available',
+      }),
+    ]);
+    const receiptCommand = {
+      operationId: receiptPrintKey,
+      target: { kind: 'check' as const, checkId: split.checks[0].id },
+      intent: 'print' as const,
+    };
+    const queuedReceipt = await service.executeReceiptCommand(
+      orderId,
+      receiptCommand,
+    );
+    expect(queuedReceipt.replayed).toBe(false);
+    expect(queuedReceipt.printJob).toMatchObject({
+      type: 'customer_receipt',
+      status: 'pending',
+    });
+    const replayedReceipt = await service.executeReceiptCommand(
+      orderId,
+      receiptCommand,
+    );
+    expect(replayedReceipt.replayed).toBe(true);
+    expect(replayedReceipt.printJob.id).toBe(queuedReceipt.printJob.id);
+
+    expect(await worker.processNext()).toBe(true);
+    expect(output).toHaveLength(4);
+    expect(output[3]?.toString('ascii')).toContain('RECU DE PAIEMENT');
+    expect(output[3]?.toString('ascii')).toContain('Integration Main');
+    const printedReceipt = await service.getReceiptJobStatus(
+      orderId,
+      queuedReceipt.printJob.id,
+    );
+    expect(printedReceipt.printJob.status).toBe('printed');
+
+    await db
+      .update(orderItems)
+      .set({ itemNameSnapshot: 'Changed after receipt snapshot' })
+      .where(eq(orderItems.id, mainOrderItemId));
+    const reprint = await service.executeReceiptCommand(orderId, {
+      operationId: receiptReprintKey,
+      target: { kind: 'check', checkId: split.checks[0].id },
+      intent: 'reprint',
+      jobId: queuedReceipt.printJob.id,
+    });
+    expect(reprint.replayed).toBe(false);
+    expect(await worker.processNext()).toBe(true);
+    expect(output).toHaveLength(5);
+    expect(output[4]?.toString('ascii')).toContain('Integration Main');
+    expect(output[4]?.toString('ascii')).not.toContain(
+      'Changed after receipt snapshot',
+    );
   });
 });

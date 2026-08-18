@@ -1313,3 +1313,810 @@ Documents and Formalités do not write either value.
 This implementation is local only. The supported legal subset, production
 privacy/retention/operations, deployment, and production data collection still
 require separate approval.
+
+## Wave D Phase 0 — `À traiter` data and interaction discovery
+
+Status: `PHASE 1 TYPED FIXTURE — NO CONTRACT, QUERY, OR REAL DATA AUTHORIZED`
+
+### Repository inventory
+
+- `PersonnelEmployeeListResponse` already returns employee summaries, active /
+  upcoming / former view, `completenessReasons`, `departureDate`, counts, and a
+  cursor page under trusted organization + establishment scope.
+- current minimum completeness covers only given names, family name, position,
+  and qualification;
+- the existing presentation already labels recorded departures during the last
+  five establishment-local calendar days;
+- signed base-contract availability exists in personnel document persistence,
+  but the current contract/repository reads it only for one scoped employee
+  when the `Documents` tab opens;
+- no batch document-presence projection, action-item contract, combined loader,
+  task/notification table, acknowledgement state, assignment, scheduled job,
+  polling, or personnel notification outbox exists;
+- the booking notification/outbox domain belongs to booking and must not be
+  reused for personnel by analogy;
+- Formalités remains a planned placeholder with no status or deadline source.
+
+### Proposed derived UI model
+
+This UI model is not a database schema.
+
+| Proposed kind                  | Authoritative source                                      | Inclusion rule                                                                  | Safe presentation                                       | Existing resolving entry point |
+| ------------------------------ | --------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------ |
+| `incomplete_employee_dossier`  | employee summary `view` + `completenessReasons`           | active/upcoming employee with at least one approved minimum reason              | employee name + `Dossier incomplet`                     | existing edit dialog           |
+| `missing_signed_base_contract` | existing signed-base-contract record/availability         | active/upcoming employee with no current available signed base contract         | employee name + `Contrat signé manquant`                | existing Documents add flow    |
+| `departure_within_five_days`   | employee summary `view` + `departureDate` + business date | active employee, departure from business date through business date plus 5 days | employee name + text-backed relative label + exact date | existing departure review flow |
+
+Former employees are excluded from the first MVP. Missing documents do not add
+employee `completenessReasons` and do not alter the existing incomplete count.
+`expectedEndDate` is not a substitute for `departureDate`. Missing amendments
+are not derived as issues.
+
+The item identity, grouping, ordering, maximum visible count, cursor shape, and
+refresh contract remain later interaction/technical decisions. Phase 0 rejects
+using array index, employee name, or a browser-composed tenant value as a
+trusted resource identity.
+
+### Proposed interaction map
+
+| Interaction                          | Current reality                                      | Phase 0 proposal                                                                     |
+| ------------------------------------ | ---------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Load `/equipe/salaries`              | loads paged employee list/counts only                | later load a bounded derived overview under the same trusted scope                   |
+| Select incomplete dossier item       | no item exists                                       | select exact employee and open existing edit flow                                    |
+| Select missing-contract item         | document flow opens only from selected dossier       | select exact employee, open drawer `Documents`, then existing add action             |
+| Select upcoming-departure item       | five-day badge exists in list/drawer                 | select exact employee and expose existing departure review/correction action         |
+| Finish an existing resolving action  | route refreshes its authoritative source             | refresh overview; never mark an item complete in browser state                       |
+| Dismiss / snooze / assign / bulk act | no domain or persistence exists                      | not available                                                                        |
+| Retry                                | page and document reads have separate failure states | later retry only the failed derived source without fabricating missing-document data |
+
+### Authorization and ownership
+
+The route remains authenticated and establishment-required. Proposed access is
+OWNER-only. Employee-derived items require `personnel.employee.read`; a
+missing-document item also requires `personnel.document.read`. Because both
+permissions currently allow only OWNER, Phase 0 proposes no new role or
+permission. A later manager delegation cannot infer document status from
+employee-read access alone.
+
+Every read must repeat trusted `organizationId` + `establishmentId` scope and,
+for item actions, the employee/resource scope. Resource-ID-only lookup and
+browser-provided organization, establishment, role, permission, item kind, or
+document-presence value are forbidden. The same person at two establishments
+produces independent dossier-derived items.
+
+### Date, refresh, and truth rules
+
+- use the establishment timezone to derive the business date;
+- departure inclusion is calendar-date based and reuses the approved 0–5-day
+  presentation rule;
+- source records, not a cached browser item, decide whether an item still exists;
+- no polling interval, scheduled evaluation, background job, or push delivery
+  is approved; a normal authorized read/refresh recomputes the overview;
+- partial document-source failure must show document status as unavailable,
+  never interpret the failure as “contract missing”;
+- no-items means no supported derived issue/event exists at read time; it is
+  not a legal-compliance or personnel-completeness guarantee.
+
+### Sensitive read, audit, and retention
+
+The overview exposes a cross-employee summary of confidential HR states. A
+later phase must select an audit owner and approve a single bounded,
+deduplicated overview-access event. Do not append one employee-history event
+per rendered item and do not include the item list, missing fields, filenames,
+dates, or document metadata in audit payloads.
+
+The Phase 0 design stores no action item, acknowledgement, or derived snapshot,
+so it adds no separate action-item retention class. Source employee, document,
+and audit retention remain governed by their own unresolved production gates.
+
+### Required later states and tests
+
+Before real implementation, approve a contract/query design and test:
+
+- two organizations and two establishments with no cross-scope names, counts,
+  issue kinds, dates, or existence leakage;
+- OWNER success and MANAGER/STAFF/public denial;
+- active/upcoming/former inclusion boundaries;
+- 0, 1, 2, 5, and 6 calendar days around a recorded departure;
+- missing minimum fields independently from missing signed contract;
+- unavailable document source not becoming a false missing-contract item;
+- source correction followed by fresh read removes only the resolved item;
+- bounded result ordering/pagination once those decisions are approved;
+- responsive, keyboard, focus, loading, no-items, partial-error, full-error,
+  retry, and forbidden presentation.
+
+Phase 0 creates no schema, migration, enum, contract, repository query, loader,
+action, API, permission, audit event, task state, notification behavior,
+fixture, or UI component.
+
+### Phase 1 fixture boundary
+
+The route-local prototype owns a presentation-only discriminated union and
+three immutable fictional items. Its `draft-*` identities are not employee,
+document, tenant, or future action-item identifiers. The component receives no
+trusted scope and performs no reads or writes. Its disabled buttons make no
+navigation, dialog, action, or refresh claim.
+
+This fixture is disposable discovery evidence. It must not be extended into a
+transport contract or mapped directly to a table. Phase 2 must still decide
+ordering, limits, truthful source-state composition, interaction entry points,
+and the minimized overview-access audit design before real integration can be
+proposed.
+
+### Wave D Phase 2 technical proposal
+
+Capability status: `PHASE 3 LOCAL REAL-DATA SLICE — PRODUCTION BLOCKED`
+
+Phase 2 was authorized on 2026-08-16 for documentation only. It maps the
+approved prototype to a bounded read model and interaction contract without
+changing the fixture or creating a schema, migration, transport contract,
+repository query, server action, permission, audit event, or real-data UI.
+
+#### Proposed read ownership and source composition
+
+A later real slice should add one establishment-scoped personnel overview read
+behind the Backoffice server boundary. It receives trusted `organizationId` and
+`establishmentId` from the validated session plus the establishment business
+date. It must not derive scope, role, permissions, business date, or document
+presence from browser input.
+
+The read remains derived; no action-item table or snapshot is proposed. Use
+bounded set-based reads rather than calling the existing per-employee document
+loader in a loop:
+
+1. one employee-source read for incomplete active/upcoming dossiers and active
+   departures in the 0–5 local-day window;
+2. one document-metadata presence read for active/upcoming employees without a
+   current available `signed_employment_contract` record;
+3. merge only safe item projections under the same trusted tenant scope.
+
+The overview reads document metadata presence only. It never reads storage
+keys, filenames, versions, file bytes, scanner/provider state, amendments, or
+PDF contents. A document-source error stays distinct from an absent contract.
+
+#### Proposed transport-safe UI model
+
+This is a read-contract proposal, not a database schema.
+
+| Field                    | Classification              | Rule                                                                                                |
+| ------------------------ | --------------------------- | --------------------------------------------------------------------------------------------------- |
+| `kind`                   | Derived allowlisted value   | `incomplete_employee_dossier`, `missing_signed_base_contract`, or `departure_within_five_days` only |
+| `employeeId`             | Scoped resource reference   | Used only to request a fresh server-authorized action target; never trusted by itself               |
+| `employeeDisplayName`    | Confidential presentation   | Given/family name only; no email, phone, qualification, CDD reason, or weekly duration              |
+| `departureDate`          | Confidential date-only fact | Present only for the departure item; relative copy is derived with the establishment business date  |
+| `pageInfo.nextCursor`    | Opaque transient navigation | Five items per group; no total count and no cursor in the page URL                                  |
+| `documentSourceStatus`   | Transient source truth      | `ready` or `unavailable`; unavailable never produces a missing-contract item                        |
+| labels/icons/action copy | Derived presentation        | Mapped from `kind` in the UI; not supplied as trusted behavior by the browser                       |
+
+No item has a persisted task ID. A client render key may combine the allowlisted
+kind and employee ID, but that value has no authorization or mutation meaning.
+Do not return completeness reason details, document identifiers, filenames,
+storage metadata, source row versions, audit IDs, organization IDs, or
+establishment IDs in the overview item.
+
+#### Ordering, limits, and group navigation
+
+- show at most five correction items and five dated events per group page;
+- use independent opaque cursors and independent `Précédent` / `Suivant`
+  controls; hide controls when one page is sufficient;
+- keep previous cursors only as transient client state, following the existing
+  consultations pagination pattern; reload resets both groups to page one;
+- do not show a total, `Voir tout`, hidden-item count, infinite scroll, or new
+  route;
+- order correction items neutrally by family name, given names, employee ID,
+  then kind (`incomplete_employee_dossier` before
+  `missing_signed_base_contract` only as a deterministic tie-breaker);
+- order dated events by departure date ascending, then family name, given
+  names, and employee ID;
+- do not compute priority or urgency scores.
+
+The correction cursor represents the merged ordering across employee and
+document sources. When the document source is unavailable, show the first
+bounded incomplete-dossier page plus a partial-warning row, disable correction
+pagination, and reset that group to page one on retry. This avoids presenting
+an incomplete merged page as complete.
+
+#### Proposed action-target resolution
+
+Overview items can reference employees outside the currently loaded employee
+list page. A later action therefore cannot reuse `data.items` as authority or
+place an employee identifier in the URL. It should request a fresh
+server-authorized target under organization + establishment + employee scope
+and recheck the item's source condition before opening a flow.
+
+| Item action            | Fresh-result behavior                                                                                                                                                                                                                                                     |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Compléter le dossier` | If still incomplete, open the existing edit dialog with the current employee revision and focus the first missing minimum field. If resolved, show a neutral changed-state message and refresh.                                                                           |
+| `Ajouter le contrat`   | If the signed base contract is still absent, open the existing dossier drawer on `Documents` and reveal the existing add form. If a contract now exists or document status is unavailable, do not open an upload form; show the current truthful state and refresh/retry. |
+| `Voir le départ`       | If the departure still falls within 0–5 local days, open the existing dossier overview and focus its departure information. Do not open the correction dialog automatically; the existing explicit `Corriger le départ` action remains separate.                          |
+
+The browser-provided employee ID and expected kind are untrusted hints. The
+server repeats OWNER permission and tenant scope, loads the current dossier,
+and returns a non-disclosing not-found/forbidden result. No overview button
+marks, dismisses, acknowledges, assigns, or mutates an item.
+
+#### Refresh and truthful state contract
+
+- initial authorized read may use the page server loader; group pagination and
+  retry may use a later validated server action without adding a public API;
+- pagination keeps current items visible with `aria-busy`, disables the active
+  group's controls, and replaces them only after a successful response;
+- edit and departure success already refresh the route; a later Documents
+  parent callback must also refresh after a verified contract save;
+- after any resolving flow, source truth decides whether the item remains;
+  never remove it optimistically in browser state;
+- a stale or resolved target shows `Cet élément a changé. La liste a été
+actualisée.` rather than opening an inappropriate flow;
+- employee-source failure replaces the complete surface with error + retry and
+  no stale names, counts, kinds, or dates;
+- document-source failure keeps truthful employee-derived items, adds
+  `Statut des contrats indisponible`, and never fabricates contract issues;
+- a genuine no-items result uses one compact neutral line and does not claim
+  legal or HR completeness;
+- route-level forbidden remains non-disclosing and does not mount the overview;
+- no polling, timer, scheduled job, notification, background refresh, email,
+  SMS, push, calendar delivery, or outbox is proposed.
+
+#### Authorization and proposed minimized audit owner
+
+Real reads require both existing OWNER-only permissions:
+`personnel.employee.read` for the surface and
+`personnel.document.read` before contract-presence items can be returned.
+Action targets additionally require the existing manage permission owned by
+their real resolving flow. Every repository call repeats organization +
+establishment scope; resource-ID-only lookup remains forbidden.
+
+The recommended later sensitive-read owner is one
+`personnel.action_overview_viewed` event in `auth_audit_events` per authorized
+overview read, scoped to actor + organization + establishment with no subject
+employee. It must not create one employee-history event per item and must not
+store item IDs, names, counts, issue kinds, dates, completeness reasons,
+document metadata, cursor values, browser data, token data, or file data. This
+new allowlisted event and its retention/visibility still require security and
+product approval before implementation; it should not appear in an employee's
+`Historique` or `Consultations` timeline.
+
+#### Phase 2 decision register
+
+| ID     | Recommended choice                                                                                                              | Approval state             |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| WD2-01 | Keep a derived overview; create no task/snapshot persistence                                                                    | Approved for local Phase 3 |
+| WD2-02 | Use one tenant-scoped overview owner with bounded set-based employee and document-presence reads; no per-employee document loop | Approved for local Phase 3 |
+| WD2-03 | Return only kind, employee ID/display name, optional departure date, page info, and document-source status                      | Approved for local Phase 3 |
+| WD2-04 | Use independent five-item cursor pages per group with previous/next; no totals, `Voir tout`, URL cursor, or new route           | Approved for local Phase 3 |
+| WD2-05 | Use neutral name/kind ordering for corrections and earliest-departure ordering for events                                       | Approved for local Phase 3 |
+| WD2-06 | Revalidate a fresh tenant-scoped action target; never use the current list page or browser item as authority                    | Approved for local Phase 3 |
+| WD2-07 | Open existing edit, Documents-add, and departure-review entry points exactly as mapped above                                    | Approved for local Phase 3 |
+| WD2-08 | Refresh from source after real flow success; no optimistic completion, polling, or background delivery                          | Approved for local Phase 3 |
+| WD2-09 | Treat document-source failure as partial unavailability, never as a missing contract; full employee failure discloses no items  | Approved for local Phase 3 |
+| WD2-10 | Reuse existing OWNER employee/document permissions and strict organization + establishment + employee scope                     | Approved for local Phase 3 |
+| WD2-11 | Record one minimized `personnel.action_overview_viewed` event in `auth_audit_events`, not per-item history                      | Approved for local Phase 3 |
+| WD2-12 | Replace the development fixture with the real local slice; production remains blocked                                           | Approved for local Phase 3 |
+
+#### Required tests before any real-data slice
+
+- two organizations and two establishments with no cross-scope names, item
+  existence, dates, source status, or cursor leakage;
+- OWNER success; MANAGER, STAFF, service, public, missing-establishment, and
+  missing document-permission denial;
+- active/upcoming/former boundaries and departure days 0, 1, 2, 5, and 6;
+- one employee producing zero, one, or both correction kinds without merging
+  their actions;
+- signed base contract present, absent, replaced, quarantined/unavailable, and
+  document-query failure without inspecting file bytes;
+- deterministic five-item cursor pages with ties, no duplicate/omitted items,
+  separate group navigation, and retry reset after partial failure;
+- stale target resolved/changed between overview read and click;
+- successful edit, document add, or departure correction followed by a fresh
+  derived read;
+- exactly one minimized overview audit event per authorized read and no event
+  or disclosure for denied reads;
+- loading, no-items, partial-error, full-error, retry, changed-state, keyboard,
+  focus, accessible names, 1440/1024/768/390 layout, and horizontal overflow.
+
+### Wave D Phase 3 local implementation reconciliation
+
+WD2-01 through WD2-12 and the local real-data slice were approved on
+2026-08-17. The implementation adds a transport-safe bounded contract, one
+tenant-scoped derived repository read, fresh target revalidation, server
+actions, and the real `À traiter` UI. It reuses the existing employee edit,
+Documents add, and departure-review flows. The fixture and its disclosure were
+removed.
+
+No schema, migration, task table, reminder, notification, scheduler, public
+API, or new permission was added. Document composition reads presence metadata
+only. Each authorized overview read records one minimized
+`personnel.action_overview_viewed` event with actor, organization, and
+establishment only. The UI and its actions are guarded by development mode;
+production neither queries nor renders the overview.
+
+Contract, Backoffice, and database-repository tests cover the bounded model,
+presentation mapping, tenant isolation, paging, target revalidation, and audit
+shape. Database integration execution remains conditional on the repository's
+explicit local test opt-in.
+
+### Wave D Phase 4 integration and production-boundary audit
+
+Phase 4 was authorized and completed on 2026-08-17 as a local integration and
+production-boundary audit. It did not authorize production delivery. The audit
+reconfirmed this path:
+
+```text
+validated OWNER session and active establishment
+-> development-only runtime gate
+-> employee/document OWNER permissions
+-> organization + establishment scoped derived repository reads
+-> minimized transport model
+-> fresh organization + establishment + employee target revalidation
+-> existing edit, Documents-add, or departure-review flow
+```
+
+The duplicated environment checks in the page loader and server actions now
+use one tested runtime-gate helper. It returns enabled only for
+`development`; `production`, `test`, and missing values fail closed. A fresh
+production build was started locally on an isolated port with the authenticated
+OWNER session: `/equipe/salaries` rendered normally, made no Wave D surface
+visible, and produced no browser warning or error. The development server still
+rendered the real item and action without prototype disclosure.
+
+No schema, migration, repository semantics, transport field, permission,
+public API, audit payload, task persistence, notification, file-provider, or
+production behavior changed in Phase 4. The mutation-capable database
+integration suite remains opt-in and was not forced against the configured
+local database. Production remains blocked by the existing legal, privacy,
+retention, security, backup/restore, and operations gates.
+
+## Wave E Phase 0 data and interaction inventory
+
+### Current repository fields versus register needs
+
+| Register information                          | Current repository evidence  | Phase 0 disposition                                           |
+| --------------------------------------------- | ---------------------------- | ------------------------------------------------------------- |
+| Names                                         | `givenNames`, `familyName`   | Reuse proposal                                                |
+| Employment/job                                | `position`                   | Reuse proposal; legal wording review required                 |
+| Qualification                                 | `qualification`              | Reuse proposal                                                |
+| Entry and exit dates                          | `entryDate`, `departureDate` | Reuse proposal                                                |
+| CDD mention                                   | `employmentTermType`         | Derivable presentation proposal                               |
+| Part-time mention                             | `workTimeCategory`           | Derivable presentation proposal                               |
+| Nationality                                   | Absent                       | New confidential field proposal; not authorized               |
+| Birth date                                    | Absent                       | New confidential field proposal; not authorized               |
+| Sex                                           | Absent                       | New confidential field proposal; not authorized               |
+| Hiring/dismissal authorization date/request   | Absent                       | Conditional model unresolved                                  |
+| Work-authorization title type/number and copy | Absent                       | More-sensitive conditional domain; separate document decision |
+| Temporary-work company name/address           | Absent                       | Worker-category/domain unresolved                             |
+| Employer-group name/address                   | Absent                       | Worker-category/domain unresolved                             |
+| Apprentice/professionalization mention        | Absent                       | Apprenticeship domain deferred                                |
+| Stagiaire name, dates, tutor, place           | No stagiaire aggregate       | Separate register part deferred from implementation           |
+| Service-civique arrival details               | No service-civique aggregate | Separate register part unresolved                             |
+
+CDD reason, expected end date, contractual weekly minutes, signed PDFs, audit
+metadata, login identity, and POS user data are not automatically register
+fields. They must not be exported merely because they exist elsewhere.
+
+### Missing domain guarantees
+
+The current employee table stores mutable current values and orders the employee
+list for product browsing, not as an indelible register. `createdAt`, employee
+UUID, `entryDate`, and current list order are not approved substitutes for a
+stable legal hiring/arrival sequence. The employee history is bounded to
+allowlisted business events and cannot reconstruct all prior values or every
+legally relevant event.
+
+A later technical phase must choose and approve a register-owned append-only
+ledger, dated versions, or another demonstrably non-destructive model. It must
+define correction semantics, arrival sequence, former-person retention,
+multi-establishment cases, and how employee facts are copied or referenced
+without creating two conflicting sources of truth. Phase 0 selects none of
+these storage designs.
+
+### Proposed interaction map
+
+```text
+OWNER opens Salariés
+-> chooses proposed Registre du personnel entry point
+-> server rederives active organization and establishment
+-> server checks proposed register-read permission
+-> register read returns ordered minimized rows plus readiness state
+-> UI shows missing information without inventing values
+-> OWNER requests PDF
+-> server reauthorizes proposed export permission and source version
+-> server creates one protected response from the same ordered snapshot
+-> minimized export audit is recorded
+-> browser downloads without a public or stable URL
+```
+
+Every later read and export fails closed. Browser-supplied organization,
+establishment, role, permission, sequence, person category, or snapshot version
+is untrusted. An export cannot reuse a stale browser copy as authority.
+
+### Proposed data classes
+
+- **Stored later, after approval:** missing register fields, person category,
+  canonical arrival sequence, dated corrections/history, retention markers.
+- **Derived:** CDD and part-time labels from current controlled fields; readiness
+  counts from the approved required-field rules.
+- **Transient:** open sections, responsive layout, export pending/error state.
+- **Generated:** PDF bytes from one authorized structured snapshot; not stored
+  by default and never a source field.
+- **External/legal:** work-authorization copies, detached-worker annexes,
+  inspection/CSE presentation rules; not integrated in the MVP.
+
+### Authorization, audit, and retention proposal
+
+Current `personnel.employee.read` does not by itself authorize a multi-person
+register or export. Phase 2 must decide whether to add
+`personnel.register.read` and `personnel.register.export`, initially OWNER-only.
+Every query remains organization + establishment scoped.
+
+Proposed allowlisted audit actions are `personnel.register_viewed` and
+`personnel.register_exported`. Audit payloads may contain only actor, trusted
+scope, action, time, and a non-sensitive snapshot/version identifier. They must
+not contain names, birth dates, nationality, sex, authorization numbers,
+missing-field values, PDF bytes, filenames, or download URLs.
+
+Five-year retention after a person leaves the establishment is the reviewed
+legal baseline for register mentions, but its start event, archives, legal
+hold, correction, deletion, backups, and rights workflow require legal/DPO and
+operations approval. Phase 0 creates no retention job or deletion behavior.
+
+### Phase 0 change flags
+
+```text
+Files modified: existing page-pack Markdown only
+Files created: none
+Packages affected: documentation only
+Cross-application impact: none
+Database change: NO; future register history and missing fields are PROPOSALS
+API or contract change: NO; future read/export contracts are PROPOSALS
+Permission/auth change: NO; separate read/export permissions are PROPOSALS
+Audit change: NO; minimized read/export events are PROPOSALS
+Runtime/provider change: NO
+PDF generation/storage: NO; server-mediated transient export is a PROPOSAL
+Operational data: unchanged
+Production: NOT AUTHORIZED
+```
+
+## Wave F Phase 1 — fixture-only interaction
+
+Status: `LOCAL PROTOTYPE; NO DOCUMENT OR EMPLOYEE DATA INTEGRATION`.
+
+The prototype uses a route-owned TypeScript fixture containing only
+`position`, `employmentTermType`, and `contractWeeklyMinutes`. The fixture is
+not derived from the loaded document, employee values, an OCR result, a model
+response, a contract package, or persistence.
+
+```text
+available signed base contract
+-> OWNER opens local prototype
+-> three fictional typed suggestions render
+-> OWNER chooses keep/use in client memory
+-> local selected-change summary updates
+-> disabled apply action ends the prototype
+```
+
+The server page passes a development-only feature flag. Production and test
+environments fail closed and render no analysis control. No API, server action,
+permission, audit event, storage read, file transmission, employee write, or
+register write exists in this phase.
+
+## Wave F Phase 2 — proposed technical contract
+
+Status: `APPROVED; LOCAL SYNTHETIC CONTRACTS/SERVICE IMPLEMENTED — PROVIDERS AND REAL FILES BLOCKED`.
+
+Phase 3 implements this boundary with a server-generated fictional PDF and a
+deterministic adapter only. The signed employee document is resolved by scoped
+metadata and exact version but its binary content is not opened. Review results
+remain transient. Position and weekly minutes may use the existing employee
+mutation; the contract type remains dependency-blocked. Minimized extraction
+events use the existing employee audit table, and the establishment rate limit
+is process-local development state rather than a production guarantee.
+
+### Repository constraints preserved
+
+- trusted organization, establishment, actor, and role come from the validated server session;
+- the employee and document are looked up with organization + establishment + employee scope;
+- only the current available signed base-contract version may be analysed;
+- quarantine objects, amendments, storage keys, filenames, browser scope, and provider output never authorize access;
+- `personnel.document.read` remains necessary for the existing document surface;
+- a future extraction request requires distinct `personnel.document.extract`;
+- applying selected employee changes also requires `personnel.employee.manage`;
+- existing employee revision, idempotency, date, CDD-reason, and audit behavior remains authoritative.
+
+### Proposed application boundary
+
+The future route-owned application service should orchestrate interfaces rather
+than embed an SDK in a React component, server action, repository, or storage
+adapter.
+
+```text
+trusted tenant context + employee/document identifiers
+-> extraction authorization
+-> scoped exact-version content grant
+-> open available private object
+-> local PDF preflight and page/text-density classification
+-> replaceable structured-extraction adapter
+-> strict schema parse
+-> employee-domain normalization and validation
+-> transient review result
+```
+
+Proposed server-only interfaces:
+
+```ts
+type ContractExtractionRequest = {
+  requestId: string;
+  employeeId: string;
+  documentId: string;
+  documentVersion: number;
+  employeeRevision: number;
+  locale: string;
+};
+
+interface ContractPdfPreparer {
+  prepare(bytes: Uint8Array): Promise<PreparedContractDocument>;
+}
+
+interface ContractExtractionAdapter {
+  extract(input: PreparedContractDocument): Promise<UnknownAdapterResult>;
+}
+
+interface PersonnelContractExtractionService {
+  extract(
+    context: TrustedTenantContext,
+    request: ContractExtractionRequest,
+  ): Promise<ContractExtractionReviewResult>;
+}
+```
+
+These are design shapes, not authorized contracts. `TrustedTenantContext` and
+document bytes are never serialized to the browser or accepted from browser
+input. The provider adapter receives no database client, storage adapter,
+employee mutation function, tools, URL-fetch capability, or tenant-selection
+mechanism.
+
+### Strict review-result shape
+
+The future result is versioned and bounded:
+
+```text
+schemaVersion: 1
+requestId: UUID
+document: documentId + exact version
+employeeRevision: positive integer captured at request time
+status: complete | partial | no_result | unsupported
+suggestions: maximum 8 strict discriminated items
+warnings: allowlisted machine codes only
+expiresAt: short review expiry
+```
+
+Each suggestion contains only:
+
+- allowlisted `field`;
+- typed `candidateValue` matching that field;
+- `confidence`: `high | medium | low`;
+- one-based `sourcePage` within the verified page count;
+- fictional/provider evidence reduced to one bounded excerpt of at most 240 characters;
+- allowlisted `issueCodes`, never arbitrary keys or instructions.
+
+The first apply-capable set is `position` and `contractWeeklyMinutes`.
+`employmentTermType` may be returned for review but is `blocked_by_dependency`
+unless the future result also supports and validates `expectedEndDate` and
+`fixedTermReasonCode`. Unknown values, ambiguous mappings, remuneration,
+identity, departure, and register facts are dropped rather than coerced.
+
+### Interaction state machine
+
+```text
+idle
+-> authorizing
+-> preparing
+-> extracting
+-> validating result
+-> ready | partial | no_result | unsupported | failed
+-> reviewing local choices
+-> applying selected fields
+-> success | employee_conflict | document_stale | validation_failed
+```
+
+Only one request may be in flight for a drawer. Closing the drawer cancels the
+client wait but does not authorize background processing. The first slice has a
+45-second server timeout, no automatic provider retry, and one explicit manual
+retry using a new request ID. `Consulter` and `Télécharger` remain independent.
+
+Suggestions stay only in browser memory for the first slice and are invalidated
+by reload, drawer close, document replacement/version change, employee revision
+change, establishment switch, expiry, or permission loss. Applying zero fields
+is a no-op. An apply request carries only selected field names and candidate
+values as untrusted form input plus a fresh idempotency key and expected
+employee/document versions. The server reauthorizes and revalidates everything;
+it never trusts a confidence score or excerpt.
+
+### Processing and provider strategy
+
+The recommended architecture is hybrid, not vendor-coupled:
+
+1. YUTA performs file ownership resolution, malware-state verification, size,
+   media type, page count, and text-density checks locally.
+2. A replaceable adapter performs semantic extraction.
+3. A provider-specific adapter maps its response into the same strict YUTA
+   result before domain validation.
+
+If an OpenAI adapter is later approved, official OpenAI documentation states
+that Responses file inputs may be inline Base64 and that PDF processing can use
+both extracted text and page images. The adapter should therefore avoid a
+persistent Files object and send one inline exact-version PDF with structured
+output, `store: false`, no tools, and no background mode. Structured Outputs
+constrain a supported JSON Schema, but refusal, truncation, and incomplete
+results still require explicit failure handling.
+
+`store: false` alone is not a privacy approval. Official OpenAI data controls
+state that API customer content is not used for training by default, while
+default abuse-monitoring retention may be up to 30 days; Zero Data Retention or
+Modified Abuse Monitoring and European regional processing require account and
+contract eligibility. Consequently every remote real-file call remains blocked
+until WF2-06 evidence is accepted.
+
+Official references reviewed on 2026-08-18:
+
+- <https://developers.openai.com/api/docs/guides/file-inputs>;
+- <https://developers.openai.com/api/docs/guides/structured-outputs>;
+- <https://developers.openai.com/api/docs/guides/your-data>.
+
+### Retention, audit, limits, and observability
+
+- raw PDF preparation text, page images, prompts, provider responses, and rejected unknown keys are request-scoped and discarded;
+- the first slice creates no extraction-result table, vector store, Files object, conversation, or browser persistence;
+- evidence excerpts exist only in the transient response and current OWNER UI;
+- audit outcomes are minimized to trusted scope, actor, document/version reference, request operation ID, action, outcome code, suggestion count, selected field names, and timestamp;
+- audit and application logs contain no employee names, candidate/current values, snippets, PDF content, prompt, response, storage key, provider request ID, model output, or provider error body;
+- operational metrics may contain duration bucket, page-count bucket, status code, adapter name/version, token/cost bucket, and rate-limit outcome without document or employee identifiers;
+- first-slice guards are one PDF, 10 MiB, 40 pages, one in-flight request per drawer, and 10 requests per establishment per rolling 24 hours;
+- production needs a shared rate-limit/idempotency owner before multi-instance deployment; in-memory coordination is development evidence only.
+
+### Required Phase 3 test matrix
+
+- OWNER success with a synthetic text PDF and strict result;
+- no permission, MANAGER/STAFF, service actor, missing membership, wrong organization, and wrong establishment denial;
+- employee/document mismatch, amendment ID, old version, unavailable/quarantine object, media mismatch, checksum mismatch, over-size, and over-page-limit denial;
+- prompt-like instructions and links inside PDF treated only as document text;
+- unknown field, extra key, invalid enum/date/minutes, page out of range, long excerpt, refusal, truncated JSON, timeout, and provider failure rejection;
+- no-result/partial/unsupported states without disabling view/download;
+- employee revision and document version conflicts before apply;
+- zero-field no-op, duplicate apply idempotency, and existing changed-field audit preservation;
+- log/audit redaction assertions and no outbound call before authorization/security checks;
+- cost/rate limit and manual retry behavior;
+- production runtime disabled until provider/legal/privacy/security/operations gates are true.
+
+### Phase 2 change flags
+
+```text
+Files modified: existing Salariés page-pack Markdown only
+Files created: none
+Database/schema/migration: NO
+Transport or application contract: NO
+Runtime service/provider/SDK/library: NO
+Permission or audit event: NO
+File read/transmission: NO
+Employee or register mutation: NO
+Operational data: unchanged
+Production: NOT AUTHORIZED
+```
+
+## Wave F Phase 0 — proposed extraction data and interaction boundary
+
+Status: documentation proposal only. No runtime or operational data changes.
+
+### Current reusable boundary
+
+The current secure-document sequence is authoritative and must remain separate
+from extraction:
+
+```text
+OWNER upload
+-> server authorization and tenant scope
+-> PDF signature/size check
+-> private quarantine
+-> malware scanner
+-> promotion to private available storage
+-> scoped metadata commit
+```
+
+A later extractor may read only an exact available document version after a
+fresh authorization check. It must not read quarantine objects, accept browser
+storage keys, create a public URL, bypass malware inspection, or become the
+storage service. No AI/OCR implementation or package exists today.
+
+### First-slice field allowlist
+
+| Employee field             | Phase 0 disposition                                                                 |
+| -------------------------- | ----------------------------------------------------------------------------------- |
+| `position`                 | May be suggested as detected contract wording; OWNER review required                |
+| `qualification`            | May be suggested; do not derive from position alone                                 |
+| `employmentTermType`       | May suggest CDI/CDD only when explicit; otherwise unresolved                        |
+| `expectedEndDate`          | May suggest for explicit CDD date; never infer a departure                          |
+| `fixedTermReasonCode`      | May map only to the existing controlled allowlist; unmatched text stays unresolved  |
+| `workTimeCategory`         | May suggest full/part-time only when explicit                                       |
+| `contractWeeklyMinutes`    | May suggest from an explicit weekly duration using deterministic unit conversion    |
+| `entryDate`                | May suggest a stated employment start date; source label must stay visible          |
+| names and identity         | Excluded from first MVP; the known employee attachment is not identity verification |
+| `departureDate`            | Excluded; a base contract end is not automatically an actual departure              |
+| register-only facts        | Excluded; register correction remains a separate append-only flow                   |
+| remuneration/other clauses | Ignored and never returned as suggestions                                           |
+
+### Proposed provider-neutral service boundary
+
+A later application-owned interface should accept trusted document bytes plus a
+server-created request context and return a strict, versioned suggestion result.
+The interface belongs behind the Backoffice server boundary; it is not a
+browser API, database adapter, shared generic AI platform, or provider SDK
+exposed to business components. One adapter can later be replaced without
+changing the Documents UI or employee mutation rules.
+
+The proposed pipeline has separable stages: PDF/text preparation, optional OCR
+for image-only pages, structured extraction, schema validation, and employee-
+domain validation. A digital-text parser, local OCR engine, or remote multimodal
+provider may implement stages later; Phase 0 selects none. The output contains
+only allowlisted field identifiers, typed candidate values, confidence bands,
+page references, and bounded evidence for current review. It contains no tool
+instructions or arbitrary keys.
+
+### Review and apply interaction
+
+```text
+OWNER opens one employee Documents tab
+-> selects Analyse this verified contract
+-> server reauthorizes document extraction for exact scope/version
+-> pending state keeps the current document visible
+-> strict suggestions return with current versus detected values
+-> OWNER accepts or rejects each field
+-> selected fields are revalidated against a fresh employee revision
+-> existing employee update semantics commit or return conflict
+-> document and register records are not rewritten
+```
+
+No suggestion is preselected solely because confidence is high. Unknown,
+ambiguous, conflicting, or unsupported content stays unresolved. Applying zero
+fields performs no mutation. A changed document version invalidates the result;
+a changed employee revision requires refresh and re-review rather than merge.
+
+### Sensitive handling, audit, and retention proposal
+
+- never put PDF bytes, raw text, prompt, response, names, values, confidence,
+  snippets, page images, storage keys, or provider IDs in URLs, analytics, or
+  generic logs;
+- raw text/model response is request-scoped and discarded by default; any later
+  encrypted short-lived cache needs an explicit TTL and deletion decision;
+- propose distinct `personnel.document.extract` permission, initially OWNER-only;
+- propose minimized events for extraction requested, result delivered, and
+  selected fields applied, containing trusted scope, actor, document/version
+  reference, action, outcome code, and time only;
+- denied/provider/malware failures belong to security/operational telemetry and
+  must reveal no employee or document existence across scope;
+- applying suggestions continues to use the existing employee changed-field
+  audit and never copies old/new sensitive values into audit metadata.
+
+### Required discovery states
+
+Unavailable/no contract, ready-to-analyse, explicit consent/disclosure if a
+remote provider is later used, pending, typed suggestions, partial/no result,
+unsupported/image-only file, provider unavailable, rate/cost limit, document-
+version stale, employee-revision conflict, apply pending, validation failure,
+success, retry, forbidden, and production-disabled. Every state is textual and
+does not claim that AI verified legal accuracy.
+
+### Phase 0 change flags
+
+```text
+Files modified: existing Salariés page-pack Markdown only
+Files created: none
+Packages affected: documentation only
+Cross-application impact: none
+Database change: NO
+API or contract change: NO
+Permission/auth change: NO
+Audit change: NO
+Runtime/provider/AI call: NO
+File read or transmission: NO
+Operational data: unchanged
+Production: NOT AUTHORIZED
+```

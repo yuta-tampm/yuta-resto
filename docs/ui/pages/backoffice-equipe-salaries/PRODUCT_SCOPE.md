@@ -465,28 +465,419 @@ audit are now reused locally. Production use remains separately gated.
 
 ### Wave D — Actionable issues and events
 
-Future `À traiter` behavior should distinguish:
+Status: `PHASE 3 LOCAL REAL DATA IMPLEMENTED — PRODUCTION NOT AUTHORIZED`
 
-- incomplete dossier data or missing approved documents;
-- upcoming expiry, contract, or formality events.
+Wave D is `NEW_CAPABILITY_DISCOVERY` for a new `À traiter` surface inside the
+already integrated `/equipe/salaries` page. It stays in this stable page pack
+and does not create another route, dashboard, tab, or navigation item.
 
-Every item must identify the employee, issue, relevant date when applicable,
-and an actually supported resolving action. Do not add a fourth KPI merely to
-display alerts or show generic warnings with no resolution.
+#### User and job
+
+The primary user is the `OWNER` of the active establishment. The job is to see
+which currently supported employee-dossier actions need attention without
+opening every dossier. MANAGER, STAFF, employees, public users, and service
+actors remain denied.
+
+#### Proposed smallest MVP
+
+`À traiter` is a derived, current overview, not a persisted task system. It may
+show only these three item kinds:
+
+1. an active or upcoming employee dossier is missing one or more currently
+   approved minimum fields; resolving action: open the existing edit flow;
+2. an active or upcoming employee has no available signed base employment
+   contract; resolving action: open the existing `Documents` flow to add it;
+3. an active employee has a recorded departure date from today through the
+   next five establishment-local calendar days; action: open the dossier and
+   the existing departure review/correction flow.
+
+The first two are issues to correct. The third is a dated event to review and
+must not be presented as an error. Missing signed evidence remains separate
+from current dossier completeness. A missing amendment is not actionable
+because no rule requires every employee to have an amendment.
+
+Each item identifies the employee, uses a safe issue/event label, shows a date
+only when relevant, and offers only an action already supported by the page.
+The surface is absent or reduced to a compact neutral state when there is
+nothing to handle. It must not become a fourth metric card.
+
+#### Product and ownership boundary
+
+- Salariés owns the derived overview and employee-dossier completeness.
+- Documents owns signed-contract availability and the existing protected add
+  flow; `À traiter` never reads or displays file bytes, filenames, versions, or
+  storage details.
+- Departure dates remain employee-dossier facts. The existing five-day rule
+  uses the establishment business date and does not schedule a notification.
+- Formalités, Planning, Pointage, payroll, and external providers do not feed
+  this Phase 0 MVP.
+- Every item remains owned by organization + establishment + employee dossier.
+  No organization-wide or cross-establishment employee view is proposed.
+
+The overview should be computed from authoritative current records rather than
+copied into a new task table. Correcting the source record makes the derived
+item disappear on the next authorized read. Phase 0 approves no persistence,
+acknowledgement state, or background worker.
+
+#### Sensitive data
+
+Employee names, missing field groups, contract-presence status, and departure
+dates are confidential employment information. The browser must not receive
+another organization or establishment scope. UI, logs, analytics, URLs, and
+audit metadata must not include document names, storage keys, CDD reasons,
+weekly duration values, or old/new field values.
+
+Viewing a multi-employee action overview is a sensitive read. A later technical
+phase must approve one bounded, deduplicated overview-access event or another
+appropriate security-log owner. Phase 0 explicitly rejects one audit event per
+visible item because that would create noisy duplicate employee history.
+
+#### Explicitly deferred
+
+- persistent tasks, assignment, owner, status, comments, completion,
+  acknowledgement, dismiss, snooze, manual priority, or bulk actions;
+- email, SMS, push, browser notification, calendar entry, polling, scheduled
+  job, outbox, or external reminder provider;
+- CDD expected-end alerts until the meaning, threshold, and supported resolving
+  action are approved; expected end must not be treated as recorded departure;
+- document expiry, amendment requirements, document-category rules, OCR, or
+  automatic extraction;
+- Formalités status/deadlines, DPAE/DSN, generated documents, signature,
+  government submission, or provider status;
+- probation, training, medical, disciplinary, payroll, remuneration,
+  time-tracking, schedule, or register/PDF alerts;
+- MANAGER delegation, employee self-service, cross-establishment overview,
+  global person, transfer, or merge;
+- new schema, task/notification table, public API, or new permission; the
+  approved local contract, repository, server actions, and minimized audit
+  event are limited to the Phase 3 implementation;
+- production rollout before the existing personnel/document legal, privacy,
+  retention, security, provider, and operations gates are closed.
+
+#### Phase 0 approval register
+
+| ID     | Proposed decision                                                                  | Status                       |
+| ------ | ---------------------------------------------------------------------------------- | ---------------------------- |
+| WD0-01 | Keep `À traiter` inside `/equipe/salaries`; no new route, tab, navigation, or KPI  | Approved for local prototype |
+| WD0-02 | Treat it as a derived overview, not persisted task management                      | Approved for local prototype |
+| WD0-03 | Limit MVP to incomplete dossier, missing signed base contract, and 5-day departure | Approved for local prototype |
+| WD0-04 | Reuse only supported edit, document-add, and departure-review entry points         | Approved for local prototype |
+| WD0-05 | Keep OWNER-only organization + establishment + employee scope                      | Approved for local prototype |
+| WD0-06 | Require later approval for one minimized overview-access audit strategy            | Approved for local prototype |
+| WD0-07 | Defer CDD expiry, Formalités, reminders, tasks, assignment, and bulk behavior      | Approved for local prototype |
+| WD0-08 | Keep local discovery separate from production authorization                        | Approved for local prototype |
+
+#### Phase 3 local implementation status
+
+The product owner approved WD2-01 through WD2-12 and local real-data Phase 3 on
+2026-08-17. The development-only surface now uses bounded derived reads,
+five-item group pages, neutral ordering, fresh server-authorized action
+targets, truthful partial failure, source refresh, existing OWNER permissions,
+and one minimized cross-employee overview audit event. No task persistence or
+background delivery exists. Production delivery remains unauthorized.
 
 ### Wave E — Personnel register and PDF export
 
-A future register entry point may be discoverable from Salariés, but it requires
-approved routing, stable establishment hiring order, retained former employees,
-reconstructable dated history, stagiaire semantics where supported, retention,
-and legal/immutability review. PDF is an export of structured data, never the
-source of truth or evidence by itself of electronic-register compliance.
+Status: `PHASE 0 READY FOR PRODUCT REVIEW — DESIGN PROMPT NOT AUTHORIZED`
 
-The preferred one-employee-per-page format remains a future presentation
-proposal until that capability wave is reviewed.
+Wave E is `NEW_CAPABILITY_DISCOVERY` for an establishment-wide register flow.
+The containing Salariés page is integrated, but the repository has no personnel-
+register aggregate, immutable hiring order, complete legally required field set,
+stagiaire/service-civique records, register retention process, or PDF generator.
+
+#### User and job
+
+The first user is the `OWNER` of the active establishment. The job is to review
+the establishment's ordered personnel register, understand which required
+information is missing, and download a protected PDF representation when the
+structured source is ready. MANAGER, STAFF, employees, public users, and service
+actors remain denied in the proposed first slice.
+
+#### Proposed smallest MVP
+
+1. Add a secondary `Registre du personnel` entry point from Salariés to a
+   proposed dedicated route, `/equipe/registre-personnel`. This route and a
+   dedicated page pack are proposals, not implementation authority.
+2. Show one read-only register for the active establishment in stable hiring or
+   arrival order. Former people retained by the approved rule remain visible.
+3. Keep salariés and the legally separate stagiaire/service-civique part
+   distinguishable. Phase 0 does not pretend the absent stagiaire domain exists.
+4. Show a truthful readiness summary when current records cannot supply all
+   required register mentions. No compliance badge is permitted.
+5. Offer a server-authorized PDF export only as a representation of the same
+   structured register. The PDF is not the source of truth, is not stored by
+   default, and never receives a public or stable URL.
+
+The preferred one-person-per-page PDF remains a presentation proposal. Product
+and legal review must decide whether it preserves the required order,
+readability, completeness, and inspection use before implementation.
+
+#### Repository reconciliation
+
+The current employee dossier can supply names, position, qualification, entry
+and departure dates, CDD status, and part-time status. It does not store all
+mentions listed by current French rules, including nationality, birth date,
+sex, conditional hiring/dismissal authorization, work-authorization title,
+temporary-work company, employer-group information, apprenticeship or
+professionalization status, and the separate stagiaire details. Current mutable
+rows and the bounded employee history also do not prove an indelible register or
+reconstruct every dated state.
+
+The applicable official sources reviewed on 2026-08-17 are:
+
+- [Code du travail L1221-13 to L1221-15-1](https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006072050/LEGISCTA000006195588/2026-05-18),
+  including establishment ownership, hiring/arrival order, indelible entries,
+  the separate stagiaire/service-civique part, and authorized inspection/CSE access;
+- [Code du travail D1221-23 to D1221-27](https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006072050/LEGISCTA000018482871/2026-05-08/),
+  including conditional fields, event timing, annexes, and five-year retention
+  after departure;
+- [Code du travail D8113-2](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000018520854),
+  requiring a substitute support to remain understandable, presentable, and
+  protected against alteration;
+- [CNIL personnel-management guidance](https://www.cnil.fr/fr/les-regles-pour-la-gestion-du-personnel)
+  and its [2026 retention reference](https://cnil.fr/fr/referentiel-durees-conservation-donnees-rh)
+  for access control, logging, information/rights handling, and retention governance.
+
+These sources inform discovery only. YUTA does not claim legal compliance.
+`D8113-3` still contains legacy declaration wording while current CNIL guidance
+states that this processing is no longer declared to CNIL under the former
+regime; legal/DPO review must resolve the operational requirement before any
+electronic-register claim.
+
+#### Ownership and authorization proposal
+
+- the register belongs to one organization and one establishment; every future
+  lookup repeats both trusted identifiers and never authorizes by person ID alone;
+- employee, stagiaire, and service-civique records are not login users or POS staff;
+- a later technical phase should approve distinct
+  `personnel.register.read` and `personnel.register.export` permissions, initially
+  assigned only to OWNER, instead of assuming employee-list access authorizes a
+  cross-person export;
+- CSE and inspection access does not create a YUTA public link or external user
+  account in the MVP; the OWNER remains responsible for presenting the register;
+- multi-establishment work, transfer, duplicate/global-person identity, and
+  organization-wide registers remain separate decisions.
+
+#### Sensitive data and controls
+
+The register combines confidential personal and employment information across
+multiple people. Birth date, nationality, sex, work-authorization references,
+employer relationships, tutor identity, dates, and the PDF must not enter URLs,
+analytics, generic logs, browser storage, or unrestricted audit metadata.
+
+A later read/export must be logged as one minimized register access event with
+actor, establishment, action, and time, never the exported field values or PDF
+content. Retention, correction without erasing prior facts, legal hold,
+information/rights handling, backup/restore, incident response, and operational
+ownership require explicit approval before real collection or production use.
+
+#### Explicitly deferred
+
+- schema, migration, register ledger/snapshots, contracts, repository, route,
+  permission, audit event, PDF generator, storage, and production behavior;
+- creation or editing from the register, destructive correction, bulk import,
+  organization-wide export, public/share links, scheduled export, and email;
+- stagiaire/service-civique management beyond its truthful separate placeholder;
+- work-permit annex storage, detached-worker annexes, CSE/inspection portal,
+  e-signature, certification, timestamp authority, or compliance attestation;
+- DPAE/DSN, Formalités, payroll, Planning, Pointage, providers, and government submission;
+- OCR, document extraction, AI suggestions, and automatic employee updates,
+  retained for the separately reviewed Wave F;
+- production delivery before product, legal/DPO, privacy, retention, security,
+  backup/restore, and operations gates are approved.
+
+#### Phase 0 approval register
+
+| ID     | Proposed decision                                                                               | Status              |
+| ------ | ----------------------------------------------------------------------------------------------- | ------------------- |
+| WE0-01 | Use proposed dedicated route `/equipe/registre-personnel`, entered from Salariés                | Approved for design |
+| WE0-02 | Keep one establishment-owned register in stable hiring/arrival order                            | Approved for design |
+| WE0-03 | Keep salariés and the separate stagiaire/service-civique part distinct                          | Approved for design |
+| WE0-04 | Treat structured register data as source of truth; PDF is a protected representation only       | Approved for design |
+| WE0-05 | Show missing required information truthfully and make no compliance claim                       | Approved for design |
+| WE0-06 | Start OWNER-only and propose separate register read/export permissions for later approval       | Approved for design |
+| WE0-07 | Require reconstructable, non-destructive history and five-year post-departure retention review  | Approved for design |
+| WE0-08 | Log minimized register reads/exports without field values or PDF content                        | Approved for design |
+| WE0-09 | Keep CSE/inspection presentation server-mediated; no public link or external account in the MVP | Approved for design |
+| WE0-10 | Defer OCR/AI to Wave F and all production/legal/provider expansion to separate gates            | Approved for design |
 
 ## Relationships
 
 Formalités, Planning, Pointage, and other Équipe routes remain planned surfaces.
 Future Formalités should consume approved employee data rather than duplicate
 it. `Utilisateurs & accès` manages login identities and memberships, not employees.
+
+## Wave F Phase 0 — document extraction and reviewed suggestions
+
+Status: `PHASE 0 APPROVED — DESIGN PROMPT EXECUTED; DRAFT VISUAL REVIEW PENDING`.
+
+### Repository reality and classification
+
+Wave F is `NEW_CAPABILITY_DISCOVERY` inside the existing integrated
+`/equipe/salaries` employee drawer and Documents tab. The repository currently
+has an OWNER-only, organization + establishment + employee scoped document
+flow for signed base contracts and amendments. PDF files are kept outside
+PostgreSQL, quarantined, checked by Microsoft Defender, and delivered only
+through the Backoffice server. There is no OCR library, AI SDK, AI provider,
+extraction contract, suggestion store, extraction permission, extraction audit,
+or automatic employee update.
+
+The external functional pack treats OCR as optional and explicitly forbids
+faking it when no approved capability exists. Repository behavior and the
+current secure-document boundary remain authoritative.
+
+### Recommended MVP
+
+The first MVP analyses only the current, security-verified signed base
+employment contract of an employee who already exists. It may propose changes
+to the existing employment fields, but never writes them automatically. The
+OWNER compares the current value, detected value, confidence, and source page,
+then accepts or rejects each suggestion. A later approved apply action must
+reuse the existing employee validation, expected revision, idempotency, and
+minimized changed-field audit.
+
+The MVP does not start employee creation from a file. The current document
+aggregate requires an existing employee ID; a file-first creation flow would
+need separately designed temporary ownership, expiry, cleanup, duplicate
+handling, and recovery. It also does not analyse amendments in the first slice:
+multiple amendment versions and effective-date precedence require a separate
+decision.
+
+### Product boundary, user, and ownership
+
+- audience: OWNER only; no MANAGER, STAFF, employee self-service, public, or service actor;
+- ownership: trusted organization + active establishment + employee + exact document/version;
+- entry point: the current Documents tab in the employee drawer; no new route,
+  sidebar item, chatbot, or organization-wide extraction queue;
+- source: the verified private PDF bytes; filename, employee names, browser
+  scope, or AI output never authorize a read or write;
+- destination: suggestions are untrusted review material; the employee dossier
+  remains authoritative only after the normal server mutation succeeds;
+- register boundary: no accepted suggestion silently rewrites an existing
+  personnel-register inscription or its append-only history.
+
+### Sensitive-data boundary
+
+Employment contracts may contain names, addresses, signatures, remuneration,
+bank/tax/social identifiers, health or union information, and unrelated clauses.
+Even when only employment fields are requested, a remote provider could receive
+the complete PDF. Production or real-file provider use therefore requires an
+approved provider, EU processing/residency decision, DPA, training/retention
+terms, access controls, incident handling, deletion, observability, cost limits,
+and legal/DPO/privacy/security review.
+
+Document text is untrusted input, including instructions embedded in a PDF. It
+must never change prompts, invoke tools, follow links, select a tenant, authorize
+an action, or bypass allowlisted schemas and employee-domain validation.
+
+### Explicitly deferred
+
+- AI/OCR service, SDK, provider account, API key, prompt, model, extraction
+  contract, schema, migration, repository, job, route, server action, and real
+  extraction behavior;
+- real PDF transmission, persistent OCR text, raw model response, embeddings,
+  vector store, training corpus, analytics payload, or browser storage;
+- file-first employee creation, identity documents, passports, work permits,
+  medical/bank/payroll files, images/camera capture, free-form document types;
+- amendment extraction, cross-document reconciliation, register updates,
+  Formalités, DPAE/DSN, payroll, Planning, Pointage, and legal calculations;
+- automatic acceptance, automatic save, bulk processing, background queue,
+  scheduled retry, notifications, chatbot, document generation, and e-signature;
+- production until provider, privacy, security, retention/deletion,
+  backup/restore, incident, cost, and operations gates are approved.
+
+### Phase 0 decision register
+
+| ID     | Recommended decision                                                                                                      | Status              |
+| ------ | ------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| WF0-01 | Start with one verified signed base contract for one existing employee                                                    | Approved for design |
+| WF0-02 | Keep the first audience OWNER-only and use trusted organization + establishment + employee + document-version scope       | Approved for design |
+| WF0-03 | Run extraction only after the existing quarantine and security scan has succeeded                                         | Approved for design |
+| WF0-04 | Introduce a server-only provider-neutral extraction interface later; do not couple UI/domain logic to one AI vendor       | Approved for design |
+| WF0-05 | Suggest only existing allowlisted employment fields; exclude identity, departure, remuneration, payroll, and unknown data | Approved for design |
+| WF0-06 | Show current/detected values, confidence, source page, and explicit per-field accept/reject                               | Approved for design |
+| WF0-07 | Never auto-save; a later apply action reuses employee revision/idempotency/validation and changed-field audit             | Approved for design |
+| WF0-08 | Keep raw PDF text/model response transient by default and never put values or snippets in generic logs/audit              | Approved for design |
+| WF0-09 | Propose distinct OWNER-only extraction permission and minimized requested/completed/applied audit events in Phase 2       | Approved for design |
+| WF0-10 | Make Phase 1 a typed-fixture UI prototype with no file read, OCR, AI call, provider, or persistence                       | Approved for design |
+| WF0-11 | Defer new-employee file-first, amendments, identity/work-permit documents, multi-file merge, and chatbot                  | Approved for design |
+| WF0-12 | Keep every real-file provider and production use behind legal/DPO/privacy/security/provider/operations approval           | Approved for design |
+
+### Wave F Phase 1 approved boundary
+
+Status: `LOCAL TYPED-FIXTURE PROTOTYPE IMPLEMENTED — REAL EXTRACTION BLOCKED`.
+
+The approved Phase 1 slice adds a development-only presentation prototype to
+the existing signed base-contract card. Its three typed suggestions are
+fictional, choices remain browser-local, and the apply action is disabled. It
+does not read or transmit a PDF, call OCR/AI, expose an extraction endpoint,
+persist a result, mutate an employee, analyse amendments, or render in a
+production build.
+
+## Wave F Phase 2 — interaction and service decisions
+
+Status: `TECHNICAL DESIGN READY FOR PRODUCT REVIEW — NO IMPLEMENTATION`.
+
+Phase 2 keeps one provider-neutral server boundary and recommends a staged
+hybrid pipeline: YUTA resolves and checks the exact available PDF locally, then
+an approved adapter may perform structured multimodal extraction. A future
+OpenAI adapter is one option, not domain authority and not a direct browser
+dependency. No provider is enabled by this design.
+
+The first real apply slice should remain smaller than the discovery allowlist.
+`position` and `contractWeeklyMinutes` can be independently validated by the
+existing employee mutation. `employmentTermType` may still be shown as an
+untrusted suggestion, but changing CDI to CDD cannot be applied unless an
+explicit expected end date and supported CDD reason are also present and
+reviewed. Phase 2 does not weaken that existing repository rule.
+
+### Phase 2 decision register
+
+| ID     | Recommended decision                                                                                                                                  | Status                    |
+| ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
+| WF2-01 | Keep extraction behind one Backoffice server-only, provider-neutral application interface                                                             | Approved local Phase 3    |
+| WF2-02 | Resolve bytes internally from trusted scope and the exact available base-contract version; browser never supplies a storage key or file URL           | Approved local Phase 3    |
+| WF2-03 | Separate local PDF preflight/preparation from the replaceable semantic-extraction adapter                                                             | Approved local Phase 3    |
+| WF2-04 | If OpenAI is later selected, use a vision-capable Responses request with inline file input, strict structured output, and `store: false`              | Approved as deferred gate |
+| WF2-05 | Do not use Files, Conversations, Assistants, vector stores, background mode, web search, tools, or public URLs for this flow                          | Approved local Phase 3    |
+| WF2-06 | Block any remote real-file call until EU regional processing, approved retention controls, DPA, legal/DPO/privacy/security, and operations gates pass | Approved; remains blocked |
+| WF2-07 | Make the first Phase 3 provider exercise use synthetic non-personnel PDFs unless WF2-06 is separately evidenced and approved                          | Approved local Phase 3    |
+| WF2-08 | Return only a strict allowlisted result; discard PDF preparation text and raw provider output after the request                                       | Approved local Phase 3    |
+| WF2-09 | Keep reviewed suggestions transient in browser memory; refresh, close, document replacement, or employee conflict invalidates them                    | Approved local Phase 3    |
+| WF2-10 | Apply only `position` and `contractWeeklyMinutes` initially; keep CDI/CDD review-only until all coupled fields are supported                          | Approved local Phase 3    |
+| WF2-11 | Treat selected browser values as untrusted input and reuse fresh authorization, employee revision, Zod validation, idempotency, and audit             | Approved local Phase 3    |
+| WF2-12 | Add a distinct future `personnel.document.extract` permission for OWNER; applying also requires `personnel.employee.manage`                           | Approved local Phase 3    |
+| WF2-13 | Use synchronous foreground extraction for the first slice: one in-flight request, 45-second timeout, no automatic retry, manual retry only            | Approved local Phase 3    |
+| WF2-14 | Limit the first slice to one PDF, 10 MiB, 40 pages, and 10 requests per establishment per rolling 24 hours                                            | Approved local Phase 3    |
+| WF2-15 | Record minimized requested/completed/failed/applied audit outcomes without PDF text, snippets, values, prompts, responses, or provider IDs            | Approved local Phase 3    |
+| WF2-16 | Require synthetic/approved eval fixtures, cross-tenant denial, prompt-injection, malformed output, stale version, conflict, and cost tests            | Approved local Phase 3    |
+
+The 2026-08-18 approval authorized only the local synthetic Phase 3 slice
+described below. Provider SDKs/secrets, real personnel-file extraction,
+production processing, new schema/migration, and remote transmission remain
+outside that approval.
+
+## Wave F Phase 3 — local synthetic vertical slice
+
+Status: `IMPLEMENTED LOCALLY — REAL PERSONNEL FILES AND PRODUCTION BLOCKED`.
+
+The approved Phase 3 slice generates a three-page fictional PDF in server
+memory and passes only that fixture through a replaceable local preparer and
+deterministic adapter. The signed personnel contract shown in the UI is never
+opened, read, copied, or transmitted for extraction. No AI/OCR provider, SDK,
+API key, remote request, result table, queue, worker, schema, or migration was
+added.
+
+The development-only review implements complete, partial, no-result,
+unsupported, failure, timeout, manual retry, document-stale, employee-conflict,
+and apply states. Only `position` and `contractWeeklyMinutes` may be applied.
+`employmentTermType` is visibly review-only because CDD requires the coupled
+end-date and controlled-reason fields.
+
+Every server request repeats trusted OWNER authorization and exact
+organization + establishment + employee + document/version resolution before
+fixture preparation. Apply additionally requires employee-management
+permission, revalidates the deterministic result, preserves the existing
+revision/idempotency/domain update path, and writes minimized extraction audit
+events to the existing personnel audit table. The 10-request/24-hour limit is
+development-process memory only and is not production coordination.

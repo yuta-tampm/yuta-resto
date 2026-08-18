@@ -173,11 +173,11 @@ N/A       not applicable for this run
 | Select `Especes` and enter tendered amount above collected amount | Payment UI shows change to return                                |        |       |
 | Enter collected amount above remaining amount                     | Submit is blocked and payment UI shows a validation message      |        |       |
 | Pay partial amount                                                | Payment saves; order remains open                                |        |       |
-| Partial payment receipt                                           | No `customer_receipt` job is created                             |        |       |
+| Partial payment receipt                                           | Payment creates no automatic `customer_receipt` job              |        |       |
 | Pay remaining amount                                              | Order becomes `Payee`                                            |        |       |
 | Overpay attempt                                                   | Payment is rejected                                              |        |       |
 | Tendered amount below amount                                      | Payment is rejected                                              |        |       |
-| Full payment receipt                                              | No `customer_receipt` print job is created                       |        |       |
+| Full payment receipt                                              | Payment creates no automatic `customer_receipt` print job        |        |       |
 | Full payment records staff                                        | Payment `paidBy` equals selected POS employee                    |        |       |
 
 ## Split Equally
@@ -189,8 +189,8 @@ N/A       not applicable for this run
 | Pay one check                   | Check becomes paid; order remains open if other checks unpaid  |        |       |
 | Pay partial check amount        | Payment saves; check remains open                              |        |       |
 | Pay all checks                  | Order becomes paid                                             |        |       |
-| Paid check receipt              | No `customer_receipt` job is created                           |        |       |
-| Partial check receipt           | No `customer_receipt` job is created                           |        |       |
+| Paid check receipt              | Payment creates no automatic `customer_receipt` job            |        |       |
+| Partial check receipt           | Payment creates no automatic `customer_receipt` job            |        |       |
 | Cancel unpaid equal split       | Split checks become `void` and `Payer tout` is available again |        |       |
 | Cancel split after paid check   | Action is disabled or rejected                                 |        |       |
 
@@ -213,43 +213,53 @@ N/A       not applicable for this run
 
 ## Print Jobs
 
-| Case                                      | Expected Result                                                             | Result | Notes |
-| ----------------------------------------- | --------------------------------------------------------------------------- | -----: | ----- |
-| Kitchen send creates station print jobs   | Queue shows a Cuisine job when applicable and one full BAR job              |        |       |
-| Second kitchen send prints only new items | Later kitchen ticket excludes items printed by the earlier send             |        |       |
-| Payment creates print job                 | Payment succeeds and creates no print job                                   |        |       |
-| Printer adapter processes pending jobs    | Job status changes to `printed`                                             |        |       |
-| Visible queue auto-refresh                | Queue and printer status changes appear within five seconds without F5      |        |       |
-| Hidden queue polling                      | Hidden tab stops polling and refreshes immediately when visible again       |        |       |
-| Print queue pagination                    | Newest 10 tickets load and older pages use Previous/Next navigation         |        |       |
-| Print queue total counters                | Status cards count the complete queue rather than only the visible page     |        |       |
-| Printer ready status                      | Writable RFCOMM character device shows ready without opening the device     |        |       |
-| Printer unavailable status                | Missing, invalid, or non-writable RFCOMM device shows unavailable           |        |       |
-| Printer attention status                  | Failed or stale pending work shows attention with queue counts              |        |       |
-| Global printer badge                      | POS shell updates summarized printer state every 15 seconds while visible   |        |       |
-| One-printer station routing               | TM-m30 prints and fully cuts Cuisine then BAR separately                    |        |       |
-| Print copy settings                       | Each station prints the configured 1 to 3 copies                            |        |       |
-| Print font preset                         | Compact, Standard, and Large change new ticket item typography              |        |       |
-| Print spacing settings                    | Top, left, and bottom values from 0 to 8 change new ticket layout           |        |       |
-| Compact section grouping                  | Cuisine: Entrées, Suppléments, Plats; BAR: Boissons first, Desserts last    |        |       |
-| Full BAR batch                            | BAR ticket contains every production item in the sent batch                 |        |       |
-| Physical station separation               | Full cut executes once after each Cuisine or BAR copy                       |        |       |
-| Bluetooth cutter pacing                   | Body and delayed feed/full-cut use two separate RFCOMM writer phases        |        |       |
-| Test print action                         | One test job prints and cuts separate Cuisine and full BAR samples          |        |       |
-| ESC/POS punctuation                       | Curly apostrophes and dash variants print as `'` and `-`, never `?`         |        |       |
-| Printed allergy severity                  | Intolerance, allergy, and severe-no-traces jobs render without failure      |        |       |
-| Print settings snapshot                   | Retried old job keeps its original copies, font, and spacing                |        |       |
-| Station `none` item                       | Item is not present on the physical ticket                                  |        |       |
-| Mark job failed manually                  | Job status changes to `failed`                                              |        |       |
-| Retry failed job                          | Job status changes back to `pending`                                        |        |       |
-| Reprint completed job                     | `Réimprimer` changes a printed job back to `pending` with the same snapshot |        |       |
-| Kitchen send is atomic                    | Forced print insert failure leaves the item pending and creates no job      |        |       |
-| Final payment is atomic                   | Payment and paid order/check state commit without a receipt job             |        |       |
-| Kitchen retry is idempotent               | Replaying one command UUID creates one kitchen ticket job                   |        |       |
-| Payment retry is idempotent               | Replaying one command UUID creates one payment and no receipt job           |        |       |
-| Concurrent full payments are serialized   | Only one competing full payment succeeds for an order                       |        |       |
-| Cancellation versus payment is serialized | The order ends cancelled without payment or paid with one payment           |        |       |
-| Site-agent heartbeat is healthy           | Site-agent health reports the local database available                      |        |       |
+| Case                                      | Expected Result                                                                                              | Result | Notes |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------ | -----: | ----- |
+| Kitchen send creates station print jobs   | Queue shows a Cuisine job when applicable and one full BAR job                                               |        |       |
+| Second kitchen send prints only new items | Later kitchen ticket excludes items printed by the earlier send                                              |        |       |
+| Payment creates print job                 | Payment succeeds and creates no print job                                                                    |        |       |
+| Paid single receipt action                | One durable `customer_receipt` job is queued from the order snapshot                                         |        |       |
+| Paid split-check receipt action           | Only the selected paid non-void check is queued                                                              |        |       |
+| Unpaid receipt target                     | Target is visible for context but printing is disabled                                                       |        |       |
+| Equal-split receipt                       | Receipt does not invent a full-order item allocation                                                         |        |       |
+| Receipt operation retry                   | Replaying one UUIDv7 operation returns the same job                                                          |        |       |
+| Active receipt de-duplication             | Repeated print intent does not create a second pending/printing target job                                   |        |       |
+| Failed receipt retry                      | A new job uses the failed job's immutable receipt snapshot                                                   |        |       |
+| Printed receipt reprint                   | A deliberate new job uses the printed job's immutable receipt snapshot                                       |        |       |
+| Receipt printer unavailable               | Job remains queued and UI does not claim physical output                                                     |        |       |
+| Non-fiscal receipt renderer               | One cut ticket says `REÇU DE PAIEMENT`, retains `Document non fiscal`, and contains no invented VAT identity |        |       |
+| Printer adapter processes pending jobs    | Job status changes to `printed`                                                                              |        |       |
+| Visible queue auto-refresh                | Queue and printer status changes appear within five seconds without F5                                       |        |       |
+| Hidden queue polling                      | Hidden tab stops polling and refreshes immediately when visible again                                        |        |       |
+| Print queue pagination                    | Newest 10 tickets load and older pages use Previous/Next navigation                                          |        |       |
+| Print queue total counters                | Status cards count the complete queue rather than only the visible page                                      |        |       |
+| Printer ready status                      | Writable RFCOMM character device shows ready without opening the device                                      |        |       |
+| Printer unavailable status                | Missing, invalid, or non-writable RFCOMM device shows unavailable                                            |        |       |
+| Printer attention status                  | Failed or stale pending work shows attention with queue counts                                               |        |       |
+| Global printer badge                      | POS shell updates summarized printer state every 15 seconds while visible                                    |        |       |
+| One-printer station routing               | TM-m30 prints and fully cuts Cuisine then BAR separately                                                     |        |       |
+| Print copy settings                       | Each station prints the configured 1 to 3 copies                                                             |        |       |
+| Print font preset                         | Compact, Standard, and Large change new ticket item typography                                               |        |       |
+| Print spacing settings                    | Top, left, and bottom values from 0 to 8 change new ticket layout                                            |        |       |
+| Compact section grouping                  | Cuisine: Entrées, Suppléments, Plats; BAR: Boissons first, Desserts last                                     |        |       |
+| Full BAR batch                            | BAR ticket contains every production item in the sent batch                                                  |        |       |
+| Physical station separation               | Full cut executes once after each Cuisine or BAR copy                                                        |        |       |
+| Bluetooth cutter pacing                   | Body and delayed feed/full-cut use two separate RFCOMM writer phases                                         |        |       |
+| Test print action                         | One test job prints and cuts separate Cuisine and full BAR samples                                           |        |       |
+| ESC/POS punctuation                       | Curly apostrophes and dash variants print as `'` and `-`, never `?`                                          |        |       |
+| Printed allergy severity                  | Intolerance, allergy, and severe-no-traces jobs render without failure                                       |        |       |
+| Print settings snapshot                   | Retried old job keeps its original copies, font, and spacing                                                 |        |       |
+| Station `none` item                       | Item is not present on the physical ticket                                                                   |        |       |
+| Mark job failed manually                  | Job status changes to `failed`                                                                               |        |       |
+| Retry failed job                          | Job status changes back to `pending`                                                                         |        |       |
+| Reprint completed job                     | `Réimprimer` changes a printed job back to `pending` with the same snapshot                                  |        |       |
+| Kitchen send is atomic                    | Forced print insert failure leaves the item pending and creates no job                                       |        |       |
+| Final payment is atomic                   | Payment and paid order/check state commit without a receipt job                                              |        |       |
+| Kitchen retry is idempotent               | Replaying one command UUID creates one kitchen ticket job                                                    |        |       |
+| Payment retry is idempotent               | Replaying one command UUID creates one payment and no receipt job                                            |        |       |
+| Concurrent full payments are serialized   | Only one competing full payment succeeds for an order                                                        |        |       |
+| Cancellation versus payment is serialized | The order ends cancelled without payment or paid with one payment                                            |        |       |
+| Site-agent heartbeat is healthy           | Site-agent health reports the local database available                                                       |        |       |
 
 ## Edge Offline Acceptance
 

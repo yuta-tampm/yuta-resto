@@ -220,10 +220,18 @@ export function getActiveNavigationHref(
   pathname: string,
   sections: readonly BackofficeNavigationSection[],
 ): string | undefined {
+  const navigationOwner =
+    pathname === '/equipe/registre-personnel' ||
+    pathname.startsWith('/equipe/registre-personnel/')
+      ? '/equipe/salaries'
+      : pathname;
+
   return sections
     .flatMap((section) => section.items)
     .filter(
-      (item) => pathname === item.href || pathname.startsWith(`${item.href}/`),
+      (item) =>
+        navigationOwner === item.href ||
+        navigationOwner.startsWith(`${item.href}/`),
     )
     .sort((left, right) => right.href.length - left.href.length)[0]?.href;
 }

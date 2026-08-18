@@ -10,6 +10,7 @@ import type {
   PersonnelEmployeeAuditEvent,
   PersonnelEmployeeSummary,
   PersonnelEmployeeView,
+  PersonnelActionOverviewItemKind,
 } from '@yuta/contracts/personnel';
 import {
   Alert,
@@ -39,6 +40,7 @@ import {
 } from '@yuta/ui';
 import {
   BadgeCheck,
+  BookOpen,
   BriefcaseBusiness,
   CheckCircle2,
   CalendarDays,
@@ -59,9 +61,11 @@ import {
   IdCard,
   UsersRound,
 } from 'lucide-react';
+import Link from 'next/link';
 import {
   useCallback,
   useEffect,
+  useRef,
   useState,
   useTransition,
   type FormEvent,
@@ -72,6 +76,10 @@ import { EmployeeDepartureDialog } from './employee-departure-dialog';
 import { EmployeeDocuments } from './employee-documents';
 import { EmployeeEditDialog } from './employee-edit-dialog';
 import { EmployeeEmploymentDetails } from './employee-employment-details';
+import {
+  EmployeeActionOverview,
+  type PersonnelActionOverviewState,
+} from './employee-action-overview';
 import {
   loadEmployeeAccessHistoryAction,
   loadEmployeeHistoryAction,
@@ -125,11 +133,15 @@ export function SalariesPage({
   query,
   locale,
   businessDate,
+  actionOverviewState,
+  contractExtractionPrototypeEnabled,
 }: {
   data: PersonnelEmployeeListResponse;
   query: PersonnelEmployeeListQuery;
   locale: string;
   businessDate: string;
+  actionOverviewState: PersonnelActionOverviewState | null;
+  contractExtractionPrototypeEnabled: boolean;
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -141,6 +153,12 @@ export function SalariesPage({
     useState<PersonnelEmployeeSummary | null>(null);
   const [recentlySavedEmployee, setRecentlySavedEmployee] =
     useState<PersonnelEmployeeSummary | null>(null);
+  const [actionTargetEmployee, setActionTargetEmployee] =
+    useState<PersonnelEmployeeSummary | null>(null);
+  const [documentAddRequested, setDocumentAddRequested] = useState(false);
+  const [focusDepartureRequested, setFocusDepartureRequested] = useState(false);
+  const drawerActionOriginRef = useRef<HTMLElement | null>(null);
+  const editActionOriginRef = useRef<HTMLElement | null>(null);
   const [editSuccessMessage, setEditSuccessMessage] = useState<string | null>(
     null,
   );
@@ -166,10 +184,6 @@ export function SalariesPage({
     string[]
   >(['']);
   const [accessHistoryPageIndex, setAccessHistoryPageIndex] = useState(0);
-  const [dossierAccessRequest, setDossierAccessRequest] = useState<{
-    employeeId: string;
-    operationId: string;
-  } | null>(null);
   const [dossierAccessError, setDossierAccessError] = useState<string | null>(
     null,
   );
@@ -178,12 +192,13 @@ export function SalariesPage({
     if (
       selectedId &&
       !data.items.some((employee) => employee.id === selectedId) &&
-      recentlySavedEmployee?.id !== selectedId
+      recentlySavedEmployee?.id !== selectedId &&
+      actionTargetEmployee?.id !== selectedId
     ) {
       setSelectedId(null);
       setDetailTab('overview');
     }
-  }, [data.items, recentlySavedEmployee, selectedId]);
+  }, [actionTargetEmployee, data.items, recentlySavedEmployee, selectedId]);
 
   useEffect(() => {
     if (!recentlySavedEmployee) return;
@@ -198,42 +213,20 @@ export function SalariesPage({
     }
   }, [data.items, recentlySavedEmployee]);
 
-  useEffect(() => {
-    if (!selectedId) {
-      setDossierAccessRequest(null);
-      return;
-    }
-    setDossierAccessRequest((current) =>
-      current?.employeeId === selectedId
-        ? current
-        : { employeeId: selectedId, operationId: crypto.randomUUID() },
-    );
-  }, [selectedId]);
-
-  useEffect(() => {
-    if (!dossierAccessRequest) return;
-    let active = true;
+  function recordDossierAccess(employeeId: string) {
     setDossierAccessError(null);
-    void recordEmployeeDossierViewAction(
-      dossierAccessRequest.employeeId,
-      dossierAccessRequest.operationId,
-    )
+    void recordEmployeeDossierViewAction(employeeId, crypto.randomUUID())
       .then((result) => {
-        if (active && result.status === 'error') {
+        if (result.status === 'error') {
           setDossierAccessError(result.message);
         }
       })
       .catch(() => {
-        if (active) {
-          setDossierAccessError(
-            'La traçabilité du dossier est indisponible. Réessayez.',
-          );
-        }
+        setDossierAccessError(
+          'La traçabilité du dossier est indisponible. Réessayez.',
+        );
       });
-    return () => {
-      active = false;
-    };
-  }, [dossierAccessRequest]);
+  }
 
   useEffect(() => {
     if (detailTab !== 'history' || !selectedId || !historyOperationId) return;
@@ -301,7 +294,8 @@ export function SalariesPage({
   );
   const selectedEmployee =
     displayedEmployees.find((employee) => employee.id === selectedId) ??
-    (recentlySavedEmployee?.id === selectedId ? recentlySavedEmployee : null);
+    (recentlySavedEmployee?.id === selectedId ? recentlySavedEmployee : null) ??
+    (actionTargetEmployee?.id === selectedId ? actionTargetEmployee : null);
   const isFirstUse =
     data.counts.active + data.counts.upcoming + data.counts.former === 0;
 
@@ -322,6 +316,17 @@ export function SalariesPage({
     navigate({ search: search.trim(), cursor: undefined });
   }
 
+  const restoreActionFocus = useCallback(
+    (originRef: { current: HTMLElement | null }) => {
+      const origin = originRef.current;
+      originRef.current = null;
+      requestAnimationFrame(() => {
+        if (origin?.isConnected) origin.focus();
+      });
+    },
+    [],
+  );
+
   const handleEmployeeSaved = useCallback(
     (employee: PersonnelEmployeeSummary, message: string | null) => {
       setRecentlySavedEmployee(employee);
@@ -329,9 +334,40 @@ export function SalariesPage({
       setEditSuccessMessage(
         message ?? 'Les modifications ont été enregistrées.',
       );
+      restoreActionFocus(editActionOriginRef);
     },
-    [],
+    [restoreActionFocus],
   );
+
+  function openActionTarget(
+    kind: PersonnelActionOverviewItemKind,
+    employee: PersonnelEmployeeSummary,
+    origin: HTMLElement,
+  ) {
+    if (kind === 'incomplete_employee_dossier') {
+      editActionOriginRef.current = origin;
+      setEditSuccessMessage(null);
+      setEditingEmployee(employee);
+      return;
+    }
+    drawerActionOriginRef.current = origin;
+    setActionTargetEmployee(employee);
+    setSelectedId(employee.id);
+    setEditSuccessMessage(null);
+    setDocumentAddRequested(kind === 'missing_signed_base_contract');
+    setFocusDepartureRequested(kind === 'departure_within_five_days');
+    recordDossierAccess(employee.id);
+    setDetailTab(
+      kind === 'missing_signed_base_contract' ? 'documents' : 'overview',
+    );
+    setHistoryOperationId('');
+    setHistoryState({ status: 'idle', history: null, message: null });
+    setAccessHistoryOperationId('');
+    setAccessHistoryCursor(undefined);
+    setAccessHistoryCursorStack(['']);
+    setAccessHistoryPageIndex(0);
+    setAccessHistoryState({ status: 'idle', history: null, message: null });
+  }
 
   return (
     <div className="flex w-full flex-col gap-5" aria-busy={isPending}>
@@ -342,10 +378,18 @@ export function SalariesPage({
             Consultez les dossiers minimums rattachés à cet établissement.
           </p>
         </div>
-        <Button size="lg" onClick={() => setCreateDialogOpen(true)}>
-          <Plus className="h-5 w-5" aria-hidden />
-          Ajouter un salarié
-        </Button>
+        <div className="flex flex-wrap gap-3">
+          <Button asChild variant="secondary" size="lg">
+            <Link href="/equipe/registre-personnel">
+              <BookOpen className="h-5 w-5" aria-hidden />
+              Registre du personnel
+            </Link>
+          </Button>
+          <Button size="lg" onClick={() => setCreateDialogOpen(true)}>
+            <Plus className="h-5 w-5" aria-hidden />
+            Ajouter un salarié
+          </Button>
+        </div>
       </header>
 
       <Alert tone="info" icon={<Database className="h-5 w-5" aria-hidden />}>
@@ -375,6 +419,15 @@ export function SalariesPage({
           helper="Selon les informations minimums"
         />
       </section>
+
+      {actionOverviewState && (
+        <EmployeeActionOverview
+          initialState={actionOverviewState}
+          locale={locale}
+          businessDate={businessDate}
+          onTargetReady={openActionTarget}
+        />
+      )}
 
       <div>
         <Card padding="none" className="min-w-0 overflow-hidden">
@@ -510,13 +563,13 @@ export function SalariesPage({
               businessDate={businessDate}
               onSelect={(id) => {
                 setRecentlySavedEmployee(null);
+                setActionTargetEmployee(null);
+                setDocumentAddRequested(false);
+                setFocusDepartureRequested(false);
                 setEditSuccessMessage(null);
                 setSelectedId(id);
                 setDetailTab('overview');
-                setDossierAccessRequest({
-                  employeeId: id,
-                  operationId: crypto.randomUUID(),
-                });
+                recordDossierAccess(id);
                 setHistoryOperationId('');
                 setHistoryState({
                   status: 'idle',
@@ -561,6 +614,11 @@ export function SalariesPage({
             accessHistoryState={accessHistoryState}
             accessHistoryPageIndex={accessHistoryPageIndex}
             dossierAccessError={dossierAccessError}
+            requestDocumentAdd={documentAddRequested}
+            focusDeparture={focusDepartureRequested}
+            contractExtractionPrototypeEnabled={
+              contractExtractionPrototypeEnabled
+            }
             onTabChange={(tab) => {
               setDetailTab(tab);
               if (tab === 'history') {
@@ -576,6 +634,10 @@ export function SalariesPage({
             onClose={() => {
               setSelectedId(null);
               setRecentlySavedEmployee(null);
+              setActionTargetEmployee(null);
+              setDocumentAddRequested(false);
+              setFocusDepartureRequested(false);
+              restoreActionFocus(drawerActionOriginRef);
             }}
             onEdit={() => {
               setEditSuccessMessage(null);
@@ -610,10 +672,7 @@ export function SalariesPage({
               setAccessHistoryOperationId(crypto.randomUUID());
             }}
             onRetryDossierAccess={() =>
-              setDossierAccessRequest({
-                employeeId: selectedEmployee.id,
-                operationId: crypto.randomUUID(),
-              })
+              recordDossierAccess(selectedEmployee.id)
             }
           />
         )}
@@ -632,7 +691,10 @@ export function SalariesPage({
           open
           onSaved={handleEmployeeSaved}
           onOpenChange={(open) => {
-            if (!open) setEditingEmployee(null);
+            if (!open) {
+              setEditingEmployee(null);
+              restoreActionFocus(editActionOriginRef);
+            }
           }}
         />
       )}
@@ -787,6 +849,9 @@ function EmployeeDetails({
   onPreviousAccessHistory,
   onNextAccessHistory,
   onRetryDossierAccess,
+  requestDocumentAdd,
+  focusDeparture,
+  contractExtractionPrototypeEnabled,
 }: {
   employee: PersonnelEmployeeSummary;
   activeTab: DetailTab;
@@ -805,7 +870,16 @@ function EmployeeDetails({
   onPreviousAccessHistory: () => void;
   onNextAccessHistory: () => void;
   onRetryDossierAccess: () => void;
+  requestDocumentAdd: boolean;
+  focusDeparture: boolean;
+  contractExtractionPrototypeEnabled: boolean;
 }) {
+  const departureFactRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (activeTab === 'overview' && focusDeparture) {
+      departureFactRef.current?.focus();
+    }
+  }, [activeTab, focusDeparture]);
   const tabs: ReadonlyArray<{ value: DetailTab; label: string }> = [
     { value: 'overview', label: 'Vue d’ensemble' },
     { value: 'identity', label: 'Identité' },
@@ -927,17 +1001,26 @@ function EmployeeDetails({
                     label="Entrée"
                     value={formatEmployeeDate(employee.entryDate, locale)}
                   />
-                  <OverviewFact
-                    icon={<CalendarX2 className="h-4 w-4" aria-hidden />}
-                    label={employee.departureDate ? 'Départ' : 'Fin attendue'}
-                    value={
-                      employee.departureDate
-                        ? formatEmployeeDate(employee.departureDate, locale)
-                        : employee.expectedEndDate
-                          ? formatEmployeeDate(employee.expectedEndDate, locale)
-                          : 'Non renseignée'
-                    }
-                  />
+                  <div
+                    ref={departureFactRef}
+                    tabIndex={-1}
+                    className="rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-ring"
+                  >
+                    <OverviewFact
+                      icon={<CalendarX2 className="h-4 w-4" aria-hidden />}
+                      label={employee.departureDate ? 'Départ' : 'Fin attendue'}
+                      value={
+                        employee.departureDate
+                          ? formatEmployeeDate(employee.departureDate, locale)
+                          : employee.expectedEndDate
+                            ? formatEmployeeDate(
+                                employee.expectedEndDate,
+                                locale,
+                              )
+                            : 'Non renseignée'
+                      }
+                    />
+                  </div>
                   <OverviewFact
                     icon={<Clock3 className="h-4 w-4" aria-hidden />}
                     label="Temps de travail"
@@ -1027,7 +1110,14 @@ function EmployeeDetails({
               />
             )}
             {activeTab === 'documents' && (
-              <EmployeeDocuments employeeId={employee.id} locale={locale} />
+              <EmployeeDocuments
+                employee={employee}
+                locale={locale}
+                requestAdd={requestDocumentAdd}
+                contractExtractionPrototypeEnabled={
+                  contractExtractionPrototypeEnabled
+                }
+              />
             )}
           </div>
         </div>
@@ -1298,6 +1388,10 @@ function auditEventLabel(eventType: PersonnelEmployeeAuditEvent['eventType']) {
     'employee.employment_updated': 'Relation de travail modifiée',
     'employee.departure_recorded': 'Départ enregistré',
     'employee.departure_corrected': 'Départ corrigé ou annulé',
+    'employee.contract_extraction_requested': 'Analyse locale demandée',
+    'employee.contract_extraction_completed': 'Analyse locale terminée',
+    'employee.contract_extraction_failed': 'Analyse locale échouée',
+    'employee.contract_extraction_applied': 'Suggestions du contrat appliquées',
   };
   return labels[eventType];
 }

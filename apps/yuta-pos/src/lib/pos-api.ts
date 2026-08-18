@@ -91,6 +91,9 @@ export const posApi = {
   cancelOrderSplit: siteAgentClient.cancelOrderSplit,
   payOrder: siteAgentClient.payOrder,
   payCheck: siteAgentClient.payCheck,
+  getReceiptView: siteAgentClient.getReceiptView,
+  executeReceiptCommand: siteAgentClient.executeReceiptCommand,
+  getReceiptJobStatus: siteAgentClient.getReceiptJobStatus,
 
   async getOrderDetail(orderId: string): Promise<PosOrderDetail> {
     const detail = await siteAgentClient.getOrderDetail(orderId);

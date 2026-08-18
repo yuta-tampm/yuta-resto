@@ -1003,6 +1003,63 @@ export const localPrinterStatusSchema = z
     checkedAt: isoDateTimeSchema,
   })
   .strict();
+export const receiptTargetInputSchema = z.discriminatedUnion('kind', [
+  z.object({ kind: z.literal('order') }).strict(),
+  z.object({ kind: z.literal('check'), checkId: identifierSchema }).strict(),
+]);
+export const receiptJobIntentSchema = z.enum(['print', 'retry', 'reprint']);
+export const receiptJobCommandInputSchema = z
+  .object({
+    operationId: uuidV7Schema,
+    target: receiptTargetInputSchema,
+    intent: receiptJobIntentSchema,
+    jobId: identifierSchema.optional(),
+  })
+  .strict()
+  .superRefine((value, context) => {
+    const requiresJob = value.intent === 'retry' || value.intent === 'reprint';
+    if (requiresJob !== Boolean(value.jobId)) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['jobId'],
+        message:
+          'jobId is required for retry/reprint and forbidden for a new print.',
+      });
+    }
+  });
+export const localReceiptTargetSchema = z
+  .object({
+    kind: z.enum(['order', 'check']),
+    id: identifierSchema,
+    label: z.string().min(1),
+    amountCents: z.number().int().nonnegative(),
+    availability: z.enum(['available', 'payment_pending', 'cancelled']),
+    splitMode: z.enum(['single', 'items', 'equal']),
+    latestJob: localPrintJobSchema.nullable(),
+  })
+  .strict();
+export const localReceiptViewResponseSchema = z
+  .object({
+    orderId: identifierSchema,
+    paymentMode: localPaymentModeSchema,
+    targets: z.array(localReceiptTargetSchema),
+    printer: localPrinterStatusSchema,
+  })
+  .strict();
+export const localReceiptCommandResponseSchema = z
+  .object({
+    target: localReceiptTargetSchema,
+    printJob: localPrintJobSchema,
+    replayed: z.boolean(),
+    printer: localPrinterStatusSchema,
+  })
+  .strict();
+export const localReceiptJobStatusResponseSchema = z
+  .object({
+    printJob: localPrintJobSchema,
+    printer: localPrinterStatusSchema,
+  })
+  .strict();
 export const printJobCommandSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('mark_printing') }).strict(),
   z.object({ action: z.literal('mark_printed') }).strict(),
@@ -1129,6 +1186,21 @@ export type PrintJobCommand = z.infer<typeof printJobCommandSchema>;
 export type PrintFontSizePreset = z.infer<typeof printFontSizePresetSchema>;
 export type LocalPrintSettings = z.infer<typeof localPrintSettingsSchema>;
 export type LocalPrinterStatus = z.infer<typeof localPrinterStatusSchema>;
+export type ReceiptTargetInput = z.infer<typeof receiptTargetInputSchema>;
+export type ReceiptJobIntent = z.infer<typeof receiptJobIntentSchema>;
+export type ReceiptJobCommandInput = z.infer<
+  typeof receiptJobCommandInputSchema
+>;
+export type LocalReceiptTarget = z.infer<typeof localReceiptTargetSchema>;
+export type LocalReceiptViewResponse = z.infer<
+  typeof localReceiptViewResponseSchema
+>;
+export type LocalReceiptCommandResponse = z.infer<
+  typeof localReceiptCommandResponseSchema
+>;
+export type LocalReceiptJobStatusResponse = z.infer<
+  typeof localReceiptJobStatusResponseSchema
+>;
 export type UpdateLocalPrintSettingsInput = z.infer<
   typeof updateLocalPrintSettingsInputSchema
 >;

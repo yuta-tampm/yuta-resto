@@ -9,6 +9,15 @@ import { eq } from 'drizzle-orm';
 
 const settingsId = 'default';
 
+export const defaultLocalPrintSettings = localPrintSettingsSchema.parse({
+  kitchenCopies: 1,
+  counterCopies: 1,
+  fontSizePreset: 'standard',
+  topPaddingLines: 1,
+  leftPaddingChars: 2,
+  bottomPaddingLines: 3,
+});
+
 export function createPrintSettingsService(db: PosDatabaseExecutor) {
   async function getPrintSettings() {
     const settings = await ensurePrintSettings(db);
@@ -38,6 +47,15 @@ function toPrintSettings(settings: typeof printSettings.$inferSelect) {
     leftPaddingChars: settings.leftPaddingChars,
     bottomPaddingLines: settings.bottomPaddingLines,
   };
+}
+
+export async function readPrintSettings(db: PosDatabaseExecutor) {
+  const settings = await db.query.printSettings.findFirst({
+    where: eq(printSettings.id, settingsId),
+  });
+  return settings
+    ? localPrintSettingsSchema.parse(toPrintSettings(settings))
+    : null;
 }
 
 export async function ensurePrintSettings(db: PosDatabaseExecutor) {

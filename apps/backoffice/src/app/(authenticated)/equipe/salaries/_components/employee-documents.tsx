@@ -1,6 +1,9 @@
 'use client';
 
-import type { PersonnelDocument } from '@yuta/contracts/personnel';
+import type {
+  PersonnelDocument,
+  PersonnelEmployeeSummary,
+} from '@yuta/contracts/personnel';
 import {
   Alert,
   AlertDescription,
@@ -19,10 +22,12 @@ import {
   RefreshCw,
   RotateCcw,
   ShieldCheck,
+  Sparkles,
   Upload,
 } from 'lucide-react';
 import Link from 'next/link';
-import { useActionState, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useActionState, useEffect, useRef, useState } from 'react';
 import {
   loadEmployeeDocumentsAction,
   saveEmployeeDocumentAction,
@@ -33,6 +38,7 @@ import {
   getDocumentFileSelectionLabel,
 } from '../employee-documents-model';
 import { EmployeeAmendments } from './employee-amendments';
+import { ContractExtractionPrototype } from './contract-extraction-prototype';
 
 type LoadState =
   | { status: 'loading'; message: null }
@@ -46,12 +52,18 @@ const initialSaveState: SaveEmployeeDocumentActionState = {
 };
 
 export function EmployeeDocuments({
-  employeeId,
+  employee,
   locale,
+  requestAdd = false,
+  contractExtractionPrototypeEnabled = false,
 }: {
-  employeeId: string;
+  employee: PersonnelEmployeeSummary;
   locale: string;
+  requestAdd?: boolean;
+  contractExtractionPrototypeEnabled?: boolean;
 }) {
+  const employeeId = employee.id;
+  const router = useRouter();
   const [document, setDocument] = useState<PersonnelDocument | null>(null);
   const [loadState, setLoadState] = useState<LoadState>({
     status: 'loading',
@@ -102,7 +114,16 @@ export function EmployeeDocuments({
     setShowForm(false);
     setSelectedFilename(null);
     setIdempotencyKey(crypto.randomUUID());
-  }, [saveState]);
+    router.refresh();
+  }, [router, saveState]);
+
+  useEffect(() => {
+    if (requestAdd && loadState.status === 'ready' && !document) {
+      setIdempotencyKey(crypto.randomUUID());
+      setSelectedFilename(null);
+      setShowForm(true);
+    }
+  }, [document, loadState.status, requestAdd]);
 
   return (
     <section className="rounded-xl border border-border-default bg-surface p-5 shadow-sm sm:p-6">
@@ -194,8 +215,11 @@ export function EmployeeDocuments({
       {loadState.status === 'ready' && document && (
         <DocumentCard
           document={document}
-          employeeId={employeeId}
+          employee={employee}
           locale={locale}
+          contractExtractionPrototypeEnabled={
+            contractExtractionPrototypeEnabled
+          }
         />
       )}
 
@@ -302,61 +326,124 @@ export function EmployeeDocuments({
 
 function DocumentCard({
   document,
-  employeeId,
+  employee,
   locale,
+  contractExtractionPrototypeEnabled,
 }: {
   document: PersonnelDocument;
-  employeeId: string;
+  employee: PersonnelEmployeeSummary;
   locale: string;
+  contractExtractionPrototypeEnabled: boolean;
 }) {
+  const employeeId = employee.id;
+  const router = useRouter();
   const href = `/api/personnel/documents/${employeeId}/${document.id}`;
+  const [showExtractionPrototype, setShowExtractionPrototype] = useState(false);
+  const [extractionSuccess, setExtractionSuccess] = useState<string | null>(
+    null,
+  );
+  const extractionTriggerRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    setShowExtractionPrototype(false);
+    setExtractionSuccess(null);
+  }, [document.id, document.version]);
+
+  function closeExtractionPrototype() {
+    setShowExtractionPrototype(false);
+    requestAnimationFrame(() => extractionTriggerRef.current?.focus());
+  }
+
   return (
-    <article className="mt-5 rounded-xl border border-border-default bg-surface p-4">
-      <div className="flex min-w-0 items-start gap-3">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-surface-muted text-action-primary">
-          <FileCheck2 className="h-5 w-5" aria-hidden />
-        </div>
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-            <div className="min-w-0">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted">
-                Contrat de travail signé
-              </p>
-              <p className="mt-1 truncate font-bold" title={document.filename}>
-                {document.filename}
-              </p>
-              <p className="mt-1 text-sm text-secondary">
-                PDF · {formatDocumentSize(document.byteSize)} · version{' '}
-                {document.version}
-              </p>
-              <p className="mt-1 text-xs text-muted">
-                Ajouté le{' '}
-                {new Intl.DateTimeFormat(locale, {
-                  dateStyle: 'medium',
-                  timeStyle: 'short',
-                }).format(new Date(document.uploadedAt))}
-              </p>
+    <>
+      <article className="mt-5 rounded-xl border border-border-default bg-surface p-4">
+        <div className="flex min-w-0 items-start gap-3">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-surface-muted text-action-primary">
+            <FileCheck2 className="h-5 w-5" aria-hidden />
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+                  Contrat de travail signé
+                </p>
+                <p
+                  className="mt-1 truncate font-bold"
+                  title={document.filename}
+                >
+                  {document.filename}
+                </p>
+                <p className="mt-1 text-sm text-secondary">
+                  PDF · {formatDocumentSize(document.byteSize)} · version{' '}
+                  {document.version}
+                </p>
+                <p className="mt-1 text-xs text-muted">
+                  Ajouté le{' '}
+                  {new Intl.DateTimeFormat(locale, {
+                    dateStyle: 'medium',
+                    timeStyle: 'short',
+                  }).format(new Date(document.uploadedAt))}
+                </p>
+              </div>
+              <Badge tone="success" className="w-fit shrink-0">
+                Disponible
+              </Badge>
             </div>
-            <Badge tone="success" className="w-fit shrink-0">
-              Disponible
-            </Badge>
           </div>
         </div>
-      </div>
-      <div className="mt-4 grid gap-2 border-t border-border-default pt-4 sm:grid-cols-2">
-        <Button asChild type="button" variant="secondary" size="sm">
-          <Link href={href} target="_blank" rel="noopener noreferrer">
-            <Eye className="h-4 w-4" aria-hidden />
-            Consulter
-          </Link>
-        </Button>
-        <Button asChild type="button" variant="outline" size="sm">
-          <a href={`${href}?download=1`}>
-            <Download className="h-4 w-4" aria-hidden />
-            Télécharger
-          </a>
-        </Button>
-      </div>
-    </article>
+        <div
+          className={`mt-4 grid gap-2 border-t border-border-default pt-4 ${
+            contractExtractionPrototypeEnabled
+              ? 'sm:grid-cols-3'
+              : 'sm:grid-cols-2'
+          }`}
+        >
+          <Button asChild type="button" variant="secondary" size="sm">
+            <Link href={href} target="_blank" rel="noopener noreferrer">
+              <Eye className="h-4 w-4" aria-hidden />
+              Consulter
+            </Link>
+          </Button>
+          <Button asChild type="button" variant="outline" size="sm">
+            <a href={`${href}?download=1`}>
+              <Download className="h-4 w-4" aria-hidden />
+              Télécharger
+            </a>
+          </Button>
+          {contractExtractionPrototypeEnabled && (
+            <Button
+              ref={extractionTriggerRef}
+              type="button"
+              variant="outline"
+              size="sm"
+              aria-expanded={showExtractionPrototype}
+              onClick={() => setShowExtractionPrototype((current) => !current)}
+            >
+              <Sparkles className="h-4 w-4" aria-hidden />
+              {showExtractionPrototype
+                ? 'Masquer l’aperçu'
+                : 'Analyser le contrat'}
+            </Button>
+          )}
+        </div>
+      </article>
+      {contractExtractionPrototypeEnabled && showExtractionPrototype && (
+        <ContractExtractionPrototype
+          employee={employee}
+          document={document}
+          onClose={closeExtractionPrototype}
+          onApplied={(message) => {
+            setExtractionSuccess(message);
+            closeExtractionPrototype();
+            router.refresh();
+          }}
+        />
+      )}
+      {extractionSuccess && (
+        <Alert tone="success" className="mt-4">
+          <AlertDescription>{extractionSuccess}</AlertDescription>
+        </Alert>
+      )}
+    </>
   );
 }

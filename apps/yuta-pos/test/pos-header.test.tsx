@@ -26,12 +26,13 @@ describe('PosHeader', () => {
     expect(hrefCount(markup, '/pos')).toBe(2);
     expect(hrefCount(markup, '/kitchen')).toBe(2);
     expect(hrefCount(markup, '/management')).toBe(2);
-    expect(markup.match(/<details/g)).toHaveLength(2);
+    expect(markup.match(/aria-expanded="false"/g)).toHaveLength(2);
+    expect(markup.match(/role="group"/g)).toHaveLength(2);
     expect(markup).toContain('Navigation secondaire');
     expect(markup).toContain('h-12 w-12');
     expect(markup).toContain('[&amp;&gt;*]:h-12');
     expect(markup).toContain('[&amp;&gt;form&gt;button]:h-12');
-    expect(markup).toContain('absolute right-4 top-full');
+    expect(markup).toContain('absolute right-0 top-full');
     expect(markup).toContain('min-w-64');
   });
 
@@ -41,7 +42,7 @@ describe('PosHeader', () => {
     );
 
     expect(hrefCount(markup, '/')).toBe(3);
-    expect(markup.match(/<details/g)).toHaveLength(1);
+    expect(markup.match(/aria-expanded="false"/g)).toHaveLength(1);
     expect(markup).not.toContain('Navigation secondaire');
   });
 

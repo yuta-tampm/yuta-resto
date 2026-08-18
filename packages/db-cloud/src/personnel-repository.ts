@@ -194,6 +194,102 @@ export async function findPersonnelEmployee(
   return row ? toSummary(row, businessDate) : null;
 }
 
+const personnelContractExtractionAuditInputSchema = z
+  .object({
+    employeeId: identifierSchema,
+    requestId: identifierSchema,
+    documentId: identifierSchema,
+    documentVersion: z.number().int().positive(),
+    eventType: z.enum([
+      'employee.contract_extraction_requested',
+      'employee.contract_extraction_completed',
+      'employee.contract_extraction_failed',
+    ]),
+    outcomeCode: z.enum([
+      'requested',
+      'complete',
+      'partial',
+      'no_result',
+      'unsupported',
+      'document_stale',
+      'employee_conflict',
+      'rate_limited',
+      'timeout',
+      'failed',
+    ]),
+    suggestionCount: z.number().int().min(0).max(8),
+  })
+  .strict();
+
+export type PersonnelContractExtractionAuditInput = z.infer<
+  typeof personnelContractExtractionAuditInputSchema
+>;
+
+export async function recordPersonnelContractExtractionAudit(
+  db: CloudDatabaseClient,
+  context: TenantContext,
+  rawInput: PersonnelContractExtractionAuditInput,
+): Promise<void> {
+  requireEstablishment(context);
+  if (context.actor.type !== 'user') {
+    throw new PersonnelRepositoryError(
+      'A user actor is required.',
+      'ACTOR_REQUIRED',
+    );
+  }
+  const actorUserId = context.actor.userId;
+  const input = personnelContractExtractionAuditInputSchema.parse(rawInput);
+  await db.transaction(async (transaction) => {
+    await transaction.execute(
+      sql`select pg_advisory_xact_lock(hashtextextended(${`${context.organizationId}:${context.establishmentId}:${input.employeeId}:${input.eventType}:${input.requestId}`}, 0))`,
+    );
+    const employee = await findScopedEmployee(
+      transaction,
+      context,
+      input.employeeId,
+    );
+    if (!employee) {
+      throw new PersonnelRepositoryError('Employee not found.', 'NOT_FOUND');
+    }
+    const [existing] = await transaction
+      .select({ id: personnelEmployeeAuditEvents.id })
+      .from(personnelEmployeeAuditEvents)
+      .where(
+        and(
+          eq(
+            personnelEmployeeAuditEvents.organizationId,
+            context.organizationId,
+          ),
+          eq(
+            personnelEmployeeAuditEvents.establishmentId,
+            context.establishmentId,
+          ),
+          eq(personnelEmployeeAuditEvents.employeeId, input.employeeId),
+          eq(personnelEmployeeAuditEvents.eventType, input.eventType),
+          eq(personnelEmployeeAuditEvents.operationId, input.requestId),
+        ),
+      )
+      .limit(1);
+    if (existing) return;
+    await transaction.insert(personnelEmployeeAuditEvents).values({
+      id: uuidv7(),
+      organizationId: context.organizationId,
+      establishmentId: context.establishmentId,
+      employeeId: input.employeeId,
+      actorUserId,
+      eventType: input.eventType,
+      operationId: input.requestId,
+      changedFields: [],
+      metadata: {
+        documentId: input.documentId,
+        documentVersion: input.documentVersion,
+        outcomeCode: input.outcomeCode,
+        suggestionCount: input.suggestionCount,
+      },
+    });
+  });
+}
+
 export async function listPersonnelEmployeeAuditHistory(
   db: CloudDatabaseClient,
   context: TenantContext,
@@ -591,12 +687,29 @@ export type UpdatePersonnelEmployeeResult = {
   updated: boolean;
 };
 
+const personnelEmployeeUpdateAuditContextSchema = z
+  .object({
+    requestId: identifierSchema,
+    documentId: identifierSchema,
+    documentVersion: z.number().int().positive(),
+    selectedFields: z
+      .array(z.enum(['position', 'contractWeeklyMinutes']))
+      .min(1)
+      .max(2),
+  })
+  .strict();
+
+export type PersonnelEmployeeUpdateAuditContext = z.infer<
+  typeof personnelEmployeeUpdateAuditContextSchema
+>;
+
 export async function updatePersonnelEmployee(
   db: CloudDatabaseClient,
   context: TenantContext,
   rawInput: UpdatePersonnelEmployeeInput,
   businessDate: string,
   now = new Date(),
+  rawAuditContext?: PersonnelEmployeeUpdateAuditContext,
 ): Promise<UpdatePersonnelEmployeeResult> {
   requireEstablishment(context);
   if (context.actor.type !== 'user') {
@@ -607,8 +720,13 @@ export async function updatePersonnelEmployee(
   }
   const actorUserId = context.actor.userId;
   const input = updatePersonnelEmployeeInputSchema.parse(rawInput);
+  const auditContext = rawAuditContext
+    ? personnelEmployeeUpdateAuditContextSchema.parse(rawAuditContext)
+    : null;
   const idempotencyHash = hash(input.idempotencyKey);
-  const fingerprint = hash(JSON.stringify(input));
+  const fingerprint = hash(
+    JSON.stringify(auditContext ? { input, auditContext } : input),
+  );
 
   await cleanupExpiredPersonnelCommandReceipts(db, context, now);
 
@@ -793,6 +911,14 @@ export async function updatePersonnelEmployee(
             },
           ]
         : []),
+      ...(auditContext
+        ? [
+            {
+              eventType: 'employee.contract_extraction_applied',
+              changedFields: auditContext.selectedFields,
+            },
+          ]
+        : []),
     ];
     await transaction.insert(personnelEmployeeAuditEvents).values(
       auditEvents.map((event) => ({
@@ -802,11 +928,23 @@ export async function updatePersonnelEmployee(
         employeeId: input.employeeId,
         actorUserId,
         eventType: event.eventType,
-        operationId,
+        operationId:
+          event.eventType === 'employee.contract_extraction_applied' &&
+          auditContext
+            ? auditContext.requestId
+            : operationId,
         changedFields: event.changedFields,
         metadata: {
           previousRevision: current.revision,
           newRevision: updated.revision,
+          ...(event.eventType === 'employee.contract_extraction_applied' &&
+          auditContext
+            ? {
+                documentId: auditContext.documentId,
+                documentVersion: auditContext.documentVersion,
+                outcome: 'applied',
+              }
+            : {}),
         },
       })),
     );

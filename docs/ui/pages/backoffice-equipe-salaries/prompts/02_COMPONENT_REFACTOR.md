@@ -18,3 +18,15 @@ compensation behavior, and narrow future vertical slices. Record recommended
 choices and required approvers in the stable page pack. Create no schema,
 migration, contract, API, permission, provider integration, storage object,
 background job, or real document behavior. Stop at the decision approval gate.
+
+## Wave D technical-design addendum
+
+For the authorized Wave D Phase 2 task, do not refactor the implemented local
+fixture or enable its actions. Map the approved `À traiter` ready state to a
+bounded derived read model, minimized item dictionary, deterministic cursor
+ordering, fresh server-authorized action targets, truthful source failures,
+source refresh, existing OWNER permissions, minimized cross-employee audit,
+and required tests. Record WD2 decisions and approvers in the stable page pack.
+Create no schema, migration, contract, repository query, server action/API,
+permission, audit event, task state, provider integration, fixture change,
+real-data UI, or production behavior. Stop at the WD2 approval gate.

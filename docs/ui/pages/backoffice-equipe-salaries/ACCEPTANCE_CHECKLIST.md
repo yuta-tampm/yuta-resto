@@ -447,3 +447,289 @@ Read-slice evidence:
 - [x] Temporary QA dossier, audit events, command receipts, and cleanup script
       are removed after capture.
 - [ ] Production legal/privacy/security/retention/operations approval is recorded.
+
+## Wave D Phase 0 — `À traiter` discovery
+
+- [x] Repository inventory confirms no current `À traiter`, personnel task,
+      acknowledgement, assignment, scheduled reminder, or notification domain.
+- [x] The capability is classified as `NEW_CAPABILITY_DISCOVERY` inside the
+      existing integrated Salaries page and stable page pack.
+- [x] Signed-in OWNER baseline confirms three existing metric cards and no
+      current `À traiter` surface; current Phase 5 captures remain containing-page
+      evidence and the new surface baseline is `NOT_APPLICABLE`.
+- [x] The proposed MVP is a derived overview rather than persisted task state.
+- [x] MVP item kinds are limited to incomplete active/upcoming dossiers, missing
+      signed base contracts, and recorded departures within 0–5 local days.
+- [x] Missing contract remains separate from current dossier completeness;
+      expected CDD end and missing amendment are not silently derived as issues.
+- [x] Every proposed item has one currently supported resolving entry point.
+- [x] OWNER-only organization + establishment + employee ownership and the
+      additional document-read boundary are recorded.
+- [x] Employee names, missing field groups, contract presence, and departure
+      dates are classified as confidential employment information.
+- [x] A later minimized overview-access audit strategy is required; per-item
+      duplicate employee-history events are rejected.
+- [x] Page-read refresh, establishment business date, partial document failure,
+      no-items, full error/retry, and forbidden truth rules are specified.
+- [x] No fourth KPI, new route/tab/navigation, task semantics, notification,
+      CDD-expiry alert, Formalités, bulk action, manager view, or production
+      claim is proposed.
+- [x] Responsive/accessibility discovery covers 1440/1024/768/390, focus,
+      keyboard operation, text-backed meaning, touch targets, and overflow.
+- [x] A self-contained Wave D French design prompt was approved and executed.
+- [x] Phase 0 changes documentation only and creates no UI, fixture, schema,
+      migration, contract, query, API/action, permission, audit event, task
+      state, scheduled job, notification, or production behavior.
+- [x] Product owner approved WD0-01 through WD0-08 for design exploration.
+- [x] Product owner authorized execution of the Wave D design prompt only.
+- [x] Four selected responsive ready-state references are stored as DRAFT.
+- [x] The selected 390 px study preserves the existing one-card-per-row metric
+      layout; the rejected three-column mobile generation is not retained.
+- [x] Product owner approved the selected Wave D visual direction.
+- [x] Product owner authorized Phase 1 typed-fixture prototype work only.
+
+## Wave D Phase 1 — local typed-fixture prototype
+
+- [x] `À traiter` is a route-local component between the three real metrics and
+      the existing employee filters/list.
+- [x] The prototype retains exactly three fictional approved examples split
+      between `À corriger` and `Échéances proches`.
+- [x] `DRAFT` and `Données fictives` are visible, and all prototype actions are
+      disabled with contextual accessible names.
+- [x] Existing loader data, summary counts, search, list, drawer, permissions,
+      actions, and audit behavior are unchanged.
+- [x] The server page exposes the prototype only in development mode;
+      production builds omit it.
+- [x] No schema, migration, contract, repository query, server action/API,
+      permission, audit event, task state, notification, provider, or
+      production behavior is added.
+- [x] Fixture tests protect the approved reasons, action labels, and
+      prototype-only identities.
+- [x] Browser QA passes at 1440, 1024, 768, and 390 px with no horizontal
+      overflow, console error, or enabled prototype action.
+- [x] Product owner approved the local as-built prototype and authorized Phase 2
+      interaction/data design only.
+
+## Wave D Phase 2 — interaction/data proposal
+
+- [x] Current paged employee list and per-employee Documents reads are rejected
+      as an authoritative overview source.
+- [x] A separate bounded, tenant-scoped, derived overview read is proposed with
+      no task/snapshot persistence and no per-employee document loop.
+- [x] The minimized item dictionary excludes completeness details, document
+      metadata/file data, tenant IDs, audit IDs, and unrelated employee facts.
+- [x] Each group uses five-item independent cursor pages with previous/next,
+      no total, no `Voir tout`, no infinite scroll, and no new route.
+- [x] Correction and event ordering is deterministic without invented priority.
+- [x] Every action performs a fresh scoped server check before opening the
+      existing edit, Documents-add, or departure-review entry point.
+- [x] Source refresh, stale-item handling, no optimistic completion, and no
+      polling/background delivery are specified.
+- [x] Document-source partial failure never becomes a false missing-contract
+      item; full employee failure and forbidden states disclose no items.
+- [x] Existing OWNER employee/document permissions and organization +
+      establishment + employee scope are retained.
+- [x] One minimized cross-employee overview event in `auth_audit_events` is
+      proposed for later approval; per-item employee-history events are rejected.
+- [x] Tenant isolation, authorization, date boundaries, cursor stability,
+      stale sources, audit, states, accessibility, and responsive tests are listed.
+- [x] Phase 2 changes documentation only; fixture, code, schema, migration,
+      contract, query, action/API, permission, audit, and real data are unchanged.
+- [x] Product/security/engineering approve WD2-01 through WD2-12 for local use.
+- [x] Product owner authorizes a local real-data Phase 3 vertical slice.
+
+## Wave D Phase 3 — local real-data implementation
+
+- [x] Fictional Wave D items and prototype labels are removed.
+- [x] The overview is derived from tenant-scoped employee rows and signed-base-
+      contract metadata presence without reading file content or storage data.
+- [x] Each group returns at most five items and has independent previous/next
+      cursor state; no totals, new route, or `Voir tout` is added.
+- [x] Document-source failure cannot create a false missing-contract item.
+- [x] Every item is revalidated under current OWNER permissions and full
+      organization + establishment + employee scope before a flow opens.
+- [x] Existing edit, Documents-add, and departure-review flows are reused.
+- [x] One minimized `personnel.action_overview_viewed` audit row is written per
+      authorized overview read; no per-item employee history is written.
+- [x] No schema, migration, task table, reminder, notification, scheduler,
+      public API, or new permission is added.
+- [x] Development mode loads and renders the real overview; production remains
+      fail closed and performs no overview read.
+- [x] Contract and Backoffice tests pass; conditional database integration
+      coverage is present for tenant isolation, paging, audit, and stale target.
+- [x] Local browser QA at 1440, 1024, 768, and 390 px confirms the real item,
+      Documents-add entry point, no horizontal overflow, and no console error.
+- [ ] Production legal, privacy, retention, security, and operations gates are
+      approved.
+
+## Wave D Phase 4 — local integration and production-boundary audit
+
+- [x] Product owner authorized Phase 4 after the local Phase 3 slice.
+- [x] Phase 4 is interpreted within the standing no-production boundary.
+- [x] The full session, OWNER permission, establishment scope, repository,
+      minimized response, target revalidation, and existing-flow path is traced.
+- [x] Page-loader and server-action runtime checks use one tested helper.
+- [x] The helper enables only `development` and fails closed for production,
+      test, and missing environment values.
+- [x] Backoffice tests pass with 31 files and 93 tests.
+- [x] A fresh production build passes and an authenticated production runtime
+      renders Salariés without rendering Wave D or logging browser errors.
+- [x] Development runtime still renders the real Wave D item/action without
+      `DRAFT` or fictional-data disclosure.
+- [x] No schema, migration, contract field, repository rule, permission,
+      public API, audit payload, task, notification, or provider was added.
+- [x] Mutation-capable database integration tests were not forced without the
+      explicit local database opt-in.
+- [ ] Production legal, privacy, retention, security, backup/restore, and
+      operations approval remains required.
+
+## Wave F Phase 0 — document extraction discovery
+
+- [x] Wave F is classified `NEW_CAPABILITY_DISCOVERY` inside the existing Salariés Documents surface.
+- [x] Repository inventory confirms secure private PDF storage, quarantine,
+      Defender scanning, OWNER permissions, server delivery, and no OCR/AI capability.
+- [x] The functional pack is treated as intent only and its no-fake-OCR rule is preserved.
+- [x] The recommended MVP is one verified signed base contract for one existing employee.
+- [x] Trusted organization + establishment + employee + document-version ownership is explicit.
+- [x] OWNER is the only proposed first user; no manager, staff, employee, public, or service access is inferred.
+- [x] The first allowlist contains existing employment facts only and excludes identity, departure, remuneration, payroll, and register facts.
+- [x] AI/OCR output remains an untrusted suggestion requiring per-field review; no automatic save is allowed.
+- [x] A later apply action must reuse employee validation, revision conflict,
+      idempotency, and minimized changed-field audit behavior.
+- [x] PDF content, raw text, prompts, responses, values, snippets, and provider IDs are excluded from URLs, analytics, generic logs, and audit metadata.
+- [x] Prompt-injection content inside documents is treated as data and cannot invoke tools or change authorization/schema rules.
+- [x] A provider-neutral server interface is proposed for later design without creating a generic AI platform now.
+- [x] File-first employee creation, amendments, identity/work-permit documents,
+      multi-file reconciliation, chatbot, batch, and production providers are deferred.
+- [x] Loading, partial/no result, unsupported, provider failure, stale document,
+      employee conflict, validation, apply, success, retry, forbidden, and production-disabled states are recorded.
+- [x] The self-contained French design prompt was executed only after explicit approval.
+- [x] Phase 0 creates no route, UI, fixture, schema, migration, contract,
+      permission, audit event, AI service/provider, file read/transmission,
+      employee mutation, operational data, or production behavior.
+- [x] Product owner approved WF0-01 through WF0-12 on 2026-08-18.
+- [x] Product owner authorized Wave F design-prompt execution separately.
+- [x] DRAFT references exist for the requested 1440, 1024, 768, and 390 viewport concepts.
+- [x] The DRAFT references keep analysis on the signed base contract and do not analyze amendments.
+- [x] No runtime UI, file read, OCR/AI call, provider, contract, persistence, permission, audit, or employee mutation was created.
+- [x] Product owner approved the Wave F DRAFT visual direction and requested Phase 1.
+
+## Wave F Phase 1 — local typed-fixture prototype
+
+- [x] The prototype is enabled only in local development and fails closed in production/test.
+- [x] `Analyser le contrat` appears only on an available signed base contract, never on an amendment.
+- [x] The panel says `Aperçu — aucune analyse réelle`, identifies fictional data,
+      and states that no PDF is read or transmitted.
+- [x] Only the three approved fictional employment suggestions are present.
+- [x] Every suggestion shows current/detected values, textual confidence, page,
+      fictional evidence, and explicit keep/use choices.
+- [x] No suggestion is preselected; choices affect only the local summary.
+- [x] The apply action remains disabled after local selections.
+- [x] Closing the inline preview restores focus to `Analyser le contrat`.
+- [x] Consult and download actions remain available and unchanged.
+- [x] 1440, 1024, 768, and 390 px have no page or prototype horizontal overflow.
+- [x] Browser QA reports no console error.
+- [x] No file read/transmission, OCR/AI/provider call, API, contract, schema,
+      migration, repository, permission, audit event, employee/register mutation,
+      operational data, or production behavior was added.
+- [x] Product owner authorized Wave F Phase 2 interaction/data/domain design.
+
+## Wave F Phase 2 — interaction, data, and service design
+
+- [x] Product owner authorized Phase 2 design only.
+- [x] Current document storage, scanner, exact-version grant, employee update,
+      revision, idempotency, validation, permissions, and audit behavior were rechecked.
+- [x] The service boundary is server-only and provider-neutral.
+- [x] Local PDF preflight and semantic extraction are separate replaceable stages.
+- [x] Browser identifiers, storage keys, URLs, roles, provider output, and PDF instructions are untrusted.
+- [x] The strict versioned result, field allowlist, typed candidates, confidence,
+      page, excerpt, warnings, status, expiry, and extra-key rejection are specified.
+- [x] `position` and `contractWeeklyMinutes` are the only proposed first apply fields.
+- [x] CDI/CDD stays review-only until expected end date and controlled CDD reason dependencies are supported.
+- [x] Suggestions are transient; invalidation on close/reload/version/revision/scope/expiry is specified.
+- [x] Fresh authorization, exact document version, employee revision, validation,
+      idempotency, and existing employee audit are required before apply.
+- [x] Separate future extract permission and minimized extraction audit outcomes are specified.
+- [x] Foreground timeout, concurrency, manual retry, file/page, and establishment rate limits are proposed.
+- [x] OpenAI file-input, structured-output, retention, and EU processing constraints were checked against official documentation.
+- [x] Remote real-file use remains blocked by EU/ZDR-or-MAM/DPA/legal/DPO/privacy/security/operations evidence.
+- [x] Synthetic fixtures, cross-tenant denial, prompt injection, malformed output,
+      stale/conflict, log redaction, rate/cost, and production-disabled tests are specified.
+- [x] Phase 2 created no service, provider, SDK/library, contract, permission,
+      audit event, schema, migration, file access/transmission, mutation, or operational data.
+- [x] Product owner approved WF2-01 through WF2-16.
+- [x] Product owner authorized Wave F Phase 3 local implementation with synthetic PDFs/data only.
+
+## Wave F Phase 3 — local synthetic implementation
+
+- [x] Development-only server flow generates and prepares a fictional PDF; it never opens the signed personnel file.
+- [x] Strict versioned schemas reject extra keys, unsupported apply fields, duplicate selections, invalid pages, and long excerpts.
+- [x] OWNER-only extraction permission is enforced before preparation or adapter invocation.
+- [x] Exact employee revision and signed-document version are checked before review and apply.
+- [x] Complete, partial, no-result, unsupported, failure, timeout, and manual-retry states are available locally.
+- [x] CDI/CDD remains review-only; only position and weekly minutes can be selected for apply.
+- [x] Apply reuses employee validation, revision, idempotency, and atomic changed-field audit behavior.
+- [x] Requested, completed, failed, and applied events contain no file content, snippets, candidate/current values, prompt, or provider response.
+- [x] Suggestions remain transient and are cleared on close, refresh, document replacement, retry, or conflict.
+- [x] No provider, remote call, API key, schema, migration, result store, queue, worker, or production enablement was added.
+- [ ] Product owner authorizes Wave F Phase 4 local integration verification separately.
+
+## Wave E Phase 0 — personnel register and PDF export discovery
+
+- [x] Repository inventory confirms no register aggregate, stable arrival
+      sequence, complete mandatory-field set, stagiaire/service-civique domain,
+      register retention process, register permission/audit, or PDF generator.
+- [x] The new capability is classified as `NEW_CAPABILITY_DISCOVERY`; the
+      containing `/equipe/salaries` page remains integrated and unchanged.
+- [x] The proposed target is an establishment-wide page entered from Salariés,
+      not a per-employee drawer tab or organization-wide register.
+- [x] Current reusable fields and missing required/conditional fields are
+      reconciled explicitly; current audit history is not treated as an
+      indelible or reconstructable register.
+- [x] OWNER-only first use, trusted organization + establishment ownership, and
+      proposed separate future read/export permissions are recorded.
+- [x] Salariés, register, Documents, Formalités, Planning, Pointage, login
+      users, and POS staff boundaries remain separate.
+- [x] Structured register data is the proposed source of truth; PDF is a
+      protected, server-generated representation with no public/stable URL.
+- [x] Sensitive multi-person data, minimized read/export audit, correction,
+      retention, rights, backup/restore, incident, and operations gates are recorded.
+- [x] Official Légifrance and CNIL sources were reviewed without a compliance claim.
+- [x] Loading, ready, incomplete, empty, unsupported category, forbidden,
+      error/retry, export pending/failure/success, stale source, responsive, and
+      accessibility discovery states are specified.
+- [x] OCR, extraction, AI suggestions, and automatic employee updates remain
+      deferred to separately approved Wave F discovery.
+- [x] A self-contained French design prompt was approved and executed.
+- [x] Phase 0 created no runtime route, UI, fixture, schema, migration,
+      contract, repository, API, permission, audit event, PDF, storage, provider,
+      test, operational data, or production behavior.
+- [x] Product owner approved WE0-01 through WE0-10 for design exploration.
+- [x] Product owner authorized execution of the Wave E design prompt only.
+- [x] A dedicated `backoffice-equipe-registre-personnel` design pack stores the
+      four responsive DRAFT studies.
+- [x] Product owner approved the Wave E visual direction.
+- [x] Product owner separately authorized Phase 1 local typed-fixture prototype work.
+
+## Wave D Phase 5 — local functional and visual QA
+
+- [x] Product owner authorized Phase 5 after the local Phase 4 audit.
+- [x] Signed-in OWNER evidence uses real configured establishment data and no
+      fixture/DRAFT disclosure.
+- [x] Current data covers one real correction item and one truthful empty group.
+- [x] `Ajouter le contrat` revalidates and opens the existing Documents add form.
+- [x] Closing the action-opened drawer with Escape restores focus to the
+      originating overview action.
+- [x] 1440, 1024, 768, and 390 px have no page horizontal overflow.
+- [x] The employee drawer at 390 px fits the viewport without horizontal overflow.
+- [x] Mobile stacks groups and the item action; desktop uses the approved compact
+      two-group composition where space permits.
+- [x] Fresh browser QA reports no warning or error.
+- [x] Four stable `wave-d-phase-5-as-built-*` captures are retained.
+- [x] Error, partial-source, and pagination screenshots are not fabricated when
+      current real data does not produce those states; code/tests remain the
+      truthful evidence.
+- [x] No employee/document mutation, fixture, schema, migration, API, permission,
+      audit payload, provider, or production behavior was added in Phase 5.
+- [ ] Production legal, privacy, retention, security, backup/restore, and
+      operations approval remains required.

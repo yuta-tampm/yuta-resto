@@ -1,25 +1,35 @@
 'use server';
 
 import {
+  applyPersonnelContractExtractionInputSchema,
   createPersonnelEmployeeInputSchema,
+  personnelContractExtractionRequestSchema,
+  personnelContractExtractionReviewResultSchema,
   setPersonnelEmployeeDepartureInputSchema,
   updatePersonnelEmployeeInputSchema,
   type PersonnelContractAmendment,
+  type PersonnelContractExtractionReviewResult,
+  type PersonnelContractExtractionRequest,
   type PersonnelContractAmendmentList,
   type PersonnelEmployeeAccessHistory,
   type PersonnelEmployeeAuditHistory,
   type PersonnelEmployeeSummary,
+  type PersonnelActionOverviewItemKind,
+  type PersonnelActionOverviewQuery,
+  type PersonnelActionOverviewResponse,
   type PersonnelDocument,
   type PersonnelDocumentList,
 } from '@yuta/contracts/personnel';
 import {
   createPersonnelEmployee,
+  findPersonnelEmployee,
   listPersonnelEmployeeAccessHistory,
   listPersonnelEmployeeAuditHistory,
   PersonnelConflictError,
   PersonnelDuplicateError,
   PersonnelRepositoryError,
   recordPersonnelEmployeeAccess,
+  recordPersonnelContractExtractionAudit,
   setPersonnelEmployeeDeparture,
   updatePersonnelEmployee,
   listPersonnelDocuments,
@@ -31,6 +41,8 @@ import {
   PersonnelContractAmendmentRepositoryError,
   recordPersonnelContractAmendmentUploadRejected,
   replacePersonnelContractAmendmentMetadata,
+  listPersonnelActionOverview,
+  resolvePersonnelActionTarget,
 } from '@yuta/db-cloud';
 import { revalidatePath } from 'next/cache';
 import { createHash } from 'node:crypto';
@@ -43,6 +55,15 @@ import {
   PersonnelDocumentScannerError,
 } from '../../../../server/personnel-documents/runtime';
 import { getBusinessDate } from './salaries-model';
+import {
+  ContractExtractionServiceError,
+  DeterministicSyntheticExtractionAdapter,
+  DevelopmentExtractionRateLimiter,
+  runSyntheticContractExtraction,
+  SyntheticContractPdfPreparer,
+} from '../../../../server/personnel-contract-extraction/service';
+import { isContractExtractionPrototypeEnabled } from './_lib/contract-extraction-prototype-runtime';
+import { isPersonnelActionOverviewEnabled } from './_lib/personnel-action-overview-runtime';
 
 export type CreateEmployeeActionState = {
   status: 'idle' | 'error' | 'duplicate' | 'success';
@@ -83,11 +104,49 @@ export type LoadEmployeeDocumentsActionResult =
   | { status: 'success'; documents: PersonnelDocumentList }
   | { status: 'error'; message: string };
 
+export type LoadPersonnelActionOverviewActionResult =
+  | { status: 'success'; overview: PersonnelActionOverviewResponse }
+  | { status: 'error'; message: string };
+
+export type ResolvePersonnelActionTargetActionResult =
+  | { status: 'ready'; employee: PersonnelEmployeeSummary }
+  | { status: 'changed'; message: string }
+  | { status: 'error'; message: string };
+
 export type SaveEmployeeDocumentActionState = {
   status: 'idle' | 'error' | 'conflict' | 'success';
   message: string | null;
   document: PersonnelDocument | null;
 };
+
+export type StartContractExtractionActionResult =
+  | {
+      status: 'success';
+      result: PersonnelContractExtractionReviewResult;
+    }
+  | {
+      status: 'error';
+      code:
+        | 'unavailable'
+        | 'document_stale'
+        | 'employee_conflict'
+        | 'rate_limited'
+        | 'timeout'
+        | 'failed';
+      message: string;
+    };
+
+export type ApplyContractExtractionActionResult =
+  | {
+      status: 'success';
+      message: string;
+      employee: PersonnelEmployeeSummary;
+    }
+  | {
+      status: 'error' | 'conflict';
+      message: string;
+      currentEmployee: PersonnelEmployeeSummary | null;
+    };
 
 export type LoadEmployeeAmendmentsActionResult =
   | { status: 'success'; amendments: PersonnelContractAmendmentList }
@@ -117,6 +176,80 @@ const replaceAmendmentFormSchema = z
   })
   .strict();
 
+const developmentExtractionRateLimiter = new DevelopmentExtractionRateLimiter();
+
+export async function loadPersonnelActionOverviewAction(
+  query: PersonnelActionOverviewQuery,
+): Promise<LoadPersonnelActionOverviewActionResult> {
+  if (!isPersonnelActionOverviewEnabled()) {
+    return actionOverviewUnavailable();
+  }
+  const { tenant } = await requirePersonnelTenant('/equipe/salaries');
+  requirePersonnelPermission(tenant, 'personnel.employee.read');
+  requirePersonnelPermission(tenant, 'personnel.document.read');
+  try {
+    const overview = await listPersonnelActionOverview(
+      cloudDatabase,
+      tenant,
+      query,
+      getBusinessDate(tenant.timezone),
+    );
+    return { status: 'success', overview };
+  } catch (error: unknown) {
+    console.error('Failed to load the personnel action overview.', error);
+    return actionOverviewUnavailable();
+  }
+}
+
+export async function resolvePersonnelActionTargetAction(
+  employeeId: string,
+  kind: PersonnelActionOverviewItemKind,
+): Promise<ResolvePersonnelActionTargetActionResult> {
+  if (!isPersonnelActionOverviewEnabled()) {
+    return actionOverviewUnavailable();
+  }
+  const { tenant } = await requirePersonnelTenant('/equipe/salaries');
+  requirePersonnelPermission(tenant, 'personnel.employee.read');
+  if (kind === 'incomplete_employee_dossier') {
+    requirePersonnelPermission(tenant, 'personnel.employee.manage');
+  } else if (kind === 'missing_signed_base_contract') {
+    requirePersonnelPermission(tenant, 'personnel.document.read');
+    requirePersonnelPermission(tenant, 'personnel.document.manage');
+  }
+  try {
+    const result = await resolvePersonnelActionTarget(
+      cloudDatabase,
+      tenant,
+      employeeId,
+      kind,
+      getBusinessDate(tenant.timezone),
+    );
+    return result.status === 'ready'
+      ? result
+      : {
+          status: 'changed',
+          message:
+            'Cette action n’est plus nécessaire. La liste a été actualisée.',
+        };
+  } catch (error: unknown) {
+    console.error('Failed to resolve a personnel action target.', error);
+    return {
+      status: 'error',
+      message: 'Impossible d’ouvrir cette action. Réessayez.',
+    };
+  }
+}
+
+function actionOverviewUnavailable(): {
+  status: 'error';
+  message: string;
+} {
+  return {
+    status: 'error',
+    message: 'La liste des actions est indisponible. Réessayez.',
+  };
+}
+
 export async function loadEmployeeDocumentsAction(
   employeeId: string,
   operationId: string,
@@ -137,6 +270,346 @@ export async function loadEmployeeDocumentsAction(
       status: 'error',
       message: 'Impossible de charger les documents. Réessayez.',
     };
+  }
+}
+
+export async function startContractExtractionAction(
+  rawRequest: unknown,
+): Promise<StartContractExtractionActionResult> {
+  if (!isContractExtractionPrototypeEnabled()) {
+    return extractionError(
+      'unavailable',
+      'L’analyse locale est disponible uniquement en développement.',
+    );
+  }
+  const { tenant } = await requirePersonnelTenant('/equipe/salaries');
+  requirePersonnelPermission(tenant, 'personnel.document.read');
+  requirePersonnelPermission(tenant, 'personnel.document.extract');
+
+  let request: PersonnelContractExtractionRequest | null = null;
+  try {
+    request = personnelContractExtractionRequestSchema.parse(rawRequest);
+    const result = await runSyntheticContractExtraction(request, {
+      authorizeAndResolve: async (authorizedRequest) => {
+        // Repeat permission checks inside the service-owned resolution step so
+        // no fixture is prepared before trusted authorization succeeds.
+        requirePersonnelPermission(tenant, 'personnel.document.read');
+        requirePersonnelPermission(tenant, 'personnel.document.extract');
+        const [employee, documents] = await Promise.all([
+          findPersonnelEmployee(
+            cloudDatabase,
+            tenant,
+            authorizedRequest.employeeId,
+            getBusinessDate(tenant.timezone),
+          ),
+          listPersonnelDocuments(
+            cloudDatabase,
+            tenant,
+            authorizedRequest.employeeId,
+            authorizedRequest.requestId,
+          ),
+        ]);
+        const document = documents.items.find(
+          (item) => item.id === authorizedRequest.documentId,
+        );
+        if (!employee || !document) {
+          throw new ContractExtractionServiceError(
+            'The scoped extraction target was not found.',
+            'DOCUMENT_STALE',
+          );
+        }
+        await recordPersonnelContractExtractionAudit(cloudDatabase, tenant, {
+          employeeId: authorizedRequest.employeeId,
+          requestId: authorizedRequest.requestId,
+          documentId: authorizedRequest.documentId,
+          documentVersion: authorizedRequest.documentVersion,
+          eventType: 'employee.contract_extraction_requested',
+          outcomeCode: 'requested',
+          suggestionCount: 0,
+        });
+        return {
+          employeeRevision: employee.revision,
+          documentId: document.id,
+          documentVersion: document.version,
+        };
+      },
+      consumeRateLimit: () =>
+        developmentExtractionRateLimiter.consume(
+          `${tenant.organizationId}:${tenant.establishmentId}`,
+        ),
+      preparer: new SyntheticContractPdfPreparer(),
+      adapter: new DeterministicSyntheticExtractionAdapter(),
+    });
+    await recordPersonnelContractExtractionAudit(cloudDatabase, tenant, {
+      employeeId: request.employeeId,
+      requestId: request.requestId,
+      documentId: request.documentId,
+      documentVersion: request.documentVersion,
+      eventType: 'employee.contract_extraction_completed',
+      outcomeCode: result.status,
+      suggestionCount: result.suggestions.length,
+    });
+    return { status: 'success', result };
+  } catch (error: unknown) {
+    if (request) {
+      await recordContractExtractionFailureSafe(
+        tenant,
+        request,
+        error instanceof ContractExtractionServiceError
+          ? extractionAuditOutcome(error.code)
+          : 'failed',
+      );
+    }
+    if (error instanceof ContractExtractionServiceError) {
+      switch (error.code) {
+        case 'DOCUMENT_STALE':
+          return extractionError(
+            'document_stale',
+            'Le contrat signé a été remplacé. Relancez l’analyse sur sa version actuelle.',
+          );
+        case 'EMPLOYEE_CONFLICT':
+          return extractionError(
+            'employee_conflict',
+            'Le dossier salarié a été modifié. Rechargez-le avant de relancer l’analyse.',
+          );
+        case 'RATE_LIMITED':
+          return extractionError(
+            'rate_limited',
+            'La limite locale de 10 analyses par établissement sur 24 heures est atteinte.',
+          );
+        case 'TIMEOUT':
+          return extractionError(
+            'timeout',
+            'L’analyse locale a dépassé le délai prévu. Vous pouvez réessayer manuellement.',
+          );
+        default:
+          return extractionError(
+            'failed',
+            'Le résultat local n’a pas pu être validé. Consultez le PDF ou réessayez.',
+          );
+      }
+    }
+    if (error instanceof z.ZodError) {
+      return extractionError(
+        'failed',
+        'La demande d’analyse locale n’est pas valide.',
+      );
+    }
+    console.error('Synthetic personnel contract extraction failed.');
+    return extractionError(
+      'failed',
+      'L’analyse locale est indisponible. Réessayez.',
+    );
+  }
+}
+
+export async function applyContractExtractionAction(
+  rawInput: unknown,
+): Promise<ApplyContractExtractionActionResult> {
+  if (!isContractExtractionPrototypeEnabled()) {
+    return {
+      status: 'error',
+      message:
+        'L’application locale est disponible uniquement en développement.',
+      currentEmployee: null,
+    };
+  }
+  const { tenant } = await requirePersonnelTenant('/equipe/salaries');
+  requirePersonnelPermission(tenant, 'personnel.document.read');
+  requirePersonnelPermission(tenant, 'personnel.document.extract');
+  requirePersonnelPermission(tenant, 'personnel.employee.manage');
+
+  try {
+    const input = applyPersonnelContractExtractionInputSchema.parse(rawInput);
+    const [employee, documents] = await Promise.all([
+      findPersonnelEmployee(
+        cloudDatabase,
+        tenant,
+        input.request.employeeId,
+        getBusinessDate(tenant.timezone),
+      ),
+      listPersonnelDocuments(
+        cloudDatabase,
+        tenant,
+        input.request.employeeId,
+        input.request.requestId,
+      ),
+    ]);
+    const document = documents.items.find(
+      (item) => item.id === input.request.documentId,
+    );
+    if (!document || document.version !== input.request.documentVersion) {
+      return {
+        status: 'conflict',
+        message:
+          'Le contrat signé a été remplacé. Les suggestions ont été supprimées.',
+        currentEmployee: employee,
+      };
+    }
+    if (!employee || employee.revision !== input.request.employeeRevision) {
+      return {
+        status: 'conflict',
+        message:
+          'Le dossier salarié a été modifié. Rechargez-le et relancez l’analyse.',
+        currentEmployee: employee,
+      };
+    }
+
+    const syntheticOutput = await new DeterministicSyntheticExtractionAdapter(
+      () => new Date(),
+    ).extract(input.request, {
+      source: 'synthetic_fixture',
+      pageCount: 3,
+      scenario: input.request.scenario,
+    });
+    const review =
+      personnelContractExtractionReviewResultSchema.parse(syntheticOutput);
+    for (const selected of input.selectedSuggestions) {
+      const matchingSuggestion = review.suggestions.find(
+        (suggestion) =>
+          suggestion.field === selected.field &&
+          suggestion.candidateValue === selected.candidateValue &&
+          !suggestion.issueCodes.includes('blocked_by_dependency'),
+      );
+      if (!matchingSuggestion) {
+        return {
+          status: 'error',
+          message:
+            'Une suggestion ne correspond plus au résultat local validé. Relancez l’analyse.',
+          currentEmployee: employee,
+        };
+      }
+    }
+
+    const position = input.selectedSuggestions.find(
+      (suggestion) => suggestion.field === 'position',
+    );
+    const weeklyMinutes = input.selectedSuggestions.find(
+      (suggestion) => suggestion.field === 'contractWeeklyMinutes',
+    );
+    const updateResult = await updatePersonnelEmployee(
+      cloudDatabase,
+      tenant,
+      {
+        idempotencyKey: input.idempotencyKey,
+        employeeId: employee.id,
+        expectedRevision: input.request.employeeRevision,
+        givenNames: employee.givenNames,
+        familyName: employee.familyName,
+        position:
+          position?.field === 'position'
+            ? position.candidateValue
+            : employee.position,
+        qualification: employee.qualification,
+        employmentTermType: employee.employmentTermType,
+        expectedEndDate: employee.expectedEndDate,
+        fixedTermReasonCode: employee.fixedTermReasonCode,
+        workTimeCategory: employee.workTimeCategory,
+        contractWeeklyMinutes:
+          weeklyMinutes?.field === 'contractWeeklyMinutes'
+            ? weeklyMinutes.candidateValue
+            : employee.contractWeeklyMinutes,
+        entryDate: employee.entryDate,
+        confirmFixedTermReasonClear: false,
+      },
+      getBusinessDate(tenant.timezone),
+      new Date(),
+      {
+        requestId: input.request.requestId,
+        documentId: input.request.documentId,
+        documentVersion: input.request.documentVersion,
+        selectedFields: input.selectedSuggestions.map(
+          (suggestion) => suggestion.field,
+        ),
+      },
+    );
+    revalidatePath('/equipe/salaries');
+    return {
+      status: 'success',
+      message: updateResult.updated
+        ? 'Les champs sélectionnés ont été enregistrés.'
+        : 'Les valeurs sélectionnées étaient déjà à jour.',
+      employee: updateResult.employee,
+    };
+  } catch (error: unknown) {
+    if (error instanceof PersonnelConflictError) {
+      return {
+        status: 'conflict',
+        message:
+          'Le dossier salarié a été modifié. Rechargez-le et relancez l’analyse.',
+        currentEmployee: error.currentEmployee,
+      };
+    }
+    if (error instanceof z.ZodError) {
+      return {
+        status: 'error',
+        message: 'Les champs sélectionnés ne sont pas valides.',
+        currentEmployee: null,
+      };
+    }
+    console.error('Failed to apply synthetic contract extraction suggestions.');
+    return {
+      status: 'error',
+      message: 'Impossible d’enregistrer les suggestions. Réessayez.',
+      currentEmployee: null,
+    };
+  }
+}
+
+function extractionError(
+  code: Extract<
+    StartContractExtractionActionResult,
+    { status: 'error' }
+  >['code'],
+  message: string,
+): StartContractExtractionActionResult {
+  return { status: 'error', code, message };
+}
+
+function extractionAuditOutcome(
+  code: ContractExtractionServiceError['code'],
+):
+  | 'document_stale'
+  | 'employee_conflict'
+  | 'rate_limited'
+  | 'timeout'
+  | 'failed' {
+  switch (code) {
+    case 'DOCUMENT_STALE':
+      return 'document_stale';
+    case 'EMPLOYEE_CONFLICT':
+      return 'employee_conflict';
+    case 'RATE_LIMITED':
+      return 'rate_limited';
+    case 'TIMEOUT':
+      return 'timeout';
+    default:
+      return 'failed';
+  }
+}
+
+async function recordContractExtractionFailureSafe(
+  tenant: Awaited<ReturnType<typeof requirePersonnelTenant>>['tenant'],
+  request: PersonnelContractExtractionRequest,
+  outcomeCode:
+    | 'document_stale'
+    | 'employee_conflict'
+    | 'rate_limited'
+    | 'timeout'
+    | 'failed',
+) {
+  try {
+    await recordPersonnelContractExtractionAudit(cloudDatabase, tenant, {
+      employeeId: request.employeeId,
+      requestId: request.requestId,
+      documentId: request.documentId,
+      documentVersion: request.documentVersion,
+      eventType: 'employee.contract_extraction_failed',
+      outcomeCode,
+      suggestionCount: 0,
+    });
+  } catch {
+    // A denied or stale cross-scope target intentionally produces no audit row.
   }
 }
 

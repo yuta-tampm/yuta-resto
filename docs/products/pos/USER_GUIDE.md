@@ -6,7 +6,7 @@ Visibility: Local operator
 
 Owner: YUTA restaurant operations
 
-Last updated: 2026-08-08
+Last updated: 2026-08-18
 
 This guide describes how to use the current YuTa POS MVP for internal restaurant operations.
 
@@ -50,7 +50,8 @@ pnpm dev:pos
 
 Kitchen production commands create durable print jobs in `site-agent`.
 Physical internal-ticket printing uses the restaurant Linux server and one
-Bluetooth EPSON TM-m30. Customer receipts are not printed.
+Bluetooth EPSON TM-m30. A paid order or paid split check can also enqueue one
+explicit non-fiscal customer receipt from the order-detail menu.
 
 The QA checklist lives in:
 
@@ -455,16 +456,34 @@ The order stays open until the remaining amount reaches 0
 ```
 
 Payment submission is committed in one database transaction. Retrying the same
-browser submission cannot create a second payment. Payment does not create a
-customer receipt print job. The same retry protection applies to a kitchen send
+browser submission cannot create a second payment. Payment does not
+automatically create a customer receipt print job. The same retry protection applies to a kitchen send
 and its internal kitchen ticket job.
 
 When the full order is completely paid:
 
 ```txt
 The order is marked paid
-No customer receipt print job is created
+No automatic customer receipt print job is created
 ```
+
+### Print A Paid Non-Fiscal Receipt
+
+From the order-detail page, open the three-line menu and select
+`Imprimer le reçu`.
+
+- A fully paid single order offers `Commande complète`.
+- A split order lists its non-void checks; only fully paid checks can print.
+- Select `Imprimer` to add one non-fiscal `REÇU DE PAIEMENT` copy to the local queue.
+- `En attente d'impression` means the durable job was accepted; it does not
+  mean paper was produced.
+- If the printer is unavailable, the job remains queued and the warning stays
+  visible.
+- A failed job offers `Réessayer l'impression`; a printed job offers
+  `Réimprimer`. Both preserve the saved receipt snapshot.
+
+The receipt contains only authoritative local order/check, item allocation,
+discount, total, payment, and timestamp data. It is not a fiscal/VAT invoice.
 
 ### Split Equally
 
@@ -497,8 +516,8 @@ Choose 4 -> Client 1, Client 2, Client 3, Client 4
 ```
 
 Assign item quantities to each client, then create checks. Each check can be
-paid fully or in partial payments. Completing a check does not create a
-customer receipt print job.
+paid fully or in partial payments. Completing a check does not automatically
+create a customer receipt print job.
 
 The selected POS employee is stored as `paidBy` for each payment.
 
@@ -676,7 +695,7 @@ Print job types:
 
 ```txt
 kitchen_ticket     created when staff sends items to production
-customer_receipt   retained only for historical compatibility; not created
+customer_receipt   explicitly queued for a paid order or paid split check
 ```
 
 Manual actions:
@@ -817,10 +836,34 @@ Known MVP constraints:
 ```txt
 No table map
 No staff login flow
-No physical ESC/POS printer integration
+No fiscal or automatic customer receipt printing
 No real fiscal receipt
 Split by items client count is selected directly on the split-by-items screen
 No partial kitchen status inside a single item row quantity
 ```
 
 These are intentional MVP limits, not bugs.
+
+### Preview a customer receipt without a printer
+
+For a paid order, generate the production ESC/POS receipt bytes plus a readable
+text copy without creating a print job or changing local POS data:
+
+```bash
+pnpm receipt:preview --order <paid-order-id>
+```
+
+For a paid split check, add `--check <paid-check-id>`. Artifacts are written
+under `apps/yuta-pos/.tmp/prints/`. The database work runs in a read-only
+transaction and uses existing print settings, or in-memory defaults when no
+settings row exists.
+
+To exercise payment, receipt command, durable queue, worker claiming, and the
+production renderer without printer hardware, run:
+
+```bash
+pnpm test:receipt-preview
+```
+
+This second command creates and removes a disposable PostgreSQL container. It
+does not connect to the operational POS database.

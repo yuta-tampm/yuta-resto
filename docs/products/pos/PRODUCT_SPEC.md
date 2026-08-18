@@ -564,8 +564,10 @@ printJobs {
 }
 ```
 
-`customer_receipt` remains in the schema only for historical compatibility;
-current payment flows do not create it.
+`customer_receipt` is created only by the explicit paid receipt command on the
+order-detail route. Payment flows do not create it automatically. The job stores
+an immutable authoritative local snapshot and represents one non-fiscal copy;
+the browser never supplies receipt lines, totals, printer routing, or ESC/POS.
 
 For MVP, print gateway behavior can run in mock mode and write printable content to logs or files.
 
@@ -655,7 +657,7 @@ Open payment screen
   -> show final total
   -> create payment
   -> mark order as paid if paid amount covers total
-  -> do not create a customer receipt print job
+  -> do not create an automatic customer receipt print job
 ```
 
 ### 11.2 Split By Items
@@ -669,7 +671,7 @@ Create checks
   -> run optimizeCheckCombos for each check
   -> each check can be paid separately
   -> order is paid when all checks are paid
-  -> do not create a customer receipt print job
+  -> do not create an automatic customer receipt print job
 ```
 
 Assigned check item quantities cannot exceed the original order item quantity.

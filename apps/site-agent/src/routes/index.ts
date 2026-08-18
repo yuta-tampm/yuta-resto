@@ -1,6 +1,7 @@
 import type { RouteHandler } from './types';
 import { handleAuthRoutes } from './auth';
 import { handleCatalogRoute } from './catalog';
+import { handleCustomerReceiptRoutes } from './customer-receipts';
 import { handleHealthRoute } from './health';
 import { handleLocalUsersRoute } from './local-users';
 import { handleOrderItemsRoute } from './order-items';
@@ -18,6 +19,7 @@ export const siteAgentRoutes: RouteHandler[] = [
   handleOrdersRoute,
   handleOrderItemsRoute,
   handlePaymentRoutes,
+  handleCustomerReceiptRoutes,
   handlePrintJobRoutes,
   handlePrinterStatusRoute,
   handlePrintSettingsRoutes,
