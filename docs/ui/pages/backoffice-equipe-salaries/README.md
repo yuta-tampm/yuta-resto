@@ -1010,6 +1010,11 @@ unknown modes, and every environment other than development before network
 access. Production UI/action gates remain closed, and no real-file or
 production use is approved.
 
+The generated Phase 6 QA PDF deliberately contains `Responsable de salle`,
+CDI, and 39 weekly hours so the fictional review shows real differences from
+the current local dossier. It remains independent from the displayed signed
+document.
+
 The organization-level eligibility request is prepared separately in
 [`OPENAI_PROVIDER_ELIGIBILITY.md`](../../../operations/OPENAI_PROVIDER_ELIGIBILITY.md).
 It discloses the four proposed YUTA AI use cases while keeping Personnel

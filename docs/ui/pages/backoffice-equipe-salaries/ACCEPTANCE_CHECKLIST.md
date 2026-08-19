@@ -980,6 +980,8 @@ Read-slice evidence:
       are present.
 - [x] The service generates a fictional PDF and does not read stored signed
       contract bytes.
+- [x] The generated QA PDF uses deliberately different fictional values:
+      `Responsable de salle`, CDI, and 39 weekly hours.
 - [x] End-to-end tests use a fake provider response and make no network call.
 - [x] Non-complete UI test scenarios remain deterministic and make no provider
       call.

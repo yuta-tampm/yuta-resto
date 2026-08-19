@@ -26,7 +26,7 @@ Package status: `design`
 
 Scope status: `DRAFT`
 
-Reference status: `NONE`
+Reference status: `DRAFT`
 
 Inventory status: `COMPLETE`
 
@@ -35,8 +35,6 @@ Baseline status: `NOT_APPLICABLE`
 Design prompt status: `READY`
 
 Shared context status: `RESOLVED`
-
-No-image reference reason: No page design has been generated or approved. Phase 0 stops before design generation.
 
 ## Current implementation
 
@@ -172,8 +170,22 @@ See `PRODUCT_SCOPE.md`, `UI_SPEC.md`, `DATA_AND_INTERACTION_SPEC.md`,
 `DESIGN_HANDOFF.md`, `IMPLEMENTATION_PLAN.md`, `ACCEPTANCE_CHECKLIST.md`, and
 the six phase prompts. Every later phase needs explicit product-owner approval.
 
+## Draft design references
+
+- `references/design-proposal-01-desktop.png`: generated desktop proposal.
+- `references/design-proposal-01-mobile.png`: generated narrow proposal.
+
+Generated on 2026-08-19 with the built-in image generation tool from the
+approved Management shell references and the Phase 0 handoff. Both remain
+`DRAFT`. They preserve the one-field, local-only direction, but they do not
+approve product decisions or authorize implementation. The desktop subtitle
+renders `recus` without the required cedilla; implementation copy must use the
+repository-authoritative `reçus` spelling, and the reference should be corrected
+or explicitly accepted before approval.
+
 ## Stop condition
 
-Stop here. Do not generate a design, add a hub card, create a route, use
-fixtures, add contracts/schema/migrations, change receipt payloads/rendering, or
-touch operational data until Phase 1 is explicitly approved.
+Stop here. Do not approve the draft automatically, add a hub card, create a
+route, use fixtures, add contracts/schema/migrations, change receipt
+payloads/rendering, or touch operational data until the product owner reviews
+the references and explicitly approves the next implementation phase.

@@ -184,11 +184,10 @@ export class DeterministicSyntheticExtractionAdapter implements ContractExtracti
         : [
             {
               field: 'position' as const,
-              candidateValue: 'Chef de rang',
+              candidateValue: 'Responsable de salle',
               confidence: 'high' as const,
               sourcePage: 2,
-              excerpt:
-                'Le salarié exercera les fonctions de chef de rang au sein de l’établissement.',
+              excerpt: 'Poste synthetique - Responsable de salle',
               issueCodes: [],
             },
             ...(document.scenario === 'partial'
@@ -196,20 +195,18 @@ export class DeterministicSyntheticExtractionAdapter implements ContractExtracti
               : [
                   {
                     field: 'employmentTermType' as const,
-                    candidateValue: 'fixed_term' as const,
+                    candidateValue: 'indefinite' as const,
                     confidence: 'medium' as const,
                     sourcePage: 1,
-                    excerpt:
-                      'Le présent contrat est conclu pour une durée déterminée.',
+                    excerpt: 'Contrat de travail synthetique - CDI',
                     issueCodes: ['blocked_by_dependency' as const],
                   },
                   {
                     field: 'contractWeeklyMinutes' as const,
-                    candidateValue: 2_100,
+                    candidateValue: 2_340,
                     confidence: 'low' as const,
                     sourcePage: 3,
-                    excerpt:
-                      'La durée hebdomadaire de travail est fixée à trente-cinq heures.',
+                    excerpt: 'Duree synthetique - 39 heures par semaine',
                     issueCodes: [],
                   },
                 ]),
@@ -273,9 +270,9 @@ async function createSyntheticContractPdf(): Promise<Uint8Array> {
   const document = await PDFDocument.create();
   const font = await document.embedFont(StandardFonts.Helvetica);
   const pages = [
-    'Contrat de travail synthetique - CDD',
-    'Poste synthetique - Chef de rang',
-    'Duree synthetique - 35 heures par semaine',
+    'Contrat de travail synthetique - CDI',
+    'Poste synthetique - Responsable de salle',
+    'Duree synthetique - 39 heures par semaine',
   ];
   for (const text of pages) {
     const page = document.addPage([595, 842]);

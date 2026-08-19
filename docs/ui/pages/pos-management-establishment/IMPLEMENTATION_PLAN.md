@@ -16,6 +16,10 @@ After explicit approval, generate and review the responsive proposal from
 labelled, development-only, and disconnected from site-agent/db-pos. Do not add
 the working hub route/card merely to make a mockup navigable.
 
+Design generation was authorized and completed on 2026-08-19. The desktop and
+mobile outputs remain `DRAFT`; product review and the remaining product/data
+decisions are still required. No fixture prototype was authorized.
+
 ## Phase 2 — Component structure
 
 After design approval, define route-local components by responsibility. Reuse

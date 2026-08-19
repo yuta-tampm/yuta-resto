@@ -4,6 +4,7 @@ vi.mock('server-only', () => ({}));
 
 import {
   ContractExtractionServiceError,
+  DeterministicSyntheticExtractionAdapter,
   DevelopmentExtractionRateLimiter,
   runSyntheticContractExtraction,
   type ContractExtractionDependencies,
@@ -65,6 +66,24 @@ function dependencies(
 }
 
 describe('synthetic personnel contract extraction service', () => {
+  it('keeps the generated comparison values different from the current QA dossier', async () => {
+    const extracted = await new DeterministicSyntheticExtractionAdapter(
+      () => new Date('2026-08-19T10:00:00.000Z'),
+    ).extract(request, {
+      source: 'synthetic_fixture',
+      pageCount: 3,
+      scenario: 'complete',
+    });
+
+    expect(extracted).toMatchObject({
+      suggestions: [
+        { field: 'position', candidateValue: 'Responsable de salle' },
+        { field: 'employmentTermType', candidateValue: 'indefinite' },
+        { field: 'contractWeeklyMinutes', candidateValue: 2_340 },
+      ],
+    });
+  });
+
   it('authorizes and resolves the scoped versions before preparing or extracting', async () => {
     const calls: string[] = [];
     const configured = dependencies({

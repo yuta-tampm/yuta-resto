@@ -353,6 +353,11 @@ request. Tests use a fake provider response and make no external request. This
 does not approve real employee files, a production account/project/model, or
 production processing.
 
+For local comparison QA, the generated Phase 6 PDF intentionally differs from
+the current fictional dossier: `Responsable de salle`, CDI, and 39 weekly hours.
+This makes the review and apply-capable differences visible while keeping the
+stored signed document completely outside the extraction path.
+
 A cross-feature OpenAI eligibility dossier now records four proposed YUTA use
 cases: review analysis, reply drafting, marketing visual generation, and signed-
 contract extraction. It proposes separate Reputation, Creative, and Personnel

@@ -23,7 +23,8 @@
 - [ ] Approve receipt snapshot timing and payload compatibility approach.
 - [ ] Confirm optional omission when unconfigured and immutable old jobs after rename.
 - [ ] Confirm legal/fiscal/cloud fields stay excluded.
-- [ ] Decide whether design generation and an explicitly labelled fixture prototype are authorized.
+- [x] Design generation was explicitly authorized and completed on 2026-08-19.
+- [ ] Decide whether an explicitly labelled fixture prototype is authorized.
 - [ ] Approve adding the `Établissement` hub card; keep reports unavailable.
 
 ## Later implementation acceptance

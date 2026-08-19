@@ -1,6 +1,6 @@
 # POS Management Establishment — Design Handoff
 
-Status: Ready for design generation after separate approval
+Status: Draft references generated; review pending
 
 Visibility: Engineering
 
@@ -71,5 +71,15 @@ Review criteria: shared-shell fidelity; one-task hierarchy; truthful proposed/un
 
 ## Handoff result
 
-No design was generated. Product owner must first approve Phase 1/design
-generation and resolve or explicitly defer the decisions in `PRODUCT_SCOPE.md`.
+The built-in image generation tool produced two draft references on 2026-08-19:
+
+- `references/design-proposal-01-desktop.png`;
+- `references/design-proposal-01-mobile.png`.
+
+Both reuse the Management shell and keep the proposal limited to one local
+display-name field, immutable old receipts, and no cloud synchronization. They
+remain `DRAFT` pending product-owner review. The desktop subtitle renders
+`recus` instead of `reçus`; this generated-text defect is not approved copy and
+must be corrected or explicitly accepted before reference approval. No route,
+fixture, API, contract, schema, migration, operational data, receipt payload, or
+runtime behavior was created or changed.
