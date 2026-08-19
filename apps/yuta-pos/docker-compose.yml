@@ -8,6 +8,7 @@ services:
     ports:
       - '${POS_PORT:-3003}:3000'
     environment:
+      HOSTNAME: 0.0.0.0
       SITE_AGENT_URL: ${SITE_AGENT_URL}
       NEXT_PUBLIC_POS_URL: ${NEXT_PUBLIC_POS_URL:-http://localhost:3003}
     networks:
