@@ -1,28 +1,216 @@
 'use client';
 
+import {
+  localKitchenEventSchema,
+  type LocalKitchenScreen,
+} from '@yuta/contracts/local-pos';
+import { Button } from '@yuta/ui';
+import { Volume2, VolumeX } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
+import {
+  kitchenEventMatchesScreen,
+  shouldPlayKitchenChime,
+} from '../_lib/kitchen-live-updates';
 
-const refreshIntervalMs = 10_000;
+const fallbackRefreshIntervalMs = 60_000;
+const eventDebounceMs = 200;
+const soundPreferenceKey = 'yuta:kitchen-sound-enabled';
 
-export function KitchenAutoRefresh() {
+export function KitchenAutoRefresh({
+  selectedScreen,
+}: {
+  selectedScreen: LocalKitchenScreen;
+}) {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const refreshInFlightRef = useRef(false);
+  const refreshQueuedRef = useRef(false);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const audioReadyRef = useRef(false);
+  const lastChimeAtRef = useRef(0);
+  const [audioReady, setAudioReady] = useState(false);
 
-  useEffect(() => {
-    const refreshIfVisible = () => {
-      if (document.visibilityState === 'visible') {
-        router.refresh();
+  const setAudioState = useCallback((ready: boolean) => {
+    audioReadyRef.current = ready;
+    setAudioReady(ready);
+  }, []);
+
+  const enableSound = useCallback(
+    async (playConfirmation: boolean) => {
+      try {
+        const context = audioContextRef.current ?? new AudioContext();
+        audioContextRef.current = context;
+        await context.resume();
+        if (context.state !== 'running') return;
+        window.localStorage.setItem(soundPreferenceKey, 'true');
+        setAudioState(true);
+        if (playConfirmation) playKitchenChime(context);
+      } catch {
+        setAudioState(false);
       }
-    };
+    },
+    [setAudioState],
+  );
 
-    const intervalId = window.setInterval(refreshIfVisible, refreshIntervalMs);
-    document.addEventListener('visibilitychange', refreshIfVisible);
+  const toggleSound = useCallback(() => {
+    if (!audioReadyRef.current) {
+      void enableSound(true);
+      return;
+    }
+    window.localStorage.setItem(soundPreferenceKey, 'false');
+    setAudioState(false);
+    void audioContextRef.current?.suspend();
+  }, [enableSound, setAudioState]);
 
-    return () => {
-      window.clearInterval(intervalId);
-      document.removeEventListener('visibilitychange', refreshIfVisible);
-    };
+  const requestRefresh = useCallback(() => {
+    if (document.visibilityState !== 'visible') return;
+    if (refreshInFlightRef.current) {
+      refreshQueuedRef.current = true;
+      return;
+    }
+    refreshInFlightRef.current = true;
+    startTransition(() => router.refresh());
   }, [router]);
 
-  return null;
+  useEffect(() => {
+    if (window.localStorage.getItem(soundPreferenceKey) === 'true') {
+      void enableSound(false);
+    }
+    return () => {
+      void audioContextRef.current?.close();
+      audioContextRef.current = null;
+    };
+  }, [enableSound]);
+
+  useEffect(() => {
+    if (isPending || !refreshInFlightRef.current) return;
+    refreshInFlightRef.current = false;
+    if (refreshQueuedRef.current) {
+      refreshQueuedRef.current = false;
+      requestRefresh();
+    }
+  }, [isPending, requestRefresh]);
+
+  useEffect(() => {
+    let source: EventSource | null = null;
+    let debounceTimer: number | null = null;
+
+    const scheduleRefresh = (delay = eventDebounceMs) => {
+      if (debounceTimer !== null) window.clearTimeout(debounceTimer);
+      debounceTimer = window.setTimeout(() => {
+        debounceTimer = null;
+        requestRefresh();
+      }, delay);
+    };
+    const connect = () => {
+      if (document.visibilityState !== 'visible' || source) return;
+      source = new EventSource('/api/kitchen-events');
+      source.addEventListener('open', () => scheduleRefresh(0));
+      source.addEventListener('kitchen_changed', (rawEvent) => {
+        if (!(rawEvent instanceof MessageEvent)) return;
+        try {
+          const parsed = localKitchenEventSchema.safeParse(
+            JSON.parse(rawEvent.data as string),
+          );
+          if (
+            parsed.success &&
+            kitchenEventMatchesScreen(parsed.data, selectedScreen)
+          ) {
+            scheduleRefresh();
+            const now = Date.now();
+            const context = audioContextRef.current;
+            if (
+              audioReadyRef.current &&
+              context?.state === 'running' &&
+              shouldPlayKitchenChime({
+                event: parsed.data,
+                selectedScreen,
+                now,
+                lastPlayedAt: lastChimeAtRef.current,
+              })
+            ) {
+              playKitchenChime(context);
+              lastChimeAtRef.current = now;
+            }
+          }
+        } catch {
+          // Ignore malformed notifications; the periodic refresh remains active.
+        }
+      });
+    };
+    const disconnect = () => {
+      source?.close();
+      source = null;
+    };
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        connect();
+        scheduleRefresh(0);
+      } else {
+        disconnect();
+      }
+    };
+    const handleOnline = () => {
+      disconnect();
+      connect();
+      scheduleRefresh(0);
+    };
+
+    connect();
+    const intervalId = window.setInterval(
+      requestRefresh,
+      fallbackRefreshIntervalMs,
+    );
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleVisibilityChange);
+    window.addEventListener('online', handleOnline);
+
+    return () => {
+      disconnect();
+      if (debounceTimer !== null) window.clearTimeout(debounceTimer);
+      window.clearInterval(intervalId);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleVisibilityChange);
+      window.removeEventListener('online', handleOnline);
+    };
+  }, [requestRefresh, selectedScreen]);
+
+  return (
+    <Button
+      type="button"
+      variant={audioReady ? 'success' : 'secondary'}
+      size="sm"
+      className="min-h-11 shrink-0 rounded-lg px-3"
+      aria-label={audioReady ? 'Désactiver le son' : 'Activer le son'}
+      aria-pressed={audioReady}
+      title={
+        audioReady ? 'Son activé' : 'Activer le son des nouvelles commandes'
+      }
+      onClick={toggleSound}
+    >
+      {audioReady ? (
+        <Volume2 className="h-4 w-4" />
+      ) : (
+        <VolumeX className="h-4 w-4" />
+      )}
+      Son
+    </Button>
+  );
+}
+
+function playKitchenChime(context: AudioContext) {
+  const startAt = context.currentTime;
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  oscillator.type = 'sine';
+  oscillator.frequency.setValueAtTime(880, startAt);
+  oscillator.frequency.setValueAtTime(1_175, startAt + 0.2);
+  gain.gain.setValueAtTime(0.0001, startAt);
+  gain.gain.exponentialRampToValueAtTime(0.2, startAt + 0.02);
+  gain.gain.exponentialRampToValueAtTime(0.0001, startAt + 0.55);
+  oscillator.connect(gain);
+  gain.connect(context.destination);
+  oscillator.start(startAt);
+  oscillator.stop(startAt + 0.56);
 }

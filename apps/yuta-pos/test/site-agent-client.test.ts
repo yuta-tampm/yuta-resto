@@ -63,6 +63,28 @@ const orderItemSnapshot = {
 };
 
 describe('yuta-pos site-agent client', () => {
+  it('opens the notification-only Kitchen event stream without caching', async () => {
+    const response = new Response('retry: 3000\n\n', {
+      headers: { 'Content-Type': 'text/event-stream' },
+    });
+    const fetchImplementation = vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(response);
+    const client = createSiteAgentClient({
+      baseUrl: 'http://site-agent.test/',
+      fetchImplementation,
+    });
+
+    await expect(client.openKitchenEventStream()).resolves.toBe(response);
+    expect(fetchImplementation).toHaveBeenCalledWith(
+      'http://site-agent.test/api/v1/kitchen/events',
+      expect.objectContaining({
+        cache: 'no-store',
+        headers: { Accept: 'text/event-stream' },
+      }),
+    );
+  });
+
   it('loads and validates site-agent health', async () => {
     const fetchImplementation = vi.fn<typeof fetch>().mockResolvedValue(
       Response.json({
@@ -620,6 +642,54 @@ describe('yuta-pos site-agent client', () => {
     expect(result.orders[0]?.itemCount).toBe(2);
     expect(fetchImplementation).toHaveBeenCalledWith(
       'http://site-agent.test/api/v1/orders/home?view=paid_today&page=2&limit=50&q=Terrasse',
+      expect.objectContaining({ cache: 'no-store' }),
+    );
+  });
+
+  it('loads the bounded Kitchen queue from one versioned endpoint', async () => {
+    const fetchImplementation = vi.fn<typeof fetch>().mockResolvedValue(
+      Response.json({
+        serviceDay: {
+          start: '2026-07-27T03:00:00.000Z',
+          end: '2026-07-28T03:00:00.000Z',
+        },
+        screen: 'counter',
+        queue: 'active',
+        tickets: [
+          {
+            order: { ...orderSnapshot, status: 'sent' },
+            items: [
+              {
+                ...orderItemSnapshot,
+                status: 'sent',
+                kitchenStationSnapshot: 'bar',
+                categoryName: 'Boissons',
+                categorySortOrder: 1,
+                itemSortOrder: 2,
+              },
+            ],
+          },
+        ],
+        counts: {
+          stations: { kitchen: 0, bar: 1, dessert: 0 },
+          queues: { active: 1, ready: 0 },
+        },
+      }),
+    );
+    const client = createSiteAgentClient({
+      baseUrl: 'http://site-agent.test',
+      fetchImplementation,
+    });
+
+    const result = await client.listKitchenQueue({
+      screen: 'counter',
+      queue: 'active',
+      limit: 100,
+    });
+
+    expect(result.tickets[0]?.items[0]?.categoryName).toBe('Boissons');
+    expect(fetchImplementation).toHaveBeenCalledWith(
+      'http://site-agent.test/api/v1/kitchen?screen=counter&queue=active&limit=100',
       expect.objectContaining({ cache: 'no-store' }),
     );
   });

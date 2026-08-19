@@ -22,6 +22,8 @@ export const localPosRoutes = {
   comboRuleGroupItems: `${localPosApiBasePath}/catalog/combo-group-items`,
   orders: `${localPosApiBasePath}/orders`,
   ordersHome: `${localPosApiBasePath}/orders/home`,
+  kitchenQueue: `${localPosApiBasePath}/kitchen`,
+  kitchenEvents: `${localPosApiBasePath}/kitchen/events`,
   orderItems: `${localPosApiBasePath}/order-items`,
   payments: `${localPosApiBasePath}/payments`,
   printJobs: `${localPosApiBasePath}/print-jobs`,
@@ -665,6 +667,78 @@ export const localOrderDetailResponseSchema = z
     discounts: z.array(localOrderDiscountSchema),
   })
   .strict();
+
+export const localKitchenScreenSchema = z.enum(['kitchen', 'counter']);
+export const localKitchenQueueSchema = z.enum(['active', 'ready']);
+export const localKitchenQueueQuerySchema = z
+  .object({
+    screen: localKitchenScreenSchema.default('kitchen'),
+    queue: localKitchenQueueSchema.default('active'),
+    limit: z.coerce.number().int().min(1).max(200).default(100),
+  })
+  .strict();
+export const localKitchenQueueItemSchema = localOrderItemSchema
+  .extend({
+    categoryName: z.string().min(1).nullable(),
+    categorySortOrder: z.number().int().nullable(),
+    itemSortOrder: z.number().int().nullable(),
+  })
+  .strict();
+export const localKitchenQueueResponseSchema = z
+  .object({
+    serviceDay: z
+      .object({
+        start: isoDateTimeSchema,
+        end: isoDateTimeSchema,
+      })
+      .strict(),
+    screen: localKitchenScreenSchema,
+    queue: localKitchenQueueSchema,
+    tickets: z.array(
+      z
+        .object({
+          order: localOrderSummarySchema,
+          items: z.array(localKitchenQueueItemSchema).min(1),
+        })
+        .strict(),
+    ),
+    counts: z
+      .object({
+        stations: z
+          .object({
+            kitchen: z.number().int().nonnegative(),
+            bar: z.number().int().nonnegative(),
+            dessert: z.number().int().nonnegative(),
+          })
+          .strict(),
+        queues: z
+          .object({
+            active: z.number().int().nonnegative(),
+            ready: z.number().int().nonnegative(),
+          })
+          .strict(),
+      })
+      .strict(),
+  })
+  .strict();
+export const localKitchenEventScreenSchema = z.enum([
+  'kitchen',
+  'counter',
+  'all',
+]);
+export const localKitchenEventReasonSchema = z.enum([
+  'ticket_created',
+  'state_changed',
+]);
+export const localKitchenEventSchema = z
+  .object({
+    type: z.literal('kitchen_changed'),
+    revision: z.string().min(1),
+    screen: localKitchenEventScreenSchema,
+    reason: localKitchenEventReasonSchema,
+    occurredAt: isoDateTimeSchema,
+  })
+  .strict();
 export const localOrderItemResponseSchema = z
   .object({ item: localOrderItemSchema })
   .strict();
@@ -739,6 +813,18 @@ export const localOrderCommandSchema = z.discriminatedUnion('action', [
       idempotencyKey: uuidV7Schema,
       allergyAcknowledged: z.boolean().default(false),
       staffUserId: identifierSchema,
+    })
+    .strict(),
+  z
+    .object({
+      action: z.literal('mark_station_preparing'),
+      station: z.enum(['kitchen', 'bar', 'dessert', 'counter']),
+    })
+    .strict(),
+  z
+    .object({
+      action: z.literal('mark_station_sent'),
+      station: z.enum(['kitchen', 'bar', 'dessert', 'counter']),
     })
     .strict(),
 ]);
@@ -1181,6 +1267,21 @@ export type LocalOrdersHomeRow = z.infer<typeof localOrdersHomeRowSchema>;
 export type LocalOrdersHomeResponse = z.infer<
   typeof localOrdersHomeResponseSchema
 >;
+export type LocalKitchenScreen = z.infer<typeof localKitchenScreenSchema>;
+export type LocalKitchenQueue = z.infer<typeof localKitchenQueueSchema>;
+export type LocalKitchenQueueQuery = z.infer<
+  typeof localKitchenQueueQuerySchema
+>;
+export type LocalKitchenQueueResponse = z.infer<
+  typeof localKitchenQueueResponseSchema
+>;
+export type LocalKitchenEventScreen = z.infer<
+  typeof localKitchenEventScreenSchema
+>;
+export type LocalKitchenEventReason = z.infer<
+  typeof localKitchenEventReasonSchema
+>;
+export type LocalKitchenEvent = z.infer<typeof localKitchenEventSchema>;
 export type AddLocalOrderItemInput = z.infer<
   typeof addLocalOrderItemInputSchema
 >;

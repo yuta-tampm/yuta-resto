@@ -138,30 +138,60 @@ N/A       not applicable for this run
 
 ## Kitchen Flow
 
-| Case                                        | Expected Result                                         | Result | Notes |
-| ------------------------------------------- | ------------------------------------------------------- | -----: | ----- |
-| Send pending items to kitchen               | Items become `Cuisine`; kitchen ticket job is created   |        |       |
-| Desktop kitchen-send placement              | Send action is at the bottom of `Commande actuelle`     |        |       |
-| Mobile kitchen-send placement               | Send action appears in the order drawer above `Fermer`  |        |       |
-| Send button with no pending items           | Button is disabled                                      |        |       |
-| Send allergic item without confirmation     | Kitchen send is blocked                                 |        |       |
-| Confirm allergy and send                    | Acknowledgement is stored on the affected item          |        |       |
-| Kitchen displays allergic item              | Red alert appears directly below the affected item      |        |       |
-| Allergy missing allergen or severity        | Item instruction form cannot be saved                   |        |       |
-| Mark allergic item ready before KDS confirm | `Pret` remains unavailable                              |        |       |
-| Confirm allergy on KDS                      | Confirmation is stored and `Pret` becomes available     |        |       |
-| Kitchen station filter `Cuisine`            | Only kitchen station items are shown                    |        |       |
-| Kitchen station filter `Bar`                | Only bar station items are shown                        |        |       |
-| Kitchen station filter `Dessert`            | Only dessert station items are shown                    |        |       |
-| Mark item `Preparer`                        | Item becomes `Preparation`                              |        |       |
-| Mark item `Pret`                            | Item becomes `Pret`                                     |        |       |
-| Open kitchen `Historique`                   | Ready items are visible by station                      |        |       |
-| Tap `Reouvrir` on a ready item              | Item returns to `Preparation` and active kitchen queue  |        |       |
-| Tap `Retour` on a preparing item            | Item returns to `Envoye`                                |        |       |
-| Paid order in kitchen `A preparer`          | Item can still be marked `Preparer` or `Pret`           |        |       |
-| Paid order in kitchen `Historique`          | Ready item can still be reopened for kitchen correction |        |       |
-| Cancelled order in kitchen                  | Item is read-only and does not show rollback buttons    |        |       |
-| Order status refreshes from item statuses   | Order status reflects sent/preparing/ready state        |        |       |
+| Case                                        | Expected Result                                                                                                                                                | Result | Notes |
+| ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | -----: | ----- |
+| Send pending items to kitchen               | Items become `Cuisine`; kitchen ticket job is created                                                                                                          |        |       |
+| Desktop kitchen-send placement              | Send action is at the bottom of `Commande actuelle`                                                                                                            |        |       |
+| Mobile kitchen-send placement               | Send action appears in the order drawer above `Fermer`                                                                                                         |        |       |
+| Send button with no pending items           | Button is disabled                                                                                                                                             |        |       |
+| Send allergic item without confirmation     | Kitchen send is blocked                                                                                                                                        |        |       |
+| Confirm allergy and send                    | Acknowledgement is stored on the affected item                                                                                                                 |        |       |
+| Kitchen displays allergic item              | Red alert appears directly below the affected item                                                                                                             |        |       |
+| Allergy missing allergen or severity        | Item instruction form cannot be saved                                                                                                                          |        |       |
+| Mark allergic item ready before KDS confirm | `Pret` remains unavailable                                                                                                                                     |        |       |
+| Confirm allergy on KDS                      | Confirmation is stored and `Pret` becomes available                                                                                                            |        |       |
+| Kitchen station filter `Cuisine`            | Only kitchen station items are shown                                                                                                                           |        |       |
+| Combined `Bar` / `Desserts` screen          | One two-line button shows both bar and dessert station items                                                                                                   |        |       |
+| Cuisine course order                        | Unfinished Entrées appear before other Cuisine categories, following catalog order within each priority                                                        |        |       |
+| Counter station order                       | Unfinished Bar rows appear before Dessert rows regardless of order-item insertion order                                                                        |        |       |
+| Course/station background                   | Entrées use warning-soft, Bar uses info-soft, and ready rows retain the completed treatment                                                                    |        |       |
+| Bounded Kitchen read                        | One `/api/v1/kitchen` response supplies selected tickets and authoritative station/queue counts without per-order detail requests                              |        |       |
+| Kitchen limit after filtering               | Service-day, production station/status, and active/ready queue selection happen before the ticket limit                                                        |        |       |
+| Kitchen read query budget                   | A populated refresh uses at most three database queries and does not load discounts or the full catalog                                                        |        |       |
+| Kitchen SSE notification payload            | Event contains only revision, affected screen, reason, timestamp, and type; no order/item payload                                                              |        |       |
+| Matching Kitchen SSE event                  | Visible selected screen refreshes once after a short debounce                                                                                                  |        |       |
+| Other-screen Kitchen SSE event              | Selected screen does not refresh                                                                                                                               |        |       |
+| Burst Kitchen SSE events                    | Events are debounced and a pending refresh is coalesced instead of overlapping                                                                                 |        |       |
+| Site-agent reconnect                        | Stream reconnects and Kitchen reloads current persisted state                                                                                                  |        |       |
+| Hidden Kitchen tab                          | Stream closes while hidden and reconnects plus refreshes when visible                                                                                          |        |       |
+| Kitchen notification fallback               | Visible Kitchen refreshes after 60 seconds even when no event arrives                                                                                          |        |       |
+| Enable Kitchen sound                        | One operator click enables the green `Son` state and plays a short confirmation chime                                                                          |        |       |
+| New Cuisine batch                           | Enabled Cuisine screen plays one short chime after a non-replayed send                                                                                         |        |       |
+| New Bar / Desserts batch                    | Enabled counter screen plays one short chime after a matching non-replayed send                                                                                |        |       |
+| Kitchen state-only event                    | Preparing, ready, reopen, allergy, payment, catalog, and fallback refresh events remain silent                                                                 |        |       |
+| Kitchen sound burst                         | Multiple matching new-ticket events within 2.5 seconds produce at most one chime                                                                               |        |       |
+| Disable Kitchen sound                       | `Son` returns to muted state and later new tickets stay silent                                                                                                 |        |       |
+| Kitchen queue `A preparer`                  | Sent, preparing, and mixed-completion tickets are shown together                                                                                               |        |       |
+| Kitchen has no `En preparation` queue tab   | Preparing remains an item state, not a separate ticket queue                                                                                                   |        |       |
+| Kitchen queue `Pret`                        | Only tickets whose active rows are all ready are shown                                                                                                         |        |       |
+| Shared button with Bar and Dessert rows     | Bar and Desserts show separate order counts; the combined queue count deduplicates the order                                                                   |        |       |
+| Queue badge with a multi-item order         | One order contributes one ticket to `A preparer` or `Pret`, regardless of its item-row count or quantities                                                     |        |       |
+| Tap ticket `Tout préparer`                  | Every sent item in that order/screen becomes `Preparation` atomically                                                                                          |        |       |
+| Replay ticket `Tout préparer`               | No additional change; the command remains idempotent by state                                                                                                  |        |       |
+| Ticket prepare station isolation            | Cuisine action does not change Bar or Dessert items                                                                                                            |        |       |
+| Counter ticket prepare scope                | One transaction changes matching Bar and Dessert rows but leaves Cuisine rows unchanged                                                                        |        |       |
+| Tap ticket preparation undo                 | Preparing rows return to sent; ready and other-station rows stay intact                                                                                        |        |       |
+| Replay ticket preparation undo              | No additional change; the command remains idempotent by state                                                                                                  |        |       |
+| Mark item `Pret`                            | Item becomes `Pret`                                                                                                                                            |        |       |
+| Mark one item `Pret` in a multi-item ticket | Ticket keeps the same height and board position; no `Terminés · N` row is inserted, the ready row moves below unfinished rows, and other tickets do not reflow |        |       |
+| Reopen that ready item                      | Ticket keeps the same height and board position; the row returns above completed rows and other tickets do not reflow                                          |        |       |
+| Mark the final active item `Pret`           | The completed ticket leaves `A preparer`; downstream reflow is expected only because the ticket is removed from that queue                                     |        |       |
+| Open kitchen `Pret`                         | Fully-ready tickets are visible by station                                                                                                                     |        |       |
+| Tap `Reouvrir` on a ready item              | Item returns to `Preparation` and active kitchen queue                                                                                                         |        |       |
+| Paid order in kitchen `A preparer`          | Ticket can still use `Tout préparer`; items can become `Pret`                                                                                                  |        |       |
+| Paid order in kitchen `Pret`                | Ready item can still be reopened for kitchen correction                                                                                                        |        |       |
+| Cancelled order in kitchen                  | Item is read-only and does not show rollback buttons                                                                                                           |        |       |
+| Order status refreshes from item statuses   | Order status reflects sent/preparing/ready state                                                                                                               |        |       |
 
 ## Full Payment
 

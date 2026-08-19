@@ -308,40 +308,69 @@ Open:
 http://localhost:3003/kitchen
 ```
 
-Kitchen staff can filter by station:
+Kitchen staff can filter by production screen:
 
 ```txt
 Cuisine
-Bar
-Dessert
+Bar / Desserts
 ```
 
-Station tabs show the unfinished item count for that station across
-`A preparer` and `En preparation`. Items already in `Pret` are not included in
-the station badge count. When staff switch station, the POS keeps the current
-status if that station has matching items; otherwise it opens the first
-unfinished queue for that station, starting with `A preparer`.
+Screen tabs show the order-ticket count for that screen across the active and
+ready queues. Queue badges also count order tickets, not item rows or product
+quantity. The shared `Bar / Desserts` button shows one number for Bar and a
+second number for Desserts. An order with both contributes to both station
+numbers but only once to the selected combined queue count. When staff switch screen, the POS preserves the selected
+`A preparer` or `Pret` queue.
 
 The kitchen screen is a production queue, not a full order-history screen.
-By default it opens `A preparer` and only loads the selected station/status
-queue.
+By default it opens the combined `A preparer` queue for the selected screen.
 It shows active kitchen work only: items in `sent`, `preparing`, or `ready`.
 It is limited to the current service day, from 05:00 to 05:00 local time. This keeps the queue from showing old unfinished history while allowing late-night orders to stay visible after midnight.
-When the kitchen screen is open, it refreshes automatically every 10 seconds while the browser tab is visible. This keeps cancelled orders and status changes reasonably fresh without a permanent realtime connection.
+When the kitchen screen is visible, local order and item changes trigger an
+automatic refresh through the local event stream. If the connection is
+interrupted, it reconnects automatically and a 60-second refresh remains as a
+safety net. Hidden tabs disconnect and reload current state when visible again.
+
+Select `Son` once on the Kitchen header to authorize browser audio. The green
+state means sound is active; select it again to mute. A short chime announces a
+new batch for the current Cuisine or Bar / Desserts screen. Preparation,
+completion, allergy confirmation, reconnect, and periodic refreshes do not
+play a sound. The browser may require reactivation after a restart or a new
+session.
 Order-level notes are shown on the kitchen screen inside the matching order group, so staff can see general instructions attached during order creation. Item preparation notes and red allergy alerts appear directly below the affected article. Structured quick instructions appear as separate labels and Mochi flavours appear as quantities. Allergy warnings stay expanded above ordinary notes. Kitchen staff must use `Confirmer l'allergie` before an allergic item can become `Pret`; this kitchen confirmation is stored separately from the POS send acknowledgement.
 
 Kitchen staff can switch between:
 
 ```txt
-A preparer       sent items
-En preparation   preparing items
-Pret             ready items; paid orders can still be reopened for kitchen corrections
+A preparer       sent, preparing, and mixed-completion tickets
+Pret             fully-ready tickets; paid orders can still be reopened for kitchen corrections
 ```
 
 The `Tous` view is intentionally not available in the MVP kitchen queue. Use
 the POS home/orders list for full command lookup.
 
 Items appear grouped by order/table.
+
+Within unfinished Cuisine rows, items in the current catalog category
+`Entrées` appear before the other courses and use a light warning background.
+On the combined screen, Bar items appear before Desserts and use a light info
+background. Completed rows still move below unfinished rows and keep their
+crossed-out ready presentation. Category classification uses the current local
+catalog, so a later catalog reassignment also changes Kitchen presentation.
+
+Within `A preparer`, tickets stay ordered by their original kitchen-send time,
+oldest first. Starting preparation or completing only some rows does not move a
+ticket ahead of or behind another active ticket. It leaves this queue only when
+all active production rows are ready.
+
+When a ticket still contains `sent` items, its header shows one flame action.
+`Tout préparer` moves every `sent` item in that order and selected screen to
+`preparing` in one atomic operation. On `Bar / Desserts`, this includes both
+stations but never changes Cuisine. Once no sent row remains and the ticket still contains preparing rows,
+the same header position shows an undo icon. `Annuler la préparation` atomically
+returns only those preparing rows to `sent`; ready rows and the other screen are
+unchanged. Unfinished item rows keep only the direct `Pret` action; ready rows
+retain one correction back to preparation.
 
 Kitchen item statuses:
 
@@ -354,11 +383,9 @@ Pret         -> ready
 Use:
 
 ```txt
-Preparer    sent -> preparing
+Tout preparer (ticket)   all sent items in this order/screen -> preparing
 Pret        sent/preparing -> ready
-Retour      preparing -> sent, for a mistaken Preparer tap
 Reouvrir    ready -> preparing, for a mistaken Pret tap
-Envoye      ready -> sent, when the item should return fully to the queue
 ```
 
 Paid orders can still move through the kitchen workflow. Cancelled orders are read-only on the kitchen screen.

@@ -17,6 +17,9 @@ import {
   cloudUserSchema,
   moneySchema,
   localOrderCommandSchema,
+  localKitchenEventSchema,
+  localKitchenQueueQuerySchema,
+  localKitchenQueueResponseSchema,
   localOrdersHomeQuerySchema,
   localOrdersHomeResponseSchema,
   localPrintSettingsSchema,
@@ -79,6 +82,42 @@ describe('@yuta/contracts', () => {
     }
     expect(sendCommand.allergyAcknowledged).toBe(false);
     expect(
+      localOrderCommandSchema.parse({
+        action: 'mark_station_preparing',
+        station: 'kitchen',
+      }),
+    ).toEqual({ action: 'mark_station_preparing', station: 'kitchen' });
+    expect(
+      localOrderCommandSchema.parse({
+        action: 'mark_station_preparing',
+        station: 'counter',
+      }),
+    ).toEqual({ action: 'mark_station_preparing', station: 'counter' });
+    expect(
+      localOrderCommandSchema.safeParse({
+        action: 'mark_station_preparing',
+        station: 'none',
+      }).success,
+    ).toBe(false);
+    expect(
+      localOrderCommandSchema.parse({
+        action: 'mark_station_sent',
+        station: 'dessert',
+      }),
+    ).toEqual({ action: 'mark_station_sent', station: 'dessert' });
+    expect(
+      localOrderCommandSchema.parse({
+        action: 'mark_station_sent',
+        station: 'counter',
+      }),
+    ).toEqual({ action: 'mark_station_sent', station: 'counter' });
+    expect(
+      localOrderCommandSchema.safeParse({
+        action: 'mark_station_sent',
+        station: 'none',
+      }).success,
+    ).toBe(false);
+    expect(
       updateLocalPrintSettingsInputSchema.parse({
         kitchenEnabled: 'true',
         counterEnabled: 'false',
@@ -121,6 +160,58 @@ describe('@yuta/contracts', () => {
         topPaddingLines: '1',
         leftPaddingChars: '2',
         bottomPaddingLines: '3',
+      }).success,
+    ).toBe(false);
+  });
+
+  it('validates the bounded Kitchen read contract', () => {
+    expect(localKitchenQueueQuerySchema.parse({})).toEqual({
+      screen: 'kitchen',
+      queue: 'active',
+      limit: 100,
+    });
+    expect(
+      localKitchenQueueQuerySchema.parse({
+        screen: 'counter',
+        queue: 'ready',
+        limit: '25',
+      }),
+    ).toEqual({ screen: 'counter', queue: 'ready', limit: 25 });
+    expect(
+      localKitchenQueueResponseSchema.safeParse({
+        serviceDay: {
+          start: '2026-07-27T03:00:00.000Z',
+          end: '2026-07-28T03:00:00.000Z',
+        },
+        screen: 'kitchen',
+        queue: 'active',
+        tickets: [],
+        counts: {
+          stations: { kitchen: 0, bar: 0, dessert: 0 },
+          queues: { active: 0, ready: 0 },
+        },
+      }).success,
+    ).toBe(true);
+  });
+
+  it('validates notification-only Kitchen events', () => {
+    expect(
+      localKitchenEventSchema.parse({
+        type: 'kitchen_changed',
+        revision: 'boot-id:4',
+        screen: 'counter',
+        reason: 'ticket_created',
+        occurredAt: '2026-07-27T12:00:00.000Z',
+      }),
+    ).toMatchObject({ screen: 'counter', revision: 'boot-id:4' });
+    expect(
+      localKitchenEventSchema.safeParse({
+        type: 'kitchen_changed',
+        revision: 'boot-id:4',
+        screen: 'counter',
+        reason: 'state_changed',
+        occurredAt: '2026-07-27T12:00:00.000Z',
+        orders: [],
       }).success,
     ).toBe(false);
   });

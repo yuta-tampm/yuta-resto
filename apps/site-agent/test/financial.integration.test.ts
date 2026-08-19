@@ -219,6 +219,77 @@ integrationTest('site-agent financial transaction integration', () => {
       idempotencyKey: kitchenSendKey,
       allergyAcknowledged: false,
     });
+    await service.executeOrderCommand(orderId, {
+      action: 'mark_station_preparing',
+      station: 'kitchen',
+    });
+    await service.executeOrderCommand(orderId, {
+      action: 'mark_station_preparing',
+      station: 'kitchen',
+    });
+    const preparedItems = await db
+      .select({
+        station: orderItems.kitchenStationSnapshot,
+        status: orderItems.status,
+      })
+      .from(orderItems)
+      .where(eq(orderItems.orderId, orderId));
+    expect(preparedItems).toEqual(
+      expect.arrayContaining([
+        { station: 'kitchen', status: 'preparing' },
+        { station: 'bar', status: 'sent' },
+      ]),
+    );
+    await service.executeOrderCommand(orderId, {
+      action: 'mark_station_sent',
+      station: 'kitchen',
+    });
+    await service.executeOrderCommand(orderId, {
+      action: 'mark_station_sent',
+      station: 'kitchen',
+    });
+    const revertedItems = await db
+      .select({
+        station: orderItems.kitchenStationSnapshot,
+        status: orderItems.status,
+      })
+      .from(orderItems)
+      .where(eq(orderItems.orderId, orderId));
+    expect(revertedItems).toEqual(
+      expect.arrayContaining([
+        { station: 'kitchen', status: 'sent' },
+        { station: 'bar', status: 'sent' },
+      ]),
+    );
+    await service.executeOrderCommand(orderId, {
+      action: 'mark_station_preparing',
+      station: 'counter',
+    });
+    await service.executeOrderCommand(orderId, {
+      action: 'mark_station_preparing',
+      station: 'counter',
+    });
+    const counterPreparedItems = await db
+      .select({
+        station: orderItems.kitchenStationSnapshot,
+        status: orderItems.status,
+      })
+      .from(orderItems)
+      .where(eq(orderItems.orderId, orderId));
+    expect(counterPreparedItems).toEqual(
+      expect.arrayContaining([
+        { station: 'kitchen', status: 'sent' },
+        { station: 'bar', status: 'preparing' },
+      ]),
+    );
+    await service.executeOrderCommand(orderId, {
+      action: 'mark_station_sent',
+      station: 'counter',
+    });
+    await service.executeOrderCommand(orderId, {
+      action: 'mark_station_sent',
+      station: 'counter',
+    });
     const kitchenJob = await db.query.printJobs.findFirst({
       where: eq(printJobs.idempotencyKey, kitchenSendKey),
     });

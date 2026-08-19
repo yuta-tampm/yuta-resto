@@ -1,5 +1,7 @@
 import type {
   LocalCatalogResponse,
+  LocalKitchenQueueQuery,
+  LocalKitchenQueueResponse,
   LocalOrdersHomeQuery,
   LocalOrdersHomeResponse,
   LocalOrdersHomeRow,
@@ -12,6 +14,8 @@ type IsoOrderDetail = Awaited<
   ReturnType<typeof siteAgentClient.getOrderDetail>
 >;
 type IsoOrderItem = IsoOrderDetail['items'][number];
+type IsoKitchenQueueItem =
+  LocalKitchenQueueResponse['tickets'][number]['items'][number];
 
 export type PosOrder = Omit<
   IsoOrder,
@@ -78,6 +82,22 @@ export type PosOrdersHomeResponse = Omit<LocalOrdersHomeResponse, 'orders'> & {
   orders: PosOrderHomeRow[];
 };
 
+export type PosKitchenQueueItem = PosOrderItem &
+  Pick<
+    IsoKitchenQueueItem,
+    'categoryName' | 'categorySortOrder' | 'itemSortOrder'
+  >;
+
+export type PosKitchenQueueResponse = Omit<
+  LocalKitchenQueueResponse,
+  'tickets'
+> & {
+  tickets: Array<{
+    order: PosOrder;
+    items: PosKitchenQueueItem[];
+  }>;
+};
+
 export const posApi = {
   listLocalUsers: () => siteAgentClient.listLocalUsers(),
   getCatalog: (): Promise<LocalCatalogResponse> => siteAgentClient.getCatalog(),
@@ -104,11 +124,6 @@ export const posApi = {
     };
   },
 
-  async listOrderDetails(limit = 200): Promise<PosOrderDetail[]> {
-    const { orders } = await siteAgentClient.listOrders({ limit });
-    return Promise.all(orders.map(({ id }) => posApi.getOrderDetail(id)));
-  },
-
   async listOrdersHome(
     input: Partial<LocalOrdersHomeQuery>,
   ): Promise<PosOrdersHomeResponse> {
@@ -116,6 +131,19 @@ export const posApi = {
     return {
       ...response,
       orders: response.orders.map(hydrateOrderHomeRow),
+    };
+  },
+
+  async listKitchenQueue(
+    input: Partial<LocalKitchenQueueQuery>,
+  ): Promise<PosKitchenQueueResponse> {
+    const response = await siteAgentClient.listKitchenQueue(input);
+    return {
+      ...response,
+      tickets: response.tickets.map((ticket) => ({
+        order: hydrateOrder(ticket.order),
+        items: ticket.items.map(hydrateKitchenQueueItem),
+      })),
     };
   },
 
@@ -171,6 +199,17 @@ function hydrateOrderItem(item: IsoOrderItem): PosOrderItem {
     cancelledAt: toNullableDate(item.cancelledAt),
     allergyAcknowledgedAt: toNullableDate(item.allergyAcknowledgedAt),
     allergyKitchenConfirmedAt: toNullableDate(item.allergyKitchenConfirmedAt),
+  };
+}
+
+function hydrateKitchenQueueItem(
+  item: IsoKitchenQueueItem,
+): PosKitchenQueueItem {
+  return {
+    ...hydrateOrderItem(item),
+    categoryName: item.categoryName,
+    categorySortOrder: item.categorySortOrder,
+    itemSortOrder: item.itemSortOrder,
   };
 }
 

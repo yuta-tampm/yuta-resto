@@ -3,6 +3,8 @@ import { handleAuthRoutes } from './auth';
 import { handleCatalogRoute } from './catalog';
 import { handleCustomerReceiptRoutes } from './customer-receipts';
 import { handleHealthRoute } from './health';
+import { handleKitchenRoute } from './kitchen';
+import { handleKitchenEventsRoute } from './kitchen-events';
 import { handleLocalUsersRoute } from './local-users';
 import { handleOrderItemsRoute } from './order-items';
 import { handleOrdersRoute } from './orders';
@@ -16,6 +18,8 @@ export const siteAgentRoutes: RouteHandler[] = [
   handleAuthRoutes,
   handleLocalUsersRoute,
   handleCatalogRoute,
+  handleKitchenEventsRoute,
+  handleKitchenRoute,
   handleOrdersRoute,
   handleOrderItemsRoute,
   handlePaymentRoutes,

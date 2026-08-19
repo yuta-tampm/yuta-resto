@@ -138,6 +138,28 @@ Kitchen and caisse see the two production items, not the formula name.
 
 Combos are payment/discount logic, not kitchen production logic.
 
+Kitchen starts preparation at ticket/screen scope. One header action changes
+all `sent` items for the selected order and production screen to `preparing`
+inside the site-agent order transaction. The counter screen includes both Bar
+and Dessert stations while Cuisine remains isolated. The
+operation is idempotent by state when no matching `sent` item remains. Item
+rows retain the direct `ready` action; ready rows expose one correction back to
+`preparing`.
+After preparation starts, the header action remains visible as an undo control.
+It atomically returns the selected order/screen's `preparing` rows to `sent`,
+without changing ready rows or the other screen, and is idempotent by state.
+
+Kitchen exposes two ticket queues: `À préparer` combines sent, preparing, and
+mixed-completion tickets, while `Prêt` contains only fully-ready tickets.
+`En préparation` remains an item state but is not repeated as an item badge or
+exposed as a separate queue tab.
+
+The operator may explicitly enable a local Kitchen chime from the `Son`
+control. A chime represents a new, non-replayed send batch for the selected
+Cuisine or Bar / Desserts screen; it does not represent preparation, ready,
+allergy, payment, catalog, reconnect, or polling activity. Browser audio remains
+muted until authorized, and bursts are rate-limited.
+
 ### 5.3 Combo Handling
 
 Staff should add individual menu items quickly without thinking about combos.

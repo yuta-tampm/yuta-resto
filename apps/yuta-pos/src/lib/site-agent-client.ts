@@ -20,6 +20,8 @@ import {
   localComboGroupResponseSchema,
   localComboRuleResponseSchema,
   localKitchenSendResponseSchema,
+  localKitchenQueueQuerySchema,
+  localKitchenQueueResponseSchema,
   localChecksResponseSchema,
   localOrderCommandSchema,
   localOrderDetailResponseSchema,
@@ -72,6 +74,7 @@ import {
   type LocalAuthLoginInput,
   type LocalOrderCommand,
   type LocalOrderItemCommand,
+  type LocalKitchenQueueQuery,
   type LocalOrdersHomeQuery,
   type LocalOrdersQuery,
   type PayLocalCheckInput,
@@ -164,6 +167,34 @@ export function createSiteAgentClient(input?: {
     }
 
     return schema.parse(payload);
+  }
+
+  async function requestEventStream(signal?: AbortSignal) {
+    const response = await fetchImplementation(
+      `${baseUrl}${localPosRoutes.kitchenEvents}`,
+      {
+        cache: 'no-store',
+        headers: { Accept: 'text/event-stream' },
+        signal,
+      },
+    );
+    if (response.ok) return response;
+
+    const payload: unknown = await response.json().catch(() => null);
+    const error = siteAgentErrorResponseSchema.safeParse(payload);
+    if (error.success) {
+      throw new SiteAgentClientError(
+        response.status,
+        error.data.error.code,
+        error.data.error.message,
+        error.data.error.requestId,
+      );
+    }
+    throw new SiteAgentClientError(
+      response.status,
+      'INVALID_ERROR_RESPONSE',
+      'The site agent returned an invalid error response.',
+    );
   }
 
   return {
@@ -520,6 +551,21 @@ export function createSiteAgentClient(input?: {
         `${localPosRoutes.ordersHome}?${search.toString()}`,
         localOrdersHomeResponseSchema,
       );
+    },
+    async listKitchenQueue(input: Partial<LocalKitchenQueueQuery> = {}) {
+      const query = localKitchenQueueQuerySchema.parse(input);
+      const search = new URLSearchParams({
+        screen: query.screen,
+        queue: query.queue,
+        limit: String(query.limit),
+      });
+      return request(
+        `${localPosRoutes.kitchenQueue}?${search.toString()}`,
+        localKitchenQueueResponseSchema,
+      );
+    },
+    async openKitchenEventStream(signal?: AbortSignal) {
+      return requestEventStream(signal);
     },
     async createOrder(input: CreateLocalOrderInput) {
       const body = createLocalOrderInputSchema.parse(input);

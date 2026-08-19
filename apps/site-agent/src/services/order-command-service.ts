@@ -385,6 +385,12 @@ export function createOrderCommandService(db: PosDatabaseExecutor) {
       if (command.action === 'cancel') {
         return cancelOrder(tx, orderId, command.reason);
       }
+      if (command.action === 'mark_station_preparing') {
+        return markKitchenStationPreparing(tx, orderId, command.station);
+      }
+      if (command.action === 'mark_station_sent') {
+        return markKitchenStationSent(tx, orderId, command.station);
+      }
       return sendToKitchen(tx, orderId, command);
     });
   }
@@ -396,6 +402,89 @@ export function createOrderCommandService(db: PosDatabaseExecutor) {
     executeOrderItemCommand,
     executeOrderCommand,
   };
+}
+
+async function markKitchenStationPreparing(
+  db: PosDatabaseExecutor,
+  orderId: string,
+  station: 'kitchen' | 'bar' | 'dessert' | 'counter',
+) {
+  const order = await getRequiredOrder(db, orderId);
+  if (order.status === 'cancelled') {
+    throw new HttpError(
+      409,
+      'ORDER_CANCELLED',
+      'Cancelled orders cannot be changed.',
+    );
+  }
+
+  const preparedItems = await db
+    .update(orderItems)
+    .set({ status: 'preparing', readyAt: null, servedAt: null })
+    .where(
+      and(
+        eq(orderItems.orderId, orderId),
+        kitchenStationCondition(station),
+        eq(orderItems.status, 'sent'),
+      ),
+    )
+    .returning({ id: orderItems.id });
+
+  if (preparedItems.length > 0) {
+    await refreshOrderStatus(db, orderId);
+  }
+  return localOrderDetailResponseSchema.parse(
+    await loadOrderDetail(db, await getRequiredOrder(db, orderId)),
+  );
+}
+
+async function markKitchenStationSent(
+  db: PosDatabaseExecutor,
+  orderId: string,
+  station: 'kitchen' | 'bar' | 'dessert' | 'counter',
+) {
+  const order = await getRequiredOrder(db, orderId);
+  if (order.status === 'cancelled') {
+    throw new HttpError(
+      409,
+      'ORDER_CANCELLED',
+      'Cancelled orders cannot be changed.',
+    );
+  }
+
+  const revertedItems = await db
+    .update(orderItems)
+    .set({ status: 'sent', readyAt: null, servedAt: null })
+    .where(
+      and(
+        eq(orderItems.orderId, orderId),
+        kitchenStationCondition(station),
+        eq(orderItems.status, 'preparing'),
+      ),
+    )
+    .returning({ id: orderItems.id });
+
+  if (revertedItems.length > 0) {
+    await refreshOrderStatus(db, orderId);
+  }
+  return localOrderDetailResponseSchema.parse(
+    await loadOrderDetail(db, await getRequiredOrder(db, orderId)),
+  );
+}
+
+export function kitchenProductionStations(
+  station: 'kitchen' | 'bar' | 'dessert' | 'counter',
+): Array<'kitchen' | 'bar' | 'dessert'> {
+  return station === 'counter' ? ['bar', 'dessert'] : [station];
+}
+
+function kitchenStationCondition(
+  station: 'kitchen' | 'bar' | 'dessert' | 'counter',
+) {
+  return inArray(
+    orderItems.kitchenStationSnapshot,
+    kitchenProductionStations(station),
+  );
 }
 
 async function cancelOrder(

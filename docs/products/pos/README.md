@@ -196,6 +196,7 @@ DELETE /api/v1/catalog/combo-group-items/:groupItemId
 GET  /api/v1/orders
 POST /api/v1/orders
 GET  /api/v1/orders/home
+GET  /api/v1/kitchen
 GET  /api/v1/orders/:orderId
 POST /api/v1/orders/:orderId/items
 POST /api/v1/orders/:orderId/commands
@@ -364,13 +365,32 @@ KDS confirmation; an allergic item cannot become `ready` until it is set. A
 later allergic item requires both confirmations again. Legacy order-level
 allergy fields remain readable for compatibility with existing local data.
 
-The kitchen screen uses lightweight 10-second client polling with `router.refresh()` while the browser tab is visible. This avoids WebSocket/SSE infrastructure for the MVP while still reflecting cancellations and kitchen status changes quickly enough during service.
+The kitchen screen uses a notification-only SSE stream through the same-origin
+POS route `/api/kitchen-events`. `site-agent` publishes only a revision,
+timestamp, affected screen, and `ticket_created`/`state_changed` reason after a
+relevant local mutation succeeds; the browser then reloads the authoritative
+read model with `router.refresh()`.
+Events are debounced, overlapping refreshes are coalesced, hidden tabs close
+the stream, and reconnect/focus/online recovery refreshes current state. A
+60-second visible-tab poll remains as a safety net if notifications are lost.
 
-Kitchen station tabs show unfinished items per station across `sent` and
-`preparing`; items in `ready` are intentionally excluded from station badge
-counts. Switching station keeps the selected status only when that station has
-matching items; otherwise the tab routes to the first unfinished queue for that
-station, preferring `sent`, then `preparing`.
+Kitchen includes a compact `Son` control in the filter header. Browser audio is
+enabled only after the operator activates it. A short local chime plays for a
+new non-replayed kitchen-send batch affecting the selected production screen;
+ordinary status, payment, catalog, reconnect, and fallback-refresh events stay
+silent. Chimes are limited to one every 2.5 seconds during bursts.
+
+Each refresh still uses the bounded `GET /api/v1/kitchen` read model. `site-agent`
+applies the 05:00 service day, selected screen, production statuses, ticket
+queue, ordering, and limit before returning grouped tickets and authoritative
+counts. The response includes only current category presentation metadata;
+Kitchen does not fetch every order detail or the full catalog.
+
+Kitchen exposes two production screens: Cuisine and a combined Bar / Desserts
+screen. Screen and queue badges count unique order tickets, not item rows. The
+combined counter screen retains the persisted Bar and Dessert stations but
+shows their rows together and handles its ticket-level prepare/undo action in
+one local transaction. Switching screen preserves the active or ready queue.
 
 Do not:
 

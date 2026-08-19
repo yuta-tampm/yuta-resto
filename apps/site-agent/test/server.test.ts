@@ -1,6 +1,8 @@
 import type { AddressInfo } from 'node:net';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type {
+  LocalKitchenEvent,
+  LocalKitchenQueueQuery,
   LocalOrdersHomeQuery,
   ReceiptJobCommandInput,
 } from '@yuta/contracts/local-pos';
@@ -47,11 +49,15 @@ describe('site-agent HTTP boundary', () => {
   let baseUrl: string;
   let revokedSessionTokens: string[];
   let ordersHomeQueries: LocalOrdersHomeQuery[];
+  let kitchenQueueQueries: LocalKitchenQueueQuery[];
+  let kitchenEventListeners: Array<(event: LocalKitchenEvent) => void>;
   let receiptCommands: ReceiptJobCommandInput[];
 
   beforeEach(async () => {
     revokedSessionTokens = [];
     ordersHomeQueries = [];
+    kitchenQueueQueries = [];
+    kitchenEventListeners = [];
     receiptCommands = [];
     server = createSiteAgentServer({
       env: {
@@ -64,6 +70,14 @@ describe('site-agent HTTP boundary', () => {
       },
       service: {
         ...createMockService(),
+        subscribeKitchenEvents: (listener) => {
+          kitchenEventListeners.push(listener);
+          return () => {
+            kitchenEventListeners = kitchenEventListeners.filter(
+              (candidate) => candidate !== listener,
+            );
+          };
+        },
         listOrdersHome: async (query) => {
           ordersHomeQueries.push(query);
           return {
@@ -82,6 +96,10 @@ describe('site-agent HTTP boundary', () => {
               totalPages: 1,
             },
           };
+        },
+        listKitchenQueue: async (query) => {
+          kitchenQueueQueries.push(query);
+          return kitchenQueueSnapshot(query);
         },
         revokeSession: async (token) => {
           revokedSessionTokens.push(token);
@@ -147,6 +165,59 @@ describe('site-agent HTTP boundary', () => {
       counts: { open: 2, paidToday: 1, allToday: 3 },
       pagination: { page: 2, pageSize: 25 },
     });
+  });
+
+  it('validates and serves the bounded Kitchen read model', async () => {
+    const response = await fetch(
+      `${baseUrl}/api/v1/kitchen?screen=counter&queue=ready&limit=25`,
+    );
+
+    expect(response.status).toBe(200);
+    expect(kitchenQueueQueries).toEqual([
+      { screen: 'counter', queue: 'ready', limit: 25 },
+    ]);
+    expect(await response.json()).toMatchObject({
+      screen: 'counter',
+      queue: 'ready',
+      tickets: [],
+      counts: {
+        stations: { kitchen: 0, bar: 0, dessert: 0 },
+        queues: { active: 0, ready: 0 },
+      },
+    });
+  });
+
+  it('serves a cache-free Kitchen event stream and cleans up clients', async () => {
+    const response = await fetch(`${baseUrl}/api/v1/kitchen/events`);
+    const reader = response.body?.getReader();
+    const firstChunk = await reader?.read();
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('content-type')).toContain('text/event-stream');
+    expect(response.headers.get('cache-control')).toBe(
+      'no-cache, no-transform',
+    );
+    expect(new TextDecoder().decode(firstChunk?.value)).toContain(
+      'retry: 3000',
+    );
+    kitchenEventListeners[0]?.({
+      type: 'kitchen_changed',
+      revision: 'test-boot:1',
+      screen: 'counter',
+      reason: 'ticket_created',
+      occurredAt: checkedAt,
+    });
+    const eventChunk = await reader?.read();
+    expect(new TextDecoder().decode(eventChunk?.value)).toContain(
+      'event: kitchen_changed',
+    );
+    expect(new TextDecoder().decode(eventChunk?.value)).toContain(
+      '"screen":"counter"',
+    );
+    expect(new TextDecoder().decode(eventChunk?.value)).toContain(
+      '"reason":"ticket_created"',
+    );
+    await reader?.cancel();
   });
 
   it('serves safe printer status without exposing the device path', async () => {
@@ -717,6 +788,7 @@ function receiptCommandSnapshot(replayed: boolean) {
 
 function createMockService(): SiteAgentService {
   return {
+    subscribeKitchenEvents: () => () => undefined,
     getHealth: async () => ({
       status: 'ok',
       database: 'ready',
@@ -882,6 +954,7 @@ function createMockService(): SiteAgentService {
         totalPages: 1,
       },
     }),
+    listKitchenQueue: async (query) => kitchenQueueSnapshot(query),
     createOrder: async (input) => ({
       order: {
         id: orderId,
@@ -971,5 +1044,21 @@ function createMockService(): SiteAgentService {
       bottomPaddingLines: 3,
     }),
     updatePrintSettings: async (input) => input,
+  };
+}
+
+function kitchenQueueSnapshot(query: LocalKitchenQueueQuery) {
+  return {
+    serviceDay: {
+      start: '2026-07-27T03:00:00.000Z',
+      end: '2026-07-28T03:00:00.000Z',
+    },
+    screen: query.screen,
+    queue: query.queue,
+    tickets: [],
+    counts: {
+      stations: { kitchen: 0, bar: 0, dessert: 0 },
+      queues: { active: 0, ready: 0 },
+    },
   };
 }

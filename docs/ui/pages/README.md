@@ -51,6 +51,12 @@ Current packages:
   preview tooling, and Phase 5 responsive browser QA are complete. Physical
   TM-m30 output remains deferred because no configured device is available.
 
+- `pos-kitchen/` - approved TV-first Phase 1 visual renewal and Phase 2
+  route-local component refactor for the existing
+  integrated local POS production queue at `/kitchen`, with auto columns,
+  continuous horizontal queue scrolling, and independent long-ticket
+  scrolling. Phase 3 and behavior/data proposals remain approval-gated.
+
 ## Local POS UI delivery backlog
 
 This is the current route/page backlog authority as of 2026-08-18. Reuse it
@@ -70,9 +76,10 @@ Implemented page packs:
 
 Prioritized remaining work:
 
-1. `/kitchen` - integrated `EXISTING_PAGE`; create its own
-   `EXISTING_CAPABILITY_RENEWAL` pack and preserve service-day, station/status,
-   allergy, polling, and kitchen transition behavior.
+1. `/kitchen` - integrated `EXISTING_PAGE`; its
+   `EXISTING_CAPABILITY_RENEWAL` Phase 0 pack and TV-first design generation
+   are complete. Next requires explicit DRAFT review; preserve service-day, station/status,
+   allergy, polling, kitchen transitions, and printer/service truthfulness.
 2. `/management/establishment` - route absent; start a separate Phase 0 as
    `NEW_PAGE` / `NEW_CAPABILITY_DISCOVERY`. First requested slice is an
    authoritative local restaurant display name for receipt snapshots. Do not

@@ -1,6 +1,9 @@
 import type { OrderItem, PrintSettings } from '@yuta/db-pos/schema';
 import { describe, expect, it } from 'vitest';
-import { buildTicketPlans } from '../src/services/order-command-service';
+import {
+  buildTicketPlans,
+  kitchenProductionStations,
+} from '../src/services/order-command-service';
 
 const kitchenItem = {
   kitchenStationSnapshot: 'kitchen',
@@ -63,5 +66,17 @@ describe('order ticket planning', () => {
         includeAllItems: false,
       }),
     ]);
+  });
+});
+
+describe('Kitchen command station scope', () => {
+  it('maps the counter screen to Bar and Dessert without Cuisine', () => {
+    expect(kitchenProductionStations('counter')).toEqual(['bar', 'dessert']);
+  });
+
+  it('keeps individual persisted stations isolated', () => {
+    expect(kitchenProductionStations('kitchen')).toEqual(['kitchen']);
+    expect(kitchenProductionStations('bar')).toEqual(['bar']);
+    expect(kitchenProductionStations('dessert')).toEqual(['dessert']);
   });
 });
