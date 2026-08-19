@@ -67,8 +67,15 @@ states must not rely on color alone.
 ## Responsive behavior
 
 Later QA uses 1366x768, 1024x768, 768x1024, and 390x844. Preserve scroll
-containment, mobile order-dialog state, category/search position, and no
-document-level horizontal overflow.
+containment, mobile order-dialog state, and no document-level horizontal
+overflow. On tablet and narrow layouts, keep the horizontal category menu
+sticky at the top of the route content while catalog results scroll; category
+selection uses two compact 44px touch rows to shorten horizontal travel, remains
+horizontally scrollable, and does not make the search field sticky. Keep the
+mobile search spacing compact so the two-row menu does not unnecessarily consume
+the catalog viewport. Present every category as a bordered, filled chip with a
+visible focus state; use the semantic success treatment to distinguish the
+selected category without relying only on its border.
 
 ## Accessibility
 

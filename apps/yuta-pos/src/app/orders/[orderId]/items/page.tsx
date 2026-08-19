@@ -224,8 +224,8 @@ export default async function OrderItemsPage({
               className="m-4 mb-0 shrink-0"
             />
           )}
-          <div className="grid min-h-0 min-w-0 flex-1 overflow-x-hidden lg:grid-cols-[190px_minmax(0,1fr)_360px] lg:grid-rows-[minmax(0,1fr)] lg:gap-3 lg:bg-canvas lg:p-3 2xl:grid-cols-[220px_minmax(0,1fr)_440px] 2xl:gap-4 2xl:p-4">
-            <aside className="min-w-0 overflow-hidden border-b border-border-default bg-white lg:flex lg:min-h-0 lg:flex-col lg:rounded-xl lg:border">
+          <div className="grid min-h-0 min-w-0 flex-1 overflow-x-clip lg:grid-cols-[190px_minmax(0,1fr)_360px] lg:grid-rows-[minmax(0,1fr)] lg:gap-3 lg:bg-canvas lg:p-3 2xl:grid-cols-[220px_minmax(0,1fr)_440px] 2xl:gap-4 2xl:p-4">
+            <aside className="sticky top-0 z-20 min-w-0 overflow-hidden border-b border-border-default bg-white lg:static lg:z-auto lg:flex lg:min-h-0 lg:flex-col lg:rounded-xl lg:border">
               <div className="hidden px-5 pb-4 pt-5 lg:block">
                 <h2 className="text-sm font-black text-primary/65">
                   Catégories

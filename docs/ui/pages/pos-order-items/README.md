@@ -459,6 +459,27 @@ Intentional as-built adaptations and deferred risks:
 - existing action recovery semantics were preserved; Phase 5 did not expand
   form persistence or add a new retry/offline capability.
 
+Product-owner mobile follow-up on 2026-08-19 keeps the horizontal category menu
+sticky at the top of the route content below `lg`, so category selection remains
+available while the catalog scrolls. The ancestor uses horizontal clipping
+rather than a nested horizontal scroll container, allowing sticky positioning
+to follow the existing `PosPageShell` content scroller. Search and catalog
+content continue to scroll normally. Staff feedback then moved the narrow menu
+to two compact rows with 44px touch targets, reducing the horizontal travel
+needed to reach later categories; mobile search padding was tightened to limit
+the added vertical cost. Each category now uses a semantic filled surface,
+border, and focus ring so every target reads as an interactive chip; the active
+category uses the existing success selection treatment. Desktop retains its
+fixed category rail. No route, loader, action, contract, persistence,
+transaction, or device behavior changed.
+
+The same-device review found that the custom drag threshold could classify a
+small finger movement as a drag and suppress the following category click.
+Touch now uses the browser's native scrolling/tap handling, while the custom
+drag path remains limited to mouse and pen input with a larger movement
+threshold. Category taps therefore navigate normally without removing the
+two-row horizontal swipe behavior.
+
 Final verification passed: scoped Prettier, POS typecheck, 51 POS tests, POS
 production build, workspace typecheck, contracts/site-agent/db-pos typechecks,
 architecture boundaries, page-pack validation, documentation consistency, and

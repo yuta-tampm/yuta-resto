@@ -44,7 +44,7 @@ export function MenuItemBrowser({
 
   return (
     <>
-      <div className="shrink-0 border-b border-border-default px-4 py-3 lg:px-5 lg:py-4">
+      <div className="shrink-0 border-b border-border-default px-3 py-2 lg:px-5 lg:py-4">
         <div className="relative">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary/35 lg:left-4 lg:h-5 lg:w-5" />
           <Input

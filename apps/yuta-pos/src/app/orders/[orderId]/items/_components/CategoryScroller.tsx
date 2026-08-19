@@ -34,9 +34,14 @@ export function CategoryScroller({
     <nav
       ref={navRef}
       aria-label="Catégories de la carte"
-      className="flex shrink-0 cursor-grab touch-pan-y select-none gap-2 overflow-x-auto overscroll-x-contain px-4 py-3 active:cursor-grabbing max-lg:[scrollbar-width:none] max-lg:[&::-webkit-scrollbar]:hidden lg:grid lg:min-h-0 lg:flex-1 lg:cursor-auto lg:content-start lg:gap-1 lg:overflow-x-hidden lg:overflow-y-scroll lg:overscroll-contain lg:px-3 lg:pb-6 lg:pt-0"
+      className="grid shrink-0 auto-cols-max grid-flow-col grid-rows-2 gap-x-2 gap-y-1 overflow-x-auto overscroll-x-contain px-3 py-2 max-lg:cursor-grab max-lg:touch-auto max-lg:select-none max-lg:active:cursor-grabbing max-lg:[scrollbar-width:none] max-lg:[&::-webkit-scrollbar]:hidden lg:min-h-0 lg:flex-1 lg:auto-cols-auto lg:grid-flow-row lg:grid-rows-none lg:content-start lg:gap-1 lg:overflow-x-hidden lg:overflow-y-scroll lg:overscroll-contain lg:px-3 lg:pb-6 lg:pt-0"
       onPointerDown={(event) => {
-        if (!event.isPrimary || event.button !== 0) return;
+        if (
+          !event.isPrimary ||
+          event.button !== 0 ||
+          event.pointerType === 'touch'
+        )
+          return;
 
         const nav = navRef.current;
         if (!nav || nav.scrollWidth <= nav.clientWidth) return;
@@ -55,7 +60,7 @@ export function CategoryScroller({
         if (!nav || drag.pointerId !== event.pointerId) return;
 
         const distance = drag.startX - event.clientX;
-        if (Math.abs(distance) > 4) drag.moved = true;
+        if (Math.abs(distance) > 8) drag.moved = true;
         nav.scrollLeft = drag.startScrollLeft + distance;
       }}
       onPointerUp={(event) => {
@@ -89,10 +94,10 @@ export function CategoryScroller({
           draggable={false}
           aria-current={category.id === selectedCategoryId ? 'page' : undefined}
           className={cn(
-            'inline-flex min-h-11 shrink-0 items-center rounded-lg border-l-4 border-transparent px-3 py-2 text-xs font-black transition-colors sm:px-4 sm:text-sm lg:w-full',
+            'inline-flex min-h-11 shrink-0 items-center whitespace-nowrap rounded-lg border px-3 py-2 text-xs font-black shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-focus-ring focus:ring-offset-1 sm:px-4 sm:text-sm lg:w-full',
             category.id === selectedCategoryId
-              ? 'border-action-primary bg-status-success-soft text-primary'
-              : 'text-primary hover:bg-surface-muted',
+              ? 'border-status-success-border bg-status-success-soft text-status-success'
+              : 'border-border-default bg-canvas text-primary hover:border-action-primary hover:bg-surface-selected',
           )}
         >
           {category.name}
