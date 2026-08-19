@@ -20,6 +20,7 @@ import {
   recordPersonnelContractExtractionAudit,
   setPersonnelEmployeeDeparture,
   updatePersonnelEmployee,
+  validatePersonnelContractExtractionReviewGrant,
 } from '../src/personnel-repository';
 import {
   establishments,
@@ -563,6 +564,70 @@ integrationTest('personnel repository tenant isolation', () => {
     ]);
     expect(JSON.stringify(events)).not.toContain('Chef de rang');
     expect(JSON.stringify(events)).not.toContain('excerpt');
+    await expect(
+      validatePersonnelContractExtractionReviewGrant(db, tenant, {
+        employeeId: employeeAId,
+        requestId,
+        documentId,
+        documentVersion: 2,
+        outcomeCode: 'complete',
+      }),
+    ).resolves.toBe('valid');
+    await expect(
+      validatePersonnelContractExtractionReviewGrant(db, tenant, {
+        employeeId: employeeAId,
+        requestId,
+        documentId: uuidv7(),
+        documentVersion: 2,
+        outcomeCode: 'complete',
+      }),
+    ).resolves.toBe('not_found');
+    await expect(
+      validatePersonnelContractExtractionReviewGrant(
+        db,
+        context(organizationAId, establishmentA2Id),
+        {
+          employeeId: employeeAId,
+          requestId,
+          documentId,
+          documentVersion: 2,
+          outcomeCode: 'complete',
+        },
+      ),
+    ).resolves.toBe('not_found');
+
+    const expiredRequestId = uuidv7();
+    await db.insert(personnelEmployeeAuditEvents).values({
+      id: uuidv7(),
+      organizationId: organizationAId,
+      establishmentId: establishmentAId,
+      employeeId: employeeAId,
+      actorUserId,
+      eventType: 'employee.contract_extraction_completed',
+      operationId: expiredRequestId,
+      changedFields: [],
+      metadata: {
+        documentId,
+        documentVersion: 2,
+        outcomeCode: 'complete',
+        suggestionCount: 3,
+      },
+      createdAt: new Date('2026-08-18T09:00:00.000Z'),
+    });
+    await expect(
+      validatePersonnelContractExtractionReviewGrant(
+        db,
+        tenant,
+        {
+          employeeId: employeeAId,
+          requestId: expiredRequestId,
+          documentId,
+          documentVersion: 2,
+          outcomeCode: 'complete',
+        },
+        new Date('2026-08-18T09:15:00.001Z'),
+      ),
+    ).resolves.toBe('expired');
   });
 
   it('requires an explicit reason before creating a possible duplicate', async () => {

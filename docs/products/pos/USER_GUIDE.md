@@ -731,6 +731,8 @@ seconds while the POS tab is visible.
 The top of the same page contains the persisted ticket settings:
 
 ```txt
+Cuisine printing: On or Off
+BAR printing: On or Off
 Cuisine copies: 1 to 3
 Full BAR ticket copies: 1 to 3
 Text size: Compact, Standard, or Large
@@ -739,26 +741,37 @@ Left spacing: 0 to 8 characters
 Bottom spacing: 0 to 8 lines
 ```
 
-Settings apply to newly created jobs. Each job keeps its copy count, font
-preset, and spacing snapshot, so retrying an older failed job does not silently
-change its layout. Paper width remains fixed at 80 mm. The physical device path is trusted
-site-agent configuration and cannot be edited in the browser.
+`Standard` is the recommended production layout: item names are uppercase,
+bold, and twice the normal character height while retaining the full line
+width. `Large` doubles both height and width and therefore wraps long names
+earlier. Extra blank lines between items are omitted to reduce paper use;
+options and notes remain indented below their item.
+The service type (`SUR PLACE`, `A EMPORTER`, or `LIVRAISON`) is centered in
+bold, double-height text immediately above the item sections.
+
+At least one of Cuisine or BAR must remain on. Settings apply to newly created
+jobs. Each job keeps its destination, copy count, font preset, and spacing
+snapshot, so retrying an older failed job does not silently change its routing
+or layout. Paper width remains fixed at 80 mm. The physical device path is
+trusted site-agent configuration and cannot be edited in the browser.
 
 Select `Impression test` after saving settings to enqueue one test job. It
-prints a Cuisine sample followed by a full BAR sample. Both use the saved
-layout settings, and the printer performs a full cut after each ticket. The
-sample includes accented words, apostrophes, dashes, options, and allergy
-emphasis. It does not create or modify a customer order.
+prints samples only for the enabled destinations, in Cuisine then BAR order
+when both are active. They use the saved layout settings, and the printer
+performs a full cut after each ticket. The sample includes accented words,
+apostrophes, dashes, options, and allergy emphasis. It does not create or
+modify a customer order.
 
 ## Physical Printer Adapter
 
 When `POS_PRINTER_DEVICE` is configured, `site-agent` claims pending
 `kitchen_ticket` jobs, renders an ASCII-safe ESC/POS ticket, writes it through
 the bound Linux RFCOMM character device, and marks the job `printed` or
-`failed`. A kitchen send creates a `CUISINE` ticket when the sent batch contains
-kitchen items, plus an independent `BAR` ticket containing the complete sent
-batch. The single TM-m30 prints and fully cuts them sequentially; station
-`none` is excluded. Cuisine is grouped in the fixed order Entrées, Suppléments,
+`failed`. A kitchen send creates an enabled `CUISINE` ticket when the sent batch
+contains kitchen items, plus an enabled independent `BAR` ticket containing the
+complete sent batch. Disabled destinations create no physical ticket. The
+single TM-m30 prints and fully cuts active tickets sequentially; station `none`
+is excluded. Cuisine is grouped in the fixed order Entrées, Suppléments,
 Plats. BAR is grouped Boissons, Entrées, Suppléments, Plats, then Desserts,
 regardless of item insertion order. Every ticket and configured copy is written
 separately. The adapter throttles long bodies in small chunks and closes the
@@ -867,3 +880,20 @@ pnpm test:receipt-preview
 
 This second command creates and removes a disposable PostgreSQL container. It
 does not connect to the operational POS database.
+
+### Preview internal Cuisine and BAR tickets without a printer
+
+Generate synthetic Cuisine and BAR tickets with the production ESC/POS
+renderer without creating a print job or changing local POS data:
+
+```bash
+pnpm internal-ticket:preview
+```
+
+The command writes binary ESC/POS, separate readable text files, one combined
+`internal-tickets.txt`, and a browser preview under
+`apps/yuta-pos/.tmp/prints/internal-ticket-preview/`. Open `index.html` to
+compare the two 80 mm tickets or the combined text file for a plain-text review.
+Use `--preset compact`, `--preset standard`, or `--preset large` to inspect
+another font preset, and `--output <directory>` to choose another artifact
+directory.

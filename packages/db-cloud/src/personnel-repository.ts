@@ -290,6 +290,73 @@ export async function recordPersonnelContractExtractionAudit(
   });
 }
 
+const personnelContractExtractionReviewGrantInputSchema = z
+  .object({
+    employeeId: identifierSchema,
+    requestId: identifierSchema,
+    documentId: identifierSchema,
+    documentVersion: z.number().int().positive(),
+    outcomeCode: z.enum(['complete', 'partial']),
+  })
+  .strict();
+
+export type PersonnelContractExtractionReviewGrantInput = z.infer<
+  typeof personnelContractExtractionReviewGrantInputSchema
+>;
+
+export async function validatePersonnelContractExtractionReviewGrant(
+  db: CloudDatabaseClient,
+  context: TenantContext,
+  rawInput: PersonnelContractExtractionReviewGrantInput,
+  now = new Date(),
+): Promise<'valid' | 'expired' | 'not_found'> {
+  requireEstablishment(context);
+  if (context.actor.type !== 'user') {
+    throw new PersonnelRepositoryError(
+      'A user actor is required.',
+      'ACTOR_REQUIRED',
+    );
+  }
+  const input =
+    personnelContractExtractionReviewGrantInputSchema.parse(rawInput);
+  const [event] = await db
+    .select({
+      metadata: personnelEmployeeAuditEvents.metadata,
+      createdAt: personnelEmployeeAuditEvents.createdAt,
+    })
+    .from(personnelEmployeeAuditEvents)
+    .where(
+      and(
+        eq(personnelEmployeeAuditEvents.organizationId, context.organizationId),
+        eq(
+          personnelEmployeeAuditEvents.establishmentId,
+          context.establishmentId,
+        ),
+        eq(personnelEmployeeAuditEvents.employeeId, input.employeeId),
+        eq(
+          personnelEmployeeAuditEvents.eventType,
+          'employee.contract_extraction_completed',
+        ),
+        eq(personnelEmployeeAuditEvents.operationId, input.requestId),
+      ),
+    )
+    .limit(1);
+  if (!event) return 'not_found';
+  const metadata = event.metadata;
+  if (
+    metadata.documentId !== input.documentId ||
+    metadata.documentVersion !== input.documentVersion ||
+    metadata.outcomeCode !== input.outcomeCode
+  ) {
+    return 'not_found';
+  }
+  const ageMilliseconds = now.getTime() - event.createdAt.getTime();
+  if (ageMilliseconds < 0 || ageMilliseconds > 15 * 60 * 1_000) {
+    return 'expired';
+  }
+  return 'valid';
+}
+
 export async function listPersonnelEmployeeAuditHistory(
   db: CloudDatabaseClient,
   context: TenantContext,

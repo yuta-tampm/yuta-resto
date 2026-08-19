@@ -496,6 +496,8 @@ describe('site-agent HTTP boundary', () => {
     });
     expect(current.status).toBe(200);
     expect(await current.json()).toEqual({
+      kitchenEnabled: true,
+      counterEnabled: true,
       kitchenCopies: 1,
       counterCopies: 1,
       fontSizePreset: 'standard',
@@ -511,6 +513,8 @@ describe('site-agent HTTP boundary', () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        kitchenEnabled: false,
+        counterEnabled: true,
         kitchenCopies: 2,
         counterCopies: 1,
         fontSizePreset: 'large',
@@ -521,6 +525,8 @@ describe('site-agent HTTP boundary', () => {
     });
     expect(updated.status).toBe(200);
     expect(await updated.json()).toEqual({
+      kitchenEnabled: false,
+      counterEnabled: true,
       kitchenCopies: 2,
       counterCopies: 1,
       fontSizePreset: 'large',
@@ -536,6 +542,8 @@ describe('site-agent HTTP boundary', () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        kitchenEnabled: true,
+        counterEnabled: true,
         kitchenCopies: 4,
         counterCopies: 1,
         fontSizePreset: 'standard',
@@ -545,6 +553,25 @@ describe('site-agent HTTP boundary', () => {
       }),
     });
     expect(invalid.status).toBe(400);
+
+    const noDestination = await fetch(`${baseUrl}/api/v1/print-settings`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        kitchenEnabled: false,
+        counterEnabled: false,
+        kitchenCopies: 1,
+        counterCopies: 1,
+        fontSizePreset: 'standard',
+        topPaddingLines: 1,
+        leftPaddingChars: 2,
+        bottomPaddingLines: 3,
+      }),
+    });
+    expect(noDestination.status).toBe(400);
   });
 
   it('requires UUIDv7 idempotency keys for kitchen commands', async () => {
@@ -934,6 +961,8 @@ function createMockService(): SiteAgentService {
     createTestPrintJob: async () => printJobSnapshot,
     executePrintJobCommand: async () => printJobSnapshot,
     getPrintSettings: async () => ({
+      kitchenEnabled: true,
+      counterEnabled: true,
       kitchenCopies: 1,
       counterCopies: 1,
       fontSizePreset: 'standard',

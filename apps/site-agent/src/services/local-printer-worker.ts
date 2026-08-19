@@ -55,6 +55,11 @@ const kitchenPrintPayloadSchema = z
         .passthrough(),
     ),
     ticketDestination: z.enum(['kitchen', 'counter']).optional(),
+    ticketDestinations: z
+      .array(z.enum(['kitchen', 'counter']))
+      .min(1)
+      .max(2)
+      .optional(),
     includeAllItems: z.boolean().default(false),
     copies: z.number().int().min(1).max(3).default(1),
     fontSizePreset: z
@@ -277,7 +282,7 @@ export function renderInternalKitchenTickets(job: PrintJob): Buffer[] {
   const payload = kitchenPrintPayloadSchema.parse(job.payload);
   const destinations = payload.ticketDestination
     ? [payload.ticketDestination]
-    : (['kitchen', 'counter'] as const);
+    : (payload.ticketDestinations ?? (['kitchen', 'counter'] as const));
   const tickets = destinations.flatMap((destination) => {
     const items = payload.items.filter((item) =>
       destination === 'kitchen'
@@ -410,7 +415,12 @@ function renderProductionTicket(
   const setSize = (value: number) => command(0x1d, 0x21, value);
   const leftPadding = payload.leftPaddingChars;
   const contentWidth = 42 - leftPadding;
-  const itemSize = payload.fontSizePreset === 'large' ? 0x11 : 0x00;
+  const itemSize =
+    payload.fontSizePreset === 'large'
+      ? 0x11
+      : payload.fontSizePreset === 'standard'
+        ? 0x01
+        : 0x00;
   const itemIndent =
     payload.fontSizePreset === 'large'
       ? Math.floor(leftPadding / 2)
@@ -443,7 +453,6 @@ function renderProductionTicket(
   setBold(true);
   if (payload.tableLabel)
     write(`TABLE       ${payload.tableLabel}`, leftPadding);
-  write(orderType(payload.orderType), leftPadding);
   write(formatDateTime(payload.createdAt), leftPadding);
   write(
     `${items.reduce((sum, item) => sum + item.quantity, 0)} ARTICLES`,
@@ -451,6 +460,15 @@ function renderProductionTicket(
   );
   if (payload.orderNote) write(`NOTE: ${payload.orderNote}`, leftPadding);
   setBold(false);
+  write(separator(contentWidth), leftPadding);
+
+  setAlign(1);
+  setBold(true);
+  setSize(0x01);
+  write(orderType(payload.orderType));
+  setSize(0x00);
+  setBold(false);
+  setAlign(0);
   write(separator(contentWidth), leftPadding);
 
   const groupedItems = new Map<string, typeof items>();
@@ -482,9 +500,11 @@ function renderProductionTicket(
     write(separator(contentWidth), leftPadding);
     for (const item of categoryItems) {
       setSize(itemSize);
-      setBold(payload.fontSizePreset !== 'compact');
+      setBold(true);
       for (const line of wrapText(
-        `${item.quantity > 1 ? `${item.quantity} x ` : ''}${item.name}`,
+        `${item.quantity > 1 ? `${item.quantity} x ` : ''}${item.name}`.toLocaleUpperCase(
+          'fr-FR',
+        ),
         itemWidth,
       )) {
         write(line, itemIndent);
@@ -527,7 +547,6 @@ function renderProductionTicket(
         setReverse(false);
         setBold(false);
       }
-      write('');
     }
   }
   write(separator(contentWidth), leftPadding);

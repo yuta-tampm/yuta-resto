@@ -89,6 +89,7 @@ the shared operations documents until a dedicated product document is needed.
 
 - [`operations/LOCAL_DEVELOPMENT.md`](operations/LOCAL_DEVELOPMENT.md)
 - [`operations/DEPLOYMENT.md`](operations/DEPLOYMENT.md)
+- [`operations/OPENAI_PROVIDER_ELIGIBILITY.md`](operations/OPENAI_PROVIDER_ELIGIBILITY.md)
 - [`DEVELOPMENT_WORKFLOW.md`](DEVELOPMENT_WORKFLOW.md)
 - [`DOCUMENTATION_POLICY.md`](DOCUMENTATION_POLICY.md)
 - [`tasks/TASK_TEMPLATE.md`](tasks/TASK_TEMPLATE.md)

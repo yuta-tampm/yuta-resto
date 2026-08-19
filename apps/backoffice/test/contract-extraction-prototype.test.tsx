@@ -48,7 +48,7 @@ describe('ContractExtractionPrototype', () => {
     );
 
     expect(markup).toContain('Local — PDF synthétique');
-    expect(markup).toContain('Phase 3 avec données fictives');
+    expect(markup).toContain('Test local avec données fictives');
     expect(markup).toContain('n’est pas lu ni transmis');
     expect(markup).toContain('Préparation du PDF synthétique');
     expect(markup).toContain('Relancer ce scénario');

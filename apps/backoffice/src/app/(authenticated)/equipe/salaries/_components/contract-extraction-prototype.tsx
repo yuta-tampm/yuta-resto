@@ -77,6 +77,11 @@ export function ContractExtractionPrototype({
   const [isApplying, setIsApplying] = useState(false);
   const [applyError, setApplyError] = useState<string | null>(null);
   const started = useRef(false);
+  const initialVersions = useRef({
+    employeeRevision: employee.revision,
+    documentId: document.id,
+    documentVersion: document.version,
+  });
 
   async function runExtraction(nextScenario = scenario) {
     const nextRequest: PersonnelContractExtractionRequest = {
@@ -114,6 +119,25 @@ export function ContractExtractionPrototype({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    const initial = initialVersions.current;
+    if (
+      employee.revision === initial.employeeRevision &&
+      document.id === initial.documentId &&
+      document.version === initial.documentVersion
+    ) {
+      return;
+    }
+    setRequest(null);
+    setChoices({});
+    setApplyError(null);
+    setState({
+      status: 'error',
+      message:
+        'Le dossier ou le contrat a changé. Relancez l’analyse sur la version actuelle.',
+    });
+  }, [document.id, document.version, employee.revision]);
+
   const selectedSuggestions = useMemo(() => {
     if (state.status !== 'ready') return [];
     return state.result.suggestions.filter(
@@ -138,8 +162,14 @@ export function ContractExtractionPrototype({
       if (response.status === 'success') {
         onApplied(response.message);
       } else {
-        setApplyError(response.message);
-        if (response.status === 'conflict') setChoices({});
+        if (response.status === 'conflict') {
+          setRequest(null);
+          setChoices({});
+          setApplyError(null);
+          setState({ status: 'error', message: response.message });
+        } else {
+          setApplyError(response.message);
+        }
       }
     } catch {
       setApplyError('Impossible d’enregistrer les suggestions. Réessayez.');
@@ -188,7 +218,7 @@ export function ContractExtractionPrototype({
         className="mt-4"
         icon={<Info className="h-5 w-5" aria-hidden />}
       >
-        <AlertTitle>Phase 3 avec données fictives</AlertTitle>
+        <AlertTitle>Test local avec données fictives</AlertTitle>
         <AlertDescription>
           Le contrat signé affiché n’est pas lu ni transmis. Le serveur génère
           un PDF synthétique indépendant pour tester ce parcours local.
@@ -411,7 +441,7 @@ function SuggestionCard({
         {applicable ? (
           <RadioGroup
             aria-label={`Décision pour ${fieldLabel(suggestion.field)}`}
-            value={choice}
+            value={choice ?? ''}
             onValueChange={(value) => onChoice(value as 'keep' | 'use')}
             className="gap-2"
           >

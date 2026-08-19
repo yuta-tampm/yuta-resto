@@ -30,6 +30,10 @@ export function createPrintJobService(db: PosDatabaseExecutor) {
           orderNote: 'Police - marges - coupe',
           createdAt: now.toISOString(),
           includeAllItems: true,
+          ticketDestinations: [
+            ...(settings.kitchenEnabled ? (['kitchen'] as const) : []),
+            ...(settings.counterEnabled ? (['counter'] as const) : []),
+          ],
           copies: 1,
           fontSizePreset: settings.fontSizePreset,
           topPaddingLines: settings.topPaddingLines,

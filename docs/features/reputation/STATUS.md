@@ -115,6 +115,10 @@ Required external configuration:
 
 - Selected AI provider and API credentials.
 - Approved model and production usage limits.
+- Organization/project eligibility, EU processing, retention, and contractual
+  questions are prepared in
+  [`OPENAI_PROVIDER_ELIGIBILITY.md`](../../operations/OPENAI_PROVIDER_ELIGIBILITY.md).
+  The dossier is not submitted and no provider is selected or connected.
 
 ### Google reply publication
 

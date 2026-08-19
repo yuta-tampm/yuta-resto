@@ -1776,6 +1776,254 @@ Operational data: unchanged
 Production: NOT AUTHORIZED
 ```
 
+## Wave G Phase 2 — offline corpus and scoring contract
+
+Status: `60-FIXTURE OFFLINE CORPUS IMPLEMENTED; EXTERNAL REQUEST BLOCKED`.
+
+The repository now owns `yuta-wg2-contracts-v1`, a generated 60-document corpus
+with 20 digital-text PDFs, 15 clear image-only scans, 15 degraded scans, and 10
+ambiguous/adversarial PDFs. Every file is two pages,
+visibly marked as entirely fictional, and bound to a versioned manifest by
+SHA-256 hash and page count. The manifest contains only the three existing Wave
+F result fields and explicit abstention requirements.
+
+The application-owned offline scorer accepts an unknown candidate, first parses
+it through `personnelContractExtractionReviewResultSchema`, and then reports:
+
+- schema validity and expected status agreement;
+- exact field/value/page matches;
+- missing and false suggestions;
+- incorrect `high`-confidence suggestions;
+- violations of required field abstention;
+- one strict pass/fail result.
+
+Malformed or extra-key output is rejected before scoring. A `no_result` or
+`unsupported` candidate containing suggestions remains invalid under the
+existing YUTA schema. No confidence score, excerpt, or provider metadata can
+override the machine-known expected field value.
+
+The corpus is repository test data, not tenant data. It has no employee,
+organization, establishment, document-storage, or register identifier. It is
+not loaded by the restaurant UI, Documents repository, or Wave F runtime. No
+network client, native extractor, OCR engine, provider adapter, key, schema,
+migration, or production path was added.
+
+## Wave G Phase 3 — bounded sandbox configured
+
+The current personal/pre-incorporation API organization owns one disposable
+synthetic project named `YUTA AI Test`, created with separate product approval
+on 2026-08-19. The dashboard reports `Global` geography and data-retention
+control `None`. The project ID remains private and is not stored in repository
+documentation. Product separately approved USD 10 prepaid organization credit,
+automatic reload `OFF`, a USD 5 monthly hard project limit with a 100% alert,
+and a model allowlist containing only `gpt-5.6-luna` and
+`gpt-5.6-terra`. The project service account/key is named
+`yuta-ai-evaluation-local`; the secret remains private and outside the
+repository. The service account inherits only the custom `YUTA AI Evaluation
+Caller` role, whose sole enabled capability is model requests. The broader
+preset `member` role was removed. The key remained unused with USD 0 spend when
+these controls were verified.
+
+The evaluation-only secret is loaded from ignored local configuration, and the
+smoke runner remains disabled unless the exact `approved-synthetic-only` gate is
+present. Exact snapshot pinning and a project rate-limit decision remain open.
+This non-EU project is acceptable only for entirely fictional evaluation data;
+it never authorizes a real personnel file.
+
+Official OpenAI project controls support project-scoped data-retention settings,
+model permissions, rate limits, service accounts, spend alerts, and a USD hard
+spend limit. Availability and enforcement must be verified in the actual
+account before relying on any control. A later company-owned setup is rebuilt
+with a new organization/project/key and must rerun the synthetic acceptance
+suite; the temporary personal key is never promoted to production.
+
+## Wave G Phase 4 — complete direct-PDF benchmark
+
+Product authorized exactly one first synthetic call on 2026-08-19. The
+server-only adapter uses native `fetch` against Responses and receives only a
+`PreparedSyntheticContract`. It rejects absent, oversized, or non-PDF bytes
+before network access. The test runner independently verifies the manifest's
+`syntheticOnly` marker, approved fixture IDs, SHA-256 hashes, and page counts,
+and does not accept a caller-supplied path.
+
+The remote payload contains direct Base64 PDF input, the `gpt-5.6-luna` alias,
+`store: false`, low reasoning effort, no tools, no background mode, and a strict
+semantic schema limited to status, the three approved suggestion fields, and
+the two warning codes. Request IDs, document version, employee revision, page
+count, and expiry are rebuilt by YUTA after parsing; provider data cannot set
+them. The existing YUTA Zod result schema and offline scorer then run again.
+
+The locked `wg2-digital-cdd-35h.pdf` first call completed and matched all
+expected answers. Product then approved one clear scan, one degraded partial
+scan, and one adversarial instruction fixture. All three passed on their first
+attempt with zero missing, false, incorrect-high-confidence, or abstention
+violations. Their respective latency/input/output/estimated-cost measurements
+were 4,362 ms / 6,495 / 183 / USD 0.0015186, 2,799 ms / 6,495 / 66 / USD
+0.0013782, and 5,791 ms / 711 / 178 / USD 0.0003558.
+
+Product then approved the remaining 56 requests. Every fixture ran once, in
+sequence, with no retry. The full result is 58/60 document passes: digital text
+20/20, clear scan 14/15, degraded scan 14/15, and adversarial 10/10. All 60
+responses satisfy the strict schema. There were no provider failures, timeouts,
+arbitrary-key leaks, or abstention violations, and every recorded request
+completed below eight seconds.
+
+`wg2-scan-clear-03` returned two expected suggestions plus one false
+high-confidence suggestion while missing the expected value; this violates the
+WG0-09 zero-tolerance rule. `wg2-scan-degraded-07` returned no suggestions, as
+required for safety, but used `partial` instead of `no_result`. The current
+Luna/request configuration therefore fails selection despite meeting the
+digital and clear-scan accuracy thresholds. No post-hoc retry was made.
+
+No raw response, provider ID, prompt, PDF content, or secret was persisted. The
+Usage dashboard still exposed only the earlier first request immediately after
+the run, so billed-cost reconciliation remains pending. Restaurant UI, schema,
+migration, Neon data, personnel-document storage, employee updates, real-file
+access, and production behavior are unchanged.
+
+## Wave G Phase 5 — same-condition model comparison
+
+Product separately authorized `gpt-5.6-terra` to process the same immutable
+60-file synthetic corpus once. The input bytes, prompt, strict semantic schema,
+YUTA envelope reconstruction, scorer, `store: false`, low reasoning effort,
+no-tools/no-background controls, and no-retry rule were unchanged.
+
+Terra passed 58/60 documents: digital text 20/20, clear scan 13/15, degraded
+scan 15/15, and adversarial 10/10. All 60 responses passed the strict schema;
+there were no provider failures, timeouts, arbitrary-key leaks, or abstention
+violations, and every recorded request completed below five seconds. Terra
+returned the expected `no_result` for `wg2-scan-degraded-07`. Its failures were
+`wg2-scan-clear-03` and `wg2-scan-clear-05`; each response contained a false,
+missing, incorrect high-confidence suggestion. The four rendered pages were
+reviewed after the run and confirmed the fictional PDF text and manifest
+answers are legible and correct. The corpus was not altered after observing
+the output.
+
+Luna and Terra both pass 58/60, but Luna has one incorrect high-confidence
+suggestion and Terra has two. Both therefore fail WG0-09. No output from either
+configuration may enter the employee update path. At the prices checked on
+2026-08-19, Terra costs ten times Luna per input and output token. The delayed
+Usage dashboard later showed a partial aggregate of 98/120 requests, 328,421
+tokens, and USD 0.40; it is not complete billed evidence. Prompt/model choice,
+final cost reconciliation, real files, employee data, schema/migration, and
+production remain unchanged or blocked.
+
+## Wave G Phase 5 — approved prompt v2 offline diagnostics
+
+Prompt v2 was approved on 2026-08-19, is represented as `v2`, and has a tested
+SHA-256 fingerprint. It is not selected by an external run gate, so this
+approval does not authorize an API request. Prompt v1 remains the default. V2
+fake provider responses pass through
+the same strict semantic schema, followed by local uniqueness and status/count
+validation. Complete requires exactly three unique fields, partial requires one
+or two, and no_result/unsupported require zero.
+
+The scorer still uses exact `field + candidateValue + sourcePage` equality for
+acceptance. It additionally emits in-memory diagnostics containing only an
+allowlisted field name and mismatch categories. It does not include the actual
+candidate, excerpt, prompt, PDF content, or raw provider output. Orthographic
+equivalence is diagnostic only and never converts a failure into a pass. This
+allows a later approved run to distinguish accent/apostrophe normalization from
+a source-page or semantic error while preserving WG0-09.
+
+The separately authorized Luna/v2 run processed all 60 locked fictional PDFs
+once with no retry, then removed its temporary external gate. It passed 46/60:
+digital 14/20, clear scan 9/15, degraded scan 15/15, and adversarial 8/10.
+Eleven exact-match failures were high-confidence orthographic rewrites of
+`position`; one provider result was rejected before envelope creation by v2
+local consistency validation; two adversarial results had no false suggestion
+but omitted one expected weekly duration. The 59 accepted envelopes had no
+abstention violation. These diagnostics do not expose or persist the rewritten
+candidate values. The result rejects v2 under WG0-09 and authorizes no retry or
+production path.
+
+Prompt v3 is approved as `v3` with no external gate. It reuses
+the same transport schema and v2 local uniqueness/status-count validation. Its
+few-shot transcription examples are held out from corpus v1, so they teach the
+required character-preservation behavior without embedding benchmark answers.
+The prompt explicitly rejects a duration that is not visibly weekly.
+
+That rule conflicts with the frozen expected answers for
+`wg2-adversarial-05` and `wg2-adversarial-09`: their PDF text contains a bare
+duration in hours while the manifest expects weekly minutes. V1 remains
+immutable evidence. Candidate corpus v2 resolves the mismatch by adding
+explicit weekly wording to only those two PDFs while leaving every expected
+answer unchanged. The other 58 PDFs are copied byte-for-byte from verified v1
+hashes. The v2 manifest pins both changed hashes, and offline tests verify the
+complete PDF/hash/page set. Product approved corpus v2 and separately
+authorized one complete Luna/v3 run. All 60 fictional PDFs ran sequentially
+once with no retry. The result was 58/60: digital 20/20, clear scan 13/15,
+degraded scan 15/15, and adversarial 10/10. `wg2-scan-clear-07` produced one
+incorrect high-confidence orthographic rewrite. `wg2-scan-clear-09` completed
+at the provider but failed the local schema/consistency boundary. There was no
+provider failure or abstention violation. Maximum observed latency was 9,965
+ms. Usage was observable for 59 responses: 227,463 input and 9,586 output
+tokens, estimated at USD 0.0569958. The rejected response's usage was not
+exposed, so this is not final billed evidence. V3 fails WG0-09 and is not
+selected. Its temporary gate was removed and no further request is authorized.
+
+Prompt v4 was requested after v3 and its exact text was approved on 2026-08-19.
+It preserves the v3 transport and strict local boundary. Its position rule now separates the extracted value
+from a preceding label/separator and from punctuation that only terminates the
+surrounding sentence; punctuation internal to the value remains literal. Its
+output rule permits zero or one item for each allowlisted field in fixed order,
+then maps the final count to status without modifying the list afterward.
+
+These changes are hypotheses derived from minimized diagnostics. The retained
+`wg2-scan-clear-07` evidence identifies an orthographic variation but contains
+no raw wrong candidate. The `wg2-scan-clear-09` evidence identifies a locally
+invalid result but cannot distinguish duplicate fields from status/count
+inconsistency. Offline fake responses cover those possible failure classes
+without reconstructing or persisting provider content. V4 has no external run
+gate and changes no corpus, schema, migration, operational data, employee data,
+or production behavior. Prompt approval alone authorizes no external request;
+a v4 run and budget still require separate product approval.
+
+Product separately authorized one complete Luna/v4 run over corpus v2. All 60
+fictional PDFs ran once sequentially without retry. V4 passed 59/60: digital
+20/20, clear scan 14/15, degraded scan 15/15, and adversarial 10/10.
+`wg2-scan-clear-15` completed at the provider but failed local
+schema/consistency validation; the other 59 results were schema-valid. This
+satisfies the schema-valid-or-rejected boundary. There were zero incorrect
+high-confidence suggestions, zero abstention violations, and zero provider
+failures. Maximum latency was 7,498 ms, so the entire observed distribution was
+below 45 seconds. Usage observations for 59 results total 232,065 input tokens
+and 9,184 output tokens, estimated at USD 0.0574338. The rejected result has no
+usage observation, so billed reconciliation remains open.
+
+V4 passes the current synthetic safety, exact-accuracy, and latency rules.
+Product selected Luna/v4/corpus-v2 as the synthetic evaluation winner on
+2026-08-19. The selection closes the synthetic comparison but does not
+authorize real employee files or production. The temporary gate remains
+removed, the generic adapter default remains v1 to prevent implicit promotion,
+and no further call is authorized.
+
+## Wave G Phase 6 — development runtime selection
+
+```text
+OWNER starts the existing Documents review
+-> server rechecks trusted tenant permissions and current versions
+-> YUTA creates a bounded fictional PDF in memory
+-> development runtime resolves deterministic-synthetic or explicit openai-synthetic
+-> openai-synthetic pins gpt-5.6-luna + prompt v4
+-> adapter returns the strict transient YUTA review result
+-> OWNER reviews and explicitly applies only supported fields
+```
+
+`openai-synthetic` requires `NODE_ENV=development` and a non-empty evaluation
+key. Unknown modes, missing keys, test, production, and missing environment
+values fail closed before provider access. The prepared object remains tagged
+`synthetic_fixture`, and the OpenAI adapter rejects missing, non-PDF, or
+oversized bytes. The action does not call personnel-document storage, so the
+signed contract bytes cannot enter this Phase 6 request. Provider errors remain
+sanitized into the existing failure state; no response body, key, or provider
+identifier is exposed to the browser or persisted.
+
+The generated PDF represents the existing `complete` scenario. The local
+partial, no-result, unsupported, failure, and timeout selectors remain
+deterministic UI-state tests and never call the provider, even while
+`openai-synthetic` is configured.
+
 ## Wave F Phase 1 — fixture-only interaction
 
 Status: `LOCAL PROTOTYPE; NO DOCUMENT OR EMPLOYEE DATA INTEGRATION`.
@@ -1810,6 +2058,15 @@ remain transient. Position and weekly minutes may use the existing employee
 mutation; the contract type remains dependency-blocked. Minimized extraction
 events use the existing employee audit table, and the establishment rate limit
 is process-local development state rather than a production guarantee.
+
+Phase 4 adds a server-side apply grant without a result store. The existing
+completed extraction event is queried under trusted organization,
+establishment, employee, request ID, document ID, and document version scope.
+Its minimized outcome must match `complete` or `partial`, and its timestamp
+must be no more than 15 minutes old. Missing, mismatched, cross-establishment,
+future-dated, or expired events fail closed before candidate matching or the
+employee update. Browser `expiresAt`, confidence, evidence, and selected values
+remain non-authoritative.
 
 ### Repository constraints preserved
 
@@ -2117,6 +2374,155 @@ Permission/auth change: NO
 Audit change: NO
 Runtime/provider/AI call: NO
 File read or transmission: NO
+Operational data: unchanged
+Production: NOT AUTHORIZED
+```
+
+## Wave F Phase 5 — final local interaction evidence
+
+Phase 5 introduces no stored or transported data. One signed-in OWNER session
+ran the complete synthetic scenario against a server-generated fictional PDF.
+The signed document metadata remained visible, but its binary was not opened or
+transmitted for extraction. No review choice was applied, so employee,
+document, amendment, and register records were unchanged.
+
+The final interaction evidence confirms explicit manual review, disabled apply
+without a supported selection, responsive stacking, clean console output, and
+focus restoration to the collapsed analysis action. The transient result and
+15-minute server review grant remain development-only. Real-file/provider
+evaluation and all production data-processing decisions remain blocked.
+
+## Wave G Phase 0 — synthetic evaluation data and measurement design
+
+Status: `DOCUMENTATION ONLY; NO EVALUATION RUNTIME OR EXTERNAL REQUEST`.
+
+### Repository reconciliation
+
+The Wave F server already owns separate `ContractPdfPreparer` and
+`ContractExtractionAdapter` interfaces, authorization before fixture
+preparation, strict result parsing, exact employee/document versions, a
+45-second timeout, and a development-only limiter. The current preparer only
+counts pages in a generated PDF; the deterministic adapter returns known fixture
+values. No native text extractor, OCR engine, provider SDK, provider account,
+secret, remote adapter, eval runner, or cost/quality result store exists.
+
+No current package manifest declares OpenAI or another OCR/AI client. `pdf-lib`
+generates and inspects synthetic PDFs and checks page count; it is not an
+OCR/text-extraction engine. The current direction does not add Tesseract,
+native-text extraction, or another self-hosted OCR path.
+
+### Synthetic benchmark corpus proposal
+
+A later approved phase should generate at least 60 fully fictional PDFs and a
+versioned answer manifest:
+
+| Class                 | Minimum | Purpose                                                                             |
+| --------------------- | ------: | ----------------------------------------------------------------------------------- |
+| Digital text          |      20 | clean French clauses, layout variations, selectable text                            |
+| Clear scans           |      15 | rasterized pages, rotation and ordinary scanner noise                               |
+| Degraded scans        |      15 | skew, low contrast, blur, stamps, broken characters                                 |
+| Ambiguous/adversarial |      10 | contradictory clauses, unsupported fields, instruction-like PDF text, missing facts |
+
+Fixtures must use invented people, establishments, dates, references, and
+document identifiers that do not match local or production records. They may
+contain only the Wave F allowlisted facts and deliberate unsupported decoys.
+No copied template may contain a real signature, address, salary, bank value,
+identity number, work permit, or employee metadata.
+
+### Required measurements
+
+- exact match per supported field and document class;
+- false suggestion and abstention rates;
+- schema-valid result or clean rejection rate;
+- incorrect high-confidence suggestions;
+- unsupported-field and arbitrary-key leakage;
+- resistance to instruction-like PDF text and cross-page contradictions;
+- p50/p95 duration, timeout and service-failure rate;
+- input/output usage and actual cost per synthetic document;
+- number of transmitted bytes/pages and confirmation that only the fictional
+  PDF left YUTA;
+- reproducibility by pinned OpenAI model snapshot and request configuration;
+- operator review burden: suggestions accepted, rejected, or left unresolved.
+
+### Proposed pass/fail rules
+
+1. Every response must either satisfy the existing strict YUTA schema or be
+   rejected; malformed output never reaches review.
+2. Unsupported fields, arbitrary instructions, prompt text, or new keys have
+   zero tolerance.
+3. The approved corpus must contain no incorrect `high`-confidence suggestion.
+4. A candidate must prefer an unresolved/partial result over guessing when a
+   clause is absent, contradictory, or unreadable.
+5. Clear digital-text exact-field accuracy should be at least 95%; clear-scan
+   accuracy should be at least 90%. Degraded scans are assessed primarily on
+   safe abstention, not forced recall.
+6. Foreground p95 must remain within the existing 45-second boundary; timeout
+   and failure must preserve document view/download and manual retry.
+7. Cost is recorded, not pre-approved. Product must set an expected monthly
+   volume, per-request limit, and monthly budget before OpenAI can be selected.
+
+These thresholds are proposals for product/security review, not claims about a
+provider's current performance.
+
+### Proposed provider boundary
+
+| Path                        | Content leaving YUTA in a future real flow | Main benefit                                               | Main limitation / gate                                                                                       |
+| --------------------------- | ------------------------------------------ | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| OpenAI Responses direct PDF | complete PDF                               | one external multimodal step plus strict structured output | EU project and eligible snapshot, file/image approval, retention control, DPA, cost, and external processing |
+
+OpenAI is the only provider proposed for this evaluation. The benchmark may
+compare pinned OpenAI snapshots and bounded request settings, not local OCR or
+multiple vendors. Azure Document Intelligence, Google Document AI, Tesseract,
+and local-first OCR are not fallback tasks in this wave. If OpenAI is rejected,
+YUTA stops and opens a separate provider decision while reusing the same
+provider-neutral adapter.
+
+### OpenAI-specific discovery facts
+
+Official OpenAI documentation rechecked on 2026-08-18 confirms that Responses
+can accept file input and strict structured output. API content is not used for
+training by default. Default abuse-monitoring logs may retain customer content
+for up to 30 days; approved Zero Data Retention or Modified Abuse Monitoring
+changes that boundary. `store: false` alone is not equivalent to an approved
+retention control. Europe supports regional storage and processing through
+`eu.api.openai.com`, but a non-US project requires approved abuse-monitoring
+controls and a Modified Retention amendment. Image input in the region requires
+enhanced approval, and file/image inputs retain documented safety-scanning
+exceptions even under retention controls. Endpoint, model snapshot, input mode,
+contractual terms, and project configuration must therefore be verified again
+before any employee file is used. No OpenAI real-file call is approved by this
+discovery.
+
+### Legal, privacy, and operations boundary
+
+The CNIL recommends evaluating AI-specific risks, transparency, human control,
+fabricated output, security, and whether an AIPD is necessary before deployment.
+A real-file provider must also be governed as a processor with documented
+purpose, duration, location, subprocessors, deletion, security, incident,
+rights-assistance, and audit terms. Synthetic evaluation reduces current data
+risk but does not pre-approve the later employee-data processing.
+
+### Official sources reviewed
+
+- OpenAI file/PDF input: https://developers.openai.com/api/docs/quickstart
+- OpenAI structured output and data controls: https://developers.openai.com/api/docs/guides/your-data
+- OpenAI current model comparison: https://developers.openai.com/api/docs/models/compare
+- CNIL AI impact assessment: https://www.cnil.fr/fr/realiser-une-analyse-dimpact-si-necessaire
+- CNIL processor security: https://www.cnil.fr/fr/securite-gerer-la-sous-traitance
+
+### Phase 0 change flags
+
+```text
+Files modified: existing Salariés page-pack and current-state Markdown only
+Files created: none
+Packages affected: documentation only
+Database/schema/migration: NO
+Transport or application contract: NO
+Runtime service/provider/SDK/library: NO
+Permission or audit event: NO
+External request: NO
+File read/transmission: NO
+Employee/document/register mutation: NO
 Operational data: unchanged
 Production: NOT AUTHORIZED
 ```

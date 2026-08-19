@@ -216,10 +216,10 @@ describe('local TM-m30 print rendering', () => {
     expect(countSequence(output, [0x1b, 0x64, 0x03])).toBe(1);
     expect(text).toContain('CUISINE');
     expect(text).toContain('ENTREES');
-    expect(text).toContain('  2 x Pho special');
+    expect(text).toContain('  2 X PHO SPECIAL');
     expect(text).toContain('    !!! ALLERGIE: ALLERGIE, arachides');
     expect(text).not.toContain('BOISSONS');
-    expect(text).not.toContain('Mochi glace');
+    expect(text).not.toContain('MOCHI GLACE');
     expect(text).not.toContain('Sac papier');
     expect(text).not.toContain('€');
   });
@@ -239,8 +239,8 @@ describe('local TM-m30 print rendering', () => {
     const text = output.toString('ascii');
     expect(text.match(/BOISSONS/g)).toHaveLength(4);
     expect(text.match(/DESSERTS/g)).toHaveLength(4);
-    expect(text.match(/Coca-Cola/g)).toHaveLength(2);
-    expect(text.match(/Mochi glace/g)).toHaveLength(2);
+    expect(text.match(/COCA-COLA/g)).toHaveLength(2);
+    expect(text.match(/MOCHI GLACE/g)).toHaveLength(2);
     const firstBoissonsSection = text.indexOf(
       'BOISSONS',
       text.indexOf('BOISSONS') + 1,
@@ -252,7 +252,7 @@ describe('local TM-m30 print rendering', () => {
     expect(firstBoissonsSection).toBeGreaterThan(-1);
     expect(firstDessertsSection).toBeGreaterThan(firstBoissonsSection);
     expect(countSequence(output, [0x1d, 0x56, 0x00])).toBe(2);
-    expect(text).not.toContain('Pho special');
+    expect(text).not.toContain('PHO SPECIAL');
   });
 
   it('renders a full BAR ticket with kitchen, drink, and dessert items', () => {
@@ -300,11 +300,11 @@ describe('local TM-m30 print rendering', () => {
     expect(text).toContain('BAR');
     expect(text).toContain('ENTREES');
     expect(text).toContain('SUPPLEMENTS');
-    expect(text).toContain('Pho special');
+    expect(text).toContain('PHO SPECIAL');
     expect(text).toContain('BOISSONS');
-    expect(text).toContain('Coca-Cola');
+    expect(text).toContain('COCA-COLA');
     expect(text).toContain('DESSERTS');
-    expect(text).toContain('Mochi glace');
+    expect(text).toContain('MOCHI GLACE');
     expect(text.indexOf('BOISSONS')).toBeLessThan(text.indexOf('ENTREES'));
     expect(text.indexOf('ENTREES')).toBeLessThan(text.indexOf('SUPPLEMENTS'));
     expect(text.indexOf('SUPPLEMENTS')).toBeLessThan(text.indexOf('PLATS'));
@@ -348,6 +348,70 @@ describe('local TM-m30 print rendering', () => {
     expect(text.indexOf('SUPPLEMENTS')).toBeLessThan(text.indexOf('PLATS'));
   });
 
+  it('uses tall standard item text without blank lines between items', () => {
+    const item = (name: string): Record<string, unknown> => ({
+      name,
+      quantity: 1,
+      note: null,
+      quickInstructions: [],
+      selectedVariants: [],
+      hasAllergy: false,
+      allergenCodes: [],
+      allergySeverity: null,
+      allergyNote: null,
+      station: 'kitchen',
+      categoryName: 'Entrées',
+    });
+    const output = renderInternalKitchenTicket({
+      ...baseJob,
+      payload: {
+        ...baseJob.payload,
+        ticketDestination: 'kitchen',
+        fontSizePreset: 'standard',
+        items: [item('Premier article'), item('Deuxieme article')],
+      },
+    });
+    expect(output).not.toBeNull();
+    if (!output) throw new Error('Expected a compact standard ticket.');
+
+    expect(countSequence(output, [0x1d, 0x21, 0x01])).toBe(3);
+    const text = output.toString('ascii');
+    const firstItemEnd =
+      text.indexOf('PREMIER ARTICLE') + 'PREMIER ARTICLE'.length;
+    const secondItemStart = text.indexOf('DEUXIEME ARTICLE');
+    expect(firstItemEnd).toBeGreaterThan('PREMIER ARTICLE'.length - 1);
+    expect(secondItemStart).toBeGreaterThan(firstItemEnd);
+    expect(text.slice(firstItemEnd, secondItemStart)).not.toContain('\r\n\r\n');
+    expect(text).not.toContain('Premier article');
+  });
+
+  it('centers a tall order type immediately before the item sections', () => {
+    const output = renderInternalKitchenTicket({
+      ...baseJob,
+      payload: {
+        ...baseJob.payload,
+        ticketDestination: 'kitchen',
+        fontSizePreset: 'standard',
+      },
+    });
+    expect(output).not.toBeNull();
+    if (!output) throw new Error('Expected an order-type preview ticket.');
+
+    const text = output.toString('ascii');
+    const orderTypeIndex = text.indexOf('SUR PLACE');
+    const sectionIndex = text.indexOf('ENTREES');
+    expect(orderTypeIndex).toBeGreaterThan(
+      text.indexOf('NOTE: Service rapide'),
+    );
+    expect(sectionIndex).toBeGreaterThan(orderTypeIndex);
+    expect(
+      countSequence(
+        output.subarray(Math.max(0, orderTypeIndex - 8), orderTypeIndex),
+        [0x1d, 0x21, 0x01],
+      ),
+    ).toBe(1);
+  });
+
   it('transliterates receipt punctuation instead of printing question marks', () => {
     const output = renderInternalKitchenTicket({
       ...baseJob,
@@ -374,7 +438,7 @@ describe('local TM-m30 print rendering', () => {
     expect(output).not.toBeNull();
     if (!output) throw new Error('Expected a punctuation test ticket.');
     const text = output.toString('ascii');
-    expect(text).toContain("Tiret - apostrophe ' droite");
+    expect(text).toContain("TIRET - APOSTROPHE ' DROITE");
     expect(text).toContain("> NOTE: Boeuf x 2 - l'ete");
     expect(text).not.toContain('?');
   });
@@ -393,6 +457,22 @@ describe('local TM-m30 print rendering', () => {
     expect(output.toString('ascii')).toContain('CUISINE');
     expect(output.toString('ascii')).toContain('BAR');
     expect(countSequence(output, [0x1d, 0x56, 0x00])).toBe(2);
+  });
+
+  it('renders only enabled destinations for a test job', () => {
+    const testJob = {
+      ...baseJob,
+      jobType: 'test',
+      payload: {
+        ...baseJob.payload,
+        includeAllItems: true,
+        ticketDestinations: ['counter'],
+      },
+    } satisfies PrintJob;
+    const tickets = renderInternalKitchenTickets(testJob);
+    expect(tickets).toHaveLength(1);
+    expect(tickets[0]?.toString('ascii')).toContain('BAR');
+    expect(tickets[0]?.toString('ascii')).not.toContain('CUISINE');
   });
 
   it('separates the cut command from the printable ticket body', () => {

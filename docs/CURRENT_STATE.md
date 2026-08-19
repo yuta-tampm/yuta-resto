@@ -155,6 +155,204 @@ existing scoped revision/idempotency/audit update path. CDI/CDD remains
 review-only. Remote AI/OCR, real personnel-file processing, shared production
 rate limiting, provider configuration, and production release remain blocked.
 
+Wave F local integration hardening also requires each apply attempt to match a
+tenant-scoped completed extraction audit event for the same employee, request,
+document/version, and complete/partial result within 15 minutes. Stale,
+fabricated, mismatched, cross-establishment, or expired reviews fail before the
+employee update. Client conflicts discard all transient suggestions. This adds
+no result store, schema, migration, real-file access, external provider, or
+production path.
+
+Wave F Phase 5 closes only the local synthetic slice. Signed-in responsive and
+accessibility QA at 1440/1024/768/390 retains as-built evidence with no
+horizontal overflow or browser warning/error and no applied employee change.
+The signed personnel PDF was not read or transmitted. Real-file extraction,
+external AI/OCR, provider evaluation, and production remain blocked.
+
+Wave G Phase 0 now defines a documentation-only synthetic OpenAI evaluation.
+It proposes a generated fictional French-contract corpus and OpenAI Responses
+direct-PDF extraction behind the existing YUTA-owned provider adapter. Local
+native extraction, Tesseract/self-hosted OCR, Azure, Google, and a second
+external provider are outside the current direction. The Wave F UI is reused
+and no design prompt is required. No SDK, key, provider account, external
+request, fixture PDF, real-file read, schema, migration, or operational data
+was added. WG0-01 through WG0-14 and Phase 1 provider-eligibility contact were
+approved on 2026-08-18. Phase 1 is documentation/private-submission work only;
+the product owner confirmed submission through the OpenAI Sales contact form on
+2026-08-18, and the provider response is pending. Phase 2, every API request,
+and every real-file action remain separately approval-gated; production also
+requires current OpenAI EU processing, retention, file/image eligibility, and
+contractual evidence.
+
+Wave G Phase 2 was separately authorized on 2026-08-19 and now has an offline
+60-PDF corpus: 20 digital-text files, 15 clear image-only scans, 15 degraded
+scans, and 10 ambiguous/adversarial files. A versioned manifest
+binds each entirely fictional file to its hash, page count, expected allowlisted
+answers, and required abstentions. The server-owned scorer reuses the strict
+Wave F result schema and tests exact, false, missing, incorrect-high-confidence,
+abstention, extra-key, hash, and page-count behavior. No restaurant UI,
+operational data, provider SDK/key/request, schema, migration, or production
+path was added. The ten-file starter was reviewed and expansion to 60 files was
+authorized on 2026-08-19; sandbox setup and the first external request required
+their own later approvals.
+
+Wave G Phase 3 sandbox setup was separately authorized for the current
+personal/pre-incorporation API organization as a disposable synthetic-only
+environment. `YUTA AI Test` exists with observed geography `Global` and
+data-retention control `None`; its private project ID is not stored in the
+repository. On 2026-08-19, product separately approved and completed a USD 10
+organization credit purchase, disabled automatic reload, set a USD 5 monthly
+hard project limit with the dashboard's 100% alert, and allowed only
+`gpt-5.6-luna` and `gpt-5.6-terra`. A project service account and key named
+`yuta-ai-evaluation-local` now exist. The secret remains private and outside
+the repository. The service account has only the custom `YUTA AI Evaluation
+Caller` role, whose only enabled capability is model requests; the broader
+preset `member` role was removed.
+
+Wave G Phase 4 received separate approval for one first synthetic request on
+2026-08-19. Backoffice now owns a minimal server-only OpenAI Responses adapter
+implemented with native `fetch`, so no provider SDK was added. The adapter
+accepts only a bounded prepared synthetic PDF, sends direct Base64 PDF input
+with `store: false`, low reasoning effort, no tools or background mode, and
+requires strict structured output before rebuilding the YUTA result envelope.
+The smoke runner is locked to approved fixture IDs, hashes, and explicit local
+run gates; it accepts no caller-supplied path. The first digital-text request
+using the `gpt-5.6-luna` alias completed and matched the strict schema and all
+expected answers. Product then approved three additional representative calls:
+a clear scan, a degraded partial scan, and an adversarial instruction fixture.
+All three passed on their first attempt with zero missing, false,
+high-confidence incorrect, or abstention-violating suggestions. Their measured
+latencies were 4,362 ms, 2,799 ms, and 5,791 ms; together they used 13,701 input
+and 427 output tokens, with a model-price estimate of USD 0.0032526.
+
+Product then approved the remaining 56 corpus requests. All ran once, in
+sequence, with no retry. The complete `gpt-5.6-luna` baseline passed 58 of 60
+documents: digital text 20/20, clear scan 14/15, degraded scan 14/15, and
+adversarial 10/10. All 60 results satisfied the strict schema and there were no
+timeouts, provider failures, arbitrary-key leaks, or abstention violations.
+`wg2-scan-clear-03` produced one false, missing, high-confidence incorrect
+suggestion; `wg2-scan-degraded-07` safely returned no suggestions but used
+`partial` instead of expected `no_result`. Every recorded request remained
+below eight seconds. Because WG0-09 allows no incorrect high-confidence
+suggestion, this Luna/request configuration fails the provider-selection gate.
+The usage dashboard still showed only the earlier first request immediately
+after the run, so full billed-cost reconciliation remains pending rather than
+being guessed. The key remained in ignored local configuration; no raw provider
+response, provider ID, prompt, PDF content, or secret was persisted. Exact
+snapshot pinning and a project rate-limit decision remain open. A future
+company-owned environment must use a new organization/project/key and rerun
+synthetic acceptance.
+
+Wave G Phase 5 then received separate approval to compare `gpt-5.6-terra`
+against the same frozen 60-document corpus, prompt, schema, request controls,
+and no-retry policy. Terra also passed 58/60: digital text 20/20, clear scan
+13/15, degraded scan 15/15, and adversarial 10/10. All 60 responses were
+schema-valid, with no provider failure, timeout, arbitrary-key leak, or
+abstention violation; every recorded request completed below five seconds.
+`wg2-scan-clear-03` and `wg2-scan-clear-05` each contained one false, missing,
+incorrect high-confidence suggestion. Visual review confirmed that both fully
+fictional clear-scan PDFs and their manifest answers are legible and correct.
+Terra corrected Luna's safe status-only mismatch on `wg2-scan-degraded-07`, but
+introduced a second high-confidence error. Both evaluated configurations
+therefore fail WG0-09 and neither is selected. At the checked model prices,
+Terra is ten times Luna per input and output token. The delayed Usage dashboard
+later exposed only a partial 98/120 requests, 328,421 tokens, and USD 0.40, so
+final billed-cost reconciliation remains open. No further provider call is
+authorized by this comparison.
+
+Wave G Phase 5 now has a product-approved prompt v2 definition. The exact text
+was approved on 2026-08-19 and is pinned by a SHA-256 fingerprint. The adapter
+continues to default to prompt v1; v2 is explicitly addressable as `v2`, and no
+external benchmark gate selects it. Prompt v2 adds exact
+position transcription, deterministic status/count rules, unique fields,
+verified weekly-minute conversion, stricter confidence/abstention wording, and
+a final self-check. Fake-response tests cover exact output, French orthographic
+rewrites, wrong source pages, inconsistent status/count, and duplicate fields.
+The scorer now reports field-level mismatch categories without recording
+candidate values or weakening exact-match acceptance. No API request, real
+file, schema, migration, UI, or operational-data change was made. Separate
+product approval remains required before v2 can receive a new full-corpus run
+gate or make any API request.
+
+Product then authorized one clean Luna/prompt-v2 run over all 60 locked
+fictional PDFs on 2026-08-19. Every fixture ran once in sequence with no retry.
+The candidate passed 46/60: digital text 14/20, clear scan 9/15, degraded scan
+15/15, and adversarial 8/10. Eleven results still rewrote a position with high
+confidence despite the verbatim instruction, one provider result failed v2's
+local status/count or uniqueness validation, and two adversarial results safely
+omitted one expected duration. The 59 accepted result envelopes had no
+abstention violation. V2 therefore fails WG0-09 and is not selected. The
+single-use v2 gate was removed after the run; no rerun, different model, real
+file, or production use is authorized. Final billed-cost reconciliation remains
+pending rather than inferred from incomplete console evidence.
+
+Wave G Phase 5 also has a product-approved prompt v3 definition, pinned by
+SHA-256, and an approved corpus v2. Corpus v2 corrects only the missing weekly
+wording in `wg2-adversarial-05` and `wg2-adversarial-09`; all expected answers
+and the other 58 PDF hashes remain unchanged. Product authorized one complete
+Luna/v3 run over the 60 fictional PDFs on 2026-08-19. The run was sequential,
+had no retry, and passed 58/60: digital text 20/20, clear scan 13/15, degraded
+scan 15/15, and adversarial 10/10. `wg2-scan-clear-07` produced one incorrect
+high-confidence orthographic rewrite. `wg2-scan-clear-09` completed at the
+provider but its result failed local schema/consistency validation. There were
+no provider failures or abstention violations. Recorded usage for 59 responses
+was 227,463 input tokens and 9,586 output tokens, estimated at USD 0.0569958;
+usage for the rejected result was not exposed by the adapter, so this is not a
+final billed total. V3 therefore still fails WG0-09 and is not selected. The
+single-use run gate was removed; prompt v1 remains the adapter default and no
+further provider call is authorized.
+
+Wave G Phase 5 now has a product-approved prompt v4 definition. The exact text
+was approved on 2026-08-19. It
+makes only two measured-gap changes: it defines the boundary between a position
+value and surrounding label/sentence punctuation, and it requires a single
+fixed-order result construction followed by a mechanical status/count check.
+The first change is a hypothesis from sanitized orthographic diagnostics; the
+raw v3 candidate was intentionally not retained. The exact cause of the other
+locally invalid v3 result is also unavailable, so fake tests cover both duplicate
+fields and status/count inconsistency without claiming which occurred. V4 is
+pinned by SHA-256 and passes offline request, scoring, and rejection tests. It
+has no external run gate, is not the adapter default, and has made no API call.
+This prompt approval does not authorize a v4 external evaluation; a separate
+run and budget approval remains required.
+
+Product then authorized one complete Luna/v4 run over corpus v2 on 2026-08-19.
+All 60 fictional PDFs ran once in sequence with no retry. V4 passed 59/60:
+digital text 20/20, clear scan 14/15, degraded scan 15/15, and adversarial
+10/10. The single failure, `wg2-scan-clear-15`, completed at the provider but
+was rejected by YUTA's local schema/consistency boundary. The other 59 results
+were schema-valid. There were zero incorrect high-confidence suggestions, zero
+abstention violations, and zero provider failures. Maximum observed latency was
+7,498 ms. Usage observations for 59 results total 232,065 input tokens and
+9,184 output tokens, estimated at USD 0.0574338; the rejected result has no
+adapter usage observation, so final billed cost remains pending. V4 meets the
+current synthetic safety, accuracy, and latency thresholds. Product selected
+Luna/v4/corpus-v2 as the winner of the synthetic evaluation on 2026-08-19. This
+closes the synthetic comparison only: the single-use gate remains removed, the
+adapter default remains v1 to prevent implicit promotion, and no further call,
+real-file use, or production path is authorized. A company-owned environment,
+an exact production model decision, and all EU/privacy/security/operations
+gates remain separate.
+
+Wave G Phase 6 now connects the existing development Documents review action
+to the selected Luna/v4 adapter behind an explicit server-only
+`openai-synthetic` mode. The service still generates its own fictional PDF;
+it never opens or transmits the stored signed contract. Offline development
+continues to default to the deterministic synthetic adapter. Missing keys,
+unknown modes, and every non-development runtime fail closed before an OpenAI
+request. Tests use a fake provider response and make no external request. This
+does not approve real employee files, a production account/project/model, or
+production processing.
+
+A cross-feature OpenAI eligibility dossier now records four proposed YUTA use
+cases: review analysis, reply drafting, marketing visual generation, and signed-
+contract extraction. It proposes separate Reputation, Creative, and Personnel
+Documents projects under one provider organization so retention, access, spend,
+and production gates remain isolated. The product owner authorized and
+confirmed the private Sales-form submission on 2026-08-18, but the repository
+does not yet record an OpenAI response. This authorizes no account, key, SDK,
+API request, spend, synthetic benchmark, or production processing.
+
 Signed employment-contract amendments are implemented as a second local-only
 document slice. Each amendment is a distinct establishment-owned record with a
 required effective date, optional bounded reference, immutable correction

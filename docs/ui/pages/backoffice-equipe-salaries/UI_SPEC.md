@@ -656,3 +656,49 @@ After successful apply, close the extraction review, refresh the employee
 summary/detail, show the normal persisted success message, and restore focus to
 the signed-contract analysis action. The register and document metadata do not
 change.
+
+Phase 4 hardening makes conflict invalidation concrete: an employee/document
+revision change or apply conflict clears the active request, all choices, and
+the review result, then shows a retry message. The local scenario selector and
+radio groups remain controlled for their complete component lifetime. French
+user-facing copy describes a local fictional-data test and does not expose
+internal delivery-phase names.
+
+## Wave F Phase 5 — as-built responsive state
+
+The completed local review preserves the existing wide employee drawer. At
+1440 and 1024 px, document actions and the review use the available width. At
+768 px the drawer fills the viewport and review decisions stack when needed.
+At 390 px the dossier tabs remain horizontally scrollable, the document actions
+become full-width rows, and every review card stays within the drawer.
+
+Signed-in captures at 1440 x 1000, 1024 x 768, 768 x 1024, and 390 x 844 show
+the complete synthetic result state. Page and review widths do not overflow;
+the console has no warning/error. Closing the review returns keyboard focus to
+`Analyser le contrat`. This visual evidence does not represent real PDF
+analysis or production readiness.
+
+## Wave G Phase 0 — UI discovery scope
+
+Wave G Phase 0 requires no new visual design. The approved Wave F Documents
+review already contains the required ready, pending, partial, unsupported,
+failure, timeout, retry, transient review, apply, stale, conflict, and synthetic
+disclosure states. A provider/model selector, prompt editor, OCR engine label,
+token counter, cost display, regional-processing badge, or technical eval panel
+must not appear in the restaurant UI.
+
+Any later synthetic provider evaluation is an engineering activity behind the
+existing server adapter. The restaurant-facing wording remains provider-
+neutral. If a future real-file flow requires a new employee disclosure or
+consent/information state, that state must receive separate product, privacy,
+and design approval before implementation.
+
+Design prompt status: `NOT_APPLICABLE`. Reuse the Wave F approved/as-built UI;
+do not run ImageGen or create a new visual reference for Phase 0.
+
+## Wave G Phase 6 — unchanged restaurant UI
+
+The development Luna/v4 integration stays behind the existing provider-neutral
+Documents review. The visible flow, French wording, states, responsive layout,
+and explicit fictional-data disclosure remain unchanged. No provider/model,
+prompt, token, cost, account, or production control is added to the UI.

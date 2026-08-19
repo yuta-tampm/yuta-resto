@@ -70,6 +70,8 @@ export async function savePrintSettingsAction(
   formData: FormData,
 ): Promise<PrintingActionState> {
   const input = updateLocalPrintSettingsInputSchema.safeParse({
+    kitchenEnabled: formData.get('kitchenEnabled'),
+    counterEnabled: formData.get('counterEnabled'),
     kitchenCopies: formData.get('kitchenCopies'),
     counterCopies: formData.get('counterCopies'),
     fontSizePreset: formData.get('fontSizePreset'),

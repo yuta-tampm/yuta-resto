@@ -420,7 +420,7 @@ The MVP print flow is site-agent-owned:
 
 ```txt
 POS send to kitchen
-Create a Cuisine job when kitchen items are present and one full-batch BAR job
+Create enabled Cuisine/BAR jobs for the new sent batch
 Local printer adapter claims the pending job
 Adapter renders one station ticket and sends ESC/POS to the configured device
 Adapter marks the job printed or failed
@@ -432,11 +432,11 @@ Kitchen ticket jobs are batch-based. If an order is sent to kitchen, then more i
 the physical device write. The selected local transport is one Linux-hosted
 EPSON TM-m30 Bluetooth RFCOMM character device, configured with
 `POS_PRINTER_DEVICE` (currently `/dev/rfcomm1` at Luna). Each kitchen send
-creates a Cuisine job for `kitchen` items when present and a BAR job containing
-the complete sent batch for service-wide visibility. The single TM-m30 prints
-and fully cuts those tickets sequentially. Jobs snapshot their configured copy
-count, font preset, and ticket spacing so retries remain stable after settings
-change.
+creates an enabled Cuisine job for `kitchen` items when present and an enabled
+BAR job containing the complete sent batch for service-wide visibility. At
+least one destination remains enabled. The single TM-m30 prints and fully cuts
+those tickets sequentially. Jobs snapshot their routing, configured copy count,
+font preset, and ticket spacing so retries remain stable after settings change.
 The renderer groups Cuisine output into `ENTREES`, `SUPPLEMENTS`, then `PLATS`,
 and BAR output into `BOISSONS`, `ENTREES`, `SUPPLEMENTS`, `PLATS`, then
 `DESSERTS`. Each station ticket ends with the Epson full-cut command so Cuisine
@@ -446,9 +446,17 @@ waits one second, opens a fresh writer phase, and sends only the feed/full-cut
 trailer before waiting 800 ms for the next ticket. This prevents a longer
 production ticket from overrunning the Bluetooth buffer or leaving its cutter
 bytes behind a busy body stream.
+Production item names are always bold and uppercase. The standard preset uses
+double-height text without doubling its width, while the large preset doubles
+both dimensions. Items follow one another without an extra blank line; section
+bars, indented options, notes, and allergy emphasis preserve scanability while
+reducing paper.
+The order type is removed from the compact metadata block and rendered as a
+centered, bold, double-height line immediately before the item sections.
 Items with station `none` do not print.
-The manual print test renders both a Cuisine ticket and a full BAR ticket, with
-a cut after each. Payment capture does not create a customer receipt job.
+The manual print test renders the currently enabled Cuisine and/or full BAR
+samples, with a cut after each. Payment capture does not create a customer
+receipt job.
 Printed jobs can be explicitly requeued from local print management; the
 original payload snapshot is reused so the reprint matches the first ticket.
 While local print management is visible, it refreshes its server data every two
@@ -525,10 +533,11 @@ commands require a local admin or manager session. Raw payloads remain inside
 The queue is ordered newest first and paginated server-side at 10 tickets per
 page. Total status counters are calculated across the complete local queue,
 not only the visible page.
-The same screen manages Cuisine and Boissons/Desserts copy counts and the
-compact, standard, or large ESC/POS font preset. It also manages zero-to-eight
-line top/bottom spacing and zero-to-eight character left spacing. Physical
-device paths and printer routing remain outside browser control.
+The same screen independently enables Cuisine or BAR internal tickets, while
+preventing both destinations from being disabled. It also manages their copy
+counts, the compact, standard, or large ESC/POS font preset, zero-to-eight line
+top/bottom spacing, and zero-to-eight character left spacing. Physical device
+paths remain outside browser control.
 The screen also presents a safe operational status derived by `site-agent` from
 the configured worker, a read-only character-device stat/access check, and
 local queue state. It refreshes every five seconds only while visible. The

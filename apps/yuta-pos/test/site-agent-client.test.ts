@@ -421,6 +421,8 @@ describe('yuta-pos site-agent client', () => {
 
   it('reads and updates validated print settings with management auth', async () => {
     const settings = {
+      kitchenEnabled: true,
+      counterEnabled: true,
       kitchenCopies: 1,
       counterCopies: 1,
       fontSizePreset: 'standard' as const,

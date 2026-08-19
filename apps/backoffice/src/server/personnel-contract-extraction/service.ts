@@ -12,6 +12,7 @@ export type PreparedSyntheticContract = Readonly<{
   source: 'synthetic_fixture';
   pageCount: number;
   scenario: PersonnelContractExtractionRequest['scenario'];
+  bytes?: Uint8Array;
 }>;
 
 export type ResolvedContractExtractionTarget = Readonly<{
@@ -153,7 +154,7 @@ export class SyntheticContractPdfPreparer implements ContractPdfPreparer {
         'PREPARATION_FAILED',
       );
     }
-    return { source: 'synthetic_fixture', pageCount, scenario };
+    return { source: 'synthetic_fixture', pageCount, scenario, bytes };
   }
 }
 

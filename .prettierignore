@@ -2,4 +2,5 @@
 **/next-env.d.ts
 **/drizzle/meta/**
 apps/yuta-pos/public/sw.js
+apps/backoffice/test/fixtures/personnel-contract-evaluation/*/manifest.json
 pnpm-lock.yaml

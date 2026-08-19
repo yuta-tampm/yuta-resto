@@ -915,12 +915,12 @@ function toPrintJob(job: typeof printJobs.$inferSelect) {
   };
 }
 
-function buildTicketPlans(items: OrderItem[], settings: PrintSettings) {
+export function buildTicketPlans(items: OrderItem[], settings: PrintSettings) {
   const kitchenItems = items.filter(
     (item) => item.kitchenStationSnapshot === 'kitchen',
   );
   const plans = [
-    ...(kitchenItems.length > 0
+    ...(settings.kitchenEnabled && kitchenItems.length > 0
       ? [
           {
             destination: 'kitchen' as const,
@@ -930,19 +930,23 @@ function buildTicketPlans(items: OrderItem[], settings: PrintSettings) {
           },
         ]
       : []),
-    {
-      destination: 'counter' as const,
-      items,
-      copies: settings.counterCopies,
-      includeAllItems: true,
-    },
+    ...(settings.counterEnabled
+      ? [
+          {
+            destination: 'counter' as const,
+            items,
+            copies: settings.counterCopies,
+            includeAllItems: true,
+          },
+        ]
+      : []),
   ];
   return plans.length > 0
     ? plans
     : [
         {
           destination: 'kitchen' as const,
-          items,
+          items: [],
           copies: settings.kitchenCopies,
           includeAllItems: false,
         },

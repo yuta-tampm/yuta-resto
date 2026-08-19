@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
   Separator,
+  Switch,
 } from '@yuta/ui';
 import {
   CheckCircle2,
@@ -41,6 +42,8 @@ export function PrintSettingsCard({
   settings: LocalPrintSettings;
 }) {
   const [settingsExpanded, setSettingsExpanded] = useState(false);
+  const [kitchenEnabled, setKitchenEnabled] = useState(settings.kitchenEnabled);
+  const [counterEnabled, setCounterEnabled] = useState(settings.counterEnabled);
   const [kitchenCopies, setKitchenCopies] = useState(
     String(settings.kitchenCopies),
   );
@@ -95,6 +98,16 @@ export function PrintSettingsCard({
           action={action}
           className={`${settingsExpanded ? 'grid' : 'hidden'} gap-4 border-t border-border-default p-4 xl:grid`}
         >
+          <input
+            type="hidden"
+            name="kitchenEnabled"
+            value={String(kitchenEnabled)}
+          />
+          <input
+            type="hidden"
+            name="counterEnabled"
+            value={String(counterEnabled)}
+          />
           <input type="hidden" name="kitchenCopies" value={kitchenCopies} />
           <input type="hidden" name="counterCopies" value={counterCopies} />
           <input type="hidden" name="fontSizePreset" value={fontSizePreset} />
@@ -111,9 +124,29 @@ export function PrintSettingsCard({
           />
 
           <p className="text-sm text-secondary">
-            Les tickets Cuisine et BAR sont imprimés et coupés séparément sur
-            l’EPSON TM-m30.
+            Activez les tickets nécessaires. Au moins une destination doit
+            rester active. Les tickets actifs sont coupés séparément sur l’EPSON
+            TM-m30.
           </p>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <PrintDestinationSwitch
+              id="kitchen-printing-enabled"
+              label="Impression CUISINE"
+              description="Articles préparés en cuisine"
+              checked={kitchenEnabled}
+              disabled={kitchenEnabled && !counterEnabled}
+              onCheckedChange={setKitchenEnabled}
+            />
+            <PrintDestinationSwitch
+              id="counter-printing-enabled"
+              label="Impression BAR"
+              description="Commande complète pour le bar"
+              checked={counterEnabled}
+              disabled={counterEnabled && !kitchenEnabled}
+              onCheckedChange={setCounterEnabled}
+            />
+          </div>
 
           <div className="grid items-end gap-3 md:grid-cols-3 xl:grid-cols-3">
             <FormField label="Copies Cuisine">
@@ -211,7 +244,12 @@ export function PrintSettingsCard({
         <div className="hidden grid-cols-2 gap-3 border-t border-border-default p-4 xl:grid">
           <TicketPreview
             title="CUISINE"
-            subtitle={`${kitchenCopies} copie${kitchenCopies === '1' ? '' : 's'}`}
+            subtitle={
+              kitchenEnabled
+                ? `${kitchenCopies} copie${kitchenCopies === '1' ? '' : 's'}`
+                : 'Désactivée'
+            }
+            enabled={kitchenEnabled}
             preset={fontSizePreset}
             topPaddingLines={Number(topPaddingLines)}
             leftPaddingChars={Number(leftPaddingChars)}
@@ -219,7 +257,12 @@ export function PrintSettingsCard({
           />
           <TicketPreview
             title="BAR — COMMANDE COMPLÈTE"
-            subtitle={`${counterCopies} copie${counterCopies === '1' ? '' : 's'}`}
+            subtitle={
+              counterEnabled
+                ? `${counterCopies} copie${counterCopies === '1' ? '' : 's'}`
+                : 'Désactivée'
+            }
+            enabled={counterEnabled}
             preset={fontSizePreset}
             topPaddingLines={Number(topPaddingLines)}
             leftPaddingChars={Number(leftPaddingChars)}
@@ -231,6 +274,43 @@ export function PrintSettingsCard({
         </div>
       </Card>
     </section>
+  );
+}
+
+function PrintDestinationSwitch({
+  id,
+  label,
+  description,
+  checked,
+  disabled,
+  onCheckedChange,
+}: {
+  id: string;
+  label: string;
+  description: string;
+  checked: boolean;
+  disabled: boolean;
+  onCheckedChange: (checked: boolean) => void;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-3 rounded-lg border border-border-default bg-surface p-3">
+      <label htmlFor={id} className="min-w-0 cursor-pointer">
+        <span className="block font-bold">{label}</span>
+        <span className="mt-0.5 block text-xs text-secondary">
+          {description}
+        </span>
+      </label>
+      <Switch
+        id={id}
+        checked={checked}
+        disabled={disabled}
+        onCheckedChange={onCheckedChange}
+        aria-describedby={`${id}-status`}
+      />
+      <span id={`${id}-status`} className="sr-only">
+        {checked ? 'Activée' : 'Désactivée'}
+      </span>
+    </div>
   );
 }
 
@@ -305,6 +385,7 @@ function PaddingSelect({
 function TicketPreview({
   title,
   subtitle,
+  enabled,
   preset,
   topPaddingLines,
   leftPaddingChars,
@@ -312,6 +393,7 @@ function TicketPreview({
 }: {
   title: string;
   subtitle: string;
+  enabled: boolean;
   preset: PrintFontSizePreset;
   topPaddingLines: number;
   leftPaddingChars: number;
@@ -319,13 +401,13 @@ function TicketPreview({
 }) {
   const itemClass =
     preset === 'large'
-      ? 'text-lg font-black'
+      ? 'text-xl font-black'
       : preset === 'compact'
-        ? 'text-sm font-semibold'
-        : 'text-base font-bold';
+        ? 'text-sm font-bold'
+        : 'text-lg font-black';
   return (
     <div
-      className="rounded-lg border border-border bg-surface p-4"
+      className={`rounded-lg border border-border bg-surface p-4 ${enabled ? '' : 'opacity-50'}`}
       style={{
         paddingTop: `${16 + topPaddingLines * 4}px`,
         paddingLeft: `${16 + leftPaddingChars * 3}px`,

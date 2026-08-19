@@ -1,4 +1,5 @@
 import {
+  boolean,
   check,
   integer,
   index,
@@ -21,6 +22,8 @@ export const printSettings = pgTable(
   'print_settings',
   {
     id: varchar('id', { length: 32 }).primaryKey(),
+    kitchenEnabled: boolean('kitchen_enabled').default(true).notNull(),
+    counterEnabled: boolean('counter_enabled').default(true).notNull(),
     kitchenCopies: integer('kitchen_copies').default(1).notNull(),
     counterCopies: integer('counter_copies').default(1).notNull(),
     fontSizePreset: varchar('font_size_preset', {
@@ -39,6 +42,10 @@ export const printSettings = pgTable(
   },
   (table) => [
     check('print_settings_singleton_check', sql`${table.id} = 'default'`),
+    check(
+      'print_settings_destination_enabled_check',
+      sql`${table.kitchenEnabled} or ${table.counterEnabled}`,
+    ),
     check(
       'print_settings_kitchen_copies_check',
       sql`${table.kitchenCopies} between 1 and 3`,

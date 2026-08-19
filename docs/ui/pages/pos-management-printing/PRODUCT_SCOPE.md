@@ -15,7 +15,9 @@ printing, and recover supported jobs without bypassing the site-agent.
 - Safe printer-channel status and complete-queue summary.
 - Paginated recent jobs with current status and error message.
 - Supported job commands: start, mark printed, mark failed, retry, and reprint.
-- Kitchen/BAR copy counts, font preset, and spacing settings with preview.
+- Independent Cuisine/BAR ticket enablement, copy counts, font preset, and
+  spacing settings with preview. At least one ticket destination remains
+  enabled.
 - Explicit test-print job creation.
 
 ## Current boundaries
@@ -32,9 +34,11 @@ dark management header on this screen by reusing the current management home
 session context, `Retour au POS`, and existing sign-out action, and keeps ticket
 settings collapsed below the desktop `xl` layout. Wide desktop keeps settings
 and previews side by side. Queue mapping, status truth, fixed ten-job pagination,
-and current actions remain unchanged. No database, API/contract,
-permission/auth, cross-application, or runtime/device behavior change is
-approved.
+and current actions remain unchanged. The later operator-approved local
+printing change adds persisted Cuisine/BAR enablement to the existing singleton
+settings contract and applies it only when new internal ticket jobs are
+planned. Permissions, authentication, and cross-application boundaries remain
+unchanged. Existing jobs remain immutable.
 
 ## Out of scope
 

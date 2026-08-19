@@ -8,7 +8,8 @@
     "start": "tsx src/server.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "receipt:preview": "tsx src/scripts/receipt-preview.ts"
+    "receipt:preview": "tsx src/scripts/receipt-preview.ts",
+    "internal-ticket:preview": "tsx src/scripts/internal-ticket-preview.ts"
   },
   "dependencies": {
     "@yuta/contracts": "workspace:*",

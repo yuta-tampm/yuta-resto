@@ -80,6 +80,8 @@ describe('@yuta/contracts', () => {
     expect(sendCommand.allergyAcknowledged).toBe(false);
     expect(
       updateLocalPrintSettingsInputSchema.parse({
+        kitchenEnabled: 'true',
+        counterEnabled: 'false',
         kitchenCopies: '2',
         counterCopies: '1',
         fontSizePreset: 'large',
@@ -88,6 +90,8 @@ describe('@yuta/contracts', () => {
         bottomPaddingLines: '4',
       }),
     ).toEqual({
+      kitchenEnabled: true,
+      counterEnabled: false,
       kitchenCopies: 2,
       counterCopies: 1,
       fontSizePreset: 'large',
@@ -97,12 +101,26 @@ describe('@yuta/contracts', () => {
     });
     expect(
       localPrintSettingsSchema.safeParse({
+        kitchenEnabled: true,
+        counterEnabled: true,
         kitchenCopies: 4,
         counterCopies: 1,
         fontSizePreset: 'standard',
         topPaddingLines: 1,
         leftPaddingChars: 2,
         bottomPaddingLines: 3,
+      }).success,
+    ).toBe(false);
+    expect(
+      updateLocalPrintSettingsInputSchema.safeParse({
+        kitchenEnabled: 'false',
+        counterEnabled: 'false',
+        kitchenCopies: '1',
+        counterCopies: '1',
+        fontSizePreset: 'standard',
+        topPaddingLines: '1',
+        leftPaddingChars: '2',
+        bottomPaddingLines: '3',
       }).success,
     ).toBe(false);
   });

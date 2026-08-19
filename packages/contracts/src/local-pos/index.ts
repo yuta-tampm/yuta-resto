@@ -1077,8 +1077,15 @@ export const printFontSizePresetSchema = z.enum([
   'standard',
   'large',
 ]);
+const printDestinationEnabledInputSchema = z.preprocess((value) => {
+  if (value === 'true') return true;
+  if (value === 'false') return false;
+  return value;
+}, z.boolean());
 export const localPrintSettingsSchema = z
   .object({
+    kitchenEnabled: z.boolean(),
+    counterEnabled: z.boolean(),
     kitchenCopies: z.number().int().min(1).max(3),
     counterCopies: z.number().int().min(1).max(3),
     fontSizePreset: printFontSizePresetSchema,
@@ -1086,9 +1093,15 @@ export const localPrintSettingsSchema = z
     leftPaddingChars: z.number().int().min(0).max(8),
     bottomPaddingLines: z.number().int().min(0).max(8),
   })
-  .strict();
+  .strict()
+  .refine((settings) => settings.kitchenEnabled || settings.counterEnabled, {
+    message: 'At least one print destination must remain enabled.',
+    path: ['counterEnabled'],
+  });
 export const updateLocalPrintSettingsInputSchema = z
   .object({
+    kitchenEnabled: printDestinationEnabledInputSchema,
+    counterEnabled: printDestinationEnabledInputSchema,
     kitchenCopies: z.coerce.number().int().min(1).max(3),
     counterCopies: z.coerce.number().int().min(1).max(3),
     fontSizePreset: printFontSizePresetSchema,
@@ -1096,7 +1109,11 @@ export const updateLocalPrintSettingsInputSchema = z
     leftPaddingChars: z.coerce.number().int().min(0).max(8),
     bottomPaddingLines: z.coerce.number().int().min(0).max(8),
   })
-  .strict();
+  .strict()
+  .refine((settings) => settings.kitchenEnabled || settings.counterEnabled, {
+    message: 'At least one print destination must remain enabled.',
+    path: ['counterEnabled'],
+  });
 
 export type SiteAgentHealthResponse = z.infer<
   typeof siteAgentHealthResponseSchema

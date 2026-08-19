@@ -82,6 +82,7 @@ describe('POS schema boundaries', () => {
     expect(config.checks.map((check) => check.name).sort()).toEqual([
       'print_settings_bottom_padding_lines_check',
       'print_settings_counter_copies_check',
+      'print_settings_destination_enabled_check',
       'print_settings_font_size_preset_check',
       'print_settings_kitchen_copies_check',
       'print_settings_left_padding_chars_check',

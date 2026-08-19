@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start -p 3001",
     "test": "vitest run",
+    "test:openai:synthetic": "vitest run test/personnel-contract-openai-smoke.test.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

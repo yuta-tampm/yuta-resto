@@ -672,7 +672,323 @@ Read-slice evidence:
 - [x] Requested, completed, failed, and applied events contain no file content, snippets, candidate/current values, prompt, or provider response.
 - [x] Suggestions remain transient and are cleared on close, refresh, document replacement, retry, or conflict.
 - [x] No provider, remote call, API key, schema, migration, result store, queue, worker, or production enablement was added.
-- [ ] Product owner authorizes Wave F Phase 4 local integration verification separately.
+- [x] Product owner authorized Wave F Phase 4 local integration verification and hardening.
+
+## Wave F Phase 4 — local integration hardening
+
+- [x] Apply requires a matching completed extraction event in the same trusted organization, establishment, employee, request, and document/version scope.
+- [x] Complete/partial outcome mismatch, fabricated request, another establishment, and document mismatch fail closed.
+- [x] Completed review grants expire after 15 minutes and are checked server-side before employee mutation.
+- [x] Employee/document revision changes and apply conflicts clear the request, choices, and review result.
+- [x] Radio groups remain controlled from first render and produce no React warning after selection.
+- [x] Complete, partial, unsupported, failure, timeout, retry, selection, and focus recovery were exercised in the live local app.
+- [x] Browser geometry at 1440/1024/768/390 has no page or review horizontal overflow.
+- [x] Browser QA produced no warning/error after hardening and did not apply a suggestion to employee data.
+- [x] No real personnel file was opened or transmitted and no external AI/provider/production path was enabled.
+- [x] Product owner authorized Wave F Phase 5 evidence/finalization on 2026-08-18.
+
+## Wave F Phase 5 — local QA and as-built finalization
+
+- [x] Signed-in OWNER QA uses the development-only synthetic PDF path and does
+      not open or transmit the signed employee PDF.
+- [x] The ready review truthfully says `Local — PDF synthétique` and
+      `Test local avec données fictives`.
+- [x] Review content, document actions, and the drawer remain usable at 1440,
+      1024, 768, and 390 px with no horizontal page or review overflow.
+- [x] Mobile stacks the review content and keeps the existing scrollable dossier
+      tab strip; no desktop-only comparison layout is forced onto 390 px.
+- [x] Closing the review restores focus to `Analyser le contrat` with
+      `aria-expanded=false`.
+- [x] Fresh browser QA reports no warning or error.
+- [x] Four stable `wave-f-phase-5-as-built-*` captures are retained.
+- [x] No suggestion was applied and no employee, document, or register data was changed.
+- [x] No real-file extraction, external AI/OCR, provider SDK/key, production
+      rate limiter, schema, migration, result store, queue, or production path
+      was introduced.
+- [ ] Real-file/provider evaluation and production approval remain separately blocked.
+
+## Wave G Phase 0 — synthetic AI/OCR provider evaluation discovery
+
+- [x] Wave G is classified as a new `FLOW + INTEGRATION` capability inside the
+      existing integrated Documents surface and stable Salariés page pack.
+- [x] Repository inventory confirms a provider-neutral preparer/adapter,
+      strict result schema, timeout, review, authorization, and no remote provider.
+- [x] Current manifests contain no selected OCR/AI SDK or provider secret.
+- [x] The Phase 0 MVP is an evaluation specification using generated fictional
+      French contracts with known expected answers.
+- [x] OpenAI Responses direct PDF is the only external AI/OCR provider path
+      proposed for the first synthetic benchmark.
+- [x] Local native extraction, Tesseract/self-hosted OCR, Azure, Google, and a
+      second provider are outside the current direction.
+- [x] Proposed corpus classes, minimum counts, metrics, and safe pass/fail rules are recorded.
+- [x] Production files remain in private EU storage outside Neon; an AI request
+      does not become file storage or an authoritative employee update.
+- [x] OWNER and trusted organization + establishment + employee + exact
+      document/version scope remain future runtime invariants.
+- [x] UI discovery reuses Wave F; design prompt is truthfully `NOT_APPLICABLE`.
+- [x] OpenAI PDF/structured-output, retention, and EU residency documentation
+      was reviewed without creating an account, key, SDK, or request.
+- [x] Current OpenAI and CNIL primary documentation was reviewed for EU
+      processing, retention controls, file/image exceptions, and privacy risks.
+- [x] WG0-01 through WG0-14 are prepared for product approval.
+- [x] Phase 0 creates no code, fixture PDF, schema, migration, contract change,
+      permission, audit event, SDK/library, key, external request, file read,
+      operational data, employee mutation, or production behavior.
+- [x] One organization-level eligibility dossier discloses review analysis,
+      reply drafting, creative visual generation, and contract extraction while
+      keeping the personnel use case separately blocked.
+- [x] The dossier contains no private contact, account, key, employee, customer,
+      contract, review, or production identifier.
+- [ ] Product, privacy/DPO, security, legal, operations, volume, and budget fields
+      are approved in a private submission copy.
+- [x] An authorized YUTA representative separately approves external submission.
+- [x] Product owner approves WG0-01 through WG0-14 and separately authorizes Wave G Phase 1.
+
+## Wave G Phase 1 — provider eligibility and private submission
+
+- [x] The private submission identifies YUTA truthfully as a pre-incorporation project.
+- [x] The request covers all four proposed AI use cases and the 100-establishment, 24-month target.
+- [x] The private submission contains no real customer, employee, review,
+      contract, prompt, response, key, or production identifier.
+- [x] Product authorizes contact with OpenAI Sales for eligibility guidance.
+- [x] The product owner confirms submission through the OpenAI Sales contact
+      form on 2026-08-18; no provider approval is inferred from form delivery.
+- [ ] OpenAI's written response is retained privately.
+- [ ] Accepted non-confidential conclusions are synchronized into current documentation.
+- [x] Product separately authorizes Wave G Phase 2 offline and Phase 3 design
+      preparation on 2026-08-19; this approval did not authorize a key or request.
+
+## Wave G Phase 2 — offline corpus
+
+- [x] The ten-file starter corpus was reviewed and expansion to 60 files was
+      authorized by product on 2026-08-19.
+- [x] Sixty visibly fictional two-page PDFs are generated: 20 digital text,
+      15 clear scans, 15 degraded scans, and 10 adversarial/ambiguous files.
+- [x] The manifest records a stable file, SHA-256, page count, exact allowlisted
+      answers, and required abstentions for every fixture.
+- [x] No fixture contains a real person, restaurant, address, signature, salary,
+      bank value, identity number, employee metadata, or production identifier.
+- [x] The scorer reuses the strict YUTA result schema and measures exact, false,
+      missing, incorrect-high-confidence, and abstention outcomes.
+- [x] Tests verify distribution, PDF signature, hash, page count, exact answers,
+      unsafe guesses, and extra-key rejection.
+- [x] Representative digital, clear-scan, degraded-scan, and adversarial pages
+      are rendered and visually inspected.
+- [x] No UI, storage, employee/document/register data, provider SDK, key,
+      request, schema, migration, or production behavior is added.
+- [x] Two consecutive generations produce identical hashes for all 60 PDFs and
+      the manifest.
+
+## Wave G Phase 3 — temporary-account preparation
+
+- [x] Product permits design preparation around the current
+      personal/pre-incorporation API organization.
+- [x] Product separately authorizes creation of the disposable `YUTA AI Test`
+      project on 2026-08-19, isolated from every production use.
+- [x] The dashboard reports `Global` geography and data-retention control
+      `None`; no EU or Zero Data Retention claim is made.
+- [x] The private project ID is not stored in repository documentation.
+- [x] Project-scoped service account/key, truthful geography, retention, model
+      allowlist, rate limit, spend alert, and hard limit are required.
+- [x] A later company-owned environment must use a new organization/project/key
+      and rerun synthetic acceptance.
+- [x] USD 10 prepaid organization credit is present and automatic reload is
+      disabled.
+- [x] The project has a USD 5 monthly hard limit and the dashboard's 100% alert.
+- [x] The model allowlist contains only `gpt-5.6-luna` and
+      `gpt-5.6-terra`; this does not yet approve exact snapshots.
+- [x] The project service account/key is named `yuta-ai-evaluation-local`; its
+      secret is private and absent from the repository.
+- [x] `YUTA AI Evaluation Caller` grants only model-request capability, is the
+      service account's only assigned role, and replaces preset `member`.
+- [x] The key was unused and project spend was USD 0 immediately after sandbox
+      setup, before the separately authorized first call.
+- [ ] Exact model snapshots and a project rate limit are approved.
+- [x] The ignored local secret path and exact `approved-synthetic-only` run gate
+      provide evaluation-only injection and a default-off kill switch.
+- [x] Product explicitly authorizes one first Phase 4 synthetic request on
+      2026-08-19.
+
+## Wave G Phase 4 — complete synthetic benchmark
+
+- [x] The adapter is server-only, implements the existing provider-neutral
+      interface, and adds no OpenAI SDK.
+- [x] The remote request uses only `gpt-5.6-luna`, direct Base64 PDF input,
+      `store: false`, strict structured output, low reasoning effort, no tools,
+      no background mode, and no automatic retry.
+- [x] The runner selects only approved manifest fixture IDs and hashes;
+      arbitrary or real file paths are not accepted.
+- [x] The digital-text first call and three separately approved representative
+      calls for clear scan, degraded partial scan, and adversarial instruction
+      content all pass on their first attempt.
+- [x] All four results pass the strict YUTA schema and expected-answer scorer
+      with no missing, false, incorrect-high-confidence, or abstention
+      violation.
+- [x] The three-call batch records normalized latency, token, and estimated-cost
+      metrics totaling 13,701 input tokens, 427 output tokens, and USD
+      0.0032526.
+- [x] Product separately authorizes the remaining 56 fixtures; all run once in
+      sequence with no retry.
+- [x] The complete baseline produces 58/60 document passes: 20/20 digital,
+      14/15 clear scan, 14/15 degraded scan, and 10/10 adversarial.
+- [x] All 60 responses are schema-valid; there are no provider failures,
+      timeouts, arbitrary-key leaks, or abstention violations.
+- [ ] WG0-09 passes: `wg2-scan-clear-03` contains one false
+      high-confidence suggestion, so zero tolerance is not met.
+- [x] `wg2-scan-degraded-07` has a status-only mismatch while safely returning
+      no suggestions.
+- [x] No secret, raw response, provider ID, prompt, PDF content, employee data,
+      or operational mutation is persisted.
+- [ ] Full billed cost is reconciled after the delayed Usage dashboard ingests
+      all 60 requests.
+- [ ] OpenAI or another request configuration is selected in Phase 5.
+- [ ] Real personnel-file use, a company-owned production environment, EU and
+      retention evidence, production controls, and production release are
+      approved.
+
+## Wave G Phase 5 — Luna/Terra comparison
+
+- [x] Product separately authorizes a full `gpt-5.6-terra` comparison against
+      the same frozen corpus and request controls.
+- [x] All 60 Terra fixtures run once in sequence with no retry.
+- [x] Terra produces 58/60 document passes: 20/20 digital, 13/15 clear scan,
+      15/15 degraded scan, and 10/10 adversarial.
+- [x] All 60 Terra responses are schema-valid; there are no provider failures,
+      timeouts, arbitrary-key leaks, or abstention violations.
+- [x] Terra records a maximum request latency below five seconds and fixes
+      Luna's safe status-only mismatch on `wg2-scan-degraded-07`.
+- [ ] Terra passes WG0-09: `wg2-scan-clear-03` and
+      `wg2-scan-clear-05` each contain one false high-confidence suggestion.
+- [x] Rendered visual review confirms both failed synthetic PDFs and their
+      manifest expected answers are legible and correct.
+- [x] The comparison preserves the prompt, schema, request shape, synthetic-only
+      boundary, and no-retry policy.
+- [x] Neither evaluated configuration is selected because both fail WG0-09.
+- [ ] Final billed cost is reconciled; the current dashboard snapshot is only
+      partial at 98/120 requests, 328,421 tokens, and USD 0.40.
+- [ ] Product either rejects both current configurations or predefines and
+      approves a new candidate before any fresh full-corpus run.
+- [ ] Real personnel-file use and production remain separately blocked.
+
+## Wave G Phase 5 — approved prompt v2 definition
+
+- [x] Prompt v2 exists as `v2`; prompt v1 remains the adapter default.
+- [x] No existing external benchmark gate selects v2.
+- [x] The draft requires exact position transcription and prohibits spelling,
+      accent, apostrophe, punctuation, spacing, or abbreviation correction.
+- [x] Status is tied to suggestion count: complete 3, partial 1–2,
+      no_result/unsupported 0.
+- [x] V2 local validation rejects duplicate fields and inconsistent
+      status/count output.
+- [x] Offline diagnostics distinguish candidate-value, source-page,
+      duplicate-field, missing/unexpected, and orthographic mismatches without
+      logging candidate values.
+- [x] Fake-response tests cover exact success, `Hôte d’accueil` normalization,
+      wrong source page, inconsistent zero-result status, and duplicate fields.
+- [x] Exact-match and WG0-09 safety gates remain unchanged.
+- [x] Product approved the exact v2 prompt text on 2026-08-19.
+- [x] The approved prompt text is pinned by a tested SHA-256 fingerprint.
+- [x] Product separately authorized one v2 full-corpus run on 2026-08-19.
+- [x] All 60 locked fictional PDFs ran once in sequence with no retry.
+- [x] Luna/v2 produced 46/60 passes: digital 14/20, clear scan 9/15,
+      degraded scan 15/15, and adversarial 8/10.
+- [ ] V2 passes WG0-09: eleven results contain an incorrect high-confidence
+      orthographic rewrite of `position`.
+- [x] One result failed v2 local consistency validation; two adversarial
+      results safely omitted one expected weekly duration.
+- [x] The temporary v2 external run gate was removed after the authorized run.
+- [ ] Exact billed-cost reconciliation is complete.
+- [ ] Any real-file or production use remains separately approved.
+
+## Wave G Phase 5 — approved prompt v3 and candidate corpus v2
+
+- [x] Product approved the exact v3 prompt text on 2026-08-19.
+- [x] V3 exists as `v3`; v1 remains the adapter default.
+- [x] V3 was not the adapter default; its single-use external gate was removed
+      after the authorized run.
+- [x] V3 uses held-out transcription examples absent from corpus v1.
+- [x] Exact matching remains unchanged; normalized French remains a failure.
+- [x] V3 does not treat a bare hour duration as weekly.
+- [x] Offline review identifies `wg2-adversarial-05` and
+      `wg2-adversarial-09` as corpus-v1 specification defects.
+- [x] Corpus v1 remains frozen; no post-result answer or PDF was changed.
+- [x] Fake-response tests cover the prompt fingerprint, exact unaccented text,
+      normalized-title failure, safe duration omission, and local consistency.
+- [x] Candidate corpus v2 changes only `wg2-adversarial-05` and
+      `wg2-adversarial-09` to make weekly duration explicit.
+- [x] Corpus v2 preserves all expected answers and 58/60 PDF hashes.
+- [x] The two changed PDF hashes are pinned in the corpus-v2 manifest.
+- [x] Both changed two-page PDFs were rendered and visually reviewed.
+- [x] Corpus-v2 tests verify distribution, hashes, pages, and v1 comparison.
+- [x] Product approved corrected corpus v2 on 2026-08-19.
+- [x] Product separately authorized one 60-PDF Luna/v3 run with no retry.
+- [x] The run produced 58/60 passes: digital 20/20, clear scan 13/15,
+      degraded scan 15/15, and adversarial 10/10.
+- [ ] V3 passes WG0-09: `wg2-scan-clear-07` contains one incorrect
+      high-confidence orthographic rewrite.
+- [x] `wg2-scan-clear-09` completed at the provider but failed local
+      schema/consistency validation.
+- [x] There were no provider failures or abstention violations.
+- [x] Usage observations for 59 responses record 227,463 input tokens, 9,586
+      output tokens, and an estimated USD 0.0569958.
+- [ ] Final billed-cost reconciliation includes the rejected response.
+- [x] The temporary v3 gate was removed; no retry or further call is authorized.
+
+## Wave G Phase 5 — approved prompt v4
+
+- [x] Product requested offline v4 preparation after the v3 result.
+- [x] V4 keeps model, reasoning effort, corpus v2, structured schema, local
+      validation, scorer, and WG0-09 unchanged.
+- [x] V4 excludes the position label, separator, and sentence-ending
+      punctuation while preserving characters internal to the value.
+- [x] V4 emits at most one suggestion per field in fixed order and derives
+      status after the final suggestion count.
+- [x] Documentation distinguishes failure hypotheses from unavailable raw v3
+      output.
+- [x] The v4 prompt is pinned by SHA-256.
+- [x] Fake-response tests cover its request name, exact position boundary,
+      punctuation mismatch, duplicate fields, and status/count mismatch.
+- [x] Prompt v1 remains the adapter default.
+- [x] The single-use v4 run gate was removed after the authorized run.
+- [x] Product approved the exact v4 prompt on 2026-08-19.
+- [x] Product separately authorized one 60-PDF Luna/v4 run with no retry.
+- [x] V4 produced 59/60 passes: digital 20/20, clear scan 14/15, degraded
+      scan 15/15, and adversarial 10/10.
+- [x] All 60 responses were schema-valid or safely rejected; the only invalid
+      result was `wg2-scan-clear-15`.
+- [x] V4 has zero incorrect high-confidence suggestions and passes WG0-09.
+- [x] V4 has zero abstention violations and zero provider failures.
+- [x] Maximum observed latency was 7,498 ms, below the 45-second boundary.
+- [x] Usage observations for 59 results total 232,065 input tokens, 9,184
+      output tokens, and estimated USD 0.0574338.
+- [ ] Final billed cost includes the locally rejected result.
+- [x] V4 meets the current synthetic safety, accuracy, and latency thresholds.
+- [x] Product selected Luna/v4/corpus-v2 as the synthetic evaluation winner on
+      2026-08-19.
+- [x] The synthetic comparison is closed and no further evaluation call is
+      authorized by the selection.
+- [x] The generic adapter default remains v1 to prevent implicit promotion.
+- [ ] Real personnel files and production use remain separately approved.
+
+## Wave G Phase 6 — development integration
+
+- [x] Existing Documents action resolves the extraction adapter on the server.
+- [x] Offline development defaults to `deterministic-synthetic`.
+- [x] `openai-synthetic` explicitly pins Luna and prompt v4.
+- [x] Missing key and unknown mode fail before provider access.
+- [x] Production, test, and missing `NODE_ENV` fail closed even if mode and key
+      are present.
+- [x] The service generates a fictional PDF and does not read stored signed
+      contract bytes.
+- [x] End-to-end tests use a fake provider response and make no network call.
+- [x] Non-complete UI test scenarios remain deterministic and make no provider
+      call.
+- [x] Existing OWNER authorization, version checks, rate limit, transient
+      review, explicit apply, and minimized audit remain unchanged.
+- [x] No schema, migration, SDK, route, provider UI, automatic employee update,
+      real-file path, or production capability was added.
+- [ ] Real personnel files and production processing remain blocked pending the
+      separate provider, EU/privacy/security, and operations gates.
 
 ## Wave E Phase 0 — personnel register and PDF export discovery
 

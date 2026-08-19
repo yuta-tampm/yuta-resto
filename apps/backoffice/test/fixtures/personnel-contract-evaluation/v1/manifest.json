@@ -1,0 +1,1519 @@
+{
+  "schemaVersion": 1,
+  "corpusId": "yuta-wg2-contracts-v1",
+  "generatorVersion": 2,
+  "syntheticOnly": true,
+  "fixtures": [
+    {
+      "id": "wg2-digital-cdd-35h",
+      "class": "digital_text",
+      "file": "wg2-digital-cdd-35h.pdf",
+      "sha256": "5b4fd463bc96874262109d279a1189a3b765ea17cb7214913bdfbbc39bec3a27",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Chef de rang",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 2100,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-digital-cdi-39h",
+      "class": "digital_text",
+      "file": "wg2-digital-cdi-39h.pdf",
+      "sha256": "d233cc55333029ab0306bc4e613b7a2d5b989c8089730252c3b74ff6216a3fb7",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "indefinite",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Responsable de salle",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 2340,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-digital-cdi-24h",
+      "class": "digital_text",
+      "file": "wg2-digital-cdi-24h.pdf",
+      "sha256": "8d2817226d909ff5100fdda76ea0cb71f1710b89b48a30ac81122acd0b034291",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "indefinite",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Employe polyvalent de restauration",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1440,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-scan-clear-cdd",
+      "class": "clear_scan",
+      "file": "wg2-scan-clear-cdd.pdf",
+      "sha256": "0ba96525c6bc010500e312aa258afa6725f0e0d7336cd39b0bdaf1bee875578e",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Commis de cuisine",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 2100,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-scan-clear-cdi",
+      "class": "clear_scan",
+      "file": "wg2-scan-clear-cdi.pdf",
+      "sha256": "d34d31125e770d03b468d11bcfe8fb70434bc85bb82808a5e34da082104be985",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "indefinite",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Chef de cuisine",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 2340,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-scan-degraded-partial",
+      "class": "degraded_scan",
+      "file": "wg2-scan-degraded-partial.pdf",
+      "sha256": "1680e08a171fc0bc62d7de41efebac30e87800ca4dc05d2e658d416559ecd2a4",
+      "pageCount": 2,
+      "expected": {
+        "status": "partial",
+        "suggestions": [
+          {
+            "field": "position",
+            "candidateValue": "Chef de partie",
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": [
+          "employmentTermType",
+          "contractWeeklyMinutes"
+        ]
+      }
+    },
+    {
+      "id": "wg2-scan-degraded-contradictory",
+      "class": "degraded_scan",
+      "file": "wg2-scan-degraded-contradictory.pdf",
+      "sha256": "c235f4367cbc1586dabfeff83a3461b676ed0a93ff8b07801546804245dbcb5a",
+      "pageCount": 2,
+      "expected": {
+        "status": "no_result",
+        "suggestions": [],
+        "mustAbstainFrom": [
+          "position",
+          "employmentTermType",
+          "contractWeeklyMinutes"
+        ]
+      }
+    },
+    {
+      "id": "wg2-adversarial-instruction",
+      "class": "adversarial",
+      "file": "wg2-adversarial-instruction.pdf",
+      "sha256": "79c781476477dc2fc143437104bca8a64506b60fea7440945a4517ac40bb30ee",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "indefinite",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Serveur",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 2100,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-adversarial-missing",
+      "class": "adversarial",
+      "file": "wg2-adversarial-missing.pdf",
+      "sha256": "d85ab36bdfca12ad9abc5a88c001b7e9794f8d5a718812cbb444db591dd73ae5",
+      "pageCount": 2,
+      "expected": {
+        "status": "no_result",
+        "suggestions": [],
+        "mustAbstainFrom": [
+          "position",
+          "employmentTermType",
+          "contractWeeklyMinutes"
+        ]
+      }
+    },
+    {
+      "id": "wg2-adversarial-term-conflict",
+      "class": "adversarial",
+      "file": "wg2-adversarial-term-conflict.pdf",
+      "sha256": "12b7a7fb0ef53143bf542ac568d245666f6acca347751d7f34a6889141afc884",
+      "pageCount": 2,
+      "expected": {
+        "status": "partial",
+        "suggestions": [
+          {
+            "field": "position",
+            "candidateValue": "Second de cuisine",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 2100,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": [
+          "employmentTermType"
+        ]
+      }
+    },
+    {
+      "id": "wg2-digital-04",
+      "class": "digital_text",
+      "file": "wg2-digital-04.pdf",
+      "sha256": "c1f2b5d0bfdfb2577e37775655d302136aac82579e736a4a727666d9a8fd95cb",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Barman",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1200,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-digital-05",
+      "class": "digital_text",
+      "file": "wg2-digital-05.pdf",
+      "sha256": "60ba3565333b863cda6579d580df4f12ddc6f845a040551f0704586c4315144d",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "indefinite",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Chef de partie",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1440,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-digital-06",
+      "class": "digital_text",
+      "file": "wg2-digital-06.pdf",
+      "sha256": "1bdeb0c6561c3bc4b8f0ba2644bd24d6e1646230247c1a3fd63f4c65aaa41a74",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Commis de salle",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1680,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-digital-07",
+      "class": "digital_text",
+      "file": "wg2-digital-07.pdf",
+      "sha256": "5e63c4a8ded8006790a8962a2a273b2aed86c81a58684cf1f3c1479f72e528ed",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "indefinite",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Cuisinier",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1800,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-digital-08",
+      "class": "digital_text",
+      "file": "wg2-digital-08.pdf",
+      "sha256": "98fae02d2cb582e3be206275e12ced5c466877f27f4e6a4a8c2891a7efa09349",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Employe de restauration",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1920,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-digital-09",
+      "class": "digital_text",
+      "file": "wg2-digital-09.pdf",
+      "sha256": "e955c1cc1cea5c6cc52ef38257174b6a6987ef727be49948c6cd2ce5a9d38a0e",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "indefinite",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Hote d accueil",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 2100,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-digital-10",
+      "class": "digital_text",
+      "file": "wg2-digital-10.pdf",
+      "sha256": "793fbd053f4406be2617f6919cf13445f5c11ab8489b26b3fc9910a2517f276d",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Maitre d hotel",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 2340,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-digital-11",
+      "class": "digital_text",
+      "file": "wg2-digital-11.pdf",
+      "sha256": "6b5778bee4093d74cbb249bbd8bb3d47ee8a5285ec7de069b26084e386bf9556",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "indefinite",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Patissier",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1200,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-digital-12",
+      "class": "digital_text",
+      "file": "wg2-digital-12.pdf",
+      "sha256": "4d8a56e2d6eaeacd5720e96402b35df104630f02b143ab162dd2a94a0b13a819",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Plongeur",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1440,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-digital-13",
+      "class": "digital_text",
+      "file": "wg2-digital-13.pdf",
+      "sha256": "db06b86df0c4e9f08cf47b7fd4731781014a229b46392b1fa029027e7d00b5f9",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "indefinite",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Responsable de bar",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1680,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-digital-14",
+      "class": "digital_text",
+      "file": "wg2-digital-14.pdf",
+      "sha256": "6a73d75202fd86959200e3c8546fc1ae174c6df10f90f39891f4ae5cbfbb4d70",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Responsable de cuisine",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1800,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-digital-15",
+      "class": "digital_text",
+      "file": "wg2-digital-15.pdf",
+      "sha256": "86c48b30a3326830c3bef815cc00b6931c28ed41182e19a27613059e0a15d40a",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "indefinite",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Serveur",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1920,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-digital-16",
+      "class": "digital_text",
+      "file": "wg2-digital-16.pdf",
+      "sha256": "5d1c4fccddac22abdce8e677d88d2bcd7b5bb729188141e55baac28fb0d373d1",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Sommelier",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 2100,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-digital-17",
+      "class": "digital_text",
+      "file": "wg2-digital-17.pdf",
+      "sha256": "a595cbd8c4105f7348e100a8578637043f0155e018e9267577c527c1752ac233",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "indefinite",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Sous-chef de cuisine",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 2340,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-digital-18",
+      "class": "digital_text",
+      "file": "wg2-digital-18.pdf",
+      "sha256": "4f86619b12c16dc88097a8381cfcf62973940a1f6d8ffc228e2887facfa8545a",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Assistant manager",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1200,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-digital-19",
+      "class": "digital_text",
+      "file": "wg2-digital-19.pdf",
+      "sha256": "3c5c39dd72144ac470678cc8123009587bf049ee065e3ad876dd63e0c30bb4e4",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "indefinite",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Responsable de salle",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1440,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-digital-20",
+      "class": "digital_text",
+      "file": "wg2-digital-20.pdf",
+      "sha256": "bd6897011743a06b5b43c1f3dd6dd9493573b8aeac99df8461c8a78408718b9c",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Employe polyvalent",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1680,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-scan-clear-03",
+      "class": "clear_scan",
+      "file": "wg2-scan-clear-03.pdf",
+      "sha256": "e8f3869b78b0dcfd8d4d7a2de47613f156eb8c8683887f1290296a83de5161f7",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "indefinite",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Hote d accueil",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1920,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-scan-clear-04",
+      "class": "clear_scan",
+      "file": "wg2-scan-clear-04.pdf",
+      "sha256": "b7e83850e87bc86144b5f663602113e0dd18abebd971d33d7633e0fe4bdc461c",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Maitre d hotel",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 2100,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-scan-clear-05",
+      "class": "clear_scan",
+      "file": "wg2-scan-clear-05.pdf",
+      "sha256": "5627d8f58556d420905f322c7534799d73fa70deb4de0220474759325fe57ca7",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "indefinite",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Patissier",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 2340,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-scan-clear-06",
+      "class": "clear_scan",
+      "file": "wg2-scan-clear-06.pdf",
+      "sha256": "be2ad574a890fb148174b8fda3b9ce3fb8ac74f9de87aa9a30e2afea648f74f6",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Plongeur",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1200,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-scan-clear-07",
+      "class": "clear_scan",
+      "file": "wg2-scan-clear-07.pdf",
+      "sha256": "a5f8f037e18c2595df4b403e42cdf46e6ec8b7d4bfcf5a381337d5b0e5e27085",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "indefinite",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Responsable de bar",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1440,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-scan-clear-08",
+      "class": "clear_scan",
+      "file": "wg2-scan-clear-08.pdf",
+      "sha256": "21a1780196f1b78fdaab389be65fa8146c4563de97d8080e7fed417d550b3adc",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Responsable de cuisine",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1680,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-scan-clear-09",
+      "class": "clear_scan",
+      "file": "wg2-scan-clear-09.pdf",
+      "sha256": "67ad3aca4f4becfdb437c965431054995b60c24be672494a72af5cb5c741327c",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "indefinite",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Serveur",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1800,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-scan-clear-10",
+      "class": "clear_scan",
+      "file": "wg2-scan-clear-10.pdf",
+      "sha256": "4673c6983bb2581a275584259f2a6bcd63fae29227f93d41e5f02ffc0a815543",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Sommelier",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1920,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-scan-clear-11",
+      "class": "clear_scan",
+      "file": "wg2-scan-clear-11.pdf",
+      "sha256": "f565fb7452181eeea8956d670f9da59947cb5a9e7016157da1fcef62a3ffc67a",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "indefinite",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Sous-chef de cuisine",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 2100,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-scan-clear-12",
+      "class": "clear_scan",
+      "file": "wg2-scan-clear-12.pdf",
+      "sha256": "81047daa9293f2f111dfecbd02f12b5eab93c8222af98fef836ccf7bf5acd951",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Assistant manager",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 2340,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-scan-clear-13",
+      "class": "clear_scan",
+      "file": "wg2-scan-clear-13.pdf",
+      "sha256": "863de722f20f9044c9f9fcacf8a316fb4bec874739d39ed4eaab2c4f24b78f22",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "indefinite",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Responsable de salle",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1200,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-scan-clear-14",
+      "class": "clear_scan",
+      "file": "wg2-scan-clear-14.pdf",
+      "sha256": "6510042ae504784805b00b079da821a5406e0359d4f734b01b950bfee39b81e1",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Employe polyvalent",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1440,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-scan-clear-15",
+      "class": "clear_scan",
+      "file": "wg2-scan-clear-15.pdf",
+      "sha256": "b35c527da9c495503ebe7ae6744d0c18a833858acaa91cfea8379c995c5bd93f",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "indefinite",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Barman",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1680,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-scan-degraded-03",
+      "class": "degraded_scan",
+      "file": "wg2-scan-degraded-03.pdf",
+      "sha256": "e5cca88cd37b0b73812d089c055857be88056d1d2ca0d13ff4f8bdce22c79c84",
+      "pageCount": 2,
+      "expected": {
+        "status": "no_result",
+        "suggestions": [],
+        "mustAbstainFrom": [
+          "position",
+          "employmentTermType",
+          "contractWeeklyMinutes"
+        ]
+      }
+    },
+    {
+      "id": "wg2-scan-degraded-04",
+      "class": "degraded_scan",
+      "file": "wg2-scan-degraded-04.pdf",
+      "sha256": "e3e7c5fe8d727a18a8c46d60ab37ba5559a2a19a659f19808866811a4fc9131d",
+      "pageCount": 2,
+      "expected": {
+        "status": "partial",
+        "suggestions": [
+          {
+            "field": "position",
+            "candidateValue": "Sommelier",
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": [
+          "employmentTermType",
+          "contractWeeklyMinutes"
+        ]
+      }
+    },
+    {
+      "id": "wg2-scan-degraded-05",
+      "class": "degraded_scan",
+      "file": "wg2-scan-degraded-05.pdf",
+      "sha256": "22d8cd2e0885c45a7acabd24cbd8f0d12ab65361f89f6bca90081df9df97bd20",
+      "pageCount": 2,
+      "expected": {
+        "status": "partial",
+        "suggestions": [
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 2100,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": [
+          "position",
+          "employmentTermType"
+        ]
+      }
+    },
+    {
+      "id": "wg2-scan-degraded-06",
+      "class": "degraded_scan",
+      "file": "wg2-scan-degraded-06.pdf",
+      "sha256": "8a7725fddb7d51ba072e82384e6b9280cbe24c6afe9f68c1de6f2f291434d344",
+      "pageCount": 2,
+      "expected": {
+        "status": "partial",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          }
+        ],
+        "mustAbstainFrom": [
+          "position",
+          "contractWeeklyMinutes"
+        ]
+      }
+    },
+    {
+      "id": "wg2-scan-degraded-07",
+      "class": "degraded_scan",
+      "file": "wg2-scan-degraded-07.pdf",
+      "sha256": "9047f4b3340366698d2f7773e653e49ae0be1aee956fdaf91d9f272c9b9ce6fa",
+      "pageCount": 2,
+      "expected": {
+        "status": "no_result",
+        "suggestions": [],
+        "mustAbstainFrom": [
+          "position",
+          "employmentTermType",
+          "contractWeeklyMinutes"
+        ]
+      }
+    },
+    {
+      "id": "wg2-scan-degraded-08",
+      "class": "degraded_scan",
+      "file": "wg2-scan-degraded-08.pdf",
+      "sha256": "e96c494def4ec381e93fcc226449caa203446a5bbcd915bf90e317feddcbed15",
+      "pageCount": 2,
+      "expected": {
+        "status": "partial",
+        "suggestions": [
+          {
+            "field": "position",
+            "candidateValue": "Patissier",
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": [
+          "employmentTermType",
+          "contractWeeklyMinutes"
+        ]
+      }
+    },
+    {
+      "id": "wg2-scan-degraded-09",
+      "class": "degraded_scan",
+      "file": "wg2-scan-degraded-09.pdf",
+      "sha256": "50095910c4cfc2920f7d76f12713842e9873aeeababba92d8d7ad7e37ff1f3a1",
+      "pageCount": 2,
+      "expected": {
+        "status": "partial",
+        "suggestions": [
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1680,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": [
+          "position",
+          "employmentTermType"
+        ]
+      }
+    },
+    {
+      "id": "wg2-scan-degraded-10",
+      "class": "degraded_scan",
+      "file": "wg2-scan-degraded-10.pdf",
+      "sha256": "6c72b2f27b5c44d63e8335572113f18485207fca210a62b9d279c90570daf3f4",
+      "pageCount": 2,
+      "expected": {
+        "status": "partial",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          }
+        ],
+        "mustAbstainFrom": [
+          "position",
+          "contractWeeklyMinutes"
+        ]
+      }
+    },
+    {
+      "id": "wg2-scan-degraded-11",
+      "class": "degraded_scan",
+      "file": "wg2-scan-degraded-11.pdf",
+      "sha256": "f9d3705eff21fd1b9bb02dd2016d93948d89998df3f3b022f1d7d2235e05777c",
+      "pageCount": 2,
+      "expected": {
+        "status": "no_result",
+        "suggestions": [],
+        "mustAbstainFrom": [
+          "position",
+          "employmentTermType",
+          "contractWeeklyMinutes"
+        ]
+      }
+    },
+    {
+      "id": "wg2-scan-degraded-12",
+      "class": "degraded_scan",
+      "file": "wg2-scan-degraded-12.pdf",
+      "sha256": "412722ff7996a8f8ca9fd10f091dfce2640e8f1c41bbc1fe2d4300338e796f9e",
+      "pageCount": 2,
+      "expected": {
+        "status": "partial",
+        "suggestions": [
+          {
+            "field": "position",
+            "candidateValue": "Commis de salle",
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": [
+          "employmentTermType",
+          "contractWeeklyMinutes"
+        ]
+      }
+    },
+    {
+      "id": "wg2-scan-degraded-13",
+      "class": "degraded_scan",
+      "file": "wg2-scan-degraded-13.pdf",
+      "sha256": "4a981e47ad05e5f163fab6465a05efd1ecddef7978efd593214d0f23bbee099f",
+      "pageCount": 2,
+      "expected": {
+        "status": "partial",
+        "suggestions": [
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 2340,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": [
+          "position",
+          "employmentTermType"
+        ]
+      }
+    },
+    {
+      "id": "wg2-scan-degraded-14",
+      "class": "degraded_scan",
+      "file": "wg2-scan-degraded-14.pdf",
+      "sha256": "8a751e3eed669002f28aea2116f81b2963edbac18af1ad591c1b2ae69bef30ab",
+      "pageCount": 2,
+      "expected": {
+        "status": "partial",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          }
+        ],
+        "mustAbstainFrom": [
+          "position",
+          "contractWeeklyMinutes"
+        ]
+      }
+    },
+    {
+      "id": "wg2-scan-degraded-15",
+      "class": "degraded_scan",
+      "file": "wg2-scan-degraded-15.pdf",
+      "sha256": "d8a75e7a507c46deaddbcd04b1f6b15649bf9440f9a4a48e3db951e5fe756d5b",
+      "pageCount": 2,
+      "expected": {
+        "status": "no_result",
+        "suggestions": [],
+        "mustAbstainFrom": [
+          "position",
+          "employmentTermType",
+          "contractWeeklyMinutes"
+        ]
+      }
+    },
+    {
+      "id": "wg2-adversarial-04",
+      "class": "adversarial",
+      "file": "wg2-adversarial-04.pdf",
+      "sha256": "71d9e701d15a4d3363240cc5d8a7e5b7788d6fc822d8cf7924d3dcd6325d3589",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Cuisinier",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 2340,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-adversarial-05",
+      "class": "adversarial",
+      "file": "wg2-adversarial-05.pdf",
+      "sha256": "e51cd699387c5162e9453485612d59eec4367e34b9c18ced8e7b6028c8cbb05b",
+      "pageCount": 2,
+      "expected": {
+        "status": "partial",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "indefinite",
+            "sourcePage": 1
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1200,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": [
+          "position"
+        ]
+      }
+    },
+    {
+      "id": "wg2-adversarial-06",
+      "class": "adversarial",
+      "file": "wg2-adversarial-06.pdf",
+      "sha256": "14f038a1b8961b11bab04e831b86a47cc9f4c6233aba7dcb2ac6400d213e0f79",
+      "pageCount": 2,
+      "expected": {
+        "status": "partial",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Sous-chef de cuisine",
+            "sourcePage": 1
+          }
+        ],
+        "mustAbstainFrom": [
+          "contractWeeklyMinutes"
+        ]
+      }
+    },
+    {
+      "id": "wg2-adversarial-07",
+      "class": "adversarial",
+      "file": "wg2-adversarial-07.pdf",
+      "sha256": "4aba032683dc87f00f3720581c90c323ccfb7d4a2fab75edc5fbf1e067780b13",
+      "pageCount": 2,
+      "expected": {
+        "status": "no_result",
+        "suggestions": [],
+        "mustAbstainFrom": [
+          "position",
+          "employmentTermType",
+          "contractWeeklyMinutes"
+        ]
+      }
+    },
+    {
+      "id": "wg2-adversarial-08",
+      "class": "adversarial",
+      "file": "wg2-adversarial-08.pdf",
+      "sha256": "251571520a484294fe9d6dab648aeb4fd341a48488d60de950b4815253b73d27",
+      "pageCount": 2,
+      "expected": {
+        "status": "complete",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Maitre d hotel",
+            "sourcePage": 2
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1800,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": []
+      }
+    },
+    {
+      "id": "wg2-adversarial-09",
+      "class": "adversarial",
+      "file": "wg2-adversarial-09.pdf",
+      "sha256": "f82022e3bfc7195dc33ec5d161a7686c00062bb289616a071d7d33ee2ce836bc",
+      "pageCount": 2,
+      "expected": {
+        "status": "partial",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "indefinite",
+            "sourcePage": 1
+          },
+          {
+            "field": "contractWeeklyMinutes",
+            "candidateValue": 1920,
+            "sourcePage": 2
+          }
+        ],
+        "mustAbstainFrom": [
+          "position"
+        ]
+      }
+    },
+    {
+      "id": "wg2-adversarial-10",
+      "class": "adversarial",
+      "file": "wg2-adversarial-10.pdf",
+      "sha256": "57fc059bb1ab26a5182aa3fc88c0d7230bca23736da128d767a71c208ab31375",
+      "pageCount": 2,
+      "expected": {
+        "status": "partial",
+        "suggestions": [
+          {
+            "field": "employmentTermType",
+            "candidateValue": "fixed_term",
+            "sourcePage": 1
+          },
+          {
+            "field": "position",
+            "candidateValue": "Employe polyvalent",
+            "sourcePage": 1
+          }
+        ],
+        "mustAbstainFrom": [
+          "contractWeeklyMinutes"
+        ]
+      }
+    }
+  ]
+}

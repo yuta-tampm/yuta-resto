@@ -328,3 +328,30 @@ action, a provider, a new employee file-first flow, amendment extraction, or
 production processing. These generated references guide hierarchy and states
 only, use distinct `wave-f-design-draft-*` names, and remain subordinate to
 repository behavior.
+
+## Wave F Phase 5 local as-built evidence
+
+Signed-in local OWNER QA captured the completed synthetic review on 2026-08-18:
+
+- `wave-f-phase-5-as-built-1440x1000.png`;
+- `wave-f-phase-5-as-built-1024x768.png`;
+- `wave-f-phase-5-as-built-768x1024.png`;
+- `wave-f-phase-5-as-built-390x844.png`.
+
+The captures show an existing signed-contract card together with the explicit
+`Local — PDF synthétique` and `Test local avec données fictives` disclosure.
+The mobile capture is intentionally scrolled to the review so its stacked
+content is visible. At all four widths the page and review fit without
+horizontal overflow, and browser logs contain no warning/error.
+
+The employee name and document metadata shown are existing local development
+data. The extraction result is fictional and generated independently; the
+signed PDF was not read or transmitted, and no suggestion was applied. These
+captures supersede the Wave F DRAFT images only as local as-built presentation
+evidence. They do not authorize real-file analysis, an external provider, or
+production use.
+
+Wave G Phase 6 changes only the server-side development adapter selection and
+therefore adds no visual reference. These Wave F Phase 5 captures continue to
+represent the unchanged fictional-data review UI; they are not evidence of a
+real-file or production OpenAI flow.

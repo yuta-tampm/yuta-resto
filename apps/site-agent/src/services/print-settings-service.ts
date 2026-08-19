@@ -10,6 +10,8 @@ import { eq } from 'drizzle-orm';
 const settingsId = 'default';
 
 export const defaultLocalPrintSettings = localPrintSettingsSchema.parse({
+  kitchenEnabled: true,
+  counterEnabled: true,
   kitchenCopies: 1,
   counterCopies: 1,
   fontSizePreset: 'standard',
@@ -40,6 +42,8 @@ export function createPrintSettingsService(db: PosDatabaseExecutor) {
 
 function toPrintSettings(settings: typeof printSettings.$inferSelect) {
   return {
+    kitchenEnabled: settings.kitchenEnabled,
+    counterEnabled: settings.counterEnabled,
     kitchenCopies: settings.kitchenCopies,
     counterCopies: settings.counterCopies,
     fontSizePreset: settings.fontSizePreset,

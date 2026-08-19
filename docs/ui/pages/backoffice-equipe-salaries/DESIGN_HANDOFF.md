@@ -817,3 +817,30 @@ WF0-01 through WF0-12 and this prompt execution were approved on 2026-08-18.
 Stop after the four DRAFT references. Prompt execution does not authorize a prototype,
 file read, OCR/AI call, provider setup, runtime UI, contract, persistence,
 permission, audit, employee mutation, or production behavior.
+
+## Wave G Phase 0 — design handoff decision
+
+Target: server-only synthetic AI/OCR provider evaluation behind the existing
+Wave F Documents review.
+
+Shared context status: `RESOLVED`.
+
+Shell mode: `REUSE_CURRENT_TARGET`.
+
+Visual baseline: the Wave F Phase 5 as-built references remain authoritative.
+
+Design-generation prompt: `NOT_APPLICABLE`.
+
+Reason: Wave G Phase 0 changes no restaurant job, information hierarchy,
+interaction, state, route, navigation, or visible control. Provider/model
+selection belongs to engineering evaluation and must remain hidden behind the
+existing provider-neutral adapter. A visual prompt would encourage unsupported
+technical controls and is therefore intentionally not prepared or run.
+
+Resume design only if a later approved real-file flow requires new privacy
+information, explicit acknowledgement, or another user-visible state. That
+would be a separate approval gate, not an inference from provider selection.
+
+Wave G Phase 6 reuses this decision. Its development-only Luna/v4 wiring adds
+no visible state or interaction, so no new design prompt or reference is
+required. The Wave F Phase 5 as-built references remain authoritative.

@@ -32,6 +32,7 @@ import {
   recordPersonnelContractExtractionAudit,
   setPersonnelEmployeeDeparture,
   updatePersonnelEmployee,
+  validatePersonnelContractExtractionReviewGrant,
   listPersonnelDocuments,
   PersonnelDocumentRepositoryError,
   recordPersonnelDocumentUploadRejected,
@@ -62,6 +63,7 @@ import {
   runSyntheticContractExtraction,
   SyntheticContractPdfPreparer,
 } from '../../../../server/personnel-contract-extraction/service';
+import { createDevelopmentContractExtractionAdapter } from '../../../../server/personnel-contract-extraction/runtime';
 import { isContractExtractionPrototypeEnabled } from './_lib/contract-extraction-prototype-runtime';
 import { isPersonnelActionOverviewEnabled } from './_lib/personnel-action-overview-runtime';
 
@@ -338,7 +340,9 @@ export async function startContractExtractionAction(
           `${tenant.organizationId}:${tenant.establishmentId}`,
         ),
       preparer: new SyntheticContractPdfPreparer(),
-      adapter: new DeterministicSyntheticExtractionAdapter(),
+      adapter: createDevelopmentContractExtractionAdapter({
+        scenario: request.scenario,
+      }),
     });
     await recordPersonnelContractExtractionAudit(cloudDatabase, tenant, {
       employeeId: request.employeeId,
@@ -464,6 +468,34 @@ export async function applyContractExtractionAction(
     });
     const review =
       personnelContractExtractionReviewResultSchema.parse(syntheticOutput);
+    if (review.status !== 'complete' && review.status !== 'partial') {
+      return {
+        status: 'error',
+        message: 'Cette analyse ne contient aucun champ applicable.',
+        currentEmployee: employee,
+      };
+    }
+    const reviewGrant = await validatePersonnelContractExtractionReviewGrant(
+      cloudDatabase,
+      tenant,
+      {
+        employeeId: input.request.employeeId,
+        requestId: input.request.requestId,
+        documentId: input.request.documentId,
+        documentVersion: input.request.documentVersion,
+        outcomeCode: review.status,
+      },
+    );
+    if (reviewGrant !== 'valid') {
+      return {
+        status: 'conflict',
+        message:
+          reviewGrant === 'expired'
+            ? 'Cette analyse a expiré. Relancez-la avant d’appliquer des champs.'
+            : 'Cette analyse n’est plus disponible. Relancez-la avant d’appliquer des champs.',
+        currentEmployee: employee,
+      };
+    }
     for (const selected of input.selectedSuggestions) {
       const matchingSuggestion = review.suggestions.find(
         (suggestion) =>

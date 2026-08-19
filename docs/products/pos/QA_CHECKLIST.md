@@ -238,17 +238,22 @@ N/A       not applicable for this run
 | Printer attention status                  | Failed or stale pending work shows attention with queue counts                                               |        |       |
 | Global printer badge                      | POS shell updates summarized printer state every 15 seconds while visible                                    |        |       |
 | One-printer station routing               | TM-m30 prints and fully cuts Cuisine then BAR separately                                                     |        |       |
+| Disable Cuisine printing                  | New sends create no physical Cuisine ticket while BAR remains active                                         |        |       |
+| Disable BAR printing                      | New sends create no physical BAR ticket while Cuisine remains active where applicable                        |        |       |
+| Disable every destination                 | UI, API contract, and database reject settings with both destinations disabled                               |        |       |
 | Print copy settings                       | Each station prints the configured 1 to 3 copies                                                             |        |       |
 | Print font preset                         | Compact, Standard, and Large change new ticket item typography                                               |        |       |
+| Dense standard ticket                     | Standard uses uppercase bold double-height item names with no extra blank line between adjacent items        |        |       |
+| Prominent order type                      | Service type is centered, bold, double-height, and immediately precedes the item sections                    |        |       |
 | Print spacing settings                    | Top, left, and bottom values from 0 to 8 change new ticket layout                                            |        |       |
 | Compact section grouping                  | Cuisine: Entrées, Suppléments, Plats; BAR: Boissons first, Desserts last                                     |        |       |
 | Full BAR batch                            | BAR ticket contains every production item in the sent batch                                                  |        |       |
 | Physical station separation               | Full cut executes once after each Cuisine or BAR copy                                                        |        |       |
 | Bluetooth cutter pacing                   | Body and delayed feed/full-cut use two separate RFCOMM writer phases                                         |        |       |
-| Test print action                         | One test job prints and cuts separate Cuisine and full BAR samples                                           |        |       |
+| Test print action                         | One test job prints and cuts samples only for currently enabled destinations                                 |        |       |
 | ESC/POS punctuation                       | Curly apostrophes and dash variants print as `'` and `-`, never `?`                                          |        |       |
 | Printed allergy severity                  | Intolerance, allergy, and severe-no-traces jobs render without failure                                       |        |       |
-| Print settings snapshot                   | Retried old job keeps its original copies, font, and spacing                                                 |        |       |
+| Print settings snapshot                   | Retried old job keeps its original routing, copies, font, and spacing                                        |        |       |
 | Station `none` item                       | Item is not present on the physical ticket                                                                   |        |       |
 | Mark job failed manually                  | Job status changes to `failed`                                                                               |        |       |
 | Retry failed job                          | Job status changes back to `pending`                                                                         |        |       |

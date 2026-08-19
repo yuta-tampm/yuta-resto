@@ -19,21 +19,22 @@ serialization-safe local POS contract data and never database or device access.
 
 ## Current domain mapping
 
-| Current field/model/contract        | UI presentation                                    | Existing transformation                    | Gap                                                  |
-| ----------------------------------- | -------------------------------------------------- | ------------------------------------------ | ---------------------------------------------------- |
-| `LocalPrintJob`                     | Recent ticket row, status, summary, error, actions | French labels and date formatting          | None identified                                      |
-| `LocalPrintJobsResponse.summary`    | Four complete-queue counters                       | Status-keyed counts                        | None identified                                      |
-| `LocalPrintJobsResponse.pagination` | Previous/next and page count                       | Ten jobs per page                          | None identified                                      |
-| `LocalPrintSettings`                | Copies, font, spacing, previews                    | Numeric values represented as form strings | None identified                                      |
-| `LocalPrinterStatus`                | Safe channel/device/queue metrics and warning      | Status/device presentation mapping         | Physical paper success is intentionally not inferred |
+| Current field/model/contract        | UI presentation                                         | Existing transformation                            | Gap                                                  |
+| ----------------------------------- | ------------------------------------------------------- | -------------------------------------------------- | ---------------------------------------------------- |
+| `LocalPrintJob`                     | Recent ticket row, status, summary, error, actions      | French labels and date formatting                  | None identified                                      |
+| `LocalPrintJobsResponse.summary`    | Four complete-queue counters                            | Status-keyed counts                                | None identified                                      |
+| `LocalPrintJobsResponse.pagination` | Previous/next and page count                            | Ten jobs per page                                  | None identified                                      |
+| `LocalPrintSettings`                | Cuisine/BAR enablement, copies, font, spacing, previews | Boolean/numeric values represented as form strings | At least one destination must remain enabled         |
+| `LocalPrinterStatus`                | Safe channel/device/queue metrics and warning           | Status/device presentation mapping                 | Physical paper success is intentionally not inferred |
 
 ## Current interactions
 
 Back navigation returns to management. Order-linked jobs navigate to their
-order. Users paginate, edit settings with live ticket previews, create a test
-job, transition eligible jobs, reprint/retry, and record a required failure
-reason in a dialog. Empty failure submission displays an accessible inline
-error without calling the server action. Invalid-status and missing-job
+order. Users paginate, independently enable Cuisine or BAR printing, edit
+settings with live ticket previews, create a test job, transition eligible
+jobs, reprint/retry, and record a required failure reason in a dialog. Empty
+failure submission displays an accessible inline error without calling the
+server action. Invalid-status and missing-job
 conflicts offer an explicit page refresh while preserving the existing polling
 rules.
 
@@ -41,8 +42,10 @@ rules.
 
 Server actions validate with `@yuta/contracts/local-pos`, require fresh local
 management credentials, call site-agent endpoints, and revalidate this route.
-The site-agent service validates state transitions and persists changes. The
-worker owns automatic claiming, rendering, and device writes.
+The site-agent service validates state transitions and persists changes. New
+order sends create only enabled destination tickets; existing queued and
+printed jobs keep their immutable payload. Test jobs render only enabled
+destinations. The worker owns automatic claiming, rendering, and device writes.
 
 ## Validation
 
@@ -50,8 +53,10 @@ Settings and commands are parsed by Zod at the server-action boundary and again
 at the site-agent route/service boundary. The failure reason is required and
 limited by the current input. Client validation mirrors the required trimmed
 value and connects its inline error to the field; server validation remains
-authoritative. Client state retains submitted values while action errors are
-shown; command conflicts instruct the operator to refresh and expose an
+authoritative. Cuisine and BAR cannot both be disabled; the UI prevents the
+last active switch from being turned off, while contract and database checks
+enforce the same invariant. Client state retains submitted values while action
+errors are shown; command conflicts instruct the operator to refresh and expose an
 `Actualiser` recovery action.
 
 ## Operational and UI states
