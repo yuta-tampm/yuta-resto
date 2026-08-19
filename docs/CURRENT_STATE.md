@@ -51,6 +51,15 @@ reservation availability.
   or synchronizes with POS data.
 - Local POS ordering, kitchen, payment, printing, administration, and reporting
   workflows described in the POS product documentation.
+- The Kitchen queue uses a bounded site-agent read model that applies the local
+  05:00 service day, production screen/status, queue projection, ordering, and
+  ticket limit before returning grouped tickets and counts. It avoids the former
+  per-order detail fan-out and full-catalog read on every refresh. A local,
+  notification-only SSE stream now signals successful relevant mutations;
+  Kitchen reloads the authoritative read model and retains a 60-second polling
+  fallback without moving order data or persistence into the browser. A
+  browser-authorized local chime can announce non-replayed new Kitchen batches
+  for the affected production screen; state-only events remain silent.
 - Standalone digital-signage administration and resilient display playback.
 
 ## Back-office surface maturity
