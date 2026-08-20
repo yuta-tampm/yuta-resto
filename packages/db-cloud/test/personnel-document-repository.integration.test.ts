@@ -7,6 +7,7 @@ import {
   grantPersonnelDocumentContentAccess,
   listPersonnelDocuments,
   PersonnelDocumentRepositoryError,
+  resolvePersonnelDocumentExtractionSource,
   savePersonnelDocumentMetadata,
 } from '../src/personnel-document-repository';
 import {
@@ -158,6 +159,40 @@ integrationTest('personnel document repository tenant isolation', () => {
       documentInput(employeeId, 1, uuidv7(), uuidv7(), 'b'),
     );
     expect(replacement.document).toMatchObject({ version: 2, revision: 2 });
+
+    const extractionSource = await resolvePersonnelDocumentExtractionSource(
+      db,
+      tenant,
+      {
+        employeeId,
+        documentId: replacement.document.id,
+        documentVersion: 2,
+      },
+    );
+    expect(extractionSource).toMatchObject({
+      documentId: replacement.document.id,
+      documentVersion: 2,
+      mediaType: 'application/pdf',
+      checksum: 'b'.repeat(64),
+    });
+    await expect(
+      resolvePersonnelDocumentExtractionSource(db, tenant, {
+        employeeId,
+        documentId: replacement.document.id,
+        documentVersion: 1,
+      }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' });
+    await expect(
+      resolvePersonnelDocumentExtractionSource(
+        db,
+        context(otherEstablishmentId),
+        {
+          employeeId,
+          documentId: replacement.document.id,
+          documentVersion: 2,
+        },
+      ),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' });
     await expect(
       savePersonnelDocumentMetadata(
         db,

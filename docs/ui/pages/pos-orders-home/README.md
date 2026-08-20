@@ -162,6 +162,15 @@ No full-page design generation was requested or run. Phase 3 later removed the u
 
 The product owner approved the shared-header refactor after reviewing the route-local menu limitation and test gap. `PosHeader` now provides generic secondary-action ownership while preserving every existing caller that supplies only `actions`. Home retains only its real route links. Two server-rendered contract tests protect the direct/secondary link composition, desktop trigger geometry classes, dropdown anchoring, and backward-compatible compact menu. Development and production browser QA verified equal 48px action/trigger heights, a 256px menu anchored 16px inside the viewport, correct destinations, and no document overflow.
 
+A real-device regression reported on 2026-08-20 exposed that the compiled POS
+stylesheet no longer contained the physical `right-0` utility even though the
+class remained in the shared menu markup. The absolutely positioned dropdown
+therefore fell back to its static left position at the trigger and overflowed
+the viewport. `PosHeaderMenu` now owns an explicit zero right inset and a
+viewport-safe width of `min(16rem, 100vw - 2rem)`; the shared contract test
+protects that rendered positioning invariant instead of only checking for a
+class name. No route, action, navigation, auth, or runtime behavior changed.
+
 ## Phase 3 delivery
 
 The product owner approved interaction cleanup on 2026-08-16. Home now labels the existing GET-form submit action `Rechercher`, removes the actionless desktop `Options` ellipsis, and presents the mobile allergy warning once per order. Search/view query semantics and every repository-backed order action remain unchanged. No new capability or mutation boundary was introduced. Phase 5 visual QA was subsequently completed.

@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 vi.mock('../src/app/(authenticated)/equipe/salaries/actions', () => ({
   startContractExtractionAction: vi.fn(),
   applyContractExtractionAction: vi.fn(),
+  loadStoredSyntheticContractEligibilityAction: vi.fn(),
 }));
 
 import { ContractExtractionPrototype } from '../src/app/(authenticated)/equipe/salaries/_components/contract-extraction-prototype';
@@ -51,6 +52,9 @@ describe('ContractExtractionPrototype', () => {
     expect(markup).toContain('Test local avec données fictives');
     expect(markup).toContain('n’est pas lu ni transmis');
     expect(markup).toContain('PDF fictif à tester');
+    expect(markup).toContain('Source du test local');
+    expect(markup).toContain('Contrat fictif enregistré');
+    expect(markup).toContain('Vérification du contrat fictif enregistré');
     expect(markup).toContain('750 Ko maximum');
     expect(markup).toContain('Analyser le PDF généré');
     expect(markup).toContain('Aucune requête externe ne part avant votre clic');

@@ -52,6 +52,7 @@ import { createOrderCommandService } from './order-command-service';
 import { createFinancialService } from './financial-service';
 import { createLocalAuthService } from './local-auth-service';
 import { createLocalUserManagementService } from './local-user-management-service';
+import { createManagementReportsService } from './management-reports-service';
 import { createPrintJobService } from './print-job-service';
 import { createPrintSettingsService } from './print-settings-service';
 import { createPrinterStatusService } from './printer-status-service';
@@ -79,6 +80,7 @@ export function createSiteAgentService(
   const userManagement = createLocalUserManagementService(db);
   const catalogManagement = createCatalogManagementService(db);
   const comboManagement = createComboManagementService(db);
+  const managementReports = createManagementReportsService(db);
   const instructionSettings = createInstructionSettingsService(db);
   const printerStatus = createPrinterStatusService(db, {
     devicePath: options.printerDevicePath,
@@ -593,6 +595,7 @@ export function createSiteAgentService(
     ...userManagement,
     ...catalogManagement,
     ...comboManagement,
+    ...managementReports,
     ...instructionSettings,
     ...orderCommands,
     ...financial,

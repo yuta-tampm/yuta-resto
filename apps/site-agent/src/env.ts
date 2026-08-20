@@ -8,6 +8,7 @@ export const siteAgentEnvSchema = z.object({
   SITE_AGENT_HOST: z.string().min(1).default('127.0.0.1'),
   SITE_AGENT_PORT: z.coerce.number().int().min(1).max(65535).default(3004),
   SITE_AGENT_ALLOWED_ORIGIN: z.string().url().default('http://localhost:3003'),
+  TZ: z.literal('Europe/Paris'),
   POS_PRINTER_DEVICE: z.string().min(1).optional(),
   POS_PRINT_POLL_INTERVAL_MS: z.coerce
     .number()
@@ -23,4 +24,15 @@ export function readSiteAgentEnv(
   environment: NodeJS.ProcessEnv = process.env,
 ): SiteAgentEnv {
   return siteAgentEnvSchema.parse(environment);
+}
+
+export function assertSiteAgentTimeZone(
+  expectedTimeZone: SiteAgentEnv['TZ'],
+  resolvedTimeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone,
+): void {
+  if (resolvedTimeZone !== expectedTimeZone) {
+    throw new Error(
+      `The site-agent runtime timezone must resolve to ${expectedTimeZone}; received ${resolvedTimeZone}.`,
+    );
+  }
 }

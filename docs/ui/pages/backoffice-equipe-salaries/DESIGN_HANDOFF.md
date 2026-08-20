@@ -844,3 +844,13 @@ would be a separate approval gate, not an inference from provider selection.
 Wave G Phase 6 reuses this decision. Its development-only Luna/v4 wiring adds
 no visible state or interaction, so no new design prompt or reference is
 required. The Wave F Phase 5 as-built references remain authoritative.
+
+Wave G Phase 8 required no new design-generation prompt. Its approved offline
+implementation reuses the compact Phase 7 source choice and existing Wave F
+review, adding `Contrat fictif enregistré` only after server eligibility.
+Missing or stale eligibility uses the existing unavailable/recovery language.
+Normal responsive and accessibility QA remains required, but no new image,
+layout, or design prompt was needed. The separately approved one-request provider QA temporarily
+replaced the offline badge/disclosure with truthful `QA OpenAI` copy stating
+that the fictional PDF would be sent once with Luna/v4 and never applied
+automatically. Restarting without the gate restores the offline presentation.

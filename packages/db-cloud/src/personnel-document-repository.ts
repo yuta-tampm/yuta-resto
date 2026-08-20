@@ -44,6 +44,15 @@ export type PersonnelDocumentContentGrant = {
   byteSize: number;
 };
 
+export type PersonnelDocumentExtractionSource = {
+  documentId: string;
+  documentVersion: number;
+  storageKey: string;
+  mediaType: 'application/pdf';
+  byteSize: number;
+  checksum: string;
+};
+
 const accessInputSchema = z
   .object({
     employeeId: identifierSchema,
@@ -442,6 +451,74 @@ export async function grantPersonnelDocumentContentAccess(
       byteSize: row.byteSize,
     };
   });
+}
+
+const extractionSourceInputSchema = z
+  .object({
+    employeeId: identifierSchema,
+    documentId: identifierSchema,
+    documentVersion: z.number().int().positive(),
+  })
+  .strict();
+
+export async function resolvePersonnelDocumentExtractionSource(
+  db: CloudDatabaseClient,
+  context: TenantContext,
+  rawInput: z.input<typeof extractionSourceInputSchema>,
+): Promise<PersonnelDocumentExtractionSource> {
+  requireEstablishment(context);
+  const scope: PersonnelTenantContext = context;
+  requireUserActor(scope);
+  const input = extractionSourceInputSchema.parse(rawInput);
+
+  const [row] = await db
+    .select({
+      documentId: personnelDocuments.id,
+      documentVersion: personnelDocumentVersions.version,
+      storageKey: personnelDocumentVersions.storageKey,
+      mediaType: personnelDocumentVersions.mediaType,
+      byteSize: personnelDocumentVersions.byteSize,
+      checksum: personnelDocumentVersions.checksum,
+    })
+    .from(personnelDocuments)
+    .innerJoin(
+      personnelDocumentVersions,
+      and(
+        eq(personnelDocumentVersions.documentId, personnelDocuments.id),
+        eq(
+          personnelDocumentVersions.organizationId,
+          personnelDocuments.organizationId,
+        ),
+        eq(
+          personnelDocumentVersions.establishmentId,
+          personnelDocuments.establishmentId,
+        ),
+        eq(personnelDocumentVersions.employeeId, personnelDocuments.employeeId),
+        eq(
+          personnelDocumentVersions.version,
+          personnelDocuments.currentVersion,
+        ),
+      ),
+    )
+    .where(
+      and(
+        documentScope(scope, input.employeeId),
+        eq(personnelDocuments.id, input.documentId),
+        eq(personnelDocuments.currentVersion, input.documentVersion),
+      ),
+    )
+    .limit(1);
+
+  if (!row || row.mediaType !== 'application/pdf') {
+    throw new PersonnelDocumentRepositoryError(
+      'The current extraction source could not be found.',
+      'NOT_FOUND',
+    );
+  }
+  return {
+    ...row,
+    mediaType: 'application/pdf',
+  };
 }
 
 export async function recordPersonnelDocumentUploadRejected(

@@ -22,6 +22,8 @@ import {
   localKitchenSendResponseSchema,
   localKitchenQueueQuerySchema,
   localKitchenQueueResponseSchema,
+  localManagementReportsQuerySchema,
+  localManagementReportsResponseSchema,
   localChecksResponseSchema,
   localOrderCommandSchema,
   localOrderDetailResponseSchema,
@@ -77,6 +79,7 @@ import {
   type LocalOrderCommand,
   type LocalOrderItemCommand,
   type LocalKitchenQueueQuery,
+  type LocalManagementReportsQuery,
   type LocalOrdersHomeQuery,
   type LocalOrdersQuery,
   type PayLocalCheckInput,
@@ -497,6 +500,21 @@ export function createSiteAgentClient(input?: {
       return request(
         localPosRoutes.establishmentProfile,
         localEstablishmentProfileSchema,
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+    },
+    async getManagementReport(
+      token: string,
+      input: Partial<LocalManagementReportsQuery> = {},
+    ) {
+      const query = localManagementReportsQuerySchema.parse(input);
+      const search = new URLSearchParams({
+        page: String(query.page),
+        limit: String(query.limit),
+      });
+      return request(
+        `${localPosRoutes.managementReports}?${search.toString()}`,
+        localManagementReportsResponseSchema,
         { headers: { Authorization: `Bearer ${token}` } },
       );
     },

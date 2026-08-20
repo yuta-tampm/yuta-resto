@@ -1054,6 +1054,39 @@ three of those four calls; the final call remains pending ingestion.
 A fresh production build exposed neither the analysis action nor the fictional
 upload UI. Development was restored afterward.
 
+Wave G Phase 8 was approved for offline implementation on 2026-08-20. It adds a
+third development source: the current signed contract already held by YUTA
+Documents, but only when the current version's existing server-side checksum
+matches the approved `wg2-digital-cdd-35h` fixture. The dedicated resolver
+repeats trusted organization, establishment, employee, document, and current-
+version scope before returning private storage metadata. Only an allowlisted
+checksum permits opening storage; byte size, PDF signature, and SHA-256 are then
+checked again.
+
+The stored source is visible only after the eligibility action succeeds and is
+forced through a fixture-specific deterministic adapter. It therefore produces
+the frozen offline review for `Chef de rang`, CDD, and 35 weekly hours by
+default. Existing OWNER
+authorization, rate limit, strict result, transient review, explicit apply, and
+audit remain in force. No schema, migration, SDK, or production path was added.
+Every real personnel file and production use remain blocked.
+
+Signed-in OWNER QA used the current version-2 stored fixture and returned the
+expected CDD, `Chef de rang`, and 35 weekly hours in about 0.6 seconds. The UI
+showed the stored-source badge and offline-only disclosure. No suggestion was
+selected or applied, browser logs had no warning/error, and the page plus drawer
+had no horizontal overflow at 390 px. This offline QA made no OpenAI request.
+
+Product then separately authorized exactly one provider-backed QA with the same
+stored fictional fixture on 2026-08-20. A temporary process-only
+`approved-once` gate, exact SHA-256 and two-page checks, and the pinned Luna/v4
+adapter produced the expected three suggestions in 4,486 ms (1,107 input, 152
+output, 1,259 total tokens). The UI disclosed the one-time OpenAI transfer
+before the click. No suggestion was selected or applied. The privileged process
+was stopped immediately afterward and development was restarted without the
+temporary flag. Any further provider request, production path, or real-file use
+requires another explicit approval.
+
 The organization-level eligibility request is prepared separately in
 [`OPENAI_PROVIDER_ELIGIBILITY.md`](../../../operations/OPENAI_PROVIDER_ELIGIBILITY.md).
 It discloses the four proposed YUTA AI use cases while keeping Personnel

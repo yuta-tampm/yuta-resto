@@ -480,6 +480,24 @@ drag path remains limited to mouse and pen input with a larger movement
 threshold. Category taps therefore navigate normally without removing the
 two-row horizontal swipe behavior.
 
+A 2026-08-20 mobile regression showed the correct server-rendered category
+markup falling back to a single vertical grid because the POS Tailwind build
+did not discover route-local utility classes. The POS stylesheet now registers
+`apps/yuta-pos/src` as the PostCSS scanner base, covering both route-owned and
+shared POS components even though the Tailwind import is provided by
+`@yuta/ui`. Browser verification must confirm the two-row layout,
+44px category targets, category navigation, and zero document overflow after a
+clean development or production CSS build. The regression gate confirmed all
+six required grid/spacing utilities in the production CSS artifact, a clean POS
+production build, and 73 passing POS tests.
+
+The same follow-up exposed a local-development-only Turbopack route-manifest
+race: the first request to the compiled `/orders/[orderId]/items` route could
+temporarily resolve to `/_not-found` after a production build. The POS dev
+script now uses Next.js's supported webpack fallback; production build output,
+route ownership, loader behavior, contracts, and operational data are
+unchanged.
+
 Final verification passed: scoped Prettier, POS typecheck, 51 POS tests, POS
 production build, workspace typecheck, contracts/site-agent/db-pos typechecks,
 architecture boundaries, page-pack validation, documentation consistency, and

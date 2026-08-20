@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type {
   LocalKitchenEvent,
   LocalKitchenQueueQuery,
+  LocalManagementReportsQuery,
   LocalOrdersHomeQuery,
   ReceiptJobCommandInput,
 } from '@yuta/contracts/local-pos';
@@ -14,6 +15,10 @@ const orderId = '22222222-2222-4222-8222-222222222222';
 const sessionId = '33333333-3333-4333-8333-333333333333';
 const checkedAt = '2026-07-27T12:00:00.000Z';
 const sessionToken = 'local-session-token-with-more-than-thirty-two-characters';
+const managerSessionToken =
+  'local-manager-session-token-with-more-than-thirty-two-characters';
+const staffSessionToken =
+  'local-staff-session-token-with-more-than-thirty-two-characters';
 const localSession = {
   id: sessionId,
   user: {
@@ -50,6 +55,7 @@ describe('site-agent HTTP boundary', () => {
   let revokedSessionTokens: string[];
   let ordersHomeQueries: LocalOrdersHomeQuery[];
   let kitchenQueueQueries: LocalKitchenQueueQuery[];
+  let managementReportQueries: LocalManagementReportsQuery[];
   let kitchenEventListeners: Array<(event: LocalKitchenEvent) => void>;
   let receiptCommands: ReceiptJobCommandInput[];
 
@@ -57,6 +63,7 @@ describe('site-agent HTTP boundary', () => {
     revokedSessionTokens = [];
     ordersHomeQueries = [];
     kitchenQueueQueries = [];
+    managementReportQueries = [];
     kitchenEventListeners = [];
     receiptCommands = [];
     server = createSiteAgentServer({
@@ -66,6 +73,7 @@ describe('site-agent HTTP boundary', () => {
         SITE_AGENT_HOST: '127.0.0.1',
         SITE_AGENT_PORT: 3004,
         SITE_AGENT_ALLOWED_ORIGIN: 'http://localhost:3003',
+        TZ: 'Europe/Paris',
         POS_PRINT_POLL_INTERVAL_MS: 1_000,
       },
       service: {
@@ -100,6 +108,10 @@ describe('site-agent HTTP boundary', () => {
         listKitchenQueue: async (query) => {
           kitchenQueueQueries.push(query);
           return kitchenQueueSnapshot(query);
+        },
+        getManagementReport: async (query) => {
+          managementReportQueries.push(query);
+          return managementReportSnapshot(query);
         },
         revokeSession: async (token) => {
           revokedSessionTokens.push(token);
@@ -185,6 +197,57 @@ describe('site-agent HTTP boundary', () => {
         queues: { active: 0, ready: 0 },
       },
     });
+  });
+
+  it('protects and validates the local Management report read model', async () => {
+    const unauthorized = await fetch(
+      `${baseUrl}/api/v1/management/reports?page=1&limit=25`,
+    );
+    expect(unauthorized.status).toBe(401);
+    const unauthorizedBody = await unauthorized.json();
+    expect(unauthorizedBody).toMatchObject({
+      error: { code: 'LOCAL_SESSION_REQUIRED' },
+    });
+    expect(unauthorizedBody).not.toHaveProperty('summary');
+
+    const forbidden = await fetch(
+      `${baseUrl}/api/v1/management/reports?page=1&limit=25`,
+      { headers: { Authorization: `Bearer ${staffSessionToken}` } },
+    );
+    expect(forbidden.status).toBe(403);
+    const forbiddenBody = await forbidden.json();
+    expect(forbiddenBody).toMatchObject({
+      error: { code: 'LOCAL_MANAGEMENT_FORBIDDEN' },
+    });
+    expect(forbiddenBody).not.toHaveProperty('summary');
+
+    const managerResponse = await fetch(
+      `${baseUrl}/api/v1/management/reports?page=1&limit=25`,
+      { headers: { Authorization: `Bearer ${managerSessionToken}` } },
+    );
+    expect(managerResponse.status).toBe(200);
+    expect(await managerResponse.json()).toEqual(
+      managementReportSnapshot({ page: 1, limit: 25 }),
+    );
+
+    const response = await fetch(
+      `${baseUrl}/api/v1/management/reports?page=2&limit=25`,
+      { headers: { Authorization: `Bearer ${sessionToken}` } },
+    );
+    expect(response.status).toBe(200);
+    expect(managementReportQueries).toEqual([
+      { page: 1, limit: 25 },
+      { page: 2, limit: 25 },
+    ]);
+    expect(await response.json()).toEqual(
+      managementReportSnapshot({ page: 2, limit: 25 }),
+    );
+
+    const invalid = await fetch(
+      `${baseUrl}/api/v1/management/reports?page=0&limit=101`,
+      { headers: { Authorization: `Bearer ${sessionToken}` } },
+    );
+    expect(invalid.status).toBe(400);
   });
 
   it('serves a cache-free Kitchen event stream and cleans up clients', async () => {
@@ -846,8 +909,22 @@ function createMockService(): SiteAgentService {
       checkedAt,
     }),
     signIn: async () => ({ token: sessionToken, session: localSession }),
-    findSession: async (token) =>
-      token === sessionToken ? localSession : null,
+    findSession: async (token) => {
+      if (token === sessionToken) return localSession;
+      if (token === managerSessionToken) {
+        return {
+          ...localSession,
+          user: { ...localSession.user, role: 'manager' as const },
+        };
+      }
+      if (token === staffSessionToken) {
+        return {
+          ...localSession,
+          user: { ...localSession.user, role: 'staff' as const },
+        };
+      }
+      return null;
+    },
     revokeSession: async () => undefined,
     listLocalUsers: async () => ({ users: [] }),
     createLocalUser: async (_session, input) => ({
@@ -994,6 +1071,7 @@ function createMockService(): SiteAgentService {
         totalPages: 1,
       },
     }),
+    getManagementReport: async (query) => managementReportSnapshot(query),
     listKitchenQueue: async (query) => kitchenQueueSnapshot(query),
     createOrder: async (input) => ({
       order: {
@@ -1109,6 +1187,28 @@ function kitchenQueueSnapshot(query: LocalKitchenQueueQuery) {
     counts: {
       stations: { kitchen: 0, bar: 0, dessert: 0 },
       queues: { active: 0, ready: 0 },
+    },
+  };
+}
+
+function managementReportSnapshot(query: LocalManagementReportsQuery) {
+  return {
+    serviceDay: {
+      start: '2026-07-27T03:00:00.000Z',
+      end: '2026-07-28T03:00:00.000Z',
+    },
+    generatedAt: checkedAt,
+    summary: {
+      paidRevenueCents: 12_450,
+      paidOrderCount: 4,
+      openOrderCount: 2,
+    },
+    orders: [],
+    pagination: {
+      page: query.page,
+      pageSize: query.limit,
+      totalItems: 0,
+      totalPages: 1,
     },
   };
 }

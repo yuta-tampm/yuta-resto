@@ -25,11 +25,11 @@ modify the standalone database inside `apps/yuta-display`.
 ## Governed UI backlog
 
 The canonical prioritized POS UI backlog is maintained in
-`docs/ui/pages/README.md` under `Local POS UI delivery backlog`. The next target
-is the integrated `/kitchen` page. Establishment settings have completed the
-approved Phase 4 real vertical slice; local reports, payment, the standalone
-split-items route decision, and management login follow. Do not repeat a broad route audit unless
-repository routes or product scope have changed.
+`docs/ui/pages/README.md` under `Local POS UI delivery backlog`. Kitchen and
+establishment delivery are complete. Local reports have an approved Phase 4
+read-only vertical slice; payment, the standalone split-items route decision,
+and management login follow. Do not repeat a broad route audit unless repository
+routes or product scope have changed.
 
 ## Scope
 
@@ -291,6 +291,13 @@ Daily orders and payments
 
 These workflows must be implemented in a local UI backed by `site-agent`.
 They must be removed from `apps/backoffice`.
+
+`/management/reports` is a protected local admin/manager read. It shows paid
+payment principal, final paid-order count, service-day open-order count, and a
+bounded order activity list. The service window is 05:00 inclusive to the next
+05:00 exclusive under the required `Europe/Paris` site-agent runtime. It adds
+no report table, cloud synchronization, fiscal/accounting claim, export, or
+mutation.
 
 Combo rules support two pricing modes:
 

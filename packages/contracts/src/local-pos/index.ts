@@ -30,6 +30,7 @@ export const localPosRoutes = {
   printTest: `${localPosApiBasePath}/print-jobs/test`,
   printSettings: `${localPosApiBasePath}/print-settings`,
   establishmentProfile: `${localPosApiBasePath}/establishment-profile`,
+  managementReports: `${localPosApiBasePath}/management/reports`,
   printerStatus: `${localPosApiBasePath}/printer-status`,
 } as const;
 
@@ -582,6 +583,55 @@ export const localOrdersHomeResponseSchema = z
       .object({
         page: z.number().int().positive(),
         pageSize: z.number().int().positive(),
+        totalItems: z.number().int().nonnegative(),
+        totalPages: z.number().int().positive(),
+      })
+      .strict(),
+  })
+  .strict();
+
+export const localManagementReportsQuerySchema = z
+  .object({
+    page: z.coerce.number().int().positive().default(1),
+    limit: z.coerce.number().int().min(1).max(100).default(50),
+  })
+  .strict();
+
+export const localManagementReportOrderSchema = z
+  .object({
+    id: identifierSchema,
+    orderNumber: z.string().min(1),
+    tableLabel: z.string().min(1),
+    orderType: localOrderTypeSchema,
+    status: localOrderStatusSchema,
+    paymentMode: localPaymentModeSchema,
+    totalCents: z.number().int().nonnegative(),
+    createdAt: isoDateTimeSchema,
+    paidAt: isoDateTimeSchema.nullable(),
+  })
+  .strict();
+
+export const localManagementReportsResponseSchema = z
+  .object({
+    serviceDay: z
+      .object({
+        start: isoDateTimeSchema,
+        end: isoDateTimeSchema,
+      })
+      .strict(),
+    generatedAt: isoDateTimeSchema,
+    summary: z
+      .object({
+        paidRevenueCents: z.number().int().nonnegative(),
+        paidOrderCount: z.number().int().nonnegative(),
+        openOrderCount: z.number().int().nonnegative(),
+      })
+      .strict(),
+    orders: z.array(localManagementReportOrderSchema),
+    pagination: z
+      .object({
+        page: z.number().int().positive(),
+        pageSize: z.number().int().positive().max(100),
         totalItems: z.number().int().nonnegative(),
         totalPages: z.number().int().positive(),
       })
@@ -1292,6 +1342,15 @@ export type LocalOrdersHomeQuery = z.infer<typeof localOrdersHomeQuerySchema>;
 export type LocalOrdersHomeRow = z.infer<typeof localOrdersHomeRowSchema>;
 export type LocalOrdersHomeResponse = z.infer<
   typeof localOrdersHomeResponseSchema
+>;
+export type LocalManagementReportsQuery = z.infer<
+  typeof localManagementReportsQuerySchema
+>;
+export type LocalManagementReportOrder = z.infer<
+  typeof localManagementReportOrderSchema
+>;
+export type LocalManagementReportsResponse = z.infer<
+  typeof localManagementReportsResponseSchema
 >;
 export type LocalKitchenScreen = z.infer<typeof localKitchenScreenSchema>;
 export type LocalKitchenQueue = z.infer<typeof localKitchenQueueSchema>;

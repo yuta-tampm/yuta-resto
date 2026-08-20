@@ -28,6 +28,7 @@ import {
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   applyContractExtractionAction,
+  loadStoredSyntheticContractEligibilityAction,
   startContractExtractionAction,
 } from '../actions';
 import {
@@ -40,6 +41,17 @@ type ExtractionState =
   | { status: 'loading'; message: string }
   | { status: 'ready'; result: PersonnelContractExtractionReviewResult }
   | { status: 'error'; message: string };
+
+type InputSource = 'generated' | 'upload' | 'stored';
+
+type StoredEligibility =
+  | { status: 'loading'; message: string }
+  | {
+      status: 'eligible';
+      message: string;
+      mode: 'offline' | 'provider_once';
+    }
+  | { status: 'unavailable'; message: string };
 
 const scenarioOptions: ReadonlyArray<{
   value: PersonnelContractExtractionScenario;
@@ -67,6 +79,13 @@ export function ContractExtractionPrototype({
   const [scenario, setScenario] =
     useState<PersonnelContractExtractionScenario>('complete');
   const [state, setState] = useState<ExtractionState>({ status: 'idle' });
+  const [inputSource, setInputSource] = useState<InputSource>('generated');
+  const [storedEligibility, setStoredEligibility] = useState<StoredEligibility>(
+    {
+      status: 'loading',
+      message: 'Vérification du contrat fictif enregistré…',
+    },
+  );
   const [syntheticPdf, setSyntheticPdf] = useState<File | null>(null);
   const [syntheticAttestation, setSyntheticAttestation] = useState(false);
   const [request, setRequest] =
@@ -84,7 +103,7 @@ export function ContractExtractionPrototype({
   });
 
   async function runExtraction(nextScenario = scenario) {
-    if (syntheticPdf && !syntheticAttestation) return;
+    if (inputSource === 'upload' && !syntheticAttestation) return;
     const nextRequest: PersonnelContractExtractionRequest = {
       requestId: crypto.randomUUID(),
       employeeId: employee.id,
@@ -98,10 +117,14 @@ export function ContractExtractionPrototype({
     setRequest(nextRequest);
     setState({ status: 'loading', message: 'Analyse locale en cours…' });
     try {
-      const upload = syntheticPdf ? new FormData() : undefined;
-      if (upload && syntheticPdf) {
+      const upload = inputSource === 'generated' ? undefined : new FormData();
+      if (upload && inputSource === 'upload' && syntheticPdf) {
+        upload.set('syntheticSource', 'synthetic_upload');
         upload.set('syntheticPdf', syntheticPdf);
         upload.set('syntheticAttestation', 'fictional-only');
+      }
+      if (upload && inputSource === 'stored') {
+        upload.set('syntheticSource', 'stored_synthetic_document');
       }
       const response = await startContractExtractionAction(nextRequest, upload);
       setState(
@@ -116,6 +139,56 @@ export function ContractExtractionPrototype({
       });
     }
   }
+
+  useEffect(() => {
+    let active = true;
+    setStoredEligibility({
+      status: 'loading',
+      message: 'Vérification du contrat fictif enregistré…',
+    });
+    void loadStoredSyntheticContractEligibilityAction(
+      employee.id,
+      document.id,
+      document.version,
+    )
+      .then((result) => {
+        if (!active) return;
+        setStoredEligibility(
+          result.status === 'eligible'
+            ? {
+                status: 'eligible',
+                mode: result.mode,
+                message:
+                  result.mode === 'provider_once'
+                    ? 'Ce contrat fictif est autorisé pour un seul appel OpenAI Luna/v4.'
+                    : 'Ce contrat correspond au fixture fictif YUTA autorisé.',
+              }
+            : result,
+        );
+      })
+      .catch(() => {
+        if (active) {
+          setStoredEligibility({
+            status: 'unavailable',
+            message:
+              'Le contrat fictif enregistré ne peut pas être vérifié actuellement.',
+          });
+        }
+      });
+    return () => {
+      active = false;
+    };
+  }, [document.id, document.version, employee.id]);
+
+  useEffect(() => {
+    if (
+      inputSource === 'stored' &&
+      storedEligibility.status === 'unavailable'
+    ) {
+      setInputSource('generated');
+      setState({ status: 'idle' });
+    }
+  }, [inputSource, storedEligibility.status]);
 
   useEffect(() => {
     const initial = initialVersions.current;
@@ -191,9 +264,14 @@ export function ContractExtractionPrototype({
               Suggestions à vérifier
             </h4>
             <Badge tone="info" size="sm">
-              {syntheticPdf
-                ? 'Local — PDF fictif sélectionné'
-                : 'Local — PDF synthétique généré'}
+              {inputSource === 'stored'
+                ? storedEligibility.status === 'eligible' &&
+                  storedEligibility.mode === 'provider_once'
+                  ? 'QA OpenAI — contrat fictif enregistré'
+                  : 'Local — contrat fictif enregistré'
+                : inputSource === 'upload'
+                  ? 'Local — PDF fictif sélectionné'
+                  : 'Local — PDF synthétique généré'}
             </Badge>
             <StateBadge state={state} />
           </div>
@@ -220,13 +298,71 @@ export function ContractExtractionPrototype({
       >
         <AlertTitle>Test local avec données fictives</AlertTitle>
         <AlertDescription>
-          {syntheticPdf
-            ? 'Le PDF fictif choisi sera transmis au service d’analyse configuré uniquement pour cette requête. Il n’est pas enregistré dans les documents YUTA.'
-            : 'Le contrat signé affiché n’est pas lu ni transmis. Le serveur génère un PDF synthétique indépendant pour tester ce parcours local.'}
+          {inputSource === 'stored'
+            ? storedEligibility.status === 'eligible' &&
+              storedEligibility.mode === 'provider_once'
+              ? 'Le serveur vérifiera ce PDF entièrement fictif, puis l’enverra une seule fois à OpenAI avec Luna/v4 pour ce QA. Aucune valeur ne sera appliquée automatiquement.'
+              : 'Le contrat fictif enregistré est vérifié par le serveur puis traité uniquement par la simulation hors ligne. Aucun appel externe n’est autorisé dans cette phase.'
+            : inputSource === 'upload'
+              ? 'Le PDF fictif choisi sera transmis au service d’analyse configuré uniquement pour cette requête. Il n’est pas enregistré dans les documents YUTA.'
+              : 'Le contrat signé affiché n’est pas lu ni transmis. Le serveur génère un PDF synthétique indépendant pour tester ce parcours local.'}
         </AlertDescription>
       </Alert>
 
       <div className="mt-4 rounded-xl border border-border-default bg-surface p-4">
+        <fieldset>
+          <legend className="text-sm font-semibold">
+            Source du test local
+          </legend>
+          <div className="mt-2 grid gap-2 sm:grid-cols-2">
+            <Button
+              type="button"
+              variant={inputSource === 'generated' ? 'secondary' : 'outline'}
+              aria-pressed={inputSource === 'generated'}
+              disabled={state.status === 'loading' || isApplying}
+              onClick={() => {
+                setInputSource('generated');
+                setScenario('complete');
+                setRequest(null);
+                setChoices({});
+                setApplyError(null);
+                setState({ status: 'idle' });
+              }}
+            >
+              PDF généré par YUTA
+            </Button>
+            <Button
+              type="button"
+              variant={inputSource === 'stored' ? 'secondary' : 'outline'}
+              aria-pressed={inputSource === 'stored'}
+              disabled={
+                state.status === 'loading' ||
+                isApplying ||
+                storedEligibility.status !== 'eligible'
+              }
+              onClick={() => {
+                setInputSource('stored');
+                setSyntheticPdf(null);
+                setSyntheticAttestation(false);
+                setScenario('complete');
+                setRequest(null);
+                setChoices({});
+                setApplyError(null);
+                setState({ status: 'idle' });
+                if (syntheticPdfInputRef.current) {
+                  syntheticPdfInputRef.current.value = '';
+                }
+              }}
+            >
+              Contrat fictif enregistré
+            </Button>
+          </div>
+          <p className="mt-2 text-xs text-secondary" role="status">
+            {storedEligibility.message}
+          </p>
+        </fieldset>
+
+        <div className="my-4 border-t border-border-default" />
         <label
           htmlFor={`synthetic-contract-${document.id}`}
           className="text-sm font-semibold"
@@ -251,6 +387,7 @@ export function ContractExtractionPrototype({
             onChange={(event) => {
               const file = event.currentTarget.files?.[0] ?? null;
               setSyntheticPdf(file);
+              setInputSource(file ? 'upload' : 'generated');
               setSyntheticAttestation(false);
               setScenario('complete');
               setRequest(null);
@@ -294,6 +431,7 @@ export function ContractExtractionPrototype({
               disabled={state.status === 'loading' || isApplying}
               onClick={() => {
                 setSyntheticPdf(null);
+                setInputSource('generated');
                 setSyntheticAttestation(false);
                 setRequest(null);
                 setChoices({});
@@ -317,7 +455,9 @@ export function ContractExtractionPrototype({
           <select
             value={scenario}
             disabled={
-              state.status === 'loading' || isApplying || Boolean(syntheticPdf)
+              state.status === 'loading' ||
+              isApplying ||
+              inputSource !== 'generated'
             }
             onChange={(event) => {
               setScenario(
@@ -355,17 +495,22 @@ export function ContractExtractionPrototype({
             <RotateCcw className="h-4 w-4" aria-hidden />
           )}
           {state.status === 'idle'
-            ? syntheticPdf
-              ? 'Analyser ce PDF fictif'
-              : 'Analyser le PDF généré'
+            ? inputSource === 'stored'
+              ? 'Analyser le contrat fictif enregistré'
+              : inputSource === 'upload'
+                ? 'Analyser ce PDF fictif'
+                : 'Analyser le PDF généré'
             : 'Relancer ce scénario'}
         </Button>
       </div>
 
       {state.status === 'idle' && (
         <p className="mt-3 text-sm text-secondary" role="status">
-          Aucune requête externe ne part avant votre clic sur le bouton
-          d’analyse.
+          {inputSource === 'stored' &&
+          storedEligibility.status === 'eligible' &&
+          storedEligibility.mode === 'provider_once'
+            ? 'Un seul appel OpenAI partira après votre clic sur le bouton d’analyse.'
+            : 'Aucune requête externe ne part avant votre clic sur le bouton d’analyse.'}
         </p>
       )}
 

@@ -188,6 +188,7 @@ POS_DATABASE_URL=postgres://yuta_pos:encoded_password@pos-db:5432/yuta_pos
 SITE_AGENT_HOST=0.0.0.0
 SITE_AGENT_PORT=3100
 SITE_AGENT_ALLOWED_ORIGIN=https://pos.restaurant.local
+TZ=Europe/Paris
 SITE_AGENT_URL=http://site-agent:3100
 POS_PRINTER_DEVICE=/dev/rfcomm1
 POS_PRINT_POLL_INTERVAL_MS=1000
@@ -203,6 +204,13 @@ as a `NEXT_PUBLIC_*` variable.
 `SITE_AGENT_ALLOWED_ORIGIN` must be the exact POS client origin; do not use a
 wildcard origin. Bind `SITE_AGENT_HOST=0.0.0.0` only inside the trusted local
 container or LAN boundary.
+
+The POS service day depends on site-agent wall-clock time. Set the Luna host
+timezone to `Europe/Paris`, pass `TZ=Europe/Paris` to the site-agent process,
+and verify that Node resolves `Europe/Paris` before starting it. Site-agent now
+fails startup when `TZ` is absent/different or when the runtime resolves another
+timezone. This prevents 05:00 service-day and local-report calculations from
+silently following a misconfigured server clock.
 
 `POS_PRINTER_DEVICE` is local device configuration, never browser input. At
 Luna, the Linux host pairs the single EPSON TM-m30 as a trusted Bluetooth
@@ -339,6 +347,17 @@ The local POS deployment must:
 - persist printer jobs and device state locally;
 - provide guarded backup and restore procedures;
 - never start a POS-to-cloud synchronization worker.
+
+Before enabling local reports on Luna, verify:
+
+```bash
+test "$(timedatectl show --property=Timezone --value)" = "Europe/Paris"
+TZ=Europe/Paris node -e "process.exit(Intl.DateTimeFormat().resolvedOptions().timeZone === 'Europe/Paris' ? 0 : 1)"
+```
+
+The production site-agent environment must contain `TZ=Europe/Paris`. A host
+timezone change or service restart remains an explicit deployment operation;
+merging report code does not perform it.
 
 For the selected Luna printer transport, verify before starting `site-agent`:
 

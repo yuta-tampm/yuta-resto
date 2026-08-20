@@ -1137,3 +1137,57 @@ sent. Offline development keeps the deterministic synthetic mode. Missing or
 invalid configuration and all non-development runtimes reject the operation.
 This phase adds no employee-data automation, real-file path, schema, migration,
 new UI, production account, or production approval.
+
+## Wave G Phase 8 — stored fictional contract offline integration
+
+Status: `IMPLEMENTED; ONE PROVIDER QA COMPLETE — PRODUCTION BLOCKED`.
+
+The next proposed development step is to exercise the same path that a later
+production implementation would need: resolve and open the current signed
+contract from YUTA Documents instead of asking OWNER to upload the same PDF a
+second time. This is not a real-file pilot. Only an exact repository-owned
+fictional fixture that the server registered when it entered the local
+development document store may be eligible.
+
+Eligibility is server-owned and uses metadata already persisted for the current
+document version. A dedicated resolver binds trusted organization,
+establishment, employee, document ID, current version, storage key, media type,
+byte size, and checksum. The checksum must match the one approved repository
+fixture before storage is opened. A browser confirmation, filename, dossier
+name, or development environment alone is insufficient. After opening the
+eligible object, YUTA recomputes and matches byte size, PDF signature, and
+SHA-256 before preparation. Replacement, missing storage, size/page failure, or
+hash mismatch invalidates the path.
+
+The proposed first user remains OWNER. Starting extraction continues to require
+`personnel.document.read` and `personnel.document.extract`; applying a supported
+suggestion also requires `personnel.employee.manage`. The existing trusted
+tenant scope, current employee/document version checks, rate limit, Luna/v4
+adapter, strict YUTA result contract, 15-minute review, explicit per-field
+choice, apply audit, and no-automatic-update rule remain unchanged.
+
+The generated and explicit-upload sources remain available as development test
+tools. The stored-fictional source is offered only when the current contract is
+eligible. It is forced through a fixture-specific deterministic adapter that
+returns the frozen expected `Chef de rang`, CDD, and 35-hour review and has no
+network capability. No provider/model/prompt/account control becomes
+restaurant-facing.
+
+Out of scope for Phase 8:
+
+- opening, hashing, or transmitting an arbitrary document already in storage;
+- treating an OWNER checkbox or local filename as proof that a file is fictional;
+- real employee or customer data;
+- production object storage, production malware scanning, retention,
+  deletion, backup/restore, incident response, or operational ownership;
+- OpenAI production organization/project, EU processing approval, retention
+  agreement, DPA/subprocessor approval, or a real-file pilot;
+- schema, migration, automatic employee update, background processing, batch
+  extraction, or another provider.
+
+Product approved this scope and its offline implementation on 2026-08-20, then
+separately authorized exactly one provider-backed QA request with the exact
+stored fictional fixture. That single Luna/v4 request completed successfully;
+the one-time gate was removed by stopping the privileged process immediately
+afterward. Any additional provider request and every real-file pilot remain
+separate approval gates.

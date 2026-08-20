@@ -716,3 +716,41 @@ Wording must say that the selected PDF is transmitted to the configured
 analysis service, is not saved in YUTA Documents, and must contain no real
 employee data. It remains provider-neutral and exposes no model, prompt, token,
 cost, account, or production control.
+
+## Wave G Phase 8 — stored fictional contract offline state
+
+Status: `IMPLEMENTED IN DEVELOPMENT; ONE PROVIDER QA COMPLETE`.
+
+Reuse the existing Documents card and review rather than introducing another
+screen or design language. When the current signed contract has a valid
+server-owned fictional-fixture eligibility result, the development source
+choice may add `Contrat fictif enregistré` alongside the generated fixture and
+local fictional upload. Its supporting copy states that YUTA will verify and
+analyze the current stored test contract through an offline simulation after an
+explicit click. It must not imply that an arbitrary stored contract is eligible
+or that an external request occurs.
+
+When eligibility is absent, expired, stale, or invalid, the stored source is not
+selectable and the UI explains that only a YUTA-registered fictional contract
+can be used in this development test. A replaced contract clears the choice and
+review. Missing storage, hash mismatch, validation failure, provider failure,
+and timeout use the existing bounded unavailable/retry states without exposing
+storage keys, hashes, provider identifiers, or technical configuration.
+
+No new visual reference or ImageGen prompt was required. Phase 7 already
+established the compact source choice and explicit start interaction. Phase 8
+adds an eligibility loading message, disabled unavailable state, selected-source
+badge, explicit offline disclosure, and source-specific analysis label.
+
+For the separately approved one-request QA only, eligibility also returned a
+temporary `provider_once` display mode. Before the click, the badge and alert
+explicitly stated that the entirely fictional stored PDF would be sent once to
+OpenAI with Luna/v4 and that no value would be applied automatically. After the
+request, the server was restarted without this mode, restoring the offline
+copy. No provider/model control is exposed to the restaurant user.
+
+Signed-in offline QA confirms the eligible stored source, selected badge,
+offline disclosure, ready review, and expected two-page suggestions. At 390 px,
+the page and employee drawer have no horizontal overflow and the stored-source
+control remains visible. Browser logs contain no warning/error. A separate
+production-hidden recheck remains part of any later provider-QA approval.

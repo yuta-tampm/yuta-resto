@@ -1035,7 +1035,7 @@ Read-slice evidence:
 - [x] Missing, expired, cross-scope, mismatched, or invalid reviews fail closed
       and are deleted when applicable; successful apply also deletes the review.
 - [x] Final signed-in QA with `wg2-digital-cdd-35h.pdf` persisted only `Chef de
-    rang` and 35 weekly hours; CDD remained unchanged.
+rang` and 35 weekly hours; CDD remained unchanged.
 - [x] History records the final analysis and two-field apply.
 - [x] Four Phase 7 provider requests occurred across initial QA, two UI retries,
       and final verification; apply made no additional request.
@@ -1044,6 +1044,63 @@ Read-slice evidence:
       the four Phase 7 requests.
 - [x] Fresh production build QA exposed no analysis action, fictional upload
       field, or synthetic review; development was restored afterward.
+
+## Wave G Phase 8 — stored fictional contract offline integration
+
+- [x] Repository reality is recorded: Phase 7 analyzes generated or explicitly
+      uploaded fictional bytes and never opens the stored signed contract.
+- [x] The implementation is development-only and permits only the exact
+      repository-owned `wg2-digital-cdd-35h` fixture hash.
+- [x] Trusted eligibility binds organization, establishment, employee,
+      document, current version, storage key, media type, byte size, and
+      persisted checksum before storage may be opened.
+- [x] Filename, browser confirmation, dossier name, and development mode are
+      explicitly insufficient proof of fictional content.
+- [x] Bytes are revalidated and hashed after opening; mismatch fails before the
+      adapter and invalidates the stored source.
+- [x] The implementation reuses existing OWNER document read/extract permissions,
+      employee-manage permission for apply, current-version checks, rate limit,
+      strict result, transient review, explicit confirmation, and audit.
+- [x] A dedicated extraction-source resolver is implemented instead of recording a
+      misleading view/download grant.
+- [x] No schema, migration, new API route, automatic update, background job, or
+      production provider/storage capability is proposed.
+- [x] Replacement, missing storage, scope/version/key mismatch, invalid PDF,
+      hash mismatch, timeout, and provider failure are fail-closed states.
+- [x] Generated and explicit-upload sources remain bounded development tools;
+      the stored source is visible only while eligible.
+- [x] The stored source uses a fixture-specific deterministic adapter by
+      default; provider use additionally requires a process-only one-time gate.
+- [x] Offline tests cover exact fixture success, unknown/non-development denial
+      before storage access, changed bytes, and complete service execution.
+- [x] The Backoffice suite passes 156 tests; db-cloud current-version,
+      stale-version, and cross-establishment integration assertions are present
+      behind the existing database-test gate.
+- [x] Phase 8 implementation made no OpenAI request, changed no employee, and
+      authorizes no real personnel file.
+- [x] Signed-in OWNER offline QA selected the eligible current version-2 stored
+      fixture and displayed CDD, `Chef de rang`, and 35 weekly hours.
+- [x] Offline QA made no selection or employee update; the server action
+      completed in about 0.6 seconds.
+- [x] Browser logs contained no warning/error; page and drawer had no horizontal
+      overflow at 390 px and the stored-source control remained visible.
+- [x] Product owner approved the Wave G Phase 8 scope on 2026-08-20.
+- [x] Product owner separately authorized Phase 8 implementation and offline
+      tests on 2026-08-20.
+- [x] After offline review, product owner separately authorized exactly one
+      provider-backed QA call with the exact stored fictional fixture on
+      2026-08-20.
+- [x] The one-time UI disclosed the OpenAI/Luna-v4 transfer before the click.
+- [x] The server rechecked exact tenant scope, current version, stored metadata,
+      opened bytes, PDF signature, SHA-256, page count, and complete scenario
+      before consuming the process-local gate and invoking the provider.
+- [x] Exactly one request completed: 4,486 ms, 1,107 input tokens, 152 output
+      tokens, 1,259 total tokens, three expected suggestions, no apply.
+- [x] The privileged process was stopped and development restarted without the
+      temporary provider-QA flag.
+- [ ] Any additional provider-backed QA call is separately authorized.
+- [ ] Real personnel-file and production legal/privacy/security/provider/
+      retention/operations gates remain separately blocked.
 
 ## Wave E Phase 0 — personnel register and PDF export discovery
 

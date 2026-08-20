@@ -51,16 +51,24 @@ Current packages:
   preview tooling, and Phase 5 responsive browser QA are complete. Physical
   TM-m30 output remains deferred because no configured device is available.
 
-- `pos-kitchen/` - approved TV-first Phase 1 visual renewal and Phase 2
-  route-local component refactor for the existing
-  integrated local POS production queue at `/kitchen`, with auto columns,
-  continuous horizontal queue scrolling, and independent long-ticket
-  scrolling. Phase 3 and behavior/data proposals remain approval-gated.
+- `pos-kitchen/` - implemented existing-capability renewal for the integrated
+  local POS production queue at `/kitchen`, including the approved bounded
+  site-agent read model, notification SSE with polling fallback, TV-first
+  layout, sound authorization, and synchronized as-built evidence.
 
-- `pos-management-establishment/` - approved Phase 1 visual direction, Phase 2
-  component structure, and Phase 3 development-only fixture interactions for
-  `/management/establishment`; the route is not linked from the hub and the
-  real local profile capability remains approval-gated.
+- `pos-management-establishment/` - implemented new-capability delivery and
+  Phase 5 as-built QA for `/management/establishment`; the hub-linked route
+  reads and updates the singleton local display name through protected
+  site-agent and preserves immutable receipt snapshots.
+
+- `pos-management-reports/` - implemented local read-only reporting and Phase
+  5 as-built QA for
+  `/management/reports`: authenticated admin/manager access, the protected
+  site-agent read model, paid-payment principal and order metrics for the fixed
+  05:00 `Europe/Paris` service day, bounded activity pagination, and direct
+  order links. The Management hub card is available; four-viewport production
+  QA plus empty/error/recovery evidence is complete. Luna release remains
+  blocked until its host and site-agent timezone preflight passes.
 
 ## Local POS UI delivery backlog
 
@@ -78,28 +86,19 @@ Implemented page packs:
 - `/management/catalog` -> `pos-management-catalog/`
 - `/management/combos` -> `pos-management-combos/`
 - `/management/printing` -> `pos-management-printing/`
+- `/kitchen` -> `pos-kitchen/`
+- `/management/establishment` -> `pos-management-establishment/`
+- `/management/reports` -> `pos-management-reports/`
 
 Prioritized remaining work:
 
-1. `/kitchen` - integrated `EXISTING_PAGE`; its
-   `EXISTING_CAPABILITY_RENEWAL` Phase 0 pack and TV-first design generation
-   are complete. Next requires explicit DRAFT review; preserve service-day, station/status,
-   allergy, polling, kitchen transitions, and printer/service truthfulness.
-2. `/management/establishment` - the approved real vertical slice and Phase 5
-   as-built QA are complete under `NEW_PAGE` / `NEW_CAPABILITY_DISCOVERY`.
-   Admins and managers can update the singleton local restaurant display name
-   through `site-agent`; new customer receipts snapshot the configured value.
-   Production release migration remains separately gated.
-3. `/management/reports` - route absent; the Management card remains
-   `Prochaine étape` with `href: null`. Start a separate Phase 0 as `NEW_PAGE` /
-   `NEW_CAPABILITY_DISCOVERY` for local db-pos operational reports.
-4. `/orders/[orderId]/payment` - integrated `EXISTING_PAGE`; create its own
+1. `/orders/[orderId]/payment` - integrated `EXISTING_PAGE`; create its own
    `EXISTING_CAPABILITY_RENEWAL` pack and use safe persisted data. Preserve
    payment/combo/idempotency and local transaction ownership.
-5. `/orders/[orderId]/payment/items` - integrated route without a page pack.
+2. `/orders/[orderId]/payment/items` - integrated route without a page pack.
    Phase 0 must first decide whether it remains a meaningful standalone screen
    or is superseded by the item-split dialog on the main payment page.
-6. `/management/login` - integrated local-management authentication screen
+3. `/management/login` - integrated local-management authentication screen
    without a dedicated page pack; renew only after the higher-priority
    operational pages.
 

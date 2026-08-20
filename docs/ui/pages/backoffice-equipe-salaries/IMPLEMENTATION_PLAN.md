@@ -1639,3 +1639,97 @@ USD 0.88, including three of those four; final-request ingestion remains pending
 A fresh production build rendered the authenticated Documents view without the
 analysis action, upload field, or synthetic review. Development was restored on
 port 3001.
+
+### Wave G Phase 8 — stored fictional contract offline integration
+
+Status: `IMPLEMENTED — ONE PROVIDER QA COMPLETE; STOP BEFORE ANY FURTHER CALL`.
+
+Goal: remove the artificial second upload from the next development test by
+reading the current local Documents object, while making it impossible for an
+arbitrary or real stored personnel file to enter the extraction path.
+
+Implemented slice:
+
+1. reuse the SHA-256 already persisted on every personnel-document version;
+2. allowlist only `wg2-digital-cdd-35h` and its corpus-v2 SHA-256;
+3. bind eligibility to trusted organization, establishment, employee,
+   document, current version, storage key, media type, byte size, and checksum;
+4. add a server-only repository resolver for the exact current extraction
+   source; do not reuse the view/download grant or its audit meaning;
+5. reject unknown/stale eligibility before opening storage, then open the
+   available object and recheck size, signature, pages, and SHA-256;
+6. extend the application-local prepared source vocabulary with
+   `stored_synthetic_document` and pass the verified bytes through the existing
+   preparer and a fixture-specific deterministic adapter;
+7. reuse the current rate limit, strict response validation, tenant-scoped
+   review store, OWNER decisions, version/audit grant, apply action, and audit;
+8. expose the stored source only in development and only while eligible; retain
+   generated and upload sources for controlled testing;
+9. fail closed in production, test, missing environment, replacement, object
+   failure, mismatch, timeout, and provider failure;
+10. cover the stored source offline before any real provider request.
+
+Expected implementation impact:
+
+```text
+Files modified: Backoffice extraction action/service/UI/tests,
+  personnel document repository/tests, current page-pack docs
+Files created: one stored-synthetic source/adapter module and one test file
+Packages affected: apps/backoffice, @yuta/db-cloud
+Cross-application impact: none
+Database/schema/migration: NO
+API route: NO
+Shared application/transport contract: NO
+Application-local source discriminant: YES — stored_synthetic_document
+Permission/auth: NO — reuse existing OWNER-only permissions
+Runtime/device: YES — development local document runtime read only
+Provider/SDK/model: NO — stored source is deterministic and cannot call OpenAI
+External request during implementation: NO
+Production: NOT AUTHORIZED
+```
+
+Required offline tests before browser/provider QA:
+
+- OWNER success with exact trusted scope, current version, eligible fixture,
+  matching storage key, and matching hash;
+- MANAGER, STAFF, public/service actor, missing establishment, and cross-tenant
+  denial before storage access;
+- unknown checksum, replacement/version mismatch, storage-key mismatch, missing
+  object, wrong media/signature, oversize, over-page, and hash mismatch all fail
+  before extraction-adapter invocation;
+- the browser cannot forge eligibility, fixture ID, hash, tenant, version,
+  storage key, provider, model, or prompt;
+- provider failure/timeout preserves Documents access and makes no employee
+  change;
+- apply still requires the exact transient review and makes no second provider
+  call;
+- production/test/missing environment expose no stored-analysis control and do
+  not open personnel storage even when secrets are configured.
+
+Product approved the Phase 8 scope and offline implementation on 2026-08-20.
+The implemented unit/service tests prove exact-fixture success, non-development
+and unknown-hash denial before storage access, changed-byte rejection, and a
+complete deterministic stored-PDF flow with no network. The Backoffice suite
+passes 154 tests; database integration assertions are present for current-
+version success plus stale/cross-establishment denial and run only when the
+repository integration-test gate is enabled.
+
+Signed-in OWNER browser QA selected the eligible current version-2 stored
+fixture. The action completed through the deterministic adapter in about 0.6
+seconds and displayed CDD, `Chef de rang`, and 35 weekly hours. No choice was
+selected or applied. Browser logs contained no warning/error, and both the page
+and drawer remained free of horizontal overflow at 390 px.
+
+Product separately authorized exactly one provider-backed QA call with the exact
+stored fixture on 2026-08-20. The implementation added a development-only,
+process-only `approved-once` gate and provider wrapper. The wrapper repeats the
+exact hash, page-count, and scenario checks, consumes the gate before sending,
+then delegates to the pinned Luna/v4 adapter. The UI disclosed the transfer
+before the click. The single request completed in 4,486 ms with 1,107 input,
+152 output, and 1,259 total tokens and returned the expected three suggestions.
+No suggestion was selected or applied. The privileged process was stopped and
+development restarted without the flag, restoring the offline stored adapter.
+
+Stop here. Any additional provider call requires another explicit approval.
+Real personnel files, schema/migration, production storage/scanning, retention,
+backup/restore, and production enablement remain outside Phase 8.

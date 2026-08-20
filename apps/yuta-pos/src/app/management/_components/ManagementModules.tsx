@@ -52,7 +52,7 @@ const modules: readonly ManagementModule[] = [
     description: 'Chiffre payé, commandes ouvertes et activité du jour.',
     icon: ChartNoAxesCombined,
     tone: 'warning',
-    href: null,
+    href: '/management/reports',
   },
   {
     title: "File d'impression",

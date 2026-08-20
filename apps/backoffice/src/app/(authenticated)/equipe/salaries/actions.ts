@@ -35,6 +35,7 @@ import {
   listPersonnelDocuments,
   PersonnelDocumentRepositoryError,
   recordPersonnelDocumentUploadRejected,
+  resolvePersonnelDocumentExtractionSource,
   savePersonnelDocumentMetadata,
   createPersonnelContractAmendmentMetadata,
   listPersonnelContractAmendments,
@@ -43,6 +44,7 @@ import {
   replacePersonnelContractAmendmentMetadata,
   listPersonnelActionOverview,
   resolvePersonnelActionTarget,
+  type PersonnelDocumentExtractionSource,
 } from '@yuta/db-cloud';
 import { revalidatePath } from 'next/cache';
 import { createHash } from 'node:crypto';
@@ -62,8 +64,16 @@ import {
   SyntheticContractPdfPreparer,
 } from '../../../../server/personnel-contract-extraction/service';
 import { createDevelopmentContractExtractionAdapter } from '../../../../server/personnel-contract-extraction/runtime';
+import type { OpenAiExtractionObservation } from '../../../../server/personnel-contract-extraction/openai-adapter';
 import { developmentContractExtractionReviewStore } from '../../../../server/personnel-contract-extraction/review-store';
 import { createDevelopmentSyntheticPdfLoader } from '../../../../server/personnel-contract-extraction/synthetic-upload';
+import {
+  createStoredSyntheticDocumentLoader,
+  identifyApprovedStoredSyntheticFixture,
+  StoredSyntheticFixtureExtractionAdapter,
+  StoredSyntheticProviderQaExtractionAdapter,
+  StoredSyntheticProviderQaGate,
+} from '../../../../server/personnel-contract-extraction/stored-synthetic-document';
 import { isContractExtractionPrototypeEnabled } from './_lib/contract-extraction-prototype-runtime';
 import { isPersonnelActionOverviewEnabled } from './_lib/personnel-action-overview-runtime';
 
@@ -138,6 +148,10 @@ export type StartContractExtractionActionResult =
       message: string;
     };
 
+export type StoredSyntheticContractEligibilityActionResult =
+  | { status: 'eligible'; mode: 'offline' | 'provider_once' }
+  | { status: 'unavailable'; message: string };
+
 export type ApplyContractExtractionActionResult =
   | {
       status: 'success';
@@ -179,6 +193,7 @@ const replaceAmendmentFormSchema = z
   .strict();
 
 const developmentExtractionRateLimiter = new DevelopmentExtractionRateLimiter();
+const storedSyntheticProviderQaGate = new StoredSyntheticProviderQaGate();
 
 export async function loadPersonnelActionOverviewAction(
   query: PersonnelActionOverviewQuery,
@@ -290,35 +305,94 @@ export async function startContractExtractionAction(
   requirePersonnelPermission(tenant, 'personnel.document.extract');
 
   let request: PersonnelContractExtractionRequest | null = null;
+  let storedSource: PersonnelDocumentExtractionSource | null = null;
   try {
     request = personnelContractExtractionRequestSchema.parse(rawRequest);
-    const loadPdf = createDevelopmentSyntheticPdfLoader(
-      syntheticUpload,
-      request.scenario,
-    );
+    const requestedSource = syntheticUpload?.get('syntheticSource');
+    if (
+      requestedSource !== null &&
+      requestedSource !== undefined &&
+      requestedSource !== 'synthetic_upload' &&
+      requestedSource !== 'stored_synthetic_document'
+    ) {
+      throw new ContractExtractionServiceError(
+        'The development extraction source is invalid.',
+        'PREPARATION_FAILED',
+      );
+    }
+    const useStoredSource = requestedSource === 'stored_synthetic_document';
+    const useStoredProviderQa =
+      useStoredSource && storedSyntheticProviderQaGate.isEnabled();
+    let providerObservation: OpenAiExtractionObservation | undefined;
+    const providerQaStartedAt = useStoredProviderQa
+      ? performance.now()
+      : undefined;
+    if (useStoredSource && request.scenario !== 'complete') {
+      throw new ContractExtractionServiceError(
+        'The stored fictional document supports only the complete scenario.',
+        'PREPARATION_FAILED',
+      );
+    }
+    const uploadedLoader = useStoredSource
+      ? undefined
+      : createDevelopmentSyntheticPdfLoader(syntheticUpload, request.scenario);
+    const loadPdf = useStoredSource
+      ? async () => {
+          if (!storedSource) {
+            throw new ContractExtractionServiceError(
+              'The stored fictional document was not resolved.',
+              'PREPARATION_FAILED',
+            );
+          }
+          const runtime = await getPersonnelDocumentRuntime();
+          return createStoredSyntheticDocumentLoader(
+            storedSource,
+            runtime.storage,
+          )();
+        }
+      : uploadedLoader;
     const result = await runSyntheticContractExtraction(request, {
       authorizeAndResolve: async (authorizedRequest) => {
         // Repeat permission checks inside the service-owned resolution step so
         // no fixture is prepared before trusted authorization succeeds.
         requirePersonnelPermission(tenant, 'personnel.document.read');
         requirePersonnelPermission(tenant, 'personnel.document.extract');
-        const [employee, documents] = await Promise.all([
-          findPersonnelEmployee(
-            cloudDatabase,
-            tenant,
-            authorizedRequest.employeeId,
-            getBusinessDate(tenant.timezone),
-          ),
-          listPersonnelDocuments(
-            cloudDatabase,
-            tenant,
-            authorizedRequest.employeeId,
-            authorizedRequest.requestId,
-          ),
-        ]);
-        const document = documents.items.find(
-          (item) => item.id === authorizedRequest.documentId,
+        const employee = await findPersonnelEmployee(
+          cloudDatabase,
+          tenant,
+          authorizedRequest.employeeId,
+          getBusinessDate(tenant.timezone),
         );
+        const document = useStoredSource
+          ? await resolvePersonnelDocumentExtractionSource(
+              cloudDatabase,
+              tenant,
+              {
+                employeeId: authorizedRequest.employeeId,
+                documentId: authorizedRequest.documentId,
+                documentVersion: authorizedRequest.documentVersion,
+              },
+            ).then((source) => {
+              if (!identifyApprovedStoredSyntheticFixture(source)) {
+                throw new ContractExtractionServiceError(
+                  'The stored contract is not an approved fictional fixture.',
+                  'PREPARATION_FAILED',
+                );
+              }
+              storedSource = source;
+              return {
+                id: source.documentId,
+                version: source.documentVersion,
+              };
+            })
+          : (
+              await listPersonnelDocuments(
+                cloudDatabase,
+                tenant,
+                authorizedRequest.employeeId,
+                authorizedRequest.requestId,
+              )
+            ).items.find((item) => item.id === authorizedRequest.documentId);
         if (!employee || !document) {
           throw new ContractExtractionServiceError(
             'The scoped extraction target was not found.',
@@ -346,10 +420,40 @@ export async function startContractExtractionAction(
         ),
       loadPdf,
       preparer: new SyntheticContractPdfPreparer(),
-      adapter: createDevelopmentContractExtractionAdapter({
-        scenario: request.scenario,
-      }),
+      adapter: useStoredSource
+        ? useStoredProviderQa
+          ? new StoredSyntheticProviderQaExtractionAdapter(
+              createDevelopmentContractExtractionAdapter({
+                scenario: request.scenario,
+                onCompleted: (observation) => {
+                  providerObservation = observation;
+                },
+              }),
+              storedSyntheticProviderQaGate,
+            )
+          : new StoredSyntheticFixtureExtractionAdapter()
+        : createDevelopmentContractExtractionAdapter({
+            scenario: request.scenario,
+          }),
     });
+    if (useStoredProviderQa && providerQaStartedAt !== undefined) {
+      console.info(
+        'YUTA_OPENAI_STORED_SYNTHETIC_QA',
+        JSON.stringify({
+          fixtureId: 'wg2-digital-cdd-35h',
+          model: providerObservation?.model,
+          promptVersion: providerObservation?.promptVersion,
+          latencyMilliseconds: Math.round(
+            performance.now() - providerQaStartedAt,
+          ),
+          inputTokens: providerObservation?.inputTokens,
+          outputTokens: providerObservation?.outputTokens,
+          totalTokens: providerObservation?.totalTokens,
+          status: result.status,
+          suggestionCount: result.suggestions.length,
+        }),
+      );
+    }
     await recordPersonnelContractExtractionAudit(cloudDatabase, tenant, {
       employeeId: request.employeeId,
       requestId: request.requestId,
@@ -402,7 +506,10 @@ export async function startContractExtractionAction(
         case 'PREPARATION_FAILED':
           return extractionError(
             'failed',
-            'Le PDF fictif n’est pas valide ou dépasse la limite de 750 Ko.',
+            syntheticUpload?.get('syntheticSource') ===
+              'stored_synthetic_document'
+              ? 'Le contrat fictif enregistré n’est pas disponible pour ce test hors ligne.'
+              : 'Le PDF fictif n’est pas valide ou dépasse la limite de 750 Ko.',
           );
         default:
           return extractionError(
@@ -422,6 +529,40 @@ export async function startContractExtractionAction(
       'failed',
       'L’analyse locale est indisponible. Réessayez.',
     );
+  }
+}
+
+export async function loadStoredSyntheticContractEligibilityAction(
+  employeeId: string,
+  documentId: string,
+  documentVersion: number,
+): Promise<StoredSyntheticContractEligibilityActionResult> {
+  const unavailable: StoredSyntheticContractEligibilityActionResult = {
+    status: 'unavailable',
+    message:
+      'Seul un contrat fictif YUTA reconnu peut être analysé depuis Documents.',
+  };
+  if (!isContractExtractionPrototypeEnabled()) return unavailable;
+
+  const { tenant } = await requirePersonnelTenant('/equipe/salaries');
+  requirePersonnelPermission(tenant, 'personnel.document.read');
+  requirePersonnelPermission(tenant, 'personnel.document.extract');
+  try {
+    const source = await resolvePersonnelDocumentExtractionSource(
+      cloudDatabase,
+      tenant,
+      { employeeId, documentId, documentVersion },
+    );
+    return identifyApprovedStoredSyntheticFixture(source)
+      ? {
+          status: 'eligible',
+          mode: storedSyntheticProviderQaGate.isEnabled()
+            ? 'provider_once'
+            : 'offline',
+        }
+      : unavailable;
+  } catch {
+    return unavailable;
   }
 }
 

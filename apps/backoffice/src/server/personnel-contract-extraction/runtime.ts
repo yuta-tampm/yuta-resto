@@ -6,7 +6,10 @@ import {
   type ContractExtractionAdapter,
   type PreparedSyntheticContract,
 } from './service';
-import { OpenAiContractExtractionAdapter } from './openai-adapter';
+import {
+  OpenAiContractExtractionAdapter,
+  type OpenAiExtractionObservation,
+} from './openai-adapter';
 
 export const DEVELOPMENT_OPENAI_EXTRACTION_MODEL = 'gpt-5.6-luna' as const;
 export const DEVELOPMENT_OPENAI_EXTRACTION_PROMPT_VERSION = 'v4' as const;
@@ -22,6 +25,7 @@ export type CreateDevelopmentContractExtractionAdapterOptions = Readonly<{
   fetchImplementation?: typeof fetch;
   now?: () => Date;
   scenario?: PreparedSyntheticContract['scenario'];
+  onCompleted?: (observation: OpenAiExtractionObservation) => void;
 }>;
 
 export function createDevelopmentContractExtractionAdapter(
@@ -64,6 +68,7 @@ export function createDevelopmentContractExtractionAdapter(
     promptVersion: DEVELOPMENT_OPENAI_EXTRACTION_PROMPT_VERSION,
     fetchImplementation: options.fetchImplementation,
     now: options.now,
+    onCompleted: options.onCompleted,
   });
 }
 

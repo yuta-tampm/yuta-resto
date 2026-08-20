@@ -32,8 +32,10 @@ describe('PosHeader', () => {
     expect(markup).toContain('h-12 w-12');
     expect(markup).toContain('[&amp;&gt;*]:h-12');
     expect(markup).toContain('[&amp;&gt;form&gt;button]:h-12');
-    expect(markup).toContain('absolute right-0 top-full');
-    expect(markup).toContain('min-w-64');
+    expect(markup).toContain('absolute top-full');
+    expect(markup).toContain(
+      'style="right:0;width:min(16rem, calc(100vw - 2rem))"',
+    );
   });
 
   it('preserves the existing all-actions compact menu when no secondary actions are provided', () => {

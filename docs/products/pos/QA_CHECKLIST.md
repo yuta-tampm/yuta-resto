@@ -31,9 +31,10 @@ pnpm dev:site-agent
 pnpm --filter @yuta/pos dev
 ```
 
-If a newly added route returns `404` in `next dev`, restart the affected dev
-server before marking the case as failed. Turbopack can keep stale route state
-after route files are added during development.
+The POS development script uses the supported Next.js webpack fallback because
+Turbopack can keep stale route state after route files are added or after a
+production build shares the same `.next` directory. If a route still returns
+`404`, restart the affected dev server before marking the case as failed.
 
 ## Result Legend
 
@@ -373,13 +374,24 @@ N/A       not applicable for this run
 
 ## Local Operational Reports
 
-| Case                       | Expected Result                              | Result | Notes |
-| -------------------------- | -------------------------------------------- | -----: | ----- |
-| Open local reports UI      | Reports page loads                           |        |       |
-| Paid revenue updates       | Paid payment amount appears in daily revenue |        |       |
-| Open order count updates   | Active orders appear in open orders count    |        |       |
-| Paid order count updates   | Paid orders appear in paid count             |        |       |
-| Open POS order from report | Link opens the correct POS order             |        |       |
+| Case                       | Expected Result                                                    | Result | Notes |
+| -------------------------- | ------------------------------------------------------------------ | -----: | ----- |
+| Open local reports UI      | Reports page loads                                                 |        |       |
+| Paid revenue updates       | Paid payment amount appears in daily revenue                       |        |       |
+| Open order count updates   | Active orders appear in open orders count                          |        |       |
+| Paid order count updates   | Paid orders appear in paid count                                   |        |       |
+| Open POS order from report | Link opens the correct POS order                                   |        |       |
+| Missing bearer session     | Redirects to Management login with no report body                  |        |       |
+| Staff or kitchen role      | Site-agent returns 403 with no financial data                      |        |       |
+| 04:59 / 05:00 boundaries   | Start is inclusive and next 05:00 is exclusive                     |        |       |
+| Partial and split payments | Paid principal is summed once; parent order counts only when final |        |       |
+| Refunded/pending/failed    | Rows do not contribute to paid revenue                             |        |       |
+| Cancelled same-day order   | Appears in activity but not in summary metrics                     |        |       |
+| Empty service              | Real zero metrics and a distinct empty list are shown              |        |       |
+| More than 200 orders       | Every row remains reachable through bounded pagination             |        |       |
+| Local dependency outage    | No fabricated totals; retry guidance is visible                    |        |       |
+| Internet-only outage       | Report remains available while the local stack is healthy          |        |       |
+| Luna timezone preflight    | Host and site-agent both resolve `Europe/Paris`                    |        |       |
 
 ## Regression Checks
 

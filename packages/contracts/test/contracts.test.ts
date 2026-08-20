@@ -21,6 +21,8 @@ import {
   localKitchenQueueQuerySchema,
   localKitchenQueueResponseSchema,
   localEstablishmentProfileSchema,
+  localManagementReportsQuerySchema,
+  localManagementReportsResponseSchema,
   localOrdersHomeQuerySchema,
   localOrdersHomeResponseSchema,
   localPrintSettingsSchema,
@@ -338,6 +340,70 @@ describe('@yuta/contracts', () => {
         },
       }).success,
     ).toBe(true);
+  });
+
+  it('validates the bounded local Management report transport', () => {
+    expect(
+      localManagementReportsQuerySchema.parse({ page: '2', limit: '50' }),
+    ).toEqual({ page: 2, limit: 50 });
+    expect(
+      localManagementReportsQuerySchema.safeParse({ page: 0, limit: 101 })
+        .success,
+    ).toBe(false);
+    expect(
+      localManagementReportsResponseSchema.safeParse({
+        serviceDay: {
+          start: '2026-08-20T03:00:00.000Z',
+          end: '2026-08-21T03:00:00.000Z',
+        },
+        generatedAt: '2026-08-20T12:00:00.000Z',
+        summary: {
+          paidRevenueCents: 12_450,
+          paidOrderCount: 4,
+          openOrderCount: 2,
+        },
+        orders: [
+          {
+            id,
+            orderNumber: 'POS-REPORT-1',
+            tableLabel: 'Table 4',
+            orderType: 'dine_in',
+            status: 'paid',
+            paymentMode: 'split_by_items',
+            totalCents: 3_500,
+            createdAt: '2026-08-20T10:00:00.000Z',
+            paidAt: '2026-08-20T11:00:00.000Z',
+          },
+        ],
+        pagination: {
+          page: 1,
+          pageSize: 50,
+          totalItems: 1,
+          totalPages: 1,
+        },
+      }).success,
+    ).toBe(true);
+    expect(
+      localManagementReportsResponseSchema.safeParse({
+        serviceDay: {
+          start: '2026-08-20T03:00:00.000Z',
+          end: '2026-08-21T03:00:00.000Z',
+        },
+        generatedAt: '2026-08-20T12:00:00.000Z',
+        summary: {
+          paidRevenueCents: -1,
+          paidOrderCount: 0,
+          openOrderCount: 0,
+        },
+        orders: [],
+        pagination: {
+          page: 1,
+          pageSize: 50,
+          totalItems: 0,
+          totalPages: 1,
+        },
+      }).success,
+    ).toBe(false);
   });
 
   it('keeps local user fields and PINs inside their transport boundaries', () => {

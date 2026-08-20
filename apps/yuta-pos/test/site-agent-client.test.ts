@@ -510,6 +510,48 @@ describe('yuta-pos site-agent client', () => {
     });
   });
 
+  it('loads the validated Management report with bearer authorization', async () => {
+    const report = {
+      serviceDay: {
+        start: '2026-08-20T03:00:00.000Z',
+        end: '2026-08-21T03:00:00.000Z',
+      },
+      generatedAt: checkedAt,
+      summary: {
+        paidRevenueCents: 12_450,
+        paidOrderCount: 4,
+        openOrderCount: 2,
+      },
+      orders: [],
+      pagination: {
+        page: 2,
+        pageSize: 50,
+        totalItems: 51,
+        totalPages: 2,
+      },
+    };
+    const fetchImplementation = vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(Response.json(report));
+    const client = createSiteAgentClient({
+      baseUrl: 'http://site-agent.test',
+      fetchImplementation,
+    });
+
+    await expect(
+      client.getManagementReport(sessionToken, { page: 2, limit: 50 }),
+    ).resolves.toEqual(report);
+    expect(fetchImplementation).toHaveBeenCalledWith(
+      'http://site-agent.test/api/v1/management/reports?page=2&limit=50',
+      expect.objectContaining({
+        cache: 'no-store',
+        headers: expect.objectContaining({
+          Authorization: `Bearer ${sessionToken}`,
+        }),
+      }),
+    );
+  });
+
   it('reads validated printer status without exposing device configuration', async () => {
     const status = {
       status: 'ready' as const,

@@ -51,6 +51,17 @@ reservation availability.
   or synchronizes with POS data.
 - Local POS ordering, kitchen, payment, printing, administration, and reporting
   workflows described in the POS product documentation.
+- Local Management reports use an admin/manager-protected site-agent read model
+  over POS orders and payments. It captures one 05:00 `Europe/Paris` service
+  window, aggregates paid payment principal and order counts server-side, and
+  returns a bounded activity page with direct POS order links. The capability
+  completed production-build Phase 5 QA at 1366×768, 1024×768, 768×1024, and
+  390×844 with no horizontal overflow, 44px report actions, accessible
+  pagination focus recovery, and verified empty/error/retry states. It
+  has no schema/migration, cloud sync, export, fiscal/accounting claim, polling,
+  cache, or mutation. Site-agent startup now requires and verifies
+  `TZ=Europe/Paris`; Luna host timezone configuration remains a deployment
+  preflight rather than a repository-side machine change.
 - The Kitchen queue uses a bounded site-agent read model that applies the local
   05:00 service day, production screen/status, queue projection, ordering, and
   ticket limit before returning grouped tickets and counts. It avoids the former
@@ -409,6 +420,37 @@ pending.
 A fresh production build then rendered the authenticated Documents view with no
 analysis button, fictional upload field, or synthetic review. Development was
 restored on port 3001.
+
+Wave G Phase 8 was approved for offline implementation on 2026-08-20. The
+development review can now select the current stored contract only when its
+existing server-side checksum matches the single approved repository fixture
+`wg2-digital-cdd-35h`. A dedicated tenant-scoped resolver checks the exact
+employee, document, and current version without recording a misleading
+view/download event. Only then may the local private object be opened; byte
+size, PDF signature, and SHA-256 are checked again. Unknown, stale, cross-scope,
+missing, or changed content fails before adapter access. The stored source uses
+a fixture-specific deterministic adapter by default.
+
+Signed-in OWNER QA selected the current version-2 stored fixture and completed
+the offline analysis in about 0.6 seconds. Review showed the expected CDD,
+`Chef de rang`, and 35 weekly hours with the stored-source badge and explicit
+offline disclosure.
+
+Product separately authorized exactly one provider-backed Phase 8 QA request
+with that stored fictional fixture on 2026-08-20. Development required a
+temporary `approved-once` process flag; an in-memory gate was consumed before
+the request, and the provider wrapper rechecked the exact fixture SHA-256,
+two-page shape, and complete scenario before delegating to the pinned Luna/v4
+adapter. The UI disclosed the one-time OpenAI transfer before the click. The
+single request completed in 4,486 ms with 1,107 input tokens, 152 output tokens,
+and 1,259 total tokens. It returned the expected CDD, `Chef de rang`, and 35
+weekly hours. No suggestion was selected or applied. The privileged process was
+then stopped and development was restarted without the temporary flag, so the
+stored path is offline again. Production, real personnel files, and any further
+provider request remain blocked.
+no-external-call disclosure. No suggestion was selected or applied. Browser
+logs contained no warning/error, and the page plus employee drawer had no
+horizontal overflow at 390 px.
 
 A cross-feature OpenAI eligibility dossier now records four proposed YUTA use
 cases: review analysis, reply drafting, marketing visual generation, and signed-

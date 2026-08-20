@@ -8,7 +8,11 @@ import {
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { v7 as uuidv7 } from 'uuid';
-import { readSiteAgentEnv, type SiteAgentEnv } from './env';
+import {
+  assertSiteAgentTimeZone,
+  readSiteAgentEnv,
+  type SiteAgentEnv,
+} from './env';
 import { HttpError, sendError, sendJson } from './http';
 import { siteAgentRoutes } from './routes';
 import {
@@ -97,6 +101,7 @@ function applyCors(
 
 async function startSiteAgent(): Promise<void> {
   const env = readSiteAgentEnv(process.env);
+  assertSiteAgentTimeZone(env.TZ);
   const db = createPosDatabaseClient(process.env);
   const printerWorker = env.POS_PRINTER_DEVICE
     ? createLocalPrinterWorker({

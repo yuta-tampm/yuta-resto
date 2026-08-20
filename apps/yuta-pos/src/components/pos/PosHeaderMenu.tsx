@@ -84,8 +84,12 @@ export function PosHeaderMenu({
           id={menuId}
           role="group"
           aria-label={label}
+          style={{
+            right: 0,
+            width: 'min(16rem, calc(100vw - 2rem))',
+          }}
           className={cn(
-            'absolute right-0 top-full z-30 mt-2 min-w-64 gap-2 rounded-lg border border-border-default bg-white p-3 text-primary shadow-sm [&>a]:w-full [&>button]:w-full [&>form>button]:w-full [&>form]:w-full',
+            'absolute top-full z-30 mt-2 gap-2 rounded-lg border border-border-default bg-white p-3 text-primary shadow-sm [&>a]:w-full [&>button]:w-full [&>form>button]:w-full [&>form]:w-full',
             open ? 'grid' : 'hidden',
           )}
         >

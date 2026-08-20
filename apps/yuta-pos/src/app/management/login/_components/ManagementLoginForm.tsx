@@ -34,7 +34,7 @@ export function ManagementLoginForm({ users }: { users: LocalUser[] }) {
       <input type="hidden" name="userId" value={selectedUserId} />
       <FormField label="Utilisateur">
         <Select value={selectedUserId} onValueChange={setSelectedUserId}>
-          <SelectTrigger>
+          <SelectTrigger aria-label="Utilisateur">
             <SelectValue placeholder="Choisir un utilisateur" />
           </SelectTrigger>
           <SelectContent>
@@ -49,6 +49,7 @@ export function ManagementLoginForm({ users }: { users: LocalUser[] }) {
 
       <FormField label="Code PIN" hint="Saisissez entre 4 et 8 chiffres.">
         <Input
+          aria-label="Code PIN"
           name="pin"
           type="password"
           inputMode="numeric"

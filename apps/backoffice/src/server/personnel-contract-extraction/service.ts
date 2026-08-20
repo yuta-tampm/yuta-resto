@@ -9,7 +9,10 @@ import {
 import { PDFDocument, StandardFonts } from 'pdf-lib';
 
 export type PreparedSyntheticContract = Readonly<{
-  source: 'synthetic_fixture' | 'synthetic_upload';
+  source:
+    | 'synthetic_fixture'
+    | 'synthetic_upload'
+    | 'stored_synthetic_document';
   pageCount: number;
   scenario: PersonnelContractExtractionRequest['scenario'];
   bytes?: Uint8Array;

@@ -283,6 +283,7 @@ async function main() {
     SITE_AGENT_PORT: String(siteAgentPort),
     SITE_AGENT_ALLOWED_ORIGIN: `http://localhost:${posPort}`,
     SITE_AGENT_URL: `http://127.0.0.1:${siteAgentPort}`,
+    TZ: 'Europe/Paris',
     POS_INTERNET_CHECK_URL: 'http://127.0.0.1:1/offline',
     YUTA_POS_SEED_ADMIN_PIN: String(randomInt(100_000, 1_000_000)),
     YUTA_POS_SEED_STAFF_PIN: String(randomInt(100_000, 1_000_000)),
@@ -298,6 +299,24 @@ async function main() {
   await runPnpm(['--filter', '@yuta/db-pos', 'db:seed'], {
     env: runtimeEnv,
   });
+
+  console.log('Testing reports against the disposable POS database...');
+  await runPnpm(
+    [
+      '--filter',
+      '@yuta/site-agent',
+      'exec',
+      'vitest',
+      'run',
+      'test/management-reports.integration.test.ts',
+    ],
+    {
+      env: {
+        ...runtimeEnv,
+        YUTA_ALLOW_DATABASE_INTEGRATION_TESTS: 'true',
+      },
+    },
+  );
 
   console.log('Building the POS production bundle...');
   if (existsSync(posNextEnvPath)) {

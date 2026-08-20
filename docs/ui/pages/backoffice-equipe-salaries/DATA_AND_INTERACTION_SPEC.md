@@ -2057,6 +2057,69 @@ version-mismatched, audit-invalid, or value-mismatched reviews fail closed and
 are removed when applicable. The browser sends selected allowlisted values, but
 those values authorize nothing unless they exactly match the stored review.
 
+## Wave G Phase 8 — stored fictional document offline integration
+
+Status: `IMPLEMENTED; ONE STORED-FIXTURE PROVIDER REQUEST COMPLETE`.
+
+Proposed flow:
+
+```text
+OWNER opens the development Documents review
+-> server derives trusted organization + establishment + employee scope
+-> server resolves the current signed-contract document and exact version
+-> server checks the current version's persisted checksum against one approved fixture
+-> only an eligible record permits opening the available private object
+-> server revalidates PDF limits and recomputes the allowlisted fixture hash
+-> hash match permits the existing rate limit + deterministic fixture adapter
+-> strict result enters the existing 15-minute server-owned review
+-> OWNER explicitly keeps or applies each supported field
+-> apply repeats version, audit-grant, review, and employee-revision checks
+```
+
+Repository inspection found that `personnel_document_versions` already stores
+the SHA-256 calculated during the existing upload flow. Phase 8 therefore adds
+no eligibility table or transient registry. The server-only resolver returns
+the exact current version's document ID, version, storage key, media type, byte
+size, and checksum under trusted composite scope. The browser receives only an
+eligible/unavailable result and cannot provide or modify any of those values.
+
+The separately approved provider QA added a temporary server-only
+`approved-once` gate. After the scoped resolver and storage loader had repeated
+the metadata, signature, size, and SHA-256 checks, a provider wrapper checked
+the exact SHA-256, two-page shape, and complete scenario once more. It consumed
+the gate before delegating the bytes to the existing Luna/v4 adapter. The gate
+therefore allowed at most one provider attempt in that process. The successful
+request returned three valid suggestions and its transient review; applying a
+field still required a separate OWNER choice and was not performed. The process
+was stopped after the result and restarted without the temporary gate.
+
+The current `grantPersonnelDocumentContentAccess` operation is not reused
+because it records a view/download grant. The new server-only extraction-source
+resolver repeats the existing composite
+organization + establishment + employee + document + current-version lookup
+without mislabeling extraction as viewing or downloading. Existing extraction
+requested/completed/applied audit events remain the activity evidence. No new
+table or migration is proposed.
+
+Preparation constraints remain `.pdf`, `application/pdf`, maximum 750
+KiB, `%PDF` signature, and 1–40 parseable pages. Eligibility is checked before
+storage access; size, signature, page count, and hash are checked again after
+the available object is opened. Any missing record/object, scope mismatch,
+version replacement, hash mismatch, or validation error
+fails before adapter access and clears the stored-source choice.
+
+The application-local prepared-document source vocabulary now includes
+`stored_synthetic_document`. No shared transport contract changed. The OpenAI
+adapter still rejects this source; the action selects only the new deterministic
+fixture adapter, whose frozen output matches the two-page fixture manifest.
+
+Production, test, missing environment, and any non-allowlisted document remain
+fail-closed before storage access. Offline tests cover exact-hash success,
+unknown-hash/non-development denial without storage access, changed-byte
+rejection, and a complete no-network service run. Real personnel-file
+processing remains a separate legal, privacy, security, provider, and
+operations decision.
+
 ## Wave F Phase 1 — fixture-only interaction
 
 Status: `LOCAL PROTOTYPE; NO DOCUMENT OR EMPLOYEE DATA INTEGRATION`.
