@@ -4,7 +4,6 @@ import {
   applyPersonnelContractExtractionInputSchema,
   createPersonnelEmployeeInputSchema,
   personnelContractExtractionRequestSchema,
-  personnelContractExtractionReviewResultSchema,
   setPersonnelEmployeeDepartureInputSchema,
   updatePersonnelEmployeeInputSchema,
   type PersonnelContractAmendment,
@@ -58,12 +57,13 @@ import {
 import { getBusinessDate } from './salaries-model';
 import {
   ContractExtractionServiceError,
-  DeterministicSyntheticExtractionAdapter,
   DevelopmentExtractionRateLimiter,
   runSyntheticContractExtraction,
   SyntheticContractPdfPreparer,
 } from '../../../../server/personnel-contract-extraction/service';
 import { createDevelopmentContractExtractionAdapter } from '../../../../server/personnel-contract-extraction/runtime';
+import { developmentContractExtractionReviewStore } from '../../../../server/personnel-contract-extraction/review-store';
+import { createDevelopmentSyntheticPdfLoader } from '../../../../server/personnel-contract-extraction/synthetic-upload';
 import { isContractExtractionPrototypeEnabled } from './_lib/contract-extraction-prototype-runtime';
 import { isPersonnelActionOverviewEnabled } from './_lib/personnel-action-overview-runtime';
 
@@ -277,6 +277,7 @@ export async function loadEmployeeDocumentsAction(
 
 export async function startContractExtractionAction(
   rawRequest: unknown,
+  syntheticUpload?: FormData,
 ): Promise<StartContractExtractionActionResult> {
   if (!isContractExtractionPrototypeEnabled()) {
     return extractionError(
@@ -291,6 +292,10 @@ export async function startContractExtractionAction(
   let request: PersonnelContractExtractionRequest | null = null;
   try {
     request = personnelContractExtractionRequestSchema.parse(rawRequest);
+    const loadPdf = createDevelopmentSyntheticPdfLoader(
+      syntheticUpload,
+      request.scenario,
+    );
     const result = await runSyntheticContractExtraction(request, {
       authorizeAndResolve: async (authorizedRequest) => {
         // Repeat permission checks inside the service-owned resolution step so
@@ -339,6 +344,7 @@ export async function startContractExtractionAction(
         developmentExtractionRateLimiter.consume(
           `${tenant.organizationId}:${tenant.establishmentId}`,
         ),
+      loadPdf,
       preparer: new SyntheticContractPdfPreparer(),
       adapter: createDevelopmentContractExtractionAdapter({
         scenario: request.scenario,
@@ -353,6 +359,13 @@ export async function startContractExtractionAction(
       outcomeCode: result.status,
       suggestionCount: result.suggestions.length,
     });
+    developmentContractExtractionReviewStore.save(
+      {
+        organizationId: tenant.organizationId,
+        establishmentId: tenant.establishmentId,
+      },
+      result,
+    );
     return { status: 'success', result };
   } catch (error: unknown) {
     if (request) {
@@ -385,6 +398,11 @@ export async function startContractExtractionAction(
           return extractionError(
             'timeout',
             'L’analyse locale a dépassé le délai prévu. Vous pouvez réessayer manuellement.',
+          );
+        case 'PREPARATION_FAILED':
+          return extractionError(
+            'failed',
+            'Le PDF fictif n’est pas valide ou dépasse la limite de 750 Ko.',
           );
         default:
           return extractionError(
@@ -422,6 +440,10 @@ export async function applyContractExtractionAction(
   requirePersonnelPermission(tenant, 'personnel.document.read');
   requirePersonnelPermission(tenant, 'personnel.document.extract');
   requirePersonnelPermission(tenant, 'personnel.employee.manage');
+  const reviewScope = {
+    organizationId: tenant.organizationId,
+    establishmentId: tenant.establishmentId,
+  };
 
   try {
     const input = applyPersonnelContractExtractionInputSchema.parse(rawInput);
@@ -443,6 +465,10 @@ export async function applyContractExtractionAction(
       (item) => item.id === input.request.documentId,
     );
     if (!document || document.version !== input.request.documentVersion) {
+      developmentContractExtractionReviewStore.delete(
+        reviewScope,
+        input.request.requestId,
+      );
       return {
         status: 'conflict',
         message:
@@ -451,6 +477,10 @@ export async function applyContractExtractionAction(
       };
     }
     if (!employee || employee.revision !== input.request.employeeRevision) {
+      developmentContractExtractionReviewStore.delete(
+        reviewScope,
+        input.request.requestId,
+      );
       return {
         status: 'conflict',
         message:
@@ -459,16 +489,32 @@ export async function applyContractExtractionAction(
       };
     }
 
-    const syntheticOutput = await new DeterministicSyntheticExtractionAdapter(
-      () => new Date(),
-    ).extract(input.request, {
-      source: 'synthetic_fixture',
-      pageCount: 3,
-      scenario: input.request.scenario,
-    });
-    const review =
-      personnelContractExtractionReviewResultSchema.parse(syntheticOutput);
+    const storedReview = developmentContractExtractionReviewStore.find(
+      reviewScope,
+      input.request,
+    );
+    if (storedReview.status !== 'valid') {
+      if (storedReview.status === 'mismatch') {
+        developmentContractExtractionReviewStore.delete(
+          reviewScope,
+          input.request.requestId,
+        );
+      }
+      return {
+        status: 'conflict',
+        message:
+          storedReview.status === 'expired'
+            ? 'Cette analyse a expiré. Relancez-la avant d’appliquer des champs.'
+            : 'Cette analyse temporaire n’est plus disponible. Relancez-la avant d’appliquer des champs.',
+        currentEmployee: employee,
+      };
+    }
+    const review = storedReview.review;
     if (review.status !== 'complete' && review.status !== 'partial') {
+      developmentContractExtractionReviewStore.delete(
+        reviewScope,
+        input.request.requestId,
+      );
       return {
         status: 'error',
         message: 'Cette analyse ne contient aucun champ applicable.',
@@ -487,6 +533,10 @@ export async function applyContractExtractionAction(
       },
     );
     if (reviewGrant !== 'valid') {
+      developmentContractExtractionReviewStore.delete(
+        reviewScope,
+        input.request.requestId,
+      );
       return {
         status: 'conflict',
         message:
@@ -504,6 +554,10 @@ export async function applyContractExtractionAction(
           !suggestion.issueCodes.includes('blocked_by_dependency'),
       );
       if (!matchingSuggestion) {
+        developmentContractExtractionReviewStore.delete(
+          reviewScope,
+          input.request.requestId,
+        );
         return {
           status: 'error',
           message:
@@ -554,6 +608,10 @@ export async function applyContractExtractionAction(
           (suggestion) => suggestion.field,
         ),
       },
+    );
+    developmentContractExtractionReviewStore.delete(
+      reviewScope,
+      input.request.requestId,
     );
     revalidatePath('/equipe/salaries');
     return {

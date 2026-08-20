@@ -36,6 +36,7 @@ import {
 } from '../contract-extraction-prototype-model';
 
 type ExtractionState =
+  | { status: 'idle' }
   | { status: 'loading'; message: string }
   | { status: 'ready'; result: PersonnelContractExtractionReviewResult }
   | { status: 'error'; message: string };
@@ -65,10 +66,9 @@ export function ContractExtractionPrototype({
 }) {
   const [scenario, setScenario] =
     useState<PersonnelContractExtractionScenario>('complete');
-  const [state, setState] = useState<ExtractionState>({
-    status: 'loading',
-    message: 'Préparation du PDF synthétique…',
-  });
+  const [state, setState] = useState<ExtractionState>({ status: 'idle' });
+  const [syntheticPdf, setSyntheticPdf] = useState<File | null>(null);
+  const [syntheticAttestation, setSyntheticAttestation] = useState(false);
   const [request, setRequest] =
     useState<PersonnelContractExtractionRequest | null>(null);
   const [choices, setChoices] = useState<ContractExtractionPrototypeChoices>(
@@ -76,7 +76,7 @@ export function ContractExtractionPrototype({
   );
   const [isApplying, setIsApplying] = useState(false);
   const [applyError, setApplyError] = useState<string | null>(null);
-  const started = useRef(false);
+  const syntheticPdfInputRef = useRef<HTMLInputElement>(null);
   const initialVersions = useRef({
     employeeRevision: employee.revision,
     documentId: document.id,
@@ -84,6 +84,7 @@ export function ContractExtractionPrototype({
   });
 
   async function runExtraction(nextScenario = scenario) {
+    if (syntheticPdf && !syntheticAttestation) return;
     const nextRequest: PersonnelContractExtractionRequest = {
       requestId: crypto.randomUUID(),
       employeeId: employee.id,
@@ -97,7 +98,12 @@ export function ContractExtractionPrototype({
     setRequest(nextRequest);
     setState({ status: 'loading', message: 'Analyse locale en cours…' });
     try {
-      const response = await startContractExtractionAction(nextRequest);
+      const upload = syntheticPdf ? new FormData() : undefined;
+      if (upload && syntheticPdf) {
+        upload.set('syntheticPdf', syntheticPdf);
+        upload.set('syntheticAttestation', 'fictional-only');
+      }
+      const response = await startContractExtractionAction(nextRequest, upload);
       setState(
         response.status === 'success'
           ? { status: 'ready', result: response.result }
@@ -110,14 +116,6 @@ export function ContractExtractionPrototype({
       });
     }
   }
-
-  useEffect(() => {
-    if (started.current) return;
-    started.current = true;
-    void runExtraction('complete');
-    // Exact document and employee versions define this transient review.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     const initial = initialVersions.current;
@@ -193,7 +191,9 @@ export function ContractExtractionPrototype({
               Suggestions à vérifier
             </h4>
             <Badge tone="info" size="sm">
-              Local — PDF synthétique
+              {syntheticPdf
+                ? 'Local — PDF fictif sélectionné'
+                : 'Local — PDF synthétique généré'}
             </Badge>
             <StateBadge state={state} />
           </div>
@@ -220,23 +220,115 @@ export function ContractExtractionPrototype({
       >
         <AlertTitle>Test local avec données fictives</AlertTitle>
         <AlertDescription>
-          Le contrat signé affiché n’est pas lu ni transmis. Le serveur génère
-          un PDF synthétique indépendant pour tester ce parcours local.
+          {syntheticPdf
+            ? 'Le PDF fictif choisi sera transmis au service d’analyse configuré uniquement pour cette requête. Il n’est pas enregistré dans les documents YUTA.'
+            : 'Le contrat signé affiché n’est pas lu ni transmis. Le serveur génère un PDF synthétique indépendant pour tester ce parcours local.'}
         </AlertDescription>
       </Alert>
+
+      <div className="mt-4 rounded-xl border border-border-default bg-surface p-4">
+        <label
+          htmlFor={`synthetic-contract-${document.id}`}
+          className="text-sm font-semibold"
+        >
+          PDF fictif à tester (facultatif)
+        </label>
+        <p
+          id={`synthetic-contract-help-${document.id}`}
+          className="mt-1 text-xs text-secondary"
+        >
+          PDF uniquement · 750 Ko maximum · aucune donnée réelle. Sans fichier,
+          YUTA utilise son PDF synthétique généré.
+        </p>
+        <div className="relative mt-3 flex min-h-11 w-full items-center gap-3 overflow-hidden rounded-lg border border-border-default bg-surface px-3 py-2 focus-within:ring-2 focus-within:ring-action-primary focus-within:ring-offset-2">
+          <input
+            ref={syntheticPdfInputRef}
+            id={`synthetic-contract-${document.id}`}
+            type="file"
+            accept="application/pdf,.pdf"
+            disabled={state.status === 'loading' || isApplying}
+            aria-describedby={`synthetic-contract-help-${document.id}`}
+            onChange={(event) => {
+              const file = event.currentTarget.files?.[0] ?? null;
+              setSyntheticPdf(file);
+              setSyntheticAttestation(false);
+              setScenario('complete');
+              setRequest(null);
+              setChoices({});
+              setApplyError(null);
+              setState({ status: 'idle' });
+            }}
+            className="absolute inset-0 h-full w-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
+          />
+          <span className="shrink-0 rounded-md bg-action-primary px-3 py-2 text-sm font-semibold text-on-action">
+            Choisir un PDF fictif
+          </span>
+          <span
+            className="min-w-0 truncate text-sm text-secondary"
+            aria-live="polite"
+          >
+            {syntheticPdf?.name ?? 'Aucun fichier sélectionné'}
+          </span>
+        </div>
+        {syntheticPdf && (
+          <>
+            <label className="mt-3 flex min-h-11 cursor-pointer items-start gap-3 rounded-lg border border-border-default bg-surface-muted px-3 py-2 text-sm">
+              <input
+                type="checkbox"
+                checked={syntheticAttestation}
+                disabled={state.status === 'loading' || isApplying}
+                onChange={(event) =>
+                  setSyntheticAttestation(event.currentTarget.checked)
+                }
+                className="mt-1 h-4 w-4 shrink-0 accent-current"
+              />
+              <span>
+                Je confirme que ce PDF est entièrement fictif et ne contient
+                aucune donnée d’un salarié réel.
+              </span>
+            </label>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              disabled={state.status === 'loading' || isApplying}
+              onClick={() => {
+                setSyntheticPdf(null);
+                setSyntheticAttestation(false);
+                setRequest(null);
+                setChoices({});
+                setApplyError(null);
+                setState({ status: 'idle' });
+                if (syntheticPdfInputRef.current) {
+                  syntheticPdfInputRef.current.value = '';
+                }
+              }}
+              className="mt-2"
+            >
+              Utiliser le PDF généré
+            </Button>
+          </>
+        )}
+      </div>
 
       <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-end">
         <label className="flex-1 text-sm font-semibold">
           Scénario local
           <select
             value={scenario}
-            disabled={state.status === 'loading' || isApplying}
-            onChange={(event) =>
+            disabled={
+              state.status === 'loading' || isApplying || Boolean(syntheticPdf)
+            }
+            onChange={(event) => {
               setScenario(
                 event.currentTarget
                   .value as PersonnelContractExtractionScenario,
-              )
-            }
+              );
+              setRequest(null);
+              setChoices({});
+              setApplyError(null);
+              setState({ status: 'idle' });
+            }}
             className="mt-1 min-h-11 w-full rounded-lg border border-border-default bg-surface px-3 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring"
           >
             {scenarioOptions.map((option) => (
@@ -249,14 +341,33 @@ export function ContractExtractionPrototype({
         <Button
           type="button"
           variant="secondary"
-          disabled={state.status === 'loading' || isApplying}
+          disabled={
+            state.status === 'loading' ||
+            isApplying ||
+            Boolean(syntheticPdf && !syntheticAttestation)
+          }
           onClick={() => void runExtraction()}
           className="w-full sm:w-auto"
         >
-          <RotateCcw className="h-4 w-4" aria-hidden />
-          Relancer ce scénario
+          {state.status === 'idle' ? (
+            <Sparkles className="h-4 w-4" aria-hidden />
+          ) : (
+            <RotateCcw className="h-4 w-4" aria-hidden />
+          )}
+          {state.status === 'idle'
+            ? syntheticPdf
+              ? 'Analyser ce PDF fictif'
+              : 'Analyser le PDF généré'
+            : 'Relancer ce scénario'}
         </Button>
       </div>
+
+      {state.status === 'idle' && (
+        <p className="mt-3 text-sm text-secondary" role="status">
+          Aucune requête externe ne part avant votre clic sur le bouton
+          d’analyse.
+        </p>
+      )}
 
       {state.status === 'loading' && (
         <p
@@ -487,6 +598,7 @@ function ChoiceRow({
 }
 
 function StateBadge({ state }: { state: ExtractionState }) {
+  if (state.status === 'idle') return <Badge tone="neutral">À lancer</Badge>;
   if (state.status === 'loading') return <Badge tone="neutral">Analyse</Badge>;
   if (state.status === 'error') return <Badge tone="danger">Échec</Badge>;
   if (state.result.status === 'partial')

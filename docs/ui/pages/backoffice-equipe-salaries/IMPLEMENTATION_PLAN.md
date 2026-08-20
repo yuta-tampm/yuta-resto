@@ -1588,3 +1588,54 @@ no-result, unsupported, failure, and timeout remain deterministic local state
 tests and never spend API credit.
 No schema, migration, SDK, new route, new UI, real-file path, automatic update,
 or production enablement is added.
+
+Signed-in Phase 6 QA completed on 2026-08-20. The new differing fictional PDF
+was analyzed twice through the complete scenario during review/rerun. OWNER
+selected and applied `position` plus `contractWeeklyMinutes`; the persisted
+fictional dossier shows `Responsable de salle` and 39 weekly hours, while its
+CDD type remains unchanged. The history view records analysis requested,
+analysis completed, suggestions applied, and the two-field employment update.
+Apply made no provider request. A fresh production build was served on an
+isolated port with the authenticated session: Salariés rendered normally with
+no analysis control, synthetic label, warning, or error. Development was then
+restored on port 3001.
+
+### Wave G Phase 7 — explicit fictional PDF upload
+
+Status: `IMPLEMENTED — DEVELOPMENT ONLY; PRODUCTION FAIL-CLOSED`.
+
+The review now starts idle instead of automatically invoking the configured
+adapter. OWNER may explicitly analyze the generated fixture or choose a local
+PDF, attest that it contains only fictional data, and click analysis. The
+uploaded path is restricted to the provider-backed complete scenario and
+validates `.pdf` filename, `application/pdf` media type, 750 KiB maximum, PDF
+signature, and the existing 1–40 page limit. It is never persisted and does not
+use personnel-document storage. The service loads its transient bytes only
+inside the existing authorized, version-bound extraction flow.
+
+The source tag distinguishes `synthetic_fixture` from `synthetic_upload`, while
+both use the same provider adapter, output contract, validation, rate limit,
+review, explicit apply, and audit boundaries. Partial, no-result, unsupported,
+failure, and timeout remain deterministic local scenarios. Production still
+rejects the page and action before provider access. No schema, migration, SDK,
+route, production configuration, automatic update, or real-file capability is
+added.
+
+Signed-in QA confirmed the idle no-request state, file-selection disclosure,
+disabled analysis before attestation, and locked complete scenario. The first
+apply exposed an obsolete deterministic-fixture reconstruction in the apply
+action. It is replaced by a bounded server-owned review store keyed by trusted
+organization, establishment, and request ID. The store retains only the strict
+validated result, never PDF bytes, and expires after the result's 15-minute TTL.
+Apply rechecks current versions and the persisted audit grant, matches selected
+allowlisted values against the stored review, makes no provider call, and
+deletes the review on success or invalidation.
+
+Final QA with `wg2-digital-cdd-35h.pdf` persisted only `Chef de rang` and 35
+weekly hours; CDD remained unchanged and history records the two-field apply.
+Four Phase 7 provider requests occurred across initial QA, two UI retries, and
+final verification. Usage currently reports 306 requests, 1,142,658 tokens, and
+USD 0.88, including three of those four; final-request ingestion remains pending.
+A fresh production build rendered the authenticated Documents view without the
+analysis action, upload field, or synthetic review. Development was restored on
+port 3001.

@@ -9,6 +9,7 @@ import {
   menuItems,
   orderItems,
   orders,
+  posEstablishmentProfiles,
 } from '../src/schema';
 
 config({ path: '.env.test' });
@@ -61,6 +62,9 @@ integrationTest('POS schema integration', () => {
       return;
     }
     await db.delete(orderItems).where(eq(orderItems.id, orderItemId));
+    await db
+      .delete(posEstablishmentProfiles)
+      .where(eq(posEstablishmentProfiles.id, 'default'));
     await db.delete(orders).where(eq(orders.id, orderId));
     await db.delete(menuItems).where(eq(menuItems.id, menuItemId));
     await db.delete(menuCategories).where(eq(menuCategories.id, categoryId));
@@ -85,5 +89,30 @@ integrationTest('POS schema integration', () => {
     expect(uuidVersion(item.id)).toBe(7);
     expect(item.itemNameSnapshot).toBe('Integration item snapshot');
     expect(item.orderId).toBe(orderId);
+  });
+
+  it('enforces one normalized local establishment profile', async () => {
+    const [profile] = await db
+      .insert(posEstablishmentProfiles)
+      .values({ id: 'default', displayName: 'Le Jardin Démo' })
+      .returning();
+
+    expect(profile).toMatchObject({
+      id: 'default',
+      displayName: 'Le Jardin Démo',
+      revision: 1,
+    });
+    await expect(
+      db.insert(posEstablishmentProfiles).values({
+        id: 'another',
+        displayName: 'Invalid singleton',
+      }),
+    ).rejects.toBeDefined();
+    await expect(
+      db
+        .update(posEstablishmentProfiles)
+        .set({ displayName: '  Invalid spaces  ' })
+        .where(eq(posEstablishmentProfiles.id, 'default')),
+    ).rejects.toBeDefined();
   });
 });

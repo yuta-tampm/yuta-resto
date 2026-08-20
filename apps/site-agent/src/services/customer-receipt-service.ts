@@ -27,6 +27,7 @@ import {
   ensurePrintSettings,
   readPrintSettings,
 } from './print-settings-service';
+import { readEstablishmentProfile } from './establishment-profile-service';
 
 type GetPrinterStatus = () => Promise<LocalPrinterStatus>;
 
@@ -346,6 +347,7 @@ async function buildReceiptPayload(
     | 'bottomPaddingLines'
   >,
 ) {
+  const establishmentProfile = await readEstablishmentProfile(db);
   const paymentRows = await db
     .select()
     .from(payments)
@@ -411,6 +413,9 @@ async function buildReceiptPayload(
   return {
     version: 1,
     documentType: 'non_fiscal',
+    ...(establishmentProfile
+      ? { establishmentDisplayName: establishmentProfile.displayName }
+      : {}),
     orderNumber: order.orderNumber,
     tableLabel: order.tableLabel,
     orderType: order.orderType,

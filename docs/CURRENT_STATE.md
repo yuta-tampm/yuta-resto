@@ -358,6 +358,58 @@ the current fictional dossier: `Responsable de salle`, CDI, and 39 weekly hours.
 This makes the review and apply-capable differences visible while keeping the
 stored signed document completely outside the extraction path.
 
+Signed-in local QA on 2026-08-20 completed the differing-fixture review and
+explicit OWNER apply flow. The fictional dossier changed only `position` to
+`Responsable de salle` and contractual weekly duration to 39 hours; its CDD
+type remained unchanged. The employee history records the requested/completed
+analysis events, the explicit two-field apply, and the resulting employment
+update. Two provider-backed complete-scenario requests occurred during this QA
+session; no additional call was made for apply or production verification, and
+final billed reconciliation remains pending. A fresh production build served
+the authenticated Salariés page on an isolated port with no analysis control,
+synthetic label, browser warning, or error. Development was restored afterward.
+
+The OpenAI Usage dashboard was reconciled on 2026-08-20 for the `YUTA AI Test`
+project and the 2026-08-05 through 2026-08-20 period. It reports 303 Responses
+requests and USD 0.88 total spend, matching the one smoke request, 120 initial
+benchmark requests, three later 60-document runs, and two Phase 6 QA requests.
+Because every request used `store: false`, Logs exposes no per-request records;
+USD 0.88 is final aggregate billed evidence through Phase 6, but it cannot
+allocate exact billed cost to either Phase 6 request or locally rejected result.
+
+Wave G Phase 7 adds an optional development-only upload for a completely
+fictional PDF. The OWNER must select the file, confirm that it contains no real
+employee data, and click the analysis button explicitly. Uploaded PDFs are
+limited to the complete scenario, PDF metadata and signature, 750 KiB, and 1–40
+pages. YUTA does not save the upload or read the stored signed contract; the
+temporary bytes enter the existing server adapter only after trusted permission
+and target-version checks. Opening the review no longer starts a provider call.
+Production remains fail-closed, and no schema, migration, SDK, route, automatic
+employee update, or real-file capability is added.
+
+Signed-in Phase 7 QA selected the repository fixture
+`wg2-digital-cdd-35h.pdf` and confirmed its fictional-only status. The initial
+request returned `Chef de rang`, CDD, and 35 weekly hours, but apply correctly
+failed because the old apply path rebuilt the generated fixture instead of
+using the validated upload result. Phase 7 therefore now keeps the validated
+allowlisted result in a server-owned, tenant-scoped in-memory review store for
+at most 15 minutes. Apply reads that exact result, rechecks employee/document
+versions and the audit grant, compares only selected allowlisted values, makes
+no provider request, and deletes the review after success, expiry, conflict, or
+invalid input. No PDF bytes enter this store.
+
+Four Phase 7 provider requests occurred across initial QA, two UI retries while
+the mismatch was diagnosed, and final verification. The final request completed
+in about 3.4 seconds; apply completed without provider access and persisted only
+`position = Chef de rang` plus 35 weekly hours. CDD remained unchanged, and
+history records the analysis and two-field apply. Usage currently reports 306
+requests, 1,142,658 tokens, and USD 0.88, which includes three of the four Phase
+7 requests; ingestion and billed reconciliation for the final request remain
+pending.
+A fresh production build then rendered the authenticated Documents view with no
+analysis button, fictional upload field, or synthetic review. Development was
+restored on port 3001.
+
 A cross-feature OpenAI eligibility dossier now records four proposed YUTA use
 cases: review analysis, reply drafting, marketing visual generation, and signed-
 contract extraction. It proposes separate Reputation, Creative, and Personnel

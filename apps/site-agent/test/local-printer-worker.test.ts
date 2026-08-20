@@ -96,6 +96,7 @@ describe('local TM-m30 print rendering', () => {
       payload: {
         version: 1,
         documentType: 'non_fiscal',
+        establishmentDisplayName: 'Le Jardin Démo',
         orderNumber: 'POS-1042',
         tableLabel: 'Table 8',
         orderType: 'dine_in',
@@ -136,6 +137,7 @@ describe('local TM-m30 print rendering', () => {
     const text = output.toString('ascii');
 
     expect(text).toContain('RECU DE PAIEMENT');
+    expect(text).toContain('Le Jardin Demo');
     expect(text).toContain('Document non fiscal');
     expect(text).toContain('1 x Combo Ete');
     expect(text).toContain('Remise Combo Ete');
@@ -146,6 +148,52 @@ describe('local TM-m30 print rendering', () => {
     expect(text).not.toContain('TVA');
     expect(text).not.toContain('SIRET');
     expect(countSequence(output, [0x1d, 0x56, 0x00])).toBe(1);
+  });
+
+  it('keeps legacy receipt payloads valid and omits a restaurant fallback', () => {
+    const output = renderCustomerReceiptTicket({
+      ...baseJob,
+      jobType: 'customer_receipt',
+      printerName: 'tm-m30-receipt',
+      payload: {
+        version: 1,
+        documentType: 'non_fiscal',
+        orderNumber: 'POS-LEGACY',
+        tableLabel: 'Table 1',
+        orderType: 'dine_in',
+        targetKind: 'order',
+        targetLabel: 'Commande complète',
+        createdAt: '2026-08-08T17:35:00.000Z',
+        paidAt: '2026-08-08T18:02:00.000Z',
+        items: [],
+        discounts: [],
+        subtotalCents: 1000,
+        discountCents: 0,
+        totalCents: 1000,
+        payments: [
+          {
+            method: 'card',
+            amountCents: 1000,
+            tenderedCents: null,
+            changeCents: null,
+            tipCents: 0,
+            paidBy: null,
+            paidAt: '2026-08-08T18:02:00.000Z',
+          },
+        ],
+        copies: 1,
+        fontSizePreset: 'standard',
+        topPaddingLines: 1,
+        leftPaddingChars: 2,
+        bottomPaddingLines: 2,
+      },
+    });
+    const text = output.toString('ascii');
+
+    expect(text).toContain('RECU DE PAIEMENT');
+    expect(text).not.toContain('YUTA');
+    expect(text).not.toContain('LUNA');
+    expect(text).not.toContain('Le Jardin');
   });
 
   it('renders equal split receipts without inventing item allocation', () => {

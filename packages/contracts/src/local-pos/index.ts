@@ -29,6 +29,7 @@ export const localPosRoutes = {
   printJobs: `${localPosApiBasePath}/print-jobs`,
   printTest: `${localPosApiBasePath}/print-jobs/test`,
   printSettings: `${localPosApiBasePath}/print-settings`,
+  establishmentProfile: `${localPosApiBasePath}/establishment-profile`,
   printerStatus: `${localPosApiBasePath}/printer-status`,
 } as const;
 
@@ -1201,6 +1202,31 @@ export const updateLocalPrintSettingsInputSchema = z
     path: ['counterEnabled'],
   });
 
+export const localEstablishmentDisplayNameSchema = z
+  .string()
+  .trim()
+  .min(1, 'Restaurant display name is required.')
+  .max(80, 'Restaurant display name must contain at most 80 characters.')
+  .refine(
+    (value) => !/[\u0000-\u001f\u007f]/u.test(value),
+    'Restaurant display name must not contain control characters.',
+  );
+
+export const localEstablishmentProfileSchema = z
+  .object({
+    displayName: localEstablishmentDisplayNameSchema.nullable(),
+    revision: z.number().int().nonnegative(),
+    updatedAt: isoDateTimeSchema.nullable(),
+  })
+  .strict();
+
+export const updateLocalEstablishmentProfileInputSchema = z
+  .object({
+    displayName: localEstablishmentDisplayNameSchema,
+    revision: z.coerce.number().int().nonnegative(),
+  })
+  .strict();
+
 export type SiteAgentHealthResponse = z.infer<
   typeof siteAgentHealthResponseSchema
 >;
@@ -1303,6 +1329,12 @@ export type LocalPrintJobsResponse = z.infer<
 export type PrintJobCommand = z.infer<typeof printJobCommandSchema>;
 export type PrintFontSizePreset = z.infer<typeof printFontSizePresetSchema>;
 export type LocalPrintSettings = z.infer<typeof localPrintSettingsSchema>;
+export type LocalEstablishmentProfile = z.infer<
+  typeof localEstablishmentProfileSchema
+>;
+export type UpdateLocalEstablishmentProfileInput = z.infer<
+  typeof updateLocalEstablishmentProfileInputSchema
+>;
 export type LocalPrinterStatus = z.infer<typeof localPrinterStatusSchema>;
 export type ReceiptTargetInput = z.infer<typeof receiptTargetInputSchema>;
 export type ReceiptJobIntent = z.infer<typeof receiptJobIntentSchema>;

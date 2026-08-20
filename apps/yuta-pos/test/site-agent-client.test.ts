@@ -475,6 +475,41 @@ describe('yuta-pos site-agent client', () => {
     });
   });
 
+  it('reads and updates the local establishment profile with management auth', async () => {
+    const current = { displayName: null, revision: 0, updatedAt: null };
+    const updated = {
+      displayName: 'Le Jardin Démo',
+      revision: 1,
+      updatedAt: checkedAt,
+    };
+    const fetchImplementation = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(Response.json(current))
+      .mockResolvedValueOnce(Response.json(updated));
+    const client = createSiteAgentClient({
+      baseUrl: 'http://site-agent.test',
+      fetchImplementation,
+    });
+
+    await client.getEstablishmentProfile(sessionToken);
+    await client.updateEstablishmentProfile(sessionToken, {
+      displayName: '  Le Jardin Démo  ',
+      revision: 0,
+    });
+
+    expect(fetchImplementation.mock.calls.map(([url]) => url)).toEqual([
+      'http://site-agent.test/api/v1/establishment-profile',
+      'http://site-agent.test/api/v1/establishment-profile',
+    ]);
+    expect(fetchImplementation.mock.calls[1]?.[1]).toMatchObject({
+      method: 'PATCH',
+      body: JSON.stringify({ displayName: 'Le Jardin Démo', revision: 0 }),
+      headers: expect.objectContaining({
+        Authorization: `Bearer ${sessionToken}`,
+      }),
+    });
+  });
+
   it('reads validated printer status without exposing device configuration', async () => {
     const status = {
       status: 'ready' as const,

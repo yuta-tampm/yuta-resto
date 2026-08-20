@@ -41,6 +41,7 @@ import {
   localReceiptJobStatusResponseSchema,
   localReceiptViewResponseSchema,
   localPrintSettingsSchema,
+  localEstablishmentProfileSchema,
   localPosRoutes,
   localUserResponseSchema,
   localUsersResponseSchema,
@@ -60,6 +61,7 @@ import {
   updateLocalUserInputSchema,
   updateLocalOrderItemInputSchema,
   updateLocalPrintSettingsInputSchema,
+  updateLocalEstablishmentProfileInputSchema,
   updateLocalInstructionSettingsInputSchema,
   localInstructionSettingsSchema,
   type AddLocalOrderItemInput,
@@ -91,6 +93,7 @@ import {
   type UpdateLocalUserInput,
   type UpdateLocalOrderItemInput,
   type UpdateLocalPrintSettingsInput,
+  type UpdateLocalEstablishmentProfileInput,
   type UpdateLocalInstructionSettingsInput,
 } from '@yuta/contracts/local-pos';
 import { z } from 'zod';
@@ -490,6 +493,13 @@ export function createSiteAgentClient(input?: {
         headers: { Authorization: `Bearer ${token}` },
       });
     },
+    async getEstablishmentProfile(token: string) {
+      return request(
+        localPosRoutes.establishmentProfile,
+        localEstablishmentProfileSchema,
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+    },
     async getPrinterStatus() {
       return request(localPosRoutes.printerStatus, localPrinterStatusSchema);
     },
@@ -509,6 +519,21 @@ export function createSiteAgentClient(input?: {
         headers: managementJsonHeaders(token),
         body: JSON.stringify(body),
       });
+    },
+    async updateEstablishmentProfile(
+      token: string,
+      input: UpdateLocalEstablishmentProfileInput,
+    ) {
+      const body = updateLocalEstablishmentProfileInputSchema.parse(input);
+      return request(
+        localPosRoutes.establishmentProfile,
+        localEstablishmentProfileSchema,
+        {
+          method: 'PATCH',
+          headers: managementJsonHeaders(token),
+          body: JSON.stringify(body),
+        },
+      );
     },
     async executePrintJobCommand(
       token: string,

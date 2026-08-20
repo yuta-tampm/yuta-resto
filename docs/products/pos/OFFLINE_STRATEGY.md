@@ -99,7 +99,9 @@ Capture payment
 Payment capture does not create a customer receipt job. A separate deliberate
 command may enqueue one paid non-fiscal customer receipt from an authoritative
 order/check snapshot. Internal production and customer-receipt jobs remain
-local and durable; neither depends on cloud availability.
+local and durable; neither depends on cloud availability. The source receipt
+payload may snapshot the configured local establishment display name; retries
+and reprints reuse it without a cloud lookup.
 ```
 
 Requirements:
@@ -119,8 +121,10 @@ The POS database represents one restaurant/site and is not cloud multi-tenant.
 Operational tables do not depend on `@yuta/tenant`, `organization_id`, or
 `establishment_id`.
 
-A single installation record may contain an installation ID, site ID, display
-name, and local license state.
+The dedicated singleton local establishment profile contains only the optional
+receipt display name, a revision, and update time. It is stored in `db-pos`, is
+accessed only through `site-agent`, and is not a cloud identity or license
+record.
 
 Use application-generated UUIDv7 identifiers for new business records.
 Authentication credentials, PIN verifiers, reset tokens, and other secrets use

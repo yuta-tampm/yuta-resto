@@ -1,6 +1,6 @@
 # POS Management Establishment — Data and Interaction Specification
 
-Status: Phase 0 proposal awaiting approval
+Status: Phase 4 real local integration implemented
 
 Visibility: Engineering
 
@@ -18,16 +18,27 @@ browser form
 The browser supplies only untrusted form input. Active local role/session is
 derived server-side. No cloud IDs or roles are accepted.
 
+## Phase 3 prototype boundary
+
+The implemented development-only client interaction never crosses the browser
+boundary. It compares the draft to the fixture exactly, enables reset and a
+simulated-submit status, preserves the draft, and performs no request or write.
+It intentionally does not normalize or validate input, infer role-specific edit
+rights, confirm clear/rename, or model concurrency. Those remain real vertical
+slice decisions below.
+
+Phase 3 is historical. Phase 4 removed the fixture-only boundary.
+
 ## Current and proposed mapping
 
-| Source                                  | UI/payload use              | Current truth                   | Approval gap              |
-| --------------------------------------- | --------------------------- | ------------------------------- | ------------------------- |
-| Proposed `displayName`                  | settings field              | Absent                          | storage and validation    |
-| Proposed revision token                 | stale-save guard            | Absent                          | token and CAS semantics   |
-| Local management session                | authorize read/edit         | Implemented admin/manager shell | edit-role decision        |
-| `customer_receipt` payload              | immutable name snapshot     | Version 1 has no name           | optional field/versioning |
-| Receipt renderer                        | optional centered name line | no name line                    | typography/placement      |
-| Source receipt payload on retry/reprint | exact reuse                 | implemented                     | must remain unchanged     |
+| Source                                  | UI/payload use              | Current truth             | Approval gap |
+| --------------------------------------- | --------------------------- | ------------------------- | ------------ |
+| `displayName`                           | settings field              | singleton row or null     | implemented  |
+| integer revision                        | stale-save guard            | response and PATCH CAS    | implemented  |
+| Local management session                | authorize read/edit         | active admin/manager      | implemented  |
+| `customer_receipt` payload              | immutable name snapshot     | optional version-1 field  | implemented  |
+| Receipt renderer                        | optional centered name line | omitted when absent       | implemented  |
+| Source receipt payload on retry/reprint | exact reuse                 | keeps old name or absence | implemented  |
 
 ## Nearby persistence patterns
 
@@ -37,13 +48,12 @@ repository-supported singleton approach but do not settle the profile table's
 semantic scope. They also do not implement optimistic concurrency, so their
 last-write-wins behavior must not be copied silently.
 
-## Proposed interactions
+## Implemented interactions
 
 1. Route load validates the local management session, then reads the local
    profile through site-agent.
 2. Unconfigured response returns `displayName: null` rather than a fake value.
-3. Edit submits the field plus an approved revision token if optimistic
-   concurrency is selected.
+3. Edit submits the field plus its integer revision token.
 4. Trusted Zod validation runs again at the contract/service boundary.
 5. Success returns the authoritative saved value/revision and revalidates the route.
 6. Conflict preserves submitted input and offers explicit reload/retry.
@@ -64,11 +74,12 @@ last-write-wins behavior must not be copied silently.
   than create a partially authoritative payload; exact product behavior needs approval.
 - Unconfigured name: successful receipt creation with the name line omitted.
 
-## Decisions that must not be guessed
+## Durable decisions
 
-Table/resource shape, maximum length, Unicode/control-character policy,
-admin/manager rights, clearing/rename behavior, audit/history, optimistic
-concurrency, receipt payload versioning, and later consumers.
+The table/resource, validation, admin/manager rights, no-clear rule, no-audit
+scope, revision CAS, optional compatible receipt field, and initial snapshot
+point are approved for this slice. Later consumers and any additional fields
+remain separately approval-gated.
 
 ## Expected protected tests after approval
 

@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering and restaurant operations
 
-Last updated: 2026-08-18
+Last updated: 2026-08-20
 
 `apps/yuta-pos` is the internal restaurant POS application for YuTa.
 
@@ -26,9 +26,9 @@ modify the standalone database inside `apps/yuta-display`.
 
 The canonical prioritized POS UI backlog is maintained in
 `docs/ui/pages/README.md` under `Local POS UI delivery backlog`. The next target
-is the integrated `/kitchen` page, starting at read-only Phase 0, followed by
-establishment settings, local reports, payment, the standalone split-items
-route decision, and management login. Do not repeat a broad route audit unless
+is the integrated `/kitchen` page. Establishment settings have completed the
+approved Phase 4 real vertical slice; local reports, payment, the standalone
+split-items route decision, and management login follow. Do not repeat a broad route audit unless
 repository routes or product scope have changed.
 
 ## Scope
@@ -183,6 +183,8 @@ The initial implemented API is:
 ```text
 GET  /health
 GET  /api/v1/local-users
+GET  /api/v1/establishment-profile
+PATCH /api/v1/establishment-profile
 GET  /api/v1/catalog
 PATCH /api/v1/catalog/instruction-settings
 POST /api/v1/catalog/combo-rules
@@ -247,7 +249,10 @@ An explicit paid non-fiscal customer-receipt flow is implemented on the order-
 detail route, with the action inside that page's section of the three-line menu.
 Site-agent validates the paid full order or paid split check, saves an immutable
 authoritative snapshot in a durable idempotent print job, and the local worker
-renders one non-fiscal `REÇU DE PAIEMENT` copy. Queue acceptance, printer availability, job
+renders one non-fiscal `REÇU DE PAIEMENT` copy. When a local establishment
+display name is configured, the first receipt job snapshots and prints it;
+renaming the profile never rewrites retries or reprints. Legacy and
+unconfigured payloads omit the name. Queue acceptance, printer availability, job
 failure, and physical output remain distinct. Fiscal/VAT claims, automatic
 payment-triggered printing, cloud merchant lookup, and browser device ownership
 remain excluded; the governed scope is in `docs/ui/pages/pos-order-detail/`.
@@ -494,10 +499,15 @@ persistence plus print-job state transitions.
 The POS database is single-site and is not cloud multi-tenant. POS tables do
 not use `organization_id`, `establishment_id`, or `@yuta/tenant`.
 
-A single local installation record may identify the restaurant/site for
-licensing, backup metadata, and operator display. Local staff authentication
-uses local users, roles, and PIN sessions managed by `site-agent`; it does not
-reuse cloud memberships or cloud authentication sessions.
+The dedicated singleton `pos_establishment_profiles` resource stores the
+optional local receipt display name, its compare-and-set revision, and update
+time. Active local admins and managers may read or update it through
+`site-agent`; the browser receives no database access. The name is trimmed,
+contains 1 to 80 characters, cannot be cleared, and has no cloud identity,
+licensing, legal, fiscal, address, or contact meaning. Local staff
+authentication uses local users, roles, and PIN sessions managed by
+`site-agent`; it does not reuse cloud memberships or cloud authentication
+sessions.
 
 The current `@yuta/db-pos` seed creates local admin, staff, and kitchen
 identities plus the approved Luna catalog and formulas. It creates 52 available
@@ -517,6 +527,11 @@ can manage every role; managers can manage only `staff` and `kitchen`.
 `site-agent` rejects attempts to disable or demote the last active admin.
 Role, active-state, and PIN changes increment `authVersion`, invalidating the
 affected user's existing sessions.
+
+`/management/establishment` provides the local establishment-name form. Saves
+use the current integer revision and fail on stale writes; the UI reloads the
+latest baseline while preserving the operator's draft. A rename applies only
+to future receipt snapshots.
 
 The unauthenticated local-user list remains available because the login and
 order-entry screens must present selectable local identities before a

@@ -147,6 +147,8 @@ All active database boundaries now have committed clean baselines:
   boundary;
 - `packages/db-pos/drizzle/0000_initial.sql` creates the 16-table local POS
   boundary;
+- ordered POS migrations through `0010_chubby_proemial_gods.sql` add approved
+  local capabilities, including the singleton establishment receipt profile;
 - both baselines have been applied with `db:migrate` to empty PostgreSQL
   databases;
 - both seeds are idempotent and their guarded integration suites pass on those

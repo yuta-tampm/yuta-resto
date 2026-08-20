@@ -20,6 +20,7 @@ import {
   orderItems,
   orders,
   payments,
+  posEstablishmentProfiles,
   printJobs,
 } from '@yuta/db-pos/schema';
 import { createLocalPrinterWorker } from '../src/services/local-printer-worker';
@@ -173,6 +174,9 @@ integrationTest('site-agent financial transaction integration', () => {
       await db.delete(checkItems).where(inArray(checkItems.checkId, checkIds));
     }
     await db.delete(printJobs).where(eq(printJobs.orderId, orderId));
+    await db
+      .delete(posEstablishmentProfiles)
+      .where(eq(posEstablishmentProfiles.id, 'default'));
     await db.delete(payments).where(eq(payments.orderId, orderId));
     await db.delete(checks).where(eq(checks.orderId, orderId));
     await db.delete(orderItems).where(eq(orderItems.orderId, orderId));
@@ -322,7 +326,7 @@ integrationTest('site-agent financial transaction integration', () => {
     expect(output[0]?.toString('ascii')).not.toContain('BOISSONS');
     expect(output[1]?.toString('ascii')).toContain('BOISSONS');
     expect(output[1]?.toString('ascii')).toContain('BAR');
-    expect(output[1]?.toString('ascii')).toContain('Integration Main');
+    expect(output[1]?.toString('ascii')).toContain('INTEGRATION MAIN');
     const [printedJob] = await db
       .select({ status: printJobs.status })
       .from(printJobs)
@@ -448,6 +452,10 @@ integrationTest('site-agent financial transaction integration', () => {
       target: { kind: 'check' as const, checkId: split.checks[0].id },
       intent: 'print' as const,
     };
+    await db.insert(posEstablishmentProfiles).values({
+      id: 'default',
+      displayName: 'Le Jardin Integration',
+    });
     const queuedReceipt = await service.executeReceiptCommand(
       orderId,
       receiptCommand,
@@ -467,6 +475,7 @@ integrationTest('site-agent financial transaction integration', () => {
     expect(await worker.processNext()).toBe(true);
     expect(output).toHaveLength(4);
     expect(output[3]?.toString('ascii')).toContain('RECU DE PAIEMENT');
+    expect(output[3]?.toString('ascii')).toContain('Le Jardin Integration');
     expect(output[3]?.toString('ascii')).toContain('Integration Main');
     const printedReceipt = await service.getReceiptJobStatus(
       orderId,
@@ -478,6 +487,10 @@ integrationTest('site-agent financial transaction integration', () => {
       .update(orderItems)
       .set({ itemNameSnapshot: 'Changed after receipt snapshot' })
       .where(eq(orderItems.id, mainOrderItemId));
+    await db
+      .update(posEstablishmentProfiles)
+      .set({ displayName: 'Renamed after receipt snapshot', revision: 2 })
+      .where(eq(posEstablishmentProfiles.id, 'default'));
     const reprint = await service.executeReceiptCommand(orderId, {
       operationId: receiptReprintKey,
       target: { kind: 'check', checkId: split.checks[0].id },
@@ -488,6 +501,10 @@ integrationTest('site-agent financial transaction integration', () => {
     expect(await worker.processNext()).toBe(true);
     expect(output).toHaveLength(5);
     expect(output[4]?.toString('ascii')).toContain('Integration Main');
+    expect(output[4]?.toString('ascii')).toContain('Le Jardin Integration');
+    expect(output[4]?.toString('ascii')).not.toContain(
+      'Renamed after receipt snapshot',
+    );
     expect(output[4]?.toString('ascii')).not.toContain(
       'Changed after receipt snapshot',
     );

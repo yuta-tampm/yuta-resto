@@ -11,45 +11,94 @@
 - [x] Required UI states, impact flags, non-goals, and a self-contained prompt are documented.
 - [x] No runtime, schema, migration, API, contract, fixture, design, operational data, or print job was changed.
 
-## Product-owner approval required before Phase 1
+## Phase 1 design approval
 
-- [ ] Approve the one-field first slice (`displayName`).
-- [ ] Approve the local singleton semantic owner/table shape.
-- [ ] Approve trim, Unicode/control-character, empty, and maximum-length rules.
-- [ ] Approve admin/manager read and edit rights.
-- [ ] Approve optimistic concurrency/conflict behavior.
-- [ ] Approve or reject update history/audit.
-- [ ] Approve clear and rename behavior/copy.
-- [ ] Approve receipt snapshot timing and payload compatibility approach.
-- [ ] Confirm optional omission when unconfigured and immutable old jobs after rename.
-- [ ] Confirm legal/fiscal/cloud fields stay excluded.
 - [x] Design generation was explicitly authorized and completed on 2026-08-19.
-- [ ] Decide whether an explicitly labelled fixture prototype is authorized.
-- [ ] Approve adding the `Établissement` hub card; keep reports unavailable.
+- [x] Desktop and mobile visual direction was approved on 2026-08-20.
+- [x] The generated `recus` typo is excluded from approved copy; implementation uses `reçus`.
+
+## Phase 2 component prototype
+
+- [x] The product owner explicitly approved Phase 2 on 2026-08-20.
+- [x] The typed fixture is visibly labelled as demonstration data.
+- [x] The direct route reuses the local Management session and shared shell.
+- [x] The route fails closed outside development and is absent from hub navigation.
+- [x] The field is read-only and the save action is disabled.
+- [x] No API, contract, schema, migration, persistence, receipt, or printer behavior changed.
+
+## Phase 3 prototype interactions
+
+- [x] The product owner explicitly approved Phase 3 on 2026-08-20.
+- [x] Editing and exact dirty-state comparison stay inside the client fixture boundary.
+- [x] Reset restores the fixture and clears simulated status.
+- [x] Simulated save retains input and truthfully states that nothing was persisted.
+- [x] Unapproved validation, edit-rights, clear/rename, and conflict rules were not invented.
+- [x] The existing server-derived local Management session gate remains authoritative.
+- [x] No API, contract, schema, migration, persistence, receipt, or printer behavior changed.
+
+## Phase 4 real vertical slice
+
+- [x] The product owner explicitly approved Phase 4 on 2026-08-20.
+- [x] Fixture and development-only gate were removed.
+- [x] Dedicated singleton migration and database constraints were generated and reviewed.
+- [x] Protected admin/manager GET/PATCH contracts and revision CAS are implemented.
+- [x] POS server-only client/action and real UI states preserve runtime ownership.
+- [x] The Management hub exposes the integrated `Établissement` route; reports remain unavailable.
+- [x] Initial receipt creation snapshots the optional name inside the locked transaction.
+- [x] Retry/reprint preserve the source payload after rename.
+- [x] Renderer and preview omit the name when absent and add no fiscal/legal fallback.
+- [x] Migration and integration tests ran only against disposable PostgreSQL.
+
+## Phase 5 visual and operational QA
+
+- [x] The product owner explicitly approved Phase 5 on 2026-08-20.
+- [x] The product owner completed the real configured save test; QA preserved `LUNA`.
+- [x] Production-build captures cover 1366x768, 1024x768, 768x1024, and 390x844.
+- [x] Every viewport has zero horizontal overflow and empty browser warning/error logs.
+- [x] Input, reset, and save controls measure 48px high at every viewport.
+- [x] Draft, reset, blank validation, configured copy, and recovery were verified without another save.
+- [x] Conflict, denial, outage, receipt, and immutable-reprint behavior remain covered by automated/guarded tests.
+- [x] No print job, active order, cloud request, reset, or seed was created for visual evidence.
+
+## Product decisions required before implementation/integration
+
+- [x] Approve the one-field first slice (`displayName`).
+- [x] Approve the dedicated local singleton owner/table shape.
+- [x] Approve trim, Unicode/control-character, non-empty, and 80-character rules.
+- [x] Approve admin/manager read and edit rights.
+- [x] Approve integer revision CAS and 409 conflict behavior.
+- [x] Reject update history/audit for this first slice.
+- [x] Reject clear; approve direct rename with immutable-old-receipt copy.
+- [x] Approve initial receipt snapshot timing and compatible optional version-1 field.
+- [x] Confirm optional omission when unconfigured and immutable old jobs after rename.
+- [x] Confirm legal/fiscal/cloud fields stay excluded.
+- [x] Authorize an explicitly labelled fixture prototype for Phase 2 only.
+- [x] Approve adding the `Établissement` hub card; keep reports unavailable.
 
 ## Later implementation acceptance
 
-- [ ] Browser receives no database access, bearer token, cloud scope, or trusted role input.
-- [ ] GET/PATCH fail closed without an active authorized local session.
-- [ ] Input is validated at the trusted contract/service boundary and preserved on failure.
-- [ ] Conflict prevents silent overwrite and supports recovery.
-- [ ] Unconfigured state uses no fabricated fallback.
-- [ ] Initial receipt creation snapshots the current normalized name atomically.
-- [ ] Retry/reprint preserve the source payload after rename.
-- [ ] Renderer/preview omit the line when absent and retain non-fiscal/no-VAT behavior.
-- [ ] Site-agent/database outage and expired/forbidden session states are truthful.
-- [ ] POS viewport matrix, focus, labels, status text, 44px touch targets, and no overflow pass.
-- [ ] Product/operator/QA docs and this pack match the as-built result.
+- [x] Browser receives no database access, bearer token, cloud scope, or trusted role input.
+- [x] GET/PATCH fail closed without an active authorized local session.
+- [x] Input is validated at the trusted contract/service boundary and preserved on failure.
+- [x] Conflict prevents silent overwrite and supports recovery.
+- [x] Unconfigured state uses no fabricated fallback.
+- [x] Initial receipt creation snapshots the current normalized name atomically.
+- [x] Retry/reprint preserve the source payload after rename.
+- [x] Renderer/preview omit the line when absent and retain non-fiscal/no-VAT behavior.
+- [x] Site-agent/database outage and expired/forbidden session states are truthful.
+- [x] Authenticated 1366x768, 1024x768, 768x1024, and 390x844 production matrix has labels, status text, 48px controls, and no horizontal overflow.
+- [ ] Automated Tab evidence remains open because both in-app browser keypress paths kept focus on the input; the semantic form/button implementation and visible focus styles remain intact.
+- [x] Current UI backlog and this pack match the Phase 5 as-built result.
 
 ## Verification gates
 
-- [ ] `pnpm ui:pack:check pos-management-establishment`
-- [ ] `pnpm docs:check`
-- [ ] `pnpm architecture:check`
-- [ ] `pnpm -r --if-present typecheck`
-- [ ] `pnpm format:check` or truthful baseline failure report
-- [ ] scoped contracts/db-pos/site-agent/POS tests and typechecks
-- [ ] guarded disposable-db integration tests for schema/query changes
-- [ ] `pnpm test:receipt-preview`
-- [ ] `pnpm build:pos`
-- [ ] authenticated browser evidence after implementation
+- [x] `pnpm ui:pack:check pos-management-establishment`
+- [x] `pnpm docs:check`
+- [x] `pnpm architecture:check`
+- [x] `pnpm -r --if-present typecheck`
+- [x] `pnpm format:check` reported the unchanged 23-file repository baseline
+- [x] scoped contracts/db-pos/site-agent/POS tests and typechecks
+- [x] guarded disposable db-pos and site-agent integration suites
+- [x] `pnpm test:receipt-preview`
+- [x] `pnpm build:pos`
+- [x] authenticated production-browser evidence for configured load, draft, reset, blank validation, and responsive matrix

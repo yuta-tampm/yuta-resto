@@ -2,6 +2,7 @@ import type { RouteHandler } from './types';
 import { handleAuthRoutes } from './auth';
 import { handleCatalogRoute } from './catalog';
 import { handleCustomerReceiptRoutes } from './customer-receipts';
+import { handleEstablishmentProfileRoutes } from './establishment-profile';
 import { handleHealthRoute } from './health';
 import { handleKitchenRoute } from './kitchen';
 import { handleKitchenEventsRoute } from './kitchen-events';
@@ -17,6 +18,7 @@ export const siteAgentRoutes: RouteHandler[] = [
   handleHealthRoute,
   handleAuthRoutes,
   handleLocalUsersRoute,
+  handleEstablishmentProfileRoutes,
   handleCatalogRoute,
   handleKitchenEventsRoute,
   handleKitchenRoute,

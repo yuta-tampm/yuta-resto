@@ -119,6 +119,54 @@ describe('synthetic personnel contract extraction service', () => {
     expect(calls).toEqual(['authorize', 'prepare', 'extract']);
   });
 
+  it('loads uploaded synthetic bytes only after trusted authorization', async () => {
+    const calls: string[] = [];
+    const configured = dependencies({
+      authorizeAndResolve: vi.fn(async () => {
+        calls.push('authorize');
+        return {
+          employeeRevision: request.employeeRevision,
+          documentId: request.documentId,
+          documentVersion: request.documentVersion,
+        };
+      }),
+      consumeRateLimit: vi.fn(() => calls.push('rate-limit')),
+      loadPdf: vi.fn(async () => {
+        calls.push('load-upload');
+        return {
+          source: 'synthetic_upload' as const,
+          bytes: new Uint8Array([37, 80, 68, 70]),
+        };
+      }),
+      preparer: {
+        prepare: vi.fn(async (_bytes, scenario, source) => {
+          calls.push('prepare');
+          return {
+            source: source ?? 'synthetic_fixture',
+            pageCount: 3,
+            scenario,
+          };
+        }),
+      },
+      adapter: {
+        extract: vi.fn(async () => {
+          calls.push('extract');
+          return result();
+        }),
+      },
+    });
+
+    await runSyntheticContractExtraction(request, configured);
+
+    expect(calls).toEqual([
+      'authorize',
+      'rate-limit',
+      'load-upload',
+      'prepare',
+      'extract',
+    ]);
+  });
+
   it('never prepares fixture bytes or invokes the adapter after authorization denial', async () => {
     const configured = dependencies({
       authorizeAndResolve: vi.fn().mockRejectedValue(new Error('forbidden')),

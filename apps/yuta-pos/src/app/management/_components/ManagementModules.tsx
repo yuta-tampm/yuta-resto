@@ -3,6 +3,7 @@ import {
   ChartNoAxesCombined,
   Layers3,
   Printer,
+  Store,
   Tags,
   Users,
   type LucideIcon,
@@ -38,6 +39,13 @@ const modules: readonly ManagementModule[] = [
     icon: Layers3,
     tone: 'info',
     href: '/management/combos',
+  },
+  {
+    title: 'Établissement',
+    description: 'Nom local affiché sur les nouveaux reçus non fiscaux.',
+    icon: Store,
+    tone: 'brand',
+    href: '/management/establishment',
   },
   {
     title: 'Rapports locaux',

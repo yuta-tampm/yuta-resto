@@ -9,7 +9,7 @@ vi.mock('../src/app/(authenticated)/equipe/salaries/actions', () => ({
 import { ContractExtractionPrototype } from '../src/app/(authenticated)/equipe/salaries/_components/contract-extraction-prototype';
 
 describe('ContractExtractionPrototype', () => {
-  it('labels the synthetic local boundary truthfully while analysis starts', () => {
+  it('labels the synthetic local boundary and waits for an explicit analysis click', () => {
     const markup = renderToStaticMarkup(
       <ContractExtractionPrototype
         employee={{
@@ -47,10 +47,12 @@ describe('ContractExtractionPrototype', () => {
       />,
     );
 
-    expect(markup).toContain('Local — PDF synthétique');
+    expect(markup).toContain('Local — PDF synthétique généré');
     expect(markup).toContain('Test local avec données fictives');
     expect(markup).toContain('n’est pas lu ni transmis');
-    expect(markup).toContain('Préparation du PDF synthétique');
-    expect(markup).toContain('Relancer ce scénario');
+    expect(markup).toContain('PDF fictif à tester');
+    expect(markup).toContain('750 Ko maximum');
+    expect(markup).toContain('Analyser le PDF généré');
+    expect(markup).toContain('Aucune requête externe ne part avant votre clic');
   });
 });

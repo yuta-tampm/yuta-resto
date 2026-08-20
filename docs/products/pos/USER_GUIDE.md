@@ -6,7 +6,7 @@ Visibility: Local operator
 
 Owner: YUTA restaurant operations
 
-Last updated: 2026-08-18
+Last updated: 2026-08-20
 
 This guide describes how to use the current YuTa POS MVP for internal restaurant operations.
 
@@ -510,7 +510,10 @@ From the order-detail page, open the three-line menu and select
   `Réimprimer`. Both preserve the saved receipt snapshot.
 
 The receipt contains only authoritative local order/check, item allocation,
-discount, total, payment, and timestamp data. It is not a fiscal/VAT invoice.
+discount, total, payment, and timestamp data. If configured, it also contains
+the local restaurant display name captured when the first receipt job is
+created. Renaming the restaurant does not change a failed-job retry or a
+printed-job reprint. It is not a fiscal/VAT invoice.
 
 ### Split Equally
 
@@ -687,6 +690,22 @@ mappings may be removed while their rule is inactive.
 
 Combos are applied during payment optimization. Editing an inactive rule does
 not rewrite discounts already persisted on paid orders.
+
+## Local Establishment Name
+
+Open `Gestion locale > Établissement` with an active administrator or manager
+session. Enter the restaurant display name used on future non-fiscal customer
+receipts, then select `Enregistrer`.
+
+The name must contain 1 to 80 characters, is trimmed on save, cannot contain a
+line break, and cannot be cleared once configured. It stays in the local POS
+database and is not a cloud establishment identity, legal company name, fiscal
+identity, address, or contact record. A rename affects only receipt jobs
+created afterward; queued retries and reprints retain their original snapshot.
+
+If another manager saves first, the page reports a conflict and reloads the
+latest saved value while preserving the current draft. Review it before saving
+again.
 
 ## Local Operational Reports
 

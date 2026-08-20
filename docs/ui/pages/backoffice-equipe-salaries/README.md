@@ -1015,6 +1015,45 @@ CDI, and 39 weekly hours so the fictional review shows real differences from
 the current local dossier. It remains independent from the displayed signed
 document.
 
+Signed-in OWNER QA on 2026-08-20 confirmed the full local flow. Two synthetic
+complete-scenario requests were made while reviewing and rerunning the new
+fixture. OWNER then explicitly applied only `position` and weekly duration;
+the fictional dossier now shows `Responsable de salle`, 39 hours per week, and
+its original CDD type. History exposes the analysis request/completion and
+two-field apply events. A separate production build rendered Salariés without
+the analysis button or synthetic review and without browser errors.
+
+The 2026-08-20 `YUTA AI Test` Usage snapshot reports 303 Responses requests and
+USD 0.88 total spend for 2026-08-05 through 2026-08-20. The request count matches
+all recorded synthetic calls: one smoke request, 120 initial comparison
+requests, three 60-document runs, and two Phase 6 QA requests. This closes the
+aggregate billed total for that period. `store: false` leaves Logs empty, so
+exact per-request allocation remains unavailable.
+
+Wave G Phase 7 adds a development-only choice between the existing generated
+PDF and a user-selected, entirely fictional PDF. The upload requires an explicit
+fictional-data confirmation and analysis click, accepts only a PDF up to 750 KiB
+for the complete scenario, is not persisted, and never replaces or reads the
+stored signed contract. The generated path remains available. Production and
+real personnel files remain blocked.
+
+Signed-in QA used the existing fictional fixture `wg2-digital-cdd-35h.pdf`.
+Before confirmation, analysis was disabled and the scenario was locked to
+`complete`. The first apply exposed that the old server check rebuilt the
+generated fixture and therefore rejected valid uploaded values. The corrected
+flow retains only the validated allowlisted result in a tenant-scoped in-memory
+store for at most 15 minutes; it stores no PDF. Apply verifies the current
+employee/document versions, audit grant, and selected values against that exact
+server-owned review, makes no provider call, and deletes the review afterward.
+
+Final QA persisted `Chef de rang` and 35 weekly hours while keeping CDD
+unchanged, and history records the two-field apply. Four Phase 7 provider calls
+occurred across the initial check, two retries, and final verification. Usage
+currently exposes 306 requests, 1,142,658 tokens, and USD 0.88, accounting for
+three of those four calls; the final call remains pending ingestion.
+A fresh production build exposed neither the analysis action nor the fictional
+upload UI. Development was restored afterward.
+
 The organization-level eligibility request is prepared separately in
 [`OPENAI_PROVIDER_ELIGIBILITY.md`](../../../operations/OPENAI_PROVIDER_ELIGIBILITY.md).
 It discloses the four proposed YUTA AI use cases while keeping Personnel

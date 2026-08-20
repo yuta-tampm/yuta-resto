@@ -47,6 +47,7 @@ import { HttpError } from '../http';
 import { createCatalogManagementService } from './catalog-management-service';
 import { createComboManagementService } from './combo-management-service';
 import { createCustomerReceiptService } from './customer-receipt-service';
+import { createEstablishmentProfileService } from './establishment-profile-service';
 import { createOrderCommandService } from './order-command-service';
 import { createFinancialService } from './financial-service';
 import { createLocalAuthService } from './local-auth-service';
@@ -73,6 +74,7 @@ export function createSiteAgentService(
   const financial = createFinancialService(db);
   const printing = createPrintJobService(db);
   const printSettings = createPrintSettingsService(db);
+  const establishmentProfile = createEstablishmentProfileService(db);
   const authentication = createLocalAuthService(db);
   const userManagement = createLocalUserManagementService(db);
   const catalogManagement = createCatalogManagementService(db);
@@ -596,6 +598,7 @@ export function createSiteAgentService(
     ...financial,
     ...printing,
     ...printSettings,
+    ...establishmentProfile,
     ...printerStatus,
     ...customerReceipts,
     subscribeKitchenEvents: kitchenEvents.subscribe,

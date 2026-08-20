@@ -72,7 +72,9 @@ describe('OpenAI synthetic contract extraction adapter', () => {
       onCompleted: (observation) => observations.push(observation),
     });
 
-    await expect(adapter.extract(request, document)).resolves.toMatchObject({
+    await expect(
+      adapter.extract(request, { ...document, source: 'synthetic_upload' }),
+    ).resolves.toMatchObject({
       schemaVersion: 1,
       requestId: request.requestId,
       document: { id: request.documentId, version: 2 },

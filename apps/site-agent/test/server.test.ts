@@ -645,6 +645,46 @@ describe('site-agent HTTP boundary', () => {
     expect(noDestination.status).toBe(400);
   });
 
+  it('protects and validates the local establishment profile', async () => {
+    const unauthorized = await fetch(`${baseUrl}/api/v1/establishment-profile`);
+    expect(unauthorized.status).toBe(401);
+
+    const current = await fetch(`${baseUrl}/api/v1/establishment-profile`, {
+      headers: { Authorization: `Bearer ${sessionToken}` },
+    });
+    expect(current.status).toBe(200);
+    expect(await current.json()).toEqual({
+      displayName: null,
+      revision: 0,
+      updatedAt: null,
+    });
+
+    const updated = await fetch(`${baseUrl}/api/v1/establishment-profile`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ displayName: '  Le Jardin  ', revision: 0 }),
+    });
+    expect(updated.status).toBe(200);
+    expect(await updated.json()).toEqual({
+      displayName: 'Le Jardin',
+      revision: 1,
+      updatedAt: checkedAt,
+    });
+
+    const invalid = await fetch(`${baseUrl}/api/v1/establishment-profile`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ displayName: 'Ligne 1\nLigne 2', revision: 1 }),
+    });
+    expect(invalid.status).toBe(400);
+  });
+
   it('requires UUIDv7 idempotency keys for kitchen commands', async () => {
     const response = await fetch(
       `${baseUrl}/api/v1/orders/${orderId}/commands`,
@@ -1044,6 +1084,16 @@ function createMockService(): SiteAgentService {
       bottomPaddingLines: 3,
     }),
     updatePrintSettings: async (input) => input,
+    getEstablishmentProfile: async () => ({
+      displayName: null,
+      revision: 0,
+      updatedAt: null,
+    }),
+    updateEstablishmentProfile: async (input) => ({
+      displayName: input.displayName,
+      revision: input.revision + 1,
+      updatedAt: checkedAt,
+    }),
   };
 }
 

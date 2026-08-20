@@ -991,6 +991,59 @@ Read-slice evidence:
       real-file path, or production capability was added.
 - [ ] Real personnel files and production processing remain blocked pending the
       separate provider, EU/privacy/security, and operations gates.
+- [x] Signed-in local QA used the deliberately different fictional PDF and
+      displayed review differences before apply.
+- [x] OWNER explicitly applied only position and weekly duration; CDD remained
+      unchanged.
+- [x] The fictional dossier persisted `Responsable de salle` and 39 weekly
+      hours after refresh.
+- [x] History records analysis request/completion, suggestion apply, and the
+      two-field employment update.
+- [x] Apply made no additional provider request.
+- [x] Two complete-scenario provider requests occurred during the local
+      review/rerun QA.
+- [x] Fresh production build QA rendered Salariés without the analysis control
+      or synthetic label and with no browser warning/error.
+
+## Wave G Phase 7 — explicit fictional PDF upload
+
+- [x] Opening the development review makes no automatic provider request.
+- [x] OWNER can keep the generated fixture or select a local PDF.
+- [x] An upload requires explicit confirmation that every value is fictional.
+- [x] Analysis remains disabled until the fictional-only confirmation is set.
+- [x] Uploaded input is limited to `complete`, `.pdf`, `application/pdf`, 750
+      KiB, PDF signature, and 1–40 parseable pages.
+- [x] Uploaded bytes are transient and never enter personnel-document storage.
+- [x] Trusted authorization and current employee/document versions are checked
+      before the service prepares or sends uploaded bytes.
+- [x] Generated and uploaded inputs reuse the same Luna/v4 adapter, strict result
+      validation, rate limit, transient review, explicit apply, and audit flow.
+- [x] Non-complete scenarios remain deterministic and provider-free.
+- [x] Production remains fail-closed and no schema, migration, SDK, route,
+      automatic update, or real personnel-file path was added.
+- [x] The Usage snapshot reports 303 recorded synthetic requests and USD 0.88
+      aggregate spend for 2026-08-05 through 2026-08-20.
+- [x] The 303 requests reconcile to one smoke request, 120 initial comparison
+      requests, three 60-document runs, and two Phase 6 QA requests.
+- [x] Exact per-request allocation remains unavailable because `store: false`
+      leaves no request records in Logs.
+- [x] The validated allowlisted result is retained only in a tenant-scoped,
+      request-keyed development memory store; no PDF bytes are retained.
+- [x] Apply rechecks current employee/document versions and the audit grant,
+      matches selected values against the exact server-owned review, and makes
+      no provider request.
+- [x] Missing, expired, cross-scope, mismatched, or invalid reviews fail closed
+      and are deleted when applicable; successful apply also deletes the review.
+- [x] Final signed-in QA with `wg2-digital-cdd-35h.pdf` persisted only `Chef de
+    rang` and 35 weekly hours; CDD remained unchanged.
+- [x] History records the final analysis and two-field apply.
+- [x] Four Phase 7 provider requests occurred across initial QA, two UI retries,
+      and final verification; apply made no additional request.
+- [ ] Usage ingestion includes the final Phase 7 request; the current dashboard
+      reports 306 requests, 1,142,658 tokens, and USD 0.88, including three of
+      the four Phase 7 requests.
+- [x] Fresh production build QA exposed no analysis action, fictional upload
+      field, or synthetic review; development was restored afterward.
 
 ## Wave E Phase 0 — personnel register and PDF export discovery
 

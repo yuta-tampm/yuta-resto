@@ -2024,6 +2024,39 @@ partial, no-result, unsupported, failure, and timeout selectors remain
 deterministic UI-state tests and never call the provider, even while
 `openai-synthetic` is configured.
 
+## Wave G Phase 7 — fictional upload input
+
+```text
+OWNER opens the development review
+-> no request starts automatically
+-> OWNER keeps the generated PDF or selects a fictional local PDF
+-> an uploaded file requires explicit fictional-only attestation
+-> OWNER clicks analysis
+-> server rechecks trusted permissions and current employee/document versions
+-> server loads and validates the transient synthetic bytes
+-> existing rate limit, adapter, and strict result validation
+-> server stores only the validated allowlisted review under tenant + request ID
+-> OWNER selects supported values
+-> apply reloads current versions and audit grant, then matches the stored review
+-> successful apply deletes the transient review without another provider call
+```
+
+An uploaded synthetic file is not a personnel document and is never saved to
+personnel-document storage. The browser cannot select a provider, model, prompt,
+tenant, or target version. The server accepts the upload only for `complete`,
+requires a `.pdf` name, `application/pdf`, fictional-only attestation, at most
+750 KiB, `%PDF` signature, and 1–40 parseable pages. The stored signed contract
+remains outside this path. Production rejects the review and action regardless
+of upload input or configured secrets.
+
+The development review store contains no PDF bytes, key, provider response
+envelope, or arbitrary browser payload. It holds only the validated YUTA review
+result, is keyed by trusted organization, establishment, and request ID, and
+uses the result's maximum 15-minute expiry. Missing, expired, cross-scope,
+version-mismatched, audit-invalid, or value-mismatched reviews fail closed and
+are removed when applicable. The browser sends selected allowlisted values, but
+those values authorize nothing unless they exactly match the stored review.
+
 ## Wave F Phase 1 — fixture-only interaction
 
 Status: `LOCAL PROTOTYPE; NO DOCUMENT OR EMPLOYEE DATA INTEGRATION`.

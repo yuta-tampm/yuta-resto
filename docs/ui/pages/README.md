@@ -4,7 +4,7 @@ Status: Current
 
 Visibility: Engineering
 
-Last updated: 2026-08-18
+Last updated: 2026-08-20
 
 Page packages under this directory may target any YUTA frontend application.
 Every package identifies its application, real route or screen, runtime
@@ -57,9 +57,14 @@ Current packages:
   continuous horizontal queue scrolling, and independent long-ticket
   scrolling. Phase 3 and behavior/data proposals remain approval-gated.
 
+- `pos-management-establishment/` - approved Phase 1 visual direction, Phase 2
+  component structure, and Phase 3 development-only fixture interactions for
+  `/management/establishment`; the route is not linked from the hub and the
+  real local profile capability remains approval-gated.
+
 ## Local POS UI delivery backlog
 
-This is the current route/page backlog authority as of 2026-08-18. Reuse it
+This is the current route/page backlog authority as of 2026-08-20. Reuse it
 before performing another broad POS route audit.
 
 Implemented page packs:
@@ -80,10 +85,11 @@ Prioritized remaining work:
    `EXISTING_CAPABILITY_RENEWAL` Phase 0 pack and TV-first design generation
    are complete. Next requires explicit DRAFT review; preserve service-day, station/status,
    allergy, polling, kitchen transitions, and printer/service truthfulness.
-2. `/management/establishment` - route absent; start a separate Phase 0 as
-   `NEW_PAGE` / `NEW_CAPABILITY_DISCOVERY`. First requested slice is an
-   authoritative local restaurant display name for receipt snapshots. Do not
-   infer cloud establishment identity or add runtime/schema work in Phase 0.
+2. `/management/establishment` - the approved real vertical slice and Phase 5
+   as-built QA are complete under `NEW_PAGE` / `NEW_CAPABILITY_DISCOVERY`.
+   Admins and managers can update the singleton local restaurant display name
+   through `site-agent`; new customer receipts snapshot the configured value.
+   Production release migration remains separately gated.
 3. `/management/reports` - route absent; the Management card remains
    `Prochaine étape` with `href: null`. Start a separate Phase 0 as `NEW_PAGE` /
    `NEW_CAPABILITY_DISCOVERY` for local db-pos operational reports.

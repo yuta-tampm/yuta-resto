@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-08-08
+Last updated: 2026-08-20
 
 Authority: `docs/products/pos/README.md` and
 `docs/architecture/DATABASE_BOUNDARIES.md`
@@ -590,6 +590,10 @@ printJobs {
 order-detail route. Payment flows do not create it automatically. The job stores
 an immutable authoritative local snapshot and represents one non-fiscal copy;
 the browser never supplies receipt lines, totals, printer routing, or ESC/POS.
+The version-1 payload may include the configured local establishment display
+name. It is captured only when the source receipt job is first created; retry
+and reprint jobs reuse that exact payload, and older/unconfigured payloads
+remain valid without the field.
 
 For MVP, print gateway behavior can run in mock mode and write printable content to logs or files.
 
@@ -751,6 +755,7 @@ Manage menu items
 Manage combo rules
 Manage combo rule groups
 Manage combo group items
+Manage the local establishment receipt display name
 View daily orders
 View daily revenue
 ```
@@ -760,6 +765,9 @@ Rules:
 - Combo rules must be configurable without code.
 - Extra price per eligible combo item must be supported.
 - Menu item availability must be toggleable.
+- The establishment profile is one local singleton, editable by an active admin
+  or manager with integer-revision compare-and-set. It is not cloud tenant,
+  legal, fiscal, licensing, address, or contact data.
 
 ## 14. Print Gateway MVP
 

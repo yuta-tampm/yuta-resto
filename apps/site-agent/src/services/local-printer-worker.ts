@@ -1,5 +1,6 @@
 import type { PosDatabaseExecutor } from '@yuta/db-pos/client';
 import { printJobs, type PrintJob } from '@yuta/db-pos/schema';
+import { localEstablishmentDisplayNameSchema } from '@yuta/contracts/local-pos';
 import { and, asc, eq, inArray } from 'drizzle-orm';
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
@@ -75,6 +76,7 @@ export const customerReceiptPayloadSchema = z
   .object({
     version: z.literal(1),
     documentType: z.literal('non_fiscal'),
+    establishmentDisplayName: localEstablishmentDisplayNameSchema.optional(),
     orderNumber: z.string().min(1),
     tableLabel: z.string().min(1),
     orderType: z.enum(['dine_in', 'takeaway', 'delivery']),
@@ -576,6 +578,12 @@ function renderCustomerReceipt(
   command(0x1b, 0x40);
   for (let line = 0; line < payload.topPaddingLines; line += 1) write();
   setAlign(1);
+  if (payload.establishmentDisplayName) {
+    setBold(true);
+    write(payload.establishmentDisplayName);
+    setBold(false);
+    write();
+  }
   setBold(true);
   setSize(0x11);
   write('RECU DE PAIEMENT');

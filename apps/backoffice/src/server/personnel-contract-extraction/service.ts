@@ -9,7 +9,7 @@ import {
 import { PDFDocument, StandardFonts } from 'pdf-lib';
 
 export type PreparedSyntheticContract = Readonly<{
-  source: 'synthetic_fixture';
+  source: 'synthetic_fixture' | 'synthetic_upload';
   pageCount: number;
   scenario: PersonnelContractExtractionRequest['scenario'];
   bytes?: Uint8Array;
@@ -25,6 +25,7 @@ export interface ContractPdfPreparer {
   prepare(
     bytes: Uint8Array,
     scenario: PersonnelContractExtractionRequest['scenario'],
+    source?: PreparedSyntheticContract['source'],
   ): Promise<PreparedSyntheticContract>;
 }
 
@@ -40,6 +41,12 @@ export type ContractExtractionDependencies = Readonly<{
     request: PersonnelContractExtractionRequest,
   ): Promise<ResolvedContractExtractionTarget>;
   consumeRateLimit(): void;
+  loadPdf?: () => Promise<
+    Readonly<{
+      source: PreparedSyntheticContract['source'];
+      bytes: Uint8Array;
+    }>
+  >;
   preparer: ContractPdfPreparer;
   adapter: ContractExtractionAdapter;
   timeoutMilliseconds?: number;
@@ -93,8 +100,17 @@ export async function runSyntheticContractExtraction(
 
   let prepared: PreparedSyntheticContract;
   try {
-    const bytes = await createSyntheticContractPdf();
-    prepared = await dependencies.preparer.prepare(bytes, request.scenario);
+    const input = dependencies.loadPdf
+      ? await dependencies.loadPdf()
+      : {
+          source: 'synthetic_fixture' as const,
+          bytes: await createSyntheticContractPdf(),
+        };
+    prepared = await dependencies.preparer.prepare(
+      input.bytes,
+      request.scenario,
+      input.source,
+    );
   } catch (error: unknown) {
     if (error instanceof ContractExtractionServiceError) throw error;
     throw new ContractExtractionServiceError(
@@ -145,6 +161,7 @@ export class SyntheticContractPdfPreparer implements ContractPdfPreparer {
   async prepare(
     bytes: Uint8Array,
     scenario: PersonnelContractExtractionRequest['scenario'],
+    source: PreparedSyntheticContract['source'] = 'synthetic_fixture',
   ): Promise<PreparedSyntheticContract> {
     const document = await PDFDocument.load(bytes);
     const pageCount = document.getPageCount();
@@ -154,7 +171,7 @@ export class SyntheticContractPdfPreparer implements ContractPdfPreparer {
         'PREPARATION_FAILED',
       );
     }
-    return { source: 'synthetic_fixture', pageCount, scenario, bytes };
+    return { source, pageCount, scenario, bytes };
   }
 }
 

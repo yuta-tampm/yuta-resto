@@ -258,6 +258,9 @@ N/A       not applicable for this run
 | Printed receipt reprint                   | A deliberate new job uses the printed job's immutable receipt snapshot                                       |        |       |
 | Receipt printer unavailable               | Job remains queued and UI does not claim physical output                                                     |        |       |
 | Non-fiscal receipt renderer               | One cut ticket says `REÇU DE PAIEMENT`, retains `Document non fiscal`, and contains no invented VAT identity |        |       |
+| Configured establishment receipt          | A new source job snapshots and renders the configured local display name                                     |        |       |
+| Unconfigured/legacy receipt               | Payload without the optional display name still renders with no blank identity line                          |        |       |
+| Rename after receipt creation             | Retry and reprint keep the old display-name snapshot                                                         |        |       |
 | Printer adapter processes pending jobs    | Job status changes to `printed`                                                                              |        |       |
 | Visible queue auto-refresh                | Queue and printer status changes appear within five seconds without F5                                       |        |       |
 | Hidden queue polling                      | Hidden tab stops polling and refreshes immediately when visible again                                        |        |       |
@@ -324,6 +327,18 @@ N/A       not applicable for this run
 | Duplicate local email | Normalized duplicate email is rejected without losing form values  |        |       |
 | Last active admin     | Concurrent demotion/deactivation leaves one active administrator   |        |       |
 | Reset local PIN       | PIN is hashed and existing sessions are invalidated                |        |       |
+
+## Local Establishment Management
+
+| Case                         | Expected Result                                                                 | Result | Notes |
+| ---------------------------- | ------------------------------------------------------------------------------- | -----: | ----- |
+| Open establishment UI        | Authenticated admin/manager sees the current local profile                      |        |       |
+| Configure first display name | A trimmed 1-80 character name is stored at revision 1                           |        |       |
+| Rename display name          | Revision increments and only future source receipt jobs use the new name        |        |       |
+| Empty or multiline name      | Save is rejected and no profile change persists                                 |        |       |
+| Stale concurrent save        | Compare-and-set rejects it; latest baseline reloads while the draft is retained |        |       |
+| Unauthorized request         | Missing or invalid local management session is rejected                         |        |       |
+| Local-only boundary          | No cloud organization/establishment record, key, or database access is used     |        |       |
 
 ## Local Menu Management
 

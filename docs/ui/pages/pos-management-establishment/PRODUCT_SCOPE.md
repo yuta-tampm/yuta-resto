@@ -1,6 +1,6 @@
 # POS Management Establishment — Product Scope
 
-Status: Phase 0 draft awaiting product approval
+Status: Phase 4 first vertical slice approved and implemented
 
 Visibility: Engineering
 
@@ -19,8 +19,7 @@ onto newly created non-fiscal customer receipts.
 - Omit the restaurant-name receipt line when no value is configured.
 - Preserve old queued, failed, printed, retried, and reprinted payloads exactly.
 
-This describes the requested scope, not implemented behavior. The persistence,
-contract, permissions, validation, and receipt payload changes remain proposals.
+This first vertical slice is implemented through the local POS runtime boundary.
 
 ## Current boundaries
 
@@ -40,24 +39,23 @@ rendering and physical device I/O stay site-agent-owned.
 - automatic receipt creation at payment;
 - fabricated defaults such as `YUTA` or `Luna`.
 
-## Decisions requiring approval
+## Approved first-slice decisions
 
-1. Dedicated profile singleton versus broader local-installation singleton.
-2. Exact normalization and validation: trim, minimum, maximum, line breaks,
-   control characters, Unicode/French accents, and whitespace-only input.
-3. Whether admin and manager may both edit, or manager is read-only/forbidden.
-4. Optimistic revision/`updatedAt` contract and stale-write recovery.
-5. Audit/history requirement, actor identity, reason, retention, and visibility.
-6. Whether clearing a configured name is allowed and whether it needs confirmation.
-7. Rename confirmation and copy explaining that old receipts do not change.
-8. Receipt payload field optionality, versioning, and exact snapshot point.
-9. Whether later consumers require separate approval (recommended: yes).
-10. Confirmation that the first slice is non-legal and non-fiscal.
+1. Dedicated `pos_establishment_profiles` singleton with id `default`.
+2. Trimmed Unicode/French accents, 1–80 characters, no control characters or blank value.
+3. Active local admin and manager sessions may read and edit.
+4. Integer revision CAS with 409 stale-write recovery.
+5. No audit/history in this first slice.
+6. Clearing is not allowed; unconfigured means no singleton row.
+7. Rename saves directly; UI explains that old receipt snapshots do not change.
+8. Optional compatible version-1 payload field captured during initial receipt creation.
+9. Every later consumer requires separate approval.
+10. The value is local operator identity only, never legal, fiscal, or cloud identity.
 
 ## Navigation proposal
 
-After approval, add an available `Établissement` module card on `/management`
-that links to `/management/establishment`. Reuse the current module-card pattern.
+The available `Établissement` module card on `/management` links to
+`/management/establishment` and reuses the current module-card pattern.
 Do not enable or otherwise change `Rapports locaux`.
 
 ## Relationships

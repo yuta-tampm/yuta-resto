@@ -1,6 +1,6 @@
 # POS Management Establishment — Design Handoff
 
-Status: Draft references generated; review pending
+Status: Phase 1 design approved
 
 Visibility: Engineering
 
@@ -66,7 +66,7 @@ Behavior constraints: The local runtime boundary is POS -> site-agent -> db-pos 
 
 Visual system: operational, calm, compact, highly legible; use YUTA semantic roles, Geist Sans with Inter fallback, Lucide-style icons, current cards/forms/buttons, textual states, visible focus, and no raw copied colors. Preserve a full-width operational canvas but keep the one-field form readably bounded. At 390px use one column, no horizontal overflow, and 44px minimum touch controls.
 
-Review criteria: shared-shell fidelity; one-task hierarchy; truthful proposed/unconfigured states; no invented navigation or fields; clear save, conflict, outage, and recovery communication; responsive touch-safe layout. This is a design proposal only and requires explicit review before Phase 1.
+Review criteria: shared-shell fidelity; one-task hierarchy; truthful proposed/unconfigured states; no invented navigation or fields; clear save, conflict, outage, and recovery communication; responsive touch-safe layout. The product owner approved this visual direction on 2026-08-20.
 ```
 
 ## Handoff result
@@ -77,9 +77,9 @@ The built-in image generation tool produced two draft references on 2026-08-19:
 - `references/design-proposal-01-mobile.png`.
 
 Both reuse the Management shell and keep the proposal limited to one local
-display-name field, immutable old receipts, and no cloud synchronization. They
-remain `DRAFT` pending product-owner review. The desktop subtitle renders
-`recus` instead of `reçus`; this generated-text defect is not approved copy and
-must be corrected or explicitly accepted before reference approval. No route,
-fixture, API, contract, schema, migration, operational data, receipt payload, or
-runtime behavior was created or changed.
+display-name field, immutable old receipts, and no cloud synchronization. The
+product owner approved their visual direction on 2026-08-20. The desktop
+subtitle renders `recus` instead of `reçus`; this generated-text defect is not
+approved copy and must be corrected in implementation. No route, fixture, API,
+contract, schema, migration, operational data, receipt payload, or runtime
+behavior was created or changed.

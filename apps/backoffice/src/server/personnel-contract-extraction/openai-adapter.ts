@@ -269,14 +269,15 @@ export class OpenAiContractExtractionAdapter implements ContractExtractionAdapte
   ): Promise<PersonnelContractExtractionReviewResult> {
     const bytes = document.bytes;
     if (
-      document.source !== 'synthetic_fixture' ||
+      (document.source !== 'synthetic_fixture' &&
+        document.source !== 'synthetic_upload') ||
       !bytes ||
       bytes.byteLength < 4 ||
       bytes.byteLength > MAX_SYNTHETIC_PDF_BYTES ||
       Buffer.from(bytes.subarray(0, 4)).toString('ascii') !== '%PDF'
     ) {
       throw new OpenAiContractExtractionError(
-        'Only a bounded synthetic PDF fixture can be sent for evaluation.',
+        'Only a bounded synthetic PDF can be sent for evaluation.',
         'INVALID_SYNTHETIC_DOCUMENT',
       );
     }

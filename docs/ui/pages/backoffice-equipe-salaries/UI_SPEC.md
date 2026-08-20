@@ -702,3 +702,17 @@ The development Luna/v4 integration stays behind the existing provider-neutral
 Documents review. The visible flow, French wording, states, responsive layout,
 and explicit fictional-data disclosure remain unchanged. No provider/model,
 prompt, token, cost, account, or production control is added to the UI.
+
+## Wave G Phase 7 — fictional PDF choice
+
+The development review opens idle and clearly states that no external request
+starts before an explicit click. A compact file field accepts an optional PDF
+up to 750 KiB. When no file is selected, the existing generated fixture remains
+the source. When a file is selected, the UI shows its filename, requires an
+unchecked fictional-only confirmation, locks the scenario to `complete`, and
+disables analysis until confirmation. OWNER can return to the generated PDF.
+
+Wording must say that the selected PDF is transmitted to the configured
+analysis service, is not saved in YUTA Documents, and must contain no real
+employee data. It remains provider-neutral and exposes no model, prompt, token,
+cost, account, or production control.

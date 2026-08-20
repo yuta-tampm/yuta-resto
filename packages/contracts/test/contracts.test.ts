@@ -20,6 +20,7 @@ import {
   localKitchenEventSchema,
   localKitchenQueueQuerySchema,
   localKitchenQueueResponseSchema,
+  localEstablishmentProfileSchema,
   localOrdersHomeQuerySchema,
   localOrdersHomeResponseSchema,
   localPrintSettingsSchema,
@@ -30,6 +31,7 @@ import {
   saveReplySchema,
   updateFeedbackSchema,
   updateLocalComboRuleInputSchema,
+  updateLocalEstablishmentProfileInputSchema,
   updateLocalUserInputSchema,
   updateLocalPrintSettingsInputSchema,
   resetLocalUserPinInputSchema,
@@ -271,6 +273,34 @@ describe('@yuta/contracts', () => {
         },
       }).success,
     ).toBe(true);
+  });
+
+  it('normalizes and bounds the local establishment profile', () => {
+    expect(
+      updateLocalEstablishmentProfileInputSchema.parse({
+        displayName: '  Le Jardin Démo  ',
+        revision: '0',
+      }),
+    ).toEqual({ displayName: 'Le Jardin Démo', revision: 0 });
+    expect(
+      updateLocalEstablishmentProfileInputSchema.safeParse({
+        displayName: 'Ligne 1\nLigne 2',
+        revision: 1,
+      }).success,
+    ).toBe(false);
+    expect(
+      updateLocalEstablishmentProfileInputSchema.safeParse({
+        displayName: 'x'.repeat(81),
+        revision: 1,
+      }).success,
+    ).toBe(false);
+    expect(
+      localEstablishmentProfileSchema.parse({
+        displayName: null,
+        revision: 0,
+        updatedAt: null,
+      }),
+    ).toEqual({ displayName: null, revision: 0, updatedAt: null });
   });
 
   it('validates paginated POS Home service-day transport', () => {
