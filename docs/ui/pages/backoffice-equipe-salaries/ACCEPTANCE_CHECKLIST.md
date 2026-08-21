@@ -39,6 +39,20 @@
 - [x] Completeness exposes reasons and supported actions.
 - [x] Missing-data and future actionable-event semantics are not conflated.
 - [x] Pagination does not gain configurable page size solely from the raster.
+- [x] Operational ordering defaults to newest entry date and supports name and
+      position in both directions across the complete server result.
+- [x] Ordering changes reset pagination, remain URL-addressable, and reject a
+      cursor issued for another ordering.
+- [x] Operational ordering does not change personnel-register historical order
+      or trusted establishment scope.
+- [x] Desktop selection preserves the right-side quick view and exposes
+      `Ouvrir le dossier complet`.
+- [x] Mobile employee cards open `/equipe/salaries/[employeeId]` directly.
+- [x] The full dossier repeats OWNER and trusted-establishment authorization,
+      reuses the approved tabs/actions, and hides invalid or cross-scope IDs.
+- [x] Signed-in desktop and 390 px browser QA confirms quick-view navigation,
+      direct mobile navigation, the addressable dossier, and back navigation
+      without browser warnings or errors.
 
 ## Future-wave retention gates
 
@@ -48,8 +62,10 @@
       audit, retention, failure, retry, and recovery before UI enablement.
 - [ ] A Formalités wave approves reusable data handoff, route, authorization,
       and document-specific ownership.
-- [ ] An actionable-events wave distinguishes incomplete data from upcoming
-      expiry/contract/formality events and provides real resolving actions.
+- [x] Wave D distinguishes incomplete data and missing signed contracts from
+      the approved five-day departure event, and routes each item to its real
+      resolving/review action. Unsupported expiry/formality events remain
+      absent.
 - [ ] A register wave approves route, historical ordering, dated history,
       retention, stagiaire scope, and legal/immutability guarantees.
 - [ ] PDF remains an export of structured register data and does not imply

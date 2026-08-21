@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import type { LocalKitchenEvent } from '@yuta/contracts/local-pos';
 import {
+  defaultKitchenChimeVolume,
   kitchenChimeCooldownMs,
   kitchenEventMatchesScreen,
+  parseKitchenChimeVolume,
   shouldPlayKitchenChime,
 } from '../src/app/kitchen/_lib/kitchen-live-updates';
 
@@ -15,6 +17,14 @@ const ticketCreated: LocalKitchenEvent = {
 };
 
 describe('Kitchen live updates', () => {
+  it('uses a safe persisted chime volume', () => {
+    expect(parseKitchenChimeVolume(null)).toBe(defaultKitchenChimeVolume);
+    expect(parseKitchenChimeVolume('0.7')).toBe(0.7);
+    expect(parseKitchenChimeVolume('invalid')).toBe(defaultKitchenChimeVolume);
+    expect(parseKitchenChimeVolume('0')).toBe(0.1);
+    expect(parseKitchenChimeVolume('2')).toBe(1);
+  });
+
   it('matches only the selected screen unless the event targets all', () => {
     expect(kitchenEventMatchesScreen(ticketCreated, 'kitchen')).toBe(true);
     expect(kitchenEventMatchesScreen(ticketCreated, 'counter')).toBe(false);

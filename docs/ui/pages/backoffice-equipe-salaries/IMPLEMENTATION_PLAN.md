@@ -157,7 +157,7 @@ identifier, error, date/time, and cursor-pagination conventions.
 
 Proposed boundary objects:
 
-- list query: view, search, completeness, cursor, limit;
+- list query: view, search, completeness, sort, cursor, limit;
 - employee summary: approved list fields, derived status/completeness, revision;
 - employee detail: approved identity/employment fields plus minimal history;
 - create input: approved writable fields plus idempotency key;
@@ -196,8 +196,11 @@ worker, local POS dependency, or compatibility layer is proposed.
 2. List query input is validated, but tenant scope comes only from the trusted context.
 3. Repository queries always include organization and establishment.
 4. Default ordering is deterministic: entry date descending, then employee ID.
+   OWNER may instead order by family name/given names or position/name in
+   either direction; the server applies that order to the complete result.
 5. Cursor pagination reuses repository conventions; configurable `10 / page`
-   is not introduced.
+   is not introduced. Each cursor is bound to its selected ordering and is
+   rejected if replayed under another ordering.
 6. Search is limited to approved names, poste, and qualification within the
    active establishment.
 7. Detail/history retrieval repeats scope on every joined/read table.
@@ -244,8 +247,10 @@ Each item is a separate reviewable vertical slice:
 Delivery status on 2026-08-13:
 
 - slice 1 read foundation is complete: contract, schema/migration, OWNER read
-  permission, tenant-scoped repository, real empty/list/search/filter states,
-  navigation filtering, and cross-tenant tests;
+  permission, tenant-scoped repository, real empty/list/search/filter/sort
+  states, navigation filtering, and cross-tenant tests. Sorting defaults to
+  newest entry and supports name/position in both directions with order-bound
+  opaque cursors;
 - the development database has migration `0005_lean_zzzax.sql` applied;
 - no employee fixture or production seed was added;
 - slice 2 create is complete for development: validated minimum form,

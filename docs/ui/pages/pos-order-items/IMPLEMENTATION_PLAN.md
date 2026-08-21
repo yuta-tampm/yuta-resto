@@ -1,8 +1,54 @@
 # POS Order Items - Implementation Plan
 
-Status: Implemented
+Status: Phase 0 combo-suggestion plan
 
 Visibility: Engineering
+
+## Reopened initiative — combo-completion suggestions
+
+### Phase 0 — Repository analysis and design handoff
+
+Audit the current order/catalog/combo loader, optimizer ownership, add-item
+action, locks, tests, and local runtime boundaries. Capture a real order with a
+partial combo without submitting controls. Update this stable page package and
+prepare a self-contained design prompt. Do not change runtime code or data
+models. Stop for product-owner approval.
+
+### Phase 1 — Approved visual direction
+
+Generate and review desktop and narrow studies for the compact suggestion
+shelf and its required states. Preserve the current three-panel desktop and
+stacked narrow composition. Do not implement runtime behavior, duplicate menu
+items, or invent management configuration. Stop after design approval.
+
+### Phase 2 — Pure completion projection
+
+After approval, add a tested pure domain projection that shares authoritative
+combo-optimizer semantics. Cover one-item completion, overlap/priority,
+bounded applications, unavailable and stale candidates, and deduplication.
+Keep catalog availability mapping in POS and calculation ownership outside
+React presentation. Stop for behavior review.
+
+### Phase 3 — Route-local interaction
+
+Render the approved shelf from real loader data and submit candidates through
+the existing `addOrderItemAction`. Preserve pending/error behavior, current
+locks, snapshots, validation, and non-optimistic reload. Do not add a new
+command or persistence. Stop for operator review.
+
+### Phase 4 — Integration and boundary audit
+
+Map the as-built projection to current catalog and order contracts. Confirm no
+API, contract, site-agent, db-pos, schema, authorization, payment, kitchen,
+printing, offline, or device extension occurred. Run the functional/regression
+gate before visual QA.
+
+### Phase 5 — Visual and operational QA
+
+Verify real data at 1366x768, 1024x768, 768x1024, and 390x844. Check catalog
+density, three-column preservation, mobile containment, 44px actions, search
+ownership, pending behavior, overlap correctness, and zero horizontal overflow.
+Synchronize product/operator docs and this package with the as-built result.
 
 ## Phase 0 — Repository analysis gate
 

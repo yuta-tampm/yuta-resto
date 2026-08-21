@@ -152,7 +152,13 @@ integrationTest('personnel repository tenant isolation', () => {
     const result = await listPersonnelEmployees(
       db,
       context(organizationAId, establishmentAId),
-      { view: 'active', search: '', completeness: 'all', limit: 25 },
+      {
+        view: 'active',
+        search: '',
+        completeness: 'all',
+        sort: 'entry_date_desc',
+        limit: 25,
+      },
       '2026-08-13',
     );
     expect(result.items.map((item) => item.id)).toEqual([employeeAId]);
@@ -181,7 +187,13 @@ integrationTest('personnel repository tenant isolation', () => {
           ...context(organizationAId, establishmentAId),
           establishmentId: null,
         },
-        { view: 'active', search: '', completeness: 'all', limit: 25 },
+        {
+          view: 'active',
+          search: '',
+          completeness: 'all',
+          sort: 'entry_date_desc',
+          limit: 25,
+        },
         '2026-08-13',
       ),
     ).rejects.toMatchObject({ code: 'ESTABLISHMENT_REQUIRED' });
@@ -207,6 +219,7 @@ integrationTest('personnel repository tenant isolation', () => {
           view: 'active',
           search: '',
           completeness: 'incomplete',
+          sort: 'entry_date_desc',
           limit: 25,
         },
         '2026-08-13',
@@ -226,6 +239,7 @@ integrationTest('personnel repository tenant isolation', () => {
           view: 'active',
           search: '',
           completeness: 'complete',
+          sort: 'entry_date_desc',
           limit: 25,
         },
         '2026-08-13',
@@ -235,6 +249,123 @@ integrationTest('personnel repository tenant isolation', () => {
       await db
         .delete(personnelEmployeeDossiers)
         .where(eq(personnelEmployeeDossiers.id, incompleteEmployeeId));
+    }
+  });
+
+  it('sorts and paginates the complete scoped result set', async () => {
+    const employeeIds = [uuidv7(), uuidv7(), uuidv7()];
+    await db.insert(personnelEmployeeDossiers).values([
+      {
+        ...employee(
+          employeeIds[0],
+          organizationAId,
+          establishmentA2Id,
+          'Sort 1',
+        ),
+        familyName: 'Martin',
+        givenNames: 'Alice',
+        position: 'Cuisine',
+      },
+      {
+        ...employee(
+          employeeIds[1],
+          organizationAId,
+          establishmentA2Id,
+          'Sort 2',
+        ),
+        familyName: 'Bernard',
+        givenNames: 'Zoé',
+        position: 'Salle',
+      },
+      {
+        ...employee(
+          employeeIds[2],
+          organizationAId,
+          establishmentA2Id,
+          'Sort 3',
+        ),
+        familyName: 'Martin',
+        givenNames: 'Zoé',
+        position: 'Bar',
+      },
+    ]);
+
+    try {
+      const firstPage = await listPersonnelEmployees(
+        db,
+        context(organizationAId, establishmentA2Id),
+        {
+          view: 'active',
+          search: '',
+          completeness: 'all',
+          sort: 'name_asc',
+          limit: 2,
+        },
+        '2026-08-13',
+      );
+      expect(firstPage.items.map((item) => item.familyName)).toEqual([
+        'Bernard',
+        'Isolation',
+      ]);
+      expect(firstPage.pageInfo.hasMore).toBe(true);
+      expect(firstPage.pageInfo.nextCursor).not.toBeNull();
+
+      const secondPage = await listPersonnelEmployees(
+        db,
+        context(organizationAId, establishmentA2Id),
+        {
+          view: 'active',
+          search: '',
+          completeness: 'all',
+          sort: 'name_asc',
+          cursor: firstPage.pageInfo.nextCursor ?? undefined,
+          limit: 2,
+        },
+        '2026-08-13',
+      );
+      expect(
+        secondPage.items.map((item) => `${item.familyName} ${item.givenNames}`),
+      ).toEqual(['Martin Alice', 'Martin Zoé']);
+      expect(secondPage.pageInfo.hasMore).toBe(false);
+
+      const byPosition = await listPersonnelEmployees(
+        db,
+        context(organizationAId, establishmentA2Id),
+        {
+          view: 'active',
+          search: '',
+          completeness: 'all',
+          sort: 'position_desc',
+          limit: 25,
+        },
+        '2026-08-13',
+      );
+      expect(byPosition.items.map((item) => item.position)).toEqual([
+        'Service',
+        'Salle',
+        'Cuisine',
+        'Bar',
+      ]);
+
+      await expect(
+        listPersonnelEmployees(
+          db,
+          context(organizationAId, establishmentA2Id),
+          {
+            view: 'active',
+            search: '',
+            completeness: 'all',
+            sort: 'name_desc',
+            cursor: firstPage.pageInfo.nextCursor ?? undefined,
+            limit: 2,
+          },
+          '2026-08-13',
+        ),
+      ).rejects.toMatchObject({ code: 'INVALID_CURSOR' });
+    } finally {
+      await db
+        .delete(personnelEmployeeDossiers)
+        .where(inArray(personnelEmployeeDossiers.id, employeeIds));
     }
   });
 

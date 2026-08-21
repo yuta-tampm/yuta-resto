@@ -20,7 +20,8 @@ semantic tokens, and navigation. The Équipe section has no second shell.
 
 The route began as a planned placeholder, so the original baseline status
 remains `NOT_APPLICABLE`. It now hosts real employee list, minimum creation,
-minimum editing, and confirmed non-destructive departure slices. Audit-history
+minimum editing, confirmed non-destructive departure, and server-side list
+sorting slices. Audit-history
 presentation is integrated as a bounded read-only detail tab.
 It loads on demand and provides loading, unavailable, retry, and truthful empty
 states rather than delaying the initial employee list.
@@ -29,7 +30,7 @@ states rather than delaying the initial employee list.
 
 1. `Salariés` header and `Ajouter un salarié` primary action.
 2. Compact actionable summary for active, upcoming, and incomplete records.
-3. Search and practical filters.
+3. Search, dossier-completeness filter, and operational ordering.
 4. `Actifs`, `Entrées à venir`, and `Anciens salariés` views.
 5. Responsive list: name, poste, qualification, minimal contract summary,
    entry/expected end dates, and completeness.
@@ -55,8 +56,8 @@ prototype unless repository constraints require a documented deviation:
   grid on the overview tab;
 - the `Identité` and `Relation de travail` tabs use the same responsive key-fact
   card language instead of stretching label/value rows across the wide drawer;
-- mobile list cards and a full-width detail drawer rather than a squeezed split
-  layout.
+- mobile list cards navigate to the addressable full employee dossier rather
+  than squeezing the desktop drawer into the narrow layout.
 
 After approval, typed fictional fixtures must use a demonstration-data notice
 and must not imply implemented persistence, upload, export, or generation.
@@ -67,9 +68,17 @@ Favor desktop scan speed and reachable filters/actions. Mobile may use list
 cards instead of a wide table. Progressive disclosure should hide deferred HR
 complexity. Departure requires confirmation and clear non-deletion copy.
 
-Selecting an employee row opens the read-only dossier drawer; it must not mutate
-employee data. Closing the drawer clears the selection. Pagination follows
-approved repository/product semantics. The
+Selecting a desktop employee row opens the read-only dossier quick view; it must
+not mutate employee data. The quick view exposes `Ouvrir le dossier complet`.
+Selecting a mobile card opens `/equipe/salaries/[employeeId]` directly. The full
+route repeats OWNER authorization and trusted establishment scope, reuses the
+approved dossier sections/actions, and returns not found without disclosure for
+an invalid or out-of-scope employee identifier. Closing the desktop drawer
+clears the selection. The list defaults to
+`Date d’entrée — plus récente` and supports `Nom — A à Z`, `Nom — Z à A`,
+`Poste — A à Z`, and `Poste — Z à A`. Ordering applies to the full server
+result, resets the cursor, and never changes personnel-register order.
+Pagination follows approved repository/product semantics. The
 draft image's `10 / page` control does not authorize configurable page size.
 
 ## Completeness and actionable issues

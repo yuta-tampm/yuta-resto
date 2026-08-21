@@ -14,7 +14,8 @@ Application: `apps/backoffice`
 
 Target type: `PAGE`
 
-Route / entry point: `/equipe/salaries`
+Route / entry points: `/equipe/salaries` and
+`/equipe/salaries/[employeeId]`
 
 Runtime family: `cloud`
 
@@ -43,9 +44,22 @@ No-image reference reason: `NOT_APPLICABLE`; draft desktop and mobile references
 The canonical route now uses the first real read-only vertical slice. It has a
 personnel list contract, cloud-owned employee dossier table and migration,
 OWNER-only read permission, trusted establishment context, tenant-scoped
-repository, real summary/list/search/filter states, and truthful loading,
+repository, real summary/list/search/filter/sort states, and truthful loading,
 empty, forbidden, and error behavior. Typed fictional fixtures and the state
 simulator have been removed.
+
+The operational list now defaults to entry date descending and lets OWNER sort
+the complete server result by employee name or position in either direction.
+Sorting resets pagination, is preserved in the URL, and is encoded into every
+opaque cursor so a cursor cannot be replayed under a different ordering. This
+does not change personnel-register historical order or establishment scope.
+
+Desktop selection keeps the existing right-side quick view, which now exposes
+`Ouvrir le dossier complet`. The dedicated employee URL reuses the same dossier
+sections and actions after fresh OWNER and establishment authorization. Mobile
+employee cards navigate directly to that full dossier rather than squeezing the
+desktop drawer into a narrow viewport. Invalid, missing, or cross-establishment
+employee identifiers disclose no dossier and resolve as not found.
 
 Employee creation is implemented for development with validation, duplicate
 review, idempotent retry, and atomic minimal audit. Editing of the approved
@@ -90,6 +104,8 @@ and restaurant-access records; they are not employee records.
 Current sources:
 
 - route: `apps/backoffice/src/app/(authenticated)/equipe/salaries/page.tsx`;
+- full dossier route:
+  `apps/backoffice/src/app/(authenticated)/equipe/salaries/[employeeId]/page.tsx`;
 - integrated read composition/model:
   `apps/backoffice/src/app/(authenticated)/equipe/salaries/`;
 - authenticated layout: `apps/backoffice/src/app/(authenticated)/layout.tsx`;

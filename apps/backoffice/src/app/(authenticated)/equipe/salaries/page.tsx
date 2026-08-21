@@ -33,6 +33,7 @@ export default async function Page({
     view: first(values.view),
     search: first(values.search),
     completeness: first(values.completeness),
+    sort: first(values.sort),
     cursor: first(values.cursor),
     limit: first(values.limit),
   });

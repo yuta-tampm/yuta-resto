@@ -1,5 +1,25 @@
 # POS Order Items - Acceptance Checklist
 
+## Combo-completion reopening gate
+
+- [x] The target is classified as a new `SURFACE` inside an `EXISTING_PAGE`.
+- [x] The existing page remains integrated and fixture replacement is forbidden.
+- [x] Current order, catalog, active combo rules, and add-item transport are
+      sufficient for the expected vertical slice.
+- [x] A real 1366x768 partial-combo baseline was captured without submitting a
+      control.
+- [x] Existing payment-summary optimization side effects are recorded.
+- [x] Database, API/contract, permission/auth, and runtime/device flags are `NO`.
+- [x] Shared context remains `RESOLVED` with
+      `REUSE_APPROVED_SHARED_SHELL`.
+- [x] The design prompt is ready and explicitly excludes hard-coded items,
+      duplicated products, virtual persisted categories, projected savings,
+      analytics, and new management settings.
+- [ ] Product owner approves the one-item-away qualification policy.
+- [ ] Product owner approves suggestion placement and required visual states.
+- [ ] Phase 1 design reference is generated, reviewed, and approved.
+- [ ] Runtime implementation begins only after the above approval gate.
+
 ## Repository and application
 
 - [x] Root and nearest application instructions were read.

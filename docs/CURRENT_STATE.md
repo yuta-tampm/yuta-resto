@@ -131,8 +131,16 @@ model, contracts, persistence, and tests.
 - `/equipe/salaries` now reads the establishment-owned personnel dossier table
   through an OWNER-only, server-authorized, organization-and-establishment-
   scoped repository. The former employee fixtures and simulated states are
-  removed. The empty, loading, forbidden, error, search/filter, summary, and
-  responsive list states use the real read path.
+  removed. The empty, loading, forbidden, error, search/filter, server-side
+  ordering, summary, and responsive list states use the real read path. The
+  list defaults to newest entry date and supports name or position ordering;
+  every opaque cursor is bound to its ordering so a stale cursor fails closed.
+  Desktop row selection keeps the right-side quick view and links to the
+  addressable `/equipe/salaries/[employeeId]` dossier. Mobile employee cards
+  open that full dossier directly. The detail route reauthorizes the current
+  OWNER and active establishment, returns not found for invalid or out-of-scope
+  identifiers, and reuses the existing dossier tabs, actions, and minimized
+  access audit.
 
 Employee creation is implemented for development as an atomic, OWNER-only
 vertical slice with validation, duplicate review, idempotent retry, and a

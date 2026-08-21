@@ -13,6 +13,7 @@ import {
   type PersonnelEmployeeAccessHistory,
   type PersonnelEmployeeListQuery,
   type PersonnelEmployeeListResponse,
+  type PersonnelEmployeeSort,
   type PersonnelEmployeeAuditHistory,
   type PersonnelEmployeeSummary,
   type PersonnelEmployeeView,
@@ -22,6 +23,7 @@ import {
 import { requireEstablishment, type TenantContext } from '@yuta/tenant';
 import {
   and,
+  asc,
   desc,
   eq,
   ilike,
@@ -47,9 +49,32 @@ import {
 
 type PersonnelTenantContext = TenantContext & { establishmentId: string };
 
-const cursorPayloadSchema = z
-  .object({ entryDate: z.string().date(), id: z.string().uuid() })
-  .strict();
+const cursorPayloadSchema = z.discriminatedUnion('sort', [
+  z
+    .object({
+      sort: z.literal('entry_date_desc'),
+      entryDate: z.string().date(),
+      id: z.string().uuid(),
+    })
+    .strict(),
+  z
+    .object({
+      sort: z.enum(['name_asc', 'name_desc']),
+      familyName: z.string().max(120),
+      givenNames: z.string().max(120),
+      id: z.string().uuid(),
+    })
+    .strict(),
+  z
+    .object({
+      sort: z.enum(['position_asc', 'position_desc']),
+      position: z.string().max(120),
+      familyName: z.string().max(120),
+      givenNames: z.string().max(120),
+      id: z.string().uuid(),
+    })
+    .strict(),
+]);
 const accessCursorPayloadSchema = z
   .object({ createdAt: z.string().datetime(), id: z.string().uuid() })
   .strict();
@@ -99,15 +124,8 @@ export async function listPersonnelEmployees(
       : query.completeness === 'complete'
         ? sql`not (${incompleteCondition})`
         : undefined;
-  const cursorCondition = cursor
-    ? or(
-        lt(personnelEmployeeDossiers.entryDate, cursor.entryDate),
-        and(
-          eq(personnelEmployeeDossiers.entryDate, cursor.entryDate),
-          lt(personnelEmployeeDossiers.id, cursor.id),
-        ),
-      )
-    : undefined;
+  const cursorCondition = getEmployeeCursorCondition(query.sort, cursor);
+  const orderBy = getEmployeeOrderBy(query.sort);
 
   const [rows, countsRows] = await Promise.all([
     db
@@ -122,10 +140,7 @@ export async function listPersonnelEmployees(
           cursorCondition,
         ),
       )
-      .orderBy(
-        desc(personnelEmployeeDossiers.entryDate),
-        desc(personnelEmployeeDossiers.id),
-      )
+      .orderBy(...orderBy)
       .limit(query.limit + 1),
     db
       .select({
@@ -167,7 +182,7 @@ export async function listPersonnelEmployees(
       hasMore,
       nextCursor:
         hasMore && lastRow
-          ? encodeCursor({ entryDate: lastRow.entryDate, id: lastRow.id })
+          ? encodeCursor(createEmployeeCursor(query.sort, lastRow))
           : null,
     },
   };
@@ -1367,6 +1382,101 @@ function escapeLike(value: string): string {
     .replaceAll('\\', '\\\\')
     .replaceAll('%', '\\%')
     .replaceAll('_', '\\_');
+}
+
+type EmployeeCursor = z.infer<typeof cursorPayloadSchema>;
+type EmployeeCursorRow = Pick<
+  PersonnelEmployeeSummary,
+  'id' | 'entryDate' | 'familyName' | 'givenNames' | 'position'
+>;
+
+function getEmployeeCursorCondition(
+  sort: PersonnelEmployeeSort,
+  cursor: EmployeeCursor | null,
+): SQL | undefined {
+  if (!cursor) return undefined;
+  if (cursor.sort !== sort) {
+    throw new PersonnelRepositoryError(
+      'Invalid pagination cursor.',
+      'INVALID_CURSOR',
+    );
+  }
+
+  switch (cursor.sort) {
+    case 'entry_date_desc':
+      return sql`(${personnelEmployeeDossiers.entryDate}, ${personnelEmployeeDossiers.id}) < (${cursor.entryDate}::date, ${cursor.id}::uuid)`;
+    case 'name_asc':
+      return sql`(${personnelEmployeeDossiers.familyName}, ${personnelEmployeeDossiers.givenNames}, ${personnelEmployeeDossiers.id}) > (${cursor.familyName}, ${cursor.givenNames}, ${cursor.id}::uuid)`;
+    case 'name_desc':
+      return sql`(${personnelEmployeeDossiers.familyName}, ${personnelEmployeeDossiers.givenNames}, ${personnelEmployeeDossiers.id}) < (${cursor.familyName}, ${cursor.givenNames}, ${cursor.id}::uuid)`;
+    case 'position_asc':
+      return sql`(${personnelEmployeeDossiers.position}, ${personnelEmployeeDossiers.familyName}, ${personnelEmployeeDossiers.givenNames}, ${personnelEmployeeDossiers.id}) > (${cursor.position}, ${cursor.familyName}, ${cursor.givenNames}, ${cursor.id}::uuid)`;
+    case 'position_desc':
+      return sql`(${personnelEmployeeDossiers.position}, ${personnelEmployeeDossiers.familyName}, ${personnelEmployeeDossiers.givenNames}, ${personnelEmployeeDossiers.id}) < (${cursor.position}, ${cursor.familyName}, ${cursor.givenNames}, ${cursor.id}::uuid)`;
+  }
+}
+
+function getEmployeeOrderBy(sort: PersonnelEmployeeSort): SQL[] {
+  switch (sort) {
+    case 'entry_date_desc':
+      return [
+        desc(personnelEmployeeDossiers.entryDate),
+        desc(personnelEmployeeDossiers.id),
+      ];
+    case 'name_asc':
+      return [
+        asc(personnelEmployeeDossiers.familyName),
+        asc(personnelEmployeeDossiers.givenNames),
+        asc(personnelEmployeeDossiers.id),
+      ];
+    case 'name_desc':
+      return [
+        desc(personnelEmployeeDossiers.familyName),
+        desc(personnelEmployeeDossiers.givenNames),
+        desc(personnelEmployeeDossiers.id),
+      ];
+    case 'position_asc':
+      return [
+        asc(personnelEmployeeDossiers.position),
+        asc(personnelEmployeeDossiers.familyName),
+        asc(personnelEmployeeDossiers.givenNames),
+        asc(personnelEmployeeDossiers.id),
+      ];
+    case 'position_desc':
+      return [
+        desc(personnelEmployeeDossiers.position),
+        desc(personnelEmployeeDossiers.familyName),
+        desc(personnelEmployeeDossiers.givenNames),
+        desc(personnelEmployeeDossiers.id),
+      ];
+  }
+}
+
+function createEmployeeCursor(
+  sort: PersonnelEmployeeSort,
+  row: EmployeeCursorRow,
+): EmployeeCursor {
+  switch (sort) {
+    case 'entry_date_desc':
+      return { sort, entryDate: row.entryDate, id: row.id };
+    case 'name_asc':
+    case 'name_desc':
+      return {
+        sort,
+        familyName: row.familyName,
+        givenNames: row.givenNames,
+        id: row.id,
+      };
+    case 'position_asc':
+    case 'position_desc':
+      return {
+        sort,
+        position: row.position,
+        familyName: row.familyName,
+        givenNames: row.givenNames,
+        id: row.id,
+      };
+  }
 }
 
 function encodeCursor(value: z.infer<typeof cursorPayloadSchema>): string {

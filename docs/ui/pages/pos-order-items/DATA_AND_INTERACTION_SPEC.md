@@ -1,6 +1,6 @@
 # POS Order Items - Data and Interaction Specification
 
-Status: Phase 4 audited
+Status: Phase 0 combo-suggestion audit
 
 Visibility: Engineering
 
@@ -43,6 +43,37 @@ success screen. `Créer une autre commande` navigates to `/pos`; `Retour aux
 commandes` navigates to `/`. The screen counts down for five seconds and then
 automatically navigates to the approved home route `/` if the operator has not
 already chosen an action.
+
+## Proposed combo-completion projection
+
+The current loader already supplies all expected input:
+
+- non-cancelled order items with menu-item ID, quantity, price snapshot, and
+  creation time;
+- active combo rules with priority, maximum applications, groups, quantity
+  ranges, eligible menu-item IDs, and extra prices;
+- catalog category activity, item availability, item price, sort order, and
+  name.
+
+The proposed pure projection compares the authoritative optimizer result for
+the current order with the result after hypothetically adding one available
+catalog item. A candidate is emitted only when the hypothetical order gains an
+additional positive combo application. The result contains stable rule and
+menu-item identifiers plus presentation-neutral ordering metadata; POS maps
+those identifiers back to current catalog copy and price.
+
+The projection must not persist the hypothetical item, mutate totals, replace
+payment-time optimization, or become a second pricing engine. Candidate click
+uses the existing `addOrderItemAction`, after which the route reloads the
+authoritative persisted order normally.
+
+Expected presentation state is ephemeral. No suggestion, dismissal, click,
+impression, ranking, or selected candidate is stored.
+
+Required edge cases are overlapping rules, higher-priority item consumption,
+already-complete rules, unlimited and bounded applications, multi-quantity
+groups, duplicate candidates, unavailable items, inactive categories, stale
+eligible IDs, cancelled order items, locked orders, and action pending/error.
 
 ## Mutations / actions / transactions
 

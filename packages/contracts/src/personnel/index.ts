@@ -11,6 +11,13 @@ export const personnelCompletenessFilterSchema = z.enum([
   'complete',
   'incomplete',
 ]);
+export const personnelEmployeeSortSchema = z.enum([
+  'entry_date_desc',
+  'name_asc',
+  'name_desc',
+  'position_asc',
+  'position_desc',
+]);
 export const personnelEmploymentTermTypeSchema = z.enum([
   'indefinite',
   'fixed_term',
@@ -47,6 +54,7 @@ export const personnelEmployeeListQuerySchema = z
     view: personnelEmployeeViewSchema.default('active'),
     search: z.string().trim().max(120).default(''),
     completeness: personnelCompletenessFilterSchema.default('all'),
+    sort: personnelEmployeeSortSchema.default('entry_date_desc'),
     cursor: z.string().max(500).optional(),
     limit: z.coerce.number().int().min(1).max(100).default(25),
   })
@@ -790,6 +798,7 @@ export type PersonnelCompletenessReason = z.infer<
 export type PersonnelCompletenessFilter = z.infer<
   typeof personnelCompletenessFilterSchema
 >;
+export type PersonnelEmployeeSort = z.infer<typeof personnelEmployeeSortSchema>;
 export type PersonnelEmployeeListQuery = z.infer<
   typeof personnelEmployeeListQuerySchema
 >;

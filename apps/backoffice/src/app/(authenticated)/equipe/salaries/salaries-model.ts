@@ -4,6 +4,10 @@ export function getEmployeeName(employee: PersonnelEmployeeSummary): string {
   return `${employee.givenNames} ${employee.familyName}`;
 }
 
+export function getEmployeeDossierHref(employeeId: string): string {
+  return `/equipe/salaries/${employeeId}`;
+}
+
 export function getEmployeeInitials(
   employee: PersonnelEmployeeSummary,
 ): string {

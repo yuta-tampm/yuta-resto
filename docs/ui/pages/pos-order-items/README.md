@@ -1,6 +1,6 @@
 # POS Order Items
 
-Status: Implemented
+Status: Design — combo-completion suggestions reopening
 
 Visibility: Engineering
 
@@ -22,11 +22,11 @@ Implementation class: `integrated`
 
 Delivery mode: `EXISTING_CAPABILITY_RENEWAL`
 
-Package status: `implemented`
+Package status: `design`
 
-Scope status: `APPROVED`
+Scope status: `DRAFT`
 
-Reference status: `APPROVED`
+Reference status: `DRAFT`
 
 Inventory status: `COMPLETE`
 
@@ -45,6 +45,93 @@ catalog, payment state, instruction settings, and combo context through
 category rail, route-local searchable item browser, desktop order summary,
 mobile order dialog, item instruction/allergy dialog, kitchen-send action, and
 real links to order detail and payment.
+
+## 2026-08-21 Phase 0 reopening — combo-completion suggestions
+
+The product owner requested a data-driven shortcut for high-frequency combo
+completion, initially observed as staff selecting a Gua Bao and then having to
+find the eligible house iced tea in another category. The proposal must reuse
+the existing catalog item and combo configuration; it must not duplicate a menu
+item, create a virtual persisted category, or hard-code a product name or ID.
+
+1. **Target:** route-local suggestion surface inside the existing dynamic page
+   `/orders/[orderId]/items`.
+2. **Target type:** `SURFACE` hosted by an `EXISTING_PAGE`.
+3. **Capability classification:** the page, catalog, order mutations, combo
+   management, and combo pricing are existing and integrated; combo-completion
+   suggestions are a new flow over that proven domain. Use
+   `NEW_CAPABILITY_DISCOVERY` for the new flow while preserving the existing
+   page in place and using real data from the first implementation slice.
+4. **Implementation class:** `integrated` because the surface depends on the
+   current persisted order, active catalog, active combo rules, and the existing
+   add-item Server Action.
+5. **Current data availability:** `posApi.getPaymentViewData()` already returns
+   the order, catalog, and active combo rules. The catalog contract already
+   contains rule priority, maximum applications, groups, quantities, eligible
+   menu-item IDs, and per-item extra price. No new loader or transport is
+   expected.
+6. **Current mutation path:** candidate selection must submit the existing
+   `addOrderItemAction`; site-agent continues to own availability checks,
+   ordering policy, snapshots, totals, locks, and transactions.
+7. **Calculation ownership:** presentation code must not reproduce combo
+   matching. The approved implementation should add or reuse a pure
+   `@yuta/core` projection that shares the authoritative
+   `calculateComboDiscounts` semantics, then let POS map returned item IDs to
+   currently available catalog items.
+8. **Initial product policy proposal:** show only one-item-away completions. A
+   candidate qualifies only when hypothetically adding one unit causes the
+   authoritative optimizer to produce one additional positive combo
+   application. This avoids noisy multi-step upsell and respects rule priority,
+   overlap, quantities, and `maxApplications`.
+9. **Current active-rule evidence:** the local catalog exposed `Menu Gourmand`
+   priority 10, `Gua Bao Happy` priority 20, `Menu Express` priority 30, and
+   `Combo Été` priority 40. Gua Bao items overlap Gourmand, Happy, and Express,
+   so name/category matching would be incorrect.
+10. **Candidate filtering:** later implementation must exclude unavailable
+    items, items under inactive categories, missing catalog references, and
+    candidates that do not improve an optimizer result. Duplicate candidate
+    items are shown once under the highest-priority qualifying rule.
+11. **Expected UI boundary:** a compact French `Compléter …` suggestion shelf
+    below catalog search and above the normal item grid. It is omitted when no
+    truthful candidate exists, the order cannot be edited, or an active search
+    query owns the result context.
+12. **Protected behavior:** preserve all current loader side effects, order and
+    payment locks, item snapshots, ordering policies, variants, instructions,
+    allergies, kitchen send, printing, staff attribution, totals, and payment
+    combo calculation.
+13. **Trust/runtime:** service-time staff selection remains attribution rather
+    than authentication. POS still uses
+    `apps/yuta-pos -> apps/site-agent -> packages/db-pos -> local PostgreSQL`.
+14. **Offline/device:** no offline mutation queue, realtime path, printer
+    routing, or device behavior is introduced.
+15. **Baseline:**
+    `references/phase-0-combo-suggestions-current-1366x768.png`, captured on
+    2026-08-21 at 1366x768 from a real persisted `sent`, `single` order
+    `POS-20260819-201927-F38DEA`. It contains one Gua Bao and no eligible 25 cl
+    house iced tea. No control was submitted. Loading invoked the existing
+    payment-summary optimizer and advanced only the order update timestamp.
+16. **Shared context:** remains `RESOLVED` with
+    `REUSE_APPROVED_SHARED_SHELL`; no shell, navigation, account, management,
+    or route change is proposed.
+17. **Expected packages:** `apps/yuta-pos`, `packages/core`, and this stable
+    page package. Current product/operator docs are updated only when behavior
+    is implemented.
+18. **Change flags:** database `NO`; API/contract `NO`; permission/auth `NO`;
+    runtime/device `NO`. A later finding that requires any of these stops for a
+    separate approval.
+19. **Required focused tests:** one-item completion, overlapping priorities,
+    already-complete rules, `maxApplications`, duplicate candidates,
+    unavailable/inactive/missing catalog entries, locked orders, and reuse of
+    the current add-item action.
+20. **Exact verification:** `pnpm ui:pack:check pos-order-items`,
+    `pnpm docs:check`, `pnpm architecture:check`,
+    `pnpm -r --if-present typecheck`, `pnpm format:check`,
+    `pnpm typecheck:pos`, `pnpm test:pos`, `pnpm build:pos`, and affected core
+    checks. Site-agent/contracts/db-pos checks remain regression boundaries even
+    though no change is expected there.
+
+Fixture replacement remains forbidden. Phase 0 changes documentation and
+visual evidence only; it does not authorize runtime implementation.
 
 ## Authority
 

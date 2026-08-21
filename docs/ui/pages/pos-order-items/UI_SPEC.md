@@ -1,6 +1,6 @@
 # POS Order Items - UI Specification
 
-Status: Approved Phase 1 reference
+Status: Draft — combo-completion suggestion design
 
 Visibility: Engineering
 
@@ -27,6 +27,31 @@ Desktop is a fixed-height three-column workspace: category rail, searchable
 catalog grid, and current-order summary. Narrow layouts use horizontal category
 scroll, catalog grid, and the existing mobile order dialog. Current baseline is
 `references/phase-0-current-1366x768.png`.
+
+The combo-suggestion reopening baseline is
+`references/phase-0-combo-suggestions-current-1366x768.png`. It demonstrates a
+real order containing a Gua Bao while the eligible house iced tea remains in a
+different part of the catalog and no shortcut exists.
+
+## Proposed combo-completion hierarchy
+
+When a truthful one-item-away candidate exists, place a compact suggestion
+shelf after search and before the standard item grid:
+
+1. text-backed heading such as `Compléter Gua Bao Happy`;
+2. one or more real catalog-item actions with name and normal catalog price;
+3. no projected discount or savings claim in the first version.
+
+The shelf does not replace category navigation, search, catalog results, or the
+current order. It is absent rather than rendered empty. It is hidden while
+search has a non-empty query and when the order cannot be edited. Candidate
+actions reuse the visual language and minimum touch size of catalog items but
+may be more compact than full item cards.
+
+Design studies must cover one candidate, multiple candidates, duplicate
+candidate resolution, no candidate, action pending/error, locked order, and
+narrow layouts. No category, persisted favorite, pinning control, dismissal,
+ranking setting, badge count, savings estimate, or analytics UI may be added.
 
 ## Visual hierarchy
 

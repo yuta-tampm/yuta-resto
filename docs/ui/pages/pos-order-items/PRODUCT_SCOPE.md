@@ -1,6 +1,6 @@
 # POS Order Items - Product Scope
 
-Status: Draft
+Status: Draft — combo-completion suggestions
 
 Visibility: Engineering
 
@@ -23,6 +23,32 @@ production without losing operational context.
   success screen with `Créer une autre commande` to `/pos` and
   `Retour aux commandes` to `/`.
 - Use the existing mobile order-summary dialog on smaller screens.
+
+## Proposed combo-completion capability
+
+The product problem is navigation time between an already-selected combo item
+and an eligible item located in another catalog category. The proposed surface
+uses the current active combo rules and current order to show a small set of
+truthful one-item-away completions.
+
+Phase 0 proposes, but does not yet authorize runtime implementation of, these
+rules:
+
+- derive candidates from active combo rule groups, never product names or IDs;
+- suggest only a candidate whose hypothetical addition produces one additional
+  positive combo application under the authoritative optimizer;
+- respect combo priority, overlapping rules, group quantities,
+  `maxApplications`, availability, active categories, and current order locks;
+- display a candidate once under its highest-priority qualifying combo;
+- use the existing real menu item and `addOrderItemAction`;
+- omit the surface when there is no candidate, the order is locked, or catalog
+  search is active;
+- do not promise a discount amount before the existing service-owned
+  calculation confirms the order totals.
+
+The initial policy intentionally excludes multi-step suggestions. For example,
+`Menu Gourmand` becomes suggestible only when two of its three required groups
+are already satisfied.
 
 ## Current boundaries
 
@@ -51,8 +77,10 @@ and backend/schema redesign.
 
 ## Proposed capabilities requiring approval
 
-None proposed in Phase 0. Any design element without current implementation is
-unsupported until separately approved.
+The combo-completion surface, one-item-away policy, placement below search, and
+candidate-deduplication policy require product-owner design approval before
+runtime work. Any new recommendation ranking, manual pinning, analytics,
+projected savings, persistence, or management setting is unsupported.
 
 ## Relationships
 

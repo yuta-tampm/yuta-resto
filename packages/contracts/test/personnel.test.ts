@@ -232,6 +232,7 @@ describe('personnel contracts', () => {
       view: 'active',
       search: '',
       completeness: 'all',
+      sort: 'entry_date_desc',
       limit: 25,
     });
     expect(
@@ -239,6 +240,10 @@ describe('personnel contracts', () => {
     ).toBe(false);
     expect(
       personnelEmployeeListQuerySchema.safeParse({ view: 'deleted' }).success,
+    ).toBe(false);
+    expect(
+      personnelEmployeeListQuerySchema.safeParse({ sort: 'qualification_asc' })
+        .success,
     ).toBe(false);
   });
 
