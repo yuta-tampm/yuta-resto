@@ -107,6 +107,7 @@ describe('back-office navigation', () => {
     expect(labels).not.toContain('Satisfaction client');
     expect(labels).not.toContain('Utilisateurs & accès');
     expect(labels).not.toContain('Salariés');
+    expect(labels).not.toContain('Formalités du personnel');
     expect(labels).toContain('Informations générales');
     expect(sections.map((section) => section.title)).not.toContain(
       'Réservations',

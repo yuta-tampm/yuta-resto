@@ -128,6 +128,17 @@ model, contracts, persistence, and tests.
 
 ### Integrated personnel foundation
 
+`/equipe/formalites-personnel` now contains a bounded Phase 1 prototype for
+understanding CDI draft readiness. The authenticated server route reuses the
+existing OWNER-only personnel guard, but the task content uses only a typed,
+route-local fictional fixture: it receives no employee identifier, performs no
+personnel or document read, and has no API, mutation, persistence, provider, or
+generated artifact. The UI permanently identifies the fictional boundary,
+separates example Salariés facts from Formalités-specific missing inputs, and
+keeps generation disabled. Linking a real employee dossier, saving a draft,
+legal validation, PDF generation, signature, audit, retention, and production
+operation remain deferred.
+
 - `/equipe/salaries` now reads the establishment-owned personnel dossier table
   through an OWNER-only, server-authorized, organization-and-establishment-
   scoped repository. The former employee fixtures and simulated states are

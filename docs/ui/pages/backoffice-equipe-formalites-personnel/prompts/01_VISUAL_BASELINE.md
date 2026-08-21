@@ -33,9 +33,3 @@ widths for another application.
 Report files changed, preserved invariants, commands, browser/device evidence,
 intentional deviations, and unresolved conflicts. Do not perform Phase 2
 automatically.
-
-For combo-completion suggestions, generate only the approved compact shelf
-below search using the ready prompt in `DESIGN_HANDOFF.md`. Study one candidate,
-multiple candidates, narrow layout, locked, pending/error, and the unchanged
-no-candidate page. Do not modify runtime code in this design phase. Stop for
-product-owner reference approval.

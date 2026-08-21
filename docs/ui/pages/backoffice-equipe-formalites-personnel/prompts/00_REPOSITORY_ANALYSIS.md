@@ -73,11 +73,3 @@ shared-context bundle (or explicit blocker), current baseline evidence, and the
 design-generation prompt.
 Stop after this handoff. Do not generate a mockup or implement Phase 1
 automatically.
-
-For the combo-completion reopening, additionally prove whether current
-order/catalog data is sufficient, enumerate active-rule overlap, verify the
-existing add-item action, identify combo-calculation ownership, capture a real
-partial-combo order without submitting controls, and record the current
-payment-summary loader side effect. Treat the new target as a `SURFACE` inside
-the existing page. No product name, item ID, category, rule, or recommendation
-may be hard-coded.

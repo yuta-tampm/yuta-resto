@@ -4,7 +4,7 @@ Status: Current
 
 Visibility: Engineering
 
-Last updated: 2026-08-20
+Last updated: 2026-08-22
 
 Page packages under this directory may target any YUTA frontend application.
 Every package identifies its application, real route or screen, runtime
@@ -19,6 +19,10 @@ Current packages:
 - `backoffice-equipe-salaries/` — Phase 0 new-capability discovery package for
   the now-integrated authenticated Backoffice route `/equipe/salaries`, with
   its approved and implemented local delivery waves.
+
+- `backoffice-equipe-formalites-personnel/` — Phase 1 fictional read-only CDI
+  draft-readiness prototype for `/equipe/formalites-personnel`; it is OWNER-only,
+  reads no employee dossier, and creates no document.
 
 - `backoffice-equipe-registre-personnel/` — implemented Wave E local real-data,
   hardening, and Phase 5 as-built pack for Backoffice route

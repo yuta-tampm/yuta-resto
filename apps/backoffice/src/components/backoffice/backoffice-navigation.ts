@@ -140,6 +140,7 @@ export const backofficeNavigationSections: readonly BackofficeNavigationSection[
           label: 'Formalités du personnel',
           icon: BookOpen,
           href: '/equipe/formalites-personnel',
+          requires: ['canReadPersonnel'],
         },
       ],
     },

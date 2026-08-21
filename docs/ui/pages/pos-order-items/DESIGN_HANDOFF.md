@@ -1,8 +1,95 @@
 # POS Order Items - Design Handoff
 
-Status: Approved for Phase 1
+Status: Phase 0 combo-suggestion handoff ready for review
 
 Visibility: Engineering
+
+## 2026-08-21 combo-completion suggestion handoff
+
+Design prompt status: `READY`
+
+Shared context status: `RESOLVED`
+
+Shell mode: `REUSE_APPROVED_SHARED_SHELL`
+
+The current implemented page and its approved service-time shell remain the
+visual and behavioral foundation. The new design scope is only a route-local
+suggestion surface between catalog search and the normal item grid. Header,
+connectivity strip, category rail/scroller, catalog grid, current-order panel,
+mobile order dialog, routes, and navigation ownership do not change.
+
+### Current baseline capture
+
+- File:
+  `references/phase-0-combo-suggestions-current-1366x768.png`.
+- Route:
+  `/orders/01a01bad-c148-704e-a042-c5f3c8f38dea/items`.
+- State: real persisted `sent`, `single` order
+  `POS-20260819-201927-F38DEA`, table label `33`, seven non-cancelled items,
+  including one `Gua Bao – Tofu pané (végé)` and no eligible 25 cl house iced
+  tea. Subtotal was EUR 70.00, existing discount EUR 3.00, and total EUR 67.00.
+- Viewport/date: 1366x768, 2026-08-21, Europe/Paris; document width equaled
+  viewport width with no horizontal overflow.
+- Runtime/session: production POS at `http://localhost:3003`, site-agent on
+  3004, real local PostgreSQL, service/database available, printer not
+  configured. Service-time staff selection is attribution, not authentication;
+  no management session was used.
+- Safety: no button, form, order command, item mutation, kitchen send, payment,
+  or print action was submitted. Rendering used the current payment-summary
+  loader, whose existing combo optimization advanced the order `updatedAt` to
+  `2026-08-21T21:53:22.295Z`; this known loader side effect is disclosed rather
+  than represented as a read-only query.
+- Observed problem: the order already contains a Gua Bao, while the eligible
+  `Thé glacé maison citron & citronnelle – 25 cl` appears far later in the
+  unfiltered catalog. There is no current combo-completion shortcut.
+
+### Current rule evidence
+
+The read-only local catalog exposed four active rules ordered by priority:
+
+1. `Menu Gourmand` (10): Plat + Entrée + Dessert.
+2. `Gua Bao Happy` (20): Gua Bao + house iced tea 25 cl.
+3. `Menu Express` (30): Plat + Entrée or dessert.
+4. `Combo Été` (40): Plat du jour/samedi + house iced tea 25 cl.
+
+Gua Bao entries overlap three rules. The design must therefore express a
+derived recommendation, not a hard-coded cross-category alias.
+
+### Curated design bundle
+
+1. The new baseline image above.
+2. Existing approved desktop/narrow/as-built references in this package for
+   shell, three-panel composition, catalog density, and responsive behavior.
+3. `README.md`, `PRODUCT_SCOPE.md`, `UI_SPEC.md`, and
+   `DATA_AND_INTERACTION_SPEC.md` for the proposed one-item-away policy.
+4. Current `MenuItemBrowser.tsx`, route `page.tsx`, `@yuta/core` combo engine,
+   local catalog contracts, and active-rule evidence.
+5. POS viewport matrix: 1366x768, 1024x768, 768x1024, and 390x844.
+
+### Ready-to-use design-generation prompt
+
+```text
+Use case: ui-mockup
+Asset type: focused desktop and narrow interaction studies for a new combo-completion suggestion surface inside the already implemented YUTA local POS route `/orders/[orderId]/items`.
+Input image: `phase-0-combo-suggestions-current-1366x768.png` is a real 1366x768 baseline. It shows the approved prominent POS header, truthful service/printer strip, fixed desktop category/catalog/current-order panels, a real order containing a Gua Bao, and no current suggestion shortcut. Treat it as evidence and visual context, not permission to change behavior.
+Operator problem: after selecting a Gua Bao, staff currently scroll or change category to find the eligible 25 cl house iced tea. The UI should expose truthful one-item-away combo completions without duplicating the item or hiding the normal catalog.
+Product policy to visualize: suggestions are derived from active configured combo rules and the current order. A candidate appears only when adding one unit would cause the authoritative optimizer to apply one additional positive combo. Rules may overlap and have priority. Duplicate candidate items appear once under the highest-priority qualifying combo. Unavailable/inactive/missing items and locked orders produce no action. Multi-step recommendations are excluded from version one.
+Primary surface: a compact French shelf immediately below catalog search and above the normal item grid. Use text such as `Compléter Gua Bao Happy`. Show the real candidate name and normal catalog price with a direct touch action. Do not show projected savings or claim that a discount has already been applied. Omit the shelf when empty rather than showing an empty card. Hide it when catalog search contains text so search results retain ownership of that region.
+Required studies: 1366x768 with one Gua Bao Happy candidate; desktop with multiple truthful candidates; 390x844 narrow layout; order locked; candidate action pending/error; no-candidate state shown as normal unchanged catalog. Keep category navigation, search, catalog density, current order, totals, payment, kitchen-send, and mobile order dialog intact.
+Shell mode: `REUSE_APPROVED_SHARED_SHELL`. Preserve the prominent desktop header, compact behavior below `lg`, logo/home, order identity, payment action, connectivity strip, and shared three-line Commandes/Cuisine/Gestion menu. Do not add a back arrow, sidebar, bottom navigation, account area, or new route.
+Visual constraints: French operational copy, current YUTA POS typography, `@yuta/ui` semantic roles, Lucide icons, strong scan hierarchy, restrained density, visible focus, text-backed states, keyboard/touch support, minimum 44px service actions, no document-level horizontal overflow, no essential hover-only behavior.
+Protected invariants: real order/catalog data; existing add-item Server Action; `apps/yuta-pos -> apps/site-agent -> packages/db-pos -> local PostgreSQL`; service-owned availability, ordering policy, snapshots, totals, locks, combo calculation, and transactions; no cloud sync; staff attribution is not authentication; preserve payment, kitchen, printing, allergy, variant, offline, and device behavior.
+Explicit exclusions: no hard-coded Gua Bao or tea name/ID; no copied menu item; no virtual persisted category; no new category, favorite, pin, dismissal, recommendation ranking setting, impression/click analytics, projected savings, manual combo override, upsell history, AI recommendation, customer profiling, schema, migration, API, contract, permission, auth, site-agent command, offline queue, printer setting, or presentation-owned pricing engine.
+Output: one 1366x768 primary proposal and one 390x844 companion, plus compact state studies for multiple candidates, locked, and pending/error. Mark all outputs DRAFT. Preserve the baseline shell and page proportions exactly enough that only the new suggestion surface reads as proposed scope.
+```
+
+### Phase 0 approval gate
+
+No generated combo-suggestion reference is approved yet. Phase 1 may begin only
+after the product owner approves the one-item-away qualification policy,
+candidate deduplication, placement below search, and the explicit exclusions.
+The previously approved references remain authority for the current as-built
+page but do not approve this new surface.
 
 ## Phase 0 source
 

@@ -17,10 +17,3 @@ client presentation code.
 
 Run affected existing typechecks/tests and provide browser evidence. Do not
 perform Phase 3 automatically.
-
-For the approved combo-completion slice, implement a pure, tested projection
-that shares the authoritative combo optimizer semantics. It may return rule and
-candidate item identifiers, but catalog availability/copy mapping remains in
-POS. Cover overlap/priority, maximum applications, already-complete rules,
-multi-step exclusion, duplicate candidates, and stale references. Do not place
-matching or pricing logic in React.

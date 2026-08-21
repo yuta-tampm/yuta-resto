@@ -30,9 +30,3 @@ work, and risks. Synchronize the stable page package with the as-built result,
 including deviations and final evidence, before setting `Package status:
 implemented`. Do not claim visual parity, lint, or a successful check without
 evidence.
-
-For combo-completion suggestions, verify one and multiple candidates, no
-candidate, locked, pending/error, and active-search behavior with real data or
-deterministic pure tests as appropriate. Confirm the shelf does not damage the
-desktop three-panel grid, narrow category/search reachability, mobile order
-action, 44px targets, internal scrolling, or zero document overflow.

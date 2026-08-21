@@ -17,9 +17,3 @@ setting, printer route, or persistence owner.
 Run only affected repository commands that actually exist. Include local API,
 database, offline, and device tests when the approved change touches those
 boundaries. Do not perform Phase 5 automatically.
-
-For the combo-completion slice, expected flags remain database `NO`, API and
-contract `NO`, permission/auth `NO`, and runtime/device `NO`. Audit that the
-as-built feature consumes the current catalog response and order model, that
-site-agent/payment optimization remains authoritative, and that no presentation
-component became a second combo engine.

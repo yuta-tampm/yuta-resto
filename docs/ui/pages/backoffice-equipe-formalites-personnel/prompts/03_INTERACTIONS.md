@@ -15,21 +15,6 @@ retry, offline recovery, device behavior, and idempotency where applicable.
 Do not add a state/form/data library for one page when the repository already
 has an established approach.
 
-Implement the approved post-kitchen-send success screen only from a trusted
-successful Server Action result. It contains exactly `Créer une autre commande`
-to `/pos` and `Retour aux commandes` to `/`. Keep both actions visible while a
-five-second countdown runs, then automatically navigate to the existing home
-route `/`. Do not use an untrusted query parameter as proof of success, add a
-new route or API, or claim that a durable kitchen-send transaction proves
-physical printing.
-
 Test applicable keyboard, touch, focus, pending, validation, success, error,
 degraded, retry, and recovery behavior. Report exact commands and results. Do
 not perform Phase 4 automatically.
-
-For combo-completion suggestions, render only approved projections from real
-loader data and submit the selected real menu item through the existing
-`addOrderItemAction`. Preserve non-optimistic reload and existing error
-behavior. Hide the shelf for non-editable orders and active search. Do not add
-a mutation, command, dismissal, ranking setting, analytics event, or persisted
-recommendation state.
