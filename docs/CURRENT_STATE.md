@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-15
+Last updated: 2026-08-23
 
 ## Product scope
 
@@ -128,16 +128,76 @@ model, contracts, persistence, and tests.
 
 ### Integrated personnel foundation
 
-`/equipe/formalites-personnel` now contains a bounded Phase 1 prototype for
-understanding CDI draft readiness. The authenticated server route reuses the
-existing OWNER-only personnel guard, but the task content uses only a typed,
-route-local fictional fixture: it receives no employee identifier, performs no
-personnel or document read, and has no API, mutation, persistence, provider, or
-generated artifact. The UI permanently identifies the fictional boundary,
-separates example Salariés facts from Formalités-specific missing inputs, and
-keeps generation disabled. Linking a real employee dossier, saving a draft,
-legal validation, PDF generation, signature, audit, retention, and production
-operation remain deferred.
+`/equipe/formalites-personnel` now contains a bounded Phase 2 interactive
+offline prototype for understanding CDI draft readiness. The authenticated
+server route reuses the existing OWNER-only personnel guard, but the task
+content uses only a typed, route-local fictional fixture: it receives no
+employee identifier and performs no personnel or document read. The local
+client flow exposes three steps, three illustrative inputs, demo-only readiness,
+an in-memory checkpoint, review acknowledgement, and reset. Reloading or leaving
+the route discards all changes. There is no browser storage, URL state, server
+action, API, database write, audit, provider, file, or generated artifact. The
+UI permanently identifies this boundary and keeps generation disabled. Linking
+a real employee dossier, durably saving a draft, legal validation, PDF
+generation, signature, audit, retention, and production operation remain
+deferred.
+
+Phase 3 adds a separate development-only read path from the full employee
+dossier to `/equipe/formalites-personnel/[employeeId]`. It is hidden unless
+`BACKOFFICE_PERSONNEL_FORMALITES_READ_PROTOTYPE_ENABLED=true` and remains
+disabled outside development even if configured. The destination repeats UUID,
+authenticated OWNER, active-establishment, and composite employee-ownership
+checks, then projects only name, position, qualification, current contract type,
+entry date, and weekly duration. Quick view remains unchanged. The connected
+surface has no contract inputs, simulated readiness, mutation, audit write,
+persistence, template, file, PDF, AI/provider call, or production enablement.
+Local QA is limited to existing fictional LUNA employees.
+
+A Phase 4 development-only connected interaction is approved and implemented.
+It combines the trusted Phase 3 read with only the three existing Phase 2
+illustrative inputs on the connected development route. Edits, checkpoint, and
+demo readiness remain React-memory-only and disappear on reload or
+navigation; generation stays disabled. It adds no F5-07 lifecycle,
+save/resume, employee update, schema/API, audit write, browser persistence,
+file/PDF/template, signature, AI/provider call, real personnel-data QA, or
+production enablement.
+
+Phase 5 documentation work was approved on 2026-08-23 and now contains an
+internal applicability and candidate CDI field matrix. It proposes an upcoming
+full-time CDI as the smallest first slice, distinguishes current Salariés facts
+from missing Formalités/employer/template authorities, and explicitly blocks
+part-time, CDD-to-CDI conversion, active-CDI remediation, and unsupported
+contract categories. Official French information-duty, part-time, and trial-
+period sources are recorded, but the matrix is not a legally reviewed template.
+Qualified legal/template and DPO-owned decisions remain blocked. Phase 5 adds no
+runtime, schema/API, persistence, file/PDF, signature, AI/provider, real
+personnel data, or production change; Phase 4 remains the current implementation.
+
+A self-contained French Phase 5 legal-review brief is prepared under the
+Formalités page pack. It contains no real employee data or contract and asks a
+qualified reviewer to decide the first use case, candidate fields,
+applicability, workflow confirmations, template/version evidence, and review
+triggers. It has not been sent and does not close `HR-TEMPLATE-01`,
+`HR-FORMALITY-01`, `HR-LEGAL-01`, `HR-RET-01`, or `HR-AUDIT-01`.
+
+F5-07 now records the approved future CDI-draft lifecycle without implementing
+it. An OWNER may eventually save and resume one active `DRAFT` per employee in
+the active establishment. OWNER-confirmed generation creates an immutable
+`GENERATED` version; a later generated replacement marks the older version
+`SUPERSEDED` rather than overwriting it. `ABANDONED` requires a reason and is
+retained. Completeness is derived as `INCOMPLETE`, `READY`, or
+`ATTENTION_REQUIRED`, and signed-contract status remains owned by Documents.
+F5-08 now records the approved legal and operational product boundary without
+closing any external gate. YUTA may eventually populate only qualified,
+versioned employment templates, flag missing information, and require explicit
+OWNER review; it does not author clauses or certify legality. Generated files
+remain outside Neon in separately approved private EU storage, signature remains
+an external-provider boundary with signed artifacts owned by Documents, audit
+must exclude sensitive values/content, and retention remains legal/DPO-owned.
+AI may assist extraction or completeness checking but cannot decide legality,
+update employee data, sign, issue, or send automatically. Separate implementation
+approval and the production-readiness register still gate schema, APIs,
+persistence, providers, generated files, real employee data, and production.
 
 - `/equipe/salaries` now reads the establishment-owned personnel dossier table
   through an OWNER-only, server-authorized, organization-and-establishment-
@@ -167,6 +227,22 @@ audit metadata, operation IDs, or tenant identifiers. History is loaded only
 when its detail tab is opened and has explicit loading, failure, and retry
 states. Minimum-field completeness is derived, filterable, explained by field,
 and links to the supported edit action.
+
+F02 Phase 1 now completes the downloaded add-employee reconciliation within
+this existing development capability. The implementation remains a single OWNER-only
+minimum-dossier dialog with trusted active-establishment scope, CDI/CDD
+conditional validation, advisory duplicate review, idempotent retry, and atomic
+creation/audit. It is not a file-first or resumable onboarding workflow. The
+current signed-contract action requires an existing employee, and remuneration,
+probation, apprenticeship, work-authorization documents, detailed part-time
+distribution, additional contract types, Formalités, and register writes remain
+outside F02. Product approved F02-01 through F02-08 on 2026-08-23. The committed
+success state now returns only the safe employee ID, remains on the dialog, and
+offers an explicit full-dossier link; unsaved non-empty input requires discard
+confirmation before close. Authenticated responsive QA used fictional LUNA
+data and created `Nina F02-Sierra` to prove the existing atomic commit and
+dossier route. No field, enum, schema, migration, permission, audit event,
+document, provider, AI, real employee, or production path was added.
 
 The local employee dossier also stores an optional controlled CDD reason and
 optional contractual weekly duration in integer minutes. New dossiers require
@@ -580,4 +656,32 @@ The database reset plan has been replaced by current architecture documents.
 Historical implementation plans and pre-reset audits are preserved by Git
 history, not the active documentation tree.
 
+`docs/operations/PRODUCTION_READINESS.md` is now the canonical cross-product
+register for company, legal/privacy, security, infrastructure, vendor, personnel,
+AI, and operational production gates. It records only status and opaque evidence
+references; sensitive corporate, legal, provider, and personal records remain in
+a separately controlled private vault. `DEPLOYMENT.md` continues to own release
+mechanics and does not override an open readiness gate.
+
 The UI export catalog is maintained only in `packages/ui/src/index.ts`.
+
+F03 Phase 0 reconciles the downloaded manage-dossier flow with the existing
+integrated employee editor. An authenticated OWNER can open the same combined
+minimum identity/employment editor from the quick view or full dossier. The
+server rederives the active organization and establishment, requires
+`personnel.employee.manage`, validates the allowlisted fields, uses an expected
+revision and idempotency receipt, and commits the dossier update plus field-
+group audit events atomically. Successful updates keep the current dossier
+surface open and refresh it with the committed summary; validation and
+revision-conflict states preserve the entered values.
+
+This is not a complete reconstructable employment history. Normal identity and
+employment audit events expose the event, actor, date, and changed field names,
+but not the previous and new field values. Only the separate departure flow
+currently exposes bounded previous/new departure dates and a correction reason.
+F03 therefore owns the current edit interaction, while F07 must separately
+decide which fields need durable value-level history and how corrections are
+represented. The current edit dialog also closes without warning when modified
+values have not been saved. F03-01 through F03-08 remain proposed for product
+approval; Phase 0 changed documentation only and authorizes no runtime, schema,
+contract, audit, data, or production change.

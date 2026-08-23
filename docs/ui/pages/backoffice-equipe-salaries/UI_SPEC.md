@@ -763,3 +763,77 @@ offline disclosure, ready review, and expected two-page suggestions. At 390 px,
 the page and employee drawer have no horizontal overflow and the stored-source
 control remains visible. Browser logs contain no warning/error. A separate
 production-hidden recheck remains part of any later provider-QA approval.
+
+## F02 Phase 1 — current create UI
+
+Status: `IMPLEMENTED — AUTHENTICATED FICTIONAL BASELINE CAPTURED`.
+
+### Current implemented UI
+
+`Ajouter un salarié` opens one scrollable dialog over the existing Salariés
+page. It contains two sections, `Identité minimale` and `Relation de travail`,
+with the current required inputs. Selecting CDD reveals `Fin prévue du CDD` and
+`Motif du CDD`. A possible duplicate inserts a warning, scoped candidate list,
+and required reason without replacing the entered values. Pending disables the
+submit action; validation and service errors remain inside the dialog; a
+committed success refreshes the page, shows the bounded success message, and
+offers close or full-dossier actions.
+
+The dialog is separate from the dossier drawer. It does not upload documents,
+save an onboarding draft, open Formalités, create a register inscription, or
+expose tenant scope.
+
+### Implemented Phase 1 behavior
+
+- preserve the current single-dialog hierarchy and every current field;
+- retain conditional CDD and duplicate-review sections in place;
+- add no wizard, stepper, document drop zone, remuneration, probation,
+  apprenticeship, work-permit, or Formalités section;
+- when input has changed, confirm before closing and losing it;
+- after committed success, show `Le dossier minimum a été créé.` with a deliberate
+  `Ouvrir le dossier` action and a secondary close action; and
+- do not auto-navigate, because the OWNER must remain in control and the list
+  refresh is still useful.
+
+### F02 as-built baseline
+
+Authenticated OWNER QA on 2026-08-23 captured the current dialog at 1440,
+1024, 768, and 390 CSS pixels after the CDD reason and contractual weekly-
+duration changes. Additional captures prove the duplicate, committed-success,
+and dirty-close states. Interactive QA also proves the CDD branch and the full-
+dossier destination. Validation, pending, error/retry, and idempotency remain
+covered by the existing action/repository behavior and tests; unsupported
+screenshots were not fabricated.
+
+At every captured width, the document and visible dialog have matching client
+and scroll widths. The browser reported no warning/error. The baseline contains
+only fictional LUNA data and is current as-built evidence, not production
+approval or authority for additional fields.
+
+## F03 Phase 0 — current manage-dossier UI
+
+Status: `CURRENT UI INVENTORIED; RENEWAL NOT YET APPROVED`.
+
+`Modifier` opens the same scrollable dialog from the selected desktop quick
+view and the full dossier page. The dialog contains `Identité minimale` and
+`Relation de travail`; choosing CDD reveals the expected end date and controlled
+reason, while changing a recorded CDD to CDI requires explicit confirmation
+before clearing its reason. The dialog deliberately excludes departure,
+documents, payroll, and Formalités.
+
+Current truthful states are pending, field validation, general save error,
+idempotency-key conflict, revision conflict with `Recharger la version
+actuelle`, no-change success, and committed success. A successful save closes
+only the editor, keeps the quick view or full dossier context, updates visible
+facts, refreshes the route, and presents a success message.
+
+The confirmed UI gap is unsaved close protection. Today the cancel button,
+Escape, backdrop, and close control can close a modified dialog immediately.
+The proposed Phase 1 reuses the F02 discard-confirmation pattern without
+changing layout, fields, validation, or mutation semantics.
+
+Existing Wave C references remain valid for the dossier shell, tabs, identity,
+and employment display. They do not prove the current edit-dialog states. F03
+baseline status is therefore `PENDING` until separately approved authenticated
+fictional QA captures the editor at 1440, 1024, 768, and 390 CSS pixels. No new
+design-generation prompt is needed for the proposed bounded interaction fix.

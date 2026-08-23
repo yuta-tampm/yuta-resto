@@ -81,9 +81,11 @@ integrationTest('combo management integration', () => {
       priority: 10,
       maxApplications: null,
       isActive: false,
+      isSuggestionEnabled: true,
     });
     ruleId = created.comboRule.id;
     expect(created.comboRule.isActive).toBe(false);
+    expect(created.comboRule.isSuggestionEnabled).toBe(true);
 
     await expect(
       service.updateComboRule(ruleId, { isActive: true }),
@@ -98,6 +100,7 @@ integrationTest('combo management integration', () => {
         priority: 20,
         maxApplications: null,
         isActive: false,
+        isSuggestionEnabled: true,
       }),
     ).rejects.toMatchObject({ code: 'COMBO_RULE_NAME_CONFLICT' });
 
@@ -134,6 +137,13 @@ integrationTest('combo management integration', () => {
     await service.updateComboRule(ruleId, { basePricingGroupName: 'Plat' });
     const active = await service.updateComboRule(ruleId, { isActive: true });
     expect(active.comboRule.isActive).toBe(true);
+    const suggestionDisabled = await service.updateComboRule(ruleId, {
+      isSuggestionEnabled: false,
+    });
+    expect(suggestionDisabled.comboRule).toMatchObject({
+      isActive: true,
+      isSuggestionEnabled: false,
+    });
 
     await expect(
       service.updateComboGroup(groupId, { sortOrder: 20 }),

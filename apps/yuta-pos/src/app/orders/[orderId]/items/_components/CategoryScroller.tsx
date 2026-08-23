@@ -8,24 +8,40 @@ type CategoryScrollerProps = {
   categories: Array<{ id: string; name: string }>;
   orderId: string;
   selectedCategoryId: string;
+  comboSuggestionDismissal: string;
 };
 
 type DragState = {
   pointerId: number | null;
   startX: number;
+  startY: number;
   startScrollLeft: number;
   moved: boolean;
 };
+
+const CATEGORY_DRAG_THRESHOLD_PX = 16;
+
+export function isCategoryDragGesture(
+  horizontalDistance: number,
+  verticalDistance: number,
+): boolean {
+  return (
+    Math.abs(horizontalDistance) >= CATEGORY_DRAG_THRESHOLD_PX &&
+    Math.abs(horizontalDistance) > Math.abs(verticalDistance)
+  );
+}
 
 export function CategoryScroller({
   categories,
   orderId,
   selectedCategoryId,
+  comboSuggestionDismissal,
 }: CategoryScrollerProps) {
   const navRef = useRef<HTMLElement>(null);
   const dragRef = useRef<DragState>({
     pointerId: null,
     startX: 0,
+    startY: 0,
     startScrollLeft: 0,
     moved: false,
   });
@@ -49,19 +65,30 @@ export function CategoryScroller({
         dragRef.current = {
           pointerId: event.pointerId,
           startX: event.clientX,
+          startY: event.clientY,
           startScrollLeft: nav.scrollLeft,
           moved: false,
         };
-        nav.setPointerCapture(event.pointerId);
       }}
       onPointerMove={(event) => {
         const nav = navRef.current;
         const drag = dragRef.current;
         if (!nav || drag.pointerId !== event.pointerId) return;
 
-        const distance = drag.startX - event.clientX;
-        if (Math.abs(distance) > 8) drag.moved = true;
-        nav.scrollLeft = drag.startScrollLeft + distance;
+        const horizontalDistance = drag.startX - event.clientX;
+        const verticalDistance = drag.startY - event.clientY;
+        if (
+          !drag.moved &&
+          !isCategoryDragGesture(horizontalDistance, verticalDistance)
+        ) {
+          return;
+        }
+
+        if (!drag.moved) {
+          drag.moved = true;
+          nav.setPointerCapture(event.pointerId);
+        }
+        nav.scrollLeft = drag.startScrollLeft + horizontalDistance;
       }}
       onPointerUp={(event) => {
         const nav = navRef.current;
@@ -90,7 +117,8 @@ export function CategoryScroller({
       {categories.map((category) => (
         <Link
           key={category.id}
-          href={categoryHref(orderId, category.id)}
+          href={categoryHref(orderId, category.id, comboSuggestionDismissal)}
+          prefetch={false}
           draggable={false}
           aria-current={category.id === selectedCategoryId ? 'page' : undefined}
           className={cn(
@@ -107,8 +135,18 @@ export function CategoryScroller({
   );
 }
 
-function categoryHref(orderId: string, categoryId: string): string {
-  return categoryId === 'all'
-    ? `/orders/${orderId}/items`
-    : `/orders/${orderId}/items?category=${encodeURIComponent(categoryId)}`;
+export function categoryHref(
+  orderId: string,
+  categoryId: string,
+  comboSuggestionDismissal: string,
+): string {
+  const search = new URLSearchParams();
+  if (comboSuggestionDismissal) {
+    search.set('hideComboSuggestions', comboSuggestionDismissal);
+  }
+  if (categoryId !== 'all') {
+    search.set('category', categoryId);
+  }
+  const query = search.toString();
+  return `/orders/${orderId}/items${query ? `?${query}` : ''}`;
 }

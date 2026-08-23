@@ -599,6 +599,78 @@ Read-slice evidence:
 - [ ] Production legal, privacy, retention, security, backup/restore, and
       operations approval remains required.
 
+## F03 Phase 0 — manage-dossier reconciliation
+
+- [x] The downloaded F03 and F07 flows were treated as product input, not
+      repository authority.
+- [x] Current quick view, full dossier, edit dialog, action, strict contract,
+      repository transaction, permissions, audit read model, and tests were
+      inspected.
+- [x] F03 is classified as an existing integrated capability renewal under
+      `EXISTING_CAPABILITY_RENEWAL`.
+- [x] Both current `Modifier` entry points reuse one combined minimum identity/
+      employment editor and one mutation boundary.
+- [x] Exact current fields and conditional CDD/CDI rules are recorded; no
+      unsupported field or contract type is inferred.
+- [x] Trusted active-establishment scope, OWNER-only manage permission,
+      expected-revision conflict, idempotency, and atomic audit behavior are
+      recorded.
+- [x] Current validation, pending, error, conflict/reload, no-change success,
+      committed success, refresh, and context-preservation states are recorded.
+- [x] Ordinary identity/employment history is correctly described as changed-
+      field traceability, not reconstructable previous/new values.
+- [x] F03 current editing and F07 future value-level history are separated.
+- [x] Missing dirty-close protection and missing current edit-dialog baseline
+      are recorded as bounded gaps.
+- [x] F03-01 through F03-08 are proposed and not presented as approved.
+- [x] Phase 0 changed documentation only; no runtime, schema, migration,
+      contract, permission, audit, data, file, provider, or production behavior
+      changed.
+- [ ] Product owner approves F03-01 through F03-08.
+- [ ] Product owner authorizes the bounded F03 Phase 1 interaction renewal.
+- [ ] Authenticated fictional-data baseline and responsive QA are completed
+      only after that approval.
+
+## F02 Phase 0 — add-employee reconciliation
+
+- [x] The downloaded F02 flow was treated as product input, not repository
+      authority.
+- [x] Current route, create dialog, action, strict contract, tenant-scoped
+      repository transaction, permission, validation, duplicate behavior,
+      idempotency, audit, and tests were inspected.
+- [x] F02 is classified as an existing integrated capability renewal under
+      `EXISTING_CAPABILITY_RENEWAL`; no new page pack or route is proposed.
+- [x] The current single-dialog field set and CDD-only branch are recorded.
+- [x] Current Documents requires an existing employee ID; file-first creation
+      and unsupported document categories remain excluded.
+- [x] Current minimum completeness is distinguished from legal, document,
+      payroll, register, Formalités, and onboarding completeness.
+- [x] Missing direct post-success dossier navigation, dirty-close recovery, and
+      current authenticated visual evidence are recorded as gaps.
+- [x] No runtime, schema, migration, API, contract, permission, audit event,
+      document, provider, test data, operational data, or production behavior
+      was changed.
+- [x] Product approved F02-01 through F02-08 on 2026-08-23.
+- [x] After product approval, authenticated current-dialog baselines were
+      captured at 1440, 1024, 768, and 390 CSS pixels.
+- [x] Product authorized and the bounded F02 Phase 1 implementation is complete.
+- [x] Successful action state returns only the committed safe employee ID.
+- [x] Success remains in the dialog, says the minimum dossier was created, and
+      offers `Fermer` plus `Ouvrir le dossier` without automatic navigation.
+- [x] Dirty uncommitted input requires explicit discard confirmation; untouched
+      or committed close remains immediate.
+- [x] Authenticated fictional QA covers normal, CDD, duplicate, dirty-close,
+      success, and the full-dossier destination.
+- [x] Four responsive as-built captures plus duplicate, dirty-close, and success
+      evidence are stored under the existing reference folder.
+- [x] No horizontal page/dialog overflow or browser warning/error was observed.
+- [x] One fictional LUNA dossier, `Nina F02-Sierra`, was created for committed-
+      success QA; no real employee data was used.
+- [x] Backoffice tests pass with 52 files and 178 tests; typecheck passes.
+- [x] No field, enum, validation rule, schema, migration, permission, audit
+      event, document type, provider, AI, or production path was added.
+- [ ] Real employee QA and production remain separately blocked.
+
 ## Wave F Phase 0 — document extraction discovery
 
 - [x] Wave F is classified `NEW_CAPABILITY_DISCOVERY` inside the existing Salariés Documents surface.

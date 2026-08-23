@@ -1,14 +1,15 @@
 # Préparer un projet de contrat CDI — Design Handoff
 
-Status: Approved no-image handoff
+Status: Phase 5 documentation completed; Phase 4 handoff remains current
 
 Visibility: Engineering
 
 ## Phase 0 source
 
 The complete inventory is summarized in `README.md`. Target: cloud Backoffice
-page `/equipe/formalites-personnel`; `NEW_PAGE`; visual-only Phase 1; goal is a
-fictional CDI-readiness explanation with no real data or generated artifact.
+page `/equipe/formalites-personnel`; `NEW_PAGE`; visual-only Phase 1 followed by
+interactive offline Phase 2; goal is a fictional CDI-readiness explanation and
+local walkthrough with no real data or generated artifact.
 
 ## Shared UI context resolution
 
@@ -56,6 +57,24 @@ and responsive design guidance, not implementation code.
 
 ## Handoff result
 
-The product owner explicitly approved a no-image implementation on 2026-08-22.
-Repository patterns are the visual reference. F5-07/F5-08 remain the next
-approval owner decisions.
+The product owner explicitly approved the no-image Phase 1 and the bounded
+interactive offline Phase 2 on 2026-08-22. Repository patterns are the visual
+reference. F5-07 and F5-08 product decisions are documented; their integrated
+implementation and every external production gate remain pending.
+
+## Phase 4 handoff
+
+No new image or shell design was required. Phase 4 composes the already
+implemented Phase 3 connected employee header/source facts with the already
+implemented Phase 2 local input and review patterns. The implementation must
+visually distinguish read-only Salariés facts from unsaved demonstration inputs
+and repeat that all edits disappear on reload or navigation. It must not add a
+persisted-success visual state, document preview, legal-validity signal, or
+enabled generation action.
+
+## Phase 5 handoff impact
+
+No design handoff or reference image was produced. Phase 5 records internal
+candidate product/legal data decisions only. Any later UI design must be derived
+from an externally reviewed and product-approved matrix and return through a
+separate design/implementation approval gate.

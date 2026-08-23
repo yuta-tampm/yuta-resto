@@ -73,6 +73,16 @@ describe('POS schema boundaries', () => {
     expect(itemOrderingPolicyEnum.enumValues).toEqual(['merge', 'separate']);
   });
 
+  it('defaults combo suggestions to enabled independently from activation', () => {
+    const config = getTableConfig(comboRules);
+    const suggestionColumn = config.columns.find(
+      (column) => column.name === 'is_suggestion_enabled',
+    );
+
+    expect(suggestionColumn?.notNull).toBe(true);
+    expect(suggestionColumn?.hasDefault).toBe(true);
+  });
+
   it('uses an RFC UUIDv7 generator for seed-created records', () => {
     expect(uuidVersion(uuidv7())).toBe(7);
   });

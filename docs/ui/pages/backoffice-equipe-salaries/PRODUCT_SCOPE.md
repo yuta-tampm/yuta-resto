@@ -1191,3 +1191,101 @@ stored fictional fixture. That single Luna/v4 request completed successfully;
 the one-time gate was removed by stopping the privileged process immediately
 afterward. Any additional provider request and every real-file pilot remain
 separate approval gates.
+
+## F02 Phase 0 — add-employee scope reconciliation
+
+Capability status: `EXISTING DEVELOPMENT CAPABILITY — PHASE 1 IMPLEMENTED`.
+
+### Current user and outcome
+
+The current user is an authenticated OWNER acting in one trusted active
+establishment. The implemented outcome is one establishment-owned minimum
+employee dossier. It is not a login account, organization-wide person, payroll
+worker, personnel-register inscription, Formalités draft, or document folder.
+
+The current required creation facts are:
+
+- given names and family name;
+- position and qualification;
+- CDI or CDD;
+- full-time or part-time category;
+- contractual weekly duration in minutes;
+- establishment-local entry date; and
+- for CDD only, one supported reason and an expected end date on or after the
+  entry date.
+
+Possible same-establishment duplicates require an explicit bounded reason
+before a separate dossier may be created. The server owns scope, actor,
+identifiers, timestamps, revision, audit, and retry receipts.
+
+### Repository conflict with the downloaded F02 flow
+
+The downloaded dossier proposes a broad progressive onboarding sequence that
+starts with optional documents and later includes remuneration, probation,
+contract-specific details, and review. Repository reality is narrower:
+
+- the current signed-contract flow needs an existing employee ID and cannot be
+  an initial creation step;
+- no approved identity, work-permit, RIB, or general employee-document category
+  exists;
+- remuneration, probation, apprenticeship, detailed part-time distribution,
+  work authorization, additional contract types, and file-first creation are
+  absent or separately blocked; and
+- the current create command persists one minimum dossier atomically rather
+  than saving a resumable multi-step onboarding draft.
+
+The external flow must therefore be narrowed to existing capability before any
+UI proposal is approved.
+
+### Approved product decisions
+
+| ID     | Decision needed                              | Recommendation                                                                                                       | Status              |
+| ------ | -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| F02-01 | One dialog or multi-step creation            | Keep one dialog for the current minimum facts; progressive completion happens in the full dossier after creation     | Approved 2026-08-23 |
+| F02-02 | Behavior after committed success             | Keep the success message and offer `Ouvrir le dossier`; do not navigate automatically                                | Approved 2026-08-23 |
+| F02-03 | Documents during creation                    | Do not add a document step; use the existing signed-contract action only after the employee dossier exists           | Approved 2026-08-23 |
+| F02-04 | Meaning of completion                        | Say `Dossier minimum créé`; do not claim legal, document, payroll, register, or onboarding completeness              | Approved 2026-08-23 |
+| F02-05 | Closing a modified form                      | Ask for confirmation before discarding non-empty unsaved input; cancellation before any input remains immediate      | Approved 2026-08-23 |
+| F02-06 | Fields and contract categories in next slice | Preserve the exact current field set and CDI/CDD branches; add no new field, enum, validation rule, or document type | Approved 2026-08-23 |
+| F02-07 | Authorization and establishment scope        | Remain OWNER-only and active-establishment-only; MANAGER and STAFF remain denied                                     | Approved 2026-08-23 |
+| F02-08 | Production availability                      | Keep production collection blocked until recorded privacy, retention, security, and operations gates are approved    | Approved 2026-08-23 |
+
+These decisions authorized only the bounded Phase 1 implementation and
+fictional authenticated baseline. They do not authorize production, real
+employee QA, new HR fields, documents, remuneration, templates, AI,
+Formalités, or register writes.
+
+## F03 Phase 0 — manage-employee-dossier scope
+
+Capability status: `EXISTING DEVELOPMENT CAPABILITY — DECISIONS PROPOSED`.
+
+### Current user and outcome
+
+The current user is an authenticated OWNER acting in one trusted active
+establishment. F03 updates the current minimum employee dossier; it does not
+create a new employee, end employment, replace a signed contract, produce a
+contract draft, write the personnel register, or update payroll.
+
+The existing editable facts are given names, family name, position,
+qualification, CDI/CDD, expected CDD end date, controlled CDD reason, full-time
+or part-time category, contractual weekly duration, and entry date. The server
+owns scope, actor, revision, timestamps, audit, and retry receipts.
+
+### Proposed product decisions
+
+| ID     | Decision needed                       | Recommendation                                                                                                      | Status   |
+| ------ | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | -------- |
+| F03-01 | Entry surfaces                        | Keep `Modifier` in both quick view and full dossier; both use one shared editor                                     | Proposed |
+| F03-02 | Editor structure                      | Keep one combined minimum identity/employment dialog; do not create separate mutations per read-only tab            | Proposed |
+| F03-03 | Editable field boundary               | Preserve the exact current field set; add no payroll, remuneration, document, authorization, register, or HR field  | Proposed |
+| F03-04 | Unsaved close                         | Require confirmation before discarding modified unsaved values; untouched or successfully saved close is immediate  | Proposed |
+| F03-05 | Successful save                       | Close the editor, keep the current quick view/full dossier open, and show the committed values plus success message | Proposed |
+| F03-06 | F03/F07 history boundary              | Keep current minimized audit as traceability only; F07 separately owns approval of reconstructable value history    | Proposed |
+| F03-07 | Authorization and establishment scope | Remain OWNER-only and active-establishment-only; MANAGER and STAFF remain denied                                    | Proposed |
+| F03-08 | Production availability               | Keep production collection blocked until privacy, retention, security, legal, and operations gates are approved     | Proposed |
+
+Approval of these decisions would authorize only the smallest Phase 1 renewal:
+capture the authenticated fictional-data edit baseline, add dirty-close
+protection, and verify existing behavior. It would not authorize a new field,
+history schema, value snapshot, audit payload, route, permission, real employee,
+or production use.

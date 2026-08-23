@@ -305,6 +305,7 @@ describe('yuta-pos site-agent client', () => {
       priority: 10,
       maxApplications: null,
       isActive: false,
+      isSuggestionEnabled: true,
       groups: [],
     };
     const group = {
@@ -343,6 +344,7 @@ describe('yuta-pos site-agent client', () => {
       priority: 10,
       maxApplications: null,
       isActive: false,
+      isSuggestionEnabled: true,
     });
     await client.updateComboRule(sessionToken, rule.id, { isActive: true });
     await client.createComboGroup(sessionToken, {

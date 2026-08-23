@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-09
+Last updated: 2026-08-23
 
 ## Authority order
 
@@ -90,7 +90,9 @@ the shared operations documents until a dedicated product document is needed.
 
 - [`operations/LOCAL_DEVELOPMENT.md`](operations/LOCAL_DEVELOPMENT.md)
 - [`operations/DEPLOYMENT.md`](operations/DEPLOYMENT.md)
+- [`operations/PRODUCTION_READINESS.md`](operations/PRODUCTION_READINESS.md)
 - [`operations/OPENAI_PROVIDER_ELIGIBILITY.md`](operations/OPENAI_PROVIDER_ELIGIBILITY.md)
+- [`operations/EXTERNAL_DELIVERABLES.md`](operations/EXTERNAL_DELIVERABLES.md)
 - [`DEVELOPMENT_WORKFLOW.md`](DEVELOPMENT_WORKFLOW.md)
 - [`DOCUMENTATION_POLICY.md`](DOCUMENTATION_POLICY.md)
 - [`tasks/TASK_TEMPLATE.md`](tasks/TASK_TEMPLATE.md)

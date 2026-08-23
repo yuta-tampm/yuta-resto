@@ -753,11 +753,13 @@ export function EmployeeFullDossierPage({
   locale,
   businessDate,
   contractExtractionPrototypeEnabled,
+  formalitesReadPrototypeEnabled,
 }: {
   initialEmployee: PersonnelEmployeeSummary;
   locale: string;
   businessDate: string;
   contractExtractionPrototypeEnabled: boolean;
+  formalitesReadPrototypeEnabled: boolean;
 }) {
   const [employee, setEmployee] = useState(initialEmployee);
   const [activeTab, setActiveTab] = useState<DetailTab>('overview');
@@ -902,6 +904,7 @@ export function EmployeeFullDossierPage({
         requestDocumentAdd={false}
         focusDeparture={false}
         contractExtractionPrototypeEnabled={contractExtractionPrototypeEnabled}
+        formalitesReadPrototypeEnabled={formalitesReadPrototypeEnabled}
         mode="page"
         onTabChange={(tab) => {
           setActiveTab(tab);
@@ -1114,6 +1117,7 @@ function EmployeeDetails({
   requestDocumentAdd,
   focusDeparture,
   contractExtractionPrototypeEnabled,
+  formalitesReadPrototypeEnabled = false,
   mode = 'dialog',
 }: {
   employee: PersonnelEmployeeSummary;
@@ -1136,6 +1140,7 @@ function EmployeeDetails({
   requestDocumentAdd: boolean;
   focusDeparture: boolean;
   contractExtractionPrototypeEnabled: boolean;
+  formalitesReadPrototypeEnabled?: boolean;
   mode?: EmployeeDetailsMode;
 }) {
   const departureFactRef = useRef<HTMLDivElement>(null);
@@ -1192,6 +1197,14 @@ function EmployeeDetails({
               </Link>
             </Button>
           )}
+          {mode === 'page' && formalitesReadPrototypeEnabled ? (
+            <Button asChild type="button" variant="secondary" size="sm">
+              <Link href={`/equipe/formalites-personnel/${employee.id}`}>
+                <FileText className="h-4 w-4" aria-hidden />
+                Préparer un projet CDI
+              </Link>
+            </Button>
+          ) : null}
           <Button type="button" variant="secondary" size="sm" onClick={onEdit}>
             <Pencil className="h-4 w-4" aria-hidden />
             Modifier

@@ -196,6 +196,16 @@ Use it during service to add menu items to the current order.
 3. Tap an item card.
 4. The item appears in `Commande actuelle`.
 
+When the current order is one eligible item away from a configured positive
+combo, the screen may show `Suggestion combo` below search. Use its `Ajouter`
+action to add the existing catalog item through the normal item workflow; this
+does not create a duplicate product or a separate combo item. Typing in search
+hides the shelf. Changing category dismisses the current shelf so staff can
+focus on the selected catalog. Adding an unrelated item does not immediately
+revive that dismissed combo state. Adding another item relevant to the combo,
+such as a second Gua Bao, creates a new state and may show the suggestion again
+in any category.
+
 Item name, price, and kitchen station are snapshotted when the item is added. Later menu changes do not rewrite old orders.
 
 Quantity controls follow the kitchen and payment lifecycle:
@@ -650,6 +660,11 @@ local POS database. Open `Gestion locale > Combos` or go directly to
 required.
 
 Combos are payment discounts, not kitchen production rules.
+
+Each rule exposes `Suggestion à la commande`. Disable it when a valid combo has
+too many candidates to be useful during order entry. This preference does not
+deactivate the rule and does not change its payment/check discount. Inactive
+rules are never suggested even when the preference is enabled.
 
 Combo behavior:
 

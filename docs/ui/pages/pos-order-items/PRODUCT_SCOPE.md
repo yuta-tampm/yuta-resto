@@ -1,6 +1,6 @@
 # POS Order Items - Product Scope
 
-Status: Draft — combo-completion suggestions
+Status: Approved — combo-completion suggestions
 
 Visibility: Engineering
 

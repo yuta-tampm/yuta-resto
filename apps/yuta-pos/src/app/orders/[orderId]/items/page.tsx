@@ -28,6 +28,11 @@ import {
   isIncompleteVariantSelection,
   kitchenSendFeedback,
 } from './_lib/kitchen-send-validation';
+import { buildComboCompletionSuggestionGroups } from './_lib/combo-completion-suggestions';
+import {
+  comboSuggestionDismissalToken,
+  hiddenComboSuggestionKeys,
+} from './_lib/combo-suggestion-visibility';
 import { posApi } from '../../../../lib/pos-api';
 import { allergySummaryFromSnapshots } from '../../../_pos-helpers';
 
@@ -38,6 +43,7 @@ type OrderItemsPageProps = {
   searchParams: Promise<{
     category?: string;
     sendError?: string;
+    hideComboSuggestions?: string;
   }>;
 };
 
@@ -51,7 +57,7 @@ export default async function OrderItemsPage({
   searchParams,
 }: OrderItemsPageProps) {
   const { orderId } = await params;
-  const { category, sendError } = await searchParams;
+  const { category, sendError, hideComboSuggestions } = await searchParams;
   const paymentView = await posApi.getPaymentViewData(orderId);
   const { catalog } = paymentView;
   const order = paymentView.order;
@@ -131,6 +137,26 @@ export default async function OrderItemsPage({
     !incompleteVariantSelection;
   const activeOrderItems = order.items.filter(
     (item) => item.status !== 'cancelled',
+  );
+  const allComboSuggestionGroups = buildComboCompletionSuggestionGroups({
+    canEditItems,
+    orderItems: activeOrderItems.map((item) => ({
+      id: item.id,
+      menuItemId: item.menuItemId,
+      unitPriceCentsSnapshot: item.unitPriceCentsSnapshot,
+      quantity: item.quantity,
+      createdAt: item.createdAt,
+    })),
+    comboRules: paymentView.activeComboRules,
+    catalogCategories: catalog.categories,
+  });
+  const hiddenComboKeys = hiddenComboSuggestionKeys(hideComboSuggestions);
+  const comboSuggestionGroups = allComboSuggestionGroups.filter(
+    (group) => !hiddenComboKeys.has(group.dismissalKey),
+  );
+  const comboSuggestionDismissal = comboSuggestionDismissalToken(
+    allComboSuggestionGroups,
+    hideComboSuggestions,
   );
   const requiredInstructionItemIds = new Set(
     itemsWithVariantPolicy
@@ -224,7 +250,7 @@ export default async function OrderItemsPage({
               className="m-4 mb-0 shrink-0"
             />
           )}
-          <div className="grid min-h-0 min-w-0 flex-1 overflow-x-clip lg:grid-cols-[190px_minmax(0,1fr)_360px] lg:grid-rows-[minmax(0,1fr)] lg:gap-3 lg:bg-canvas lg:p-3 2xl:grid-cols-[220px_minmax(0,1fr)_440px] 2xl:gap-4 2xl:p-4">
+          <div className="grid min-h-0 min-w-0 flex-1 content-start overflow-x-clip lg:grid-cols-[190px_minmax(0,1fr)_360px] lg:grid-rows-[minmax(0,1fr)] lg:content-stretch lg:gap-3 lg:bg-canvas lg:p-3 2xl:grid-cols-[220px_minmax(0,1fr)_440px] 2xl:gap-4 2xl:p-4">
             <aside className="sticky top-0 z-20 min-w-0 overflow-hidden border-b border-border-default bg-white lg:static lg:z-auto lg:flex lg:min-h-0 lg:flex-col lg:rounded-xl lg:border">
               <div className="hidden px-5 pb-4 pt-5 lg:block">
                 <h2 className="text-sm font-black text-primary/65">
@@ -235,6 +261,7 @@ export default async function OrderItemsPage({
                 categories={categoryTabs}
                 orderId={order.id}
                 selectedCategoryId={selectedCategoryId}
+                comboSuggestionDismissal={comboSuggestionDismissal}
               />
             </aside>
             <section className="min-w-0 overflow-hidden border-b border-border-default bg-white lg:flex lg:min-h-0 lg:flex-col lg:rounded-xl lg:border">
@@ -252,6 +279,13 @@ export default async function OrderItemsPage({
                       (total, orderItem) => total + orderItem.quantity,
                       0,
                     ),
+                }))}
+                comboSuggestionGroups={comboSuggestionGroups.map((group) => ({
+                  ...group,
+                  items: group.items.map((item) => ({
+                    ...item,
+                    priceLabel: formatEuros(item.priceCents),
+                  })),
                 }))}
               />
 

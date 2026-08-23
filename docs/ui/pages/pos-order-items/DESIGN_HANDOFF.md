@@ -1,6 +1,6 @@
 # POS Order Items - Design Handoff
 
-Status: Phase 0 combo-suggestion handoff ready for review
+Status: Phase 1 combo-suggestion designs approved
 
 Visibility: Engineering
 
@@ -83,13 +83,33 @@ Explicit exclusions: no hard-coded Gua Bao or tea name/ID; no copied menu item; 
 Output: one 1366x768 primary proposal and one 390x844 companion, plus compact state studies for multiple candidates, locked, and pending/error. Mark all outputs DRAFT. Preserve the baseline shell and page proportions exactly enough that only the new suggestion surface reads as proposed scope.
 ```
 
-### Phase 0 approval gate
+### Phase 0 approval and Phase 1 result
 
-No generated combo-suggestion reference is approved yet. Phase 1 may begin only
-after the product owner approves the one-item-away qualification policy,
-candidate deduplication, placement below search, and the explicit exclusions.
+On 2026-08-22, the product owner approved the one-item-away qualification
+policy, highest-priority candidate deduplication, placement below search, and
+hiding the shelf while catalog search is active.
+
+ImageGen then produced two corrected `DRAFT` references:
+
+- `references/design-proposal-04-combo-suggestions-desktop.png` keeps the
+  desktop three-panel workspace and inserts one compact suggestion shelf below
+  search. It uses the exact real tea item, normal catalog price, and a direct
+  `Ajouter` action without displaying projected savings.
+- `references/design-proposal-05-combo-suggestions-narrow.png` keeps the
+  compact service header, current two-row category pattern, search, two-column
+  catalog, and bottom order action while adapting the same shelf to 390x844.
+
+Repository review rejected the first generated drafts because the candidate
+artwork used `E5` instead of `TG`, and the narrow category area was rendered as
+one row with an invented `Plats` label. Targeted revisions corrected the
+artwork to `TG`, restored two compact category rows, and restored the real
+`Plat du jour` label. The corrected images remain directional visual guidance:
+generated typography and pixels do not override repository copy, components,
+tokens, or responsive implementation.
+
 The previously approved references remain authority for the current as-built
-page but do not approve this new surface.
+page. The product owner approved both corrected references by authorizing Phase
+2 on 2026-08-22.
 
 ## Phase 0 source
 

@@ -80,6 +80,7 @@ import { isPersonnelActionOverviewEnabled } from './_lib/personnel-action-overvi
 export type CreateEmployeeActionState = {
   status: 'idle' | 'error' | 'duplicate' | 'success';
   message: string | null;
+  employeeId: string | null;
   fieldErrors: Record<string, string>;
   duplicateCandidates: Array<{
     id: string;
@@ -1361,7 +1362,7 @@ export async function createEmployeeAction(
         formData.get('duplicateOverrideReason'),
       ),
     });
-    await createPersonnelEmployee(
+    const result = await createPersonnelEmployee(
       cloudDatabase,
       tenant,
       input,
@@ -1370,7 +1371,8 @@ export async function createEmployeeAction(
     revalidatePath('/equipe/salaries');
     return {
       status: 'success',
-      message: 'Le dossier salarié a été enregistré.',
+      message: 'Le dossier minimum a été créé.',
+      employeeId: result.employee.id,
       fieldErrors: {},
       duplicateCandidates: [],
     };
@@ -1384,6 +1386,7 @@ export async function createEmployeeAction(
       return {
         status: 'error',
         message: 'Certains champs doivent être corrigés.',
+        employeeId: null,
         fieldErrors,
         duplicateCandidates: [],
       };
@@ -1393,6 +1396,7 @@ export async function createEmployeeAction(
         status: 'duplicate',
         message:
           'Un dossier portant le même nom existe peut-être dans cet établissement.',
+        employeeId: null,
         fieldErrors: {},
         duplicateCandidates: error.candidates,
       };
@@ -1405,6 +1409,7 @@ export async function createEmployeeAction(
         status: 'error',
         message:
           'Cette tentative a déjà été utilisée avec d’autres valeurs. Fermez puis rouvrez le formulaire.',
+        employeeId: null,
         fieldErrors: {},
         duplicateCandidates: [],
       };
@@ -1413,6 +1418,7 @@ export async function createEmployeeAction(
     return {
       status: 'error',
       message: 'Impossible d’enregistrer le dossier. Réessayez.',
+      employeeId: null,
       fieldErrors: {},
       duplicateCandidates: [],
     };

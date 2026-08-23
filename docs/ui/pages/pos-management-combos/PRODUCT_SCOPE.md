@@ -1,6 +1,6 @@
 # POS management combos — Product Scope
 
-Status: Reviewed repository scope; visual direction pending approval
+Status: Suggestion-eligibility management and consumption implemented; Phase 5 complete
 
 Visibility: Engineering
 
@@ -9,6 +9,20 @@ Visibility: Engineering
 Allow an authenticated local administrator or manager to configure payment
 combo rules quickly and safely without changing kitchen production items or
 leaving the local restaurant runtime.
+
+The 2026-08-23 extension adds one bounded goal: explicitly choose which active
+combo rules may produce order-entry completion suggestions when broad eligible
+item sets make the shelf operationally noisy.
+
+## Suggestion-eligibility capability
+
+- persist one boolean preference per combo rule;
+- expose its text-backed state and control on `/management/combos`;
+- allow the existing local `admin` and `manager` roles to change it;
+- exclude opted-out rules only from `/orders/[orderId]/items` suggestions;
+- preserve discount calculation, payment/check optimization, active state,
+  structural locks, and historical snapshots;
+- default existing and new rules to enabled.
 
 ## Current approved capabilities
 
@@ -37,9 +51,11 @@ leaving the local restaurant runtime.
 
 ## Out of scope
 
-No cloud sync, tenant/establishment switcher, analytics, kitchen routing,
+No automatic item-count/name heuristic, candidate cap, browser-local setting,
+cloud sync, tenant/establishment switcher, analytics, kitchen routing,
 rule duplication, bulk edit, drag-and-drop persistence, import/export, new
-roles, new endpoints, new fields, hard delete, or payment-engine change.
+roles, separate endpoints, additional domain fields, hard delete, or
+payment-engine change.
 
 Collapsible rule/group presentation may be explored as page-local UI state in
 the visual proposal. It is not approved behavior until the design and relevant

@@ -83,6 +83,33 @@ All generated images are visual proposals only. They do not define routes,
 product scope, authorization, contracts, APIs, persistence, device ownership,
 business rules, exact copy, or raw colors.
 
+## Combo-completion Phase 5 as-built evidence
+
+Evidence status: `AS-BUILT`
+
+Captured on 2026-08-22 from the production build using real persisted order
+`POS-20260819-201927-F38DEA`. Site-agent and database were available; the
+printer was not configured. Capture did not submit a control or create an
+item, kitchen transaction, payment, or print job.
+
+- `phase-5-combo-suggestions-1366x768.png`: exact 1366x768 internal viewport,
+  three panels, multiple suggestion groups, and four catalog cards per row;
+- `phase-5-combo-suggestions-1024x768.png`: exact 1024x768 internal viewport,
+  three panels, stacked combo headings, visible 44px add action, and two catalog
+  cards per row;
+- `phase-5-combo-suggestions-768x1024.png`: exact 768x1024 internal viewport,
+  stacked layout, two-row category menu, and mobile-order action;
+- `phase-5-combo-suggestions-390x844.png`: exact 390x844 internal viewport,
+  two catalog cards, multiple suggestion groups, and mobile-order action.
+
+The in-app browser has a fixed outer viewport, so each image is a scaled
+wrapper preview of an iframe whose inner viewport matches the stated size.
+DOM evidence was measured inside each iframe: inner width equalled client
+width, document overflow was zero, category and suggestion actions were 44px,
+and the mobile-order action was 56px. Browser logs contained no warning or
+error. The images document presentation only and do not extend product or
+runtime authority.
+
 ## Final Phase 5 as-built evidence
 
 Evidence status: `AS-BUILT`

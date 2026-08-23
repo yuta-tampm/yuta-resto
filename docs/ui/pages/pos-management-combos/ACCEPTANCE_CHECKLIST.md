@@ -6,6 +6,84 @@ Visibility: Engineering
 
 ## Phase 0
 
+### 2026-08-23 suggestion-eligibility extension
+
+- [x] Existing management page and order-entry consumer are inventoried.
+- [x] Persisted field, contract, site-agent, auth, migration, and UI impact are
+      identified without runtime or data mutation.
+- [x] Real catalog evidence records 27/27/5/3 eligible-item counts without
+      turning those counts into an automatic rule.
+- [x] Payment/check calculation and historical snapshots are protected from the
+      new presentation preference.
+- [x] Existing stable management and order-items packs are selected; no
+      duplicate feature package is created.
+- [x] Current authenticated recapture blocker and resume condition are recorded.
+- [x] Product owner approves the three default/independence/explicit-control
+      decisions.
+- [ ] Fresh authenticated current baseline is captured before design approval.
+- [x] Product owner approves Phase 0 before Extension Phase 1 design.
+- [x] Separate desktop and narrow suggestion-setting proposals are generated
+      from approved as-built references.
+- [x] Selected DRAFT references use current catalog priority, pricing, and group
+      metadata rather than generated placeholder values.
+- [x] DRAFT design distinguishes `Active` discount state from
+      `Suggestion à la commande` state and preserves existing actions.
+- [x] Phase 1 makes no runtime, schema, migration, API, contract, auth, or data
+      change.
+- [x] Product owner approves the selected Phase 1 design before Phase 2.
+- [x] `combo_rules.is_suggestion_enabled` is non-null and defaults existing and
+      new rules to `true` through generated migration `0011`.
+- [x] Combo response, create, and update contracts carry the preference without
+      adding an endpoint or permission.
+- [x] Site-agent catalog and management projections return the persisted value.
+- [x] Existing management authorization protects the PATCH update.
+- [x] An active rule can change suggestion preference without relaxing active
+      group/item structural locks.
+- [x] Persistence regression proves a suggestion-disabled active rule still
+      calculates and persists unchanged order/check discounts.
+- [x] Phase 2 adds no management UI and no order-items filtering.
+- [x] Migration `0011` remains unapplied to the operational POS database.
+- [x] Product owner approves Extension Phase 3 management UI implementation.
+- [x] Every real rule header exposes a separate text-backed
+      `Suggestion à la commande` control.
+- [x] The setting remains visually and semantically independent from the
+      discount `Active` badge and activation action.
+- [x] Active and inactive rules can save the preference without relaxing
+      structural locks.
+- [x] Inactive rules with an enabled preference state that they cannot be
+      suggested while inactive.
+- [x] The Switch has visible focus, an effective 44px target, and responsive
+      full-width narrow placement without compressing existing actions.
+- [x] Pending state blocks duplicate submissions and announces save progress.
+- [x] Persisted success and recoverable error feedback remain visible in the
+      affected rule surface.
+- [x] The dedicated Server Action validates the field, uses the trusted local
+      management token, calls the existing PATCH path, and revalidates both
+      management and order layouts.
+- [x] Focused tests cover enabled/disabled/inactive/pending copy and both Server
+      Action payload directions.
+- [x] Phase 3 adds no order-items filter, endpoint, permission, schema, fixture,
+      or operational-data mutation.
+- [x] Product owner approves Extension Phase 4 order-entry consumption.
+- [x] The order-items adapter filters `isSuggestionEnabled === false` only at
+      the completion-projection boundary.
+- [x] Enabled active rules continue producing expected candidates.
+- [x] Opted-out active rules produce no suggestion shelf entry.
+- [x] Payment and item-split pages still receive every active combo rule.
+- [x] Guarded persistence coverage proves opted-out active rules still
+      calculate and persist normal order/check discounts.
+- [x] No automatic threshold, candidate cap, category/name match, or hard-coded
+      combo identity is introduced.
+- [x] Phase 4 adds no endpoint, contract, schema, authorization, mutation,
+      payment, kitchen, printing, offline, or device capability.
+- [x] Product owner approves Extension Phase 5 authenticated responsive QA.
+- [x] Real order-entry consumer passes the four-viewport matrix with zero
+      document-level horizontal overflow and truthful suggestion behavior.
+- [x] Search hiding/restoration, category dismissal, unrelated-item stability,
+      and renewed same-rule eligibility after another Gua Bao pass read-only QA.
+- [x] Authenticated `/management/combos` desktop and narrow evidence is captured.
+- [x] Phase 5 package status is restored to implemented after authenticated QA.
+
 - [x] Existing real route and integrated implementation identified.
 - [x] Local session, bearer transport, site-agent, db-pos, and contract
       boundaries mapped.

@@ -1109,3 +1109,81 @@ It discloses the four proposed YUTA AI use cases while keeping Personnel
 Documents as a separately blocked high-risk project. The Sales form was
 submitted on 2026-08-18; its response is pending and it does not approve an
 account, key, SDK, request, or real-file use.
+
+## F02 Phase 1 — bounded employee creation completion
+
+Status: `IMPLEMENTED AND QA COMPLETE WITH FICTIONAL LUNA DATA — PRODUCTION BLOCKED`.
+
+F02 (`Ajouter un nouveau salarié`) is not a missing capability and must not be
+rebuilt from the external functional-flow dossier. Repository inspection on
+2026-08-23 confirms an existing integrated development slice inside
+`/equipe/salaries`: an OWNER opens `Ajouter un salarié`, completes the current
+single-dialog minimum dossier, follows the conditional CDD branch when needed,
+and submits through the existing tenant-scoped action. Validation, advisory
+same-establishment duplicate review, reasoned override, idempotent retry,
+atomic creation/audit, refresh, and recoverable errors already exist.
+
+Use `EXISTING_CAPABILITY_RENEWAL` for F02. Preserve the current route, dialog,
+contracts, repository transaction, permission, tenant scope, validation,
+duplicate behavior, idempotency, and audit. The wider downloaded F02 flow is
+product input only: remuneration, trial period, apprenticeship, identity/work-
+permit files, detailed part-time distribution, file-first creation, Formalités,
+register inscription, and additional contract types are not current F02
+capabilities.
+
+Before Phase 1, the create action did not return the committed employee
+identifier to the dialog and success offered no direct dossier action. The
+current signed-contract capability still requires an existing employee dossier,
+so Documents cannot truthfully be the first F02 step. Current completeness
+means only that the four existing minimum text facts are present; it is not
+legal, payroll, document, or onboarding completeness.
+
+Product approved F02-01 through F02-08 and the bounded Phase 1 implementation
+on 2026-08-23. The existing action now returns only the committed safe employee
+ID after its atomic transaction. The dialog keeps the OWNER on the success
+state, says that the minimum dossier was created, and offers explicit `Fermer`
+and `Ouvrir le dossier` choices. It does not navigate automatically. Closing a
+modified, uncommitted form now requires an explicit discard confirmation;
+closing an untouched or committed form remains immediate.
+
+Authenticated OWNER QA covered the normal dialog, CDD branch, existing
+same-establishment duplicate branch, dirty-close recovery, committed success,
+and the full-dossier route. One clearly fictional LUNA employee,
+`Nina F02-Sierra`, was created to prove the committed success and returned
+dossier ID. Four responsive as-built captures plus duplicate, dirty-close, and
+success evidence are stored in `references/`. All four widths have no page or
+visible-dialog horizontal overflow and browser logs contain no warning/error.
+
+Phase 1 adds no route, field, enum, validation rule, schema, migration,
+permission, audit event, document type, upload-before-create flow, provider,
+AI, or production behavior. Documents still begin only after the employee
+dossier exists. Real employee QA and production remain blocked.
+
+## F03 Phase 0 — manage-dossier reconciliation
+
+Status: `DOCUMENTATION REVIEW — PRODUCT APPROVAL REQUIRED`.
+
+F03 (`Gérer le dossier salarié`) is an existing integrated capability, not a
+new page. The same `Modifier` action is available from the desktop quick view
+and `/equipe/salaries/[employeeId]`; both open the existing combined minimum
+identity/employment dialog and use the same server action, strict contract,
+tenant-scoped repository transaction, revision guard, idempotency receipt, and
+audit behavior. Use `EXISTING_CAPABILITY_RENEWAL` and preserve those boundaries.
+
+The downloaded flow is product input only. The current editor does not own
+remuneration, payroll, documents, work authorization, Formalités, personnel-
+register corrections, departure, or contract-document lifecycle. It also does
+not provide reconstructable old/new values for ordinary identity and employment
+changes. Those audit events expose changed field names only; F07 remains the
+separate decision point for durable value-level history.
+
+The current dialog has validation, pending, save error, idempotency conflict,
+stale-revision recovery, no-change success, and committed-success behavior. Its
+confirmed Phase 0 interaction gap is dirty close: `Annuler`, Escape, backdrop,
+or the close control can discard modified unsaved values without confirmation.
+No F03-specific current edit-dialog baseline is stored yet; existing Wave C
+captures establish the containing dossier and tabs only.
+
+Phase 0 proposes F03-01 through F03-08 and stops for product approval. It makes
+no runtime, schema, migration, contract, permission, audit-event, operational-
+data, provider, file, real-employee, or production change.

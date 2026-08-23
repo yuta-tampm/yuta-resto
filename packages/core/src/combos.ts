@@ -36,6 +36,18 @@ export type CalculatedComboDiscount = {
   itemApplications: Array<{ itemId: string; quantityApplied: number }>;
 };
 
+export type ComboCompletionCandidate = {
+  menuItemId: string;
+  unitPriceCents: number;
+};
+
+export type ComboCompletionSuggestion = {
+  comboRuleId: string;
+  comboRuleName: string;
+  comboRulePriority: number;
+  menuItemId: string;
+};
+
 type UnitItem = {
   unitKey: string;
   itemId: string;
@@ -58,10 +70,7 @@ export function calculateComboDiscounts(
   const remainingUnits = expandQuantities(items);
   const activeRules = rules
     .filter((rule) => rule.isActive)
-    .toSorted(
-      (left, right) =>
-        left.priority - right.priority || left.name.localeCompare(right.name),
-    );
+    .toSorted(compareRules);
 
   for (const rule of activeRules) {
     let applications = 0;
@@ -97,6 +106,125 @@ export function calculateComboDiscounts(
   }
 
   return discounts;
+}
+
+export function calculateComboCompletionSuggestions(
+  items: ComboCalculationItem[],
+  rules: ComboCalculationRule[],
+  candidates: ComboCompletionCandidate[],
+): ComboCompletionSuggestion[] {
+  const baselineDiscounts = calculateComboDiscounts(items, rules);
+  const baselineDiscountTotal = sumDiscounts(baselineDiscounts);
+  const baselineRuleCounts = countDiscountsByRule(baselineDiscounts);
+  const activeRules = rules.filter((rule) => rule.isActive);
+  const activeRulesById = new Map(activeRules.map((rule) => [rule.id, rule]));
+  const eligibleMenuItemIds = new Set(
+    activeRules.flatMap((rule) =>
+      rule.groups.flatMap((group) =>
+        group.items.map((item) => item.menuItemId),
+      ),
+    ),
+  );
+  const candidateCreatedAt = nextItemCreatedAt(items);
+  const seenMenuItemIds = new Set<string>();
+  const suggestions: ComboCompletionSuggestion[] = [];
+
+  for (const [candidateIndex, candidate] of candidates.entries()) {
+    if (seenMenuItemIds.has(candidate.menuItemId)) {
+      continue;
+    }
+    seenMenuItemIds.add(candidate.menuItemId);
+    if (!eligibleMenuItemIds.has(candidate.menuItemId)) {
+      continue;
+    }
+
+    const projectedDiscounts = calculateComboDiscounts(
+      [
+        ...items,
+        {
+          id: `combo-completion-candidate:${candidateIndex}:${candidate.menuItemId}`,
+          menuItemId: candidate.menuItemId,
+          unitPriceCentsSnapshot: candidate.unitPriceCents,
+          quantity: 1,
+          createdAt: candidateCreatedAt,
+        },
+      ],
+      rules,
+    );
+
+    if (
+      projectedDiscounts.length <= baselineDiscounts.length ||
+      sumDiscounts(projectedDiscounts) <= baselineDiscountTotal
+    ) {
+      continue;
+    }
+
+    const projectedRuleCounts = countDiscountsByRule(projectedDiscounts);
+    const qualifyingRule = [...activeRulesById.values()]
+      .filter(
+        (rule) =>
+          (projectedRuleCounts.get(rule.id) ?? 0) >
+          (baselineRuleCounts.get(rule.id) ?? 0),
+      )
+      .toSorted(compareRules)[0];
+
+    if (!qualifyingRule) {
+      continue;
+    }
+
+    suggestions.push({
+      comboRuleId: qualifyingRule.id,
+      comboRuleName: qualifyingRule.name,
+      comboRulePriority: qualifyingRule.priority,
+      menuItemId: candidate.menuItemId,
+    });
+  }
+
+  return suggestions.toSorted(
+    (left, right) =>
+      left.comboRulePriority - right.comboRulePriority ||
+      left.comboRuleName.localeCompare(right.comboRuleName) ||
+      left.menuItemId.localeCompare(right.menuItemId),
+  );
+}
+
+function sumDiscounts(discounts: CalculatedComboDiscount[]): number {
+  return discounts.reduce(
+    (total, discount) => total + discount.discountCents,
+    0,
+  );
+}
+
+function countDiscountsByRule(
+  discounts: CalculatedComboDiscount[],
+): Map<string, number> {
+  const counts = new Map<string, number>();
+  for (const discount of discounts) {
+    counts.set(
+      discount.comboRuleId,
+      (counts.get(discount.comboRuleId) ?? 0) + 1,
+    );
+  }
+  return counts;
+}
+
+function nextItemCreatedAt(items: ComboCalculationItem[]): Date {
+  const latestTimestamp = items.reduce(
+    (latest, item) => Math.max(latest, item.createdAt.getTime()),
+    0,
+  );
+  return new Date(latestTimestamp + 1);
+}
+
+function compareRules(
+  left: ComboCalculationRule,
+  right: ComboCalculationRule,
+): number {
+  return (
+    left.priority - right.priority ||
+    left.name.localeCompare(right.name) ||
+    left.id.localeCompare(right.id)
+  );
 }
 
 function expandQuantities(items: ComboCalculationItem[]): UnitItem[] {

@@ -18,3 +18,8 @@ vendor
 apps/yuta-pos/.tmp/prints/*
 !apps/yuta-pos/.tmp/prints/.gitkeep
 apps/yuta-pos/.tmp/*.log
+
+# Local artifact workspace and externally shareable handoff files.
+/tmp/
+/exports/*
+!/exports/README.md

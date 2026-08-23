@@ -1738,3 +1738,109 @@ development restarted without the flag, restoring the offline stored adapter.
 Stop here. Any additional provider call requires another explicit approval.
 Real personnel files, schema/migration, production storage/scanning, retention,
 backup/restore, and production enablement remain outside Phase 8.
+
+## F02 — add-employee flow
+
+### F02 Phase 0 — repository reconciliation
+
+Status: `APPROVED 2026-08-23`.
+
+Completed read-only work:
+
+1. reconciled the downloaded F02 flow with the current route, dialog, action,
+   contract, repository, permissions, tests, and page-pack authority;
+2. classified F02 as renewal of an existing integrated capability under
+   `EXISTING_CAPABILITY_RENEWAL`, not a new page or fixture prototype;
+3. inventoried the exact current fields, conditional CDD validation, duplicate
+   branch, idempotency, atomic audit, success, and recovery behavior;
+4. recorded that current Documents requires an existing employee and cannot be
+   the first creation step;
+5. separated current minimum-dossier completeness from broader legal,
+   document, payroll, register, Formalités, and onboarding completeness;
+6. recorded the missing current authenticated create-dialog baseline; and
+7. proposed F02-01 through F02-08 for product approval without modifying code.
+
+No runtime, schema, migration, transport, permission, audit, file, provider,
+test data, or operational data changed.
+
+### F02 Phase 1 — bounded existing-flow completion
+
+Status: `IMPLEMENTED AND QA COMPLETE 2026-08-23`.
+
+Implemented slice:
+
+1. keep the current one-dialog fields, layout, server action, repository, and
+   OWNER/establishment boundaries;
+2. return only the committed safe employee ID in the successful action state;
+3. present `Le dossier minimum a été créé.`, `Ouvrir le dossier`, and `Fermer`
+   after the existing atomic commit, without automatic navigation;
+4. confirm before closing only when the current unsaved dialog is dirty;
+5. add focused dirty-input tests and preserve the existing action/repository
+   coverage for validation, duplicate, retry, idempotency, and atomic commit;
+6. capture authenticated fictional-data baselines and run responsive,
+   accessibility, browser-console, and regression QA; and
+7. synchronize the page pack with the implemented result.
+
+Stop before adding a wizard, resumable draft, field, enum, validation rule,
+document type, upload-before-create flow, remuneration, probation,
+apprenticeship, work authorization, detailed part-time distribution,
+Formalités, register mutation, AI/provider, real employee QA, or production
+enablement. Any of those requires a separate approved phase.
+
+### Phase 1 evidence and stop gate
+
+Product approved F02-01 through F02-08 and this bounded implementation on
+2026-08-23. The Backoffice suite passes 52 test files and 178 tests. Typecheck
+passes. Authenticated OWNER browser QA covers the normal, CDD, duplicate,
+dirty-close, committed-success, and full-dossier states with fictional LUNA
+data. Responsive checks at 1440, 1024, 768, and 390 CSS pixels report no page
+or visible-dialog horizontal overflow and no browser warning/error.
+
+One fictional dossier, `Nina F02-Sierra`, was created to prove the existing
+commit and returned route. Stop here before any field expansion, document-first
+flow, real employee QA, production enablement, or other item excluded above.
+
+## F03 — manage-employee-dossier flow
+
+### F03 Phase 0 — repository reconciliation
+
+Status: `AWAITING PRODUCT APPROVAL`.
+
+Completed documentation-only work:
+
+1. reconciled the downloaded F03 and F07 flows with the current quick view,
+   full dossier, edit dialog, server action, contract, repository, audit read
+   model, authorization, and tests;
+2. classified F03 as renewal of an existing integrated capability under
+   `EXISTING_CAPABILITY_RENEWAL`;
+3. inventoried the exact current editable fields, CDD branches, revision,
+   idempotency, atomic audit, validation, success, and recovery behavior;
+4. recorded that ordinary audit events contain changed field names but not
+   reconstructable previous/new values;
+5. assigned current editing to F03 and any future durable value history to F07;
+6. identified unsaved-close protection and a current F03 edit-dialog baseline
+   as the bounded gaps; and
+7. proposed F03-01 through F03-08 without changing implementation or data.
+
+### Proposed F03 Phase 1 — bounded interaction renewal
+
+Do not start until F03-01 through F03-08 are explicitly approved.
+
+The smallest coherent next slice is:
+
+1. capture the current authenticated edit dialog with fictional LUNA data;
+2. add confirmation before discarding modified unsaved editor values, reusing
+   the existing F02 decision/helper pattern where appropriate;
+3. preserve immediate close for untouched and successfully saved states;
+4. add focused tests for the close decision without changing server behavior;
+5. verify existing validation, CDD-to-CDI confirmation, stale-revision reload,
+   no-change success, committed success, focus recovery, and dossier refresh;
+6. run responsive/accessibility/browser QA at 1440, 1024, 768, and 390 CSS
+   pixels with fictional data only; and
+7. synchronize this page pack with the as-built result.
+
+Stop before any new employee field, contract type, validation policy, route,
+permission, schema, migration, value-history record, audit payload, departure
+change, document/Formalités/register coupling, real employee QA, or production
+enablement. F07 requires a separate product, legal/privacy, retention, domain,
+and technical design approval before value-level history implementation.

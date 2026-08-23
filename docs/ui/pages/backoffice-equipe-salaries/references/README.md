@@ -303,6 +303,33 @@ The DRAFT design and Phase 1 fixture captures remain historical discovery
 evidence only. This Phase 5 set is the current Wave D as-built reference and
 does not authorize production delivery.
 
+## F02 Phase 1 as-built evidence
+
+Authenticated local OWNER QA captured the current `Ajouter un salarié` dialog
+with fictional LUNA data on 2026-08-23:
+
+- `f02-phase-1-as-built-1440x1000.png`;
+- `f02-phase-1-as-built-1024x768.png`;
+- `f02-phase-1-as-built-768x1024.png`;
+- `f02-phase-1-as-built-390x844.png`;
+- `f02-phase-1-duplicate-1440x1000.png`;
+- `f02-phase-1-dirty-close-390x844.png`; and
+- `f02-phase-1-success-1440x1000.png`.
+
+The four responsive captures are the current normal-dialog baseline after the
+controlled CDD-reason and contractual-weekly-duration work. The additional
+captures prove existing same-establishment duplicate review, the new explicit
+discard decision, and the committed success with `Fermer` and
+`Ouvrir le dossier`. Interactive QA separately confirmed the CDD branch and
+that the returned employee ID resolves to the full dossier route.
+
+The browser reported no warning/error. At 1440, 1024, 768, and 390 CSS pixels,
+the page and visible dialog each have equal client and scroll widths. One
+clearly fictional record, `Nina F02-Sierra`, was created through the existing
+atomic flow to produce truthful success evidence. These captures contain no
+real employee data and do not authorize new fields, document-first creation,
+provider work, real employee QA, or production.
+
 ## Wave F Phase 0 containing-surface and DRAFT design evidence
 
 The current approved Documents/Wave C Phase 5 as-built drawer captures remain

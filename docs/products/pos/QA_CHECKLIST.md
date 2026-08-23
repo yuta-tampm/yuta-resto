@@ -103,6 +103,7 @@ N/A       not applicable for this run
 | Case                                | Expected Result                                                  | Result | Notes |
 | ----------------------------------- | ---------------------------------------------------------------- | -----: | ----- |
 | Select menu category                | Item grid changes to selected category                           |        |       |
+| Slight pointer movement on category | Category still opens; only intentional horizontal drag scrolls   |        |       |
 | Add item                            | Item appears in `Commande en cours`                              |        |       |
 | Add same item twice                 | Two rows or expected quantity behavior is visible                |        |       |
 | Item total displays correctly       | Row amount equals snapshot unit price times quantity             |        |       |
@@ -123,6 +124,15 @@ N/A       not applicable for this run
 | Edit sent item note                 | Note action is unavailable after kitchen send                    |        |       |
 | Item allergy without details        | Form validation blocks saving the instructions                   |        |       |
 | Add allergies to different items    | Each warning stays attached to its own item                      |        |       |
+| One item from positive combo        | Truthful one-step completion suggestion appears below search     |        |       |
+| Narrow combo candidate cards        | Full candidate names remain readable before staff adds an item   |        |       |
+| Search while suggestion is visible  | Shelf hides; clearing search restores the eligible suggestion    |        |       |
+| Change category with suggestion     | Current shelf dismisses and selected catalog remains reachable   |        |       |
+| Add unrelated item after dismissal  | The same dismissed combo state does not immediately reappear     |        |       |
+| Add another relevant combo item     | A new combo state may produce the same rule suggestion again     |        |       |
+| Open another category directly      | Eligible suggestion may appear outside `Toutes`                  |        |       |
+| Add suggested catalog item          | Existing add-item pending/revalidation behavior is reused        |        |       |
+| Locked order                        | Combo-completion suggestions and add actions are absent          |        |       |
 
 ## Quantity, Cancel, Restore
 
@@ -368,6 +378,8 @@ N/A       not applicable for this run
 | Create combo rule                    | Rule appears in combo list                               |        |       |
 | Add combo group                      | Group appears under rule                                 |        |       |
 | Add eligible item                    | Item can be used by combo optimizer                      |        |       |
+| Disable order suggestion             | Rule stays Active for discounts but leaves suggestion UI |        |       |
+| Enable order suggestion              | Eligible incomplete order can show the rule suggestion   |        |       |
 | Check Luna entry eligibility         | Mix LUNA is excluded from Menu Express and Menu Gourmand |        |       |
 | Combo applies at full payment        | Order total reflects discount                            |        |       |
 | Combo applies at split check payment | Eligible check total reflects discount                   |        |       |

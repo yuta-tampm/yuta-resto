@@ -1,6 +1,6 @@
 # POS Order Items - Data and Interaction Specification
 
-Status: Phase 0 combo-suggestion audit
+Status: Implemented — Phase 5 combo-completion delivery complete
 
 Visibility: Engineering
 
@@ -44,7 +44,7 @@ commandes` navigates to `/`. The screen counts down for five seconds and then
 automatically navigates to the approved home route `/` if the operator has not
 already chosen an action.
 
-## Proposed combo-completion projection
+## Implemented combo-completion projection and route adapter
 
 The current loader already supplies all expected input:
 
@@ -55,7 +55,7 @@ The current loader already supplies all expected input:
 - catalog category activity, item availability, item price, sort order, and
   name.
 
-The proposed pure projection compares the authoritative optimizer result for
+The pure projection compares the authoritative optimizer result for
 the current order with the result after hypothetically adding one available
 catalog item. A candidate is emitted only when the hypothetical order gains an
 additional positive combo application. The result contains stable rule and
@@ -67,8 +67,28 @@ payment-time optimization, or become a second pricing engine. Candidate click
 uses the existing `addOrderItemAction`, after which the route reloads the
 authoritative persisted order normally.
 
-Expected presentation state is ephemeral. No suggestion, dismissal, click,
-impression, ranking, or selected candidate is stored.
+The Phase 3 route adapter filters to active categories and available catalog
+items before projection, maps the result back to current catalog name and
+price, groups by qualifying rule, and sorts candidates using catalog sort order
+and French name. The shelf may appear in any catalog category. Category links
+carry an ephemeral dismissal token containing each visible rule ID plus the
+quantities of current order items eligible for that rule. Selecting a category
+hides those exact rule states for the current route session. Adding an unrelated
+item does not change the fingerprint; adding another eligible item changes it
+and permits the same rule to be suggested again. Category links disable route prefetch to
+avoid reusing a response captured before the latest dismissal state. The
+shelf is also hidden during active search and omitted for locked orders.
+Candidate submission uses the existing add-item Server Action and waits for its
+normal revalidation without optimistic totals.
+
+The 2026-08-23 suggestion-eligibility extension additionally filters active
+rules with `isSuggestionEnabled === false` at this route-local adapter boundary.
+It does not change the payment facade's active-rule list or site-agent
+order/check optimization, so opted-out rules remain valid discounts.
+
+Presentation state is ephemeral. The URL dismissal token is presentation-only,
+is not trusted as order state, and stores no suggestion, click, impression,
+ranking, or selected candidate.
 
 Required edge cases are overlapping rules, higher-priority item consumption,
 already-complete rules, unlimited and bounded applications, multi-quantity
@@ -97,6 +117,26 @@ partially mapped for kitchen send; later design may propose recovery UI but not
 new semantics.
 
 ## Phase 4 integration audit
+
+Combo-completion-specific evidence:
+
+- `getPaymentViewData` already supplies hydrated non-cancelled order-item
+  snapshots, catalog category/item state, and active combo rules; no loader or
+  transport field was added.
+- The pure projection returns only combo identity/priority and menu-item
+  identity. POS performs active-category/available-item filtering and catalog
+  presentation mapping without claiming persisted truth.
+- Candidate forms use the unchanged `addOrderItemAction` and existing POST
+  `/api/v1/orders/:orderId/items` contract. Site-agent still owns order locks,
+  item availability, snapshotting, ordering policy, recalculation, and database
+  transactions.
+- No diff exists in contracts, site-agent, db-pos, migrations, POS transport,
+  Server Action schemas, manifests, or the lockfile. API, schema, auth,
+  payment, kitchen, printing, offline, device, and cloud changes are all `NO`.
+- Full local regression and disposable-database offline acceptance passed; no
+  Phase 4 runtime change was necessary.
+
+Existing route-wide evidence:
 
 - Data owner remains `packages/db-pos`, accessed only by `apps/site-agent`.
 - Transport remains `@yuta/contracts/local-pos` through the server-only

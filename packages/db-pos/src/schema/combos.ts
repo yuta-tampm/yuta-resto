@@ -35,6 +35,9 @@ export const comboRules = pgTable(
     priority: integer('priority').default(0).notNull(),
     maxApplications: integer('max_applications'),
     isActive: boolean('is_active').default(true).notNull(),
+    isSuggestionEnabled: boolean('is_suggestion_enabled')
+      .default(true)
+      .notNull(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },

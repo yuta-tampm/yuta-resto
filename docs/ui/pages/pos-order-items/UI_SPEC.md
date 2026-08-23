@@ -1,6 +1,6 @@
 # POS Order Items - UI Specification
 
-Status: Draft — combo-completion suggestion design
+Status: Implemented — combo-completion suggestion surface
 
 Visibility: Engineering
 
@@ -43,15 +43,21 @@ shelf after search and before the standard item grid:
 3. no projected discount or savings claim in the first version.
 
 The shelf does not replace category navigation, search, catalog results, or the
-current order. It is absent rather than rendered empty. It is hidden while
-search has a non-empty query and when the order cannot be edited. Candidate
-actions reuse the visual language and minimum touch size of catalog items but
+current order. It is absent rather than rendered empty. It may appear in any
+catalog category when truthful candidates exist. Selecting a category dismisses
+the currently visible combo rule states for the route session. Unrelated item
+changes do not revive those states; adding another item relevant to a dismissed
+rule creates a new state that may appear. The shelf is
+also hidden while search has a non-empty query or when the order cannot be
+edited. Candidate actions reuse the visual language and minimum touch size of
+catalog items but
 may be more compact than full item cards.
 
 Design studies must cover one candidate, multiple candidates, duplicate
 candidate resolution, no candidate, action pending/error, locked order, and
-narrow layouts. No category, persisted favorite, pinning control, dismissal,
-ranking setting, badge count, savings estimate, or analytics UI may be added.
+narrow layouts. No virtual category, persisted favorite, pinning control,
+manual dismissal control, ranking setting, badge count, savings estimate, or
+analytics UI may be added.
 
 ## Visual hierarchy
 

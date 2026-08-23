@@ -66,6 +66,41 @@ Visual references may not invent a toast, global notification center, working
 search, new field, or new route. Generated text and sample values are
 non-authoritative; repository French copy and runtime data win.
 
+## Suggestion-eligibility extension
+
+The approved existing hierarchy remains. Each rule summary gains a distinct,
+text-backed `Suggestion à la commande` state and control that does not compete
+with or replace the `Active` discount badge. On narrow screens it may wrap
+below rule metadata rather than compressing the name, pricing summary, or
+existing actions. The control uses a minimum 44px target, visible focus, and
+pending/disabled feedback; persisted success and save failure remain visible
+in the rule surface.
+
+The visual treatment must make these independent facts clear:
+
+- `Active` means the combo participates in payment/check calculation;
+- `Suggestion activée` means an otherwise active combo may appear in the
+  order-entry completion shelf;
+- an inactive combo never appears in suggestions even if its saved preference
+  is enabled.
+
+The extension may add only this approved setting. It does not authorize an
+automatic item-count threshold, candidate cap, analytics, or another field.
+
+### Phase 3 as-built resolution
+
+The setting is composed as a bordered rule-header row using the existing
+`Switch`. At narrow and tablet widths it occupies a readable full-width row
+below the rule summary/actions; at desktop width it becomes its own middle
+column. The label and persisted state remain text-backed. Pending copy replaces
+the state text while saving, duplicate input is disabled, and success/error
+feedback appears below the control without changing the disclosure state.
+
+When the preference is enabled on an inactive rule, the surface adds `Une
+formule inactive ne peut pas être suggérée.` This preserves the distinction
+between saved preference and current suggestion eligibility. Phase 3 does not
+consume the preference in order entry.
+
 ## As-built visual resolution
 
 The implementation follows the approved hierarchy and density while retaining
@@ -79,6 +114,10 @@ reference's table-like geometry.
 Authenticated Phase 5 evidence confirms zero document-level horizontal
 overflow at all four QA viewports. Route-local action targets are at least
 `44 × 44`; the shared shell keeps its established responsive sizing. The
+suggestion switch exposes a rule-aware accessible name, independent
+`Activée`/`Désactivée` copy, and an effective `44px` target; narrow layouts
+place the control in a full-width row without obscuring Active discount state.
+The
 `390 × 844` editor uses the full available width, stays within 16 CSS pixels of
 the top and bottom viewport edges, scrolls its field region independently, and
 keeps save/cancel actions visible.

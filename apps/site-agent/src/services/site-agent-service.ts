@@ -215,6 +215,7 @@ export function createSiteAgentService(
         priority: rule.priority,
         maxApplications: rule.maxApplications,
         isActive: rule.isActive,
+        isSuggestionEnabled: rule.isSuggestionEnabled,
         groups: (groupsByRule.get(rule.id) ?? []).map((group) => ({
           id: group.id,
           name: group.name,

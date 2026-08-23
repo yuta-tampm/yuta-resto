@@ -195,3 +195,40 @@ The captures use real seed-backed data and submit no mutation. Desktop and
 narrow layouts retain the shared header, content return, primary create action,
 active-rule locks, real rule/group/item actions, and French runtime values.
 The narrow capture has no horizontal document overflow.
+
+## 2026-08-23 extension design prompt — suggestion eligibility
+
+Status: `APPROVED`; selected references were approved by the product owner on
+2026-08-23. Final authenticated as-built evidence was captured after the
+operator signed in locally without sharing the PIN.
+
+```text
+Use case: ui-mockup
+Asset type: high-fidelity extension of the existing authenticated YUTA POS `/management/combos` page
+Primary request: Add a compact per-combo setting that lets a local admin or manager decide whether an active combo may appear in the order-entry completion-suggestion shelf.
+Context bundle: Use the existing approved desktop and 390px management-combos references, the approved ManagementHeader references, and the current real hierarchy in this package. Do not redesign the page or shell.
+Desktop state: Show the real rules Menu Gourmand, Menu Express, Gua Bao Happy, and Combo Été. Preserve each rule's Active/Inactive discount badge, priority, pricing summary, group count, disclosure, edit, group, and activation actions. Add a separate text-backed state and control labelled “Suggestion à la commande” with “Activée” or “Désactivée”. Demonstrate Menu Gourmand disabled for suggestions and Gua Bao Happy enabled without changing either rule's Active discount state.
+Narrow state: At 390x844, keep the setting readable, keyboard/touch reachable, and at least 44px without causing horizontal page overflow or crowding existing actions. It may wrap below the rule summary.
+Interaction states: Include a clear pending state, persisted success feedback, and local-service/save-error recovery. The control remains editable while a rule is active because it does not change groups, eligible items, pricing, or activation.
+Protected invariants: This setting affects only `/orders/[orderId]/items` suggestions. It must not change payment/check discounts, combo priority, pricing, maximum applications, structural locks, historical snapshots, kitchen behavior, local authorization, or runtime ownership.
+Exact exclusions: no automatic threshold based on item/group counts; no name matching or hard-coded combo IDs; no candidate cap; no browser-local preference; no new route, role, permission, shell, sidebar, cloud sync, analytics, kitchen control, delete action, or payment behavior.
+Visual system: Reuse @yuta/ui semantic tokens, the existing Switch primitive if approved by composition, Lucide icons only where already justified, visible focus, French operator copy, and the approved ManagementHeader.
+```
+
+### Generated approved handoff
+
+- `references/design-proposal-04-suggestion-config-desktop.png` — compact
+  desktop rule-header setting with independent Active/suggestion states;
+- `references/design-proposal-05-suggestion-config-narrow.png` — one-column
+  390px companion with a full-width setting row and 44px control.
+
+The initial generated pair was rejected because it repeated priority 10 and
+illustrative pricing/group metadata across rules. The selected pair was
+regenerated with current read-only catalog values. Exact raster icons, colors,
+shadows, typography metrics, and switch geometry remain illustrative;
+implementation must compose the existing `@yuta/ui` `Switch`, `Badge`, `Card`,
+and feedback patterns.
+
+The proposed disabled states for Menu Gourmand/Menu Express and enabled states
+for Gua Bao Happy/Combo Été are design examples only. Phase 1 did not submit a
+management action or change persisted combo data.

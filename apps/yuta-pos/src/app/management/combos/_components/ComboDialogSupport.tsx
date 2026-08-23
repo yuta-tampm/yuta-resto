@@ -42,8 +42,22 @@ export function ComboEditorFooter({
   );
 }
 
-export function ComboActionFeedback({ state }: { state: ComboActionState }) {
-  if (!state.error) return null;
+export function ComboActionFeedback({
+  state,
+  showSuccess = false,
+}: {
+  state: ComboActionState;
+  showSuccess?: boolean;
+}) {
+  if (!state.error && (!showSuccess || !state.success)) return null;
+
+  if (showSuccess && state.success) {
+    return (
+      <Alert tone="success" role="status">
+        <AlertDescription>{state.success}</AlertDescription>
+      </Alert>
+    );
+  }
 
   return (
     <Alert tone="danger" role="alert">

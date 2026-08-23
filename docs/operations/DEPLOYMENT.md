@@ -14,6 +14,11 @@ This document implements the boundaries defined by
 `docs/architecture/DATABASE_BOUNDARIES.md`. The legacy shared database topology
 is forbidden.
 
+`docs/operations/PRODUCTION_READINESS.md` is the canonical cross-product release
+gate register. A deployment procedure or successful build does not authorize a
+production capability while a blocking readiness gate remains open. This
+document owns deployment mechanics and does not duplicate that evidence register.
+
 ## Runtime families
 
 YuTa has separate cloud and restaurant-local runtime families.
@@ -180,6 +185,12 @@ PUBLIC_FEEDBACK_IP_HASH_SALT=...
 ```
 
 Only cloud server processes receive these values.
+
+`BACKOFFICE_PERSONNEL_FORMALITES_READ_PROTOTYPE_ENABLED` is a local-development
+opt-in for the Phase 3 read-only Formalités prototype. It defaults to false and
+must not be added to a production environment. Runtime code also rejects it
+outside `development`, so the full-dossier entry and integrated route remain
+fail-closed in production.
 
 ### POS local server
 

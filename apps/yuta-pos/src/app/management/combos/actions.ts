@@ -59,6 +59,24 @@ export async function setComboRuleActiveAction(
   });
 }
 
+export async function setComboRuleSuggestionEnabledAction(
+  ruleId: string,
+  isSuggestionEnabled: boolean,
+  _previousState: ComboActionState,
+): Promise<ComboActionState> {
+  const input = updateLocalComboRuleInputSchema.safeParse({
+    isSuggestionEnabled,
+  });
+  if (!input.success) return validationError();
+
+  return execute(async (token) => {
+    await siteAgentClient.updateComboRule(token, ruleId, input.data);
+    return isSuggestionEnabled
+      ? 'Suggestions à la commande activées.'
+      : 'Suggestions à la commande désactivées.';
+  });
+}
+
 export async function createComboGroupAction(
   ruleId: string,
   _previousState: ComboActionState,

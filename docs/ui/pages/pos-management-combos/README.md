@@ -1,6 +1,6 @@
 # POS management combos
 
-Status: Implemented and approved
+Status: Extension Phase 5 complete; suggestion eligibility implemented
 
 Visibility: Engineering
 
@@ -20,7 +20,7 @@ Page classification: `EXISTING_PAGE`
 
 Implementation class: `integrated`
 
-Package status: `implemented`
+Package status: `approved`
 
 Scope status: `APPROVED`
 
@@ -33,6 +33,217 @@ Baseline status: `CAPTURED`
 Design prompt status: `READY`
 
 Shared context status: `RESOLVED`
+
+## 2026-08-23 Phase 0 — combo suggestion eligibility
+
+Staff feedback identifies a new local management need: some valid payment
+combos contain too many eligible items to produce a useful order-entry
+suggestion shelf. Repository evidence confirms that `Menu Gourmand` and
+`Menu Express` each currently reference 27 distinct eligible items, while
+`Gua Bao Happy` references 5 and `Combo Été` references 3. Candidate count is
+not a stable product rule, so the proposal does not infer eligibility from
+names, group counts, or item counts.
+
+The target is a cross-route `FLOW` over two existing integrated pages:
+`/management/combos` owns configuration and `/orders/[orderId]/items` consumes
+it. The capability itself is absent, so the delivery mode is
+`NEW_CAPABILITY_DISCOVERY`. This stable management page pack remains the
+primary owner; `pos-order-items` records the consumer boundary rather than
+creating a duplicate package.
+
+Repository reality requires one persisted boolean on each local combo rule,
+provisionally named `isSuggestionEnabled`. It travels through the existing
+catalog contract and management PATCH endpoint. The order-entry adapter filters
+disabled rules before calling the existing pure completion calculator. Payment
+and check optimization continue to receive every active rule, so disabling a
+suggestion cannot disable, change, or recalculate the combo discount itself.
+
+Phase 0 proposes a compact, text-backed per-rule setting in the existing rule
+header: `Suggestion à la commande`, with `Activée` / `Désactivée`, pending,
+success, and error feedback. It remains editable while a rule is active because
+it changes presentation eligibility only, not group/item structure or pricing.
+The existing `admin` / `manager` management authorization remains sufficient;
+no new role or permission is proposed.
+
+Current authenticated recapture was blocked because the fresh browser session
+correctly redirected to `/management/login`; no PIN was requested or entered.
+The package's existing authenticated desktop and narrow baselines remain valid
+implementation context because the target management code has not changed.
+A fresh authenticated capture is required before the extension can advance to
+approved or implementation-ready status.
+
+### Phase 0 change impact
+
+```text
+Files expected to modify: combo schema/migration, local-pos contracts, site-agent catalog mapping and combo service, management combo action/UI, order-items suggestion adapter, focused tests, current POS docs and both stable page packs
+Files expected to create: one db-pos migration and focused tests only if current test owners do not already cover the behavior
+Packages affected: packages/db-pos, packages/contracts, apps/site-agent, apps/yuta-pos, docs/ui
+Cross-application impact: none; local POS family only
+Database change: YES / PROPOSAL — one non-null boolean on combo_rules
+API or contract change: YES / PROPOSAL — extend existing combo rule shapes and PATCH input
+Permission/auth change: NO
+Runtime/device change: NO
+Payment/kitchen behavior change: NO
+```
+
+### Protected invariants
+
+- `isActive` remains the only switch controlling discount calculation.
+- Suggestion eligibility affects only the order-entry suggestion shelf.
+- Existing combo matching, priority, pricing, maximum applications, order/check
+  discount persistence, and historical snapshots remain unchanged.
+- Active structural locks remain unchanged; the suggestion switch is not a
+  structural edit.
+- Configuration remains local through `yuta-pos -> site-agent -> db-pos` and
+  requires the existing trusted management session.
+- No automatic item-count threshold, name matching, hard-coded combo ID,
+  browser-local setting, cloud sync, kitchen behavior, or new permission.
+
+### Approved product decisions
+
+Product-owner authorization to begin Phase 1 on 2026-08-23 approves these
+Phase 0 decisions:
+
+1. Existing and newly created combo rules default to suggestion eligibility
+   `ON`; managers opt out only rules that are operationally noisy.
+2. The setting remains independently editable for active and inactive rules;
+   inactive rules are never suggested regardless of the stored preference.
+3. Eligibility is entirely explicit; YUTA does not automatically disable long
+   combos or cap their candidates as part of this capability.
+
+### Phase 1 design result
+
+Built-in ImageGen produced separate desktop and narrow proposals from the
+approved as-built references. The first generation was corrected because it
+repeated `Priorité 10` and illustrative pricing across multiple rules. The
+selected references now use current catalog metadata: Menu Gourmand
+priority 10 / base + 8,00 €, Menu Express priority 30 / base + 4,00 €,
+Gua Bao Happy priority 20 / fixed 12,50 €, and Combo Été priority 40 / base +
+2,50 €.
+
+Both proposals preserve the approved Management shell and make `Active`
+discount state visually independent from `Suggestion à la commande`. Desktop
+uses a compact rule-header setting; narrow layouts wrap it into a full-width
+44px row without compressing rule names or existing actions. Proposed visual
+states show broad Menu Gourmand/Menu Express suggestions disabled and focused
+Gua Bao Happy/Combo Été suggestions enabled. These values illustrate the
+approved configuration capability; Phase 1 does not persist them.
+
+Selected files, approved by the product owner on 2026-08-23:
+
+- `references/design-proposal-04-suggestion-config-desktop.png`;
+- `references/design-proposal-05-suggestion-config-narrow.png`.
+
+No runtime, schema, migration, API, contract, auth, discount, order, or combo
+data changed in Phase 1. The product owner explicitly approved the selected
+design and authorized Phase 2 despite the fresh-login baseline blocker.
+Baseline status therefore remains `BLOCKED`, while reference status is now
+`APPROVED`.
+
+### Extension Phase 2 result
+
+Phase 2 adds `combo_rules.is_suggestion_enabled` as a non-null local boolean
+with a default of `true`. Generated migration `0011_clever_groot.sql` preserves
+existing behavior by backfilling deployed rules through that default. The
+field is required in combo responses, defaults to `true` on create, and is an
+optional field on the existing authenticated rule PATCH contract.
+
+Site-agent now maps the preference through management responses and the real
+catalog projection. Active rules may update this presentation preference
+without deactivation; group/item structural locks remain unchanged. A focused
+persistence regression stores an active combo with suggestions disabled and
+still expects the same order/check discount, protecting `isActive` as the sole
+calculation switch.
+
+No management switch or order-entry filtering is implemented in Phase 2.
+Migration `0011` is generated and reviewed but is not applied to the current
+operational POS database. Phase 3 requires a separate product-owner approval.
+
+Phase 2 verification passes contracts `34/34`, db-pos `15` unit/schema tests,
+site-agent `70` unguarded tests, POS `86/86`, the two focused guarded combo
+integration tests, full workspace typecheck, docs, architecture, formatting,
+and `git diff --check`. The offline disposable acceptance also applied all
+migrations through `0011`, seeded real local data, built the production POS,
+and passed the offline site-agent/POS flow. All disposable containers were
+removed afterward.
+
+### Extension Phase 3 result
+
+The approved route-local `Suggestion à la commande` control now appears in
+each real combo-rule header. It uses the existing `@yuta/ui` `Switch`, keeps the
+discount `Active` badge visually and semantically independent, and remains
+editable for active or inactive rules. An enabled preference on an inactive
+rule explicitly says that inactive rules cannot be suggested.
+
+The control submits a dedicated Server Action through the existing trusted
+management-session and combo PATCH path. It stays on the persisted server value
+while saving, blocks duplicate submissions, announces `Enregistrement…`, and
+shows persisted success or recoverable error feedback in the rule surface.
+Successful updates revalidate both `/management/combos` and the order layouts.
+The narrow layout gives the setting its own full-width row; desktop promotes it
+to a separate rule-header column without compressing rule names or existing
+actions. The switch retains visible focus and an effective 44px touch target.
+
+Phase 3 adds no order-items filtering, discount-calculation change, endpoint,
+permission, schema, fixture, or operational-data mutation. The operational
+database remains unmigrated and authenticated browser capture remains deferred
+to Phase 5. Phase 4 requires separate product-owner approval.
+
+Phase 3 verification passes POS `90/90`, the full local suite, production build,
+full workspace typecheck, docs, architecture, formatting, and
+`git diff --check`. Offline acceptance applied migrations through `0011` only
+inside its disposable PostgreSQL stack, then verified the production POS and
+local site-agent with the Internet probe unavailable. The stack was removed on
+completion.
+
+### Extension Phase 4 result
+
+The route-local completion adapter now removes rules with
+`isSuggestionEnabled === false` immediately before invoking the authoritative
+completion projection. The payment view continues to expose every active combo
+rule to payment and item-split discount calculation; its `activeComboRules`
+selection is unchanged. This keeps the preference presentation-only.
+
+Focused POS coverage proves an active enabled rule still produces its expected
+candidate and an otherwise identical active opted-out rule produces no shelf
+entry. The existing guarded persistence regression continues to prove that the
+same opted-out active rule calculates and persists normal order/check
+discounts. No category/name/item-count heuristic or hard-coded combo identity
+was introduced.
+
+Phase 4 requires no new endpoint, contract, schema, authorization, mutation,
+payment, kitchen, printing, offline, or device behavior. Phase 5 authenticated
+responsive and as-built QA requires separate product-owner approval.
+
+Phase 4 verification passes POS `91/91`, db-pos `15` unguarded tests,
+site-agent `70` unguarded tests, production build, and the complete local gate.
+Offline acceptance applies migrations through `0011` inside a disposable
+PostgreSQL stack and verifies the production POS/site-agent with the Internet
+probe unavailable. Repository-wide typecheck, docs, architecture, formatting,
+and diff gates also pass.
+
+### Extension Phase 5 result
+
+The product owner authorized Phase 5 on 2026-08-23. Production-browser QA of
+the real order-entry consumer passes at `1366 × 768`, `1024 × 768`,
+`768 × 1024`, and `390 × 844`, with zero document-level horizontal overflow.
+The shelf remains readable, desktop preserves three columns, narrow layouts
+retain the two-row category control and reachable order bar, search hides and
+restores the shelf, and category navigation dismisses the current rule-state
+fingerprint. Read-only QA also confirms that unrelated items retain dismissal
+while another rule-relevant Gua Bao permits a fresh suggestion state.
+
+After the operator authenticated locally without sharing the PIN, the real
+`/management/combos` route passed the same four-viewport matrix with zero
+document-level horizontal overflow. All four persisted controls are present:
+Menu Gourmand/Menu Express are suggestion-disabled and Gua Bao Happy/Combo Été
+are suggestion-enabled, while all four discount rules remain independently
+Active. Desktop keeps the compact rule-header control; `768` and `390` widths
+wrap it into a readable full-width row. Each switch has an explicit rule-aware
+accessible name and a `44px`-wide control with a pseudo-element extending the
+effective vertical target to `44px`. The four authenticated as-built captures
+are stored in `references/`. No switch, combo, order, payment, kitchen, or
+operational-data mutation was submitted solely for Phase 5 QA.
 
 ## Target
 
@@ -52,6 +263,7 @@ The existing Server Component route requires a validated local admin or
 manager session and loads the real local catalogue through `site-agent`.
 `ComboManagement.tsx` owns page-level client orchestration and the empty state;
 `ComboOverview.tsx` owns rule/group disclosure and eligible-item rows;
+`ComboSuggestionControl.tsx` owns the independent persisted suggestion setting;
 `ComboRuleDialogs.tsx` owns rule editing and activation;
 `ComboGroupDialogs.tsx` owns group and eligible-item editors; and
 `ComboDialogSupport.tsx` owns route-local feedback, confirmation, and dialog

@@ -514,7 +514,24 @@ describe('site-agent HTTP boundary', () => {
         name: 'Lunch combo',
         pricingMode: 'fixed',
         isActive: false,
+        isSuggestionEnabled: true,
       },
+    });
+
+    const updated = await fetch(
+      `${baseUrl}/api/v1/catalog/combo-rules/${userId}`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${sessionToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ isSuggestionEnabled: false }),
+      },
+    );
+    expect(updated.status).toBe(200);
+    expect(await updated.json()).toMatchObject({
+      comboRule: { isSuggestionEnabled: false },
     });
 
     const invalidGroup = await fetch(`${baseUrl}/api/v1/catalog/combo-groups`, {
@@ -1006,7 +1023,12 @@ function createMockService(): SiteAgentService {
       },
     }),
     createComboRule: async (input) => ({
-      comboRule: { id: userId, ...input, groups: [] },
+      comboRule: {
+        id: userId,
+        ...input,
+        isSuggestionEnabled: input.isSuggestionEnabled ?? true,
+        groups: [],
+      },
     }),
     updateComboRule: async (_ruleId, input) => ({
       comboRule: {
@@ -1019,6 +1041,7 @@ function createMockService(): SiteAgentService {
         priority: input.priority ?? 0,
         maxApplications: input.maxApplications ?? null,
         isActive: input.isActive ?? false,
+        isSuggestionEnabled: input.isSuggestionEnabled ?? true,
         groups: [],
       },
     }),

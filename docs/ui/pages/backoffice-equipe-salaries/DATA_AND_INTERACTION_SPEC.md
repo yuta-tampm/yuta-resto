@@ -1782,6 +1782,170 @@ Operational data: unchanged
 Production: NOT AUTHORIZED
 ```
 
+## F03 Phase 0 — current edit data and interaction inventory
+
+Status: `DOCUMENTATION ONLY; APPROVAL REQUIRED BEFORE PHASE 1`.
+
+### Current trusted boundary
+
+```text
+authenticated OWNER
+-> quick view or /equipe/salaries/[employeeId]
+-> shared EmployeeEditDialog
+-> updateEmployeeAction
+-> trusted session organization + active establishment
+-> personnel.employee.manage
+-> strict updatePersonnelEmployeeInputSchema
+-> tenant-scoped updatePersonnelEmployee transaction
+-> dossier revision + minimized audit event(s) + idempotency receipt
+```
+
+The browser employee ID, expected revision, and idempotency key are command
+inputs, not authorization. The server rederives the actor and tenant scope. The
+repository requires the current establishment-owned employee and matches the
+expected revision again in the update statement.
+
+### Current field and validation map
+
+| Field group | Current facts                                                                                   | Current audit result                                           |
+| ----------- | ----------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| Identity    | Required trimmed given names and family name, each at most 120 characters                       | `employee.identity_updated` plus changed field names           |
+| Employment  | Required position and qualification; CDI/CDD; full/part time; entry; optional weekly minutes    | `employee.employment_updated` plus changed field names         |
+| CDD branch  | Expected end required and not before entry; supported reason required for controlled CDD writes | Same employment event; no ordinary previous/new value snapshot |
+| CDD to CDI  | Expected end/reason cleared; an existing controlled reason requires explicit user confirmation  | Same employment event                                          |
+| Departure   | Not edited by F03; separate reasoned, non-destructive departure command                         | Separate event with bounded previous/new departure dates       |
+
+Ordinary F03 updates store previous/new revision numbers internally but the
+approved read contract exposes only event type, actor display name, occurrence
+time, and changed field names. It cannot reconstruct the former name, position,
+qualification, contract type, duration, or entry date. F07 must not describe
+that missing capability as implemented.
+
+### Current recovery behavior and gap
+
+- invalid input preserves controlled dialog values and returns field errors;
+- a stale revision preserves entered values and offers an explicit reload of
+  the current summary before a new retry key is used;
+- a repeated identical committed command resolves to the committed employee;
+- reuse of a key with different values fails without a second write;
+- no changed field returns a truthful no-change success;
+- successful commit returns the current safe employee summary, refreshes the
+  route, closes the editor, and leaves the dossier context open; and
+- closing modified unsaved input has no confirmation today.
+
+### F03 and F07 ownership
+
+F03 owns opening, editing the current allowlisted dossier facts, validation,
+save, conflict recovery, and refreshing the current dossier. F07 owns any
+future decision that requires previous/new values, effective dates, correction
+reason policy, durable versions, retention, or legally reconstructable history.
+No F07 schema or payload is selected in this phase.
+
+### Phase 0 change flags
+
+```text
+Files modified: existing Salariés page-pack and CURRENT_STATE Markdown only
+Files created: none
+Packages affected: documentation only
+Database/schema/migration: NO
+API/application contract: NO
+Permission/auth: NO
+Audit event/payload: NO
+Runtime/UI behavior: NO
+Operational or test data: unchanged
+File/provider/AI: NO
+Production: NOT AUTHORIZED
+```
+
+## F02 Phase 0 — implemented creation inventory
+
+Status: `PHASE 1 IMPLEMENTED; CURRENT DATA BOUNDARY PRESERVED`.
+
+### Current boundary
+
+```text
+authenticated OWNER
+-> /equipe/salaries existing client dialog
+-> createEmployeeAction
+-> trusted session organization + active establishment
+-> personnel.employee.manage
+-> strict createPersonnelEmployeeInputSchema
+-> tenant-scoped createPersonnelEmployee transaction
+-> dossier + minimized audit + idempotency receipt
+```
+
+The browser supplies no trusted organization, establishment, actor, role,
+permission, audit, employee ID, timestamp, or revision value. The server derives
+the business date using the trusted establishment timezone.
+
+### Current field and state map
+
+| UI fact                           | Current rule                                                                                  | Persistence/ownership                    |
+| --------------------------------- | --------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| Given names / family name         | Trimmed required text, maximum 120 characters                                                 | Employee dossier identity snapshot       |
+| Position / qualification          | Trimmed required text, maximum 120 characters                                                 | Establishment employment relationship    |
+| Employment term                   | `indefinite` or `fixed_term`                                                                  | Employee dossier                         |
+| Expected end date                 | Required for CDD, absent for CDI, and not before entry                                        | Employee dossier, nullable               |
+| CDD reason                        | One current allowlisted reason for CDD, absent for CDI                                        | Employee dossier, nullable               |
+| Work-time category                | `full_time` or `part_time`                                                                    | Employee dossier                         |
+| Contractual weekly duration       | Integer 1–2,880 minutes, entered as hours plus minute remainder                               | Employee dossier                         |
+| Entry date                        | Required canonical date-only value                                                            | Employee dossier                         |
+| Idempotency key                   | Browser-generated UUID; hashed and scoped to actor, establishment, and command                | Short-lived server receipt               |
+| Duplicate confirmation and reason | Same-establishment advisory branch; reason required when confirming a distinct possible match | Transient command plus minimized audit   |
+| Success                           | Only after dossier, required audit, and command receipt commit atomically                     | Persisted outcome; list path revalidated |
+
+Current completeness checks only given names, family name, position, and
+qualification. Because creation requires those four values, a newly created
+dossier has no current completeness reason. This does not prove that documents,
+legal duties, payroll, register, Formalités, or wider onboarding are complete.
+
+### Current recovery and test evidence
+
+- Zod rejects missing/invalid conditional facts before repository mutation;
+- the dialog preserves controlled values across validation and duplicate
+  responses;
+- a repeated key and identical payload returns the original committed dossier;
+- the same key with different values fails without another write;
+- duplicate candidates are establishment-scoped and never auto-merge;
+- creation and duplicate-override audits commit with the dossier;
+- integration tests cover atomic create/replay, tenant scope, duplicate reason,
+  audit minimization, and command conflict; and
+- focused pure tests cover the dirty-input decision; authenticated browser QA
+  covers the normal, CDD, duplicate, dirty-close, committed-success, and full-
+  dossier states.
+
+### Remaining boundaries after Phase 1
+
+1. Documents begin only after an employee ID exists; the downloaded file-first
+   ordering is unsupported.
+2. There is no resumable onboarding draft, remuneration, probation,
+   apprenticeship, detailed part-time distribution, work-authorization flow,
+   additional contract type, or production approval.
+
+### Phase 1 change flags
+
+```text
+Files modified: create action state, create dialog, page-pack, CURRENT_STATE
+Files created: one route-local dirty-input helper and focused test
+Packages affected: apps/backoffice
+Runtime component/action: YES — bounded success and dirty-close interaction
+Repository transaction: unchanged
+Database/schema/migration: NO
+Shared transport/application contract: NO
+Permission/audit event: NO
+Document/file/provider/AI: NO
+Employee mutation: one fictional LUNA QA dossier created through existing flow
+Authenticated browser capture: COMPLETE at 1440, 1024, 768, and 390 CSS pixels
+Production: NOT AUTHORIZED
+```
+
+On committed success, `createEmployeeAction` returns only the safe employee ID
+already created by the transaction. Tenant, establishment, actor, permission,
+revision, audit metadata, and receipt data remain server-owned. The dialog uses
+the existing full-dossier route helper only after a success ID exists and does
+not navigate automatically. Dirty detection is browser-local and never changes
+the persisted command.
+
 ## Wave G Phase 2 — offline corpus and scoring contract
 
 Status: `60-FIXTURE OFFLINE CORPUS IMPLEMENTED; EXTERNAL REQUEST BLOCKED`.

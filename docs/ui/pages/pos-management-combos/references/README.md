@@ -6,6 +6,46 @@ Visibility: Engineering
 
 Reference status: `APPROVED`
 
+The 2026-08-23 suggestion-eligibility extension inherits these approved
+references. The initial clean browser correctly redirected to
+`/management/login`. The operator later authenticated locally without sharing
+the PIN, allowing final read-only as-built capture. No credential was requested
+and no combo or order data was changed solely for capture.
+
+## 2026-08-23 suggestion-eligibility final as-built
+
+- `phase-5-suggestion-config-1366x768.png`
+- `phase-5-suggestion-config-1024x768.png`
+- `phase-5-suggestion-config-768x1024.png`
+- `phase-5-suggestion-config-390x844.png`
+  - Purpose: authenticated production-browser evidence for the persisted
+    `Suggestion à la commande` control across the complete POS viewport matrix.
+  - State: Menu Gourmand/Menu Express disabled; Gua Bao Happy/Combo Été enabled;
+    all four discount rules independently Active.
+  - Captured: 2026-08-23; DPR 1; zero document-level horizontal overflow.
+  - Mutation: none; no switch or operational action was submitted.
+
+## 2026-08-23 suggestion-eligibility approved proposals
+
+- `design-proposal-04-suggestion-config-desktop.png`
+  - Purpose: desktop hierarchy for the independent per-rule suggestion control.
+  - State study: Menu Gourmand/Menu Express suggestion-disabled; Gua Bao
+    Happy/Combo Été suggestion-enabled while all four discount rules remain
+    Active.
+  - Status: `APPROVED`; generated with built-in ImageGen from approved references.
+- `design-proposal-05-suggestion-config-narrow.png`
+  - Purpose: narrow responsive companion with a full-width setting row and
+    readable state/switch treatment.
+  - Native image represents a 390px-wide scrolling page; no device frame.
+  - Status: `APPROVED`; generated with built-in ImageGen from approved references.
+
+The first generated variants were rejected for incorrect repeated priority and
+pricing metadata. The selected pair uses current read-only catalog values. The
+references remain visually non-authoritative for icons, exact styling, switch
+implementation, and persistence. The product owner approved this pair on
+2026-08-23 and authorized Phase 2. Fresh authenticated final capture is
+recorded above.
+
 ## Current baseline
 
 - `current-baseline-1366x768.png`

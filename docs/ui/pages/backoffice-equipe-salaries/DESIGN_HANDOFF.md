@@ -854,3 +854,63 @@ layout, or design prompt was needed. The separately approved one-request provide
 replaced the offline badge/disclosure with truthful `QA OpenAI` copy stating
 that the fictional PDF would be sent once with Luna/v4 and never applied
 automatically. Restarting without the gate restores the offline presentation.
+
+## F02 Phase 1 design handoff
+
+Target: existing `Ajouter un salarié` dialog within `/equipe/salaries`.
+
+Delivery mode: `EXISTING_CAPABILITY_RENEWAL`.
+
+Shell mode: `REUSE_CURRENT_TARGET` inside the existing approved Backoffice and
+Salariés page shell.
+
+Shared context status: `RESOLVED` from the current Salariés package.
+
+F02 baseline status: `CAPTURED 2026-08-23`.
+
+The authenticated fictional-data baseline covers 1440, 1024, 768, and 390 CSS
+pixels plus duplicate, dirty-close, and committed-success evidence. It proves
+the current controlled CDD reason, contractual weekly duration, existing page
+shell, and the two bounded Phase 1 additions.
+
+F02 design prompt status: `NOT_APPLICABLE FOR PHASE 1`.
+
+The approved change completes two missing interactions inside the current
+dialog and reuses existing `@yuta/ui` patterns. Generating a new design would
+invite the wider unsupported downloaded flow. A later design phase must remain
+separately approved and preserve the current fields, conditional CDD branch,
+duplicate review, pending, validation, error, committed-success,
+authorization, and tenant boundaries. File-first creation, unsupported
+documents, a new route, remuneration, probation, apprenticeship, detailed
+scheduling, Formalités, register writes, AI, and production claims remain
+excluded.
+
+## F03 Phase 0 design handoff
+
+Target: existing shared `Modifier le dossier salarié` dialog opened from the
+Salariés quick view and full dossier.
+
+Delivery mode: `EXISTING_CAPABILITY_RENEWAL`.
+
+Shell mode: `REUSE_CURRENT_TARGET` inside the approved Backoffice and Salariés
+shell; do not redesign navigation, dossier tabs, or the containing drawer/page.
+
+Shared context status: `RESOLVED` from the current Salariés package and Wave C
+as-built dossier references.
+
+F03 baseline status: `PENDING`. Existing references cover the containing
+dossier but not the current editor, its CDD branch, validation, or revision-
+conflict state. Capturing those states requires a later approved authenticated
+fictional-data QA step.
+
+F03 design prompt status: `NOT_APPLICABLE FOR THE PROPOSED PHASE 1`. The only
+proposed UI change reuses the existing F02 discard-confirmation pattern. A new
+generated design would add no authority and risks importing unsupported fields
+from the downloaded functional flow.
+
+Any later design work must preserve the combined current field set, conditional
+CDD logic, OWNER/establishment boundary, pending/validation/conflict/retry/
+success states, and the distinction between F03 current-value editing and F07
+value-level history. It must exclude payroll, remuneration, general documents,
+work authorization, Formalités, register correction, departure, new contract
+types, and production claims unless separately approved.

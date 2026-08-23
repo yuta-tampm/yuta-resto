@@ -8,6 +8,7 @@ import { hasPersonnelPermission } from '../../../../../server/auth/permissions';
 import { requireAuthenticatedTenant } from '../../../../../server/auth/session';
 import { cloudDatabase } from '../../../../../server/cloud-database';
 import { EmployeeFullDossierPage } from '../_components/salaries-page';
+import { isFormalitesReadPrototypeEnabled } from '../../formalites-personnel/_lib/formalites-read-prototype-runtime';
 import { isContractExtractionPrototypeEnabled } from '../_lib/contract-extraction-prototype-runtime';
 import { getBusinessDate } from '../salaries-model';
 
@@ -44,6 +45,7 @@ export default async function Page({ params }: PageProps) {
         isContractExtractionPrototypeEnabled() &&
         hasPersonnelPermission(tenant, 'personnel.document.extract')
       }
+      formalitesReadPrototypeEnabled={isFormalitesReadPrototypeEnabled()}
     />
   );
 }

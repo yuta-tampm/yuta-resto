@@ -1,6 +1,6 @@
 # POS Order Items
 
-Status: Design — combo-completion suggestions reopening
+Status: Phase 5 combo-completion delivery complete; suggestion eligibility consumed
 
 Visibility: Engineering
 
@@ -10,7 +10,7 @@ Protocol revision: 4
 
 Application: `apps/yuta-pos`
 
-Target type: `PAGE`
+Target type: `SURFACE`
 
 Route / entry point: `/orders/[orderId]/items`
 
@@ -20,13 +20,27 @@ Page classification: `EXISTING_PAGE`
 
 Implementation class: `integrated`
 
-Delivery mode: `EXISTING_CAPABILITY_RENEWAL`
+Delivery mode: `NEW_CAPABILITY_DISCOVERY`
 
-Package status: `design`
+Package status: `implemented`
 
-Scope status: `DRAFT`
+Cross-route extension completed: Extension Phase 4 in
+`../pos-management-combos/` now filters opted-out rules immediately before this
+page invokes the existing completion projection. Payment/check calculation
+continues receiving every active rule. The adapter uses only the persisted
+boolean; it introduces no category/name/item-count heuristic or hard-coded
+combo identity.
 
-Reference status: `DRAFT`
+Extension Phase 5 consumer QA passes the production-browser viewport matrix at
+`1366 × 768`, `1024 × 768`, `768 × 1024`, and `390 × 844` with zero document
+overflow. Search, category dismissal, unrelated-item stability, and renewed
+same-rule eligibility after another Gua Bao pass without a QA-only order
+mutation. Authenticated management QA also passes, so the cross-route extension
+is complete.
+
+Scope status: `APPROVED`
+
+Reference status: `APPROVED`
 
 Inventory status: `COMPLETE`
 
@@ -45,6 +59,160 @@ catalog, payment state, instruction settings, and combo context through
 category rail, route-local searchable item browser, desktop order summary,
 mobile order dialog, item instruction/allergy dialog, kitchen-send action, and
 real links to order detail and payment.
+
+## 2026-08-22 Phase 5 delivery — combo-completion visual and operational QA
+
+The product owner approved the Phase 4 boundary audit by authorizing Phase 5.
+Final QA ran against the production POS build and real persisted order
+`POS-20260819-201927-F38DEA`. The local service and database were available,
+and the printer remained truthfully reported as not configured. QA did not add
+an item, send a kitchen batch, capture a payment, or create a print job.
+
+The exact internal viewport matrix passed:
+
+- 1366x768: `190px / 768px / 360px` three-panel workspace, four 171px catalog
+  cards per row, multiple truthful suggestion groups, and zero document
+  overflow;
+- 1024x768: `190px / 426px / 360px` three-panel workspace, two 183px catalog
+  cards per row, and zero document overflow. Phase 5 keeps each combo heading
+  above its candidate scroller at this width so the first 89x44px `Ajouter`
+  action remains immediately visible;
+- 768x1024: stacked layout, three 232px catalog cards, 108px two-row category
+  menu with 44px targets, 56px mobile-order action, and zero document overflow;
+- 390x844: stacked layout, two 168px catalog cards, 108px two-row category
+  menu with 44px targets, 56px mobile-order action, and zero document overflow.
+
+Browser interaction QA confirmed that active search hides the shelf and
+clearing search restores it. A category link carries the ephemeral current
+fingerprints of the visible combo rules and their relevant item quantities;
+opening `Gua Bao` directly without that token still allows truthful suggestions
+in that category. Adding an unrelated item does not revive a dismissed state.
+Adding another rule-relevant item, such as a second Gua Bao, changes the
+fingerprint and allows Gua Bao Happy to be suggested again. The
+dynamic category links disable framework prefetch so a catalog response
+captured before the latest dismissal state cannot restore a stale shelf.
+Authenticated browser QA on the reported four-item order confirmed that
+selecting `Entrées` loads only Entrées items and removes the current Gua Bao
+suggestion without mutating the order.
+real order exposed two suggestion groups. Deterministic core and POS tests
+cover one-step qualification, multi-step/no-result exclusion, overlapping
+priority, unavailable/stale candidates, locked-order omission, stable
+dismissal across unrelated item changes, and renewed eligibility after another
+rule-relevant item.
+Candidate submission still uses the
+existing non-optimistic action and visible 44px pending control; Phase 5 did
+not force a real mutation or service failure solely for visual evidence.
+
+The four `phase-5-combo-suggestions-*` references are scaled wrapper previews
+of exact-size browser iframes; DOM measurements were taken inside each stated
+viewport. Browser logs contained no warning or error. The only runtime change
+made during Phase 5 is the 1024px presentation breakpoint correction; no
+contract, site-agent, db-pos, schema, authorization, payment, kitchen,
+printing, offline, or device behavior changed.
+
+## 2026-08-22 Phase 4 delivery — integration and boundary audit
+
+The product owner approved the Phase 3 route interaction by authorizing Phase 4. The as-built diff remains confined to the pure `@yuta/core` projection,
+route-local POS mapping/presentation, focused tests, and this stable page pack.
+There is no tracked or untracked change in `@yuta/contracts`, `apps/site-agent`,
+`packages/db-pos`, migrations, POS transport/facade, Server Action schemas,
+manifests, or the lockfile.
+
+The existing path remains authoritative: `posApi.getPaymentViewData()` supplies
+the hydrated order, catalog, and active rules; the suggestion form submits the
+existing `addOrderItemAction`; site-agent revalidates the order lock and item
+availability, snapshots the current item values, applies merge/separate
+ordering policy, and recalculates persisted totals. Suggestions do not persist
+hypothetical items, estimated savings, impressions, ranking, or client totals.
+
+The full local regression gate passed: db-pos tests (14 passed, 2 skipped),
+site-agent tests (70 passed, 9 skipped), POS tests (81 passed), production POS
+build, and the disposable-database offline acceptance flow. Architecture,
+workspace typechecks, documentation, page-pack, scoped Prettier, and diff
+checks also pass. Repository-wide `format:check` currently reports two
+unrelated dirty Backoffice formalities files; they were preserved. Phase 4 adds
+no runtime code and stops for approval before Phase 5 visual and operational
+QA.
+
+## 2026-08-22 operator-feedback correction — mobile catalog interaction
+
+Operator testing at 390x844 exposed two route-local presentation defects. The
+mobile outer grid stretched its implicit category row to consume spare viewport
+height, leaving a large blank area before search. Catalog-item submission was
+working and persisted additions, but the only visible confirmation arrived
+after revalidation through the small quantity badge and bottom order count.
+
+The mobile grid now uses start-aligned content while desktop explicitly retains
+its stretched fixed-height three-column workspace. Catalog cards now expose a
+disabled `Ajout...` overlay with a spinner and accessible pending label while
+the unchanged `addOrderItemAction` runs. No optimistic quantity, total, or
+success claim was added.
+
+Browser verification at 390x844 reduced the category region to 109px, left a
+9px transition to search, preserved the two-column catalog and fixed order
+trigger, produced no document-level horizontal overflow, and changed no order
+data during QA. POS typecheck and all 81 POS tests pass.
+
+Follow-up operator feedback clarified that the combo shelf is not owned by
+`Toutes`: it may appear in any category when the current order has truthful
+candidates. Selecting a category dismisses the current shelf for the current
+route session. Later unrelated item changes do not revive those dismissed
+states, while adding another item relevant to the same rule creates a new state
+that may be suggested again. Clean-origin browser QA confirmed a shelf
+in the direct `Gua Bao` view and no shelf after category navigation. The
+dismissal remains presentation-only and POS now has 84 passing tests.
+
+## 2026-08-22 Phase 3 delivery — route-local combo suggestions
+
+The product owner approved the Phase 2 behavior by authorizing Phase 3. The
+route now maps non-cancelled order items, active combo rules, and the real
+catalog into the pure core projection. POS owns the presentation filter: only
+available items inside active categories can appear, and candidates are grouped
+by the qualifying combo in rule-priority order with catalog sort order inside
+each group.
+
+`MenuItemBrowser` renders the approved compact `Compléter …` shelf after search
+and before the standard item grid. It is absent when there is no truthful
+candidate, when the order cannot be edited, and while search contains a
+non-empty query. Candidate forms reuse `addOrderItemAction`; the action remains
+non-optimistic and the clicked candidate is disabled with visible pending copy
+until the existing service mutation and route revalidation finish.
+
+Focused POS tests cover real catalog mapping/order, inactive categories,
+unavailable and stale eligible items, and locked-order omission. No API,
+contract, site-agent, db-pos, schema, authorization, payment, kitchen, printing,
+offline, or device behavior changed. Phase 4 later confirmed these boundaries.
+
+Read-only browser QA used the real local order
+`01a01bad-c148-704e-a042-c5f3c8f38dea` at 1280px. The route produced truthful
+`Gua Bao Happy` and `Menu Express` groups from the current optimizer and
+catalog. Entering `pho` removed the shelf while preserving the matching catalog
+result; clearing search restored it. No add control was submitted. The page had
+no document-level horizontal overflow and no browser warning or error.
+
+## 2026-08-22 Phase 2 delivery — pure combo-completion projection
+
+The product owner approved both corrected Phase 1 references by authorizing
+Phase 2. `packages/core/src/combos.ts` now exports
+`calculateComboCompletionSuggestions`, a pure one-item-away projection that
+reuses `calculateComboDiscounts` for every hypothetical candidate instead of
+reimplementing matching or pricing.
+
+The projection compares the current optimizer result with the result after one
+candidate unit. It emits a suggestion only when both the number of positive
+combo applications and total discount increase. It therefore inherits active
+rule ordering, overlapping-unit consumption, group quantities, pricing modes,
+and `maxApplications` from the authoritative calculator. Candidate menu-item
+IDs are deduplicated and results are ordered by qualifying rule priority, name,
+and item ID.
+
+Focused core tests cover one-step qualification, multi-step exclusion,
+multi-quantity groups, higher-priority overlap, bounded applications,
+deduplication/order, inactive rules, and non-positive outcomes. Phase 2 does
+not import catalog availability into core, render UI, call an action, or change
+contracts, site-agent, db-pos, schema, authorization, payment, kitchen,
+printing, offline, or device behavior. POS availability/category filtering and
+route integration are delivered in Phase 3.
 
 ## 2026-08-21 Phase 0 reopening — combo-completion suggestions
 
@@ -261,6 +429,11 @@ visual evidence only; it does not authorize runtime implementation.
 Fixture replacement is forbidden for this existing integrated page.
 
 ## References
+
+- `references/design-proposal-04-combo-suggestions-desktop.png` - approved
+  Phase 1 desktop combo-completion shelf direction.
+- `references/design-proposal-05-combo-suggestions-narrow.png` - approved Phase
+  1 390x844 companion preserving the two-row category pattern.
 
 - `references/phase-0-current-1366x768.png` - current real operational
   baseline, evidence only.
@@ -566,6 +739,20 @@ Touch now uses the browser's native scrolling/tap handling, while the custom
 drag path remains limited to mouse and pen input with a larger movement
 threshold. Category taps therefore navigate normally without removing the
 two-row horizontal swipe behavior.
+
+A later mouse/pen regression showed that an ordinary click with slight pointer
+movement could still cross the original custom threshold. The gesture now
+requires at least 16px of horizontal-dominant movement before suppressing link
+activation, and pointer capture begins only after that drag intent is proven.
+Small or vertical-dominant movement therefore remains targeted at the category
+link; real horizontal dragging still scrolls the rail without navigation.
+
+Operator review of the narrow combo shelf found that the inline add action left
+too little room to identify candidates with similar names. Narrow suggestion
+cards now show the complete real catalog name and price in an unconstrained
+text row, with the 44px add action spanning the card below it. Wider layouts
+retain the compact inline action. Suggestion semantics, ordering, and the
+existing add-item action remain unchanged.
 
 A 2026-08-20 mobile regression showed the correct server-rendered category
 markup falling back to a single vertical grid because the POS Tailwind build

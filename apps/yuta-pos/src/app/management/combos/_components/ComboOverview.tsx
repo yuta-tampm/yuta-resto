@@ -14,6 +14,7 @@ import {
   type ComboRule,
 } from '../combo-model';
 import { ComboRuleDialog, ToggleComboRuleDialog } from './ComboRuleDialogs';
+import { ComboSuggestionControl } from './ComboSuggestionControl';
 
 export function ComboOverview({
   comboRules,
@@ -54,7 +55,7 @@ function ComboRuleSection({
 
   return (
     <Card padding="none" className="overflow-hidden">
-      <div className="grid gap-3 bg-surface-muted px-3 py-3 sm:flex sm:flex-wrap sm:items-start sm:justify-between md:px-4">
+      <div className="grid gap-3 bg-surface-muted px-3 py-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start lg:grid-cols-[minmax(0,1fr)_minmax(15rem,auto)_auto] md:px-4">
         <div className="flex min-w-0 flex-1 items-start gap-2">
           <button
             type="button"
@@ -86,7 +87,8 @@ function ComboRuleSection({
             </p>
           </div>
         </div>
-        <div className="flex flex-wrap gap-2 sm:justify-end">
+        <ComboSuggestionControl rule={rule} />
+        <div className="flex flex-wrap gap-2 sm:col-start-2 sm:row-start-1 sm:justify-end lg:col-start-3">
           <ComboRuleDialog rule={rule} />
           <ComboGroupDialog ruleId={rule.id} disabled={rule.isActive} />
           <ToggleComboRuleDialog rule={rule} />

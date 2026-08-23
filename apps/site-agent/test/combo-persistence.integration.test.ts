@@ -80,6 +80,7 @@ integrationTest('combo persistence integration', () => {
       name: originalRuleName,
       comboPriceCents: 1400,
       priority: 1,
+      isSuggestionEnabled: false,
     });
     await db.insert(comboRuleGroups).values([
       {

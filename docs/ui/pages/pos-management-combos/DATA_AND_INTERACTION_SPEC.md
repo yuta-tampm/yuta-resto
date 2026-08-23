@@ -23,6 +23,7 @@ commands to site-agent. Site-agent owns db-pos reads, validation, and writes.
 | priority           | `priority`                                           | site-agent/db-pos |
 | application cap    | `maxApplications` nullable                           | site-agent/db-pos |
 | active state       | `isActive`                                           | site-agent/db-pos |
+| suggestion state   | `isSuggestionEnabled`                                | site-agent/db-pos |
 | group              | `groups[].id/name/minQuantity/maxQuantity/sortOrder` | site-agent/db-pos |
 | eligible item      | `groups[].items[].menuItemId/extraPriceCents`        | site-agent/db-pos |
 | item display name  | catalogue category/item response                     | site-agent/db-pos |
@@ -39,6 +40,37 @@ commands to site-agent. Site-agent owns db-pos reads, validation, and writes.
   layouts. Errors remain visible in the dialog/confirmation surface.
 - Editor dialogs prevent dismissal while a submission is pending. Their field
   region scrolls independently while cancel/save actions remain reachable.
+
+## Suggestion-eligibility mapping
+
+Phase 2 adds one boolean to the existing combo-rule response and create/update
+schemas. It uses the existing authenticated rule PATCH endpoint; no separate
+route or permission is added. Phase 3 adds a dedicated Server Action that
+submits only this field, recovers the trusted HttpOnly management token, and
+revalidates `/management/combos` plus the `/orders` layout after success.
+
+The route-local Switch remains controlled by the persisted catalog value. It
+does not optimistically claim a state change: while the request is pending it
+keeps the current value, blocks another submission, and announces save
+progress. Success and failure stay visible in the same rule surface. Stale-rule
+errors retain the existing refresh recovery.
+
+The Phase 4 order-entry adapter passes only active rules with
+`isSuggestionEnabled === true` to the completion-suggestion projection. The
+payment/check persistence service continues loading all active rules and does
+not filter on this preference. This separation is mandatory and must be covered
+by regression tests.
+
+Implemented Phase 2 migration behavior:
+
+- generated migration `0011_clever_groot.sql` adds non-null
+  `is_suggestion_enabled` on `combo_rules`;
+- its `DEFAULT true` preserves existing deployed behavior and defaults newly
+  created rules to suggestion eligibility;
+- do not rewrite order/check discount snapshots or group/item mappings.
+
+The migration is reviewed but remains unapplied to the current operational POS
+database. Guarded integration runs use only a disposable database.
 
 ## Validation and service rules
 

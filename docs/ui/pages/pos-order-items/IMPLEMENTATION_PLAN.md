@@ -1,8 +1,25 @@
 # POS Order Items - Implementation Plan
 
-Status: Phase 0 combo-suggestion plan
+Status: Phase 5 combo-completion delivery complete
 
 Visibility: Engineering
+
+## 2026-08-23 suggestion-eligibility extension
+
+Extension Phase 4 is complete. The route-local adapter now excludes active
+rules whose persisted `isSuggestionEnabled` preference is false before calling
+the existing completion projection. The payment facade and payment/item-split
+consumers retain the unchanged full active-rule list, so configuration cannot
+disable a discount. Focused POS regression covers enabled and opted-out rules;
+no endpoint, contract, schema, permission, category heuristic, or hard-coded
+combo identity was added. Stop for Extension Phase 5 authenticated responsive
+QA approval.
+
+Extension Phase 5 consumer QA is complete at the four required production
+viewports with zero document overflow. Search hiding/restoration, category
+dismissal, unrelated-item stability, and renewed same-rule eligibility after
+another Gua Bao pass without a QA-only mutation. Cross-route completion now
+includes authenticated `/management/combos` desktop and narrow evidence.
 
 ## Reopened initiative — combo-completion suggestions
 
@@ -21,6 +38,12 @@ shelf and its required states. Preserve the current three-panel desktop and
 stacked narrow composition. Do not implement runtime behavior, duplicate menu
 items, or invent management configuration. Stop after design approval.
 
+Delivered for review on 2026-08-22: corrected desktop and 390x844 narrow
+references add only the approved shelf. Repository review corrected generated
+candidate initials and restored the real two-row narrow category pattern and
+`Plat du jour` label. The product owner approved both references by authorizing
+Phase 2 on 2026-08-22.
+
 ### Phase 2 — Pure completion projection
 
 After approval, add a tested pure domain projection that shares authoritative
@@ -29,12 +52,33 @@ bounded applications, unavailable and stale candidates, and deduplication.
 Keep catalog availability mapping in POS and calculation ownership outside
 React presentation. Stop for behavior review.
 
+Delivered for review on 2026-08-22:
+`calculateComboCompletionSuggestions` lives with the authoritative core combo
+calculator and simulates one candidate unit through
+`calculateComboDiscounts`. Qualification requires both an additional positive
+application and an increased total discount. The result carries only rule
+identity/priority and candidate menu-item identity; POS catalog filtering and
+presentation remain deferred to Phase 3. Nine core tests pass, including the
+new suggestion scenarios. No UI or integration boundary changed.
+
 ### Phase 3 — Route-local interaction
 
 Render the approved shelf from real loader data and submit candidates through
 the existing `addOrderItemAction`. Preserve pending/error behavior, current
 locks, snapshots, validation, and non-optimistic reload. Do not add a new
 command or persistence. Stop for operator review.
+
+Delivered for operator review on 2026-08-22: the Server Component maps real
+non-cancelled order items, active rules, and active/available catalog items
+through a route-local presentation adapter into the pure core projection. The
+approved shelf is rendered below search and above the catalog grid, disappears
+during active search and for locked orders, and groups candidates by combo with
+catalog ordering inside each group. Each candidate submits the existing
+`addOrderItemAction` with a visible disabled pending state; no optimistic price
+or order state is introduced. Focused POS tests pass. No transport,
+persistence, authorization, kitchen, payment, printing, offline, or device
+boundary changed. The product owner approved this interaction by authorizing
+Phase 4 on 2026-08-22.
 
 ### Phase 4 — Integration and boundary audit
 
@@ -43,12 +87,48 @@ API, contract, site-agent, db-pos, schema, authorization, payment, kitchen,
 printing, offline, or device extension occurred. Run the functional/regression
 gate before visual QA.
 
+Delivered on 2026-08-22: the diff audit confirms no change in contracts,
+site-agent, db-pos, migrations, POS transport/facade, Server Action schemas,
+manifests, or the lockfile. The suggestion uses existing loader fields and the
+existing add-item mutation; service-owned locks, availability, snapshots,
+ordering policy, totals, and transactions remain authoritative. The complete
+local test gate, production POS build, offline disposable-database acceptance,
+workspace typechecks, architecture, docs, page-pack, scoped formatting, and
+diff checks pass. Repository-wide formatting is blocked only by two unrelated
+dirty Backoffice formalities files, which remain untouched. No Phase 4 runtime
+change was required. Stop for product-owner approval before Phase 5.
+
 ### Phase 5 — Visual and operational QA
 
 Verify real data at 1366x768, 1024x768, 768x1024, and 390x844. Check catalog
 density, three-column preservation, mobile containment, 44px actions, search
 ownership, pending behavior, overlap correctness, and zero horizontal overflow.
 Synchronize product/operator docs and this package with the as-built result.
+
+Operator-feedback correction on 2026-08-22: mobile QA found that the implicit
+category grid row stretched into unused viewport space and that normal catalog
+cards lacked visible pending feedback. The route now start-aligns mobile grid
+content while retaining desktop stretch, and item cards show a disabled
+`Ajout...` overlay during the existing Server Action. Focused 390x844 browser
+verification and POS regression checks pass. The full Phase 5 viewport and
+operational matrix remains pending.
+
+Category-visibility correction on 2026-08-22: suggestions remain eligible in
+every catalog category. Category navigation dismisses the current shelf using
+an ephemeral token containing each combo-rule ID and its relevant item
+quantities. Unrelated item changes keep that state dismissed, while another
+rule-relevant item creates a new suggestion state. No
+persisted dismissal, catalog duplication, or service contract was added.
+
+Delivered on 2026-08-22: production-build browser QA passed at 1366x768,
+1024x768, 768x1024, and 390x844 with zero document overflow and no browser
+warning or error. Phase 5 corrected the suggestion group layout at 1024px so
+the first 44px add action is visible without horizontal discovery while the
+required three-panel workspace remains intact. Search hiding/restoration,
+category dismissal, direct-category eligibility, 44px targets, mobile order
+reachability, and real multiple-group rendering pass. Deterministic tests
+cover the states that would otherwise require unnecessary operational data
+mutation. Evidence and the stable package are synchronized as implemented.
 
 ## Phase 0 — Repository analysis gate
 

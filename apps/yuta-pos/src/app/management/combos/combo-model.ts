@@ -20,3 +20,12 @@ export function getComboPricingSummary(rule: ComboRule): string {
 
   return `${rule.basePricingGroupName ?? 'Groupe manquant'} + ${formatComboPrice(rule.priceDeltaCents)}`;
 }
+
+export function getComboSuggestionStatus(
+  rule: Pick<ComboRule, 'isActive' | 'isSuggestionEnabled'>,
+  pending: boolean,
+): string {
+  if (pending) return 'Enregistrement…';
+  if (!rule.isSuggestionEnabled) return 'Désactivée';
+  return rule.isActive ? 'Activée' : 'Activée · formule inactive';
+}

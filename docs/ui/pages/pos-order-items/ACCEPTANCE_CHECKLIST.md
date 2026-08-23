@@ -2,6 +2,16 @@
 
 ## Combo-completion reopening gate
 
+- [x] The management-owned `isSuggestionEnabled` preference is consumed only
+      at the order-items completion-projection boundary.
+- [x] Opted-out active rules disappear from suggestions while remaining active
+      for payment/check discount calculation.
+- [x] Focused regression covers enabled and opted-out presentation behavior.
+- [x] Extension Phase 5 production-browser QA passes at `1366 × 768`,
+      `1024 × 768`, `768 × 1024`, and `390 × 844` with zero document overflow.
+- [x] Search and category dismissal pass, unrelated items do not revive a
+      dismissed state, and another Gua Bao creates a fresh eligible state.
+
 - [x] The target is classified as a new `SURFACE` inside an `EXISTING_PAGE`.
 - [x] The existing page remains integrated and fixture replacement is forbidden.
 - [x] Current order, catalog, active combo rules, and add-item transport are
@@ -15,10 +25,61 @@
 - [x] The design prompt is ready and explicitly excludes hard-coded items,
       duplicated products, virtual persisted categories, projected savings,
       analytics, and new management settings.
-- [ ] Product owner approves the one-item-away qualification policy.
-- [ ] Product owner approves suggestion placement and required visual states.
-- [ ] Phase 1 design reference is generated, reviewed, and approved.
-- [ ] Runtime implementation begins only after the above approval gate.
+- [x] Product owner approves the one-item-away qualification policy.
+- [x] Product owner approves highest-priority deduplication, suggestion
+      placement, active-search hiding, and required visual states.
+- [x] Phase 1 desktop and narrow design references are generated and repository
+      reviewed.
+- [x] Product owner approves the corrected Phase 1 design references.
+- [x] Runtime implementation begins only after the above approval gate.
+- [x] Phase 2 uses the authoritative combo calculator rather than presentation
+      matching logic.
+- [x] Phase 2 tests one-step qualification, multi-step exclusion,
+      multi-quantity groups, overlap/priority, `maxApplications`, deduplication,
+      inactive rules, and non-positive outcomes.
+- [x] Phase 2 changes no catalog transport, action, site-agent, db-pos, schema,
+      auth, payment, kitchen, printing, offline, or device behavior.
+- [x] Product owner approves Phase 2 behavior before Phase 3 route integration.
+- [x] Phase 3 filters active categories and available real catalog items in POS,
+      while core remains presentation-neutral.
+- [x] The shelf is absent for no-result and locked states and hidden during an
+      active search.
+- [x] Candidate submission reuses `addOrderItemAction`, exposes a disabled
+      pending state, and does not update order or pricing optimistically.
+- [x] Phase 3 adds no API, contract, site-agent, db-pos, schema, authorization,
+      payment, kitchen, printing, offline, or device capability.
+- [x] Product owner/operator approves the Phase 3 route interaction before the
+      Phase 4 integration audit.
+- [x] Phase 4 confirms no diff in contracts, site-agent, db-pos, migrations,
+      POS transport/action schemas, manifests, or lockfile.
+- [x] Existing order locks, availability checks, snapshots, ordering policy,
+      recalculation, and transactions remain site-agent owned.
+- [x] Local db-pos, site-agent, POS, production-build, and disposable-database
+      offline acceptance gates pass.
+- [x] Phase 4 requires no runtime implementation change.
+- [x] Product owner approves the Phase 4 audit before Phase 5 visual and
+      operational QA.
+- [x] Operator-reported mobile category-row stretching is corrected without
+      changing the desktop three-column workspace.
+- [x] Small or vertical-dominant mouse/pen movement on a category remains a
+      click; only a horizontal-dominant drag of at least 16px suppresses link
+      activation.
+- [x] Normal catalog-card submission exposes visible, accessible pending
+      feedback without optimistic order or pricing state.
+- [x] Corrective QA passes at 1366x768, 1024x768, 768x1024, and 390x844 with no
+      document-level horizontal overflow.
+- [x] Combo suggestions may appear in any category; selecting a category hides
+      the visible rule-state fingerprints for the current route session. Adding
+      unrelated items does not revive them; adding another rule-relevant item,
+      such as a second Gua Bao, allows that rule's new state to appear.
+- [x] Dynamic category links do not prefetch dismissal-sensitive route
+      responses; authenticated navigation from `Toutes` to `Entrées` keeps the
+      category items correct and does not restore the dismissed shelf.
+- [x] At 1024px the suggestion heading stacks above its candidate scroller so
+      the first 44px add action remains immediately visible without changing
+      the three-panel workspace.
+- [x] Narrow combo suggestion cards show the complete candidate name and price
+      above a full-width add action so staff can distinguish product variants.
 
 ## Repository and application
 

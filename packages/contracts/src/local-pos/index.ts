@@ -245,6 +245,7 @@ export const localComboRuleSchema = z
     priority: z.number().int(),
     maxApplications: z.number().int().positive().nullable(),
     isActive: z.boolean(),
+    isSuggestionEnabled: z.boolean(),
     groups: z.array(localComboRuleGroupSchema),
   })
   .strict();
@@ -378,6 +379,7 @@ export const createLocalComboRuleInputSchema = z
     priority: comboPrioritySchema.default(0),
     maxApplications: z.number().int().positive().max(10_000).nullable(),
     isActive: z.boolean().default(false),
+    isSuggestionEnabled: z.boolean().default(true),
   })
   .strict();
 
@@ -397,6 +399,7 @@ export const updateLocalComboRuleInputSchema = z
       .nullable()
       .optional(),
     isActive: z.boolean().optional(),
+    isSuggestionEnabled: z.boolean().optional(),
   })
   .strict()
   .refine((values) => Object.keys(values).length > 0, {

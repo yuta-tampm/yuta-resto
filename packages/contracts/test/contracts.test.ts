@@ -23,6 +23,7 @@ import {
   localEstablishmentProfileSchema,
   localManagementReportsQuerySchema,
   localManagementReportsResponseSchema,
+  localComboRuleSchema,
   localOrdersHomeQuerySchema,
   localOrdersHomeResponseSchema,
   localPrintSettingsSchema,
@@ -476,6 +477,7 @@ describe('@yuta/contracts', () => {
       priority: 0,
       maxApplications: 2,
       isActive: false,
+      isSuggestionEnabled: true,
     });
     expect(
       createLocalComboRuleInputSchema.safeParse({
@@ -486,6 +488,23 @@ describe('@yuta/contracts', () => {
       }).success,
     ).toBe(false);
     expect(updateLocalComboRuleInputSchema.safeParse({}).success).toBe(false);
+    expect(
+      updateLocalComboRuleInputSchema.parse({ isSuggestionEnabled: false }),
+    ).toEqual({ isSuggestionEnabled: false });
+    expect(
+      localComboRuleSchema.safeParse({
+        id,
+        name: 'Legacy response without suggestion eligibility',
+        pricingMode: 'fixed',
+        comboPriceCents: 1000,
+        priceDeltaCents: 0,
+        basePricingGroupName: null,
+        priority: 0,
+        maxApplications: null,
+        isActive: true,
+        groups: [],
+      }).success,
+    ).toBe(false);
     expect(
       createLocalComboGroupInputSchema.safeParse({
         comboRuleId: id,
