@@ -802,6 +802,17 @@ export const addLocalOrderItemInputSchema = z
     menuItemId: identifierSchema,
     quantity: z.number().int().positive().default(1),
     note: z.string().trim().max(2000).optional(),
+    selectedVariants: z
+      .array(
+        z
+          .object({
+            code: z.string().trim().min(1),
+            quantity: z.number().int().nonnegative(),
+          })
+          .strict(),
+      )
+      .max(20)
+      .optional(),
   })
   .strict();
 

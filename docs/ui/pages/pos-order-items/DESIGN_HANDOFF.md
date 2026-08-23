@@ -1,8 +1,28 @@
 # POS Order Items - Design Handoff
 
-Status: Phase 1 combo-suggestion designs approved
+Status: Approved and implemented — pre-add required-option dialog
 
 Visibility: Engineering
+
+## 2026-08-23 required-option interaction handoff
+
+The product owner approved a focused modal immediately after staff taps a
+catalog item with required variants. The item must not be created before the
+selection is confirmed. The modal presents current catalog labels, an exact
+selected/required counter, repeated-choice support, 44px decrement/increment
+controls, `Annuler`, and `Ajouter à la commande`. It contains no allergy fields.
+
+Plain catalog items keep direct one-tap addition. Configured items shown in the
+combo-completion shelf use the same modal. A recoverable service error keeps
+the dialog and draft selection visible; confirmed success closes it and shows
+the persisted row through normal route revalidation. The current shared POS
+shell, catalog density, order summary, payment, kitchen, and mobile-order
+ownership remain unchanged.
+
+No generated visual reference is required for this bounded route-local dialog.
+Repository components and the approved interaction description are sufficient;
+production browser QA at the canonical viewport matrix remains the visual
+acceptance authority.
 
 ## 2026-08-21 combo-completion suggestion handoff
 

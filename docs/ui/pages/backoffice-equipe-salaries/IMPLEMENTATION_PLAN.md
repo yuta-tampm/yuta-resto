@@ -1894,3 +1894,106 @@ Completed slice:
 Stop before adding a field, source of truth, mutation, contract aggregate or
 version, history payload, document operation, generation, AI/provider call,
 real employee QA, or production enablement.
+
+## F05 — manage-employee-documents flow
+
+### F05 Phase 0 — repository reconciliation
+
+Status: `APPROVED 2026-08-24`.
+
+Completed read-only work:
+
+1. reconciled the downloaded F05 flow with the existing Documents Wave A/B,
+   Wave D missing-contract overview, Wave F/G extraction boundary, contracts,
+   actions, repositories, routes, runtime adapters, permissions, audit, and
+   tests;
+2. classified F05 as renewal of an existing integrated capability under
+   `EXISTING_CAPABILITY_RENEWAL`;
+3. limited approved meanings to one signed base contract and distinct signed
+   amendments, with no generic or additional sensitive document category;
+4. recorded verification-before-commit, immutable versions, revision,
+   idempotency, tenant scope, minimized audit, and server-mediated delivery;
+5. distinguished base replacement from correction of one amendment scan;
+6. reconciled the current active/upcoming missing-base action as operational
+   missing evidence, not employee-dossier or legal completeness;
+7. preserved F03/F04 employee facts, Wave D overview, Wave F/G review, and
+   production-provider ownership boundaries; and
+8. proposed F05-01 through F05-10 without changing implementation or data.
+
+No runtime, schema, migration, transport, permission, audit, file,
+storage/scanner, provider, test data, operational data, or production behavior
+changed.
+
+### F05 Phase 1 — bounded fictional regression
+
+Status: `READ-ONLY FICTIONAL REGRESSION COMPLETE 2026-08-24`.
+
+Completed slice:
+
+1. verified one existing fictional available base contract and one existing
+   fictional missing-base state without opening or changing a file;
+2. confirmed the base/amendment hierarchy, replacement wording, empty-amendment
+   state, scoped server-route link shapes, and missing-evidence/completeness copy;
+3. verified the missing state at 390 px with matching document/drawer client
+   and scroll widths and no browser warning/error;
+4. retained existing as-built evidence for a populated amendment rather than
+   creating a new amendment solely for QA; and
+5. made no runtime, employee, document, audit, file, storage, or provider change.
+
+Repository tests remain the non-mutating evidence for view/download grants,
+cross-establishment denial, versioning, stale revision, idempotency, and
+pagination. Stop before any new category, applicability rule, metadata,
+delete/archive behavior, AI call, real employee file, or production enablement.
+
+## F06 — resolve-dossier-alerts flow
+
+### F06 Phase 0 — repository reconciliation
+
+Status: `DOCUMENTATION COMPLETE; AWAITING APPROVAL`.
+
+Completed read-only work:
+
+1. reconciled the downloaded F06 flow with Wave D product decisions, as-built
+   evidence, contracts, repository queries, server actions, runtime gate,
+   presentation model, permissions, audit, and tests;
+2. classified F06 as `EXISTING_CAPABILITY_RENEWAL` rather than a new alert or
+   task capability;
+3. fixed scope to the current three derived conditions and their existing
+   F03/F05/departure targets;
+4. separated minimum-dossier incompleteness, missing signed evidence, and an
+   upcoming departure event;
+5. recorded fresh server resolution, changed-state refresh, partial document-
+   source failure, and source-driven disappearance semantics;
+6. preserved independent five-item cursor pages, minimized overview-read audit,
+   OWNER-only trusted scope, and the development-only fail-closed runtime gate;
+7. explicitly deferred unsupported expiry/event sources and every persisted
+   workflow feature; and
+8. proposed F06-01 through F06-10 without changing implementation or data.
+
+No runtime, schema, migration, contract, API, permission, audit definition,
+employee, document, departure, alert/task data, provider, or production behavior
+changed.
+
+### Proposed F06 Phase 1 — bounded read-only regression
+
+Approval required before execution.
+
+If approved:
+
+1. use the current authenticated OWNER development surface and only existing
+   fictional LUNA records;
+2. verify the visible groups, supported labels, existing item types, contextual
+   target resolution, stale/partial/error evidence available in tests, and the
+   production gate;
+3. verify responsive behavior at 390 px and clean browser logs when a current
+   item exists;
+4. reuse the Wave D Phase 5 as-built evidence for states not present in current
+   data; and
+5. run focused and Backoffice checks without creating a missing field,
+   uploading/replacing a PDF, or changing a departure merely to manufacture QA.
+
+An authorized overview read may write its existing single minimized audit
+event. Phase 1 must make no employee/document/departure mutation and must add no
+new alert category, task state, notification, background job, provider call,
+real employee data, or production behavior. Stop and document any repository
+conflict instead of broadening scope.

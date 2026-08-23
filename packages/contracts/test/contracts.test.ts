@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   apiErrorSchema,
+  addLocalOrderItemInputSchema,
   createInternalNoteSchema,
   createLocalCatalogItemInputSchema,
   createLocalComboGroupInputSchema,
@@ -68,6 +69,22 @@ describe('@yuta/contracts', () => {
       tableLabel: 'Table 12',
       orderType: 'dine_in',
       staffUserId: id,
+    });
+    expect(
+      addLocalOrderItemInputSchema.parse({
+        menuItemId: id,
+        selectedVariants: [
+          { code: 'MANGUE', quantity: 1 },
+          { code: 'MATCHA', quantity: 1 },
+        ],
+      }),
+    ).toEqual({
+      menuItemId: id,
+      quantity: 1,
+      selectedVariants: [
+        { code: 'MANGUE', quantity: 1 },
+        { code: 'MATCHA', quantity: 1 },
+      ],
     });
     expect(
       localOrderCommandSchema.safeParse({

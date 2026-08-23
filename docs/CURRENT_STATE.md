@@ -51,6 +51,10 @@ reservation availability.
   or synchronizes with POS data.
 - Local POS ordering, kitchen, payment, printing, administration, and reporting
   workflows described in the POS product documentation.
+- Local POS catalog items with required variants now collect the exact options
+  in a focused pre-add dialog. Site-agent validates and snapshots the item and
+  option labels in one add transaction; cancel creates no incomplete row,
+  plain items retain one-tap addition, and allergy capture stays separate.
 - Local Management reports use an admin/manager-protected site-agent read model
   over POS orders and payments. It captures one 05:00 `Europe/Paris` service
   window, aggregates paid payment principal and order counts server-side, and
@@ -710,3 +714,50 @@ focused component test and authenticated fictional LUNA QA verify the boundary,
 the absence of the stale claim, and clean browser logs. No schema, API,
 permission, audit, file operation, provider call, employee/document value, real
 employee data, or production behavior changed.
+
+F05 Phase 0 reconciles the downloaded manage-documents flow with the existing
+Documents Wave A/B capability. The current development surface supports exactly
+one signed base employment-contract PDF and distinct signed amendment PDFs. It
+uses OWNER-only trusted organization + establishment + employee scope, PDF up
+to 10 MiB, quarantine and scanning before metadata commit, immutable versions,
+revision/idempotency guards, minimized audit, and server-mediated no-store
+delivery without browser-visible storage authority. Base replacement advances
+the one base slot; amendment replacement corrects only the selected amendment's
+scan. The development-only `À traiter` overview currently flags every active or
+upcoming employee without a base PDF; F05 proposes retaining that only as
+operational missing evidence, not dossier or legal completeness. No amendment
+or unsupported identity, work-permit, RIB, or generic category is universally
+required. Validity/expiry, metadata edit, deletion/archive/legal hold/purge,
+self-service, and signature are absent. Wave F/G remains a separately gated
+base-contract-only review path with no automatic employee update. Product
+approved F05-01 through F05-10 and the bounded read-only regression on
+2026-08-24. Existing fictional records proved one available version-2 base
+contract, one missing-base state, empty amendments, safe scoped route link
+shapes, non-completeness copy, clean browser logs, and no 390 px overflow.
+Existing as-built evidence remains the populated-amendment proof; no mutation
+was created for QA. No PDF view/download was invoked because it intentionally
+writes audit evidence. Phase 1 changed no runtime, employee, document, audit,
+file, storage, or provider state. Production remains fail-closed pending EU
+storage/scanner, retention, rights, deletion, backup/restore, incident,
+legal/privacy, security, and operations approval.
+
+F06 Phase 0 reconciles the downloaded resolve-dossier-alerts flow with the
+existing development-only Wave D `À traiter` overview. This is an existing-
+capability renewal, not a new alert page or persisted task system. Repository
+reality supports exactly three derived current conditions: an incomplete
+minimum employee dossier, a missing signed base contract for an active or
+upcoming employee, and a departure from the establishment business date
+through the next five calendar days. The first two are corrections; the last
+is an upcoming event to review, not an error. Resolution remains source-driven:
+the existing F03 editor, F05 base-contract add flow, or departure review is
+opened only after fresh trusted-scope and permission checks, and an item becomes
+absent only when its underlying condition changes. There is no dismiss,
+acknowledge, assignment, comment, reminder, notification, or cosmetic resolved
+flag. CDD expected-end, probation, document expiry, amendment, Formalités,
+register, Planning, Pointage, and payroll alerts remain unsupported. A document
+metadata failure produces a partial state and no false missing-contract item.
+The overview remains OWNER-only, organization + establishment scoped, bounded
+to independent five-item cursor pages, audited once per overview read, and
+fail-closed outside development. F06-01 through F06-10 and a read-only
+fictional regression are awaiting product approval. Phase 0 changed
+documentation only.

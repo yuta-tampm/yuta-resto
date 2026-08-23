@@ -1,5 +1,20 @@
 # POS Order Items - Acceptance Checklist
 
+## Required-option add flow
+
+- [x] Product owner approved option selection immediately after tapping a
+      configured catalog item.
+- [x] Items without required variants retain one-tap addition.
+- [x] Required options use a focused modal and do not open allergy controls.
+- [x] Canceling the modal creates no order item.
+- [x] Confirmation sends the item and selected variants in one request.
+- [x] Site-agent validates current catalog codes and the exact required count.
+- [x] Required-variant items use separate-portion ordering.
+- [x] The existing `selected_variants` snapshot field avoids a migration.
+- [x] Configured combo candidates reuse the same modal.
+- [x] Focused tests, required repository checks, offline acceptance, and
+      responsive browser QA pass.
+
 ## Combo-completion reopening gate
 
 - [x] The management-owned `isSuggestionEnabled` preference is consumed only

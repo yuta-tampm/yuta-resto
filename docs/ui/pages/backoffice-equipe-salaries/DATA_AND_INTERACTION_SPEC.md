@@ -1782,6 +1782,175 @@ Operational data: unchanged
 Production: NOT AUTHORIZED
 ```
 
+## F06 Phase 0 — alert derivation and resolution interaction
+
+F06 does not introduce an alert entity. The current Wave D overview is computed
+from authoritative employee and document state for the trusted organization
+and active establishment. Browser-provided scope, role, permissions, employee
+identity, alert state, and resolution state are not trusted.
+
+### Derived item contract
+
+| Kind                           | Source condition                                                                                           | Group         | Existing target            |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------- | ------------- | -------------------------- |
+| `incomplete_employee_dossier`  | Active/upcoming dossier has a blank given-names, family-name, position, or qualification value             | `corrections` | F03 minimum-dossier editor |
+| `missing_signed_base_contract` | Active/upcoming dossier has no `signed_employment_contract` document metadata in the same trusted scope    | `corrections` | F05 base-contract add form |
+| `departure_within_five_days`   | Active dossier departure date is between business date and business date plus five calendar days inclusive | `departures`  | Existing departure review  |
+
+The response exposes only the kind, employee ID, employee display name, the
+departure date when relevant, bounded page information, and document-source
+status. It contains no filename, file version, storage key, contract content,
+missing-field list, comment, assignee, priority, or persisted resolution data.
+
+Corrections and departures have independent deterministic cursor pagination
+with five items per page. Cursors are transient interaction state, not URL or
+durable workflow state. The overview exposes no aggregate total and uses no
+polling or background refresh.
+
+### Read, resolve, and freshness sequence
+
+1. The server requires the current personnel tenant and employee/document read
+   permissions before loading the overview.
+2. Employee incompleteness, document metadata, and departure rows are read in
+   the trusted scope.
+3. One minimized `personnel.action_overview_viewed` audit event with empty
+   metadata is written for the overview read, not one event per item.
+4. Selecting an item sends only the employee ID and strict item kind back to
+   the server.
+5. The server repeats runtime, tenant, scope, employee, permission, business-
+   date, and underlying-condition checks.
+6. A current item returns the bounded existing target. A changed or resolved
+   item returns `changed`, the client refreshes, and no obsolete target opens.
+7. The overview never marks an item resolved. It disappears or changes only
+   after the owning domain successfully changes its authoritative source.
+
+An incomplete-dossier target additionally requires employee-manage permission.
+A missing-contract target additionally requires document read/manage. The
+departure target remains a read-only review. Current role mapping makes the
+multi-employee surface OWNER-only.
+
+### Failure and non-inference rules
+
+If document metadata fails while employee/departure reads succeed, the response
+keeps the valid rows, sets `documentSourceStatus: unavailable`, and produces no
+missing-contract item. If a required non-document source fails, the action
+returns the full retry state without personnel data. Invalid cursors and stale
+targets fail closed.
+
+Do not infer CDD expiry from `expectedEndDate`, departure from contract end,
+legal completeness from current minimum fields, amendment requirements,
+document validity, or deadlines from Formalités, register, Planning, Pointage,
+or payroll. No current schema supports task status, acknowledgement, dismissal,
+assignment, comments, reminders, or notifications.
+
+The proposed Phase 1 may exercise only existing fictional records and current
+tests. It must not insert, edit, upload, replace, depart, or otherwise mutate a
+source condition solely for QA. The normal minimized overview-read audit is an
+expected security side effect, not a manually created alert mutation.
+
+```text
+F06 Phase 0 change record
+Files created: none
+Packages affected: documentation only
+Database/schema/migration: NO
+Transport or application contract: NO
+Runtime behavior: NO
+Permission or audit event definition: NO
+Employee/document/departure mutation: NO
+Operational alert/task data: none exists
+External request/provider: NO
+Production: NOT AUTHORIZED
+```
+
+## F05 Phase 0 — current document data and interaction inventory
+
+### Approved current document meanings
+
+| Meaning                         | Persistence model                                    | Current interaction boundary                                                                |
+| ------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Signed base employment contract | One establishment-owned document plus versions       | Add once; verified replacement advances current version; view/download current version only |
+| Signed contract amendment       | Distinct amendment aggregate plus immutable versions | Add with effective date and optional reference; replace only its scan; page ten at a time   |
+
+The base category is the allowlisted `signed_employment_contract`. Amendments
+use a separate repository/schema family and audit category; they are not a
+second base-category slot. Identity documents, work authorization/title, RIB,
+payroll evidence, generic attachments, and unsigned drafts have no approved F05
+contract or storage behavior.
+
+### Write and delivery sequence
+
+For both supported meanings, the server derives tenant and OWNER permissions,
+validates PDF media/signature and the 10 MiB limit, writes a quarantined private
+object, invokes the local scanner, promotes verified bytes, and only then commits
+scoped metadata/version/audit with revision and idempotency protection. Failed
+verification does not replace the current version and attempts to clean the new
+object. Production runtime refuses to provide the local storage/scanner.
+
+View and download URLs carry employee and item identifiers only as untrusted
+hints. The server rederives organization and establishment, requires
+`personnel.document.read`, grants the current scoped object, records a minimized
+view or download event, opens private storage, and returns `private, no-store`
+PDF content with `nosniff` and safe content disposition. Storage keys and
+checksums are never part of the browser model.
+
+### Presence and applicability
+
+The employee document card explicitly says absence of the base file does not
+automatically make the employee dossier incomplete. Separately, the approved
+development-only `À traiter` query lists every active or upcoming employee with
+no signed base-contract metadata as `missing_signed_base_contract`. F05 Phase 0
+proposes retaining that rule only as an operational missing-evidence action. It
+must not be described as a legal-completeness judgment, and it does not create a
+general required/optional/not-applicable configuration.
+
+No current rule requires an amendment. No validity/expiry date exists for the
+base contract or amendment file. Amendment effective date is contract context,
+not document expiry. F05 must not fabricate expiry alerts or applicability
+rules.
+
+### Ownership boundaries
+
+| Concern                      | Owner/boundary                                                                 |
+| ---------------------------- | ------------------------------------------------------------------------------ |
+| Employee current facts       | F03/F04 employee dossier; F05 does not silently update them                    |
+| Signed base and amendments   | F05 Documents                                                                  |
+| Missing-base overview action | Development-only Wave D derived metadata read; no file bytes                   |
+| Extraction suggestions       | Separately gated Wave F/G, base contract only, explicit OWNER review           |
+| Deletion/retention/rights    | Deferred production legal/privacy/security/operations decision                 |
+| Production binary storage    | Future private EU provider outside Neon; no provider is selected by this phase |
+
+### Completed Phase 1 read-only regression
+
+Authenticated QA used existing fictional LUNA records only. `ok cdi ddd`
+exposed an available version-2 base contract, safe employee/document-scoped
+view and download link shapes, the separate analysis gate, and an empty
+amendment section. `Nina F02-Sierra` exposed the missing-base action plus the
+explicit statement that absence does not automatically make the dossier
+incomplete. The 390 px document and drawer widths matched their scroll widths.
+Browser logs contained no warning/error.
+
+QA deliberately did not open or download the PDF because those reads write
+audit evidence, and it did not add or replace a base contract or amendment.
+Repository tests remain the evidence for scoped grants, cross-establishment
+denial, immutable versions, stale revision, idempotency, and amendment paging.
+Existing as-built evidence remains the populated-amendment visual proof.
+
+### Phase 0 change flags
+
+```text
+Files modified: existing Salariés page-pack and current-state Markdown only
+Files created: none
+Packages affected: documentation only
+Runtime/UI/action/repository: NO
+Database/schema/migration: NO
+Transport contract/API/permission/audit: NO
+File read/write/upload/download: NO
+Storage/scanner/provider operation: NO
+Employee/document/test/operational data: unchanged
+AI/provider request: NO
+Production: NOT AUTHORIZED
+```
+
 ## F03 Phase 0 — current edit data and interaction inventory
 
 Status: `PHASE 1 IMPLEMENTED; SERVER AND DATA BOUNDARIES UNCHANGED`.

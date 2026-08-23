@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering and restaurant operations
 
-Last updated: 2026-08-20
+Last updated: 2026-08-23
 
 `apps/yuta-pos` is the internal restaurant POS application for YuTa.
 
@@ -317,6 +317,12 @@ group name, usually `Plat`.
 ## UX Principles
 
 The POS is used during service, often on a tablet. Favor speed, clarity, and large touch targets.
+
+Catalog items with required variants open a focused option dialog before they
+are added. Confirmation sends the item and option quantities together; cancel
+creates nothing. Site-agent validates and snapshots the current option labels
+inside the add transaction. Allergy capture remains separate. Plain items keep
+the direct one-tap path.
 
 The application shell uses the full available viewport width across service,
 order, kitchen, payment, and local-management routes. Do not constrain a

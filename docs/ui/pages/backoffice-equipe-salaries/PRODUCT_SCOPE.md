@@ -1322,3 +1322,89 @@ These decisions authorize only the completed copy-level Phase 1 coherence
 renewal and fictional authenticated QA. They do not authorize a new field,
 source of truth, mutation, contract aggregate/version, document operation,
 AI extraction, real employee, or production behavior.
+
+## F05 Phase 0 — manage-employee-documents scope
+
+Capability status: `EXISTING DEVELOPMENT CAPABILITY — PHASE 1 REGRESSION COMPLETE`.
+
+### Current user and outcome
+
+An authenticated OWNER in one trusted active establishment can add, replace,
+view, and download the employee's signed base employment contract and distinct
+signed amendments. The outcome is controlled access to approved signed PDF
+evidence, not a general HR vault, legal-completeness determination, signature
+workflow, or document-generation service.
+
+### Proposed product decisions
+
+| ID     | Decision needed               | Recommendation                                                                                                                                                | Status              |
+| ------ | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| F05-01 | Supported document meanings   | Keep only one signed base employment contract plus distinct signed amendments; add no identity, work-permit, RIB, generic, or payroll category                | Approved 2026-08-24 |
+| F05-02 | Primary surface               | Keep both meanings in the existing employee `Documents` tab; add no vault page, route, tab, or cross-employee document browser                                | Approved 2026-08-24 |
+| F05-03 | Base-contract lifecycle       | Keep one current base slot; verified replacement creates a new immutable version and never removes the prior version                                          | Approved 2026-08-24 |
+| F05-04 | Amendment lifecycle           | Keep each legal amendment distinct with required effective date and optional reference; replacement corrects only the selected amendment scan                 | Approved 2026-08-24 |
+| F05-05 | File and delivery boundary    | Keep PDF-only, 10 MiB, quarantine/scan-before-commit, server-mediated view/download, no public/stable URL, and no browser storage authority                   | Approved 2026-08-24 |
+| F05-06 | Missing/required meaning      | Keep the local active/upcoming missing-base-contract action as missing signed evidence only; do not make it dossier completeness or a universal category rule | Approved 2026-08-24 |
+| F05-07 | Authorization and audit       | Remain OWNER-only and active-establishment-scoped; retain minimized list/open/view/download/upload/replace/reject evidence                                    | Approved 2026-08-24 |
+| F05-08 | Metadata and removal boundary | Keep current filename/version/upload date plus amendment effective date/reference; defer validity, expiry, edit, delete, archive, legal hold, and purge       | Approved 2026-08-24 |
+| F05-09 | AI/extraction boundary        | Keep Wave F/G separate and base-contract-only; never analyze amendments or update employee data automatically                                                 | Approved 2026-08-24 |
+| F05-10 | Production boundary           | Stay fail-closed until EU storage/scanner, retention, rights, deletion, backup/restore, incident, legal/privacy, security, and operations gates are closed    | Approved 2026-08-24 |
+
+These decisions authorize only the completed non-mutating fictional regression.
+They do not authorize a new category, applicability rule, metadata, mutation,
+file operation, AI request, real employee file, or production behavior.
+
+## F06 Phase 0 — resolve-dossier-alerts scope
+
+Capability status: `EXISTING DEVELOPMENT CAPABILITY — PHASE 0 AWAITING APPROVAL`.
+
+### Current outcome and boundary
+
+F06 renews the existing Wave D `À traiter` overview inside
+`/equipe/salaries`. It does not create a separate route, tab, summary KPI,
+alert center, workflow inbox, or persisted task model. `Dossiers à compléter`
+continues to be the existing filter/count for the minimum dossier rule; it is
+not an alias for every `À traiter` condition.
+
+The supported conditions are fixed to current repository semantics:
+
+1. `incomplete_employee_dossier`: one or more current minimum text facts are
+   blank;
+2. `missing_signed_base_contract`: an active or upcoming employee has no signed
+   base employment-contract document; and
+3. `departure_within_five_days`: an active employee has a departure date from
+   the establishment business date through the next five calendar days.
+
+The first two are corrections. The departure item is an upcoming review event,
+not proof of an error. Missing base evidence never changes the minimum-dossier
+completeness result. A CDD expected end is not a departure date.
+
+### Proposed F06 decisions
+
+| ID     | Decision needed           | Recommendation                                                                                      | Status            |
+| ------ | ------------------------- | --------------------------------------------------------------------------------------------------- | ----------------- |
+| F06-01 | Surface                   | Keep `À traiter` inside `/equipe/salaries`; add no page, tab, navigation item, or KPI               | Awaiting approval |
+| F06-02 | Alert model               | Keep a server-derived current overview; add no persisted alert/task/resolution record               | Awaiting approval |
+| F06-03 | Supported conditions      | Keep only the three repository-backed conditions listed above                                       | Awaiting approval |
+| F06-04 | Meaning and grouping      | Keep incomplete/missing-base under corrections and departure under upcoming events                  | Awaiting approval |
+| F06-05 | Resolving actions         | Reuse F03 edit, F05 base-contract add, and existing departure review; never auto-update data        | Awaiting approval |
+| F06-06 | Freshness                 | Revalidate the condition server-side; stale/resolved items return changed-state and refresh         | Awaiting approval |
+| F06-07 | Paging and refresh        | Keep independent five-item cursor pages; no totals, URL cursor, polling, reminder, or notification  | Awaiting approval |
+| F06-08 | Failure and authorization | Keep OWNER-only trusted scope; document-source failure is partial and creates no false missing item | Awaiting approval |
+| F06-09 | Audit and privacy         | Keep one minimized audit event per overview read; no per-item history or sensitive detail expansion | Awaiting approval |
+| F06-10 | Deferred and production   | Keep unsupported alerts/workflow absent and production fail-closed                                  | Awaiting approval |
+
+### Explicitly deferred
+
+- CDD expiry, probation, work-authorization, identity-document, amendment, or
+  generic document expiry alerts;
+- Formalités, register, Planning, Pointage, payroll, and external-provider
+  deadlines;
+- dismiss, acknowledge, assign, comment, snooze, schedule, notify, or manually
+  mark resolved;
+- manager access, cross-establishment aggregation, background processing, and
+  production enablement.
+
+The proposed Phase 1 is bounded read-only regression using existing fictional
+data and current tests. No operational condition is created or changed solely
+to obtain a screenshot or test state.

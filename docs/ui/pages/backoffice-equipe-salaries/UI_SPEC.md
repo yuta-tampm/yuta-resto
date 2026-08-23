@@ -864,3 +864,66 @@ validation, or production availability. It says that declared information may
 be reused to prepare a formality and directs signed-contract viewing to
 `Documents` when such a file exists. The layout, navigation, fields, and actions
 are unchanged.
+
+## F05 Phase 0 — current Documents UI
+
+Status: `PHASE 1 READ-ONLY FICTIONAL REGRESSION COMPLETE`.
+
+F05 reuses the existing full-dossier `Documents` tab. Keep the signed base
+contract first and the separate `Avenants signés` section below it. Do not add a
+document-vault page, document-category picker, general upload area, validity
+dashboard, signature workflow, or cross-employee document browser.
+
+The base section truthfully supports loading, unavailable/retry, no signed
+contract, add, file selected, verification pending, validation/scanner failure,
+revision or idempotency conflict, success, available card, replace, view, and
+download. The amendment section separately supports loading, unavailable/retry,
+empty, add, replace, validation/conflict/success, ten-item pagination, view, and
+download. Every card displays only bounded filename, PDF size, current version,
+upload date, and availability; amendments additionally show effective date and
+optional reference.
+
+`Remplacer` must remain unambiguous: for the base it replaces the current base
+scan after verification; for an amendment it corrects only the selected
+amendment scan. Missing base-contract copy must stay separate from employee-
+dossier completeness, and an empty amendment list must not be presented as a
+problem.
+
+Existing Documents Wave A and Wave B as-built references remain the design
+authority. F05 is `EXISTING_CAPABILITY_RENEWAL`; no new design-generation prompt
+was needed. Phase 1 verified current available-base and missing-base states at
+desktop width, the missing state at 390 px, the empty-amendment state, and clean
+browser logs. The populated-amendment state remains supported by existing
+as-built evidence because creating another amendment solely for QA was forbidden.
+Wave F/G controls remain separately gated and do not redefine F05.
+
+## F06 Phase 0 — current alert-resolution UI
+
+F06 reuses the existing integrated surfaces. The `Dossiers à compléter` metric
+continues to activate the current minimum-dossier list filter. The development-
+only `À traiter` card remains between the metrics and the employee list; it is
+not promoted to a page, tab, drawer, modal, or KPI.
+
+The card has two semantic groups:
+
+- `À corriger`: `Dossier incomplet` with `Compléter le dossier`, and `Contrat
+signé manquant` with `Ajouter le contrat`;
+- `Échéances proches`: a dated departure with `Voir le départ`.
+
+Opening an action has a pending state while the server resolves the current
+target. A current item opens the existing employee surface at the relevant
+context. A stale item displays the existing changed-state notice and refreshes
+the overview. The overview owns no mutation success state because resolution
+belongs to the underlying F03, F05, or departure flow.
+
+Preserve the current loading, empty, full-error/retry, document-source partial
+warning, source refresh, independent previous/next pagination, action pending,
+stale-item notice, focus restoration, responsive stacking, and accessible-name
+behavior. At narrow widths, each action stays full-width and no horizontal
+overflow is allowed.
+
+Do not add resolved checkboxes, dismiss/snooze controls, counts, urgency scores,
+priorities, assignees, comments, notifications, unsupported alert labels, file
+details, legal-completeness claims, manager views, or production disclosure.
+No new visual design prompt is needed: the selected Wave D as-built surface is
+the current authority.

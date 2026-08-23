@@ -1,6 +1,6 @@
 # POS Order Items - Data and Interaction Specification
 
-Status: Implemented — Phase 5 combo-completion delivery complete
+Status: Implemented — atomic required-option add flow
 
 Visibility: Engineering
 
@@ -33,7 +33,8 @@ database credentials nor printer paths.
 
 ## Current interactions
 
-Navigate categories, search locally, add an item, change pending quantity,
+Navigate categories, search locally, add a plain item directly, choose required
+options before adding a configured item, change pending quantity,
 soft-remove pending item, edit instructions/allergy, open/close mobile summary,
 navigate to detail/payment, and confirm/send the pending batch to kitchen.
 
@@ -43,6 +44,22 @@ success screen. `Créer une autre commande` navigates to `/pos`; `Retour aux
 commandes` navigates to `/`. The screen counts down for five seconds and then
 automatically navigates to the approved home route `/` if the operator has not
 already chosen an action.
+
+## Implemented required-option add flow
+
+The item browser receives `variantOptions` and `requiredVariantQuantity` from
+the current catalog response. A positive required count changes only the add
+interaction: the card and any combo-completion candidate open the same
+route-local dialog rather than submitting immediately. The browser tracks draft
+quantities only while the dialog is open and cannot claim persistence.
+
+`addLocalOrderItemInputSchema` accepts optional `selectedVariants`. Site-agent
+locks the order, reloads the authoritative catalog row, requires variant items
+to use separate-portion ordering, validates the exact per-portion count through
+the existing snapshot builder, inserts the item with label snapshots, and
+recalculates totals in one transaction. Missing, stale, unknown, or incorrectly
+counted variants fail without creating a row. No database migration is needed
+because `order_items.selected_variants` already owns the snapshots.
 
 ## Implemented combo-completion projection and route adapter
 
@@ -181,6 +198,8 @@ success, item photos, dirty dialog behavior, authentication, printer routing,
 combo calculation, polling, or offline replay. The two approved success
 destinations are `/pos` and `/`; no other post-send navigation is authorized.
 
-## Proposed persistence/contract changes
+## Persistence/contract changes
 
-None. Any such change requires separate product/architecture approval.
+The approved add-item contract extension is optional `selectedVariants`; it is
+backward compatible for items without required variants. Persistence is
+unchanged. Any further contract or schema change requires separate approval.

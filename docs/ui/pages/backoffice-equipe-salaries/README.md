@@ -1229,3 +1229,85 @@ render test protects the copy boundary. Authenticated OWNER QA with the
 fictional `Nina F02-Sierra` dossier verified `Relation de travail`, the separate
 `Documents` tab, absence of the stale message, and no browser warning/error.
 No employee or document value was written.
+
+## F05 Phase 0 — manage-employee-documents reconciliation
+
+Status: `PHASE 1 READ-ONLY FICTIONAL REGRESSION COMPLETE`.
+
+F05 (`Gérer les documents`) is an existing integrated development capability,
+not a generic document-vault proposal. The current `Documents` tab supports
+exactly two meanings: one current signed base employment-contract PDF and zero
+or more distinct signed amendment PDFs. Use `EXISTING_CAPABILITY_RENEWAL` and
+preserve the Wave A and Wave B implementation boundaries.
+
+Both slices are OWNER-only and establishment scoped. They accept PDF up to
+10 MiB, quarantine and scan bytes before metadata becomes current, keep prior
+versions on replacement, deliver content through audited server routes, and
+never expose storage keys or stable provider URLs. A base-contract replacement
+updates the one base slot; an amendment replacement corrects only that
+amendment's scan. It never replaces the base contract or another amendment.
+
+The current development-only `À traiter` overview treats an absent base
+contract for every active or upcoming employee as missing signed evidence. It
+does not change employee-dossier completeness, and no rule makes an amendment
+or another document category universally required. Identity documents, work
+authorizations, RIB, validity/expiry metadata, generic attachments, delete,
+archive, legal hold, and employee self-service remain unsupported.
+
+Wave F/G analysis remains a separate, gated base-contract review path. It does
+not broaden F05 categories, analyze amendments, or authorize automatic employee
+updates. Production remains fail-closed until private EU storage, an approved
+scanner, retention/deletion, rights handling, backup/restore, incident response,
+legal/privacy, security, and operational ownership are approved.
+
+Product approved F05-01 through F05-10 and the bounded regression on
+2026-08-24. Authenticated read-only QA used the fictional `ok cdi ddd` dossier
+for an available version-2 base contract and `Nina F02-Sierra` for the missing
+state. It confirmed the base/amendment separation, safe server-route link
+shapes, explicit non-completeness copy, empty amendments, clean browser logs,
+and no horizontal overflow at 390 px. Existing Wave B evidence remains the
+truthful proof for a populated amendment state; QA did not create one.
+
+No view/download was invoked because those authorized reads intentionally write
+audit evidence, and no upload or replacement was performed. Phase 1 changed no
+runtime, file, database, employee, document, audit, or provider state.
+
+## F06 Phase 0 — resolve-dossier-alerts reconciliation
+
+Status: `DOCUMENTATION COMPLETE — AWAITING PRODUCT APPROVAL`.
+
+F06 (`Résoudre dossier incomplet / alertes`) maps to the existing development-
+only Wave D `À traiter` overview and the existing `Dossiers à compléter`
+filter/count. It is an `EXISTING_CAPABILITY_RENEWAL`, not authority for a new
+page, KPI, task store, alert engine, or notification system.
+
+Repository reality supports exactly three derived current conditions:
+
+- incomplete current minimum employee dossier;
+- missing signed base employment-contract evidence for an active or upcoming
+  employee; and
+- departure from the establishment business date through the next five
+  calendar days.
+
+The first two appear under `À corriger`; departure appears under `Échéances
+proches` and is a review event rather than an error. Missing signed evidence is
+separate from employee-dossier completeness. CDD expected-end, probation,
+document expiry, amendments, Formalités, register, Planning, Pointage, payroll,
+and any broader legal-completeness rule remain unsupported.
+
+The existing contextual actions reuse F03 edit, F05 signed-base add, and the
+departure review. The server rechecks the trusted tenant, permissions,
+employee, and current condition before opening a target. An obsolete item
+returns a changed-state notice and refreshes; it is never cosmetically marked
+resolved. No dismiss, acknowledgement, assignment, comment, reminder,
+notification, or persisted alert status exists.
+
+The overview remains OWNER-only, establishment scoped, development-only,
+bounded to independent five-item cursor pages, and audited once per overview
+read. A document metadata failure is partial and cannot fabricate missing-
+contract items. Production remains fail-closed.
+
+The smallest proposed Phase 1 is a read-only regression with existing
+fictional LUNA data and repository tests. It must not create or change employee,
+document, alert, or departure data merely to manufacture QA states. Any normal
+minimized audit event produced by an authorized overview read remains expected.

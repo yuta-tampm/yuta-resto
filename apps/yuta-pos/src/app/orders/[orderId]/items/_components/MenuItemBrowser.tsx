@@ -1,10 +1,17 @@
 'use client';
 
 import { Button, Input, cn } from '@yuta/ui';
-import { LoaderCircle, Plus, Search, Sparkles } from 'lucide-react';
+import {
+  LoaderCircle,
+  Plus,
+  Search,
+  SlidersHorizontal,
+  Sparkles,
+} from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { addOrderItemAction } from '../../../../actions';
+import { VariantSelectionDialog } from './VariantSelectionDialog';
 
 type MenuItemBrowserItem = {
   id: string;
@@ -12,6 +19,8 @@ type MenuItemBrowserItem = {
   description: string | null;
   priceLabel: string;
   selectedQuantity: number;
+  variantOptions: Array<{ code: string; label: string }>;
+  requiredVariantQuantity: number;
 };
 
 type MenuItemBrowserProps = {
@@ -28,6 +37,8 @@ type ComboSuggestionGroup = {
     id: string;
     name: string;
     priceLabel: string;
+    variantOptions: Array<{ code: string; label: string }>;
+    requiredVariantQuantity: number;
   }>;
 };
 
@@ -98,32 +109,67 @@ export function MenuItemBrowser({
               </div>
 
               <div className="flex min-w-0 gap-2 overflow-x-auto overscroll-x-contain pb-1 lg:pb-0">
-                {group.items.map((item) => (
-                  <form
-                    key={item.id}
-                    action={addOrderItemAction}
-                    className="grid min-w-[280px] flex-1 grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 gap-y-2 rounded-lg border border-status-success-border bg-white p-2 shadow-sm sm:min-w-[320px] sm:grid-cols-[auto_minmax(0,1fr)_auto]"
-                  >
-                    <input type="hidden" name="orderId" value={orderId} />
-                    <input type="hidden" name="menuItemId" value={item.id} />
-                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-status-success-border bg-status-success-soft text-xs font-black">
-                      {menuItemInitials(item.name)}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block whitespace-normal break-words text-sm font-black leading-tight">
-                        {item.name}
+                {group.items.map((item) => {
+                  const content = (
+                    <div className="grid min-w-[280px] flex-1 grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 gap-y-2 rounded-lg border border-status-success-border bg-white p-2 shadow-sm sm:min-w-[320px] sm:grid-cols-[auto_minmax(0,1fr)_auto]">
+                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-status-success-border bg-status-success-soft text-xs font-black">
+                        {menuItemInitials(item.name)}
                       </span>
-                      <span className="block text-xs font-bold text-primary/60">
-                        {item.priceLabel}
+                      <span className="min-w-0 flex-1">
+                        <span className="block whitespace-normal break-words text-sm font-black leading-tight">
+                          {item.name}
+                        </span>
+                        <span className="block text-xs font-bold text-primary/60">
+                          {item.priceLabel}
+                          {item.requiredVariantQuantity > 0 &&
+                            ` · ${item.requiredVariantQuantity} choix`}
+                        </span>
                       </span>
-                    </span>
-                    <AddSuggestionButton
-                      disabled={!canEditItems}
-                      itemName={item.name}
-                      comboRuleName={group.comboRuleName}
-                    />
-                  </form>
-                ))}
+                      {item.requiredVariantQuantity > 0 ? (
+                        <VariantSelectionDialog
+                          orderId={orderId}
+                          itemId={item.id}
+                          itemName={item.name}
+                          priceLabel={item.priceLabel}
+                          variantOptions={item.variantOptions}
+                          requiredVariantQuantity={item.requiredVariantQuantity}
+                          disabled={!canEditItems}
+                          trigger={
+                            <Button
+                              type="button"
+                              className="min-h-11 w-full sm:w-auto"
+                            >
+                              <SlidersHorizontal
+                                className="h-4 w-4"
+                                aria-hidden="true"
+                              />
+                              Choisir
+                            </Button>
+                          }
+                        />
+                      ) : (
+                        <form action={addOrderItemAction}>
+                          <input type="hidden" name="orderId" value={orderId} />
+                          <input
+                            type="hidden"
+                            name="menuItemId"
+                            value={item.id}
+                          />
+                          <AddSuggestionButton
+                            disabled={!canEditItems}
+                            itemName={item.name}
+                            comboRuleName={group.comboRuleName}
+                          />
+                        </form>
+                      )}
+                    </div>
+                  );
+                  return (
+                    <div key={item.id} className="flex flex-1">
+                      {content}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           ))}
@@ -142,16 +188,57 @@ export function MenuItemBrowser({
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-2 p-4 pb-24 sm:gap-3 md:grid-cols-3 lg:min-h-0 lg:flex-1 lg:auto-rows-max lg:grid-cols-2 lg:overflow-y-auto lg:overscroll-contain lg:p-4 lg:pb-5 xl:grid-cols-4 2xl:grid-cols-[repeat(auto-fill,minmax(210px,1fr))]">
-          {visibleItems.map((item) => (
-            <form key={item.id} action={addOrderItemAction}>
-              <input type="hidden" name="orderId" value={orderId} />
-              <input type="hidden" name="menuItemId" value={item.id} />
-              <MenuItemSubmitButton item={item} disabled={!canEditItems} />
-            </form>
-          ))}
+          {visibleItems.map((item) =>
+            item.requiredVariantQuantity > 0 ? (
+              <VariantSelectionDialog
+                key={item.id}
+                orderId={orderId}
+                itemId={item.id}
+                itemName={item.name}
+                priceLabel={item.priceLabel}
+                variantOptions={item.variantOptions}
+                requiredVariantQuantity={item.requiredVariantQuantity}
+                disabled={!canEditItems}
+                trigger={menuItemOptionButton(item, !canEditItems)}
+              />
+            ) : (
+              <form key={item.id} action={addOrderItemAction}>
+                <input type="hidden" name="orderId" value={orderId} />
+                <input type="hidden" name="menuItemId" value={item.id} />
+                <MenuItemSubmitButton item={item} disabled={!canEditItems} />
+              </form>
+            ),
+          )}
         </div>
       )}
     </>
+  );
+}
+
+function menuItemOptionButton(item: MenuItemBrowserItem, disabled: boolean) {
+  return (
+    <Button
+      type="button"
+      variant="secondary"
+      className="relative h-36 w-full flex-col gap-0 overflow-hidden rounded-xl p-0 text-center sm:h-40"
+      disabled={disabled}
+      aria-label={`${item.name}, ${item.requiredVariantQuantity} choix requis`}
+    >
+      <MenuItemArtwork
+        name={item.name}
+        selectedQuantity={item.selectedQuantity}
+      />
+      <span className="grid w-full gap-1 px-3 pb-3 pt-2.5">
+        <span className="line-clamp-2 min-h-7 text-xs font-black leading-tight sm:min-h-9 sm:text-sm">
+          {item.name}
+        </span>
+        <span className="text-xs font-black sm:text-sm">{item.priceLabel}</span>
+        <span className="inline-flex items-center justify-center gap-1 text-[11px] font-bold text-status-success">
+          <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden="true" />
+          {item.requiredVariantQuantity} choix requis
+        </span>
+      </span>
+    </Button>
   );
 }
 

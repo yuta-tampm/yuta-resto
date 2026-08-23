@@ -66,7 +66,7 @@ describe('kitchen send validation', () => {
     expect(kitchenSendFeedback('INVALID_VARIANT_QUANTITY', true)).toEqual({
       title: 'Choix requis',
       description:
-        'Ouvrez « Notes / allergie » sous l’article signalé et complétez les choix requis avant l’envoi.',
+        'Ouvrez « Choisir les options » sous l’article signalé et complétez les choix requis avant l’envoi.',
     });
     expect(kitchenSendFeedback('UNKNOWN_FAILURE', false)?.title).toBe(
       'Envoi impossible',

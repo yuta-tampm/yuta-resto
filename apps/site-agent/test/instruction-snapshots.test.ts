@@ -61,5 +61,8 @@ describe('local order instruction snapshots', () => {
     expect(() =>
       buildVariantSnapshots(options, 2, 1, [{ code: 'MANGUE', quantity: 3 }]),
     ).toThrowError(HttpError);
+    expect(() => buildVariantSnapshots(options, 2, 1, [])).toThrowError(
+      HttpError,
+    );
   });
 });

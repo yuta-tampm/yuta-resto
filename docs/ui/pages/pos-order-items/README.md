@@ -1,6 +1,6 @@
 # POS Order Items
 
-Status: Phase 5 combo-completion delivery complete; suggestion eligibility consumed
+Status: Implemented — pre-add required-option selection
 
 Visibility: Engineering
 
@@ -59,6 +59,23 @@ catalog, payment state, instruction settings, and combo context through
 category rail, route-local searchable item browser, desktop order summary,
 mobile order dialog, item instruction/allergy dialog, kitchen-send action, and
 real links to order detail and payment.
+
+## 2026-08-23 required-option add flow
+
+Product-owner approval extends the existing item browser with a route-local
+selection dialog for catalog items whose `requiredVariantQuantity` is positive.
+Tapping a configured item opens its current catalog options before any order
+item is created. Staff must select the exact required count; cancellation
+creates nothing, while confirmation sends the item and selected variants in one
+site-agent request.
+
+The add-item transport now accepts optional `selectedVariants`. Site-agent
+reloads the authoritative menu item, validates option codes and quantities,
+snapshots labels, inserts the item, and recalculates the order in one local
+transaction. Items without required variants retain the existing one-tap add
+flow. Allergy capture remains a separate item-instruction concern and is not
+opened to choose flavors. No schema, migration, cloud, payment, kitchen, print,
+or management-session change is introduced.
 
 ## 2026-08-22 Phase 5 delivery — combo-completion visual and operational QA
 

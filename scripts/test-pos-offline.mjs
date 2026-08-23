@@ -354,8 +354,18 @@ async function main() {
   const seededCatalogItem = catalog.categories
     .flatMap((category) => category.items)
     .at(0);
+  const configuredCatalogItem = catalog.categories
+    .flatMap((category) => category.items)
+    .find(
+      (item) =>
+        item.requiredVariantQuantity > 0 && item.variantOptions.length > 0,
+    );
 
-  if (users.users.length === 0 || !seededCatalogItem) {
+  if (
+    users.users.length === 0 ||
+    !seededCatalogItem ||
+    !configuredCatalogItem
+  ) {
     throw new Error('The disposable POS seed did not create usable data.');
   }
 
@@ -803,6 +813,61 @@ async function main() {
   if (!orderItemResponse.ok) {
     throw new Error(
       `The offline order item could not be created: ${await orderItemResponse.text()}`,
+    );
+  }
+
+  const incompleteConfiguredItemResponse = await fetch(
+    `http://127.0.0.1:${siteAgentPort}/api/v1/orders/${createdOrder.order.id}/items`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        menuItemId: configuredCatalogItem.id,
+        quantity: 1,
+      }),
+      signal: AbortSignal.timeout(5_000),
+    },
+  );
+  if (incompleteConfiguredItemResponse.status !== 422) {
+    throw new Error(
+      `A configured item without required options returned HTTP ${incompleteConfiguredItemResponse.status}.`,
+    );
+  }
+
+  const selectedVariants = [
+    {
+      code: configuredCatalogItem.variantOptions[0].code,
+      quantity: configuredCatalogItem.requiredVariantQuantity,
+    },
+  ];
+  const configuredItemResponse = await fetch(
+    `http://127.0.0.1:${siteAgentPort}/api/v1/orders/${createdOrder.order.id}/items`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        menuItemId: configuredCatalogItem.id,
+        quantity: 1,
+        selectedVariants,
+      }),
+      signal: AbortSignal.timeout(5_000),
+    },
+  );
+  if (!configuredItemResponse.ok) {
+    throw new Error(
+      `The configured offline order item could not be created: ${await configuredItemResponse.text()}`,
+    );
+  }
+  const configuredOrderItem = await configuredItemResponse.json();
+  if (
+    configuredOrderItem.item.selectedVariants.length !== 1 ||
+    configuredOrderItem.item.selectedVariants[0].code !==
+      selectedVariants[0].code ||
+    configuredOrderItem.item.selectedVariants[0].quantity !==
+      selectedVariants[0].quantity
+  ) {
+    throw new Error(
+      'The configured order item did not preserve its selected option snapshot.',
     );
   }
 

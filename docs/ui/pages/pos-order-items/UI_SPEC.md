@@ -1,6 +1,6 @@
 # POS Order Items - UI Specification
 
-Status: Implemented — combo-completion suggestion surface
+Status: Implemented — pre-add required-option selection
 
 Visibility: Engineering
 
@@ -65,7 +65,22 @@ analytics UI may be added.
 2. Category and search controls.
 3. Fast item-selection grid with selected quantity.
 4. Current order, item attention/status, totals, and kitchen send.
-5. Notes/allergy and send-confirmation dialogs when required.
+5. Focused option selection before adding configured items.
+6. Notes/allergy and send-confirmation dialogs when required.
+
+## Required-option dialog
+
+Items with `requiredVariantQuantity > 0` expose the required-choice count on
+their catalog card. Activating the card opens a modal with the current item
+name, price, option labels, per-option decrement/increment controls, and a live
+selected/required counter. The add action remains disabled until the exact
+count is selected. Repeated selections of one option are supported.
+
+Cancel and close create no order item. Submission disables every quantity and
+close control, preserves selection on recoverable failure, and closes only
+after confirmed site-agent success. Allergy fields do not appear in this
+focused modal. Items without required options retain direct one-tap addition,
+including when presented as combo-completion candidates.
 
 ## Post-send success state
 

@@ -245,6 +245,7 @@ function toItem(
 }
 
 function assertOrderingConfiguration(input: {
+  orderingPolicy: 'merge' | 'separate';
   variantOptions: Array<{ code: string; label: string }>;
   requiredVariantQuantity: number;
 }): void {
@@ -268,6 +269,16 @@ function assertOrderingConfiguration(input: {
       422,
       'VARIANT_QUANTITY_REQUIRED',
       'Variant options need a required quantity per portion.',
+    );
+  }
+  if (
+    input.requiredVariantQuantity > 0 &&
+    input.orderingPolicy !== 'separate'
+  ) {
+    throw new HttpError(
+      422,
+      'VARIANT_ITEM_SEPARATE_PORTION_REQUIRED',
+      'Items with required variants must use separate portions.',
     );
   }
 }

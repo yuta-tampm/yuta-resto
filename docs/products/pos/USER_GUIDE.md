@@ -6,7 +6,7 @@ Visibility: Local operator
 
 Owner: YUTA restaurant operations
 
-Last updated: 2026-08-20
+Last updated: 2026-08-23
 
 This guide describes how to use the current YuTa POS MVP for internal restaurant operations.
 
@@ -195,6 +195,17 @@ Use it during service to add menu items to the current order.
 2. Search when needed.
 3. Tap an item card.
 4. The item appears in `Commande actuelle`.
+
+If the item requires a flavor, filling, or other configured option, tapping the
+card opens `Choisir les options` before the item is added. Use the minus and
+plus controls until the counter reaches the required total, then select
+`Ajouter à la commande`. The same option can be selected more than once, for
+example two Mangue pieces for `Mochi glacé (2 pcs)`. `Annuler` creates no item.
+Items without required options still add immediately with one tap.
+
+Required options are separate from allergies. Do not enable or open allergy
+controls merely to choose a flavor. Use `Notes / allergie` only for actual
+preparation instructions or customer allergy information.
 
 When the current order is one eligible item away from a configured positive
 combo, the screen may show `Suggestion combo` below search. Use its `Ajouter`

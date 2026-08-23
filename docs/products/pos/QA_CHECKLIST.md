@@ -6,7 +6,7 @@ Visibility: Local operator
 
 Owner: YUTA engineering and QA
 
-Last updated: 2026-08-16
+Last updated: 2026-08-23
 
 Use this checklist to stabilize the POS MVP before adding larger features.
 
@@ -105,6 +105,13 @@ N/A       not applicable for this run
 | Select menu category                | Item grid changes to selected category                           |        |       |
 | Slight pointer movement on category | Category still opens; only intentional horizontal drag scrolls   |        |       |
 | Add item                            | Item appears in `Commande en cours`                              |        |       |
+| Tap plain item                      | Item adds directly without opening an option modal               |        |       |
+| Tap Mochi                           | Option modal opens before any Mochi row is created               |        |       |
+| Cancel Mochi option modal           | Modal closes and no order item is created                        |        |       |
+| Confirm exact Mochi options         | One row and its two option snapshots persist atomically          |        |       |
+| Submit stale/invalid option         | Modal retains a recoverable error and no item is created         |        |       |
+| Configured combo candidate          | Candidate opens the same required-option modal                   |        |       |
+| Option modal accessibility          | Focus is contained/restored and controls are at least 44px       |        |       |
 | Add same item twice                 | Two rows or expected quantity behavior is visible                |        |       |
 | Item total displays correctly       | Row amount equals snapshot unit price times quantity             |        |       |
 | Order total displays correctly      | Total equals sum of active non-cancelled items minus discounts   |        |       |

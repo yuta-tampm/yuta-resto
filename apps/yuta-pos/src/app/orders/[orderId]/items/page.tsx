@@ -273,6 +273,8 @@ export default async function OrderItemsPage({
                   name: item.name,
                   description: item.description,
                   priceLabel: formatEuros(item.priceCents),
+                  variantOptions: item.variantOptions,
+                  requiredVariantQuantity: item.requiredVariantQuantity,
                   selectedQuantity: activeOrderItems
                     .filter((orderItem) => orderItem.menuItemId === item.id)
                     .reduce(
@@ -285,6 +287,11 @@ export default async function OrderItemsPage({
                   items: group.items.map((item) => ({
                     ...item,
                     priceLabel: formatEuros(item.priceCents),
+                    variantOptions:
+                      menuItemConfigById.get(item.id)?.variantOptions ?? [],
+                    requiredVariantQuantity:
+                      menuItemConfigById.get(item.id)
+                        ?.requiredVariantQuantity ?? 0,
                   })),
                 }))}
               />

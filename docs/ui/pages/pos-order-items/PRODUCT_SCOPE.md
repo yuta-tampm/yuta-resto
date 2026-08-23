@@ -1,6 +1,6 @@
 # POS Order Items - Product Scope
 
-Status: Approved — combo-completion suggestions
+Status: Implemented — required-option selection and combo-completion suggestions
 
 Visibility: Engineering
 
@@ -14,6 +14,8 @@ production without losing operational context.
 
 - Filter the available local catalog by active category and client-side search.
 - Add available items using catalog ordering policy and stored snapshots.
+- For an item with required variants, choose the exact configured options in a
+  focused dialog before the item is created.
 - Review, increase, decrease, or soft-remove pending items when order locks allow.
 - Edit notes, quick instructions, required variants, and structured allergies.
 - Review totals and navigate to order detail or payment.
@@ -56,6 +58,11 @@ This is single-site local POS operation. Site-agent owns APIs, transactions,
 persistence, and printing; db-pos owns local PostgreSQL data. Staff selection is
 attribution, not authentication. Cloud tenancy and management sessions do not
 apply.
+
+Required options and allergies are distinct. A flavor, filling, or other
+catalog variant does not require opening or enabling allergy controls. Canceling
+the pre-add option dialog must leave the order unchanged. A confirmed add must
+persist the item and its validated option snapshots atomically.
 
 ## Approved change boundary
 

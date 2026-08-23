@@ -1,8 +1,25 @@
 # POS Order Items - Implementation Plan
 
-Status: Phase 5 combo-completion delivery complete
+Status: Required-option add flow implemented and verified
 
 Visibility: Engineering
+
+## 2026-08-23 required-option add flow
+
+Approved vertical slice:
+
+1. Pass current variant configuration to the existing item browser.
+2. Open one focused modal before adding any item with required variants.
+3. Extend the add-item contract with optional structured selections.
+4. Validate and snapshot selections inside the site-agent add transaction.
+5. Preserve one-tap addition for plain items and reuse the modal for configured
+   combo candidates.
+6. Cover contract parsing, action recovery, snapshot validation, full local
+   regression, offline disposable-database acceptance, and responsive browser
+   behavior.
+
+No schema/migration is planned. Stop if implementation requires allergy,
+payment, pricing, kitchen, printer, cloud, or new authorization behavior.
 
 ## 2026-08-23 suggestion-eligibility extension
 

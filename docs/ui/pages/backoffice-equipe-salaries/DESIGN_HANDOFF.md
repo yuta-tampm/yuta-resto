@@ -942,3 +942,63 @@ Later work must preserve F03 edit ownership, F05 file ownership, F07 history
 ownership, OWNER/active-establishment authorization, current CDI/CDD semantics,
 and production blocking. It must not imply legal completeness, automatic PDF
 extraction, contract generation, or approval to process real employee data.
+
+## F05 Phase 0 design handoff
+
+Target: existing `Documents` tab in the full employee dossier.
+
+Delivery mode: `EXISTING_CAPABILITY_RENEWAL`.
+
+Shell mode: `REUSE_CURRENT_TARGET`; keep the base signed contract followed by
+the distinct signed-amendments section. Do not add a vault page, new tab,
+category browser, or generic uploader.
+
+Shared context status: `RESOLVED` from the current Salariés pack and Documents
+Wave A/B as-built references.
+
+F05 baseline status: `READ-ONLY VERIFIED 2026-08-24`. Existing references cover
+the base-contract and populated-amendment surfaces at 1440, 1024, 768, and 390
+CSS pixels. Phase 1 additionally verified existing available-base,
+missing-base, and empty-amendment fictional states plus the 390 px missing
+state. It created no document mutation or new screenshot fixture.
+
+F05 design prompt status: `NOT_APPLICABLE FOR PHASE 1`. Repository
+reality already implements the approved visual hierarchy and interactions. A
+new generated design risks importing unsupported identity/RIB/work-permit
+categories, validity rules, deletion, signature, or production claims from the
+downloaded flow.
+
+Any later work must preserve the distinction between base-contract replacement
+and amendment-scan correction, OWNER/establishment scope, server-mediated
+delivery, the missing-evidence/completeness distinction, Wave F/G isolation,
+and production fail-closed behavior.
+
+## F06 Phase 0 design handoff
+
+F06 design status: `NO NEW DESIGN REQUIRED — AWAITING PRODUCT DECISIONS`.
+
+The downloaded flow describes a useful outcome but not a new UI authority. The
+repository already contains the selected, responsive Wave D `À traiter` card,
+its two semantic groups, contextual action buttons, source-partial warning,
+empty/error/loading/stale states, pagination, focus behavior, and four as-built
+responsive references. F06 must renew that surface in place.
+
+The design authority remains:
+
+1. the current Salariés containing page and shared application patterns;
+2. the implemented Wave D as-built references and component behavior;
+3. F03 for minimum-dossier correction;
+4. F05 for signed base-contract addition; and
+5. the existing departure review for the dated event.
+
+Do not generate a replacement alert dashboard, new page, KPI, task inbox,
+completion checkbox, priority, assignee, reminder, notification, unsupported
+expiry category, legal-status claim, manager view, or production state. Missing
+base-contract evidence must remain visually and semantically separate from
+minimum-dossier completeness, and departure must remain an upcoming event
+rather than an error.
+
+F06 design prompt status: `NOT_APPLICABLE FOR PROPOSED PHASE 1`. The smallest
+next step is a truthful read-only regression against the current as-built UI
+and existing fictional state. A missing test state must be covered by current
+code/tests rather than fabricated through an employee or document mutation.

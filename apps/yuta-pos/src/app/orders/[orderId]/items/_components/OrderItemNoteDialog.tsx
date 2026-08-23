@@ -193,18 +193,19 @@ export function OrderItemNoteDialog({
         >
           <MessageSquarePlus className="h-3.5 w-3.5" />
           {requiresAttention
-            ? 'Choisir les parfums'
-            : initialNote ||
-                initialHasAllergy ||
-                initialQuickInstructions.length > 0 ||
-                initialVariants.length > 0
-              ? 'Modifier les instructions'
-              : 'Notes / allergie'}
+            ? 'Choisir les options'
+            : initialVariants.length > 0
+              ? 'Modifier les options'
+              : initialNote ||
+                  initialHasAllergy ||
+                  initialQuickInstructions.length > 0
+                ? 'Modifier les instructions'
+                : 'Notes / allergie'}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Instruction pour {itemName}</DialogTitle>
+          <DialogTitle>Options et instructions pour {itemName}</DialogTitle>
           <DialogDescription>
             Les choix apparaissent sous cet article en cuisine et sur le ticket.
           </DialogDescription>

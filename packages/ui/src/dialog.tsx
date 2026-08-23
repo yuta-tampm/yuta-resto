@@ -11,6 +11,7 @@ const DialogClose = DialogPrimitive.Close;
 type DialogContentProps = React.ComponentPropsWithoutRef<
   typeof DialogPrimitive.Content
 > & {
+  closeClassName?: string;
   closeLabel?: string;
   variant?: 'modal' | 'right-panel';
 };
@@ -37,7 +38,14 @@ const DialogContent = React.forwardRef<
   DialogContentProps
 >(
   (
-    { className, children, closeLabel = 'Close', variant = 'modal', ...props },
+    {
+      className,
+      children,
+      closeClassName,
+      closeLabel = 'Close',
+      variant = 'modal',
+      ...props
+    },
     ref,
   ) => (
     <DialogPortal>
@@ -66,7 +74,12 @@ const DialogContent = React.forwardRef<
         {...props}
       >
         {children}
-        <DialogPrimitive.Close className="absolute right-4 top-4 rounded-lg p-1 text-primary/50 transition-colors hover:bg-surface-muted hover:text-primary focus:outline-none focus:ring-2 focus:ring-focus-ring">
+        <DialogPrimitive.Close
+          className={cn(
+            'absolute right-4 top-4 rounded-lg p-1 text-primary/50 transition-colors hover:bg-surface-muted hover:text-primary focus:outline-none focus:ring-2 focus:ring-focus-ring',
+            closeClassName,
+          )}
+        >
           <X className="h-4 w-4" />
           <span className="sr-only">{closeLabel}</span>
         </DialogPrimitive.Close>

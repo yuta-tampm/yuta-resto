@@ -47,66 +47,85 @@ export function createOrderCommandService(db: PosDatabaseExecutor) {
   }
 
   async function addOrderItem(orderId: string, input: AddLocalOrderItemInput) {
-    const order = await getRequiredOrder(db, orderId);
-    await assertOrderCanChangeItems(db, order);
-    const menuItem = await db.query.menuItems.findFirst({
-      where: eq(menuItems.id, input.menuItemId),
+    return db.transaction(async (tx) => {
+      await tx.execute(
+        sql`select ${orders.id} from ${orders} where ${orders.id} = ${orderId} for update`,
+      );
+      const order = await getRequiredOrder(tx, orderId);
+      await assertOrderCanChangeItems(tx, order);
+      const menuItem = await tx.query.menuItems.findFirst({
+        where: eq(menuItems.id, input.menuItemId),
+      });
+      if (!menuItem) {
+        throw new HttpError(404, 'MENU_ITEM_NOT_FOUND', 'Menu item not found.');
+      }
+      if (!menuItem.isAvailable) {
+        throw new HttpError(
+          422,
+          'MENU_ITEM_UNAVAILABLE',
+          'Menu item is not available.',
+        );
+      }
+
+      const requiresSeparatePortion = menuItem.orderingPolicy === 'separate';
+      if (menuItem.requiredVariantQuantity > 0 && !requiresSeparatePortion) {
+        throw new HttpError(
+          422,
+          'VARIANT_ITEM_SEPARATE_PORTION_REQUIRED',
+          'Items with required variants must use separate portions.',
+        );
+      }
+      if (requiresSeparatePortion && input.quantity !== 1) {
+        throw new HttpError(
+          422,
+          'SEPARATE_PORTION_QUANTITY_REQUIRED',
+          'This menu item must be added one portion at a time.',
+        );
+      }
+
+      const selectedVariants = buildVariantSnapshots(
+        menuItem.variantOptions,
+        menuItem.requiredVariantQuantity,
+        input.quantity,
+        input.selectedVariants ?? [],
+      );
+      const existing = requiresSeparatePortion
+        ? undefined
+        : await tx.query.orderItems.findFirst({
+            where: and(
+              eq(orderItems.orderId, orderId),
+              eq(orderItems.menuItemId, menuItem.id),
+              eq(orderItems.status, 'pending'),
+              sql`${orderItems.note} is null`,
+            ),
+          });
+      let item: OrderItem;
+      if (existing && !input.note) {
+        [item] = await tx
+          .update(orderItems)
+          .set({ quantity: existing.quantity + input.quantity })
+          .where(eq(orderItems.id, existing.id))
+          .returning();
+      } else {
+        [item] = await tx
+          .insert(orderItems)
+          .values({
+            id: uuidv7(),
+            orderId,
+            menuItemId: menuItem.id,
+            itemNameSnapshot: menuItem.name,
+            unitPriceCentsSnapshot: menuItem.priceCents,
+            kitchenStationSnapshot: menuItem.kitchenStation,
+            quantity: input.quantity,
+            note: input.note,
+            selectedVariants,
+          })
+          .returning();
+      }
+
+      await recalculateOrder(tx, orderId);
+      return localOrderItemResponseSchema.parse({ item: toOrderItem(item) });
     });
-    if (!menuItem) {
-      throw new HttpError(404, 'MENU_ITEM_NOT_FOUND', 'Menu item not found.');
-    }
-    if (!menuItem.isAvailable) {
-      throw new HttpError(
-        422,
-        'MENU_ITEM_UNAVAILABLE',
-        'Menu item is not available.',
-      );
-    }
-
-    const requiresSeparatePortion = menuItem.orderingPolicy === 'separate';
-    if (requiresSeparatePortion && input.quantity !== 1) {
-      throw new HttpError(
-        422,
-        'SEPARATE_PORTION_QUANTITY_REQUIRED',
-        'This menu item must be added one portion at a time.',
-      );
-    }
-
-    const existing = requiresSeparatePortion
-      ? undefined
-      : await db.query.orderItems.findFirst({
-          where: and(
-            eq(orderItems.orderId, orderId),
-            eq(orderItems.menuItemId, menuItem.id),
-            eq(orderItems.status, 'pending'),
-            sql`${orderItems.note} is null`,
-          ),
-        });
-    let item: OrderItem;
-    if (existing && !input.note) {
-      [item] = await db
-        .update(orderItems)
-        .set({ quantity: existing.quantity + input.quantity })
-        .where(eq(orderItems.id, existing.id))
-        .returning();
-    } else {
-      [item] = await db
-        .insert(orderItems)
-        .values({
-          id: uuidv7(),
-          orderId,
-          menuItemId: menuItem.id,
-          itemNameSnapshot: menuItem.name,
-          unitPriceCentsSnapshot: menuItem.priceCents,
-          kitchenStationSnapshot: menuItem.kitchenStation,
-          quantity: input.quantity,
-          note: input.note,
-        })
-        .returning();
-    }
-
-    await recalculateOrder(db, orderId);
-    return localOrderItemResponseSchema.parse({ item: toOrderItem(item) });
   }
 
   async function updateOrderItem(

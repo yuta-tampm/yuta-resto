@@ -599,6 +599,82 @@ Read-slice evidence:
 - [ ] Production legal, privacy, retention, security, backup/restore, and
       operations approval remains required.
 
+## F06 Phase 0 — resolve-dossier-alerts reconciliation
+
+- [x] The downloaded F06 flow was treated as product input, not repository authority.
+- [x] Existing Wave D decisions, implementation, as-built evidence, contracts,
+      repositories, actions, runtime gate, permissions, audit, and tests were reconciled.
+- [x] F06 is classified as `EXISTING_CAPABILITY_RENEWAL`; no new route, tab,
+      KPI, alert center, task inbox, or persisted alert model is proposed.
+- [x] Supported conditions remain incomplete minimum dossier, missing signed
+      base contract, and departure within the current five-calendar-day window.
+- [x] Missing signed evidence remains separate from dossier completeness, and
+      departure remains an upcoming review event rather than an error.
+- [x] F03 edit, F05 base-contract add, and the existing departure review remain
+      the only contextual targets; no automatic source mutation is proposed.
+- [x] Fresh server revalidation, changed-state refresh, and source-driven item
+      disappearance are recorded; no cosmetic resolved flag exists.
+- [x] Corrections/departures keep independent bounded five-item cursor pages
+      without totals, URL cursors, polling, reminders, or notifications.
+- [x] Document-source failure remains partial and creates no false missing-
+      contract item; required-source failure returns no personnel data.
+- [x] OWNER-only trusted organization + establishment scope and one minimized
+      audit event per overview read remain unchanged.
+- [x] CDD/probation/document/amendment expiry, Formalités, register, Planning,
+      Pointage, payroll, workflow, manager, and production behavior remain deferred.
+- [x] Existing Wave D as-built references remain the design authority; no new
+      design-generation prompt is required.
+- [x] Phase 0 changed documentation only and read/wrote no personnel file or
+      operational employee/document/departure data.
+- [ ] Product owner approves F06-01 through F06-10.
+- [ ] Product owner authorizes the bounded fictional F06 Phase 1 read-only regression.
+- [ ] Phase 1 uses only existing fictional state and creates no source mutation
+      merely to manufacture a QA condition.
+- [ ] Normal minimized overview-read audit is accepted as an existing security
+      side effect, not a new alert/task mutation.
+- [ ] Production remains fail-closed pending separate approval.
+
+## F05 Phase 0 — manage-employee-documents reconciliation
+
+- [x] The downloaded F05 flow was treated as product input, not repository authority.
+- [x] Existing Documents Wave A/B, Wave D, Wave F/G, code, permissions, storage,
+      audit, routes, and tests were reconciled.
+- [x] F05 is classified as `EXISTING_CAPABILITY_RENEWAL`; no new page, tab,
+      vault, category browser, or generic uploader is proposed.
+- [x] Supported meanings remain one signed base contract and distinct signed
+      amendments only.
+- [x] Base replacement and correction of one amendment scan remain separate
+      versioned operations.
+- [x] PDF/10 MiB, quarantine/scan-before-commit, server delivery, revision,
+      idempotency, and tenant-scope boundaries are recorded.
+- [x] The active/upcoming missing-base action is identified as operational
+      missing evidence, not dossier or legal completeness.
+- [x] Amendments and unsupported categories are never universally required;
+      validity/expiry rules are not invented.
+- [x] OWNER-only permissions and minimized document/audit behavior remain unchanged.
+- [x] Identity, work-permit, RIB, generic attachments, metadata editing,
+      delete/archive/legal hold/purge, self-service, and signature remain deferred.
+- [x] Wave F/G remains base-contract-only and cannot automatically update an employee.
+- [x] Production EU storage/scanner, retention/deletion, rights, backup/restore,
+      incident, legal/privacy, security, and operations gates remain open.
+- [x] Existing as-built references are reused; no design-generation prompt is needed.
+- [x] Phase 0 changed documentation only and read/wrote no personnel PDF or data.
+- [x] Product owner approved F05-01 through F05-10 on 2026-08-24.
+- [x] Product owner authorized the bounded fictional F05 Phase 1 regression.
+- [x] Existing fictional available-base and missing-base states were verified
+      without upload, replacement, view, download, or other document mutation.
+- [x] Base and amendment meanings, safe route link shapes, empty amendments,
+      and non-completeness copy remain truthful.
+- [x] Existing as-built evidence remains the populated-amendment proof; no
+      amendment was created solely for QA.
+- [x] At 390 px, document and drawer client/scroll widths match and the missing
+      action remains visible.
+- [x] Browser logs contain no warning/error.
+- [x] The Backoffice suite passes 54 files and 192 tests; one separately gated
+      suite remains skipped by its existing configuration.
+- [x] Phase 1 changed no runtime, schema, API, permission, audit, employee,
+      document, file, storage/scanner, provider, or production behavior.
+
 ## F04 Phase 0 — current-contract view reconciliation
 
 - [x] The downloaded F04 flow was treated as product input, not repository authority.

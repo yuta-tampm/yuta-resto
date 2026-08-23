@@ -47,6 +47,21 @@ const addOrderItemFormSchema = z.object({
   menuItemId: z.string().uuid(),
 });
 
+const addConfiguredOrderItemFormSchema = addOrderItemFormSchema.extend({
+  selectedVariants: z.array(
+    z.object({
+      code: z.string().trim().min(1),
+      quantity: z.number().int().nonnegative(),
+    }),
+  ),
+});
+
+export type AddConfiguredOrderItemActionState = {
+  revision: number;
+  status: 'idle' | 'success' | 'validation_error' | 'service_error';
+  message: string | null;
+};
+
 const orderIdFormSchema = z.object({
   orderId: z.string().uuid(),
 });
@@ -200,6 +215,75 @@ export async function addOrderItemAction(formData: FormData): Promise<void> {
 
   revalidatePath(`/orders/${values.orderId}`);
   revalidatePath(`/orders/${values.orderId}/items`);
+}
+
+export async function addConfiguredOrderItemAction(
+  previousState: AddConfiguredOrderItemActionState,
+  formData: FormData,
+): Promise<AddConfiguredOrderItemActionState> {
+  let selectedVariants: unknown[];
+  try {
+    selectedVariants = parseJsonArray(formData.get('selectedVariants'));
+  } catch {
+    return {
+      revision: previousState.revision + 1,
+      status: 'validation_error',
+      message: 'Les options sélectionnées ne sont pas valides.',
+    };
+  }
+  const parsed = addConfiguredOrderItemFormSchema.safeParse({
+    orderId: formData.get('orderId'),
+    menuItemId: formData.get('menuItemId'),
+    selectedVariants,
+  });
+  if (!parsed.success) {
+    return {
+      revision: previousState.revision + 1,
+      status: 'validation_error',
+      message: 'Les options sélectionnées ne sont pas valides.',
+    };
+  }
+
+  try {
+    await posApi.addOrderItem(parsed.data.orderId, {
+      menuItemId: parsed.data.menuItemId,
+      quantity: 1,
+      selectedVariants: parsed.data.selectedVariants,
+    });
+  } catch (error) {
+    if (error instanceof SiteAgentClientError) {
+      const messages: Record<string, string> = {
+        INVALID_VARIANT_QUANTITY:
+          'Choisissez exactement le nombre d’options demandé.',
+        UNKNOWN_VARIANT:
+          'Une option a changé dans le catalogue. Fermez puis rouvrez la sélection.',
+        MENU_ITEM_UNAVAILABLE: "Cet article n'est plus disponible.",
+        INVALID_ORDER_STATUS: 'Cette commande ne peut plus être modifiée.',
+      };
+      return {
+        revision: previousState.revision + 1,
+        status: 'service_error',
+        message:
+          messages[error.code] ??
+          "L'ajout n'a pas été confirmé. Vérifiez le service local puis réessayez.",
+      };
+    }
+    console.error('Configured order item add failed.', error);
+    return {
+      revision: previousState.revision + 1,
+      status: 'service_error',
+      message:
+        "L'ajout n'a pas été confirmé. Vérifiez le service local puis réessayez.",
+    };
+  }
+
+  revalidatePath(`/orders/${parsed.data.orderId}`);
+  revalidatePath(`/orders/${parsed.data.orderId}/items`);
+  return {
+    revision: previousState.revision + 1,
+    status: 'success',
+    message: null,
+  };
 }
 
 export async function sendOrderToKitchenAction(

@@ -42,7 +42,7 @@ export function kitchenSendFeedback(
     return {
       title: 'Choix requis',
       description:
-        'Ouvrez « Notes / allergie » sous l’article signalé et complétez les choix requis avant l’envoi.',
+        'Ouvrez « Choisir les options » sous l’article signalé et complétez les choix requis avant l’envoi.',
     };
   }
 
