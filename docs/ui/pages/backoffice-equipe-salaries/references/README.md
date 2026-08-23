@@ -382,3 +382,25 @@ Wave G Phase 6 changes only the server-side development adapter selection and
 therefore adds no visual reference. These Wave F Phase 5 captures continue to
 represent the unchanged fictional-data review UI; they are not evidence of a
 real-file or production OpenAI flow.
+
+## F03 Phase 1 as-built evidence
+
+Authenticated local OWNER QA captured the current shared employee editor with
+fictional LUNA data on 2026-08-23:
+
+- `f03-phase-1-edit-baseline-1440x1000.png`;
+- `f03-phase-1-edit-baseline-1024x768.png`;
+- `f03-phase-1-edit-baseline-768x1024.png`;
+- `f03-phase-1-edit-baseline-390x844.png`; and
+- `f03-phase-1-dirty-close-390x844.png`.
+
+The responsive set shows the unchanged combined minimum identity/employment
+editor. The mobile interaction capture shows the explicit discard decision
+after changing only a fictional browser-local position value. Interactive QA
+continued editing, verified that the draft remained, then discarded it without
+calling the update action. Restoring the original value allowed immediate close.
+
+At 1440, 1024, 768, and 390 CSS pixels, the document and editor each have equal
+client and scroll widths. Browser logs contain no warning/error. No employee
+value was saved for this evidence. These captures do not authorize new fields,
+F07 value-level history, real employee QA, or production.

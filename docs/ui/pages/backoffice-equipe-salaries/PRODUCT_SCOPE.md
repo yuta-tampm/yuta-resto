@@ -1257,7 +1257,7 @@ Formalités, or register writes.
 
 ## F03 Phase 0 — manage-employee-dossier scope
 
-Capability status: `EXISTING DEVELOPMENT CAPABILITY — DECISIONS PROPOSED`.
+Capability status: `EXISTING DEVELOPMENT CAPABILITY — PHASE 1 IMPLEMENTED`.
 
 ### Current user and outcome
 
@@ -1273,19 +1273,19 @@ owns scope, actor, revision, timestamps, audit, and retry receipts.
 
 ### Proposed product decisions
 
-| ID     | Decision needed                       | Recommendation                                                                                                      | Status   |
-| ------ | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | -------- |
-| F03-01 | Entry surfaces                        | Keep `Modifier` in both quick view and full dossier; both use one shared editor                                     | Proposed |
-| F03-02 | Editor structure                      | Keep one combined minimum identity/employment dialog; do not create separate mutations per read-only tab            | Proposed |
-| F03-03 | Editable field boundary               | Preserve the exact current field set; add no payroll, remuneration, document, authorization, register, or HR field  | Proposed |
-| F03-04 | Unsaved close                         | Require confirmation before discarding modified unsaved values; untouched or successfully saved close is immediate  | Proposed |
-| F03-05 | Successful save                       | Close the editor, keep the current quick view/full dossier open, and show the committed values plus success message | Proposed |
-| F03-06 | F03/F07 history boundary              | Keep current minimized audit as traceability only; F07 separately owns approval of reconstructable value history    | Proposed |
-| F03-07 | Authorization and establishment scope | Remain OWNER-only and active-establishment-only; MANAGER and STAFF remain denied                                    | Proposed |
-| F03-08 | Production availability               | Keep production collection blocked until privacy, retention, security, legal, and operations gates are approved     | Proposed |
+| ID     | Decision needed                       | Recommendation                                                                                                      | Status              |
+| ------ | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| F03-01 | Entry surfaces                        | Keep `Modifier` in both quick view and full dossier; both use one shared editor                                     | Approved 2026-08-23 |
+| F03-02 | Editor structure                      | Keep one combined minimum identity/employment dialog; do not create separate mutations per read-only tab            | Approved 2026-08-23 |
+| F03-03 | Editable field boundary               | Preserve the exact current field set; add no payroll, remuneration, document, authorization, register, or HR field  | Approved 2026-08-23 |
+| F03-04 | Unsaved close                         | Require confirmation before discarding modified unsaved values; untouched or successfully saved close is immediate  | Approved 2026-08-23 |
+| F03-05 | Successful save                       | Close the editor, keep the current quick view/full dossier open, and show the committed values plus success message | Approved 2026-08-23 |
+| F03-06 | F03/F07 history boundary              | Keep current minimized audit as traceability only; F07 separately owns approval of reconstructable value history    | Approved 2026-08-23 |
+| F03-07 | Authorization and establishment scope | Remain OWNER-only and active-establishment-only; MANAGER and STAFF remain denied                                    | Approved 2026-08-23 |
+| F03-08 | Production availability               | Keep production collection blocked until privacy, retention, security, legal, and operations gates are approved     | Approved 2026-08-23 |
 
-Approval of these decisions would authorize only the smallest Phase 1 renewal:
-capture the authenticated fictional-data edit baseline, add dirty-close
-protection, and verify existing behavior. It would not authorize a new field,
+These decisions authorized only the completed smallest Phase 1 renewal:
+authenticated fictional-data edit baselines, dirty-close protection, focused
+tests, and existing-behavior verification. They do not authorize a new field,
 history schema, value snapshot, audit payload, route, permission, real employee,
 or production use.

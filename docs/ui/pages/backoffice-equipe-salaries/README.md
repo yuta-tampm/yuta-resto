@@ -1161,7 +1161,7 @@ dossier exists. Real employee QA and production remain blocked.
 
 ## F03 Phase 0 — manage-dossier reconciliation
 
-Status: `DOCUMENTATION REVIEW — PRODUCT APPROVAL REQUIRED`.
+Status: `PHASE 1 IMPLEMENTED AND FICTIONAL QA COMPLETE`.
 
 F03 (`Gérer le dossier salarié`) is an existing integrated capability, not a
 new page. The same `Modifier` action is available from the desktop quick view
@@ -1179,11 +1179,21 @@ separate decision point for durable value-level history.
 
 The current dialog has validation, pending, save error, idempotency conflict,
 stale-revision recovery, no-change success, and committed-success behavior. Its
-confirmed Phase 0 interaction gap is dirty close: `Annuler`, Escape, backdrop,
-or the close control can discard modified unsaved values without confirmation.
-No F03-specific current edit-dialog baseline is stored yet; existing Wave C
-captures establish the containing dossier and tabs only.
+confirmed Phase 0 interaction gap was dirty close: `Annuler`, Escape, backdrop,
+or the close control could discard modified unsaved values without
+confirmation. Phase 1 now routes those close requests through one explicit
+discard decision while leaving untouched, restored, and successfully saved
+close immediate.
 
-Phase 0 proposes F03-01 through F03-08 and stops for product approval. It makes
-no runtime, schema, migration, contract, permission, audit-event, operational-
-data, provider, file, real-employee, or production change.
+Product approved F03-01 through F03-08 and the bounded Phase 1 on 2026-08-23.
+Focused tests cover every editable field, equality, changed-then-restored
+values, and dirty detection. Authenticated fictional LUNA QA covers untouched
+cancel, modified cancel, continue, Escape, discard, restored-value close, and
+unchanged persisted data. Four responsive editor baselines plus one mobile
+dirty-close capture are stored in `references/`; no horizontal overflow or
+browser warning/error was observed.
+
+Phase 1 changes only the route-local edit interaction and documentation. It
+adds no schema, migration, application contract, permission, audit payload,
+employee mutation, provider, file processing, real-employee QA, or production
+behavior.

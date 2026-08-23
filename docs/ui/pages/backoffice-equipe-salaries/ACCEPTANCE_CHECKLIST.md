@@ -620,16 +620,27 @@ Read-slice evidence:
 - [x] Ordinary identity/employment history is correctly described as changed-
       field traceability, not reconstructable previous/new values.
 - [x] F03 current editing and F07 future value-level history are separated.
-- [x] Missing dirty-close protection and missing current edit-dialog baseline
-      are recorded as bounded gaps.
-- [x] F03-01 through F03-08 are proposed and not presented as approved.
+- [x] Dirty-close protection and the current edit-dialog baseline were recorded
+      as the bounded Phase 1 gaps.
+- [x] F03-01 through F03-08 were approved on 2026-08-23.
 - [x] Phase 0 changed documentation only; no runtime, schema, migration,
       contract, permission, audit, data, file, provider, or production behavior
       changed.
-- [ ] Product owner approves F03-01 through F03-08.
-- [ ] Product owner authorizes the bounded F03 Phase 1 interaction renewal.
-- [ ] Authenticated fictional-data baseline and responsive QA are completed
-      only after that approval.
+- [x] Product owner authorized the bounded F03 Phase 1 interaction renewal.
+- [x] Modified unsaved values require an explicit discard decision through
+      cancel, Escape, backdrop, and close-control requests.
+- [x] Continuing preserves controlled values; discarding closes without calling
+      the employee update action.
+- [x] Untouched and changed-then-restored values close immediately.
+- [x] Focused tests cover equality, every editable field, and restored values.
+- [x] Authenticated fictional QA covers untouched cancel, modified cancel,
+      continue, Escape, discard, restored-value close, and unchanged persisted data.
+- [x] Editor baselines at 1440, 1024, 768, and 390 CSS pixels plus the mobile
+      dirty-close state are stored under `references/`.
+- [x] Page and dialog have no horizontal overflow; browser logs contain no
+      warning/error.
+- [x] No server action, schema, migration, contract, permission, audit payload,
+      employee value, file, provider, real-employee, or production behavior changed.
 
 ## F02 Phase 0 — add-employee reconciliation
 

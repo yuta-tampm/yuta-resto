@@ -1784,7 +1784,7 @@ Production: NOT AUTHORIZED
 
 ## F03 Phase 0 — current edit data and interaction inventory
 
-Status: `DOCUMENTATION ONLY; APPROVAL REQUIRED BEFORE PHASE 1`.
+Status: `PHASE 1 IMPLEMENTED; SERVER AND DATA BOUNDARIES UNCHANGED`.
 
 ### Current trusted boundary
 
@@ -1831,7 +1831,8 @@ that missing capability as implemented.
 - no changed field returns a truthful no-change success;
 - successful commit returns the current safe employee summary, refreshes the
   route, closes the editor, and leaves the dossier context open; and
-- closing modified unsaved input has no confirmation today.
+- closing modified unsaved input now requires an explicit discard decision;
+  untouched or restored values close immediately.
 
 ### F03 and F07 ownership
 
@@ -1840,6 +1841,12 @@ save, conflict recovery, and refreshing the current dossier. F07 owns any
 future decision that requires previous/new values, effective dates, correction
 reason policy, durable versions, retention, or legally reconstructable history.
 No F07 schema or payload is selected in this phase.
+
+The Phase 1 dirty comparison is browser-local and compares every current edit
+field with the last summary loaded into the dialog. Loading a newer revision
+after a conflict replaces that comparison baseline. Continuing from the
+confirmation retains the controlled values; discarding unmounts the editor and
+does not call `updateEmployeeAction`.
 
 ### Phase 0 change flags
 
@@ -1851,7 +1858,7 @@ Database/schema/migration: NO
 API/application contract: NO
 Permission/auth: NO
 Audit event/payload: NO
-Runtime/UI behavior: NO
+Runtime/UI behavior: YES — route-local dirty-close confirmation only
 Operational or test data: unchanged
 File/provider/AI: NO
 Production: NOT AUTHORIZED

@@ -7,6 +7,7 @@ import {
   AlertTitle,
   Button,
   Checkbox,
+  ConfirmDialog,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -34,6 +35,7 @@ import {
   fixedTermReasonOptions,
   splitContractWeeklyMinutes,
 } from '../_lib/employee-employment';
+import { hasEmployeeEditUnsavedChanges } from '../_lib/employee-edit-flow';
 
 const initialUpdateEmployeeActionState: UpdateEmployeeActionState = {
   status: 'idle',
@@ -59,6 +61,9 @@ export function EmployeeEditDialog({
     initialUpdateEmployeeActionState,
   );
   const [values, setValues] = useState(() => editableValues(employee));
+  const [loadedValues, setLoadedValues] = useState(() =>
+    editableValues(employee),
+  );
   const [revision, setRevision] = useState(employee.revision);
   const [idempotencyKey, setIdempotencyKey] = useState('');
   const [conflictDismissed, setConflictDismissed] = useState(false);
@@ -67,6 +72,8 @@ export function EmployeeEditDialog({
   );
   const [confirmFixedTermReasonClear, setConfirmFixedTermReasonClear] =
     useState(false);
+  const [discardConfirmationOpen, setDiscardConfirmationOpen] = useState(false);
+  const hasUnsavedChanges = hasEmployeeEditUnsavedChanges(loadedValues, values);
   const needsFixedTermReasonClearConfirmation =
     loadedFixedTermReasonCode !== null &&
     values.employmentTermType === 'indefinite';
@@ -89,7 +96,9 @@ export function EmployeeEditDialog({
 
   function loadCurrentVersion() {
     if (!state.currentEmployee) return;
-    setValues(editableValues(state.currentEmployee));
+    const currentValues = editableValues(state.currentEmployee);
+    setValues(currentValues);
+    setLoadedValues(currentValues);
     setRevision(state.currentEmployee.revision);
     setLoadedFixedTermReasonCode(state.currentEmployee.fixedTermReasonCode);
     setConfirmFixedTermReasonClear(false);
@@ -97,8 +106,25 @@ export function EmployeeEditDialog({
     setConflictDismissed(true);
   }
 
+  function closeImmediately() {
+    setDiscardConfirmationOpen(false);
+    onOpenChange(false);
+  }
+
+  function handleOpenChange(nextOpen: boolean) {
+    if (nextOpen) {
+      onOpenChange(true);
+      return;
+    }
+    if (state.status !== 'success' && hasUnsavedChanges) {
+      setDiscardConfirmationOpen(true);
+      return;
+    }
+    closeImmediately();
+  }
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-h-[92vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Modifier le dossier salarié</DialogTitle>
@@ -391,7 +417,7 @@ export function EmployeeEditDialog({
             <Button
               type="button"
               variant="secondary"
-              onClick={() => onOpenChange(false)}
+              onClick={() => handleOpenChange(false)}
             >
               Annuler
             </Button>
@@ -408,6 +434,15 @@ export function EmployeeEditDialog({
           </DialogFooter>
         </form>
       </DialogContent>
+      <ConfirmDialog
+        open={discardConfirmationOpen}
+        onOpenChange={setDiscardConfirmationOpen}
+        title="Abandonner les modifications ?"
+        description="Les modifications non enregistrées seront perdues."
+        confirmLabel="Abandonner"
+        cancelLabel="Continuer la modification"
+        onConfirm={closeImmediately}
+      />
     </Dialog>
   );
 }

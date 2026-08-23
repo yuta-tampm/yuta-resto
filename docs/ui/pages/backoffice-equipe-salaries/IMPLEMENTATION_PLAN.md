@@ -1804,7 +1804,7 @@ flow, real employee QA, production enablement, or other item excluded above.
 
 ### F03 Phase 0 — repository reconciliation
 
-Status: `AWAITING PRODUCT APPROVAL`.
+Status: `APPROVED 2026-08-23`.
 
 Completed documentation-only work:
 
@@ -1822,22 +1822,26 @@ Completed documentation-only work:
    as the bounded gaps; and
 7. proposed F03-01 through F03-08 without changing implementation or data.
 
-### Proposed F03 Phase 1 — bounded interaction renewal
+### F03 Phase 1 — bounded interaction renewal
 
-Do not start until F03-01 through F03-08 are explicitly approved.
+Status: `IMPLEMENTED AND FICTIONAL QA COMPLETE 2026-08-23`.
 
-The smallest coherent next slice is:
+The completed slice:
 
-1. capture the current authenticated edit dialog with fictional LUNA data;
-2. add confirmation before discarding modified unsaved editor values, reusing
+1. captured the current authenticated edit dialog with fictional LUNA data;
+2. added confirmation before discarding modified unsaved editor values, reusing
    the existing F02 decision/helper pattern where appropriate;
-3. preserve immediate close for untouched and successfully saved states;
-4. add focused tests for the close decision without changing server behavior;
-5. verify existing validation, CDD-to-CDI confirmation, stale-revision reload,
-   no-change success, committed success, focus recovery, and dossier refresh;
-6. run responsive/accessibility/browser QA at 1440, 1024, 768, and 390 CSS
+3. preserved immediate close for untouched, restored, and successfully saved states;
+4. added focused tests for the close decision without changing server behavior;
+5. verified existing dialog behavior plus cancel, continue, Escape, discard,
+   restored-value close, and zero-mutation recovery;
+6. ran responsive/accessibility/browser QA at 1440, 1024, 768, and 390 CSS
    pixels with fictional data only; and
-7. synchronize this page pack with the as-built result.
+7. synchronized this page pack with the as-built result.
+
+Existing contract/repository coverage continues to protect validation,
+CDD-to-CDI confirmation, stale-revision reload, no-change success, committed
+success, focus recovery, and dossier refresh.
 
 Stop before any new employee field, contract type, validation policy, route,
 permission, schema, migration, value-history record, audit payload, departure

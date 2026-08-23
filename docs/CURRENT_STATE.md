@@ -681,7 +681,11 @@ but not the previous and new field values. Only the separate departure flow
 currently exposes bounded previous/new departure dates and a correction reason.
 F03 therefore owns the current edit interaction, while F07 must separately
 decide which fields need durable value-level history and how corrections are
-represented. The current edit dialog also closes without warning when modified
-values have not been saved. F03-01 through F03-08 remain proposed for product
-approval; Phase 0 changed documentation only and authorizes no runtime, schema,
-contract, audit, data, or production change.
+represented. Product approved F03-01 through F03-08 and the bounded Phase 1 on
+2026-08-23. The editor now asks before discarding modified unsaved values;
+untouched, restored, and successfully saved values close immediately. Focused
+tests and authenticated fictional LUNA QA cover cancel, continue, Escape,
+discard, restored-value close, and zero-mutation recovery. Responsive captures
+at 1440/1024/768/390 show no page or dialog horizontal overflow, and the browser
+logged no warning/error. No server action, schema, contract, permission, audit
+payload, employee value, provider, or production behavior changed.

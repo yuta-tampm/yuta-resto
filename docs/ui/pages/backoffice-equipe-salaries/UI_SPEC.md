@@ -812,7 +812,7 @@ approval or authority for additional fields.
 
 ## F03 Phase 0 — current manage-dossier UI
 
-Status: `CURRENT UI INVENTORIED; RENEWAL NOT YET APPROVED`.
+Status: `PHASE 1 IMPLEMENTED; AUTHENTICATED FICTIONAL QA COMPLETE`.
 
 `Modifier` opens the same scrollable dialog from the selected desktop quick
 view and the full dossier page. The dialog contains `Identité minimale` and
@@ -827,13 +827,17 @@ actuelle`, no-change success, and committed success. A successful save closes
 only the editor, keeps the quick view or full dossier context, updates visible
 facts, refreshes the route, and presents a success message.
 
-The confirmed UI gap is unsaved close protection. Today the cancel button,
-Escape, backdrop, and close control can close a modified dialog immediately.
-The proposed Phase 1 reuses the F02 discard-confirmation pattern without
-changing layout, fields, validation, or mutation semantics.
+Phase 1 closes the confirmed unsaved-close gap. The cancel button, Escape,
+backdrop, and close control now open `Abandonner les modifications ?` when any
+editable value differs from the currently loaded summary. `Continuer la
+modification` preserves the draft; `Abandonner` closes without a write.
+Untouched values and values changed then restored close immediately. The
+interaction reuses the F02 confirmation pattern without changing layout,
+fields, validation, or mutation semantics.
 
 Existing Wave C references remain valid for the dossier shell, tabs, identity,
 and employment display. They do not prove the current edit-dialog states. F03
-baseline status is therefore `PENDING` until separately approved authenticated
-fictional QA captures the editor at 1440, 1024, 768, and 390 CSS pixels. No new
-design-generation prompt is needed for the proposed bounded interaction fix.
+baseline status is now `CAPTURED 2026-08-23`: authenticated fictional QA stores
+the editor at 1440, 1024, 768, and 390 CSS pixels plus the mobile dirty-close
+state. Page and dialog client/scroll widths match at every viewport, and the
+browser has no warning/error. No new design-generation prompt was needed.

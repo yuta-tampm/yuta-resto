@@ -898,13 +898,13 @@ shell; do not redesign navigation, dossier tabs, or the containing drawer/page.
 Shared context status: `RESOLVED` from the current Salariés package and Wave C
 as-built dossier references.
 
-F03 baseline status: `PENDING`. Existing references cover the containing
-dossier but not the current editor, its CDD branch, validation, or revision-
-conflict state. Capturing those states requires a later approved authenticated
-fictional-data QA step.
+F03 baseline status: `CAPTURED 2026-08-23`. Four authenticated fictional-data
+captures cover the current editor at 1440, 1024, 768, and 390 CSS pixels. One
+additional mobile capture covers the explicit dirty-close decision. Existing
+Wave C references continue to own the containing dossier context.
 
 F03 design prompt status: `NOT_APPLICABLE FOR THE PROPOSED PHASE 1`. The only
-proposed UI change reuses the existing F02 discard-confirmation pattern. A new
+implemented UI change reuses the existing F02 discard-confirmation pattern. A new
 generated design would add no authority and risks importing unsupported fields
 from the downloaded functional flow.
 
