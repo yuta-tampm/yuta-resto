@@ -1864,6 +1864,67 @@ File/provider/AI: NO
 Production: NOT AUTHORIZED
 ```
 
+## F04 Phase 0 — current-contract data and interaction inventory
+
+### Current structured source
+
+The current contract-like facts are columns on the establishment-owned employee
+dossier, not a separate contract aggregate. They include `employmentTermType`,
+`expectedEndDate`, `fixedTermReasonCode`, `workTimeCategory`,
+`contractWeeklyMinutes`, and `entryDate`, alongside position and qualification.
+The supported term values are only `indefinite` and `fixed_term`. Repository
+validation enforces the current CDD/date/reason and weekly-minute boundaries.
+
+There is no employee-contract identifier, effective-version chain,
+remuneration, monthly duration, detailed part-time distribution, probation, or
+employee-level apprenticeship/professionalization model. Similar labels in the
+personnel-register domain do not extend this employee-dossier contract.
+
+### Current reads and ownership
+
+| Concern                       | Current source/owner                           | F04 Phase 0 disposition                                                   |
+| ----------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------- |
+| Structured current facts      | Employee dossier / `Relation de travail`       | View as current declared facts, not a signed or legally complete contract |
+| Editing current facts         | Shared F03 `Modifier` action                   | Reuse; do not create an F04 mutation                                      |
+| Formalités connected read     | Read-only projection of six current facts      | Preserve bounded reuse; no generation, save, or sufficiency claim         |
+| Base signed contract PDF      | F05 `Documents` secure-document vertical slice | Keep separate from structured facts                                       |
+| Signed amendments             | F05 amendment records and secure reads         | Keep as distinct evidence; do not overwrite the base contract             |
+| Ordinary change trace         | Current audit events with changed field names  | F07 decides future reconstructable previous/new value history             |
+| AI/PDF extraction suggestions | Separately gated Wave G review flow            | Never silently redefine the current contract or update the employee       |
+
+Secure document reads are server mediated, tenant scoped by trusted session,
+require `personnel.document.read`, and create view/download audit evidence.
+Storage keys are not browser authority. The structured employee read and edit
+likewise remain scoped by trusted organization and active establishment. The
+current permission catalog grants these employee and document capabilities to
+OWNER only.
+
+### Implemented smallest Phase 1
+
+After explicit approval, Phase 1 performed authenticated fictional-data
+verification of the existing Relation/Documents split and corrected only the
+stale Relation helper text about Formalités availability. A focused static-
+render test asserts both the bounded reuse statement and the signed-document
+boundary. Current fields, navigation, F03 editor, F05 files, authorization,
+storage, audit, and server behavior remain unchanged.
+
+### Phase 0 change flags
+
+```text
+Files modified: existing Salariés page-pack and current-state Markdown only
+Files created: none
+Packages affected: documentation only
+Database/schema/migration: NO
+Transport or application contract: NO
+Runtime UI/action/repository: NO
+Permission or audit event: NO
+File read/write/transmission: NO
+AI/provider request: NO
+Employee/document mutation: NO
+Operational/test data: unchanged
+Production: NOT AUTHORIZED
+```
+
 ## F02 Phase 0 — implemented creation inventory
 
 Status: `PHASE 1 IMPLEMENTED; CURRENT DATA BOUNDARY PRESERVED`.

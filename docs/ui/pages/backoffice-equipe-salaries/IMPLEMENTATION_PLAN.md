@@ -1848,3 +1848,49 @@ permission, schema, migration, value-history record, audit payload, departure
 change, document/Formalités/register coupling, real employee QA, or production
 enablement. F07 requires a separate product, legal/privacy, retention, domain,
 and technical design approval before value-level history implementation.
+
+## F04 — view-current-contract flow
+
+### F04 Phase 0 — repository reconciliation
+
+Status: `APPROVED 2026-08-23`.
+
+Completed read-only work:
+
+1. reconciled the downloaded F04 flow with the current employee dossier,
+   `Relation de travail`, `Documents`, connected Formalités read model,
+   repositories, permissions, audit behavior, and tests;
+2. classified F04 as renewal of an existing integrated capability under
+   `EXISTING_CAPABILITY_RENEWAL`;
+3. separated current structured employee facts from signed base-contract and
+   amendment PDF evidence;
+4. inventoried the exact supported CDI/CDD, CDD reason/date, work-time,
+   contractual-weekly-duration, entry-date, position, and qualification facts;
+5. recorded unsupported remuneration, monthly duration, detailed distribution,
+   probation, other contract categories, and separate contract versioning;
+6. preserved F03 edit, F05 document, and F07 value-history ownership;
+7. identified stale Formalités helper text as the only bounded Phase 1
+   coherence candidate; and
+8. proposed F04-01 through F04-09 without changing implementation or data.
+
+No runtime, schema, migration, transport, permission, audit, file, provider,
+test data, operational data, or production behavior changed.
+
+### F04 Phase 1 — read-only coherence renewal
+
+Status: `IMPLEMENTED AND FICTIONAL QA COMPLETE 2026-08-23`.
+
+Completed slice:
+
+1. replaced the stale Formalités-unavailable sentence with bounded reuse and
+   signed-document guidance;
+2. added focused component coverage proving the new message and absence of the
+   stale claim;
+3. verified `Relation de travail` and the separate `Documents` tab as an
+   authenticated OWNER using only the fictional `Nina F02-Sierra` dossier;
+4. confirmed no browser warning/error and no employee/document write; and
+5. synchronized the page pack with the implemented result.
+
+Stop before adding a field, source of truth, mutation, contract aggregate or
+version, history payload, document operation, generation, AI/provider call,
+real employee QA, or production enablement.

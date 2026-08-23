@@ -1289,3 +1289,36 @@ authenticated fictional-data edit baselines, dirty-close protection, focused
 tests, and existing-behavior verification. They do not authorize a new field,
 history schema, value snapshot, audit payload, route, permission, real employee,
 or production use.
+
+## F04 Phase 0 — current-contract view scope
+
+Capability status: `EXISTING DEVELOPMENT CAPABILITY — PHASE 1 IMPLEMENTED`.
+
+### Current user and outcome
+
+An authenticated OWNER acting in one trusted active establishment can view the
+employee dossier's current structured employment facts in `Relation de travail`
+and the separately stored signed contract and amendments in `Documents`.
+Together these surfaces answer different questions: the first supports current
+operational facts and bounded Formalités reuse; the second provides controlled
+access to signed PDF evidence. Neither is a complete contract-management
+domain.
+
+### Proposed product decisions
+
+| ID     | Decision needed                       | Recommendation                                                                                                                      | Status              |
+| ------ | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| F04-01 | Meaning of current contract           | Treat it as current structured employment facts; do not claim that the summary is the signed legal contract or legally complete     | Approved 2026-08-23 |
+| F04-02 | Primary viewing surface               | Keep structured facts in `Relation de travail` and files in `Documents`; add no contract page, tab, or duplicate source of truth    | Approved 2026-08-23 |
+| F04-03 | Editing ownership                     | Reuse the shared F03 `Modifier` flow; F04 adds no second contract mutation                                                          | Approved 2026-08-23 |
+| F04-04 | Supported contract classifications    | Support only current CDI/CDD semantics; keep seasonal as a controlled CDD reason and defer other contract categories                | Approved 2026-08-23 |
+| F04-05 | Duration authority                    | Keep contractual weekly minutes as the stored authority and derive display text; do not infer monthly duration or work distribution | Approved 2026-08-23 |
+| F04-06 | Formalités reuse                      | Reuse only the currently projected facts read-only; do not imply that they are sufficient to generate or validate a legal contract  | Approved 2026-08-23 |
+| F04-07 | Signed-document boundary              | Keep the base signed PDF and amendments under F05/Documents; structured values are not automatically derived from or written to PDF | Approved 2026-08-23 |
+| F04-08 | History boundary                      | Keep current minimized audit as traceability; let F07 decide any reconstructable previous/new contract-value history                | Approved 2026-08-23 |
+| F04-09 | Authorization and production boundary | Remain OWNER-only and active-establishment-only; keep real employee use and production blocked by recorded readiness gates          | Approved 2026-08-23 |
+
+These decisions authorize only the completed copy-level Phase 1 coherence
+renewal and fictional authenticated QA. They do not authorize a new field,
+source of truth, mutation, contract aggregate/version, document operation,
+AI extraction, real employee, or production behavior.

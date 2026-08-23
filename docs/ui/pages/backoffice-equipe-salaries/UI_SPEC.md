@@ -841,3 +841,26 @@ baseline status is now `CAPTURED 2026-08-23`: authenticated fictional QA stores
 the editor at 1440, 1024, 768, and 390 CSS pixels plus the mobile dirty-close
 state. Page and dialog client/scroll widths match at every viewport, and the
 browser has no warning/error. No new design-generation prompt was needed.
+
+## F04 Phase 0 — current-contract view UI
+
+Status: `PHASE 1 IMPLEMENTED; FICTIONAL QA COMPLETE`.
+
+F04 reuses the current full employee dossier. The structured view remains in
+`Relation de travail`; the signed base contract and signed amendments remain in
+`Documents`. Do not add a contract page, duplicate tab, quick-view contract
+editor, document preview inside the structured card, or another mutation.
+
+The truthful structured summary may show only repository-backed facts: CDI or
+CDD, expected CDD end date and controlled reason when applicable, full-time or
+part-time category, contractual weekly duration, entry date, position, and
+qualification. Labels and helper text must distinguish declared dossier facts
+from signed-document evidence and must not claim legal completeness.
+
+Existing Wave C employment and Documents as-built references provide the
+containing-surface baseline. No new design-generation prompt was needed. Phase
+1 corrects the stale helper text without implying contract generation, legal
+validation, or production availability. It says that declared information may
+be reused to prepare a formality and directs signed-contract viewing to
+`Documents` when such a file exists. The layout, navigation, fields, and actions
+are unchanged.

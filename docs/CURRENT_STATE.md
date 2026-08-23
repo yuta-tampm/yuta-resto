@@ -689,3 +689,24 @@ discard, restored-value close, and zero-mutation recovery. Responsive captures
 at 1440/1024/768/390 show no page or dialog horizontal overflow, and the browser
 logged no warning/error. No server action, schema, contract, permission, audit
 payload, employee value, provider, or production behavior changed.
+
+F04 Phase 0 reconciles the downloaded current-contract flow with two existing
+employee-dossier surfaces. `Relation de travail` reads current structured
+employment facts stored on the employee dossier; `Documents` separately serves
+the signed base-contract PDF and signed amendments through tenant-scoped,
+audited server reads. F04 is therefore an existing-capability renewal, not a
+new contract page, aggregate, or source of truth. Current structured support is
+limited to CDI/CDD, controlled CDD reason and expected end date, work-time
+category, contractual weekly minutes, entry date, position, and qualification.
+It does not include remuneration, monthly duration, detailed work distribution,
+probation, other employee-contract categories, or a complete legal contract
+model. F03 retains edit ownership, F05 retains signed-document ownership, and
+F07 retains any future reconstructable value-history decision. The connected
+Formalités prototype reuses a bounded subset read-only, making one existing
+helper message stale. Product approved F04-01 through F04-09 and the bounded
+Phase 1 on 2026-08-23. The helper now explains that declared facts may be reused
+to prepare a formality while any signed contract remains in `Documents`. A
+focused component test and authenticated fictional LUNA QA verify the boundary,
+the absence of the stale claim, and clean browser logs. No schema, API,
+permission, audit, file operation, provider call, employee/document value, real
+employee data, or production behavior changed.

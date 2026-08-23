@@ -599,6 +599,44 @@ Read-slice evidence:
 - [ ] Production legal, privacy, retention, security, backup/restore, and
       operations approval remains required.
 
+## F04 Phase 0 — current-contract view reconciliation
+
+- [x] The downloaded F04 flow was treated as product input, not repository authority.
+- [x] Current structured facts and signed PDF evidence were identified as two
+      separate existing surfaces and sources.
+- [x] F04 is classified as `EXISTING_CAPABILITY_RENEWAL`; no new page, tab,
+      aggregate, or editor is proposed.
+- [x] The exact current CDI/CDD, CDD reason/date, work-time, weekly-duration,
+      entry-date, position, and qualification boundary is recorded.
+- [x] Unsupported remuneration, monthly duration, work distribution,
+      probation, contract categories, and contract version history are not
+      presented as implemented.
+- [x] F03 current editing, F05 signed documents/amendments, and F07 future
+      reconstructable history remain separate.
+- [x] Formalités reuse is documented as a bounded read-only projection, not
+      contract generation or proof of legal sufficiency.
+- [x] OWNER-only active-establishment authorization and tenant-scoped secure
+      document reads remain unchanged.
+- [x] Existing employment/Documents as-built references are reused; no design-
+      generation prompt is required for the proposed smallest Phase 1.
+- [x] The stale Formalités helper text is recorded as a potential bounded
+      coherence correction, not changed during Phase 0.
+- [x] Phase 0 changed documentation only; no runtime, schema, migration, API,
+      permission, audit, file, AI/provider, employee, or operational data changed.
+- [x] Product owner approved F04-01 through F04-09 on 2026-08-23.
+- [x] Product owner authorized the bounded F04 Phase 1 read-only coherence renewal.
+- [x] The stale Formalités-unavailable sentence was replaced by bounded reuse
+      and signed-document guidance without changing layout or behavior.
+- [x] A focused component test protects the current-facts/Documents boundary.
+- [x] The Backoffice suite passes 54 files and 192 tests, with one unrelated
+      suite skipped by its existing gate.
+- [x] Authenticated OWNER QA used only the fictional `Nina F02-Sierra` dossier
+      and performed no employee or document write.
+- [x] Browser QA confirms the new copy, separate Documents tab, absence of the
+      stale sentence, and no warning/error.
+- [x] Phase 1 added no schema, migration, API, permission, audit event, file
+      operation, AI/provider request, real employee data, or production behavior.
+
 ## F03 Phase 0 — manage-dossier reconciliation
 
 - [x] The downloaded F03 and F07 flows were treated as product input, not

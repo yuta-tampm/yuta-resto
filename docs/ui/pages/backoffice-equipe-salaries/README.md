@@ -1197,3 +1197,35 @@ Phase 1 changes only the route-local edit interaction and documentation. It
 adds no schema, migration, application contract, permission, audit payload,
 employee mutation, provider, file processing, real-employee QA, or production
 behavior.
+
+## F04 Phase 0 — current-contract view reconciliation
+
+Status: `PHASE 1 IMPLEMENTED AND FICTIONAL QA COMPLETE`.
+
+F04 (`Gérer le contrat actuel`) is already split across two integrated employee-
+dossier surfaces. `Relation de travail` presents the current structured
+employment facts stored on the employee dossier. `Documents` presents the
+separately stored signed employment-contract PDF and signed amendments. F04 is
+therefore an `EXISTING_CAPABILITY_RENEWAL`, not authority for a new contract
+page, aggregate, file category, or source of truth.
+
+Repository reality supports only CDI/CDD, a controlled CDD reason and expected
+end date, full-time/part-time classification, contractual weekly minutes,
+entry date, position, and qualification. It does not support remuneration,
+monthly contractual duration, detailed part-time distribution, probation,
+apprenticeship/professionalization as employee-contract types, or a complete
+legal contract model. A structured summary must not be described as the signed
+contract or as proof of legal completeness.
+
+The current Formalités connected-read prototype reuses a bounded subset of
+these facts read-only. Phase 1 replaces the stale `Relation de travail` message
+with bounded copy explaining that declared facts may be reused to prepare a
+formality while the signed contract, when it exists, remains in `Documents`.
+
+F03 continues to own the shared current-value editor, F05 owns signed PDFs and
+amendments, and F07 owns any future reconstructable value history. Product
+approved F04-01 through F04-09 and the bounded Phase 1 on 2026-08-23. A focused
+render test protects the copy boundary. Authenticated OWNER QA with the
+fictional `Nina F02-Sierra` dossier verified `Relation de travail`, the separate
+`Documents` tab, absence of the stale message, and no browser warning/error.
+No employee or document value was written.

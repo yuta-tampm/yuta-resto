@@ -914,3 +914,31 @@ success states, and the distinction between F03 current-value editing and F07
 value-level history. It must exclude payroll, remuneration, general documents,
 work authorization, Formalités, register correction, departure, new contract
 types, and production claims unless separately approved.
+
+## F04 Phase 0 design handoff
+
+Target: existing `Relation de travail` and `Documents` tabs in the full employee
+dossier.
+
+Delivery mode: `EXISTING_CAPABILITY_RENEWAL`.
+
+Shell mode: `REUSE_CURRENT_TARGET`; do not add a contract page, tab, drawer, or
+duplicate editor.
+
+Shared context status: `RESOLVED` from the current Salariés pack, Wave C
+employment as-built references, and Documents as-built references.
+
+F04 baseline status: `VERIFIED 2026-08-23`. Existing as-built references prove
+the current structured employment and signed-document surfaces. Authenticated
+OWNER QA additionally verified both tabs together using a fictional LUNA
+employee, with no data write or browser warning/error.
+
+F04 design prompt status: `NOT_APPLICABLE FOR PHASE 1`. The implemented slice is
+a truthful-copy coherence correction inside an existing component. A generated
+redesign would risk conflating current declared facts with signed PDF evidence
+or importing unsupported fields from the downloaded functional flow.
+
+Later work must preserve F03 edit ownership, F05 file ownership, F07 history
+ownership, OWNER/active-establishment authorization, current CDI/CDD semantics,
+and production blocking. It must not imply legal completeness, automatic PDF
+extraction, contract generation, or approval to process real employee data.

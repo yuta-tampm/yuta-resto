@@ -47,7 +47,11 @@ export function EmployeeEmploymentDetails({
 
       <div className="mt-4 flex items-start gap-2 rounded-lg border border-border-default bg-surface-muted px-4 py-3 text-sm text-secondary">
         <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
-        <p>Les formalités associées ne sont pas encore disponibles.</p>
+        <p>
+          Ces informations déclarées peuvent être réutilisées pour préparer une
+          formalité. Le contrat signé, lorsqu’il existe, reste consultable dans
+          Documents.
+        </p>
       </div>
     </section>
   );
