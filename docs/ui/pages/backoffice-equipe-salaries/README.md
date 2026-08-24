@@ -1274,12 +1274,13 @@ runtime, file, database, employee, document, audit, or provider state.
 
 ## F06 Phase 0 — resolve-dossier-alerts reconciliation
 
-Status: `DOCUMENTATION COMPLETE — AWAITING PRODUCT APPROVAL`.
+Status: `PHASE 1 READ-ONLY FICTIONAL REGRESSION COMPLETE`.
 
 F06 (`Résoudre dossier incomplet / alertes`) maps to the existing development-
-only Wave D `À traiter` overview and the existing `Dossiers à compléter`
-filter/count. It is an `EXISTING_CAPABILITY_RENEWAL`, not authority for a new
-page, KPI, task store, alert engine, or notification system.
+only Wave D `À traiter` overview, the display-only `Dossiers à compléter`
+summary count, and the separate completeness filter. It is an
+`EXISTING_CAPABILITY_RENEWAL`, not authority for a new page, KPI, task store,
+alert engine, or notification system.
 
 Repository reality supports exactly three derived current conditions:
 
@@ -1307,7 +1308,96 @@ bounded to independent five-item cursor pages, and audited once per overview
 read. A document metadata failure is partial and cannot fabricate missing-
 contract items. Production remains fail-closed.
 
-The smallest proposed Phase 1 is a read-only regression with existing
-fictional LUNA data and repository tests. It must not create or change employee,
-document, alert, or departure data merely to manufacture QA states. Any normal
-minimized audit event produced by an authorized overview read remains expected.
+Product approved F06-01 through F06-10 and Phase 1 on 2026-08-24. Authenticated
+OWNER QA used only existing fictional LUNA state: zero incomplete minimum
+dossiers, more than five missing signed base contracts, and no departure in the
+current five-day window. Page one and page two retained deterministic five-item
+pagination. `Ajouter le contrat` opened Nina F02-Sierra directly on the existing
+Documents add form; closing restored focus to the originating action. No file
+was selected and no form was submitted.
+
+At 390 px, document and `À traiter` card client/scroll widths matched, all five
+visible actions remained available, and browser logs contained no warning or
+error. Backoffice passed 54 files and 192 tests, with one existing gated suite
+skipped; the focused personnel contract suite passed 14 tests. Existing tests
+remain the evidence for incomplete/departure, stale, partial-source, full-error,
+and production-fail-closed states absent from current data. Phase 1 created no
+employee, document, departure, alert/task, provider, or production mutation.
+Normal minimized overview/dossier-access audit side effects remained expected.
+
+## F07 Phase 0 — modify-and-historize reconciliation
+
+Status: `PHASE 1 FIELD-HISTORY POLICY MATRIX COMPLETE — NO RUNTIME AUTHORIZED`.
+
+F07 (`Modifier une donnée + historisation`) crosses an implemented current-
+value editor and an implemented but deliberately minimized employee timeline.
+The current trace is not a reconstructable snapshot history. F07 is therefore
+an existing-capability renewal for the current `Historique` interaction and a
+new-capability discovery for any future previous/new value history.
+
+Today, one authenticated OWNER can open `Historique` from either the quick view
+or full dossier. The read is on demand and reuses trusted organization,
+establishment, and employee scope. It shows the 50 newest allowlisted employee
+events in reverse chronological order, with event label, occurrence time,
+actor, and changed field labels. A deleted actor is displayed neutrally. More
+than 50 events produces a truncation notice; there is no history pagination,
+search, filter, or export.
+
+Ordinary F03 identity and employment writes commit the current dossier revision
+and audit event atomically with idempotency and conflict protection. The audit
+retains field names and revision numbers internally, but its public contract
+does not expose previous/new values, an effective date, or an ordinary edit
+reason. One update spanning identity and employment may appear as two events,
+and the current UI contract does not expose their shared operation identifier
+for grouping.
+
+Departure is the only current reconstructable value exception: its event may
+show previous and new departure dates, and a correction/cancellation requires
+and displays a bounded reason. This exception must not be generalized to every
+field without a product, privacy, retention, and correction-policy decision.
+
+`Historique` excludes dossier consultation records, document history,
+personnel-register history, Formalités, Planning, Pointage, payroll, and generic
+authentication audit. Viewing `Historique` writes a minimized access event that
+belongs to the separate `Consultations` tab. Contract-extraction lifecycle
+events may appear, but never prompts, excerpts, PDF content, or suggested old/
+new employee values.
+
+Repository inspection also found a coherence gap: after a successful edit, a
+previously loaded timeline is not explicitly invalidated or reloaded. No
+runtime correction is authorized in Phase 0. The smallest proposed next step is
+a documentation-only field-history policy matrix before any schema, contract,
+or UI implementation.
+
+Product approved F07-01 through F07-10 and completed that matrix on
+2026-08-24. It classifies every current mutable F03 field without authorizing
+storage:
+
+- given names and family name form one identity-history candidate;
+- position and qualification form an employment-role candidate;
+- CDI/CDD type, expected end, and controlled CDD reason form one coupled term
+  candidate;
+- work-time category and contractual weekly duration form one coupled work-time
+  candidate;
+- entry-date changes are correction candidates whose date is the corrected
+  fact itself; and
+- departure keeps its already implemented previous/new dates and mandatory
+  reason when corrected or cleared.
+
+Role, contract-term, and work-time candidates require a business-effective date
+policy before implementation. A correction must remain distinguishable from an
+ordinary prospective change, with a reason required only where the approved
+policy says it is a correction. Identity classification and all retention,
+redaction, rights, legal-hold, backup/restore, and production rules remain open
+for product/legal/DPO/security/operations review.
+
+The matrix is prospective. It forbids rewriting current events or inventing
+old/new values. A future baseline for existing dossiers, if ever approved, must
+be labelled as a cutover snapshot of then-current authoritative values, never
+as proof of earlier history. Creation, duplicate override, contract extraction,
+Documents, register, and access events keep their current separate meanings.
+
+The smallest next implementation candidate is limited to reloading the existing
+field-name timeline after a successful F03 edit. It would add no schema,
+previous/new value, effective date, reason field, event type, paging, export, or
+production-data capability.

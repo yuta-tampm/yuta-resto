@@ -900,9 +900,10 @@ Wave F/G controls remain separately gated and do not redefine F05.
 ## F06 Phase 0 — current alert-resolution UI
 
 F06 reuses the existing integrated surfaces. The `Dossiers à compléter` metric
-continues to activate the current minimum-dossier list filter. The development-
-only `À traiter` card remains between the metrics and the employee list; it is
-not promoted to a page, tab, drawer, modal, or KPI.
+is display-only; the separate completeness selector owns the current minimum-
+dossier list filter. The development-only `À traiter` card remains between the
+metrics and the employee list; it is not promoted to a page, tab, drawer,
+modal, or KPI.
 
 The card has two semantic groups:
 
@@ -927,3 +928,67 @@ priorities, assignees, comments, notifications, unsupported alert labels, file
 details, legal-completeness claims, manager views, or production disclosure.
 No new visual design prompt is needed: the selected Wave D as-built surface is
 the current authority.
+
+### F06 Phase 1 as-built regression
+
+Current fictional LUNA data rendered zero incomplete dossiers, five missing-
+base actions on page one, five on page two, and an empty departure group. The
+existing `Ajouter le contrat` action opened the correct employee Documents tab
+and visible protected add form. Closing restored focus to the action. No file
+was selected or submitted.
+
+At 390 px, the page and `À traiter` card had matching client/scroll widths and
+all five actions remained visible. Browser logs were clean. Missing current
+incomplete/departure, partial/error, and stale states were not fabricated;
+existing Wave D references and tests remain their truthful evidence.
+
+## F07 Phase 0 — current employee-history UI
+
+The existing `Historique` tab is shared by the quick-view drawer and full
+dossier. It loads only when selected and renders `Historique du dossier` with
+loading, error/retry, truthful empty, populated, and truncated states.
+
+Each current row shows:
+
+- a localized event label;
+- occurrence date/time;
+- actor display name or `Utilisateur supprimé`;
+- allowlisted changed-field labels when present;
+- previous/new departure dates when present; and
+- a reason only when safely exposed by the current departure/duplicate event.
+
+The UI does not show old/new values for ordinary identity or employment edits,
+revision numbers, operation grouping, effective dates, raw metadata, document
+names/content, prompts, excerpts, IP/user-agent data, or generic auth events.
+`Consultations` remains a separate tab and must not be merged into business
+change history.
+
+The current 50-event limit uses a notice, not pagination. Do not invent a
+`Voir tout`, filter, export, compare, restore, rollback, or “version actuelle”
+snapshot control. Do not imply that two event rows from one save are distinct
+user operations when the public contract does not expose grouping.
+
+After a successful edit, the containing dossier refreshes current values but a
+previously loaded history state is not explicitly invalidated. Record this as a
+future coherence correction, not an authorized Phase 0 runtime change.
+
+Existing Salariés as-built references remain sufficient for Phase 0. No new
+design-generation prompt is required before the field-history policy matrix is
+approved.
+
+### F07 Phase 1 policy outcome
+
+Phase 1 changes no UI. The current row remains an event/changed-field trace.
+Future value-history candidates must not be mocked or labelled implemented.
+
+If a later phase is authorized, one user save should be presented as one
+operation even when identity and employment groups both change. Within that
+operation, only approved coupled groups may later display previous/new values:
+identity, role, contract term, or work time. Entry/departure corrections may
+show their date transition and bounded reason under their separate approved
+rules. Effective date must stay distinct from recorded-at time.
+
+Do not add value diff, correction badge, effective-date label, baseline event,
+compare/restore controls, pagination, or export until the matching data policy
+and transport are separately approved. The smallest current-UI renewal remains
+only invalidating/reloading `Historique` after a successful F03 edit.

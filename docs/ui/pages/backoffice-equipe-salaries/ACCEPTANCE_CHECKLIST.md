@@ -599,6 +599,61 @@ Read-slice evidence:
 - [ ] Production legal, privacy, retention, security, backup/restore, and
       operations approval remains required.
 
+## F07 Phase 0 — modify-and-historize reconciliation
+
+- [x] The downloaded F07 flow was treated as product input, not repository authority.
+- [x] F03/F04 boundaries, `Historique`, `Consultations`, contracts, schema,
+      repository, actions, permissions, sanitization, and tests were reconciled.
+- [x] Current employee trace is classified as existing-capability renewal;
+      reconstructable previous/new value history is separately gated discovery.
+- [x] Current ordinary identity/employment events expose event, actor, time,
+      and changed field names but not reconstructable previous/new values.
+- [x] Departure old/new dates and mandatory correction reason remain the only
+      current value-level exception.
+- [x] The current timeline is OWNER-only, tenant/employee scoped, loaded on
+      demand, limited to the newest 50 events, and truthfully marks truncation.
+- [x] History viewing writes a minimized access event in `Consultations`, not a
+      recursive business-history item.
+- [x] Employee, access, Documents/amendments, register, and other module
+      histories remain separate.
+- [x] No effective-date model, ordinary edit reason, public operation grouping,
+      history pagination/export, or safe value backfill is claimed.
+- [x] The post-save history invalidation/reload gap is documented without a
+      Phase 0 runtime correction.
+- [x] Existing rows will not be rewritten or supplemented with invented values.
+- [x] Privacy, retention, legal hold, rights, backup/restore, incident, and
+      production-data gates are recorded for future value history.
+- [x] Existing as-built references remain sufficient; no design-generation
+      prompt is required before policy approval.
+- [x] Phase 0 changed documentation only and mutated no employee/history data.
+- [x] Product owner approved F07-01 through F07-10 on 2026-08-24.
+- [x] Product owner authorized the documentation-only F07 Phase 1 field-history
+      policy matrix.
+- [x] Phase 1 groups current fields into identity, role, contract term, work
+      time, entry date, and departure without selecting a storage design.
+- [x] Identity, role, contract-term, work-time, entry-date, and possible cutover
+      baseline values are candidates only; no previous/new value capture is authorized.
+- [x] Contract term and work time remain atomic coupled groups with their
+      current invariants; future effective dates remain separate from recorded-at time.
+- [x] Ordinary prospective change and correction remain distinct; no global
+      reason requirement is introduced.
+- [x] Entry-date edits are classified as correction-only candidates with a
+      future bounded reason requirement.
+- [x] Departure retains its current implemented old/new dates and mandatory
+      correction/cancellation reason without expansion.
+- [x] Creation/baseline, duplicate override, extraction, Consultations,
+      Documents/amendments, and register ownership are explicitly separated.
+- [x] Existing events remain immutable, unknown values remain unknown, and a
+      possible cutover snapshot may never be presented as earlier history.
+- [x] OWNER-only scope remains the first policy; no manager or cross-
+      establishment value history is approved.
+- [x] Retention, legal hold, rights, redaction, backup/restore, incident,
+      production purpose, and operational ownership remain open gates.
+- [x] Phase 1 created no file, schema, migration, API, contract, event payload,
+      value capture, data mutation, backfill, runtime, or production behavior.
+- [ ] Any runtime refresh, schema, API, contract, value capture, paging/export,
+      backfill, real-data QA, or production change remains separately approved.
+
 ## F06 Phase 0 — resolve-dossier-alerts reconciliation
 
 - [x] The downloaded F06 flow was treated as product input, not repository authority.
@@ -626,12 +681,26 @@ Read-slice evidence:
       design-generation prompt is required.
 - [x] Phase 0 changed documentation only and read/wrote no personnel file or
       operational employee/document/departure data.
-- [ ] Product owner approves F06-01 through F06-10.
-- [ ] Product owner authorizes the bounded fictional F06 Phase 1 read-only regression.
-- [ ] Phase 1 uses only existing fictional state and creates no source mutation
+- [x] Product owner approved F06-01 through F06-10 on 2026-08-24.
+- [x] Product owner authorized the bounded fictional F06 Phase 1 read-only regression.
+- [x] Phase 1 used only existing fictional state and created no source mutation
       merely to manufacture a QA condition.
-- [ ] Normal minimized overview-read audit is accepted as an existing security
+- [x] Normal minimized overview/dossier-access audit was accepted as an existing security
       side effect, not a new alert/task mutation.
+- [x] Current LUNA state showed zero incomplete minimum dossiers, a paged
+      missing-base group, and an empty five-day departure group.
+- [x] `Ajouter le contrat` opened the correct existing Documents add form;
+      closing restored focus and no file was selected or submitted.
+- [x] Corrections loaded page two with five bounded items.
+- [x] The display-only completeness metric is now distinguished from the
+      separate list-filter selector in the current documentation.
+- [x] At 390 px, document/card client and scroll widths matched, five actions
+      remained visible, and browser logs contained no warning/error.
+- [x] Backoffice passed 54 files and 192 tests; the focused personnel contract
+      suite passed 14 tests. One existing gated Backoffice suite was skipped.
+- [x] Existing tests/references remain evidence for absent incomplete,
+      departure, stale, partial/error, and production-gate states.
+- [x] Mutation-capable database integration tests were not forced.
 - [ ] Production remains fail-closed pending separate approval.
 
 ## F05 Phase 0 — manage-employee-documents reconciliation

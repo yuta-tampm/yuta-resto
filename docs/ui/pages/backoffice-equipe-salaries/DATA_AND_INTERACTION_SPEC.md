@@ -1782,6 +1782,180 @@ Operational data: unchanged
 Production: NOT AUTHORIZED
 ```
 
+## F07 Phase 0 — employee change-history inventory
+
+### Current persistence and read model
+
+`personnel_employee_audit_events` is establishment-owned and binds every row to
+organization, establishment, and employee. It stores actor user ID, event type,
+operation ID, allowlisted changed field names, JSON metadata, and transaction
+time. It is not a row-version snapshot table.
+
+`listPersonnelEmployeeAuditHistory` rederives the trusted establishment scope,
+filters to the strict employee event allowlist, orders by `(createdAt, id)`
+descending, reads at most 51 rows, returns the newest 50, and exposes
+`truncated: true` when older supported events exist. It sanitizes every event
+type, changed field, reason, and departure date before returning the strict
+contract.
+
+The public employee-history item contains only:
+
+| Field                   | Current meaning                                                         |
+| ----------------------- | ----------------------------------------------------------------------- |
+| `id`                    | Audit-event identifier                                                  |
+| `eventType`             | One allowlisted employee lifecycle/update/extraction event              |
+| `changedFields`         | Allowlisted names of changed fields; not their previous/new values      |
+| `actorDisplayName`      | Current joined display name or null when unavailable                    |
+| `occurredAt`            | Persisted transaction timestamp; not a general business-effective date  |
+| `reason`                | Safely bounded metadata reason when current event semantics provide one |
+| `previousDepartureDate` | Safely parsed date for the departure-specific exception                 |
+| `newDepartureDate`      | Safely parsed date for the departure-specific exception                 |
+
+The output omits organization/establishment identifiers, actor user ID,
+operation ID, revisions, raw metadata, document identifiers/versions, request
+details, prompt/excerpt/file content, IP/user-agent data, and ordinary old/new
+employee values.
+
+### Current write semantics
+
+| Mutation/event family      | Atomic current write and audit evidence                                                 | Reconstructable values today                               |
+| -------------------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| Employee creation          | One `employee.created`; optional duplicate-override event shares the operation          | Initial snapshot is not exposed through history contract   |
+| Ordinary identity update   | `employee.identity_updated` with changed identity field names and revision metadata     | No previous/new values; no ordinary reason                 |
+| Ordinary employment update | `employee.employment_updated` with changed employment field names and revision metadata | No previous/new values; no effective date/reason           |
+| Departure record           | `employee.departure_recorded` with `departureDate`                                      | Previous/new departure dates                               |
+| Departure correction       | `employee.departure_corrected`; reason is mandatory                                     | Previous/new departure dates plus bounded reason           |
+| Contract extraction        | Requested/completed/failed/applied allowlisted events                                   | No prompt, excerpt, PDF content, or old/new employee value |
+
+Ordinary updates use expected revision and an idempotency receipt, then commit
+the dossier revision and relevant identity/employment audit events in one
+transaction. A save spanning both groups creates two rows with one internal
+operation ID, but the current response does not expose that ID and the UI cannot
+group those rows as one operation.
+
+No-op writes create no ordinary update event. Idempotent replay does not create
+a second committed event. Cross-establishment lookup is denied by repository
+scope. Current integration tests cover these rules behind the existing database
+test gate.
+
+### Read authorization and audit separation
+
+`loadEmployeeHistoryAction` requires trusted `personnel.employee.read`, which
+is currently OWNER-only. Before reading history it records one idempotent
+`employee.history_viewed` access event for the supplied operation ID. That event
+is excluded from the business `Historique` allowlist and belongs to the separate
+cursor-paged `Consultations` timeline.
+
+Employee business history is also separate from document/version history,
+signed-amendment history, personnel-register append-only corrections,
+Formalités, Planning, Pointage, payroll, and generic access-management audit.
+F07 must not join these sources into one aggregate without a separately approved
+ownership and authorization design.
+
+### Confirmed gaps against downloaded F07
+
+- Ordinary previous/new values cannot be reconstructed from the current event
+  contract or persisted metadata.
+- Transaction time is available, but no general field-level effective date
+  model exists.
+- A correction reason is mandatory only for correction/clear of an existing
+  departure; ordinary employee edits have no reason field.
+- The newest 50 supported events are visible; older events have no UI paging or
+  export path.
+- One save may render as two rows because operation grouping is not exposed.
+- A successfully saved edit does not explicitly invalidate a previously loaded
+  history state in the client.
+- Existing event rows cannot safely be backfilled with values that were never
+  captured.
+
+The approved next phase remained documentation-only: build a field-policy
+matrix before any schema, migration, contract, repository, UI, backfill,
+retention job, or production-data change.
+
+```text
+F07 Phase 0 change record
+Files created: none
+Packages affected: documentation only
+Database/schema/migration: NO
+Transport or application contract: NO
+Runtime behavior: NO
+Permission or audit event definition: NO
+Employee/history/access mutation: NO
+Backfill or operational data: NO
+External request/provider/file processing: NO
+Production behavior: unchanged
+```
+
+### F07 Phase 1 — approved field-history policy matrix
+
+Status: `DOCUMENTATION COMPLETE 2026-08-24; NO VALUE CAPTURE AUTHORIZED`.
+
+The capture classes below are planning labels only:
+
+- `CURRENT_VALUE_TRACE`: keep the current event and changed-field names;
+- `VALUE_HISTORY_CANDIDATE`: previous/new values may be designed only after a
+  separate technical, privacy, and production approval;
+- `IMPLEMENTED_EXCEPTION`: current bounded value-level behavior already exists;
+- `SEPARATE_OWNER`: do not copy the source into employee history.
+
+| Group               | Fields/events                                                  | Capture class             | Grouping and time policy                                                                    | Correction/reason policy                                                             | Sensitivity and unresolved gates                                                           |
+| ------------------- | -------------------------------------------------------------- | ------------------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| Identity            | `givenNames`, `familyName`                                     | `VALUE_HISTORY_CANDIDATE` | One identity group per save; recorded-at retained; legal/business effective date unresolved | Change versus correction must be explicit before design; correction reason candidate | Personal identity values; legal/DPO purpose, visibility, retention, rights, redaction open |
+| Employment role     | `position`, `qualification`                                    | `VALUE_HISTORY_CANDIDATE` | One role group; business-effective date required and distinct from recorded-at              | Reason required only for a future explicitly classified correction                   | Employment facts; purpose, retention, signed-evidence relationship, rights open            |
+| Contract term       | `employmentTermType`, `expectedEndDate`, `fixedTermReasonCode` | `VALUE_HISTORY_CANDIDATE` | One atomic coupled group; effective date required; CDI/CDD invariants preserved             | Correction reason policy required; ordinary prospective change remains distinct      | High-impact employment facts; legal/DPO review and document-source relationship open       |
+| Work time           | `workTimeCategory`, `contractWeeklyMinutes`                    | `VALUE_HISTORY_CANDIDATE` | One atomic coupled group; effective date required; full-/part-time invariants preserved     | Correction reason policy required; ordinary prospective change remains distinct      | Employment duration; legal/DPO purpose, retention, signed-evidence relationship open       |
+| Entry date          | `entryDate`                                                    | `VALUE_HISTORY_CANDIDATE` | Correction-only candidate; the old/new entry dates are the effective facts                  | A bounded reason is required for any future correction                               | Register relationship, retention, rights, and legal/DPO review open                        |
+| Departure           | `departureDate`                                                | `IMPLEMENTED_EXCEPTION`   | Current old/new date behavior retained; date itself is the effective fact                   | Existing departure correction/cancellation requires a bounded reason                 | No expansion beyond current sanitized dates/reason without approval                        |
+| Creation            | `employee.created`                                             | `CURRENT_VALUE_TRACE`     | Keep current trace now; future new-employee initial snapshot is a separate candidate        | Not a correction event                                                               | Exact initial-set purpose, minimization, retention, and contract remain open               |
+| Cutover baseline    | Possible future current-value snapshot for existing dossiers   | `VALUE_HISTORY_CANDIDATE` | If approved, label as captured-at cutover; never imply knowledge before that timestamp      | Not a historical correction and never a fabricated backfill                          | Requires migration, notice/purpose, privacy, legal/DPO, operations, and rollback review    |
+| Duplicate override  | `employee.duplicate_override_confirmed`                        | `CURRENT_VALUE_TRACE`     | Keep its current operation trace                                                            | Keep bounded override reason; do not copy candidate identities                       | Candidate count/raw matching detail stays outside the employee-history response            |
+| Contract extraction | requested/completed/failed/applied events                      | `CURRENT_VALUE_TRACE`     | Keep lifecycle and selected-field trace only                                                | No employee correction semantics inferred                                            | Never store prompt, excerpt, PDF, suggested value, or provider payload in this history     |
+| Consultations       | dossier/history/access-history view events                     | `SEPARATE_OWNER`          | Keep cursor-paged `Consultations` timeline                                                  | Not an employee-value correction                                                     | Minimized access evidence only                                                             |
+| Documents/register  | base/amendment versions and register inscription/corrections   | `SEPARATE_OWNER`          | Keep each current domain timeline/source                                                    | Follow the owning domain's correction rules                                          | Do not duplicate protected file or register values into employee audit                     |
+
+### Cross-field and lifecycle rules
+
+1. A single future operation may contain multiple approved groups, but the UI
+   should present one operation with group-level differences rather than
+   misleading independent user actions.
+2. `recordedAt` remains server transaction time. `effectiveDate`, where the
+   matrix requires it, is a separate business fact and cannot be inferred from
+   request time or document upload time.
+3. A prospective change and a correction are distinct intents. A reason is not
+   collected for every normal change by default; it is mandatory only for an
+   explicitly approved correction policy.
+4. Null/clear transitions are value changes and require the same coupled-field
+   invariants and display policy as non-null changes.
+5. Existing audit rows remain immutable. Unknown previous/new values stay
+   unknown. No inference from the current row, PDF, register, or provider is
+   allowed as historical backfill.
+6. Any future cutover baseline must state only values verified at cutover and
+   must not be displayed as an earlier employment event.
+7. OWNER-only trusted organization + establishment + employee scope remains the
+   proposed first visibility. No manager or cross-establishment aggregate is
+   approved.
+8. Retention, legal hold, data-subject rights, redaction, actor deletion,
+   backup/restore, incident response, production purpose, and operational owner
+   remain unresolved cross-cutting gates for every value candidate.
+
+This matrix does not select a storage model, transport shape, event version,
+migration, baseline job, retention period, UI diff, or production rollout.
+
+```text
+F07 Phase 1 change record
+Files created: none
+Packages affected: documentation only
+Database/schema/migration: NO
+Transport or application contract: NO
+Runtime/UI behavior: NO
+Permission or audit event definition: NO
+Previous/new value capture: NO
+Employee/history/access mutation: NO
+Backfill/baseline job/operational data: NO
+Real employee QA: NO
+Production behavior: unchanged
+```
+
 ## F06 Phase 0 — alert derivation and resolution interaction
 
 F06 does not introduce an alert entity. The current Wave D overview is computed
@@ -1843,10 +2017,11 @@ document validity, or deadlines from Formalités, register, Planning, Pointage,
 or payroll. No current schema supports task status, acknowledgement, dismissal,
 assignment, comments, reminders, or notifications.
 
-The proposed Phase 1 may exercise only existing fictional records and current
-tests. It must not insert, edit, upload, replace, depart, or otherwise mutate a
-source condition solely for QA. The normal minimized overview-read audit is an
-expected security side effect, not a manually created alert mutation.
+The approved Phase 1 exercised only existing fictional records and current
+tests. It did not insert, edit, upload, replace, depart, or otherwise mutate a
+source condition solely for QA. The normal minimized overview/dossier-access
+audits were expected security side effects, not manually created alert
+mutations.
 
 ```text
 F06 Phase 0 change record
@@ -1861,6 +2036,23 @@ Operational alert/task data: none exists
 External request/provider: NO
 Production: NOT AUTHORIZED
 ```
+
+### F06 Phase 1 read-only evidence
+
+The 2026-08-24 authenticated OWNER regression read existing fictional LUNA
+state only. The current query returned no incomplete minimum dossier, more than
+one page of missing signed base contracts, and no departure in the five-day
+window. It exercised page one, page two, and one fresh missing-contract target.
+The target opened the existing Documents add form and recorded only the normal
+overview/dossier-access read evidence. No file was selected, no form was
+submitted, and no employee, document, or departure value changed.
+
+Backoffice unit/component coverage passed 54 files and 192 tests; the focused
+personnel contract schema suite passed 14 tests. Existing repository and runtime
+tests remain the evidence for source-partial, source-error, incomplete,
+departure, stale-target, bounded-output, and non-development denial states that
+current data did not expose. Mutation-capable database integration tests were
+not forced for this read-only phase.
 
 ## F05 Phase 0 — current document data and interaction inventory
 

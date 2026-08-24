@@ -1356,15 +1356,16 @@ file operation, AI request, real employee file, or production behavior.
 
 ## F06 Phase 0 — resolve-dossier-alerts scope
 
-Capability status: `EXISTING DEVELOPMENT CAPABILITY — PHASE 0 AWAITING APPROVAL`.
+Capability status: `EXISTING DEVELOPMENT CAPABILITY — PHASE 1 REGRESSION COMPLETE`.
 
 ### Current outcome and boundary
 
 F06 renews the existing Wave D `À traiter` overview inside
 `/equipe/salaries`. It does not create a separate route, tab, summary KPI,
 alert center, workflow inbox, or persisted task model. `Dossiers à compléter`
-continues to be the existing filter/count for the minimum dossier rule; it is
-not an alias for every `À traiter` condition.
+is a display-only count for the minimum dossier rule. The separate completeness
+selector owns list filtering. Neither is an alias for every `À traiter`
+condition.
 
 The supported conditions are fixed to current repository semantics:
 
@@ -1381,18 +1382,18 @@ completeness result. A CDD expected end is not a departure date.
 
 ### Proposed F06 decisions
 
-| ID     | Decision needed           | Recommendation                                                                                      | Status            |
-| ------ | ------------------------- | --------------------------------------------------------------------------------------------------- | ----------------- |
-| F06-01 | Surface                   | Keep `À traiter` inside `/equipe/salaries`; add no page, tab, navigation item, or KPI               | Awaiting approval |
-| F06-02 | Alert model               | Keep a server-derived current overview; add no persisted alert/task/resolution record               | Awaiting approval |
-| F06-03 | Supported conditions      | Keep only the three repository-backed conditions listed above                                       | Awaiting approval |
-| F06-04 | Meaning and grouping      | Keep incomplete/missing-base under corrections and departure under upcoming events                  | Awaiting approval |
-| F06-05 | Resolving actions         | Reuse F03 edit, F05 base-contract add, and existing departure review; never auto-update data        | Awaiting approval |
-| F06-06 | Freshness                 | Revalidate the condition server-side; stale/resolved items return changed-state and refresh         | Awaiting approval |
-| F06-07 | Paging and refresh        | Keep independent five-item cursor pages; no totals, URL cursor, polling, reminder, or notification  | Awaiting approval |
-| F06-08 | Failure and authorization | Keep OWNER-only trusted scope; document-source failure is partial and creates no false missing item | Awaiting approval |
-| F06-09 | Audit and privacy         | Keep one minimized audit event per overview read; no per-item history or sensitive detail expansion | Awaiting approval |
-| F06-10 | Deferred and production   | Keep unsupported alerts/workflow absent and production fail-closed                                  | Awaiting approval |
+| ID     | Decision needed           | Recommendation                                                                                      | Status              |
+| ------ | ------------------------- | --------------------------------------------------------------------------------------------------- | ------------------- |
+| F06-01 | Surface                   | Keep `À traiter` inside `/equipe/salaries`; add no page, tab, navigation item, or KPI               | Approved 2026-08-24 |
+| F06-02 | Alert model               | Keep a server-derived current overview; add no persisted alert/task/resolution record               | Approved 2026-08-24 |
+| F06-03 | Supported conditions      | Keep only the three repository-backed conditions listed above                                       | Approved 2026-08-24 |
+| F06-04 | Meaning and grouping      | Keep incomplete/missing-base under corrections and departure under upcoming events                  | Approved 2026-08-24 |
+| F06-05 | Resolving actions         | Reuse F03 edit, F05 base-contract add, and existing departure review; never auto-update data        | Approved 2026-08-24 |
+| F06-06 | Freshness                 | Revalidate the condition server-side; stale/resolved items return changed-state and refresh         | Approved 2026-08-24 |
+| F06-07 | Paging and refresh        | Keep independent five-item cursor pages; no totals, URL cursor, polling, reminder, or notification  | Approved 2026-08-24 |
+| F06-08 | Failure and authorization | Keep OWNER-only trusted scope; document-source failure is partial and creates no false missing item | Approved 2026-08-24 |
+| F06-09 | Audit and privacy         | Keep one minimized audit event per overview read; no per-item history or sensitive detail expansion | Approved 2026-08-24 |
+| F06-10 | Deferred and production   | Keep unsupported alerts/workflow absent and production fail-closed                                  | Approved 2026-08-24 |
 
 ### Explicitly deferred
 
@@ -1405,6 +1406,76 @@ completeness result. A CDD expected end is not a departure date.
 - manager access, cross-establishment aggregation, background processing, and
   production enablement.
 
-The proposed Phase 1 is bounded read-only regression using existing fictional
-data and current tests. No operational condition is created or changed solely
-to obtain a screenshot or test state.
+The bounded Phase 1 read-only regression completed with existing fictional data
+and current tests. No operational condition was created or changed solely to
+obtain a screenshot or test state.
+
+## F07 Phase 0 — modify-and-historize scope
+
+Capability status: `MIXED — CURRENT TRACE EXISTS; RECONSTRUCTABLE HISTORY IS NEW DISCOVERY`.
+
+### Current outcome and limitation
+
+F03 owns current employee editing. F07 owns the meaning and presentation of
+historical change evidence. The current `Historique` tab is a minimized audit
+timeline, not a versioned employee record and not proof that every former value
+can be reconstructed.
+
+Current ordinary identity/employment events expose changed field names, actor,
+transaction time, and event type. They do not expose old/new values, a business-
+effective date, or a correction reason. Departure alone exposes bounded old/new
+dates and a reason when an existing departure is corrected or cleared.
+
+### Proposed F07 decisions
+
+| ID     | Decision needed                 | Recommendation                                                                                                       | Status              |
+| ------ | ------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| F07-01 | Capability classification       | Renew the existing trace UI; treat reconstructable previous/new value history as a separately approved new slice     | Approved 2026-08-24 |
+| F07-02 | Surface and refresh             | Keep `Historique` in quick/full dossier; later reload it after a successful owning mutation instead of adding a page | Approved 2026-08-24 |
+| F07-03 | Timeline ownership              | Keep employee changes, dossier consultations, Documents, register, and other modules in separate histories           | Approved 2026-08-24 |
+| F07-04 | Current trace claim             | Describe ordinary events as field-level traceability only; never claim a reconstructable snapshot                    | Approved 2026-08-24 |
+| F07-05 | Departure exception             | Preserve previous/new departure dates and mandatory reason for correction/cancellation                               | Approved 2026-08-24 |
+| F07-06 | Future field selection          | Create a field-by-field policy matrix before choosing any value snapshot; do not enable every field by default       | Approved 2026-08-24 |
+| F07-07 | Time and correction semantics   | Decide effective date and reason requirements per approved field; do not generalize the departure rule               | Approved 2026-08-24 |
+| F07-08 | Append-only and backfill        | Never rewrite existing audit; do not fabricate old/new values or backfill values that cannot be proven               | Approved 2026-08-24 |
+| F07-09 | Authorization, audit, privacy   | Keep OWNER-only trusted scope, on-demand loading, minimized view audit, and no sensitive provider/document payload   | Approved 2026-08-24 |
+| F07-10 | Limits and production readiness | Keep the current 50-event truthful limit; gate paging/export/retention/rights/legal-hold and future production data  | Approved 2026-08-24 |
+
+### Field-policy matrix required before implementation
+
+For every current mutable F03 field, the next documentation phase must decide:
+
+- whether previous/new values are genuinely required or a changed-field trace
+  is sufficient;
+- whether a business-effective date differs from transaction time;
+- whether a correction reason is required and who may see it;
+- sensitivity, display/redaction, retention, legal hold, deletion/rights, and
+  backup/restore treatment;
+- whether events from one operation should be grouped; and
+- whether future history starts prospectively, with no invented backfill.
+
+This matrix must also keep departure, Documents, personnel register,
+Formalités, Planning, Pointage, payroll, and access history under their current
+owners. Phase 0 authorizes no mutation or persistence change.
+
+### Phase 1 matrix disposition
+
+Status: `COMPLETE 2026-08-24 — POLICY CANDIDATES ONLY`.
+
+| Policy group              | Fields/events                                                                 | Recommended disposition before technical design                                                                |
+| ------------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Identity                  | `givenNames`, `familyName`                                                    | Coupled prospective value-history candidate; identity change/correction classification and privacy review open |
+| Employment role           | `position`, `qualification`                                                   | Coupled value-history candidate; business-effective date required; correction reason only for corrections      |
+| Contract term             | `employmentTermType`, `expectedEndDate`, `fixedTermReasonCode`                | One coupled candidate; effective date and CDI/CDD invariant policy required                                    |
+| Work time                 | `workTimeCategory`, `contractWeeklyMinutes`                                   | One coupled candidate; effective date and full-/part-time invariant policy required                            |
+| Entry date                | `entryDate`                                                                   | Correction-only candidate; old/new date and reason required; no extra effective date                           |
+| Departure                 | `departureDate`                                                               | Preserve current implemented old/new dates and correction/cancellation reason                                  |
+| Creation/baseline         | `employee.created` and a possible future cutover baseline                     | New creation may capture an approved initial set later; never present a cutover snapshot as earlier history    |
+| Duplicate override        | `employee.duplicate_override_confirmed`                                       | Keep bounded reason trace; never expose candidate identities/count as employee value history                   |
+| Contract extraction       | requested/completed/failed/applied events                                     | Keep minimized lifecycle/selected-field trace; never store prompt, excerpt, PDF, or suggested values here      |
+| Access/Documents/register | consultations, document versions/amendments, register inscription/corrections | Remain separate timelines under their current owners                                                           |
+
+The matrix is not permission to capture any candidate value. Retention,
+redaction, legal hold, rights, backup/restore, incident response, production
+use, baseline semantics, and the exact change-versus-correction interaction
+remain approval gates.

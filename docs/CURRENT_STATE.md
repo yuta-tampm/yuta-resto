@@ -758,6 +758,49 @@ register, Planning, Pointage, and payroll alerts remain unsupported. A document
 metadata failure produces a partial state and no false missing-contract item.
 The overview remains OWNER-only, organization + establishment scoped, bounded
 to independent five-item cursor pages, audited once per overview read, and
-fail-closed outside development. F06-01 through F06-10 and a read-only
-fictional regression are awaiting product approval. Phase 0 changed
-documentation only.
+fail-closed outside development. Product approved F06-01 through F06-10 and the
+bounded read-only fictional regression on 2026-08-24. Current LUNA data proved
+zero incomplete minimum dossiers, a paged missing-base-contract group, and an
+empty five-day departure group without manufacturing another condition. The
+missing-contract action opened the correct existing Documents add form, close
+restored focus, page two loaded correctly, 390 px had no horizontal overflow,
+and browser logs were clean. The summary metric is display-only; the separate
+completeness selector owns filtering. Backoffice passed 54 files/192 tests and
+the focused personnel contract suite passed 14 tests. No employee, document,
+departure, alert/task, provider, or production behavior changed; only existing
+minimized read/access audit side effects occurred.
+
+F07 Phase 0 reconciles the downloaded modify-and-historize flow with the
+existing per-employee `Historique` and `Consultations` tabs. Current employee
+updates atomically persist the new dossier revision and allowlisted audit
+events, but ordinary identity/employment events expose only event type, actor,
+time, and changed field names. They do not expose previous/new values, an
+effective date, or an ordinary correction reason, so the current timeline is
+traceability rather than reconstructable value history. Departure is the only
+current bounded exception: record/correction events expose previous/new
+departure dates, and corrections require a reason. History is loaded on demand,
+OWNER-only, organization + establishment + employee scoped, and limited to the
+50 newest supported events with a truthful truncation notice and no pagination.
+Opening it writes a separate minimized access event shown under
+`Consultations`; document, register, and access histories remain separate
+domains. A successful edit does not currently force a previously loaded
+history view to reload. The external F07 outcome therefore requires new product
+and data-policy decisions before any reconstructable-history implementation.
+F07-01 through F07-10 and a documentation-only field-history policy matrix were
+proposed. Phase 0 changed documentation only.
+
+Product approved F07-01 through F07-10 and completed the documentation-only
+Phase 1 matrix on 2026-08-24. The matrix recommends prospective value-history
+candidates for current identity and employment facts, but authorizes no value
+capture. Identity changes remain a coupled names group; position/qualification,
+contract-term facts, and work-time facts require business-effective-date policy;
+entry-date edits are treated as corrections requiring a reason; and the current
+departure old/new-date plus correction-reason behavior remains the only
+implemented value-level history. Creation/baseline, correction-versus-change,
+operation grouping, retention, legal hold, rights, redaction, and migration
+semantics remain gates. Existing events will not be rewritten and unknown
+historical values will not be backfilled. Contract extraction and duplicate-
+override events remain minimized traces rather than employee-value snapshots.
+The smallest next runtime candidate is only to invalidate and reload the
+existing timeline after a successful F03 edit; it would add no field values or
+schema. Phase 1 changed documentation only.

@@ -1949,7 +1949,7 @@ delete/archive behavior, AI call, real employee file, or production enablement.
 
 ### F06 Phase 0 — repository reconciliation
 
-Status: `DOCUMENTATION COMPLETE; AWAITING APPROVAL`.
+Status: `APPROVED 2026-08-24`.
 
 Completed read-only work:
 
@@ -1974,26 +1974,97 @@ No runtime, schema, migration, contract, API, permission, audit definition,
 employee, document, departure, alert/task data, provider, or production behavior
 changed.
 
-### Proposed F06 Phase 1 — bounded read-only regression
+### F06 Phase 1 — bounded read-only regression
 
-Approval required before execution.
+Status: `COMPLETE 2026-08-24`.
 
-If approved:
+Completed slice:
 
-1. use the current authenticated OWNER development surface and only existing
-   fictional LUNA records;
-2. verify the visible groups, supported labels, existing item types, contextual
-   target resolution, stale/partial/error evidence available in tests, and the
-   production gate;
-3. verify responsive behavior at 390 px and clean browser logs when a current
-   item exists;
-4. reuse the Wave D Phase 5 as-built evidence for states not present in current
+1. used the authenticated OWNER development surface and only existing fictional
+   LUNA records;
+2. confirmed zero incomplete minimum dossiers, a paged missing-base group, and
+   an empty five-day departure group without manufacturing another state;
+3. confirmed the missing-contract action opened Nina F02-Sierra on the existing
+   Documents add form and closing restored focus to the originating action;
+4. confirmed independent correction pagination from page one to page two;
+5. verified matching page/card client and scroll widths at 390 px, five visible
+   actions, and no browser warning/error;
+6. retained existing Wave D references/tests for incomplete, departure, stale,
+   partial-source, full-error, and production-gate states absent from current
    data; and
-5. run focused and Backoffice checks without creating a missing field,
-   uploading/replacing a PDF, or changing a departure merely to manufacture QA.
+7. ran the Backoffice and focused personnel contract suites successfully.
 
-An authorized overview read may write its existing single minimized audit
-event. Phase 1 must make no employee/document/departure mutation and must add no
-new alert category, task state, notification, background job, provider call,
-real employee data, or production behavior. Stop and document any repository
-conflict instead of broadening scope.
+The QA corrected one documentation mismatch: the `Dossiers à compléter` metric
+is display-only, while the separate completeness selector owns list filtering.
+No runtime correction was required. The authorized reads produced only existing
+minimized overview/dossier-access audit side effects. No employee, document,
+departure, alert/task data, provider, real employee data, or production behavior
+changed. Mutation-capable database integration tests were not forced.
+
+## F07 — modify-and-historize flow
+
+### F07 Phase 0 — repository reconciliation
+
+Status: `APPROVED 2026-08-24`.
+
+Completed read-only work:
+
+1. reconciled the downloaded F07 flow with F03/F04 boundaries, the current
+   `Historique` and `Consultations` UI, strict contracts, schema, repository,
+   server actions, permissions, audit sanitization, and tests;
+2. classified the existing employee trace as renewal and reconstructable value
+   history as a separately gated new capability;
+3. recorded the exact current event/field allowlists, OWNER-only trusted scope,
+   on-demand audited read, newest-50 limit, and truthful truncation state;
+4. confirmed that ordinary identity/employment changes expose field names but
+   not previous/new values, effective date, or edit reason;
+5. retained departure previous/new dates plus mandatory correction reason as
+   the only current value-level exception;
+6. kept employee, access, document, amendment, register, and other module
+   histories separate;
+7. identified absent operation grouping, paging/export, safe backfill, and
+   post-save history invalidation;
+8. recorded privacy, retention, legal-hold, rights, backup/restore, and
+   production-data decisions as prerequisites; and
+9. proposed F07-01 through F07-10 plus a documentation-only next phase.
+
+No runtime, schema, migration, transport, repository, permission, audit event,
+employee/history/access data, backfill, provider, file, or production behavior
+changed.
+
+### F07 Phase 1 — field-history policy matrix
+
+Status: `DOCUMENTATION COMPLETE 2026-08-24`.
+
+Completed work:
+
+1. classified all current F03 mutable fields into identity, role, contract-
+   term, work-time, entry-date, and departure policy groups;
+2. retained current traces while marking previous/new values as unimplemented
+   candidates only;
+3. required coupled grouping for names, contract term, and work time, and
+   proposed operation-level presentation for a save spanning groups;
+4. separated recorded-at time from required future business-effective dates;
+5. separated ordinary prospective change from correction and avoided a global
+   reason requirement;
+6. kept entry-date as correction-only and departure as the existing bounded
+   value-level exception;
+7. classified creation/baseline, duplicate override, extraction, access,
+   Documents, and register behavior without merging their ownership;
+8. prohibited rewriting existing events, invented backfill, or presenting a
+   possible cutover snapshot as earlier history; and
+9. retained legal/DPO/security/operations decisions for retention, legal hold,
+   rights, redaction, backup/restore, incident response, and production.
+
+No schema, migration, API, contract, repository, UI, permission, event payload,
+previous/new value, reason field, effective date, baseline job, backfill,
+employee/history/access data, provider, real-employee QA, or production behavior
+changed.
+
+### Next optional gate — current-history coherence only
+
+The smallest runtime candidate is to invalidate and reload the existing
+minimized `Historique` after a successful F03 edit in the drawer and full
+dossier. It must preserve the current field-name-only contract, OWNER scope,
+on-demand access audit, error/retry behavior, and 50-event limit. This candidate
+requires separate approval and does not authorize any matrix value candidate.

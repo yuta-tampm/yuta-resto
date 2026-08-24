@@ -975,7 +975,7 @@ and production fail-closed behavior.
 
 ## F06 Phase 0 design handoff
 
-F06 design status: `NO NEW DESIGN REQUIRED — AWAITING PRODUCT DECISIONS`.
+F06 design status: `NO NEW DESIGN REQUIRED — PHASE 1 REGRESSION COMPLETE`.
 
 The downloaded flow describes a useful outcome but not a new UI authority. The
 repository already contains the selected, responsive Wave D `À traiter` card,
@@ -998,7 +998,46 @@ base-contract evidence must remain visually and semantically separate from
 minimum-dossier completeness, and departure must remain an upcoming event
 rather than an error.
 
-F06 design prompt status: `NOT_APPLICABLE FOR PROPOSED PHASE 1`. The smallest
-next step is a truthful read-only regression against the current as-built UI
-and existing fictional state. A missing test state must be covered by current
-code/tests rather than fabricated through an employee or document mutation.
+F06 design prompt status: `NOT_APPLICABLE`. The completed read-only regression
+confirmed the current as-built UI with existing fictional state. Page one/page
+two missing-contract actions, the correct Documents target, focus restoration,
+390 px layout, and clean browser logs passed. Missing incomplete/departure and
+failure states remain covered by current references and tests rather than a
+fabricated employee or document mutation.
+
+## F07 Phase 0 design handoff
+
+F07 design status: `NO NEW VISUAL DIRECTION — PHASE 1 POLICY MATRIX COMPLETE`.
+
+The existing drawer/full-dossier `Historique` tab, timeline rows, loading,
+error/retry, empty, populated, and 50-event truncation states remain the visual
+authority. The downloaded flow does not authorize a version browser, compare
+screen, restore/rollback action, aggregate audit center, or register-history
+replacement.
+
+Any future reconstructable row must first have an approved data meaning. A
+design must not show invented previous/new values, effective dates, correction
+reasons, event grouping, retention promises, or legal status. The current
+departure old/new dates are a narrow real exception, not a reusable mockup for
+every employee field.
+
+Keep these surfaces distinct:
+
+- `Historique`: employee business lifecycle and allowlisted change trace;
+- `Consultations`: audited dossier/history reads;
+- `Documents`: base-contract and amendment evidence/version behavior;
+- personnel register: its own append-only inscription/correction history; and
+- other modules: their own future ownership decisions.
+
+F07 design prompt status: `NOT_APPLICABLE`. The approved Phase 1 matrix defines
+planning candidates and explicit unknowns without authorizing value rows. A
+future design may group one save into identity, role, contract-term, and work-
+time sections only after matching transport/data approval. Effective date and
+recorded-at time must remain visibly distinct, and a correction reason may
+appear only for an explicitly classified correction.
+
+No visual should be generated for cutover baselines, value differences,
+correction badges, paging/export, compare, or restore while their data and
+retention policies remain open. The smallest truthful design/runtime candidate
+remains the invisible coherence change of reloading the current minimized
+timeline after a successful F03 edit.
