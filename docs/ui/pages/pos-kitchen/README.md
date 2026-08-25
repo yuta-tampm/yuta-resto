@@ -153,8 +153,9 @@ PostgreSQL`; no cloud persistence or synchronization.
   snapshots, historical item name/quantity/station data, and grouping by
   order/table.
 - Preserve notification-only SSE plus the 60-second visible-tab Kitchen
-  fallback and the shared 15-second visible/focus local-health/printer refresh.
-  Do not claim that event payloads are authoritative order data.
+  fallback and the shared 15-second visible/focus local-health/printer refresh,
+  gated by the browser-local screen schedule. Do not claim that event payloads
+  are authoritative order data.
 - Preserve site-agent command validation and service ownership. The selected
   staff cookie supplies attribution for allergy confirmation; it is not a
   management authorization session.

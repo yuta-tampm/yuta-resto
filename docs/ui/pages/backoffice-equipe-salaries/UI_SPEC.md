@@ -992,3 +992,26 @@ Do not add value diff, correction badge, effective-date label, baseline event,
 compare/restore controls, pagination, or export until the matching data policy
 and transport are separately approved. The smallest current-UI renewal remains
 only invalidating/reloading `Historique` after a successful F03 edit.
+
+### F07 Phase 2 implemented coherence
+
+Phase 2 makes no visual change. On successful F03 save, both dossier surfaces
+discard the previously rendered timeline. If `Historique` is active, its
+existing loading state appears while a fresh read runs. If another tab is
+active, there is no hidden history request; opening `Historique` later uses its
+normal loading path. Existing empty, error/retry, populated, and truncation
+states remain the UI authority. No value difference, correction badge,
+effective date, paging, export, compare, or restore control is added.
+
+## F08 Phase 0 — current UI and forbidden implications
+
+The full dossier already exposes `Préparer un projet CDI` only when the
+development gate passes. The quick view remains unchanged. The destination
+shows the six approved read-only facts, three local illustrative inputs, local
+checkpoint status, demonstration readiness, and a disabled generation action.
+
+F08 Phase 0 adds no UI. Do not add a document selector, saved-draft badge,
+template preview, PDF/download control, generated success, signature/delivery
+status, or Documents linkage. Do not relabel `Simuler l’enregistrement` as save
+or present `Prêt pour la démonstration` as contract readiness. Any later design
+must first use an approved field/applicability matrix and versioned template.

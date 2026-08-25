@@ -1327,7 +1327,7 @@ Normal minimized overview/dossier-access audit side effects remained expected.
 
 ## F07 Phase 0 — modify-and-historize reconciliation
 
-Status: `PHASE 1 FIELD-HISTORY POLICY MATRIX COMPLETE — NO RUNTIME AUTHORIZED`.
+Status: `PHASE 2 CURRENT-HISTORY COHERENCE COMPLETE`.
 
 F07 (`Modifier une donnée + historisation`) crosses an implemented current-
 value editor and an implemented but deliberately minimized employee timeline.
@@ -1397,7 +1397,34 @@ be labelled as a cutover snapshot of then-current authoritative values, never
 as proof of earlier history. Creation, duplicate override, contract extraction,
 Documents, register, and access events keep their current separate meanings.
 
-The smallest next implementation candidate is limited to reloading the existing
-field-name timeline after a successful F03 edit. It would add no schema,
-previous/new value, effective date, reason field, event type, paging, export, or
-production-data capability.
+Phase 2 was approved and implemented on 2026-08-24. After a successful F03 edit
+in either the quick view or full dossier, any previously loaded history is
+invalidated. An active `Historique` tab immediately starts a fresh read with a
+new operation ID; an inactive tab stays unloaded and reads fresh data only when
+opened. Existing loading, error/retry, OWNER scope, minimized view audit, and
+newest-50 behavior remain unchanged. Focused tests cover both active and
+inactive outcomes. Phase 2 adds no schema, API, audit payload, previous/new
+value, effective date, reason field, event type, paging, export, or production-
+data capability.
+
+## F08 Phase 0 — generate-formality reconciliation
+
+Status: `PROPOSED FOR PRODUCT APPROVAL — DOCUMENTATION ONLY`.
+
+The downloaded F08 flow is product input, not current repository authority. Its
+statement that `/equipe/formalites-personnel` is only a planned page is stale:
+the repository now has a generic fictional prototype and an off-by-default,
+development-only employee-scoped route that reuses six allowlisted Salariés
+facts and keeps three illustrative inputs in React memory.
+
+The requested completion outcome is nevertheless absent. No Formalités record,
+saved CDI `DRAFT`, reviewed template, preview, generated PDF, file reference,
+signature request, external delivery, or automatic Documents link exists. The
+local checkpoint is not a saved draft, and demonstration `READY` is not legal,
+template, or generation readiness.
+
+F08 is therefore an existing-capability renewal for the employee-to-Formalités
+handoff and local walkthrough, plus a separately gated new capability for any
+durable or generated result. The first candidate remains one upcoming full-time
+CDI in the active establishment, but external legal/template review is still
+missing. Phase 0 proposes F08-01 through F08-10 and stops before runtime work.

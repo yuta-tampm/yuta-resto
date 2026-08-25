@@ -176,3 +176,25 @@ Stop before code, runtime UI, schemas, migrations, contracts, APIs, server
 actions, persistence, lifecycle/audit writes, templates/files/PDF, signature,
 AI/providers, real employee data, and production. A later phase may propose
 persistence only after this matrix and required external evidence are approved.
+
+## F08 Phase 0 — generate-formality reconciliation
+
+Status: `DOCUMENTATION COMPLETE 2026-08-25; PRODUCT APPROVAL PENDING`.
+
+Completed work:
+
+1. reconciled the downloaded F08 sequence with Phase 2–4 runtime and Phase 5
+   decision evidence;
+2. corrected the stale planned-page status without overstating the current
+   connected/local prototype;
+3. separated current trusted read and local interaction from absent save,
+   preview, generation, file, signature, delivery, and linkage behavior;
+4. reused F5-07/F5-08 decisions and the existing legal-review brief instead of
+   creating a duplicate lifecycle or field matrix;
+5. mirrored the proposed F08-01 through F08-10 boundary; and
+6. stopped before runtime because qualified legal/template evidence and
+   production-readiness gates remain blocked.
+
+No Phase 1 runtime implementation is proposed at this gate. The next external
+dependency is completing and sending the existing private legal-review handoff,
+then recording a dated qualified response and versioned template evidence.

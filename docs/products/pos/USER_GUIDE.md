@@ -95,6 +95,22 @@ Serveur indisponible browser cannot reach the local POS server
 kitchen operations. Follow the payment-terminal procedure before accepting a
 card or restaurant-ticket payment during an Internet outage.
 
+### Horaires de l'écran
+
+Select `Horaires écran` in the service strip to configure this POS display.
+Automatic standby defaults to enabled from 09:00 to 23:00. Choose the daily
+opening and closing times, then select `Enregistrer`. The schedule is stored
+only in the current browser and uses the device's local time; configure each
+POS screen separately. A range such as 18:00–02:00 crosses midnight. A browser
+that already saved a preference keeps that preference.
+
+Outside the configured range, an open POS shows a dark standby screen and stops
+its automatic status and page refreshes. Select `Réveiller 15 min` for temporary
+access, or `Modifier les horaires` to change the range. If the app remains open,
+it returns to normal automatically at opening time. This standby does not stop
+the local server, database, or printer worker. Disable the switch to keep the
+screen active at all times.
+
 ## POS Home / Orders
 
 Open:
@@ -351,6 +367,8 @@ When the kitchen screen is visible, local order and item changes trigger an
 automatic refresh through the local event stream. If the connection is
 interrupted, it reconnects automatically and a 60-second refresh remains as a
 safety net. Hidden tabs disconnect and reload current state when visible again.
+Outside the configured screen hours, the event stream and safety refresh stay
+suspended until the screen wakes.
 
 Select `Son` once on the Kitchen header to authorize browser audio. The green
 state means sound is active; select it again to mute. The adjacent volume
@@ -805,15 +823,16 @@ The queue shows 10 tickets per page, newest first. Use `Précédent` and `Suivan
 to browse older tickets; the status counters continue to represent the complete
 local queue. The visible page and printer status refresh automatically every
 five seconds while the page is visible, and refresh immediately when returning
-to its tab. Operators do not need to reload the whole page to see pending,
-printing, printed, or failed transitions.
+to its tab, provided the configured screen hours are active. Operators do not
+need to reload the whole page to see pending, printing, printed, or failed
+transitions.
 
 The `État de l’imprimante` card shows the RFCOMM channel, local worker, pending,
 printing and failed queue counts, and the latest successful print. `Prête à
 envoyer` means Linux can access the configured character device; it does not
 confirm paper, cover, or cutter state. Use `Impression test` for that physical
 check. The compact printer badge in the global status strip updates every 15
-seconds while the POS tab is visible.
+seconds while the POS tab is visible and the configured screen hours are active.
 
 The top of the same page contains the persisted ticket settings:
 

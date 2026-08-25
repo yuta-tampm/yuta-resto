@@ -300,3 +300,30 @@ real data or production use.
 
 No row above becomes a Zod schema, transport field, database column, readiness
 rule, UI control, or executable template mapping during Phase 5.
+
+## F08 Phase 0 interaction reconciliation
+
+The current F08-compatible path ends before persistence:
+
+```text
+trusted employee dossier read
+-> allowlisted six-field Formalités presentation
+-> local illustrative input/review state
+-> disabled generation
+```
+
+There is no Formalités write model or transport. The current `CREATE_CHECKPOINT`
+reducer event copies local values only inside React memory; it is not F5-07
+`DRAFT`. `READY` means demo completeness only. Reload or navigation discards
+both without an audit event.
+
+Any later durable design must first receive the qualified field/applicability
+and template evidence, then define trusted snapshot inputs, revisions,
+idempotency, one active draft, transitions, immutable generated versions,
+minimized audit, file-reference/storage boundary, retention, failure recovery,
+and cross-tenant denial. Generated draft ownership stays in Formalités; a signed
+artifact remains a separate Documents concern.
+
+Phase 0 adds no field, schema, migration, contract, API, server action,
+repository, permission, audit definition, persistence, file, PDF, template,
+signature, AI/provider, real personnel data, or production behavior.

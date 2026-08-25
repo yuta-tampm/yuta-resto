@@ -155,6 +155,8 @@
       are deliberately reviewed.
 - [ ] Direct transition actions remain reachable without essential hover-only
       behavior.
+- [x] Kitchen SSE, the 60-second fallback, and shared health polling stop while
+      the browser-local screen schedule is in standby and resume after wake.
 - [ ] Selected filters and item statuses are communicated by text, not color
       alone.
 - [ ] Icon-only controls have accessible names and visible focus.

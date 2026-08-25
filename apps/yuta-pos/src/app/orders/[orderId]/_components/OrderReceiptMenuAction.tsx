@@ -30,6 +30,7 @@ import {
 import { useEffect, useRef, useState, useTransition } from 'react';
 import { v7 as uuidv7 } from 'uuid';
 import { useClosePosHeaderMenu } from '../../../../components/pos/PosHeaderMenu';
+import { usePosStandby } from '../../../../components/pos/PosStandbyProvider';
 import {
   executeOrderReceiptAction,
   getOrderReceiptJobStatusAction,
@@ -51,6 +52,7 @@ export function OrderReceiptMenuAction({
   receiptView,
 }: OrderReceiptMenuActionProps) {
   const closeMenu = useClosePosHeaderMenu();
+  const { automaticRefreshAllowed } = usePosStandby();
   const [open, setOpen] = useState(false);
   const [targets, setTargets] = useState(receiptView.targets);
   const firstAvailable =
@@ -78,6 +80,7 @@ export function OrderReceiptMenuAction({
   useEffect(() => {
     if (
       !open ||
+      !automaticRefreshAllowed ||
       !activeJob ||
       (activeJob.status !== 'pending' && activeJob.status !== 'printing')
     ) {
@@ -115,7 +118,7 @@ export function OrderReceiptMenuAction({
       document.removeEventListener('visibilitychange', onVisible);
       window.removeEventListener('focus', onVisible);
     };
-  }, [activeJob, open, orderId, selectedTarget?.id]);
+  }, [activeJob, automaticRefreshAllowed, open, orderId, selectedTarget?.id]);
 
   const commandIntent = receiptCommandIntent(activeJob);
   const waiting =

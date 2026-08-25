@@ -1,1 +1,5 @@
 @import '@yuta/ui/styles/global.css';
+
+@theme {
+  --color-standby: #000000;
+}

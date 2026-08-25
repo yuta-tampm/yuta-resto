@@ -599,6 +599,29 @@ Read-slice evidence:
 - [ ] Production legal, privacy, retention, security, backup/restore, and
       operations approval remains required.
 
+## F08 Phase 0 — generate-formality reconciliation
+
+- [x] The downloaded F08 flow was treated as product input, not repository authority.
+- [x] Its stale planned-page implementation claim was corrected against the
+      current generic and employee-scoped Formalités prototypes.
+- [x] Existing OWNER, trusted active-establishment scope, development gate,
+      composite employee read, and six-field projection were reconciled.
+- [x] The local checkpoint and demo `READY` result remain explicitly transient
+      and are not a saved `DRAFT` or generation readiness.
+- [x] No template selector, preview, PDF, file reference, signature, delivery,
+      generated result, or automatic Documents link is claimed.
+- [x] Salariés facts, Formalités inputs/draft versions, and signed Documents
+      artifacts retain separate ownership.
+- [x] F5-07 lifecycle intent and F5-08 boundaries were reused without treating
+      them as implementation or legal/production approval.
+- [x] Upcoming full-time CDI remains a candidate pending qualified review; all
+      other recorded situations remain blocked/excluded.
+- [x] F08-01 through F08-10 are proposed for product approval.
+- [x] Phase 0 changes documentation only and reads/writes no operational data.
+- [ ] Product owner approves or revises F08-01 through F08-10.
+- [ ] Qualified legal/template review is received before runtime persistence or
+      generation is proposed.
+
 ## F07 Phase 0 — modify-and-historize reconciliation
 
 - [x] The downloaded F07 flow was treated as product input, not repository authority.
@@ -651,8 +674,18 @@ Read-slice evidence:
       production purpose, and operational ownership remain open gates.
 - [x] Phase 1 created no file, schema, migration, API, contract, event payload,
       value capture, data mutation, backfill, runtime, or production behavior.
-- [ ] Any runtime refresh, schema, API, contract, value capture, paging/export,
-      backfill, real-data QA, or production change remains separately approved.
+- [x] Product owner approved F07 Phase 2 current-history coherence on 2026-08-24.
+- [x] Successful F03 edits invalidate previously loaded history in the quick
+      view and full dossier.
+- [x] An active `Historique` tab starts a fresh existing history read; an
+      inactive tab performs no hidden read and loads normally when opened.
+- [x] Focused tests cover active immediate reload and inactive on-demand
+      invalidation.
+- [x] Phase 2 changes no schema, migration, API, contract, repository,
+      permission, audit definition/payload, history content, event limit, or
+      production behavior.
+- [ ] Any value capture, paging/export, backfill, real-data QA, or production
+      change remains separately approved.
 
 ## F06 Phase 0 — resolve-dossier-alerts reconciliation
 

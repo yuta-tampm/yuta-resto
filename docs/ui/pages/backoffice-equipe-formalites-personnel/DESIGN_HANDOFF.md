@@ -78,3 +78,11 @@ No design handoff or reference image was produced. Phase 5 records internal
 candidate product/legal data decisions only. Any later UI design must be derived
 from an externally reviewed and product-approved matrix and return through a
 separate design/implementation approval gate.
+
+## F08 Phase 0 handoff impact
+
+No new design or image is required. The downloaded F08 diagram is a sequence
+reference only and does not authorize document selection, template preview,
+saved/generated states, PDF, signature, or delivery controls. Phase 4 remains
+the visual authority until qualified template evidence and F08 product decisions
+permit a new design phase.

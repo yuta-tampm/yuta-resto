@@ -1007,7 +1007,7 @@ fabricated employee or document mutation.
 
 ## F07 Phase 0 design handoff
 
-F07 design status: `NO NEW VISUAL DIRECTION — PHASE 1 POLICY MATRIX COMPLETE`.
+F07 design status: `NO NEW VISUAL DIRECTION — PHASE 2 COHERENCE COMPLETE`.
 
 The existing drawer/full-dossier `Historique` tab, timeline rows, loading,
 error/retry, empty, populated, and 50-event truncation states remain the visual
@@ -1041,3 +1041,20 @@ correction badges, paging/export, compare, or restore while their data and
 retention policies remain open. The smallest truthful design/runtime candidate
 remains the invisible coherence change of reloading the current minimized
 timeline after a successful F03 edit.
+
+Phase 2 implements that invisible change in the quick view and full dossier.
+It reuses the existing loading and retry presentation and adds no new component,
+copy, row shape, field value, badge, or responsive requirement. No new visual
+reference or design-generation prompt is required.
+
+## F08 Phase 0 design handoff
+
+F08 design status: `NO NEW DESIGN — CURRENT FORMALITÉS PHASE 4 REMAINS AUTHORITY`.
+
+The downloaded diagram describes sequence only and cannot authorize a document
+selector, template, persisted draft, preview, PDF, signed state, or delivery
+success. The existing full-dossier entry and connected local-only Formalités
+prototype are the truthful visual baseline. A generated-result design is
+blocked until the field/applicability matrix and a qualified versioned template
+are approved. No design-generation prompt or reference image is requested in
+Phase 0.

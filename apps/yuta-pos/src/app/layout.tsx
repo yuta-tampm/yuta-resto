@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { IBM_Plex_Sans } from 'next/font/google';
 import './globals.css';
 import { PwaInstallPrompt } from '../components/pos/PwaInstallPrompt';
+import { PosStandbyProvider } from '../components/pos/PosStandbyProvider';
 
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ['latin', 'vietnamese'],
@@ -86,8 +87,10 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={ibmPlexSans.className}>
-        {children}
-        <PwaInstallPrompt />
+        <PosStandbyProvider>
+          {children}
+          <PwaInstallPrompt />
+        </PosStandbyProvider>
       </body>
     </html>
   );

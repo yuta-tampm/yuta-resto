@@ -8,6 +8,7 @@ import { Button } from '@yuta/ui';
 import { Volume2, VolumeX } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
+import { usePosStandby } from '../../../components/pos/PosStandbyProvider';
 import {
   defaultKitchenChimeVolume,
   kitchenEventMatchesScreen,
@@ -28,6 +29,7 @@ export function KitchenAutoRefresh({
   selectedScreen: LocalKitchenScreen;
 }) {
   const router = useRouter();
+  const { automaticRefreshAllowed } = usePosStandby();
   const [isPending, startTransition] = useTransition();
   const refreshInFlightRef = useRef(false);
   const refreshQueuedRef = useRef(false);
@@ -89,6 +91,7 @@ export function KitchenAutoRefresh({
   }, []);
 
   const requestRefresh = useCallback(() => {
+    if (!automaticRefreshAllowed) return;
     if (document.visibilityState !== 'visible') return;
     if (refreshInFlightRef.current) {
       refreshQueuedRef.current = true;
@@ -96,7 +99,7 @@ export function KitchenAutoRefresh({
     }
     refreshInFlightRef.current = true;
     startTransition(() => router.refresh());
-  }, [router]);
+  }, [automaticRefreshAllowed, router]);
 
   useEffect(() => {
     let shouldEnableSound = false;
@@ -130,6 +133,7 @@ export function KitchenAutoRefresh({
   }, [isPending, requestRefresh]);
 
   useEffect(() => {
+    if (!automaticRefreshAllowed) return;
     let source: EventSource | null = null;
     let debounceTimer: number | null = null;
 
@@ -211,7 +215,7 @@ export function KitchenAutoRefresh({
       window.removeEventListener('focus', handleVisibilityChange);
       window.removeEventListener('online', handleOnline);
     };
-  }, [requestRefresh, selectedScreen]);
+  }, [automaticRefreshAllowed, requestRefresh, selectedScreen]);
 
   return (
     <div className="flex shrink-0 items-center gap-2">

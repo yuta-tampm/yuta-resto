@@ -105,6 +105,16 @@ configured) an Internet outage while local operation remains available. The
 Docker healthcheck uses the same endpoint but depends only on application and
 database readiness, not on Internet access.
 
+The same strip exposes `Horaires écran`. Each POS browser can optionally store
+one daily activity range in local storage. Outside that range, while the POS is
+open, the browser shows a fully black standby screen and suspends automatic
+health, Kitchen, print-management, and receipt-job refreshes. An overnight
+range such as 18:00–02:00 is supported. The operator can wake the screen for 15
+minutes or edit the schedule; normal activity resumes automatically at the
+configured opening time. The setting defaults to enabled from 09:00 to 23:00,
+uses the device's local clock, and does not stop `site-agent`, PostgreSQL, or the
+print worker. A browser that already saved a preference keeps that preference.
+
 The accepted offline architecture and phased implementation roadmap live in
 `docs/products/pos/OFFLINE_STRATEGY.md`. Phases 1 and 2 (restaurant edge operation and
 data-integrity hardening) are approved for implementation. Cloud
@@ -391,6 +401,8 @@ read model with `router.refresh()`.
 Events are debounced, overlapping refreshes are coalesced, hidden tabs close
 the stream, and reconnect/focus/online recovery refreshes current state. A
 60-second visible-tab poll remains as a safety net if notifications are lost.
+The stream and fallback operate only while the browser-local screen schedule
+permits automatic refresh.
 
 Kitchen includes a compact `Son` control in the filter header. Browser audio is
 enabled only after the operator activates it. A short local chime plays for a
@@ -497,9 +509,10 @@ samples, with a cut after each. Payment capture does not create a customer
 receipt job.
 Printed jobs can be explicitly requeued from local print management; the
 original payload snapshot is reused so the reprint matches the first ticket.
-While local print management is visible, it refreshes its server data every two
-seconds and immediately on tab visibility/focus changes. Printer-worker status
-updates therefore appear without a full browser reload, while hidden tabs do
+While local print management is visible and the browser-local screen schedule
+permits automatic refresh, it refreshes its server data every five seconds and
+immediately on tab visibility/focus changes. Printer-worker status updates
+therefore appear without a full browser reload, while hidden or standby tabs do
 not poll.
 
 `@yuta/core` is now database-independent. Its legacy repositories,

@@ -97,6 +97,7 @@ import {
   getWorkTimeLabel,
   isEmployeeComplete,
 } from '../salaries-model';
+import { getPostSaveHistoryOperationId } from '../_lib/employee-history-refresh';
 
 type DetailTab =
   | 'overview'
@@ -338,13 +339,19 @@ export function SalariesPage({
   const handleEmployeeSaved = useCallback(
     (employee: PersonnelEmployeeSummary, message: string | null) => {
       setRecentlySavedEmployee(employee);
+      setHistoryState({ status: 'idle', history: null, message: null });
+      setHistoryOperationId(
+        getPostSaveHistoryOperationId(detailTab === 'history', () =>
+          crypto.randomUUID(),
+        ),
+      );
       setEditingEmployee(null);
       setEditSuccessMessage(
         message ?? 'Les modifications ont été enregistrées.',
       );
       restoreActionFocus(editActionOriginRef);
     },
-    [restoreActionFocus],
+    [detailTab, restoreActionFocus],
   );
 
   function openActionTarget(
@@ -958,6 +965,12 @@ export function EmployeeFullDossierPage({
           open
           onSaved={(savedEmployee, message) => {
             setEmployee(savedEmployee);
+            setHistoryState({ status: 'idle', history: null, message: null });
+            setHistoryOperationId(
+              getPostSaveHistoryOperationId(activeTab === 'history', () =>
+                crypto.randomUUID(),
+              ),
+            );
             setEditing(false);
             setSuccessMessage(
               message ?? 'Les modifications ont été enregistrées.',

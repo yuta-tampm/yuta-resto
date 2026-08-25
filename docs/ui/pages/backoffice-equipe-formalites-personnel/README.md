@@ -360,3 +360,24 @@ does not constitute legal or template approval.
 Phase 5 verification passed documentation consistency, page-pack validation,
 architecture boundaries, recursive workspace typecheck, repository-wide
 formatting, and `git diff --check` on 2026-08-23.
+
+## F08 Phase 0 reconciliation
+
+Status: `DOCUMENTATION COMPLETE — PRODUCT DECISIONS PROPOSED`.
+
+The downloaded Salariés F08 flow was reconciled on 2026-08-25. Its description
+of this route as a planned page is superseded by the implemented Phase 2–4
+prototypes. The current employee-scoped development route already performs a
+trusted six-field read and offers three illustrative local inputs, checkpoint,
+review acknowledgement, and demo readiness.
+
+This is not document generation. No Formalités row, durable `DRAFT`, approved
+template, preview, PDF, private-storage object, signature request, delivery,
+generated-result link, or Documents artifact is created. The current generation
+button remains disabled and production remains fail-closed.
+
+F08-01 through F08-10 are proposed in the Salariés page pack and mirrored here.
+They retain the CDI-only candidate, OWNER/full-dossier/single-establishment
+entry, Salariés-versus-Formalités ownership, F5-07 lifecycle intent, signed-
+artifact ownership in Documents, and all external gates. No runtime continuation
+is recommended until qualified legal/template review is received.

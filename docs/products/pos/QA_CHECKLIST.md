@@ -317,6 +317,22 @@ N/A       not applicable for this run
 | Cancellation versus payment is serialized | The order ends cancelled without payment or paid with one payment                                            |        |       |
 | Site-agent heartbeat is healthy           | Site-agent health reports the local database available                                                       |        |       |
 
+## Browser-local Screen Standby
+
+| Check                                  | Expected result                                                                                            | Pass / Fail | Notes |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ----------- | ----- |
+| First use without saved settings       | Automatic standby defaults to enabled from 09:00 to 23:00                                                  |             |       |
+| Standby disabled                       | POS remains active at all local times                                                                      |             |       |
+| Same-day activity range                | Opening minute is active; closing minute enters standby                                                    |             |       |
+| Overnight activity range               | A range such as 18:00–02:00 remains active across midnight                                                 |             |       |
+| Outside configured hours               | Fully black overlay blocks the POS and automatic health, Kitchen, printing, and receipt polling is stopped |             |       |
+| Temporary wake                         | `Réveiller 15 min` restores the POS and automatic refreshes for 15 minutes                                 |             |       |
+| Automatic opening                      | An open app resumes without a reload when local device time reaches opening                                |             |       |
+| Browser-local persistence              | Reload preserves settings in the same browser; another browser/device remains independent                  |             |       |
+| Invalid or unavailable browser storage | Safe defaults keep standby disabled and a failed save shows an inline error                                |             |       |
+| Keyboard and touch                     | Standby/settings actions are focusable, named, and at least 44px                                           |             |       |
+| Site-agent and printer worker          | Browser standby does not stop local persistence or durable print processing                                |             |       |
+
 ## Edge Offline Acceptance
 
 | Check                                       | Expected result                                                 | Pass / Fail | Notes |

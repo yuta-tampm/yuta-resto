@@ -184,6 +184,20 @@ applicability, workflow confirmations, template/version evidence, and review
 triggers. It has not been sent and does not close `HR-TEMPLATE-01`,
 `HR-FORMALITY-01`, `HR-LEGAL-01`, `HR-RET-01`, or `HR-AUDIT-01`.
 
+F08 Phase 0 reconciles the downloaded generate-formality flow with this current
+Formalités capability. The generic and employee-scoped development prototypes
+already explain reusable facts and local missing-input interaction, but they do
+not create a saved `DRAFT`, preview, template-backed document, PDF, file
+reference, signature request, delivery, or Documents link. Their checkpoint and
+`READY` result remain React-memory demonstration states. The downloaded claim
+that Formalités is only a planned page is therefore stale, while its generated-
+result outcome remains unimplemented. F08 is an existing-capability renewal for
+the connected prototype and a separately gated new capability for any durable
+or generated result. Product decisions F08-01 through F08-10 are proposed;
+runtime work remains blocked by the unsent legal-review brief and open
+personnel/template/privacy/security/operations gates. Phase 0 changes
+documentation only.
+
 F5-07 now records the approved future CDI-draft lifecycle without implementing
 it. An OWNER may eventually save and resume one active `DRAFT` per employee in
 the active establishment. OWNER-confirmed generation creates an immutable
@@ -801,6 +815,11 @@ operation grouping, retention, legal hold, rights, redaction, and migration
 semantics remain gates. Existing events will not be rewritten and unknown
 historical values will not be backfilled. Contract extraction and duplicate-
 override events remain minimized traces rather than employee-value snapshots.
-The smallest next runtime candidate is only to invalidate and reload the
-existing timeline after a successful F03 edit; it would add no field values or
-schema. Phase 1 changed documentation only.
+F07 Phase 2 now keeps the existing minimized timeline coherent after a
+successful F03 edit. Both the quick view and full dossier invalidate any
+previously loaded history; if `Historique` is active they immediately request a
+fresh read, otherwise the next tab opening performs the read on demand. The
+current OWNER-only trusted scope, minimized history-view audit, field-name-only
+contract, error/retry behavior, and 50-event limit are unchanged. Phase 2 adds
+no schema, API, audit payload, previous/new value, effective date, reason,
+provider, or production-data behavior.

@@ -81,6 +81,7 @@
 - [x] No input, persistence, lifecycle, schema, API, audit write, file, PDF,
       template, signature, AI/provider, production, or legal eligibility rule is
       proposed.
+
 - [x] Product owner explicitly approved Phase 3 implementation in this scope.
 - [x] Development gate, full-dossier entry, scoped route, allowlisted projection,
       and read-only UI are implemented.
@@ -141,3 +142,23 @@
       and recorded as evidence.
 - [ ] The complete field/applicability matrix is approved before persistence is
       proposed.
+
+## F08 Phase 0 reconciliation
+
+- [x] The external F08 flow was treated as product input, not repository authority.
+- [x] The current generic and employee-scoped Phase 2–4 prototypes were
+      reconciled with the Phase 5 decision package and code/tests.
+- [x] The stale planned-page claim was corrected without claiming document
+      generation.
+- [x] Current trusted read, local illustrative interaction, checkpoint, and demo
+      readiness are distinguished from durable Formalités state.
+- [x] No saved `DRAFT`, reviewed template, preview, PDF, file, signature,
+      delivery, generated link, or Documents artifact is claimed.
+- [x] Salariés, Formalités, and Documents ownership boundaries remain intact.
+- [x] F5-07/F5-08 and the existing legal-review brief are reused as authority;
+      no overlapping lifecycle or legal dossier was created.
+- [x] F08-01 through F08-10 are proposed for product approval in the Salariés pack.
+- [x] Phase 0 changes documentation only and leaves Phase 4 runtime unchanged.
+- [ ] Product owner approves or revises F08-01 through F08-10.
+- [ ] Qualified review and versioned template evidence are received before any
+      persistence or generation phase is proposed.

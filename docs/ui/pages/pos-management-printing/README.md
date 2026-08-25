@@ -95,7 +95,8 @@ deferred; browser state is not treated as proof of paper or cutter output.
 - Preserve queue pagination, complete-queue summary counts, status transitions,
   retry/reprint/test actions, and conflict recovery.
 - Preserve visible-page polling every five seconds, immediate focus/visibility
-  refresh, and no refresh while hidden.
+  refresh, and no refresh while hidden or blocked by the browser-local screen
+  schedule.
 - Printer status must remain safe and observational: polling must not open,
   claim, read, or write the RFCOMM device. Only explicit print/test work may use
   the device path.
@@ -300,7 +301,7 @@ unchanged.
 7. **Data owner/persistence:** `apps/site-agent` owns local operations and accesses `@yuta/db-pos`; `print_jobs` and `print_settings` are local POS data.
 8. **Contracts:** local routes, queries, responses, settings, printer status, job commands, and serialization-safe types come from `packages/contracts/src/local-pos/index.ts`.
 9. **Loaders/actions/mutations:** `page.tsx` loads jobs (10 per page), settings, and status in parallel. `actions.ts` handles job commands, failure reason, settings save, and test-print creation, then revalidates the route.
-10. **Polling/offline/device:** refresh every five seconds only while visible and immediately on focus/visibility. Status is safe and does not touch RFCOMM. The site-agent worker owns job claiming and device I/O.
+10. **Polling/offline/device:** refresh every five seconds only while visible and the browser-local screen schedule permits it, and immediately on focus/visibility under the same condition. Status is safe and does not touch RFCOMM. The site-agent worker owns job claiming and device I/O, including while the browser is in standby.
 11. **UI primitives/tokens:** `PageHeader`, `Card`, `StatCard`, `Alert`, `Badge`, `Button`, `Dialog`, `FormField`, `Input`, `Select`, `Pagination`, `Separator`, `EmptyState`, and semantic tokens from `@yuta/ui`.
 12. **Tests:** `apps/yuta-pos/test/site-agent-client.test.ts`, `apps/site-agent/test/server.test.ts`, `print-job-pagination.test.ts`, `printer-status-service.test.ts`, and `local-printer-worker.test.ts`.
 13. **Authoritative docs:** root/POS `AGENTS.md`, `docs/CURRENT_STATE.md`, POS README, product spec, user guide, offline strategy, QA checklist, applicable operations docs, and shared/POS UI governance.

@@ -1782,6 +1782,50 @@ Operational data: unchanged
 Production: NOT AUTHORIZED
 ```
 
+## F08 Phase 0 — Formalités handoff and result boundary
+
+The current trusted handoff is a server read, not a Formalités aggregate:
+
+```text
+full employee dossier
+-> development-only gated employee Formalités route
+-> authenticated OWNER + active-establishment scope
+-> composite-scoped employee read
+-> six-field presentation projection
+-> three illustrative values in React memory only
+-> disabled generation
+```
+
+Current reusable projection: employee name, position, qualification, current
+CDI/CDD label, entry date, and contractual weekly duration. It excludes
+revision, addresses, remuneration, probation details, employer legal identity,
+collective agreement, template/version, documents, and every generated-result
+identifier. The route identifier is untrusted lookup input and never grants
+scope.
+
+There is no current write contract. The local checkpoint, review acknowledgement,
+and demo readiness disappear on reload/navigation and create no employee,
+Formalités, document, file, or audit row. No preview or generation action runs.
+
+Future persistence must not be inferred from the external flow. Before design,
+it requires an approved eligibility/field/template matrix and must separately
+define trusted scope, draft snapshot semantics, one-active-draft invariant,
+revision conflict, idempotency, transitions, immutable generated versions,
+minimized audit, file ownership, retention, and cross-tenant denial. A generated
+Formalités version is not a signed Documents artifact and cannot update
+Salariés automatically.
+
+```text
+F08 Phase 0 change record
+Runtime/UI/code/test behavior: NO
+Schema/migration/API/transport: NO
+Permission or audit event: NO
+Persistence/template/PDF/file/signature/provider: NO
+Employee/formality/document operational data: NO
+Real personnel data or external request: NO
+Production behavior: unchanged
+```
+
 ## F07 Phase 0 — employee change-history inventory
 
 ### Current persistence and read model
@@ -1953,6 +1997,39 @@ Previous/new value capture: NO
 Employee/history/access mutation: NO
 Backfill/baseline job/operational data: NO
 Real employee QA: NO
+Production behavior: unchanged
+```
+
+### F07 Phase 2 — post-save history coherence
+
+Status: `IMPLEMENTED 2026-08-24`.
+
+After `EmployeeEditDialog` reports a successful committed employee summary:
+
+1. the owning quick-view or full-dossier surface replaces its current employee
+   summary as before;
+2. any cached `HistoryLoadState` is reset to `idle`;
+3. when the active detail tab is `history`, a new random operation ID triggers
+   the existing scoped history action immediately; and
+4. when another detail tab is active, the operation ID is cleared so no hidden
+   read or history-view audit occurs, and the normal tab-open interaction later
+   creates the fresh operation ID.
+
+The existing action remains the only data boundary. Its OWNER authorization,
+trusted organization + establishment + employee scope, minimized access audit,
+sanitized response, newest-50 limit, truncation flag, and error/retry contract
+are unchanged. The refresh helper contains no employee data and decides only
+whether a post-save operation ID is needed.
+
+```text
+F07 Phase 2 change record
+Schema/migration/API/transport: NO
+Permission or audit definition/payload: NO
+Previous/new values/effective date/reason: NO
+Quick-view and full-dossier post-save invalidation: YES
+Immediate read while Historique is active: YES, existing action only
+Background read while another tab is active: NO
+Employee/history operational QA mutation: NO
 Production behavior: unchanged
 ```
 

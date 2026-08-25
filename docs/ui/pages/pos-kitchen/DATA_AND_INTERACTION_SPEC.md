@@ -80,9 +80,11 @@ active; this is attribution, not an authenticated kitchen role boundary.
 6. Queue links preserve the screen and switch between active and ready.
 7. `KitchenAutoRefresh` calls `router.refresh()` after a matching local SSE
    notification, on recovery/reconnect, and every 60 seconds as a visible-tab
-   fallback.
+   fallback, only while the browser-local screen schedule permits automatic
+   refresh.
 8. The shared health strip fetches `/api/health` on mount, every 15 seconds
-   while visible, and on online/offline/focus/visibility events.
+   while visible, and on online/offline/focus/visibility events, only while the
+   same schedule permits automatic refresh.
 9. Ticket preparation is one native form posting order ID and selected screen;
    item completion/correction forms continue to post one item ID.
 

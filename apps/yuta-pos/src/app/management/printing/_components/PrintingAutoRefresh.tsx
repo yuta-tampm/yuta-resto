@@ -2,13 +2,16 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { usePosStandby } from '../../../../components/pos/PosStandbyProvider';
 
 const refreshIntervalMs = 5_000;
 
 export function PrintingAutoRefresh() {
   const router = useRouter();
+  const { automaticRefreshAllowed } = usePosStandby();
 
   useEffect(() => {
+    if (!automaticRefreshAllowed) return;
     const refreshIfVisible = () => {
       if (document.visibilityState === 'visible') {
         router.refresh();
@@ -24,7 +27,7 @@ export function PrintingAutoRefresh() {
       document.removeEventListener('visibilitychange', refreshIfVisible);
       window.removeEventListener('focus', refreshIfVisible);
     };
-  }, [router]);
+  }, [automaticRefreshAllowed, router]);
 
   return null;
 }

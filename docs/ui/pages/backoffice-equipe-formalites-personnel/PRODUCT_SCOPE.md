@@ -239,3 +239,26 @@ dossier already indicates an indefinite term. This is a product proposal only;
 it is not runtime behavior or legal approval. Upcoming part-time CDI, CDD-to-CDI
 conversion, active CDI remediation, and unsupported contract categories remain
 blocked or excluded as detailed in `DATA_AND_INTERACTION_SPEC.md`.
+
+## F08 Phase 0 disposition
+
+The current connected prototype satisfies only the beginning of F08: an OWNER
+may start from one full employee dossier and see a bounded set of reusable facts
+without re-entry. It does not satisfy the external flow's save/generate outcome.
+
+The following product direction is proposed for approval:
+
+- retain one future upcoming full-time CDI draft candidate only;
+- keep the full dossier as the sole employee-scoped entry;
+- keep the current six Salariés facts read-only and leave missing/document-
+  specific values under Formalités ownership;
+- do not expose eligibility, a saved draft, preview, or generation until the
+  reviewed field/applicability/template evidence exists;
+- preserve the approved future F5-07 lifecycle without simulating it locally;
+- keep generated draft versions under Formalités and signed artifacts under
+  Documents; and
+- never update Salariés, sign, issue, send, or link a signed artifact
+  automatically.
+
+Detailed F08-01 through F08-10 approval status is maintained in the Salariés
+page pack. Phase 0 authorizes no implementation.

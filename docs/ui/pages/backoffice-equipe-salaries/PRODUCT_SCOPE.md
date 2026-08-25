@@ -1479,3 +1479,39 @@ The matrix is not permission to capture any candidate value. Retention,
 redaction, legal hold, rights, backup/restore, incident response, production
 use, baseline semantics, and the exact change-versus-correction interaction
 remain approval gates.
+
+### Phase 2 current-history coherence disposition
+
+Status: `IMPLEMENTED 2026-08-24`.
+
+The approved runtime renewal is limited to invalidating the current minimized
+history after a successful F03 edit in both existing dossier surfaces. When
+`Historique` is already active, the application reloads it immediately. When
+another tab is active, no history request is added; the next history-tab opening
+loads fresh data through the existing path. No matrix candidate, new route,
+permission, schema, API, audit content, history limit, or production capability
+is included.
+
+## F08 Phase 0 — generate-formality decisions
+
+F08 keeps Salariés as the source of current employee/employment facts and
+Formalités as the owner of document-specific input, validation, draft state,
+template application, and any future generated version.
+
+| ID     | Decision needed                  | Recommendation                                                                                                                                | Status              |
+| ------ | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| F08-01 | Capability classification        | Renew the existing connected development prototype; gate saved/generated Formalités as a new capability                                       | Proposed 2026-08-25 |
+| F08-02 | First supported output           | Keep only a CDI draft candidate; do not add a generic document selector, CDD, apprenticeship, DPAE, amendment, or other output                | Proposed 2026-08-25 |
+| F08-03 | Actor, scope, and entry          | OWNER, one employee, active establishment, full dossier entry only; no quick-view or cross-establishment workflow                             | Proposed 2026-08-25 |
+| F08-04 | Reusable facts                   | Keep the current allowlisted Salariés facts read-only; document-specific or missing values remain Formalités-owned                            | Proposed 2026-08-25 |
+| F08-05 | Eligibility                      | Make no runtime eligibility claim until the upcoming full-time CDI candidate and exclusions are approved by qualified review                  | Proposed 2026-08-25 |
+| F08-06 | Draft and readiness semantics    | Preserve F5-07 as future intent; never relabel the local checkpoint or demo `READY` as a persisted `DRAFT` or generation readiness            | Proposed 2026-08-25 |
+| F08-07 | Preview and generation           | Require a qualified, versioned applicable template and explicit OWNER confirmation before any document preview or immutable generated version | Proposed 2026-08-25 |
+| F08-08 | Result ownership and linkage     | Formalités owns draft/generated versions; Documents owns signed artifacts; generation never updates the employee dossier automatically        | Proposed 2026-08-25 |
+| F08-09 | Authorization, audit, and safety | Design future mutation permission and minimized audit before persistence; keep trusted tenant scope and no sensitive values in audit          | Proposed 2026-08-25 |
+| F08-10 | Production and external gates    | Block implementation/production on legal/template, privacy, retention, EU storage, scanning, audit, backup/restore, and operations            | Proposed 2026-08-25 |
+
+These proposals do not approve schema, API, persistence, template binaries,
+PDF generation, storage, signature, AI/provider use, real personnel data, or
+production. The next dependency is qualified review of the existing private
+handoff, not runtime Phase 1.

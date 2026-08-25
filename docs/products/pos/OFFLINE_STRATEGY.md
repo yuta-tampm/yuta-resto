@@ -28,6 +28,13 @@ The implementation uses the isolated local POS database architecture.
 Browser-only operation after the local server or LAN fails is not an MVP
 requirement.
 
+Browser-local screen standby is an energy-saving UI behavior, not a new offline
+mode. While an open POS is outside its optional per-browser activity schedule,
+the UI suppresses automatic health, Kitchen SSE/fallback, print-management, and
+receipt-job refreshes. `site-agent`, PostgreSQL, the durable print queue, and
+the local print worker continue operating. The schedule is not persisted in
+POS operational data and creates no cloud synchronization path.
+
 ## Data-residency rule
 
 POS operational data is local-only. It must never be stored in, replicated to,

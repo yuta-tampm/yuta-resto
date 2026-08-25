@@ -2061,10 +2061,48 @@ previous/new value, reason field, effective date, baseline job, backfill,
 employee/history/access data, provider, real-employee QA, or production behavior
 changed.
 
-### Next optional gate — current-history coherence only
+### F07 Phase 2 — current-history coherence
 
-The smallest runtime candidate is to invalidate and reload the existing
-minimized `Historique` after a successful F03 edit in the drawer and full
-dossier. It must preserve the current field-name-only contract, OWNER scope,
-on-demand access audit, error/retry behavior, and 50-event limit. This candidate
-requires separate approval and does not authorize any matrix value candidate.
+Status: `IMPLEMENTED 2026-08-24`.
+
+Product approved invalidating and reloading the existing minimized
+`Historique` after a successful F03 edit in the drawer and full dossier. The
+implementation resets the current history state in both save callbacks. It
+creates a new operation ID only while `Historique` is active; otherwise the next
+tab opening retains ownership of the on-demand request. A focused pure test
+covers both decisions.
+
+The field-name-only contract, OWNER scope, on-demand access audit, error/retry
+behavior, and 50-event limit remain unchanged. No schema, migration, API,
+contract, repository, permission, audit definition/payload, value capture,
+operational employee mutation, provider, or production behavior is included.
+
+## F08 — generate-formality flow
+
+### F08 Phase 0 — repository reconciliation
+
+Status: `PROPOSED FOR APPROVAL 2026-08-25`.
+
+Completed documentation-only work:
+
+1. treated the downloaded F08 flow as product input and corrected its stale
+   planned-page implementation claim;
+2. reconciled the current generic fictional and employee-scoped connected
+   Formalités prototypes, gate, OWNER scope, six-field projection, local state,
+   tests, and production fail-closed behavior;
+3. separated the implemented read/local walkthrough from absent persistence,
+   template preview, PDF generation, file storage, signature, delivery, and
+   Documents linkage;
+4. retained Salariés, Formalités, and Documents ownership boundaries;
+5. retained the approved F5-07 lifecycle as unimplemented intent and the F5-08
+   legal/operational boundary as no production sign-off;
+6. recorded the upcoming full-time CDI first-slice candidate and every current
+   exclusion as pending qualified review;
+7. confirmed that checkpoint and demo readiness are never durable/business
+   states;
+8. proposed F08-01 through F08-10; and
+9. stopped before runtime work because the legal-review brief is unsent and the
+   required external gates remain blocked.
+
+No Phase 1 runtime is proposed before product decision approval and qualified
+legal/template evidence. Phase 0 changes existing documentation only.

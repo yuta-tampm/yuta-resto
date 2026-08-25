@@ -70,10 +70,12 @@ state is approved.
 
 ## Polling / offline / device behavior
 
-Refresh every five seconds only while visible, plus immediate refresh on focus
-or visibility restoration. Status polling must not open or claim RFCOMM. The
-site-agent worker exclusively claims supported pending jobs and performs
-explicit print/test hardware I/O; failures remain queued for recovery.
+Refresh every five seconds only while visible and the browser-local screen
+schedule permits automatic refresh, plus immediate refresh on focus or
+visibility restoration under the same condition. Status polling must not open
+or claim RFCOMM. The site-agent worker exclusively claims supported pending
+jobs and performs explicit print/test hardware I/O; failures remain queued for
+recovery even while the browser is in standby.
 
 ## Decisions that must not be guessed
 

@@ -147,3 +147,14 @@ Phase 4 page, labels, three illustrative inputs, local state, disabled generatio
 action, and production gate remain unchanged. A decision-matrix row does not
 authorize a field, control, validation message, readiness badge, or template
 preview in the UI.
+
+## F08 Phase 0 UI disposition
+
+No UI changes are authorized. The current Phase 4 connected prototype remains
+the truthful baseline. Its checkpoint and readiness language must stay
+demonstration-only, and generation remains disabled.
+
+Do not add the external flow's generic document selection, missing-information
+questionnaire, preview, generated-success, PDF/download, signature, delivery,
+or saved/link state. Those controls require separately approved product meaning,
+data, template/version, lifecycle, permissions, audit, and failure behavior.

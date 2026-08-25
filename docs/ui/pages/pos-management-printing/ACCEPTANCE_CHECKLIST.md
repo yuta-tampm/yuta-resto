@@ -57,6 +57,11 @@
 
 ## Behavior
 
+- [x] Automatic five-second and focus/visibility refreshes stop while the
+      browser-local screen schedule is in standby and resume after wake.
+- [x] Browser standby does not stop or claim the site-agent print worker or
+      RFCOMM device.
+
 - [x] Unsupported mockup concepts remain proposals.
 - [x] Destructive behavior is confirmed.
 - [x] Validation is truthful.
