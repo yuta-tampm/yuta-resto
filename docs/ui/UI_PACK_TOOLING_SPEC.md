@@ -41,6 +41,13 @@ scripts/ui-pack-tooling.test.mjs
 The validator currently accepts legacy stable packages structurally and emits a
 lifecycle warning until they are next actively migrated.
 
+Newly generated packs use the approved `GENERATED_SNAPSHOTS` topology. The
+canonical prompt set has deterministic revision metadata in
+`docs/ui/templates/page/prompt-template.json`; each generated pack receives a
+strictly parseable `prompt-provenance.json`. JSON is used because exact hashes,
+duplicate phase detection, and cross-platform source paths are safer to parse
+than a Markdown table. This file is tooling metadata, not Product Knowledge.
+
 ## Generator: `scripts/create-ui-pack.mjs`
 
 ### Goal
@@ -71,19 +78,29 @@ The generator must:
    reject path traversal or unsafe symlink targets;
 5. stage creation on the same filesystem and rename atomically so failures do
    not leave a partial package;
-6. copy the canonical page template;
-7. create `references/` with a reference metadata README;
-8. create `DESIGN_HANDOFF.md` with unresolved shared-context, baseline, and
-   prompt states;
-9. populate only safe mechanical metadata such as application, target, slug,
-   initial package status, and unresolved implementation classification;
-10. leave repository-derived fields as explicit placeholders for Phase 0;
-11. never create API, contract, permission, schema, database, or application
+6. read the deterministic canonical prompt-template revision;
+7. copy the canonical page template;
+8. hash each canonical prompt and each final local copy;
+9. write `prompt-provenance.json` for all six sealed snapshots, using a Git
+   generation commit when available or an ISO timestamp fallback;
+10. exclude template-only `prompt-template.json` from the generated pack;
+11. create `references/` with a reference metadata README;
+12. create `DESIGN_HANDOFF.md` with unresolved shared-context, baseline, and
+    prompt states;
+13. populate only safe mechanical metadata such as application, target, slug,
+    initial package status, and unresolved implementation classification;
+14. leave repository-derived fields as explicit placeholders for Phase 0;
+15. never create API, contract, permission, schema, database, or application
     code;
-12. never rename or migrate existing packages automatically;
-13. print the created tree, state that `docs/ui/pages/README.md` must be reviewed
+16. never rename or migrate existing packages automatically;
+17. print the created tree, state that `docs/ui/pages/README.md` must be reviewed
     when the package becomes current, and print the next required step:
     repository analysis.
+
+Generation is the sealing point: after the six final local hashes and
+provenance are written, the atomic rename completes the pack. The generator
+never opens or overwrites an existing stable pack. Canonical-template changes
+therefore affect only later generations.
 
 ### Initial metadata
 
@@ -103,11 +120,58 @@ Inventory status: PENDING
 Baseline status: PENDING
 Design prompt status: PENDING
 Shared context status: PENDING
+Prompt snapshot topology: GENERATED_SNAPSHOTS
+Prompt provenance: prompt-provenance.json
 No-image reference reason: <required after approval when status is NONE>
 ```
 
 `NEW_PAGE` or `EXISTING_PAGE` must be proven by Phase 0, not guessed by the
 generator.
+
+### Prompt provenance format
+
+`docs/ui/templates/page/prompt-template.json` owns the deterministic canonical
+set revision, initially `prompt-template-v1`. Change prompt content and increment
+that revision together for future generations; a date alone is not a revision.
+
+The generator writes `prompt-provenance.json` at the generated pack root. Its
+minimal shape is:
+
+```json
+{
+  "schemaVersion": 1,
+  "topology": "GENERATED_SNAPSHOTS",
+  "sealed": true,
+  "templateRevision": "prompt-template-v1",
+  "generation": { "commit": "<git-object-id>" },
+  "prompts": [
+    {
+      "filename": "00_REPOSITORY_ANALYSIS.md",
+      "templateSource": "docs/ui/templates/page/prompts/00_REPOSITORY_ANALYSIS.md",
+      "templateRevision": "prompt-template-v1",
+      "templateSha256": "<64-lowercase-hex>",
+      "snapshotSha256": "<64-lowercase-hex>",
+      "localModificationState": "NONE",
+      "provenanceStatus": "PROVEN"
+    }
+  ]
+}
+```
+
+The actual array contains all six unique phase prompts. `generation` contains
+exactly one valid `commit`, or an ISO `timestamp` fallback when Git metadata is
+unavailable. `localModificationState` is `NONE` for direct generated copies and
+may be `PRE_SEAL` only for a future approved pre-seal customization workflow.
+Provenance status is `PROVEN`, `PARTIAL`, or `NEEDS_REVIEW`; the latter two are
+primarily for the separately approved legacy migration and never authorize a
+guessed origin.
+
+Normal generator output uses one non-null root template-set revision and the
+same revision for all six `PROVEN` prompt entries. A historical mixed pack may
+use `null` for the root revision and preserve different proven per-prompt
+revisions. A per-prompt revision may also be `null` only with `PARTIAL` or
+`NEEDS_REVIEW`. This represents missing evidence explicitly instead of falsely
+normalizing historical cohorts.
 
 ## Validator: `scripts/check-ui-pack.mjs`
 
@@ -127,6 +191,14 @@ For every checked package, verify:
   reason;
 - `references/` exists;
 - `prompts/` contains the six required phase files;
+- a provenance-enabled pack contains `prompt-provenance.json` with exactly six
+  unique phase entries;
+- prompt filenames match the required phase set; a newly generated `PROVEN`
+  source matches the available canonical path, while historical incomplete
+  sources are `null` or repository-relative forward-slash paths;
+- template revision, template SHA-256, snapshot SHA-256, generation evidence,
+  local-modification state, and provenance status are valid;
+- every recorded snapshot SHA-256 matches the local sealed file;
 - no single `CODEX_PROMPT.md` replaces the phase prompts;
 - page documents link to shared/application rules rather than copying the shared
   component/token catalog;
@@ -205,6 +277,26 @@ actively modified. It must not invent or silently write metadata.
 Once a package declares `Package status`, all lifecycle rules apply. This keeps
 the no-argument validator usable before a dedicated mechanical migration of
 existing packages.
+
+Existing packs without `prompt-provenance.json` also remain valid in prompt
+compatibility mode. They receive `missing-prompt-provenance`, not a structural
+failure. A pack that declares `GENERATED_SNAPSHOTS` or references
+`prompt-provenance.json` is provenance-enabled and must contain complete valid
+metadata.
+
+The validator never auto-repairs provenance or copies the latest canonical
+prompt over a local file. A sealed snapshot/hash mismatch is an error. A
+different current canonical-template hash is not an error for an older pack;
+only the recorded provenance and sealed local content are validated. Historical
+provenance that cannot be established remains `NEEDS_REVIEW` until a separately
+approved migration.
+
+Each `PARTIAL` prompt emits `partial-prompt-provenance`; each `NEEDS_REVIEW`
+prompt emits `unresolved-prompt-provenance`. These warnings do not fail an
+otherwise valid migrated pack, but unresolved provenance never disappears into
+a clean result. A historical source path does not need to exist at its current
+repository location when the entry is explicitly incomplete. Its sealed local
+snapshot hash is still mandatory and enforced.
 
 ### Implementation-ready checks
 
@@ -299,6 +391,12 @@ The generator/validator owns package mechanics only. It must never:
 - A generated package cannot overwrite an existing stable package.
 - Invalid slugs and unknown applications fail clearly.
 - Missing required files/prompts fail validation.
+- Generated packs contain six sealed local prompt snapshots plus complete
+  per-phase provenance using deterministic template revision metadata.
+- Sealed snapshot changes fail validation without being repaired.
+- Updating a canonical prompt after generation does not invalidate or rewrite
+  an older valid snapshot.
+- Legacy packs without provenance remain valid with compatibility warnings.
 - An `implementation-ready` claim fails until Phase 0, shared context,
   shell/navigation decision, invariants, change impact, verification commands,
   and approved reference metadata are complete.
@@ -317,6 +415,15 @@ Cover at least:
 - duplicate destinations and atomic cleanup after failure;
 - generated tree and safe metadata substitution;
 - missing required files/prompts/references;
+- generated per-phase provenance, template revision, template and snapshot
+  hashes, and cross-platform source paths;
+- historical mixed per-phase revisions and nullable unknown set revision;
+- visible `PARTIAL` and `NEEDS_REVIEW` warnings;
+- unavailable historical template sources with preserved sealed integrity;
+- missing, duplicate, malformed, or incomplete provenance entries;
+- sealed snapshot mismatch without auto-repair;
+- canonical-template evolution after pack generation;
+- legacy missing-provenance warning behavior;
 - lifecycle state transitions and unresolved placeholders;
 - legacy package warning behavior;
 - non-existent verification command detection;

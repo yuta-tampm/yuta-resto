@@ -6,19 +6,27 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-23
+Last updated: 2026-08-27
 
-## Authority order
+## Finding the right authority
 
-1. `CURRENT_STATE.md`
-2. `architecture/`
-3. the relevant document under `features/` or `products/`
-4. `operations/`
-5. accepted records under `decisions/`
-6. code and tests as implementation evidence
+YUTA does not use one universal source order for every question. Start with
+[`AUTHORITY_MODEL.md`](AUTHORITY_MODEL.md) to classify the question and select
+the appropriate authority.
 
-Completed plans, audits, migration checkpoints, and implementation reports are
-not current architecture authority. Git history preserves that record.
+- Use [`PRODUCT_KNOWLEDGE.md`](PRODUCT_KNOWLEDGE.md) to locate current product
+  and module knowledge.
+- Use [`MODULE_REGISTRY.md`](MODULE_REGISTRY.md) to locate bounded capabilities,
+  ownership, lifecycle evidence, and review markers.
+- Use [`LIFECYCLE_STATUS_MODEL.md`](LIFECYCLE_STATUS_MODEL.md) to interpret
+  lifecycle values without promoting one dimension from another.
+- Treat `CURRENT_STATE.md` as a broad summary and routing source, not the
+  highest authority for every question.
+- Keep accepted decisions authoritative for their durable boundaries and use
+  the specific verification source required by the Authority Model.
+
+Completed plans, audits, migration checkpoints, implementation reports, and
+task history are not current product or architecture authority.
 
 ## Documentation visibility
 
@@ -35,6 +43,10 @@ sensitive details never belong in the repository.
 
 ### Project state
 
+- [`AUTHORITY_MODEL.md`](AUTHORITY_MODEL.md)
+- [`LIFECYCLE_STATUS_MODEL.md`](LIFECYCLE_STATUS_MODEL.md)
+- [`PRODUCT_KNOWLEDGE.md`](PRODUCT_KNOWLEDGE.md)
+- [`MODULE_REGISTRY.md`](MODULE_REGISTRY.md)
 - [`CURRENT_STATE.md`](CURRENT_STATE.md)
 - [`REPOSITORY_MAP.md`](REPOSITORY_MAP.md)
 
@@ -49,6 +61,10 @@ sensitive details never belong in the repository.
 
 ### Cloud features
 
+- [`features/identity-access/README.md`](features/identity-access/README.md)
+- [`features/establishment/README.md`](features/establishment/README.md)
+- [`features/personnel/README.md`](features/personnel/README.md)
+- [`features/today/README.md`](features/today/README.md)
 - [`features/public-website/README.md`](features/public-website/README.md)
 - [`features/public-booking/README.md`](features/public-booking/README.md)
 - [`features/public-booking/PRODUCT_SPEC.md`](features/public-booking/PRODUCT_SPEC.md)
@@ -58,14 +74,17 @@ sensitive details never belong in the repository.
 
 ### Local products
 
+- [`products/display/README.md`](products/display/README.md)
 - [`products/pos/README.md`](products/pos/README.md)
+- [`products/pos/site-agent/README.md`](products/pos/site-agent/README.md)
 - [`products/pos/USER_GUIDE.md`](products/pos/USER_GUIDE.md)
 - [`products/pos/OFFLINE_STRATEGY.md`](products/pos/OFFLINE_STRATEGY.md)
 - [`products/pos/QA_CHECKLIST.md`](products/pos/QA_CHECKLIST.md)
 - [`products/pos/PRODUCT_SPEC.md`](products/pos/PRODUCT_SPEC.md)
 
-The standalone display product is governed by `apps/yuta-display/AGENTS.md` and
-the shared operations documents until a dedicated product document is needed.
+Display Product Knowledge starts at `products/display/README.md`; runtime-local
+instructions remain in `apps/yuta-display/AGENTS.md`, with deployment authority
+in the shared operations documents.
 
 ### UI implementation
 
@@ -101,6 +120,8 @@ the shared operations documents until a dedicated product document is needed.
 - [`decisions/ADR-002-independent-public-booking-application.md`](decisions/ADR-002-independent-public-booking-application.md)
 - [`decisions/ADR-003-database-ownership-boundaries.md`](decisions/ADR-003-database-ownership-boundaries.md)
 - [`decisions/ADR-004-independent-public-feedback-application.md`](decisions/ADR-004-independent-public-feedback-application.md)
+- [`decisions/ADR-005-today-operational-steering.md`](decisions/ADR-005-today-operational-steering.md)
+- [`decisions/ADR-006-cloud-establishment-profile-context.md`](decisions/ADR-006-cloud-establishment-profile-context.md)
 
 Completed task specifications are removed after durable behavior is reflected
 in current feature documentation and remaining work is captured in `STATUS.md`.

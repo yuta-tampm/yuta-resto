@@ -19,6 +19,9 @@ The target runtime boundary is:
 apps/yuta-pos -> apps/site-agent -> packages/db-pos -> local PostgreSQL
 ```
 
+The canonical Site Agent Product Knowledge home is
+[`site-agent/README.md`](site-agent/README.md).
+
 The legacy shared database package has been removed. The POS must not reuse or
 modify the standalone database inside `apps/yuta-display`.
 

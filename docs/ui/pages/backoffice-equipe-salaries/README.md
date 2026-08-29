@@ -6,6 +6,10 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
+Prompt snapshot topology: GENERATED_SNAPSHOTS
+
+Prompt provenance: prompt-provenance.json
+
 Last updated: 2026-08-17
 
 Protocol revision: 4

@@ -1,4 +1,4 @@
-# YUTA Public Booking App — Master Product & Technical Specification
+# YUTA Public Booking — Product Intent and Future Direction
 
 Status: Current product reference
 
@@ -6,2240 +6,684 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-08-08
+Last updated: 2026-08-28
 
-Authority: `docs/features/public-booking/README.md` for implemented behavior
+## 1. Document role and authority
 
-This document preserves durable product requirements and future direction. The
-adjacent `README.md`, `STATUS.md`, current code, and tests define implemented
-Phase 0/1 behavior and release readiness. Historical implementation sequencing
-is not a current progress tracker.
+This document owns the broader Product Intent and future context for YUTA
+Public Booking:
 
-**Document status:** Master specification  
-**Target readers:** Codex, technical lead, frontend/backend developers, product designer, QA  
-**Project:** YUTA  
-**Application:** Public restaurant booking  
-**Primary language of the product:** French  
-**Documentation language:** English
+- the long-term product vision;
+- guest and restaurant outcomes;
+- experience and product principles;
+- future capability direction;
+- initial-release non-goals; and
+- open product design space.
 
----
+It does not define current Implemented State, executable database shape,
+runtime ownership, exact APIs or routes, package layout, implemented
+permissions, deployment, or Production Readiness.
 
-## 0. Current Phase 0/1 reconciliation
+Use the current sources according to the question:
 
-This master specification contains durable requirements and future design
-direction; it is not a statement that every described capability exists.
-`STATUS.md` contains the authoritative feature-by-feature implementation and
-release matrix.
+| Question                                                  | Current authority                                                                                                                                                            |
+| --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| What bounded Phase 0/1 behavior exists in the repository? | [`README.md`](README.md), [`STATUS.md`](STATUS.md), current code, contracts, schemas, and tests.                                                                             |
+| What remains incomplete or blocked?                       | [`STATUS.md`](STATUS.md) and [`PRODUCTION_READINESS.md`](../../operations/PRODUCTION_READINESS.md).                                                                          |
+| What lifecycle status applies?                            | [`MODULE_REGISTRY.md`](../../MODULE_REGISTRY.md) using [`LIFECYCLE_STATUS_MODEL.md`](../../LIFECYCLE_STATUS_MODEL.md).                                                       |
+| Who owns the runtime and persistence boundaries?          | [ADR-002](../../decisions/ADR-002-independent-public-booking-application.md), [ADR-003](../../decisions/ADR-003-database-ownership-boundaries.md), and current architecture. |
+| What is the exact executable data or transport shape?     | Active db-cloud schemas/migrations, reservation contracts, repository code, and tests.                                                                                       |
+| Is a target environment deployed and ready?               | Production Readiness, Deployment, capability status, and dated environment/runtime evidence.                                                                                 |
+| How should a conflict be resolved?                        | [`AUTHORITY_MODEL.md`](../../AUTHORITY_MODEL.md).                                                                                                                            |
 
-The current Phase 0/1 implementation differs from the broader target in these
-material ways:
-
-- guest email is required, not optional;
-- public branding renders a supported subset rather than custom themes or all
-  establishment profile fields;
-- source attribution stores a bounded source enum but not UTM/referrer/campaign
-  detail;
-- manual Backoffice creation is public-eligibility and capacity checked, uses
-  source `BACK_OFFICE`, and has no audited override;
-- existing service periods and exceptions support create/delete rather than
-  in-place edit;
-- notification records are enqueued, but no provider adapter or worker sends
-  them;
-- public API E2E, mobile/accessibility acceptance, launch-volume tests,
-  production deployment, and operational observability remain incomplete.
-
-These differences require either an approved product decision and
-implementation task or an explicit Phase 1 scope change. Do not silently infer
-the missing schema, provider, permission, route, or infrastructure.
-
----
-
-## 1. Document purpose
-
-This document defines the complete product and technical vision for the YUTA public booking application, from the first MVP to advanced future phases.
-
-It must allow Codex and future developers to understand:
-
-- why this application exists;
-- how it fits into the YUTA ecosystem;
-- how public visitors create, view, modify, and cancel reservations;
-- how restaurant teams configure availability and manage reservations;
-- how multi-tenancy must be enforced;
-- how the application should evolve without requiring a major rewrite;
-- which features belong to each delivery phase;
-- which implementation shortcuts are acceptable in the MVP;
-- which architectural decisions are mandatory from the beginning.
-
-This is a master specification. Individual implementation tickets may refine details, but they must not contradict the principles defined here.
-
----
+Current tracked code and tests prove repository implementation only. They do
+not prove which version is deployed, externally enabled, or production-ready.
+This Product Spec does not promote any lifecycle value.
 
 ## 2. Product vision
 
-YUTA provides each restaurant with a branded public booking experience that can be linked from:
+YUTA gives each restaurant a direct, restaurant-branded public booking
+experience that can be linked from its website, Google Business Profile,
+social profiles, QR codes, email campaigns, and other approved digital
+channels.
 
-- Google Business Profile;
-- the restaurant website;
-- Facebook;
-- Instagram;
-- TikTok;
-- QR codes;
-- email campaigns;
-- other digital channels.
+The experience should feel like the restaurant's own booking page rather than
+a marketplace listing. YUTA branding remains secondary and discreet. The
+guest journey must be simple, fast, clear about its outcome, and useful to the
+restaurant's actual service operation.
 
-The public page must feel like the restaurant's own booking page, not like a generic marketplace.
+The long-term direction includes:
 
-The system must remain simple for the guest and operationally useful for the restaurant.
-
-The long-term product must support:
-
-- multiple organizations;
-- multiple establishments per organization;
-- configurable booking rules per establishment;
+- multiple organizations and establishments;
+- establishment-specific availability and booking rules;
 - automatic or manual confirmation;
-- multiple service periods;
-- exceptional closures and special schedules;
-- capacity-based availability;
-- later table assignment and floor plans;
-- notification workflows;
-- source attribution and analytics;
-- multilingual public pages;
-- embeddable widgets;
-- custom domains;
-- Google booking integrations;
-- waitlists;
-- group and event enquiries;
-- intelligent operational recommendations.
+- multiple service periods and exceptional schedules;
+- capacity-based availability that can evolve toward table-aware operation;
+- communication and reminder workflows;
+- source attribution and conversion understanding;
+- multilingual and restaurant-controlled presentation;
+- waitlists, group requests, and demand-management tools;
+- embedding, custom-domain, and external-channel options;
+- operational analytics and explainable recommendations; and
+- clear separation between guest access, restaurant administration, and YUTA
+  platform support.
 
----
+These are product directions. They are not claims that every capability is
+individually approved, implemented, enabled, deployed, or ready.
 
-## 3. Position inside the YUTA ecosystem
+## 3. Product boundary
 
-The public booking application is a separate deployable cloud application
-inside the YUTA monorepo.
+Public Booking is an anonymous public product with an independent experience
+and release boundary. Restaurant reservation administration belongs to the
+authenticated Backoffice. The public marketing site is not the Booking
+runtime, and the reserved Platform Admin boundary is not an implemented
+Booking administration product.
 
-Current relevant structure:
+The product-level reasons for the independent public experience remain:
 
-```text
-apps/
-├── web/                 # Public YUTA marketing website
-├── backoffice/          # Authenticated restaurant back-office
-├── booking-web/         # Independent public booking application
-└── platform-admin/      # Reserved future YUTA administration app; not implemented
+- no guest account or Backoffice session is required;
+- mobile speed, traffic spikes, indexing, and social sharing matter;
+- public abuse and privacy risks differ from authenticated administration;
+- the restaurant must be resolved before private or bookable information is
+  exposed; and
+- public availability must remain usable independently of a staff browser
+  session.
 
-packages/
-├── db-cloud/            # Cloud schema, migrations, repositories, and adapters
-├── tenant/              # Trusted tenant resolution and authorization guards
-├── auth/                # Portable authentication primitives
-├── contracts/           # Shared transport contracts and Zod schemas
-├── core/                # Pure shared domain logic
-├── booking/             # Pure booking-domain logic
-└── ui/                  # Shared design system
-```
+ADR-002 and ADR-003 own the durable runtime and data boundaries. Current
+Tenancy, Authentication, Data Model, and Database Boundary documents own trust,
+scope, server/client, and persistence rules. This Product Spec does not redefine
+those boundaries.
 
-`apps/platform-admin` is a reserved future boundary and is not implemented.
-Restaurant booking administration belongs in `apps/backoffice`.
+### Public URL intent
 
-Notification providers and observability helpers currently remain application
-or infrastructure concerns. Do not represent them as existing shared packages
-until an approved task and ADR justify extraction.
-
-`docs/REPOSITORY_MAP.md` and accepted ADRs are authoritative for current
-repository ownership if this long-term product specification becomes stale.
-
-### 3.1 Why it must be a separate application
-
-The booking application has different constraints from the YUTA marketing site and the restaurant back-office:
-
-- it is public and does not require login;
-- it must load quickly on mobile devices;
-- it may receive traffic spikes;
-- it requires SEO and social preview metadata;
-- it may later be embedded on external websites;
-- it requires public abuse protection;
-- it has an independent deployment lifecycle;
-- it must resolve a restaurant before rendering the page;
-- it must remain usable even when restaurant staff are not logged in.
-
-The booking application may share contracts, pure domain logic, cloud
-persistence adapters, infrastructure, and design primitives with other YUTA
-applications, but its runtime and deployment remain independent. Database
-access is server-only.
-
----
-
-## 4. Domain and URL strategy
-
-### 4.1 MVP domain
-
-Use one shared public booking domain:
+The current target experience uses a shared booking domain with a stable,
+restaurant-specific slug, for example:
 
 ```text
-reservation.yutapro.fr
+reservation.yutapro.fr/{establishmentSlug}
 ```
 
-Each establishment is identified by a unique public slug:
+The slug is a public identifier, never trusted organization or establishment
+authorization input. A documented target domain does not prove DNS, TLS,
+deployment, or production enablement.
 
-```text
-reservation.yutapro.fr/luna
-reservation.yutapro.fr/restaurant-abc
-```
+Restaurant subdomains and custom domains remain future, separately reviewable
+directions. Any implementation must preserve trusted server-side resolution,
+privacy-safe failure behavior, canonical URL handling, and operational
+ownership.
 
-Recommended route format:
+## 4. Product users and roles
 
-```text
-/[establishmentSlug]
-/[establishmentSlug]/confirmation/[publicToken]
-/[establishmentSlug]/reservation/[publicToken]
-```
+### Guest
 
-### 4.2 Future subdomain support
+A guest should be able to:
 
-Later, the platform may support:
+- discover valid dates and time slots;
+- submit a reservation without creating an account;
+- understand whether the result is confirmed or pending;
+- access the reservation through a secure public management link;
+- cancel when policy allows; and
+- later request changes, join a waitlist, or submit a group enquiry when those
+  capabilities are separately approved and available.
 
-```text
-luna.reservation.yutapro.fr
-restaurant-abc.reservation.yutapro.fr
-```
+### Restaurant team
 
-### 4.3 Future custom domain support
+An authorized restaurant team member should be able, within current role and
+permission boundaries, to:
 
-Later phases may allow:
+- understand upcoming demand;
+- create and manage reservations received through approved channels;
+- perform valid lifecycle actions;
+- configure availability, service periods, closures, and booking policy;
+- understand booking source and communication state; and
+- later manage waitlists, tables, areas, and operational recommendations when
+  those scopes are approved.
 
-```text
-reservation.restaurant-domain.fr
-reserver.restaurant-domain.fr
-```
+Exact role mappings and permissions are not defined here. Current server-side
+authorization and denial behavior are authoritative.
 
-### 4.4 Mandatory design decision
+### Organization administration
 
-The application must resolve an establishment through a centralized tenant-resolution mechanism. Public routes must never rely on hardcoded restaurant identifiers.
+Cross-establishment configuration may be useful for an organization, but it
+remains subject to trusted membership, establishment scope, entitlements, and
+explicit permissions. Organization scope must never become implicit
+cross-tenant access.
 
-The establishment record must include at least:
+### YUTA platform support — NEEDS REVIEW
 
-```ts
-interface EstablishmentPublicIdentity {
-  id: string;
-  organizationId: string;
-  slug: string;
-  bookingEnabled: boolean;
-  bookingCustomDomain?: string | null;
-}
-```
+Potential YUTA support or platform-administration outcomes include module
+enablement, configuration troubleshooting, technical evidence, and reserved
+slug/domain management with strict minimization. The reserved Platform Admin
+boundary does not approve these Booking capabilities or any access to guest
+data. Exact capabilities, identity, permissions, audit, and operating model
+remain separately reviewable.
 
-The slug must be unique across the full platform unless the final routing strategy explicitly scopes it by organization.
+## 5. Product principles
 
-For the MVP, global uniqueness is preferred because it simplifies routing.
+### Mobile-first and low friction
 
----
-
-## 5. Core user roles
-
-### 5.1 Guest
-
-A public visitor who can:
-
-- check available dates and time slots;
-- create a reservation;
-- receive confirmation or pending status;
-- view the reservation through a secure public link;
-- cancel the reservation;
-- later request a modification;
-- later join a waitlist;
-- later create a group or event enquiry.
-
-No account is required.
-
-### 5.2 Restaurant team member
-
-An authenticated back-office user who can, depending on permissions:
-
-- view the reservation calendar;
-- create a reservation manually;
-- confirm or decline pending reservations;
-- edit reservation details;
-- cancel reservations;
-- mark arrivals, completions, or no-shows;
-- configure booking rules;
-- define closures and exceptions;
-- manage public booking page branding;
-- review booking source analytics;
-- later manage tables and floor plans.
-
-### 5.3 Organization administrator
-
-Can manage booking settings for all establishments inside the organization, subject to role permissions.
-
-### 5.4 YUTA super-admin
-
-Can:
-
-- enable or disable the booking module;
-- troubleshoot tenant configuration;
-- view technical logs and audit trails;
-- manage global feature flags;
-- manage reserved slugs or domains;
-- support restaurants without accessing unnecessary guest data.
-
----
-
-## 6. Product principles
-
-The following principles are mandatory.
-
-### 6.1 Mobile-first
-
-Most guests will access the page from a phone after clicking Google or social media links.
-
-The complete booking flow must work comfortably on small screens.
-
-### 6.2 Minimum friction
-
-The booking flow should require no more than four conceptual steps:
+The complete public flow must work comfortably on small screens. The core
+journey should remain four conceptual steps:
 
 1. party size;
 2. date and time;
-3. guest details;
+3. guest details; and
 4. confirmation.
 
-### 6.3 Restaurant-branded experience
+The interface should preserve entered information during correction and back
+navigation, use accessible touch targets, avoid unnecessary modal stacking,
+and keep progress and loading understandable.
 
-The restaurant identity is primary. YUTA branding is secondary and discreet.
+### Restaurant-first presentation
 
-### 6.4 Server-authoritative availability
+The restaurant's identity, policy, and permitted public information are
+primary. Theme options must remain controlled and accessible; arbitrary custom
+CSS is not a product requirement.
 
-Availability displayed on the client is informative only. The server must revalidate availability inside the reservation creation transaction.
+### Server-authoritative availability
 
-### 6.5 Progressive complexity
+Displayed availability is informative until the server revalidates the
+request at creation time. The guest must never receive a successful outcome
+for capacity that cannot be committed safely.
 
-The MVP must use capacity by time slot and service period. It must not require automatic table allocation.
+### Progressive capacity evolution
 
-The architecture, however, must not prevent future table-level inventory.
+The initial experience must not require table allocation. Capacity can begin
+at service-period/time-slot level while preserving room for later duration,
+area, table, combination, pacing, and turn-time concepts. Future table-aware
+behavior must not silently alter reservation identity or lifecycle meaning.
 
-### 6.6 Multi-tenant isolation
+### Explainable reservation outcomes
 
-Every write and every authenticated read must be scoped by organization and establishment.
+Guests and staff must be able to distinguish pending, confirmed, declined,
+cancelled, seated, completed, and no-show outcomes where those states apply.
+The UI must never imply confirmation when the server recorded a pending
+request.
 
-### 6.7 Explainable reservation states
+### Progressive complexity
 
-The guest and the restaurant must always understand whether a reservation is:
+Future capabilities should add value without forcing every restaurant to adopt
+the same operational model. Disabled or unavailable capabilities must not
+appear actionable.
 
-- pending;
-- confirmed;
-- declined;
-- cancelled;
-- seated;
-- completed;
-- no-show.
+## 6. Current bounded Phase 0/1
 
-### 6.8 Operational override
+Phase 0/1 establishes the current bounded public creation, secure management,
+cancellation, and Backoffice reservation foundation. The implemented scope,
+known limits, tests, and remaining release work are intentionally not repeated
+here:
 
-Restaurant staff must always be able to manually create or adjust a reservation, subject to explicit warnings and permissions.
+- read [`README.md`](README.md) for current bounded behavior;
+- read [`STATUS.md`](STATUS.md) for feature reconciliation, limitations,
+  evidence, open product decisions, dependencies, and release blockers;
+- read [`MODULE_REGISTRY.md`](../../MODULE_REGISTRY.md) for lifecycle status;
+  and
+- inspect current contracts, schemas, code, and tests for executable behavior.
 
----
+Material boundaries that future work must not silently reinterpret include:
 
-## 7. Scope by product phase
+- email is currently required across the bounded Phase 0/1 flow;
+- current branding, attribution, abuse protection, and Backoffice operation
+  implement only bounded subsets of the broader intent;
+- manual creation does not currently establish an approved capacity override;
+- current notification persistence does not prove message delivery; and
+- local or automated acceptance does not prove production deployment or
+  readiness.
 
-## 7.1 Phase 0 — Foundation
+Changing one of these boundaries requires a scoped product decision and
+coherent contract, schema, UI, implementation, test, and readiness work where
+applicable.
 
-This phase prepares the architecture before launching the public booking flow.
+## 7. Future Product Intent
 
-### Objectives
+The capabilities in this section are future direction. They are not described
+as implemented, enabled, production-ready, or individually product-approved.
+Each bounded capability still requires the authority, ownership, lifecycle,
+security, provider, and operational decisions appropriate to its scope.
 
-- create `apps/booking-web`;
-- define shared booking contracts;
-- add booking feature flags;
-- implement public establishment resolution;
-- implement tenant-safe data access;
-- establish public error handling;
-- prepare email notification abstraction;
-- configure observability and audit logging;
-- define database schema without legacy constraints.
+### Phase 2 — Communication and conversion
 
-### Deliverables
+Future outcomes may include:
 
-- deployable empty booking application;
-- restaurant slug resolution;
-- public establishment metadata endpoint;
-- shared domain types;
-- feature flag per establishment;
-- baseline tests.
-
-### Acceptance criteria
-
-- an enabled establishment slug resolves successfully;
-- a disabled or unknown slug returns a safe public 404 state;
-- no private establishment fields are exposed;
-- all domain queries require explicit establishment scope.
-
----
-
-## 7.2 Phase 1 — Public booking MVP
-
-This section defines the target for the first production-usable version. It is
-not a claim of current release readiness; use `STATUS.md` for that assessment.
-
-### Public guest features
-
-- public restaurant booking page;
-- restaurant branding and basic information;
-- party-size selection;
-- date selection;
-- available time-slot selection;
-- guest name;
-- guest phone number;
-- optional email;
-- optional note;
-- special requirements;
-- creation of reservation;
-- automatic or manual confirmation;
-- confirmation page;
-- secure public reservation page;
-- guest cancellation;
-- French language;
-- mobile responsive UI;
-- basic SEO and sharing metadata.
-
-### Back-office features
-
-- reservation list;
-- day and week views;
-- manual reservation creation;
-- reservation detail panel;
-- confirm pending reservation;
-- decline pending reservation;
-- cancel reservation;
-- update guest information;
-- mark reservation as seated;
-- mark reservation as completed;
-- mark reservation as no-show;
-- booking settings;
-- weekly service periods;
-- slot interval configuration;
-- online capacity configuration;
-- minimum advance time;
-- maximum advance days;
-- maximum online party size;
-- automatic or manual confirmation mode;
-- exceptional closures and blocked slots;
-- email confirmation.
-
-### Explicit MVP simplifications
-
-The MVP must not require:
-
-- floor-plan editing;
-- table assignment;
-- automatic table optimization;
-- waitlist;
-- SMS;
-- custom domains;
-- embeddable widget;
-- automated Google integration;
-- predictive no-show scoring;
-- advanced revenue analytics;
-- guest account creation.
-
-### MVP acceptance criteria
-
-A guest can successfully create a reservation for an available slot, receive the correct status, view it through a secure link, and cancel it.
-
-A restaurant user can configure weekly availability, apply a closure, view the reservation, and update its lifecycle status.
-
-The system must prevent two concurrent requests from overbooking the final available capacity.
-
----
-
-## 7.3 Phase 2 — Communication and conversion
-
-### Public features
-
-- SMS confirmation;
-- automated reminders;
+- email and SMS reminders;
 - confirmation resend;
-- guest modification request;
+- guest modification requests with explicit restaurant approval or an
+  separately approved self-service policy;
 - alternative time suggestions;
-- multilingual interface;
-- optional email verification;
-- optional phone verification;
-- configurable cancellation deadline;
-- configurable late-arrival policy;
-- branded message templates.
+- multilingual presentation;
+- optional email or phone verification;
+- configurable cancellation and late-arrival policies;
+- branded message templates;
+- communication timelines and preferences;
+- conversion and source reporting; and
+- establishment-specific reminder schedules.
 
-### Back-office features
+A modification request is not permission to silently alter a confirmed
+reservation. Provider choice, delivery guarantees, consent, retention,
+templates, retries, observability, and operator ownership remain unresolved.
 
-- notification timeline;
-- resend confirmation;
-- approve or reject modification requests;
-- communication preferences;
-- source attribution dashboard;
-- conversion tracking;
-- configurable reminder schedules;
-- per-establishment message templates.
+### Phase 3 — Waitlist and demand management
 
-### Acceptance criteria
+Future outcomes may include:
 
-- restaurant staff can identify how a guest reached the booking page;
-- guests receive scheduled reminders according to establishment settings;
-- modification requests do not silently alter confirmed reservations without restaurant approval unless the establishment explicitly enables self-service modification.
+- guest waitlist registration by date, service, party size, and preferred time
+  range;
+- manual or automated invitations when suitable capacity becomes available;
+- invitation expiry and alternative-slot suggestions;
+- a restaurant waitlist board;
+- conversion from a waitlist entry to a reservation;
+- waitlist and conversion analytics; and
+- service pacing and capacity controls.
 
----
+A waitlist entry is not a reservation and must not consume confirmed capacity
+before a valid conversion. Waitlist ownership, messaging, expiry, fairness,
+privacy, and automation remain separately reviewable.
 
-## 7.4 Phase 3 — Waitlist and demand management
+### Phase 4 — Areas, tables, and floor-plan outcomes
 
-### Features
+Future outcomes may include:
 
-- waitlist by date, service, party size, and preferred time range;
-- guest waitlist registration;
-- automatic or manual invitation when capacity becomes available;
-- invitation expiry;
-- alternative slot recommendations;
-- restaurant waitlist board;
-- conversion from waitlist to reservation;
-- waitlist analytics;
-- service-level capacity controls;
-- booking pacing controls.
+- dining areas and floor plans;
+- table capacities, attributes, and combinations;
+- manual or suggested assignment;
+- conflict detection and occupancy views;
+- duration and turn-time rules; and
+- explicitly controlled overbooking behavior.
 
-### Design principle
+This direction does not assign data ownership, approve a Rooms/Tables source
+module, or prescribe entities. Its relationship to Establishment, Booking,
+restaurant operation, and future source modules remains `NEEDS REVIEW`.
 
-A waitlist entry is not a reservation and must never consume confirmed capacity before conversion.
+### Phase 5 — Embedding, domains, branding, and multilingual experience
 
----
+Future outcomes may include:
 
-## 7.5 Phase 4 — Table and floor-plan management
+- an embeddable widget or approved iframe experience;
+- a restaurant booking button;
+- custom domains;
+- controlled advanced theming and white-label options;
+- multilingual public content;
+- safe cross-origin resizing and conversion callbacks; and
+- origin, content-security, and anti-clickjacking controls suited to the
+  approved embedding mode.
 
-### Features
+No embedding mechanism, SDK, domain model, or deployment method is selected by
+this intent. Custom domains and white-label behavior remain separately
+reviewable.
 
-- dining areas;
-- floor plans;
-- table definitions;
-- table capacities;
-- table combinations;
-- accessibility attributes;
-- indoor/outdoor attributes;
-- manual table assignment;
-- suggested table assignment;
-- conflict detection;
-- table occupancy timeline;
-- reservation duration rules;
-- turn-time management;
-- controlled overbooking rules.
+### Phase 6 — External channels and integrations
 
-### Important architectural note
+Future direction may include:
 
-The MVP capacity model must be implemented so that table-level inventory can be introduced later without changing public reservation identifiers or reservation lifecycle states.
-
-### Recommended strategy
-
-Introduce table assignments as a separate domain:
-
-```text
-reservation_table_assignments
-restaurant_areas
-restaurant_tables
-table_combinations
-```
-
-Do not embed table IDs directly as mandatory fields on the initial reservation record.
-
----
-
-## 7.6 Phase 5 — Website embedding and custom branding
-
-### Features
-
-- embeddable booking widget;
-- JavaScript SDK or iframe integration;
-- custom booking button;
-- custom domain;
-- advanced theme configuration;
-- white-label options;
-- automatic height resizing for iframe;
-- cross-origin event communication;
-- conversion event callbacks.
-
-### Security requirements
-
-- strict origin validation;
-- content security policy;
-- anti-clickjacking policy adjusted only for approved embedding modes;
-- no exposure of private API credentials;
-- rate limiting remains server-side.
-
----
-
-## 7.7 Phase 6 — External ecosystem integrations
-
-### Potential integrations
-
-- Google Business Profile booking link;
-- Google booking provider integration, subject to eligibility;
-- Meta profile links;
-- restaurant website CMS plugins;
+- Google Business Profile booking links or eligible booking-provider
+  integration;
+- approved social-profile links;
+- restaurant website or CMS integration;
 - calendar export;
-- email marketing platforms;
-- customer relationship tools;
-- business intelligence exports;
-- automation webhooks.
+- email-marketing and customer-relationship integrations;
+- business-intelligence exports; and
+- bounded automation webhooks.
 
-### Integration principle
+External providers must remain adapters at an application/infrastructure
+boundary so core Booking behavior is not coupled to one SDK. This principle
+does not approve a provider, package, credential, data transfer, webhook
+contract, or production integration.
 
-External providers must use adapters. Core booking logic must not depend directly on a single provider SDK.
+### Phase 7 — Intelligence and optimization
 
-Recommended package structure:
+Future outcomes may include:
 
-```text
-packages/booking-integrations/
-├── google/
-├── meta/
-├── calendar/
-└── webhooks/
-```
+- explainable no-show risk indicators;
+- alternative-slot, duration, capacity, and pacing suggestions;
+- demand forecasts and anomaly detection;
+- table-assignment recommendations;
+- natural-language operational summaries; and
+- assistance interpreting special requests.
 
----
+Recommendations must remain explainable and operator-overrideable. They must
+not silently change a confirmed reservation. Provider use, training/evaluation
+data, accuracy thresholds, human review, privacy, cost, failure behavior, and
+production authority remain separately reviewable.
 
-## 7.8 Phase 7 — Intelligence and optimization
+## 8. Guest experience direction
 
-### Potential features
+### Entry and restaurant context
 
-- no-show risk indicators;
-- intelligent alternative slot recommendations;
-- demand forecasts;
-- suggested capacity adjustments;
-- suggested reservation duration;
-- automatic table assignment recommendations;
-- service pacing recommendations;
-- anomaly detection;
-- natural-language operational summaries;
-- assistance processing special requests.
+The page should present only approved public restaurant identity, contact,
+policy, locale, and branding information. When booking is unavailable, the
+guest should receive a safe, branded explanation and permitted contact path
+without learning private configuration.
+
+### Party size
+
+Selection should be quick for common groups and accessible for other permitted
+sizes. When a request exceeds the online threshold, the product should offer an
+approved alternative such as restaurant contact, a future group request, or a
+future waitlist rather than an unexplained generic error.
 
-### Guardrail
+Group requests and the alternative path remain separately reviewable.
 
-Recommendations must remain explainable and overrideable by restaurant staff.
+### Date and time
 
-The system must not silently change confirmed reservations based only on a prediction.
+The guest should see relevant local dates and time slots grouped in a way that
+matches the restaurant's service model. Exact remaining capacity is private
+unless a separate product decision permits bounded availability messaging.
 
----
+### Guest information
 
-## 8. Public guest journey
+Collect only what is required for the bounded booking purpose. The broader
+direction may support locale, accessibility needs, dietary or allergy notes,
+celebrations, high-chair or stroller needs, and later area preference, but each
+structured field needs an explicit purpose, owner, retention rule, and
+interface decision.
 
-## 8.1 Page entry
+### Review and result
 
-The guest opens:
+Before submission, show a clear summary of restaurant, local date/time, party
+size, contact information, and important policy. After a successful commit,
+show the actual confirmed or pending outcome. A notification failure must not
+turn a committed reservation into a false creation failure.
 
-```text
-https://reservation.yutapro.fr/{establishmentSlug}
-```
+### Public reservation management
 
-The server resolves the establishment and loads:
+A secure public link may support viewing and cancellation today and later
+modification requests, resend, calendar access, or restaurant contact. A human-
+readable reference is never a public authorization credential.
 
-- public name;
-- logo;
-- cover image;
-- public address;
-- public phone number;
-- timezone;
-- booking settings;
-- theme;
-- public booking policy;
-- supported locales;
-- feature flags.
+### Accessibility and resilience
 
-If booking is disabled, show a branded unavailable state with the restaurant's contact details when permitted.
+The flow should provide semantic labels, keyboard operation, visible focus,
+sufficient contrast, non-color-only meaning, locale-aware dates/times, status
+announcements, clear errors, preserved correctable input, and no horizontal
+overflow. Automated checks do not replace target-device or assistive-
+technology acceptance.
 
-## 8.2 Step 1 — Party size
+## 9. Availability and reservation principles
 
-Recommended controls:
+Booking availability must be calculated from establishment-owned rules and
+current reserving states under the authoritative local date/time context. The
+server must revalidate capacity and safely serialize competing final-capacity
+requests before committing a reservation and its history.
 
-- quick buttons for 1 to 6 guests;
-- increment/decrement control;
-- large-party path when above the online threshold.
-
-If the requested party size exceeds `maximumOnlinePartySize`, show one of the configured alternatives:
-
-- contact the restaurant;
-- submit a group request;
-- join a waiting list;
-- display a custom explanation.
-
-The system must not simply display a generic error.
-
-## 8.3 Step 2 — Date and time
-
-The guest selects a date within the allowed booking horizon.
-
-The application requests availability using:
-
-- establishment ID resolved server-side;
-- local date;
-- party size;
-- optional service period;
-- optional area preference in later phases.
-
-The interface should group slots by service period, for example:
-
-```text
-Déjeuner
-11:30  11:45  12:00  12:15
-
-Dîner
-18:30  18:45  19:00  19:15
-```
-
-The UI must not reveal exact remaining capacity unless the restaurant explicitly enables such messaging.
-
-Preferred labels:
-
-- available;
-- limited availability;
-- unavailable;
-- contact restaurant.
-
-## 8.4 Step 3 — Guest information
-
-Required fields:
-
-- full name;
-- phone number;
-- acceptance of booking policy and privacy information.
-
-Optional fields:
-
-- email;
-- note;
-- locale;
-- high chair;
-- stroller;
-- reduced mobility access;
-- allergies or dietary restrictions;
-- celebration;
-- area preference in later phases.
-
-All fields must be configurable where appropriate, but the MVP may use a fixed safe subset.
-
-Current implementation note: the Phase 0/1 transport contract requires email
-and exposes one optional free-text special-requirements field. Making email
-optional requires an approved contract, persistence, notification, and form
-change.
-
-## 8.5 Step 4 — Confirmation
-
-Before submission, show a clear summary:
-
-- restaurant;
-- date;
-- local time;
-- party size;
-- guest name;
-- contact information;
-- important policy information.
-
-After submission, return one of two primary outcomes.
-
-### Confirmed
-
-The reservation is accepted immediately.
-
-### Pending
-
-The request is recorded but requires restaurant confirmation.
-
-The wording must never imply confirmation when the reservation is pending.
-
-## 8.6 Public reservation management
-
-The guest receives a secure public URL:
-
-```text
-/{establishmentSlug}/reservation/{publicToken}
-```
-
-The page may allow:
-
-- viewing reservation information;
-- cancellation;
-- later modification request;
-- later calendar download;
-- later contact with the restaurant.
-
-The public token must be unguessable and revocable.
-
----
-
-## 9. Availability model
-
-## 9.1 MVP availability model
-
-The MVP uses capacity by time slot, not physical table inventory.
-
-For each service period, the establishment defines:
-
-- start time;
-- end time;
-- slot interval;
-- online capacity;
-- enabled days;
-- optional capacity overrides.
-
-Example:
-
-```text
-Dinner service: 18:30–21:30
-Slot interval: 15 minutes
-Online capacity per slot: 20 guests
-```
-
-## 9.2 Capacity consumption
-
-By default, these statuses consume capacity:
-
-- pending, when manual confirmation reserves inventory;
-- confirmed;
-- seated.
-
-These statuses do not consume capacity:
-
-- declined;
-- cancelled;
-- completed;
-- no-show, after status transition;
-- expired pending request, if expiration is implemented.
-
-Whether pending reservations consume capacity must be explicit in the booking configuration.
-
-Recommended MVP behavior: pending reservations consume capacity to avoid accepting overlapping requests.
-
-## 9.3 Capacity calculation
-
-For a requested slot:
-
-```text
-availableCapacity = configuredCapacity - activeReservedPartySize
-```
-
-The slot is available when:
-
-```text
-availableCapacity >= requestedPartySize
-```
-
-Later phases may use duration windows instead of one-slot-only capacity.
-
-## 9.4 Reservation duration
-
-The MVP may store `defaultDurationMinutes` without using full interval-overlap logic initially.
-
-However, the data model should include:
-
-- `startAt`;
-- `expectedEndAt` or duration;
-- establishment timezone.
-
-This allows later transition to occupancy-window calculations.
-
-## 9.5 Concurrency control
-
-Reservation creation must occur in a database transaction.
-
-The server must:
-
-1. resolve establishment;
-2. validate input;
-3. lock or safely serialize the relevant inventory scope;
-4. recalculate capacity;
-5. reject if capacity is insufficient;
-6. create the reservation;
-7. write status history;
-8. commit;
-9. send notifications after commit.
-
-Do not send notifications before the transaction is committed.
-
-Possible implementation strategies:
-
-- transactional advisory locks;
-- row-level locking on inventory rows;
-- atomic capacity counters;
-- serializable transaction where appropriate.
-
-The final strategy must be documented in code.
-
----
-
-## 10. Booking configuration model
-
-Each establishment must have independent settings.
-
-Recommended configuration fields:
-
-```ts
-interface BookingSettings {
-  establishmentId: string;
-  enabled: boolean;
-  defaultLocale: string;
-  supportedLocales: string[];
-  timezone: string;
-
-  slotIntervalMinutes: number;
-  minimumAdvanceMinutes: number;
-  maximumAdvanceDays: number;
-  maximumOnlinePartySize: number;
-  minimumOnlinePartySize: number;
-
-  confirmationMode: 'automatic' | 'manual';
-  pendingConsumesCapacity: boolean;
-  defaultDurationMinutes: number;
-  lateArrivalToleranceMinutes: number;
-
-  cancellationEnabled: boolean;
-  cancellationDeadlineMinutes?: number | null;
-  modificationRequestEnabled: boolean;
-
-  guestEmailRequired: boolean;
-  guestPhoneRequired: boolean;
-
-  showRemainingAvailability: boolean;
-  bookingPolicyI18n?: LocalizedText | null;
-  confirmationMessageI18n?: LocalizedText | null;
-}
-```
-
-Not every field must be exposed in the first UI, but the model should be extensible.
-
----
-
-## 11. Weekly service periods
-
-A service period represents a bookable operating interval, such as lunch or dinner.
-
-Recommended structure:
-
-```ts
-interface BookingServicePeriod {
-  id: string;
-  establishmentId: string;
-  dayOfWeek: number;
-  code: string;
-  nameI18n: LocalizedText;
-  startTime: string;
-  endTime: string;
-  slotIntervalMinutes?: number | null;
-  onlineCapacity: number;
-  enabled: boolean;
-}
-```
-
-Examples:
-
-```text
-Monday lunch: 11:30–13:30
-Monday dinner: 18:30–21:00
-```
-
-A day may contain zero, one, or multiple service periods.
-
-Service periods must use the establishment's local timezone.
-
----
-
-## 12. Exceptions and closures
-
-Exceptions override normal weekly rules.
-
-Supported types should include:
-
-- full-day closure;
-- partial closure;
-- blocked service period;
-- blocked time slot;
-- special opening hours;
-- capacity override;
-- special event;
-- private event;
-- temporarily disabled online booking.
-
-Recommended model:
-
-```ts
-interface BookingException {
-  id: string;
-  establishmentId: string;
-  date: string;
-  type:
-    | 'closed_day'
-    | 'closed_interval'
-    | 'special_hours'
-    | 'capacity_override'
-    | 'private_event'
-    | 'online_booking_disabled';
-  startTime?: string | null;
-  endTime?: string | null;
-  capacity?: number | null;
-  reason?: string | null;
-  publicMessageI18n?: LocalizedText | null;
-}
-```
-
-Exception evaluation must be centralized in the booking domain package, not duplicated between frontend and backend.
-
----
-
-## 13. Reservation lifecycle
-
-Recommended statuses:
-
-```ts
-type ReservationStatus =
-  | 'pending'
-  | 'confirmed'
-  | 'declined'
-  | 'cancelled'
-  | 'seated'
-  | 'completed'
-  | 'no_show';
-```
-
-Optional future statuses:
-
-```text
-expired
-modification_requested
-waitlisted
-```
-
-### 13.1 Allowed transitions
-
-Recommended base transitions:
-
-```text
-pending -> confirmed
-pending -> declined
-pending -> cancelled
-
-confirmed -> cancelled
-confirmed -> seated
-confirmed -> no_show
-
-seated -> completed
-seated -> cancelled only with elevated permission and audit reason
-```
-
-Invalid transitions must be rejected by domain logic.
-
-### 13.2 Status history
-
-Every status change must be recorded with:
-
-- previous status;
-- new status;
-- actor type;
-- actor user ID when authenticated;
-- source;
-- timestamp;
-- optional reason;
-- optional metadata.
-
----
-
-## 14. Data model
-
-The exact SQL schema may evolve, but the following conceptual entities are required.
-
-The implemented Phase 0/1 schema currently uses `booking_settings`,
-`booking_service_periods`, `booking_exceptions`, `reservations`,
-`reservation_status_history`, `reservation_internal_notes`,
-`booking_audit_events`, `booking_notification_deliveries`, and
-`booking_public_attempts`. The current Drizzle schema is authoritative for
-exact columns and constraints. Entities described below as optional or future
-are not claims of implemented persistence.
-
-## 14.1 `booking_settings`
-
-One record per establishment.
-
-Key fields:
-
-- `establishment_id`;
-- `enabled`;
-- `timezone`;
-- booking horizon settings;
-- confirmation mode;
-- cancellation rules;
-- notification rules;
-- default duration;
-- locale settings.
-
-## 14.2 `booking_service_periods`
-
-Stores weekly recurring service periods.
-
-## 14.3 `booking_exceptions`
-
-Stores date-specific overrides.
-
-## 14.4 `reservations`
-
-Recommended fields:
-
-```ts
-interface Reservation {
-  id: string;
-  organizationId: string;
-  establishmentId: string;
-
-  reservationNumber: string;
-  publicTokenHash: string;
-
-  localDate: string;
-  startAt: Date;
-  expectedEndAt?: Date | null;
-  timezone: string;
-  partySize: number;
-
-  guestName: string;
-  guestPhone: string;
-  guestEmail?: string | null;
-  guestLocale?: string | null;
-
-  note?: string | null;
-  specialRequirements?: Record<string, unknown> | null;
-
-  source: ReservationSource;
-  sourceDetail?: string | null;
-  campaign?: string | null;
-
-  status: ReservationStatus;
-  confirmationMode: 'automatic' | 'manual';
-
-  cancellationReason?: string | null;
-  internalNote?: string | null;
-
-  createdAt: Date;
-  updatedAt: Date;
-}
-```
-
-### Mandatory denormalized scope fields
-
-Both `organizationId` and `establishmentId` must be stored directly on the reservation.
-
-This provides:
-
-- clear tenant boundaries;
-- faster scoped queries;
-- safer authorization;
-- easier reporting;
-- simpler archival and export.
-
-## 14.5 `reservation_status_history`
-
-Stores all lifecycle transitions.
-
-## 14.6 `reservation_events`
-
-Optional but recommended for an event timeline:
-
-- reservation created;
-- email sent;
-- SMS sent;
-- viewed by guest;
-- cancelled by guest;
-- reminder sent;
-- edited by staff;
-- modification requested.
-
-## 14.7 `reservation_contacts`
-
-Not required for MVP. Guest contact data may initially live on the reservation.
-
-A separate guest/customer profile system can be introduced later, with careful privacy controls and deduplication.
-
-## 14.8 Future entities
-
-```text
-waitlist_entries
-restaurant_areas
-restaurant_tables
-table_combinations
-reservation_table_assignments
-booking_message_templates
-booking_notification_jobs
-booking_webhook_deliveries
-booking_source_attributions
-```
-
----
-
-## 15. Reservation identifiers
-
-Each reservation needs three distinct identifiers.
-
-### Internal ID
-
-UUID or equivalent primary key.
-
-### Human-readable reservation number
-
-Example:
-
-```text
-LU-8K42P
-```
-
-Requirements:
-
-- short enough for phone communication;
-- not used for authorization;
-- unique within a reasonable scope;
-- not sequential in a way that leaks business volume.
-
-### Public token
-
-Used in guest management URLs.
-
-Requirements:
-
-- high entropy;
-- unguessable;
-- stored hashed when practical;
-- revocable;
-- never replace authorization with the human-readable number.
-
----
-
-## 16. API architecture
-
-Use shared request and response contracts from `packages/contracts`.
-
-Do not duplicate validation schemas in multiple applications.
-
-## 16.1 Public endpoints
-
-Recommended routes:
-
-```text
-GET  /api/public/establishments/:slug
-GET  /api/public/establishments/:slug/availability
-POST /api/public/establishments/:slug/reservations
-GET  /api/public/reservations/:publicToken
-POST /api/public/reservations/:publicToken/cancel
-POST /api/public/reservations/:publicToken/modification-request
-```
-
-The final URL shape may use route handlers or server actions, but the domain boundary must remain equivalent.
-
-## 16.2 Back-office endpoints
-
-Recommended routes:
-
-```text
-GET    /api/reservations
-POST   /api/reservations
-GET    /api/reservations/:id
-PATCH  /api/reservations/:id
-POST   /api/reservations/:id/confirm
-POST   /api/reservations/:id/decline
-POST   /api/reservations/:id/cancel
-POST   /api/reservations/:id/seat
-POST   /api/reservations/:id/complete
-POST   /api/reservations/:id/no-show
-```
-
-Configuration endpoints:
-
-```text
-GET    /api/booking/settings
-PATCH  /api/booking/settings
-GET    /api/booking/service-periods
-POST   /api/booking/service-periods
-PATCH  /api/booking/service-periods/:id
-DELETE /api/booking/service-periods/:id
-GET    /api/booking/exceptions
-POST   /api/booking/exceptions
-PATCH  /api/booking/exceptions/:id
-DELETE /api/booking/exceptions/:id
-```
-
-## 16.3 API rules
-
-- validate every payload with Zod;
-- resolve tenant scope server-side;
-- never trust organization or establishment IDs supplied by public clients;
-- use idempotency protection for reservation creation;
-- return stable machine-readable error codes;
-- avoid leaking private capacity data;
-- apply rate limits to public endpoints;
-- log security-relevant failures;
-- generate notifications only after successful commit.
-
----
-
-## 17. Shared contracts
-
-Recommended shared schemas:
-
-```text
-PublicEstablishmentSchema
-BookingAvailabilityQuerySchema
-BookingAvailabilityResponseSchema
-CreatePublicReservationSchema
-CreatePublicReservationResponseSchema
-PublicReservationSchema
-CancelPublicReservationSchema
-ReservationStatusSchema
-BookingSettingsSchema
-BookingServicePeriodSchema
-BookingExceptionSchema
-```
-
-Each contract should define:
-
-- input schema;
-- output schema;
-- TypeScript type;
-- documented error codes.
-
-Example error codes:
-
-```text
-ESTABLISHMENT_NOT_FOUND
-BOOKING_DISABLED
-DATE_OUTSIDE_BOOKING_HORIZON
-PARTY_SIZE_NOT_ALLOWED
-SLOT_NOT_AVAILABLE
-RESERVATION_ALREADY_CANCELLED
-CANCELLATION_DEADLINE_PASSED
-INVALID_PUBLIC_TOKEN
-RATE_LIMITED
-VALIDATION_ERROR
-```
-
----
-
-## 18. Public UI structure
-
-## 18.1 Main page
-
-Recommended sections:
-
-1. restaurant header;
-2. compact restaurant information;
-3. booking form;
-4. address and map link;
-5. opening information;
-6. contact information;
-7. booking policy;
-8. privacy information;
-9. discreet “Powered by YUTA” footer.
-
-## 18.2 Booking form states
-
-The UI must support:
-
-- initial state;
-- loading availability;
-- no availability;
-- alternative slot suggestions;
-- validation errors;
-- submission in progress;
-- successful confirmed booking;
-- successful pending request;
-- expired or invalid public link;
-- cancelled reservation;
-- booking disabled.
-
-## 18.3 Mobile behavior
-
-- large touch targets;
-- no horizontal scrolling;
-- sticky action button where useful;
-- date picker optimized for mobile;
-- clear back navigation between steps;
-- preserve entered data when navigating backward;
-- avoid unnecessary modal stacking;
-- maintain visible loading feedback.
-
-## 18.4 Accessibility
-
-Minimum requirements:
-
-- semantic labels;
-- keyboard support;
-- visible focus states;
-- sufficient contrast;
-- screen-reader announcements for errors and status changes;
-- no color-only availability meaning;
-- locale-aware date and time labels.
-
----
-
-## 19. Restaurant branding
-
-Each establishment may configure:
-
-- logo;
-- cover image;
-- primary color;
-- accent color;
-- button style within controlled options;
-- restaurant name;
-- short description;
-- public address;
-- phone number;
-- map link;
-- accessibility information;
-- booking policy;
-- social links;
-- default locale;
-- supported locales.
-
-Theme configuration must use controlled design tokens. Do not allow arbitrary CSS in the MVP.
-
-Current implementation note: only establishment name, configured logo or YUTA
-fallback, welcome copy, visible phone/address, and booking policy are rendered.
-The cover image and visible public email are resolved but not rendered. Custom
-theme fields, map/social links, and multilingual content are not implemented.
-
-Recommended theme object:
-
-```ts
-interface BookingTheme {
-  logoUrl?: string | null;
-  coverImageUrl?: string | null;
-  primaryColor?: string | null;
-  accentColor?: string | null;
-  surfaceStyle?: 'light' | 'warm' | 'neutral';
-  borderRadius?: 'small' | 'medium' | 'large';
-}
-```
-
----
-
-## 20. Back-office information architecture
-
-Recommended navigation:
-
-```text
-Réservations
-├── Vue d’ensemble
-├── Planning
-├── Liste
-├── Disponibilités
-├── Fermetures et exceptions
-├── Page de réservation
-├── Notifications
-└── Paramètres
-```
-
-### 20.1 Overview
-
-Display:
-
-- today's reservations;
-- pending requests;
-- expected guest count;
-- arrivals soon;
-- cancellations;
-- no-shows;
-- important exceptions;
-- later source and conversion metrics.
-
-### 20.2 Planning
-
-Views:
-
-- day;
-- week;
-- service period;
-- later floor plan.
-
-### 20.3 Reservation list
-
-Filters:
-
-- date range;
-- status;
-- service period;
-- source;
-- party size;
-- guest name or phone;
-- assigned area or table later.
-
-### 20.4 Reservation details
-
-Display:
-
-- reservation summary;
-- guest details;
-- status;
-- source;
-- notes;
-- special requirements;
-- notification history;
-- audit history;
-- actions allowed by current status and permission.
-
-### 20.5 Manual reservation creation
-
-Restaurant users must be able to create reservations received by phone or other channels.
-
-The form must allow source selection:
-
-```text
-phone
-walk_in
-backoffice
-email
-partner
-other
-```
-
-Manual creation may allow an authorized user to exceed online capacity, but the UI must show a clear warning and record the override.
-
-Current implementation note: manual creation requires an enabled public booking
-configuration, remains online-capacity checked, and records source
-`BACK_OFFICE`. Source selection and audited capacity override are not
-implemented.
-
----
-
-## 21. Source attribution
-
-The system must prepare source tracking from the MVP.
-
-Supported base sources:
-
-```ts
-type ReservationSource =
-  | 'public_booking_page'
-  | 'google'
-  | 'facebook'
-  | 'instagram'
-  | 'tiktok'
-  | 'website'
-  | 'qr_code'
-  | 'phone'
-  | 'walk_in'
-  | 'backoffice'
-  | 'partner'
-  | 'other';
-```
-
-Track standard campaign parameters when present:
-
-- `utm_source`;
-- `utm_medium`;
-- `utm_campaign`;
-- `utm_content`;
-- referring domain.
-
-Public links may use:
-
-```text
-https://reservation.yutapro.fr/luna?utm_source=google&utm_medium=organic
-```
-
-Attribution must be sanitized and length-limited before storage.
-
-Current implementation note: the public page accepts a bounded `source` query
-value and stores the corresponding enum. UTM parameters, referring domain, and
-campaign details are not persisted.
-
----
-
-## 22. Notifications
-
-## 22.1 MVP
-
-Email notifications:
-
-- guest confirmation;
-- guest pending request acknowledgment;
-- guest cancellation confirmation;
-- restaurant notification for new pending request;
-- restaurant notification for cancellation when appropriate.
-
-## 22.2 Later phases
-
-- SMS confirmations;
-- reminder emails;
-- reminder SMS;
-- modification request notifications;
-- waitlist invitations;
-- no-show follow-up;
-- internal daily summary.
-
-## 22.3 Technical architecture
-
-Notifications should be asynchronous after reservation transaction completion.
-
-Recommended abstraction:
-
-```ts
-interface BookingNotificationService {
-  sendReservationCreated(event: ReservationCreatedEvent): Promise<void>;
-  sendReservationConfirmed(event: ReservationConfirmedEvent): Promise<void>;
-  sendReservationCancelled(event: ReservationCancelledEvent): Promise<void>;
-}
-```
-
-Use an outbox or durable job queue when production volume requires it.
-
-Avoid coupling reservation creation directly to a specific email or SMS provider.
-
-Current implementation note: booking transactions write provider-neutral
-`PENDING` outbox records. No worker, email adapter, retry processor, or queue
-observability owner exists, so email delivery is not implemented.
-
----
-
-## 23. Security and abuse protection
-
-Public booking endpoints require dedicated protection.
-
-### 23.1 Required controls
-
-- IP-based rate limiting;
-- phone-based duplicate detection;
-- email-based duplicate detection where relevant;
-- idempotency keys;
-- server-side validation;
-- input length limits;
-- HTML escaping;
-- anti-automation challenge only when risk is detected;
-- request logging;
-- secure public tokens;
-- CSRF protection where applicable;
-- strict content security policy;
-- secure headers;
-- safe file and image handling;
-- no private establishment fields in public responses.
-
-### 23.2 CAPTCHA strategy
-
-Do not force CAPTCHA for every guest by default.
-
-Use risk-based or progressive protection:
-
-- repeated submissions;
-- suspicious request velocity;
-- known malicious IP;
-- invalid phone patterns;
-- automation-like behavior.
-
-### 23.3 Privacy
-
-Collect only information necessary to manage the reservation.
-
-The public form must provide clear privacy information and identify the relevant data controller/processor roles according to the final legal implementation.
-
-The platform must support:
-
-- retention rules;
-- guest data export where required;
-- deletion or anonymization workflows;
-- restricted staff access;
-- audit logging;
-- minimized display of personal data in notifications and logs.
-
-Do not put raw guest personal data in analytics events or application logs.
-
----
-
-## 24. Multi-tenancy and authorization
-
-### 24.1 Public context
-
-The establishment is resolved from the route or validated custom domain.
-
-Public clients must not submit trusted `organizationId` or `establishmentId` values.
-
-### 24.2 Authenticated context
-
-For back-office operations:
-
-- derive current user;
-- resolve active organization;
-- resolve active establishment;
-- verify membership;
-- verify feature access;
-- verify permission;
-- scope the database query;
-- reject cross-tenant identifiers even when they exist.
-
-### 24.3 Recommended permissions
-
-```text
-booking.read
-booking.create
-booking.update
-booking.confirm
-booking.decline
-booking.cancel
-booking.mark_seated
-booking.mark_completed
-booking.mark_no_show
-booking.override_capacity
-booking.manage_settings
-booking.manage_branding
-booking.manage_notifications
-booking.view_analytics
-```
-
----
-
-## 25. Timezone, date, and locale rules
-
-The establishment timezone is authoritative.
-
-Never rely on the browser timezone for reservation calculations.
-
-Store timestamps in UTC and also preserve:
-
-- establishment timezone;
-- local reservation date;
-- local display time when needed for stable historical rendering.
-
-Use locale-aware formatting for guests and staff.
-
-Important cases to test:
-
-- daylight-saving transition;
-- booking around midnight;
-- guest in another timezone;
-- establishment timezone change;
-- future reservation created before DST change;
-- exception dates.
-
----
-
-## 26. SEO and public metadata
-
-The main establishment booking page should support:
-
-- indexable restaurant name and booking purpose when appropriate;
-- canonical URL;
-- title and description;
-- Open Graph image;
-- social sharing metadata;
-- structured data where appropriate;
-- noindex for private reservation management pages;
-- no sensitive information in metadata.
-
-Public reservation detail URLs must be `noindex` and should not be discoverable through sitemap generation.
-
----
-
-## 27. Performance requirements
-
-Target priorities:
-
-- fast initial render on mobile;
-- minimal JavaScript for the first view;
-- optimized images;
-- cached public establishment configuration;
-- no caching of private reservation pages;
-- efficient availability queries;
-- resilient behavior under traffic spikes.
-
-Recommended principles:
-
-- server-render establishment shell;
-- cache public branding/configuration with short invalidation strategy;
-- calculate availability server-side;
-- avoid loading back-office bundles in the public app;
-- lazy-load nonessential maps and media;
-- monitor p95 latency for availability and creation endpoints.
-
----
-
-## 28. Observability and auditability
-
-Log and measure:
-
-- page load failures;
-- availability request failures;
-- reservation creation attempts;
-- successful reservations;
-- rejected overbooking attempts;
-- duplicate submissions;
-- notification failures;
-- cancellations;
-- invalid token access;
-- rate-limit events;
-- database transaction failures.
-
-Recommended metrics:
-
-```text
-booking_page_views
-booking_flow_started
-booking_availability_requests
-booking_slot_selected
-booking_submission_attempts
-booking_created_confirmed
-booking_created_pending
-booking_creation_failed
-booking_cancelled
-booking_no_show
-booking_notification_failed
-```
-
-Do not include guest personal data in metric labels.
-
-Audit logs must distinguish:
-
-- guest action;
-- restaurant user action;
-- system automation;
-- YUTA support action.
-
----
-
-## 29. Error handling
-
-Public errors must be understandable and safe.
-
-Examples:
-
-### Slot unavailable
-
-The selected time is no longer available. Offer refreshed alternatives.
-
-### Booking disabled
-
-Explain that online booking is temporarily unavailable and show restaurant contact details when configured.
-
-### Invalid token
-
-Do not reveal whether a reservation exists. Show a generic invalid or expired link state.
-
-### Rate limited
-
-Ask the guest to try again later or contact the restaurant.
-
-### Notification failure
-
-If the reservation is successfully committed but notification fails, do not report reservation creation as failed. Show the reservation number and allow confirmation resend later.
-
----
-
-## 30. Testing strategy
-
-## 30.1 Unit tests
-
-Test:
-
-- slot generation;
-- booking horizon;
-- capacity calculation;
-- exception precedence;
-- status transitions;
-- cancellation rules;
-- source normalization;
-- public token validation;
-- timezone conversion;
-- permission checks.
-
-## 30.2 Integration tests
-
-Test:
-
-- public establishment resolution;
-- availability endpoint;
-- transactional reservation creation;
-- overbooking prevention;
-- manual confirmation;
-- guest cancellation;
-- notification event creation;
-- tenant isolation.
-
-## 30.3 End-to-end tests
-
-Core scenarios:
-
-1. guest creates automatically confirmed reservation;
-2. guest creates pending reservation;
-3. restaurant confirms pending reservation;
-4. guest cancels confirmed reservation;
-5. exception closes a normally open service;
-6. last capacity is requested concurrently by two guests;
-7. public token is invalid;
-8. booking is disabled;
-9. mobile booking flow completes successfully;
-10. restaurant user cannot access another establishment's reservation.
-
-## 30.4 Load and concurrency tests
-
-Before broader launch, test:
-
-- repeated availability reads;
-- concurrent final-capacity reservation attempts;
-- traffic spikes after campaigns;
-- notification queue backlogs;
-- database lock behavior.
-
----
-
-## 31. Suggested code architecture
-
-Recommended package responsibilities:
-
-```text
-packages/booking/
-├── domain/
-│   ├── availability.ts
-│   ├── reservation-status.ts
-│   ├── booking-rules.ts
-│   ├── exceptions.ts
-│   └── errors.ts
-├── application/
-│   ├── create-reservation.ts
-│   ├── cancel-reservation.ts
-│   ├── confirm-reservation.ts
-│   ├── get-availability.ts
-│   └── update-reservation.ts
-├── infrastructure/
-│   ├── reservation-repository.ts
-│   ├── booking-settings-repository.ts
-│   ├── capacity-lock.ts
-│   └── event-publisher.ts
-└── index.ts
-```
-
-### Architectural rule
-
-Business rules must live in `packages/booking`, not inside React components or route handlers.
-
-Route handlers should:
-
-1. parse request;
-2. resolve context;
-3. validate input;
-4. call application service;
-5. map result or domain error to response.
-
----
-
-## 32. Suggested route structure for `apps/booking-web`
-
-```text
-apps/booking-web/
-├── app/
-│   ├── [establishmentSlug]/
-│   │   ├── page.tsx
-│   │   ├── loading.tsx
-│   │   ├── error.tsx
-│   │   ├── reservation/
-│   │   │   └── [publicToken]/page.tsx
-│   │   └── confirmation/
-│   │       └── [publicToken]/page.tsx
-│   ├── api/
-│   │   └── public/
-│   │       ├── establishments/
-│   │       ├── availability/
-│   │       └── reservations/
-│   ├── not-found.tsx
-│   ├── layout.tsx
-│   └── globals.css
-├── components/
-│   ├── booking-flow/
-│   ├── restaurant-header/
-│   ├── reservation-summary/
-│   └── public-status/
-├── lib/
-│   ├── public-establishment.ts
-│   ├── analytics.ts
-│   ├── rate-limit.ts
-│   └── metadata.ts
-└── tests/
-```
-
-The exact structure may follow existing monorepo conventions, but separation of concerns must remain clear.
-
----
-
-## 33. Feature flags
-
-Recommended flags:
-
-```text
-booking.enabled
-booking.manual_confirmation
-booking.guest_cancellation
-booking.guest_modification
-booking.sms_notifications
-booking.waitlist
-booking.table_management
-booking.embed_widget
-booking.custom_domain
-booking.multilingual
-booking.analytics
-```
-
-Feature flags should be evaluated per establishment where appropriate.
-
-The public UI must not display disabled capabilities.
-
----
-
-## 34. Migration and rollout strategy
-
-Because the current YUTA platform is still under development, the booking schema may be introduced cleanly without preserving unnecessary legacy structures.
-
-Recommended rollout:
-
-1. implement schema and domain package;
-2. deploy booking app behind feature flag;
-3. configure one internal pilot establishment;
-4. test staff workflows;
-5. test public booking with limited opening hours;
-6. validate notification reliability;
-7. enable live public links;
-8. review operational data;
-9. improve before onboarding additional restaurants.
-
-Do not enable all establishments by default.
-
----
-
-## 35. Historical MVP implementation sequence
-
-Recommended order:
-
-### Step 1 — Domain and schema
-
-- define booking statuses;
-- define settings;
-- define service periods;
-- define exceptions;
-- define reservations;
-- define status history;
-- define source attribution;
-- generate database access layer.
-
-### Step 2 — Tenant-safe services
-
-- public slug resolver;
-- authenticated establishment context;
-- scoped repositories;
-- permission checks.
-
-### Step 3 — Availability engine
-
-- weekly schedule generation;
-- exception application;
-- capacity calculation;
-- booking horizon checks;
-- party-size validation;
-- tests.
-
-### Step 4 — Reservation creation
-
-- public validation;
-- transaction and concurrency control;
-- reservation number;
-- public token;
-- status selection;
-- status history;
-- idempotency.
-
-### Step 5 — Public UI
-
-- restaurant shell;
-- party-size step;
-- date and slot step;
-- guest details step;
-- summary and submission;
-- confirmed/pending states;
-- reservation detail page;
-- cancellation.
-
-### Step 6 — Back-office MVP
-
-- reservation list;
-- day/week view;
-- reservation detail;
-- manual creation;
-- status actions;
-- settings;
-- service periods;
-- exceptions.
-
-### Step 7 — Notifications
-
-- email templates;
-- post-commit notification jobs;
-- failure handling;
-- retry policy.
-
-### Step 8 — Security and observability
-
-- rate limiting;
-- abuse detection;
-- audit logs;
-- metrics;
-- structured errors;
-- privacy-safe logs.
-
-### Step 9 — QA and pilot
-
-- unit tests;
-- integration tests;
-- E2E tests;
-- concurrency tests;
-- mobile checks;
-- accessibility checks;
-- internal pilot launch.
-
----
-
-## 36. Definition of done for Phase 1
-
-Phase 1 is complete only when all of the following are true:
-
-This checklist is not currently complete. In particular, production deployment,
-confirmation-email delivery, operational observability, full public E2E/mobile
-acceptance, and launch-volume verification remain open in `STATUS.md`.
-
-- `apps/booking-web` is deployed independently;
-- a public establishment page resolves from slug;
-- disabled establishments are handled correctly;
-- weekly service periods can be configured;
-- exceptions can close or modify availability;
-- public availability is calculated server-side;
-- a guest can create a reservation;
-- automatic and manual confirmation both work;
-- overbooking is prevented under concurrency;
-- a guest receives a secure public management link;
-- a guest can cancel when policy allows;
-- staff can view and manage reservations;
-- staff can manually create reservations;
-- reservation lifecycle is audited;
-- confirmation email works;
-- errors are observable;
-- public endpoints are rate-limited;
-- tenant isolation tests pass;
-- the flow is usable on mobile;
-- the French interface is complete;
-- private pages are not indexed;
-- no sensitive data is exposed in logs or analytics.
-
----
-
-## 37. Non-goals for the initial release
-
-The initial release is not intended to solve every restaurant capacity problem.
-
-The following must not delay the MVP:
-
-- perfect automatic table assignment;
-- complex room-layout optimization;
-- predictive demand modeling;
+The current executable behavior belongs to `packages/booking`, reservation
+contracts, db-cloud schemas/repositories, and tests. This document preserves
+only these product principles:
+
+- capacity consumption and lifecycle transitions must be explicit;
+- invalid transitions must fail rather than be guessed by a client;
+- exception and closure behavior must take precedence predictably;
+- public responses must not expose private capacity detail;
+- reservation creation must be idempotent where retries can occur;
+- guest management access must use an unguessable, revocable credential; and
+- notification work must follow a successful reservation commit.
+
+### Staff capacity override — NEEDS REVIEW
+
+The broader intent allows for a clearly warned, explicitly permissioned,
+reasoned, and audited staff override. The current bounded implementation has no
+approved capacity override. Exact eligibility, limits, conflict behavior,
+permission, audit reason, and reporting remain unresolved.
+
+## 10. Booking configuration and restaurant operations
+
+Each establishment should be able to express its approved booking policy
+without inheriting another establishment's configuration. Product outcomes may
+include:
+
+- enabled/disabled public booking;
+- local timezone and locale presentation;
+- booking horizon and minimum notice;
+- accepted party-size range;
+- automatic or manual confirmation;
+- service periods and per-period capacity;
+- dated closures, modified hours, blocked periods/slots, or special events;
+- cancellation and late-arrival policy;
+- public booking policy and confirmation copy; and
+- later communication, branding, source, and analytics settings.
+
+This list is product direction, not an executable field catalog. Current
+fields, constraints, edit behavior, and data ownership come from schemas,
+contracts, repositories, README/STATUS, and current UI.
+
+Broader Backoffice outcomes may include:
+
+- day, week, service, list, and later floor-plan perspectives;
+- pending, arrival, cancellation, no-show, and exception attention;
+- search and filtering by approved reservation attributes;
+- reservation detail, internal notes, lifecycle history, and allowed actions;
+- manual creation with a truthful source;
+- availability and exception management;
+- communication history and resend operations; and
+- source, conversion, and operational analytics.
+
+These outcomes do not mandate a navigation tree or route layout.
+
+## 11. Branding, attribution, and communication
+
+### Restaurant branding
+
+Future branding may include logo, cover image, controlled colors and surface
+styles, public description, visible contact/address information, map and social
+links, accessibility information, policy copy, and supported locales. The
+canonical Establishment profile owns shared establishment facts; Booking owns
+only Booking-specific policy and presentation choices within approved
+boundaries.
+
+### Source attribution and conversion
+
+The product should distinguish approved direct, website, Google, social, QR,
+Backoffice, phone, walk-in, partner, and other channels where useful and
+truthful. Future attribution may include sanitized campaign and referrer
+context plus conversion reporting.
+
+Attribution must be bounded, length-limited, privacy-safe, and separate from
+authorization. Current supported values and persistence belong to executable
+contracts/schema and README/STATUS.
+
+### Communication
+
+Guests and restaurants should receive timely, truthful communication for
+creation, pending/confirmation, cancellation, later reminders, modification,
+and waitlist outcomes when those channels are approved. Delivery should be
+asynchronous after the reservation transaction and resilient to provider
+failure.
+
+No provider, credential, template set, retry policy, delivery SLO, or operator
+is selected by this document. Persisted notification intent is not evidence of
+successful delivery.
+
+## 12. Booking-specific safety, privacy, and trust outcomes
+
+Current trust, tenancy, authorization, and data ownership are defined by
+accepted ADRs and current architecture. Booking-specific product outcomes are:
+
+- resolve public restaurant context on the server and expose only permitted
+  fields;
+- never treat browser-provided organization, establishment, membership, role,
+  permission, or entitlement values as authority;
+- scope restaurant-owned data to the trusted organization and establishment;
+- use secure, revocable public reservation access;
+- protect public creation with server validation, bounded input, idempotency,
+  and proportionate rate/abuse controls;
+- prefer progressive/risk-based challenges rather than forcing CAPTCHA on
+  every guest without evidence;
+- minimize guest data and keep personal data out of ordinary logs, analytics
+  labels, public metadata, and unnecessary notifications;
+- provide clear privacy information and approved controller/contact context;
+- support approved retention, rights, deletion/anonymization, restricted
+  access, and audit operations before production reliance; and
+- fail safely without revealing whether a private reservation or tenant record
+  exists.
+
+Exact roles, permissions, security headers, rate-limit implementation,
+retention periods, legal bases, providers, and production controls remain with
+their current authorities and readiness gates.
+
+## 13. SEO, performance, observability, and error principles
+
+### SEO and public metadata
+
+The public restaurant booking page should support an appropriate canonical URL,
+restaurant-aware title/description, social preview metadata, and structured
+data where approved. Private reservation-management pages must not be indexed,
+listed in sitemaps, or leak guest information through metadata.
+
+### Performance
+
+Priorities are fast mobile rendering, minimal initial client work, optimized
+public media, efficient server-side availability, separation from Backoffice
+bundles, and resilience under campaign-driven traffic. Specific production
+SLOs, cache policy, target volume, and alert thresholds remain separately
+reviewable and require dated target-environment evidence.
+
+### Observability and auditability
+
+The product should make availability failures, creation outcomes, rejected
+capacity attempts, duplicate submissions, cancellations, invalid access,
+rate-limit events, notification failures, and transaction failures
+operationally understandable without exposing guest data.
+
+Auditable actions should distinguish guest, restaurant user, system automation,
+and approved YUTA support actors. Exact events, metrics, labels, retention,
+provider, dashboards, alerts, and response ownership belong to current
+operations/readiness decisions.
+
+### Safe error outcomes
+
+- A stale slot should refresh and offer safe alternatives.
+- Disabled booking should explain unavailability and show permitted contact
+  details.
+- Invalid or expired public access should not reveal reservation existence.
+- Rate limiting should give a safe retry/contact path.
+- A committed reservation with failed notification delivery should remain a
+  committed reservation and expose an appropriate recovery path.
+
+## 14. Initial-release non-goals
+
+The initial release must not be delayed by:
+
+- automatic table assignment or room-layout optimization;
+- predictive demand or no-show modeling;
 - custom-domain automation;
 - complete multilingual content management;
 - third-party marketplace synchronization;
-- advanced CRM profiles;
-- complex group-event contracts;
-- full white-label SDK.
+- advanced customer profiles;
+- complex group-event contracts; or
+- a full white-label SDK.
 
-The MVP must solve one core problem reliably:
+The core initial outcome remains:
 
-> A guest can find a valid time, submit a booking request, receive a clear result, and the restaurant can manage that reservation without ambiguity.
+> A guest can find a valid time, submit a booking request, receive a clear
+> result, and the restaurant can manage that reservation without ambiguity.
 
----
+This product outcome does not itself establish production readiness; use the
+current readiness and release sources.
 
-## 38. Future design decisions that must remain open
+## 15. Open design space and unresolved capabilities
 
-Do not hardcode assumptions that would block:
+Future design must not hardcode assumptions that prevent:
 
 - several establishments in one organization;
-- several dining areas in one establishment;
-- table-level inventory;
+- several areas in one establishment;
+- table-aware inventory;
 - custom reservation durations;
-- separate online and total capacities;
+- separate online and total capacity;
 - multiple confirmation policies;
 - multiple notification providers;
 - multiple languages;
-- custom domains;
-- embeddable booking widgets;
-- external integration adapters;
-- per-source booking rules;
-- waitlists;
-- group requests;
-- restaurant-specific custom fields.
+- custom domains and embedding;
+- external adapters and webhooks;
+- per-source rules;
+- waitlists and group requests; or
+- restaurant-specific bounded fields.
+
+The following remain explicitly separately reviewable:
+
+| Area                           | Unresolved decision boundary                                                                                                  |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| Staff capacity override        | Eligibility, permission, limits, reason, audit, conflict behavior, and reporting.                                             |
+| YUTA super-admin/support       | Capability scope, identity, minimization, permission, audit, and relationship to reserved Platform Admin.                     |
+| Rooms/Tables/floor plans       | Product and data ownership, relationship to Establishment/Booking, lifecycle, authorization, and failure behavior.            |
+| Exact future permissions       | Role-to-permission mappings and server enforcement for each future capability.                                                |
+| Feature flags/entitlements     | Which capabilities need a flag, its owner, scope, default, lifecycle, and server evaluation.                                  |
+| Providers                      | Email, SMS, integration, intelligence, domain, analytics, and other vendor selection plus legal/security/operations evidence. |
+| Custom domains and embedding   | Tenant resolution, domain verification, security policy, support, deployment, and incident ownership.                         |
+| Waitlists and group requests   | Ownership, lifecycle, capacity relationship, communications, privacy, and operational workflow.                               |
+| External integrations/webhooks | Provider eligibility, contracts, authentication, retries, reconciliation, data minimization, and exit behavior.               |
+| Intelligence                   | Provider/model boundary, evaluation, privacy, explainability, human control, cost, monitoring, and prohibited automation.     |
+| Production SLOs                | Target traffic, latency, availability, notification delivery, queue backlog, monitoring, and accountable owner.               |
+
+No exact future capability is approved merely because it is preserved as
+Product Intent in this document.
+
+## 16. Technical authority routing
+
+This Product Spec intentionally does not contain exact database tables or
+columns, TypeScript models, API endpoint inventories, route trees, package
+trees, contract catalogs, permission-name catalogs, feature-flag lists,
+migration instructions, or deployment steps.
+
+Use:
+
+- [ADR-002](../../decisions/ADR-002-independent-public-booking-application.md)
+  for the independent Public Booking runtime and Backoffice administration
+  boundary;
+- [ADR-003](../../decisions/ADR-003-database-ownership-boundaries.md) and
+  [Database Boundaries](../../architecture/DATABASE_BOUNDARIES.md) for cloud
+  persistence ownership;
+- [Tenancy](../../architecture/TENANCY.md),
+  [Authentication](../../architecture/AUTHENTICATION.md), and
+  [Data Model](../../architecture/DATA_MODEL.md) for current trusted context,
+  authorization, and schema routing;
+- `packages/db-cloud/src/schema/booking.ts` and active migrations for executable
+  database shape;
+- `packages/contracts/src/reservations` for current transport contracts;
+- `packages/booking`, current Booking/Backoffice routes, and tests for current
+  repository behavior;
+- [`README.md`](README.md) and [`STATUS.md`](STATUS.md) for bounded feature
+  reconciliation; and
+- [Deployment](../../operations/DEPLOYMENT.md) and
+  [Production Readiness](../../operations/PRODUCTION_READINESS.md) for
+  procedures, gates, and dated evidence.
+
+If a proposed implementation differs from these current authorities, record
+the conflict and obtain the appropriate decision; do not use this Product Spec
+to silently override them.
+
+## 17. Historical context — non-authoritative
+
+The original master specification proposed a nine-step MVP sequence:
+
+1. domain and schema;
+2. tenant-safe services;
+3. availability engine;
+4. reservation creation;
+5. public UI;
+6. Backoffice MVP;
+7. notifications;
+8. security and observability; and
+9. QA and pilot.
+
+This sequence is preserved only as implementation provenance. It is not a
+current progress tracker, delivery plan, package architecture, migration
+procedure, or deployment authority. Current outcomes and remaining work belong
+to README/STATUS; Git history preserves the detailed former prescriptions.
+
+## 18. OpenSpec future role
+
+This Product Spec remains the broader Product Intent, non-goal, rationale, and
+future-context source. If YUTA later explicitly makes `openspec/specs/`
+normative, approved OpenSpec specs may own precise behavioral requirements
+inside accepted durable boundaries.
+
+Accepted ADRs and security/runtime decisions remain higher authority for
+durable product, architecture, data, and security boundaries. OpenSpec changes
+remain non-normative until the approved lifecycle promotes them, and no
+OpenSpec artifact by itself proves implementation, deployment, external
+enablement, or Production Readiness.
 
 ---
 
-## 39. Final architecture summary
-
-```text
-Guest
-  ↓
-reservation.yutapro.fr/{establishmentSlug}
-  ↓
-Public establishment resolution
-  ↓
-Booking configuration + service periods + exceptions
-  ↓
-Server-generated availability
-  ↓
-Guest selects party size, date, and time
-  ↓
-Guest submits contact details
-  ↓
-Server validates and opens transaction
-  ↓
-Capacity is recalculated and protected against concurrency
-  ↓
-Reservation + status history are created
-  ↓
-Transaction commits
-  ↓
-Confirmed or pending result is returned
-  ↓
-Notifications are sent asynchronously
-  ↓
-Restaurant manages reservation in YUTA back-office
-```
-
-Recommended initial technical choices:
-
-```text
-Application: apps/booking-web
-Public domain: reservation.yutapro.fr
-Tenant resolution: establishment slug
-Primary availability model: capacity per time slot/service period
-Initial guest access: no account required
-Guest management security: unguessable public token
-Primary language: French
-Architecture: multi-tenant from day one
-Notifications: provider abstraction
-Advanced table management: later phase
-```
-
----
-
-## 40. Durable implementation guardrails
-
-Codex must follow these rules while implementing this specification:
-
-1. Do not put booking business logic inside UI components.
-2. Do not trust organization or establishment IDs from the public client.
-3. Do not create a reservation without server-side availability revalidation.
-4. Do not send notifications before the reservation transaction commits.
-5. Do not use reservation numbers as public authorization credentials.
-6. Do not expose exact capacity unless explicitly enabled.
-7. Do not allow invalid reservation status transitions.
-8. Do not create cross-tenant queries without explicit scope.
-9. Do not store guest personal data in analytics events or ordinary logs.
-10. Do not require table management for the MVP.
-11. Do not hardcode one restaurant's schedule, branding, or timezone.
-12. Do not duplicate Zod contracts across applications.
-13. Do not silently convert a pending request into a confirmed reservation in the UI.
-14. Do not make the public booking page look like the YUTA marketing website.
-15. Do not introduce external provider dependencies directly into core domain logic.
-
----
-
-**End of master specification.**
+This document deliberately describes product intent rather than replacement
+architecture. Always route implementation, lifecycle, ownership, and readiness
+questions to the current authorities listed above.

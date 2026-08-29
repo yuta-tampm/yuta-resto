@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "topology": "GENERATED_SNAPSHOTS",
+  "sealed": true,
+  "templateRevision": null,
+  "generation": {
+    "commit": "37cf43f973687063c2b1b87c4c1e58c0dde5267e"
+  },
+  "prompts": [
+    {
+      "filename": "00_REPOSITORY_ANALYSIS.md",
+      "templateSource": "docs/ui/templates/page/prompts/00_REPOSITORY_ANALYSIS.md",
+      "templateRevision": "prompt-template-git-70b77938251df9b0e9a772f3d5311c6d03bb1e89",
+      "templateSha256": "7ecab8ffd6d97de28f463d521172be6de8f66b7e3074e5e90e88f53f41ea394c",
+      "snapshotSha256": "7ecab8ffd6d97de28f463d521172be6de8f66b7e3074e5e90e88f53f41ea394c",
+      "localModificationState": "NONE",
+      "provenanceStatus": "PROVEN"
+    },
+    {
+      "filename": "01_VISUAL_BASELINE.md",
+      "templateSource": null,
+      "templateRevision": null,
+      "templateSha256": null,
+      "snapshotSha256": "e3db0f4087ca5b38109c6d595c0c30ee30bff35dfef4773fef6d6c8f9b360edf",
+      "localModificationState": "PRE_SEAL",
+      "provenanceStatus": "NEEDS_REVIEW"
+    },
+    {
+      "filename": "02_COMPONENT_REFACTOR.md",
+      "templateSource": "docs/ui/templates/page/prompts/02_COMPONENT_REFACTOR.md",
+      "templateRevision": "prompt-template-git-37cf43f973687063c2b1b87c4c1e58c0dde5267e",
+      "templateSha256": "8b134cd4b462562416fb5c2e57c23eb4675a26eff7ea75fdfae44727b74648ac",
+      "snapshotSha256": "8b134cd4b462562416fb5c2e57c23eb4675a26eff7ea75fdfae44727b74648ac",
+      "localModificationState": "NONE",
+      "provenanceStatus": "PROVEN"
+    },
+    {
+      "filename": "03_INTERACTIONS.md",
+      "templateSource": "docs/ui/templates/page/prompts/03_INTERACTIONS.md",
+      "templateRevision": "prompt-template-git-37cf43f973687063c2b1b87c4c1e58c0dde5267e",
+      "templateSha256": "e27c12d152d9270229eed6951898ab6f5e477d7d12ff9c170f4522ed45f00388",
+      "snapshotSha256": "e27c12d152d9270229eed6951898ab6f5e477d7d12ff9c170f4522ed45f00388",
+      "localModificationState": "NONE",
+      "provenanceStatus": "PROVEN"
+    },
+    {
+      "filename": "04_DATA_INTEGRATION.md",
+      "templateSource": "docs/ui/templates/page/prompts/04_DATA_INTEGRATION.md",
+      "templateRevision": "prompt-template-git-37cf43f973687063c2b1b87c4c1e58c0dde5267e",
+      "templateSha256": "f878f959d3afee428e67620c74f4c75231d2c7816f23cbf7fc6c701067538e79",
+      "snapshotSha256": "f878f959d3afee428e67620c74f4c75231d2c7816f23cbf7fc6c701067538e79",
+      "localModificationState": "NONE",
+      "provenanceStatus": "PROVEN"
+    },
+    {
+      "filename": "05_VISUAL_QA.md",
+      "templateSource": "docs/ui/templates/page/prompts/05_VISUAL_QA.md",
+      "templateRevision": "prompt-template-git-49e4258173b4e8767d240fa3cd4b3df0afb92fe0",
+      "templateSha256": "beb16be7f9672bc0abf38fb8c3bcda0431f79d264747b74a26efb987319e5837",
+      "snapshotSha256": "beb16be7f9672bc0abf38fb8c3bcda0431f79d264747b74a26efb987319e5837",
+      "localModificationState": "NONE",
+      "provenanceStatus": "PROVEN"
+    }
+  ]
+}

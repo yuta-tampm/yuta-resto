@@ -4,7 +4,7 @@ Status: Current
 
 Visibility: Engineering
 
-Last updated: 2026-08-22
+Last updated: 2026-08-27
 
 Page packages under this directory may target any YUTA frontend application.
 Every package identifies its application, real route or screen, runtime
@@ -20,9 +20,13 @@ Current packages:
   the now-integrated authenticated Backoffice route `/equipe/salaries`, with
   its approved and implemented local delivery waves.
 
-- `backoffice-equipe-formalites-personnel/` — Phase 1 fictional read-only CDI
-  draft-readiness prototype for `/equipe/formalites-personnel`; it is OWNER-only,
-  reads no employee dossier, and creates no document.
+- `backoffice-equipe-formalites-personnel/` — implemented bounded development
+  package for `/equipe/formalites-personnel`; Phase 4 is the current
+  employee-connected, in-memory runtime. Phase 5 is documentation-only: it
+  records approved F5-07/F5-08 boundaries plus remaining proposed decisions
+  without changing the current runtime. The durable Formalités lifecycle
+  remains `PROPOSED`, `NOT_STARTED`, and not enabled; no durable generation or
+  persistence is implemented.
 
 - `backoffice-equipe-registre-personnel/` — implemented Wave E local real-data,
   hardening, and Phase 5 as-built pack for Backoffice route
@@ -32,17 +36,19 @@ Current packages:
 - `establishment-general-information/` — integrated establishment profile editor
   at `/etablissement/informations-generales`.
 - `today/` — integrated authenticated Backoffice dashboard at `/aujourdhui`.
-- `pos-management-printing/` — Phase 0 inventory for the existing local POS
-  device-coupled screen at `/management/printing`; design approval is pending.
+- `pos-management-printing/` — implemented page pack for the existing local POS
+  device-coupled screen at `/management/printing`; Phase 5, final as-built
+  delivery, and the later header usability correction are recorded. Physical
+  printer acceptance remains device/site-specific and unverified here.
 
-- `pos-management-catalog/` — Phase 0 inventory and authenticated baseline for
-  the existing integrated local POS screen at `/management/catalog`; generated
-  design approval is pending.
+- `pos-management-catalog/` — implemented page pack for the existing integrated
+  local POS screen at `/management/catalog`; approved reference, Phase 5, and
+  final as-built delivery are recorded.
 
-- `pos-management-combos/` — completed Phase 0 inventory, authenticated
-  baseline, resolved catalog/printing shared UI context, and design prompt for
-  the existing integrated local POS screen at `/management/combos`; design
-  generation and approval are pending.
+- `pos-management-combos/` — approved page pack for the existing integrated
+  local POS screen at `/management/combos`; the base-page delivery and
+  suggestion-eligibility extension are implemented, and extension Phase 5 plus
+  final as-built delivery are recorded.
 
 - `pos-order-entry/` - implemented existing-capability renewal for the local
   POS `/pos` order-entry page, including approved visual renewal, route-local
@@ -76,8 +82,10 @@ Current packages:
 
 ## Local POS UI delivery backlog
 
-This is the current route/page backlog authority as of 2026-08-20. Reuse it
-before performing another broad POS route audit.
+This is the page-pack routing backlog last reconciled on 2026-08-27. It is not
+Product Intent, capability lifecycle, or implementation authority. Before
+starting delivery, verify the relevant Product Knowledge source, Module
+Registry row, current route/code, and nearest application instructions.
 
 Implemented page packs:
 

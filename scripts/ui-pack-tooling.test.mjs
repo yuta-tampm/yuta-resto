@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import {
   cpSync,
   mkdtempSync,
@@ -114,6 +115,8 @@ test('generates a complete design package without overwriting an existing one', 
   assert.ok(result.tree.includes('references/README.md'));
   assert.ok(result.tree.includes('DESIGN_HANDOFF.md'));
   assert.ok(result.tree.includes('prompts/05_VISUAL_QA.md'));
+  assert.ok(result.tree.includes('prompt-provenance.json'));
+  assert.ok(!result.tree.includes('prompt-template.json'));
 
   const readme = readFileSync(join(result.destination, 'README.md'), 'utf8');
   assert.match(readme, /Application: `apps\/yuta-pos`/u);
@@ -124,6 +127,43 @@ test('generates a complete design package without overwriting an existing one', 
   assert.match(readme, /Baseline status: `PENDING`/u);
   assert.match(readme, /Design prompt status: `PENDING`/u);
   assert.match(readme, /Shared context status: `PENDING`/u);
+  assert.match(readme, /Prompt snapshot topology: `GENERATED_SNAPSHOTS`/u);
+  assert.match(readme, /Prompt provenance: `prompt-provenance\.json`/u);
+
+  const provenance = readJson(
+    join(result.destination, 'prompt-provenance.json'),
+  );
+  assert.equal(provenance.schemaVersion, 1);
+  assert.equal(provenance.topology, 'GENERATED_SNAPSHOTS');
+  assert.equal(provenance.sealed, true);
+  assert.equal(provenance.templateRevision, 'prompt-template-v1');
+  assert.equal(provenance.prompts.length, 6);
+  assert.ok(
+    provenance.prompts.every(
+      (prompt) => prompt.templateRevision === provenance.templateRevision,
+    ),
+  );
+  assert.ok(provenance.generation.commit || provenance.generation.timestamp);
+  for (const prompt of provenance.prompts) {
+    assert.ok(requiredFixturePrompts.includes(prompt.filename));
+    assert.equal(
+      prompt.templateSource,
+      `docs/ui/templates/page/prompts/${prompt.filename}`,
+    );
+    assert.ok(!prompt.templateSource.includes('\\'));
+    assert.equal(prompt.templateRevision, 'prompt-template-v1');
+    assert.equal(
+      prompt.templateSha256,
+      hashFile(join(root, ...prompt.templateSource.split('/'))),
+    );
+    assert.equal(
+      prompt.snapshotSha256,
+      hashFile(join(result.destination, 'prompts', prompt.filename)),
+    );
+    assert.equal(prompt.templateSha256, prompt.snapshotSha256);
+    assert.equal(prompt.localModificationState, 'NONE');
+    assert.equal(prompt.provenanceStatus, 'PROVEN');
+  }
 
   const withoutSharedContext = readme.replace(
     /\nShared context status: `PENDING`\n/u,
@@ -203,6 +243,218 @@ test('keeps legacy packages valid with a lifecycle warning', () => {
   assert.deepEqual(validation.errors, []);
   assert.ok(
     validation.warnings.some((warning) => warning.rule === 'legacy-lifecycle'),
+  );
+  assert.ok(
+    validation.warnings.some(
+      (warning) => warning.rule === 'missing-prompt-provenance',
+    ),
+  );
+});
+
+test('requires complete generated provenance and detects sealed prompt changes', () => {
+  const root = createFixtureRepository();
+  const result = createUiPack({
+    repositoryRoot: root,
+    app: 'yuta-pos',
+    slug: 'sealed-snapshot',
+    target: '/sealed',
+    targetType: 'SCREEN',
+  });
+  const provenancePath = join(result.destination, 'prompt-provenance.json');
+  const provenance = readJson(provenancePath);
+
+  unlinkSync(provenancePath);
+  let validation = validateUiPacks({
+    repositoryRoot: root,
+    slug: 'sealed-snapshot',
+  });
+  assert.ok(
+    validation.errors.some(
+      (error) => error.rule === 'missing-prompt-provenance',
+    ),
+  );
+
+  writeJson(provenancePath, {
+    ...provenance,
+    prompts: provenance.prompts.slice(1),
+  });
+  validation = validateUiPacks({
+    repositoryRoot: root,
+    slug: 'sealed-snapshot',
+  });
+  assert.ok(
+    validation.errors.some(
+      (error) => error.rule === 'missing-prompt-provenance-entry',
+    ),
+  );
+
+  writeJson(provenancePath, {
+    ...provenance,
+    prompts: [...provenance.prompts, provenance.prompts[0]],
+  });
+  validation = validateUiPacks({
+    repositoryRoot: root,
+    slug: 'sealed-snapshot',
+  });
+  assert.ok(
+    validation.errors.some(
+      (error) => error.rule === 'duplicate-prompt-provenance',
+    ),
+  );
+
+  writeJson(provenancePath, provenance);
+  const snapshotPath = join(
+    result.destination,
+    'prompts',
+    '03_INTERACTIONS.md',
+  );
+  const changedSnapshot = `${readFileSync(snapshotPath, 'utf8')}\nChanged after seal.\n`;
+  writeFileSync(snapshotPath, changedSnapshot);
+  validation = validateUiPacks({
+    repositoryRoot: root,
+    slug: 'sealed-snapshot',
+  });
+  assert.ok(
+    validation.errors.some((error) => error.rule === 'sealed-prompt-mismatch'),
+  );
+  assert.equal(readFileSync(snapshotPath, 'utf8'), changedSnapshot);
+});
+
+test('keeps an old sealed snapshot valid when the canonical template changes', () => {
+  const root = createFixtureRepository();
+  const result = createUiPack({
+    repositoryRoot: root,
+    app: 'backoffice',
+    slug: 'template-evolution',
+    target: '/template-evolution',
+    targetType: 'PAGE',
+  });
+  const snapshotPath = join(
+    result.destination,
+    'prompts',
+    '02_COMPONENT_REFACTOR.md',
+  );
+  const snapshotBefore = readFileSync(snapshotPath, 'utf8');
+  const templatePath = join(
+    root,
+    'docs',
+    'ui',
+    'templates',
+    'page',
+    'prompts',
+    '02_COMPONENT_REFACTOR.md',
+  );
+  writeFileSync(
+    templatePath,
+    `${readFileSync(templatePath, 'utf8')}\nNew canonical revision content.\n`,
+  );
+
+  const validation = validateUiPacks({
+    repositoryRoot: root,
+    slug: 'template-evolution',
+  });
+  assert.deepEqual(validation.errors, []);
+  assert.equal(readFileSync(snapshotPath, 'utf8'), snapshotBefore);
+});
+
+test('accepts proven historical prompts from mixed template revisions', () => {
+  const root = createFixtureRepository();
+  const result = createUiPack({
+    repositoryRoot: root,
+    app: 'backoffice',
+    slug: 'mixed-history',
+    target: '/mixed-history',
+    targetType: 'PAGE',
+  });
+  const provenancePath = join(result.destination, 'prompt-provenance.json');
+  const provenance = readJson(provenancePath);
+  provenance.templateRevision = null;
+  provenance.prompts[0].templateRevision = 'prompt-template-v0';
+  writeJson(provenancePath, provenance);
+
+  const validation = validateUiPacks({
+    repositoryRoot: root,
+    slug: 'mixed-history',
+  });
+  assert.deepEqual(validation.errors, []);
+  assert.deepEqual(validation.warnings, []);
+});
+
+test('warns for partial provenance with an unavailable historical source and still enforces the sealed hash', () => {
+  const root = createFixtureRepository();
+  const result = createUiPack({
+    repositoryRoot: root,
+    app: 'yuta-pos',
+    slug: 'partial-history',
+    target: '/partial-history',
+    targetType: 'SCREEN',
+  });
+  const provenancePath = join(result.destination, 'prompt-provenance.json');
+  const provenance = readJson(provenancePath);
+  const prompt = provenance.prompts[0];
+  provenance.templateRevision = null;
+  prompt.templateRevision = 'prompt-template-v0';
+  prompt.provenanceStatus = 'PARTIAL';
+  writeJson(provenancePath, provenance);
+  unlinkSync(join(root, ...prompt.templateSource.split('/')));
+
+  let validation = validateUiPacks({
+    repositoryRoot: root,
+    slug: 'partial-history',
+  });
+  assert.deepEqual(validation.errors, []);
+  assert.ok(
+    validation.warnings.some(
+      (warning) => warning.rule === 'partial-prompt-provenance',
+    ),
+  );
+
+  const snapshotPath = join(result.destination, 'prompts', prompt.filename);
+  const changedSnapshot = `${readFileSync(snapshotPath, 'utf8')}\nChanged after seal.\n`;
+  writeFileSync(snapshotPath, changedSnapshot);
+  validation = validateUiPacks({
+    repositoryRoot: root,
+    slug: 'partial-history',
+  });
+  assert.ok(
+    validation.errors.some((error) => error.rule === 'sealed-prompt-mismatch'),
+  );
+  assert.ok(
+    validation.warnings.some(
+      (warning) => warning.rule === 'partial-prompt-provenance',
+    ),
+  );
+  assert.equal(readFileSync(snapshotPath, 'utf8'), changedSnapshot);
+});
+
+test('warns without failing when historical provenance needs review', () => {
+  const root = createFixtureRepository();
+  const result = createUiPack({
+    repositoryRoot: root,
+    app: 'backoffice',
+    slug: 'unresolved-history',
+    target: '/unresolved-history',
+    targetType: 'PAGE',
+  });
+  const provenancePath = join(result.destination, 'prompt-provenance.json');
+  const provenance = readJson(provenancePath);
+  provenance.templateRevision = null;
+  provenance.prompts[0].templateRevision = null;
+  provenance.prompts[0].templateSource = null;
+  provenance.prompts[0].templateSha256 = null;
+  provenance.prompts[0].localModificationState = 'UNKNOWN';
+  provenance.prompts[0].provenanceStatus = 'NEEDS_REVIEW';
+  writeJson(provenancePath, provenance);
+
+  const validation = validateUiPacks({
+    repositoryRoot: root,
+    slug: 'unresolved-history',
+  });
+  assert.deepEqual(validation.errors, []);
+  assert.ok(
+    validation.warnings.some(
+      (warning) => warning.rule === 'unresolved-prompt-provenance',
+    ),
   );
 });
 
@@ -392,6 +644,14 @@ function createFixtureRepository() {
 function writeJson(path, value) {
   mkdirSync(dirname(path), { recursive: true });
   writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`);
+}
+
+function readJson(path) {
+  return JSON.parse(readFileSync(path, 'utf8'));
+}
+
+function hashFile(path) {
+  return createHash('sha256').update(readFileSync(path)).digest('hex');
 }
 
 function makeImplementationReady(readme) {

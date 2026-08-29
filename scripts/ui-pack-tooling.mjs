@@ -10,6 +10,8 @@ import {
   statSync,
   writeFileSync,
 } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import { basename, join, relative, resolve, sep } from 'node:path';
 
 export const frontendApplications = new Map([
@@ -73,6 +75,16 @@ const requiredPrompts = [
   '04_DATA_INTEGRATION.md',
   '05_VISUAL_QA.md',
 ];
+
+const promptSnapshotTopology = 'GENERATED_SNAPSHOTS';
+const promptTemplateMetadataFile = 'prompt-template.json';
+const promptProvenanceFile = 'prompt-provenance.json';
+const promptProvenanceSchemaVersion = 1;
+const promptTemplateSourceRoot = 'docs/ui/templates/page/prompts';
+const promptHashPattern = /^[a-f0-9]{64}$/u;
+const promptTemplateRevisionPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u;
+const promptLocalModificationStates = new Set(['NONE', 'PRE_SEAL', 'UNKNOWN']);
+const promptProvenanceStates = new Set(['PROVEN', 'PARTIAL', 'NEEDS_REVIEW']);
 
 const lifecycleFields = [
   'Target type',
@@ -183,6 +195,7 @@ export function createUiPack({
   if (!existsSync(templateRoot)) {
     throw new Error(`Missing canonical template: ${templateRoot}`);
   }
+  const promptTemplateRevision = readPromptTemplateRevision(templateRoot);
   mkdirSync(pagesRoot, { recursive: true });
 
   const realRepositoryRoot = realpathSync(repositoryRoot);
@@ -210,11 +223,18 @@ export function createUiPack({
       errorOnExist: true,
       force: false,
     });
+    rmSync(join(staging, promptTemplateMetadataFile));
     populateGeneratedMetadata(staging, {
       canonicalApp,
       slug,
       target,
       targetType: normalizedType,
+    });
+    writePromptProvenance({
+      repositoryRoot,
+      templateRoot,
+      packageRoot: staging,
+      templateRevision: promptTemplateRevision,
     });
     renameSync(staging, destination);
   } catch (error) {
@@ -241,6 +261,80 @@ function validateTarget(target) {
       'Target must be a non-empty single-line value without backticks.',
     );
   }
+}
+
+function readPromptTemplateRevision(templateRoot) {
+  const metadataPath = join(templateRoot, promptTemplateMetadataFile);
+  if (!existsSync(metadataPath)) {
+    throw new Error(`Missing prompt template metadata: ${metadataPath}`);
+  }
+
+  const metadata = readJson(metadataPath);
+  if (
+    metadata.schemaVersion !== promptProvenanceSchemaVersion ||
+    typeof metadata.revision !== 'string' ||
+    !promptTemplateRevisionPattern.test(metadata.revision)
+  ) {
+    throw new Error(`Invalid prompt template metadata: ${metadataPath}`);
+  }
+  return metadata.revision;
+}
+
+function writePromptProvenance({
+  repositoryRoot,
+  templateRoot,
+  packageRoot,
+  templateRevision,
+}) {
+  const generation = resolveGenerationEvidence(repositoryRoot);
+  const prompts = requiredPrompts.map((filename) => {
+    const templatePath = join(templateRoot, 'prompts', filename);
+    const snapshotPath = join(packageRoot, 'prompts', filename);
+    const templateSha256 = sha256File(templatePath);
+    const snapshotSha256 = sha256File(snapshotPath);
+
+    return {
+      filename,
+      templateSource: `${promptTemplateSourceRoot}/${filename}`,
+      templateRevision,
+      templateSha256,
+      snapshotSha256,
+      localModificationState: 'NONE',
+      provenanceStatus: 'PROVEN',
+    };
+  });
+
+  const provenance = {
+    schemaVersion: promptProvenanceSchemaVersion,
+    topology: promptSnapshotTopology,
+    sealed: true,
+    templateRevision,
+    generation,
+    prompts,
+  };
+  writeFileSync(
+    join(packageRoot, promptProvenanceFile),
+    `${JSON.stringify(provenance, null, 2)}\n`,
+    'utf8',
+  );
+}
+
+function resolveGenerationEvidence(repositoryRoot) {
+  try {
+    const commit = execFileSync('git', ['rev-parse', 'HEAD'], {
+      cwd: repositoryRoot,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim();
+    if (/^[a-f0-9]{40,64}$/u.test(commit)) return { commit };
+  } catch {
+    // Disposable or exported repositories may not include Git metadata.
+  }
+  return { timestamp: new Date().toISOString() };
+}
+
+function sha256File(path) {
+  return createHash('sha256').update(readFileSync(path)).digest('hex');
 }
 
 export function validateUiPacks({ repositoryRoot, slug }) {
@@ -426,6 +520,15 @@ function validatePackage({
       ),
     );
   }
+
+  validatePromptProvenance({
+    repositoryRoot,
+    packagePath,
+    relativePackage,
+    metadata,
+    errors,
+    warnings,
+  });
 
   const appValue = unquote(metadata.get('Application'));
   const normalizedApp = [...frontendApplications.values()].includes(appValue)
@@ -633,6 +736,377 @@ function validatePackage({
         ),
       );
     }
+  }
+}
+
+function validatePromptProvenance({
+  repositoryRoot,
+  packagePath,
+  relativePackage,
+  metadata,
+  errors,
+  warnings,
+}) {
+  const provenancePath = join(packagePath, promptProvenanceFile);
+  const topology = unquote(metadata.get('Prompt snapshot topology'));
+  const provenanceReference = unquote(metadata.get('Prompt provenance'));
+  const hasProvenance = existsSync(provenancePath);
+  const provenanceEnabled = Boolean(
+    topology || provenanceReference || hasProvenance,
+  );
+
+  if (!provenanceEnabled) {
+    warnings.push(
+      issue(
+        'missing-prompt-provenance',
+        relativePackage,
+        'Legacy compatibility mode: local prompts remain valid, but provenance must be added by the approved migration step.',
+      ),
+    );
+    return;
+  }
+
+  if (topology !== promptSnapshotTopology) {
+    errors.push(
+      issue(
+        'invalid-prompt-topology',
+        `${relativePackage}/README.md`,
+        `Prompt snapshot topology must be ${promptSnapshotTopology}.`,
+      ),
+    );
+  }
+  if (provenanceReference !== promptProvenanceFile) {
+    errors.push(
+      issue(
+        'invalid-prompt-provenance-reference',
+        `${relativePackage}/README.md`,
+        `Prompt provenance must reference ${promptProvenanceFile}.`,
+      ),
+    );
+  }
+  if (!hasProvenance) {
+    errors.push(
+      issue(
+        'missing-prompt-provenance',
+        `${relativePackage}/${promptProvenanceFile}`,
+        'A provenance-enabled pack requires its generated metadata file.',
+      ),
+    );
+    return;
+  }
+
+  let provenance;
+  try {
+    provenance = readJson(provenancePath);
+  } catch (error) {
+    errors.push(
+      issue(
+        'invalid-prompt-provenance',
+        `${relativePackage}/${promptProvenanceFile}`,
+        `Provenance JSON is invalid: ${error.message}`,
+      ),
+    );
+    return;
+  }
+
+  if (provenance.schemaVersion !== promptProvenanceSchemaVersion) {
+    errors.push(
+      issue(
+        'invalid-prompt-provenance',
+        `${relativePackage}/${promptProvenanceFile}`,
+        `schemaVersion must be ${promptProvenanceSchemaVersion}.`,
+      ),
+    );
+  }
+  if (provenance.topology !== promptSnapshotTopology) {
+    errors.push(
+      issue(
+        'invalid-prompt-provenance',
+        `${relativePackage}/${promptProvenanceFile}`,
+        `topology must be ${promptSnapshotTopology}.`,
+      ),
+    );
+  }
+  if (provenance.sealed !== true) {
+    errors.push(
+      issue(
+        'unsealed-prompt-snapshot',
+        `${relativePackage}/${promptProvenanceFile}`,
+        'Generated prompt snapshots must be sealed after provenance is written.',
+      ),
+    );
+  }
+  const rootTemplateRevisionKnown =
+    typeof provenance.templateRevision === 'string' &&
+    promptTemplateRevisionPattern.test(provenance.templateRevision);
+  if (!rootTemplateRevisionKnown && provenance.templateRevision !== null) {
+    errors.push(
+      issue(
+        'invalid-prompt-provenance',
+        `${relativePackage}/${promptProvenanceFile}`,
+        'templateRevision must be a valid generated set revision or null for an explicitly historical mixed/unknown set.',
+      ),
+    );
+  }
+  validateGenerationEvidence(provenance.generation, provenancePath, errors);
+
+  if (!Array.isArray(provenance.prompts)) {
+    errors.push(
+      issue(
+        'invalid-prompt-provenance',
+        `${relativePackage}/${promptProvenanceFile}`,
+        'prompts must be an array containing all six phases.',
+      ),
+    );
+    return;
+  }
+
+  const seen = new Set();
+  const normalGeneratedSet =
+    rootTemplateRevisionKnown &&
+    provenance.prompts.length === requiredPrompts.length &&
+    provenance.prompts.every(
+      (prompt) =>
+        prompt?.provenanceStatus === 'PROVEN' &&
+        prompt?.localModificationState === 'NONE',
+    );
+  for (const prompt of provenance.prompts) {
+    if (!prompt || typeof prompt !== 'object') {
+      errors.push(
+        issue(
+          'invalid-prompt-provenance',
+          `${relativePackage}/${promptProvenanceFile}`,
+          'Each prompt provenance entry must be an object.',
+        ),
+      );
+      continue;
+    }
+
+    const filename = prompt.filename;
+    if (!requiredPrompts.includes(filename)) {
+      errors.push(
+        issue(
+          'unknown-prompt-provenance',
+          `${relativePackage}/${promptProvenanceFile}`,
+          `Unknown phase prompt: ${filename ?? ''}`,
+        ),
+      );
+      continue;
+    }
+    if (seen.has(filename)) {
+      errors.push(
+        issue(
+          'duplicate-prompt-provenance',
+          `${relativePackage}/${promptProvenanceFile}`,
+          `Duplicate provenance entry for ${filename}.`,
+        ),
+      );
+      continue;
+    }
+    seen.add(filename);
+
+    const expectedSource = `${promptTemplateSourceRoot}/${filename}`;
+    const provenanceStatusValid = promptProvenanceStates.has(
+      prompt.provenanceStatus,
+    );
+    if (!provenanceStatusValid) {
+      errors.push(
+        issue(
+          'invalid-prompt-provenance',
+          `${relativePackage}/${promptProvenanceFile}`,
+          `Provenance status for ${filename} is invalid.`,
+        ),
+      );
+    }
+
+    if (prompt.provenanceStatus === 'PARTIAL') {
+      warnings.push(
+        issue(
+          'partial-prompt-provenance',
+          `${relativePackage}/${promptProvenanceFile}`,
+          `${filename} has partial historical provenance; preserve the sealed snapshot and do not infer missing evidence.`,
+        ),
+      );
+    } else if (prompt.provenanceStatus === 'NEEDS_REVIEW') {
+      warnings.push(
+        issue(
+          'unresolved-prompt-provenance',
+          `${relativePackage}/${promptProvenanceFile}`,
+          `${filename} has unresolved historical provenance; preserve the sealed snapshot until evidence is reviewed.`,
+        ),
+      );
+    }
+
+    const sourceIsValid = isRepositoryRelativePromptSource(
+      prompt.templateSource,
+    );
+    if (prompt.provenanceStatus === 'PROVEN') {
+      if (
+        prompt.templateSource !== expectedSource ||
+        !existsSync(join(repositoryRoot, ...expectedSource.split('/')))
+      ) {
+        errors.push(
+          issue(
+            'invalid-prompt-template-source',
+            `${relativePackage}/${promptProvenanceFile}`,
+            `Proven template source for ${filename} must be the available canonical path ${expectedSource}.`,
+          ),
+        );
+      }
+    } else if (prompt.templateSource !== null && !sourceIsValid) {
+      errors.push(
+        issue(
+          'invalid-prompt-template-source',
+          `${relativePackage}/${promptProvenanceFile}`,
+          `Historical template source for ${filename} must be null or a repository-relative forward-slash path.`,
+        ),
+      );
+    }
+
+    const promptRevisionKnown =
+      typeof prompt.templateRevision === 'string' &&
+      promptTemplateRevisionPattern.test(prompt.templateRevision);
+    if (
+      (!promptRevisionKnown && prompt.templateRevision !== null) ||
+      (prompt.provenanceStatus === 'PROVEN' && !promptRevisionKnown)
+    ) {
+      errors.push(
+        issue(
+          'invalid-prompt-provenance',
+          `${relativePackage}/${promptProvenanceFile}`,
+          `Template revision for ${filename} must be valid, or null only when historical provenance is PARTIAL or NEEDS_REVIEW.`,
+        ),
+      );
+    }
+    if (
+      normalGeneratedSet &&
+      prompt.templateRevision !== provenance.templateRevision
+    ) {
+      errors.push(
+        issue(
+          'inconsistent-prompt-template-revision',
+          `${relativePackage}/${promptProvenanceFile}`,
+          `New generated prompt ${filename} must match the template-set revision.`,
+        ),
+      );
+    }
+    const templateHashKnown = promptHashPattern.test(
+      prompt.templateSha256 ?? '',
+    );
+    if (
+      (!templateHashKnown && prompt.templateSha256 !== null) ||
+      (prompt.provenanceStatus === 'PROVEN' && !templateHashKnown)
+    ) {
+      errors.push(
+        issue(
+          'invalid-prompt-provenance',
+          `${relativePackage}/${promptProvenanceFile}`,
+          `Template SHA-256 for ${filename} must be valid, or null only when historical provenance is PARTIAL or NEEDS_REVIEW.`,
+        ),
+      );
+    }
+    if (!promptHashPattern.test(prompt.snapshotSha256 ?? '')) {
+      errors.push(
+        issue(
+          'invalid-prompt-provenance',
+          `${relativePackage}/${promptProvenanceFile}`,
+          `Snapshot SHA-256 for ${filename} is invalid.`,
+        ),
+      );
+    }
+    if (!promptLocalModificationStates.has(prompt.localModificationState)) {
+      errors.push(
+        issue(
+          'invalid-prompt-provenance',
+          `${relativePackage}/${promptProvenanceFile}`,
+          `Local modification state for ${filename} is invalid.`,
+        ),
+      );
+    }
+    if (
+      prompt.provenanceStatus === 'PROVEN' &&
+      prompt.localModificationState === 'UNKNOWN'
+    ) {
+      errors.push(
+        issue(
+          'invalid-prompt-provenance',
+          `${relativePackage}/${promptProvenanceFile}`,
+          `Local modification state for proven prompt ${filename} cannot be UNKNOWN.`,
+        ),
+      );
+    }
+    if (
+      prompt.localModificationState === 'NONE' &&
+      templateHashKnown &&
+      promptHashPattern.test(prompt.snapshotSha256 ?? '') &&
+      prompt.templateSha256 !== prompt.snapshotSha256
+    ) {
+      errors.push(
+        issue(
+          'inconsistent-prompt-provenance',
+          `${relativePackage}/${promptProvenanceFile}`,
+          `${filename} declares no local modification but its template and snapshot hashes differ.`,
+        ),
+      );
+    }
+
+    const snapshotPath = join(packagePath, 'prompts', filename);
+    if (
+      existsSync(snapshotPath) &&
+      promptHashPattern.test(prompt.snapshotSha256 ?? '') &&
+      sha256File(snapshotPath) !== prompt.snapshotSha256
+    ) {
+      errors.push(
+        issue(
+          'sealed-prompt-mismatch',
+          `${relativePackage}/prompts/${filename}`,
+          'The sealed snapshot differs from recorded provenance. Tooling will not repair it; a future explicit successor/reseal flow is required.',
+        ),
+      );
+    }
+  }
+
+  for (const filename of requiredPrompts) {
+    if (!seen.has(filename)) {
+      errors.push(
+        issue(
+          'missing-prompt-provenance-entry',
+          `${relativePackage}/${promptProvenanceFile}`,
+          `Missing provenance entry for ${filename}.`,
+        ),
+      );
+    }
+  }
+}
+
+function isRepositoryRelativePromptSource(value) {
+  return (
+    typeof value === 'string' &&
+    value.length > 0 &&
+    !value.includes('\\') &&
+    !value.startsWith('/') &&
+    !/^[a-zA-Z]:/u.test(value) &&
+    !value.split('/').some((part) => part === '..' || part === '')
+  );
+}
+
+function validateGenerationEvidence(generation, provenancePath, errors) {
+  const commitIsValid =
+    generation &&
+    typeof generation.commit === 'string' &&
+    /^[a-f0-9]{40,64}$/u.test(generation.commit);
+  const timestampIsValid =
+    generation &&
+    typeof generation.timestamp === 'string' &&
+    !Number.isNaN(Date.parse(generation.timestamp));
+  if (commitIsValid === timestampIsValid) {
+    errors.push(
+      issue(
+        'invalid-prompt-provenance',
+        provenancePath,
+        'generation must contain exactly one valid commit or timestamp fallback.',
+      ),
+    );
   }
 }
 

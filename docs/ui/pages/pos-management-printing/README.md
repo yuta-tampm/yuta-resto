@@ -6,6 +6,10 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
+Prompt snapshot topology: GENERATED_SNAPSHOTS
+
+Prompt provenance: prompt-provenance.json
+
 Application: `apps/yuta-pos`
 
 Target type: `SCREEN`

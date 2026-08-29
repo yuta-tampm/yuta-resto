@@ -8,8 +8,11 @@ Owner: YUTA engineering
 
 Last updated: 2026-08-06
 
-`apps/web` serves the public YUTA product website as well as tenant-facing
-public feedback routes.
+`apps/web` serves the public YUTA product website, including its marketing,
+legal, and integration-information routes. Anonymous tenant-facing direct
+feedback is owned by `apps/feedback-web`; see the
+[reputation feature](../reputation/README.md) and
+[ADR-004](../../decisions/ADR-004-independent-public-feedback-application.md).
 
 ## Public marketing routes
 

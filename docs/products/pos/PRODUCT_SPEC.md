@@ -1,871 +1,453 @@
-# YuTa POS MVP Master Specification
+# YUTA POS Product Specification
 
-Status: Current product reference; architecture sections are superseded
-
-Visibility: Engineering
+Status: Current Product Intent
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-08-20
+Document role: Current broader Product Intent and product rationale
 
-Authority: `docs/products/pos/README.md` and
-`docs/architecture/DATABASE_BOUNDARIES.md`
+Visibility: Engineering and restaurant-local operations
 
-> **Product-scope reference.** Business and UX requirements in this document are
-> governed by `docs/architecture/DATABASE_BOUNDARIES.md`,
-> `docs/products/pos/README.md`, and `docs/products/pos/OFFLINE_STRATEGY.md`.
+Last updated: 2026-08-28
+
+## 1. Purpose and authority
+
+This document owns the broader Product Intent for YUTA POS:
+
+- product rationale and restaurant-local operating goals;
+- operator experience principles;
+- durable business invariants;
+- product-specific non-goals; and
+- future and unresolved design space that remains separately reviewable.
+
+It does not own current runtime or database ownership, executable schemas,
+exact APIs or routes, service signatures, package structure, realtime or
+authentication implementation, printer adapters, deployment, hardware/site
+readiness, or Production Readiness. Those questions must be resolved through
+the current authorities in [Technical authority routing](#14-technical-authority-routing).
+
+Current repository implementation is evidence of Implemented State. It does
+not prove which version, migration, configuration, printer, device, or site is
+currently deployed or ready in production.
+
+## 2. Product position
+
+YUTA POS is a restaurant-local operational product for taking orders,
+coordinating kitchen work, recording operational payments, producing
+non-fiscal tickets, and supporting bounded local management and reporting.
+
+It is designed for fast, repeated use by restaurant operators on local devices.
+Its critical operational path must not depend on public Internet or cloud
+availability while the restaurant's local infrastructure remains healthy.
+
+YUTA POS is a first-class maintained YUTA product. Its local ordering,
+payments, kitchen, printing, user, catalog, and reporting capabilities must not
+be presented as public YUTA cloud-service capabilities.
+
+## 3. Product boundaries
+
+### 3.1 In scope
+
+The broader POS intent covers:
+
+- fast touch-oriented order creation and item entry;
+- an explicit order and order-item lifecycle;
+- durable historical snapshots of operational facts;
+- kitchen production and correction workflows;
+- combo recognition as a commercial discount rule;
+- full and split-payment outcomes;
+- durable, observable, retryable non-fiscal printing;
+- bounded local catalog, combo, establishment, printing, and user management;
+- restaurant-local operational reports; and
+- degraded operation and recovery within the accepted local runtime boundary.
 
-## 0. Purpose
+### 3.2 Product-specific non-goals
 
-This document is the master specification for building the YuTa internal restaurant POS MVP.
+This Product Spec does not approve or claim:
 
-The app is for internal restaurant operations only. The restaurant already uses a separate certified cash register system, so fiscal/tax-compliant receipts, VAT accounting, and legal cash-register certification are out of scope for this MVP.
+- certified cash-register compliance or fiscal receipt issuance;
+- VAT, accounting, or legal cash-register certification;
+- cloud persistence or synchronization of POS operational data;
+- browser ownership of database, transaction, printing, or device access;
+- browser-only emergency operation after loss of the local server;
+- public cloud exposure of restaurant-local operational capabilities;
+- automatic identity synchronization between cloud users and local POS users;
+- automatic synchronization between the cloud Establishment profile and the
+  local POS establishment record;
+- remote management, cloud analytics/export, or multi-site aggregation;
+- a complete Rooms/Tables or floor-plan management capability; or
+- support/readiness claims for every printer, payment device, restaurant, or
+  deployment environment.
 
-The MVP must be simple, reliable, tablet-friendly, and able to run on a local mini PC server 24/7.
+Any future capability in these areas requires its own accepted scope and the
+applicable architecture, security, data, compliance, operations, and readiness
+work.
 
-## 1. Repository Fit
+## 4. Operator experience goals
 
-YuTa is an existing pnpm monorepo. The POS MVP must follow the current repository conventions instead of creating a greenfield structure.
+The POS experience should optimize for real restaurant operations:
 
-Use:
+- fast entry with minimal navigation and avoidable confirmation steps;
+- large, touch-friendly targets and clear current-order context;
+- one-tap addition for plain items when no required choice exists;
+- immediate required-option selection when an item requires a variant;
+- allergy capture kept distinct from commercial option selection;
+- clear success, error, conflict, degraded, and recovery feedback;
+- predictable behavior under repeated actions or temporary local failures;
+- French operator-facing language unless a later approved localization scope
+  says otherwise; and
+- accessible names, keyboard behavior, and visible focus where applicable.
 
-```txt
-apps/yuta-pos       Local POS client, kitchen workflow, payments, and management UI
-apps/site-agent     Local API, persistence, printing, and device-integration boundary
-packages/db-pos     Local POS database schema, migrations, repositories, and seed data
-packages/core       Shared business logic where appropriate
-packages/ui         Shared UI component library (@yuta/ui)
-```
+Exact pages, layouts, components, and current interaction details belong to the
+POS page packs and current application rather than this document.
 
-`apps/backoffice` is a cloud application and must not own or manage local POS
-operational data.
+## 5. Core operational journey
 
-Important exception:
+The durable product journey is:
 
-```txt
-apps/yuta-display
-```
+1. An operator opens an order and identifies its restaurant context using the
+   bounded order-entry model.
+2. The operator adds menu items quickly, including required options and any
+   operator notes or allergy information.
+3. Production items are sent to the kitchen in explicit batches.
+4. Kitchen operators see and advance production work, with bounded correction
+   and recovery behavior.
+5. The commercial total is calculated from durable item facts and applicable
+   combo discounts.
+6. The operator records a full payment or an approved split-payment outcome.
+7. The order closes only when its required operational and payment invariants
+   are satisfied.
+8. Non-fiscal print work is created from committed state and can be observed and
+   retried independently of the transaction that produced it.
 
-`apps/yuta-display` is a separate signage app and keeps its own local database
-setup. Do not move or merge the display database into `packages/db-pos` as part
-of the POS MVP.
+The bounded current flow may use a free-form table or service label. That does
+not approve a broader Rooms/Tables, floor-plan, reservation, or seating model.
 
-## 2. Tech Stack
+## 6. Durable business invariants
 
-Use the existing project stack:
+### 6.1 Explicit lifecycle
 
-```txt
-pnpm
-Next.js App Router
-React 19
-TypeScript strict mode
-Tailwind CSS 4
-PostgreSQL
-Drizzle ORM
-Zod
-Docker Compose
-Local server
-Tailscale remote access
-```
+Orders and order items must have explicit, reviewable lifecycle transitions.
+Transitions must not be inferred solely from which screen is visible, and
+repeated commands must not silently create duplicate durable effects.
 
-All UI must use `@yuta/ui`. Do not introduce MUI, Ant Design, Chakra UI, Mantine, or another component library. Use `lucide-react` for icons.
+The exact current statuses, transition guards, request schemas, and error
+responses are executable implementation details owned by current contracts,
+schema, services, and tests.
 
-## 3. Language Rules
+### 6.2 Historical accuracy
 
-- Code, comments, types, variables, commit messages, and documentation: English.
-- `apps/yuta-pos` UI text: French.
-- Admin POS UI text: French.
+Operational history must remain understandable after catalog or configuration
+changes. Orders, items, discounts, checks, payments, kitchen batches, and print
+work must preserve the facts needed to explain what happened at the time.
 
-## 4. Core POS Flow
+Where a mutable catalog or rule contributes to an order, the committed order
+must retain the relevant historical label, price, tax-independent commercial
+amount, option, and discount facts rather than depending only on today's
+catalog state.
 
-The MVP must support this main flow:
+### 6.3 No silent hard deletion
 
-```txt
-Create order
-  -> enter table label as free text
-  -> add menu items quickly
-  -> send items to kitchen
-  -> kitchen prepares items
-  -> payment screen
-  -> auto-apply combo discounts
-  -> full payment or split payment
-  -> close order
-```
+Committed operational history must not be silently hard-deleted. Cancellation,
+voiding, correction, reversal, or supersession must be explicit and auditable
+within the owning workflow.
 
-There is no table management module for MVP. Do not create a table map, table state screen, or `restaurant_tables` table.
+This principle does not define exact retention law, fiscal compliance, or a
+universal deletion policy for every technical record. Those questions require
+their applicable approved scope.
 
-Store table information as:
+## 7. Kitchen product semantics
 
-```ts
-orders.tableLabel: string;
-```
+The kitchen works from production items and preparation context, not from
+commercial combo names or discount lines.
 
-Examples:
+Durable kitchen intent includes:
 
-```txt
-Table 3
-Terrasse 5
-Emporter
-Uber Eats
-Deliveroo
-Client Martin
-```
+- only eligible production work is sent;
+- each send produces an identifiable batch or equivalent durable boundary;
+- repeated sends do not duplicate the same committed production effect;
+- preparation progress and completion are explicit;
+- corrections are deliberate and preserve operational history;
+- temporary realtime loss has a recovery path to committed local state; and
+- audio or visual attention cues assist the operator but are not the source of
+  truth for kitchen state.
 
-## 5. Business Rules
+Exact queues, status values, realtime transport, polling fallback, chime
+behavior, routes, and screen layout belong to current Product Knowledge, page
+packs, contracts, code, and tests.
 
-### 5.1 Historical Accuracy
+## 8. Combo product semantics
 
-Menu prices and names can change later. Old orders must remain correct.
+A combo is a deterministic commercial rule applied to eligible order items. It
+does not become a synthetic kitchen product and must not hide the actual items
+that need preparation.
 
-Every order item must store snapshots:
+Combo behavior should:
 
-```txt
-itemNameSnapshot
-unitPriceCentsSnapshot
-kitchenStationSnapshot
-```
+- use committed item facts and eligible rule configuration;
+- produce explainable discount results;
+- avoid assigning one item to incompatible overlapping benefits;
+- preserve which items and rule produced a committed discount;
+- remain stable for historical orders after later rule changes; and
+- keep operator suggestions distinct from the final committed calculation.
 
-### 5.2 Kitchen Display
+Exact algorithms, data models, service functions, and management screens are
+owned by current implementation sources.
 
-Kitchen must see real production items only. Kitchen must not see combo names or combo discounts.
+## 9. Payments and splits
 
-Example:
+YUTA POS records operational payment facts. It does not claim fiscal,
+accounting, acquiring, or certified cash-register authority.
 
-```txt
-Customer gets Gua Bao Happy from Gua Bao - Porc laque + The glace maison 25 cl.
-Kitchen and caisse see the two production items, not the formula name.
-```
+### 9.1 Full payment
 
-Combos are payment/discount logic, not kitchen production logic.
+A full-payment workflow should record a committed payment outcome against the
+remaining payable amount and close the order only after all required
+invariants succeed atomically.
 
-Kitchen starts preparation at ticket/screen scope. One header action changes
-all `sent` items for the selected order and production screen to `preparing`
-inside the site-agent order transaction. The counter screen includes both Bar
-and Dessert stations while Cuisine remains isolated. The
-operation is idempotent by state when no matching `sent` item remains. Item
-rows retain the direct `ready` action; ready rows expose one correction back to
-`preparing`.
-After preparation starts, the header action remains visible as an undo control.
-It atomically returns the selected order/screen's `preparing` rows to `sent`,
-without changing ready rows or the other screen, and is idempotent by state.
+### 9.2 Split by items
 
-Kitchen exposes two ticket queues: `À préparer` combines sent, preparing, and
-mixed-completion tickets, while `Prêt` contains only fully-ready tickets.
-`En préparation` remains an item state but is not repeated as an item badge or
-exposed as a separate queue tab.
+An item split should let an operator allocate eligible order items to a check
+or payment share while preserving the connection between items, applicable
+discounts, and the order total. The same payable value must not be allocated
+twice.
 
-The operator may explicitly enable a local Kitchen chime from the `Son`
-control. A chime represents a new, non-replayed send batch for the selected
-Cuisine or Bar / Desserts screen; it does not represent preparation, ready,
-allergy, payment, catalog, reconnect, or polling activity. Browser audio remains
-muted until authorized, and bursts are rate-limited.
+### 9.3 Equal split
 
-### 5.3 Combo Handling
+An equal split should distribute the remaining payable value predictably.
+Rounding must be deterministic, explicit, and conserve the total: the sum of
+all shares must equal the amount being split.
 
-Staff should add individual menu items quickly without thinking about combos.
+### 9.4 Balanced close
 
-Correct workflow:
+Across full and split workflows:
 
-```txt
-Add Gua Bao - Porc laque 11 EUR
-Add The glace maison 25 cl 3.50 EUR
+- committed allocations and payments must not exceed the eligible remainder;
+- discounts must be allocated or represented without changing the order total;
+- retries must not duplicate payments, checks, or closure effects;
+- partial progress must remain understandable and recoverable; and
+- an order closes only when its required payable balance is satisfied.
 
-At payment:
-System detects Gua Bao Happy = 12.50 EUR
-System adds discount -2 EUR
+Exact payment methods, status values, rounding implementation, APIs, and
+transaction boundaries belong to current contracts, schema, services, and
+tests. Refunds, new payment hardware, invoicing, fiscalization, and cash
+management remain separately reviewable.
 
-Final:
-Gua Bao - Porc laque 11 EUR
-The glace maison 25 cl 3.50 EUR
-Gua Bao Happy discount -2 EUR
-Total 12.50 EUR
-```
+## 10. Printing and hardware intent
 
-Combos are represented as automatic discounts. Do not replace order items with combo items.
+Printing is an operational, non-fiscal capability.
 
-### 5.4 Split Payment
+When a committed operation requires a ticket:
 
-The system must support:
+- print work should be durably recorded after or with the owning committed
+  state;
+- operators should be able to observe pending, successful, and failed work;
+- failed jobs should be safely retryable;
+- repeated requests should not silently create unintended duplicate effects;
+- printer failure must not corrupt or roll back an already committed order or
+  payment; and
+- recovery should distinguish transaction success from physical-output
+  success.
 
-```txt
-1. Pay full order
-2. Split by items
-3. Split equally
-```
+This document does not define printer model, transport, device path, worker
+cadence, command language, station wiring, or site configuration. Those are
+current implementation and deployment concerns.
 
-Rules:
+Repository implementation does not mean a named restaurant, host, printer, or
+device is `READY`. Hardware/site readiness requires dated evidence for the
+explicit environment and scope.
 
-- Full payment optimizes combo discounts on the whole order.
-- Split by items creates checks and recalculates combo discounts inside each check.
-- Split equally optimizes the full order first, then divides the final total.
-- For split by items, combo discounts apply only inside the same check.
-- Replacing an unpaid split marks old open checks as `void`.
-- Once any split check is paid, the split mode cannot be replaced.
-
-### 5.5 No Hard Delete
-
-Do not hard-delete historical data:
-
-```txt
-orders
-order_items
-payments
-discounts
-checks
-print_jobs
-```
-
-Use statuses such as:
-
-```txt
-cancelled
-void
-refunded
-failed
-```
-
-## 6. Status Model
-
-### 6.1 Order Status
-
-```ts
-type OrderStatus =
-  | 'draft'
-  | 'sent'
-  | 'preparing'
-  | 'ready'
-  | 'served'
-  | 'paid'
-  | 'cancelled';
-```
-
-Normal flow:
-
-```txt
-draft -> sent -> preparing -> ready -> served -> paid
-```
-
-Cancelled flow:
-
-```txt
-draft/sent/preparing/ready/served -> cancelled
-```
-
-### 6.2 Order Item Status
-
-```ts
-type OrderItemStatus =
-  | 'pending'
-  | 'sent'
-  | 'preparing'
-  | 'ready'
-  | 'served'
-  | 'cancelled';
-```
-
-Rules:
-
-- `pending` items can be edited freely.
-- `sent`, `preparing`, `ready`, and `served` items should not be deleted.
-- Sent or later items can only be cancelled.
-- Kitchen display shows `sent` and `preparing` items.
-- Ready items can be shown separately or hidden depending on UI.
-- For MVP, status applies to the whole order item row quantity. Partial kitchen status for a single row is out of scope.
-
-## 7. Database Rules
-
-Use PostgreSQL + Drizzle ORM in `packages/db-pos`. `apps/site-agent` is the
-runtime owner of this package; browser code and cloud applications must not
-connect to the local POS database directly.
-
-General rules:
-
-- Use UUID primary keys.
-- Use integer cents for money fields. Never use floats for money.
-- Use enums where appropriate.
-- Add `createdAt` and `updatedAt` where records can change.
-- Add indexes for common lookup fields such as `orderId`, `checkId`, `status`, `createdAt`, and `orderNumber`.
-- Use foreign keys.
-- Keep snapshot fields for historical accuracy.
-- VAT/tax-compliant receipt fields are out of scope for MVP.
-
-## 8. Database Tables
-
-### 8.1 users
-
-```ts
-users {
-  id: string;
-  name: string;
-  email?: string;
-  role: 'admin' | 'manager' | 'staff' | 'kitchen';
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
-```
-
-### 8.2 menu_categories
-
-```ts
-menuCategories {
-  id: string;
-  name: string;
-  sortOrder: number;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
-```
-
-### 8.3 menu_items
-
-```ts
-menuItems {
-  id: string;
-  categoryId: string;
-  name: string;
-  description?: string;
-  priceCents: number;
-  kitchenStation: 'kitchen' | 'bar' | 'dessert' | 'none';
-  orderingPolicy: 'merge' | 'separate';
-  variantOptions: Array<{ code: string; label: string }>;
-  requiredVariantQuantity: number;
-  isAvailable: boolean;
-  sortOrder: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
-```
-
-Menu items are real sellable items. `orderingPolicy` controls whether repeated
-pending additions merge or create one quantity-one row per portion.
-`variantOptions` and `requiredVariantQuantity` define catalog-driven choices;
-the service validates the configured total per ordered portion without
-matching item names. Do not represent combo rules as normal menu items for MVP.
-
-### 8.4 orders
-
-```ts
-orders {
-  id: string;
-  orderNumber: string;
-  tableLabel: string;
-  orderType: 'dine_in' | 'takeaway' | 'delivery';
-  status: 'draft' | 'sent' | 'preparing' | 'ready' | 'served' | 'paid' | 'cancelled';
-
-  subtotalCents: number;
-  discountCents: number;
-  totalCents: number;
-
-  paymentMode: 'single' | 'split_by_items' | 'split_equally';
-  note?: string;
-  createdBy: string;
-
-  sentAt?: Date;
-  paidAt?: Date;
-  cancelledAt?: Date;
-  cancelledReason?: string;
-
-  createdAt: Date;
-  updatedAt: Date;
-}
-```
-
-### 8.5 order_items
-
-```ts
-orderItems {
-  id: string;
-  orderId: string;
-  menuItemId: string;
-
-  itemNameSnapshot: string;
-  unitPriceCentsSnapshot: number;
-  kitchenStationSnapshot: 'kitchen' | 'bar' | 'dessert' | 'none';
-
-  quantity: number;
-  note?: string;
-
-  status: 'pending' | 'sent' | 'preparing' | 'ready' | 'served' | 'cancelled';
-
-  sentAt?: Date;
-  readyAt?: Date;
-  servedAt?: Date;
-  cancelledAt?: Date;
-  cancelledReason?: string;
-
-  createdAt: Date;
-  updatedAt: Date;
-}
-```
-
-### 8.6 combo_rules
-
-```ts
-comboRules {
-  id: string;
-  name: string;
-  pricingMode: 'fixed' | 'base_item_plus_delta';
-  comboPriceCents: number;
-  priceDeltaCents: number;
-  basePricingGroupName?: string;
-  priority: number;
-  maxApplications?: number;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
-```
-
-Lower `priority` means higher priority.
-
-### 8.7 combo_rule_groups
-
-```ts
-comboRuleGroups {
-  id: string;
-  comboRuleId: string;
-  name: string;
-  minQuantity: number;
-  maxQuantity: number;
-  sortOrder: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
-```
-
-### 8.8 combo_rule_group_items
-
-```ts
-comboRuleGroupItems {
-  id: string;
-  comboRuleGroupId: string;
-  menuItemId: string;
-  extraPriceCents: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
-```
-
-### 8.9 order_discounts
-
-```ts
-orderDiscounts {
-  id: string;
-  orderId: string;
-  comboRuleId?: string;
-  nameSnapshot: string;
-  discountCents: number;
-  createdAt: Date;
-}
-```
-
-### 8.10 order_discount_items
-
-```ts
-orderDiscountItems {
-  id: string;
-  orderDiscountId: string;
-  orderItemId: string;
-  quantityApplied: number;
-  createdAt: Date;
-}
-```
-
-### 8.11 checks
-
-```ts
-checks {
-  id: string;
-  orderId: string;
-  checkLabel: string;
-  splitMode: 'items' | 'equal';
-  status: 'open' | 'paid' | 'void';
-
-  subtotalCents: number;
-  discountCents: number;
-  totalCents: number;
-
-  createdAt: Date;
-  updatedAt: Date;
-}
-```
-
-For equal split checks, `check_items` may be empty and the check total is stored directly on the check.
-
-### 8.12 check_items
-
-```ts
-checkItems {
-  id: string;
-  checkId: string;
-  orderItemId: string;
-  quantity: number;
-  amountCentsSnapshot: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
-```
-
-### 8.13 check_discounts
-
-```ts
-checkDiscounts {
-  id: string;
-  checkId: string;
-  comboRuleId?: string;
-  nameSnapshot: string;
-  discountCents: number;
-  createdAt: Date;
-}
-```
-
-### 8.14 check_discount_items
-
-```ts
-checkDiscountItems {
-  id: string;
-  checkDiscountId: string;
-  checkItemId: string;
-  quantityApplied: number;
-  createdAt: Date;
-}
-```
-
-### 8.15 payments
-
-```ts
-payments {
-  id: string;
-  orderId: string;
-  checkId?: string;
-
-  method: 'cash' | 'card' | 'ticket_resto' | 'other';
-  amountCents: number;
-  tenderedCents?: number;
-  changeCents?: number;
-  tipCents: number;
-
-  status: 'pending' | 'paid' | 'failed' | 'refunded';
-
-  paidBy?: string;
-  paidAt?: Date;
-  refundedAt?: Date;
-  refundReason?: string;
-
-  createdAt: Date;
-}
-```
-
-Rules:
-
-- `amountCents` is the amount applied to the order or check.
-- For cash, `tenderedCents` is the money received and `changeCents` is the change returned.
-- Full order payment uses `checkId = null`.
-- Split payment points `checkId` to the relevant check.
-- Mark an order as paid only when the correct amount has been paid.
-
-### 8.16 print_jobs
-
-```ts
-printJobs {
-  id: string;
-
-  source: 'pos' | 'kitchen' | 'delivery' | 'manual';
-  printerName: string;
-
-  jobType: 'kitchen_ticket' | 'customer_receipt' | 'test';
-  status: 'pending' | 'printing' | 'printed' | 'failed';
-
-  payload: json;
-  errorMessage?: string;
-
-  createdAt: Date;
-  printedAt?: Date;
-}
-```
-
-`customer_receipt` is created only by the explicit paid receipt command on the
-order-detail route. Payment flows do not create it automatically. The job stores
-an immutable authoritative local snapshot and represents one non-fiscal copy;
-the browser never supplies receipt lines, totals, printer routing, or ESC/POS.
-The version-1 payload may include the configured local establishment display
-name. It is captured only when the source receipt job is first created; retry
-and reprint jobs reuse that exact payload, and older/unconfigured payloads
-remain valid without the field.
-
-For MVP, print gateway behavior can run in mock mode and write printable content to logs or files.
-
-## 9. Order Service Requirements
-
-Implement:
-
-```ts
-createOrder({ tableLabel, orderType, createdBy });
-addOrderItem({ orderId, menuItemId, quantity, note });
-updateOrderItemQuantity({ orderItemId, quantity });
-cancelOrderItem({ orderItemId, reason });
-sendOrderToKitchen(orderId);
-markOrderItemPreparing(orderItemId);
-markOrderItemSent(orderItemId);
-markOrderItemReady(orderItemId);
-markOrderItemServed(orderItemId);
-getOpenOrders();
-getOrderDetail(orderId);
-```
-
-Rules:
-
-- `createOrder` creates an order with status `draft`.
-- `addOrderItem` copies menu item snapshots into `order_items`.
-- Only `pending` items can be modified freely.
-- Sent or preparing items cannot be deleted; use cancellation.
-- `sendOrderToKitchen` updates pending items to `sent`.
-- `sendOrderToKitchen` sets `sentAt`.
-- Order totals must be recalculated after item changes.
-- Combo discounts should not be calculated inside the basic order service.
-- Combo optimization happens at payment or explicitly from the payment screen.
-
-## 10. Combo Engine
-
-Implement:
-
-```ts
-optimizeOrderCombos(orderId);
-clearOrderComboDiscounts(orderId);
-calculateComboDiscountsForItems(items, comboRules);
-optimizeCheckCombos(checkId);
-clearCheckComboDiscounts(checkId);
-```
-
-Rules:
-
-- Apply combo rules by priority.
-- Lower priority number means higher priority.
-- One item quantity can only be used once.
-- If an order item has quantity 3, it can be expanded into 3 unit items internally.
-- Do not modify order items.
-- Do not replace order items with combo items.
-- Only create a discount if `discountCents > 0`.
-- Store discount-to-item mapping.
-- For `fixed`, combo total is `comboPriceCents + eligible item extras`.
-- For `base_item_plus_delta`, combo total is selected base-group item price plus `priceDeltaCents` plus eligible item extras. The base group is identified by `basePricingGroupName`, usually `Plat`.
-
-Tie-breaker for deterministic results:
-
-```txt
-When several item combinations match the same combo rule:
-1. Choose the combination with the highest positive discount.
-2. Then choose older order items first.
-3. Then choose lower item id as the final tie-breaker.
-```
-
-## 11. Payment and Split Payment
-
-Implement:
-
-```ts
-payFullOrder({ orderId, method, amountCents, tenderedCents?, paidBy })
-createChecksByItems({ orderId, checks })
-splitOrderEqually({ orderId, parts })
-payCheck({ checkId, method, amountCents, tenderedCents?, paidBy })
-getPaymentSummary(orderId)
-```
-
-### 11.1 Full Payment
-
-Flow:
-
-```txt
-Open payment screen
-  -> run optimizeOrderCombos(orderId)
-  -> show final total
-  -> create payment
-  -> mark order as paid if paid amount covers total
-  -> do not create an automatic customer receipt print job
-```
-
-### 11.2 Split By Items
-
-Flow:
-
-```txt
-Create checks
-  -> assign item quantities to each check
-  -> validate assigned quantities
-  -> run optimizeCheckCombos for each check
-  -> each check can be paid separately
-  -> order is paid when all checks are paid
-  -> do not create an automatic customer receipt print job
-```
-
-Assigned check item quantities cannot exceed the original order item quantity.
-
-### 11.3 Split Equally
-
-Flow:
-
-```txt
-Run optimizeOrderCombos(orderId)
-  -> take final optimized total
-  -> split into N checks
-  -> handle rounding by cents
-  -> each check can be paid separately
-```
-
-Rounding rule:
-
-```txt
-If total is 10000 cents and parts = 3:
-- Part 1: 3334
-- Part 2: 3333
-- Part 3: 3333
-```
-
-The sum must always equal the original optimized total.
-
-## 12. POS UI Requirements
-
-The UI must be simple, tablet-friendly, and in French.
-
-Screens in `apps/yuta-pos`:
-
-```txt
-Create order
-Order detail
-Kitchen
-Payment
-Split by items
-Split equally
-```
-
-Do not build a table map.
-
-Use `@yuta/ui` components and YuTa design tokens.
-
-## 13. Admin MVP
-
-Keep POS management local. Provide the management workflows through
-`apps/yuta-pos`, backed by `apps/site-agent`:
-
-```txt
-Manage menu categories
-Manage menu items
-Manage combo rules
-Manage combo rule groups
-Manage combo group items
-Manage the local establishment receipt display name
-View daily orders
-View daily revenue
-```
-
-Rules:
-
-- Combo rules must be configurable without code.
-- Extra price per eligible combo item must be supported.
-- Menu item availability must be toggleable.
-- The establishment profile is one local singleton, editable by an active admin
-  or manager with integer-revision compare-and-set. It is not cloud tenant,
-  legal, fiscal, licensing, address, or contact data.
-
-## 14. Print Gateway MVP
-
-The current print gateway uses one EPSON TM-m30 Bluetooth printer for internal
-production tickets only.
-
-Required features:
-
-```txt
-Create print job by HTTP API or service function
-Store job in print_jobs
-Worker processes pending jobs
-Render ASCII-safe ESC/POS and write to the configured Linux RFCOMM device
-Mark job as printed or failed
-Retry failed jobs
-```
-
-Kitchen tickets are batch-based. If additional items are added after an earlier kitchen send, the next kitchen ticket should contain only the newly sent items.
-
-Physical printer integration remains behind `apps/site-agent`. Each send batch
-creates separate `CUISINE` and `BOISSONS & DESSERTS` jobs for the stations that
-have items; station `none` is excluded. The one TM-m30 prints and cuts the jobs
-sequentially. Local managers configure 1 to 3 copies per destination and a
-compact, standard, or large font preset, plus top, left, and bottom ticket
-spacing. Jobs snapshot those presentation settings. Cuisine sections are
-ordered Entrées, Suppléments, then Plats; counter sections are ordered Boissons
-then Desserts. One feed-and-cut runs at the end of each station ticket. Payment never creates a
-customer receipt job, and the POS browser
-receives no device path or access.
-Local managers can enqueue a one-copy test job from printing management. The
-test uses persisted presentation settings and validates punctuation
-transliteration, allergy emphasis, and the physical cut without creating an
-order.
-
-## 15. Implementation Order
-
-Do not build the full system in one giant step.
-
-Recommended order:
-
-```txt
-1. Inspect repository structure
-2. Create packages/db-pos Drizzle schema
-3. Create migrations
-4. Add seed data
-5. Implement local order services in apps/site-agent
-6. Implement combo engine
-7. Implement payment/split service
-8. Connect the apps/yuta-pos shell to apps/site-agent
-9. Build POS order UI
-10. Build kitchen screen inside yuta-pos
-11. Build payment and split screens
-12. Add local menu/combo management screens to apps/yuta-pos
-13. Add print job mock workflow
-14. Add unit tests
-15. Add Docker Compose following `docs/operations/DEPLOYMENT.md`.
-```
-
-## 16. Seed Data
-
-The POS seed is the approved Luna operating catalog, not demonstration menu
-fixtures. Its authoritative structured source is
-`packages/db-pos/src/luna-seed-data.ts`.
-
-It creates 12 categories and 53 catalog rows across entrees, Bun, Gua Bao,
-soups, daily dishes, desserts, soft drinks, cocktails and mocktails, hot
-drinks, alcohol, supplements, and formulas. Fifty-two products are available
-after a clean seed. `Plat special du samedi` is the additional row; it starts
-unavailable at zero price so a manager must enter the weekly description and
-price before enabling it.
-
-The seed creates these active combo rules:
-
-```txt
-Gua Bao Happy = one Gua Bao + The glace maison 25 cl for 12.50 EUR
-Menu Express = eligible main dish + 4 EUR, with one entree or dessert
-Menu Gourmand = eligible main dish + 8 EUR, with one entree and one dessert
-Combo Ete = daily dish + The glace maison 25 cl for daily dish price + 2.50 EUR
-```
-
-Eligible main dishes for Menu Express and Menu Gourmand are all Bun, Gua Bao,
-soups, and daily dishes. Seeded products route to `kitchen`, `bar`, or
-`dessert`; none uses station `none`.
-
-## 17. Acceptance Criteria
-
-The MVP is acceptable when:
-
-1. Staff can create an order with a free text table label.
-2. Staff can add menu items quickly.
-3. Staff can send items to kitchen.
-4. Kitchen screen shows real items only.
-5. Staff can mark items preparing and ready.
-6. Payment screen auto-applies combo discounts.
-7. Full payment works.
-8. Split by items works.
-9. Split equally works.
-10. Order is marked paid only when all required payments are completed.
-11. Historical order data stays correct after menu price changes.
-12. Print job mock can create and process print jobs.
-13. Unit tests cover core business rules.
+## 11. Local management, reports, and identity
+
+### 11.1 Bounded local management
+
+The POS product may provide local management for the operational configuration
+it owns, including catalog, combos, establishment display/receipt context,
+printing, and local users. Management actions must preserve operational history
+and respect the trusted Site Agent boundary.
+
+This intent does not approve cloud administration, remote fleet management, or
+automatic multi-site distribution.
+
+### 11.2 Restaurant-local reports
+
+Operational reports should help restaurant operators understand local orders,
+payments, items, and activity using the committed local facts owned by POS.
+Report results must be explainable, deterministic for their selected scope, and
+must not be presented as fiscal or certified accounting output.
+
+Exact service-day rules, measures, filters, routes, exports, and current UI
+belong to current Product Knowledge, page packs, code, and tests. Cloud
+analytics/export is separately reviewable.
+
+### 11.3 Separate local access control
+
+Restaurant-local POS access is controlled separately from cloud identity and
+membership. Cloud users must not be treated as local POS identities, and cloud
+roles must not silently authorize local operations.
+
+The product intent is fail-closed local access, accountable operator actions,
+and least privilege appropriate to the restaurant-local boundary. Exact local
+roles, permissions, credential/PIN storage, sessions, versioning, route
+protection, and administration behavior belong to the approved Site Agent
+Product Knowledge and current code/tests.
+
+## 12. Local-first and resilience
+
+Local-first means POS operational work can continue without Internet or cloud
+when the restaurant LAN, local POS server, Site Agent, local PostgreSQL, and
+required devices remain healthy.
+
+Local-first does not mean that a browser can continue durable operation after
+losing the local server. Current browser-offline emergency order entry is not
+implemented. A cached application shell, browser standby, or temporary UI state
+must not be confused with durable operational ownership.
+
+Durable local operations should:
+
+- commit through the trusted local service and persistence boundary;
+- use atomic and idempotent behavior for critical mutations;
+- recover from browser refresh or transient connection loss by reading
+  committed local state;
+- preserve queued print work independently of the browser session; and
+- fail visibly when required local infrastructure is unavailable.
+
+Detailed failure modes, PWA behavior, backup expectations, and recovery limits
+are owned by [Offline Strategy](OFFLINE_STRATEGY.md) and the
+[Site Agent Product Knowledge Home](site-agent/README.md).
+
+This Product Spec does not introduce browser-side operational replication,
+multi-master state, speculative outboxes, or offline synchronization.
+
+## 13. Cloud and local separation
+
+POS operational data remains restaurant-local. Orders, payments, kitchen
+state, print work, local users, catalog, and operational reports must not be
+silently synchronized into cloud persistence.
+
+The following are separate trust and ownership boundaries:
+
+- cloud identities/memberships versus local POS users; and
+- the cloud Establishment profile versus the local POS establishment record.
+
+Similar names or fields do not create a shared source of truth or authorize
+copying between those boundaries.
+
+Cloud analytics/export, remote management, multi-site aggregation, cloud-user
+mapping, Establishment mapping, or any transfer of local operational data is
+future design space. Each capability requires an accepted Product Decision and
+explicit data minimization, contracts, security, ownership, operations,
+failure, and readiness review. None is an existing roadmap commitment in this
+document.
+
+## 14. Technical authority routing
+
+For current technical or implementation questions, use these sources rather
+than this Product Spec:
+
+| Question                                                         | Current authority                                                                                                                                     |
+| ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Runtime families, product visibility, and cloud/local separation | [ADR-001](../../decisions/ADR-001-runtime-families-and-product-visibility.md) and [ADR-003](../../decisions/ADR-003-database-ownership-boundaries.md) |
+| Browser, Site Agent, and database ownership                      | [Database Boundaries](../../architecture/DATABASE_BOUNDARIES.md) and [Site Agent Product Knowledge](site-agent/README.md)                             |
+| Current POS scope and behavior                                   | [POS README](README.md) and the [Module Registry](../../MODULE_REGISTRY.md)                                                                           |
+| Current local persistence                                        | [`packages/db-pos` schema and migrations](../../../packages/db-pos)                                                                                   |
+| Current transport contracts                                      | [`@yuta/contracts/local-pos`](../../../packages/contracts/src/local-pos) and current consumers                                                        |
+| Exact routes, services, auth, realtime, printing, and UI         | [Site Agent code/tests](../../../apps/site-agent), [POS code/tests](../../../apps/yuta-pos), and their nearest instructions                           |
+| Route-level UI intent and evidence                               | [POS page-pack index](../../ui/pages/README.md) and the owning page pack                                                                              |
+| Operator behavior and acceptance                                 | [User Guide](USER_GUIDE.md) and [QA Checklist](QA_CHECKLIST.md)                                                                                       |
+| Offline/degraded behavior                                        | [Offline Strategy](OFFLINE_STRATEGY.md) and [Site Agent Product Knowledge](site-agent/README.md)                                                      |
+| Deployment and site readiness                                    | [Deployment](../../operations/DEPLOYMENT.md) and [Production Readiness](../../operations/PRODUCTION_READINESS.md)                                     |
+
+Package manifests, executable schema/migrations, contracts, current code, and
+tests describe repository implementation. Dated deployment/runtime evidence is
+still required for claims about a live restaurant environment.
+
+## 15. Fiscal and legal boundary
+
+YUTA POS currently records operational payments and produces non-fiscal
+tickets.
+
+This Product Spec does not claim:
+
+- certified cash-register compliance;
+- fiscal receipt issuance;
+- VAT certification;
+- accounting certification; or
+- legal cash-register certification.
+
+Any future fiscal, invoicing, tax, certified-payment, or accounting capability
+requires a separate approved scope plus applicable legal/compliance ownership,
+data design, auditability, operations, certification, and readiness evidence.
+
+## 16. Future and unresolved design space
+
+The following may remain useful product context, but each is separately
+reviewable and receives no lifecycle assignment from this document:
+
+- browser-offline emergency order entry;
+- remote management and multi-site operations;
+- cloud analytics or bounded export;
+- any local-to-cloud data transfer;
+- cloud-user/local-user or cloud-Establishment/local-establishment mapping;
+- new payment methods or hardware;
+- refunds, cash-management, fiscalization, VAT, and invoicing;
+- Rooms/Tables, floor plans, reservations, or seating management;
+- multiple-printer or fleet management;
+- additional printer/device models;
+- new local access roles or permission models; and
+- new integrations, APIs, packages, schemas, or deployment topologies.
+
+Future designs must preserve historical accuracy, explicit ownership,
+idempotency, failure isolation, local operational continuity, and the accepted
+cloud/POS separation unless a higher-authority accepted durable decision
+explicitly changes the relevant boundary.
+
+## 17. Product acceptance outcomes
+
+The broader product intent is satisfied only when the applicable bounded scope
+can demonstrate that:
+
+- operators can create and progress orders quickly and predictably;
+- committed item, discount, payment, kitchen, and print history remains
+  explainable after configuration changes;
+- kitchen work reflects production items rather than commercial discount
+  constructs;
+- full and split payments conserve totals and cannot close an unbalanced order;
+- retries and transient failures do not duplicate critical durable effects;
+- printing failures remain observable and do not corrupt committed operations;
+- cloud outage does not stop the healthy restaurant-local runtime;
+- local server loss is reported honestly rather than presented as supported
+  browser-offline operation;
+- local identity and data remain separate from cloud trust and persistence;
+- reports and tickets remain explicitly operational and non-fiscal; and
+- environment, device, and production-readiness claims are supported by dated,
+  scope-specific evidence.
+
+Exact verification procedures and current evidence belong to the QA Checklist,
+page packs, test suites, and Production Readiness sources.
+
+## 18. Historical context — non-authoritative
+
+Earlier versions of this document combined Product Intent with an initial
+technical blueprint: technology choices, schema and service catalogs,
+implementation sequencing, printer-adapter details, and a sample Luna seed.
+Those details helped explain the original implementation path but are not
+current architecture, execution instructions, configuration, or deployment
+evidence.
+
+Current technical questions must use the authorities routed above. Historical
+provenance remains available in repository history; this step does not create
+or choose a separate archive.
+
+## 19. OpenSpec future role
+
+This Product Spec retains broader Product Intent, product rationale, non-goals,
+and context. Once YUTA explicitly approves `openspec/specs/` as normative,
+approved OpenSpec specs may own precise behavioral requirements inside accepted
+durable boundaries.
+
+Accepted ADR, runtime, database, security, and product-boundary decisions remain
+higher authority for those durable boundaries. An OpenSpec change remains
+non-normative until promoted through the approved lifecycle, and neither an
+OpenSpec spec nor repository implementation proves deployment or Production
+Readiness.

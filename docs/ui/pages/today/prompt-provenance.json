@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "topology": "GENERATED_SNAPSHOTS",
+  "sealed": true,
+  "templateRevision": null,
+  "generation": {
+    "commit": "e028cfdb98a9ff95eee955e037f6fa6f93a94566"
+  },
+  "prompts": [
+    {
+      "filename": "00_REPOSITORY_ANALYSIS.md",
+      "templateSource": null,
+      "templateRevision": null,
+      "templateSha256": null,
+      "snapshotSha256": "c0b9f66a166acdbddfe673b59762c39045096be5612d0899266ca44f2b2f0229",
+      "localModificationState": "UNKNOWN",
+      "provenanceStatus": "NEEDS_REVIEW"
+    },
+    {
+      "filename": "01_VISUAL_BASELINE.md",
+      "templateSource": null,
+      "templateRevision": null,
+      "templateSha256": null,
+      "snapshotSha256": "efa409e68647dd5388b656b5c7e24f44e2673ed5361e97a76ed658313d887cf2",
+      "localModificationState": "UNKNOWN",
+      "provenanceStatus": "NEEDS_REVIEW"
+    },
+    {
+      "filename": "02_COMPONENT_REFACTOR.md",
+      "templateSource": null,
+      "templateRevision": null,
+      "templateSha256": null,
+      "snapshotSha256": "a198e36586bccab82a6eb7fb2314658de3122a10ca7fe018dea7e3a42d765f96",
+      "localModificationState": "UNKNOWN",
+      "provenanceStatus": "NEEDS_REVIEW"
+    },
+    {
+      "filename": "03_INTERACTIONS.md",
+      "templateSource": null,
+      "templateRevision": null,
+      "templateSha256": null,
+      "snapshotSha256": "15f05a5a4221dc378e6b128292ca0553454f344b021b28f8c4527a2dea9a799a",
+      "localModificationState": "UNKNOWN",
+      "provenanceStatus": "NEEDS_REVIEW"
+    },
+    {
+      "filename": "04_DATA_INTEGRATION.md",
+      "templateSource": null,
+      "templateRevision": null,
+      "templateSha256": null,
+      "snapshotSha256": "14b937dbc09d86201ebf99cfadd33964f94455e0978fffc06afe2a92a4cb2f49",
+      "localModificationState": "UNKNOWN",
+      "provenanceStatus": "NEEDS_REVIEW"
+    },
+    {
+      "filename": "05_VISUAL_QA.md",
+      "templateSource": null,
+      "templateRevision": null,
+      "templateSha256": null,
+      "snapshotSha256": "2326260c23b360324560c8e4b7051c7448e26ba650782fe98c3897fe110f1daf",
+      "localModificationState": "UNKNOWN",
+      "provenanceStatus": "NEEDS_REVIEW"
+    }
+  ]
+}

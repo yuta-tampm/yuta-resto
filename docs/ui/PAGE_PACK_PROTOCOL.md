@@ -99,6 +99,7 @@ Do not create `v2`, `v3`, `new`, `final`, or `latest` page directories.
 ```text
 docs/ui/pages/<page-slug>/
 ├── README.md
+├── prompt-provenance.json
 ├── PRODUCT_SCOPE.md
 ├── UI_SPEC.md
 ├── DATA_AND_INTERACTION_SPEC.md
@@ -116,6 +117,65 @@ docs/ui/pages/<page-slug>/
 ```
 
 `PRODUCT_SCOPE.md` may be omitted only when the page is trivial and its scope is fully governed by an existing current feature document. The page `README.md` must state the reason.
+
+`prompt-provenance.json` is required for packs generated under the Generated
+Snapshots topology. Existing packs without this file remain valid in legacy
+compatibility mode and receive a validator warning until the separately
+approved provenance migration is completed.
+
+## Generated prompt snapshots
+
+The canonical source for phase prompts is:
+
+```text
+docs/ui/templates/page/prompts/
+```
+
+Creating a new page pack copies the six canonical prompts into the pack's local
+`prompts/` directory. These local copies are the execution inputs for that page
+pack. An agent working in an existing pack reads its local phase snapshot; it
+must not substitute the latest canonical template.
+
+The generator reads the deterministic template-set revision from
+`docs/ui/templates/page/prompt-template.json`, records one provenance entry per
+phase in `prompt-provenance.json`, and seals the snapshots after successful
+copying and provenance creation. A provenance entry records the filename,
+canonical source path, template revision, template SHA-256, final snapshot
+SHA-256, generation commit or timestamp fallback, local-modification state, and
+provenance status.
+
+For a normal newly generated pack, the root `templateRevision` identifies the
+template set and all six per-prompt revisions match it. Historical migration
+may prove that prompt phases came from different template cohorts. Such a pack
+records `templateRevision: null` at the root when no single set revision is
+meaningful and preserves each known per-prompt revision independently. A
+per-prompt revision may be `null` only when its provenance is explicitly
+`PARTIAL` or `NEEDS_REVIEW`; tooling must not invent a revision.
+
+Generated snapshots use `localModificationState: NONE`. If a future approved
+workflow needs page-specific customization before execution, it must record the
+final local hash and `PRE_SEAL` state before sealing. After sealing, local
+prompts must not be silently edited. A mismatch between a sealed file and its
+recorded hash is a validation error and requires a future explicit
+successor/reseal workflow; tooling never repairs it by overwriting the file.
+
+A canonical-template update affects only packs generated afterward. It does
+not rewrite, regenerate, or invalidate an older pack solely because the latest
+template content differs from that pack's recorded template hash. Duplicate
+prompt bodies are expected when they are valid snapshots and are not a cleanup
+error by themselves.
+
+Existing page packs without prompt provenance remain structurally valid. The
+validator reports `missing-prompt-provenance` as a compatibility warning, does
+not infer historical provenance, and does not add or alter prompt files.
+
+Historical `PARTIAL` and `NEEDS_REVIEW` entries remain structurally valid but
+always produce visible non-blocking provenance warnings. Their recorded
+template source may be an unavailable historical repository-relative path, or
+`null` when it is unknown. Current canonical-file existence is required for a
+newly generated `PROVEN` entry, not for an explicitly incomplete historical
+entry. Snapshot integrity remains independent: every sealed local file must
+still match its recorded snapshot SHA-256.
 
 ## Shared documentation
 
@@ -157,6 +217,8 @@ Inventory status: PENDING | COMPLETE
 Baseline status: PENDING | CAPTURED | BLOCKED | NOT_APPLICABLE
 Design prompt status: PENDING | READY
 Shared context status: PENDING | RESOLVED | BLOCKED
+Prompt snapshot topology: GENERATED_SNAPSHOTS
+Prompt provenance: prompt-provenance.json
 ```
 
 `UNKNOWN` is allowed only while repository analysis is incomplete. Package
@@ -366,6 +428,12 @@ Each reference must be described in the page `README.md`. Images are non-authori
 ### `prompts/`
 
 Contains one focused instruction per phase. Do not replace these with one large `CODEX_PROMPT.md`.
+
+For a generated pack, these files are sealed local snapshots and remain the
+pack's phase execution inputs. Read canonical templates when creating a new
+pack or reviewing topology evolution, not as a replacement for an existing
+pack's local snapshots. Validator findings are diagnostic only: tooling never
+auto-fixes or refreshes a snapshot from the current canonical template.
 
 ## Existing-route rule
 

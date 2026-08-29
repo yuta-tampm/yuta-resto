@@ -36,7 +36,9 @@ consumer needs that database boundary.
 
 ## Global rules
 
-- Never restore the legacy `@yuta/db` compatibility package.
+- The legacy `packages/db` path is removed from tracked source. Never use or
+  restore it as the `@yuta/db` compatibility package; ignored files, generated
+  content, or empty local directories under that path do not make it active.
 - Never use ambiguous `DATABASE_URL` for these runtime families.
 - Never expose database URLs through `NEXT_PUBLIC_*` variables.
 - Cloud, POS, and display use separate names, credentials, migrations, backups,

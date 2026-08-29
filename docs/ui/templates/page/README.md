@@ -34,6 +34,10 @@ Design prompt status: `PENDING`
 
 Shared context status: `PENDING`
 
+Prompt snapshot topology: `GENERATED_SNAPSHOTS`
+
+Prompt provenance: `prompt-provenance.json`
+
 No-image reference reason: `<required when Reference status is NONE after design approval>`
 
 ## Current implementation
@@ -114,6 +118,12 @@ no-image decision. A draft reference is not implementation authority.
 6. `prompts/05_VISUAL_QA.md`
 
 Review each phase before starting the next.
+
+The generator reads `prompt-template.json`, copies the six canonical prompts,
+writes their sealed provenance to `prompt-provenance.json`, and excludes the
+template-only metadata file from the generated pack. Agents working in the pack
+execute the local prompt snapshots. Later canonical-template changes never
+rewrite those snapshots.
 
 ## Stop conditions
 
