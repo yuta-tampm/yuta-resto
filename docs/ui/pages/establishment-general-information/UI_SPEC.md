@@ -132,6 +132,18 @@ The implemented desktop layout uses a `2/5` language column and a constrained
 modes use a compact icon, textual label, border, and check indicator so state
 never relies on color alone.
 
+### Restaurant Knowledge — `Concept & histoire`
+
+The composed page places a separate full-width card after the profile editor
+and preview grid. It is not numbered as a fifth Establishment Profile section.
+The card identifies Restaurant Knowledge, labels the two textareas `Concept`
+and `Histoire`, and marks both as optional without adding counters or limits.
+
+Users with READ see persisted values. Users with MANAGE can edit both
+browser-local drafts and receive one submit action labelled `Enregistrer le
+concept et l’histoire`. Without MANAGE the fields are disabled and no submit
+control is rendered. Without READ the section is not loaded or rendered.
+
 ## Public-preview panel
 
 The panel is read-only and may reflect unsaved local form state.

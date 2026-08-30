@@ -77,10 +77,10 @@ or evaluated; `NOT_APPLICABLE` is not supported by current evidence.
 
 ## 6. Remaining NEEDS REVIEW
 
-- canonical Restaurant Knowledge data owner and persistence boundary;
-- operation-level permissions, including read, add, edit, validate, reject,
-  classify, and administrative access;
-- initial data shape and behavior scope;
+- concrete Restaurant Knowledge schema, repository/table choice, API, field
+  validation, and storage implementation;
+- operation-level permissions beyond the approved READ and MANAGE operations,
+  including validate, reject, classify, and administrative access;
 - company/legal data ownership across Organization, Establishment, a possible
   employer/legal configuration, and Formalites;
 - social-profile link ownership;
@@ -98,23 +98,28 @@ analysis must read the Establishment module home, the page home, the relevant
 Module Registry row, accepted decisions, and implementation evidence when
 needed.
 
-Restaurant Knowledge is not ready for an implementation specification. Its
-data owner/boundary, operation-level permissions, and initial data
-shape/behavior scope must first be resolved sufficiently to write requirements
-without guessing.
+Subsequent Control Tower decisions establish Restaurant Knowledge as the
+canonical owner of Concept and Histoire and their persistence/domain boundary.
+The data is semantically establishment-scoped, with Organization as the
+tenancy/access envelope; Establishment Profile owns neither datum. Concept and
+Histoire are independently optional, an empty initial state is valid, and the
+initial behavior permits manual input, view, and edit followed by one explicit
+save for the complete slice, with no autosave. Dedicated READ and MANAGE
+authorization is defined separately.
+
+A resumed bounded implementation specification may select concrete schema,
+repository/table, API, field validation, and storage implementation without
+changing those Product decisions or inventing additional behavior.
 
 No OpenSpec change, main spec, schema, configuration, or skill was created or
 modified.
 
 ## 8. Recommended first pilot candidate
 
-Do not start a Restaurant Knowledge pilot yet. The safer first candidate is a
-separately approved, genuinely bounded enhancement of the existing
-Establishment Profile that reuses its current owner, permissions, and runtime
-boundary.
-
-If the intended pilot specifically targets Restaurant Knowledge, wait until
-the three minimum blockers are resolved: canonical data owner/boundary,
-operation-level permissions, and initial data shape/behavior scope.
+The approved Concept & histoire slice must remain a Restaurant Knowledge
+capability and must not be implemented as an Establishment Profile
+enhancement. It may proceed only through its separately reviewed change after
+the authorization prerequisite is accepted. This report update does not resume
+or implement that dependent change.
 
 Status: APPROVED

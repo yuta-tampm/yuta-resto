@@ -1,0 +1,213 @@
+Change: restaurant-knowledge-concept-history
+Gate: 2 — Specs Review
+Review status: APPROVED
+Created: 2026-08-30T23:04:23.9620078+02:00
+Schema: yuta-spec-driven
+Analysis conclusion: READY_FOR_SPECS
+Sensitive change: YES — tenant-owned data boundary, authorization consumption, and canonical ownership
+Approval source: explicit current-user instruction
+Approval recorded by: Codex workflow
+Approved: 2026-08-30T23:13:00.4375372+02:00
+
+# Gate 2 — Specs Review
+
+## Approved Gate 1 reference
+
+Gate 1 was approved from the explicit current-user instruction `APPROVE Gate 1`. Before creating Specs, the recorded Proposal and Analysis hashes were recomputed and matched the approved packet.
+
+| Repository-relative path                                                  | SHA-256                                                            |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `docs/reviews/restaurant-knowledge-concept-history/01-analysis-review.md` | `48a9a7584c69addae404c8385444cbfff58be19fd17ff8a823c3e5a58097551e` |
+| `openspec/changes/restaurant-knowledge-concept-history/analysis.md`       | `3e79cd9d7f8464edf9d5eda3d2c03da1f5716af024ab3717465df467afce7ea8` |
+| `openspec/changes/restaurant-knowledge-concept-history/proposal.md`       | `071b1300029075719d69954f2fafe707173145d6e75a54c17251eb2c0be46ddc` |
+
+Gate 1 packet status: `APPROVED`.
+
+## Delta Spec inventory and hash
+
+Command:
+
+```powershell
+Get-FileHash -Algorithm SHA256 -LiteralPath 'openspec/changes/restaurant-knowledge-concept-history/specs/restaurant-knowledge/concept-history/spec.md'
+```
+
+| Repository-relative path                                                                                   | SHA-256                                                            |
+| ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `openspec/changes/restaurant-knowledge-concept-history/specs/restaurant-knowledge/concept-history/spec.md` | `6a9b186070a8b2d9b02072ca109f256fed188babd1817726438f02bf8bc9893b` |
+
+## Requirements and scenarios summary
+
+The delta contains 7 ADDED requirements and 16 scenarios:
+
+1. Restaurant Knowledge canonical ownership and establishment semantic scope, with Organization only as tenancy/access envelope.
+2. View protected by Restaurant Knowledge READ without Establishment Profile permission inheritance.
+3. Edit and explicit save protected by Restaurant Knowledge MANAGE, separate from READ.
+4. Independent optional Concept and Histoire values, including valid empty initial state.
+5. Independent manual input and editing for each value.
+6. One explicit save for the complete `Concept & histoire` slice.
+7. No persistence of edits before explicit save.
+
+The accepted normative `authorization/restaurant-knowledge` spec supplies the grant matrix and tenant checks consumed here: OWNER and MANAGER receive READ and MANAGE; STAFF receives neither by default; active user, organization, establishment, matching active membership, and server-derived tenant context remain required.
+
+## Exact delta Spec content
+
+```markdown
+## Purpose
+
+Capability này cho phép người dùng được ủy quyền xem và quản lý thủ công Concept và Histoire như knowledge chính thức của một establishment trong page `Informations générales`.
+
+## ADDED Requirements
+
+### Requirement: Concept và Histoire thuộc Restaurant Knowledge của establishment hiện tại
+
+Hệ thống SHALL coi Restaurant Knowledge là canonical owner của Concept và Histoire cùng persistence/domain boundary của chúng. Hai giá trị SHALL được scope theo establishment trong trusted tenant context hiện tại; Organization SHALL chỉ giữ vai trò tenancy/access envelope. Establishment Profile SHALL NOT trở thành owner hoặc canonical source của hai giá trị này.
+
+#### Scenario: Xem knowledge của establishment hiện tại
+
+- **WHEN** người dùng được phép xem slice `Concept & histoire` trong trusted tenant context của một establishment
+- **THEN** hệ thống SHALL hiển thị Concept và Histoire thuộc Restaurant Knowledge của establishment đó
+- **AND** SHALL NOT lấy hai giá trị này từ Establishment Profile như canonical source
+
+#### Scenario: Lưu knowledge cho establishment hiện tại
+
+- **WHEN** người dùng được phép lưu slice `Concept & histoire` trong trusted tenant context của một establishment
+- **THEN** hệ thống SHALL lưu trạng thái canonical của Concept và Histoire dưới ownership của Restaurant Knowledge cho establishment đó
+- **AND** Organization SHALL remain tenancy/access envelope thay vì trở thành semantic owner của hai giá trị
+
+### Requirement: View sử dụng Restaurant Knowledge READ
+
+Hệ thống SHALL require Restaurant Knowledge READ để xem Concept và Histoire. Hệ thống SHALL NOT reuse hoặc inherit `establishment.profile.read` hay `establishment.profile.manage` để cấp quyền xem slice này.
+
+#### Scenario: Principal có READ xem được Concept và Histoire
+
+- **WHEN** principal có Restaurant Knowledge READ trong valid trusted tenant context mở slice `Concept & histoire`
+- **THEN** hệ thống SHALL cho phép xem Concept và Histoire của establishment hiện tại
+
+#### Scenario: Principal không có READ bị từ chối xem
+
+- **WHEN** principal không có Restaurant Knowledge READ cố xem slice `Concept & histoire`
+- **THEN** hệ thống SHALL từ chối quyền xem
+- **AND** Establishment Profile permission SHALL NOT thay thế Restaurant Knowledge READ
+
+### Requirement: Edit và explicit save sử dụng Restaurant Knowledge MANAGE
+
+Hệ thống SHALL require Restaurant Knowledge MANAGE để sửa Concept hoặc Histoire và để thực hiện explicit save. Restaurant Knowledge READ và MANAGE SHALL remain separate logical operations; quyền READ riêng SHALL NOT cấp quyền edit hoặc save.
+
+#### Scenario: Principal có MANAGE sửa và lưu được
+
+- **WHEN** principal có Restaurant Knowledge MANAGE trong valid trusted tenant context sửa Concept hoặc Histoire và kích hoạt explicit save
+- **THEN** hệ thống SHALL cho phép thực hiện edit và save cho slice
+
+#### Scenario: READ không thay thế MANAGE
+
+- **WHEN** principal có Restaurant Knowledge READ nhưng không có Restaurant Knowledge MANAGE cố sửa hoặc lưu slice
+- **THEN** hệ thống SHALL từ chối edit hoặc save
+
+#### Scenario: Establishment Profile MANAGE không cấp quyền quản lý knowledge
+
+- **WHEN** principal có `establishment.profile.manage` nhưng không có Restaurant Knowledge MANAGE cố sửa hoặc lưu slice
+- **THEN** hệ thống SHALL từ chối edit hoặc save
+
+### Requirement: Concept và Histoire là hai giá trị optional độc lập
+
+Hệ thống SHALL cho phép Concept và Histoire tồn tại độc lập; mỗi giá trị SHALL là optional và trạng thái cả hai cùng empty SHALL hợp lệ.
+
+#### Scenario: Empty initial state hợp lệ
+
+- **WHEN** establishment chưa có Concept và chưa có Histoire
+- **THEN** hệ thống SHALL hiển thị slice với cả hai giá trị empty như một trạng thái hợp lệ
+
+#### Scenario: Chỉ Concept có giá trị
+
+- **WHEN** Concept có giá trị và Histoire empty
+- **THEN** hệ thống SHALL hiển thị Concept đã có và Histoire empty
+
+#### Scenario: Chỉ Histoire có giá trị
+
+- **WHEN** Histoire có giá trị và Concept empty
+- **THEN** hệ thống SHALL hiển thị Histoire đã có và Concept empty
+
+### Requirement: Người dùng nhập và sửa Concept và Histoire thủ công
+
+Hệ thống SHALL cho phép người dùng có Restaurant Knowledge MANAGE nhập và sửa thủ công từng giá trị Concept và Histoire mà không bắt buộc giá trị còn lại phải được nhập hoặc thay đổi.
+
+#### Scenario: Sửa Concept độc lập
+
+- **WHEN** người dùng sửa thủ công Concept mà không thay đổi Histoire
+- **THEN** hệ thống SHALL giữ nguyên giá trị Histoire trong trạng thái slice chờ lưu
+
+#### Scenario: Sửa Histoire độc lập
+
+- **WHEN** người dùng sửa thủ công Histoire mà không thay đổi Concept
+- **THEN** hệ thống SHALL giữ nguyên giá trị Concept trong trạng thái slice chờ lưu
+
+#### Scenario: Để trống một giá trị
+
+- **WHEN** người dùng để Concept hoặc Histoire empty trong trạng thái slice chờ lưu
+- **THEN** hệ thống SHALL coi giá trị đó là optional và không bắt buộc giá trị còn lại phải empty
+
+### Requirement: Một explicit save lưu toàn bộ slice Concept và Histoire
+
+Hệ thống SHALL cung cấp một explicit save duy nhất cho slice `Concept & histoire`. Khi save thành công, hệ thống SHALL lưu trạng thái hiện tại của cả Concept và Histoire cho establishment hiện tại như một slice Restaurant Knowledge.
+
+#### Scenario: Lưu cả hai giá trị bằng một explicit save
+
+- **WHEN** người dùng có Restaurant Knowledge MANAGE kích hoạt explicit save sau khi chỉnh sửa Concept, Histoire hoặc cả hai
+- **THEN** hệ thống SHALL lưu trạng thái hiện tại của cả Concept và Histoire cho establishment hiện tại
+
+#### Scenario: Xem lại trạng thái đã lưu
+
+- **WHEN** explicit save đã thành công và người dùng có Restaurant Knowledge READ xem lại slice của cùng establishment
+- **THEN** hệ thống SHALL hiển thị các giá trị Concept và Histoire đã được lưu
+
+### Requirement: Slice không autosave
+
+Hệ thống SHALL NOT persist thay đổi Concept hoặc Histoire trước khi người dùng có Restaurant Knowledge MANAGE kích hoạt explicit save của slice.
+
+#### Scenario: Thay đổi chưa explicit save không được persist
+
+- **WHEN** người dùng sửa Concept hoặc Histoire nhưng chưa kích hoạt explicit save
+- **THEN** hệ thống SHALL NOT persist thay đổi đó như trạng thái canonical của Restaurant Knowledge
+```
+
+## Strict validation
+
+Command:
+
+```text
+openspec validate restaurant-knowledge-concept-history --strict
+```
+
+Exact result:
+
+```text
+Change 'restaurant-knowledge-concept-history' is valid
+```
+
+Exit result: PASS.
+
+## Changed assumptions since Analysis
+
+None. The delta Specs preserve the approved Product behavior, ownership, semantic scope, accepted authorization operations, grant implications, tenant/access boundary, and exclusions.
+
+No schema, repository/table, API, validation rule, storage technology, storage representation, additional permission, role, principal, tenancy semantic, or cross-runtime behavior was selected.
+
+## Remaining ambiguity
+
+No requirement-level ambiguity blocks Design.
+
+Concrete persistence shape, schema, repository/table, API, field validation, transport, and storage representation remain deliberately undecided. These matters may be evaluated only at Design without changing the behavioral contract or approved ownership/security boundaries. A discovered need for a new shared contract, additional permission, changed tenancy boundary, changed canonical ownership, or cross-runtime behavior must return to the appropriate earlier review gate.
+
+The excluded AI, automatic learning, provenance/history, Marketing/social, external-provider, embeddings/vector-DB, and other Restaurant Knowledge section behaviors remain outside this change.
+
+## Scope checkpoint
+
+Only one delta Spec file was created. No Design, Tasks, implementation, sync, or archive action was performed.
+
+## Recommendation and required human action
+
+Gate 2 recommendation: approve the delta Specs only if the exact requirements and scenarios correctly express the approved `Concept & histoire` behavior without selecting an unapproved technical representation.
+
+Because this change affects tenant-owned data and a canonical persistence/domain boundary, a separate mandatory Design Gate follows Gate 2 approval. Gate 2 approval does not authorize Tasks or Apply.
+
+Required approval phrase: `APPROVE Gate 2`

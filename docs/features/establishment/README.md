@@ -106,11 +106,23 @@ and in-page preview are derived presentation state, not persisted records.
 
 Route grouping does not change these ownership boundaries.
 
-### Future, not-started, or proposed scope
+### Partial and future scope
 
-Restaurant Knowledge is approved by ADR-007 but not started. Its canonical
-data owner/boundary, operation-level permissions, and initial data
-shape/behavior remain `NEEDS REVIEW` before implementation specifications.
+Restaurant Knowledge is approved by ADR-007. Its bounded `Concept & histoire`
+content slice and initial authorization are implemented through
+distinct `restaurant-knowledge.read` and `restaurant-knowledge.manage`
+operations, both granted to `OWNER` and `MANAGER` and denied to `STAFF` by
+default. Restaurant Knowledge is the canonical owner of `Concept` and
+`Histoire`, including their persistence/domain boundary; Establishment Profile
+does not own either datum. This knowledge is semantically scoped to an
+establishment, while Organization remains its tenancy and access envelope.
+
+The implemented initial `Concept & histoire` behavior allows viewing and manual
+input/editing of each independently optional value, including a valid empty
+initial state, followed by one explicit save for the whole slice; it does not
+autosave. A dedicated cloud table and Restaurant Knowledge repository own the
+data, while a page-local server action provides the bounded mutation. No shared
+contract, API route or Product content-validation limit was added.
 
 Media upload/storage, image processing, address verification/geocoding, an
 external public profile route, expanded service-mode values, external profile
@@ -124,16 +136,16 @@ classify that capability. Its detailed ownership and maturity remain
 
 ## 4. Capability map
 
-| Capability / scope                      | Current boundary                                                                                                                                                      | Owner                                                                                                         |
-| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| General establishment profile           | Implemented read/edit scope for supported identity, address, contact, media-reference, language, service-mode, and visibility fields.                                 | Establishment in `packages/db-cloud`.                                                                         |
-| Restaurant Knowledge                    | Approved not-started capability for concept/history, cuisine/know-how, customer experience, team/culture, communication identity, and validated restaurant knowledge. | Establishment domain at product/navigation level; canonical data owner and permissions remain `NEEDS REVIEW`. |
-| Establishment context                   | Identity, locale, timezone, active scope, and entitlements are resolved into trusted server context.                                                                  | Establishment records plus Tenancy/Auth resolution.                                                           |
-| Hours / service periods                 | Implemented Booking administration shown under the Establishment UI area.                                                                                             | Booking.                                                                                                      |
-| Dated exceptions                        | Implemented Booking exception records and mutations.                                                                                                                  | Booking.                                                                                                      |
-| Public-facing establishment information | Supported profile fields are filtered by visibility rules for approved public consumers; no general public-profile route is claimed.                                  | Establishment profile; each public flow owns its presentation and eligibility.                                |
-| Service modes / visibility              | Implemented profile arrays and visibility flags exposed by the general-information editor.                                                                            | Establishment.                                                                                                |
-| Logo and cover references               | Implemented validated HTTP(S) references; upload, storage, deletion, and cleanup lifecycles are not approved.                                                         | Establishment owns references; no media-storage owner is selected.                                            |
+| Capability / scope                      | Current boundary                                                                                                                                                                                                       | Owner                                                                                                                                                                                                          |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| General establishment profile           | Implemented read/edit scope for supported identity, address, contact, media-reference, language, service-mode, and visibility fields.                                                                                  | Establishment in `packages/db-cloud`.                                                                                                                                                                          |
+| Restaurant Knowledge                    | Partially implemented capability: Concept/Histoire supports independent optional values, manual input/view/edit, valid empty state, one explicit save, and no autosave; other knowledge families remain unimplemented. | Restaurant Knowledge canonically owns Concept/Histoire and their establishment-scoped persistence/domain boundary; Organization is the tenancy/access envelope. Identity / Access owns permission integration. |
+| Establishment context                   | Identity, locale, timezone, active scope, and entitlements are resolved into trusted server context.                                                                                                                   | Establishment records plus Tenancy/Auth resolution.                                                                                                                                                            |
+| Hours / service periods                 | Implemented Booking administration shown under the Establishment UI area.                                                                                                                                              | Booking.                                                                                                                                                                                                       |
+| Dated exceptions                        | Implemented Booking exception records and mutations.                                                                                                                                                                   | Booking.                                                                                                                                                                                                       |
+| Public-facing establishment information | Supported profile fields are filtered by visibility rules for approved public consumers; no general public-profile route is claimed.                                                                                   | Establishment profile; each public flow owns its presentation and eligibility.                                                                                                                                 |
+| Service modes / visibility              | Implemented profile arrays and visibility flags exposed by the general-information editor.                                                                                                                             | Establishment.                                                                                                                                                                                                 |
+| Logo and cover references               | Implemented validated HTTP(S) references; upload, storage, deletion, and cleanup lifecycles are not approved.                                                                                                          | Establishment owns references; no media-storage owner is selected.                                                                                                                                             |
 
 ## 5. Lifecycle summary
 
@@ -142,27 +154,27 @@ implementation evidence. The existing Establishment Profile lifecycle remains
 unchanged. Booking-owned capabilities retain their separate Booking lifecycle
 assignments.
 
-| Capability / Scope                    | Product Decision | Implementation | Environment   | Production Readiness | External Dependency | Review Marker                                                                                        |
-| ------------------------------------- | ---------------- | -------------- | ------------- | -------------------- | ------------------- | ---------------------------------------------------------------------------------------------------- |
-| Current general Establishment profile | `APPROVED`       | `IMPLEMENTED`  | `UNVERIFIED`  | `NOT_READY`          | `NOT_ASSESSED`      | `OK`                                                                                                 |
-| Restaurant Knowledge                  | `APPROVED`       | `NOT_STARTED`  | `NOT_ENABLED` | `NOT_ASSESSED`       | `NOT_ASSESSED`      | `NEEDS REVIEW` — data owner/boundary, permissions, and initial data shape/behavior remain unresolved |
+| Capability / Scope                    | Product Decision | Implementation | Environment   | Production Readiness | External Dependency | Review Marker                                                                                                                |
+| ------------------------------------- | ---------------- | -------------- | ------------- | -------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Current general Establishment profile | `APPROVED`       | `IMPLEMENTED`  | `UNVERIFIED`  | `NOT_READY`          | `NOT_ASSESSED`      | `OK`                                                                                                                         |
+| Restaurant Knowledge                  | `APPROVED`       | `PARTIAL`      | `NOT_ENABLED` | `NOT_ASSESSED`       | `NOT_ASSESSED`      | `OK` for the implemented Concept/Histoire slice; all other knowledge families and excluded integrations remain unimplemented |
 
 ## 6. Source-of-truth boundaries
 
-| Data / concern                              | Owning module/source                                                                                                                                                | Establishment relationship                                                                                                                                                                       |
-| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Organization identity                       | `organizations` and Tenancy architecture                                                                                                                            | An Establishment belongs to one Organization; it does not replace or duplicate the organization record.                                                                                          |
-| Establishment identity and profile          | `establishments` through the Establishment profile repository                                                                                                       | Canonical cloud owner for the bounded restaurant/site profile. Reads and writes use both organization and establishment scope.                                                                   |
-| Restaurant Knowledge                        | `NEEDS REVIEW`; ADR-007 requires a boundary separate from the Establishment Profile                                                                                 | Approved Product Intent in the Establishment domain at product/navigation level; no schema, repository, permission mapping, or implementation is approved.                                       |
-| Locale and timezone                         | `establishments`, projected into trusted tenant context                                                                                                             | Establishment-owned context consumed by date/time presentation and source modules; not currently editable in the general-information form.                                                       |
-| Booking service periods                     | `booking_service_periods` and Booking repository/actions                                                                                                            | Establishment-scoped relation only; Booking owns period records and behavior.                                                                                                                    |
-| Booking exceptions                          | `booking_exceptions` and Booking repository/actions                                                                                                                 | Establishment-scoped relation only; Booking owns exception records and behavior.                                                                                                                 |
-| Reservation settings                        | `booking_settings` and Booking administration                                                                                                                       | Booking owns availability and policy. It does not own profile address, contacts, logo, cover, languages, or service modes.                                                                       |
-| Public booking tenant resolution            | Public Booking repository resolves the globally unique establishment slug and verifies active organization/establishment, entitlement, and enabled Booking settings | Establishment supplies bounded identity/profile context; Booking owns eligibility, availability, and reservation behavior. Browser-supplied organization or establishment IDs are not authority. |
-| Reputation / Direct Feedback tenant context | Tenancy hostname resolution and Reputation sources                                                                                                                  | Verified server-side hostname context identifies organization and establishment. Reputation owns settings, feedback, replies, and connector behavior.                                            |
-| Access and membership                       | Authentication, `tenant_memberships`, sessions, permissions, and entitlements                                                                                       | Membership grants scoped access to an Establishment; the Establishment profile does not own users, roles, or membership lifecycle.                                                               |
-| Today context                               | Trusted authenticated tenant context and canonical Establishment profile                                                                                            | Today consumes locale, timezone, identity, and scope without becoming another profile owner.                                                                                                     |
-| Public website tenant context               | Verified hostname resolution and the bounded public tenant API where used                                                                                           | Current code can expose bounded identity context; this does not establish a general public Establishment profile or transfer profile ownership to Marketing.                                     |
+| Data / concern                              | Owning module/source                                                                                                                                                                         | Establishment relationship                                                                                                                                                                       |
+| ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Organization identity                       | `organizations` and Tenancy architecture                                                                                                                                                     | An Establishment belongs to one Organization; it does not replace or duplicate the organization record.                                                                                          |
+| Establishment identity and profile          | `establishments` through the Establishment profile repository                                                                                                                                | Canonical cloud owner for the bounded restaurant/site profile. Reads and writes use both organization and establishment scope.                                                                   |
+| Restaurant Knowledge                        | Dedicated `restaurant_knowledge_concept_history` table and Restaurant Knowledge repository in `packages/db-cloud`; page-local Backoffice server action with no shared/API transport contract | Canonical owner of Concept and Histoire. Organization is the tenancy/access envelope; Establishment Profile is not the data owner. Other knowledge families remain unimplemented.                |
+| Locale and timezone                         | `establishments`, projected into trusted tenant context                                                                                                                                      | Establishment-owned context consumed by date/time presentation and source modules; not currently editable in the general-information form.                                                       |
+| Booking service periods                     | `booking_service_periods` and Booking repository/actions                                                                                                                                     | Establishment-scoped relation only; Booking owns period records and behavior.                                                                                                                    |
+| Booking exceptions                          | `booking_exceptions` and Booking repository/actions                                                                                                                                          | Establishment-scoped relation only; Booking owns exception records and behavior.                                                                                                                 |
+| Reservation settings                        | `booking_settings` and Booking administration                                                                                                                                                | Booking owns availability and policy. It does not own profile address, contacts, logo, cover, languages, or service modes.                                                                       |
+| Public booking tenant resolution            | Public Booking repository resolves the globally unique establishment slug and verifies active organization/establishment, entitlement, and enabled Booking settings                          | Establishment supplies bounded identity/profile context; Booking owns eligibility, availability, and reservation behavior. Browser-supplied organization or establishment IDs are not authority. |
+| Reputation / Direct Feedback tenant context | Tenancy hostname resolution and Reputation sources                                                                                                                                           | Verified server-side hostname context identifies organization and establishment. Reputation owns settings, feedback, replies, and connector behavior.                                            |
+| Access and membership                       | Authentication, `tenant_memberships`, sessions, permissions, and entitlements                                                                                                                | Membership grants scoped access to an Establishment; the Establishment profile does not own users, roles, or membership lifecycle.                                                               |
+| Today context                               | Trusted authenticated tenant context and canonical Establishment profile                                                                                                                     | Today consumes locale, timezone, identity, and scope without becoming another profile owner.                                                                                                     |
+| Public website tenant context               | Verified hostname resolution and the bounded public tenant API where used                                                                                                                    | Current code can expose bounded identity context; this does not establish a general public Establishment profile or transfer profile ownership to Marketing.                                     |
 
 ## 7. Cloud Establishment versus restaurant-local POS establishment
 
@@ -205,8 +217,8 @@ target.
 This home intentionally does not reproduce the schema field catalog.
 
 The ownership bullets above describe the current Establishment Profile only.
-They must not be reused to assign Restaurant Knowledge to `establishments`, its
-profile repository, or `establishment.profile.*` permissions.
+They are not reused by the dedicated Restaurant Knowledge table/repository or
+its `restaurant-knowledge.*` permissions.
 
 ## 9. Related modules
 
@@ -238,8 +250,11 @@ profile repository, or `establishment.profile.*` permissions.
 - Repository implementation and tests describe repository Implemented State;
   they do not prove which version is deployed or that Backoffice is
   production-ready.
-- Restaurant Knowledge has no approved data owner, operation-level permission
-  matrix, detailed data shape, provider, or implementation. Company/legal data,
+- Restaurant Knowledge owns the approved persistence/domain boundary for
+  Concept and Histoire, but no concrete schema, repository/table, API, field
+  validation, storage implementation, provider, or content implementation has
+  been selected. Its approved READ/MANAGE matrix is implemented independently
+  of Establishment Profile permissions. Company/legal data,
   automatic cross-module inference, detailed history/provenance, Marketing or
   social-content consumption, and social-profile link ownership remain outside
   its initial approved scope or `NEEDS REVIEW`.
@@ -280,8 +295,11 @@ profile repository, or `establishment.profile.*` permissions.
    implementation.
 9. When sources conflict or authority is insufficient, apply the Authority
    Model and retain `NEEDS REVIEW` rather than choosing silently.
-10. Do not infer Restaurant Knowledge data ownership or permissions from its
-    Establishment product/navigation placement or from current profile code.
+10. Treat Restaurant Knowledge as the canonical owner of Concept and Histoire
+    and their persistence/domain boundary. Keep them semantically
+    establishment-scoped with Organization as the tenancy/access envelope;
+    never move them into Establishment Profile or infer access from profile
+    code.
 11. OpenSpec is not currently normative for Establishment.
 
 ## 13. OpenSpec position
@@ -291,10 +309,14 @@ today. This home retains broader Product Knowledge context and ownership
 boundaries. After YUTA explicitly approves OpenSpec specifications as
 normative, approved Establishment specs may define specific behavioral
 requirements inside accepted product, architecture, and security boundaries.
-Restaurant Knowledge is not ready for an implementation specification until
-its data owner/boundary, operation-level permissions, and initial data
-shape/behavior scope are resolved. No OpenSpec artifact is created or modified
-by this step.
+The bounded `Concept & histoire` Product decisions establish canonical
+ownership, establishment scope, independently optional values, valid empty
+state, manual view/edit, and one explicit save. A future resumed change may
+specify implementation within those decisions after its authorization
+prerequisite is accepted. It must select technical schema, repository/table,
+API, validation, and storage details without changing approved ownership or
+inventing new Product behavior. This authorization change does not implement
+Restaurant Knowledge content.
 
 ## 14. Status
 

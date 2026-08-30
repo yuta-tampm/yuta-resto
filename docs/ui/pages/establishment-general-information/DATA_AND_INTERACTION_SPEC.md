@@ -15,6 +15,7 @@ Prompt 00 must first map every concept to the current repository implementation.
 | Logo and cover                        | validated URL fields on `establishments` | establishment profile action | `SUPPORTED_WITH_DIFFERENT_COPY` |
 | Languages and service modes           | establishment arrays and approved enum   | establishment profile action | `SUPPORTED`                     |
 | Public visibility                     | establishment booleans                   | establishment profile action | `SUPPORTED`                     |
+| Restaurant Knowledge Concept/Histoire | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
 | Completion                            | local view-model calculation             | none                         | `UI_ONLY_DERIVED`               |
 | Local public preview                  | local form state                         | none                         | `UI_ONLY_DERIVED`               |
 | Media upload                          | no storage lifecycle                     | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
@@ -41,6 +42,31 @@ Requirements:
 - reads and writes remain scoped by both organization and establishment where required;
 - read-only users cannot mutate through direct requests;
 - existing role, permission, entitlement, and membership rules remain authoritative.
+
+The composed capabilities enforce permissions independently:
+
+- Establishment Profile continues to use `establishment.profile.read/manage`;
+- Concept/Histoire load and visibility require `restaurant-knowledge.read`;
+- Concept/Histoire edit and explicit save require
+  `restaurant-knowledge.manage`;
+- STAFF keeps profile-read access but receives no Restaurant Knowledge access;
+- the knowledge action re-derives trusted tenant context and accepts no browser
+  organization or establishment identifier.
+
+## Restaurant Knowledge Concept & histoire
+
+The implemented page-level view model is two nullable strings, owned by the
+Restaurant Knowledge repository rather than Establishment Profile. Missing
+persistence maps to `{ concept: null, history: null }`.
+
+- Concept and Histoire remain independent and optional;
+- both values are browser-local draft state until submit;
+- one submit sends both values to the dedicated server action;
+- empty form values normalize to `null`;
+- no blur, timer, effect or background request persists changes;
+- no Product length, format, requiredness or content validation is defined;
+- the action revalidates only `/etablissement/informations-generales` after a
+  successful save.
 
 ## UI view model
 

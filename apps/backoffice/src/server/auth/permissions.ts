@@ -23,6 +23,10 @@ export type EstablishmentPermission =
   | 'establishment.profile.read'
   | 'establishment.profile.manage';
 
+export type RestaurantKnowledgePermission =
+  | 'restaurant-knowledge.read'
+  | 'restaurant-knowledge.manage';
+
 export type PersonnelPermission =
   | 'personnel.employee.read'
   | 'personnel.employee.manage'
@@ -58,6 +62,14 @@ const establishmentPermissionRoles: Record<
 > = {
   'establishment.profile.read': ['OWNER', 'MANAGER', 'STAFF'],
   'establishment.profile.manage': ['OWNER', 'MANAGER'],
+};
+
+const restaurantKnowledgePermissionRoles: Record<
+  RestaurantKnowledgePermission,
+  readonly TenantRole[]
+> = {
+  'restaurant-knowledge.read': ['OWNER', 'MANAGER'],
+  'restaurant-knowledge.manage': ['OWNER', 'MANAGER'],
 };
 
 const personnelPermissionRoles: Record<
@@ -127,6 +139,29 @@ export function requireEstablishmentPermission(
   permission: EstablishmentPermission,
 ): void {
   if (!hasEstablishmentPermission(context, permission)) {
+    throw new TenantError(
+      'Permission denied.',
+      'CROSS_TENANT_ACCESS_DENIED',
+      403,
+    );
+  }
+}
+
+export function hasRestaurantKnowledgePermission(
+  context: TenantContext,
+  permission: RestaurantKnowledgePermission,
+): boolean {
+  return (
+    context.actor.type === 'user' &&
+    restaurantKnowledgePermissionRoles[permission].includes(context.actor.role)
+  );
+}
+
+export function requireRestaurantKnowledgePermission(
+  context: TenantContext,
+  permission: RestaurantKnowledgePermission,
+): void {
+  if (!hasRestaurantKnowledgePermission(context, permission)) {
     throw new TenantError(
       'Permission denied.',
       'CROSS_TENANT_ACCESS_DENIED',

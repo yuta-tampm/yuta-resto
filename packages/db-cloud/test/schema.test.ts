@@ -28,6 +28,7 @@ import {
   reputationAuditEvents,
   reputationConnectors,
   reputationSettings,
+  restaurantKnowledgeConceptHistory,
   tenantDomains,
   tenantMemberships,
   users,
@@ -126,6 +127,35 @@ describe('cloud schema boundaries', () => {
       ]),
     );
     expect(establishmentServiceModeEnum.enumValues).toContain('RESERVATION');
+  });
+
+  it('keeps Concept and Histoire in a dedicated establishment-scoped Restaurant Knowledge table', () => {
+    const knowledgeConfig = getTableConfig(restaurantKnowledgeConceptHistory);
+    const knowledgeColumns = knowledgeConfig.columns.map(
+      (column) => column.name,
+    );
+    const establishmentColumns = getTableConfig(establishments).columns.map(
+      (column) => column.name,
+    );
+
+    expect(knowledgeColumns).toEqual([
+      'organization_id',
+      'establishment_id',
+      'concept',
+      'history',
+    ]);
+    expect(
+      knowledgeConfig.columns.find((column) => column.name === 'concept')
+        ?.notNull,
+    ).toBe(false);
+    expect(
+      knowledgeConfig.columns.find((column) => column.name === 'history')
+        ?.notNull,
+    ).toBe(false);
+    expect(knowledgeConfig.primaryKeys).toHaveLength(1);
+    expect(knowledgeConfig.foreignKeys).toHaveLength(1);
+    expect(establishmentColumns).not.toContain('concept');
+    expect(establishmentColumns).not.toContain('history');
   });
 
   it('keeps personnel document metadata establishment and employee scoped', () => {

@@ -23,7 +23,9 @@ Informations generales
 ```
 
 The Establishment Profile is the existing approved and implemented capability.
-Restaurant Knowledge is newly approved Product Intent and is not implemented.
+Restaurant Knowledge is approved Product Intent. Its bounded `Concept &
+histoire` slice is implemented in the repository; the other knowledge families
+remain unimplemented.
 
 This page-level Product Knowledge home does not replace the canonical
 [Establishment Product Knowledge home](../README.md). It must be read with
@@ -104,14 +106,40 @@ required before promotion to validated knowledge.
 
 Restaurant Knowledge must have its own:
 
-- canonical data owner and persistence boundary;
-- operation-level permissions;
+- canonical data owner and persistence/domain boundary;
+- operation-level permissions independent from Establishment Profile;
 - approved initial data shape and behavior scope; and
 - lifecycle and evidence independent from the Establishment Profile.
 
-These details remain `NEEDS REVIEW`. Page placement does not assign them, and
-Restaurant Knowledge does not inherit the profile repository, schema, or
-permissions.
+The initial permission boundary is resolved through distinct
+`restaurant-knowledge.read` and `restaurant-knowledge.manage` operations. Both
+currently grant `OWNER` and `MANAGER`; `STAFF` is denied by default. Restaurant
+Knowledge owns their semantic meaning, while Identity / Access owns their
+representation, grant mapping, and enforcement integration. They do not
+inherit Establishment Profile permissions, and `YUTA_ADMIN` or `YUTA_SUPPORT`
+does not bypass active tenant membership or these grants.
+
+Restaurant Knowledge is the canonical owner of `Concept` and `Histoire` and of
+their persistence/domain boundary. Establishment Profile owns neither datum.
+This knowledge is semantically scoped to an establishment; Organization is the
+tenancy/access envelope rather than the semantic owner. Page placement does
+not change these decisions, and Restaurant Knowledge does not inherit the
+profile repository or schema.
+
+### Approved initial Concept & histoire behavior
+
+- view Concept;
+- manually input and edit Concept;
+- view Histoire;
+- manually input and edit Histoire; and
+- explicitly save the complete `Concept & histoire` slice once.
+
+Concept and Histoire are independent and optional. An empty initial state is
+valid, and the initial behavior does not autosave. The implementation uses a
+dedicated `restaurant_knowledge_concept_history` cloud table and Restaurant
+Knowledge repository, scoped by trusted organization and establishment
+context. It uses a page-local server action rather than a shared transport
+contract or API route, and adds no Product content-validation limits.
 
 ### Ownership invariant
 
@@ -133,10 +161,10 @@ capability. It must not duplicate:
 
 The two capability rows are intentionally independent.
 
-| Capability            | Product Decision | Implementation | Environment   | Production Readiness | External Dependency | Review Marker                                                                                        |
-| --------------------- | ---------------- | -------------- | ------------- | -------------------- | ------------------- | ---------------------------------------------------------------------------------------------------- |
-| Establishment Profile | `APPROVED`       | `IMPLEMENTED`  | `UNVERIFIED`  | `NOT_READY`          | `NOT_ASSESSED`      | `OK`                                                                                                 |
-| Restaurant Knowledge  | `APPROVED`       | `NOT_STARTED`  | `NOT_ENABLED` | `NOT_ASSESSED`       | `NOT_ASSESSED`      | `NEEDS REVIEW` — data owner/boundary, permissions, and initial data shape/behavior remain unresolved |
+| Capability            | Product Decision | Implementation | Environment   | Production Readiness | External Dependency | Review Marker                                                                                                                                                                                                       |
+| --------------------- | ---------------- | -------------- | ------------- | -------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Establishment Profile | `APPROVED`       | `IMPLEMENTED`  | `UNVERIFIED`  | `NOT_READY`          | `NOT_ASSESSED`      | `OK`                                                                                                                                                                                                                |
+| Restaurant Knowledge  | `APPROVED`       | `PARTIAL`      | `NOT_ENABLED` | `NOT_ASSESSED`       | `NOT_ASSESSED`      | `OK` for the implemented Concept/Histoire slice; Cuisine/savoir-faire, Experience client, Equipe/culture, communication identity, validated-knowledge workflows and every excluded integration remain unimplemented |
 
 Approval of Restaurant Knowledge does not prove implementation, environment
 availability, production readiness, or provider selection.
@@ -155,7 +183,6 @@ The following are not approved current behavior:
 - ownership of social-profile links;
 - AI/provider, prompt, embedding, vector database, storage, job, model, or API
   implementation;
-- a detailed Restaurant Knowledge role/permission matrix; and
 - detailed fields, schema, requiredness, enums, limits, or validation rules.
 
 Company/legal ownership across Organization, Establishment, a possible
@@ -179,17 +206,22 @@ the canonical owner. Consumption does not transfer ownership.
 ## 8. Roles, security, and runtime boundaries
 
 Current Establishment Profile permissions apply only to that capability.
-Restaurant Knowledge read, add, edit, validate, reject, classify, and
-administrative operations remain `NEEDS REVIEW` and must be defined separately.
+Restaurant Knowledge READ and MANAGE are separately implemented for `OWNER`
+and `MANAGER`, with `STAFF` denied. Additional validate, reject, classify, or
+administrative operations remain `NEEDS REVIEW` and require separate Product
+decisions.
 
-Any future cloud implementation must preserve trusted server-derived
-organization-and-establishment scope and fail closed. Browser-provided
+The current cloud implementation preserves trusted server-derived
+organization-and-establishment scope and fails closed. Browser-provided
 organization, establishment, membership, role, permission, entitlement, or
 tenant values are not authority.
 
 Cloud, restaurant-local POS, and Display persistence remain separate under
-ADR-003. This page-level decision does not select a Restaurant Knowledge
-database, schema, provider, storage system, or runtime adapter.
+ADR-003. Restaurant Knowledge owns the Concept/Histoire persistence/domain
+boundary in `packages/db-cloud`; the dedicated table/repository is not part of
+Establishment Profile. No API, provider, shared contract, local-runtime adapter,
+history/provenance model, or cross-runtime synchronization exists for this
+slice.
 
 ## 9. OpenSpec readiness
 
@@ -204,27 +236,24 @@ An OpenSpec analysis for a change on this page must read, in order:
 5. current implementation evidence when the question concerns Implemented
    State.
 
-### Restaurant Knowledge blocker
+### Restaurant Knowledge readiness
 
-Restaurant Knowledge is not ready for an implementation specification. At
-minimum, Product, architecture, and security review must resolve:
+The Control Tower-approved Product decisions resolve the bounded Concept &
+histoire owner, semantic scope, optionality, empty state, manual view/edit, and
+explicit-save behavior. The separate authorization prerequisite resolves the
+initial READ/MANAGE permission mapping.
 
-- the canonical data owner and boundary;
-- operation-level permissions; and
-- the initial knowledge data shape and behavior scope.
-
-The resolution must be sufficient to write requirements without inventing a
-schema, permission, workflow, provider, or storage design.
+The bounded implementation selects its dedicated cloud table, repository and
+page-local server action without changing canonical ownership, tenant scope or
+approved behavior. Product content validation, shared/API transport, history,
+providers and other knowledge families remain outside this slice.
 
 ### Pilot recommendation
 
-A first pilot may use a genuinely bounded enhancement of the existing
-Establishment Profile only if separately approved and if its current owner and
-permissions remain intact. A Restaurant Knowledge pilot should wait until the
-three blockers above are resolved.
-
-No OpenSpec change or specification is created by this Product Knowledge
-integration.
+The bounded Concept & histoire slice is implemented as Restaurant Knowledge,
+not as an enhancement of Establishment Profile. Repository implementation does
+not prove environment enablement or production readiness. This documentation
+does not authorize any excluded knowledge family, consumer or integration.
 
 ## 10. Source map
 

@@ -1,11 +1,17 @@
 'use server';
 
 import { establishmentProfileInputSchema } from '@yuta/contracts';
-import { updateEstablishmentProfile } from '@yuta/db-cloud';
+import {
+  saveRestaurantKnowledgeConceptHistory,
+  updateEstablishmentProfile,
+} from '@yuta/db-cloud';
 import { requireEstablishment } from '@yuta/tenant';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { requireEstablishmentPermission } from '../../../../server/auth/permissions';
+import {
+  requireEstablishmentPermission,
+  requireRestaurantKnowledgePermission,
+} from '../../../../server/auth/permissions';
 import { requireAuthenticatedTenant } from '../../../../server/auth/session';
 import { cloudDatabase } from '../../../../server/cloud-database';
 
@@ -14,6 +20,23 @@ export type GeneralInformationActionState = {
   message: string | null;
   fieldErrors: Record<string, string>;
 };
+
+export type ConceptHistoryActionState = {
+  status: 'idle' | 'success' | 'error';
+  message: string | null;
+};
+
+const optionalConceptHistoryTextSchema = z
+  .string()
+  .nullable()
+  .transform((value) => (value === '' ? null : value));
+
+const conceptHistoryInputSchema = z
+  .object({
+    concept: optionalConceptHistoryTextSchema,
+    history: optionalConceptHistoryTextSchema,
+  })
+  .strict();
 
 export async function saveGeneralInformationAction(
   _previousState: GeneralInformationActionState,
@@ -89,6 +112,40 @@ export async function saveGeneralInformationAction(
       status: 'error',
       message: 'Une erreur est survenue. Réessayez.',
       fieldErrors: {},
+    };
+  }
+}
+
+export async function saveConceptHistoryAction(
+  _previousState: ConceptHistoryActionState,
+  formData: FormData,
+): Promise<ConceptHistoryActionState> {
+  const { tenant } = await requireAuthenticatedTenant(
+    '/etablissement/informations-generales',
+  );
+  requireEstablishment(tenant);
+  requireRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.manage');
+
+  try {
+    const input = conceptHistoryInputSchema.parse({
+      concept: formData.get('concept'),
+      history: formData.get('history'),
+    });
+    await saveRestaurantKnowledgeConceptHistory(cloudDatabase, tenant, input);
+    revalidatePath('/etablissement/informations-generales');
+    return {
+      status: 'success',
+      message: 'Concept et histoire enregistrés.',
+    };
+  } catch (error: unknown) {
+    if (!(error instanceof z.ZodError)) {
+      console.error('Failed to save Restaurant Knowledge Concept/History.', {
+        errorName: error instanceof Error ? error.name : 'UnknownError',
+      });
+    }
+    return {
+      status: 'error',
+      message: 'Une erreur est survenue. Réessayez.',
     };
   }
 }

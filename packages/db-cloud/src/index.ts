@@ -10,6 +10,7 @@ export * from './personnel-action-overview-repository';
 export * from './personnel-document-repository';
 export * from './personnel-contract-amendment-repository';
 export * from './reputation-repository';
+export * from './restaurant-knowledge-repository';
 export * from './schema';
 export * from './tenant-adapters';
 export * from './tenant-foundation-repository';

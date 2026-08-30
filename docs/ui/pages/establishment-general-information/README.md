@@ -10,7 +10,7 @@ Prompt snapshot topology: GENERATED_SNAPSHOTS
 
 Prompt provenance: prompt-provenance.json
 
-Last updated: 2026-08-08
+Last updated: 2026-08-30
 
 Route: `/etablissement/informations-generales`
 
@@ -18,11 +18,18 @@ Application: `apps/backoffice`
 
 ## Current status
 
-The authenticated route is an establishment-scoped editor backed by the
-canonical profile fields on `establishments`. OWNER and MANAGER memberships may
-edit; STAFF memberships have read-only access. The page provides explicit save,
-field validation, loading and error states, visibility controls, supported
-language and service-mode selections, and a local unsaved-value preview.
+The authenticated route is a composed establishment-scoped editor. The
+existing Establishment Profile remains backed by canonical profile fields on
+`establishments`; OWNER and MANAGER may edit it and STAFF remains read-only.
+The separate Restaurant Knowledge `Concept & histoire` section is backed by
+its dedicated cloud table/repository, requires Restaurant Knowledge READ to be
+visible, and requires MANAGE to edit or explicitly save. OWNER and MANAGER have
+both operations; STAFF receives no Restaurant Knowledge access.
+
+Concept and Histoire are independently optional, including a valid both-empty
+state. Their browser-local draft has one explicit save for the complete slice
+and no autosave. The profile and Restaurant Knowledge sections retain separate
+forms, actions, permissions and canonical owners.
 
 Weekly service periods are managed independently under
 `/etablissement/horaires-services`.
@@ -76,4 +83,6 @@ is `EXISTING_PAGE`; fixture replacement is forbidden.
 ## Stop conditions
 
 Stop for approval before adding a storage/geocoding provider, public profile
-route, new service-mode value, or changing profile ownership or role policy.
+route, new service-mode value, Restaurant Knowledge shared/API contract,
+Product content-validation rule, additional knowledge section, or changing
+profile/knowledge ownership or role policy.

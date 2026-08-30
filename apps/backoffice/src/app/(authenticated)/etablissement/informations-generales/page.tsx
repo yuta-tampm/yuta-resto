@@ -9,6 +9,8 @@ import {
 import { requireAuthenticatedTenant } from '../../../../server/auth/session';
 import { cloudDatabase } from '../../../../server/cloud-database';
 import { GeneralInformationForm } from './_components/general-information-form';
+import { ConceptHistoryForm } from './_components/concept-history-form';
+import { loadConceptHistorySection } from './restaurant-knowledge-loader';
 
 export default async function GeneralInformationPage() {
   const { tenant } = await requireAuthenticatedTenant(
@@ -16,7 +18,10 @@ export default async function GeneralInformationPage() {
   );
   requireEstablishment(tenant);
   requireEstablishmentPermission(tenant, 'establishment.profile.read');
-  const profile = await getEstablishmentProfile(cloudDatabase, tenant);
+  const [profile, conceptHistorySection] = await Promise.all([
+    getEstablishmentProfile(cloudDatabase, tenant),
+    loadConceptHistorySection(cloudDatabase, tenant),
+  ]);
   if (!profile) notFound();
   const canEditProfile = hasEstablishmentPermission(
     tenant,
@@ -28,7 +33,16 @@ export default async function GeneralInformationPage() {
       title="Informations générales"
       description="Gérez les informations principales et les coordonnées publiques de votre établissement."
     >
-      <GeneralInformationForm profile={profile} canEdit={canEditProfile} />
+      <div className="grid gap-5">
+        <GeneralInformationForm profile={profile} canEdit={canEditProfile} />
+        {conceptHistorySection && (
+          <ConceptHistoryForm
+            key={`${conceptHistorySection.conceptHistory.concept ?? ''}\u0000${conceptHistorySection.conceptHistory.history ?? ''}`}
+            conceptHistory={conceptHistorySection.conceptHistory}
+            canManage={conceptHistorySection.canManage}
+          />
+        )}
+      </div>
     </BackofficePage>
   );
 }

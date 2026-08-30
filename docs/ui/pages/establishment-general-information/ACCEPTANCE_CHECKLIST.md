@@ -66,11 +66,22 @@ When classified `EXISTING_PAGE`:
 - [ ] Reads/writes remain scoped to the required organization and establishment.
 - [ ] Direct requests cannot bypass read-only or edit permissions.
 - [ ] Existing DTO/repository/action patterns are reused.
+- [ ] Restaurant Knowledge reads and writes use both trusted organization and
+      establishment scope through its dedicated repository.
+- [ ] Restaurant Knowledge READ controls section loading/visibility and MANAGE
+      controls edit/save; Establishment Profile permissions do not substitute.
+- [ ] OWNER and MANAGER can view/edit/save Concept/Histoire; STAFF cannot load
+      or mutate the Restaurant Knowledge slice while profile-read access remains.
 - [ ] Private contact values are not exposed publicly without current business rules.
 - [ ] Contact data is not logged unnecessarily.
 - [ ] No external provider was added.
 
 ## Interactions and states
+
+- [ ] Concept and Histoire are independently optional and both-empty is valid.
+- [ ] One explicit save submits the current values of both knowledge fields.
+- [ ] Editing or rendering the Restaurant Knowledge draft does not autosave.
+- [ ] The profile and Restaurant Knowledge forms/actions remain independent.
 
 - [ ] Dirty-state and save behavior follow current form conventions.
 - [ ] Save cannot duplicate-submit.

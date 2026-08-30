@@ -2,7 +2,10 @@
 
 ## Implemented page responsibility
 
-`/etablissement/informations-generales` is the establishment profile/settings page for the currently selected restaurant. It belongs to the `ÉTABLISSEMENT` area of the back-office.
+`/etablissement/informations-generales` is a composed Establishment Profile and
+Restaurant Knowledge page for the currently selected restaurant. It belongs to
+the `ÉTABLISSEMENT` area of the back-office without merging the two canonical
+data or permission boundaries.
 
 Approved information categories:
 
@@ -15,6 +18,8 @@ Approved information categories:
 7. supported service modes: dine-in, takeaway, reservation, delivery,
    click-and-collect, private events, and catering;
 8. visibility controls for optional public profile fields.
+9. independently optional Restaurant Knowledge Concept and Histoire values,
+   including valid empty state, manual edit, and one explicit whole-slice save.
 
 All data is establishment-scoped and must remain inside the validated active `organization + establishment` context.
 
@@ -46,6 +51,7 @@ public profile route, address verification, or media upload flow.
 | Individual public-visibility switches                                                                               | Implemented for optional public fields                                                         |
 | Service-mode choices                                                                                                | Implemented through the approved establishment service-mode contract                           |
 | Logo removal or media cleanup                                                                                       | Expose only when current upload/storage infrastructure supports it                             |
+| Restaurant Knowledge Concept/Histoire                                                                               | Implemented in a dedicated establishment-scoped table/repository with separate READ/MANAGE     |
 
 ## Out of scope
 
@@ -58,6 +64,8 @@ public profile route, address verification, or media upload flow.
 - customer-order, checkout, payment, invoicing, or cash-management workflows;
 - new geocoding, storage, analytics, or media providers;
 - new public-profile platform architecture;
+- other Restaurant Knowledge sections, AI/automatic learning, provenance,
+  Marketing/social consumers, external providers, embeddings or vector DB;
 - new database schema, enum, permission, API route, or contract without a separate approved proposal.
 
 ## Existing-page protection rule
