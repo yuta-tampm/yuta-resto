@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-27
+Last updated: 2026-08-30
 
 ## Finding the right authority
 
@@ -63,6 +63,7 @@ sensitive details never belong in the repository.
 
 - [`features/identity-access/README.md`](features/identity-access/README.md)
 - [`features/establishment/README.md`](features/establishment/README.md)
+- [`features/establishment/general-information/README.md`](features/establishment/general-information/README.md)
 - [`features/personnel/README.md`](features/personnel/README.md)
 - [`features/today/README.md`](features/today/README.md)
 - [`features/public-website/README.md`](features/public-website/README.md)
@@ -122,6 +123,7 @@ in the shared operations documents.
 - [`decisions/ADR-004-independent-public-feedback-application.md`](decisions/ADR-004-independent-public-feedback-application.md)
 - [`decisions/ADR-005-today-operational-steering.md`](decisions/ADR-005-today-operational-steering.md)
 - [`decisions/ADR-006-cloud-establishment-profile-context.md`](decisions/ADR-006-cloud-establishment-profile-context.md)
+- [`decisions/ADR-007-composed-general-information-and-restaurant-knowledge.md`](decisions/ADR-007-composed-general-information-and-restaurant-knowledge.md)
 
 Completed task specifications are removed after durable behavior is reflected
 in current feature documentation and remaining work is captured in `STATUS.md`.

@@ -170,9 +170,15 @@ from navigation visibility.
 
 ### Establishment
 
-- Approved Product Decision:
-  `docs/decisions/ADR-006-cloud-establishment-profile-context.md`
+- Approved Product Decisions:
+  - `docs/decisions/ADR-006-cloud-establishment-profile-context.md` for the
+    bounded Cloud Establishment Profile;
+  - `docs/decisions/ADR-007-composed-general-information-and-restaurant-knowledge.md`
+    for the composed `Informations generales` page and separate Restaurant
+    Knowledge capability.
 - Canonical Product Knowledge home: `docs/features/establishment/README.md`
+- Canonical page-level Product Knowledge home:
+  `docs/features/establishment/general-information/README.md`
 - Trust and ownership context: `docs/architecture/TENANCY.md` and
   `docs/architecture/DATA_MODEL.md`
 - General-profile UI evidence:
@@ -182,6 +188,13 @@ from navigation visibility.
 - Implementation: `apps/backoffice/src/app/(authenticated)/etablissement`,
   `packages/db-cloud/src/establishment-profile-repository.ts`, and Booking
   administration repositories
+
+The general-information page composes the implemented Establishment Profile
+and the approved but not-started Restaurant Knowledge capability. Page
+composition does not assign a shared data owner or permission boundary.
+Restaurant Knowledge data ownership, operation-level permissions, and initial
+data shape/behavior remain `NEEDS REVIEW`; do not infer implementation from the
+existing route.
 
 ### Today
 

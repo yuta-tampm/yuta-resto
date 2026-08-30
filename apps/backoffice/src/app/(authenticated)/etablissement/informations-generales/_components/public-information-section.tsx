@@ -1,3 +1,4 @@
+import { Button } from '@yuta/ui';
 import { ProfileSection, TextInput } from './general-information-fields';
 import type {
   GeneralInformationProfile,
@@ -11,17 +12,30 @@ export function PublicInformationSection({
   fieldErrors,
   setText,
   setBoolean,
+  onCopyPrimaryContact,
 }: {
   draft: GeneralInformationProfile;
   canEdit: boolean;
   fieldErrors: Record<string, string>;
   setText: SetProfileText;
   setBoolean: SetProfileBoolean;
+  onCopyPrimaryContact: () => void;
 }) {
   return (
     <ProfileSection number="3" title="Informations publiques">
       <div className="grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:divide-x lg:divide-border-default">
         <div className="grid content-start gap-4 lg:pr-5">
+          {canEdit && (
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              className="justify-self-start"
+              onClick={onCopyPrimaryContact}
+            >
+              Utiliser les coordonnées principales
+            </Button>
+          )}
           <TextInput
             label="E-mail public (visible par les clients)"
             field="publicEmail"

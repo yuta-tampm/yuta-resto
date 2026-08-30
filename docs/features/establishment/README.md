@@ -4,7 +4,7 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Approved: 2026-08-27
+Approved: 2026-08-30
 
 ## 1. Purpose
 
@@ -21,11 +21,16 @@ restaurant-local POS installation identity; those are separate bounded
 contexts with separate persistence.
 
 This file is the canonical Product Knowledge entry point for Cloud
-Establishment. The bounded Product Intent is approved in
-[ADR-006](../../decisions/ADR-006-cloud-establishment-profile-context.md). This
-home does not replace executable schemas, tenant and authentication
-architecture, Booking knowledge, UI page packs, code and tests,
-production-readiness evidence, or future normative OpenSpec specifications.
+Establishment. The bounded profile Product Intent is approved in
+[ADR-006](../../decisions/ADR-006-cloud-establishment-profile-context.md).
+[ADR-007](../../decisions/ADR-007-composed-general-information-and-restaurant-knowledge.md)
+approves `Informations generales` as a composed page and Restaurant Knowledge
+as a separate capability in the Establishment product/navigation domain. The
+[page-level Product Knowledge home](general-information/README.md) owns that
+composed-page context. This home does not replace executable schemas, tenant
+and authentication architecture, Booking knowledge, UI page packs, code and
+tests, production-readiness evidence, or future normative OpenSpec
+specifications.
 
 ## 2. Users and roles
 
@@ -59,6 +64,10 @@ This approval is limited by ADR-006. It does not transfer Booking, Reputation,
 Authentication, Access, Tenancy, Today, POS, or Display ownership into
 Establishment and does not approve the detailed Rooms and Tables capability or
 provider-backed media and external services.
+
+ADR-007 separately approves Restaurant Knowledge at Product Intent level. It
+belongs to the Establishment domain at product/navigation level but is not part
+of the current Establishment Profile data or permission boundary.
 
 ### Current bounded scope
 
@@ -97,12 +106,15 @@ and in-page preview are derived presentation state, not persisted records.
 
 Route grouping does not change these ownership boundaries.
 
-### Future or proposed scope
+### Future, not-started, or proposed scope
 
-No scope beyond ADR-006 is approved by this home. Media upload/storage, image
-processing, address verification/geocoding, an external public profile route,
-expanded service-mode values, external profile synchronization, and
-third-party providers require separate approval.
+Restaurant Knowledge is approved by ADR-007 but not started. Its canonical
+data owner/boundary, operation-level permissions, and initial data
+shape/behavior remain `NEEDS REVIEW` before implementation specifications.
+
+Media upload/storage, image processing, address verification/geocoding, an
+external public profile route, expanded service-mode values, external profile
+synchronization, and third-party providers still require separate approval.
 
 `CURRENT_STATE.md` describes room/table structure as core establishment product
 context, but this task found no dedicated bounded Establishment lifecycle row
@@ -112,26 +124,28 @@ classify that capability. Its detailed ownership and maturity remain
 
 ## 4. Capability map
 
-| Capability / scope                      | Current boundary                                                                                                                      | Owner                                                                          |
-| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| General establishment profile           | Implemented read/edit scope for supported identity, address, contact, media-reference, language, service-mode, and visibility fields. | Establishment in `packages/db-cloud`.                                          |
-| Establishment context                   | Identity, locale, timezone, active scope, and entitlements are resolved into trusted server context.                                  | Establishment records plus Tenancy/Auth resolution.                            |
-| Hours / service periods                 | Implemented Booking administration shown under the Establishment UI area.                                                             | Booking.                                                                       |
-| Dated exceptions                        | Implemented Booking exception records and mutations.                                                                                  | Booking.                                                                       |
-| Public-facing establishment information | Supported profile fields are filtered by visibility rules for approved public consumers; no general public-profile route is claimed.  | Establishment profile; each public flow owns its presentation and eligibility. |
-| Service modes / visibility              | Implemented profile arrays and visibility flags exposed by the general-information editor.                                            | Establishment.                                                                 |
-| Logo and cover references               | Implemented validated HTTP(S) references; upload, storage, deletion, and cleanup lifecycles are not approved.                         | Establishment owns references; no media-storage owner is selected.             |
+| Capability / scope                      | Current boundary                                                                                                                                                      | Owner                                                                                                         |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| General establishment profile           | Implemented read/edit scope for supported identity, address, contact, media-reference, language, service-mode, and visibility fields.                                 | Establishment in `packages/db-cloud`.                                                                         |
+| Restaurant Knowledge                    | Approved not-started capability for concept/history, cuisine/know-how, customer experience, team/culture, communication identity, and validated restaurant knowledge. | Establishment domain at product/navigation level; canonical data owner and permissions remain `NEEDS REVIEW`. |
+| Establishment context                   | Identity, locale, timezone, active scope, and entitlements are resolved into trusted server context.                                                                  | Establishment records plus Tenancy/Auth resolution.                                                           |
+| Hours / service periods                 | Implemented Booking administration shown under the Establishment UI area.                                                                                             | Booking.                                                                                                      |
+| Dated exceptions                        | Implemented Booking exception records and mutations.                                                                                                                  | Booking.                                                                                                      |
+| Public-facing establishment information | Supported profile fields are filtered by visibility rules for approved public consumers; no general public-profile route is claimed.                                  | Establishment profile; each public flow owns its presentation and eligibility.                                |
+| Service modes / visibility              | Implemented profile arrays and visibility flags exposed by the general-information editor.                                                                            | Establishment.                                                                                                |
+| Logo and cover references               | Implemented validated HTTP(S) references; upload, storage, deletion, and cleanup lifecycles are not approved.                                                         | Establishment owns references; no media-storage owner is selected.                                            |
 
 ## 5. Lifecycle summary
 
-The bounded status below reflects ADR-006 and repository implementation
-evidence. Environment, readiness, and external-dependency values remain
+The bounded statuses below reflect ADR-006, ADR-007, and repository
+implementation evidence. The existing Establishment Profile lifecycle remains
 unchanged. Booking-owned capabilities retain their separate Booking lifecycle
 assignments.
 
-| Capability / Scope                    | Product Decision | Implementation | Environment  | Production Readiness | External Dependency | Review Marker |
-| ------------------------------------- | ---------------- | -------------- | ------------ | -------------------- | ------------------- | ------------- |
-| Current general Establishment profile | `APPROVED`       | `IMPLEMENTED`  | `UNVERIFIED` | `NOT_READY`          | `NOT_ASSESSED`      | `OK`          |
+| Capability / Scope                    | Product Decision | Implementation | Environment   | Production Readiness | External Dependency | Review Marker                                                                                        |
+| ------------------------------------- | ---------------- | -------------- | ------------- | -------------------- | ------------------- | ---------------------------------------------------------------------------------------------------- |
+| Current general Establishment profile | `APPROVED`       | `IMPLEMENTED`  | `UNVERIFIED`  | `NOT_READY`          | `NOT_ASSESSED`      | `OK`                                                                                                 |
+| Restaurant Knowledge                  | `APPROVED`       | `NOT_STARTED`  | `NOT_ENABLED` | `NOT_ASSESSED`       | `NOT_ASSESSED`      | `NEEDS REVIEW` — data owner/boundary, permissions, and initial data shape/behavior remain unresolved |
 
 ## 6. Source-of-truth boundaries
 
@@ -139,6 +153,7 @@ assignments.
 | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Organization identity                       | `organizations` and Tenancy architecture                                                                                                                            | An Establishment belongs to one Organization; it does not replace or duplicate the organization record.                                                                                          |
 | Establishment identity and profile          | `establishments` through the Establishment profile repository                                                                                                       | Canonical cloud owner for the bounded restaurant/site profile. Reads and writes use both organization and establishment scope.                                                                   |
+| Restaurant Knowledge                        | `NEEDS REVIEW`; ADR-007 requires a boundary separate from the Establishment Profile                                                                                 | Approved Product Intent in the Establishment domain at product/navigation level; no schema, repository, permission mapping, or implementation is approved.                                       |
 | Locale and timezone                         | `establishments`, projected into trusted tenant context                                                                                                             | Establishment-owned context consumed by date/time presentation and source modules; not currently editable in the general-information form.                                                       |
 | Booking service periods                     | `booking_service_periods` and Booking repository/actions                                                                                                            | Establishment-scoped relation only; Booking owns period records and behavior.                                                                                                                    |
 | Booking exceptions                          | `booking_exceptions` and Booking repository/actions                                                                                                                 | Establishment-scoped relation only; Booking owns exception records and behavior.                                                                                                                 |
@@ -189,6 +204,10 @@ target.
 
 This home intentionally does not reproduce the schema field catalog.
 
+The ownership bullets above describe the current Establishment Profile only.
+They must not be reused to assign Restaurant Knowledge to `establishments`, its
+profile repository, or `establishment.profile.*` permissions.
+
 ## 9. Related modules
 
 | Related module                | Current relationship                                                                                                                                                   | Source of truth / direction                                                                 |
@@ -219,29 +238,36 @@ This home intentionally does not reproduce the schema field catalog.
 - Repository implementation and tests describe repository Implemented State;
   they do not prove which version is deployed or that Backoffice is
   production-ready.
+- Restaurant Knowledge has no approved data owner, operation-level permission
+  matrix, detailed data shape, provider, or implementation. Company/legal data,
+  automatic cross-module inference, detailed history/provenance, Marketing or
+  social-content consumption, and social-profile link ownership remain outside
+  its initial approved scope or `NEEDS REVIEW`.
 
 ## 11. Source map
 
-| Question                                                       | Read this source                                                                                                                                                                    |
-| -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| What Product Intent is approved for Establishment?             | [ADR-006](../../decisions/ADR-006-cloud-establishment-profile-context.md).                                                                                                          |
-| Where should Establishment questions start?                    | This canonical Product Knowledge home.                                                                                                                                              |
-| What does the general-information page currently support?      | [Establishment general-information page pack](../../ui/pages/establishment-general-information/README.md).                                                                          |
-| Who owns hours, service periods, and exceptions?               | [Hours and services page pack](../../ui/pages/hours-services/README.md) and current Booking administration sources.                                                                 |
-| How is trusted cloud scope resolved?                           | [`TENANCY.md`](../../architecture/TENANCY.md), authentication architecture, and `packages/tenant`.                                                                                  |
-| What owns Booking behavior and public eligibility?             | [Public Booking](../public-booking/README.md), its status source, and Booking repositories.                                                                                         |
-| How does Today consume Establishment context?                  | [Today Product Knowledge](../today/README.md).                                                                                                                                      |
-| How do Reputation and Direct Feedback use establishment scope? | [Reputation](../reputation/README.md) and ADR-004.                                                                                                                                  |
-| What are the current lifecycle assignments?                    | [`MODULE_REGISTRY.md`](../../MODULE_REGISTRY.md) and [`LIFECYCLE_STATUS_MODEL.md`](../../LIFECYCLE_STATUS_MODEL.md).                                                                |
-| How should conflicts be resolved?                              | [`AUTHORITY_MODEL.md`](../../AUTHORITY_MODEL.md).                                                                                                                                   |
-| What is implemented now?                                       | [Backoffice Establishment routes](<../../../apps/backoffice/src/app/(authenticated)/etablissement>), the profile and Booking repositories, permissions, schemas, and focused tests. |
-| Is the capability production-ready?                            | [`PRODUCTION_READINESS.md`](../../operations/PRODUCTION_READINESS.md).                                                                                                              |
-| What owns the separate local POS profile?                      | [POS Product Knowledge](../../products/pos/README.md) and [POS Establishment page pack](../../ui/pages/pos-management-establishment/README.md).                                     |
+| Question                                                       | Read this source                                                                                                                                                                                                                          |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| What Product Intent is approved for Establishment?             | [ADR-006](../../decisions/ADR-006-cloud-establishment-profile-context.md) for the profile and [ADR-007](../../decisions/ADR-007-composed-general-information-and-restaurant-knowledge.md) for the composed page and Restaurant Knowledge. |
+| Where should Establishment questions start?                    | This canonical Product Knowledge home.                                                                                                                                                                                                    |
+| What composes the general-information page?                    | [Informations generales page Product Knowledge](general-information/README.md).                                                                                                                                                           |
+| What does the general-information page currently support?      | [Establishment general-information page pack](../../ui/pages/establishment-general-information/README.md).                                                                                                                                |
+| Who owns hours, service periods, and exceptions?               | [Hours and services page pack](../../ui/pages/hours-services/README.md) and current Booking administration sources.                                                                                                                       |
+| How is trusted cloud scope resolved?                           | [`TENANCY.md`](../../architecture/TENANCY.md), authentication architecture, and `packages/tenant`.                                                                                                                                        |
+| What owns Booking behavior and public eligibility?             | [Public Booking](../public-booking/README.md), its status source, and Booking repositories.                                                                                                                                               |
+| How does Today consume Establishment context?                  | [Today Product Knowledge](../today/README.md).                                                                                                                                                                                            |
+| How do Reputation and Direct Feedback use establishment scope? | [Reputation](../reputation/README.md) and ADR-004.                                                                                                                                                                                        |
+| What are the current lifecycle assignments?                    | [`MODULE_REGISTRY.md`](../../MODULE_REGISTRY.md) and [`LIFECYCLE_STATUS_MODEL.md`](../../LIFECYCLE_STATUS_MODEL.md).                                                                                                                      |
+| How should conflicts be resolved?                              | [`AUTHORITY_MODEL.md`](../../AUTHORITY_MODEL.md).                                                                                                                                                                                         |
+| What is implemented now?                                       | [Backoffice Establishment routes](<../../../apps/backoffice/src/app/(authenticated)/etablissement>), the profile and Booking repositories, permissions, schemas, and focused tests.                                                       |
+| Is the capability production-ready?                            | [`PRODUCTION_READINESS.md`](../../operations/PRODUCTION_READINESS.md).                                                                                                                                                                    |
+| What owns the separate local POS profile?                      | [POS Product Knowledge](../../products/pos/README.md) and [POS Establishment page pack](../../ui/pages/pos-management-establishment/README.md).                                                                                           |
 
 ## 12. Agent interpretation rules
 
 1. Apply ADR-006 as the approved Product Decision for only the bounded Cloud
-   Establishment profile/context.
+   Establishment profile/context, and ADR-007 for the composed page and
+   separate Restaurant Knowledge capability.
 2. Do not infer domain ownership from route or path placement.
 3. Do not merge Organization, Establishment, membership, Booking, Reputation,
    or POS-local data into one model.
@@ -254,7 +280,9 @@ This home intentionally does not reproduce the schema field catalog.
    implementation.
 9. When sources conflict or authority is insufficient, apply the Authority
    Model and retain `NEEDS REVIEW` rather than choosing silently.
-10. OpenSpec is not currently normative for Establishment.
+10. Do not infer Restaurant Knowledge data ownership or permissions from its
+    Establishment product/navigation placement or from current profile code.
+11. OpenSpec is not currently normative for Establishment.
 
 ## 13. OpenSpec position
 
@@ -263,7 +291,10 @@ today. This home retains broader Product Knowledge context and ownership
 boundaries. After YUTA explicitly approves OpenSpec specifications as
 normative, approved Establishment specs may define specific behavioral
 requirements inside accepted product, architecture, and security boundaries.
-No OpenSpec artifact is created or modified by this step.
+Restaurant Knowledge is not ready for an implementation specification until
+its data owner/boundary, operation-level permissions, and initial data
+shape/behavior scope are resolved. No OpenSpec artifact is created or modified
+by this step.
 
 ## 14. Status
 

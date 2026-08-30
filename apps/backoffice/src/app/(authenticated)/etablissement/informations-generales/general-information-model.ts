@@ -64,6 +64,16 @@ export const countryOptions = [
   ['CA', 'Canada'],
 ] as const;
 
+export function copyPrimaryContactToPublic(
+  profile: GeneralInformationProfile,
+): GeneralInformationProfile {
+  return {
+    ...profile,
+    publicPhone: profile.phone || profile.publicPhone,
+    publicEmail: profile.email || profile.publicEmail,
+  };
+}
+
 export function calculateCompletion(
   profile: GeneralInformationProfile,
 ): number {

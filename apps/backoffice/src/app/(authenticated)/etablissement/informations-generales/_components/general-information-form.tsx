@@ -15,6 +15,7 @@ import { IdentitySection } from './identity-section';
 import { LanguagesServiceModesSection } from './languages-service-modes-section';
 import {
   calculateCompletion,
+  copyPrimaryContactToPublic,
   type GeneralInformationProfile,
 } from '../general-information-model';
 import { PublicInformationSection } from './public-information-section';
@@ -58,6 +59,8 @@ export function GeneralInformationForm({
         ? [...current.serviceModes, value]
         : current.serviceModes.filter((item) => item !== value),
     }));
+  const copyPrimaryContact = () =>
+    setDraft((current) => copyPrimaryContactToPublic(current));
 
   return (
     <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_22rem]">
@@ -98,6 +101,7 @@ export function GeneralInformationForm({
             fieldErrors={state.fieldErrors}
             setText={setText}
             setBoolean={setBoolean}
+            onCopyPrimaryContact={copyPrimaryContact}
           />
           <LanguagesServiceModesSection
             draft={draft}
