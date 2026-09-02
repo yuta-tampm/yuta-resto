@@ -10,7 +10,17 @@ import { requireAuthenticatedTenant } from '../../../../server/auth/session';
 import { cloudDatabase } from '../../../../server/cloud-database';
 import { GeneralInformationForm } from './_components/general-information-form';
 import { ConceptHistoryForm } from './_components/concept-history-form';
-import { loadConceptHistorySection } from './restaurant-knowledge-loader';
+import { CuisineKnowHowForm } from './_components/cuisine-know-how-form';
+import { CustomerExperienceForm } from './_components/customer-experience-form';
+import { TeamCultureForm } from './_components/team-culture-form';
+import { CommunicationIdentityForm } from './_components/communication-identity-form';
+import {
+  loadCommunicationIdentitySection,
+  loadConceptHistorySection,
+  loadCuisineKnowHowSection,
+  loadCustomerExperienceSection,
+  loadTeamCultureSection,
+} from './restaurant-knowledge-loader';
 
 export default async function GeneralInformationPage() {
   const { tenant } = await requireAuthenticatedTenant(
@@ -18,9 +28,20 @@ export default async function GeneralInformationPage() {
   );
   requireEstablishment(tenant);
   requireEstablishmentPermission(tenant, 'establishment.profile.read');
-  const [profile, conceptHistorySection] = await Promise.all([
+  const [
+    profile,
+    conceptHistorySection,
+    cuisineKnowHowSection,
+    customerExperienceSection,
+    teamCultureSection,
+    communicationIdentitySection,
+  ] = await Promise.all([
     getEstablishmentProfile(cloudDatabase, tenant),
     loadConceptHistorySection(cloudDatabase, tenant),
+    loadCuisineKnowHowSection(cloudDatabase, tenant),
+    loadCustomerExperienceSection(cloudDatabase, tenant),
+    loadTeamCultureSection(cloudDatabase, tenant),
+    loadCommunicationIdentitySection(cloudDatabase, tenant),
   ]);
   if (!profile) notFound();
   const canEditProfile = hasEstablishmentPermission(
@@ -37,9 +58,37 @@ export default async function GeneralInformationPage() {
         <GeneralInformationForm profile={profile} canEdit={canEditProfile} />
         {conceptHistorySection && (
           <ConceptHistoryForm
-            key={`${conceptHistorySection.conceptHistory.concept ?? ''}\u0000${conceptHistorySection.conceptHistory.history ?? ''}`}
+            key={`concept-history\u0000${conceptHistorySection.conceptHistory.concept ?? ''}\u0000${conceptHistorySection.conceptHistory.history ?? ''}`}
             conceptHistory={conceptHistorySection.conceptHistory}
             canManage={conceptHistorySection.canManage}
+          />
+        )}
+        {cuisineKnowHowSection && (
+          <CuisineKnowHowForm
+            key={`cuisine-know-how\u0000${cuisineKnowHowSection.cuisineKnowHow.cuisineDescription ?? ''}\u0000${cuisineKnowHowSection.cuisineKnowHow.knowHowParticularities ?? ''}\u0000${cuisineKnowHowSection.cuisineKnowHow.homemade ?? ''}`}
+            cuisineKnowHow={cuisineKnowHowSection.cuisineKnowHow}
+            canManage={cuisineKnowHowSection.canManage}
+          />
+        )}
+        {customerExperienceSection && (
+          <CustomerExperienceForm
+            key={`customer-experience\u0000${customerExperienceSection.customerExperience.desiredExperience ?? ''}\u0000${customerExperienceSection.customerExperience.welcomeAndService ?? ''}\u0000${customerExperienceSection.customerExperience.customerAttention ?? ''}`}
+            customerExperience={customerExperienceSection.customerExperience}
+            canManage={customerExperienceSection.canManage}
+          />
+        )}
+        {teamCultureSection && (
+          <TeamCultureForm
+            teamCulture={teamCultureSection.teamCulture}
+            canManage={teamCultureSection.canManage}
+          />
+        )}
+        {communicationIdentitySection && (
+          <CommunicationIdentityForm
+            communicationIdentity={
+              communicationIdentitySection.communicationIdentity
+            }
+            canManage={communicationIdentitySection.canManage}
           />
         )}
       </div>

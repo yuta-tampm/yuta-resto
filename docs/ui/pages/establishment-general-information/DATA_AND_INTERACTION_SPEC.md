@@ -8,19 +8,23 @@ Prompt 00 must first map every concept to the current repository implementation.
 
 ## Current implementation mapping
 
-| UI concept                            | Current source                           | Mutation                     | Status                          |
-| ------------------------------------- | ---------------------------------------- | ---------------------------- | ------------------------------- |
-| Name, description, structured address | `establishments`                         | establishment profile action | `SUPPORTED`                     |
-| Primary and public contact, website   | `establishments`                         | establishment profile action | `SUPPORTED`                     |
-| Logo and cover                        | validated URL fields on `establishments` | establishment profile action | `SUPPORTED_WITH_DIFFERENT_COPY` |
-| Languages and service modes           | establishment arrays and approved enum   | establishment profile action | `SUPPORTED`                     |
-| Public visibility                     | establishment booleans                   | establishment profile action | `SUPPORTED`                     |
-| Restaurant Knowledge Concept/Histoire | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
-| Completion                            | local view-model calculation             | none                         | `UI_ONLY_DERIVED`               |
-| Local public preview                  | local form state                         | none                         | `UI_ONLY_DERIVED`               |
-| Media upload                          | no storage lifecycle                     | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
-| Address verification                  | no geocoding provider                    | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
-| External public profile               | no route                                 | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
+| UI concept                                     | Current source                           | Mutation                     | Status                          |
+| ---------------------------------------------- | ---------------------------------------- | ---------------------------- | ------------------------------- |
+| Name, description, structured address          | `establishments`                         | establishment profile action | `SUPPORTED`                     |
+| Primary and public contact, website            | `establishments`                         | establishment profile action | `SUPPORTED`                     |
+| Logo and cover                                 | validated URL fields on `establishments` | establishment profile action | `SUPPORTED_WITH_DIFFERENT_COPY` |
+| Languages and service modes                    | establishment arrays and approved enum   | establishment profile action | `SUPPORTED`                     |
+| Public visibility                              | establishment booleans                   | establishment profile action | `SUPPORTED`                     |
+| Restaurant Knowledge Concept/Histoire          | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
+| Restaurant Knowledge Cuisine/savoir-faire      | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
+| Restaurant Knowledge Expérience client         | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
+| Restaurant Knowledge Équipe & culture          | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
+| Restaurant Knowledge Identité de communication | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
+| Completion                                     | local view-model calculation             | none                         | `UI_ONLY_DERIVED`               |
+| Local public preview                           | local form state                         | none                         | `UI_ONLY_DERIVED`               |
+| Media upload                                   | no storage lifecycle                     | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
+| Address verification                           | no geocoding provider                    | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
+| External public profile                        | no route                                 | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
 
 ## Context and authorization
 
@@ -49,6 +53,16 @@ The composed capabilities enforce permissions independently:
 - Concept/Histoire load and visibility require `restaurant-knowledge.read`;
 - Concept/Histoire edit and explicit save require
   `restaurant-knowledge.manage`;
+- Cuisine/savoir-faire load and visibility require
+  `restaurant-knowledge.read`, while edit and explicit save require
+  `restaurant-knowledge.manage`;
+- Expérience client load and visibility require `restaurant-knowledge.read`,
+  while edit and explicit save require `restaurant-knowledge.manage`;
+- Équipe & culture load and visibility require `restaurant-knowledge.read`,
+  while edit and explicit save require `restaurant-knowledge.manage`;
+- Identité de communication load and visibility require
+  `restaurant-knowledge.read`, while edit and explicit save require
+  `restaurant-knowledge.manage`;
 - STAFF keeps profile-read access but receives no Restaurant Knowledge access;
 - the knowledge action re-derives trusted tenant context and accepts no browser
   organization or establishment identifier.
@@ -67,6 +81,101 @@ persistence maps to `{ concept: null, history: null }`.
 - no Product length, format, requiredness or content validation is defined;
 - the action revalidates only `/etablissement/informations-generales` after a
   successful save.
+
+## Restaurant Knowledge Cuisine & savoir-faire
+
+The slice loads from its dedicated Restaurant Knowledge repository using both
+trusted organization and establishment scope. Missing persistence projects to
+three null values.
+
+- `Description de la cuisine`, `Savoir-faire & particularités` and `Fait
+maison` are independent optional descriptive values;
+- all-empty and every single-value state are valid;
+- all three values remain browser-local drafts until submit;
+- one submit sends the complete three-value slice to the dedicated server
+  action;
+- empty form values normalize to `null`;
+- no blur, timer, effect or background request persists changes;
+- no Product length, format, requiredness, taxonomy or menu relationship is
+  defined;
+- the action revalidates only `/etablissement/informations-generales` after a
+  successful save;
+- neither the repository nor the action reads, writes, links, copies or
+  synchronizes `Carte & menus` or POS operational data.
+
+## Restaurant Knowledge Expérience client
+
+The slice loads from its dedicated Restaurant Knowledge repository using both
+trusted organization and establishment scope. Missing persistence projects to
+three null values.
+
+- `Expérience souhaitée`, `Accueil & service` and `Attention particulière au
+client` are independent optional descriptive establishment values;
+- all-empty and every single-value state are valid;
+- all three values remain browser-local drafts until submit;
+- one submit sends the complete three-value slice to the dedicated server
+  action;
+- empty form values normalize to `null`;
+- no blur, timer, effect or background request persists changes;
+- no Product length, format, requiredness, taxonomy, scoring, CRM/customer
+  preference or analytics classification is defined;
+- the action revalidates only `/etablissement/informations-generales` after a
+  successful save;
+- neither the repository nor the action reads, writes, links, infers or
+  synchronizes Reservations, Reputation, Today, Personnel, POS/orders,
+  Marketing, CRM or provider data.
+
+## Restaurant Knowledge Équipe & culture
+
+The slice loads from its dedicated Restaurant Knowledge repository using both
+trusted organization and establishment scope. Missing persistence and an
+all-null row both project to the same three-value all-empty state.
+
+- `Valeurs & état d’esprit`, `Façon de travailler ensemble` and `Transmission &
+intégration` are independent optional descriptive establishment values;
+- all-empty and every single-value state are valid;
+- all three values remain browser-local drafts until submit;
+- one submit sends the complete three-value slice to the dedicated server
+  action;
+- only exact empty strings normalize to `null`; non-empty strings, including
+  whitespace-only strings, remain unchanged;
+- dirty comparison treats `''` and `null` as the same canonical empty value;
+- no blur, timer, effect or background request persists changes;
+- no Product length, format, requiredness, taxonomy, scoring, competency,
+  employee, training/onboarding, checklist/task or analytics rule is defined;
+- the action revalidates only `/etablissement/informations-generales` after a
+  successful save;
+- neither the repository nor the action reads, writes, links, infers, copies or
+  synchronizes Personnel/Salariés, Planning, Pointage, Today, Tâches du jour,
+  Formalités, POS, Site Agent, Display, Marketing/social or provider data.
+
+## Restaurant Knowledge Identité de communication
+
+The slice loads from its dedicated Restaurant Knowledge repository using both
+trusted organization and establishment scope. Missing persistence and an
+all-null row both project to the same three-value all-empty state.
+
+- `Ton & style de communication`, `Façon de s’adresser aux clients` and
+  `Éléments de langage & choses à éviter` are independent optional descriptive
+  establishment values;
+- all-empty and every single-value state are valid;
+- all three values remain browser-local drafts until submit;
+- one submit sends the complete three-value slice to the dedicated server
+  action;
+- only exact empty strings normalize to `null`; non-empty strings, including
+  whitespace-only strings, remain unchanged;
+- dirty comparison treats `''` and `null` as the same canonical empty value,
+  and the canonical projection returned by a successful save becomes the
+  accepted baseline without requiring a remount;
+- no blur, timer, effect or background request persists changes;
+- no Product length, format, requiredness, enum, taxonomy, tone preset, score,
+  rating, customer preference, legal validation or moderation rule is defined;
+- the action revalidates only `/etablissement/informations-generales` after a
+  successful save;
+- neither the repository nor the action reads, writes, links, infers, derives,
+  publishes or synchronizes Establishment Profile, Marketing/Content,
+  Reviews/Reputation, AI, Social, public website, CRM/customer, POS, Site Agent,
+  Display or provider data.
 
 ## UI view model
 

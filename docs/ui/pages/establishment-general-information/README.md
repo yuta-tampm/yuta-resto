@@ -10,7 +10,7 @@ Prompt snapshot topology: GENERATED_SNAPSHOTS
 
 Prompt provenance: prompt-provenance.json
 
-Last updated: 2026-08-30
+Last updated: 2026-09-02
 
 Route: `/etablissement/informations-generales`
 
@@ -21,15 +21,20 @@ Application: `apps/backoffice`
 The authenticated route is a composed establishment-scoped editor. The
 existing Establishment Profile remains backed by canonical profile fields on
 `establishments`; OWNER and MANAGER may edit it and STAFF remains read-only.
-The separate Restaurant Knowledge `Concept & histoire` section is backed by
-its dedicated cloud table/repository, requires Restaurant Knowledge READ to be
-visible, and requires MANAGE to edit or explicitly save. OWNER and MANAGER have
-both operations; STAFF receives no Restaurant Knowledge access.
+The separate Restaurant Knowledge `Concept & histoire`, `Cuisine &
+savoir-faire`, `Expérience client`, `Équipe & culture` and `Identité de
+communication` sections are backed by dedicated cloud tables and repository
+operations, require Restaurant Knowledge READ to be visible, and require MANAGE
+to edit or explicitly save. OWNER and MANAGER have both operations; STAFF
+receives no Restaurant Knowledge access.
 
 Concept and Histoire are independently optional, including a valid both-empty
-state. Their browser-local draft has one explicit save for the complete slice
-and no autosave. The profile and Restaurant Knowledge sections retain separate
-forms, actions, permissions and canonical owners.
+state. The three Cuisine/savoir-faire, three Expérience client, three Équipe &
+culture and three Identité de communication values are likewise independent
+and optional, including a valid all-empty state for each slice. Each
+browser-local slice has one explicit whole-slice save and no autosave. The
+profile and all five Restaurant Knowledge sections retain separate forms,
+actions and canonical data boundaries.
 
 Weekly service periods are managed independently under
 `/etablissement/horaires-services`.
@@ -84,5 +89,5 @@ is `EXISTING_PAGE`; fixture replacement is forbidden.
 
 Stop for approval before adding a storage/geocoding provider, public profile
 route, new service-mode value, Restaurant Knowledge shared/API contract,
-Product content-validation rule, additional knowledge section, or changing
-profile/knowledge ownership or role policy.
+Product content-validation rule, unapproved additional knowledge section, or
+changing profile/knowledge ownership or role policy.

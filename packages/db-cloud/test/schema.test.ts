@@ -28,7 +28,11 @@ import {
   reputationAuditEvents,
   reputationConnectors,
   reputationSettings,
+  restaurantKnowledgeCommunicationIdentity,
   restaurantKnowledgeConceptHistory,
+  restaurantKnowledgeCuisineKnowHow,
+  restaurantKnowledgeCustomerExperience,
+  restaurantKnowledgeTeamCulture,
   tenantDomains,
   tenantMemberships,
   users,
@@ -156,6 +160,166 @@ describe('cloud schema boundaries', () => {
     expect(knowledgeConfig.foreignKeys).toHaveLength(1);
     expect(establishmentColumns).not.toContain('concept');
     expect(establishmentColumns).not.toContain('history');
+  });
+
+  it('keeps Cuisine and savoir-faire in its dedicated establishment-scoped Restaurant Knowledge table', () => {
+    const knowledgeConfig = getTableConfig(restaurantKnowledgeCuisineKnowHow);
+    const knowledgeColumns = knowledgeConfig.columns.map(
+      (column) => column.name,
+    );
+    const establishmentColumns = getTableConfig(establishments).columns.map(
+      (column) => column.name,
+    );
+
+    expect(knowledgeColumns).toEqual([
+      'organization_id',
+      'establishment_id',
+      'cuisine_description',
+      'know_how_particularities',
+      'homemade',
+    ]);
+    for (const columnName of [
+      'cuisine_description',
+      'know_how_particularities',
+      'homemade',
+    ]) {
+      expect(
+        knowledgeConfig.columns.find((column) => column.name === columnName)
+          ?.notNull,
+      ).toBe(false);
+      expect(establishmentColumns).not.toContain(columnName);
+    }
+    expect(knowledgeConfig.primaryKeys).toHaveLength(1);
+    expect(knowledgeConfig.foreignKeys).toHaveLength(1);
+  });
+
+  it('keeps Customer Experience in its dedicated establishment-scoped Restaurant Knowledge table', () => {
+    const knowledgeConfig = getTableConfig(
+      restaurantKnowledgeCustomerExperience,
+    );
+    const knowledgeColumns = knowledgeConfig.columns.map(
+      (column) => column.name,
+    );
+    const establishmentColumns = getTableConfig(establishments).columns.map(
+      (column) => column.name,
+    );
+
+    expect(knowledgeColumns).toEqual([
+      'organization_id',
+      'establishment_id',
+      'desired_experience',
+      'welcome_and_service',
+      'customer_attention',
+    ]);
+    for (const columnName of [
+      'desired_experience',
+      'welcome_and_service',
+      'customer_attention',
+    ]) {
+      expect(
+        knowledgeConfig.columns.find((column) => column.name === columnName)
+          ?.notNull,
+      ).toBe(false);
+      expect(establishmentColumns).not.toContain(columnName);
+    }
+    expect(knowledgeConfig.primaryKeys).toHaveLength(1);
+    expect(knowledgeConfig.foreignKeys).toHaveLength(1);
+  });
+
+  it('keeps Team Culture in its dedicated establishment-scoped Restaurant Knowledge table', () => {
+    const knowledgeConfig = getTableConfig(restaurantKnowledgeTeamCulture);
+    const knowledgeColumns = knowledgeConfig.columns.map(
+      (column) => column.name,
+    );
+    const establishmentColumns = getTableConfig(establishments).columns.map(
+      (column) => column.name,
+    );
+
+    expect(knowledgeColumns).toEqual([
+      'organization_id',
+      'establishment_id',
+      'values_and_mindset',
+      'working_together',
+      'transmission_and_integration',
+    ]);
+    for (const columnName of [
+      'values_and_mindset',
+      'working_together',
+      'transmission_and_integration',
+    ]) {
+      expect(
+        knowledgeConfig.columns.find((column) => column.name === columnName)
+          ?.notNull,
+      ).toBe(false);
+      expect(establishmentColumns).not.toContain(columnName);
+    }
+    expect(knowledgeConfig.primaryKeys).toHaveLength(1);
+    expect(knowledgeConfig.primaryKeys[0]?.name).toBe(
+      'restaurant_knowledge_team_culture_scope_pk',
+    );
+    expect(knowledgeConfig.foreignKeys).toHaveLength(1);
+    expect(knowledgeConfig.foreignKeys[0]?.onDelete).toBe('restrict');
+    expect(
+      knowledgeConfig.foreignKeys[0]
+        ?.reference()
+        .columns.map((column) => column.name),
+    ).toEqual(['organization_id', 'establishment_id']);
+    expect(
+      knowledgeConfig.foreignKeys[0]
+        ?.reference()
+        .foreignColumns.map((column) => column.name),
+    ).toEqual(['organization_id', 'id']);
+  });
+
+  it('keeps Communication Identity in an exact dedicated establishment-scoped Restaurant Knowledge table', () => {
+    const knowledgeConfig = getTableConfig(
+      restaurantKnowledgeCommunicationIdentity,
+    );
+    const knowledgeColumns = knowledgeConfig.columns.map(
+      (column) => column.name,
+    );
+    const establishmentColumns = getTableConfig(establishments).columns.map(
+      (column) => column.name,
+    );
+
+    expect(knowledgeColumns).toEqual([
+      'organization_id',
+      'establishment_id',
+      'tone_and_communication_style',
+      'customer_addressing',
+      'language_elements_and_things_to_avoid',
+    ]);
+    for (const columnName of [
+      'tone_and_communication_style',
+      'customer_addressing',
+      'language_elements_and_things_to_avoid',
+    ]) {
+      const column = knowledgeConfig.columns.find(
+        (candidate) => candidate.name === columnName,
+      );
+      expect(column?.notNull).toBe(false);
+      expect(column?.getSQLType()).toBe('text');
+      expect(establishmentColumns).not.toContain(columnName);
+    }
+    expect(knowledgeConfig.primaryKeys).toHaveLength(1);
+    expect(knowledgeConfig.primaryKeys[0]?.name).toBe(
+      'restaurant_knowledge_communication_identity_scope_pk',
+    );
+    expect(knowledgeConfig.foreignKeys).toHaveLength(1);
+    expect(knowledgeConfig.foreignKeys[0]?.onDelete).toBe('restrict');
+    expect(knowledgeConfig.foreignKeys[0]?.getName()).toBe(
+      'restaurant_knowledge_communication_identity_establishment_fk',
+    );
+    expect(
+      knowledgeConfig.foreignKeys[0]
+        ?.reference()
+        .columns.map((column) => column.name),
+    ).toEqual(['organization_id', 'establishment_id']);
+    expect(
+      knowledgeConfig.foreignKeys[0]
+        ?.reference()
+        .foreignColumns.map((column) => column.name),
+    ).toEqual(['organization_id', 'id']);
   });
 
   it('keeps personnel document metadata establishment and employee scoped', () => {

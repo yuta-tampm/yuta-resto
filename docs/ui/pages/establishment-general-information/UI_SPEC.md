@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-08-07
+Last updated: 2026-09-02
 
 ## Visual reference
 
@@ -143,6 +143,60 @@ Users with READ see persisted values. Users with MANAGE can edit both
 browser-local drafts and receive one submit action labelled `Enregistrer le
 concept et l’histoire`. Without MANAGE the fields are disabled and no submit
 control is rendered. Without READ the section is not loaded or rendered.
+
+### Restaurant Knowledge — `Cuisine & savoir-faire`
+
+A second separate full-width Restaurant Knowledge card follows `Concept &
+histoire`; it is not a numbered Establishment Profile section. It contains
+exactly three optional textareas labelled `Description de la cuisine`,
+`Savoir-faire & particularités` and `Fait maison`.
+
+Users with READ see persisted values. Users with MANAGE can edit the three
+browser-local drafts and receive one submit action labelled `Enregistrer la
+cuisine et le savoir-faire`. Without MANAGE all three fields are disabled and
+no submit control is rendered. Without READ the section is not loaded or
+rendered. Field changes do not autosave.
+
+### Restaurant Knowledge — `Expérience client`
+
+A third separate full-width Restaurant Knowledge card follows `Cuisine &
+savoir-faire`; it is not a numbered Establishment Profile section. It contains
+exactly three optional textareas labelled `Expérience souhaitée`, `Accueil &
+service` and `Attention particulière au client`.
+
+Users with READ see persisted values. Users with MANAGE can edit the three
+browser-local drafts and receive one submit action labelled `Enregistrer
+l’expérience client`. Without MANAGE all three fields are disabled and no
+submit control is rendered. Without READ the section is not loaded or rendered.
+Field changes do not autosave.
+
+### Restaurant Knowledge — `Équipe & culture`
+
+A fourth separate full-width Restaurant Knowledge card follows `Expérience
+client`; it is not a numbered Establishment Profile section. It contains
+exactly three optional textareas labelled `Valeurs & état d’esprit`, `Façon de
+travailler ensemble` and `Transmission & intégration`.
+
+Users with READ see persisted values. Users with MANAGE can edit the three
+browser-local drafts and receive one submit action labelled `Enregistrer équipe
+& culture`. Without MANAGE all three fields are disabled and no submit control
+is rendered. Without READ the section is not loaded or rendered. Canonically
+pristine drafts keep the submit disabled; field changes do not autosave.
+
+### Restaurant Knowledge — `Identité de communication`
+
+A fifth separate full-width Restaurant Knowledge card follows `Équipe &
+culture`; it is not a numbered Establishment Profile section. It contains
+exactly three optional textareas labelled `Ton & style de communication`,
+`Façon de s’adresser aux clients` and `Éléments de langage & choses à éviter`.
+
+Users with READ see persisted values. Users with MANAGE can edit the three
+browser-local drafts and receive one submit action labelled `Enregistrer
+identité de communication`. Without MANAGE all three fields are disabled and
+no submit control is rendered. Without READ the section is not loaded or
+rendered. Canonically pristine drafts keep the submit disabled; a successful
+save uses the returned canonical projection as its accepted baseline, and field
+changes do not autosave.
 
 ## Public-preview panel
 

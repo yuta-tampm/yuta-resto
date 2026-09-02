@@ -1,4 +1,4 @@
-# YUTA Automated Change Workflow
+# YUTA Automated Change Workflow v3
 
 Status: Proposed
 
@@ -8,90 +8,317 @@ Owner: YUTA product and engineering
 
 ## Purpose
 
-This workflow automates OpenSpec planning, implementation, verification, review-packet assembly, and approved mechanical promotion while preserving explicit human review gates.
+Workflow v3 automates bounded discovery, OpenSpec planning, phased
+implementation, technical verification, QA evidence, review-packet assembly,
+approved normative promotion, archive, and post-archive knowledge
+consolidation. Human approval remains mandatory at Product/authority,
+requirements, sensitive-design, final-review, and conditional knowledge-review
+boundaries.
+
+It does not merge release, deployment, environment enablement, or Production
+Readiness into repository implementation closure.
+
+## End-to-end workflow
 
 ```text
-$yuta-run-change
-  -> Proposal + Analysis
-  -> Gate 1: 01-analysis-review.md
-  -> human review and explicit approval
-$yuta-run-change <change> continue
-  -> Delta specs + strict validation
-  -> Gate 2: 02-specs-review.md
-  -> human review and explicit approval
-$yuta-run-change <change> continue
-  -> Design + Tasks + Apply + Verify
-  -> Gate 3: 03-final-review.md
-  -> human review and explicit sync authorization
-$yuta-finish-change <change>
-  -> Sync + validate main specs + archive
+IDEA
+  -> DISCOVERY / SHAPING                              conditional
+  -> PROPOSAL
+  -> ANALYSIS
+  -> GATE 1 — PRODUCT / AUTHORITY REVIEW
+  -> SPECS
+  -> GATE 2 — REQUIREMENTS REVIEW
+  -> DESIGN
+  -> SENSITIVE DESIGN GATE                           conditional
+  -> TASKS + PHASED IMPLEMENTATION PLAN
+  -> APPLY
+  -> VERIFY
+  -> QA
+  -> GATE 3 — FINAL INDEPENDENT REVIEW
+  -> APPROVAL + EXPLICIT SYNC AUTHORIZATION
+  -> SYNC NORMATIVE SPECS
+  -> VALIDATE MAIN SPECS
+  -> ARCHIVE
+  -> KNOWLEDGE CONSOLIDATION
+       -> NO_UPDATE_REQUIRED -> DONE
+       -> UPDATE_REQUIRED -> KNOWLEDGE REVIEW
+          -> APPLY APPROVED KNOWLEDGE UPDATE -> DONE
+
+RELEASE / DEPLOY / POST-DEPLOY VERIFY
+  = separate conditional operational lane
 ```
 
-A valid `skip_specs: true` change omits Gate 2. A sensitive change adds `02b-design-review.md` before apply.
+A valid `skip_specs: true` change omits Gate 2 and normative promotion. A
+sensitive change adds `02b-design-review.md` before Tasks/Apply.
 
-## Responsibilities
+## Workflow responsibilities
 
-`$yuta-run-change` starts or resumes a change and runs autonomously only until the next human gate. It creates the packet for that gate and stops. It never syncs normative specs or archives a change.
+`$yuta-run-change` starts or resumes an active change and runs only through the
+next review stop. It owns conditional Discovery/Shaping, planning artifacts,
+Gates 1 and 2, the conditional Design Gate, phased Tasks/Apply, VERIFY, QA, and
+Gate 3. It never syncs or archives normative specs.
 
-It can also adopt an in-flight change that already has planning artifacts but no YUTA packets. Adoption always starts at the earliest missing or unapproved gate and preserves every existing artifact byte-for-byte unless the user explicitly requests changes after review:
+`$yuta-finish-change` requires explicit Gate 3 approval plus explicit sync and
+archive authorization. It rechecks reviewed hashes, syncs selected deltas,
+validates main specs, archives synchronously, and performs Knowledge
+Consolidation. It also resumes an approved Knowledge Review for an already
+archived change without recreating an active change.
 
-- existing Proposal + Analysis with no Gate 1 packet → read/validate, hash, create `01-analysis-review.md`, and stop;
-- after Gate 1 approval, existing delta specs with no Gate 2 packet → strict-validate without editing, hash, create `02-specs-review.md`, and stop;
-- after Gate 2 approval, existing design → use it as-is rather than regenerate it.
+Reviewers remain independent. Automation cannot approve Product Intent, resolve
+authority conflicts, infer permission, or promote lifecycle/readiness.
 
-Later specs, design, tasks, or implementation can never bypass an earlier unapproved gate. A missing packet is missing review evidence, not a reason to rewrite its artifacts.
+## Conditional Discovery / Shaping
 
-`$yuta-finish-change` runs only after Gate 3 receives explicit current-user final approval plus explicit authorization to sync and archive. It revalidates the reviewed state, promotes applicable deltas, validates main specs, and archives only after success.
+Before a new change, classify whether current Product Knowledge can safely bound
+the request. Use read-only Discovery/Shaping for unclear ownership,
+cross-module behavior, external-provider behavior, major workflow redesign, or
+unfamiliar runtime/data boundaries.
 
-ChatGPT or another external reviewer remains an independent review layer. Automation removes repetitive prompt handoff and packet assembly; it does not automate Product, authority, architecture, security, legal, privacy, or sync-authorization decisions.
+Discovery is not a mandatory OpenSpec artifact. It may produce a question, a
+bounded request, or no change. Small, well-bounded requests skip it.
 
-## Review gates
+## Gates and adoption
 
-### Gate 1 — Analysis
+### Gate 1 — Product / authority review
 
-Reviews the exact proposal and authority/evidence analysis. Specs cannot begin until the bounded behavior is ready and the packet is explicitly approved. Requirement-level conflicts return to analysis instead of being guessed through.
+Reviews exact Proposal and Analysis bytes. Requirement-level conflicts return to
+Analysis. Valid conclusions remain `READY_FOR_SPECS`,
+`BLOCKED_NEEDS_REVIEW`, and `NO_SPEC_BEHAVIOR_CHANGE`.
 
-Valid YUTA analysis conclusions are exactly:
+### Gate 2 — Requirements review
 
-- `READY_FOR_SPECS`
-- `BLOCKED_NEEDS_REVIEW`
-- `NO_SPEC_BEHAVIOR_CHANGE`
+Reviews every exact delta spec and strict validation evidence. It is omitted
+only for an approved `skip_specs: true` path.
 
-`CONFLICT` is recorded in the conflict section, not used as an analysis conclusion. When a conflict affects requirement readiness, the conclusion is `BLOCKED_NEEDS_REVIEW`.
+### Conditional sensitive Design Gate
 
-### Gate 2 — Specs
+Authorization/security, runtime/data ownership, database/destructive migration,
+payment/fiscal, Personnel/legal/privacy, provider, POS transaction,
+irreversible, or cross-module durable-boundary work requires
+`02b-design-review.md` approval before Tasks/Apply.
 
-Reviews exact delta specs and strict validation evidence. Design or implementation cannot begin until the behavioral contract is explicitly approved. This gate is absent only for a valid no-spec change.
+### Adoption
 
-### Conditional Design Gate
+An existing in-flight change always resumes at its earliest missing,
+unapproved, invalidated, or changes-requested gate. Later artifacts never bypass
+an earlier gate and are preserved byte-for-byte unless an approved revision
+explicitly authorizes edits.
 
-Sensitive authorization, ownership, migration, payment/fiscal, Personnel/legal/privacy, provider, POS transaction, destructive, or cross-module boundary work receives a separate design review before apply.
+## Tasks and phased implementation
 
-### Gate 3 — Final
+Tasks include only the phases the approved change needs, in dependency order:
 
-Reviews planning hashes, implementation diff, test and verification evidence, deviations, and unresolved issues. Its initial sync authorization is `PENDING`. Only explicit current-user approval and sync authorization permit `$yuta-finish-change` to act.
+- `Foundation / Data`;
+- `Service / Domain`;
+- `UI / Components`;
+- `Interaction / States`;
+- `Integration / Regression`.
 
-## Integrity and invalidation
+These are planning labels, not mandatory stages. Each included phase contains
+verifiable checkbox outcomes. APPLY executes them in order, runs targeted checks
+where practical between phases, and marks a task complete only when its stated
+outcome exists. Product or durable-boundary discoveries return to the
+appropriate earlier gate rather than weakening Specs/Design.
 
-Each packet records SHA-256 hashes of the exact artifacts or implementation diff reviewed. Resume and finish operations recompute the recorded path sets and hashes. Any added, removed, renamed, or changed reviewed content invalidates approval and stops the workflow for re-review.
+Each included phase embeds a `TECHNICAL IMPLEMENTATION CONTRACT` in the
+existing Tasks / Implementation Plan. It is not a new OpenSpec artifact. The
+phase records:
 
-Approval is never inferred from passing checks, OpenSpec state, file existence, commits, pull requests, or prior assistant messages. Approval records use:
+- affected runtime/data/domain/security/presentation boundary and canonical
+  owner;
+- root and nearest scoped `AGENTS.md` plus the applicable current technical
+  authorities;
+- only the constraints relevant to the phase;
+- intended files/packages;
+- required targeted checks;
+- completion evidence.
+
+Reference and resolve repository/scoped authorities instead of duplicating
+their rules in the workflow. The selected phase determines the applicable
+concerns: data ownership/schema/migration/isolation, service/domain trusted
+boundaries and validation, UI component/client ownership, interaction/state
+and accessibility behavior, or integration/regression evidence.
+
+APPLY cannot start while a required owner, boundary, authority, or constraint
+is unresolved. A phase completes only when both its implementation outcome and
+its contract evidence exist. Any need to change a permission, contract, API,
+canonical owner, cross-runtime behavior, or durable boundary returns to the
+applicable Design/Product/authority gate.
+
+## VERIFY
+
+VERIFY asks: does repository implementation match the approved Specs and
+Design?
+
+Applicable evidence includes requirement/scenario mapping, targeted and broader
+tests, typecheck, build, strict OpenSpec validation, architecture/security,
+migration/schema evidence, scoped diff review, and deviations/blockers.
+
+VERIFY includes a `TECHNICAL COMPLIANCE MATRIX` for every contract item in each
+phase actually used:
 
 ```text
-Approval source: explicit current-user instruction
-Approval recorded by: Codex workflow
+technical rule/constraint
+-> authoritative source
+-> affected implementation
+-> test/check/evidence
+-> PASS | FAIL
 ```
 
-No universal approver identity is invented.
+Do not add ceremonial rows for unused phases. VERIFY records
+`TECHNICAL IMPLEMENTATION COMPLIANCE: PASS` only when every applicable row
+passes. `VERIFY: PASS` additionally requires implementation to match approved
+Specs/Design with no unresolved critical issue. VERIFY never claims browser
+UX, visual/responsive correctness, deployment, environment enablement, or
+Production Readiness.
 
-## Normativity and lifecycle
+## QA
 
-OpenSpec change artifacts and review packets are non-normative. On a behavior-changing path, only an explicitly authorized, successful sync followed by main-spec validation promotes the reviewed behavior into `openspec/specs/**`. Archive closes history; it does not create authority.
+QA is independent of VERIFY and follows
+[`YUTA_QA_PROTOCOL.md`](YUTA_QA_PROTOCOL.md). Before Gate 3, classify:
 
-No workflow step automatically promotes Product Decision, Implementation, Environment, Production Readiness, External Dependency, or any other lifecycle value.
+```text
+UI_AFFECTING: YES | NO
+BROWSER_QA_REQUIRED: YES | NO
+```
+
+QA status is exactly `PASS`, `FAIL`, `BLOCKED_BY_ENVIRONMENT`, or
+`NOT_APPLICABLE`.
+
+Visible UI, interaction, responsive layout, UI role/edit/read-only states,
+loading/error/success presentation, or visual component behavior makes Browser
+QA mandatory. Required evidence lives under:
+
+```text
+docs/reviews/<change-name>/qa/
+├── QA_REPORT.md
+├── screenshot-manifest.md
+└── *.png
+```
+
+UI Browser QA uses the real/local route, page-pack viewport rules when present,
+and actual hashed screenshots. Without page-specific rules, test at least
+`1366x768` and `390x844`, adding an intermediate/tablet viewport when the
+layout or target requires it.
+
+## Gate 3 — Final independent review
+
+Gate 3 contains separate `TECHNICAL VERIFY` and `QA` sections plus the
+existing planning hashes, implementation attribution, scoped diff, tests,
+deviations, and lifecycle truth.
+
+A UI-affecting change is Gate 3-ready only when:
+
+```text
+TECHNICAL IMPLEMENTATION COMPLIANCE: PASS
+VERIFY: PASS
+QA: PASS
+```
+
+A non-UI change requires Technical Implementation Compliance PASS, VERIFY PASS,
+and either applicable QA PASS or truthful `NOT_APPLICABLE`. Backend/database
+correctness belongs to VERIFY through the applicable contract, migration,
+schema, repository, tenant-isolation, authorization, and integration evidence;
+it does not require meaningless Browser QA. `FAIL`, `BLOCKED_BY_ENVIRONMENT`,
+missing responsive coverage, or missing hashed screenshot evidence cannot
+produce a ready Gate 3.
+
+Only a ready packet may recommend:
+
+```text
+APPROVE_GATE_3_WITH_EXPLICIT_SYNC_AUTHORIZATION_IF_READY
+```
+
+That text is a recommendation, not approval or sync authorization.
+
+## Hash integrity and invalidation
+
+Every review approval is bounded to exact paths and SHA-256 hashes. Resume and
+finish operations recompute all earlier reviewed path sets, planning artifacts,
+implementation diffs, VERIFY evidence, and applicable QA/screenshot evidence.
+The finish workflow also rechecks the reviewed Technical Compliance Matrix
+source/hash and phase-contract completion.
+
+Any reviewed addition, removal, rename, or byte change sets the affected packet
+to `INVALIDATED_BY_ARTIFACT_CHANGE` and stops for re-review. Passing commands,
+Git/PR state, packet existence, or prior assistant text never substitutes for
+current-user approval.
+
+## Sync, validation, and archive
+
+After explicit Gate 3 approval and sync/archive authorization,
+`$yuta-finish-change`:
+
+1. rechecks Gate 3 readiness and every reviewed hash;
+2. selects deltas only from `artifactPaths.specs.existingOutputPaths`;
+3. captures pre-sync normative bytes;
+4. performs the generated intelligent sync inline;
+5. reviews the exact main-spec diff;
+6. strictly validates main specs;
+7. archives only after successful sync/validation and complete Tasks.
+
+Sync is mechanical promotion after approval. Archive closes history; neither
+promotes lifecycle, deployment, environment, provider, or readiness state.
+
+### Finish-change branch isolation
+
+Active-change finalization and archived Knowledge Review resume are distinct
+branches with non-interchangeable preconditions and integrity checks.
+
+- **Active-change finalization** requires an existing active change, Gate 3
+  `AWAITING_HUMAN_REVIEW`, and explicit current-user final approval plus
+  sync/archive authorization. It recomputes reviewed planning-artifact,
+  implementation-diff, VERIFY-evidence, Technical Compliance, and applicable
+  earlier-gate hashes before sync, validation, and archive.
+- **Archived Knowledge Review resume** requires Gate 3 already `APPROVED`, a
+  successfully recorded finish/archive and `Workflow status:
+AWAITING_KNOWLEDGE_REVIEW`, no active change, the recorded archive, and an
+  `AWAITING_HUMAN_REVIEW` Knowledge Review packet. It validates only the
+  packet's target path set, target hashes, proposed-diff hash, and explicit
+  current-user Knowledge Review approval before applying that exact
+  documentation diff and closing `DONE`.
+
+The archived-resume branch never requires Gate 3 to be awaiting review, never
+reruns active-change planning/implementation/VERIFY integrity approval checks,
+and never repeats sync or archive.
+
+## Knowledge Consolidation
+
+After archive, follow
+[`YUTA_KNOWLEDGE_CONSOLIDATION_PROTOCOL.md`](YUTA_KNOWLEDGE_CONSOLIDATION_PROTOCOL.md).
+
+- `NO_UPDATE_REQUIRED`: record reason and inspected sources, classify release
+  follow-up, and close `DONE`.
+- `UPDATE_REQUIRED`: create
+  `docs/reviews/<change>/04-knowledge-consolidation-review.md` with exact
+  proposed diff and target/diff hashes, then stop without editing canonical
+  knowledge.
+- After explicit Knowledge Review approval, recheck hashes, apply only the
+  approved documentation diff, run documentation/architecture validation, and
+  close `DONE`.
+
+Knowledge Consolidation cannot approve Product Decisions, change durable
+boundaries, ownership or permissions, promote lifecycle/readiness, rewrite
+normative specs, or resolve `NEEDS REVIEW` by assumption.
+
+## Release/deploy lane
+
+After `DONE`, classify `RELEASE_FOLLOW_UP` as `NOT_REQUIRED`, `REQUIRED`,
+or `UNKNOWN`. If required, report runtime/environment, deployment/readiness
+evidence, and post-deploy verification needs.
+
+The repository workflow never deploys automatically:
+
+```text
+IMPLEMENTED != PRODUCTION_ENABLED
+```
 
 ## Failure behavior
 
-The workflow stops on missing/ambiguous approval, hash drift, unresolved authority decisions, sensitive design awaiting approval, non-isolatable implementation diffs, spec/design conflicts, failed sync, unexpected main-spec diff, or failed main-spec validation.
+Stop on ambiguous approval, hash drift, unresolved authority, missing sensitive
+Design approval, non-isolatable diffs, VERIFY failure, required QA failure or
+environment block, failed/partial sync, unexpected main-spec diff, failed
+validation/archive, or pending Knowledge Review.
 
-Technical implementation defects inside an approved contract may be fixed and re-verified. Product or durable-boundary decisions always return to the applicable human gate.
+Technical defects inside approved behavior may be fixed and VERIFY/QA rerun.
+Product or durable-boundary decisions always return to human review.

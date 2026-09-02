@@ -1,0 +1,1721 @@
+diff --git a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/communication-identity-fields.tsx b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/communication-identity-fields.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..6f30ec6ede0a09b0309daecfb5a2ddb0e250232f
+--- /dev/null
++++ b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/communication-identity-fields.tsx
+@@ -0,0 +1,76 @@
++import { FormField, Label, Textarea } from '@yuta/ui';
++import type { CommunicationIdentityDraft } from '../communication-identity-model';
++
++export function CommunicationIdentityFields({
++  draft,
++  canManage,
++  onToneAndCommunicationStyleChange,
++  onCustomerAddressingChange,
++  onLanguageElementsAndThingsToAvoidChange,
++}: {
++  draft: CommunicationIdentityDraft;
++  canManage: boolean;
++  onToneAndCommunicationStyleChange: (value: string) => void;
++  onCustomerAddressingChange: (value: string) => void;
++  onLanguageElementsAndThingsToAvoidChange: (value: string) => void;
++}) {
++  return (
++    <div className="grid gap-4 lg:grid-cols-2">
++      <FormField
++        label={
++          <Label htmlFor="toneAndCommunicationStyle">
++            Ton &amp; style de communication
++          </Label>
++        }
++        hint="Optionnel"
++      >
++        <Textarea
++          id="toneAndCommunicationStyle"
++          name="toneAndCommunicationStyle"
++          value={draft.toneAndCommunicationStyle ?? ''}
++          onChange={(event) =>
++            onToneAndCommunicationStyleChange(event.target.value)
++          }
++          disabled={!canManage}
++          rows={6}
++        />
++      </FormField>
++      <FormField
++        label={
++          <Label htmlFor="customerAddressing">
++            Façon de s’adresser aux clients
++          </Label>
++        }
++        hint="Optionnel"
++      >
++        <Textarea
++          id="customerAddressing"
++          name="customerAddressing"
++          value={draft.customerAddressing ?? ''}
++          onChange={(event) => onCustomerAddressingChange(event.target.value)}
++          disabled={!canManage}
++          rows={6}
++        />
++      </FormField>
++      <FormField
++        label={
++          <Label htmlFor="languageElementsAndThingsToAvoid">
++            Éléments de langage &amp; choses à éviter
++          </Label>
++        }
++        hint="Optionnel"
++      >
++        <Textarea
++          id="languageElementsAndThingsToAvoid"
++          name="languageElementsAndThingsToAvoid"
++          value={draft.languageElementsAndThingsToAvoid ?? ''}
++          onChange={(event) =>
++            onLanguageElementsAndThingsToAvoidChange(event.target.value)
++          }
++          disabled={!canManage}
++          rows={6}
++        />
++      </FormField>
++    </div>
++  );
++}
+diff --git a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/communication-identity-form.tsx b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/communication-identity-form.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..6e66641e3761094ea085896fdc4ab0b6d78a34c4
+--- /dev/null
++++ b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/communication-identity-form.tsx
+@@ -0,0 +1,128 @@
++'use client';
++
++import { Alert, AlertDescription, Button, Card, Separator } from '@yuta/ui';
++import { Save } from 'lucide-react';
++import { useActionState, useState } from 'react';
++import { useFormStatus } from 'react-dom';
++import {
++  saveCommunicationIdentityAction,
++  type CommunicationIdentityActionState,
++} from '../actions';
++import {
++  isCommunicationIdentityDirty,
++  updateCustomerAddressing,
++  updateLanguageElementsAndThingsToAvoid,
++  updateToneAndCommunicationStyle,
++  type CommunicationIdentityDraft,
++} from '../communication-identity-model';
++import { CommunicationIdentityFields } from './communication-identity-fields';
++
++const initialState: CommunicationIdentityActionState = {
++  status: 'idle',
++  message: null,
++  savedCommunicationIdentity: null,
++};
++
++export function CommunicationIdentityForm({
++  communicationIdentity,
++  canManage,
++}: {
++  communicationIdentity: CommunicationIdentityDraft;
++  canManage: boolean;
++}) {
++  const [state, formAction] = useActionState(
++    saveCommunicationIdentityAction,
++    initialState,
++  );
++  const [draft, setDraft] = useState(communicationIdentity);
++  const acceptedBaseline =
++    state.savedCommunicationIdentity ?? communicationIdentity;
++  const isDirty = isCommunicationIdentityDirty(acceptedBaseline, draft);
++
++  return (
++    <Card padding="none" radius="lg" className="overflow-hidden">
++      <div className="px-5 py-4">
++        <p className="text-xs font-bold uppercase tracking-wide text-action-primary">
++          Restaurant Knowledge
++        </p>
++        <h2 className="mt-1 font-bold">Identité de communication</h2>
++        <p className="mt-1 text-sm text-muted">
++          Décrivez le ton, la manière de vous adresser aux clients et les
++          éléments de langage propres à votre établissement.
++        </p>
++      </div>
++      <Separator />
++      <form action={formAction} className="grid gap-4 p-5">
++        {!canManage && (
++          <Alert tone="info">
++            <AlertDescription>
++              Votre rôle permet de consulter ces informations, mais pas de les
++              modifier.
++            </AlertDescription>
++          </Alert>
++        )}
++        {state.message && (
++          <Alert
++            tone={state.status === 'success' ? 'success' : 'danger'}
++            role={state.status === 'success' ? 'status' : 'alert'}
++          >
++            <AlertDescription>{state.message}</AlertDescription>
++          </Alert>
++        )}
++
++        <CommunicationIdentityFields
++          draft={draft}
++          canManage={canManage}
++          onToneAndCommunicationStyleChange={(toneAndCommunicationStyle) =>
++            setDraft((current) =>
++              updateToneAndCommunicationStyle(
++                current,
++                toneAndCommunicationStyle,
++              ),
++            )
++          }
++          onCustomerAddressingChange={(customerAddressing) =>
++            setDraft((current) =>
++              updateCustomerAddressing(current, customerAddressing),
++            )
++          }
++          onLanguageElementsAndThingsToAvoidChange={(
++            languageElementsAndThingsToAvoid,
++          ) =>
++            setDraft((current) =>
++              updateLanguageElementsAndThingsToAvoid(
++                current,
++                languageElementsAndThingsToAvoid,
++              ),
++            )
++          }
++        />
++
++        {canManage && (
++          <div className="flex justify-end">
++            <CommunicationIdentitySubmitButton disabled={!isDirty} />
++          </div>
++        )}
++      </form>
++    </Card>
++  );
++}
++
++export function CommunicationIdentitySubmitButton({
++  disabled,
++}: {
++  disabled: boolean;
++}) {
++  const { pending } = useFormStatus();
++  return (
++    <Button
++      type="submit"
++      variant="success"
++      loading={pending}
++      disabled={disabled}
++    >
++      <Save className="h-4 w-4" aria-hidden />
++      {pending ? 'Enregistrement…' : 'Enregistrer identité de communication'}
++    </Button>
++  );
++}
+diff --git a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/actions.ts b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/actions.ts
+index 66961737970be088b81ac73cc3f03625766eb048..4f6760ab89feaee69e4f3a296362a00b7e00107a 100644
+--- a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/actions.ts
++++ b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/actions.ts
+@@ -3,10 +3,12 @@
+ import { establishmentProfileInputSchema } from '@yuta/contracts';
+ import {
+   saveRestaurantKnowledgeConceptHistory,
++  saveRestaurantKnowledgeCommunicationIdentity,
+   saveRestaurantKnowledgeCuisineKnowHow,
+   saveRestaurantKnowledgeCustomerExperience,
+   saveRestaurantKnowledgeTeamCulture,
+   updateEstablishmentProfile,
++  type RestaurantKnowledgeCommunicationIdentityInput,
+ } from '@yuta/db-cloud';
+ import { requireEstablishment } from '@yuta/tenant';
+ import { revalidatePath } from 'next/cache';
+@@ -35,6 +37,12 @@ export type CustomerExperienceActionState = ConceptHistoryActionState;
+ 
+ export type TeamCultureActionState = ConceptHistoryActionState;
+ 
++export type CommunicationIdentityActionState = {
++  status: 'idle' | 'success' | 'error';
++  message: string | null;
++  savedCommunicationIdentity: RestaurantKnowledgeCommunicationIdentityInput | null;
++};
++
+ const optionalConceptHistoryTextSchema = z
+   .string()
+   .nullable()
+@@ -71,6 +79,14 @@ const teamCultureInputSchema = z
+   })
+   .strict();
+ 
++const communicationIdentityInputSchema = z
++  .object({
++    toneAndCommunicationStyle: optionalConceptHistoryTextSchema,
++    customerAddressing: optionalConceptHistoryTextSchema,
++    languageElementsAndThingsToAvoid: optionalConceptHistoryTextSchema,
++  })
++  .strict();
++
+ export async function saveGeneralInformationAction(
+   _previousState: GeneralInformationActionState,
+   formData: FormData,
+@@ -294,3 +310,50 @@ export async function saveTeamCultureAction(
+     };
+   }
+ }
++
++export async function saveCommunicationIdentityAction(
++  previousState: CommunicationIdentityActionState,
++  formData: FormData,
++): Promise<CommunicationIdentityActionState> {
++  const { tenant } = await requireAuthenticatedTenant(
++    '/etablissement/informations-generales',
++  );
++  requireEstablishment(tenant);
++  requireRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.manage');
++
++  try {
++    const input = communicationIdentityInputSchema.parse({
++      toneAndCommunicationStyle: formData.get('toneAndCommunicationStyle'),
++      customerAddressing: formData.get('customerAddressing'),
++      languageElementsAndThingsToAvoid: formData.get(
++        'languageElementsAndThingsToAvoid',
++      ),
++    });
++    const savedCommunicationIdentity =
++      await saveRestaurantKnowledgeCommunicationIdentity(
++        cloudDatabase,
++        tenant,
++        input,
++      );
++    revalidatePath('/etablissement/informations-generales');
++    return {
++      status: 'success',
++      message: 'Identité de communication enregistrée.',
++      savedCommunicationIdentity,
++    };
++  } catch (error: unknown) {
++    if (!(error instanceof z.ZodError)) {
++      console.error(
++        'Failed to save Restaurant Knowledge Communication Identity.',
++        {
++          errorName: error instanceof Error ? error.name : 'UnknownError',
++        },
++      );
++    }
++    return {
++      status: 'error',
++      message: 'Une erreur est survenue. Réessayez.',
++      savedCommunicationIdentity: previousState.savedCommunicationIdentity,
++    };
++  }
++}
+diff --git a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/communication-identity-model.ts b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/communication-identity-model.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..aa2e645ec730af36e2b106dbc19e73e8ac59fa71
+--- /dev/null
++++ b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/communication-identity-model.ts
+@@ -0,0 +1,66 @@
++export type CommunicationIdentityDraft = {
++  toneAndCommunicationStyle: string | null;
++  customerAddressing: string | null;
++  languageElementsAndThingsToAvoid: string | null;
++};
++
++export function communicationIdentityDraft(
++  toneAndCommunicationStyle: string | null,
++  customerAddressing: string | null,
++  languageElementsAndThingsToAvoid: string | null,
++): CommunicationIdentityDraft {
++  return {
++    toneAndCommunicationStyle,
++    customerAddressing,
++    languageElementsAndThingsToAvoid,
++  };
++}
++
++export function updateToneAndCommunicationStyle(
++  draft: CommunicationIdentityDraft,
++  toneAndCommunicationStyle: string,
++): CommunicationIdentityDraft {
++  return { ...draft, toneAndCommunicationStyle };
++}
++
++export function updateCustomerAddressing(
++  draft: CommunicationIdentityDraft,
++  customerAddressing: string,
++): CommunicationIdentityDraft {
++  return { ...draft, customerAddressing };
++}
++
++export function updateLanguageElementsAndThingsToAvoid(
++  draft: CommunicationIdentityDraft,
++  languageElementsAndThingsToAvoid: string,
++): CommunicationIdentityDraft {
++  return { ...draft, languageElementsAndThingsToAvoid };
++}
++
++export function canonicalCommunicationIdentityValue(
++  value: string | null,
++): string | null {
++  return value === '' ? null : value;
++}
++
++export function isCommunicationIdentityDirty(
++  acceptedBaseline: CommunicationIdentityDraft,
++  draft: CommunicationIdentityDraft,
++): boolean {
++  return (
++    canonicalCommunicationIdentityValue(draft.toneAndCommunicationStyle) !==
++      canonicalCommunicationIdentityValue(
++        acceptedBaseline.toneAndCommunicationStyle,
++      ) ||
++    canonicalCommunicationIdentityValue(draft.customerAddressing) !==
++      canonicalCommunicationIdentityValue(
++        acceptedBaseline.customerAddressing,
++      ) ||
++    canonicalCommunicationIdentityValue(
++      draft.languageElementsAndThingsToAvoid,
++    ) !==
++      canonicalCommunicationIdentityValue(
++        acceptedBaseline.languageElementsAndThingsToAvoid,
++      )
++  );
++}
+diff --git a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/page.tsx b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/page.tsx
+index fdd1fc81a8829dcaf99049ac579c177933ae5bba..561b97d49bad2a063e431981cbc95fa8ef529859 100644
+--- a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/page.tsx
++++ b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/page.tsx
+@@ -13,7 +13,9 @@ import { ConceptHistoryForm } from './_components/concept-history-form';
+ import { CuisineKnowHowForm } from './_components/cuisine-know-how-form';
+ import { CustomerExperienceForm } from './_components/customer-experience-form';
+ import { TeamCultureForm } from './_components/team-culture-form';
++import { CommunicationIdentityForm } from './_components/communication-identity-form';
+ import {
++  loadCommunicationIdentitySection,
+   loadConceptHistorySection,
+   loadCuisineKnowHowSection,
+   loadCustomerExperienceSection,
+@@ -32,12 +34,14 @@ export default async function GeneralInformationPage() {
+     cuisineKnowHowSection,
+     customerExperienceSection,
+     teamCultureSection,
++    communicationIdentitySection,
+   ] = await Promise.all([
+     getEstablishmentProfile(cloudDatabase, tenant),
+     loadConceptHistorySection(cloudDatabase, tenant),
+     loadCuisineKnowHowSection(cloudDatabase, tenant),
+     loadCustomerExperienceSection(cloudDatabase, tenant),
+     loadTeamCultureSection(cloudDatabase, tenant),
++    loadCommunicationIdentitySection(cloudDatabase, tenant),
+   ]);
+   if (!profile) notFound();
+   const canEditProfile = hasEstablishmentPermission(
+@@ -79,6 +83,14 @@ export default async function GeneralInformationPage() {
+             canManage={teamCultureSection.canManage}
+           />
+         )}
++        {communicationIdentitySection && (
++          <CommunicationIdentityForm
++            communicationIdentity={
++              communicationIdentitySection.communicationIdentity
++            }
++            canManage={communicationIdentitySection.canManage}
++          />
++        )}
+       </div>
+     </BackofficePage>
+   );
+diff --git a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/restaurant-knowledge-loader.ts b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/restaurant-knowledge-loader.ts
+index 3b2d6c67d2d00b0437518559bfbbea3b14d59a4e..b5f73bf6558e637b6bdfffafd2a24c6d82f3b1f2 100644
+--- a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/restaurant-knowledge-loader.ts
++++ b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/restaurant-knowledge-loader.ts
+@@ -2,6 +2,7 @@ import 'server-only';
+ 
+ import {
+   getRestaurantKnowledgeConceptHistory,
++  getRestaurantKnowledgeCommunicationIdentity,
+   getRestaurantKnowledgeCuisineKnowHow,
+   getRestaurantKnowledgeCustomerExperience,
+   getRestaurantKnowledgeTeamCulture,
+@@ -80,3 +81,23 @@ export async function loadTeamCultureSection(
+     ),
+   };
+ }
++
++export async function loadCommunicationIdentitySection(
++  db: CloudDatabaseClient,
++  tenant: TenantContext,
++) {
++  if (!hasRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.read')) {
++    return null;
++  }
++
++  return {
++    communicationIdentity: await getRestaurantKnowledgeCommunicationIdentity(
++      db,
++      tenant,
++    ),
++    canManage: hasRestaurantKnowledgePermission(
++      tenant,
++      'restaurant-knowledge.manage',
++    ),
++  };
++}
+diff --git a/apps/backoffice/test/communication-identity-action.test.ts b/apps/backoffice/test/communication-identity-action.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..c3f42d29c683df8c27fb4a680281de98cb9a1763
+--- /dev/null
++++ b/apps/backoffice/test/communication-identity-action.test.ts
+@@ -0,0 +1,249 @@
++import { randomUUID } from 'node:crypto';
++import { TenantError, type TenantContext, type TenantRole } from '@yuta/tenant';
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++
++const mocks = vi.hoisted(() => ({
++  tenant: null as TenantContext | null,
++  denyManage: false,
++  requireRestaurantKnowledgePermission: vi.fn(),
++  saveCommunicationIdentity: vi.fn(),
++  saveTeamCulture: vi.fn(),
++  saveConceptHistory: vi.fn(),
++  saveCuisineKnowHow: vi.fn(),
++  saveCustomerExperience: vi.fn(),
++  updateProfile: vi.fn(),
++  revalidatePath: vi.fn(),
++}));
++
++vi.mock('server-only', () => ({}));
++vi.mock('@yuta/db-cloud', () => ({
++  saveRestaurantKnowledgeCommunicationIdentity: mocks.saveCommunicationIdentity,
++  saveRestaurantKnowledgeTeamCulture: mocks.saveTeamCulture,
++  saveRestaurantKnowledgeConceptHistory: mocks.saveConceptHistory,
++  saveRestaurantKnowledgeCuisineKnowHow: mocks.saveCuisineKnowHow,
++  saveRestaurantKnowledgeCustomerExperience: mocks.saveCustomerExperience,
++  updateEstablishmentProfile: mocks.updateProfile,
++}));
++vi.mock('next/cache', () => ({ revalidatePath: mocks.revalidatePath }));
++vi.mock('../src/server/cloud-database', () => ({
++  cloudDatabase: { kind: 'test-cloud-database' },
++}));
++vi.mock('../src/server/auth/session', () => ({
++  requireAuthenticatedTenant: vi.fn(async () => ({ tenant: mocks.tenant })),
++}));
++vi.mock('../src/server/auth/permissions', async () => {
++  const actual = await vi.importActual<
++    typeof import('../src/server/auth/permissions')
++  >('../src/server/auth/permissions');
++  return {
++    ...actual,
++    requireRestaurantKnowledgePermission: (
++      ...args: Parameters<typeof actual.requireRestaurantKnowledgePermission>
++    ) => {
++      mocks.requireRestaurantKnowledgePermission(...args);
++      if (mocks.denyManage) {
++        throw new TenantError(
++          'Permission denied.',
++          'CROSS_TENANT_ACCESS_DENIED',
++          403,
++        );
++      }
++      return actual.requireRestaurantKnowledgePermission(...args);
++    },
++  };
++});
++
++import { saveCommunicationIdentityAction } from '../src/app/(authenticated)/etablissement/informations-generales/actions';
++import { hasEstablishmentPermission } from '../src/server/auth/permissions';
++
++function context(role: TenantRole): TenantContext {
++  return {
++    organizationId: randomUUID(),
++    establishmentId: randomUUID(),
++    actor: {
++      type: 'user',
++      userId: randomUUID(),
++      membershipId: randomUUID(),
++      role,
++    },
++    locale: 'fr-FR',
++    timezone: 'Europe/Paris',
++    entitlements: new Set(),
++  };
++}
++
++const initialState = {
++  status: 'idle' as const,
++  message: null,
++  savedCommunicationIdentity: null,
++};
++
++function populatedFormData() {
++  const formData = new FormData();
++  formData.set('toneAndCommunicationStyle', 'Chaleureux et direct');
++  formData.set('customerAddressing', 'Avec naturel et attention');
++  formData.set(
++    'languageElementsAndThingsToAvoid',
++    'Privilégier les mots simples',
++  );
++  return formData;
++}
++
++describe('Communication Identity save action', () => {
++  beforeEach(() => {
++    mocks.denyManage = false;
++    mocks.requireRestaurantKnowledgePermission.mockReset();
++    mocks.saveCommunicationIdentity.mockReset();
++    mocks.saveCommunicationIdentity.mockImplementation(
++      async (_db, _tenant, input) => input,
++    );
++    mocks.saveTeamCulture.mockReset();
++    mocks.saveConceptHistory.mockReset();
++    mocks.saveCuisineKnowHow.mockReset();
++    mocks.saveCustomerExperience.mockReset();
++    mocks.updateProfile.mockReset();
++    mocks.revalidatePath.mockReset();
++  });
++
++  it.each(['OWNER', 'MANAGER'] as const)(
++    'saves the exact whole slice once with MANAGE for %s',
++    async (role) => {
++      mocks.tenant = context(role);
++      const formData = populatedFormData();
++      formData.set('organizationId', randomUUID());
++      formData.set('establishmentId', randomUUID());
++      formData.set('role', 'STAFF');
++      formData.set('permission', 'establishment.profile.manage');
++      formData.set('marketingPermission', 'marketing.manage');
++      formData.set('unrelated', 'not forwarded');
++
++      await expect(
++        saveCommunicationIdentityAction(initialState, formData),
++      ).resolves.toEqual({
++        status: 'success',
++        message: 'Identité de communication enregistrée.',
++        savedCommunicationIdentity: {
++          toneAndCommunicationStyle: 'Chaleureux et direct',
++          customerAddressing: 'Avec naturel et attention',
++          languageElementsAndThingsToAvoid: 'Privilégier les mots simples',
++        },
++      });
++      expect(mocks.requireRestaurantKnowledgePermission).toHaveBeenCalledWith(
++        mocks.tenant,
++        'restaurant-knowledge.manage',
++      );
++      expect(mocks.saveCommunicationIdentity).toHaveBeenCalledTimes(1);
++      expect(mocks.saveCommunicationIdentity).toHaveBeenCalledWith(
++        { kind: 'test-cloud-database' },
++        mocks.tenant,
++        {
++          toneAndCommunicationStyle: 'Chaleureux et direct',
++          customerAddressing: 'Avec naturel et attention',
++          languageElementsAndThingsToAvoid: 'Privilégier les mots simples',
++        },
++      );
++      expect(mocks.saveTeamCulture).not.toHaveBeenCalled();
++      expect(mocks.saveConceptHistory).not.toHaveBeenCalled();
++      expect(mocks.saveCuisineKnowHow).not.toHaveBeenCalled();
++      expect(mocks.saveCustomerExperience).not.toHaveBeenCalled();
++      expect(mocks.updateProfile).not.toHaveBeenCalled();
++      expect(mocks.revalidatePath).toHaveBeenCalledTimes(1);
++      expect(mocks.revalidatePath).toHaveBeenCalledWith(
++        '/etablissement/informations-generales',
++      );
++    },
++  );
++
++  it('normalizes only exact empty strings and preserves whitespace', async () => {
++    mocks.tenant = context('OWNER');
++    const formData = new FormData();
++    formData.set('toneAndCommunicationStyle', '');
++    formData.set('customerAddressing', '   ');
++    formData.set('languageElementsAndThingsToAvoid', '');
++
++    await expect(
++      saveCommunicationIdentityAction(initialState, formData),
++    ).resolves.toMatchObject({
++      savedCommunicationIdentity: {
++        toneAndCommunicationStyle: null,
++        customerAddressing: '   ',
++        languageElementsAndThingsToAvoid: null,
++      },
++    });
++    expect(mocks.saveCommunicationIdentity).toHaveBeenCalledWith(
++      { kind: 'test-cloud-database' },
++      mocks.tenant,
++      {
++        toneAndCommunicationStyle: null,
++        customerAddressing: '   ',
++        languageElementsAndThingsToAvoid: null,
++      },
++    );
++  });
++
++  it('denies STAFF before parsing or persistence without Profile substitution', async () => {
++    mocks.tenant = context('STAFF');
++    expect(
++      hasEstablishmentPermission(mocks.tenant, 'establishment.profile.read'),
++    ).toBe(true);
++
++    await expect(
++      saveCommunicationIdentityAction(initialState, new FormData()),
++    ).rejects.toThrow('Permission denied.');
++    expect(mocks.saveCommunicationIdentity).not.toHaveBeenCalled();
++    expect(mocks.updateProfile).not.toHaveBeenCalled();
++    expect(mocks.revalidatePath).not.toHaveBeenCalled();
++  });
++
++  it('enforces MANAGE independently at the server authorization boundary', async () => {
++    mocks.tenant = context('OWNER');
++    mocks.denyManage = true;
++
++    await expect(
++      saveCommunicationIdentityAction(initialState, populatedFormData()),
++    ).rejects.toThrow('Permission denied.');
++    expect(mocks.requireRestaurantKnowledgePermission).toHaveBeenCalledWith(
++      mocks.tenant,
++      'restaurant-knowledge.manage',
++    );
++    expect(mocks.saveCommunicationIdentity).not.toHaveBeenCalled();
++    expect(mocks.revalidatePath).not.toHaveBeenCalled();
++  });
++
++  it('retains the prior accepted baseline on a content-safe recoverable error', async () => {
++    mocks.tenant = context('MANAGER');
++    mocks.saveCommunicationIdentity.mockRejectedValue(
++      new Error('database unavailable'),
++    );
++    const previousState = {
++      status: 'success' as const,
++      message: 'Identité de communication enregistrée.',
++      savedCommunicationIdentity: {
++        toneAndCommunicationStyle: 'Baseline',
++        customerAddressing: null,
++        languageElementsAndThingsToAvoid: null,
++      },
++    };
++    const consoleError = vi
++      .spyOn(console, 'error')
++      .mockImplementation(() => undefined);
++
++    await expect(
++      saveCommunicationIdentityAction(previousState, populatedFormData()),
++    ).resolves.toEqual({
++      status: 'error',
++      message: 'Une erreur est survenue. Réessayez.',
++      savedCommunicationIdentity: previousState.savedCommunicationIdentity,
++    });
++    expect(mocks.saveCommunicationIdentity).toHaveBeenCalledTimes(1);
++    expect(mocks.revalidatePath).not.toHaveBeenCalled();
++    expect(consoleError).toHaveBeenCalledWith(
++      'Failed to save Restaurant Knowledge Communication Identity.',
++      { errorName: 'Error' },
++    );
++    expect(JSON.stringify(consoleError.mock.calls)).not.toContain(
++      'Chaleureux et direct',
++    );
++    consoleError.mockRestore();
++  });
++});
+diff --git a/apps/backoffice/test/communication-identity-fields.test.tsx b/apps/backoffice/test/communication-identity-fields.test.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..969f2b65e386d48e346da22a115d4c35e1dff836
+--- /dev/null
++++ b/apps/backoffice/test/communication-identity-fields.test.tsx
+@@ -0,0 +1,45 @@
++import { renderToStaticMarkup } from 'react-dom/server';
++import { describe, expect, it, vi } from 'vitest';
++import { CommunicationIdentityFields } from '../src/app/(authenticated)/etablissement/informations-generales/_components/communication-identity-fields';
++
++const draft = {
++  toneAndCommunicationStyle: 'Chaleureux',
++  customerAddressing: 'Avec naturel',
++  languageElementsAndThingsToAvoid: 'Des mots simples',
++};
++
++function render(canManage: boolean) {
++  return renderToStaticMarkup(
++    <CommunicationIdentityFields
++      draft={draft}
++      canManage={canManage}
++      onToneAndCommunicationStyleChange={vi.fn()}
++      onCustomerAddressingChange={vi.fn()}
++      onLanguageElementsAndThingsToAvoidChange={vi.fn()}
++    />,
++  );
++}
++
++describe('CommunicationIdentityFields', () => {
++  it('renders exactly the three approved optional labelled values', () => {
++    const markup = render(true);
++
++    expect(markup.match(/<textarea/g)).toHaveLength(3);
++    expect(markup).toContain('Ton &amp; style de communication');
++    expect(markup).toContain('Façon de s’adresser aux clients');
++    expect(markup).toContain('Éléments de langage &amp; choses à éviter');
++    expect(markup).toContain('name="toneAndCommunicationStyle"');
++    expect(markup).toContain('name="customerAddressing"');
++    expect(markup).toContain('name="languageElementsAndThingsToAvoid"');
++    expect(markup.match(/Optionnel/g)).toHaveLength(3);
++  });
++
++  it('associates labels and disables all values in presentation-only read mode', () => {
++    const markup = render(false);
++
++    expect(markup).toContain('for="toneAndCommunicationStyle"');
++    expect(markup).toContain('for="customerAddressing"');
++    expect(markup).toContain('for="languageElementsAndThingsToAvoid"');
++    expect(markup.match(/disabled=""/g)).toHaveLength(3);
++  });
++});
+diff --git a/apps/backoffice/test/communication-identity-form.test.tsx b/apps/backoffice/test/communication-identity-form.test.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..e9dc4e29314c53e26b59f963982abcbde4b773a4
+--- /dev/null
++++ b/apps/backoffice/test/communication-identity-form.test.tsx
+@@ -0,0 +1,177 @@
++import { renderToStaticMarkup } from 'react-dom/server';
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++
++type Values = {
++  toneAndCommunicationStyle: string | null;
++  customerAddressing: string | null;
++  languageElementsAndThingsToAvoid: string | null;
++};
++
++const mocks = vi.hoisted(() => ({
++  actionState: {
++    status: 'idle' as 'idle' | 'success' | 'error',
++    message: null as string | null,
++    savedCommunicationIdentity: null as Values | null,
++  },
++  draftOverride: null as Values | null,
++  pending: false,
++  saveCommunicationIdentityAction: vi.fn(),
++}));
++
++vi.mock(
++  '../src/app/(authenticated)/etablissement/informations-generales/actions',
++  () => ({
++    saveCommunicationIdentityAction: mocks.saveCommunicationIdentityAction,
++  }),
++);
++vi.mock('react-dom', () => ({
++  useFormStatus: () => ({ pending: mocks.pending }),
++}));
++vi.mock('react', async (importOriginal) => {
++  const actual = await importOriginal<typeof import('react')>();
++  return {
++    ...actual,
++    useActionState: () => [mocks.actionState, vi.fn()],
++    useState: (initial: unknown) => [mocks.draftOverride ?? initial, vi.fn()],
++  };
++});
++
++import {
++  CommunicationIdentityForm,
++  CommunicationIdentitySubmitButton,
++} from '../src/app/(authenticated)/etablissement/informations-generales/_components/communication-identity-form';
++
++const values: Values = {
++  toneAndCommunicationStyle: 'Chaleureux',
++  customerAddressing: 'Avec naturel',
++  languageElementsAndThingsToAvoid: 'Des mots simples',
++};
++
++describe('CommunicationIdentityForm', () => {
++  beforeEach(() => {
++    mocks.actionState = {
++      status: 'idle',
++      message: null,
++      savedCommunicationIdentity: null,
++    };
++    mocks.draftOverride = null;
++    mocks.pending = false;
++    mocks.saveCommunicationIdentityAction.mockReset();
++  });
++
++  it('renders one explicit whole-slice save and does not autosave on render', () => {
++    const markup = renderToStaticMarkup(
++      <CommunicationIdentityForm communicationIdentity={values} canManage />,
++    );
++
++    expect(markup.match(/<form/g)).toHaveLength(1);
++    expect(markup.match(/type="submit"/g)).toHaveLength(1);
++    expect(markup).toContain('Enregistrer identité de communication');
++    expect(markup).toContain('name="toneAndCommunicationStyle"');
++    expect(markup).toContain('name="customerAddressing"');
++    expect(markup).toContain('name="languageElementsAndThingsToAvoid"');
++    expect(markup).toContain('disabled=""');
++    expect(mocks.saveCommunicationIdentityAction).not.toHaveBeenCalled();
++  });
++
++  it('renders canManage false with disabled values and no save control', () => {
++    const markup = renderToStaticMarkup(
++      <CommunicationIdentityForm
++        communicationIdentity={values}
++        canManage={false}
++      />,
++    );
++
++    expect(markup).toContain('Identité de communication');
++    expect(markup.match(/disabled=""/g)).toHaveLength(3);
++    expect(markup).not.toContain('type="submit"');
++    expect(mocks.saveCommunicationIdentityAction).not.toHaveBeenCalled();
++  });
++
++  it('keeps a canonical-equivalent successful save pristine without remount', () => {
++    mocks.draftOverride = {
++      toneAndCommunicationStyle: '',
++      customerAddressing: '',
++      languageElementsAndThingsToAvoid: '',
++    };
++    mocks.actionState = {
++      status: 'success',
++      message: 'Identité de communication enregistrée.',
++      savedCommunicationIdentity: {
++        toneAndCommunicationStyle: null,
++        customerAddressing: null,
++        languageElementsAndThingsToAvoid: null,
++      },
++    };
++
++    const markup = renderToStaticMarkup(
++      <CommunicationIdentityForm
++        communicationIdentity={{
++          toneAndCommunicationStyle: null,
++          customerAddressing: null,
++          languageElementsAndThingsToAvoid: null,
++        }}
++        canManage
++      />,
++    );
++
++    expect(markup).toContain('role="status"');
++    expect(markup).toMatch(/<button[^>]*disabled=""/);
++  });
++
++  it('keeps clearing a non-empty baseline dirty and enables the same submit', () => {
++    mocks.draftOverride = {
++      toneAndCommunicationStyle: '',
++      customerAddressing: null,
++      languageElementsAndThingsToAvoid: null,
++    };
++
++    const markup = renderToStaticMarkup(
++      <CommunicationIdentityForm
++        communicationIdentity={{
++          toneAndCommunicationStyle: 'abc',
++          customerAddressing: null,
++          languageElementsAndThingsToAvoid: null,
++        }}
++        canManage
++      />,
++    );
++
++    expect(markup).toMatch(/<button[^>]*type="submit"/);
++    expect(markup).not.toMatch(/<button[^>]*disabled=""/);
++  });
++
++  it('shows pending state on the same submit control', () => {
++    mocks.pending = true;
++    const markup = renderToStaticMarkup(
++      <CommunicationIdentitySubmitButton disabled={false} />,
++    );
++
++    expect(markup.match(/<button/g)).toHaveLength(1);
++    expect(markup).toContain('type="submit"');
++    expect(markup).toContain('Enregistrement…');
++    expect(markup).not.toContain('Enregistrer identité de communication');
++  });
++
++  it('retains the failed draft and renders a recoverable alert', () => {
++    mocks.draftOverride = {
++      toneAndCommunicationStyle: 'Brouillon conservé',
++      customerAddressing: '',
++      languageElementsAndThingsToAvoid: '',
++    };
++    mocks.actionState = {
++      status: 'error',
++      message: 'Une erreur est survenue. Réessayez.',
++      savedCommunicationIdentity: values,
++    };
++
++    const markup = renderToStaticMarkup(
++      <CommunicationIdentityForm communicationIdentity={values} canManage />,
++    );
++
++    expect(markup).toContain('Une erreur est survenue. Réessayez.');
++    expect(markup).toContain('role="alert"');
++    expect(markup).toContain('Brouillon conservé');
++    expect(markup).not.toMatch(/<button[^>]*disabled=""/);
++  });
++});
+diff --git a/apps/backoffice/test/communication-identity-model.test.ts b/apps/backoffice/test/communication-identity-model.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..d98432c0463af7fda32591d61d9dfdaae92f65a0
+--- /dev/null
++++ b/apps/backoffice/test/communication-identity-model.test.ts
+@@ -0,0 +1,79 @@
++import { describe, expect, it } from 'vitest';
++import {
++  canonicalCommunicationIdentityValue,
++  communicationIdentityDraft,
++  isCommunicationIdentityDirty,
++  updateCustomerAddressing,
++  updateLanguageElementsAndThingsToAvoid,
++  updateToneAndCommunicationStyle,
++} from '../src/app/(authenticated)/etablissement/informations-generales/communication-identity-model';
++
++describe('Communication Identity model', () => {
++  it('exposes exactly three independently updateable values', () => {
++    const initial = communicationIdentityDraft(null, null, null);
++    const updated = updateLanguageElementsAndThingsToAvoid(
++      updateCustomerAddressing(
++        updateToneAndCommunicationStyle(initial, 'Ton'),
++        'Adresse',
++      ),
++      'Langage',
++    );
++
++    expect(updated).toEqual({
++      toneAndCommunicationStyle: 'Ton',
++      customerAddressing: 'Adresse',
++      languageElementsAndThingsToAvoid: 'Langage',
++    });
++    expect(Object.keys(updated)).toEqual([
++      'toneAndCommunicationStyle',
++      'customerAddressing',
++      'languageElementsAndThingsToAvoid',
++    ]);
++  });
++
++  it('canonicalizes only empty string to null without trimming', () => {
++    expect(canonicalCommunicationIdentityValue(null)).toBeNull();
++    expect(canonicalCommunicationIdentityValue('')).toBeNull();
++    expect(canonicalCommunicationIdentityValue('abc')).toBe('abc');
++    expect(canonicalCommunicationIdentityValue('   ')).toBe('   ');
++  });
++
++  it('treats initial null and draft empty string as not dirty', () => {
++    expect(
++      isCommunicationIdentityDirty(
++        communicationIdentityDraft(null, null, null),
++        communicationIdentityDraft('', null, null),
++      ),
++    ).toBe(false);
++  });
++
++  it('treats initial text and draft empty string as dirty', () => {
++    expect(
++      isCommunicationIdentityDirty(
++        communicationIdentityDraft('abc', null, null),
++        communicationIdentityDraft('', null, null),
++      ),
++    ).toBe(true);
++  });
++
++  it('treats initial null and draft text as dirty', () => {
++    expect(
++      isCommunicationIdentityDirty(
++        communicationIdentityDraft(null, null, null),
++        communicationIdentityDraft('abc', null, null),
++      ),
++    ).toBe(true);
++  });
++
++  it('is not dirty after empty-string save canonicalizes to null without remount', () => {
++    const retainedBrowserDraft = communicationIdentityDraft('', '', '');
++    const canonicalSavedBaseline = communicationIdentityDraft(null, null, null);
++
++    expect(
++      isCommunicationIdentityDirty(
++        canonicalSavedBaseline,
++        retainedBrowserDraft,
++      ),
++    ).toBe(false);
++  });
++});
+diff --git a/apps/backoffice/test/restaurant-knowledge-loader.test.ts b/apps/backoffice/test/restaurant-knowledge-loader.test.ts
+index 11dd2ea05829b9e3545cab7160e1b6f653a17cf2..ce21185c791a5c416d6a742fdbeb377cedd811f0 100644
+--- a/apps/backoffice/test/restaurant-knowledge-loader.test.ts
++++ b/apps/backoffice/test/restaurant-knowledge-loader.test.ts
+@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
+ 
+ const mocks = vi.hoisted(() => ({
+   getConceptHistory: vi.fn(),
++  getCommunicationIdentity: vi.fn(),
+   getCuisineKnowHow: vi.fn(),
+   getCustomerExperience: vi.fn(),
+   getTeamCulture: vi.fn(),
+@@ -12,12 +13,14 @@ const mocks = vi.hoisted(() => ({
+ vi.mock('server-only', () => ({}));
+ vi.mock('@yuta/db-cloud', () => ({
+   getRestaurantKnowledgeConceptHistory: mocks.getConceptHistory,
++  getRestaurantKnowledgeCommunicationIdentity: mocks.getCommunicationIdentity,
+   getRestaurantKnowledgeCuisineKnowHow: mocks.getCuisineKnowHow,
+   getRestaurantKnowledgeCustomerExperience: mocks.getCustomerExperience,
+   getRestaurantKnowledgeTeamCulture: mocks.getTeamCulture,
+ }));
+ 
+ import {
++  loadCommunicationIdentitySection,
+   loadConceptHistorySection,
+   loadCuisineKnowHowSection,
+   loadCustomerExperienceSection,
+@@ -76,6 +79,63 @@ describe('Restaurant Knowledge Concept and Histoire loader', () => {
+   });
+ });
+ 
++describe('Communication Identity loader', () => {
++  beforeEach(() => {
++    mocks.getConceptHistory.mockReset();
++    mocks.getCuisineKnowHow.mockReset();
++    mocks.getCustomerExperience.mockReset();
++    mocks.getTeamCulture.mockReset();
++    mocks.getCommunicationIdentity.mockReset();
++    mocks.getCommunicationIdentity.mockResolvedValue({
++      toneAndCommunicationStyle: null,
++      customerAddressing: null,
++      languageElementsAndThingsToAvoid: null,
++    });
++  });
++
++  it.each(['OWNER', 'MANAGER'] as const)(
++    'loads with READ and derives MANAGE for %s',
++    async (role) => {
++      const tenant = context(role);
++      await expect(
++        loadCommunicationIdentitySection(
++          { kind: 'test-cloud-database' } as never,
++          tenant,
++        ),
++      ).resolves.toEqual({
++        communicationIdentity: {
++          toneAndCommunicationStyle: null,
++          customerAddressing: null,
++          languageElementsAndThingsToAvoid: null,
++        },
++        canManage: true,
++      });
++      expect(mocks.getCommunicationIdentity).toHaveBeenCalledWith(
++        { kind: 'test-cloud-database' },
++        tenant,
++      );
++      expect(mocks.getConceptHistory).not.toHaveBeenCalled();
++      expect(mocks.getCuisineKnowHow).not.toHaveBeenCalled();
++      expect(mocks.getCustomerExperience).not.toHaveBeenCalled();
++      expect(mocks.getTeamCulture).not.toHaveBeenCalled();
++    },
++  );
++
++  it('denies STAFF before repository access despite Profile read access', async () => {
++    await expect(
++      loadCommunicationIdentitySection(
++        { kind: 'test-cloud-database' } as never,
++        context('STAFF'),
++      ),
++    ).resolves.toBeNull();
++    expect(mocks.getCommunicationIdentity).not.toHaveBeenCalled();
++    expect(mocks.getConceptHistory).not.toHaveBeenCalled();
++    expect(mocks.getCuisineKnowHow).not.toHaveBeenCalled();
++    expect(mocks.getCustomerExperience).not.toHaveBeenCalled();
++    expect(mocks.getTeamCulture).not.toHaveBeenCalled();
++  });
++});
++
+ describe('Cuisine and savoir-faire loader', () => {
+   beforeEach(() => {
+     mocks.getConceptHistory.mockReset();
+diff --git a/docs/ui/pages/establishment-general-information/ACCEPTANCE_CHECKLIST.md b/docs/ui/pages/establishment-general-information/ACCEPTANCE_CHECKLIST.md
+index d5217f80daded0ddba1b9f797c7b3006482a6212..f96b293b532345d54aa726cf5cd2508ac0229914 100644
+--- a/docs/ui/pages/establishment-general-information/ACCEPTANCE_CHECKLIST.md
++++ b/docs/ui/pages/establishment-general-information/ACCEPTANCE_CHECKLIST.md
+@@ -89,6 +89,13 @@ When classified `EXISTING_PAGE`:
+       synchronize Personnel/Salariés, Planning, Pointage, Today, Tâches du jour,
+       Formalités, onboarding/training, POS, Site Agent, Display,
+       Marketing/social or provider data.
++- [ ] OWNER and MANAGER can view/edit/save Identité de communication; STAFF is
++      denied before repository access or persistence, and Profile or Marketing
++      permissions do not substitute for Restaurant Knowledge READ/MANAGE.
++- [ ] Identité de communication reads and writes do not access, link, infer,
++      derive, publish or synchronize Establishment Profile, Marketing/Content,
++      Reviews/Reputation, AI, Social/public website, CRM/customer, legal or
++      moderation data, POS, Site Agent, Display or provider data.
+ - [ ] Private contact values are not exposed publicly without current business rules.
+ - [ ] Contact data is not logged unnecessarily.
+ - [ ] No external provider was added.
+@@ -112,9 +119,15 @@ When classified `EXISTING_PAGE`:
+ - [ ] Équipe & culture has exactly one whole-slice submit and no autosave;
+       canonical dirty comparison treats `''` and `null` as equivalent without
+       trimming non-empty strings.
+-- [ ] Profile, Concept/Histoire, Cuisine/savoir-faire, Expérience client and
+-      Équipe & culture retain independent forms, actions, repository operations
+-      and persistence boundaries.
++- [ ] The three Identité de communication values are independently optional;
++      all-empty and every single-value state are valid.
++- [ ] Identité de communication has exactly one whole-slice submit and no
++      autosave; canonical dirty comparison treats `''` and `null` as
++      equivalent without trimming non-empty strings, and successful canonical
++      save resets dirty state without relying on a remount.
++- [ ] Profile, Concept/Histoire, Cuisine/savoir-faire, Expérience client,
++      Équipe & culture and Identité de communication retain independent forms,
++      actions, repository operations and persistence boundaries.
+ 
+ - [ ] Dirty-state and save behavior follow current form conventions.
+ - [ ] Save cannot duplicate-submit.
+diff --git a/docs/ui/pages/establishment-general-information/DATA_AND_INTERACTION_SPEC.md b/docs/ui/pages/establishment-general-information/DATA_AND_INTERACTION_SPEC.md
+index 33772dd418f83741ec2afa0a241b5ba576cc6dff..65562fe09b25d76c764d70bc8b9c3bc775246bcf 100644
+--- a/docs/ui/pages/establishment-general-information/DATA_AND_INTERACTION_SPEC.md
++++ b/docs/ui/pages/establishment-general-information/DATA_AND_INTERACTION_SPEC.md
+@@ -8,22 +8,23 @@ Prompt 00 must first map every concept to the current repository implementation.
+ 
+ ## Current implementation mapping
+ 
+-| UI concept                                | Current source                           | Mutation                     | Status                          |
+-| ----------------------------------------- | ---------------------------------------- | ---------------------------- | ------------------------------- |
+-| Name, description, structured address     | `establishments`                         | establishment profile action | `SUPPORTED`                     |
+-| Primary and public contact, website       | `establishments`                         | establishment profile action | `SUPPORTED`                     |
+-| Logo and cover                            | validated URL fields on `establishments` | establishment profile action | `SUPPORTED_WITH_DIFFERENT_COPY` |
+-| Languages and service modes               | establishment arrays and approved enum   | establishment profile action | `SUPPORTED`                     |
+-| Public visibility                         | establishment booleans                   | establishment profile action | `SUPPORTED`                     |
+-| Restaurant Knowledge Concept/Histoire     | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
+-| Restaurant Knowledge Cuisine/savoir-faire | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
+-| Restaurant Knowledge Expérience client    | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
+-| Restaurant Knowledge Équipe & culture     | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
+-| Completion                                | local view-model calculation             | none                         | `UI_ONLY_DERIVED`               |
+-| Local public preview                      | local form state                         | none                         | `UI_ONLY_DERIVED`               |
+-| Media upload                              | no storage lifecycle                     | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
+-| Address verification                      | no geocoding provider                    | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
+-| External public profile                   | no route                                 | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
++| UI concept                                     | Current source                           | Mutation                     | Status                          |
++| ---------------------------------------------- | ---------------------------------------- | ---------------------------- | ------------------------------- |
++| Name, description, structured address          | `establishments`                         | establishment profile action | `SUPPORTED`                     |
++| Primary and public contact, website            | `establishments`                         | establishment profile action | `SUPPORTED`                     |
++| Logo and cover                                 | validated URL fields on `establishments` | establishment profile action | `SUPPORTED_WITH_DIFFERENT_COPY` |
++| Languages and service modes                    | establishment arrays and approved enum   | establishment profile action | `SUPPORTED`                     |
++| Public visibility                              | establishment booleans                   | establishment profile action | `SUPPORTED`                     |
++| Restaurant Knowledge Concept/Histoire          | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
++| Restaurant Knowledge Cuisine/savoir-faire      | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
++| Restaurant Knowledge Expérience client         | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
++| Restaurant Knowledge Équipe & culture          | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
++| Restaurant Knowledge Identité de communication | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
++| Completion                                     | local view-model calculation             | none                         | `UI_ONLY_DERIVED`               |
++| Local public preview                           | local form state                         | none                         | `UI_ONLY_DERIVED`               |
++| Media upload                                   | no storage lifecycle                     | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
++| Address verification                           | no geocoding provider                    | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
++| External public profile                        | no route                                 | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
+ 
+ ## Context and authorization
+ 
+@@ -59,6 +60,9 @@ The composed capabilities enforce permissions independently:
+   while edit and explicit save require `restaurant-knowledge.manage`;
+ - Équipe & culture load and visibility require `restaurant-knowledge.read`,
+   while edit and explicit save require `restaurant-knowledge.manage`;
++- Identité de communication load and visibility require
++  `restaurant-knowledge.read`, while edit and explicit save require
++  `restaurant-knowledge.manage`;
+ - STAFF keeps profile-read access but receives no Restaurant Knowledge access;
+ - the knowledge action re-derives trusted tenant context and accepts no browser
+   organization or establishment identifier.
+@@ -145,6 +149,34 @@ intégration` are independent optional descriptive establishment values;
+   synchronizes Personnel/Salariés, Planning, Pointage, Today, Tâches du jour,
+   Formalités, POS, Site Agent, Display, Marketing/social or provider data.
+ 
++## Restaurant Knowledge Identité de communication
++
++The slice loads from its dedicated Restaurant Knowledge repository using both
++trusted organization and establishment scope. Missing persistence and an
++all-null row both project to the same three-value all-empty state.
++
++- `Ton & style de communication`, `Façon de s’adresser aux clients` and
++  `Éléments de langage & choses à éviter` are independent optional descriptive
++  establishment values;
++- all-empty and every single-value state are valid;
++- all three values remain browser-local drafts until submit;
++- one submit sends the complete three-value slice to the dedicated server
++  action;
++- only exact empty strings normalize to `null`; non-empty strings, including
++  whitespace-only strings, remain unchanged;
++- dirty comparison treats `''` and `null` as the same canonical empty value,
++  and the canonical projection returned by a successful save becomes the
++  accepted baseline without requiring a remount;
++- no blur, timer, effect or background request persists changes;
++- no Product length, format, requiredness, enum, taxonomy, tone preset, score,
++  rating, customer preference, legal validation or moderation rule is defined;
++- the action revalidates only `/etablissement/informations-generales` after a
++  successful save;
++- neither the repository nor the action reads, writes, links, infers, derives,
++  publishes or synchronizes Establishment Profile, Marketing/Content,
++  Reviews/Reputation, AI, Social, public website, CRM/customer, POS, Site Agent,
++  Display or provider data.
++
+ ## UI view model
+ 
+ Adapt to existing DTOs and field names. Do not treat this as a persistence contract.
+diff --git a/docs/ui/pages/establishment-general-information/PRODUCT_SCOPE.md b/docs/ui/pages/establishment-general-information/PRODUCT_SCOPE.md
+index 449e2aa178716db08b2064f8229da189fe8f39bd..3e2a3e4e1e9afd3cb751e884a76edd607d34104d 100644
+--- a/docs/ui/pages/establishment-general-information/PRODUCT_SCOPE.md
++++ b/docs/ui/pages/establishment-general-information/PRODUCT_SCOPE.md
+@@ -29,6 +29,10 @@ Approved information categories:
+ 12. independently optional Restaurant Knowledge Valeurs & état d’esprit, Façon
+     de travailler ensemble and Transmission & intégration values, including
+     valid all-empty state, manual edit, and one explicit whole-slice save.
++13. independently optional Restaurant Knowledge Ton & style de communication,
++    Façon de s’adresser aux clients and Éléments de langage & choses à éviter
++    values, including valid all-empty state, manual edit, and one explicit
++    whole-slice save.
+ 
+ All data is establishment-scoped and must remain inside the validated active `organization + establishment` context.
+ 
+@@ -64,6 +68,7 @@ public profile route, address verification, or media upload flow.
+ | Restaurant Knowledge Cuisine/savoir-faire                                                                           | Implemented as a separate three-value establishment-scoped slice with READ/MANAGE and no Carte/POS dependency                   |
+ | Restaurant Knowledge Expérience client                                                                              | Implemented as a separate three-value establishment-scoped slice with READ/MANAGE and no operational-module/provider dependency |
+ | Restaurant Knowledge Équipe & culture                                                                               | Implemented as a separate three-value establishment-scoped slice with READ/MANAGE and no employee/workflow dependency           |
++| Restaurant Knowledge Identité de communication                                                                      | Implemented as a separate three-value establishment-scoped slice with READ/MANAGE and no Marketing/Reviews/AI/CRM dependency    |
+ 
+ ## Out of scope
+ 
+diff --git a/docs/ui/pages/establishment-general-information/README.md b/docs/ui/pages/establishment-general-information/README.md
+index 9ec65bca60ee7daa69e3c169500d7b44d5ab0a3a..6bb1e203a06c7bd919f7aa49a0210b323fb43001 100644
+--- a/docs/ui/pages/establishment-general-information/README.md
++++ b/docs/ui/pages/establishment-general-information/README.md
+@@ -22,17 +22,19 @@ The authenticated route is a composed establishment-scoped editor. The
+ existing Establishment Profile remains backed by canonical profile fields on
+ `establishments`; OWNER and MANAGER may edit it and STAFF remains read-only.
+ The separate Restaurant Knowledge `Concept & histoire`, `Cuisine &
+-savoir-faire`, `Expérience client` and `Équipe & culture` sections are backed by
+-dedicated cloud tables and repository operations, require Restaurant Knowledge
+-READ to be visible, and require MANAGE to edit or explicitly save. OWNER and
+-MANAGER have both operations; STAFF receives no Restaurant Knowledge access.
++savoir-faire`, `Expérience client`, `Équipe & culture` and `Identité de
++communication` sections are backed by dedicated cloud tables and repository
++operations, require Restaurant Knowledge READ to be visible, and require MANAGE
++to edit or explicitly save. OWNER and MANAGER have both operations; STAFF
++receives no Restaurant Knowledge access.
+ 
+ Concept and Histoire are independently optional, including a valid both-empty
+-state. The three Cuisine/savoir-faire, three Expérience client and three Équipe
+-& culture values are likewise independent and optional, including a valid
+-all-empty state for each slice. Each browser-local slice has one explicit
+-whole-slice save and no autosave. The profile and all four Restaurant Knowledge
+-sections retain separate forms, actions and canonical data boundaries.
++state. The three Cuisine/savoir-faire, three Expérience client, three Équipe &
++culture and three Identité de communication values are likewise independent
++and optional, including a valid all-empty state for each slice. Each
++browser-local slice has one explicit whole-slice save and no autosave. The
++profile and all five Restaurant Knowledge sections retain separate forms,
++actions and canonical data boundaries.
+ 
+ Weekly service periods are managed independently under
+ `/etablissement/horaires-services`.
+diff --git a/docs/ui/pages/establishment-general-information/UI_SPEC.md b/docs/ui/pages/establishment-general-information/UI_SPEC.md
+index aa33722590263dfc637c67ae2d749011cc1d019a..4a6a6532768a93227ae722b2f11a43551ea7c003 100644
+--- a/docs/ui/pages/establishment-general-information/UI_SPEC.md
++++ b/docs/ui/pages/establishment-general-information/UI_SPEC.md
+@@ -6,7 +6,7 @@ Visibility: Engineering
+ 
+ Owner: YUTA product and engineering
+ 
+-Last updated: 2026-09-01
++Last updated: 2026-09-02
+ 
+ ## Visual reference
+ 
+@@ -183,6 +183,21 @@ browser-local drafts and receive one submit action labelled `Enregistrer équipe
+ is rendered. Without READ the section is not loaded or rendered. Canonically
+ pristine drafts keep the submit disabled; field changes do not autosave.
+ 
++### Restaurant Knowledge — `Identité de communication`
++
++A fifth separate full-width Restaurant Knowledge card follows `Équipe &
++culture`; it is not a numbered Establishment Profile section. It contains
++exactly three optional textareas labelled `Ton & style de communication`,
++`Façon de s’adresser aux clients` and `Éléments de langage & choses à éviter`.
++
++Users with READ see persisted values. Users with MANAGE can edit the three
++browser-local drafts and receive one submit action labelled `Enregistrer
++identité de communication`. Without MANAGE all three fields are disabled and
++no submit control is rendered. Without READ the section is not loaded or
++rendered. Canonically pristine drafts keep the submit disabled; a successful
++save uses the returned canonical projection as its accepted baseline, and field
++changes do not autosave.
++
+ ## Public-preview panel
+ 
+ The panel is read-only and may reflect unsaved local form state.
+diff --git a/packages/db-cloud/src/restaurant-knowledge-repository.ts b/packages/db-cloud/src/restaurant-knowledge-repository.ts
+index 2d0ae0c00ba5963b7e2e28a5fee78de66458db9a..525d4b7826c8c25cf6eb09f01587692fc1f964a0 100644
+--- a/packages/db-cloud/src/restaurant-knowledge-repository.ts
++++ b/packages/db-cloud/src/restaurant-knowledge-repository.ts
+@@ -3,6 +3,7 @@ import { and, eq } from 'drizzle-orm';
+ import type { CloudDatabaseClient } from './client';
+ import {
+   restaurantKnowledgeConceptHistory,
++  restaurantKnowledgeCommunicationIdentity,
+   restaurantKnowledgeCuisineKnowHow,
+   restaurantKnowledgeCustomerExperience,
+   restaurantKnowledgeTeamCulture,
+@@ -316,3 +317,87 @@ export async function saveRestaurantKnowledgeTeamCulture(
+ 
+   return row ?? emptyTeamCulture();
+ }
++
++export type RestaurantKnowledgeCommunicationIdentityInput = {
++  toneAndCommunicationStyle: string | null;
++  customerAddressing: string | null;
++  languageElementsAndThingsToAvoid: string | null;
++};
++
++const emptyCommunicationIdentity =
++  (): RestaurantKnowledgeCommunicationIdentityInput => ({
++    toneAndCommunicationStyle: null,
++    customerAddressing: null,
++    languageElementsAndThingsToAvoid: null,
++  });
++
++export async function getRestaurantKnowledgeCommunicationIdentity(
++  db: CloudDatabaseClient,
++  context: TenantContext,
++): Promise<RestaurantKnowledgeCommunicationIdentityInput> {
++  requireEstablishment(context);
++  const [row] = await db
++    .select({
++      toneAndCommunicationStyle:
++        restaurantKnowledgeCommunicationIdentity.toneAndCommunicationStyle,
++      customerAddressing:
++        restaurantKnowledgeCommunicationIdentity.customerAddressing,
++      languageElementsAndThingsToAvoid:
++        restaurantKnowledgeCommunicationIdentity.languageElementsAndThingsToAvoid,
++    })
++    .from(restaurantKnowledgeCommunicationIdentity)
++    .where(
++      and(
++        eq(
++          restaurantKnowledgeCommunicationIdentity.organizationId,
++          context.organizationId,
++        ),
++        eq(
++          restaurantKnowledgeCommunicationIdentity.establishmentId,
++          context.establishmentId,
++        ),
++      ),
++    )
++    .limit(1);
++
++  return row ?? emptyCommunicationIdentity();
++}
++
++export async function saveRestaurantKnowledgeCommunicationIdentity(
++  db: CloudDatabaseClient,
++  context: TenantContext,
++  input: RestaurantKnowledgeCommunicationIdentityInput,
++): Promise<RestaurantKnowledgeCommunicationIdentityInput> {
++  requireEstablishment(context);
++  const [row] = await db
++    .insert(restaurantKnowledgeCommunicationIdentity)
++    .values({
++      organizationId: context.organizationId,
++      establishmentId: context.establishmentId,
++      toneAndCommunicationStyle: input.toneAndCommunicationStyle,
++      customerAddressing: input.customerAddressing,
++      languageElementsAndThingsToAvoid: input.languageElementsAndThingsToAvoid,
++    })
++    .onConflictDoUpdate({
++      target: [
++        restaurantKnowledgeCommunicationIdentity.organizationId,
++        restaurantKnowledgeCommunicationIdentity.establishmentId,
++      ],
++      set: {
++        toneAndCommunicationStyle: input.toneAndCommunicationStyle,
++        customerAddressing: input.customerAddressing,
++        languageElementsAndThingsToAvoid:
++          input.languageElementsAndThingsToAvoid,
++      },
++    })
++    .returning({
++      toneAndCommunicationStyle:
++        restaurantKnowledgeCommunicationIdentity.toneAndCommunicationStyle,
++      customerAddressing:
++        restaurantKnowledgeCommunicationIdentity.customerAddressing,
++      languageElementsAndThingsToAvoid:
++        restaurantKnowledgeCommunicationIdentity.languageElementsAndThingsToAvoid,
++    });
++
++  return row ?? emptyCommunicationIdentity();
++}
+diff --git a/packages/db-cloud/src/schema/restaurant-knowledge.ts b/packages/db-cloud/src/schema/restaurant-knowledge.ts
+index b301e459769b45a6dbb0a64e2fc36980600a7734..74c370dde67f502c285567beab44565ea5210f39 100644
+--- a/packages/db-cloud/src/schema/restaurant-knowledge.ts
++++ b/packages/db-cloud/src/schema/restaurant-knowledge.ts
+@@ -105,3 +105,30 @@ export const restaurantKnowledgeTeamCulture = pgTable(
+ 
+ export type RestaurantKnowledgeTeamCulture =
+   typeof restaurantKnowledgeTeamCulture.$inferSelect;
++
++export const restaurantKnowledgeCommunicationIdentity = pgTable(
++  'restaurant_knowledge_communication_identity',
++  {
++    organizationId: uuid('organization_id').notNull(),
++    establishmentId: uuid('establishment_id').notNull(),
++    toneAndCommunicationStyle: text('tone_and_communication_style'),
++    customerAddressing: text('customer_addressing'),
++    languageElementsAndThingsToAvoid: text(
++      'language_elements_and_things_to_avoid',
++    ),
++  },
++  (table) => [
++    primaryKey({
++      columns: [table.organizationId, table.establishmentId],
++      name: 'restaurant_knowledge_communication_identity_scope_pk',
++    }),
++    foreignKey({
++      columns: [table.organizationId, table.establishmentId],
++      foreignColumns: [establishments.organizationId, establishments.id],
++      name: 'restaurant_knowledge_communication_identity_establishment_fk',
++    }).onDelete('restrict'),
++  ],
++);
++
++export type RestaurantKnowledgeCommunicationIdentity =
++  typeof restaurantKnowledgeCommunicationIdentity.$inferSelect;
+diff --git a/packages/db-cloud/test/restaurant-knowledge-repository.integration.test.ts b/packages/db-cloud/test/restaurant-knowledge-repository.integration.test.ts
+index 30ac6ed511e850c7dfd53f5ad8c6e8a664aa6b16..88a85f76cea72d969e69fff2310f8a7986124858 100644
+--- a/packages/db-cloud/test/restaurant-knowledge-repository.integration.test.ts
++++ b/packages/db-cloud/test/restaurant-knowledge-repository.integration.test.ts
+@@ -5,10 +5,12 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+ import { v7 as uuidv7 } from 'uuid';
+ import {
+   getRestaurantKnowledgeConceptHistory,
++  getRestaurantKnowledgeCommunicationIdentity,
+   getRestaurantKnowledgeCuisineKnowHow,
+   getRestaurantKnowledgeCustomerExperience,
+   getRestaurantKnowledgeTeamCulture,
+   saveRestaurantKnowledgeConceptHistory,
++  saveRestaurantKnowledgeCommunicationIdentity,
+   saveRestaurantKnowledgeCuisineKnowHow,
+   saveRestaurantKnowledgeCustomerExperience,
+   saveRestaurantKnowledgeTeamCulture,
+@@ -20,6 +22,7 @@ import {
+ import {
+   establishments,
+   organizations,
++  restaurantKnowledgeCommunicationIdentity,
+   restaurantKnowledgeConceptHistory,
+   restaurantKnowledgeCuisineKnowHow,
+   restaurantKnowledgeCustomerExperience,
+@@ -107,6 +110,20 @@ integrationTest('Restaurant Knowledge repository tenant isolation', () => {
+       [organizationAId, establishmentA2Id],
+       [organizationBId, establishmentBId],
+     ] as const) {
++      await db
++        .delete(restaurantKnowledgeCommunicationIdentity)
++        .where(
++          and(
++            eq(
++              restaurantKnowledgeCommunicationIdentity.organizationId,
++              organizationId,
++            ),
++            eq(
++              restaurantKnowledgeCommunicationIdentity.establishmentId,
++              establishmentId,
++            ),
++          ),
++        );
+       await db
+         .delete(restaurantKnowledgeTeamCulture)
+         .where(
+@@ -188,6 +205,123 @@ integrationTest('Restaurant Knowledge repository tenant isolation', () => {
+     await db.$client.end({ timeout: 5 });
+   });
+ 
++  it('supports missing, all-null and every single Communication Identity value state', async () => {
++    const allEmpty = {
++      toneAndCommunicationStyle: null,
++      customerAddressing: null,
++      languageElementsAndThingsToAvoid: null,
++    };
++    await expect(
++      getRestaurantKnowledgeCommunicationIdentity(db, contextA1),
++    ).resolves.toEqual(allEmpty);
++
++    const singleValueStates = [
++      {
++        toneAndCommunicationStyle: 'Chaleureux, direct et attentionné.',
++        customerAddressing: null,
++        languageElementsAndThingsToAvoid: null,
++      },
++      {
++        toneAndCommunicationStyle: null,
++        customerAddressing: 'S’adresser aux clients avec naturel.',
++        languageElementsAndThingsToAvoid: null,
++      },
++      {
++        toneAndCommunicationStyle: null,
++        customerAddressing: null,
++        languageElementsAndThingsToAvoid:
++          'Privilégier des mots simples et éviter le jargon.',
++      },
++    ];
++
++    for (const state of singleValueStates) {
++      await expect(
++        saveRestaurantKnowledgeCommunicationIdentity(db, contextA1, state),
++      ).resolves.toEqual(state);
++      await expect(
++        getRestaurantKnowledgeCommunicationIdentity(db, contextA1),
++      ).resolves.toEqual(state);
++    }
++
++    await expect(
++      saveRestaurantKnowledgeCommunicationIdentity(db, contextA1, allEmpty),
++    ).resolves.toEqual(allEmpty);
++  });
++
++  it('round-trips and overwrites Communication Identity with composite tenant isolation', async () => {
++    const stateA1 = {
++      toneAndCommunicationStyle: 'Ton A1',
++      customerAddressing: 'Adresse A1',
++      languageElementsAndThingsToAvoid: 'Langage A1',
++    };
++    const stateA2 = {
++      toneAndCommunicationStyle: null,
++      customerAddressing: 'Adresse A2',
++      languageElementsAndThingsToAvoid: null,
++    };
++    const stateB = {
++      toneAndCommunicationStyle: 'Ton B',
++      customerAddressing: null,
++      languageElementsAndThingsToAvoid: 'Langage B',
++    };
++
++    await saveRestaurantKnowledgeCommunicationIdentity(db, contextA1, stateA1);
++    await saveRestaurantKnowledgeCommunicationIdentity(db, contextA2, stateA2);
++    await saveRestaurantKnowledgeCommunicationIdentity(db, contextB, stateB);
++
++    await expect(
++      getRestaurantKnowledgeCommunicationIdentity(db, contextA1),
++    ).resolves.toEqual(stateA1);
++    await expect(
++      getRestaurantKnowledgeCommunicationIdentity(db, contextA2),
++    ).resolves.toEqual(stateA2);
++    await expect(
++      getRestaurantKnowledgeCommunicationIdentity(db, contextB),
++    ).resolves.toEqual(stateB);
++
++    const overwrittenA1 = {
++      toneAndCommunicationStyle: null,
++      customerAddressing: 'Adresse A1 remplacée',
++      languageElementsAndThingsToAvoid: null,
++    };
++    await expect(
++      saveRestaurantKnowledgeCommunicationIdentity(
++        db,
++        contextA1,
++        overwrittenA1,
++      ),
++    ).resolves.toEqual(overwrittenA1);
++
++    const mismatchedContext = context(organizationBId, establishmentA1Id);
++    const wrongOrganizationContext = context(uuidv7(), establishmentA1Id);
++    const wrongEstablishmentContext = context(organizationAId, uuidv7());
++    const emptyState = {
++      toneAndCommunicationStyle: null,
++      customerAddressing: null,
++      languageElementsAndThingsToAvoid: null,
++    };
++
++    for (const deniedContext of [
++      mismatchedContext,
++      wrongOrganizationContext,
++      wrongEstablishmentContext,
++    ]) {
++      await expect(
++        getRestaurantKnowledgeCommunicationIdentity(db, deniedContext),
++      ).resolves.toEqual(emptyState);
++      await expect(
++        saveRestaurantKnowledgeCommunicationIdentity(db, deniedContext, {
++          toneAndCommunicationStyle: 'Cross-tenant write',
++          customerAddressing: null,
++          languageElementsAndThingsToAvoid: null,
++        }),
++      ).rejects.toThrow();
++    }
++    await expect(
++      getRestaurantKnowledgeCommunicationIdentity(db, contextA1),
++    ).resolves.toEqual(overwrittenA1);
++  });
++
+   it('supports all-empty and every single Cuisine and savoir-faire value state', async () => {
+     await expect(
+       getRestaurantKnowledgeCuisineKnowHow(db, contextA1),
+diff --git a/packages/db-cloud/test/schema.test.ts b/packages/db-cloud/test/schema.test.ts
+index 767f19a902564850f6a106b9e70c4846f7c5bd81..1b021830bcd324ac4b5e41a693f20ca28ccfd74c 100644
+--- a/packages/db-cloud/test/schema.test.ts
++++ b/packages/db-cloud/test/schema.test.ts
+@@ -28,6 +28,7 @@ import {
+   reputationAuditEvents,
+   reputationConnectors,
+   reputationSettings,
++  restaurantKnowledgeCommunicationIdentity,
+   restaurantKnowledgeConceptHistory,
+   restaurantKnowledgeCuisineKnowHow,
+   restaurantKnowledgeCustomerExperience,
+@@ -270,6 +271,57 @@ describe('cloud schema boundaries', () => {
+     ).toEqual(['organization_id', 'id']);
+   });
+ 
++  it('keeps Communication Identity in an exact dedicated establishment-scoped Restaurant Knowledge table', () => {
++    const knowledgeConfig = getTableConfig(
++      restaurantKnowledgeCommunicationIdentity,
++    );
++    const knowledgeColumns = knowledgeConfig.columns.map(
++      (column) => column.name,
++    );
++    const establishmentColumns = getTableConfig(establishments).columns.map(
++      (column) => column.name,
++    );
++
++    expect(knowledgeColumns).toEqual([
++      'organization_id',
++      'establishment_id',
++      'tone_and_communication_style',
++      'customer_addressing',
++      'language_elements_and_things_to_avoid',
++    ]);
++    for (const columnName of [
++      'tone_and_communication_style',
++      'customer_addressing',
++      'language_elements_and_things_to_avoid',
++    ]) {
++      const column = knowledgeConfig.columns.find(
++        (candidate) => candidate.name === columnName,
++      );
++      expect(column?.notNull).toBe(false);
++      expect(column?.getSQLType()).toBe('text');
++      expect(establishmentColumns).not.toContain(columnName);
++    }
++    expect(knowledgeConfig.primaryKeys).toHaveLength(1);
++    expect(knowledgeConfig.primaryKeys[0]?.name).toBe(
++      'restaurant_knowledge_communication_identity_scope_pk',
++    );
++    expect(knowledgeConfig.foreignKeys).toHaveLength(1);
++    expect(knowledgeConfig.foreignKeys[0]?.onDelete).toBe('restrict');
++    expect(knowledgeConfig.foreignKeys[0]?.getName()).toBe(
++      'restaurant_knowledge_communication_identity_establishment_fk',
++    );
++    expect(
++      knowledgeConfig.foreignKeys[0]
++        ?.reference()
++        .columns.map((column) => column.name),
++    ).toEqual(['organization_id', 'establishment_id']);
++    expect(
++      knowledgeConfig.foreignKeys[0]
++        ?.reference()
++        .foreignColumns.map((column) => column.name),
++    ).toEqual(['organization_id', 'id']);
++  });
++
+   it('keeps personnel document metadata establishment and employee scoped', () => {
+     for (const table of [
+       personnelDocuments,

@@ -190,11 +190,14 @@ from navigation visibility.
   administration repositories
 
 The general-information page composes the implemented Establishment Profile
-and the approved but not-started Restaurant Knowledge capability. Page
-composition does not assign a shared data owner or permission boundary.
-Restaurant Knowledge data ownership, operation-level permissions, and initial
-data shape/behavior remain `NEEDS REVIEW`; do not infer implementation from the
-existing route.
+and five implemented Restaurant Knowledge slices: Concept/Histoire,
+Cuisine/savoir-faire, Expérience client, Équipe & culture and Identité de
+communication. Page composition does not assign a shared data owner or
+permission boundary. Restaurant Knowledge is their canonical owner,
+Organization is the tenancy/access envelope, and dedicated READ/MANAGE
+authorization remains independent from Establishment Profile. Remaining
+knowledge families and integrations must not be inferred from the existing
+route.
 
 ### Today
 

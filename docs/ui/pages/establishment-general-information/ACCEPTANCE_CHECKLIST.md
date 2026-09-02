@@ -72,6 +72,30 @@ When classified `EXISTING_PAGE`:
       controls edit/save; Establishment Profile permissions do not substitute.
 - [ ] OWNER and MANAGER can view/edit/save Concept/Histoire; STAFF cannot load
       or mutate the Restaurant Knowledge slice while profile-read access remains.
+- [ ] OWNER and MANAGER can view/edit/save Cuisine/savoir-faire; STAFF cannot
+      load or mutate it, and no Profile permission substitutes for READ/MANAGE.
+- [ ] Cuisine/savoir-faire reads and writes do not access, link, copy or
+      synchronize Carte & menus, POS, Site Agent or `@yuta/db-pos` data.
+- [ ] OWNER and MANAGER can view/edit/save Expérience client; STAFF is denied
+      before repository access or persistence, and Profile permissions do not
+      substitute for Restaurant Knowledge READ/MANAGE.
+- [ ] Expérience client reads and writes do not access, link, infer, copy or
+      synchronize Reservations, Reputation, Today, Personnel, POS/orders,
+      Marketing, CRM or provider data.
+- [ ] OWNER and MANAGER can view/edit/save Équipe & culture; STAFF is denied
+      before repository access or persistence, and Profile permissions do not
+      substitute for Restaurant Knowledge READ/MANAGE.
+- [ ] Équipe & culture reads and writes do not access, link, infer, copy or
+      synchronize Personnel/Salariés, Planning, Pointage, Today, Tâches du jour,
+      Formalités, onboarding/training, POS, Site Agent, Display,
+      Marketing/social or provider data.
+- [ ] OWNER and MANAGER can view/edit/save Identité de communication; STAFF is
+      denied before repository access or persistence, and Profile or Marketing
+      permissions do not substitute for Restaurant Knowledge READ/MANAGE.
+- [ ] Identité de communication reads and writes do not access, link, infer,
+      derive, publish or synchronize Establishment Profile, Marketing/Content,
+      Reviews/Reputation, AI, Social/public website, CRM/customer, legal or
+      moderation data, POS, Site Agent, Display or provider data.
 - [ ] Private contact values are not exposed publicly without current business rules.
 - [ ] Contact data is not logged unnecessarily.
 - [ ] No external provider was added.
@@ -82,6 +106,28 @@ When classified `EXISTING_PAGE`:
 - [ ] One explicit save submits the current values of both knowledge fields.
 - [ ] Editing or rendering the Restaurant Knowledge draft does not autosave.
 - [ ] The profile and Restaurant Knowledge forms/actions remain independent.
+- [ ] The three Cuisine/savoir-faire values are independently optional;
+      all-empty and every single-value state are valid.
+- [ ] Cuisine/savoir-faire has exactly one whole-slice submit and no autosave.
+- [ ] Concept/Histoire and Cuisine/savoir-faire retain independent forms,
+      actions, repository operations and persistence tables.
+- [ ] The three Expérience client values are independently optional; all-empty
+      and every single-value state are valid.
+- [ ] Expérience client has exactly one whole-slice submit and no autosave.
+- [ ] The three Équipe & culture values are independently optional; all-empty
+      and every single-value state are valid.
+- [ ] Équipe & culture has exactly one whole-slice submit and no autosave;
+      canonical dirty comparison treats `''` and `null` as equivalent without
+      trimming non-empty strings.
+- [ ] The three Identité de communication values are independently optional;
+      all-empty and every single-value state are valid.
+- [ ] Identité de communication has exactly one whole-slice submit and no
+      autosave; canonical dirty comparison treats `''` and `null` as
+      equivalent without trimming non-empty strings, and successful canonical
+      save resets dirty state without relying on a remount.
+- [ ] Profile, Concept/Histoire, Cuisine/savoir-faire, Expérience client,
+      Équipe & culture and Identité de communication retain independent forms,
+      actions, repository operations and persistence boundaries.
 
 - [ ] Dirty-state and save behavior follow current form conventions.
 - [ ] Save cannot duplicate-submit.

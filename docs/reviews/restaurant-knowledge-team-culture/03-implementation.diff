@@ -1,0 +1,1517 @@
+diff --git a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/team-culture-fields.tsx b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/team-culture-fields.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..584318ebc09d1508b075c22ba1d09b06a280b2be
+--- /dev/null
++++ b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/team-culture-fields.tsx
+@@ -0,0 +1,70 @@
++import { FormField, Label, Textarea } from '@yuta/ui';
++import type { TeamCultureDraft } from '../team-culture-model';
++
++export function TeamCultureFields({
++  draft,
++  canManage,
++  onValuesAndMindsetChange,
++  onWorkingTogetherChange,
++  onTransmissionAndIntegrationChange,
++}: {
++  draft: TeamCultureDraft;
++  canManage: boolean;
++  onValuesAndMindsetChange: (value: string) => void;
++  onWorkingTogetherChange: (value: string) => void;
++  onTransmissionAndIntegrationChange: (value: string) => void;
++}) {
++  return (
++    <div className="grid gap-4 lg:grid-cols-2">
++      <FormField
++        label={
++          <Label htmlFor="valuesAndMindset">Valeurs &amp; état d’esprit</Label>
++        }
++        hint="Optionnel"
++      >
++        <Textarea
++          id="valuesAndMindset"
++          name="valuesAndMindset"
++          value={draft.valuesAndMindset ?? ''}
++          onChange={(event) => onValuesAndMindsetChange(event.target.value)}
++          disabled={!canManage}
++          rows={6}
++        />
++      </FormField>
++      <FormField
++        label={
++          <Label htmlFor="workingTogether">Façon de travailler ensemble</Label>
++        }
++        hint="Optionnel"
++      >
++        <Textarea
++          id="workingTogether"
++          name="workingTogether"
++          value={draft.workingTogether ?? ''}
++          onChange={(event) => onWorkingTogetherChange(event.target.value)}
++          disabled={!canManage}
++          rows={6}
++        />
++      </FormField>
++      <FormField
++        label={
++          <Label htmlFor="transmissionAndIntegration">
++            Transmission &amp; intégration
++          </Label>
++        }
++        hint="Optionnel"
++      >
++        <Textarea
++          id="transmissionAndIntegration"
++          name="transmissionAndIntegration"
++          value={draft.transmissionAndIntegration ?? ''}
++          onChange={(event) =>
++            onTransmissionAndIntegrationChange(event.target.value)
++          }
++          disabled={!canManage}
++          rows={6}
++        />
++      </FormField>
++    </div>
++  );
++}
+diff --git a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/team-culture-form.tsx b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/team-culture-form.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..b4e632290972a7f71190b04a384f77bc1b036e61
+--- /dev/null
++++ b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/team-culture-form.tsx
+@@ -0,0 +1,113 @@
++'use client';
++
++import { Alert, AlertDescription, Button, Card, Separator } from '@yuta/ui';
++import { Save } from 'lucide-react';
++import { useActionState, useState } from 'react';
++import { useFormStatus } from 'react-dom';
++import { saveTeamCultureAction, type TeamCultureActionState } from '../actions';
++import {
++  isTeamCultureDirty,
++  updateTransmissionAndIntegration,
++  updateValuesAndMindset,
++  updateWorkingTogether,
++  type TeamCultureDraft,
++} from '../team-culture-model';
++import { TeamCultureFields } from './team-culture-fields';
++
++const initialState: TeamCultureActionState = {
++  status: 'idle',
++  message: null,
++};
++
++export function TeamCultureForm({
++  teamCulture,
++  canManage,
++}: {
++  teamCulture: TeamCultureDraft;
++  canManage: boolean;
++}) {
++  const [state, formAction] = useActionState(
++    saveTeamCultureAction,
++    initialState,
++  );
++  const [draft, setDraft] = useState(teamCulture);
++  const isDirty = isTeamCultureDirty(teamCulture, draft);
++
++  return (
++    <Card padding="none" radius="lg" className="overflow-hidden">
++      <div className="px-5 py-4">
++        <p className="text-xs font-bold uppercase tracking-wide text-action-primary">
++          Restaurant Knowledge
++        </p>
++        <h2 className="mt-1 font-bold">Équipe &amp; culture</h2>
++        <p className="mt-1 text-sm text-muted">
++          Décrivez les valeurs, la collaboration et la transmission propres à
++          votre établissement.
++        </p>
++      </div>
++      <Separator />
++      <form action={formAction} className="grid gap-4 p-5">
++        {!canManage && (
++          <Alert tone="info">
++            <AlertDescription>
++              Votre rôle permet de consulter ces informations, mais pas de les
++              modifier.
++            </AlertDescription>
++          </Alert>
++        )}
++        {state.message && (
++          <Alert
++            tone={state.status === 'success' ? 'success' : 'danger'}
++            role={state.status === 'success' ? 'status' : 'alert'}
++          >
++            <AlertDescription>{state.message}</AlertDescription>
++          </Alert>
++        )}
++
++        <TeamCultureFields
++          draft={draft}
++          canManage={canManage}
++          onValuesAndMindsetChange={(valuesAndMindset) =>
++            setDraft((current) =>
++              updateValuesAndMindset(current, valuesAndMindset),
++            )
++          }
++          onWorkingTogetherChange={(workingTogether) =>
++            setDraft((current) =>
++              updateWorkingTogether(current, workingTogether),
++            )
++          }
++          onTransmissionAndIntegrationChange={(transmissionAndIntegration) =>
++            setDraft((current) =>
++              updateTransmissionAndIntegration(
++                current,
++                transmissionAndIntegration,
++              ),
++            )
++          }
++        />
++
++        {canManage && (
++          <div className="flex justify-end">
++            <TeamCultureSubmitButton disabled={!isDirty} />
++          </div>
++        )}
++      </form>
++    </Card>
++  );
++}
++
++export function TeamCultureSubmitButton({ disabled }: { disabled: boolean }) {
++  const { pending } = useFormStatus();
++  return (
++    <Button
++      type="submit"
++      variant="success"
++      loading={pending}
++      disabled={disabled}
++    >
++      <Save className="h-4 w-4" aria-hidden />
++      {pending ? 'Enregistrement…' : 'Enregistrer équipe & culture'}
++    </Button>
++  );
++}
+diff --git a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/actions.ts b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/actions.ts
+index 22df2b56e7a5fec6ade81341c22c25de26d5f68b..66961737970be088b81ac73cc3f03625766eb048 100644
+--- a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/actions.ts
++++ b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/actions.ts
+@@ -5,6 +5,7 @@ import {
+   saveRestaurantKnowledgeConceptHistory,
+   saveRestaurantKnowledgeCuisineKnowHow,
+   saveRestaurantKnowledgeCustomerExperience,
++  saveRestaurantKnowledgeTeamCulture,
+   updateEstablishmentProfile,
+ } from '@yuta/db-cloud';
+ import { requireEstablishment } from '@yuta/tenant';
+@@ -32,6 +33,8 @@ export type CuisineKnowHowActionState = ConceptHistoryActionState;
+ 
+ export type CustomerExperienceActionState = ConceptHistoryActionState;
+ 
++export type TeamCultureActionState = ConceptHistoryActionState;
++
+ const optionalConceptHistoryTextSchema = z
+   .string()
+   .nullable()
+@@ -60,6 +63,14 @@ const customerExperienceInputSchema = z
+   })
+   .strict();
+ 
++const teamCultureInputSchema = z
++  .object({
++    valuesAndMindset: optionalConceptHistoryTextSchema,
++    workingTogether: optionalConceptHistoryTextSchema,
++    transmissionAndIntegration: optionalConceptHistoryTextSchema,
++  })
++  .strict();
++
+ export async function saveGeneralInformationAction(
+   _previousState: GeneralInformationActionState,
+   formData: FormData,
+@@ -248,3 +259,38 @@ export async function saveCustomerExperienceAction(
+     };
+   }
+ }
++
++export async function saveTeamCultureAction(
++  _previousState: TeamCultureActionState,
++  formData: FormData,
++): Promise<TeamCultureActionState> {
++  const { tenant } = await requireAuthenticatedTenant(
++    '/etablissement/informations-generales',
++  );
++  requireEstablishment(tenant);
++  requireRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.manage');
++
++  try {
++    const input = teamCultureInputSchema.parse({
++      valuesAndMindset: formData.get('valuesAndMindset'),
++      workingTogether: formData.get('workingTogether'),
++      transmissionAndIntegration: formData.get('transmissionAndIntegration'),
++    });
++    await saveRestaurantKnowledgeTeamCulture(cloudDatabase, tenant, input);
++    revalidatePath('/etablissement/informations-generales');
++    return {
++      status: 'success',
++      message: 'Équipe et culture enregistrées.',
++    };
++  } catch (error: unknown) {
++    if (!(error instanceof z.ZodError)) {
++      console.error('Failed to save Restaurant Knowledge Team Culture.', {
++        errorName: error instanceof Error ? error.name : 'UnknownError',
++      });
++    }
++    return {
++      status: 'error',
++      message: 'Une erreur est survenue. Réessayez.',
++    };
++  }
++}
+diff --git a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/page.tsx b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/page.tsx
+index 02a256b777613ad7f9bcaf2c71b7295b588870c1..fdd1fc81a8829dcaf99049ac579c177933ae5bba 100644
+--- a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/page.tsx
++++ b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/page.tsx
+@@ -12,10 +12,12 @@ import { GeneralInformationForm } from './_components/general-information-form';
+ import { ConceptHistoryForm } from './_components/concept-history-form';
+ import { CuisineKnowHowForm } from './_components/cuisine-know-how-form';
+ import { CustomerExperienceForm } from './_components/customer-experience-form';
++import { TeamCultureForm } from './_components/team-culture-form';
+ import {
+   loadConceptHistorySection,
+   loadCuisineKnowHowSection,
+   loadCustomerExperienceSection,
++  loadTeamCultureSection,
+ } from './restaurant-knowledge-loader';
+ 
+ export default async function GeneralInformationPage() {
+@@ -29,11 +31,13 @@ export default async function GeneralInformationPage() {
+     conceptHistorySection,
+     cuisineKnowHowSection,
+     customerExperienceSection,
++    teamCultureSection,
+   ] = await Promise.all([
+     getEstablishmentProfile(cloudDatabase, tenant),
+     loadConceptHistorySection(cloudDatabase, tenant),
+     loadCuisineKnowHowSection(cloudDatabase, tenant),
+     loadCustomerExperienceSection(cloudDatabase, tenant),
++    loadTeamCultureSection(cloudDatabase, tenant),
+   ]);
+   if (!profile) notFound();
+   const canEditProfile = hasEstablishmentPermission(
+@@ -50,25 +54,31 @@ export default async function GeneralInformationPage() {
+         <GeneralInformationForm profile={profile} canEdit={canEditProfile} />
+         {conceptHistorySection && (
+           <ConceptHistoryForm
+-            key={`${conceptHistorySection.conceptHistory.concept ?? ''}\u0000${conceptHistorySection.conceptHistory.history ?? ''}`}
++            key={`concept-history\u0000${conceptHistorySection.conceptHistory.concept ?? ''}\u0000${conceptHistorySection.conceptHistory.history ?? ''}`}
+             conceptHistory={conceptHistorySection.conceptHistory}
+             canManage={conceptHistorySection.canManage}
+           />
+         )}
+         {cuisineKnowHowSection && (
+           <CuisineKnowHowForm
+-            key={`${cuisineKnowHowSection.cuisineKnowHow.cuisineDescription ?? ''}\u0000${cuisineKnowHowSection.cuisineKnowHow.knowHowParticularities ?? ''}\u0000${cuisineKnowHowSection.cuisineKnowHow.homemade ?? ''}`}
++            key={`cuisine-know-how\u0000${cuisineKnowHowSection.cuisineKnowHow.cuisineDescription ?? ''}\u0000${cuisineKnowHowSection.cuisineKnowHow.knowHowParticularities ?? ''}\u0000${cuisineKnowHowSection.cuisineKnowHow.homemade ?? ''}`}
+             cuisineKnowHow={cuisineKnowHowSection.cuisineKnowHow}
+             canManage={cuisineKnowHowSection.canManage}
+           />
+         )}
+         {customerExperienceSection && (
+           <CustomerExperienceForm
+-            key={`${customerExperienceSection.customerExperience.desiredExperience ?? ''}\u0000${customerExperienceSection.customerExperience.welcomeAndService ?? ''}\u0000${customerExperienceSection.customerExperience.customerAttention ?? ''}`}
++            key={`customer-experience\u0000${customerExperienceSection.customerExperience.desiredExperience ?? ''}\u0000${customerExperienceSection.customerExperience.welcomeAndService ?? ''}\u0000${customerExperienceSection.customerExperience.customerAttention ?? ''}`}
+             customerExperience={customerExperienceSection.customerExperience}
+             canManage={customerExperienceSection.canManage}
+           />
+         )}
++        {teamCultureSection && (
++          <TeamCultureForm
++            teamCulture={teamCultureSection.teamCulture}
++            canManage={teamCultureSection.canManage}
++          />
++        )}
+       </div>
+     </BackofficePage>
+   );
+diff --git a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/restaurant-knowledge-loader.ts b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/restaurant-knowledge-loader.ts
+index b8463b9a66c0e89bde22188a8629a4bbdb6fd1de..3b2d6c67d2d00b0437518559bfbbea3b14d59a4e 100644
+--- a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/restaurant-knowledge-loader.ts
++++ b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/restaurant-knowledge-loader.ts
+@@ -4,6 +4,7 @@ import {
+   getRestaurantKnowledgeConceptHistory,
+   getRestaurantKnowledgeCuisineKnowHow,
+   getRestaurantKnowledgeCustomerExperience,
++  getRestaurantKnowledgeTeamCulture,
+   type CloudDatabaseClient,
+ } from '@yuta/db-cloud';
+ import type { TenantContext } from '@yuta/tenant';
+@@ -62,3 +63,20 @@ export async function loadCustomerExperienceSection(
+     ),
+   };
+ }
++
++export async function loadTeamCultureSection(
++  db: CloudDatabaseClient,
++  tenant: TenantContext,
++) {
++  if (!hasRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.read')) {
++    return null;
++  }
++
++  return {
++    teamCulture: await getRestaurantKnowledgeTeamCulture(db, tenant),
++    canManage: hasRestaurantKnowledgePermission(
++      tenant,
++      'restaurant-knowledge.manage',
++    ),
++  };
++}
+diff --git a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/team-culture-model.ts b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/team-culture-model.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..df458b5781f7f15e6dac95e303cba4862f87f116
+--- /dev/null
++++ b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/team-culture-model.ts
+@@ -0,0 +1,52 @@
++export type TeamCultureDraft = {
++  valuesAndMindset: string | null;
++  workingTogether: string | null;
++  transmissionAndIntegration: string | null;
++};
++
++export function teamCultureDraft(
++  valuesAndMindset: string | null,
++  workingTogether: string | null,
++  transmissionAndIntegration: string | null,
++): TeamCultureDraft {
++  return { valuesAndMindset, workingTogether, transmissionAndIntegration };
++}
++
++export function updateValuesAndMindset(
++  draft: TeamCultureDraft,
++  valuesAndMindset: string,
++): TeamCultureDraft {
++  return { ...draft, valuesAndMindset };
++}
++
++export function updateWorkingTogether(
++  draft: TeamCultureDraft,
++  workingTogether: string,
++): TeamCultureDraft {
++  return { ...draft, workingTogether };
++}
++
++export function updateTransmissionAndIntegration(
++  draft: TeamCultureDraft,
++  transmissionAndIntegration: string,
++): TeamCultureDraft {
++  return { ...draft, transmissionAndIntegration };
++}
++
++export function canonicalTeamCultureValue(value: string | null): string | null {
++  return value === '' ? null : value;
++}
++
++export function isTeamCultureDirty(
++  initial: TeamCultureDraft,
++  draft: TeamCultureDraft,
++): boolean {
++  return (
++    canonicalTeamCultureValue(draft.valuesAndMindset) !==
++      canonicalTeamCultureValue(initial.valuesAndMindset) ||
++    canonicalTeamCultureValue(draft.workingTogether) !==
++      canonicalTeamCultureValue(initial.workingTogether) ||
++    canonicalTeamCultureValue(draft.transmissionAndIntegration) !==
++      canonicalTeamCultureValue(initial.transmissionAndIntegration)
++  );
++}
+diff --git a/apps/backoffice/test/restaurant-knowledge-loader.test.ts b/apps/backoffice/test/restaurant-knowledge-loader.test.ts
+index d9c5de5a64de3a44305824199e684bb7a3cecb0f..11dd2ea05829b9e3545cab7160e1b6f653a17cf2 100644
+--- a/apps/backoffice/test/restaurant-knowledge-loader.test.ts
++++ b/apps/backoffice/test/restaurant-knowledge-loader.test.ts
+@@ -6,6 +6,7 @@ const mocks = vi.hoisted(() => ({
+   getConceptHistory: vi.fn(),
+   getCuisineKnowHow: vi.fn(),
+   getCustomerExperience: vi.fn(),
++  getTeamCulture: vi.fn(),
+ }));
+ 
+ vi.mock('server-only', () => ({}));
+@@ -13,12 +14,14 @@ vi.mock('@yuta/db-cloud', () => ({
+   getRestaurantKnowledgeConceptHistory: mocks.getConceptHistory,
+   getRestaurantKnowledgeCuisineKnowHow: mocks.getCuisineKnowHow,
+   getRestaurantKnowledgeCustomerExperience: mocks.getCustomerExperience,
++  getRestaurantKnowledgeTeamCulture: mocks.getTeamCulture,
+ }));
+ 
+ import {
+   loadConceptHistorySection,
+   loadCuisineKnowHowSection,
+   loadCustomerExperienceSection,
++  loadTeamCultureSection,
+ } from '../src/app/(authenticated)/etablissement/informations-generales/restaurant-knowledge-loader';
+ 
+ function context(role: TenantRole): TenantContext {
+@@ -166,3 +169,57 @@ describe('Customer Experience loader', () => {
+     expect(mocks.getCuisineKnowHow).not.toHaveBeenCalled();
+   });
+ });
++
++describe('Team Culture loader', () => {
++  beforeEach(() => {
++    mocks.getConceptHistory.mockReset();
++    mocks.getCuisineKnowHow.mockReset();
++    mocks.getCustomerExperience.mockReset();
++    mocks.getTeamCulture.mockReset();
++    mocks.getTeamCulture.mockResolvedValue({
++      valuesAndMindset: null,
++      workingTogether: null,
++      transmissionAndIntegration: null,
++    });
++  });
++
++  it.each(['OWNER', 'MANAGER'] as const)(
++    'loads with READ and derives MANAGE for %s',
++    async (role) => {
++      const tenant = context(role);
++      await expect(
++        loadTeamCultureSection(
++          { kind: 'test-cloud-database' } as never,
++          tenant,
++        ),
++      ).resolves.toEqual({
++        teamCulture: {
++          valuesAndMindset: null,
++          workingTogether: null,
++          transmissionAndIntegration: null,
++        },
++        canManage: true,
++      });
++      expect(mocks.getTeamCulture).toHaveBeenCalledWith(
++        { kind: 'test-cloud-database' },
++        tenant,
++      );
++      expect(mocks.getConceptHistory).not.toHaveBeenCalled();
++      expect(mocks.getCuisineKnowHow).not.toHaveBeenCalled();
++      expect(mocks.getCustomerExperience).not.toHaveBeenCalled();
++    },
++  );
++
++  it('denies STAFF before repository access despite Profile read access', async () => {
++    await expect(
++      loadTeamCultureSection(
++        { kind: 'test-cloud-database' } as never,
++        context('STAFF'),
++      ),
++    ).resolves.toBeNull();
++    expect(mocks.getTeamCulture).not.toHaveBeenCalled();
++    expect(mocks.getConceptHistory).not.toHaveBeenCalled();
++    expect(mocks.getCuisineKnowHow).not.toHaveBeenCalled();
++    expect(mocks.getCustomerExperience).not.toHaveBeenCalled();
++  });
++});
+diff --git a/apps/backoffice/test/team-culture-action.test.ts b/apps/backoffice/test/team-culture-action.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..802ecd935c25fac0cb248dcc28d069754b006c7d
+--- /dev/null
++++ b/apps/backoffice/test/team-culture-action.test.ts
+@@ -0,0 +1,216 @@
++import { randomUUID } from 'node:crypto';
++import { TenantError, type TenantContext, type TenantRole } from '@yuta/tenant';
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++
++const mocks = vi.hoisted(() => ({
++  tenant: null as TenantContext | null,
++  denyManage: false,
++  requireRestaurantKnowledgePermission: vi.fn(),
++  saveTeamCulture: vi.fn(),
++  saveConceptHistory: vi.fn(),
++  saveCuisineKnowHow: vi.fn(),
++  saveCustomerExperience: vi.fn(),
++  updateProfile: vi.fn(),
++  revalidatePath: vi.fn(),
++}));
++
++vi.mock('server-only', () => ({}));
++vi.mock('@yuta/db-cloud', () => ({
++  saveRestaurantKnowledgeTeamCulture: mocks.saveTeamCulture,
++  saveRestaurantKnowledgeConceptHistory: mocks.saveConceptHistory,
++  saveRestaurantKnowledgeCuisineKnowHow: mocks.saveCuisineKnowHow,
++  saveRestaurantKnowledgeCustomerExperience: mocks.saveCustomerExperience,
++  updateEstablishmentProfile: mocks.updateProfile,
++}));
++vi.mock('next/cache', () => ({ revalidatePath: mocks.revalidatePath }));
++vi.mock('../src/server/cloud-database', () => ({
++  cloudDatabase: { kind: 'test-cloud-database' },
++}));
++vi.mock('../src/server/auth/session', () => ({
++  requireAuthenticatedTenant: vi.fn(async () => ({ tenant: mocks.tenant })),
++}));
++vi.mock('../src/server/auth/permissions', async () => {
++  const actual = await vi.importActual<
++    typeof import('../src/server/auth/permissions')
++  >('../src/server/auth/permissions');
++  return {
++    ...actual,
++    requireRestaurantKnowledgePermission: (
++      ...args: Parameters<typeof actual.requireRestaurantKnowledgePermission>
++    ) => {
++      mocks.requireRestaurantKnowledgePermission(...args);
++      if (mocks.denyManage) {
++        throw new TenantError(
++          'Permission denied.',
++          'CROSS_TENANT_ACCESS_DENIED',
++          403,
++        );
++      }
++      return actual.requireRestaurantKnowledgePermission(...args);
++    },
++  };
++});
++
++import { saveTeamCultureAction } from '../src/app/(authenticated)/etablissement/informations-generales/actions';
++import { hasEstablishmentPermission } from '../src/server/auth/permissions';
++
++function context(role: TenantRole): TenantContext {
++  return {
++    organizationId: randomUUID(),
++    establishmentId: randomUUID(),
++    actor: {
++      type: 'user',
++      userId: randomUUID(),
++      membershipId: randomUUID(),
++      role,
++    },
++    locale: 'fr-FR',
++    timezone: 'Europe/Paris',
++    entitlements: new Set(),
++  };
++}
++
++const initialState = { status: 'idle' as const, message: null };
++
++function populatedFormData() {
++  const formData = new FormData();
++  formData.set('valuesAndMindset', 'Bienveillance et exigence');
++  formData.set('workingTogether', 'Décider ensemble au briefing');
++  formData.set(
++    'transmissionAndIntegration',
++    'Accompagner chaque nouvelle arrivée',
++  );
++  return formData;
++}
++
++describe('Team Culture save action', () => {
++  beforeEach(() => {
++    mocks.denyManage = false;
++    mocks.requireRestaurantKnowledgePermission.mockReset();
++    mocks.saveTeamCulture.mockReset();
++    mocks.saveConceptHistory.mockReset();
++    mocks.saveCuisineKnowHow.mockReset();
++    mocks.saveCustomerExperience.mockReset();
++    mocks.updateProfile.mockReset();
++    mocks.revalidatePath.mockReset();
++  });
++
++  it.each(['OWNER', 'MANAGER'] as const)(
++    'saves the whole slice exactly once with MANAGE for %s',
++    async (role) => {
++      mocks.tenant = context(role);
++      const formData = populatedFormData();
++      formData.set('organizationId', randomUUID());
++      formData.set('establishmentId', randomUUID());
++      formData.set('role', 'STAFF');
++      formData.set('permission', 'establishment.profile.manage');
++      formData.set('unrelated', 'not forwarded');
++
++      await expect(
++        saveTeamCultureAction(initialState, formData),
++      ).resolves.toEqual({
++        status: 'success',
++        message: 'Équipe et culture enregistrées.',
++      });
++      expect(mocks.requireRestaurantKnowledgePermission).toHaveBeenCalledWith(
++        mocks.tenant,
++        'restaurant-knowledge.manage',
++      );
++      expect(mocks.saveTeamCulture).toHaveBeenCalledTimes(1);
++      expect(mocks.saveTeamCulture).toHaveBeenCalledWith(
++        { kind: 'test-cloud-database' },
++        mocks.tenant,
++        {
++          valuesAndMindset: 'Bienveillance et exigence',
++          workingTogether: 'Décider ensemble au briefing',
++          transmissionAndIntegration: 'Accompagner chaque nouvelle arrivée',
++        },
++      );
++      expect(mocks.saveConceptHistory).not.toHaveBeenCalled();
++      expect(mocks.saveCuisineKnowHow).not.toHaveBeenCalled();
++      expect(mocks.saveCustomerExperience).not.toHaveBeenCalled();
++      expect(mocks.updateProfile).not.toHaveBeenCalled();
++      expect(mocks.revalidatePath).toHaveBeenCalledWith(
++        '/etablissement/informations-generales',
++      );
++      expect(mocks.revalidatePath).toHaveBeenCalledTimes(1);
++    },
++  );
++
++  it('normalizes only exact empty strings and preserves whitespace', async () => {
++    mocks.tenant = context('OWNER');
++    const formData = new FormData();
++    formData.set('valuesAndMindset', '');
++    formData.set('workingTogether', '   ');
++    formData.set('transmissionAndIntegration', '');
++
++    await saveTeamCultureAction(initialState, formData);
++
++    expect(mocks.saveTeamCulture).toHaveBeenCalledWith(
++      { kind: 'test-cloud-database' },
++      mocks.tenant,
++      {
++        valuesAndMindset: null,
++        workingTogether: '   ',
++        transmissionAndIntegration: null,
++      },
++    );
++  });
++
++  it('denies STAFF before parsing or persistence without Profile substitution', async () => {
++    mocks.tenant = context('STAFF');
++    expect(
++      hasEstablishmentPermission(mocks.tenant, 'establishment.profile.manage'),
++    ).toBe(false);
++    expect(
++      hasEstablishmentPermission(mocks.tenant, 'establishment.profile.read'),
++    ).toBe(true);
++
++    await expect(
++      saveTeamCultureAction(initialState, new FormData()),
++    ).rejects.toThrow('Permission denied.');
++    expect(mocks.saveTeamCulture).not.toHaveBeenCalled();
++    expect(mocks.updateProfile).not.toHaveBeenCalled();
++    expect(mocks.revalidatePath).not.toHaveBeenCalled();
++  });
++
++  it('enforces MANAGE independently when the test boundary models READ without MANAGE', async () => {
++    mocks.tenant = context('OWNER');
++    mocks.denyManage = true;
++
++    await expect(
++      saveTeamCultureAction(initialState, populatedFormData()),
++    ).rejects.toThrow('Permission denied.');
++    expect(mocks.requireRestaurantKnowledgePermission).toHaveBeenCalledWith(
++      mocks.tenant,
++      'restaurant-knowledge.manage',
++    );
++    expect(mocks.saveTeamCulture).not.toHaveBeenCalled();
++    expect(mocks.revalidatePath).not.toHaveBeenCalled();
++  });
++
++  it('returns a content-safe recoverable error and does not revalidate on persistence failure', async () => {
++    mocks.tenant = context('MANAGER');
++    mocks.saveTeamCulture.mockRejectedValue(new Error('database unavailable'));
++    const consoleError = vi
++      .spyOn(console, 'error')
++      .mockImplementation(() => undefined);
++
++    await expect(
++      saveTeamCultureAction(initialState, populatedFormData()),
++    ).resolves.toEqual({
++      status: 'error',
++      message: 'Une erreur est survenue. Réessayez.',
++    });
++    expect(mocks.saveTeamCulture).toHaveBeenCalledTimes(1);
++    expect(mocks.revalidatePath).not.toHaveBeenCalled();
++    expect(consoleError).toHaveBeenCalledWith(
++      'Failed to save Restaurant Knowledge Team Culture.',
++      { errorName: 'Error' },
++    );
++    expect(JSON.stringify(consoleError.mock.calls)).not.toContain(
++      'Bienveillance et exigence',
++    );
++    consoleError.mockRestore();
++  });
++});
+diff --git a/apps/backoffice/test/team-culture-fields.test.tsx b/apps/backoffice/test/team-culture-fields.test.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..07d3ede7c8c444e971158752aed8e76c956d9276
+--- /dev/null
++++ b/apps/backoffice/test/team-culture-fields.test.tsx
+@@ -0,0 +1,45 @@
++import { renderToStaticMarkup } from 'react-dom/server';
++import { describe, expect, it, vi } from 'vitest';
++import { TeamCultureFields } from '../src/app/(authenticated)/etablissement/informations-generales/_components/team-culture-fields';
++
++const draft = {
++  valuesAndMindset: 'Bienveillance',
++  workingTogether: 'Décisions partagées',
++  transmissionAndIntegration: 'Accompagnement',
++};
++
++function render(canManage: boolean) {
++  return renderToStaticMarkup(
++    <TeamCultureFields
++      draft={draft}
++      canManage={canManage}
++      onValuesAndMindsetChange={vi.fn()}
++      onWorkingTogetherChange={vi.fn()}
++      onTransmissionAndIntegrationChange={vi.fn()}
++    />,
++  );
++}
++
++describe('TeamCultureFields', () => {
++  it('renders exactly the three approved optional labelled values', () => {
++    const markup = render(true);
++
++    expect(markup.match(/<textarea/g)).toHaveLength(3);
++    expect(markup).toContain('Valeurs &amp; état d’esprit');
++    expect(markup).toContain('Façon de travailler ensemble');
++    expect(markup).toContain('Transmission &amp; intégration');
++    expect(markup).toContain('name="valuesAndMindset"');
++    expect(markup).toContain('name="workingTogether"');
++    expect(markup).toContain('name="transmissionAndIntegration"');
++    expect(markup.match(/Optionnel/g)).toHaveLength(3);
++  });
++
++  it('associates labels and disables all values in presentation-only read mode', () => {
++    const markup = render(false);
++
++    expect(markup).toContain('for="valuesAndMindset"');
++    expect(markup).toContain('for="workingTogether"');
++    expect(markup).toContain('for="transmissionAndIntegration"');
++    expect(markup.match(/disabled=""/g)).toHaveLength(3);
++  });
++});
+diff --git a/apps/backoffice/test/team-culture-form.test.tsx b/apps/backoffice/test/team-culture-form.test.tsx
+new file mode 100644
+index 0000000000000000000000000000000000000000..aa6a553c2c1343fdcd552faae76a5101cb8dc8b0
+--- /dev/null
++++ b/apps/backoffice/test/team-culture-form.test.tsx
+@@ -0,0 +1,130 @@
++import { renderToStaticMarkup } from 'react-dom/server';
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++
++const mocks = vi.hoisted(() => ({
++  actionState: {
++    status: 'idle' as 'idle' | 'success' | 'error',
++    message: null as string | null,
++  },
++  pending: false,
++  saveTeamCultureAction: vi.fn(),
++}));
++
++vi.mock(
++  '../src/app/(authenticated)/etablissement/informations-generales/actions',
++  () => ({
++    saveTeamCultureAction: mocks.saveTeamCultureAction,
++  }),
++);
++vi.mock('react-dom', () => ({
++  useFormStatus: () => ({ pending: mocks.pending }),
++}));
++vi.mock('react', async (importOriginal) => {
++  const actual = await importOriginal<typeof import('react')>();
++  return {
++    ...actual,
++    useActionState: () => [mocks.actionState, vi.fn()],
++  };
++});
++
++import {
++  TeamCultureForm,
++  TeamCultureSubmitButton,
++} from '../src/app/(authenticated)/etablissement/informations-generales/_components/team-culture-form';
++
++const values = {
++  valuesAndMindset: 'Bienveillance',
++  workingTogether: 'Décisions partagées',
++  transmissionAndIntegration: 'Accompagnement',
++};
++
++describe('TeamCultureForm', () => {
++  beforeEach(() => {
++    mocks.actionState = { status: 'idle', message: null };
++    mocks.pending = false;
++    mocks.saveTeamCultureAction.mockReset();
++  });
++
++  it('renders one explicit whole-slice save and does not autosave on render', () => {
++    const markup = renderToStaticMarkup(
++      <TeamCultureForm teamCulture={values} canManage />,
++    );
++
++    expect(markup.match(/<form/g)).toHaveLength(1);
++    expect(markup.match(/type="submit"/g)).toHaveLength(1);
++    expect(markup).toContain('Enregistrer équipe &amp; culture');
++    expect(markup).toContain('name="valuesAndMindset"');
++    expect(markup).toContain('name="workingTogether"');
++    expect(markup).toContain('name="transmissionAndIntegration"');
++    expect(markup).toContain('disabled=""');
++    expect(mocks.saveTeamCultureAction).not.toHaveBeenCalled();
++  });
++
++  it('renders canManage false as presentation-only disabled values with no save control', () => {
++    const markup = renderToStaticMarkup(
++      <TeamCultureForm teamCulture={values} canManage={false} />,
++    );
++
++    expect(markup).toContain('Équipe &amp; culture');
++    expect(markup.match(/disabled=""/g)).toHaveLength(3);
++    expect(markup).not.toContain('type="submit"');
++    expect(mocks.saveTeamCultureAction).not.toHaveBeenCalled();
++  });
++
++  it('keeps canonical all-empty state pristine without relying on a key change', () => {
++    const markup = renderToStaticMarkup(
++      <TeamCultureForm
++        teamCulture={{
++          valuesAndMindset: null,
++          workingTogether: null,
++          transmissionAndIntegration: null,
++        }}
++        canManage
++      />,
++    );
++
++    expect(markup.match(/type="submit"/g)).toHaveLength(1);
++    expect(markup).toContain('disabled=""');
++    expect(mocks.saveTeamCultureAction).not.toHaveBeenCalled();
++  });
++
++  it('shows pending state on the same submit control', () => {
++    mocks.pending = true;
++    const markup = renderToStaticMarkup(
++      <TeamCultureSubmitButton disabled={false} />,
++    );
++
++    expect(markup.match(/<button/g)).toHaveLength(1);
++    expect(markup).toContain('type="submit"');
++    expect(markup).toContain('Enregistrement…');
++    expect(markup).not.toContain('Enregistrer équipe &amp; culture');
++  });
++
++  it('renders the successful explicit-save message', () => {
++    mocks.actionState = {
++      status: 'success',
++      message: 'Équipe et culture enregistrées.',
++    };
++
++    const markup = renderToStaticMarkup(
++      <TeamCultureForm teamCulture={values} canManage />,
++    );
++
++    expect(markup).toContain('Équipe et culture enregistrées.');
++    expect(markup).toContain('role="status"');
++  });
++
++  it('renders a failed save as an alert for recoverable retry', () => {
++    mocks.actionState = {
++      status: 'error',
++      message: 'Une erreur est survenue. Réessayez.',
++    };
++
++    const markup = renderToStaticMarkup(
++      <TeamCultureForm teamCulture={values} canManage />,
++    );
++
++    expect(markup).toContain('Une erreur est survenue. Réessayez.');
++    expect(markup).toContain('role="alert"');
++  });
++});
+diff --git a/apps/backoffice/test/team-culture-model.test.ts b/apps/backoffice/test/team-culture-model.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..1dff1f34e4facad7ce26876e94010b47f59cc523
+--- /dev/null
++++ b/apps/backoffice/test/team-culture-model.test.ts
+@@ -0,0 +1,76 @@
++import { describe, expect, it } from 'vitest';
++import {
++  canonicalTeamCultureValue,
++  isTeamCultureDirty,
++  teamCultureDraft,
++  updateTransmissionAndIntegration,
++  updateValuesAndMindset,
++  updateWorkingTogether,
++} from '../src/app/(authenticated)/etablissement/informations-generales/team-culture-model';
++
++describe('Team Culture model', () => {
++  it('exposes exactly three independently updateable values', () => {
++    const initial = teamCultureDraft(null, null, null);
++    const updated = updateTransmissionAndIntegration(
++      updateWorkingTogether(
++        updateValuesAndMindset(initial, 'Valeurs'),
++        'Collaboration',
++      ),
++      'Transmission',
++    );
++
++    expect(updated).toEqual({
++      valuesAndMindset: 'Valeurs',
++      workingTogether: 'Collaboration',
++      transmissionAndIntegration: 'Transmission',
++    });
++    expect(Object.keys(updated)).toEqual([
++      'valuesAndMindset',
++      'workingTogether',
++      'transmissionAndIntegration',
++    ]);
++  });
++
++  it('canonicalizes only empty string to null without trimming', () => {
++    expect(canonicalTeamCultureValue(null)).toBeNull();
++    expect(canonicalTeamCultureValue('')).toBeNull();
++    expect(canonicalTeamCultureValue('abc')).toBe('abc');
++    expect(canonicalTeamCultureValue('   ')).toBe('   ');
++  });
++
++  it('treats initial null and draft empty string as not dirty', () => {
++    expect(
++      isTeamCultureDirty(
++        teamCultureDraft(null, null, null),
++        teamCultureDraft('', null, null),
++      ),
++    ).toBe(false);
++  });
++
++  it('treats initial text and draft empty string as dirty', () => {
++    expect(
++      isTeamCultureDirty(
++        teamCultureDraft('abc', null, null),
++        teamCultureDraft('', null, null),
++      ),
++    ).toBe(true);
++  });
++
++  it('treats initial null and draft text as dirty', () => {
++    expect(
++      isTeamCultureDirty(
++        teamCultureDraft(null, null, null),
++        teamCultureDraft('abc', null, null),
++      ),
++    ).toBe(true);
++  });
++
++  it('is not dirty after empty-string save canonicalizes to null without remount', () => {
++    const retainedBrowserDraft = teamCultureDraft('', null, null);
++    const revalidatedServerState = teamCultureDraft(null, null, null);
++
++    expect(
++      isTeamCultureDirty(revalidatedServerState, retainedBrowserDraft),
++    ).toBe(false);
++  });
++});
+diff --git a/docs/ui/pages/establishment-general-information/ACCEPTANCE_CHECKLIST.md b/docs/ui/pages/establishment-general-information/ACCEPTANCE_CHECKLIST.md
+index b00d477b3034fdf0be68255249b3717808c3e99b..d5217f80daded0ddba1b9f797c7b3006482a6212 100644
+--- a/docs/ui/pages/establishment-general-information/ACCEPTANCE_CHECKLIST.md
++++ b/docs/ui/pages/establishment-general-information/ACCEPTANCE_CHECKLIST.md
+@@ -82,6 +82,13 @@ When classified `EXISTING_PAGE`:
+ - [ ] Expérience client reads and writes do not access, link, infer, copy or
+       synchronize Reservations, Reputation, Today, Personnel, POS/orders,
+       Marketing, CRM or provider data.
++- [ ] OWNER and MANAGER can view/edit/save Équipe & culture; STAFF is denied
++      before repository access or persistence, and Profile permissions do not
++      substitute for Restaurant Knowledge READ/MANAGE.
++- [ ] Équipe & culture reads and writes do not access, link, infer, copy or
++      synchronize Personnel/Salariés, Planning, Pointage, Today, Tâches du jour,
++      Formalités, onboarding/training, POS, Site Agent, Display,
++      Marketing/social or provider data.
+ - [ ] Private contact values are not exposed publicly without current business rules.
+ - [ ] Contact data is not logged unnecessarily.
+ - [ ] No external provider was added.
+@@ -100,9 +107,14 @@ When classified `EXISTING_PAGE`:
+ - [ ] The three Expérience client values are independently optional; all-empty
+       and every single-value state are valid.
+ - [ ] Expérience client has exactly one whole-slice submit and no autosave.
+-- [ ] Profile, Concept/Histoire, Cuisine/savoir-faire and Expérience client
+-      retain independent forms, actions, repository operations and persistence
+-      boundaries.
++- [ ] The three Équipe & culture values are independently optional; all-empty
++      and every single-value state are valid.
++- [ ] Équipe & culture has exactly one whole-slice submit and no autosave;
++      canonical dirty comparison treats `''` and `null` as equivalent without
++      trimming non-empty strings.
++- [ ] Profile, Concept/Histoire, Cuisine/savoir-faire, Expérience client and
++      Équipe & culture retain independent forms, actions, repository operations
++      and persistence boundaries.
+ 
+ - [ ] Dirty-state and save behavior follow current form conventions.
+ - [ ] Save cannot duplicate-submit.
+diff --git a/docs/ui/pages/establishment-general-information/DATA_AND_INTERACTION_SPEC.md b/docs/ui/pages/establishment-general-information/DATA_AND_INTERACTION_SPEC.md
+index 4e8cee5d5eac6885c39abe7ed9f139c06661d32c..33772dd418f83741ec2afa0a241b5ba576cc6dff 100644
+--- a/docs/ui/pages/establishment-general-information/DATA_AND_INTERACTION_SPEC.md
++++ b/docs/ui/pages/establishment-general-information/DATA_AND_INTERACTION_SPEC.md
+@@ -18,6 +18,7 @@ Prompt 00 must first map every concept to the current repository implementation.
+ | Restaurant Knowledge Concept/Histoire     | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
+ | Restaurant Knowledge Cuisine/savoir-faire | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
+ | Restaurant Knowledge Expérience client    | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
++| Restaurant Knowledge Équipe & culture     | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
+ | Completion                                | local view-model calculation             | none                         | `UI_ONLY_DERIVED`               |
+ | Local public preview                      | local form state                         | none                         | `UI_ONLY_DERIVED`               |
+ | Media upload                              | no storage lifecycle                     | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
+@@ -56,6 +57,8 @@ The composed capabilities enforce permissions independently:
+   `restaurant-knowledge.manage`;
+ - Expérience client load and visibility require `restaurant-knowledge.read`,
+   while edit and explicit save require `restaurant-knowledge.manage`;
++- Équipe & culture load and visibility require `restaurant-knowledge.read`,
++  while edit and explicit save require `restaurant-knowledge.manage`;
+ - STAFF keeps profile-read access but receives no Restaurant Knowledge access;
+ - the knowledge action re-derives trusted tenant context and accepts no browser
+   organization or establishment identifier.
+@@ -118,6 +121,30 @@ client` are independent optional descriptive establishment values;
+   synchronizes Reservations, Reputation, Today, Personnel, POS/orders,
+   Marketing, CRM or provider data.
+ 
++## Restaurant Knowledge Équipe & culture
++
++The slice loads from its dedicated Restaurant Knowledge repository using both
++trusted organization and establishment scope. Missing persistence and an
++all-null row both project to the same three-value all-empty state.
++
++- `Valeurs & état d’esprit`, `Façon de travailler ensemble` and `Transmission &
++intégration` are independent optional descriptive establishment values;
++- all-empty and every single-value state are valid;
++- all three values remain browser-local drafts until submit;
++- one submit sends the complete three-value slice to the dedicated server
++  action;
++- only exact empty strings normalize to `null`; non-empty strings, including
++  whitespace-only strings, remain unchanged;
++- dirty comparison treats `''` and `null` as the same canonical empty value;
++- no blur, timer, effect or background request persists changes;
++- no Product length, format, requiredness, taxonomy, scoring, competency,
++  employee, training/onboarding, checklist/task or analytics rule is defined;
++- the action revalidates only `/etablissement/informations-generales` after a
++  successful save;
++- neither the repository nor the action reads, writes, links, infers, copies or
++  synchronizes Personnel/Salariés, Planning, Pointage, Today, Tâches du jour,
++  Formalités, POS, Site Agent, Display, Marketing/social or provider data.
++
+ ## UI view model
+ 
+ Adapt to existing DTOs and field names. Do not treat this as a persistence contract.
+diff --git a/docs/ui/pages/establishment-general-information/PRODUCT_SCOPE.md b/docs/ui/pages/establishment-general-information/PRODUCT_SCOPE.md
+index 2ecddc8a668fd97c095aa374bfc21d7683decaaf..449e2aa178716db08b2064f8229da189fe8f39bd 100644
+--- a/docs/ui/pages/establishment-general-information/PRODUCT_SCOPE.md
++++ b/docs/ui/pages/establishment-general-information/PRODUCT_SCOPE.md
+@@ -26,6 +26,9 @@ Approved information categories:
+ 11. independently optional Restaurant Knowledge Expérience souhaitée, Accueil
+     & service and Attention particulière au client values, including valid
+     all-empty state, manual edit, and one explicit whole-slice save.
++12. independently optional Restaurant Knowledge Valeurs & état d’esprit, Façon
++    de travailler ensemble and Transmission & intégration values, including
++    valid all-empty state, manual edit, and one explicit whole-slice save.
+ 
+ All data is establishment-scoped and must remain inside the validated active `organization + establishment` context.
+ 
+@@ -60,6 +63,7 @@ public profile route, address verification, or media upload flow.
+ | Restaurant Knowledge Concept/Histoire                                                                               | Implemented in a dedicated establishment-scoped table/repository with separate READ/MANAGE                                      |
+ | Restaurant Knowledge Cuisine/savoir-faire                                                                           | Implemented as a separate three-value establishment-scoped slice with READ/MANAGE and no Carte/POS dependency                   |
+ | Restaurant Knowledge Expérience client                                                                              | Implemented as a separate three-value establishment-scoped slice with READ/MANAGE and no operational-module/provider dependency |
++| Restaurant Knowledge Équipe & culture                                                                               | Implemented as a separate three-value establishment-scoped slice with READ/MANAGE and no employee/workflow dependency           |
+ 
+ ## Out of scope
+ 
+diff --git a/docs/ui/pages/establishment-general-information/README.md b/docs/ui/pages/establishment-general-information/README.md
+index c6442e8fc9b2c717f2d6a431202f803441f7cf75..9ec65bca60ee7daa69e3c169500d7b44d5ab0a3a 100644
+--- a/docs/ui/pages/establishment-general-information/README.md
++++ b/docs/ui/pages/establishment-general-information/README.md
+@@ -10,7 +10,7 @@ Prompt snapshot topology: GENERATED_SNAPSHOTS
+ 
+ Prompt provenance: prompt-provenance.json
+ 
+-Last updated: 2026-09-01
++Last updated: 2026-09-02
+ 
+ Route: `/etablissement/informations-generales`
+ 
+@@ -22,17 +22,17 @@ The authenticated route is a composed establishment-scoped editor. The
+ existing Establishment Profile remains backed by canonical profile fields on
+ `establishments`; OWNER and MANAGER may edit it and STAFF remains read-only.
+ The separate Restaurant Knowledge `Concept & histoire`, `Cuisine &
+-savoir-faire` and `Expérience client` sections are backed by dedicated cloud
+-tables and repository operations, require Restaurant Knowledge READ to be
+-visible, and require MANAGE to edit or explicitly save. OWNER and MANAGER have
+-both operations; STAFF receives no Restaurant Knowledge access.
++savoir-faire`, `Expérience client` and `Équipe & culture` sections are backed by
++dedicated cloud tables and repository operations, require Restaurant Knowledge
++READ to be visible, and require MANAGE to edit or explicitly save. OWNER and
++MANAGER have both operations; STAFF receives no Restaurant Knowledge access.
+ 
+ Concept and Histoire are independently optional, including a valid both-empty
+-state. The three Cuisine/savoir-faire values and the three Expérience client
+-values are likewise independent and optional, including a valid all-empty state
+-for each slice. Each browser-local slice has one explicit whole-slice save and
+-no autosave. The profile and all three Restaurant Knowledge sections retain
+-separate forms, actions and canonical data boundaries.
++state. The three Cuisine/savoir-faire, three Expérience client and three Équipe
++& culture values are likewise independent and optional, including a valid
++all-empty state for each slice. Each browser-local slice has one explicit
++whole-slice save and no autosave. The profile and all four Restaurant Knowledge
++sections retain separate forms, actions and canonical data boundaries.
+ 
+ Weekly service periods are managed independently under
+ `/etablissement/horaires-services`.
+diff --git a/docs/ui/pages/establishment-general-information/UI_SPEC.md b/docs/ui/pages/establishment-general-information/UI_SPEC.md
+index b74ef3afe84f8a1ee3a46c6938ca3fdc2d5e2511..aa33722590263dfc637c67ae2d749011cc1d019a 100644
+--- a/docs/ui/pages/establishment-general-information/UI_SPEC.md
++++ b/docs/ui/pages/establishment-general-information/UI_SPEC.md
+@@ -170,6 +170,19 @@ l’expérience client`. Without MANAGE all three fields are disabled and no
+ submit control is rendered. Without READ the section is not loaded or rendered.
+ Field changes do not autosave.
+ 
++### Restaurant Knowledge — `Équipe & culture`
++
++A fourth separate full-width Restaurant Knowledge card follows `Expérience
++client`; it is not a numbered Establishment Profile section. It contains
++exactly three optional textareas labelled `Valeurs & état d’esprit`, `Façon de
++travailler ensemble` and `Transmission & intégration`.
++
++Users with READ see persisted values. Users with MANAGE can edit the three
++browser-local drafts and receive one submit action labelled `Enregistrer équipe
++& culture`. Without MANAGE all three fields are disabled and no submit control
++is rendered. Without READ the section is not loaded or rendered. Canonically
++pristine drafts keep the submit disabled; field changes do not autosave.
++
+ ## Public-preview panel
+ 
+ The panel is read-only and may reflect unsaved local form state.
+diff --git a/packages/db-cloud/src/restaurant-knowledge-repository.ts b/packages/db-cloud/src/restaurant-knowledge-repository.ts
+index a7acf8c8280016705de51111ddb2422b9289a442..2d0ae0c00ba5963b7e2e28a5fee78de66458db9a 100644
+--- a/packages/db-cloud/src/restaurant-knowledge-repository.ts
++++ b/packages/db-cloud/src/restaurant-knowledge-repository.ts
+@@ -5,6 +5,7 @@ import {
+   restaurantKnowledgeConceptHistory,
+   restaurantKnowledgeCuisineKnowHow,
+   restaurantKnowledgeCustomerExperience,
++  restaurantKnowledgeTeamCulture,
+ } from './schema';
+ 
+ export type RestaurantKnowledgeConceptHistoryInput = {
+@@ -237,3 +238,81 @@ export async function saveRestaurantKnowledgeCustomerExperience(
+ 
+   return row ?? emptyCustomerExperience();
+ }
++
++export type RestaurantKnowledgeTeamCultureInput = {
++  valuesAndMindset: string | null;
++  workingTogether: string | null;
++  transmissionAndIntegration: string | null;
++};
++
++const emptyTeamCulture = (): RestaurantKnowledgeTeamCultureInput => ({
++  valuesAndMindset: null,
++  workingTogether: null,
++  transmissionAndIntegration: null,
++});
++
++export async function getRestaurantKnowledgeTeamCulture(
++  db: CloudDatabaseClient,
++  context: TenantContext,
++): Promise<RestaurantKnowledgeTeamCultureInput> {
++  requireEstablishment(context);
++  const [row] = await db
++    .select({
++      valuesAndMindset: restaurantKnowledgeTeamCulture.valuesAndMindset,
++      workingTogether: restaurantKnowledgeTeamCulture.workingTogether,
++      transmissionAndIntegration:
++        restaurantKnowledgeTeamCulture.transmissionAndIntegration,
++    })
++    .from(restaurantKnowledgeTeamCulture)
++    .where(
++      and(
++        eq(
++          restaurantKnowledgeTeamCulture.organizationId,
++          context.organizationId,
++        ),
++        eq(
++          restaurantKnowledgeTeamCulture.establishmentId,
++          context.establishmentId,
++        ),
++      ),
++    )
++    .limit(1);
++
++  return row ?? emptyTeamCulture();
++}
++
++export async function saveRestaurantKnowledgeTeamCulture(
++  db: CloudDatabaseClient,
++  context: TenantContext,
++  input: RestaurantKnowledgeTeamCultureInput,
++): Promise<RestaurantKnowledgeTeamCultureInput> {
++  requireEstablishment(context);
++  const [row] = await db
++    .insert(restaurantKnowledgeTeamCulture)
++    .values({
++      organizationId: context.organizationId,
++      establishmentId: context.establishmentId,
++      valuesAndMindset: input.valuesAndMindset,
++      workingTogether: input.workingTogether,
++      transmissionAndIntegration: input.transmissionAndIntegration,
++    })
++    .onConflictDoUpdate({
++      target: [
++        restaurantKnowledgeTeamCulture.organizationId,
++        restaurantKnowledgeTeamCulture.establishmentId,
++      ],
++      set: {
++        valuesAndMindset: input.valuesAndMindset,
++        workingTogether: input.workingTogether,
++        transmissionAndIntegration: input.transmissionAndIntegration,
++      },
++    })
++    .returning({
++      valuesAndMindset: restaurantKnowledgeTeamCulture.valuesAndMindset,
++      workingTogether: restaurantKnowledgeTeamCulture.workingTogether,
++      transmissionAndIntegration:
++        restaurantKnowledgeTeamCulture.transmissionAndIntegration,
++    });
++
++  return row ?? emptyTeamCulture();
++}
+diff --git a/packages/db-cloud/src/schema/restaurant-knowledge.ts b/packages/db-cloud/src/schema/restaurant-knowledge.ts
+index 94cab4bab8343b4521b7d945d7c338749cf1338a..b301e459769b45a6dbb0a64e2fc36980600a7734 100644
+--- a/packages/db-cloud/src/schema/restaurant-knowledge.ts
++++ b/packages/db-cloud/src/schema/restaurant-knowledge.ts
+@@ -80,3 +80,28 @@ export const restaurantKnowledgeCustomerExperience = pgTable(
+ 
+ export type RestaurantKnowledgeCustomerExperience =
+   typeof restaurantKnowledgeCustomerExperience.$inferSelect;
++
++export const restaurantKnowledgeTeamCulture = pgTable(
++  'restaurant_knowledge_team_culture',
++  {
++    organizationId: uuid('organization_id').notNull(),
++    establishmentId: uuid('establishment_id').notNull(),
++    valuesAndMindset: text('values_and_mindset'),
++    workingTogether: text('working_together'),
++    transmissionAndIntegration: text('transmission_and_integration'),
++  },
++  (table) => [
++    primaryKey({
++      columns: [table.organizationId, table.establishmentId],
++      name: 'restaurant_knowledge_team_culture_scope_pk',
++    }),
++    foreignKey({
++      columns: [table.organizationId, table.establishmentId],
++      foreignColumns: [establishments.organizationId, establishments.id],
++      name: 'restaurant_knowledge_team_culture_establishment_scope_fk',
++    }).onDelete('restrict'),
++  ],
++);
++
++export type RestaurantKnowledgeTeamCulture =
++  typeof restaurantKnowledgeTeamCulture.$inferSelect;
+diff --git a/packages/db-cloud/test/restaurant-knowledge-repository.integration.test.ts b/packages/db-cloud/test/restaurant-knowledge-repository.integration.test.ts
+index 9a04c6acaaf7eb5afbe4f2abca00f57d04bac7c8..30ac6ed511e850c7dfd53f5ad8c6e8a664aa6b16 100644
+--- a/packages/db-cloud/test/restaurant-knowledge-repository.integration.test.ts
++++ b/packages/db-cloud/test/restaurant-knowledge-repository.integration.test.ts
+@@ -7,9 +7,11 @@ import {
+   getRestaurantKnowledgeConceptHistory,
+   getRestaurantKnowledgeCuisineKnowHow,
+   getRestaurantKnowledgeCustomerExperience,
++  getRestaurantKnowledgeTeamCulture,
+   saveRestaurantKnowledgeConceptHistory,
+   saveRestaurantKnowledgeCuisineKnowHow,
+   saveRestaurantKnowledgeCustomerExperience,
++  saveRestaurantKnowledgeTeamCulture,
+ } from '../src/restaurant-knowledge-repository';
+ import {
+   createCloudDatabaseClient,
+@@ -21,6 +23,7 @@ import {
+   restaurantKnowledgeConceptHistory,
+   restaurantKnowledgeCuisineKnowHow,
+   restaurantKnowledgeCustomerExperience,
++  restaurantKnowledgeTeamCulture,
+ } from '../src/schema';
+ 
+ config({ path: '.env.test' });
+@@ -104,6 +107,14 @@ integrationTest('Restaurant Knowledge repository tenant isolation', () => {
+       [organizationAId, establishmentA2Id],
+       [organizationBId, establishmentBId],
+     ] as const) {
++      await db
++        .delete(restaurantKnowledgeTeamCulture)
++        .where(
++          and(
++            eq(restaurantKnowledgeTeamCulture.organizationId, organizationId),
++            eq(restaurantKnowledgeTeamCulture.establishmentId, establishmentId),
++          ),
++        );
+       await db
+         .delete(restaurantKnowledgeCustomerExperience)
+         .where(
+@@ -272,6 +283,109 @@ integrationTest('Restaurant Knowledge repository tenant isolation', () => {
+     ).resolves.toEqual(allEmpty);
+   });
+ 
++  it('supports missing, all-null and every single Team Culture value state', async () => {
++    const allEmpty = {
++      valuesAndMindset: null,
++      workingTogether: null,
++      transmissionAndIntegration: null,
++    };
++    await expect(
++      getRestaurantKnowledgeTeamCulture(db, contextA1),
++    ).resolves.toEqual(allEmpty);
++
++    const singleValueStates = [
++      {
++        valuesAndMindset: 'Bienveillance, exigence et curiosité.',
++        workingTogether: null,
++        transmissionAndIntegration: null,
++      },
++      {
++        valuesAndMindset: null,
++        workingTogether: 'Les décisions sont partagées au briefing.',
++        transmissionAndIntegration: null,
++      },
++      {
++        valuesAndMindset: null,
++        workingTogether: null,
++        transmissionAndIntegration:
++          'Chaque arrivée est accompagnée par un membre de l’équipe.',
++      },
++    ];
++
++    for (const state of singleValueStates) {
++      await expect(
++        saveRestaurantKnowledgeTeamCulture(db, contextA1, state),
++      ).resolves.toEqual(state);
++      await expect(
++        getRestaurantKnowledgeTeamCulture(db, contextA1),
++      ).resolves.toEqual(state);
++    }
++
++    await expect(
++      saveRestaurantKnowledgeTeamCulture(db, contextA1, allEmpty),
++    ).resolves.toEqual(allEmpty);
++  });
++
++  it('round-trips and overwrites Team Culture with composite tenant isolation', async () => {
++    const stateA1 = {
++      valuesAndMindset: 'Valeurs A1',
++      workingTogether: 'Collaboration A1',
++      transmissionAndIntegration: 'Transmission A1',
++    };
++    const stateA2 = {
++      valuesAndMindset: null,
++      workingTogether: 'Collaboration A2',
++      transmissionAndIntegration: null,
++    };
++    const stateB = {
++      valuesAndMindset: 'Valeurs B',
++      workingTogether: null,
++      transmissionAndIntegration: 'Transmission B',
++    };
++
++    await saveRestaurantKnowledgeTeamCulture(db, contextA1, stateA1);
++    await saveRestaurantKnowledgeTeamCulture(db, contextA2, stateA2);
++    await saveRestaurantKnowledgeTeamCulture(db, contextB, stateB);
++
++    await expect(
++      getRestaurantKnowledgeTeamCulture(db, contextA1),
++    ).resolves.toEqual(stateA1);
++    await expect(
++      getRestaurantKnowledgeTeamCulture(db, contextA2),
++    ).resolves.toEqual(stateA2);
++    await expect(
++      getRestaurantKnowledgeTeamCulture(db, contextB),
++    ).resolves.toEqual(stateB);
++
++    const overwrittenA1 = {
++      valuesAndMindset: null,
++      workingTogether: 'Collaboration A1 remplacée',
++      transmissionAndIntegration: null,
++    };
++    await expect(
++      saveRestaurantKnowledgeTeamCulture(db, contextA1, overwrittenA1),
++    ).resolves.toEqual(overwrittenA1);
++
++    const mismatchedContext = context(organizationBId, establishmentA1Id);
++    await expect(
++      getRestaurantKnowledgeTeamCulture(db, mismatchedContext),
++    ).resolves.toEqual({
++      valuesAndMindset: null,
++      workingTogether: null,
++      transmissionAndIntegration: null,
++    });
++    await expect(
++      saveRestaurantKnowledgeTeamCulture(db, mismatchedContext, {
++        valuesAndMindset: 'Cross-tenant write',
++        workingTogether: null,
++        transmissionAndIntegration: null,
++      }),
++    ).rejects.toThrow();
++    await expect(
++      getRestaurantKnowledgeTeamCulture(db, contextA1),
++    ).resolves.toEqual(overwrittenA1);
++  });
++
+   it('round-trips and overwrites the whole Customer Experience slice with tenant isolation', async () => {
+     const stateA1 = {
+       desiredExperience: 'Expérience A1',
+diff --git a/packages/db-cloud/test/schema.test.ts b/packages/db-cloud/test/schema.test.ts
+index 244a8c604cf601705411b16156e41d1b7c237b6a..767f19a902564850f6a106b9e70c4846f7c5bd81 100644
+--- a/packages/db-cloud/test/schema.test.ts
++++ b/packages/db-cloud/test/schema.test.ts
+@@ -31,6 +31,7 @@ import {
+   restaurantKnowledgeConceptHistory,
+   restaurantKnowledgeCuisineKnowHow,
+   restaurantKnowledgeCustomerExperience,
++  restaurantKnowledgeTeamCulture,
+   tenantDomains,
+   tenantMemberships,
+   users,
+@@ -224,6 +225,51 @@ describe('cloud schema boundaries', () => {
+     expect(knowledgeConfig.foreignKeys).toHaveLength(1);
+   });
+ 
++  it('keeps Team Culture in its dedicated establishment-scoped Restaurant Knowledge table', () => {
++    const knowledgeConfig = getTableConfig(restaurantKnowledgeTeamCulture);
++    const knowledgeColumns = knowledgeConfig.columns.map(
++      (column) => column.name,
++    );
++    const establishmentColumns = getTableConfig(establishments).columns.map(
++      (column) => column.name,
++    );
++
++    expect(knowledgeColumns).toEqual([
++      'organization_id',
++      'establishment_id',
++      'values_and_mindset',
++      'working_together',
++      'transmission_and_integration',
++    ]);
++    for (const columnName of [
++      'values_and_mindset',
++      'working_together',
++      'transmission_and_integration',
++    ]) {
++      expect(
++        knowledgeConfig.columns.find((column) => column.name === columnName)
++          ?.notNull,
++      ).toBe(false);
++      expect(establishmentColumns).not.toContain(columnName);
++    }
++    expect(knowledgeConfig.primaryKeys).toHaveLength(1);
++    expect(knowledgeConfig.primaryKeys[0]?.name).toBe(
++      'restaurant_knowledge_team_culture_scope_pk',
++    );
++    expect(knowledgeConfig.foreignKeys).toHaveLength(1);
++    expect(knowledgeConfig.foreignKeys[0]?.onDelete).toBe('restrict');
++    expect(
++      knowledgeConfig.foreignKeys[0]
++        ?.reference()
++        .columns.map((column) => column.name),
++    ).toEqual(['organization_id', 'establishment_id']);
++    expect(
++      knowledgeConfig.foreignKeys[0]
++        ?.reference()
++        .foreignColumns.map((column) => column.name),
++    ).toEqual(['organization_id', 'id']);
++  });
++
+   it('keeps personnel document metadata establishment and employee scoped', () => {
+     for (const table of [
+       personnelDocuments,

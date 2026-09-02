@@ -3,7 +3,12 @@
 import { establishmentProfileInputSchema } from '@yuta/contracts';
 import {
   saveRestaurantKnowledgeConceptHistory,
+  saveRestaurantKnowledgeCommunicationIdentity,
+  saveRestaurantKnowledgeCuisineKnowHow,
+  saveRestaurantKnowledgeCustomerExperience,
+  saveRestaurantKnowledgeTeamCulture,
   updateEstablishmentProfile,
+  type RestaurantKnowledgeCommunicationIdentityInput,
 } from '@yuta/db-cloud';
 import { requireEstablishment } from '@yuta/tenant';
 import { revalidatePath } from 'next/cache';
@@ -26,6 +31,18 @@ export type ConceptHistoryActionState = {
   message: string | null;
 };
 
+export type CuisineKnowHowActionState = ConceptHistoryActionState;
+
+export type CustomerExperienceActionState = ConceptHistoryActionState;
+
+export type TeamCultureActionState = ConceptHistoryActionState;
+
+export type CommunicationIdentityActionState = {
+  status: 'idle' | 'success' | 'error';
+  message: string | null;
+  savedCommunicationIdentity: RestaurantKnowledgeCommunicationIdentityInput | null;
+};
+
 const optionalConceptHistoryTextSchema = z
   .string()
   .nullable()
@@ -35,6 +52,38 @@ const conceptHistoryInputSchema = z
   .object({
     concept: optionalConceptHistoryTextSchema,
     history: optionalConceptHistoryTextSchema,
+  })
+  .strict();
+
+const cuisineKnowHowInputSchema = z
+  .object({
+    cuisineDescription: optionalConceptHistoryTextSchema,
+    knowHowParticularities: optionalConceptHistoryTextSchema,
+    homemade: optionalConceptHistoryTextSchema,
+  })
+  .strict();
+
+const customerExperienceInputSchema = z
+  .object({
+    desiredExperience: optionalConceptHistoryTextSchema,
+    welcomeAndService: optionalConceptHistoryTextSchema,
+    customerAttention: optionalConceptHistoryTextSchema,
+  })
+  .strict();
+
+const teamCultureInputSchema = z
+  .object({
+    valuesAndMindset: optionalConceptHistoryTextSchema,
+    workingTogether: optionalConceptHistoryTextSchema,
+    transmissionAndIntegration: optionalConceptHistoryTextSchema,
+  })
+  .strict();
+
+const communicationIdentityInputSchema = z
+  .object({
+    toneAndCommunicationStyle: optionalConceptHistoryTextSchema,
+    customerAddressing: optionalConceptHistoryTextSchema,
+    languageElementsAndThingsToAvoid: optionalConceptHistoryTextSchema,
   })
   .strict();
 
@@ -146,6 +195,165 @@ export async function saveConceptHistoryAction(
     return {
       status: 'error',
       message: 'Une erreur est survenue. Réessayez.',
+    };
+  }
+}
+
+export async function saveCuisineKnowHowAction(
+  _previousState: CuisineKnowHowActionState,
+  formData: FormData,
+): Promise<CuisineKnowHowActionState> {
+  const { tenant } = await requireAuthenticatedTenant(
+    '/etablissement/informations-generales',
+  );
+  requireEstablishment(tenant);
+  requireRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.manage');
+
+  try {
+    const input = cuisineKnowHowInputSchema.parse({
+      cuisineDescription: formData.get('cuisineDescription'),
+      knowHowParticularities: formData.get('knowHowParticularities'),
+      homemade: formData.get('homemade'),
+    });
+    await saveRestaurantKnowledgeCuisineKnowHow(cloudDatabase, tenant, input);
+    revalidatePath('/etablissement/informations-generales');
+    return {
+      status: 'success',
+      message: 'Cuisine et savoir-faire enregistrés.',
+    };
+  } catch (error: unknown) {
+    if (!(error instanceof z.ZodError)) {
+      console.error('Failed to save Restaurant Knowledge Cuisine/Know-how.', {
+        errorName: error instanceof Error ? error.name : 'UnknownError',
+      });
+    }
+    return {
+      status: 'error',
+      message: 'Une erreur est survenue. Réessayez.',
+    };
+  }
+}
+
+export async function saveCustomerExperienceAction(
+  _previousState: CustomerExperienceActionState,
+  formData: FormData,
+): Promise<CustomerExperienceActionState> {
+  const { tenant } = await requireAuthenticatedTenant(
+    '/etablissement/informations-generales',
+  );
+  requireEstablishment(tenant);
+  requireRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.manage');
+
+  try {
+    const input = customerExperienceInputSchema.parse({
+      desiredExperience: formData.get('desiredExperience'),
+      welcomeAndService: formData.get('welcomeAndService'),
+      customerAttention: formData.get('customerAttention'),
+    });
+    await saveRestaurantKnowledgeCustomerExperience(
+      cloudDatabase,
+      tenant,
+      input,
+    );
+    revalidatePath('/etablissement/informations-generales');
+    return {
+      status: 'success',
+      message: 'Expérience client enregistrée.',
+    };
+  } catch (error: unknown) {
+    if (!(error instanceof z.ZodError)) {
+      console.error(
+        'Failed to save Restaurant Knowledge Customer Experience.',
+        {
+          errorName: error instanceof Error ? error.name : 'UnknownError',
+        },
+      );
+    }
+    return {
+      status: 'error',
+      message: 'Une erreur est survenue. Réessayez.',
+    };
+  }
+}
+
+export async function saveTeamCultureAction(
+  _previousState: TeamCultureActionState,
+  formData: FormData,
+): Promise<TeamCultureActionState> {
+  const { tenant } = await requireAuthenticatedTenant(
+    '/etablissement/informations-generales',
+  );
+  requireEstablishment(tenant);
+  requireRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.manage');
+
+  try {
+    const input = teamCultureInputSchema.parse({
+      valuesAndMindset: formData.get('valuesAndMindset'),
+      workingTogether: formData.get('workingTogether'),
+      transmissionAndIntegration: formData.get('transmissionAndIntegration'),
+    });
+    await saveRestaurantKnowledgeTeamCulture(cloudDatabase, tenant, input);
+    revalidatePath('/etablissement/informations-generales');
+    return {
+      status: 'success',
+      message: 'Équipe et culture enregistrées.',
+    };
+  } catch (error: unknown) {
+    if (!(error instanceof z.ZodError)) {
+      console.error('Failed to save Restaurant Knowledge Team Culture.', {
+        errorName: error instanceof Error ? error.name : 'UnknownError',
+      });
+    }
+    return {
+      status: 'error',
+      message: 'Une erreur est survenue. Réessayez.',
+    };
+  }
+}
+
+export async function saveCommunicationIdentityAction(
+  previousState: CommunicationIdentityActionState,
+  formData: FormData,
+): Promise<CommunicationIdentityActionState> {
+  const { tenant } = await requireAuthenticatedTenant(
+    '/etablissement/informations-generales',
+  );
+  requireEstablishment(tenant);
+  requireRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.manage');
+
+  try {
+    const input = communicationIdentityInputSchema.parse({
+      toneAndCommunicationStyle: formData.get('toneAndCommunicationStyle'),
+      customerAddressing: formData.get('customerAddressing'),
+      languageElementsAndThingsToAvoid: formData.get(
+        'languageElementsAndThingsToAvoid',
+      ),
+    });
+    const savedCommunicationIdentity =
+      await saveRestaurantKnowledgeCommunicationIdentity(
+        cloudDatabase,
+        tenant,
+        input,
+      );
+    revalidatePath('/etablissement/informations-generales');
+    return {
+      status: 'success',
+      message: 'Identité de communication enregistrée.',
+      savedCommunicationIdentity,
+    };
+  } catch (error: unknown) {
+    if (!(error instanceof z.ZodError)) {
+      console.error(
+        'Failed to save Restaurant Knowledge Communication Identity.',
+        {
+          errorName: error instanceof Error ? error.name : 'UnknownError',
+        },
+      );
+    }
+    return {
+      status: 'error',
+      message: 'Une erreur est survenue. Réessayez.',
+      savedCommunicationIdentity: previousState.savedCommunicationIdentity,
     };
   }
 }

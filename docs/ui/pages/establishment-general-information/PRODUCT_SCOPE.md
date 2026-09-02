@@ -20,6 +20,19 @@ Approved information categories:
 8. visibility controls for optional public profile fields.
 9. independently optional Restaurant Knowledge Concept and Histoire values,
    including valid empty state, manual edit, and one explicit whole-slice save.
+10. independently optional Restaurant Knowledge Description de la cuisine,
+    Savoir-faire & particularités and Fait maison values, including valid
+    all-empty state, manual edit, and one explicit whole-slice save.
+11. independently optional Restaurant Knowledge Expérience souhaitée, Accueil
+    & service and Attention particulière au client values, including valid
+    all-empty state, manual edit, and one explicit whole-slice save.
+12. independently optional Restaurant Knowledge Valeurs & état d’esprit, Façon
+    de travailler ensemble and Transmission & intégration values, including
+    valid all-empty state, manual edit, and one explicit whole-slice save.
+13. independently optional Restaurant Knowledge Ton & style de communication,
+    Façon de s’adresser aux clients and Éléments de langage & choses à éviter
+    values, including valid all-empty state, manual edit, and one explicit
+    whole-slice save.
 
 All data is establishment-scoped and must remain inside the validated active `organization + establishment` context.
 
@@ -40,18 +53,22 @@ public profile route, address verification, or media upload flow.
 
 ## Capability decision table
 
-| Capability shown or implied                                                                                         | Pack treatment                                                                                 |
-| ------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| Commercial name, logo/cover URLs, structured address, phone, email, website, description, languages, public contact | Implemented on the establishment profile                                                       |
-| Public preview inside the editor                                                                                    | Approved UI behavior when it can derive safely from current form values                        |
-| External `Aperçu public` destination                                                                                | Use only an existing approved route/modal; otherwise disabled or omitted with an explicit note |
-| Profile-completion percentage                                                                                       | Derived locally from supported profile fields; not persisted                                   |
-| Address verification                                                                                                | Use only an existing approved capability; otherwise omit                                       |
-| Cover image in preview                                                                                              | Display existing cover/fallback only; cover editing is outside this page                       |
-| Individual public-visibility switches                                                                               | Implemented for optional public fields                                                         |
-| Service-mode choices                                                                                                | Implemented through the approved establishment service-mode contract                           |
-| Logo removal or media cleanup                                                                                       | Expose only when current upload/storage infrastructure supports it                             |
-| Restaurant Knowledge Concept/Histoire                                                                               | Implemented in a dedicated establishment-scoped table/repository with separate READ/MANAGE     |
+| Capability shown or implied                                                                                         | Pack treatment                                                                                                                  |
+| ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Commercial name, logo/cover URLs, structured address, phone, email, website, description, languages, public contact | Implemented on the establishment profile                                                                                        |
+| Public preview inside the editor                                                                                    | Approved UI behavior when it can derive safely from current form values                                                         |
+| External `Aperçu public` destination                                                                                | Use only an existing approved route/modal; otherwise disabled or omitted with an explicit note                                  |
+| Profile-completion percentage                                                                                       | Derived locally from supported profile fields; not persisted                                                                    |
+| Address verification                                                                                                | Use only an existing approved capability; otherwise omit                                                                        |
+| Cover image in preview                                                                                              | Display existing cover/fallback only; cover editing is outside this page                                                        |
+| Individual public-visibility switches                                                                               | Implemented for optional public fields                                                                                          |
+| Service-mode choices                                                                                                | Implemented through the approved establishment service-mode contract                                                            |
+| Logo removal or media cleanup                                                                                       | Expose only when current upload/storage infrastructure supports it                                                              |
+| Restaurant Knowledge Concept/Histoire                                                                               | Implemented in a dedicated establishment-scoped table/repository with separate READ/MANAGE                                      |
+| Restaurant Knowledge Cuisine/savoir-faire                                                                           | Implemented as a separate three-value establishment-scoped slice with READ/MANAGE and no Carte/POS dependency                   |
+| Restaurant Knowledge Expérience client                                                                              | Implemented as a separate three-value establishment-scoped slice with READ/MANAGE and no operational-module/provider dependency |
+| Restaurant Knowledge Équipe & culture                                                                               | Implemented as a separate three-value establishment-scoped slice with READ/MANAGE and no employee/workflow dependency           |
+| Restaurant Knowledge Identité de communication                                                                      | Implemented as a separate three-value establishment-scoped slice with READ/MANAGE and no Marketing/Reviews/AI/CRM dependency    |
 
 ## Out of scope
 
@@ -64,7 +81,7 @@ public profile route, address verification, or media upload flow.
 - customer-order, checkout, payment, invoicing, or cash-management workflows;
 - new geocoding, storage, analytics, or media providers;
 - new public-profile platform architecture;
-- other Restaurant Knowledge sections, AI/automatic learning, provenance,
+- other unimplemented Restaurant Knowledge sections, AI/automatic learning, provenance,
   Marketing/social consumers, external providers, embeddings or vector DB;
 - new database schema, enum, permission, API route, or contract without a separate approved proposal.
 

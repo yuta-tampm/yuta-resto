@@ -1,0 +1,60 @@
+ M .agents/skills/yuta-finish-change/SKILL.md
+ M .agents/skills/yuta-run-change/SKILL.md
+ M apps/backoffice/next-env.d.ts
+ M apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/actions.ts
+ M apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/page.tsx
+ M apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/restaurant-knowledge-loader.ts
+ M apps/backoffice/test/concept-history-action.test.ts
+ M apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/manifest.json
+ M apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/manifest.json
+ M apps/backoffice/test/restaurant-knowledge-loader.test.ts
+ M docs/features/establishment/general-information/README.md
+ M docs/features/establishment/README.md
+ M docs/MODULE_REGISTRY.md
+ M docs/reviews/README.md
+ M docs/ui/pages/establishment-general-information/ACCEPTANCE_CHECKLIST.md
+ M docs/ui/pages/establishment-general-information/DATA_AND_INTERACTION_SPEC.md
+ M docs/ui/pages/establishment-general-information/PRODUCT_SCOPE.md
+ M docs/ui/pages/establishment-general-information/README.md
+ M docs/ui/pages/establishment-general-information/UI_SPEC.md
+ M docs/YUTA_AUTOMATED_CHANGE_WORKFLOW.md
+ M packages/db-cloud/drizzle/meta/_journal.json
+ M packages/db-cloud/src/restaurant-knowledge-repository.ts
+ M packages/db-cloud/src/schema/restaurant-knowledge.ts
+ M packages/db-cloud/test/restaurant-knowledge-repository.integration.test.ts
+ M packages/db-cloud/test/schema.test.ts
+?? apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/cuisine-know-how-fields.tsx
+?? apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/cuisine-know-how-form.tsx
+?? apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/customer-experience-fields.tsx
+?? apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/customer-experience-form.tsx
+?? apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/cuisine-know-how-model.ts
+?? apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/customer-experience-model.ts
+?? apps/backoffice/test/cuisine-know-how-action.test.ts
+?? apps/backoffice/test/cuisine-know-how-fields.test.tsx
+?? apps/backoffice/test/cuisine-know-how-form.test.tsx
+?? apps/backoffice/test/cuisine-know-how-model.test.ts
+?? apps/backoffice/test/customer-experience-action.test.ts
+?? apps/backoffice/test/customer-experience-fields.test.tsx
+?? apps/backoffice/test/customer-experience-form.test.tsx
+?? apps/backoffice/test/customer-experience-model.test.ts
+?? docs/chatGPT/YUTA_CONTROL_TOWER_HANDOFF_TEMPLATE_V3.md
+?? docs/chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT_V3.md
+?? docs/chatGPT/YUTA_PAGE_CHAT_OPERATING_PROMPT_V3.md
+?? docs/chatGPT/YuTa_Workflow_v3.pdf
+?? docs/reviews/restaurant-knowledge-cuisine-know-how/
+?? docs/reviews/restaurant-knowledge-customer-experience/
+?? docs/reviews/restaurant-knowledge-team-culture/
+?? docs/tasks/YUTA_WORKFLOW_V3_AUTOMATION_UPDATE_TASK.md
+?? docs/YUTA_KNOWLEDGE_CONSOLIDATION_PROTOCOL.md
+?? docs/YUTA_QA_PROTOCOL.md
+?? docs/YUTA_WORKFLOW_V3_UPDATE_REPORT.md
+?? openspec/changes/archive/2026-08-31-restaurant-knowledge-cuisine-know-how/
+?? openspec/changes/archive/2026-09-01-restaurant-knowledge-customer-experience/
+?? openspec/changes/restaurant-knowledge-team-culture/
+?? openspec/specs/restaurant-knowledge/cuisine-know-how/
+?? openspec/specs/restaurant-knowledge/customer-experience/
+?? output/
+?? packages/db-cloud/drizzle/0012_restaurant_knowledge_cuisine_know_how.sql
+?? packages/db-cloud/drizzle/0013_restaurant_knowledge_customer_experience.sql
+?? packages/db-cloud/drizzle/meta/0012_snapshot.json
+?? packages/db-cloud/drizzle/meta/0013_snapshot.json

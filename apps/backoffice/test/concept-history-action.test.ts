@@ -5,6 +5,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const mocks = vi.hoisted(() => ({
   tenant: null as TenantContext | null,
   saveConceptHistory: vi.fn(),
+  saveCuisineKnowHow: vi.fn(),
+  saveCustomerExperience: vi.fn(),
   updateProfile: vi.fn(),
   revalidatePath: vi.fn(),
 }));
@@ -12,6 +14,8 @@ const mocks = vi.hoisted(() => ({
 vi.mock('server-only', () => ({}));
 vi.mock('@yuta/db-cloud', () => ({
   saveRestaurantKnowledgeConceptHistory: mocks.saveConceptHistory,
+  saveRestaurantKnowledgeCuisineKnowHow: mocks.saveCuisineKnowHow,
+  saveRestaurantKnowledgeCustomerExperience: mocks.saveCustomerExperience,
   updateEstablishmentProfile: mocks.updateProfile,
 }));
 vi.mock('next/cache', () => ({
@@ -47,6 +51,7 @@ const initialState = { status: 'idle' as const, message: null };
 describe('Concept and Histoire save action', () => {
   beforeEach(() => {
     mocks.saveConceptHistory.mockReset();
+    mocks.saveCustomerExperience.mockReset();
     mocks.updateProfile.mockReset();
     mocks.revalidatePath.mockReset();
     mocks.saveConceptHistory.mockResolvedValue({

@@ -1,0 +1,14 @@
+packages/db-cloud/src/schema/restaurant-knowledge.ts
+packages/db-cloud/src/restaurant-knowledge-repository.ts
+packages/db-cloud/test/schema.test.ts
+packages/db-cloud/test/restaurant-knowledge-repository.integration.test.ts
+packages/db-cloud/drizzle/meta/_journal.json
+apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/restaurant-knowledge-loader.ts
+apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/actions.ts
+apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/page.tsx
+apps/backoffice/test/restaurant-knowledge-loader.test.ts
+docs/ui/pages/establishment-general-information/README.md
+docs/ui/pages/establishment-general-information/PRODUCT_SCOPE.md
+docs/ui/pages/establishment-general-information/DATA_AND_INTERACTION_SPEC.md
+docs/ui/pages/establishment-general-information/UI_SPEC.md
+docs/ui/pages/establishment-general-information/ACCEPTANCE_CHECKLIST.md
