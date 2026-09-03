@@ -198,6 +198,20 @@ rendered. Canonically pristine drafts keep the submit disabled; a successful
 save uses the returned canonical projection as its accepted baseline, and field
 changes do not autosave.
 
+### Restaurant Knowledge — `Connaissances validées`
+
+A sixth separate full-width Restaurant Knowledge card follows `Identité de
+communication`. READ users see the current zero/one/multiple-item list or a
+valid empty state. MANAGE users additionally receive an explicit local add
+draft and independent edit/remove controls for each item.
+
+Every create, edit or pending removal has an item-scoped explicit save. Pending
+removal offers undo before save. Blank/whitespace-only statements show a clear
+field-associated error and cannot be saved; accepted surrounding whitespace is
+preserved. Operation-local pending, success and error feedback uses semantic
+status/alert behavior. No whole-list save, autosave, bulk operation, ordering,
+category, tag, AI, suggestion or provenance/history control is present.
+
 ## Public-preview panel
 
 The panel is read-only and may reflect unsaved local form state.

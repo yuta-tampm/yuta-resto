@@ -7,6 +7,7 @@ export const kitchenChimeCooldownMs = 2_500;
 export const defaultKitchenChimeVolume = 0.5;
 export const minimumKitchenChimeVolume = 0.1;
 export const maximumKitchenChimeVolume = 1;
+export const kitchenChimeVolumeVersion = '3';
 
 export function parseKitchenChimeVolume(value: string | null): number {
   if (value === null) return defaultKitchenChimeVolume;
@@ -18,6 +19,15 @@ export function parseKitchenChimeVolume(value: string | null): number {
     maximumKitchenChimeVolume,
     Math.max(minimumKitchenChimeVolume, parsed),
   );
+}
+
+export function resolveKitchenChimeVolume(
+  value: string | null,
+  storedVersion: string | null,
+): number {
+  const parsed = parseKitchenChimeVolume(value);
+  const wasAutomaticallyRaised = storedVersion === '2' && parsed === 0.8;
+  return wasAutomaticallyRaised ? defaultKitchenChimeVolume : parsed;
 }
 
 export function kitchenEventMatchesScreen(

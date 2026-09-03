@@ -12,9 +12,11 @@ import { usePosStandby } from '../../../components/pos/PosStandbyProvider';
 import {
   defaultKitchenChimeVolume,
   kitchenEventMatchesScreen,
+  kitchenChimeVolumeVersion,
   maximumKitchenChimeVolume,
   minimumKitchenChimeVolume,
   parseKitchenChimeVolume,
+  resolveKitchenChimeVolume,
   shouldPlayKitchenChime,
 } from '../_lib/kitchen-live-updates';
 
@@ -22,6 +24,8 @@ const fallbackRefreshIntervalMs = 60_000;
 const eventDebounceMs = 200;
 const soundPreferenceKey = 'yuta:kitchen-sound-enabled';
 const volumePreferenceKey = 'yuta:kitchen-sound-volume';
+const volumePreferenceVersionKey = 'yuta:kitchen-sound-volume-version';
+const kitchenChimeBaseGain = 1.4;
 
 export function KitchenAutoRefresh({
   selectedScreen,
@@ -104,11 +108,17 @@ export function KitchenAutoRefresh({
   useEffect(() => {
     let shouldEnableSound = false;
     try {
-      const storedVolume = parseKitchenChimeVolume(
+      const storedVolume = resolveKitchenChimeVolume(
         window.localStorage.getItem(volumePreferenceKey),
+        window.localStorage.getItem(volumePreferenceVersionKey),
       );
       volumeRef.current = storedVolume;
       setVolume(storedVolume);
+      window.localStorage.setItem(volumePreferenceKey, String(storedVolume));
+      window.localStorage.setItem(
+        volumePreferenceVersionKey,
+        kitchenChimeVolumeVersion,
+      );
       shouldEnableSound =
         window.localStorage.getItem(soundPreferenceKey) === 'true';
     } catch {
@@ -267,16 +277,39 @@ export function KitchenAutoRefresh({
 
 function playKitchenChime(context: AudioContext, volume: number) {
   const startAt = context.currentTime;
-  const oscillator = context.createOscillator();
-  const gain = context.createGain();
-  oscillator.type = 'sine';
-  oscillator.frequency.setValueAtTime(880, startAt);
-  oscillator.frequency.setValueAtTime(1_175, startAt + 0.2);
-  gain.gain.setValueAtTime(0.0001, startAt);
-  gain.gain.exponentialRampToValueAtTime(volume, startAt + 0.02);
-  gain.gain.exponentialRampToValueAtTime(0.0001, startAt + 0.55);
-  oscillator.connect(gain);
-  gain.connect(context.destination);
-  oscillator.start(startAt);
-  oscillator.stop(startAt + 0.56);
+  const limiter = context.createDynamicsCompressor();
+  limiter.threshold.setValueAtTime(-10, startAt);
+  limiter.knee.setValueAtTime(10, startAt);
+  limiter.ratio.setValueAtTime(6, startAt);
+  limiter.attack.setValueAtTime(0.003, startAt);
+  limiter.release.setValueAtTime(0.12, startAt);
+  limiter.connect(context.destination);
+  const pattern = [
+    { offset: 0, frequency: 880 },
+    { offset: 0.22, frequency: 1_320 },
+    { offset: 0.52, frequency: 880 },
+    { offset: 0.74, frequency: 1_320 },
+    { offset: 1.04, frequency: 880 },
+    { offset: 1.26, frequency: 1_320 },
+  ];
+
+  for (const tone of pattern) {
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+    const toneStart = startAt + tone.offset;
+    const toneEnd = toneStart + 0.18;
+
+    oscillator.type = 'square';
+    oscillator.frequency.setValueAtTime(tone.frequency, toneStart);
+    gain.gain.setValueAtTime(0.0001, toneStart);
+    gain.gain.exponentialRampToValueAtTime(
+      volume * kitchenChimeBaseGain,
+      toneStart + 0.015,
+    );
+    gain.gain.exponentialRampToValueAtTime(0.0001, toneEnd);
+    oscillator.connect(gain);
+    gain.connect(limiter);
+    oscillator.start(toneStart);
+    oscillator.stop(toneEnd + 0.01);
+  }
 }

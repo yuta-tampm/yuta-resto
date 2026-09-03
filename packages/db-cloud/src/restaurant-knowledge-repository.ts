@@ -1,12 +1,15 @@
 import { requireEstablishment, type TenantContext } from '@yuta/tenant';
-import { and, eq } from 'drizzle-orm';
+import { and, asc, eq } from 'drizzle-orm';
+import { v7 as uuidv7 } from 'uuid';
 import type { CloudDatabaseClient } from './client';
 import {
+  establishments,
   restaurantKnowledgeConceptHistory,
   restaurantKnowledgeCommunicationIdentity,
   restaurantKnowledgeCuisineKnowHow,
   restaurantKnowledgeCustomerExperience,
   restaurantKnowledgeTeamCulture,
+  restaurantKnowledgeValidatedItems,
 } from './schema';
 
 export type RestaurantKnowledgeConceptHistoryInput = {
@@ -400,4 +403,136 @@ export async function saveRestaurantKnowledgeCommunicationIdentity(
     });
 
   return row ?? emptyCommunicationIdentity();
+}
+
+export type RestaurantKnowledgeValidatedItemValue = {
+  id: string;
+  statement: string;
+};
+
+async function hasScopedEstablishment(
+  db: CloudDatabaseClient,
+  context: TenantContext & { establishmentId: string },
+): Promise<boolean> {
+  const [row] = await db
+    .select({ id: establishments.id })
+    .from(establishments)
+    .where(
+      and(
+        eq(establishments.organizationId, context.organizationId),
+        eq(establishments.id, context.establishmentId),
+      ),
+    )
+    .limit(1);
+  return Boolean(row);
+}
+
+export async function listRestaurantKnowledgeValidatedItems(
+  db: CloudDatabaseClient,
+  context: TenantContext,
+): Promise<RestaurantKnowledgeValidatedItemValue[]> {
+  requireEstablishment(context);
+  if (!(await hasScopedEstablishment(db, context))) return [];
+
+  return db
+    .select({
+      id: restaurantKnowledgeValidatedItems.id,
+      statement: restaurantKnowledgeValidatedItems.statement,
+    })
+    .from(restaurantKnowledgeValidatedItems)
+    .where(
+      and(
+        eq(
+          restaurantKnowledgeValidatedItems.organizationId,
+          context.organizationId,
+        ),
+        eq(
+          restaurantKnowledgeValidatedItems.establishmentId,
+          context.establishmentId,
+        ),
+      ),
+    )
+    .orderBy(asc(restaurantKnowledgeValidatedItems.id));
+}
+
+export async function createRestaurantKnowledgeValidatedItem(
+  db: CloudDatabaseClient,
+  context: TenantContext,
+  statement: string,
+): Promise<RestaurantKnowledgeValidatedItemValue | null> {
+  requireEstablishment(context);
+  if (!(await hasScopedEstablishment(db, context))) return null;
+
+  const [row] = await db
+    .insert(restaurantKnowledgeValidatedItems)
+    .values({
+      organizationId: context.organizationId,
+      establishmentId: context.establishmentId,
+      id: uuidv7(),
+      statement,
+    })
+    .returning({
+      id: restaurantKnowledgeValidatedItems.id,
+      statement: restaurantKnowledgeValidatedItems.statement,
+    });
+  return row ?? null;
+}
+
+export async function updateRestaurantKnowledgeValidatedItem(
+  db: CloudDatabaseClient,
+  context: TenantContext,
+  id: string,
+  statement: string,
+): Promise<RestaurantKnowledgeValidatedItemValue | null> {
+  requireEstablishment(context);
+  if (!(await hasScopedEstablishment(db, context))) return null;
+
+  const [row] = await db
+    .update(restaurantKnowledgeValidatedItems)
+    .set({ statement })
+    .where(
+      and(
+        eq(
+          restaurantKnowledgeValidatedItems.organizationId,
+          context.organizationId,
+        ),
+        eq(
+          restaurantKnowledgeValidatedItems.establishmentId,
+          context.establishmentId,
+        ),
+        eq(restaurantKnowledgeValidatedItems.id, id),
+      ),
+    )
+    .returning({
+      id: restaurantKnowledgeValidatedItems.id,
+      statement: restaurantKnowledgeValidatedItems.statement,
+    });
+  return row ?? null;
+}
+
+export async function removeRestaurantKnowledgeValidatedItem(
+  db: CloudDatabaseClient,
+  context: TenantContext,
+  id: string,
+): Promise<boolean> {
+  requireEstablishment(context);
+  if (!(await hasScopedEstablishment(db, context))) return false;
+
+  const [row] = await db
+    .delete(restaurantKnowledgeValidatedItems)
+    .where(
+      and(
+        eq(
+          restaurantKnowledgeValidatedItems.organizationId,
+          context.organizationId,
+        ),
+        eq(
+          restaurantKnowledgeValidatedItems.establishmentId,
+          context.establishmentId,
+        ),
+        eq(restaurantKnowledgeValidatedItems.id, id),
+      ),
+    )
+    .returning({ id: restaurantKnowledgeValidatedItems.id });
+  return Boolean(row);
 }

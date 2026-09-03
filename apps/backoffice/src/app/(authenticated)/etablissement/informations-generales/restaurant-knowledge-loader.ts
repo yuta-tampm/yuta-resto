@@ -6,6 +6,7 @@ import {
   getRestaurantKnowledgeCuisineKnowHow,
   getRestaurantKnowledgeCustomerExperience,
   getRestaurantKnowledgeTeamCulture,
+  listRestaurantKnowledgeValidatedItems,
   type CloudDatabaseClient,
 } from '@yuta/db-cloud';
 import type { TenantContext } from '@yuta/tenant';
@@ -95,6 +96,23 @@ export async function loadCommunicationIdentitySection(
       db,
       tenant,
     ),
+    canManage: hasRestaurantKnowledgePermission(
+      tenant,
+      'restaurant-knowledge.manage',
+    ),
+  };
+}
+
+export async function loadValidatedKnowledgeSection(
+  db: CloudDatabaseClient,
+  tenant: TenantContext,
+) {
+  if (!hasRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.read')) {
+    return null;
+  }
+
+  return {
+    items: await listRestaurantKnowledgeValidatedItems(db, tenant),
     canManage: hasRestaurantKnowledgePermission(
       tenant,
       'restaurant-knowledge.manage',

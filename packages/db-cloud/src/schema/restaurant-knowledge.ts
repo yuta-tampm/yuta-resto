@@ -132,3 +132,27 @@ export const restaurantKnowledgeCommunicationIdentity = pgTable(
 
 export type RestaurantKnowledgeCommunicationIdentity =
   typeof restaurantKnowledgeCommunicationIdentity.$inferSelect;
+
+export const restaurantKnowledgeValidatedItems = pgTable(
+  'restaurant_knowledge_validated_items',
+  {
+    organizationId: uuid('organization_id').notNull(),
+    establishmentId: uuid('establishment_id').notNull(),
+    id: uuid('id').notNull(),
+    statement: text('statement').notNull(),
+  },
+  (table) => [
+    primaryKey({
+      columns: [table.organizationId, table.establishmentId, table.id],
+      name: 'restaurant_knowledge_validated_items_scope_item_pk',
+    }),
+    foreignKey({
+      columns: [table.organizationId, table.establishmentId],
+      foreignColumns: [establishments.organizationId, establishments.id],
+      name: 'restaurant_knowledge_validated_items_establishment_scope_fk',
+    }).onDelete('restrict'),
+  ],
+);
+
+export type RestaurantKnowledgeValidatedItem =
+  typeof restaurantKnowledgeValidatedItems.$inferSelect;

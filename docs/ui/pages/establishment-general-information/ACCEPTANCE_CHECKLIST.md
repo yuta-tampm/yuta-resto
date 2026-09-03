@@ -99,6 +99,9 @@ When classified `EXISTING_PAGE`:
 - [ ] Private contact values are not exposed publicly without current business rules.
 - [ ] Contact data is not logged unnecessarily.
 - [ ] No external provider was added.
+- [ ] OWNER and MANAGER can list/create/edit/remove Connaissances validées;
+      STAFF is denied before repository access, and Profile permission does not
+      substitute for Restaurant Knowledge READ/MANAGE.
 
 ## Interactions and states
 
@@ -128,6 +131,14 @@ When classified `EXISTING_PAGE`:
 - [ ] Profile, Concept/Histoire, Cuisine/savoir-faire, Expérience client,
       Équipe & culture and Identité de communication retain independent forms,
       actions, repository operations and persistence boundaries.
+- [ ] Connaissances validées supports zero, one and multiple current items with
+      item-scoped create/update/physical remove and no whole-list replacement.
+- [ ] Blank and whitespace-only create/update fail before persistence; accepted
+      surrounding whitespace remains exact and blank edit never removes.
+- [ ] Pending removal leaves canonical data intact, undo performs no
+      persistence, and successful explicit remove affects only the matched item.
+- [ ] Connaissances validées has no autosave, bulk edit/delete, ordering,
+      category/tag, semantic duplicate detection, AI or provenance/history.
 
 - [ ] Dirty-state and save behavior follow current form conventions.
 - [ ] Save cannot duplicate-submit.

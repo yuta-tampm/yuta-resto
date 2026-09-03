@@ -33,6 +33,7 @@ import {
   restaurantKnowledgeCuisineKnowHow,
   restaurantKnowledgeCustomerExperience,
   restaurantKnowledgeTeamCulture,
+  restaurantKnowledgeValidatedItems,
   tenantDomains,
   tenantMemberships,
   users,
@@ -320,6 +321,53 @@ describe('cloud schema boundaries', () => {
         ?.reference()
         .foreignColumns.map((column) => column.name),
     ).toEqual(['organization_id', 'id']);
+  });
+
+  it('keeps Validated Knowledge in an exact dedicated item collection table', () => {
+    const config = getTableConfig(restaurantKnowledgeValidatedItems);
+    expect(config.columns.map((column) => column.name)).toEqual([
+      'organization_id',
+      'establishment_id',
+      'id',
+      'statement',
+    ]);
+    for (const name of [
+      'organization_id',
+      'establishment_id',
+      'id',
+      'statement',
+    ]) {
+      expect(
+        config.columns.find((column) => column.name === name)?.notNull,
+      ).toBe(true);
+    }
+    expect(
+      config.columns
+        .find((column) => column.name === 'statement')
+        ?.getSQLType(),
+    ).toBe('text');
+    expect(config.primaryKeys).toHaveLength(1);
+    expect(config.primaryKeys[0]?.name).toBe(
+      'restaurant_knowledge_validated_items_scope_item_pk',
+    );
+    expect(config.primaryKeys[0]?.columns.map((column) => column.name)).toEqual(
+      ['organization_id', 'establishment_id', 'id'],
+    );
+    expect(config.foreignKeys).toHaveLength(1);
+    expect(config.foreignKeys[0]?.onDelete).toBe('restrict');
+    expect(config.foreignKeys[0]?.getName()).toBe(
+      'restaurant_knowledge_validated_items_establishment_scope_fk',
+    );
+    expect(
+      config.foreignKeys[0]?.reference().columns.map((column) => column.name),
+    ).toEqual(['organization_id', 'establishment_id']);
+    expect(
+      config.foreignKeys[0]
+        ?.reference()
+        .foreignColumns.map((column) => column.name),
+    ).toEqual(['organization_id', 'id']);
+    expect(config.uniqueConstraints).toHaveLength(0);
+    expect(config.checks).toHaveLength(0);
   });
 
   it('keeps personnel document metadata establishment and employee scoped', () => {

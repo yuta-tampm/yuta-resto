@@ -25,8 +25,9 @@ Informations generales
 The Establishment Profile is the existing approved and implemented capability.
 Restaurant Knowledge is approved Product Intent. Its bounded `Concept &
 histoire`, `Cuisine & savoir-faire`, `Expérience client`, `Équipe & culture`
-and `Identité de communication` slices are implemented in the repository; the
-other knowledge families remain unimplemented.
+and `Identité de communication` descriptive slices and its `Connaissances
+validées` item collection are implemented in the repository; the other
+knowledge families remain unimplemented.
 
 This page-level Product Knowledge home does not replace the canonical
 [Establishment Product Knowledge home](../README.md). It must be read with
@@ -153,6 +154,13 @@ create no Profile, Marketing/Content, Reviews/Reputation, AI, Social/public,
 provider, CRM/customer, legal/compliance/moderation or cross-runtime
 relationship.
 
+Restaurant Knowledge is also the canonical owner of current validated
+knowledge items manually accepted by authorized restaurant humans, together
+with their persistence/domain boundary. These independently understandable
+statements form an establishment-scoped collection and create no canonical
+ownership, provenance/history, automation, publishing, consumer, module,
+runtime or provider relationship outside Restaurant Knowledge.
+
 ### Approved initial Concept & histoire behavior
 
 - view Concept;
@@ -228,6 +236,25 @@ establishment scope. It adds no Product validation, taxonomy, customer state,
 AI/provider, publishing, moderation/legal, operational-module or cross-runtime
 relationship.
 
+### Approved initial Connaissances validées behavior
+
+- list/view zero, one or multiple current validated statements;
+- manually create a pending statement and explicitly save that item;
+- manually edit an existing item and explicitly save that item; and
+- mark one item for removal, undo locally or explicitly save its physical
+  removal without replacing the whole list.
+
+Each saved statement must contain at least one non-whitespace character.
+Accepted surrounding whitespace is preserved exactly; blank create/edit fails
+server-side validation and blank edit never means remove. Pending create,
+edit, removal and failed save remain non-canonical, and no interaction
+autosaves. The implementation uses the dedicated
+`restaurant_knowledge_validated_items` cloud table, item-scoped Restaurant
+Knowledge repository operations and server-generated technical identity under
+trusted organization and establishment scope. It adds no provenance/history,
+semantic duplicate detection, taxonomy, ordering, AI/provider, downstream
+consumer, publishing, operational-module or cross-runtime relationship.
+
 ### Ownership invariant
 
 ```text
@@ -251,7 +278,7 @@ The two capability rows are intentionally independent.
 | Capability            | Product Decision | Implementation | Environment   | Production Readiness | External Dependency | Review Marker                                                                                                                                                                                                           |
 | --------------------- | ---------------- | -------------- | ------------- | -------------------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Establishment Profile | `APPROVED`       | `IMPLEMENTED`  | `UNVERIFIED`  | `NOT_READY`          | `NOT_ASSESSED`      | `OK`                                                                                                                                                                                                                    |
-| Restaurant Knowledge  | `APPROVED`       | `PARTIAL`      | `NOT_ENABLED` | `NOT_ASSESSED`       | `NOT_ASSESSED`      | `OK` for the implemented Concept/Histoire, Cuisine/savoir-faire, Expérience client, Équipe & culture and Identité de communication slices; validated-knowledge workflows and every excluded integration remain unimplemented |
+| Restaurant Knowledge  | `APPROVED`       | `PARTIAL`      | `NOT_ENABLED` | `NOT_ASSESSED`       | `NOT_ASSESSED`      | `OK` for the implemented Concept/Histoire, Cuisine/savoir-faire, Expérience client, Équipe & culture, Identité de communication and Connaissances validées capabilities; other knowledge families and every excluded integration remain unimplemented |
 
 Approval of Restaurant Knowledge does not prove implementation, environment
 availability, production readiness, or provider selection.
@@ -270,7 +297,9 @@ The following are not approved current behavior:
 - ownership of social-profile links;
 - AI/provider, prompt, embedding, vector database, storage, job, model, or API
   implementation;
-- detailed fields, schema, requiredness, enums, limits, or validation rules.
+- additional validated-statement fields, requiredness, enums, length or
+  formatting limits, or validation rules beyond at least one non-whitespace
+  character.
 
 Company/legal ownership across Organization, Establishment, a possible
 employer/legal configuration, and Formalites remains `NEEDS REVIEW`.
@@ -305,12 +334,12 @@ tenant values are not authority.
 
 Cloud, restaurant-local POS, and Display persistence remain separate under
 ADR-003. Restaurant Knowledge owns the Concept/Histoire, Cuisine/savoir-faire,
-Expérience client, Équipe & culture and Identité de communication
-persistence/domain boundaries in `packages/db-cloud`;
-their dedicated tables and repository operations are not part of Establishment
-Profile. No API, provider, shared contract, local-runtime adapter,
-history/provenance model, operational-module relationship or cross-runtime
-synchronization exists for these slices.
+Expérience client, Équipe & culture, Identité de communication and validated-
+item persistence/domain boundaries in `packages/db-cloud`; their dedicated
+tables and repository operations are not part of Establishment Profile. No API,
+provider, shared contract, local-runtime adapter, history/provenance model,
+operational-module relationship or cross-runtime synchronization exists for
+these capabilities.
 
 ## 9. OpenSpec readiness
 
@@ -329,24 +358,25 @@ An OpenSpec analysis for a change on this page must read, in order:
 
 The approved Product decisions resolve the bounded Concept & histoire, Cuisine
 & savoir-faire, Expérience client, Équipe & culture and Identité de
-communication ownership, semantic scope, optionality, empty state, manual
-view/edit, explicit-save and no-autosave behavior. The
-separate authorization capability resolves the initial READ/MANAGE permission
-mapping.
+communication descriptive-slice behavior and the item-scoped Connaissances
+validées list/create/edit/remove behavior. The separate authorization
+capability resolves the initial READ/MANAGE permission mapping.
 
-The bounded implementation selects its dedicated cloud table, repository and
-page-local server action without changing canonical ownership, tenant scope or
-approved behavior. Product content validation, shared/API transport, history,
-providers and other knowledge families remain outside this slice.
+The bounded implementation selects dedicated cloud tables, repository
+operations and page-local server actions without changing canonical ownership,
+tenant scope or approved behavior. Validated statements add only the approved
+non-whitespace rule while preserving accepted text exactly. Shared/API
+transport, expanded validation, history/provenance, providers and other
+knowledge families remain outside these capabilities.
 
 ### Pilot recommendation
 
 The bounded Concept & histoire, Cuisine & savoir-faire, Expérience client,
-Équipe & culture and Identité de communication slices are implemented as
-Restaurant Knowledge, not as enhancements of Establishment Profile. Repository
-implementation does not prove environment
-enablement or production readiness. This documentation does not authorize any
-excluded knowledge family, consumer or integration.
+Équipe & culture and Identité de communication descriptive slices and the
+Connaissances validées item collection are implemented as Restaurant Knowledge,
+not as enhancements of Establishment Profile. Repository implementation does
+not prove environment enablement or production readiness. This documentation
+does not authorize any excluded knowledge family, consumer or integration.
 
 ## 10. Source map
 

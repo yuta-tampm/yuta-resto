@@ -110,8 +110,8 @@ Route grouping does not change these ownership boundaries.
 
 Restaurant Knowledge is approved by ADR-007. Its bounded `Concept & histoire`,
 `Cuisine & savoir-faire`, `Expérience client`, `Équipe & culture` and `Identité
-de communication` content slices and initial authorization are implemented
-through
+de communication` descriptive slices, its `Connaissances validées` item
+collection and initial authorization are implemented through
 distinct `restaurant-knowledge.read` and `restaurant-knowledge.manage`
 operations, both granted to `OWNER` and `MANAGER` and denied to `STAFF` by
 default. Restaurant Knowledge is the canonical owner of `Concept` and
@@ -158,6 +158,15 @@ Marketing/Content, Reviews/Reputation, AI, Social/public publishing, external-
 provider, CRM/customer, legal/compliance/moderation, POS, Site Agent or Display
 relationship.
 
+Restaurant Knowledge also canonically owns the current validated knowledge
+items accepted manually by authorized restaurant humans. The establishment-
+scoped collection supports zero, one or multiple independent statements,
+item-scoped create/edit/physical remove, explicit save and no autosave. Saved
+statements require at least one non-whitespace character while preserving
+accepted text exactly. It creates no provenance/history, AI/inference,
+automatic validation, downstream consumer, publishing, operational-module,
+local-runtime or provider relationship.
+
 Media upload/storage, image processing, address verification/geocoding, an
 external public profile route, expanded service-mode values, external profile
 synchronization, and third-party providers still require separate approval.
@@ -173,7 +182,7 @@ classify that capability. Its detailed ownership and maturity remain
 | Capability / scope                      | Current boundary                                                                                                                                                                                                                                                            | Owner                                                                                                                                                                                                            |
 | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | General establishment profile           | Implemented read/edit scope for supported identity, address, contact, media-reference, language, service-mode, and visibility fields.                                                                                                                                       | Establishment in `packages/db-cloud`.                                                                                                                                                                            |
-| Restaurant Knowledge                    | Partially implemented capability: Concept/Histoire, Cuisine/savoir-faire, Expérience client, Équipe & culture and Identité de communication support independent optional values, manual input/view/edit, valid empty state, one explicit save per slice, and no autosave; other knowledge families remain unimplemented. | Restaurant Knowledge canonically owns all five slices and their establishment-scoped persistence/domain boundaries; Organization is the tenancy/access envelope. Identity / Access owns permission integration. |
+| Restaurant Knowledge                    | Partially implemented capability: five descriptive slices support independent optional values, manual input/view/edit, valid empty state, one explicit save per slice and no autosave; Connaissances validées supports zero, one or multiple independent manually accepted statements with item-scoped explicit create/edit/remove and no autosave; other knowledge families remain unimplemented. | Restaurant Knowledge canonically owns all five descriptive slices, the validated-item collection and their establishment-scoped persistence/domain boundaries; Organization is the tenancy/access envelope. Identity / Access owns permission integration. |
 | Establishment context                   | Identity, locale, timezone, active scope, and entitlements are resolved into trusted server context.                                                                                                                                                                        | Establishment records plus Tenancy/Auth resolution.                                                                                                                                                              |
 | Hours / service periods                 | Implemented Booking administration shown under the Establishment UI area.                                                                                                                                                                                                   | Booking.                                                                                                                                                                                                         |
 | Dated exceptions                        | Implemented Booking exception records and mutations.                                                                                                                                                                                                                        | Booking.                                                                                                                                                                                                         |
@@ -191,7 +200,7 @@ assignments.
 | Capability / Scope                    | Product Decision | Implementation | Environment   | Production Readiness | External Dependency | Review Marker                                                                                                                                                             |
 | ------------------------------------- | ---------------- | -------------- | ------------- | -------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Current general Establishment profile | `APPROVED`       | `IMPLEMENTED`  | `UNVERIFIED`  | `NOT_READY`          | `NOT_ASSESSED`      | `OK`                                                                                                                                                                      |
-| Restaurant Knowledge                  | `APPROVED`       | `PARTIAL`      | `NOT_ENABLED` | `NOT_ASSESSED`       | `NOT_ASSESSED`      | `OK` for the implemented Concept/Histoire, Cuisine/savoir-faire, Expérience client, Équipe & culture and Identité de communication slices; all other knowledge families and excluded integrations remain unimplemented |
+| Restaurant Knowledge                  | `APPROVED`       | `PARTIAL`      | `NOT_ENABLED` | `NOT_ASSESSED`       | `NOT_ASSESSED`      | `OK` for the implemented Concept/Histoire, Cuisine/savoir-faire, Expérience client, Équipe & culture, Identité de communication and Connaissances validées capabilities; all other knowledge families and excluded integrations remain unimplemented |
 
 ## 6. Source-of-truth boundaries
 
@@ -199,7 +208,7 @@ assignments.
 | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Organization identity                       | `organizations` and Tenancy architecture                                                                                                                                                                                                                                                           | An Establishment belongs to one Organization; it does not replace or duplicate the organization record.                                                                                                                   |
 | Establishment identity and profile          | `establishments` through the Establishment profile repository                                                                                                                                                                                                                                      | Canonical cloud owner for the bounded restaurant/site profile. Reads and writes use both organization and establishment scope.                                                                                            |
-| Restaurant Knowledge                        | Dedicated `restaurant_knowledge_concept_history`, `restaurant_knowledge_cuisine_know_how`, `restaurant_knowledge_customer_experience`, `restaurant_knowledge_team_culture` and `restaurant_knowledge_communication_identity` tables plus Restaurant Knowledge repository operations in `packages/db-cloud`; page-local Backoffice server actions with no shared/API transport contract | Canonical owner of Concept/Histoire, Cuisine/savoir-faire, Expérience client, Équipe & culture and Identité de communication. Organization is the tenancy/access envelope; Establishment Profile is not the data owner. Other knowledge families remain unimplemented. |
+| Restaurant Knowledge                        | Dedicated `restaurant_knowledge_concept_history`, `restaurant_knowledge_cuisine_know_how`, `restaurant_knowledge_customer_experience`, `restaurant_knowledge_team_culture`, `restaurant_knowledge_communication_identity` and `restaurant_knowledge_validated_items` tables plus Restaurant Knowledge repository operations in `packages/db-cloud`; page-local Backoffice server actions with no shared/API transport contract | Canonical owner of Concept/Histoire, Cuisine/savoir-faire, Expérience client, Équipe & culture, Identité de communication and the current validated-item collection. Organization is the tenancy/access envelope; Establishment Profile is not the data owner. Other knowledge families remain unimplemented. |
 | Locale and timezone                         | `establishments`, projected into trusted tenant context                                                                                                                                                                                                                                            | Establishment-owned context consumed by date/time presentation and source modules; not currently editable in the general-information form.                                                                                |
 | Booking service periods                     | `booking_service_periods` and Booking repository/actions                                                                                                                                                                                                                                           | Establishment-scoped relation only; Booking owns period records and behavior.                                                                                                                                             |
 | Booking exceptions                          | `booking_exceptions` and Booking repository/actions                                                                                                                                                                                                                                                | Establishment-scoped relation only; Booking owns exception records and behavior.                                                                                                                                          |
@@ -285,12 +294,13 @@ its `restaurant-knowledge.*` permissions.
   they do not prove which version is deployed or that Backoffice is
   production-ready.
 - Restaurant Knowledge owns the implemented persistence/domain boundaries for
-  Concept/Histoire, Cuisine/savoir-faire, Expérience client, Équipe & culture and
-  Identité de communication through dedicated cloud tables and repository
-  operations. No shared API contract, Product content validation,
-  provider, cross-runtime storage or other knowledge-family implementation is
-  approved. Its READ/MANAGE matrix is implemented independently
-  of Establishment Profile permissions. Company/legal data,
+  Concept/Histoire, Cuisine/savoir-faire, Expérience client, Équipe & culture,
+  Identité de communication and the validated-item collection through dedicated
+  cloud tables and repository operations. Validated statements have only the
+  approved non-whitespace content rule and preserve accepted text exactly. No
+  shared API contract, provider, cross-runtime storage or other knowledge-family
+  implementation is approved. Its READ/MANAGE matrix is implemented
+  independently of Establishment Profile permissions. Company/legal data,
   automatic cross-module inference, detailed history/provenance, Marketing or
   social-content consumption, and social-profile link ownership remain outside
   its initial approved scope or `NEEDS REVIEW`.
@@ -332,12 +342,11 @@ its `restaurant-knowledge.*` permissions.
 9. When sources conflict or authority is insufficient, apply the Authority
    Model and retain `NEEDS REVIEW` rather than choosing silently.
 10. Treat Restaurant Knowledge as the canonical owner of Concept/Histoire,
-    Cuisine/savoir-faire, Expérience client, Équipe & culture and Identité de
-    communication and their persistence/domain boundaries. Keep them
-    semantically
-    establishment-scoped with Organization as the tenancy/access envelope;
-    never move them into Establishment Profile or infer access from profile
-    code.
+    Cuisine/savoir-faire, Expérience client, Équipe & culture, Identité de
+    communication, the current validated-item collection and their
+    persistence/domain boundaries. Keep them semantically establishment-scoped
+    with Organization as the tenancy/access envelope; never move them into
+    Establishment Profile or infer access from profile code.
 11. Treat synced Restaurant Knowledge main specs as normative only inside their
     accepted bounded capabilities; they do not promote lifecycle state.
 
@@ -345,10 +354,10 @@ its `restaurant-knowledge.*` permissions.
 
 Normative Restaurant Knowledge specifications exist under `openspec/specs/`
 for the accepted authorization, Concept/Histoire, Cuisine/savoir-faire,
-Expérience client, Équipe & culture and Identité de communication capabilities.
-This home retains broader Product Knowledge context and ownership boundaries.
-Sync and archive do not promote Environment, Production Readiness or any other
-lifecycle dimension.
+Expérience client, Équipe & culture, Identité de communication and Validated
+Knowledge capabilities. This home retains broader Product Knowledge context
+and ownership boundaries. Sync and archive do not promote Environment,
+Production Readiness or any other lifecycle dimension.
 
 ## 14. Status
 

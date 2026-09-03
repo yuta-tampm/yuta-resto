@@ -189,15 +189,15 @@ from navigation visibility.
   `packages/db-cloud/src/establishment-profile-repository.ts`, and Booking
   administration repositories
 
-The general-information page composes the implemented Establishment Profile
-and five implemented Restaurant Knowledge slices: Concept/Histoire,
+The general-information page composes the implemented Establishment Profile,
+five implemented Restaurant Knowledge descriptive slices—Concept/Histoire,
 Cuisine/savoir-faire, Expérience client, Équipe & culture and Identité de
-communication. Page composition does not assign a shared data owner or
-permission boundary. Restaurant Knowledge is their canonical owner,
-Organization is the tenancy/access envelope, and dedicated READ/MANAGE
-authorization remains independent from Establishment Profile. Remaining
-knowledge families and integrations must not be inferred from the existing
-route.
+communication—and the implemented `Connaissances validées` item collection.
+Page composition does not assign a shared data owner or permission boundary.
+Restaurant Knowledge is their canonical owner, Organization is the
+tenancy/access envelope, and dedicated READ/MANAGE authorization remains
+independent from Establishment Profile. Remaining knowledge families and
+integrations must not be inferred from the existing route.
 
 ### Today
 

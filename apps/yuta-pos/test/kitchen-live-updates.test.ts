@@ -3,8 +3,10 @@ import type { LocalKitchenEvent } from '@yuta/contracts/local-pos';
 import {
   defaultKitchenChimeVolume,
   kitchenChimeCooldownMs,
+  kitchenChimeVolumeVersion,
   kitchenEventMatchesScreen,
   parseKitchenChimeVolume,
+  resolveKitchenChimeVolume,
   shouldPlayKitchenChime,
 } from '../src/app/kitchen/_lib/kitchen-live-updates';
 
@@ -23,6 +25,15 @@ describe('Kitchen live updates', () => {
     expect(parseKitchenChimeVolume('invalid')).toBe(defaultKitchenChimeVolume);
     expect(parseKitchenChimeVolume('0')).toBe(0.1);
     expect(parseKitchenChimeVolume('2')).toBe(1);
+  });
+
+  it('preserves user volume while undoing the automatic 80% calibration', () => {
+    expect(resolveKitchenChimeVolume('0.5', null)).toBe(0.5);
+    expect(resolveKitchenChimeVolume('0.9', null)).toBe(0.9);
+    expect(resolveKitchenChimeVolume('0.8', '2')).toBe(0.5);
+    expect(resolveKitchenChimeVolume('0.5', kitchenChimeVolumeVersion)).toBe(
+      0.5,
+    );
   });
 
   it('matches only the selected screen unless the event targets all', () => {

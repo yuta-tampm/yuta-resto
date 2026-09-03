@@ -372,8 +372,8 @@ suspended until the screen wakes.
 
 Select `Son` once on the Kitchen header to authorize browser audio. The green
 state means sound is active; select it again to mute. The adjacent volume
-control is saved in the current browser and defaults to 50%. A short chime
-announces a new batch for the current Cuisine or Bar / Desserts screen. Preparation,
+control is saved in the current browser and defaults to 50%. The amplified,
+repeated three-pulse alert announces a new batch for the current Cuisine or Bar / Desserts screen. Preparation,
 completion, allergy confirmation, reconnect, and periodic refreshes do not
 play a sound. The browser may require reactivation after a restart or a new
 session.

@@ -1,0 +1,4 @@
+ M apps/yuta-pos/package.json
+ M docs/products/pos/QA_CHECKLIST.md
+?? docs/reviews/restaurant-knowledge-validated-knowledge/
+?? openspec/changes/restaurant-knowledge-validated-knowledge/

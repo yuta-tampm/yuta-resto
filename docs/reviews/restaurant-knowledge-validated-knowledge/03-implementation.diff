@@ -1,0 +1,1755 @@
+diff --git a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/validated-knowledge-section.tsx b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/validated-knowledge-section.tsx
+new file mode 100644
+index 0000000..4beef79
+--- /dev/null
++++ b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/validated-knowledge-section.tsx
+@@ -0,0 +1,322 @@
++'use client';
++
++import {
++  Alert,
++  AlertDescription,
++  Button,
++  Card,
++  FormField,
++  Label,
++  Separator,
++  Textarea,
++} from '@yuta/ui';
++import { Plus, RotateCcw, Save, Trash2 } from 'lucide-react';
++import { useActionState, useEffect, useState } from 'react';
++import { useFormStatus } from 'react-dom';
++import {
++  createValidatedKnowledgeAction,
++  removeValidatedKnowledgeAction,
++  updateValidatedKnowledgeAction,
++  type ValidatedKnowledgeActionState,
++} from '../actions';
++import {
++  hasNonWhitespace,
++  type ValidatedKnowledgeItem,
++} from '../validated-knowledge-model';
++
++const validationMessage =
++  'Saisissez une connaissance contenant au moins un caractère autre qu’un espace.';
++
++const idleState: ValidatedKnowledgeActionState = {
++  status: 'idle',
++  message: null,
++  fieldError: null,
++  item: null,
++  removedItemId: null,
++};
++
++export function ValidatedKnowledgeSection({
++  items,
++  canManage,
++}: {
++  items: ValidatedKnowledgeItem[];
++  canManage: boolean;
++}) {
++  const [createdItems, setCreatedItems] = useState<ValidatedKnowledgeItem[]>(
++    [],
++  );
++  const [removedIds, setRemovedIds] = useState<string[]>([]);
++  const [newDraftKey, setNewDraftKey] = useState<string | null>(null);
++  const visibleItems = [...items, ...createdItems].filter(
++    (item, index, all) =>
++      !removedIds.includes(item.id) &&
++      all.findIndex((candidate) => candidate.id === item.id) === index,
++  );
++
++  return (
++    <Card padding="none" radius="lg" className="overflow-hidden">
++      <div className="px-5 py-4">
++        <p className="text-xs font-bold uppercase tracking-wide text-action-primary">
++          Restaurant Knowledge
++        </p>
++        <h2 className="mt-1 font-bold">Connaissances validées</h2>
++        <p className="mt-1 text-sm text-muted">
++          Conservez ici des connaissances descriptives de l’établissement,
++          validées manuellement par une personne autorisée.
++        </p>
++      </div>
++      <Separator />
++      <div className="grid gap-4 p-5">
++        {visibleItems.length === 0 && !newDraftKey ? (
++          <p className="text-sm text-muted">
++            Aucune connaissance validée pour le moment.
++          </p>
++        ) : null}
++
++        {visibleItems.map((item) =>
++          canManage ? (
++            <ValidatedKnowledgeItemForm
++              key={item.id}
++              item={item}
++              onRemoved={(id) =>
++                setRemovedIds((current) =>
++                  current.includes(id) ? current : [...current, id],
++                )
++              }
++            />
++          ) : (
++            <p
++              key={item.id}
++              className="whitespace-pre-wrap rounded-lg border border-border-default bg-surface-muted p-4 text-sm text-primary"
++            >
++              {item.statement}
++            </p>
++          ),
++        )}
++
++        {canManage && newDraftKey ? (
++          <ValidatedKnowledgeCreateForm
++            key={newDraftKey}
++            onCancel={() => setNewDraftKey(null)}
++            onCreated={(item) => {
++              setCreatedItems((current) =>
++                current.some((candidate) => candidate.id === item.id)
++                  ? current
++                  : [...current, item],
++              );
++              setNewDraftKey(null);
++            }}
++          />
++        ) : null}
++
++        {canManage && !newDraftKey ? (
++          <div className="flex justify-end">
++            <Button
++              type="button"
++              variant="secondary"
++              onClick={() => setNewDraftKey(`draft:${crypto.randomUUID()}`)}
++            >
++              <Plus className="h-4 w-4" aria-hidden />
++              Ajouter une connaissance
++            </Button>
++          </div>
++        ) : null}
++      </div>
++    </Card>
++  );
++}
++
++function ValidatedKnowledgeCreateForm({
++  onCancel,
++  onCreated,
++}: {
++  onCancel: () => void;
++  onCreated: (item: ValidatedKnowledgeItem) => void;
++}) {
++  const [state, action] = useActionState(
++    createValidatedKnowledgeAction,
++    idleState,
++  );
++  const [statement, setStatement] = useState('');
++  const invalid = !hasNonWhitespace(statement);
++
++  useEffect(() => {
++    if (state.status === 'success' && state.item) onCreated(state.item);
++  }, [onCreated, state.item, state.status]);
++
++  return (
++    <form action={action} className="grid gap-3 rounded-lg border p-4">
++      <ValidatedKnowledgeFeedback state={state} />
++      <ValidatedKnowledgeField
++        id="validated-knowledge-new"
++        statement={statement}
++        onChange={setStatement}
++        error={
++          statement.length > 0 && invalid ? validationMessage : state.fieldError
++        }
++      />
++      <div className="flex flex-wrap justify-end gap-2">
++        <Button type="button" variant="ghost" onClick={onCancel}>
++          Annuler
++        </Button>
++        <ValidatedKnowledgeSubmitButton disabled={invalid} label="Ajouter" />
++      </div>
++    </form>
++  );
++}
++
++function ValidatedKnowledgeItemForm({
++  item,
++  onRemoved,
++}: {
++  item: ValidatedKnowledgeItem;
++  onRemoved: (id: string) => void;
++}) {
++  const [updateState, updateAction] = useActionState(
++    updateValidatedKnowledgeAction,
++    idleState,
++  );
++  const [removeState, removeAction] = useActionState(
++    removeValidatedKnowledgeAction,
++    idleState,
++  );
++  const canonicalItem = updateState.item ?? item;
++  const [statement, setStatement] = useState(item.statement);
++  const [pendingRemoval, setPendingRemoval] = useState(false);
++  const invalid = !hasNonWhitespace(statement);
++  const dirty = statement !== canonicalItem.statement;
++
++  useEffect(() => {
++    if (updateState.status === 'success' && updateState.item) {
++      setStatement(updateState.item.statement);
++      setPendingRemoval(false);
++    }
++  }, [updateState.item, updateState.status]);
++
++  useEffect(() => {
++    if (removeState.status === 'success' && removeState.removedItemId) {
++      onRemoved(removeState.removedItemId);
++    }
++  }, [onRemoved, removeState.removedItemId, removeState.status]);
++
++  const activeState = pendingRemoval ? removeState : updateState;
++
++  return (
++    <form
++      action={pendingRemoval ? removeAction : updateAction}
++      className="grid gap-3 rounded-lg border p-4"
++    >
++      <input type="hidden" name="id" value={item.id} />
++      <ValidatedKnowledgeFeedback state={activeState} />
++      {pendingRemoval ? (
++        <Alert tone="warning">
++          <AlertDescription>
++            Cette connaissance sera retirée après votre confirmation.
++          </AlertDescription>
++        </Alert>
++      ) : (
++        <ValidatedKnowledgeField
++          id={`validated-knowledge-${item.id}`}
++          statement={statement}
++          onChange={setStatement}
++          error={dirty && invalid ? validationMessage : updateState.fieldError}
++        />
++      )}
++      <div className="flex flex-wrap justify-end gap-2">
++        {pendingRemoval ? (
++          <Button
++            type="button"
++            variant="ghost"
++            onClick={() => setPendingRemoval(false)}
++          >
++            <RotateCcw className="h-4 w-4" aria-hidden />
++            Annuler le retrait
++          </Button>
++        ) : (
++          <Button
++            type="button"
++            variant="ghost"
++            onClick={() => setPendingRemoval(true)}
++          >
++            <Trash2 className="h-4 w-4" aria-hidden />
++            Retirer
++          </Button>
++        )}
++        <ValidatedKnowledgeSubmitButton
++          disabled={pendingRemoval ? false : !dirty || invalid}
++          label={pendingRemoval ? 'Confirmer le retrait' : 'Enregistrer'}
++          danger={pendingRemoval}
++        />
++      </div>
++    </form>
++  );
++}
++
++function ValidatedKnowledgeField({
++  id,
++  statement,
++  onChange,
++  error,
++}: {
++  id: string;
++  statement: string;
++  onChange: (value: string) => void;
++  error: string | null | false;
++}) {
++  const errorId = `${id}-error`;
++  return (
++    <FormField
++      label={<Label htmlFor={id}>Connaissance</Label>}
++      error={error ? <span id={errorId}>{error}</span> : undefined}
++    >
++      <Textarea
++        id={id}
++        name="statement"
++        value={statement}
++        onChange={(event) => onChange(event.target.value)}
++        rows={4}
++        aria-invalid={Boolean(error)}
++        aria-describedby={error ? errorId : undefined}
++      />
++    </FormField>
++  );
++}
++
++function ValidatedKnowledgeFeedback({
++  state,
++}: {
++  state: ValidatedKnowledgeActionState;
++}) {
++  if (!state.message || state.fieldError) return null;
++  return (
++    <Alert
++      tone={state.status === 'success' ? 'success' : 'danger'}
++      role={state.status === 'success' ? 'status' : 'alert'}
++    >
++      <AlertDescription>{state.message}</AlertDescription>
++    </Alert>
++  );
++}
++
++function ValidatedKnowledgeSubmitButton({
++  disabled,
++  label,
++  danger = false,
++}: {
++  disabled: boolean;
++  label: string;
++  danger?: boolean;
++}) {
++  const { pending } = useFormStatus();
++  return (
++    <Button
++      type="submit"
++      variant={danger ? 'danger' : 'success'}
++      loading={pending}
++      disabled={disabled}
++    >
++      <Save className="h-4 w-4" aria-hidden />
++      {pending ? 'Enregistrement…' : label}
++    </Button>
++  );
++}
+diff --git a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/actions.ts b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/actions.ts
+index 4f6760a..23c1aba 100644
+--- a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/actions.ts
++++ b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/actions.ts
+@@ -2,13 +2,17 @@
+ 
+ import { establishmentProfileInputSchema } from '@yuta/contracts';
+ import {
++  createRestaurantKnowledgeValidatedItem,
++  removeRestaurantKnowledgeValidatedItem,
+   saveRestaurantKnowledgeConceptHistory,
+   saveRestaurantKnowledgeCommunicationIdentity,
+   saveRestaurantKnowledgeCuisineKnowHow,
+   saveRestaurantKnowledgeCustomerExperience,
+   saveRestaurantKnowledgeTeamCulture,
++  updateRestaurantKnowledgeValidatedItem,
+   updateEstablishmentProfile,
+   type RestaurantKnowledgeCommunicationIdentityInput,
++  type RestaurantKnowledgeValidatedItemValue,
+ } from '@yuta/db-cloud';
+ import { requireEstablishment } from '@yuta/tenant';
+ import { revalidatePath } from 'next/cache';
+@@ -43,6 +47,14 @@ export type CommunicationIdentityActionState = {
+   savedCommunicationIdentity: RestaurantKnowledgeCommunicationIdentityInput | null;
+ };
+ 
++export type ValidatedKnowledgeActionState = {
++  status: 'idle' | 'success' | 'error';
++  message: string | null;
++  fieldError: string | null;
++  item: RestaurantKnowledgeValidatedItemValue | null;
++  removedItemId: string | null;
++};
++
+ const optionalConceptHistoryTextSchema = z
+   .string()
+   .nullable()
+@@ -87,6 +99,40 @@ const communicationIdentityInputSchema = z
+   })
+   .strict();
+ 
++const validatedKnowledgeStatementSchema = z
++  .string()
++  .refine((value) => /\S/u.test(value), {
++    message:
++      'Saisissez une connaissance contenant au moins un caractère autre qu’un espace.',
++  });
++
++const validatedKnowledgeCreateSchema = z
++  .object({ statement: validatedKnowledgeStatementSchema })
++  .strict();
++
++const validatedKnowledgeUpdateSchema = z
++  .object({
++    id: z.string().uuid(),
++    statement: validatedKnowledgeStatementSchema,
++  })
++  .strict();
++
++const validatedKnowledgeRemoveSchema = z
++  .object({ id: z.string().uuid() })
++  .strict();
++
++const validatedKnowledgeValidationFailure = (
++  error: z.ZodError,
++): ValidatedKnowledgeActionState => ({
++  status: 'error',
++  message: 'Cette connaissance doit être corrigée.',
++  fieldError:
++    error.issues.find((issue) => issue.path[0] === 'statement')?.message ??
++    null,
++  item: null,
++  removedItemId: null,
++});
++
+ export async function saveGeneralInformationAction(
+   _previousState: GeneralInformationActionState,
+   formData: FormData,
+@@ -357,3 +403,140 @@ export async function saveCommunicationIdentityAction(
+     };
+   }
+ }
++
++export async function createValidatedKnowledgeAction(
++  _previousState: ValidatedKnowledgeActionState,
++  formData: FormData,
++): Promise<ValidatedKnowledgeActionState> {
++  const { tenant } = await requireAuthenticatedTenant(
++    '/etablissement/informations-generales',
++  );
++  requireEstablishment(tenant);
++  requireRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.manage');
++
++  try {
++    const input = validatedKnowledgeCreateSchema.parse({
++      statement: formData.get('statement'),
++    });
++    const item = await createRestaurantKnowledgeValidatedItem(
++      cloudDatabase,
++      tenant,
++      input.statement,
++    );
++    if (!item) {
++      return validatedKnowledgeError('Établissement introuvable.');
++    }
++    revalidatePath('/etablissement/informations-generales');
++    return {
++      status: 'success',
++      message: 'Connaissance validée ajoutée.',
++      fieldError: null,
++      item,
++      removedItemId: null,
++    };
++  } catch (error: unknown) {
++    if (error instanceof z.ZodError) {
++      return validatedKnowledgeValidationFailure(error);
++    }
++    console.error('Failed to create Restaurant Knowledge validated item.', {
++      errorName: error instanceof Error ? error.name : 'UnknownError',
++    });
++    return validatedKnowledgeError('Une erreur est survenue. Réessayez.');
++  }
++}
++
++export async function updateValidatedKnowledgeAction(
++  _previousState: ValidatedKnowledgeActionState,
++  formData: FormData,
++): Promise<ValidatedKnowledgeActionState> {
++  const { tenant } = await requireAuthenticatedTenant(
++    '/etablissement/informations-generales',
++  );
++  requireEstablishment(tenant);
++  requireRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.manage');
++
++  try {
++    const input = validatedKnowledgeUpdateSchema.parse({
++      id: formData.get('id'),
++      statement: formData.get('statement'),
++    });
++    const item = await updateRestaurantKnowledgeValidatedItem(
++      cloudDatabase,
++      tenant,
++      input.id,
++      input.statement,
++    );
++    if (!item) {
++      return validatedKnowledgeError('Cette connaissance n’existe plus.');
++    }
++    revalidatePath('/etablissement/informations-generales');
++    return {
++      status: 'success',
++      message: 'Connaissance validée enregistrée.',
++      fieldError: null,
++      item,
++      removedItemId: null,
++    };
++  } catch (error: unknown) {
++    if (error instanceof z.ZodError) {
++      return validatedKnowledgeValidationFailure(error);
++    }
++    console.error('Failed to update Restaurant Knowledge validated item.', {
++      errorName: error instanceof Error ? error.name : 'UnknownError',
++    });
++    return validatedKnowledgeError('Une erreur est survenue. Réessayez.');
++  }
++}
++
++export async function removeValidatedKnowledgeAction(
++  _previousState: ValidatedKnowledgeActionState,
++  formData: FormData,
++): Promise<ValidatedKnowledgeActionState> {
++  const { tenant } = await requireAuthenticatedTenant(
++    '/etablissement/informations-generales',
++  );
++  requireEstablishment(tenant);
++  requireRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.manage');
++
++  try {
++    const input = validatedKnowledgeRemoveSchema.parse({
++      id: formData.get('id'),
++    });
++    const removed = await removeRestaurantKnowledgeValidatedItem(
++      cloudDatabase,
++      tenant,
++      input.id,
++    );
++    if (!removed) {
++      return validatedKnowledgeError('Cette connaissance n’existe plus.');
++    }
++    revalidatePath('/etablissement/informations-generales');
++    return {
++      status: 'success',
++      message: 'Connaissance validée retirée.',
++      fieldError: null,
++      item: null,
++      removedItemId: input.id,
++    };
++  } catch (error: unknown) {
++    if (error instanceof z.ZodError) {
++      return validatedKnowledgeValidationFailure(error);
++    }
++    console.error('Failed to remove Restaurant Knowledge validated item.', {
++      errorName: error instanceof Error ? error.name : 'UnknownError',
++    });
++    return validatedKnowledgeError('Une erreur est survenue. Réessayez.');
++  }
++}
++
++function validatedKnowledgeError(
++  message: string,
++): ValidatedKnowledgeActionState {
++  return {
++    status: 'error',
++    message,
++    fieldError: null,
++    item: null,
++    removedItemId: null,
++  };
++}
+diff --git a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/page.tsx b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/page.tsx
+index 561b97d..32a50ac 100644
+--- a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/page.tsx
++++ b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/page.tsx
+@@ -14,12 +14,14 @@ import { CuisineKnowHowForm } from './_components/cuisine-know-how-form';
+ import { CustomerExperienceForm } from './_components/customer-experience-form';
+ import { TeamCultureForm } from './_components/team-culture-form';
+ import { CommunicationIdentityForm } from './_components/communication-identity-form';
++import { ValidatedKnowledgeSection } from './_components/validated-knowledge-section';
+ import {
+   loadCommunicationIdentitySection,
+   loadConceptHistorySection,
+   loadCuisineKnowHowSection,
+   loadCustomerExperienceSection,
+   loadTeamCultureSection,
++  loadValidatedKnowledgeSection,
+ } from './restaurant-knowledge-loader';
+ 
+ export default async function GeneralInformationPage() {
+@@ -35,6 +37,7 @@ export default async function GeneralInformationPage() {
+     customerExperienceSection,
+     teamCultureSection,
+     communicationIdentitySection,
++    validatedKnowledgeSection,
+   ] = await Promise.all([
+     getEstablishmentProfile(cloudDatabase, tenant),
+     loadConceptHistorySection(cloudDatabase, tenant),
+@@ -42,6 +45,7 @@ export default async function GeneralInformationPage() {
+     loadCustomerExperienceSection(cloudDatabase, tenant),
+     loadTeamCultureSection(cloudDatabase, tenant),
+     loadCommunicationIdentitySection(cloudDatabase, tenant),
++    loadValidatedKnowledgeSection(cloudDatabase, tenant),
+   ]);
+   if (!profile) notFound();
+   const canEditProfile = hasEstablishmentPermission(
+@@ -91,6 +95,12 @@ export default async function GeneralInformationPage() {
+             canManage={communicationIdentitySection.canManage}
+           />
+         )}
++        {validatedKnowledgeSection && (
++          <ValidatedKnowledgeSection
++            items={validatedKnowledgeSection.items}
++            canManage={validatedKnowledgeSection.canManage}
++          />
++        )}
+       </div>
+     </BackofficePage>
+   );
+diff --git a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/restaurant-knowledge-loader.ts b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/restaurant-knowledge-loader.ts
+index b5f73bf..10b2898 100644
+--- a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/restaurant-knowledge-loader.ts
++++ b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/restaurant-knowledge-loader.ts
+@@ -6,6 +6,7 @@ import {
+   getRestaurantKnowledgeCuisineKnowHow,
+   getRestaurantKnowledgeCustomerExperience,
+   getRestaurantKnowledgeTeamCulture,
++  listRestaurantKnowledgeValidatedItems,
+   type CloudDatabaseClient,
+ } from '@yuta/db-cloud';
+ import type { TenantContext } from '@yuta/tenant';
+@@ -101,3 +102,20 @@ export async function loadCommunicationIdentitySection(
+     ),
+   };
+ }
++
++export async function loadValidatedKnowledgeSection(
++  db: CloudDatabaseClient,
++  tenant: TenantContext,
++) {
++  if (!hasRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.read')) {
++    return null;
++  }
++
++  return {
++    items: await listRestaurantKnowledgeValidatedItems(db, tenant),
++    canManage: hasRestaurantKnowledgePermission(
++      tenant,
++      'restaurant-knowledge.manage',
++    ),
++  };
++}
+diff --git a/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/validated-knowledge-model.ts b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/validated-knowledge-model.ts
+new file mode 100644
+index 0000000..13ad929
+--- /dev/null
++++ b/apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/validated-knowledge-model.ts
+@@ -0,0 +1,71 @@
++export type ValidatedKnowledgeItem = {
++  id: string;
++  statement: string;
++};
++
++export type ValidatedKnowledgeDraft = {
++  key: string;
++  id: string | null;
++  acceptedStatement: string | null;
++  statement: string;
++  pendingRemoval: boolean;
++};
++
++export function hasNonWhitespace(value: string): boolean {
++  return /\S/u.test(value);
++}
++
++export function draftFromValidatedItem(
++  item: ValidatedKnowledgeItem,
++): ValidatedKnowledgeDraft {
++  return {
++    key: item.id,
++    id: item.id,
++    acceptedStatement: item.statement,
++    statement: item.statement,
++    pendingRemoval: false,
++  };
++}
++
++export function newValidatedKnowledgeDraft(
++  key: string,
++): ValidatedKnowledgeDraft {
++  return {
++    key,
++    id: null,
++    acceptedStatement: null,
++    statement: '',
++    pendingRemoval: false,
++  };
++}
++
++export function isValidatedKnowledgeDraftDirty(
++  draft: ValidatedKnowledgeDraft,
++): boolean {
++  return draft.pendingRemoval || draft.statement !== draft.acceptedStatement;
++}
++
++export function markValidatedKnowledgeForRemoval(
++  draft: ValidatedKnowledgeDraft,
++): ValidatedKnowledgeDraft {
++  return { ...draft, pendingRemoval: true };
++}
++
++export function undoValidatedKnowledgeRemoval(
++  draft: ValidatedKnowledgeDraft,
++): ValidatedKnowledgeDraft {
++  return { ...draft, pendingRemoval: false };
++}
++
++export function acceptValidatedKnowledgeStatement(
++  draft: ValidatedKnowledgeDraft,
++  item: ValidatedKnowledgeItem,
++): ValidatedKnowledgeDraft {
++  return {
++    key: item.id,
++    id: item.id,
++    acceptedStatement: item.statement,
++    statement: item.statement,
++    pendingRemoval: false,
++  };
++}
+diff --git a/apps/backoffice/test/restaurant-knowledge-loader.test.ts b/apps/backoffice/test/restaurant-knowledge-loader.test.ts
+index ce21185..99d0375 100644
+--- a/apps/backoffice/test/restaurant-knowledge-loader.test.ts
++++ b/apps/backoffice/test/restaurant-knowledge-loader.test.ts
+@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
+   getCuisineKnowHow: vi.fn(),
+   getCustomerExperience: vi.fn(),
+   getTeamCulture: vi.fn(),
++  listValidatedKnowledge: vi.fn(),
+ }));
+ 
+ vi.mock('server-only', () => ({}));
+@@ -17,6 +18,7 @@ vi.mock('@yuta/db-cloud', () => ({
+   getRestaurantKnowledgeCuisineKnowHow: mocks.getCuisineKnowHow,
+   getRestaurantKnowledgeCustomerExperience: mocks.getCustomerExperience,
+   getRestaurantKnowledgeTeamCulture: mocks.getTeamCulture,
++  listRestaurantKnowledgeValidatedItems: mocks.listValidatedKnowledge,
+ }));
+ 
+ import {
+@@ -25,6 +27,7 @@ import {
+   loadCuisineKnowHowSection,
+   loadCustomerExperienceSection,
+   loadTeamCultureSection,
++  loadValidatedKnowledgeSection,
+ } from '../src/app/(authenticated)/etablissement/informations-generales/restaurant-knowledge-loader';
+ 
+ function context(role: TenantRole): TenantContext {
+@@ -79,6 +82,39 @@ describe('Restaurant Knowledge Concept and Histoire loader', () => {
+   });
+ });
+ 
++describe('Validated Knowledge loader', () => {
++  beforeEach(() => {
++    mocks.listValidatedKnowledge.mockReset();
++    mocks.listValidatedKnowledge.mockResolvedValue([
++      { id: randomUUID(), statement: 'Cuisine guidée par les saisons.' },
++    ]);
++  });
++
++  it.each(['OWNER', 'MANAGER'] as const)(
++    'loads current items with READ and derives MANAGE for %s',
++    async (role) => {
++      const tenant = context(role);
++      const result = await loadValidatedKnowledgeSection(
++        { kind: 'test-cloud-database' } as never,
++        tenant,
++      );
++      expect(result?.canManage).toBe(true);
++      expect(result?.items).toHaveLength(1);
++      expect(mocks.listValidatedKnowledge).toHaveBeenCalledWith(
++        { kind: 'test-cloud-database' },
++        tenant,
++      );
++    },
++  );
++
++  it('denies STAFF before repository access despite Profile read access', async () => {
++    await expect(
++      loadValidatedKnowledgeSection({} as never, context('STAFF')),
++    ).resolves.toBeNull();
++    expect(mocks.listValidatedKnowledge).not.toHaveBeenCalled();
++  });
++});
++
+ describe('Communication Identity loader', () => {
+   beforeEach(() => {
+     mocks.getConceptHistory.mockReset();
+diff --git a/apps/backoffice/test/validated-knowledge-action.test.ts b/apps/backoffice/test/validated-knowledge-action.test.ts
+new file mode 100644
+index 0000000..9548aba
+--- /dev/null
++++ b/apps/backoffice/test/validated-knowledge-action.test.ts
+@@ -0,0 +1,200 @@
++import { randomUUID } from 'node:crypto';
++import { TenantError, type TenantContext, type TenantRole } from '@yuta/tenant';
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++
++const mocks = vi.hoisted(() => ({
++  tenant: null as TenantContext | null,
++  denyManage: false,
++  create: vi.fn(),
++  update: vi.fn(),
++  remove: vi.fn(),
++  revalidatePath: vi.fn(),
++}));
++
++vi.mock('server-only', () => ({}));
++vi.mock('@yuta/db-cloud', () => ({
++  createRestaurantKnowledgeValidatedItem: mocks.create,
++  updateRestaurantKnowledgeValidatedItem: mocks.update,
++  removeRestaurantKnowledgeValidatedItem: mocks.remove,
++  saveRestaurantKnowledgeConceptHistory: vi.fn(),
++  saveRestaurantKnowledgeCommunicationIdentity: vi.fn(),
++  saveRestaurantKnowledgeCuisineKnowHow: vi.fn(),
++  saveRestaurantKnowledgeCustomerExperience: vi.fn(),
++  saveRestaurantKnowledgeTeamCulture: vi.fn(),
++  updateEstablishmentProfile: vi.fn(),
++}));
++vi.mock('next/cache', () => ({ revalidatePath: mocks.revalidatePath }));
++vi.mock('../src/server/cloud-database', () => ({
++  cloudDatabase: { test: true },
++}));
++vi.mock('../src/server/auth/session', () => ({
++  requireAuthenticatedTenant: vi.fn(async () => ({ tenant: mocks.tenant })),
++}));
++vi.mock('../src/server/auth/permissions', async () => {
++  const actual = await vi.importActual<
++    typeof import('../src/server/auth/permissions')
++  >('../src/server/auth/permissions');
++  return {
++    ...actual,
++    requireRestaurantKnowledgePermission: (
++      ...args: Parameters<typeof actual.requireRestaurantKnowledgePermission>
++    ) => {
++      if (mocks.denyManage) {
++        throw new TenantError(
++          'Permission denied.',
++          'CROSS_TENANT_ACCESS_DENIED',
++          403,
++        );
++      }
++      return actual.requireRestaurantKnowledgePermission(...args);
++    },
++  };
++});
++
++import {
++  createValidatedKnowledgeAction,
++  removeValidatedKnowledgeAction,
++  updateValidatedKnowledgeAction,
++  type ValidatedKnowledgeActionState,
++} from '../src/app/(authenticated)/etablissement/informations-generales/actions';
++
++const initial: ValidatedKnowledgeActionState = {
++  status: 'idle',
++  message: null,
++  fieldError: null,
++  item: null,
++  removedItemId: null,
++};
++
++function context(role: TenantRole): TenantContext {
++  return {
++    organizationId: randomUUID(),
++    establishmentId: randomUUID(),
++    actor: {
++      type: 'user',
++      userId: randomUUID(),
++      membershipId: randomUUID(),
++      role,
++    },
++    locale: 'fr-FR',
++    timezone: 'Europe/Paris',
++    entitlements: new Set(),
++  };
++}
++
++describe('Validated Knowledge actions', () => {
++  beforeEach(() => {
++    mocks.denyManage = false;
++    mocks.create.mockReset();
++    mocks.update.mockReset();
++    mocks.remove.mockReset();
++    mocks.revalidatePath.mockReset();
++  });
++
++  it.each(['OWNER', 'MANAGER'] as const)(
++    'creates with MANAGE for %s and preserves whitespace exactly',
++    async (role) => {
++      mocks.tenant = context(role);
++      const id = randomUUID();
++      mocks.create.mockResolvedValue({ id, statement: ' abc ' });
++      const data = new FormData();
++      data.set('statement', ' abc ');
++      data.set('id', randomUUID());
++      data.set('organizationId', randomUUID());
++      data.set('role', 'STAFF');
++      await expect(
++        createValidatedKnowledgeAction(initial, data),
++      ).resolves.toMatchObject({
++        status: 'success',
++        item: { id, statement: ' abc ' },
++      });
++      expect(mocks.create).toHaveBeenCalledWith(
++        { test: true },
++        mocks.tenant,
++        ' abc ',
++      );
++      expect(mocks.revalidatePath).toHaveBeenCalledTimes(1);
++    },
++  );
++
++  it.each(['', '   ', '\n\t '])(
++    'rejects create %j before persistence',
++    async (statement) => {
++      mocks.tenant = context('OWNER');
++      const data = new FormData();
++      data.set('statement', statement);
++      const result = await createValidatedKnowledgeAction(initial, data);
++      expect(result.status).toBe('error');
++      expect(result.fieldError).toContain('au moins un caractère');
++      expect(mocks.create).not.toHaveBeenCalled();
++      expect(mocks.remove).not.toHaveBeenCalled();
++      expect(mocks.revalidatePath).not.toHaveBeenCalled();
++    },
++  );
++
++  it('rejects a blank edit without update, remove, or success revalidation', async () => {
++    mocks.tenant = context('MANAGER');
++    const data = new FormData();
++    data.set('id', randomUUID());
++    data.set('statement', '   ');
++    const result = await updateValidatedKnowledgeAction(initial, data);
++    expect(result.status).toBe('error');
++    expect(mocks.update).not.toHaveBeenCalled();
++    expect(mocks.remove).not.toHaveBeenCalled();
++    expect(mocks.revalidatePath).not.toHaveBeenCalled();
++  });
++
++  it('updates one item and reports a missing stale item as an error', async () => {
++    mocks.tenant = context('OWNER');
++    const id = randomUUID();
++    const data = new FormData();
++    data.set('id', id);
++    data.set('statement', '  a  ');
++    mocks.update.mockResolvedValueOnce({ id, statement: '  a  ' });
++    await expect(
++      updateValidatedKnowledgeAction(initial, data),
++    ).resolves.toMatchObject({
++      status: 'success',
++      item: { id, statement: '  a  ' },
++    });
++    mocks.revalidatePath.mockReset();
++    mocks.update.mockResolvedValueOnce(null);
++    await expect(
++      updateValidatedKnowledgeAction(initial, data),
++    ).resolves.toMatchObject({
++      status: 'error',
++      message: 'Cette connaissance n’existe plus.',
++    });
++    expect(mocks.revalidatePath).not.toHaveBeenCalled();
++  });
++
++  it('removes only through the explicit remove action', async () => {
++    mocks.tenant = context('OWNER');
++    const id = randomUUID();
++    mocks.remove.mockResolvedValue(true);
++    const data = new FormData();
++    data.set('id', id);
++    await expect(
++      removeValidatedKnowledgeAction(initial, data),
++    ).resolves.toMatchObject({
++      status: 'success',
++      removedItemId: id,
++    });
++    expect(mocks.remove).toHaveBeenCalledWith({ test: true }, mocks.tenant, id);
++  });
++
++  it('denies STAFF and an independent MANAGE denial before parsing or persistence', async () => {
++    for (const tenant of [context('STAFF'), context('OWNER')]) {
++      mocks.tenant = tenant;
++      mocks.denyManage =
++        tenant.actor.type === 'user' && tenant.actor.role === 'OWNER';
++      await expect(
++        createValidatedKnowledgeAction(initial, new FormData()),
++      ).rejects.toThrow('Permission denied.');
++    }
++    expect(mocks.create).not.toHaveBeenCalled();
++    expect(mocks.update).not.toHaveBeenCalled();
++    expect(mocks.remove).not.toHaveBeenCalled();
++    expect(mocks.revalidatePath).not.toHaveBeenCalled();
++  });
++});
+diff --git a/apps/backoffice/test/validated-knowledge-model.test.ts b/apps/backoffice/test/validated-knowledge-model.test.ts
+new file mode 100644
+index 0000000..d84a476
+--- /dev/null
++++ b/apps/backoffice/test/validated-knowledge-model.test.ts
+@@ -0,0 +1,60 @@
++import { describe, expect, it } from 'vitest';
++import {
++  acceptValidatedKnowledgeStatement,
++  draftFromValidatedItem,
++  hasNonWhitespace,
++  isValidatedKnowledgeDraftDirty,
++  markValidatedKnowledgeForRemoval,
++  newValidatedKnowledgeDraft,
++  undoValidatedKnowledgeRemoval,
++} from '../src/app/(authenticated)/etablissement/informations-generales/validated-knowledge-model';
++
++describe('Validated Knowledge model', () => {
++  it.each(['', '   ', '\n\t '])('rejects whitespace-only %j', (value) => {
++    expect(hasNonWhitespace(value)).toBe(false);
++  });
++
++  it.each(['abc', ' abc ', '  a  '])('accepts and preserves %j', (value) => {
++    expect(hasNonWhitespace(value)).toBe(true);
++    expect(value).toBe(value);
++  });
++
++  it('keeps browser draft identity separate from canonical identity', () => {
++    const draft = newValidatedKnowledgeDraft('draft:local');
++    expect(draft).toMatchObject({
++      key: 'draft:local',
++      id: null,
++      statement: '',
++    });
++  });
++
++  it('tracks edit and removal independently', () => {
++    const draft = draftFromValidatedItem({
++      id: 'item-id',
++      statement: 'Initial',
++    });
++    expect(isValidatedKnowledgeDraftDirty(draft)).toBe(false);
++    const pending = markValidatedKnowledgeForRemoval(draft);
++    expect(isValidatedKnowledgeDraftDirty(pending)).toBe(true);
++    expect(undoValidatedKnowledgeRemoval(pending)).toEqual(draft);
++  });
++
++  it('accepts a canonical response without remount', () => {
++    const draft = {
++      ...newValidatedKnowledgeDraft('draft:local'),
++      statement: ' abc ',
++    };
++    expect(
++      acceptValidatedKnowledgeStatement(draft, {
++        id: 'server-id',
++        statement: ' abc ',
++      }),
++    ).toEqual({
++      key: 'server-id',
++      id: 'server-id',
++      acceptedStatement: ' abc ',
++      statement: ' abc ',
++      pendingRemoval: false,
++    });
++  });
++});
+diff --git a/apps/backoffice/test/validated-knowledge-section.test.tsx b/apps/backoffice/test/validated-knowledge-section.test.tsx
+new file mode 100644
+index 0000000..84fa5fe
+--- /dev/null
++++ b/apps/backoffice/test/validated-knowledge-section.test.tsx
+@@ -0,0 +1,95 @@
++import { renderToStaticMarkup } from 'react-dom/server';
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++
++const mocks = vi.hoisted(() => ({
++  create: vi.fn(),
++  update: vi.fn(),
++  remove: vi.fn(),
++}));
++
++vi.mock(
++  '../src/app/(authenticated)/etablissement/informations-generales/actions',
++  () => ({
++    createValidatedKnowledgeAction: mocks.create,
++    updateValidatedKnowledgeAction: mocks.update,
++    removeValidatedKnowledgeAction: mocks.remove,
++  }),
++);
++vi.mock('react-dom', () => ({ useFormStatus: () => ({ pending: false }) }));
++vi.mock('react', async (importOriginal) => {
++  const actual = await importOriginal<typeof import('react')>();
++  return {
++    ...actual,
++    useActionState: () => [
++      {
++        status: 'idle',
++        message: null,
++        fieldError: null,
++        item: null,
++        removedItemId: null,
++      },
++      vi.fn(),
++    ],
++  };
++});
++
++import { ValidatedKnowledgeSection } from '../src/app/(authenticated)/etablissement/informations-generales/_components/validated-knowledge-section';
++
++describe('ValidatedKnowledgeSection', () => {
++  beforeEach(() => {
++    mocks.create.mockReset();
++    mocks.update.mockReset();
++    mocks.remove.mockReset();
++  });
++
++  it('renders the valid empty state and one explicit add control for MANAGE', () => {
++    const markup = renderToStaticMarkup(
++      <ValidatedKnowledgeSection items={[]} canManage />,
++    );
++    expect(markup).toContain('Connaissances validées');
++    expect(markup).toContain('Aucune connaissance validée');
++    expect(markup.match(/Ajouter une connaissance/g)).toHaveLength(1);
++    expect(markup).not.toContain('<form');
++  });
++
++  it('renders current items without mutation controls when canManage is false', () => {
++    const markup = renderToStaticMarkup(
++      <ValidatedKnowledgeSection
++        items={[
++          { id: '018f0000-0000-7000-8000-000000000001', statement: 'Une' },
++          { id: '018f0000-0000-7000-8000-000000000002', statement: 'Deux' },
++        ]}
++        canManage={false}
++      />,
++    );
++    expect(markup).toContain('Une');
++    expect(markup).toContain('Deux');
++    expect(markup).not.toContain('<form');
++    expect(markup).not.toContain('Ajouter une connaissance');
++    expect(markup).not.toContain('Retirer');
++    expect(markup).not.toContain('Enregistrer');
++  });
++
++  it('renders independent item-scoped edit and remove controls without autosave', () => {
++    const markup = renderToStaticMarkup(
++      <ValidatedKnowledgeSection
++        items={[
++          {
++            id: '018f0000-0000-7000-8000-000000000001',
++            statement: '  Connaissance exacte  ',
++          },
++        ]}
++        canManage
++      />,
++    );
++    expect(markup.match(/<form/g)).toHaveLength(1);
++    expect(markup).toContain('name="id"');
++    expect(markup).toContain('name="statement"');
++    expect(markup).toContain('  Connaissance exacte  ');
++    expect(markup).toContain('Retirer');
++    expect(markup).toContain('Enregistrer');
++    expect(mocks.create).not.toHaveBeenCalled();
++    expect(mocks.update).not.toHaveBeenCalled();
++    expect(mocks.remove).not.toHaveBeenCalled();
++  });
++});
+diff --git a/docs/ui/pages/establishment-general-information/ACCEPTANCE_CHECKLIST.md b/docs/ui/pages/establishment-general-information/ACCEPTANCE_CHECKLIST.md
+index f96b293..d20ad5b 100644
+--- a/docs/ui/pages/establishment-general-information/ACCEPTANCE_CHECKLIST.md
++++ b/docs/ui/pages/establishment-general-information/ACCEPTANCE_CHECKLIST.md
+@@ -99,6 +99,9 @@ When classified `EXISTING_PAGE`:
+ - [ ] Private contact values are not exposed publicly without current business rules.
+ - [ ] Contact data is not logged unnecessarily.
+ - [ ] No external provider was added.
++- [ ] OWNER and MANAGER can list/create/edit/remove Connaissances validées;
++      STAFF is denied before repository access, and Profile permission does not
++      substitute for Restaurant Knowledge READ/MANAGE.
+ 
+ ## Interactions and states
+ 
+@@ -128,6 +131,14 @@ When classified `EXISTING_PAGE`:
+ - [ ] Profile, Concept/Histoire, Cuisine/savoir-faire, Expérience client,
+       Équipe & culture and Identité de communication retain independent forms,
+       actions, repository operations and persistence boundaries.
++- [ ] Connaissances validées supports zero, one and multiple current items with
++      item-scoped create/update/physical remove and no whole-list replacement.
++- [ ] Blank and whitespace-only create/update fail before persistence; accepted
++      surrounding whitespace remains exact and blank edit never removes.
++- [ ] Pending removal leaves canonical data intact, undo performs no
++      persistence, and successful explicit remove affects only the matched item.
++- [ ] Connaissances validées has no autosave, bulk edit/delete, ordering,
++      category/tag, semantic duplicate detection, AI or provenance/history.
+ 
+ - [ ] Dirty-state and save behavior follow current form conventions.
+ - [ ] Save cannot duplicate-submit.
+diff --git a/docs/ui/pages/establishment-general-information/DATA_AND_INTERACTION_SPEC.md b/docs/ui/pages/establishment-general-information/DATA_AND_INTERACTION_SPEC.md
+index 65562fe..c7e1ba3 100644
+--- a/docs/ui/pages/establishment-general-information/DATA_AND_INTERACTION_SPEC.md
++++ b/docs/ui/pages/establishment-general-information/DATA_AND_INTERACTION_SPEC.md
+@@ -8,23 +8,24 @@ Prompt 00 must first map every concept to the current repository implementation.
+ 
+ ## Current implementation mapping
+ 
+-| UI concept                                     | Current source                           | Mutation                     | Status                          |
+-| ---------------------------------------------- | ---------------------------------------- | ---------------------------- | ------------------------------- |
+-| Name, description, structured address          | `establishments`                         | establishment profile action | `SUPPORTED`                     |
+-| Primary and public contact, website            | `establishments`                         | establishment profile action | `SUPPORTED`                     |
+-| Logo and cover                                 | validated URL fields on `establishments` | establishment profile action | `SUPPORTED_WITH_DIFFERENT_COPY` |
+-| Languages and service modes                    | establishment arrays and approved enum   | establishment profile action | `SUPPORTED`                     |
+-| Public visibility                              | establishment booleans                   | establishment profile action | `SUPPORTED`                     |
+-| Restaurant Knowledge Concept/Histoire          | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
+-| Restaurant Knowledge Cuisine/savoir-faire      | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
+-| Restaurant Knowledge Expérience client         | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
+-| Restaurant Knowledge Équipe & culture          | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
+-| Restaurant Knowledge Identité de communication | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
+-| Completion                                     | local view-model calculation             | none                         | `UI_ONLY_DERIVED`               |
+-| Local public preview                           | local form state                         | none                         | `UI_ONLY_DERIVED`               |
+-| Media upload                                   | no storage lifecycle                     | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
+-| Address verification                           | no geocoding provider                    | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
+-| External public profile                        | no route                                 | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
++| UI concept                                     | Current source                            | Mutation                     | Status                          |
++| ---------------------------------------------- | ----------------------------------------- | ---------------------------- | ------------------------------- |
++| Name, description, structured address          | `establishments`                          | establishment profile action | `SUPPORTED`                     |
++| Primary and public contact, website            | `establishments`                          | establishment profile action | `SUPPORTED`                     |
++| Logo and cover                                 | validated URL fields on `establishments`  | establishment profile action | `SUPPORTED_WITH_DIFFERENT_COPY` |
++| Languages and service modes                    | establishment arrays and approved enum    | establishment profile action | `SUPPORTED`                     |
++| Public visibility                              | establishment booleans                    | establishment profile action | `SUPPORTED`                     |
++| Restaurant Knowledge Concept/Histoire          | dedicated Restaurant Knowledge table      | page-local knowledge action  | `SUPPORTED`                     |
++| Restaurant Knowledge Cuisine/savoir-faire      | dedicated Restaurant Knowledge table      | page-local knowledge action  | `SUPPORTED`                     |
++| Restaurant Knowledge Expérience client         | dedicated Restaurant Knowledge table      | page-local knowledge action  | `SUPPORTED`                     |
++| Restaurant Knowledge Équipe & culture          | dedicated Restaurant Knowledge table      | page-local knowledge action  | `SUPPORTED`                     |
++| Restaurant Knowledge Identité de communication | dedicated Restaurant Knowledge table      | page-local knowledge action  | `SUPPORTED`                     |
++| Restaurant Knowledge Connaissances validées    | dedicated Restaurant Knowledge item table | page-local item actions      | `SUPPORTED`                     |
++| Completion                                     | local view-model calculation              | none                         | `UI_ONLY_DERIVED`               |
++| Local public preview                           | local form state                          | none                         | `UI_ONLY_DERIVED`               |
++| Media upload                                   | no storage lifecycle                      | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
++| Address verification                           | no geocoding provider                     | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
++| External public profile                        | no route                                  | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
+ 
+ ## Context and authorization
+ 
+@@ -63,6 +64,9 @@ The composed capabilities enforce permissions independently:
+ - Identité de communication load and visibility require
+   `restaurant-knowledge.read`, while edit and explicit save require
+   `restaurant-knowledge.manage`;
++- Connaissances validées load and visibility require `restaurant-knowledge.read`;
++  item-scoped create, update and physical remove require
++  `restaurant-knowledge.manage` before parsing or persistence;
+ - STAFF keeps profile-read access but receives no Restaurant Knowledge access;
+ - the knowledge action re-derives trusted tenant context and accepts no browser
+   organization or establishment identifier.
+@@ -177,6 +181,27 @@ all-null row both project to the same three-value all-empty state.
+   Reviews/Reputation, AI, Social, public website, CRM/customer, POS, Site Agent,
+   Display or provider data.
+ 
++## Restaurant Knowledge Connaissances validées
++
++The section lists zero, one or multiple current items from the dedicated
++Restaurant Knowledge repository using trusted organization and establishment
++scope. Each canonical item contains only an opaque UUIDv7 identifier and an
++exact statement.
++
++- create, update and physical remove are separate item-scoped explicit saves;
++- no whole-list replacement or autosave exists;
++- create generates canonical identity server-side;
++- update and remove constrain organization, establishment and item ID;
++- blank or whitespace-only create/update is rejected server-side before
++  persistence; surrounding whitespace on accepted text is preserved exactly;
++- blank edit never invokes remove, while pending removal requires its own
++  explicit confirmation and supports undo before save;
++- failed operations preserve the pending browser draft and previous canonical
++  baseline; successful responses reconcile locally without relying only on a
++  remount;
++- no category, tag, ordering, duplicate detection, provenance/history, AI,
++  cross-module lookup or downstream consumer is introduced.
++
+ ## UI view model
+ 
+ Adapt to existing DTOs and field names. Do not treat this as a persistence contract.
+diff --git a/docs/ui/pages/establishment-general-information/PRODUCT_SCOPE.md b/docs/ui/pages/establishment-general-information/PRODUCT_SCOPE.md
+index 3e2a3e4..f291ba7 100644
+--- a/docs/ui/pages/establishment-general-information/PRODUCT_SCOPE.md
++++ b/docs/ui/pages/establishment-general-information/PRODUCT_SCOPE.md
+@@ -33,6 +33,10 @@ Approved information categories:
+     Façon de s’adresser aux clients and Éléments de langage & choses à éviter
+     values, including valid all-empty state, manual edit, and one explicit
+     whole-slice save.
++14. a Restaurant Knowledge `Connaissances validées` collection with zero, one
++    or multiple independently saved statements, item-scoped manual create,
++    edit and remove, explicit save, no autosave and exact preservation of
++    accepted non-blank text.
+ 
+ All data is establishment-scoped and must remain inside the validated active `organization + establishment` context.
+ 
+@@ -69,6 +73,7 @@ public profile route, address verification, or media upload flow.
+ | Restaurant Knowledge Expérience client                                                                              | Implemented as a separate three-value establishment-scoped slice with READ/MANAGE and no operational-module/provider dependency |
+ | Restaurant Knowledge Équipe & culture                                                                               | Implemented as a separate three-value establishment-scoped slice with READ/MANAGE and no employee/workflow dependency           |
+ | Restaurant Knowledge Identité de communication                                                                      | Implemented as a separate three-value establishment-scoped slice with READ/MANAGE and no Marketing/Reviews/AI/CRM dependency    |
++| Restaurant Knowledge Connaissances validées                                                                         | Implemented as a dedicated establishment-scoped item collection with READ/MANAGE and item-scoped explicit create/edit/remove    |
+ 
+ ## Out of scope
+ 
+diff --git a/docs/ui/pages/establishment-general-information/README.md b/docs/ui/pages/establishment-general-information/README.md
+index 6bb1e20..efed227 100644
+--- a/docs/ui/pages/establishment-general-information/README.md
++++ b/docs/ui/pages/establishment-general-information/README.md
+@@ -22,8 +22,9 @@ The authenticated route is a composed establishment-scoped editor. The
+ existing Establishment Profile remains backed by canonical profile fields on
+ `establishments`; OWNER and MANAGER may edit it and STAFF remains read-only.
+ The separate Restaurant Knowledge `Concept & histoire`, `Cuisine &
+-savoir-faire`, `Expérience client`, `Équipe & culture` and `Identité de
+-communication` sections are backed by dedicated cloud tables and repository
++savoir-faire`, `Expérience client`, `Équipe & culture`, `Identité de
++communication` and `Connaissances validées` sections are backed by dedicated
++cloud tables and repository
+ operations, require Restaurant Knowledge READ to be visible, and require MANAGE
+ to edit or explicitly save. OWNER and MANAGER have both operations; STAFF
+ receives no Restaurant Knowledge access.
+@@ -33,7 +34,7 @@ state. The three Cuisine/savoir-faire, three Expérience client, three Équipe &
+ culture and three Identité de communication values are likewise independent
+ and optional, including a valid all-empty state for each slice. Each
+ browser-local slice has one explicit whole-slice save and no autosave. The
+-profile and all five Restaurant Knowledge sections retain separate forms,
++profile and all six Restaurant Knowledge sections retain separate forms,
+ actions and canonical data boundaries.
+ 
+ Weekly service periods are managed independently under
+diff --git a/docs/ui/pages/establishment-general-information/UI_SPEC.md b/docs/ui/pages/establishment-general-information/UI_SPEC.md
+index 4a6a653..1136c53 100644
+--- a/docs/ui/pages/establishment-general-information/UI_SPEC.md
++++ b/docs/ui/pages/establishment-general-information/UI_SPEC.md
+@@ -198,6 +198,20 @@ rendered. Canonically pristine drafts keep the submit disabled; a successful
+ save uses the returned canonical projection as its accepted baseline, and field
+ changes do not autosave.
+ 
++### Restaurant Knowledge — `Connaissances validées`
++
++A sixth separate full-width Restaurant Knowledge card follows `Identité de
++communication`. READ users see the current zero/one/multiple-item list or a
++valid empty state. MANAGE users additionally receive an explicit local add
++draft and independent edit/remove controls for each item.
++
++Every create, edit or pending removal has an item-scoped explicit save. Pending
++removal offers undo before save. Blank/whitespace-only statements show a clear
++field-associated error and cannot be saved; accepted surrounding whitespace is
++preserved. Operation-local pending, success and error feedback uses semantic
++status/alert behavior. No whole-list save, autosave, bulk operation, ordering,
++category, tag, AI, suggestion or provenance/history control is present.
++
+ ## Public-preview panel
+ 
+ The panel is read-only and may reflect unsaved local form state.
+diff --git a/packages/db-cloud/src/restaurant-knowledge-repository.ts b/packages/db-cloud/src/restaurant-knowledge-repository.ts
+index 525d4b7..e8d919c 100644
+--- a/packages/db-cloud/src/restaurant-knowledge-repository.ts
++++ b/packages/db-cloud/src/restaurant-knowledge-repository.ts
+@@ -1,12 +1,15 @@
+ import { requireEstablishment, type TenantContext } from '@yuta/tenant';
+-import { and, eq } from 'drizzle-orm';
++import { and, asc, eq } from 'drizzle-orm';
++import { v7 as uuidv7 } from 'uuid';
+ import type { CloudDatabaseClient } from './client';
+ import {
++  establishments,
+   restaurantKnowledgeConceptHistory,
+   restaurantKnowledgeCommunicationIdentity,
+   restaurantKnowledgeCuisineKnowHow,
+   restaurantKnowledgeCustomerExperience,
+   restaurantKnowledgeTeamCulture,
++  restaurantKnowledgeValidatedItems,
+ } from './schema';
+ 
+ export type RestaurantKnowledgeConceptHistoryInput = {
+@@ -401,3 +404,135 @@ export async function saveRestaurantKnowledgeCommunicationIdentity(
+ 
+   return row ?? emptyCommunicationIdentity();
+ }
++
++export type RestaurantKnowledgeValidatedItemValue = {
++  id: string;
++  statement: string;
++};
++
++async function hasScopedEstablishment(
++  db: CloudDatabaseClient,
++  context: TenantContext & { establishmentId: string },
++): Promise<boolean> {
++  const [row] = await db
++    .select({ id: establishments.id })
++    .from(establishments)
++    .where(
++      and(
++        eq(establishments.organizationId, context.organizationId),
++        eq(establishments.id, context.establishmentId),
++      ),
++    )
++    .limit(1);
++  return Boolean(row);
++}
++
++export async function listRestaurantKnowledgeValidatedItems(
++  db: CloudDatabaseClient,
++  context: TenantContext,
++): Promise<RestaurantKnowledgeValidatedItemValue[]> {
++  requireEstablishment(context);
++  if (!(await hasScopedEstablishment(db, context))) return [];
++
++  return db
++    .select({
++      id: restaurantKnowledgeValidatedItems.id,
++      statement: restaurantKnowledgeValidatedItems.statement,
++    })
++    .from(restaurantKnowledgeValidatedItems)
++    .where(
++      and(
++        eq(
++          restaurantKnowledgeValidatedItems.organizationId,
++          context.organizationId,
++        ),
++        eq(
++          restaurantKnowledgeValidatedItems.establishmentId,
++          context.establishmentId,
++        ),
++      ),
++    )
++    .orderBy(asc(restaurantKnowledgeValidatedItems.id));
++}
++
++export async function createRestaurantKnowledgeValidatedItem(
++  db: CloudDatabaseClient,
++  context: TenantContext,
++  statement: string,
++): Promise<RestaurantKnowledgeValidatedItemValue | null> {
++  requireEstablishment(context);
++  if (!(await hasScopedEstablishment(db, context))) return null;
++
++  const [row] = await db
++    .insert(restaurantKnowledgeValidatedItems)
++    .values({
++      organizationId: context.organizationId,
++      establishmentId: context.establishmentId,
++      id: uuidv7(),
++      statement,
++    })
++    .returning({
++      id: restaurantKnowledgeValidatedItems.id,
++      statement: restaurantKnowledgeValidatedItems.statement,
++    });
++  return row ?? null;
++}
++
++export async function updateRestaurantKnowledgeValidatedItem(
++  db: CloudDatabaseClient,
++  context: TenantContext,
++  id: string,
++  statement: string,
++): Promise<RestaurantKnowledgeValidatedItemValue | null> {
++  requireEstablishment(context);
++  if (!(await hasScopedEstablishment(db, context))) return null;
++
++  const [row] = await db
++    .update(restaurantKnowledgeValidatedItems)
++    .set({ statement })
++    .where(
++      and(
++        eq(
++          restaurantKnowledgeValidatedItems.organizationId,
++          context.organizationId,
++        ),
++        eq(
++          restaurantKnowledgeValidatedItems.establishmentId,
++          context.establishmentId,
++        ),
++        eq(restaurantKnowledgeValidatedItems.id, id),
++      ),
++    )
++    .returning({
++      id: restaurantKnowledgeValidatedItems.id,
++      statement: restaurantKnowledgeValidatedItems.statement,
++    });
++  return row ?? null;
++}
++
++export async function removeRestaurantKnowledgeValidatedItem(
++  db: CloudDatabaseClient,
++  context: TenantContext,
++  id: string,
++): Promise<boolean> {
++  requireEstablishment(context);
++  if (!(await hasScopedEstablishment(db, context))) return false;
++
++  const [row] = await db
++    .delete(restaurantKnowledgeValidatedItems)
++    .where(
++      and(
++        eq(
++          restaurantKnowledgeValidatedItems.organizationId,
++          context.organizationId,
++        ),
++        eq(
++          restaurantKnowledgeValidatedItems.establishmentId,
++          context.establishmentId,
++        ),
++        eq(restaurantKnowledgeValidatedItems.id, id),
++      ),
++    )
++    .returning({ id: restaurantKnowledgeValidatedItems.id });
++  return Boolean(row);
++}
+diff --git a/packages/db-cloud/src/schema/restaurant-knowledge.ts b/packages/db-cloud/src/schema/restaurant-knowledge.ts
+index 74c370d..57bc7be 100644
+--- a/packages/db-cloud/src/schema/restaurant-knowledge.ts
++++ b/packages/db-cloud/src/schema/restaurant-knowledge.ts
+@@ -132,3 +132,27 @@ export const restaurantKnowledgeCommunicationIdentity = pgTable(
+ 
+ export type RestaurantKnowledgeCommunicationIdentity =
+   typeof restaurantKnowledgeCommunicationIdentity.$inferSelect;
++
++export const restaurantKnowledgeValidatedItems = pgTable(
++  'restaurant_knowledge_validated_items',
++  {
++    organizationId: uuid('organization_id').notNull(),
++    establishmentId: uuid('establishment_id').notNull(),
++    id: uuid('id').notNull(),
++    statement: text('statement').notNull(),
++  },
++  (table) => [
++    primaryKey({
++      columns: [table.organizationId, table.establishmentId, table.id],
++      name: 'restaurant_knowledge_validated_items_scope_item_pk',
++    }),
++    foreignKey({
++      columns: [table.organizationId, table.establishmentId],
++      foreignColumns: [establishments.organizationId, establishments.id],
++      name: 'restaurant_knowledge_validated_items_establishment_scope_fk',
++    }).onDelete('restrict'),
++  ],
++);
++
++export type RestaurantKnowledgeValidatedItem =
++  typeof restaurantKnowledgeValidatedItems.$inferSelect;
+diff --git a/packages/db-cloud/test/restaurant-knowledge-repository.integration.test.ts b/packages/db-cloud/test/restaurant-knowledge-repository.integration.test.ts
+index 88a85f7..f492bff 100644
+--- a/packages/db-cloud/test/restaurant-knowledge-repository.integration.test.ts
++++ b/packages/db-cloud/test/restaurant-knowledge-repository.integration.test.ts
+@@ -4,16 +4,20 @@ import type { TenantContext } from '@yuta/tenant';
+ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+ import { v7 as uuidv7 } from 'uuid';
+ import {
++  createRestaurantKnowledgeValidatedItem,
+   getRestaurantKnowledgeConceptHistory,
+   getRestaurantKnowledgeCommunicationIdentity,
+   getRestaurantKnowledgeCuisineKnowHow,
+   getRestaurantKnowledgeCustomerExperience,
+   getRestaurantKnowledgeTeamCulture,
++  listRestaurantKnowledgeValidatedItems,
++  removeRestaurantKnowledgeValidatedItem,
+   saveRestaurantKnowledgeConceptHistory,
+   saveRestaurantKnowledgeCommunicationIdentity,
+   saveRestaurantKnowledgeCuisineKnowHow,
+   saveRestaurantKnowledgeCustomerExperience,
+   saveRestaurantKnowledgeTeamCulture,
++  updateRestaurantKnowledgeValidatedItem,
+ } from '../src/restaurant-knowledge-repository';
+ import {
+   createCloudDatabaseClient,
+@@ -27,6 +31,7 @@ import {
+   restaurantKnowledgeCuisineKnowHow,
+   restaurantKnowledgeCustomerExperience,
+   restaurantKnowledgeTeamCulture,
++  restaurantKnowledgeValidatedItems,
+ } from '../src/schema';
+ 
+ config({ path: '.env.test' });
+@@ -110,6 +115,20 @@ integrationTest('Restaurant Knowledge repository tenant isolation', () => {
+       [organizationAId, establishmentA2Id],
+       [organizationBId, establishmentBId],
+     ] as const) {
++      await db
++        .delete(restaurantKnowledgeValidatedItems)
++        .where(
++          and(
++            eq(
++              restaurantKnowledgeValidatedItems.organizationId,
++              organizationId,
++            ),
++            eq(
++              restaurantKnowledgeValidatedItems.establishmentId,
++              establishmentId,
++            ),
++          ),
++        );
+       await db
+         .delete(restaurantKnowledgeCommunicationIdentity)
+         .where(
+@@ -701,4 +720,113 @@ integrationTest('Restaurant Knowledge repository tenant isolation', () => {
+       getRestaurantKnowledgeConceptHistory(db, contextA1),
+     ).resolves.toEqual({ concept: 'Concept A1', history: null });
+   });
++
++  it('lists zero, one and multiple validated items in deterministic UUIDv7 order', async () => {
++    await expect(
++      listRestaurantKnowledgeValidatedItems(db, contextA1),
++    ).resolves.toEqual([]);
++    const first = await createRestaurantKnowledgeValidatedItem(
++      db,
++      contextA1,
++      ' Première ',
++    );
++    const second = await createRestaurantKnowledgeValidatedItem(
++      db,
++      contextA1,
++      'Deuxième',
++    );
++    expect(first?.id).toBeTruthy();
++    expect(second?.id).toBeTruthy();
++    await expect(
++      listRestaurantKnowledgeValidatedItems(db, contextA1),
++    ).resolves.toEqual([first, second]);
++  });
++
++  it('keeps item-scoped create, update and physical remove isolated', async () => {
++    const itemA = await createRestaurantKnowledgeValidatedItem(
++      db,
++      contextA1,
++      'A',
++    );
++    const itemB = await createRestaurantKnowledgeValidatedItem(
++      db,
++      contextA1,
++      'B',
++    );
++    const itemC = await createRestaurantKnowledgeValidatedItem(
++      db,
++      contextA2,
++      'C',
++    );
++    expect(itemA && itemB && itemC).toBeTruthy();
++    if (!itemA || !itemB || !itemC) throw new Error('Expected created items.');
++
++    await expect(
++      updateRestaurantKnowledgeValidatedItem(
++        db,
++        contextA1,
++        itemA.id,
++        ' A modifiée ',
++      ),
++    ).resolves.toEqual({ id: itemA.id, statement: ' A modifiée ' });
++    await expect(
++      updateRestaurantKnowledgeValidatedItem(
++        db,
++        contextA2,
++        itemA.id,
++        'Cross scope',
++      ),
++    ).resolves.toBeNull();
++    await expect(
++      removeRestaurantKnowledgeValidatedItem(db, contextA1, itemC.id),
++    ).resolves.toBe(false);
++    await expect(
++      removeRestaurantKnowledgeValidatedItem(db, contextA1, itemB.id),
++    ).resolves.toBe(true);
++    await expect(
++      updateRestaurantKnowledgeValidatedItem(db, contextA1, itemB.id, 'Stale'),
++    ).resolves.toBeNull();
++    await expect(
++      listRestaurantKnowledgeValidatedItems(db, contextA1),
++    ).resolves.toContainEqual({
++      id: itemA.id,
++      statement: ' A modifiée ',
++    });
++    await expect(
++      listRestaurantKnowledgeValidatedItems(db, contextA2),
++    ).resolves.toContainEqual(itemC);
++  });
++
++  it('uses last successful scoped write for the same item without touching unrelated items', async () => {
++    const itemA = await createRestaurantKnowledgeValidatedItem(
++      db,
++      contextB,
++      'Initial',
++    );
++    const itemB = await createRestaurantKnowledgeValidatedItem(
++      db,
++      contextB,
++      'Unrelated',
++    );
++    if (!itemA || !itemB) throw new Error('Expected created items.');
++    await Promise.all([
++      updateRestaurantKnowledgeValidatedItem(
++        db,
++        contextB,
++        itemA.id,
++        'Write one',
++      ),
++      updateRestaurantKnowledgeValidatedItem(
++        db,
++        contextB,
++        itemA.id,
++        'Write two',
++      ),
++    ]);
++    const items = await listRestaurantKnowledgeValidatedItems(db, contextB);
++    expect(['Write one', 'Write two']).toContain(
++      items.find((item) => item.id === itemA.id)?.statement,
++    );
++    expect(items).toContainEqual(itemB);
++  });
+ });
+diff --git a/packages/db-cloud/test/schema.test.ts b/packages/db-cloud/test/schema.test.ts
+index 1b02183..20c7a67 100644
+--- a/packages/db-cloud/test/schema.test.ts
++++ b/packages/db-cloud/test/schema.test.ts
+@@ -33,6 +33,7 @@ import {
+   restaurantKnowledgeCuisineKnowHow,
+   restaurantKnowledgeCustomerExperience,
+   restaurantKnowledgeTeamCulture,
++  restaurantKnowledgeValidatedItems,
+   tenantDomains,
+   tenantMemberships,
+   users,
+@@ -322,6 +323,53 @@ describe('cloud schema boundaries', () => {
+     ).toEqual(['organization_id', 'id']);
+   });
+ 
++  it('keeps Validated Knowledge in an exact dedicated item collection table', () => {
++    const config = getTableConfig(restaurantKnowledgeValidatedItems);
++    expect(config.columns.map((column) => column.name)).toEqual([
++      'organization_id',
++      'establishment_id',
++      'id',
++      'statement',
++    ]);
++    for (const name of [
++      'organization_id',
++      'establishment_id',
++      'id',
++      'statement',
++    ]) {
++      expect(
++        config.columns.find((column) => column.name === name)?.notNull,
++      ).toBe(true);
++    }
++    expect(
++      config.columns
++        .find((column) => column.name === 'statement')
++        ?.getSQLType(),
++    ).toBe('text');
++    expect(config.primaryKeys).toHaveLength(1);
++    expect(config.primaryKeys[0]?.name).toBe(
++      'restaurant_knowledge_validated_items_scope_item_pk',
++    );
++    expect(config.primaryKeys[0]?.columns.map((column) => column.name)).toEqual(
++      ['organization_id', 'establishment_id', 'id'],
++    );
++    expect(config.foreignKeys).toHaveLength(1);
++    expect(config.foreignKeys[0]?.onDelete).toBe('restrict');
++    expect(config.foreignKeys[0]?.getName()).toBe(
++      'restaurant_knowledge_validated_items_establishment_scope_fk',
++    );
++    expect(
++      config.foreignKeys[0]?.reference().columns.map((column) => column.name),
++    ).toEqual(['organization_id', 'establishment_id']);
++    expect(
++      config.foreignKeys[0]
++        ?.reference()
++        .foreignColumns.map((column) => column.name),
++    ).toEqual(['organization_id', 'id']);
++    expect(config.uniqueConstraints).toHaveLength(0);
++    expect(config.checks).toHaveLength(0);
++  });
++
+   it('keeps personnel document metadata establishment and employee scoped', () => {
+     for (const table of [
+       personnelDocuments,

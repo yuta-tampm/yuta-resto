@@ -2,13 +2,17 @@
 
 import { establishmentProfileInputSchema } from '@yuta/contracts';
 import {
+  createRestaurantKnowledgeValidatedItem,
+  removeRestaurantKnowledgeValidatedItem,
   saveRestaurantKnowledgeConceptHistory,
   saveRestaurantKnowledgeCommunicationIdentity,
   saveRestaurantKnowledgeCuisineKnowHow,
   saveRestaurantKnowledgeCustomerExperience,
   saveRestaurantKnowledgeTeamCulture,
+  updateRestaurantKnowledgeValidatedItem,
   updateEstablishmentProfile,
   type RestaurantKnowledgeCommunicationIdentityInput,
+  type RestaurantKnowledgeValidatedItemValue,
 } from '@yuta/db-cloud';
 import { requireEstablishment } from '@yuta/tenant';
 import { revalidatePath } from 'next/cache';
@@ -41,6 +45,14 @@ export type CommunicationIdentityActionState = {
   status: 'idle' | 'success' | 'error';
   message: string | null;
   savedCommunicationIdentity: RestaurantKnowledgeCommunicationIdentityInput | null;
+};
+
+export type ValidatedKnowledgeActionState = {
+  status: 'idle' | 'success' | 'error';
+  message: string | null;
+  fieldError: string | null;
+  item: RestaurantKnowledgeValidatedItemValue | null;
+  removedItemId: string | null;
 };
 
 const optionalConceptHistoryTextSchema = z
@@ -86,6 +98,40 @@ const communicationIdentityInputSchema = z
     languageElementsAndThingsToAvoid: optionalConceptHistoryTextSchema,
   })
   .strict();
+
+const validatedKnowledgeStatementSchema = z
+  .string()
+  .refine((value) => /\S/u.test(value), {
+    message:
+      'Saisissez une connaissance contenant au moins un caractère autre qu’un espace.',
+  });
+
+const validatedKnowledgeCreateSchema = z
+  .object({ statement: validatedKnowledgeStatementSchema })
+  .strict();
+
+const validatedKnowledgeUpdateSchema = z
+  .object({
+    id: z.string().uuid(),
+    statement: validatedKnowledgeStatementSchema,
+  })
+  .strict();
+
+const validatedKnowledgeRemoveSchema = z
+  .object({ id: z.string().uuid() })
+  .strict();
+
+const validatedKnowledgeValidationFailure = (
+  error: z.ZodError,
+): ValidatedKnowledgeActionState => ({
+  status: 'error',
+  message: 'Cette connaissance doit être corrigée.',
+  fieldError:
+    error.issues.find((issue) => issue.path[0] === 'statement')?.message ??
+    null,
+  item: null,
+  removedItemId: null,
+});
 
 export async function saveGeneralInformationAction(
   _previousState: GeneralInformationActionState,
@@ -356,4 +402,141 @@ export async function saveCommunicationIdentityAction(
       savedCommunicationIdentity: previousState.savedCommunicationIdentity,
     };
   }
+}
+
+export async function createValidatedKnowledgeAction(
+  _previousState: ValidatedKnowledgeActionState,
+  formData: FormData,
+): Promise<ValidatedKnowledgeActionState> {
+  const { tenant } = await requireAuthenticatedTenant(
+    '/etablissement/informations-generales',
+  );
+  requireEstablishment(tenant);
+  requireRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.manage');
+
+  try {
+    const input = validatedKnowledgeCreateSchema.parse({
+      statement: formData.get('statement'),
+    });
+    const item = await createRestaurantKnowledgeValidatedItem(
+      cloudDatabase,
+      tenant,
+      input.statement,
+    );
+    if (!item) {
+      return validatedKnowledgeError('Établissement introuvable.');
+    }
+    revalidatePath('/etablissement/informations-generales');
+    return {
+      status: 'success',
+      message: 'Connaissance validée ajoutée.',
+      fieldError: null,
+      item,
+      removedItemId: null,
+    };
+  } catch (error: unknown) {
+    if (error instanceof z.ZodError) {
+      return validatedKnowledgeValidationFailure(error);
+    }
+    console.error('Failed to create Restaurant Knowledge validated item.', {
+      errorName: error instanceof Error ? error.name : 'UnknownError',
+    });
+    return validatedKnowledgeError('Une erreur est survenue. Réessayez.');
+  }
+}
+
+export async function updateValidatedKnowledgeAction(
+  _previousState: ValidatedKnowledgeActionState,
+  formData: FormData,
+): Promise<ValidatedKnowledgeActionState> {
+  const { tenant } = await requireAuthenticatedTenant(
+    '/etablissement/informations-generales',
+  );
+  requireEstablishment(tenant);
+  requireRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.manage');
+
+  try {
+    const input = validatedKnowledgeUpdateSchema.parse({
+      id: formData.get('id'),
+      statement: formData.get('statement'),
+    });
+    const item = await updateRestaurantKnowledgeValidatedItem(
+      cloudDatabase,
+      tenant,
+      input.id,
+      input.statement,
+    );
+    if (!item) {
+      return validatedKnowledgeError('Cette connaissance n’existe plus.');
+    }
+    revalidatePath('/etablissement/informations-generales');
+    return {
+      status: 'success',
+      message: 'Connaissance validée enregistrée.',
+      fieldError: null,
+      item,
+      removedItemId: null,
+    };
+  } catch (error: unknown) {
+    if (error instanceof z.ZodError) {
+      return validatedKnowledgeValidationFailure(error);
+    }
+    console.error('Failed to update Restaurant Knowledge validated item.', {
+      errorName: error instanceof Error ? error.name : 'UnknownError',
+    });
+    return validatedKnowledgeError('Une erreur est survenue. Réessayez.');
+  }
+}
+
+export async function removeValidatedKnowledgeAction(
+  _previousState: ValidatedKnowledgeActionState,
+  formData: FormData,
+): Promise<ValidatedKnowledgeActionState> {
+  const { tenant } = await requireAuthenticatedTenant(
+    '/etablissement/informations-generales',
+  );
+  requireEstablishment(tenant);
+  requireRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.manage');
+
+  try {
+    const input = validatedKnowledgeRemoveSchema.parse({
+      id: formData.get('id'),
+    });
+    const removed = await removeRestaurantKnowledgeValidatedItem(
+      cloudDatabase,
+      tenant,
+      input.id,
+    );
+    if (!removed) {
+      return validatedKnowledgeError('Cette connaissance n’existe plus.');
+    }
+    revalidatePath('/etablissement/informations-generales');
+    return {
+      status: 'success',
+      message: 'Connaissance validée retirée.',
+      fieldError: null,
+      item: null,
+      removedItemId: input.id,
+    };
+  } catch (error: unknown) {
+    if (error instanceof z.ZodError) {
+      return validatedKnowledgeValidationFailure(error);
+    }
+    console.error('Failed to remove Restaurant Knowledge validated item.', {
+      errorName: error instanceof Error ? error.name : 'UnknownError',
+    });
+    return validatedKnowledgeError('Une erreur est survenue. Réessayez.');
+  }
+}
+
+function validatedKnowledgeError(
+  message: string,
+): ValidatedKnowledgeActionState {
+  return {
+    status: 'error',
+    message,
+    fieldError: null,
+    item: null,
+    removedItemId: null,
+  };
 }

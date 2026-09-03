@@ -6,7 +6,7 @@ Visibility: Local operator
 
 Owner: YUTA engineering and QA
 
-Last updated: 2026-08-23
+Last updated: 2026-09-02
 
 Use this checklist to stabilize the POS MVP before adding larger features.
 
@@ -31,10 +31,12 @@ pnpm dev:site-agent
 pnpm --filter @yuta/pos dev
 ```
 
-The POS development script uses the supported Next.js webpack fallback because
-Turbopack can keep stale route state after route files are added or after a
-production build shares the same `.next` directory. If a route still returns
-`404`, restart the affected dev server before marking the case as failed.
+The POS development script uses the default Next.js Turbopack development
+bundler. The webpack fallback in Next.js 16.2.9 does not correctly hydrate the
+POS-wide client provider around asynchronous App Router pages. If a newly added
+route returns a stale `404`, restart the affected dev server before marking the
+case as failed. If restarting is insufficient, stop the server, move the POS
+`.next` directory aside, and restart so the generated cache can be rebuilt.
 
 ## Result Legend
 

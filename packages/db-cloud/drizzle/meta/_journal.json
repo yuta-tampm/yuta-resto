@@ -113,6 +113,13 @@
       "when": 1788370299685,
       "tag": "0015_restaurant_knowledge_communication_identity",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1788386481416,
+      "tag": "0016_restaurant_knowledge_validated_items",
+      "breakpoints": true
     }
   ]
 }

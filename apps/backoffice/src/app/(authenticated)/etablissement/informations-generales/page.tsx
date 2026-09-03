@@ -14,12 +14,14 @@ import { CuisineKnowHowForm } from './_components/cuisine-know-how-form';
 import { CustomerExperienceForm } from './_components/customer-experience-form';
 import { TeamCultureForm } from './_components/team-culture-form';
 import { CommunicationIdentityForm } from './_components/communication-identity-form';
+import { ValidatedKnowledgeSection } from './_components/validated-knowledge-section';
 import {
   loadCommunicationIdentitySection,
   loadConceptHistorySection,
   loadCuisineKnowHowSection,
   loadCustomerExperienceSection,
   loadTeamCultureSection,
+  loadValidatedKnowledgeSection,
 } from './restaurant-knowledge-loader';
 
 export default async function GeneralInformationPage() {
@@ -35,6 +37,7 @@ export default async function GeneralInformationPage() {
     customerExperienceSection,
     teamCultureSection,
     communicationIdentitySection,
+    validatedKnowledgeSection,
   ] = await Promise.all([
     getEstablishmentProfile(cloudDatabase, tenant),
     loadConceptHistorySection(cloudDatabase, tenant),
@@ -42,6 +45,7 @@ export default async function GeneralInformationPage() {
     loadCustomerExperienceSection(cloudDatabase, tenant),
     loadTeamCultureSection(cloudDatabase, tenant),
     loadCommunicationIdentitySection(cloudDatabase, tenant),
+    loadValidatedKnowledgeSection(cloudDatabase, tenant),
   ]);
   if (!profile) notFound();
   const canEditProfile = hasEstablishmentPermission(
@@ -89,6 +93,12 @@ export default async function GeneralInformationPage() {
               communicationIdentitySection.communicationIdentity
             }
             canManage={communicationIdentitySection.canManage}
+          />
+        )}
+        {validatedKnowledgeSection && (
+          <ValidatedKnowledgeSection
+            items={validatedKnowledgeSection.items}
+            canManage={validatedKnowledgeSection.canManage}
           />
         )}
       </div>

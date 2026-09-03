@@ -8,23 +8,24 @@ Prompt 00 must first map every concept to the current repository implementation.
 
 ## Current implementation mapping
 
-| UI concept                                     | Current source                           | Mutation                     | Status                          |
-| ---------------------------------------------- | ---------------------------------------- | ---------------------------- | ------------------------------- |
-| Name, description, structured address          | `establishments`                         | establishment profile action | `SUPPORTED`                     |
-| Primary and public contact, website            | `establishments`                         | establishment profile action | `SUPPORTED`                     |
-| Logo and cover                                 | validated URL fields on `establishments` | establishment profile action | `SUPPORTED_WITH_DIFFERENT_COPY` |
-| Languages and service modes                    | establishment arrays and approved enum   | establishment profile action | `SUPPORTED`                     |
-| Public visibility                              | establishment booleans                   | establishment profile action | `SUPPORTED`                     |
-| Restaurant Knowledge Concept/Histoire          | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
-| Restaurant Knowledge Cuisine/savoir-faire      | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
-| Restaurant Knowledge Expérience client         | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
-| Restaurant Knowledge Équipe & culture          | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
-| Restaurant Knowledge Identité de communication | dedicated Restaurant Knowledge table     | page-local knowledge action  | `SUPPORTED`                     |
-| Completion                                     | local view-model calculation             | none                         | `UI_ONLY_DERIVED`               |
-| Local public preview                           | local form state                         | none                         | `UI_ONLY_DERIVED`               |
-| Media upload                                   | no storage lifecycle                     | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
-| Address verification                           | no geocoding provider                    | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
-| External public profile                        | no route                                 | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
+| UI concept                                     | Current source                            | Mutation                     | Status                          |
+| ---------------------------------------------- | ----------------------------------------- | ---------------------------- | ------------------------------- |
+| Name, description, structured address          | `establishments`                          | establishment profile action | `SUPPORTED`                     |
+| Primary and public contact, website            | `establishments`                          | establishment profile action | `SUPPORTED`                     |
+| Logo and cover                                 | validated URL fields on `establishments`  | establishment profile action | `SUPPORTED_WITH_DIFFERENT_COPY` |
+| Languages and service modes                    | establishment arrays and approved enum    | establishment profile action | `SUPPORTED`                     |
+| Public visibility                              | establishment booleans                    | establishment profile action | `SUPPORTED`                     |
+| Restaurant Knowledge Concept/Histoire          | dedicated Restaurant Knowledge table      | page-local knowledge action  | `SUPPORTED`                     |
+| Restaurant Knowledge Cuisine/savoir-faire      | dedicated Restaurant Knowledge table      | page-local knowledge action  | `SUPPORTED`                     |
+| Restaurant Knowledge Expérience client         | dedicated Restaurant Knowledge table      | page-local knowledge action  | `SUPPORTED`                     |
+| Restaurant Knowledge Équipe & culture          | dedicated Restaurant Knowledge table      | page-local knowledge action  | `SUPPORTED`                     |
+| Restaurant Knowledge Identité de communication | dedicated Restaurant Knowledge table      | page-local knowledge action  | `SUPPORTED`                     |
+| Restaurant Knowledge Connaissances validées    | dedicated Restaurant Knowledge item table | page-local item actions      | `SUPPORTED`                     |
+| Completion                                     | local view-model calculation              | none                         | `UI_ONLY_DERIVED`               |
+| Local public preview                           | local form state                          | none                         | `UI_ONLY_DERIVED`               |
+| Media upload                                   | no storage lifecycle                      | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
+| Address verification                           | no geocoding provider                     | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
+| External public profile                        | no route                                  | none                         | `PROPOSAL_REQUIRES_APPROVAL`    |
 
 ## Context and authorization
 
@@ -63,6 +64,9 @@ The composed capabilities enforce permissions independently:
 - Identité de communication load and visibility require
   `restaurant-knowledge.read`, while edit and explicit save require
   `restaurant-knowledge.manage`;
+- Connaissances validées load and visibility require `restaurant-knowledge.read`;
+  item-scoped create, update and physical remove require
+  `restaurant-knowledge.manage` before parsing or persistence;
 - STAFF keeps profile-read access but receives no Restaurant Knowledge access;
 - the knowledge action re-derives trusted tenant context and accepts no browser
   organization or establishment identifier.
@@ -176,6 +180,27 @@ all-null row both project to the same three-value all-empty state.
   publishes or synchronizes Establishment Profile, Marketing/Content,
   Reviews/Reputation, AI, Social, public website, CRM/customer, POS, Site Agent,
   Display or provider data.
+
+## Restaurant Knowledge Connaissances validées
+
+The section lists zero, one or multiple current items from the dedicated
+Restaurant Knowledge repository using trusted organization and establishment
+scope. Each canonical item contains only an opaque UUIDv7 identifier and an
+exact statement.
+
+- create, update and physical remove are separate item-scoped explicit saves;
+- no whole-list replacement or autosave exists;
+- create generates canonical identity server-side;
+- update and remove constrain organization, establishment and item ID;
+- blank or whitespace-only create/update is rejected server-side before
+  persistence; surrounding whitespace on accepted text is preserved exactly;
+- blank edit never invokes remove, while pending removal requires its own
+  explicit confirmation and supports undo before save;
+- failed operations preserve the pending browser draft and previous canonical
+  baseline; successful responses reconcile locally without relying only on a
+  remount;
+- no category, tag, ordering, duplicate detection, provenance/history, AI,
+  cross-module lookup or downstream consumer is introduced.
 
 ## UI view model
 

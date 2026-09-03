@@ -4,16 +4,20 @@ import type { TenantContext } from '@yuta/tenant';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { v7 as uuidv7 } from 'uuid';
 import {
+  createRestaurantKnowledgeValidatedItem,
   getRestaurantKnowledgeConceptHistory,
   getRestaurantKnowledgeCommunicationIdentity,
   getRestaurantKnowledgeCuisineKnowHow,
   getRestaurantKnowledgeCustomerExperience,
   getRestaurantKnowledgeTeamCulture,
+  listRestaurantKnowledgeValidatedItems,
+  removeRestaurantKnowledgeValidatedItem,
   saveRestaurantKnowledgeConceptHistory,
   saveRestaurantKnowledgeCommunicationIdentity,
   saveRestaurantKnowledgeCuisineKnowHow,
   saveRestaurantKnowledgeCustomerExperience,
   saveRestaurantKnowledgeTeamCulture,
+  updateRestaurantKnowledgeValidatedItem,
 } from '../src/restaurant-knowledge-repository';
 import {
   createCloudDatabaseClient,
@@ -27,6 +31,7 @@ import {
   restaurantKnowledgeCuisineKnowHow,
   restaurantKnowledgeCustomerExperience,
   restaurantKnowledgeTeamCulture,
+  restaurantKnowledgeValidatedItems,
 } from '../src/schema';
 
 config({ path: '.env.test' });
@@ -110,6 +115,20 @@ integrationTest('Restaurant Knowledge repository tenant isolation', () => {
       [organizationAId, establishmentA2Id],
       [organizationBId, establishmentBId],
     ] as const) {
+      await db
+        .delete(restaurantKnowledgeValidatedItems)
+        .where(
+          and(
+            eq(
+              restaurantKnowledgeValidatedItems.organizationId,
+              organizationId,
+            ),
+            eq(
+              restaurantKnowledgeValidatedItems.establishmentId,
+              establishmentId,
+            ),
+          ),
+        );
       await db
         .delete(restaurantKnowledgeCommunicationIdentity)
         .where(
@@ -700,5 +719,114 @@ integrationTest('Restaurant Knowledge repository tenant isolation', () => {
     await expect(
       getRestaurantKnowledgeConceptHistory(db, contextA1),
     ).resolves.toEqual({ concept: 'Concept A1', history: null });
+  });
+
+  it('lists zero, one and multiple validated items in deterministic UUIDv7 order', async () => {
+    await expect(
+      listRestaurantKnowledgeValidatedItems(db, contextA1),
+    ).resolves.toEqual([]);
+    const first = await createRestaurantKnowledgeValidatedItem(
+      db,
+      contextA1,
+      ' Première ',
+    );
+    const second = await createRestaurantKnowledgeValidatedItem(
+      db,
+      contextA1,
+      'Deuxième',
+    );
+    expect(first?.id).toBeTruthy();
+    expect(second?.id).toBeTruthy();
+    await expect(
+      listRestaurantKnowledgeValidatedItems(db, contextA1),
+    ).resolves.toEqual([first, second]);
+  });
+
+  it('keeps item-scoped create, update and physical remove isolated', async () => {
+    const itemA = await createRestaurantKnowledgeValidatedItem(
+      db,
+      contextA1,
+      'A',
+    );
+    const itemB = await createRestaurantKnowledgeValidatedItem(
+      db,
+      contextA1,
+      'B',
+    );
+    const itemC = await createRestaurantKnowledgeValidatedItem(
+      db,
+      contextA2,
+      'C',
+    );
+    expect(itemA && itemB && itemC).toBeTruthy();
+    if (!itemA || !itemB || !itemC) throw new Error('Expected created items.');
+
+    await expect(
+      updateRestaurantKnowledgeValidatedItem(
+        db,
+        contextA1,
+        itemA.id,
+        ' A modifiée ',
+      ),
+    ).resolves.toEqual({ id: itemA.id, statement: ' A modifiée ' });
+    await expect(
+      updateRestaurantKnowledgeValidatedItem(
+        db,
+        contextA2,
+        itemA.id,
+        'Cross scope',
+      ),
+    ).resolves.toBeNull();
+    await expect(
+      removeRestaurantKnowledgeValidatedItem(db, contextA1, itemC.id),
+    ).resolves.toBe(false);
+    await expect(
+      removeRestaurantKnowledgeValidatedItem(db, contextA1, itemB.id),
+    ).resolves.toBe(true);
+    await expect(
+      updateRestaurantKnowledgeValidatedItem(db, contextA1, itemB.id, 'Stale'),
+    ).resolves.toBeNull();
+    await expect(
+      listRestaurantKnowledgeValidatedItems(db, contextA1),
+    ).resolves.toContainEqual({
+      id: itemA.id,
+      statement: ' A modifiée ',
+    });
+    await expect(
+      listRestaurantKnowledgeValidatedItems(db, contextA2),
+    ).resolves.toContainEqual(itemC);
+  });
+
+  it('uses last successful scoped write for the same item without touching unrelated items', async () => {
+    const itemA = await createRestaurantKnowledgeValidatedItem(
+      db,
+      contextB,
+      'Initial',
+    );
+    const itemB = await createRestaurantKnowledgeValidatedItem(
+      db,
+      contextB,
+      'Unrelated',
+    );
+    if (!itemA || !itemB) throw new Error('Expected created items.');
+    await Promise.all([
+      updateRestaurantKnowledgeValidatedItem(
+        db,
+        contextB,
+        itemA.id,
+        'Write one',
+      ),
+      updateRestaurantKnowledgeValidatedItem(
+        db,
+        contextB,
+        itemA.id,
+        'Write two',
+      ),
+    ]);
+    const items = await listRestaurantKnowledgeValidatedItems(db, contextB);
+    expect(['Write one', 'Write two']).toContain(
+      items.find((item) => item.id === itemA.id)?.statement,
+    );
+    expect(items).toContainEqual(itemB);
   });
 });

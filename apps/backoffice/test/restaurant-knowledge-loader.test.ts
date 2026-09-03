@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
   getCuisineKnowHow: vi.fn(),
   getCustomerExperience: vi.fn(),
   getTeamCulture: vi.fn(),
+  listValidatedKnowledge: vi.fn(),
 }));
 
 vi.mock('server-only', () => ({}));
@@ -17,6 +18,7 @@ vi.mock('@yuta/db-cloud', () => ({
   getRestaurantKnowledgeCuisineKnowHow: mocks.getCuisineKnowHow,
   getRestaurantKnowledgeCustomerExperience: mocks.getCustomerExperience,
   getRestaurantKnowledgeTeamCulture: mocks.getTeamCulture,
+  listRestaurantKnowledgeValidatedItems: mocks.listValidatedKnowledge,
 }));
 
 import {
@@ -25,6 +27,7 @@ import {
   loadCuisineKnowHowSection,
   loadCustomerExperienceSection,
   loadTeamCultureSection,
+  loadValidatedKnowledgeSection,
 } from '../src/app/(authenticated)/etablissement/informations-generales/restaurant-knowledge-loader';
 
 function context(role: TenantRole): TenantContext {
@@ -76,6 +79,39 @@ describe('Restaurant Knowledge Concept and Histoire loader', () => {
     ).resolves.toBeNull();
     expect(mocks.getConceptHistory).not.toHaveBeenCalled();
     expect(mocks.getCuisineKnowHow).not.toHaveBeenCalled();
+  });
+});
+
+describe('Validated Knowledge loader', () => {
+  beforeEach(() => {
+    mocks.listValidatedKnowledge.mockReset();
+    mocks.listValidatedKnowledge.mockResolvedValue([
+      { id: randomUUID(), statement: 'Cuisine guidée par les saisons.' },
+    ]);
+  });
+
+  it.each(['OWNER', 'MANAGER'] as const)(
+    'loads current items with READ and derives MANAGE for %s',
+    async (role) => {
+      const tenant = context(role);
+      const result = await loadValidatedKnowledgeSection(
+        { kind: 'test-cloud-database' } as never,
+        tenant,
+      );
+      expect(result?.canManage).toBe(true);
+      expect(result?.items).toHaveLength(1);
+      expect(mocks.listValidatedKnowledge).toHaveBeenCalledWith(
+        { kind: 'test-cloud-database' },
+        tenant,
+      );
+    },
+  );
+
+  it('denies STAFF before repository access despite Profile read access', async () => {
+    await expect(
+      loadValidatedKnowledgeSection({} as never, context('STAFF')),
+    ).resolves.toBeNull();
+    expect(mocks.listValidatedKnowledge).not.toHaveBeenCalled();
   });
 });
 

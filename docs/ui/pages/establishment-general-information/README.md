@@ -22,8 +22,9 @@ The authenticated route is a composed establishment-scoped editor. The
 existing Establishment Profile remains backed by canonical profile fields on
 `establishments`; OWNER and MANAGER may edit it and STAFF remains read-only.
 The separate Restaurant Knowledge `Concept & histoire`, `Cuisine &
-savoir-faire`, `Expérience client`, `Équipe & culture` and `Identité de
-communication` sections are backed by dedicated cloud tables and repository
+savoir-faire`, `Expérience client`, `Équipe & culture`, `Identité de
+communication` and `Connaissances validées` sections are backed by dedicated
+cloud tables and repository
 operations, require Restaurant Knowledge READ to be visible, and require MANAGE
 to edit or explicitly save. OWNER and MANAGER have both operations; STAFF
 receives no Restaurant Knowledge access.
@@ -33,7 +34,7 @@ state. The three Cuisine/savoir-faire, three Expérience client, three Équipe &
 culture and three Identité de communication values are likewise independent
 and optional, including a valid all-empty state for each slice. Each
 browser-local slice has one explicit whole-slice save and no autosave. The
-profile and all five Restaurant Knowledge sections retain separate forms,
+profile and all six Restaurant Knowledge sections retain separate forms,
 actions and canonical data boundaries.
 
 Weekly service periods are managed independently under

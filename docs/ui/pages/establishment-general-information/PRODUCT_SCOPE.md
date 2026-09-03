@@ -33,6 +33,10 @@ Approved information categories:
     Façon de s’adresser aux clients and Éléments de langage & choses à éviter
     values, including valid all-empty state, manual edit, and one explicit
     whole-slice save.
+14. a Restaurant Knowledge `Connaissances validées` collection with zero, one
+    or multiple independently saved statements, item-scoped manual create,
+    edit and remove, explicit save, no autosave and exact preservation of
+    accepted non-blank text.
 
 All data is establishment-scoped and must remain inside the validated active `organization + establishment` context.
 
@@ -69,6 +73,7 @@ public profile route, address verification, or media upload flow.
 | Restaurant Knowledge Expérience client                                                                              | Implemented as a separate three-value establishment-scoped slice with READ/MANAGE and no operational-module/provider dependency |
 | Restaurant Knowledge Équipe & culture                                                                               | Implemented as a separate three-value establishment-scoped slice with READ/MANAGE and no employee/workflow dependency           |
 | Restaurant Knowledge Identité de communication                                                                      | Implemented as a separate three-value establishment-scoped slice with READ/MANAGE and no Marketing/Reviews/AI/CRM dependency    |
+| Restaurant Knowledge Connaissances validées                                                                         | Implemented as a dedicated establishment-scoped item collection with READ/MANAGE and item-scoped explicit create/edit/remove    |
 
 ## Out of scope
 
