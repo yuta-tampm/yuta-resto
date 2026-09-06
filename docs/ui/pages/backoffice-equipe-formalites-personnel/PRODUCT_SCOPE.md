@@ -1,42 +1,71 @@
 # Préparer un projet de contrat CDI — Product Scope
 
-Status: Phase 5 internal decision matrix drafted; external review blocked
+Status: Persistent draft foundation implemented — development local-only;
+production deferred
 
 Visibility: Engineering
 
 ## User goal
 
-Allow an OWNER to understand which existing employee facts could be reused and
-which contract-specific facts would still be required before preparing a CDI
-draft.
+Allow an OWNER to explicitly preserve and resume a bounded CDI preparation draft
+for one employee in the active establishment while Personnel remains the
+authoritative source for employee facts.
 
 ## Current approved capabilities
 
-- Display one clearly labelled fictional employee.
-- Separate reusable Salariés facts from Formalités-owned missing inputs.
-- Let the OWNER move through three local fictional steps, edit three
-  illustrative values, create an in-memory checkpoint, acknowledge review, and
-  see demo-only readiness.
-- Keep document generation disabled.
-- Restrict the route and navigation item with existing OWNER personnel access.
+- Keep the generic fictional prototype unchanged.
+- On the connected employee route, allow an OWNER to create, save, reopen,
+  reconcile, and abandon one active durable CDI preparation draft.
+- Reuse exactly seven current Personnel facts and collect only the three-state
+  probation preparation choice.
+- Detect later Personnel divergence and require explicit per-fact KEEP or
+  REFRESH reconciliation.
+- Keep document generation absent and production disabled.
+- Require independent `formalites.read`/`formalites.manage` and Personnel source
+  read authorization.
 
 ## Current boundaries
 
-This is an authenticated cloud Backoffice page for the active establishment.
-Phase 2 contains no tenant-owned personnel read and no transport or persistence.
-The shell session is real; every business fact in the prototype is fictional.
+This is an authenticated cloud Backoffice capability scoped by trusted
+organization, active establishment, employee, and draft. The connected route
+uses local development PostgreSQL persistence; the generic demonstration still
+uses fictional in-memory state. Browser-provided scope never creates authority.
 
 ## Approved change boundary
 
-Only the route, a route-local model/component, the navigation visibility rule,
-tests, and current documentation are in scope. Database, API, contracts, schema,
-migrations, providers, files, generation, signature, and production are excluded.
+The bounded implementation includes typed contracts, additive cloud schema and
+migration, a scoped repository, server actions, the connected route workspace,
+tests, and current page documentation. Provider, file, generation, signature,
+and production work remain excluded.
 
 ## Out of scope
 
-CDD or amendments, real dossier integration, durable editing/save/resume, templates,
-PDF generation, legal validation, DPAE/DSN, signature, sending, audit, retention,
-AI/OCR, and production operation.
+CDD draft creation, amendments, address, remuneration/payroll, probation
+duration or renewal, templates, PDF generation, legal validation, DPAE/DSN,
+signature, sending, Documents integration, AI/OCR, MANAGER/STAFF access,
+Personnel write-back, automatic retention cleanup, and production operation.
+
+## Persistent draft foundation — current as-built slice
+
+- Eligibility uses current trusted Personnel and requires only current CDI;
+  full-time, upcoming, departure, and legal probation conditions are not added as
+  eligibility gates.
+- `DRAFT` supports explicit create/save/reopen/edit/reconcile/abandon. There is
+  no autosave and `ABANDONED` remains read-only.
+- One active draft is allowed per employee, organization, establishment, and
+  bounded formality type; a new draft may be created after abandonment if the
+  current employee is again eligible.
+- `probationChoice` is exactly `UNDECIDED`, `INCLUDE`, or `EXCLUDE`. `INCLUDE`
+  is preparation metadata, not legal advice.
+- Reconciliation is derived by the server from current Personnel. KEEP preserves
+  the draft value without redefining Personnel truth; REFRESH accepts the
+  current trusted value. A later Personnel change creates a new episode.
+- Stale revisions, stale source snapshots, replays, conflicts, and server errors
+  fail visibly without partial save. Successful replay recovery does not create
+  a duplicate effect.
+- Active and abandoned records are retained in this bounded slice without user
+  hard delete or automatic expiry. This is not an infinite-retention promise;
+  final retention remains a separate privacy/production decision.
 
 ## Approved F5-07 lifecycle
 

@@ -1174,12 +1174,12 @@ identity/employment dialog and use the same server action, strict contract,
 tenant-scoped repository transaction, revision guard, idempotency receipt, and
 audit behavior. Use `EXISTING_CAPABILITY_RENEWAL` and preserve those boundaries.
 
-The downloaded flow is product input only. The current editor does not own
+The downloaded flow is product input only. The original F03 slice does not own
 remuneration, payroll, documents, work authorization, Formalités, personnel-
-register corrections, departure, or contract-document lifecycle. It also does
-not provide reconstructable old/new values for ordinary identity and employment
-changes. Those audit events expose changed field names only; F07 remains the
-separate decision point for durable value-level history.
+register corrections, departure, or contract-document lifecycle. Before F07,
+its audit events exposed changed field names only. The completed F07 extension
+now adds reconstructable old/new values for its approved Personnel facts while
+reusing this same editor.
 
 The current dialog has validation, pending, save error, idempotency conflict,
 stale-revision recovery, no-change success, and committed-success behavior. Its
@@ -1227,7 +1227,8 @@ with bounded copy explaining that declared facts may be reused to prepare a
 formality while the signed contract, when it exists, remains in `Documents`.
 
 F03 continues to own the shared current-value editor, F05 owns signed PDFs and
-amendments, and F07 owns any future reconstructable value history. Product
+amendments, and F07 owns reconstructable value history for its approved
+Personnel facts. Product
 approved F04-01 through F04-09 and the bounded Phase 1 on 2026-08-23. A focused
 render test protects the copy boundary. Authenticated OWNER QA with the
 fictional `Nina F02-Sierra` dossier verified `Relation de travail`, the separate
@@ -1331,34 +1332,50 @@ Normal minimized overview/dossier-access audit side effects remained expected.
 
 ## F07 Phase 0 — modify-and-historize reconciliation
 
-Status: `PHASE 2 CURRENT-HISTORY COHERENCE COMPLETE`.
+Status: `LOCAL AS-BUILT — GATE 3 APPROVED, NORMATIVE SPEC SYNCED; PRODUCTION BLOCKED`.
 
-F07 (`Modifier une donnée + historisation`) crosses an implemented current-
-value editor and an implemented but deliberately minimized employee timeline.
-The current trace is not a reconstructable snapshot history. F07 is therefore
-an existing-capability renewal for the current `Historique` interaction and a
-new-capability discovery for any future previous/new value history.
+F07 (`Modifier une donnée + historisation`) now extends the existing F03 editor
+and the existing `Historique` surface locally. It does not create a second
+editor or a separate history page. The server derives the actual changed
+semantic groups from authoritative dossier values; browser metadata never
+decides what changed.
 
-Today, one authenticated OWNER can open `Historique` from either the quick view
-or full dossier. The read is on demand and reuses trusted organization,
-establishment, and employee scope. It shows the 50 newest allowlisted employee
-events in reverse chronological order, with event label, occurrence time,
-actor, and changed field labels. A deleted actor is displayed neutrally. More
-than 50 events produces a truncation notice; there is no history pagination,
-search, filter, or export.
+For every changed group, the editor collects the approved classification and
+conditional metadata independently. Identity allows Correction or Change;
+Entry is Correction-only; Role, Contract terms, and Work time allow both.
+Applicable Changes require a business-effective date between the authoritative
+entry date and today, and no later than an existing departure. Future dates,
+scheduled changes, pending values, and future activation are not supported.
+Correction reasons follow the approved per-group matrix rather than becoming
+globally required.
 
-Ordinary F03 identity and employment writes commit the current dossier revision
-and audit event atomically with idempotency and conflict protection. The audit
-retains field names and revision numbers internally, but its public contract
-does not expose previous/new values, an effective date, or an ordinary edit
-reason. One update spanning identity and employment may appear as two events,
-and the current UI contract does not expose their shared operation identifier
-for grouping.
+One F03 submit remains atomic. The dossier mutation, all required F07 evidence,
+compatibility audit, and command receipt either commit together or roll back
+together. One invalid group rejects the entire mutation. Existing revision
+conflict, request fingerprint, idempotency, no-op, departure, and recovery
+semantics remain in force. Successful saves refresh the current dossier and an
+open `Historique`; validation, conflict, or retryable failure preserves the
+user's relevant draft.
 
-Departure is the only current reconstructable value exception: its event may
-show previous and new departure dates, and a correction/cancellation requires
-and displays a bounded reason. This exception must not be generalized to every
-field without a product, privacy, retention, and correction-policy decision.
+An authenticated OWNER can open `Historique` from either the quick view or full
+dossier. The read reuses trusted organization, establishment, and employee
+scope and merges legacy audit, typed F07 mutation events, and the cutover
+baseline. F07 entries display semantic group, Correction/Change, previous/new
+values, applicable effective date/reason, actor, and recorded time. Internal
+payload JSON, tenant IDs, operation IDs, and revisions are never rendered.
+Compatibility audit duplicates are removed. The surface still shows the 50
+newest events in stable reverse chronology and displays the existing truncation
+notice beyond that limit; it adds no pagination, search, filter, or export.
+
+Each dossier that existed at the completed cutover receives exactly one
+baseline labelled neutrally as current values at the start of historisation,
+with system attribution. It does not claim employee-start history, previous
+values, a human actor, or pre-cutover truth. Dossiers created after the cutover
+receive no fake baseline. Missing/corrupt versions fail closed.
+
+Departure retains its approved first-record/correction/cancellation behavior,
+including previous/new dates, explicit `null` cancellation, and mandatory
+reason for correction or cancellation.
 
 `Historique` excludes dossier consultation records, document history,
 personnel-register history, Formalités, Planning, Pointage, payroll, and generic
@@ -1367,15 +1384,8 @@ belongs to the separate `Consultations` tab. Contract-extraction lifecycle
 events may appear, but never prompts, excerpts, PDF content, or suggested old/
 new employee values.
 
-Repository inspection also found a coherence gap: after a successful edit, a
-previously loaded timeline is not explicitly invalidated or reloaded. No
-runtime correction is authorized in Phase 0. The smallest proposed next step is
-a documentation-only field-history policy matrix before any schema, contract,
-or UI implementation.
-
 Product approved F07-01 through F07-10 and completed that matrix on
-2026-08-24. It classifies every current mutable F03 field without authorizing
-storage:
+2026-08-24. The current local implementation follows these semantic groups:
 
 - given names and family name form one identity-history candidate;
 - position and qualification form an employment-role candidate;
@@ -1388,28 +1398,18 @@ storage:
 - departure keeps its already implemented previous/new dates and mandatory
   reason when corrected or cleared.
 
-Role, contract-term, and work-time candidates require a business-effective date
-policy before implementation. A correction must remain distinguishable from an
-ordinary prospective change, with a reason required only where the approved
-policy says it is a correction. Identity classification and all retention,
-redaction, rights, legal-hold, backup/restore, and production rules remain open
-for product/legal/DPO/security/operations review.
+The approved five-year post-departure rule is implemented only as retention-
+eligibility data behavior. There is no cleanup cron/job, keep-forever field, or
+invented legal-hold authority. Production migration, production cutover,
+backup/PITR approval, cleanup execution, and production enablement remain
+blocked and outside this local change.
 
-The matrix is prospective. It forbids rewriting current events or inventing
-old/new values. A future baseline for existing dossiers, if ever approved, must
-be labelled as a cutover snapshot of then-current authoritative values, never
-as proof of earlier history. Creation, duplicate override, contract extraction,
-Documents, register, and access events keep their current separate meanings.
-
-Phase 2 was approved and implemented on 2026-08-24. After a successful F03 edit
-in either the quick view or full dossier, any previously loaded history is
-invalidated. An active `Historique` tab immediately starts a fresh read with a
-new operation ID; an inactive tab stays unloaded and reads fresh data only when
-opened. Existing loading, error/retry, OWNER scope, minimized view audit, and
-newest-50 behavior remain unchanged. Focused tests cover both active and
-inactive outcomes. Phase 2 adds no schema, API, audit payload, previous/new
-value, effective date, reason field, event type, paging, export, or production-
-data capability.
+The precise observable F07 behavior is normative in the
+[Personnel reconstructable-value-history specification](../../../../openspec/specs/personnel/reconstructable-value-history/spec.md).
+Its completed planning evidence is archived under
+`openspec/changes/archive/2026-09-03-personnel-reconstructable-value-history`.
+Neither sync nor archive changes this page pack's local-only environment and
+production-readiness boundary.
 
 ## F08 Phase 0 — generate-formality reconciliation
 

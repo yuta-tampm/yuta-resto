@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-08
+Last updated: 2026-09-06
 
 This file is the operational implementation tracker for
 the reputation feature. Durable behavior belongs in the adjacent `README.md`.
@@ -22,6 +22,11 @@ Implement idempotent Google review import and a manual synchronization action.
 - Unified inbox list and feedback detail reads.
 - Public direct-feedback page with validation, consent handling, external review
   links, tenant resolution, and abuse rate limiting.
+- OWNER-only configuration of the active establishment's Google review,
+  Facebook, and Instagram destinations through one explicit atomic Save.
+- Shared fail-closed URL policy for private validation and public safe projection;
+  missing Reputation settings remain unavailable and are not provisioned by this
+  capability.
 - Database-backed back-office authentication with HttpOnly sessions.
 - Tenant and establishment selector with server-side membership validation and
   session rotation.

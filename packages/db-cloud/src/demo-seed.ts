@@ -120,6 +120,38 @@ const demoFeedback = [
     status: 'NEW',
     daysAgo: 8,
   },
+  {
+    id: '019faa29-fe4a-7a01-8c02-19d0a0b42db1',
+    externalId: 'yuta-demo-direct-poitiers-positive',
+    establishmentSlug: 'luna-poitiers',
+    privateSubmission: true,
+    source: 'DIRECT',
+    type: 'DIRECT_FEEDBACK',
+    authorName: 'Client démo positif',
+    rating: 5,
+    content:
+      'Accueil très chaleureux, service rapide et plats savoureux. Une excellente expérience à Poitiers.',
+    sentiment: 'POSITIVE',
+    urgency: 'LOW',
+    status: 'NEW',
+    daysAgo: 2,
+  },
+  {
+    id: '019faa29-fe4a-7a01-8c02-2f364a849516',
+    externalId: 'yuta-demo-direct-poitiers-negative',
+    establishmentSlug: 'luna-poitiers',
+    privateSubmission: true,
+    source: 'DIRECT',
+    type: 'DIRECT_FEEDBACK',
+    authorName: 'Client démo négatif',
+    rating: 2,
+    content:
+      "L'attente a été trop longue et le plat est arrivé tiède. L'équipe a toutefois été courtoise.",
+    sentiment: 'NEGATIVE',
+    urgency: 'HIGH',
+    status: 'TO_PROCESS',
+    daysAgo: 1,
+  },
 ] as const;
 
 export async function seedCloudReputationDemo(
@@ -147,11 +179,24 @@ export async function seedCloudReputationDemo(
           ),
         })
       : undefined;
+    const poitiersEstablishment = organization
+      ? await activeDb.query.establishments.findFirst({
+          where: and(
+            eq(establishments.organizationId, organization.id),
+            eq(establishments.slug, 'luna-poitiers'),
+          ),
+        })
+      : undefined;
     const ownerUser = await activeDb.query.users.findFirst({
       where: eq(users.email, 'owner@luna-restaurant.fr'),
     });
 
-    if (!organization || !establishment || !ownerUser) {
+    if (
+      !organization ||
+      !establishment ||
+      !poitiersEstablishment ||
+      !ownerUser
+    ) {
       throw new Error(
         'Run the cloud foundation seed before the reputation demo seed.',
       );
@@ -162,9 +207,12 @@ export async function seedCloudReputationDemo(
 
     for (const item of demoFeedback) {
       const receivedAt = new Date(now - item.daysAgo * dayInMilliseconds);
+      const itemEstablishment =
+        'establishmentSlug' in item ? poitiersEstablishment : establishment;
+      const isPrivateSubmission = 'privateSubmission' in item;
       const values = {
         organizationId: organization.id,
-        establishmentId: establishment.id,
+        establishmentId: itemEstablishment.id,
         source: item.source,
         type: item.type,
         externalId: item.externalId,
@@ -179,9 +227,9 @@ export async function seedCloudReputationDemo(
         urgency: item.urgency,
         status: item.status,
         assignedToUserId: 'assigned' in item ? ownerUser.id : null,
-        publishedAt: receivedAt,
+        publishedAt: isPrivateSubmission ? null : receivedAt,
         receivedAt,
-        lastSyncedAt: receivedAt,
+        lastSyncedAt: isPrivateSubmission ? null : receivedAt,
         providerMetadata: {
           demo: true,
           seedKey: item.externalId,
@@ -325,6 +373,58 @@ export async function seedCloudReputationDemo(
         target: directCustomerFeedback.id,
         set: directValues,
       });
+
+    const poitiersDirectSeeds = [
+      {
+        id: '019faa29-fe4a-7a01-8c02-3d052772091d',
+        feedbackKey: 'yuta-demo-direct-poitiers-positive',
+        selectedTopics: ['WELCOME', 'FOOD_QUALITY'],
+        orderReference: 'DEMO-POITIERS-1001',
+        daysAgo: 2,
+        servicePeriod: 'LUNCH',
+      },
+      {
+        id: '019faa29-fe4a-7a01-8c02-4275f9cf906f',
+        feedbackKey: 'yuta-demo-direct-poitiers-negative',
+        selectedTopics: ['WAIT_TIME', 'FOOD_TEMPERATURE'],
+        orderReference: 'DEMO-POITIERS-1002',
+        daysAgo: 1,
+        servicePeriod: 'DINNER',
+      },
+    ] as const;
+
+    for (const directSeed of poitiersDirectSeeds) {
+      const feedbackItemId = feedbackIds.get(directSeed.feedbackKey);
+      if (!feedbackItemId) {
+        throw new Error(
+          `Missing direct demo feedback ${directSeed.feedbackKey}.`,
+        );
+      }
+      const values = {
+        organizationId: organization.id,
+        establishmentId: poitiersEstablishment.id,
+        feedbackItemId,
+        selectedTopics: [...directSeed.selectedTopics],
+        customerName: null,
+        customerEmail: null,
+        customerPhone: null,
+        consentToContact: false,
+        consentRecordedAt: null,
+        orderReference: directSeed.orderReference,
+        visitDate: new Date(now - directSeed.daysAgo * dayInMilliseconds),
+        servicePeriod: directSeed.servicePeriod,
+        sourceTag: 'demo-seed',
+        submissionIpHash: null,
+        userAgent: 'YuTa demo seed',
+      };
+      await activeDb
+        .insert(directCustomerFeedback)
+        .values({ id: directSeed.id, ...values })
+        .onConflictDoUpdate({
+          target: directCustomerFeedback.id,
+          set: values,
+        });
+    }
 
     return {
       feedbackCount: demoFeedback.length,

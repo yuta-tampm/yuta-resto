@@ -38,6 +38,18 @@ export const personnelDocumentCategoryEnum = pgEnum(
   'personnel_document_category',
   ['signed_employment_contract'],
 );
+export const personnelHistoryEventKindEnum = pgEnum(
+  'personnel_history_event_kind',
+  ['mutation', 'cutover_baseline'],
+);
+export const personnelHistorySemanticGroupEnum = pgEnum(
+  'personnel_history_semantic_group',
+  ['identity', 'role', 'contract_terms', 'work_time', 'entry', 'departure'],
+);
+export const personnelHistoryClassificationEnum = pgEnum(
+  'personnel_history_classification',
+  ['correction', 'change'],
+);
 
 export const personnelEmployeeDossiers = pgTable(
   'personnel_employee_dossiers',
@@ -203,6 +215,165 @@ export const personnelCommandReceipts = pgTable(
       ],
       name: 'personnel_command_receipts_employee_scope_fk',
     }).onDelete('restrict'),
+  ],
+);
+
+export const personnelEmployeeHistoryEvents = pgTable(
+  'personnel_employee_history_events',
+  {
+    id: uuid('id').primaryKey(),
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'restrict' }),
+    establishmentId: uuid('establishment_id').notNull(),
+    employeeId: uuid('employee_id').notNull(),
+    eventKind: personnelHistoryEventKindEnum('event_kind').notNull(),
+    operationId: uuid('operation_id').notNull(),
+    previousRevision: integer('previous_revision'),
+    newRevision: integer('new_revision').notNull(),
+    actorUserId: uuid('actor_user_id').references(() => users.id, {
+      onDelete: 'set null',
+    }),
+    payloadVersion: integer('payload_version').notNull(),
+    recordedAt: timestamp('recorded_at', { withTimezone: true }).notNull(),
+  },
+  (table) => [
+    unique('personnel_employee_history_events_scope_kind_id_unique').on(
+      table.organizationId,
+      table.establishmentId,
+      table.employeeId,
+      table.eventKind,
+      table.id,
+    ),
+    uniqueIndex(
+      'personnel_employee_history_events_scope_operation_unique_idx',
+    ).on(
+      table.organizationId,
+      table.establishmentId,
+      table.employeeId,
+      table.operationId,
+    ),
+    uniqueIndex('personnel_employee_history_events_one_cutover_idx')
+      .on(table.organizationId, table.establishmentId, table.employeeId)
+      .where(sql`${table.eventKind} = 'cutover_baseline'`),
+    index('personnel_employee_history_events_scope_employee_recorded_idx').on(
+      table.organizationId,
+      table.establishmentId,
+      table.employeeId,
+      table.recordedAt,
+      table.id,
+    ),
+    foreignKey({
+      columns: [table.organizationId, table.establishmentId, table.employeeId],
+      foreignColumns: [
+        personnelEmployeeDossiers.organizationId,
+        personnelEmployeeDossiers.establishmentId,
+        personnelEmployeeDossiers.id,
+      ],
+      name: 'personnel_employee_history_events_employee_scope_fk',
+    }).onDelete('restrict'),
+    check(
+      'personnel_employee_history_events_payload_version_check',
+      sql`${table.payloadVersion} = 1`,
+    ),
+    check(
+      'personnel_employee_history_events_kind_metadata_check',
+      sql`(${table.eventKind} = 'mutation' and ${table.previousRevision} is not null and ${table.previousRevision} > 0 and ${table.newRevision} = ${table.previousRevision} + 1) or (${table.eventKind} = 'cutover_baseline' and ${table.actorUserId} is null and ${table.previousRevision} is null and ${table.newRevision} > 0)`,
+    ),
+  ],
+);
+
+export const personnelEmployeeHistoryGroupChanges = pgTable(
+  'personnel_employee_history_group_changes',
+  {
+    id: uuid('id').primaryKey(),
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'restrict' }),
+    establishmentId: uuid('establishment_id').notNull(),
+    employeeId: uuid('employee_id').notNull(),
+    eventId: uuid('event_id').notNull(),
+    eventKind: personnelHistoryEventKindEnum('event_kind').notNull(),
+    semanticGroup:
+      personnelHistorySemanticGroupEnum('semantic_group').notNull(),
+    classification: personnelHistoryClassificationEnum('classification'),
+    previousValues: jsonb('previous_values').$type<Record<
+      string,
+      unknown
+    > | null>(),
+    newValues: jsonb('new_values').$type<Record<string, unknown>>().notNull(),
+    effectiveDate: date('effective_date'),
+    correctionReason: varchar('correction_reason', { length: 250 }),
+  },
+  (table) => [
+    uniqueIndex('personnel_employee_history_groups_event_group_unique_idx').on(
+      table.organizationId,
+      table.establishmentId,
+      table.employeeId,
+      table.eventId,
+      table.semanticGroup,
+    ),
+    index('personnel_employee_history_groups_scope_employee_idx').on(
+      table.organizationId,
+      table.establishmentId,
+      table.employeeId,
+      table.eventId,
+    ),
+    foreignKey({
+      columns: [
+        table.organizationId,
+        table.establishmentId,
+        table.employeeId,
+        table.eventKind,
+        table.eventId,
+      ],
+      foreignColumns: [
+        personnelEmployeeHistoryEvents.organizationId,
+        personnelEmployeeHistoryEvents.establishmentId,
+        personnelEmployeeHistoryEvents.employeeId,
+        personnelEmployeeHistoryEvents.eventKind,
+        personnelEmployeeHistoryEvents.id,
+      ],
+      name: 'personnel_employee_history_groups_event_scope_fk',
+    }).onDelete('restrict'),
+    check(
+      'personnel_employee_history_groups_kind_metadata_check',
+      sql`(${table.eventKind} = 'mutation' and ${table.classification} is not null and ${table.previousValues} is not null) or (${table.eventKind} = 'cutover_baseline' and ${table.classification} is null and ${table.previousValues} is null and ${table.effectiveDate} is null and ${table.correctionReason} is null)`,
+    ),
+  ],
+);
+
+export const personnelHistoryCutovers = pgTable(
+  'personnel_history_cutovers',
+  {
+    id: uuid('id').primaryKey(),
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'restrict' }),
+    establishmentId: uuid('establishment_id').notNull(),
+    cutoverVersion: integer('cutover_version').notNull(),
+    cutoverAt: timestamp('cutover_at', { withTimezone: true }).notNull(),
+    completedAt: timestamp('completed_at', { withTimezone: true }).notNull(),
+  },
+  (table) => [
+    unique('personnel_history_cutovers_scope_version_unique').on(
+      table.organizationId,
+      table.establishmentId,
+      table.cutoverVersion,
+    ),
+    foreignKey({
+      columns: [table.organizationId, table.establishmentId],
+      foreignColumns: [establishments.organizationId, establishments.id],
+      name: 'personnel_history_cutovers_establishment_scope_fk',
+    }).onDelete('restrict'),
+    check(
+      'personnel_history_cutovers_version_check',
+      sql`${table.cutoverVersion} = 1`,
+    ),
+    check(
+      'personnel_history_cutovers_timestamps_check',
+      sql`${table.completedAt} >= ${table.cutoverAt}`,
+    ),
   ],
 );
 

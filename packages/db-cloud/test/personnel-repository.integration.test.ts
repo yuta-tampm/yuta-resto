@@ -1,6 +1,12 @@
 import { config } from 'dotenv';
 import { and, eq, inArray } from 'drizzle-orm';
 import type { TenantContext } from '@yuta/tenant';
+import type {
+  PersonnelEmployeeSummary,
+  PersonnelHistoryClassification,
+  PersonnelHistoryMutationGroupMetadata,
+  PersonnelHistorySemanticGroup,
+} from '@yuta/contracts/personnel';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { v7 as uuidv7 } from 'uuid';
 import {
@@ -11,6 +17,7 @@ import {
   findPersonnelEmployee,
   listPersonnelEmployeeAccessHistory,
   listPersonnelEmployeeAuditHistory,
+  listPersonnelEmployeeUnifiedHistory,
   listPersonnelEmployees,
   createPersonnelEmployee,
   PersonnelDuplicateError,
@@ -22,12 +29,16 @@ import {
   updatePersonnelEmployee,
   validatePersonnelContractExtractionReviewGrant,
 } from '../src/personnel-repository';
+import { runPersonnelHistoryCutover } from '../src/personnel-history-cutover';
 import {
   establishments,
   organizations,
   personnelCommandReceipts,
   personnelEmployeeAuditEvents,
   personnelEmployeeDossiers,
+  personnelEmployeeHistoryEvents,
+  personnelEmployeeHistoryGroupChanges,
+  personnelHistoryCutovers,
   users,
 } from '../src/schema';
 
@@ -1142,6 +1153,560 @@ integrationTest('personnel repository tenant isolation', () => {
   });
 });
 
+integrationTest('F07 reconstructable Personnel history service', () => {
+  let db: CloudDatabaseClient;
+  const organizationId = uuidv7();
+  const establishmentId = uuidv7();
+  const otherEstablishmentId = uuidv7();
+  const actorUserId = uuidv7();
+  const baselineEmployeeId = uuidv7();
+  const tenant: TenantContext = {
+    organizationId,
+    establishmentId,
+    actor: {
+      type: 'user',
+      userId: actorUserId,
+      membershipId: uuidv7(),
+      role: 'OWNER',
+    },
+    locale: 'fr-FR',
+    timezone: 'Europe/Paris',
+    entitlements: new Set(),
+  };
+
+  beforeAll(async () => {
+    db = createCloudDatabaseClient(process.env);
+    await db.insert(organizations).values({
+      id: organizationId,
+      name: 'F07 test organization',
+      slug: `f07-${organizationId}`,
+    });
+    await db.insert(establishments).values([
+      {
+        id: establishmentId,
+        organizationId,
+        name: 'F07 establishment',
+        slug: `f07-${establishmentId}`,
+      },
+      {
+        id: otherEstablishmentId,
+        organizationId,
+        name: 'F07 other establishment',
+        slug: `f07-${otherEstablishmentId}`,
+      },
+    ]);
+    await db.insert(users).values({
+      id: actorUserId,
+      authProviderId: `test:f07:${actorUserId}`,
+      email: `f07-${actorUserId}@example.test`,
+      displayName: 'F07 owner',
+    });
+    await db
+      .insert(personnelEmployeeDossiers)
+      .values(
+        employee(
+          baselineEmployeeId,
+          organizationId,
+          establishmentId,
+          'F07 baseline',
+        ),
+      );
+    await runPersonnelHistoryCutover(db, tenant);
+  });
+
+  afterAll(async () => {
+    if (!db) return;
+    await db
+      .delete(personnelEmployeeHistoryGroupChanges)
+      .where(
+        eq(personnelEmployeeHistoryGroupChanges.organizationId, organizationId),
+      );
+    await db
+      .delete(personnelEmployeeHistoryEvents)
+      .where(eq(personnelEmployeeHistoryEvents.organizationId, organizationId));
+    await db
+      .delete(personnelHistoryCutovers)
+      .where(eq(personnelHistoryCutovers.organizationId, organizationId));
+    await db
+      .delete(personnelCommandReceipts)
+      .where(eq(personnelCommandReceipts.organizationId, organizationId));
+    await db
+      .delete(personnelEmployeeAuditEvents)
+      .where(eq(personnelEmployeeAuditEvents.organizationId, organizationId));
+    await db
+      .delete(personnelEmployeeDossiers)
+      .where(eq(personnelEmployeeDossiers.organizationId, organizationId));
+    await db
+      .delete(establishments)
+      .where(eq(establishments.organizationId, organizationId));
+    await db.delete(organizations).where(eq(organizations.id, organizationId));
+    await db.delete(users).where(eq(users.id, actorUserId));
+    await db.$client.end({ timeout: 5 });
+  });
+
+  it('records a multi-group mutation atomically and preserves replay, fingerprint, and revision semantics', async () => {
+    const created = await createF07Employee(db, tenant, 'Multi group');
+    const idempotencyKey = uuidv7();
+    const input = {
+      ...updateFrom(created.employee),
+      idempotencyKey,
+      givenNames: 'Camille Marie',
+      position: 'Responsable de salle',
+      workTimeCategory: 'part_time' as const,
+      contractWeeklyMinutes: 1_500,
+      historyMetadata: [
+        metadata('identity', 'correction', null, null),
+        metadata('role', 'change', '2026-08-01', null),
+        metadata(
+          'work_time',
+          'correction',
+          null,
+          'Durée contractuelle mal saisie.',
+        ),
+      ],
+    };
+    const committedAt = new Date('2026-08-13T10:00:00.000Z');
+    const updated = await updatePersonnelEmployee(
+      db,
+      tenant,
+      input,
+      '2026-08-13',
+      committedAt,
+    );
+    const replay = await updatePersonnelEmployee(
+      db,
+      tenant,
+      input,
+      '2026-08-13',
+      committedAt,
+    );
+    expect(updated.updated).toBe(true);
+    expect(replay.idempotentReplay).toBe(true);
+
+    const events = await db
+      .select()
+      .from(personnelEmployeeHistoryEvents)
+      .where(
+        eq(personnelEmployeeHistoryEvents.employeeId, created.employee.id),
+      );
+    expect(events).toHaveLength(1);
+    const groups = await db
+      .select()
+      .from(personnelEmployeeHistoryGroupChanges)
+      .where(
+        eq(
+          personnelEmployeeHistoryGroupChanges.employeeId,
+          created.employee.id,
+        ),
+      );
+    expect(groups.map((group) => group.semanticGroup).sort()).toEqual([
+      'identity',
+      'role',
+      'work_time',
+    ]);
+    expect(
+      groups.find((group) => group.semanticGroup === 'identity'),
+    ).toMatchObject({
+      previousValues: expect.objectContaining({
+        givenNames: created.employee.givenNames,
+      }),
+      newValues: expect.objectContaining({ givenNames: 'Camille Marie' }),
+    });
+    const compatibilityAudit = await db
+      .select()
+      .from(personnelEmployeeAuditEvents)
+      .where(
+        and(
+          eq(personnelEmployeeAuditEvents.employeeId, created.employee.id),
+          inArray(personnelEmployeeAuditEvents.eventType, [
+            'employee.identity_updated',
+            'employee.employment_updated',
+          ]),
+        ),
+      );
+    expect(compatibilityAudit).toHaveLength(2);
+    expect(
+      new Set(compatibilityAudit.map((event) => event.operationId)),
+    ).toEqual(new Set([events[0]!.operationId]));
+    const receipts = await db
+      .select()
+      .from(personnelCommandReceipts)
+      .where(
+        and(
+          eq(personnelCommandReceipts.employeeId, created.employee.id),
+          eq(personnelCommandReceipts.commandType, 'personnel.employee.update'),
+        ),
+      );
+    expect(receipts).toHaveLength(1);
+
+    const noOp = await updatePersonnelEmployee(
+      db,
+      tenant,
+      {
+        ...updateFrom(updated.employee),
+        idempotencyKey: uuidv7(),
+      },
+      '2026-08-13',
+      committedAt,
+    );
+    expect(noOp).toMatchObject({ updated: false, idempotentReplay: false });
+    expect(
+      await db
+        .select()
+        .from(personnelEmployeeHistoryEvents)
+        .where(
+          eq(personnelEmployeeHistoryEvents.employeeId, created.employee.id),
+        ),
+    ).toHaveLength(1);
+
+    await expect(
+      updatePersonnelEmployee(
+        db,
+        tenant,
+        { ...input, familyName: 'Different request' },
+        '2026-08-13',
+        committedAt,
+      ),
+    ).rejects.toMatchObject<Partial<PersonnelRepositoryError>>({
+      code: 'IDEMPOTENCY_CONFLICT',
+    });
+    await expect(
+      updatePersonnelEmployee(
+        db,
+        tenant,
+        { ...input, idempotencyKey: uuidv7(), position: 'Direction' },
+        '2026-08-13',
+      ),
+    ).rejects.toBeInstanceOf(PersonnelConflictError);
+
+    const unified = await listPersonnelEmployeeUnifiedHistory(
+      db,
+      tenant,
+      created.employee.id,
+    );
+    expect(
+      unified.items.filter((item) => item.kind === 'mutation'),
+    ).toHaveLength(1);
+    expect(
+      unified.items.filter(
+        (item) =>
+          item.kind === 'legacy' &&
+          (item.eventType === 'employee.identity_updated' ||
+            item.eventType === 'employee.employment_updated'),
+      ),
+    ).toHaveLength(0);
+    expect(JSON.stringify(unified)).not.toMatch(
+      /organizationId|establishmentId|employeeId|operationId|payloadVersion|previousRevision|newRevision/u,
+    );
+  });
+
+  it('rejects one invalid group before any dossier, history, audit, or receipt write', async () => {
+    const created = await createF07Employee(db, tenant, 'Invalid group');
+    const idempotencyKey = uuidv7();
+    await expect(
+      updatePersonnelEmployee(
+        db,
+        tenant,
+        {
+          ...updateFrom(created.employee),
+          idempotencyKey,
+          givenNames: 'Corrected name',
+          position: 'Future role',
+          historyMetadata: [
+            metadata('identity', 'correction', null, null),
+            metadata('role', 'change', '2026-08-14', null),
+          ],
+        },
+        '2026-08-13',
+      ),
+    ).rejects.toMatchObject<Partial<PersonnelRepositoryError>>({
+      code: 'PERSONNEL_HISTORY_METADATA_INVALID',
+    });
+    await expect(
+      findPersonnelEmployee(db, tenant, created.employee.id, '2026-08-13'),
+    ).resolves.toMatchObject({
+      givenNames: created.employee.givenNames,
+      position: created.employee.position,
+      revision: created.employee.revision,
+    });
+    const f07 = await db
+      .select()
+      .from(personnelEmployeeHistoryEvents)
+      .where(
+        eq(personnelEmployeeHistoryEvents.employeeId, created.employee.id),
+      );
+    expect(f07).toHaveLength(0);
+    const receipt = await db
+      .select()
+      .from(personnelCommandReceipts)
+      .where(
+        and(
+          eq(personnelCommandReceipts.employeeId, created.employee.id),
+          eq(personnelCommandReceipts.commandType, 'personnel.employee.update'),
+        ),
+      );
+    expect(receipt).toHaveLength(0);
+    const compatibilityAudit = await db
+      .select()
+      .from(personnelEmployeeAuditEvents)
+      .where(
+        and(
+          eq(personnelEmployeeAuditEvents.employeeId, created.employee.id),
+          inArray(personnelEmployeeAuditEvents.eventType, [
+            'employee.identity_updated',
+            'employee.employment_updated',
+          ]),
+        ),
+      );
+    expect(compatibilityAudit).toHaveLength(0);
+  });
+
+  it('rolls the dossier back when the required F07 history write fails', async () => {
+    const created = await createF07Employee(db, tenant, 'Rollback');
+    const missingActorTenant: TenantContext = {
+      ...tenant,
+      actor: {
+        type: 'user',
+        userId: uuidv7(),
+        membershipId: uuidv7(),
+        role: 'OWNER',
+      },
+    };
+    await expect(
+      updatePersonnelEmployee(
+        db,
+        missingActorTenant,
+        {
+          ...updateFrom(created.employee),
+          idempotencyKey: uuidv7(),
+          position: 'Must roll back',
+          historyMetadata: [metadata('role', 'change', '2026-08-13', null)],
+        },
+        '2026-08-13',
+      ),
+    ).rejects.toBeDefined();
+    await expect(
+      findPersonnelEmployee(db, tenant, created.employee.id, '2026-08-13'),
+    ).resolves.toMatchObject({
+      position: created.employee.position,
+      revision: created.employee.revision,
+    });
+    expect(
+      await db
+        .select()
+        .from(personnelEmployeeHistoryEvents)
+        .where(
+          eq(personnelEmployeeHistoryEvents.employeeId, created.employee.id),
+        ),
+    ).toHaveLength(0);
+    expect(
+      await db
+        .select()
+        .from(personnelCommandReceipts)
+        .where(
+          and(
+            eq(personnelCommandReceipts.employeeId, created.employee.id),
+            eq(
+              personnelCommandReceipts.commandType,
+              'personnel.employee.update',
+            ),
+          ),
+        ),
+    ).toHaveLength(0);
+    expect(
+      await db
+        .select()
+        .from(personnelEmployeeAuditEvents)
+        .where(
+          and(
+            eq(personnelEmployeeAuditEvents.employeeId, created.employee.id),
+            inArray(personnelEmployeeAuditEvents.eventType, [
+              'employee.identity_updated',
+              'employee.employment_updated',
+            ]),
+          ),
+        ),
+    ).toHaveLength(0);
+  });
+
+  it('keeps departure record, correction, cancellation, and unified deduplication compatible', async () => {
+    const created = await createF07Employee(db, tenant, 'Departure');
+    const recordInput = {
+      idempotencyKey: uuidv7(),
+      employeeId: created.employee.id,
+      expectedRevision: created.employee.revision,
+      departureDate: '2026-08-13',
+      correctionReason: null,
+      confirmNonDeletion: true as const,
+    };
+    const recorded = await setPersonnelEmployeeDeparture(
+      db,
+      tenant,
+      recordInput,
+      '2026-08-13',
+    );
+    await expect(
+      setPersonnelEmployeeDeparture(db, tenant, recordInput, '2026-08-13'),
+    ).resolves.toMatchObject({ idempotentReplay: true });
+    await expect(
+      setPersonnelEmployeeDeparture(
+        db,
+        tenant,
+        {
+          ...recordInput,
+          idempotencyKey: uuidv7(),
+          expectedRevision: recorded.employee.revision,
+          departureDate: null,
+          correctionReason: null,
+        },
+        '2026-08-14',
+      ),
+    ).rejects.toMatchObject<Partial<PersonnelRepositoryError>>({
+      code: 'REASON_REQUIRED',
+    });
+    const cancelled = await setPersonnelEmployeeDeparture(
+      db,
+      tenant,
+      {
+        ...recordInput,
+        idempotencyKey: uuidv7(),
+        expectedRevision: recorded.employee.revision,
+        departureDate: null,
+        correctionReason: 'Départ enregistré par erreur.',
+      },
+      '2026-08-14',
+    );
+    expect(cancelled.employee.departureDate).toBeNull();
+    const history = await listPersonnelEmployeeUnifiedHistory(
+      db,
+      tenant,
+      created.employee.id,
+    );
+    const mutations = history.items.filter((item) => item.kind === 'mutation');
+    expect(mutations).toHaveLength(2);
+    expect(mutations[0]).toMatchObject({
+      groups: [
+        {
+          semanticGroup: 'departure',
+          classification: 'correction',
+          previousValues: { departureDate: '2026-08-13' },
+          newValues: { departureDate: null },
+          correctionReason: 'Départ enregistré par erreur.',
+        },
+      ],
+    });
+    expect(
+      history.items.filter(
+        (item) =>
+          item.kind === 'legacy' &&
+          item.eventType.startsWith('employee.departure'),
+      ),
+    ).toHaveLength(0);
+  });
+
+  it('fails closed across establishment scope and for corrupt payloads', async () => {
+    const baseline = await listPersonnelEmployeeUnifiedHistory(
+      db,
+      tenant,
+      baselineEmployeeId,
+    );
+    expect(baseline.items).toEqual([
+      expect.objectContaining({
+        kind: 'cutover_baseline',
+        actorDisplayName: null,
+        groups: expect.any(Array),
+      }),
+    ]);
+    expect(
+      baseline.items[0]?.kind === 'cutover_baseline'
+        ? baseline.items[0].groups
+        : [],
+    ).toHaveLength(6);
+
+    await expect(
+      updatePersonnelEmployee(
+        db,
+        { ...tenant, establishmentId: otherEstablishmentId },
+        {
+          ...updateFrom(
+            (await findPersonnelEmployee(
+              db,
+              tenant,
+              baselineEmployeeId,
+              '2026-08-13',
+            ))!,
+          ),
+          idempotencyKey: uuidv7(),
+          position: 'Forbidden',
+          historyMetadata: [metadata('role', 'change', '2026-08-13', null)],
+        },
+        '2026-08-13',
+      ),
+    ).rejects.toMatchObject<Partial<PersonnelRepositoryError>>({
+      code: 'NOT_FOUND',
+    });
+
+    const created = await createF07Employee(db, tenant, 'Corrupt payload');
+    await updatePersonnelEmployee(
+      db,
+      tenant,
+      {
+        ...updateFrom(created.employee),
+        idempotencyKey: uuidv7(),
+        position: 'New role',
+        historyMetadata: [metadata('role', 'change', '2026-08-13', null)],
+      },
+      '2026-08-13',
+    );
+    await db
+      .update(personnelEmployeeHistoryGroupChanges)
+      .set({
+        newValues: {
+          payloadVersion: 2,
+          position: 'Corrupt',
+          qualification: 'Corrupt',
+        },
+      })
+      .where(
+        eq(
+          personnelEmployeeHistoryGroupChanges.employeeId,
+          created.employee.id,
+        ),
+      );
+    await expect(
+      listPersonnelEmployeeUnifiedHistory(db, tenant, created.employee.id),
+    ).rejects.toBeDefined();
+  });
+
+  it('preserves a stable newest-50 window and truncation', async () => {
+    const created = await createF07Employee(db, tenant, 'Newest 50');
+    const base = new Date('2026-09-04T12:00:00.000Z').getTime();
+    await db.insert(personnelEmployeeAuditEvents).values(
+      Array.from({ length: 51 }, (_, index) => ({
+        id: uuidv7(),
+        organizationId,
+        establishmentId,
+        employeeId: created.employee.id,
+        actorUserId,
+        eventType: 'employee.employment_updated',
+        operationId: uuidv7(),
+        changedFields: ['position'],
+        createdAt: new Date(base + index),
+      })),
+    );
+    const history = await listPersonnelEmployeeUnifiedHistory(
+      db,
+      tenant,
+      created.employee.id,
+    );
+    expect(history.items).toHaveLength(50);
+    expect(history.truncated).toBe(true);
+    expect(history.items[0]?.occurredAt).toBe(
+      new Date(base + 50).toISOString(),
+    );
+  });
+});
+
 function employee(
   id: string,
   organizationId: string,
@@ -1181,5 +1746,55 @@ function createInput(idempotencyKey: string, familyName: string) {
     entryDate: '2026-08-13',
     confirmDuplicate: false,
     duplicateOverrideReason: null,
+  };
+}
+
+function createF07Employee(
+  db: CloudDatabaseClient,
+  tenant: TenantContext,
+  label: string,
+) {
+  return createPersonnelEmployee(
+    db,
+    tenant,
+    {
+      ...createInput(uuidv7(), `${label} ${uuidv7()}`),
+      givenNames: 'Camille',
+      entryDate: '2026-01-01',
+    },
+    '2026-08-13',
+  );
+}
+
+function updateFrom(employee: PersonnelEmployeeSummary) {
+  return {
+    idempotencyKey: uuidv7(),
+    employeeId: employee.id,
+    expectedRevision: employee.revision,
+    givenNames: employee.givenNames,
+    familyName: employee.familyName,
+    position: employee.position,
+    qualification: employee.qualification,
+    employmentTermType: employee.employmentTermType,
+    expectedEndDate: employee.expectedEndDate,
+    fixedTermReasonCode: employee.fixedTermReasonCode,
+    workTimeCategory: employee.workTimeCategory,
+    contractWeeklyMinutes: employee.contractWeeklyMinutes,
+    entryDate: employee.entryDate,
+    confirmFixedTermReasonClear: false,
+  };
+}
+
+function metadata(
+  semanticGroup: PersonnelHistorySemanticGroup,
+  classification: PersonnelHistoryClassification,
+  effectiveDate: string | null,
+  correctionReason: string | null,
+): PersonnelHistoryMutationGroupMetadata {
+  return {
+    semanticGroup,
+    classification,
+    effectiveDate,
+    correctionReason,
   };
 }

@@ -4,6 +4,7 @@ import {
   personnelEmployeeAccessEventTypeSchema,
   personnelEmployeeAuditEventTypeSchema,
   personnelEmployeeAuditFieldSchema,
+  personnelEmployeeUnifiedHistorySchema,
   personnelEmployeeListQuerySchema,
   setPersonnelEmployeeDepartureInputSchema,
   updatePersonnelEmployeeInputSchema,
@@ -15,6 +16,7 @@ import {
   type PersonnelEmployeeListResponse,
   type PersonnelEmployeeSort,
   type PersonnelEmployeeAuditHistory,
+  type PersonnelEmployeeUnifiedHistory,
   type PersonnelEmployeeSummary,
   type PersonnelEmployeeView,
   type SetPersonnelEmployeeDepartureInput,
@@ -32,6 +34,7 @@ import {
   isNull,
   lt,
   lte,
+  notExists,
   or,
   sql,
   type SQL,
@@ -44,8 +47,21 @@ import {
   personnelCommandReceipts,
   personnelEmployeeAuditEvents,
   personnelEmployeeDossiers,
+  personnelEmployeeHistoryEvents,
+  personnelEmployeeHistoryGroupChanges,
   users,
 } from './schema';
+import {
+  isPersonnelHistoryCutoverCompleted,
+  parsePersonnelHistoryStoredSnapshot,
+  PERSONNEL_HISTORY_CUTOVER_VERSION,
+} from './personnel-history-cutover';
+import {
+  createDepartureHistoryMutationEvidence,
+  derivePersonnelHistoryMutationEvidence,
+  PersonnelHistoryMetadataError,
+  type PersonnelHistoryMutationEvidence,
+} from './personnel-history-domain';
 
 type PersonnelTenantContext = TenantContext & { establishmentId: string };
 
@@ -436,6 +452,235 @@ export async function listPersonnelEmployeeAuditHistory(
   return { items, truncated: rows.length > 50 };
 }
 
+export async function listPersonnelEmployeeUnifiedHistory(
+  db: CloudDatabaseClient,
+  context: TenantContext,
+  rawEmployeeId: string,
+): Promise<PersonnelEmployeeUnifiedHistory> {
+  requireEstablishment(context);
+  const employeeId = identifierSchema.parse(rawEmployeeId);
+  const scope = and(
+    eq(personnelEmployeeHistoryEvents.employeeId, employeeId),
+    eq(personnelEmployeeHistoryEvents.organizationId, context.organizationId),
+    eq(personnelEmployeeHistoryEvents.establishmentId, context.establishmentId),
+  );
+  const historyRows = await db
+    .select({
+      id: personnelEmployeeHistoryEvents.id,
+      eventKind: personnelEmployeeHistoryEvents.eventKind,
+      operationId: personnelEmployeeHistoryEvents.operationId,
+      payloadVersion: personnelEmployeeHistoryEvents.payloadVersion,
+      recordedAt: personnelEmployeeHistoryEvents.recordedAt,
+      actorDisplayName: users.displayName,
+    })
+    .from(personnelEmployeeHistoryEvents)
+    .leftJoin(users, eq(personnelEmployeeHistoryEvents.actorUserId, users.id))
+    .where(scope)
+    .orderBy(
+      desc(personnelEmployeeHistoryEvents.recordedAt),
+      desc(personnelEmployeeHistoryEvents.id),
+    )
+    .limit(51);
+  const historyIds = historyRows.map((row) => row.id);
+  const groupRows =
+    historyIds.length === 0
+      ? []
+      : await db
+          .select()
+          .from(personnelEmployeeHistoryGroupChanges)
+          .where(
+            and(
+              eq(
+                personnelEmployeeHistoryGroupChanges.organizationId,
+                context.organizationId,
+              ),
+              eq(
+                personnelEmployeeHistoryGroupChanges.establishmentId,
+                context.establishmentId,
+              ),
+              eq(personnelEmployeeHistoryGroupChanges.employeeId, employeeId),
+              inArray(personnelEmployeeHistoryGroupChanges.eventId, historyIds),
+            ),
+          );
+  const groupsByEvent = new Map<string, typeof groupRows>();
+  for (const group of groupRows) {
+    const groups = groupsByEvent.get(group.eventId) ?? [];
+    groups.push(group);
+    groupsByEvent.set(group.eventId, groups);
+  }
+
+  const reconstructable = historyRows.map((row) => {
+    if (row.payloadVersion !== PERSONNEL_HISTORY_CUTOVER_VERSION) {
+      throw new PersonnelRepositoryError(
+        'Personnel history contains an unsupported payload version.',
+        'HISTORY_INTEGRITY_ERROR',
+      );
+    }
+    const groups = groupsByEvent.get(row.id) ?? [];
+    const item =
+      row.eventKind === 'mutation'
+        ? {
+            kind: 'mutation' as const,
+            id: row.id,
+            actorDisplayName: row.actorDisplayName,
+            occurredAt: row.recordedAt.toISOString(),
+            groups: groups.map((group) => {
+              if (
+                group.eventKind !== 'mutation' ||
+                !group.classification ||
+                group.previousValues === null
+              ) {
+                throw new PersonnelRepositoryError(
+                  'Personnel mutation history is incomplete.',
+                  'HISTORY_INTEGRITY_ERROR',
+                );
+              }
+              const previous = parsePersonnelHistoryStoredSnapshot(
+                group.semanticGroup,
+                group.previousValues,
+              );
+              const next = parsePersonnelHistoryStoredSnapshot(
+                group.semanticGroup,
+                group.newValues,
+              );
+              return {
+                semanticGroup: group.semanticGroup,
+                classification: group.classification,
+                previousValues: stripPayloadVersion(previous),
+                newValues: stripPayloadVersion(next),
+                effectiveDate: group.effectiveDate,
+                correctionReason: group.correctionReason,
+              };
+            }),
+          }
+        : {
+            kind: 'cutover_baseline' as const,
+            id: row.id,
+            actorDisplayName: null,
+            occurredAt: row.recordedAt.toISOString(),
+            groups: groups.map((group) => {
+              if (
+                group.eventKind !== 'cutover_baseline' ||
+                group.classification !== null ||
+                group.previousValues !== null ||
+                group.effectiveDate !== null ||
+                group.correctionReason !== null
+              ) {
+                throw new PersonnelRepositoryError(
+                  'Personnel cutover history is incomplete.',
+                  'HISTORY_INTEGRITY_ERROR',
+                );
+              }
+              const current = parsePersonnelHistoryStoredSnapshot(
+                group.semanticGroup,
+                group.newValues,
+              );
+              return {
+                semanticGroup: group.semanticGroup,
+                currentValues: stripPayloadVersion(current),
+              };
+            }),
+          };
+    return {
+      operationId: row.operationId,
+      sortId: row.id,
+      occurredAt: row.recordedAt,
+      item,
+    };
+  });
+
+  const legacyRows = await db
+    .select({
+      id: personnelEmployeeAuditEvents.id,
+      eventType: personnelEmployeeAuditEvents.eventType,
+      operationId: personnelEmployeeAuditEvents.operationId,
+      changedFields: personnelEmployeeAuditEvents.changedFields,
+      metadata: personnelEmployeeAuditEvents.metadata,
+      createdAt: personnelEmployeeAuditEvents.createdAt,
+      actorDisplayName: users.displayName,
+    })
+    .from(personnelEmployeeAuditEvents)
+    .leftJoin(users, eq(personnelEmployeeAuditEvents.actorUserId, users.id))
+    .where(
+      and(
+        eq(personnelEmployeeAuditEvents.employeeId, employeeId),
+        eq(personnelEmployeeAuditEvents.organizationId, context.organizationId),
+        eq(
+          personnelEmployeeAuditEvents.establishmentId,
+          context.establishmentId,
+        ),
+        inArray(
+          personnelEmployeeAuditEvents.eventType,
+          personnelEmployeeAuditEventTypeSchema.options,
+        ),
+        notExists(
+          db
+            .select({ id: personnelEmployeeHistoryEvents.id })
+            .from(personnelEmployeeHistoryEvents)
+            .where(
+              and(
+                eq(
+                  personnelEmployeeHistoryEvents.organizationId,
+                  context.organizationId,
+                ),
+                eq(
+                  personnelEmployeeHistoryEvents.establishmentId,
+                  context.establishmentId,
+                ),
+                eq(personnelEmployeeHistoryEvents.employeeId, employeeId),
+                eq(
+                  personnelEmployeeHistoryEvents.operationId,
+                  personnelEmployeeAuditEvents.operationId,
+                ),
+              ),
+            ),
+        ),
+      ),
+    )
+    .orderBy(
+      desc(personnelEmployeeAuditEvents.createdAt),
+      desc(personnelEmployeeAuditEvents.id),
+    )
+    .limit(51);
+  const legacy = legacyRows.flatMap((row) => {
+    const eventType = personnelEmployeeAuditEventTypeSchema.safeParse(
+      row.eventType,
+    );
+    if (!eventType.success) return [];
+    const changedFields = row.changedFields.flatMap((field) => {
+      const parsed = personnelEmployeeAuditFieldSchema.safeParse(field);
+      return parsed.success ? [parsed.data] : [];
+    });
+    const metadata = safeAuditMetadata(row.metadata);
+    return [
+      {
+        operationId: row.operationId,
+        sortId: row.id,
+        occurredAt: row.createdAt,
+        item: {
+          kind: 'legacy' as const,
+          id: row.id,
+          eventType: eventType.data,
+          changedFields,
+          actorDisplayName: row.actorDisplayName,
+          occurredAt: row.createdAt.toISOString(),
+          reason: metadata.reason,
+          previousDepartureDate: metadata.previousDepartureDate,
+          newDepartureDate: metadata.newDepartureDate,
+        },
+      },
+    ];
+  });
+  const combined = [...reconstructable, ...legacy].sort((left, right) => {
+    const byTime = right.occurredAt.getTime() - left.occurredAt.getTime();
+    return byTime || right.sortId.localeCompare(left.sortId);
+  });
+  return personnelEmployeeUnifiedHistorySchema.parse({
+    items: combined.slice(0, 50).map((row) => row.item),
+    truncated: combined.length > 50,
+  });
+}
+
 export async function listPersonnelEmployeeAccessHistory(
   db: CloudDatabaseClient,
   context: TenantContext,
@@ -629,6 +874,7 @@ export async function createPersonnelEmployee(
     await transaction.execute(
       sql`select pg_advisory_xact_lock(hashtextextended(${`${context.organizationId}:${context.establishmentId}:${actorUserId}:personnel.employee.create:${idempotencyHash}`}, 0))`,
     );
+    await isPersonnelHistoryCutoverCompleted(transaction, context);
 
     const [receipt] = await transaction
       .select()
@@ -816,6 +1062,10 @@ export async function updatePersonnelEmployee(
     await transaction.execute(
       sql`select pg_advisory_xact_lock(hashtextextended(${`${context.organizationId}:${context.establishmentId}:${actorUserId}:personnel.employee.update:${idempotencyHash}`}, 0))`,
     );
+    const personnelHistoryEnabled = await isPersonnelHistoryCutoverCompleted(
+      transaction,
+      context,
+    );
 
     const [receipt] = await transaction
       .select()
@@ -935,6 +1185,22 @@ export async function updatePersonnelEmployee(
       };
     }
 
+    let historyEvidence: PersonnelHistoryMutationEvidence[] = [];
+    if (personnelHistoryEnabled) {
+      try {
+        historyEvidence = derivePersonnelHistoryMutationEvidence({
+          current,
+          proposed: input,
+          businessDate,
+        });
+      } catch (error: unknown) {
+        if (error instanceof PersonnelHistoryMetadataError) {
+          throw new PersonnelRepositoryError(error.message, error.code);
+        }
+        throw error;
+      }
+    }
+
     const [updated] = await transaction
       .update(personnelEmployeeDossiers)
       .set({
@@ -976,6 +1242,17 @@ export async function updatePersonnelEmployee(
     }
 
     const operationId = uuidv7();
+    if (personnelHistoryEnabled) {
+      await insertPersonnelHistoryMutation(transaction, context, {
+        employeeId: input.employeeId,
+        actorUserId,
+        operationId,
+        previousRevision: current.revision,
+        newRevision: updated.revision,
+        recordedAt: now,
+        groups: historyEvidence,
+      });
+    }
     const auditEvents = [
       ...(identityFields.length > 0
         ? [
@@ -1080,6 +1357,10 @@ export async function setPersonnelEmployeeDeparture(
   return db.transaction(async (transaction) => {
     await transaction.execute(
       sql`select pg_advisory_xact_lock(hashtextextended(${`${context.organizationId}:${context.establishmentId}:${actorUserId}:personnel.employee.departure:${idempotencyHash}`}, 0))`,
+    );
+    const personnelHistoryEnabled = await isPersonnelHistoryCutoverCompleted(
+      transaction,
+      context,
     );
 
     const [receipt] = await transaction
@@ -1198,6 +1479,24 @@ export async function setPersonnelEmployeeDeparture(
       throw new PersonnelConflictError(toSummary(concurrent, businessDate));
     }
 
+    const operationId = uuidv7();
+    if (personnelHistoryEnabled) {
+      await insertPersonnelHistoryMutation(transaction, context, {
+        employeeId: input.employeeId,
+        actorUserId,
+        operationId,
+        previousRevision: current.revision,
+        newRevision: updated.revision,
+        recordedAt: now,
+        groups: [
+          createDepartureHistoryMutationEvidence({
+            currentDepartureDate: current.departureDate,
+            newDepartureDate: updated.departureDate,
+            correctionReason: input.correctionReason,
+          }),
+        ],
+      });
+    }
     await transaction.insert(personnelEmployeeAuditEvents).values({
       id: uuidv7(),
       organizationId: context.organizationId,
@@ -1207,7 +1506,7 @@ export async function setPersonnelEmployeeDeparture(
       eventType: isCorrection
         ? 'employee.departure_corrected'
         : 'employee.departure_recorded',
-      operationId: uuidv7(),
+      operationId,
       changedFields: ['departureDate'],
       metadata: {
         previousRevision: current.revision,
@@ -1240,6 +1539,64 @@ export async function setPersonnelEmployeeDeparture(
 type PersonnelTransaction = Parameters<
   Parameters<CloudDatabaseClient['transaction']>[0]
 >[0];
+
+async function insertPersonnelHistoryMutation(
+  transaction: PersonnelTransaction,
+  context: PersonnelTenantContext,
+  input: {
+    employeeId: string;
+    actorUserId: string;
+    operationId: string;
+    previousRevision: number;
+    newRevision: number;
+    recordedAt: Date;
+    groups: PersonnelHistoryMutationEvidence[];
+  },
+) {
+  if (input.groups.length === 0) {
+    throw new PersonnelRepositoryError(
+      'A Personnel history mutation must contain at least one changed group.',
+      'HISTORY_INTEGRITY_ERROR',
+    );
+  }
+  const eventId = uuidv7();
+  await transaction.insert(personnelEmployeeHistoryEvents).values({
+    id: eventId,
+    organizationId: context.organizationId,
+    establishmentId: context.establishmentId,
+    employeeId: input.employeeId,
+    eventKind: 'mutation',
+    operationId: input.operationId,
+    previousRevision: input.previousRevision,
+    newRevision: input.newRevision,
+    actorUserId: input.actorUserId,
+    payloadVersion: PERSONNEL_HISTORY_CUTOVER_VERSION,
+    recordedAt: input.recordedAt,
+  });
+  await transaction.insert(personnelEmployeeHistoryGroupChanges).values(
+    input.groups.map((group) => ({
+      id: uuidv7(),
+      organizationId: context.organizationId,
+      establishmentId: context.establishmentId,
+      employeeId: input.employeeId,
+      eventId,
+      eventKind: 'mutation' as const,
+      semanticGroup: group.semanticGroup,
+      classification: group.classification,
+      previousValues: group.previousSnapshot.values,
+      newValues: group.newSnapshot.values,
+      effectiveDate: group.effectiveDate,
+      correctionReason: group.correctionReason,
+    })),
+  );
+}
+
+function stripPayloadVersion(snapshot: {
+  values: { payloadVersion: 1 } & Record<string, unknown>;
+}) {
+  const { payloadVersion: _payloadVersion, ...safeValues } = snapshot.values;
+  return safeValues;
+}
 
 async function findScopedEmployee(
   transaction: PersonnelTransaction,
@@ -1529,7 +1886,9 @@ export class PersonnelRepositoryError extends Error {
       | 'FIXED_TERM_REASON_REQUIRED'
       | 'FIXED_TERM_REASON_CLEAR_CONFIRMATION_REQUIRED'
       | 'REASON_REQUIRED'
-      | 'DEPARTURE_DATE_REQUIRED',
+      | 'DEPARTURE_DATE_REQUIRED'
+      | 'PERSONNEL_HISTORY_METADATA_INVALID'
+      | 'HISTORY_INTEGRITY_ERROR',
   ) {
     super(message);
     this.name = 'PersonnelRepositoryError';

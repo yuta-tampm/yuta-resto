@@ -12,6 +12,7 @@ import {
   type PersonnelContractAmendmentList,
   type PersonnelEmployeeAccessHistory,
   type PersonnelEmployeeAuditHistory,
+  type PersonnelEmployeeUnifiedHistory,
   type PersonnelEmployeeSummary,
   type PersonnelActionOverviewItemKind,
   type PersonnelActionOverviewQuery,
@@ -24,6 +25,7 @@ import {
   findPersonnelEmployee,
   listPersonnelEmployeeAccessHistory,
   listPersonnelEmployeeAuditHistory,
+  listPersonnelEmployeeUnifiedHistory,
   PersonnelConflictError,
   PersonnelDuplicateError,
   PersonnelRepositoryError,
@@ -76,6 +78,7 @@ import {
 } from '../../../../server/personnel-contract-extraction/stored-synthetic-document';
 import { isContractExtractionPrototypeEnabled } from './_lib/contract-extraction-prototype-runtime';
 import { isPersonnelActionOverviewEnabled } from './_lib/personnel-action-overview-runtime';
+import { mapPersonnelHistoryMetadataError } from './_lib/employee-history-action-errors';
 
 export type CreateEmployeeActionState = {
   status: 'idle' | 'error' | 'duplicate' | 'success';
@@ -107,6 +110,10 @@ export type DepartureEmployeeActionState = {
 
 export type LoadEmployeeHistoryActionResult =
   | { status: 'success'; history: PersonnelEmployeeAuditHistory }
+  | { status: 'error'; message: string };
+
+export type LoadEmployeeUnifiedHistoryActionResult =
+  | { status: 'success'; history: PersonnelEmployeeUnifiedHistory }
   | { status: 'error'; message: string };
 
 export type LoadEmployeeAccessHistoryActionResult =
@@ -1301,6 +1308,42 @@ export async function loadEmployeeHistoryAction(
   }
 }
 
+export async function loadEmployeeUnifiedHistoryAction(
+  employeeId: string,
+  operationId: string,
+): Promise<LoadEmployeeUnifiedHistoryActionResult> {
+  const { tenant } = await requirePersonnelTenant('/equipe/salaries');
+  requirePersonnelPermission(tenant, 'personnel.employee.read');
+
+  try {
+    const allowed = await recordPersonnelEmployeeAccess(
+      cloudDatabase,
+      tenant,
+      employeeId,
+      'employee.history_viewed',
+      operationId,
+    );
+    if (!allowed) {
+      return {
+        status: 'error',
+        message: 'Impossible de charger l’historique. Réessayez.',
+      };
+    }
+    const history = await listPersonnelEmployeeUnifiedHistory(
+      cloudDatabase,
+      tenant,
+      employeeId,
+    );
+    return { status: 'success', history };
+  } catch (error: unknown) {
+    console.error('Failed to load unified personnel employee history.', error);
+    return {
+      status: 'error',
+      message: 'Impossible de charger l’historique. Réessayez.',
+    };
+  }
+}
+
 export async function recordEmployeeDossierViewAction(
   employeeId: string,
   operationId: string,
@@ -1431,9 +1474,14 @@ export async function updateEmployeeAction(
 ): Promise<UpdateEmployeeActionState> {
   const { tenant } = await requirePersonnelTenant('/equipe/salaries');
   requirePersonnelPermission(tenant, 'personnel.employee.manage');
+  const businessDate = getBusinessDate(tenant.timezone);
+  let submittedHistoryMetadata: unknown;
 
   try {
     const employmentTermType = String(formData.get('employmentTermType') ?? '');
+    submittedHistoryMetadata = parseHistoryMetadata(
+      formData.get('historyMetadata'),
+    );
     const input = updatePersonnelEmployeeInputSchema.parse({
       idempotencyKey: formData.get('idempotencyKey'),
       employeeId: formData.get('employeeId'),
@@ -1456,12 +1504,13 @@ export async function updateEmployeeAction(
       entryDate: formData.get('entryDate'),
       confirmFixedTermReasonClear:
         formData.get('confirmFixedTermReasonClear') === 'true',
+      historyMetadata: submittedHistoryMetadata,
     });
     const result = await updatePersonnelEmployee(
       cloudDatabase,
       tenant,
       input,
-      getBusinessDate(tenant.timezone),
+      businessDate,
     );
     revalidatePath('/equipe/salaries');
     return {
@@ -1476,7 +1525,10 @@ export async function updateEmployeeAction(
     if (error instanceof z.ZodError) {
       const fieldErrors: Record<string, string> = {};
       for (const issue of error.issues) {
-        const field = String(issue.path[0] ?? 'form');
+        const field = employeeUpdateIssueField(
+          issue.path,
+          submittedHistoryMetadata,
+        );
         fieldErrors[field] ??= frenchFieldError(field);
       }
       return {
@@ -1497,6 +1549,23 @@ export async function updateEmployeeAction(
         fieldErrors: {
           entryDate: 'Choisissez une date antérieure ou égale au départ.',
         },
+        currentEmployee: null,
+      };
+    }
+    if (
+      error instanceof PersonnelRepositoryError &&
+      error.code === 'PERSONNEL_HISTORY_METADATA_INVALID'
+    ) {
+      const mapped = mapPersonnelHistoryMetadataError({
+        repositoryMessage: error.message,
+        submittedMetadata: submittedHistoryMetadata,
+        businessDate,
+        entryDate: String(formData.get('entryDate') ?? ''),
+      });
+      return {
+        status: 'error',
+        message: mapped.message,
+        fieldErrors: mapped.fieldErrors,
         currentEmployee: null,
       };
     }
@@ -1673,6 +1742,45 @@ function nullableText(value: FormDataEntryValue | null): string | null {
   return normalized || null;
 }
 
+function parseHistoryMetadata(value: FormDataEntryValue | null): unknown {
+  const raw = String(value ?? '').trim();
+  if (!raw) return undefined;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return raw;
+  }
+}
+
+function employeeUpdateIssueField(
+  path: PropertyKey[],
+  submittedHistoryMetadata: unknown,
+): string {
+  const root = String(path[0] ?? 'form');
+  if (root !== 'historyMetadata') return root;
+  const index = path[1];
+  const field = path[2];
+  if (
+    typeof index === 'number' &&
+    Array.isArray(submittedHistoryMetadata) &&
+    typeof field === 'string'
+  ) {
+    const item = submittedHistoryMetadata[index];
+    if (item && typeof item === 'object') {
+      const semanticGroup = (item as Record<string, unknown>).semanticGroup;
+      if (
+        typeof semanticGroup === 'string' &&
+        ['identity', 'role', 'contract_terms', 'work_time', 'entry'].includes(
+          semanticGroup,
+        )
+      ) {
+        return `historyMetadata.${semanticGroup}.${field}`;
+      }
+    }
+  }
+  return 'historyMetadata';
+}
+
 function contractWeeklyMinutes(formData: FormData): number | null {
   const hoursValue = String(formData.get('contractWeeklyHours') ?? '').trim();
   const minutesValue = String(
@@ -1715,6 +1823,16 @@ function frenchFieldError(field: string): string {
     departureDate: 'Renseignez une date de départ valide.',
     correctionReason: 'Expliquez brièvement la correction.',
     confirmNonDeletion: 'Confirmez que le dossier doit être conservé.',
+    historyMetadata: 'Vérifiez la nature des modifications.',
   };
+  if (field.endsWith('.classification')) {
+    return 'Choisissez Correction ou Changement.';
+  }
+  if (field.endsWith('.effectiveDate')) {
+    return 'Renseignez une date d’effet valide.';
+  }
+  if (field.endsWith('.correctionReason')) {
+    return 'Expliquez brièvement la correction.';
+  }
   return messages[field] ?? 'Vérifiez cette valeur.';
 }

@@ -6,6 +6,12 @@ Owner: YUTA product and engineering
 
 Reviewed: 2026-08-29 against the active OpenSpec 1.11.0 baseline
 
+Scope and routing: The approved active policy in this document remains
+authoritative for normative scope, approval, sync, conflict, rollback and
+lifecycle separation. Its dated pre-activation/current-state narrative is
+historical context. For the human end-to-end workflow, start with
+[`YUTA_WORKFLOW_V3.md`](YUTA_WORKFLOW_V3.md).
+
 ## 1. Current State
 
 The `yuta-spec-driven` schema is active as the project default. The approved

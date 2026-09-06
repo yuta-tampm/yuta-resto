@@ -1,5 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import { getPostSaveHistoryOperationId } from './employee-history-refresh';
+import {
+  getEmployeeEditCommitRefreshPlan,
+  getPostSaveHistoryOperationId,
+  restoreEmployeeEditFocus,
+} from './employee-history-refresh';
 
 describe('employee history refresh', () => {
   it('starts a fresh history load when history is active after a save', () => {
@@ -16,5 +20,37 @@ describe('employee history refresh', () => {
 
     expect(getPostSaveHistoryOperationId(false, createOperationId)).toBe('');
     expect(createOperationId).not.toHaveBeenCalled();
+  });
+
+  it.each(['drawer', 'full_dossier'] as const)(
+    'uses the same committed refresh behavior for the %s surface',
+    (surface) => {
+      expect(
+        getEmployeeEditCommitRefreshPlan(surface, true, () => 'fresh-id'),
+      ).toEqual({
+        surface,
+        closeEditor: true,
+        resetHistory: true,
+        historyOperationId: 'fresh-id',
+      });
+    },
+  );
+
+  it('restores focus to the connected edit trigger after close', () => {
+    const focus = vi.fn();
+    const schedule = vi.fn((callback: () => void) => callback());
+
+    restoreEmployeeEditFocus({ isConnected: true, focus }, schedule);
+
+    expect(schedule).toHaveBeenCalledOnce();
+    expect(focus).toHaveBeenCalledOnce();
+  });
+
+  it('does not focus a trigger that is no longer connected', () => {
+    const focus = vi.fn();
+    restoreEmployeeEditFocus({ isConnected: false, focus }, (callback) =>
+      callback(),
+    );
+    expect(focus).not.toHaveBeenCalled();
   });
 });

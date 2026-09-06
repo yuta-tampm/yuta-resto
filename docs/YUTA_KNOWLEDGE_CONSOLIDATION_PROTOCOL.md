@@ -1,10 +1,14 @@
 # YUTA Knowledge Consolidation Protocol
 
-Status: Proposed
+Status: APPROVED
 
 Visibility: Engineering
 
 Owner: YUTA product and engineering
+
+Workflow routing: Start with [`YUTA_WORKFLOW_V3.md`](YUTA_WORKFLOW_V3.md), the
+canonical human-readable YUTA Workflow v3 operating guide. This document is the
+detailed supporting post-archive Knowledge Consolidation protocol.
 
 ## Purpose
 
@@ -101,7 +105,26 @@ Resume `$yuta-finish-change` against the archive location recorded by Gate 3;
 never recreate an active change. Require explicit current-user Knowledge Review
 approval for the exact packet.
 
-Before applying, recompute the complete target path set, target-file hashes,
+This is Branch B — archived Knowledge Review resume. Before applying, require
+all of the following:
+
+- Gate 3 records `Review status: APPROVED`.
+- Gate 3 records successful finish/archive with `Finish outcome: COMPLETED`
+  and the exact archive location.
+- Gate 3 records `Workflow status: AWAITING_KNOWLEDGE_REVIEW`.
+- No active change exists at the resolved active-change path.
+- The recorded archive exists and retains the completed-change evidence.
+- `04-knowledge-consolidation-review.md` exists with
+  `Review status: AWAITING_HUMAN_REVIEW`.
+- The current user explicitly approves the exact Knowledge Review packet and
+  proposed documentation diff.
+
+Branch B checks only the Knowledge Review target path set, target hashes,
+proposed-diff hash, and current explicit approval. It does not reopen or rerun
+Gate 3 approval, active-change integrity checks, sync, or archive; historical
+Gate 3 and sync/archive authorization do not authorize the documentation edit.
+
+Recompute the complete target path set, target-file hashes,
 and proposed-diff hash. Any drift changes the packet to
 `INVALIDATED_BY_ARTIFACT_CHANGE` and stops without editing.
 

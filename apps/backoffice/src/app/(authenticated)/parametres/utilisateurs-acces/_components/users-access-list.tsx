@@ -41,9 +41,10 @@ export function UsersAccessList({
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Rechercher un utilisateur..."
           aria-label="Rechercher un utilisateur"
-          className="w-64"
+          className="w-full min-w-0 lg:w-64"
         />
       }
+      headerClassName="flex-col items-stretch lg:flex-row lg:items-center [&_h2]:whitespace-normal lg:[&_h2]:whitespace-nowrap"
       bodyClassName="gap-4 p-4"
     >
       {filteredUsers.length === 0 ? (

@@ -1,0 +1,213 @@
+diff --git a/apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/_lib/review-social-links-state.ts b/apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/_lib/review-social-links-state.ts
+index 3f16ac3..bb15238 100644
+--- a/apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/_lib/review-social-links-state.ts
++++ b/apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/_lib/review-social-links-state.ts
+@@ -134,9 +134,39 @@ export function updateReviewSocialLinksDraft(
+     status:
+       state.status === 'conflict'
+         ? 'conflict'
+-        : isNormalizedDraftDirty(draft, state.baseline?.values ?? null)
+-          ? 'dirty'
+-          : 'idle',
++        : firstErrorField(fieldErrors)
++          ? 'invalid'
++          : isNormalizedDraftDirty(draft, state.baseline?.values ?? null)
++            ? 'dirty'
++            : 'idle',
++  };
++}
++
++export function validateReviewSocialLinksDraft(
++  state: ReviewSocialLinksViewState,
++): ReviewSocialLinksViewState {
++  if (
++    !state.baseline ||
++    state.status === 'saving' ||
++    state.status === 'conflict' ||
++    state.status === 'configuration_unavailable'
++  ) {
++    return state;
++  }
++
++  const parsed = reputationReviewSocialLinksValuesSchema.safeParse(state.draft);
++  if (!parsed.success) {
++    return {
++      ...state,
++      fieldErrors: fieldErrorsFromIssues(parsed.error.issues),
++      status: 'invalid',
++    };
++  }
++
++  return {
++    ...state,
++    fieldErrors: {},
++    status: valuesEqual(parsed.data, state.baseline.values) ? 'idle' : 'dirty',
+   };
+ }
+ 
+@@ -253,12 +283,6 @@ export function reloadReviewSocialLinksConflict(
+   };
+ }
+ 
+-export function firstReviewSocialLinksErrorField(
+-  state: ReviewSocialLinksViewState,
+-): ReputationReviewSocialLinkField | null {
+-  return firstErrorField(state.fieldErrors);
+-}
+-
+ function fieldErrorsFromIssues(
+   issues: ReadonlyArray<{ path: PropertyKey[]; message: string }>,
+ ): Partial<Record<ReputationReviewSocialLinkField, string>> {
+
+diff --git a/apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/_components/review-social-links-settings.tsx b/apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/_components/review-social-links-settings.tsx
+index 99d993d..b6bd32d 100644
+--- a/apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/_components/review-social-links-settings.tsx
++++ b/apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/_components/review-social-links-settings.tsx
+@@ -29,10 +29,10 @@ import {
+   canSubmitReviewSocialLinks,
+   createReviewSocialLinksSubmissionGate,
+   createReviewSocialLinksViewState,
+-  firstReviewSocialLinksErrorField,
+   prepareReviewSocialLinksSave,
+   reloadReviewSocialLinksConflict,
+   updateReviewSocialLinksDraft,
++  validateReviewSocialLinksDraft,
+   type ReviewSocialLinksInitialOutcome,
+ } from '../_lib/review-social-links-state';
+ 
+@@ -88,13 +88,6 @@ export function ReviewSocialLinksSettings({
+     setView(createReviewSocialLinksViewState(initialOutcome));
+   }, [initialOutcome]);
+ 
+-  useEffect(() => {
+-    const field = firstReviewSocialLinksErrorField(view);
+-    if (view.status === 'invalid' && field) {
+-      inputRefs[field].current?.focus();
+-    }
+-  }, [view]);
+-
+   const hasModel = Boolean(view.baseline);
+   const fieldsDisabled =
+     !hasModel || isPending || view.status === 'configuration_unavailable';
+@@ -106,6 +99,9 @@ export function ReviewSocialLinksSettings({
+     setView(prepared.state);
+     if (prepared.kind !== 'ready') {
+       submissionGate.current.finish();
++      if (prepared.focusField) {
++        inputRefs[prepared.focusField].current?.focus();
++      }
+       return;
+     }
+ 
+@@ -193,6 +189,11 @@ export function ReviewSocialLinksSettings({
+                   disabled={fieldsDisabled}
+                   aria-invalid={Boolean(error)}
+                   aria-describedby={error ? errorId : undefined}
++                  onBlur={() =>
++                    setView((current) =>
++                      validateReviewSocialLinksDraft(current),
++                    )
++                  }
+                   onChange={(event) =>
+                     setView((current) =>
+                       updateReviewSocialLinksDraft(
+
+diff --git a/apps/backoffice/test/reputation-review-social-links-component.test.tsx b/apps/backoffice/test/reputation-review-social-links-component.test.tsx
+index 05f934a..a7d8d77 100644
+--- a/apps/backoffice/test/reputation-review-social-links-component.test.tsx
++++ b/apps/backoffice/test/reputation-review-social-links-component.test.tsx
+@@ -53,6 +53,7 @@ import {
+   prepareReviewSocialLinksSave,
+   reloadReviewSocialLinksConflict,
+   updateReviewSocialLinksDraft,
++  validateReviewSocialLinksDraft,
+ } from '../src/app/(authenticated)/visibilite-reputation/satisfaction/_lib/review-social-links-state';
+ 
+ const model: ReputationReviewSocialLinksReadModel = {
+@@ -142,6 +143,73 @@ describe('Reputation review social links settings model', () => {
+     expect(prepared.state.fieldErrors.googleReviewUrl).toContain('destination');
+   });
+ 
++  it('makes an invalid Google draft reachable on blur and enables Save after correction', () => {
++    let state = createReviewSocialLinksViewState(success);
++    state = updateReviewSocialLinksDraft(
++      state,
++      'googleReviewUrl',
++      'https://example.invalid/review',
++    );
++    state = validateReviewSocialLinksDraft(state);
++
++    expect(state.status).toBe('invalid');
++    expect(state.fieldErrors.googleReviewUrl).toContain('destination');
++    expect(canSubmitReviewSocialLinks(state)).toBe(false);
++    expect(state.draft.googleReviewUrl).toBe('https://example.invalid/review');
++
++    state = updateReviewSocialLinksDraft(
++      state,
++      'googleReviewUrl',
++      'https://www.google.com/maps/place/yuta-corrected',
++    );
++
++    expect(state.fieldErrors.googleReviewUrl).toBeUndefined();
++    expect(state.status).toBe('dirty');
++    expect(canSubmitReviewSocialLinks(state)).toBe(true);
++  });
++
++  it.each([
++    ['facebookReviewUrl', 'https://example.invalid/facebook'],
++    ['instagramUrl', 'https://example.invalid/instagram'],
++  ] as const)(
++    'maps blur validation to the invalid %s field',
++    (field, value) => {
++      const state = validateReviewSocialLinksDraft(
++        updateReviewSocialLinksDraft(
++          createReviewSocialLinksViewState(success),
++          field,
++          value,
++        ),
++      );
++
++      expect(state.status).toBe('invalid');
++      expect(state.fieldErrors[field]).toContain('destination');
++      expect(canSubmitReviewSocialLinks(state)).toBe(false);
++    },
++  );
++
++  it('keeps the shared-schema submit fallback and does not define a private provider validator', () => {
++    const invalid = updateReviewSocialLinksDraft(
++      createReviewSocialLinksViewState(success),
++      'instagramUrl',
++      'not-a-url',
++    );
++    const prepared = prepareReviewSocialLinksSave(invalid);
++    expect(prepared.kind).toBe('blocked');
++    expect(prepared.state.fieldErrors.instagramUrl).toBeDefined();
++
++    const stateSource = readFileSync(
++      'src/app/(authenticated)/visibilite-reputation/satisfaction/_lib/review-social-links-state.ts',
++      'utf8',
++    );
++    expect(stateSource).toContain(
++      'reputationReviewSocialLinksValuesSchema.safeParse',
++    );
++    expect(stateSource).not.toMatch(
++      /google\.com|google\.fr|g\.page|facebook\.com|instagram\.com|fb\.me/,
++    );
++  });
++
+   it('blocks normalized no-op submissions and reports the no-change state', () => {
+     const state = createReviewSocialLinksViewState(success);
+     expect(canSubmitReviewSocialLinks(state)).toBe(false);
+@@ -275,6 +343,12 @@ describe('Reputation review social links settings component', () => {
+     );
+     expect(componentSource).toContain('submissionGate.current.tryStart()');
+     expect(componentSource).toContain('.current?.focus()');
++    expect(componentSource).toContain(
++      'validateReviewSocialLinksDraft(current)',
++    );
++    expect(componentSource).toContain(
++      'aria-describedby={error ? errorId : undefined}',
++    );
+   });
+ });
+ 

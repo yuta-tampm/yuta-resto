@@ -2,6 +2,7 @@ export * from './cloud-admin';
 export * from './common';
 export * from './display';
 export * from './establishment-profile';
+export * from './formalites';
 export * from './local-pos';
 export * from './orders';
 export * from './personnel';

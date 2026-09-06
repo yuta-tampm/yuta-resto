@@ -1,5 +1,6 @@
 export * from './auth';
 export * from './booking';
+export * from './formalites';
 export * from './personnel';
 export * from './reputation';
 export * from './restaurant-knowledge';

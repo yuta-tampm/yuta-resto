@@ -6,8 +6,6 @@ import type {
   PersonnelEmployeeListResponse,
   PersonnelEmployeeAccessEvent,
   PersonnelEmployeeAccessHistory,
-  PersonnelEmployeeAuditHistory,
-  PersonnelEmployeeAuditEvent,
   PersonnelEmployeeSummary,
   PersonnelEmployeeSort,
   PersonnelEmployeeView,
@@ -79,12 +77,16 @@ import { EmployeeDocuments } from './employee-documents';
 import { EmployeeEditDialog } from './employee-edit-dialog';
 import { EmployeeEmploymentDetails } from './employee-employment-details';
 import {
+  EmployeeHistory,
+  type EmployeeHistoryLoadState,
+} from './employee-history';
+import {
   EmployeeActionOverview,
   type PersonnelActionOverviewState,
 } from './employee-action-overview';
 import {
   loadEmployeeAccessHistoryAction,
-  loadEmployeeHistoryAction,
+  loadEmployeeUnifiedHistoryAction,
   recordEmployeeDossierViewAction,
 } from '../actions';
 import {
@@ -97,7 +99,11 @@ import {
   getWorkTimeLabel,
   isEmployeeComplete,
 } from '../salaries-model';
-import { getPostSaveHistoryOperationId } from '../_lib/employee-history-refresh';
+import {
+  getEmployeeEditCommitRefreshPlan,
+  restoreEmployeeEditFocus,
+} from '../_lib/employee-history-refresh';
+import { formatEmployeeHistoryDateTime } from '../_lib/employee-history-presentation';
 
 type DetailTab =
   | 'overview'
@@ -106,14 +112,6 @@ type DetailTab =
   | 'history'
   | 'access'
   | 'documents';
-type HistoryLoadState =
-  | { status: 'idle' | 'loading'; history: null; message: null }
-  | {
-      status: 'success';
-      history: PersonnelEmployeeAuditHistory;
-      message: null;
-    }
-  | { status: 'error'; history: null; message: string };
 type AccessHistoryLoadState =
   | { status: 'idle' | 'loading'; history: null; message: null }
   | {
@@ -124,6 +122,13 @@ type AccessHistoryLoadState =
   | { status: 'error'; history: null; message: string };
 
 type EmployeeDetailsMode = 'dialog' | 'page';
+
+async function loadEmployeeHistoryWithAccessTrace(
+  employeeId: string,
+  operationId: string,
+) {
+  return loadEmployeeUnifiedHistoryAction(employeeId, operationId);
+}
 
 const viewOptions: ReadonlyArray<{
   value: PersonnelEmployeeView;
@@ -170,7 +175,7 @@ export function SalariesPage({
   );
   const [departureEmployee, setDepartureEmployee] =
     useState<PersonnelEmployeeSummary | null>(null);
-  const [historyState, setHistoryState] = useState<HistoryLoadState>({
+  const [historyState, setHistoryState] = useState<EmployeeHistoryLoadState>({
     status: 'idle',
     history: null,
     message: null,
@@ -238,7 +243,7 @@ export function SalariesPage({
     if (detailTab !== 'history' || !selectedId || !historyOperationId) return;
     let active = true;
     setHistoryState({ status: 'loading', history: null, message: null });
-    void loadEmployeeHistoryAction(selectedId, historyOperationId)
+    void loadEmployeeHistoryWithAccessTrace(selectedId, historyOperationId)
       .then((result) => {
         if (!active) return;
         setHistoryState(
@@ -329,23 +334,24 @@ export function SalariesPage({
     (originRef: { current: HTMLElement | null }) => {
       const origin = originRef.current;
       originRef.current = null;
-      requestAnimationFrame(() => {
-        if (origin?.isConnected) origin.focus();
-      });
+      restoreEmployeeEditFocus(origin, (callback) =>
+        requestAnimationFrame(callback),
+      );
     },
     [],
   );
 
   const handleEmployeeSaved = useCallback(
     (employee: PersonnelEmployeeSummary, message: string | null) => {
+      const refreshPlan = getEmployeeEditCommitRefreshPlan(
+        'drawer',
+        detailTab === 'history',
+        () => crypto.randomUUID(),
+      );
       setRecentlySavedEmployee(employee);
       setHistoryState({ status: 'idle', history: null, message: null });
-      setHistoryOperationId(
-        getPostSaveHistoryOperationId(detailTab === 'history', () =>
-          crypto.randomUUID(),
-        ),
-      );
-      setEditingEmployee(null);
+      setHistoryOperationId(refreshPlan.historyOperationId);
+      if (refreshPlan.closeEditor) setEditingEmployee(null);
       setEditSuccessMessage(
         message ?? 'Les modifications ont été enregistrées.',
       );
@@ -681,7 +687,8 @@ export function SalariesPage({
               setFocusDepartureRequested(false);
               restoreActionFocus(drawerActionOriginRef);
             }}
-            onEdit={() => {
+            onEdit={(origin) => {
+              editActionOriginRef.current = origin;
               setEditSuccessMessage(null);
               setEditingEmployee(selectedEmployee);
             }}
@@ -730,6 +737,7 @@ export function SalariesPage({
       {editingEmployee && (
         <EmployeeEditDialog
           employee={editingEmployee}
+          businessDate={businessDate}
           open
           onSaved={handleEmployeeSaved}
           onOpenChange={(open) => {
@@ -773,7 +781,8 @@ export function EmployeeFullDossierPage({
   const [editing, setEditing] = useState(false);
   const [departureOpen, setDepartureOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [historyState, setHistoryState] = useState<HistoryLoadState>({
+  const editActionOriginRef = useRef<HTMLElement | null>(null);
+  const [historyState, setHistoryState] = useState<EmployeeHistoryLoadState>({
     status: 'idle',
     history: null,
     message: null,
@@ -797,6 +806,14 @@ export function EmployeeFullDossierPage({
     null,
   );
   const accessRecordedEmployeeRef = useRef<string | null>(null);
+
+  const restoreEditFocus = useCallback(() => {
+    const origin = editActionOriginRef.current;
+    editActionOriginRef.current = null;
+    restoreEmployeeEditFocus(origin, (callback) =>
+      requestAnimationFrame(callback),
+    );
+  }, []);
 
   useEffect(() => {
     if (
@@ -832,7 +849,7 @@ export function EmployeeFullDossierPage({
     if (activeTab !== 'history' || !historyOperationId) return;
     let active = true;
     setHistoryState({ status: 'loading', history: null, message: null });
-    void loadEmployeeHistoryAction(employee.id, historyOperationId)
+    void loadEmployeeHistoryWithAccessTrace(employee.id, historyOperationId)
       .then((result) => {
         if (!active) return;
         setHistoryState(
@@ -925,7 +942,8 @@ export function EmployeeFullDossierPage({
             setAccessHistoryOperationId(crypto.randomUUID());
           }
         }}
-        onEdit={() => {
+        onEdit={(origin) => {
+          editActionOriginRef.current = origin;
           setSuccessMessage(null);
           setEditing(true);
         }}
@@ -962,21 +980,27 @@ export function EmployeeFullDossierPage({
       {editing && (
         <EmployeeEditDialog
           employee={employee}
+          businessDate={businessDate}
           open
           onSaved={(savedEmployee, message) => {
+            const refreshPlan = getEmployeeEditCommitRefreshPlan(
+              'full_dossier',
+              activeTab === 'history',
+              () => crypto.randomUUID(),
+            );
             setEmployee(savedEmployee);
             setHistoryState({ status: 'idle', history: null, message: null });
-            setHistoryOperationId(
-              getPostSaveHistoryOperationId(activeTab === 'history', () =>
-                crypto.randomUUID(),
-              ),
-            );
-            setEditing(false);
+            setHistoryOperationId(refreshPlan.historyOperationId);
+            if (refreshPlan.closeEditor) setEditing(false);
             setSuccessMessage(
               message ?? 'Les modifications ont été enregistrées.',
             );
+            restoreEditFocus();
           }}
-          onOpenChange={setEditing}
+          onOpenChange={(open) => {
+            setEditing(open);
+            if (!open) restoreEditFocus();
+          }}
         />
       )}
       {departureOpen && (
@@ -1139,9 +1163,9 @@ function EmployeeDetails({
   businessDate: string;
   onTabChange: (tab: DetailTab) => void;
   onClose?: () => void;
-  onEdit: () => void;
+  onEdit: (origin: HTMLElement) => void;
   onDeparture: () => void;
-  historyState: HistoryLoadState;
+  historyState: EmployeeHistoryLoadState;
   accessHistoryState: AccessHistoryLoadState;
   accessHistoryPageIndex: number;
   dossierAccessError: string | null;
@@ -1218,7 +1242,12 @@ function EmployeeDetails({
               </Link>
             </Button>
           ) : null}
-          <Button type="button" variant="secondary" size="sm" onClick={onEdit}>
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            onClick={(event) => onEdit(event.currentTarget)}
+          >
             <Pencil className="h-4 w-4" aria-hidden />
             Modifier
           </Button>
@@ -1427,102 +1456,6 @@ function EmployeeDetails({
   );
 }
 
-function EmployeeHistory({
-  state,
-  locale,
-  onRetry,
-}: {
-  state: HistoryLoadState;
-  locale: string;
-  onRetry: () => void;
-}) {
-  if (state.status === 'idle' || state.status === 'loading') {
-    return (
-      <DetailSection title="Historique du dossier">
-        <p
-          className="flex items-center gap-2 text-sm text-secondary"
-          role="status"
-        >
-          <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden />
-          Chargement de l’historique…
-        </p>
-      </DetailSection>
-    );
-  }
-  if (state.status === 'error') {
-    return (
-      <DetailSection title="Historique du dossier">
-        <Alert tone="danger">
-          <AlertTitle>Historique indisponible</AlertTitle>
-          <AlertDescription>{state.message}</AlertDescription>
-        </Alert>
-        <Button type="button" variant="secondary" size="sm" onClick={onRetry}>
-          <RotateCcw className="h-4 w-4" aria-hidden />
-          Réessayer
-        </Button>
-      </DetailSection>
-    );
-  }
-  if (!state.history) return null;
-  const { history } = state;
-  if (history.items.length === 0) {
-    return (
-      <DetailSection title="Historique du dossier">
-        <p className="text-sm text-secondary">
-          Aucun événement n’a encore été enregistré pour ce dossier.
-        </p>
-      </DetailSection>
-    );
-  }
-  return (
-    <DetailSection title="Historique du dossier">
-      <ol className="grid gap-4">
-        {history.items.map((event) => (
-          <li key={event.id} className="flex gap-3">
-            <span className="mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-surface-muted text-secondary">
-              <Clock3 className="h-3.5 w-3.5" aria-hidden />
-            </span>
-            <div className="min-w-0 text-sm">
-              <p className="font-bold">{auditEventLabel(event.eventType)}</p>
-              <p className="mt-1 text-xs text-secondary">
-                {formatAuditDateTime(event.occurredAt, locale)} ·{' '}
-                {event.actorDisplayName ?? 'Utilisateur supprimé'}
-              </p>
-              {event.changedFields.length > 0 && (
-                <p className="mt-2 text-xs text-secondary">
-                  Champs : {event.changedFields.map(auditFieldLabel).join(', ')}
-                </p>
-              )}
-              {(event.previousDepartureDate || event.newDepartureDate) && (
-                <p className="mt-2 text-xs text-secondary">
-                  Départ :{' '}
-                  {event.previousDepartureDate
-                    ? formatEmployeeDate(event.previousDepartureDate, locale)
-                    : 'non renseigné'}{' '}
-                  →{' '}
-                  {event.newDepartureDate
-                    ? formatEmployeeDate(event.newDepartureDate, locale)
-                    : 'annulé'}
-                </p>
-              )}
-              {event.reason && (
-                <p className="mt-2 rounded-md bg-surface-muted px-2 py-1 text-xs">
-                  Motif : {event.reason}
-                </p>
-              )}
-            </div>
-          </li>
-        ))}
-      </ol>
-      {history.truncated && (
-        <p className="mt-4 text-xs text-secondary">
-          Seuls les 50 événements les plus récents sont affichés.
-        </p>
-      )}
-    </DetailSection>
-  );
-}
-
 function EmployeeAccessHistory({
   state,
   locale,
@@ -1591,7 +1524,7 @@ function EmployeeAccessHistory({
             <div className="min-w-0 text-sm">
               <p className="font-bold">{accessEventLabel(event.eventType)}</p>
               <p className="mt-1 text-xs text-secondary">
-                {formatAuditDateTime(event.occurredAt, locale)} ·{' '}
+                {formatEmployeeHistoryDateTime(event.occurredAt, locale)} ·{' '}
                 {event.actorDisplayName ?? 'Utilisateur supprimé'}
               </p>
             </div>
@@ -1632,7 +1565,7 @@ function CompletenessGuidance({
   onEdit,
 }: {
   employee: PersonnelEmployeeSummary;
-  onEdit: () => void;
+  onEdit: (origin: HTMLElement) => void;
 }) {
   if (employee.completenessReasons.length === 0) {
     return (
@@ -1661,7 +1594,12 @@ function CompletenessGuidance({
         .
       </AlertDescription>
       <div className="mt-3">
-        <Button type="button" variant="secondary" size="sm" onClick={onEdit}>
+        <Button
+          type="button"
+          variant="secondary"
+          size="sm"
+          onClick={(event) => onEdit(event.currentTarget)}
+        >
           <Pencil className="h-4 w-4" aria-hidden />
           Compléter le dossier
         </Button>
@@ -1679,52 +1617,6 @@ function accessEventLabel(
     'employee.access_history_viewed': 'Historique des consultations consulté',
   };
   return labels[eventType];
-}
-
-function auditEventLabel(eventType: PersonnelEmployeeAuditEvent['eventType']) {
-  const labels: Record<PersonnelEmployeeAuditEvent['eventType'], string> = {
-    'employee.created': 'Dossier créé',
-    'employee.duplicate_override_confirmed': 'Doublon potentiel confirmé',
-    'employee.identity_updated': 'Identité modifiée',
-    'employee.employment_updated': 'Relation de travail modifiée',
-    'employee.departure_recorded': 'Départ enregistré',
-    'employee.departure_corrected': 'Départ corrigé ou annulé',
-    'employee.contract_extraction_requested': 'Analyse locale demandée',
-    'employee.contract_extraction_completed': 'Analyse locale terminée',
-    'employee.contract_extraction_failed': 'Analyse locale échouée',
-    'employee.contract_extraction_applied': 'Suggestions du contrat appliquées',
-  };
-  return labels[eventType];
-}
-
-function auditFieldLabel(
-  field: PersonnelEmployeeAuditEvent['changedFields'][number],
-) {
-  const labels: Record<
-    PersonnelEmployeeAuditEvent['changedFields'][number],
-    string
-  > = {
-    identity: 'identité',
-    givenNames: 'prénoms',
-    familyName: 'nom',
-    position: 'poste',
-    qualification: 'qualification',
-    employmentTermType: 'type de contrat',
-    expectedEndDate: 'fin prévue',
-    fixedTermReasonCode: 'motif du CDD',
-    workTimeCategory: 'temps de travail',
-    contractWeeklyMinutes: 'durée hebdomadaire contractuelle',
-    entryDate: 'date d’entrée',
-    departureDate: 'date de départ',
-  };
-  return labels[field];
-}
-
-function formatAuditDateTime(value: string, locale: string) {
-  return new Intl.DateTimeFormat(locale, {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  }).format(new Date(value));
 }
 
 function OverviewFact({

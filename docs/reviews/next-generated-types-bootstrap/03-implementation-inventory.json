@@ -1,0 +1,332 @@
+{
+  "change": "next-generated-types-bootstrap",
+  "paths": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "kind": "modified",
+      "beforeSha256": "68e7c5999d2a28a06599b782d94c7097b93f5fb010fd96b50905d3db35f67266",
+      "afterSha256": "0f738c855e627da68f9304754117488744a4d2fa2e39e9dc0db6c5b71da5702e",
+      "baseline": "07d9d6d88e07f6a819c7894ef2e35f79d1eb32fa"
+    },
+    {
+      "path": ".gitignore",
+      "kind": "modified",
+      "beforeSha256": "1ce7016b3a14884d257b03981975a1afa09ce2147d44bd484a679fa28fc11541",
+      "afterSha256": "31262a06e1e330502c323eda7ac811cdcd8bd6e9e2b10c0c73bd6ca60543351b",
+      "baseline": "07d9d6d88e07f6a819c7894ef2e35f79d1eb32fa"
+    },
+    {
+      "path": "README.md",
+      "kind": "modified",
+      "beforeSha256": "777936a0314f30b5ae94dd21427e4fa16efb43934a8345164b4602e6c2964cdb",
+      "afterSha256": "5404c00ca3032a34137096edd34a6b4997e2c460d02ded3a63b8f224b9a74ef8",
+      "baseline": "07d9d6d88e07f6a819c7894ef2e35f79d1eb32fa"
+    },
+    {
+      "path": "apps/backoffice/next-env.d.ts",
+      "kind": "tracking-removal",
+      "beforeSha256": "4e4da12aa061aac172fb1bcb48e9b6e4b293080d2f494327925fdba8f39632ac",
+      "afterSha256": null,
+      "baseline": "c5cdad547d33fdc8a2aa3f585ce0822c76de8309"
+    },
+    {
+      "path": "apps/booking-web/next-env.d.ts",
+      "kind": "tracking-removal",
+      "beforeSha256": "7b550dda9686c16f36a17bf9051d5dbf31e98555b30d114ac49fc49a1e712651",
+      "afterSha256": null,
+      "baseline": "c5cdad547d33fdc8a2aa3f585ce0822c76de8309"
+    },
+    {
+      "path": "apps/feedback-web/next-env.d.ts",
+      "kind": "tracking-removal",
+      "beforeSha256": "7b550dda9686c16f36a17bf9051d5dbf31e98555b30d114ac49fc49a1e712651",
+      "afterSha256": null,
+      "baseline": "c5cdad547d33fdc8a2aa3f585ce0822c76de8309"
+    },
+    {
+      "path": "apps/web/next-env.d.ts",
+      "kind": "tracking-removal",
+      "beforeSha256": "4e4da12aa061aac172fb1bcb48e9b6e4b293080d2f494327925fdba8f39632ac",
+      "afterSha256": null,
+      "baseline": "c5cdad547d33fdc8a2aa3f585ce0822c76de8309"
+    },
+    {
+      "path": "apps/yuta-display/next-env.d.ts",
+      "kind": "tracking-removal",
+      "beforeSha256": "83a6738771334a63124c8acf38250eccd39fd0aba62846bb0815d952a7936205",
+      "afterSha256": null,
+      "baseline": "c5cdad547d33fdc8a2aa3f585ce0822c76de8309"
+    },
+    {
+      "path": "apps/yuta-pos/next-env.d.ts",
+      "kind": "tracking-removal",
+      "beforeSha256": "4e4da12aa061aac172fb1bcb48e9b6e4b293080d2f494327925fdba8f39632ac",
+      "afterSha256": null,
+      "baseline": "c5cdad547d33fdc8a2aa3f585ce0822c76de8309"
+    },
+    {
+      "path": "docs/DEVELOPMENT_WORKFLOW.md",
+      "kind": "modified",
+      "beforeSha256": "d9894f4beaca8bb2f8c5258380f2491defd2474c4699a7911cd9e4bb00947e7b",
+      "afterSha256": "892db065b41c932152ea56bd55f043eb6ae94d5181894ace69cb26746b8f2b6f",
+      "baseline": "07d9d6d88e07f6a819c7894ef2e35f79d1eb32fa"
+    },
+    {
+      "path": "package.json",
+      "kind": "modified",
+      "beforeSha256": "843340c6527b04cb1b1b1a2b6a2e893901cd84a62510f9feeb380b44a14be721",
+      "afterSha256": "fc6fdde9d6ee80a5a8861c94082c64829a18dafde2eae238f5d1cbc4e0d31595",
+      "baseline": "07d9d6d88e07f6a819c7894ef2e35f79d1eb32fa"
+    },
+    {
+      "path": "scripts/generate-next-types.mjs",
+      "kind": "added",
+      "beforeSha256": null,
+      "afterSha256": "f4c4f981923b851ae7598301d607e8f0b5917ba5269f7bce30bdcfd9b110df78"
+    },
+    {
+      "path": "scripts/next-generated-types-bootstrap.test.mjs",
+      "kind": "added",
+      "beforeSha256": null,
+      "afterSha256": "3de15afdbcea8b0cdb8c3ed025290bbbe484c1d2085d9752eedf91523ac8e615"
+    },
+    {
+      "path": "scripts/test-pos-offline.mjs",
+      "kind": "modified",
+      "beforeSha256": "9952e7062048e47d0c3ce1135ce526203aa3c8993032995c1185e8bbabc87319",
+      "afterSha256": "ef08133a64c67a5dae5c5a4b5845a2f95286d9397af77b7678d993c522fd8764",
+      "baseline": "07d9d6d88e07f6a819c7894ef2e35f79d1eb32fa"
+    }
+  ],
+  "commands": [
+    {
+      "command": [
+        "git",
+        "-c",
+        "core.quotepath=false",
+        "diff",
+        "--no-ext-diff",
+        "--no-color",
+        "--binary",
+        "HEAD",
+        "880ed17ddd6adb47b1d585e82233820708202631",
+        "--",
+        ".github/workflows/ci.yml"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "core.quotepath=false",
+        "diff",
+        "--no-ext-diff",
+        "--no-color",
+        "--binary",
+        "HEAD",
+        "880ed17ddd6adb47b1d585e82233820708202631",
+        "--",
+        ".gitignore"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "core.quotepath=false",
+        "diff",
+        "--no-ext-diff",
+        "--no-color",
+        "--binary",
+        "HEAD",
+        "880ed17ddd6adb47b1d585e82233820708202631",
+        "--",
+        "README.md"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "core.quotepath=false",
+        "diff",
+        "--no-ext-diff",
+        "--no-color",
+        "--binary",
+        "c5cdad547d33fdc8a2aa3f585ce0822c76de8309",
+        "880ed17ddd6adb47b1d585e82233820708202631",
+        "--",
+        "apps/backoffice/next-env.d.ts"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "core.quotepath=false",
+        "diff",
+        "--no-ext-diff",
+        "--no-color",
+        "--binary",
+        "c5cdad547d33fdc8a2aa3f585ce0822c76de8309",
+        "880ed17ddd6adb47b1d585e82233820708202631",
+        "--",
+        "apps/booking-web/next-env.d.ts"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "core.quotepath=false",
+        "diff",
+        "--no-ext-diff",
+        "--no-color",
+        "--binary",
+        "c5cdad547d33fdc8a2aa3f585ce0822c76de8309",
+        "880ed17ddd6adb47b1d585e82233820708202631",
+        "--",
+        "apps/feedback-web/next-env.d.ts"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "core.quotepath=false",
+        "diff",
+        "--no-ext-diff",
+        "--no-color",
+        "--binary",
+        "c5cdad547d33fdc8a2aa3f585ce0822c76de8309",
+        "880ed17ddd6adb47b1d585e82233820708202631",
+        "--",
+        "apps/web/next-env.d.ts"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "core.quotepath=false",
+        "diff",
+        "--no-ext-diff",
+        "--no-color",
+        "--binary",
+        "c5cdad547d33fdc8a2aa3f585ce0822c76de8309",
+        "880ed17ddd6adb47b1d585e82233820708202631",
+        "--",
+        "apps/yuta-display/next-env.d.ts"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "core.quotepath=false",
+        "diff",
+        "--no-ext-diff",
+        "--no-color",
+        "--binary",
+        "c5cdad547d33fdc8a2aa3f585ce0822c76de8309",
+        "880ed17ddd6adb47b1d585e82233820708202631",
+        "--",
+        "apps/yuta-pos/next-env.d.ts"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "core.quotepath=false",
+        "diff",
+        "--no-ext-diff",
+        "--no-color",
+        "--binary",
+        "HEAD",
+        "880ed17ddd6adb47b1d585e82233820708202631",
+        "--",
+        "docs/DEVELOPMENT_WORKFLOW.md"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "core.quotepath=false",
+        "diff",
+        "--no-ext-diff",
+        "--no-color",
+        "--binary",
+        "HEAD",
+        "880ed17ddd6adb47b1d585e82233820708202631",
+        "--",
+        "package.json"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "core.quotepath=false",
+        "diff",
+        "--no-index",
+        "--no-ext-diff",
+        "--no-color",
+        "--binary",
+        "--",
+        "/dev/null",
+        "scripts/generate-next-types.mjs"
+      ],
+      "exit": 1
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "core.quotepath=false",
+        "diff",
+        "--no-index",
+        "--no-ext-diff",
+        "--no-color",
+        "--binary",
+        "--",
+        "/dev/null",
+        "scripts/next-generated-types-bootstrap.test.mjs"
+      ],
+      "exit": 1
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "core.quotepath=false",
+        "diff",
+        "--no-ext-diff",
+        "--no-color",
+        "--binary",
+        "HEAD",
+        "880ed17ddd6adb47b1d585e82233820708202631",
+        "--",
+        "scripts/test-pos-offline.mjs"
+      ],
+      "exit": 0
+    }
+  ],
+  "candidate": "880ed17ddd6adb47b1d585e82233820708202631",
+  "sha256": "6f1643414f375b72c5bff659285da448f4679b9d4e1cad2da3f90d09e03685ff",
+  "bytes": 45072,
+  "serialization": "Sorted ordinal paths; concatenate exact scoped Git diff stdout; UTF-8 no BOM, CRLF-to-LF for diff serialization only and one final LF. Source qualification always raw-byte SHA, never normalized.",
+  "baselineExplanation": "Six modified existing sources: HEAD raw bytes match Phase 1 baseline. Six tracking removals: c5cdad snapshot raw bytes match pre-Apply generated baseline (not blindly HEAD). Two new implementation files included explicitly via no-index /dev/null diff. Full diff reverse-check was accepted on exact Linux /candidate, exit 0; no reverse apply."
+}

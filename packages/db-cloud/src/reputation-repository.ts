@@ -3,6 +3,7 @@ import type {
   FeedbackStatus,
   PublicFeedbackSubmission,
 } from '@yuta/contracts/reputation';
+import { projectPublicReputationReviewSocialLinks } from '@yuta/contracts/reputation';
 import type { AssignableReputationUser } from '@yuta/contracts/cloud-admin';
 import type { PublicTenantContext, TenantContext } from '@yuta/tenant';
 import {
@@ -153,15 +154,19 @@ export async function findPublicFeedbackConfiguration(
     .limit(1);
   if (!establishment) return null;
 
+  const safeLinks = projectPublicReputationReviewSocialLinks({
+    googleReviewUrl: result.googleReviewUrl,
+    facebookReviewUrl: result.facebookReviewUrl,
+    instagramUrl: result.instagramUrl,
+  });
+
   return {
     organizationId: result.organizationId,
     establishmentId: result.establishmentId,
     establishmentName: establishment.name,
     slug: result.publicFeedbackSlug,
     enabled: result.publicFeedbackEnabled,
-    googleReviewUrl: result.googleReviewUrl,
-    facebookReviewUrl: result.facebookReviewUrl,
-    instagramUrl: result.instagramUrl,
+    ...safeLinks,
   };
 }
 

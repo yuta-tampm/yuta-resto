@@ -35,6 +35,82 @@ export class TenantUserError extends Error {
   }
 }
 
+type MembershipTransaction = Parameters<
+  Parameters<CloudDatabaseClient['transaction']>[0]
+>[0];
+
+async function lockEstablishments(
+  transaction: MembershipTransaction,
+  organizationId: string,
+  establishmentIds: string[],
+  errorCode: 'ESTABLISHMENT_NOT_ALLOWED' | 'MEMBERSHIP_NOT_FOUND',
+): Promise<void> {
+  const parents = await transaction
+    .select({ id: establishments.id })
+    .from(establishments)
+    .where(
+      and(
+        eq(establishments.organizationId, organizationId),
+        eq(establishments.status, 'active'),
+        inArray(establishments.id, establishmentIds),
+      ),
+    );
+  if (parents.length !== establishmentIds.length) {
+    throw new TenantUserError(
+      'Establishment not in management scope.',
+      errorCode,
+    );
+  }
+
+  // Use canonical database UUIDs, not request order or locale-dependent sorting.
+  const orderedIds = parents.map((parent) => parent.id).sort();
+  for (const establishmentId of orderedIds) {
+    const [parent] = await transaction
+      .select({ id: establishments.id })
+      .from(establishments)
+      .where(
+        and(
+          eq(establishments.organizationId, organizationId),
+          eq(establishments.id, establishmentId),
+          eq(establishments.status, 'active'),
+        ),
+      )
+      .for('no key update');
+    if (!parent) {
+      throw new TenantUserError(
+        'Establishment not in management scope.',
+        errorCode,
+      );
+    }
+  }
+}
+
+async function assertAnotherActiveOwner(
+  transaction: MembershipTransaction,
+  organizationId: string,
+  establishmentId: string,
+  membershipId: string,
+): Promise<void> {
+  const [ownerCount] = await transaction
+    .select({ value: count() })
+    .from(tenantMemberships)
+    .where(
+      and(
+        eq(tenantMemberships.organizationId, organizationId),
+        eq(tenantMemberships.establishmentId, establishmentId),
+        eq(tenantMemberships.role, 'OWNER'),
+        eq(tenantMemberships.status, 'active'),
+        ne(tenantMemberships.id, membershipId),
+      ),
+    );
+  if ((ownerCount?.value ?? 0) === 0) {
+    throw new TenantUserError(
+      'The establishment must retain an active owner.',
+      'LAST_OWNER_REQUIRED',
+    );
+  }
+}
+
 export function createTenantUserRepository(repositoryDb: CloudDatabaseClient) {
   async function listManageableEstablishments(input: {
     organizationId: string;
@@ -126,112 +202,129 @@ export function createTenantUserRepository(repositoryDb: CloudDatabaseClient) {
       input.allowedEstablishmentIds,
     );
 
-    return repositoryDb.transaction(async (transaction) => {
-      const establishmentRows = await transaction
-        .select({ id: establishments.id })
-        .from(establishments)
-        .where(
-          and(
-            eq(establishments.organizationId, input.organizationId),
-            eq(establishments.status, 'active'),
-            inArray(establishments.id, input.establishmentIds),
-          ),
-        );
-      if (establishmentRows.length !== input.establishmentIds.length) {
-        throw new TenantUserError(
-          'An establishment is outside the management scope.',
+    return repositoryDb.transaction(
+      async (transaction) => {
+        await lockEstablishments(
+          transaction,
+          input.organizationId,
+          input.establishmentIds,
           'ESTABLISHMENT_NOT_ALLOWED',
         );
-      }
 
-      const [existingUser] = await transaction
-        .select()
-        .from(users)
-        .where(eq(users.email, input.email))
-        .limit(1);
-      let user = existingUser;
-      const created = !user;
-      if (user && user.status !== 'ACTIVE') {
-        throw new TenantUserError(
-          'The existing user account is inactive.',
-          'USER_INACTIVE',
-        );
-      }
-      if (!user) {
-        const [createdUser] = await transaction
-          .insert(users)
-          .values({
-            id: uuidv7(),
-            authProviderId: createPasswordProviderId(input.email),
-            displayName: input.name,
-            email: input.email,
-            passwordHash: await hashPassword(input.password),
-            status: 'ACTIVE',
+        const [existingUser] = await transaction
+          .select()
+          .from(users)
+          .where(eq(users.email, input.email))
+          .limit(1);
+        let user = existingUser;
+        const created = !user;
+        if (user && user.status !== 'ACTIVE') {
+          throw new TenantUserError(
+            'The existing user account is inactive.',
+            'USER_INACTIVE',
+          );
+        }
+        if (!user) {
+          const [createdUser] = await transaction
+            .insert(users)
+            .values({
+              id: uuidv7(),
+              authProviderId: createPasswordProviderId(input.email),
+              displayName: input.name,
+              email: input.email,
+              passwordHash: await hashPassword(input.password),
+              status: 'ACTIVE',
+            })
+            .returning();
+          user = createdUser;
+        }
+        if (!created && user.id === input.actorUserId) {
+          throw new TenantUserError(
+            'The current user cannot modify itself through the attachment flow.',
+            'CURRENT_MEMBERSHIP_LOCKED',
+          );
+        }
+
+        const existingMemberships = await transaction
+          .select({
+            id: tenantMemberships.id,
+            establishmentId: tenantMemberships.establishmentId,
+            role: tenantMemberships.role,
+            status: tenantMemberships.status,
           })
-          .returning();
-        user = createdUser;
-      }
-      if (!created && user.id === input.actorUserId) {
-        throw new TenantUserError(
-          'The current user cannot modify itself through the attachment flow.',
-          'CURRENT_MEMBERSHIP_LOCKED',
-        );
-      }
+          .from(tenantMemberships)
+          .where(
+            and(
+              eq(tenantMemberships.userId, user.id),
+              eq(tenantMemberships.organizationId, input.organizationId),
+              inArray(
+                tenantMemberships.establishmentId,
+                input.establishmentIds,
+              ),
+            ),
+          );
+        if (
+          input.actorRole !== 'OWNER' &&
+          existingMemberships.some((membership) => membership.role !== 'STAFF')
+        ) {
+          throw new TenantUserError(
+            'A manager cannot manage owner or manager memberships.',
+            'ROLE_NOT_ALLOWED',
+          );
+        }
 
-      const existingMemberships = await transaction
-        .select({ role: tenantMemberships.role })
-        .from(tenantMemberships)
-        .where(
-          and(
-            eq(tenantMemberships.userId, user.id),
-            eq(tenantMemberships.organizationId, input.organizationId),
-            inArray(tenantMemberships.establishmentId, input.establishmentIds),
-          ),
-        );
-      if (
-        input.actorRole !== 'OWNER' &&
-        existingMemberships.some((membership) => membership.role !== 'STAFF')
-      ) {
-        throw new TenantUserError(
-          'A manager cannot manage owner or manager memberships.',
-          'ROLE_NOT_ALLOWED',
-        );
-      }
+        for (const membership of existingMemberships) {
+          if (
+            membership.role === 'OWNER' &&
+            membership.status === 'active' &&
+            input.role !== 'OWNER' &&
+            membership.establishmentId
+          ) {
+            await assertAnotherActiveOwner(
+              transaction,
+              input.organizationId,
+              membership.establishmentId,
+              membership.id,
+            );
+          }
+        }
 
-      for (const establishmentId of input.establishmentIds) {
-        await transaction
-          .insert(tenantMemberships)
-          .values({
-            id: uuidv7(),
-            userId: user.id,
-            organizationId: input.organizationId,
-            establishmentId,
+        for (const establishmentId of input.establishmentIds) {
+          await transaction
+            .insert(tenantMemberships)
+            .values({
+              id: uuidv7(),
+              userId: user.id,
+              organizationId: input.organizationId,
+              establishmentId,
+              role: input.role,
+              status: 'active',
+            })
+            .onConflictDoUpdate({
+              target: [
+                tenantMemberships.userId,
+                tenantMemberships.organizationId,
+                tenantMemberships.establishmentId,
+              ],
+              set: { role: input.role, status: 'active' },
+            });
+        }
+
+        await transaction.insert(authAuditEvents).values({
+          id: uuidv7(),
+          event: created ? 'tenant.user.created' : 'tenant.user.attached',
+          actorUserId: input.actorUserId,
+          subjectUserId: user.id,
+          organizationId: input.organizationId,
+          metadata: {
+            establishmentIds: input.establishmentIds,
             role: input.role,
-            status: 'active',
-          })
-          .onConflictDoUpdate({
-            target: [
-              tenantMemberships.userId,
-              tenantMemberships.organizationId,
-              tenantMemberships.establishmentId,
-            ],
-            set: { role: input.role, status: 'active' },
-          });
-      }
-
-      await transaction.insert(authAuditEvents).values({
-        id: uuidv7(),
-        event: created ? 'tenant.user.created' : 'tenant.user.attached',
-        actorUserId: input.actorUserId,
-        subjectUserId: user.id,
-        organizationId: input.organizationId,
-        metadata: {
-          establishmentIds: input.establishmentIds,
-          role: input.role,
-        },
-      });
-      return { userId: user.id, created };
-    });
+          },
+        });
+        return { userId: user.id, created };
+      },
+      { isolationLevel: 'read committed' },
+    );
   }
 
   async function updateMembership(input: {
@@ -252,118 +345,139 @@ export function createTenantUserRepository(repositoryDb: CloudDatabaseClient) {
       );
     }
 
-    await repositoryDb.transaction(async (transaction) => {
-      const targetRows = await transaction
-        .select({
-          membership: tenantMemberships,
-          establishmentOrganizationId: establishments.organizationId,
-        })
-        .from(tenantMemberships)
-        .innerJoin(
-          establishments,
-          eq(establishments.id, tenantMemberships.establishmentId),
-        )
-        .where(
-          and(
-            eq(tenantMemberships.id, input.membershipId),
-            eq(tenantMemberships.organizationId, input.organizationId),
-            inArray(
-              tenantMemberships.establishmentId,
-              input.allowedEstablishmentIds,
+    await repositoryDb.transaction(
+      async (transaction) => {
+        const locatorRows = await transaction
+          .select({
+            membership: tenantMemberships,
+            establishmentOrganizationId: establishments.organizationId,
+          })
+          .from(tenantMemberships)
+          .innerJoin(
+            establishments,
+            eq(establishments.id, tenantMemberships.establishmentId),
+          )
+          .where(
+            and(
+              eq(tenantMemberships.id, input.membershipId),
+              eq(tenantMemberships.organizationId, input.organizationId),
+              inArray(
+                tenantMemberships.establishmentId,
+                input.allowedEstablishmentIds,
+              ),
             ),
-          ),
-        )
-        .limit(1);
-      const target = targetRows[0];
-      if (
-        !target ||
-        target.establishmentOrganizationId !== input.organizationId ||
-        !target.membership.establishmentId
-      ) {
-        throw new TenantUserError(
-          'Membership not found in the management scope.',
+          )
+          .limit(1);
+        const locator = locatorRows[0];
+        if (
+          !locator ||
+          locator.establishmentOrganizationId !== input.organizationId ||
+          !locator.membership.establishmentId
+        ) {
+          throw new TenantUserError(
+            'Membership not found in the management scope.',
+            'MEMBERSHIP_NOT_FOUND',
+          );
+        }
+        await lockEstablishments(
+          transaction,
+          input.organizationId,
+          [locator.membership.establishmentId],
           'MEMBERSHIP_NOT_FOUND',
         );
-      }
-      if (input.actorRole !== 'OWNER' && target.membership.role !== 'STAFF') {
-        throw new TenantUserError(
-          'A manager cannot manage owner or manager memberships.',
-          'ROLE_NOT_ALLOWED',
-        );
-      }
-      const removesOwner =
-        target.membership.role === 'OWNER' &&
-        (input.role !== 'OWNER' || input.status !== 'active');
-      if (removesOwner) {
-        const [ownerCount] = await transaction
-          .select({ value: count() })
+        // A separate post-lock statement sees the previous lock holder's commit.
+        const [membership] = await transaction
+          .select()
           .from(tenantMemberships)
           .where(
             and(
+              eq(tenantMemberships.id, input.membershipId),
+              eq(tenantMemberships.organizationId, input.organizationId),
+              eq(
+                tenantMemberships.establishmentId,
+                locator.membership.establishmentId,
+              ),
+            ),
+          )
+          .limit(1);
+        if (!membership || !membership.establishmentId) {
+          throw new TenantUserError(
+            'Membership not found in the management scope.',
+            'MEMBERSHIP_NOT_FOUND',
+          );
+        }
+        const target = {
+          membership: {
+            ...membership,
+            establishmentId: membership.establishmentId,
+          },
+        };
+        if (input.actorRole !== 'OWNER' && target.membership.role !== 'STAFF') {
+          throw new TenantUserError(
+            'A manager cannot manage owner or manager memberships.',
+            'ROLE_NOT_ALLOWED',
+          );
+        }
+        const removesOwner =
+          target.membership.role === 'OWNER' &&
+          (input.role !== 'OWNER' || input.status !== 'active');
+        if (removesOwner) {
+          await assertAnotherActiveOwner(
+            transaction,
+            input.organizationId,
+            target.membership.establishmentId,
+            target.membership.id,
+          );
+        }
+
+        await transaction
+          .update(tenantMemberships)
+          .set({ role: input.role, status: input.status })
+          .where(
+            and(
+              eq(tenantMemberships.id, target.membership.id),
               eq(tenantMemberships.organizationId, input.organizationId),
               eq(
                 tenantMemberships.establishmentId,
                 target.membership.establishmentId,
               ),
-              eq(tenantMemberships.role, 'OWNER'),
-              eq(tenantMemberships.status, 'active'),
-              ne(tenantMemberships.id, target.membership.id),
             ),
           );
-        if ((ownerCount?.value ?? 0) === 0) {
-          throw new TenantUserError(
-            'The establishment must retain an active owner.',
-            'LAST_OWNER_REQUIRED',
-          );
-        }
-      }
 
-      await transaction
-        .update(tenantMemberships)
-        .set({ role: input.role, status: input.status })
-        .where(
-          and(
-            eq(tenantMemberships.id, target.membership.id),
-            eq(tenantMemberships.organizationId, input.organizationId),
-            eq(
-              tenantMemberships.establishmentId,
-              target.membership.establishmentId,
-            ),
-          ),
-        );
-
-      if (input.status === 'suspended') {
-        await transaction
-          .update(authSessions)
-          .set({ revokedAt: new Date() })
-          .where(
-            and(
-              eq(authSessions.userId, target.membership.userId),
-              eq(authSessions.organizationId, input.organizationId),
-              eq(
-                authSessions.establishmentId,
-                target.membership.establishmentId,
+        if (input.status === 'suspended') {
+          await transaction
+            .update(authSessions)
+            .set({ revokedAt: new Date() })
+            .where(
+              and(
+                eq(authSessions.userId, target.membership.userId),
+                eq(authSessions.organizationId, input.organizationId),
+                eq(
+                  authSessions.establishmentId,
+                  target.membership.establishmentId,
+                ),
+                isNull(authSessions.revokedAt),
               ),
-              isNull(authSessions.revokedAt),
-            ),
-          );
-      }
+            );
+        }
 
-      await transaction.insert(authAuditEvents).values({
-        id: uuidv7(),
-        event: 'tenant.membership.updated',
-        actorUserId: input.actorUserId,
-        subjectUserId: target.membership.userId,
-        organizationId: input.organizationId,
-        establishmentId: target.membership.establishmentId,
-        metadata: {
-          previousRole: target.membership.role,
-          previousStatus: target.membership.status,
-          role: input.role,
-          status: input.status,
-        },
-      });
-    });
+        await transaction.insert(authAuditEvents).values({
+          id: uuidv7(),
+          event: 'tenant.membership.updated',
+          actorUserId: input.actorUserId,
+          subjectUserId: target.membership.userId,
+          organizationId: input.organizationId,
+          establishmentId: target.membership.establishmentId,
+          metadata: {
+            previousRole: target.membership.role,
+            previousStatus: target.membership.status,
+            role: input.role,
+            status: input.status,
+          },
+        });
+      },
+      { isolationLevel: 'read committed' },
+    );
   }
 
   return {

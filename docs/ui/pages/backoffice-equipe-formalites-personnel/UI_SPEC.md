@@ -1,13 +1,16 @@
 # Préparer un projet de contrat CDI — UI Specification
 
-Status: Phase 5 documentation completed; Phase 4 UI remains current
+Status: Persistent draft foundation UI implemented — development local-only;
+production deferred
 
 Visibility: Engineering
 
 ## Authority and target
 
-`apps/backoffice`, `/equipe/formalites-personnel`, `NEW_PAGE`, interactive
-fictional prototype. Runtime code and product decisions remain authoritative.
+`apps/backoffice`, generic `/equipe/formalites-personnel` fictional prototype,
+and development-gated connected route
+`/equipe/formalites-personnel/[employeeId]`. Runtime code and approved Product
+decisions remain authoritative.
 
 ## Shared UI context
 
@@ -24,19 +27,19 @@ task surface.
 
 ## Visual hierarchy
 
-1. Page title and short readiness purpose.
-2. Permanent warning that every business fact is fictional and nothing is read,
-   saved, generated, or sent.
-3. Fictional employee context, three local step controls, and checkpoint status.
-4. One task card for the active source, inputs, or review step.
-5. Demo-only readiness and disabled generation button in review.
+1. Page title and explicit connected employee context.
+2. Current persistent state or recoverable feedback.
+3. One task surface for create, editable draft, reconciliation, ineligible
+   recovery, or abandoned read-only.
+4. Clearly separated draft and current Personnel values where they differ.
+5. Explicit save/reconcile/abandon actions; no generation control.
 
 ## Content and copy
 
-French UI uses “Prototype — données entièrement fictives”, “Données qui
-viendraient de Salariés”, “Informations propres au projet CDI”, and
-“Préparation impossible pour le moment”. It must never say a contract was
-generated, validated, compliant, saved, or sent.
+The connected French UI uses “Dossier salarié connecté”, “Brouillon en cours”,
+“Valeur du brouillon”, “Valeur actuelle du dossier salarié”, and explicit
+success/recovery wording. It may say the preparation draft was saved, but must
+never say a legal contract was generated, validated, compliant, signed, or sent.
 
 ## Responsive behavior
 
@@ -57,8 +60,33 @@ horizontal overflow.
 
 ## Out of scope
 
-Document preview, generated artifact, employee dossier linkage, loading/retry
-states for data, durable form behavior, and shell changes.
+Document preview, generated artifact, address, remuneration, legal advice,
+probation duration/renewal, MANAGER/STAFF access, Personnel write-back,
+automatic retention cleanup, production enablement, and shell changes.
+
+## Persistent draft foundation UI
+
+Status: `IMPLEMENTED — DEVELOPMENT LOCAL-ONLY`
+
+- Eligible CDI with no active draft shows the seven current Personnel facts and
+  an explicit “Créer le brouillon” action; nothing is auto-created.
+- Editable `DRAFT` shows the three probation choices and explicit Save/Abandon.
+  Successful save refreshes the authoritative model.
+- Reconciliation renders only server-derived divergent facts. Each shows draft
+  and current Personnel values plus KEEP/REFRESH controls. Missing choices focus
+  the first unresolved fact.
+- Ineligible recovery is read-only except for abandon. An abandoned record is
+  read-only and shows its reason; a separate new draft can be created only when
+  current CDI eligibility is restored.
+- Validation, stale draft, stale source, replay conflict, and server failure are
+  visible and recoverable without losing relevant local input. Pending state
+  blocks accidental double submission.
+- Dirty navigation requires confirmation. Dialogs retain accessible names,
+  labels, focus behavior, and required reason feedback.
+- At 1024 and below, the probation choices remain stacked to avoid cramped
+  labels; content remains free of horizontal overflow at 1440/1024/768/390.
+- No raw identifiers, operation evidence, address, remuneration, legal
+  recommendation, document-generation, or provider UI is rendered.
 
 ## Phase 2 UI extension
 

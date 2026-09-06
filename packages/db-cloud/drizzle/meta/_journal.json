@@ -120,6 +120,20 @@
       "when": 1788386481416,
       "tag": "0016_restaurant_knowledge_validated_items",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1788438509051,
+      "tag": "0017_whole_warbound",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1788559880299,
+      "tag": "0018_elite_hardball",
+      "breakpoints": true
     }
   ]
 }

@@ -47,7 +47,7 @@ export function MembershipEditorForm({
   return (
     <form
       action={formAction}
-      className="grid gap-3 px-4 py-4 lg:grid-cols-[minmax(180px,1fr)_190px_150px_auto] lg:items-end"
+      className="grid gap-3 px-4 py-4 xl:grid-cols-[minmax(180px,1fr)_190px_150px_auto] xl:items-end"
     >
       <input type="hidden" name="membershipId" value={membership.id} />
       <div>
@@ -93,6 +93,7 @@ export function MembershipEditorForm({
 
       <FormField label={<Label htmlFor={`role-${membership.id}`}>Rôle</Label>}>
         <Select
+          key={`${membership.id}:role:${membership.role}`}
           name="role"
           defaultValue={membership.role}
           disabled={locked}
@@ -115,6 +116,7 @@ export function MembershipEditorForm({
         label={<Label htmlFor={`status-${membership.id}`}>Statut</Label>}
       >
         <Select
+          key={`${membership.id}:status:${membership.status}`}
           name="status"
           defaultValue={
             membership.status === 'suspended' ? 'suspended' : 'active'

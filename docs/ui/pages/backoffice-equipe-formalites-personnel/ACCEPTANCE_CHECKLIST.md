@@ -162,3 +162,32 @@
 - [ ] Product owner approves or revises F08-01 through F08-10.
 - [ ] Qualified review and versioned template evidence are received before any
       persistence or generation phase is proposed.
+
+## Persistent draft foundation — local acceptance
+
+- [x] OWNER-only connected route uses independent Formalités and Personnel read
+      authorization with trusted organization and active-establishment scope.
+- [x] Current CDI eligibility is revalidated for authoritative mutations; no
+      full-time/upcoming/departure rule was added as an extra eligibility gate.
+- [x] Exactly seven Personnel facts are snapshotted without Personnel write-back.
+- [x] Explicit create/save/reopen supports UNDECIDED, INCLUDE, and EXCLUDE with
+      no autosave and one active draft per bounded scope.
+- [x] KEEP, REFRESH, mixed reconciliation, unchanged-source acknowledgement, and
+      changed-again source behavior pass against real local PostgreSQL.
+- [x] Stale draft, stale Personnel source, replay conflict, same-action retry,
+      rollback, and double-submit behavior are visible and non-partial.
+- [x] Non-CDI recovery allows read/abandon; abandonment requires a 1–250 character
+      reason and leaves an immutable read-only record.
+- [x] A separate draft can be created after abandonment when current CDI
+      eligibility is restored.
+- [x] Browser QA passes at 1440/1024/768/390 with no feature-content overflow;
+      keyboard, focus recovery, dialog labels, dirty-close, and the connected
+      workspace accessibility scan pass.
+- [x] No address, remuneration, legal recommendation, raw tenant/actor IDs,
+      operation key/hash, fingerprint, receipt internals, PDF, signature,
+      provider, or Personnel mutation is exposed.
+- [x] The generic fictional prototype, navigation, development gate, and shared
+      `@yuta/ui` primitives remain unchanged.
+- [x] The route and database migration remain local/development-only; production
+      migration, route enablement, deployment, and automatic retention cleanup
+      remain unauthorized.

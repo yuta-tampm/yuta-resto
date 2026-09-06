@@ -101,6 +101,29 @@ These active-change planning, implementation, VERIFY, Technical Compliance,
 and earlier-gate integrity checks must never run as preconditions for the
 archived knowledge-review resume branch.
 
+### Branch A Design omission integrity
+
+When Design is absent, require the complete `DESIGN APPLICABILITY` block in
+Tasks defined by `docs/YUTA_AUTOMATED_CHANGE_WORKFLOW.md`. Require
+`Status: NOT_APPLICABLE`, bounded rationale, findings for every criterion,
+exact authority/approved scope/spec references, and expected Design absence.
+Independently verify current scope still permits omission and no sensitive
+Design approval is being bypassed. Gate 3 must expose the rationale, evidence
+source, exact Tasks path/hash, and resolved expected-absent Design path.
+
+Recompute the reviewed Tasks hash and check expected absence alongside all
+other Branch A integrity checks. A later Design addition, changed applicability,
+rationale or reviewed Tasks evidence invalidates Gate 3 and returns to run-change.
+Missing/invalid omission evidence blocks approval, sync, and archive; do not
+backfill it during finalization. `skip_specs: true` is not evidence for omitting
+Design. These checks belong only to Branch A, never Branch B.
+
+Report `RAW OPENSPEC STATUS` separately from `YUTA OPERATIONAL READINESS`:
+Design may remain ready and planning incomplete despite a valid omission.
+Recognize this exception only when omitted Design is the sole outstanding
+planning artifact and all other completion, integrity, approval, sync/validation,
+and QA requirements pass. Do not claim a native OpenSpec Design-skip state.
+
 ### Record final approval
 
 Only after every integrity check passes, update Gate 3 with:
@@ -145,7 +168,7 @@ After successful applicable sync and main-spec validation, or after a valid no-s
 
 1. Follow the current generated `openspec-archive-change` workflow synchronously using the resolved planning root.
 2. Reconfirm artifact/task completion and that sync state matches every delta before moving the change.
-3. Do not approve warnings for incomplete work merely because final authorization exists; unresolved incompleteness invalidates readiness and must return to `$yuta-run-change`.
+3. Do not approve warnings for incomplete work merely because final authorization exists; unresolved incompleteness invalidates readiness and must return to `$yuta-run-change`. The sole bounded exception is the valid, Gate-3-reviewed Design omission checked above under the approved conditional-Design policy. Inspect any warning before accepting it; record its exact text, omission evidence/path/hash, current-user finalization authorization, and bounded acceptance in Gate 3. Accept only the warning attributable to that omission. Any unrelated warning or incomplete work stops for review; never reuse historical warning acceptance generically.
 4. Archive only when the target path is unambiguous and does not already exist.
 5. Confirm the archived change retains its metadata and evidence.
 

@@ -9,8 +9,12 @@ import {
   personnelActionOverviewResponseSchema,
   personnelEmployeeAccessHistorySchema,
   personnelEmployeeAuditHistorySchema,
+  personnelEmployeeUnifiedHistorySchema,
   personnelEmployeeListQuerySchema,
   personnelEmployeeSummarySchema,
+  personnelHistoryMutationGroupMetadataSchema,
+  personnelHistoryStoredSnapshotSchema,
+  personnelReconstructableHistoryEventSchema,
   personnelDocumentListSchema,
   personnelRegisterFactsSchema,
   personnelRegisterPageSchema,
@@ -21,6 +25,193 @@ import {
 } from '../src/personnel';
 
 describe('personnel contracts', () => {
+  it('strictly validates all versioned reconstructable-history groups', () => {
+    const snapshots = [
+      {
+        semanticGroup: 'identity',
+        values: {
+          payloadVersion: 1,
+          givenNames: 'Camille',
+          familyName: 'Martin',
+        },
+      },
+      {
+        semanticGroup: 'role',
+        values: {
+          payloadVersion: 1,
+          position: 'Cheffe de rang',
+          qualification: 'Employée qualifiée',
+        },
+      },
+      {
+        semanticGroup: 'contract_terms',
+        values: {
+          payloadVersion: 1,
+          employmentTermType: 'fixed_term',
+          expectedEndDate: '2027-03-31',
+          fixedTermReasonCode: 'seasonal_employment',
+        },
+      },
+      {
+        semanticGroup: 'work_time',
+        values: {
+          payloadVersion: 1,
+          workTimeCategory: 'part_time',
+          contractWeeklyMinutes: 1_800,
+        },
+      },
+      {
+        semanticGroup: 'entry',
+        values: { payloadVersion: 1, entryDate: '2026-09-01' },
+      },
+      {
+        semanticGroup: 'departure',
+        values: { payloadVersion: 1, departureDate: null },
+      },
+    ] as const;
+
+    for (const snapshot of snapshots) {
+      expect(personnelHistoryStoredSnapshotSchema.parse(snapshot)).toEqual(
+        snapshot,
+      );
+    }
+    expect(
+      personnelHistoryStoredSnapshotSchema.safeParse({
+        ...snapshots[0],
+        values: { ...snapshots[0].values, payloadVersion: 2 },
+      }).success,
+    ).toBe(false);
+    expect(
+      personnelHistoryStoredSnapshotSchema.safeParse({
+        ...snapshots[0],
+        values: { ...snapshots[0].values, rawForm: 'not allowed' },
+      }).success,
+    ).toBe(false);
+    expect(
+      personnelHistoryStoredSnapshotSchema.safeParse({
+        semanticGroup: 'documents',
+        values: { payloadVersion: 1 },
+      }).success,
+    ).toBe(false);
+  });
+
+  it('keeps per-group metadata bounded and strict', () => {
+    const metadata = {
+      semanticGroup: 'role',
+      classification: 'change',
+      effectiveDate: '2026-09-03',
+      correctionReason: null,
+    } as const;
+    expect(personnelHistoryMutationGroupMetadataSchema.parse(metadata)).toEqual(
+      metadata,
+    );
+    expect(
+      personnelHistoryMutationGroupMetadataSchema.safeParse({
+        ...metadata,
+        organizationId: '11111111-1111-4111-8111-111111111111',
+      }).success,
+    ).toBe(false);
+  });
+
+  it('exposes safe reconstructable DTOs without persistence JSON internals', () => {
+    const event = personnelReconstructableHistoryEventSchema.parse({
+      kind: 'mutation',
+      id: '11111111-1111-4111-8111-111111111111',
+      actorDisplayName: 'Propriétaire test',
+      occurredAt: '2026-09-03T12:00:00.000Z',
+      groups: [
+        {
+          semanticGroup: 'departure',
+          classification: 'correction',
+          previousValues: { departureDate: '2026-09-30' },
+          newValues: { departureDate: null },
+          effectiveDate: null,
+          correctionReason: 'Départ annulé',
+        },
+      ],
+    });
+
+    expect(event).not.toHaveProperty('organizationId');
+    expect(event).not.toHaveProperty('establishmentId');
+    expect(event).not.toHaveProperty('employeeId');
+    expect(event).not.toHaveProperty('operationId');
+    expect(event.kind).toBe('mutation');
+    if (event.kind !== 'mutation') throw new Error('Expected mutation event.');
+    expect(event.groups[0]?.newValues).not.toHaveProperty('payloadVersion');
+    expect(
+      personnelReconstructableHistoryEventSchema.safeParse({
+        ...event,
+        groups: [
+          {
+            ...event.groups[0],
+            newValues: { departureDate: null, payloadVersion: 1 },
+          },
+        ],
+      }).success,
+    ).toBe(false);
+  });
+
+  it('unifies legacy and reconstructable history without internal fields', () => {
+    const history = personnelEmployeeUnifiedHistorySchema.parse({
+      items: [
+        {
+          kind: 'legacy',
+          id: '11111111-1111-4111-8111-111111111111',
+          eventType: 'employee.created',
+          changedFields: ['identity'],
+          actorDisplayName: 'Propriétaire test',
+          occurredAt: '2026-09-03T12:00:00.000Z',
+          reason: null,
+          previousDepartureDate: null,
+          newDepartureDate: null,
+        },
+        {
+          kind: 'cutover_baseline',
+          id: '22222222-2222-4222-8222-222222222222',
+          actorDisplayName: null,
+          occurredAt: '2026-09-03T11:00:00.000Z',
+          groups: [
+            {
+              semanticGroup: 'identity',
+              currentValues: { givenNames: 'Camille', familyName: 'Martin' },
+            },
+            {
+              semanticGroup: 'role',
+              currentValues: { position: 'Service', qualification: 'Employée' },
+            },
+            {
+              semanticGroup: 'contract_terms',
+              currentValues: {
+                employmentTermType: 'indefinite',
+                expectedEndDate: null,
+                fixedTermReasonCode: null,
+              },
+            },
+            {
+              semanticGroup: 'work_time',
+              currentValues: {
+                workTimeCategory: 'full_time',
+                contractWeeklyMinutes: 2_100,
+              },
+            },
+            {
+              semanticGroup: 'entry',
+              currentValues: { entryDate: '2026-01-01' },
+            },
+            {
+              semanticGroup: 'departure',
+              currentValues: { departureDate: null },
+            },
+          ],
+        },
+      ],
+      truncated: false,
+    });
+    expect(JSON.stringify(history)).not.toContain('operationId');
+    expect(JSON.stringify(history)).not.toContain('payloadVersion');
+    expect(JSON.stringify(history)).not.toContain('organizationId');
+  });
+
   it('accepts only bounded, allowlisted contract extraction results', () => {
     const result = {
       schemaVersion: 1,

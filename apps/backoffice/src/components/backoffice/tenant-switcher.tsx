@@ -2,7 +2,6 @@
 
 import type { AvailableTenant } from '@yuta/auth';
 import {
-  Button,
   Select,
   SelectContent,
   SelectGroup,
@@ -12,14 +11,13 @@ import {
   SelectValue,
   cn,
 } from '@yuta/ui';
-import { ArrowLeftRight } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { useActionState, useState } from 'react';
-import { useFormStatus } from 'react-dom';
+import { useActionState, useEffect, useRef } from 'react';
 import {
   switchTenantAction,
   type TenantSwitchActionState,
 } from '../../app/(authenticated)/actions';
+import { submitTenantSwitch } from './tenant-switcher-submission';
 
 const initialState: TenantSwitchActionState = { error: null };
 
@@ -33,23 +31,50 @@ export function TenantSwitcher({
   className?: string;
 }) {
   const pathname = usePathname();
-  const [selectedMembershipId, setSelectedMembershipId] =
-    useState(currentMembershipId);
-  const [state, formAction] = useActionState(switchTenantAction, initialState);
+  const formRef = useRef<HTMLFormElement>(null);
+  const membershipFieldRef = useRef<HTMLInputElement>(null);
+  const submissionRequestedRef = useRef(false);
+  const [state, formAction, isPending] = useActionState(
+    switchTenantAction,
+    initialState,
+  );
   const tenantsByOrganization = groupTenantsByOrganization(tenants);
+
+  useEffect(() => {
+    if (!isPending) submissionRequestedRef.current = false;
+  }, [isPending, state]);
+
+  function handleValueChange(targetMembershipId: string) {
+    const submitted = submitTenantSwitch({
+      currentMembershipId,
+      targetMembershipId,
+      pending: isPending || submissionRequestedRef.current,
+      membershipField: membershipFieldRef.current,
+      form: formRef.current,
+    });
+    if (submitted) submissionRequestedRef.current = true;
+  }
 
   return (
     <form
+      ref={formRef}
       action={formAction}
-      className={cn('flex min-w-0 items-start gap-2', className)}
+      className={cn('min-w-0', className)}
+      aria-busy={isPending}
     >
       <input type="hidden" name="returnTo" value={pathname} />
-      <div className="min-w-0 flex-1">
+      <input
+        key={currentMembershipId}
+        ref={membershipFieldRef}
+        type="hidden"
+        name="membershipId"
+        defaultValue={currentMembershipId}
+      />
+      <div className="min-w-0">
         <Select
-          name="membershipId"
-          value={selectedMembershipId}
-          onValueChange={setSelectedMembershipId}
-          disabled={tenants.length < 2}
+          value={currentMembershipId}
+          onValueChange={handleValueChange}
+          disabled={tenants.length < 2 || isPending}
           required
         >
           <SelectTrigger
@@ -77,37 +102,18 @@ export function TenantSwitcher({
             ))}
           </SelectContent>
         </Select>
-        {state.error && (
+        {isPending && (
+          <p className="mt-1 max-w-64 text-xs text-muted" role="status">
+            Changement d’établissement…
+          </p>
+        )}
+        {!isPending && state.error && (
           <p className="mt-1 max-w-64 text-xs text-status-danger" role="alert">
             {state.error}
           </p>
         )}
       </div>
-      <TenantSwitchSubmit
-        disabled={
-          tenants.length < 2 || selectedMembershipId === currentMembershipId
-        }
-      />
     </form>
-  );
-}
-
-function TenantSwitchSubmit({ disabled }: { disabled: boolean }) {
-  const { pending } = useFormStatus();
-  return (
-    <Button
-      type="submit"
-      variant="outline"
-      size="sm"
-      className="h-9 shrink-0 px-2"
-      loading={pending}
-      disabled={disabled || pending}
-      aria-label="Changer d'établissement"
-      title="Changer d'établissement"
-    >
-      <ArrowLeftRight className="h-4 w-4" />
-      <span className="sr-only">Changer d'établissement</span>
-    </Button>
   );
 }
 

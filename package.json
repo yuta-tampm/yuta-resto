@@ -60,6 +60,7 @@
     "test:pos": "pnpm --filter @yuta/pos test",
     "test:site-agent": "pnpm --filter @yuta/site-agent test",
     "test:ui-pack": "node --test ./scripts/ui-pack-tooling.test.mjs",
+    "typegen:next": "node scripts/generate-next-types.mjs",
     "typecheck": "pnpm --filter @yuta/web typecheck",
     "typecheck:backoffice": "pnpm --filter @yuta/backoffice typecheck",
     "typecheck:booking": "pnpm --filter @yuta/booking-web typecheck",

@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-08
+Last updated: 2026-09-06
 
 This document tracks the Phase 1 reputation module implemented across
 `apps/backoffice`, `apps/feedback-web`, `packages/contracts`, and the cloud
@@ -26,6 +26,9 @@ is completed, added, deferred, or reordered.
 - Back-office inbox: `/visibilite-reputation/avis` in `apps/backoffice`.
 - Direct customer feedback inbox: `/visibilite-reputation/satisfaction`, restricted to
   feedback submitted through the public YUTA feedback website.
+- OWNER-only review and social-link settings are appended to that Satisfaction
+  page after the inbox. The settings manage exactly the Google review,
+  Facebook, and Instagram destinations for the active establishment.
 - Review detail route: `/visibilite-reputation/avis/[reviewId]`, which redirects
   to the inbox with that review selected.
 - Public YUTA Avis landing page: `/` in `apps/feedback-web`.
@@ -76,8 +79,9 @@ must use a verified hostname in `tenant_domains` routed to `apps/feedback-web`.
   database-backed rate limiting.
 - A hidden honeypot field provides basic bot protection.
 - A client may submit at most five feedback records per 15-minute window.
-- External review links are displayed after submission independently of the
-  submitted score.
+- Safe configured external review links are displayed after submission
+  independently of the submitted score. Null or invalid stored destinations are
+  hidden, and rendered links open in a new tab with `noopener noreferrer`.
 - Customer email and phone are not sent to an AI provider.
 
 Set `PUBLIC_FEEDBACK_IP_HASH_SALT` to a long random value in every production
@@ -85,18 +89,21 @@ feedback-web environment. Production submissions fail closed if it is missing.
 
 ## Development data
 
-The idempotent database seed creates:
+The idempotent foundation seed creates reputation settings for both LUNA
+establishments, with public slugs `luna` and `luna-poitiers`. It does not insert
+feedback records.
 
-- Reputation settings for LUNA with public slug `luna`.
-- Three Google reviews with 5-, 3-, and 1-star ratings.
-- One positive direct feedback record.
-- One negative direct feedback record with contact consent.
-- Stored analyses, one published reply, one failed reply, and one open incident.
+The separately guarded `pnpm db:cloud:seed:demo` command preserves the existing
+LUNA reputation sample and adds two synthetic direct-feedback records for LuNa
+Poitiers: one positive and one negative. Both Poitiers records include their
+private direct-feedback detail, contain no customer contact data, and are
+distinguished by the standard demo marker.
 
 After migrating and seeding, use:
 
 ```text
 http://localhost:3006/luna
+http://localhost:3006/luna-poitiers
 http://localhost:3001/visibilite-reputation/avis
 http://localhost:3001/visibilite-reputation/satisfaction
 ```
@@ -124,9 +131,36 @@ shared contracts, repeat authorization checks on the server, and create
 reputation audit events. Employees can read and act only on feedback assigned
 to their own user account.
 
+Only OWNER can load or mutate the three review/social-link settings through
+`reputation.settings.manage`. MANAGER and STAFF keep their existing inbox
+behavior but receive no settings model or settings surface. The server derives
+organization, active establishment, membership, role, and permission from the
+authenticated context before interpreting a mutation payload.
+
 No production development-tenant fallback remains in the back-office application.
 Organization, establishment, role, entitlement, and permission values are never
 accepted from the browser. See `docs/architecture/AUTHENTICATION.md`.
+
+## Review and social-link configuration
+
+The repository now implements and locally verifies the bounded configuration
+slice for `googleReviewUrl`, `facebookReviewUrl`, and `instagramUrl` without a
+schema or migration change. One explicit Save updates the three-field slice
+atomically and records one scoped `SETTINGS` audit for a real mutation.
+Normalized no-op, invalid input, stale conflict, missing settings row, and
+transaction failure do not create a partial mutation or audit.
+
+The shared contract owns one exact HTTPS provider policy used by private
+validation and the public safe projection. Google remains manual-only and
+independent of Google Business Profile OAuth/location state. The capability
+does not call providers, follow redirects, provision missing
+`reputation_settings` rows, or infer other Reputation settings. A missing row
+fails closed as configuration unavailable until a separate provisioning flow
+creates it.
+
+This behavior has passed local disposable-database and real-route Browser QA.
+That evidence does not authorize production provisioning, configuration,
+deployment, or enablement.
 
 ## Google Business Profile connector
 

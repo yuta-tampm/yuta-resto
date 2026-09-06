@@ -215,3 +215,245 @@ export const createIncidentSchema = z.object({
   internalNotes: z.string().trim().max(4_000).nullable().optional(),
   dueAt: z.string().datetime().nullable().optional(),
 });
+
+export const reputationReviewSocialLinkProviderValues = [
+  'GOOGLE',
+  'FACEBOOK',
+  'INSTAGRAM',
+] as const;
+export const reputationReviewSocialLinkProviderSchema = z.enum(
+  reputationReviewSocialLinkProviderValues,
+);
+export type ReputationReviewSocialLinkProvider = z.infer<
+  typeof reputationReviewSocialLinkProviderSchema
+>;
+
+export const reputationReviewSocialLinkFieldValues = [
+  'googleReviewUrl',
+  'facebookReviewUrl',
+  'instagramUrl',
+] as const;
+export const reputationReviewSocialLinkFieldSchema = z.enum(
+  reputationReviewSocialLinkFieldValues,
+);
+export type ReputationReviewSocialLinkField = z.infer<
+  typeof reputationReviewSocialLinkFieldSchema
+>;
+
+export const reputationReviewSocialLinkIssueCodeValues = [
+  'INVALID_TYPE',
+  'TOO_LONG',
+  'MALFORMED_URL',
+  'HTTPS_REQUIRED',
+  'CREDENTIALS_FORBIDDEN',
+  'HOST_NOT_ALLOWED',
+  'PATH_NOT_ALLOWED',
+] as const;
+export const reputationReviewSocialLinkIssueCodeSchema = z.enum(
+  reputationReviewSocialLinkIssueCodeValues,
+);
+export type ReputationReviewSocialLinkIssueCode = z.infer<
+  typeof reputationReviewSocialLinkIssueCodeSchema
+>;
+
+type ReputationReviewSocialLinkPolicy = Readonly<{
+  hosts: Readonly<Record<string, string | null>>;
+}>;
+
+const reputationReviewSocialLinkPolicies: Readonly<
+  Record<ReputationReviewSocialLinkProvider, ReputationReviewSocialLinkPolicy>
+> = {
+  GOOGLE: {
+    hosts: {
+      'g.page': null,
+      'maps.app.goo.gl': null,
+      'google.com': '/maps/',
+      'www.google.com': '/maps/',
+      'google.fr': '/maps/',
+      'www.google.fr': '/maps/',
+      'search.google.com': '/local/writereview',
+    },
+  },
+  FACEBOOK: {
+    hosts: {
+      'facebook.com': null,
+      'www.facebook.com': null,
+      'm.facebook.com': null,
+      'fb.me': null,
+    },
+  },
+  INSTAGRAM: {
+    hosts: {
+      'instagram.com': null,
+      'www.instagram.com': null,
+    },
+  },
+};
+
+export type ReputationReviewSocialLinkValidationResult =
+  | Readonly<{ success: true; value: string | null }>
+  | Readonly<{
+      success: false;
+      issueCode: ReputationReviewSocialLinkIssueCode;
+    }>;
+
+export const validateReputationReviewSocialLink = (
+  provider: ReputationReviewSocialLinkProvider,
+  input: unknown,
+): ReputationReviewSocialLinkValidationResult => {
+  if (input === null) {
+    return { success: true, value: null };
+  }
+  if (typeof input !== 'string') {
+    return { success: false, issueCode: 'INVALID_TYPE' };
+  }
+
+  const value = input.trim();
+  if (value.length === 0) {
+    return { success: true, value: null };
+  }
+  if (value.length > 2_048) {
+    return { success: false, issueCode: 'TOO_LONG' };
+  }
+
+  let parsedUrl: URL;
+  try {
+    parsedUrl = new URL(value);
+  } catch {
+    return { success: false, issueCode: 'MALFORMED_URL' };
+  }
+
+  if (parsedUrl.protocol !== 'https:') {
+    return { success: false, issueCode: 'HTTPS_REQUIRED' };
+  }
+  if (parsedUrl.username !== '' || parsedUrl.password !== '') {
+    return { success: false, issueCode: 'CREDENTIALS_FORBIDDEN' };
+  }
+
+  const hosts = reputationReviewSocialLinkPolicies[provider].hosts;
+  if (!Object.prototype.hasOwnProperty.call(hosts, parsedUrl.hostname)) {
+    return { success: false, issueCode: 'HOST_NOT_ALLOWED' };
+  }
+  const pathPrefix = hosts[parsedUrl.hostname];
+  if (pathPrefix !== null && !parsedUrl.pathname.startsWith(pathPrefix)) {
+    return { success: false, issueCode: 'PATH_NOT_ALLOWED' };
+  }
+
+  return { success: true, value };
+};
+
+const createReputationReviewSocialLinkSchema = (
+  provider: ReputationReviewSocialLinkProvider,
+) =>
+  z.union([z.string(), z.null()]).transform((input, context) => {
+    const result = validateReputationReviewSocialLink(provider, input);
+    if (!result.success) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: result.issueCode,
+      });
+      return z.NEVER;
+    }
+    return result.value;
+  });
+
+export const reputationGoogleReviewUrlSchema =
+  createReputationReviewSocialLinkSchema('GOOGLE');
+export const reputationFacebookReviewUrlSchema =
+  createReputationReviewSocialLinkSchema('FACEBOOK');
+export const reputationInstagramUrlSchema =
+  createReputationReviewSocialLinkSchema('INSTAGRAM');
+
+export const reputationReviewSocialLinksValuesSchema = z
+  .object({
+    googleReviewUrl: reputationGoogleReviewUrlSchema,
+    facebookReviewUrl: reputationFacebookReviewUrlSchema,
+    instagramUrl: reputationInstagramUrlSchema,
+  })
+  .strict();
+export type ReputationReviewSocialLinksValues = z.infer<
+  typeof reputationReviewSocialLinksValuesSchema
+>;
+
+export const reputationReviewSocialLinksStateTokenSchema = z
+  .string()
+  .regex(/^[a-f0-9]{64}$/);
+
+export const reputationReviewSocialLinksReadModelSchema = z
+  .object({
+    values: reputationReviewSocialLinksValuesSchema,
+    stateToken: reputationReviewSocialLinksStateTokenSchema,
+  })
+  .strict();
+export type ReputationReviewSocialLinksReadModel = z.infer<
+  typeof reputationReviewSocialLinksReadModelSchema
+>;
+
+export const reputationReviewSocialLinksSaveInputSchema = z
+  .object({
+    expectedValues: reputationReviewSocialLinksValuesSchema,
+    proposedValues: reputationReviewSocialLinksValuesSchema,
+    expectedStateToken: reputationReviewSocialLinksStateTokenSchema,
+  })
+  .strict();
+export type ReputationReviewSocialLinksSaveInput = z.infer<
+  typeof reputationReviewSocialLinksSaveInputSchema
+>;
+
+const reputationReviewSocialLinksModelOutcomeSchema = (
+  kind: 'success' | 'no_change' | 'conflict',
+) =>
+  z
+    .object({
+      kind: z.literal(kind),
+      model: reputationReviewSocialLinksReadModelSchema,
+    })
+    .strict();
+
+export const reputationReviewSocialLinksValidationIssueSchema = z
+  .object({
+    field: reputationReviewSocialLinkFieldSchema,
+    code: reputationReviewSocialLinkIssueCodeSchema,
+  })
+  .strict();
+
+export const reputationReviewSocialLinksOutcomeSchema = z.discriminatedUnion(
+  'kind',
+  [
+    reputationReviewSocialLinksModelOutcomeSchema('success'),
+    reputationReviewSocialLinksModelOutcomeSchema('no_change'),
+    z
+      .object({
+        kind: z.literal('validation_error'),
+        issues: z
+          .array(reputationReviewSocialLinksValidationIssueSchema)
+          .min(1)
+          .max(reputationReviewSocialLinkFieldValues.length),
+      })
+      .strict(),
+    reputationReviewSocialLinksModelOutcomeSchema('conflict'),
+    z.object({ kind: z.literal('configuration_unavailable') }).strict(),
+    z.object({ kind: z.literal('server_error') }).strict(),
+  ],
+);
+export type ReputationReviewSocialLinksOutcome = z.infer<
+  typeof reputationReviewSocialLinksOutcomeSchema
+>;
+
+export const projectPublicReputationReviewSocialLinks = (
+  values: Readonly<Record<ReputationReviewSocialLinkField, unknown>>,
+): ReputationReviewSocialLinksValues => {
+  const project = (
+    provider: ReputationReviewSocialLinkProvider,
+    value: unknown,
+  ): string | null => {
+    const result = validateReputationReviewSocialLink(provider, value);
+    return result.success ? result.value : null;
+  };
+
+  return {
+    googleReviewUrl: project('GOOGLE', values.googleReviewUrl),
+    facebookReviewUrl: project('FACEBOOK', values.facebookReviewUrl),
+    instagramUrl: project('INSTAGRAM', values.instagramUrl),
+  };
+};

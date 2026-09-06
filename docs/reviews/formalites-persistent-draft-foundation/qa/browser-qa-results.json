@@ -1,0 +1,302 @@
+{
+  "checks": [
+    {
+      "name": "OWNER eligible/no draft",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "no horizontal overflow — 1440 eligible",
+      "passed": true,
+      "detail": "{\"clientWidth\":1440,\"scrollWidth\":1440}"
+    },
+    {
+      "name": "forbidden rendering absent: operationKey",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "forbidden rendering absent: sourceStateFingerprint",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "forbidden rendering absent: requestFingerprint",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "forbidden rendering absent: actorUserId",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "forbidden rendering absent: organizationId",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "forbidden rendering absent: establishmentId",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "forbidden rendering absent: Rémunération",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "forbidden rendering absent: Adresse du salarié",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Create",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "no horizontal overflow — 1024 editable",
+      "passed": true,
+      "detail": "{\"clientWidth\":1024,\"scrollWidth\":1024}"
+    },
+    {
+      "name": "SAVE UNDECIDED",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "INCLUDE + double-submit prevention",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "EXCLUDE",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "reload/reopen persisted state",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "reconciliation required",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "no horizontal overflow — 768 reconciliation",
+      "passed": true,
+      "detail": "{\"clientWidth\":768,\"scrollWidth\":768}"
+    },
+    {
+      "name": "per-fact validation and focus recovery",
+      "passed": true,
+      "detail": "reconcile-position-keep"
+    },
+    {
+      "name": "no horizontal overflow — 390 validation",
+      "passed": true,
+      "detail": "{\"clientWidth\":390,\"scrollWidth\":390}"
+    },
+    {
+      "name": "mixed KEEP/REFRESH",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "unchanged source after KEEP does not reprompt",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "KEEP does not redefine Personnel truth",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "later Personnel change creates new reconciliation",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "stale Personnel source",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "REFRESH accepts trusted current value",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "stale draft",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "recoverable server error",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "same action retry commits once",
+      "passed": true,
+      "detail": "7->8"
+    },
+    {
+      "name": "non-CDI recovery",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "no horizontal overflow — 390 non-CDI",
+      "passed": true,
+      "detail": "{\"clientWidth\":390,\"scrollWidth\":390}"
+    },
+    {
+      "name": "abandonment reason required",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "dialog accessible name",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "ABANDON while non-CDI + abandoned read-only",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "create new after abandonment when CDI",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "dirty-close protection",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "keyboard traversal reaches focusable control",
+      "passed": true,
+      "detail": "{\"tag\":\"BUTTON\",\"label\":null}"
+    },
+    {
+      "name": "main accessibility scan has no serious/critical violations",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "name": "replay conflict",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "MANAGER permission denial",
+      "passed": true,
+      "detail": "Une erreur est survenue.\n\nPermission denied.\n\nRéessayer"
+    },
+    {
+      "name": "login recovery redirect",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/01-owner-eligible-no-draft-1440.png",
+      "viewport": "1440x900",
+      "role": "OWNER",
+      "state": "eligible_no_draft",
+      "sha256": "7608b1840c9cef6d7655a0745266df6c4f3c202957950413de85ec33b9c03db2"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/02-created-editable-1024.png",
+      "viewport": "1024x850",
+      "role": "OWNER",
+      "state": "editable_created",
+      "sha256": "c15130afed991f83c3ff434842f1c3aaec86ff05f0a36779f4c71799a9585acb"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/03-reconciliation-required-768.png",
+      "viewport": "768x1024",
+      "role": "OWNER",
+      "state": "reconciliation_required",
+      "sha256": "d007274a39db0c05cb4bc635dd2a3ea93118067cf317aed18c97f4c14e56ea88"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/04-reconciliation-validation-390.png",
+      "viewport": "390x844",
+      "role": "OWNER",
+      "state": "reconciliation_validation_error",
+      "sha256": "83b62f87216f93b03c1d7db19db83ca68c4b2039e660b0b6d2d2ba3b9b894058"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/05-stale-personnel-source-768.png",
+      "viewport": "768x1024",
+      "role": "OWNER",
+      "state": "stale_personnel_source",
+      "sha256": "e0528746fe96f4424bebb7a070d557b8ce69d03fa3aba8c67ee776ef5434f7bc"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/06-stale-draft-1024.png",
+      "viewport": "1024x850",
+      "role": "OWNER",
+      "state": "stale_draft",
+      "sha256": "fe15904521d4f9c6b51476b2585df3510e6d52f91846479a68cc049f42bcc0e0"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/07-recoverable-server-error-1024.png",
+      "viewport": "1024x850",
+      "role": "OWNER",
+      "state": "server_error_recoverable",
+      "sha256": "5a10850d07ff40f5381a75e339602681dad1dec08a6f764f0382bb2999045280"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/08-non-cdi-recovery-390.png",
+      "viewport": "390x844",
+      "role": "OWNER",
+      "state": "ineligible_recovery",
+      "sha256": "5130e1e2f0382ea738a4c52594656c91695a1f1e98ab0941a8c097421c898d82"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/09-abandon-dialog-390.png",
+      "viewport": "390x844",
+      "role": "OWNER",
+      "state": "abandon_dialog_valid_reason",
+      "sha256": "14a5a53fdc918792b2f5ea8651810e43fafb8ab433b0ccd7ae045219ce5af4a9"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/10-abandoned-read-only-768.png",
+      "viewport": "768x1024",
+      "role": "OWNER",
+      "state": "abandoned_read_only",
+      "sha256": "87bc37cc1324c16b0f43328ef6b7093839dc6f1d82b5015a59b8bd3ac59ef689"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/11-replay-conflict-1024.png",
+      "viewport": "1024x850",
+      "role": "OWNER",
+      "state": "replay_conflict",
+      "sha256": "d832ae41de08b72c36574089495cb9cb4db0c46a7a13782882cce3486e45c1a0"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/12-manager-denied-1024.png",
+      "viewport": "1024x850",
+      "role": "MANAGER",
+      "state": "permission_denied",
+      "sha256": "dd500bf6e96d2323038846c25ee1092cd2b01adec2388eeafbf7b321667fe71d"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/13-login-recovery-390.png",
+      "viewport": "390x844",
+      "role": "ANONYMOUS",
+      "state": "login_recovery",
+      "sha256": "1698f8551d90520ddadccebafa283a4c380d9af93203e17e405aac1ad5195467"
+    }
+  ]
+}

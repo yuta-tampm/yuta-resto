@@ -6,6 +6,12 @@ Owner: YUTA product and engineering
 
 Reviewed baseline: 2026-08-29 against local OpenSpec 1.11.0
 
+Scope and routing: The approved active policy in this document remains
+authoritative for `yuta-spec-driven` activation, use, upgrade and fallback. Its
+dated pre-activation/current-state narrative is historical context. For the
+human end-to-end workflow, start with
+[`YUTA_WORKFLOW_V3.md`](YUTA_WORKFLOW_V3.md).
+
 ## 1. Activation Scope
 
 This review defines how YUTA must use the technically approved

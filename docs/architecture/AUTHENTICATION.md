@@ -124,8 +124,8 @@ server permission check.
 - Managers can manage staff only in the currently selected establishment.
 - Managers cannot assign or modify owner or manager roles.
 - The membership used by the current session cannot modify or suspend itself.
-- The last active owner membership in an organization cannot be downgraded or
-  suspended.
+- The last active owner membership in each organization/establishment scope
+  cannot be downgraded or suspended through edit or existing-user attachment.
 - Suspending a membership immediately revokes active sessions for that user,
   organization, and establishment.
 
@@ -134,6 +134,15 @@ establishment memberships. Creating access for an email that already exists
 attaches the existing identity and preserves its current password. Automated
 invitation email is not active yet, so the initial password must be delivered
 through an approved operational channel for newly created identities.
+
+Membership edits and creation/attachment transactions acquire `FOR NO KEY
+UPDATE` locks on their existing active establishment rows in canonical UUID
+order before mutation writes. Both paths use explicit `READ COMMITTED` and
+fresh post-lock membership and active-owner reads. Membership writes, scoped
+session revocation, and success audit share that transaction; a rejected target
+or later failure rolls back the entire batch and its effects. The owner count
+uses active memberships in the exact organization/establishment scope, not
+global account usability.
 
 Membership creation, attachment, role changes, and suspension are recorded in
 `auth_audit_events`. Audit metadata contains identifiers, roles, and statuses;
@@ -181,6 +190,15 @@ system role and no restaurant membership, so it cannot use the restaurant
 back-office. Never deploy development seed identities or credentials.
 
 ## Password recovery
+
+Reset tokens are atomically single-use. After hashing the new password, the
+repository conditionally claims an unconsumed, unexpired token with an update
+that returns its user ID. The claim, password update, authentication-version
+increment, session revocation, and selection-ticket deletion share one
+transaction. A later failure rolls back the claim as well as the other writes.
+Unknown, expired, consumed, and concurrently claimed tokens all produce the
+same invalid-token result. Concurrent use of one token can complete at most one
+password reset.
 
 The reset-token storage and password reset page are implemented. Automated
 delivery is intentionally not active because the repository does not yet have a

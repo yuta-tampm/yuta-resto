@@ -144,6 +144,51 @@ integrationTest('post-login establishment selection', () => {
     }
   });
 
+  it('rotates an existing scoped session to the selected membership', async () => {
+    const repository = createAuthRepository(db);
+    await db
+      .update(tenantMemberships)
+      .set({ status: 'suspended' })
+      .where(eq(tenantMemberships.id, membershipIds[1]));
+
+    let initialSession: Awaited<ReturnType<typeof repository.signIn>>;
+    try {
+      initialSession = await repository.signIn({
+        email,
+        password,
+        rateLimitKeyHash: `auth-switch-${userId}`,
+        ipHash: null,
+        userAgent: 'integration-test',
+      });
+    } finally {
+      await db
+        .update(tenantMemberships)
+        .set({ status: 'active' })
+        .where(eq(tenantMemberships.id, membershipIds[1]));
+    }
+
+    expect(initialSession.type).toBe('SIGNED_IN');
+    if (initialSession.type !== 'SIGNED_IN') return;
+
+    const switchedSession = await repository.switchTenant({
+      token: initialSession.token,
+      membershipId: membershipIds[1],
+    });
+
+    expect(switchedSession.token).not.toBe(initialSession.token);
+    expect(switchedSession.session.organizationId).toBe(organizationId);
+    expect(switchedSession.session.establishmentId).toBe(establishmentIds[1]);
+    await expect(
+      repository.findSession(initialSession.token),
+    ).resolves.toBeNull();
+    await expect(
+      repository.findSession(switchedSession.token),
+    ).resolves.toMatchObject({
+      organizationId,
+      establishmentId: establishmentIds[1],
+    });
+  });
+
   it('rejects restaurant login when no active membership remains', async () => {
     await db
       .update(tenantMemberships)

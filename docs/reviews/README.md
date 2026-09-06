@@ -1,16 +1,21 @@
 # YUTA OpenSpec Review Packets
 
-Status: Proposed
+Status: APPROVED
 
 Visibility: Engineering
 
 Owner: YUTA product and engineering
 
+Workflow routing: Start with [`YUTA_WORKFLOW_V3.md`](../YUTA_WORKFLOW_V3.md),
+the canonical human-readable YUTA Workflow v3 operating guide. This document
+is the detailed supporting review-packet protocol.
+
 ## Purpose
 
 `docs/reviews/<change-name>/` stores self-contained review packets, QA
-artifacts, and provenance evidence for the human gates in the
-[Workflow v3 protocol](../YUTA_AUTOMATED_CHANGE_WORKFLOW.md).
+artifacts, and provenance evidence for the human gates described by the
+canonical guide. The detailed automation behavior remains in
+[`YUTA_AUTOMATED_CHANGE_WORKFLOW.md`](../YUTA_AUTOMATED_CHANGE_WORKFLOW.md).
 
 Packets are not Product Knowledge, accepted decisions, lifecycle evidence by
 themselves, normative specs, deployment evidence, or Production Readiness.
@@ -99,6 +104,20 @@ and `Sync authorization: PENDING`.
 A packet is never ready without `TECHNICAL IMPLEMENTATION COMPLIANCE: PASS`
 and `VERIFY: PASS`. A UI-affecting packet additionally requires `QA: PASS`.
 Passing technical compliance or VERIFY never substitutes for Browser QA.
+
+A non-UI packet additionally requires `QA: PASS` for its applicable non-browser
+plan, or truthful `QA: NOT_APPLICABLE` only when no user/runtime QA dimension
+exists. `FAIL` and `BLOCKED_BY_ENVIRONMENT` are never ready.
+
+When Design is deliberately omitted, Gate 3 exposes
+`Design applicability: NOT_APPLICABLE`, the rationale and authority/evidence
+sources, exact `tasks.md` path/SHA-256 containing the `DESIGN APPLICABILITY`
+block, and the resolved expected-absent `design.md` path. Review applicability,
+not just file absence. A later Design addition, applicability/rationale change,
+or reviewed Tasks-evidence change triggers normal hash/review invalidation.
+Raw incomplete-planning status and any bounded Design-omission archive warning
+must be reported separately from YUTA operational readiness. Branch A records
+the exact warning and scoped acceptance; no other incomplete work is waived.
 
 ## Knowledge Review packet
 

@@ -35,7 +35,15 @@ import {
   fixedTermReasonOptions,
   splitContractWeeklyMinutes,
 } from '../_lib/employee-employment';
-import { hasEmployeeEditUnsavedChanges } from '../_lib/employee-edit-flow';
+import {
+  areClientHistoryMetadataDraftsReady,
+  createEmployeeEditHistoryMetadataDrafts,
+  getClientObservedChangedGroups,
+  hasEmployeeEditUnsavedChanges,
+  isEmployeeEditSubmitDisabled,
+  serializeClientHistoryMetadata,
+} from '../_lib/employee-edit-flow';
+import { EmployeeHistoryMetadataFields } from './employee-history-metadata-fields';
 
 const initialUpdateEmployeeActionState: UpdateEmployeeActionState = {
   status: 'idle',
@@ -46,11 +54,13 @@ const initialUpdateEmployeeActionState: UpdateEmployeeActionState = {
 
 export function EmployeeEditDialog({
   employee,
+  businessDate,
   open,
   onOpenChange,
   onSaved,
 }: {
   employee: PersonnelEmployeeSummary;
+  businessDate: string;
   open: boolean;
   onOpenChange(open: boolean): void;
   onSaved(employee: PersonnelEmployeeSummary, message: string | null): void;
@@ -72,11 +82,34 @@ export function EmployeeEditDialog({
   );
   const [confirmFixedTermReasonClear, setConfirmFixedTermReasonClear] =
     useState(false);
+  const [historyMetadataDrafts, setHistoryMetadataDrafts] = useState(
+    createEmployeeEditHistoryMetadataDrafts,
+  );
   const [discardConfirmationOpen, setDiscardConfirmationOpen] = useState(false);
   const hasUnsavedChanges = hasEmployeeEditUnsavedChanges(loadedValues, values);
+  const clientObservedChangedGroups = getClientObservedChangedGroups(
+    loadedValues,
+    values,
+  );
   const needsFixedTermReasonClearConfirmation =
     loadedFixedTermReasonCode !== null &&
     values.employmentTermType === 'indefinite';
+  const effectiveDateBoundaries = {
+    minimumEffectiveDate: values.entryDate,
+    maximumEffectiveDate:
+      employee.departureDate && employee.departureDate < businessDate
+        ? employee.departureDate
+        : businessDate,
+  };
+  const historyMetadataReady = areClientHistoryMetadataDraftsReady(
+    clientObservedChangedGroups,
+    historyMetadataDrafts,
+    effectiveDateBoundaries,
+  );
+  const serializedHistoryMetadata = serializeClientHistoryMetadata(
+    clientObservedChangedGroups,
+    historyMetadataDrafts,
+  );
 
   useEffect(() => {
     if (state.status === 'success' && state.currentEmployee) {
@@ -102,6 +135,7 @@ export function EmployeeEditDialog({
     setRevision(state.currentEmployee.revision);
     setLoadedFixedTermReasonCode(state.currentEmployee.fixedTermReasonCode);
     setConfirmFixedTermReasonClear(false);
+    setHistoryMetadataDrafts(createEmployeeEditHistoryMetadataDrafts());
     setIdempotencyKey(crypto.randomUUID());
     setConflictDismissed(true);
   }
@@ -138,6 +172,11 @@ export function EmployeeEditDialog({
           <input type="hidden" name="idempotencyKey" value={idempotencyKey} />
           <input type="hidden" name="employeeId" value={employee.id} />
           <input type="hidden" name="expectedRevision" value={revision} />
+          <input
+            type="hidden"
+            name="historyMetadata"
+            value={serializedHistoryMetadata}
+          />
           <input
             type="hidden"
             name="confirmFixedTermReasonClear"
@@ -357,6 +396,20 @@ export function EmployeeEditDialog({
             </div>
           </section>
 
+          <EmployeeHistoryMetadataFields
+            groups={clientObservedChangedGroups}
+            drafts={historyMetadataDrafts}
+            minimumEffectiveDate={effectiveDateBoundaries.minimumEffectiveDate}
+            maximumEffectiveDate={effectiveDateBoundaries.maximumEffectiveDate}
+            fieldErrors={state.fieldErrors}
+            onDraftChange={(group, draft) =>
+              setHistoryMetadataDrafts((current) => ({
+                ...current,
+                [group]: draft,
+              }))
+            }
+          />
+
           {needsFixedTermReasonClearConfirmation && (
             <div>
               <label
@@ -426,6 +479,7 @@ export function EmployeeEditDialog({
                 <UpdateEmployeeSubmitButton
                   ready={
                     Boolean(idempotencyKey) &&
+                    historyMetadataReady &&
                     (!needsFixedTermReasonClearConfirmation ||
                       confirmFixedTermReasonClear)
                   }
@@ -502,7 +556,11 @@ function EditField({
 function UpdateEmployeeSubmitButton({ ready }: { ready: boolean }) {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" loading={pending} disabled={!ready || pending}>
+    <Button
+      type="submit"
+      loading={pending}
+      disabled={isEmployeeEditSubmitDisabled({ ready, pending })}
+    >
       <Save className="h-4 w-4" aria-hidden />
       Enregistrer les modifications
     </Button>

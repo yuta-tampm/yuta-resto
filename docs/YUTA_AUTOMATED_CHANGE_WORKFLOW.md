@@ -1,10 +1,14 @@
 # YUTA Automated Change Workflow v3
 
-Status: Proposed
+Status: APPROVED
 
 Visibility: Engineering
 
 Owner: YUTA product and engineering
+
+Workflow routing: Start with [`YUTA_WORKFLOW_V3.md`](YUTA_WORKFLOW_V3.md), the
+canonical human-readable YUTA Workflow v3 operating guide. This document is the
+detailed supporting automation/workflow protocol.
 
 ## Purpose
 
@@ -28,7 +32,7 @@ IDEA
   -> GATE 1 — PRODUCT / AUTHORITY REVIEW
   -> SPECS
   -> GATE 2 — REQUIREMENTS REVIEW
-  -> DESIGN
+  -> DESIGN                                         when applicable
   -> SENSITIVE DESIGN GATE                           conditional
   -> TASKS + PHASED IMPLEMENTATION PLAN
   -> APPLY
@@ -103,6 +107,71 @@ An existing in-flight change always resumes at its earliest missing,
 unapproved, invalidated, or changes-requested gate. Later artifacts never bypass
 an earlier gate and are preserved byte-for-byte unless an approved revision
 explicitly authorizes edits.
+
+## Conditional Design and persisted omission
+
+Evaluate Design against its current schema instruction and approved scope:
+architecture/cross-cutting impact, data/runtime ownership, security/authorization,
+migration/destructive data, significant dependency/provider,
+significant performance/operational complexity, and unresolved technical
+decisions. If applicable, create/use meaningful Design normally. Sensitive
+Design Gate applicability is a separate human-review classification; omission
+must never bypass a required sensitive gate. Preserve pre-existing Design.
+
+When none apply, the approved YUTA controlled adapter exception permits Tasks
+only when Design is the sole deliberately omitted dependency and every other
+prerequisite and earlier human gate is satisfied. Retrieve current Tasks
+instructions even if raw status is blocked. Do not use Continue as an implicit
+bypass, run Propose across unapproved gates, or create a placeholder Design.
+
+Persist this bounded evidence in the existing `tasks.md` before Apply:
+
+```text
+DESIGN APPLICABILITY
+Status: NOT_APPLICABLE
+Reason: <bounded rationale for this approved scope>
+Applicability criteria checked:
+- architecture / cross-cutting impact: <finding>
+- data/runtime ownership: <finding>
+- security/authorization: <finding>
+- migration/destructive data: <finding>
+- significant dependency/provider: <finding>
+- significant performance/operational complexity: <finding>
+- unresolved technical decision: <finding>
+Authority / evidence: <exact sources and approved scope/spec references>
+Expected artifact state: design.md intentionally absent
+```
+
+Use actual findings, not unchecked labels or unresolved assumptions. This block
+is planning evidence, not an implementation checkbox, new artifact, or approval.
+At Gate 3, expose its rationale, source, exact Tasks path/SHA-256, and resolved
+expected-absent Design path. Before Gate 3, preserve the omission block and its
+scope; normal task progress is not permission to revise that evidence.
+
+On resume with Tasks already present, never infer omission from missing Design.
+Require the persisted block, re-evaluate against current approved scope/specs,
+and check all applicable reviewed hashes and expected absence. Missing, drifted,
+invalidated, or newly inapplicable omission evidence stops at the appropriate
+planning/review point; revise only with authorization. Design addition or any
+reviewed rationale, applicability, or Tasks-evidence change invokes normal
+review invalidation. On first arrival at Design with no Tasks yet, record the
+fresh justified omission while creating Tasks; this is not retrospective repair
+of an adopted/resumed change.
+
+Report `RAW OPENSPEC STATUS` separately from `YUTA OPERATIONAL READINESS`.
+The graph still requires Design: before Tasks exists it may report Tasks
+blocked; afterward Tasks may be done while Design remains ready and
+`isPlanningComplete: false`. This is not native conditional skip support.
+Branch A may recognize only that exact reviewed omission as the known
+incomplete-planning/archive-warning exception, after integrity and scope checks.
+Record any warning and its bounded acceptance in Gate 3; unrelated incomplete
+work still blocks finalization. Historical warning acceptance is not reusable
+authorization. Branch B's archived Knowledge Review checks remain isolated.
+
+`skip_specs: true` does not skip Design. Evaluate independently: no-spec plus
+applicable Design proceeds through Design; no-spec plus justified omission
+proceeds to Tasks. Only Gate 2 and normative promotion are omitted because of
+`skip_specs`; all other applicable gates, verification, and QA remain.
 
 ## Tasks and phased implementation
 

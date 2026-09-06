@@ -85,6 +85,25 @@ server-derived active user, organization, establishment, and membership scope
 has been established. `YUTA_ADMIN` and `YUTA_SUPPORT` do not bypass that scope
 or the Restaurant Knowledge grant mapping.
 
+### Formalités authorization prerequisite
+
+Formalités owns the semantic meaning of independent `formalites.read` and
+`formalites.manage` operations. Shared Authorization / Identity / Access owns
+their server-side representation, grant mapping, and enforcement in Backoffice.
+Both currently grant only `OWNER`; `MANAGER` and `STAFF` have neither grant.
+The current session, matching active membership, trusted organization, and
+required active establishment checks apply; system roles and browser claims
+cannot bypass them. Personnel permissions do not authorize Formalités state.
+
+The repository contains the dedicated guards and small server-only composition
+helper. The bounded employee-connected persistent draft now composes them with
+independent Personnel source-read authorization. The generic fictional
+prototype, development gate, navigation, and grant mapping remain unchanged.
+This use does not approve provider behavior, production enablement, or a broader
+Formalités lifecycle.
+Precise behavior is defined by the approved
+[Formalités authorization specification](../../../openspec/specs/authorization/formalites/spec.md).
+
 ## 4. Current bounded scope
 
 Verified repository implementation includes:
@@ -281,17 +300,18 @@ equivalent without a separately accepted decision.
    or tests.
 8. When sources conflict or explicit product approval is absent, apply the
    Authority Model and retain `NEEDS REVIEW`; do not resolve by assumption.
-9. OpenSpec is not currently normative for Identity / Access.
+9. Approved normative authorization specs govern their bounded behavior;
+   this home remains broader Product Knowledge and does not promote lifecycle.
 
 ## 14. OpenSpec position
 
-There is no normative Identity / Access specification under `openspec/specs/`
-today. This home retains broader Product Knowledge plus security and trust
-context. After YUTA explicitly approves OpenSpec specifications as normative,
-approved specs may become the primary authority for specific behavioral
-requirements inside accepted boundaries. Accepted durable security, tenancy,
-runtime, and data decisions remain the highest authority for those boundaries.
-No OpenSpec artifact is created or modified by this step.
+The approved [Formalités authorization specification](../../../openspec/specs/authorization/formalites/spec.md)
+is normative for its bounded READ/MANAGE prerequisite. The existing
+[Restaurant Knowledge authorization specification](../../../openspec/specs/authorization/restaurant-knowledge/spec.md)
+remains unchanged. This home retains broader Product Knowledge and security
+context; accepted durable security, tenancy, runtime, and data decisions still
+control those boundaries. These specs do not approve every Identity / Access
+workflow or establish deployment, environment enablement, or production readiness.
 
 ## 15. Status
 

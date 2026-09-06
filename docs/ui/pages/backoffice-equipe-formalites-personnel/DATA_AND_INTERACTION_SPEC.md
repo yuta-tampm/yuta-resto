@@ -1,50 +1,70 @@
 # Préparer un projet de contrat CDI — Data and Interaction Specification
 
-Status: Phase 5 field-decision scope proposed; Phase 4 local state implemented
+Status: Persistent draft foundation implemented — development local-only;
+production deferred
 
 Visibility: Engineering
 
 ## Runtime and trust boundary
 
-The server requires an authenticated tenant, active establishment, and existing
-`personnel.employee.read` permission. Browser scope is never trusted. The page
-then renders only a compile-time fictional fixture.
+The connected route requires an authenticated active membership, trusted
+organization, trusted active establishment, `formalites.read` or
+`formalites.manage` as applicable, and independent
+`personnel.employee.read`. Browser scope is never trusted. The generic route
+keeps its compile-time fictional fixture.
 
 ## Data ownership and transport
 
-There is no runtime transport or persistence. A route-local typed object owns
-all Phase 1 display values. It contains no employee, organization,
-establishment, document, or request identifier.
+The connected route uses typed contracts and local development cloud persistence
+owned by Formalités. Each draft and receipt is fully scoped by trusted
+organization and establishment; employee and draft identifiers are lookup
+candidates, never authority. Raw rows, operation keys/hashes, fingerprints,
+tenant IDs, actor IDs, and receipt internals are not exposed to the UI.
 
 ## Current domain mapping
 
-| Prototype group         | UI presentation               | Runtime source                    | Gap                                          |
-| ----------------------- | ----------------------------- | --------------------------------- | -------------------------------------------- |
-| reusable employee facts | six read-only labelled values | fictional fixture                 | future authorized Salariés mapping           |
-| contract-specific facts | three missing values          | fictional fixture                 | future Formalités input model and validation |
-| readiness               | blocked summary               | derived from fixed missing values | future approved lifecycle                    |
+| Connected group    | UI presentation                     | Runtime source                           |
+| ------------------ | ----------------------------------- | ---------------------------------------- |
+| Personnel source   | seven read-only labelled values     | fresh composite-scoped Personnel read    |
+| Formalités draft   | saved seven-fact snapshot           | Formalités-owned PostgreSQL draft        |
+| preparation choice | UNDECIDED / INCLUDE / EXCLUDE       | explicit Formalités save                 |
+| reconciliation     | per divergent fact KEEP / REFRESH   | server-derived current-source comparison |
+| lifecycle          | eligible/no draft, DRAFT, ABANDONED | scoped repository and typed read model   |
 
-The model is a presentation fixture, not a contract or database schema.
+The generic prototype remains a presentation fixture and is not this durable
+model.
 
 ## Current interactions
 
-The page is read-only. The generation button is disabled. There is no selection,
-edit, submit, retry, preview, download, or dossier handoff.
+The connected page supports explicit create, save, reopen, per-fact reconcile,
+retry/reload recovery, and abandon with a required reason. It protects unsaved
+local choices on navigation. There is no preview, download, document generation,
+provider call, or Personnel edit.
 
 ## Mutations / actions / transactions
 
-None.
+CREATE, SAVE, RECONCILE, and ABANDON are atomic repository mutations. Every
+logical mutation uses a bounded opaque operation key; persistence stores only a
+one-way hash and normalized request fingerprint for replay recovery. Draft
+revision prevents silent last-write-wins. Current CDI eligibility is rechecked
+inside applicable mutations.
 
 ## Validation
 
-No input exists. Tests assert the bounded fixture, explicit fictional-data
-notice, absence of an employee identifier, and disabled generation control.
+Untrusted action input is strictly parsed. Probation choice has exactly three
+values. Reconciliation must contain exactly one allowed choice for every
+server-derived divergent fact. Abandonment reason is trimmed and must contain
+1–250 characters. Stale draft/source and replay conflicts return safe typed
+outcomes without partial mutation.
 
 ## Operational and UI states
 
-Authenticated OWNER: fictional readiness screen. Unauthorized: existing
-server authorization fails closed before rendering the page. No loading,
-database, provider, success, or recovery state exists because no service runs.
+Authenticated OWNER sees eligible/no draft, editable draft, reconciliation
+required, ineligible recovery, or abandoned read-only. Pending, validation,
+success, stale draft, stale Personnel source, replay conflict, recoverable
+server error, not found, and permission/session recovery are explicit. MANAGER,
+STAFF, public/service users, and system roles without valid OWNER restaurant
+membership receive no bypass.
 
 ## Polling / offline / device behavior
 

@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last reviewed: 2026-08-27
+Last reviewed: 2026-09-03
 
 ## Purpose
 
@@ -55,8 +55,9 @@ requirements** after promotion through the approved
 A main spec is normative only when its exact delta passed the accountable
 approval gate, sync was explicitly authorized and completed successfully, and
 the resulting main specs passed validation and diff review. File existence
-alone is not authority. The directory is currently empty, so the normative role
-is enabled but no normative main-spec content exists yet.
+alone is not authority. The directory now contains successfully gated, synced,
+and validated main specs; use the current tree and capability links rather than
+a historical empty-tree assumption.
 
 Product Knowledge remains the broader Product Intent and context source.
 Normative main specs operate inside accepted durable product, architecture,
@@ -158,6 +159,12 @@ production service.
 
 - Canonical Identity / Access Product Knowledge home:
   `docs/features/identity-access/README.md`
+- Bounded Formalités READ/MANAGE authorization prerequisite:
+  [normative specification](../openspec/specs/authorization/formalites/spec.md).
+- Bounded Formalités persistent-draft behavior:
+  [normative specification](../openspec/specs/formalites/persistent-draft-foundation/spec.md);
+  employee-connected development-only persistence with no production
+  enablement.
 - Overall maturity: `docs/CURRENT_STATE.md`
 - Trust and ownership: authentication, tenancy, identity/membership, and data
   model architecture documents
@@ -212,6 +219,8 @@ integrations must not be inferred from the existing route.
 ### Personnel, Documents, register, and Formalités
 
 - Canonical Product Knowledge home: `docs/features/personnel/README.md`
+- Normative F07 behavior:
+  `openspec/specs/personnel/reconstructable-value-history/spec.md`
 - Current summary and production gates: `CURRENT_STATE.md` and
   `docs/operations/PRODUCTION_READINESS.md`
 - Detailed delivery evidence:
@@ -219,17 +228,19 @@ integrations must not be inferred from the existing route.
   - `docs/ui/pages/backoffice-equipe-registre-personnel/`
   - `docs/ui/pages/backoffice-equipe-formalites-personnel/`
 - Implementation: personnel routes/guards in `apps/backoffice` and personnel
-  schema/repositories in `packages/db-cloud`
+  plus Formalités schema/repositories in `packages/db-cloud`
 
 Always state the environment boundary. Repository-local or development-only
 implementation does not mean production approval, legal validation, approved
 templates, or connected OCR/AI.
 
-Treat the employee-connected, in-memory Formalités development prototype as a
-separate capability from the proposed durable Formalités lifecycle. The latter
-includes any persisted draft/version records, generated documents, approved
-templates, private storage, signature, lifecycle/history, and production
-operation; it is not implemented by the current prototype.
+Treat the generic fictional in-memory Formalités prototype, the bounded
+employee-connected persistent CDI preparation draft, and the proposed future
+generation/signature lifecycle as separate scopes. The persistent foundation
+owns only its development-only draft, reconciliation, abandonment, and replay
+state. Generated versions, approved templates, private file storage, signature,
+Documents handoff, final retention policy, and production operation remain
+unimplemented or separately gated.
 
 ### Local POS and Site Agent
 
@@ -319,7 +330,7 @@ Current observed state:
 ```text
 default schema                 yuta-spec-driven
 normative main-spec role       enabled
-normative main-spec count      0
+normative main-spec count      10
 active OpenSpec change count   0
 ```
 

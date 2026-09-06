@@ -277,6 +277,11 @@ published and draft replies, internal notes, and direct-feedback details. Demo
 feedback is marked with `providerMetadata.demo = true`, so it remains
 distinguishable from imported or customer-created records.
 
+The existing LUNA demo dataset remains scoped to establishment slug `luna`.
+The same command also creates one positive and one negative synthetic direct
+feedback record for `luna-poitiers`, each with a direct-feedback detail and no
+customer contact data. It does not configure external review URLs.
+
 The command refuses to run without `CONFIRM_CLOUD_DEMO_SEED=true` and requires
 the normal cloud foundation seed to exist first. Run it only against a local
 database or an explicitly approved demo environment. Never run it against a

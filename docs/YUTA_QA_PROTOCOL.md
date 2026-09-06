@@ -1,10 +1,14 @@
 # YUTA QA Protocol
 
-Status: Proposed
+Status: APPROVED
 
 Visibility: Engineering
 
 Owner: YUTA product and engineering
+
+Workflow routing: Start with [`YUTA_WORKFLOW_V3.md`](YUTA_WORKFLOW_V3.md), the
+canonical human-readable YUTA Workflow v3 operating guide. This document is the
+detailed supporting QA protocol.
 
 ## Purpose
 
@@ -141,5 +145,6 @@ QA: PASS
 ```
 
 Missing responsive coverage, screenshot hashes, or an applicable role/state
-check prevents a ready Gate 3. Non-UI changes require VERIFY PASS and either an
-applicable QA PASS or truthful `NOT_APPLICABLE`.
+check prevents a ready Gate 3. Non-UI changes require
+`TECHNICAL IMPLEMENTATION COMPLIANCE: PASS`, `VERIFY: PASS`, and either
+applicable non-browser `QA: PASS` or truthful `QA: NOT_APPLICABLE`.

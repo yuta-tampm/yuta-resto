@@ -1,3 +1,4 @@
+import type { FormalitesPersonnelDraftReadModel } from '@yuta/contracts';
 import type { PersonnelEmployeeSummary } from '@yuta/contracts/personnel';
 
 type ConnectedEmployeeSource = Pick<
@@ -14,12 +15,16 @@ type ConnectedEmployeeSource = Pick<
 export type CdiDraftConnectedReadModel = {
   employeeName: string;
   fields: readonly { label: string; value: string }[];
+  draftModel?: FormalitesPersonnelDraftReadModel;
 };
 
 export function createCdiDraftConnectedReadModel(
-  employee: ConnectedEmployeeSource,
+  source: ConnectedEmployeeSource | FormalitesPersonnelDraftReadModel,
   locale: string,
 ): CdiDraftConnectedReadModel {
+  const employee = isDraftReadModel(source)
+    ? source.currentPersonnelValues
+    : source;
   return {
     employeeName: `${employee.givenNames} ${employee.familyName}`,
     fields: [
@@ -42,7 +47,14 @@ export function createCdiDraftConnectedReadModel(
         value: formatWeeklyMinutes(employee.contractWeeklyMinutes),
       },
     ],
+    ...(isDraftReadModel(source) ? { draftModel: source } : {}),
   };
+}
+
+function isDraftReadModel(
+  source: ConnectedEmployeeSource | FormalitesPersonnelDraftReadModel,
+): source is FormalitesPersonnelDraftReadModel {
+  return 'state' in source;
 }
 
 function formatDate(value: string, locale: string): string {

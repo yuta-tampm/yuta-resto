@@ -32,6 +32,247 @@ export const personnelFixedTermReasonCodeSchema = z.enum([
   'seasonal_employment',
   'customary_use_employment',
 ]);
+
+export const personnelHistoryPayloadVersionSchema = z.literal(1);
+export const personnelHistorySemanticGroupSchema = z.enum([
+  'identity',
+  'role',
+  'contract_terms',
+  'work_time',
+  'entry',
+  'departure',
+]);
+export const personnelHistoryClassificationSchema = z.enum([
+  'correction',
+  'change',
+]);
+
+const personnelHistoryCorrectionReasonSchema = z
+  .string()
+  .trim()
+  .min(3)
+  .max(250)
+  .refine((value) => !/[\u0000-\u001F\u007F]/u.test(value), {
+    message: 'Control characters are not allowed.',
+  });
+
+export const personnelHistoryIdentityPayloadV1Schema = z
+  .object({
+    payloadVersion: personnelHistoryPayloadVersionSchema,
+    givenNames: z.string().max(120),
+    familyName: z.string().max(120),
+  })
+  .strict();
+export const personnelHistoryRolePayloadV1Schema = z
+  .object({
+    payloadVersion: personnelHistoryPayloadVersionSchema,
+    position: z.string().max(120),
+    qualification: z.string().max(120),
+  })
+  .strict();
+export const personnelHistoryContractTermsPayloadV1Schema = z
+  .object({
+    payloadVersion: personnelHistoryPayloadVersionSchema,
+    employmentTermType: personnelEmploymentTermTypeSchema,
+    expectedEndDate: z.string().date().nullable(),
+    fixedTermReasonCode: personnelFixedTermReasonCodeSchema.nullable(),
+  })
+  .strict();
+export const personnelHistoryWorkTimePayloadV1Schema = z
+  .object({
+    payloadVersion: personnelHistoryPayloadVersionSchema,
+    workTimeCategory: personnelWorkTimeCategorySchema,
+    contractWeeklyMinutes: z.number().int().min(1).max(2_880).nullable(),
+  })
+  .strict();
+export const personnelHistoryEntryPayloadV1Schema = z
+  .object({
+    payloadVersion: personnelHistoryPayloadVersionSchema,
+    entryDate: z.string().date(),
+  })
+  .strict();
+export const personnelHistoryDeparturePayloadV1Schema = z
+  .object({
+    payloadVersion: personnelHistoryPayloadVersionSchema,
+    departureDate: z.string().date().nullable(),
+  })
+  .strict();
+
+export const personnelHistoryStoredSnapshotSchema = z.discriminatedUnion(
+  'semanticGroup',
+  [
+    z
+      .object({
+        semanticGroup: z.literal('identity'),
+        values: personnelHistoryIdentityPayloadV1Schema,
+      })
+      .strict(),
+    z
+      .object({
+        semanticGroup: z.literal('role'),
+        values: personnelHistoryRolePayloadV1Schema,
+      })
+      .strict(),
+    z
+      .object({
+        semanticGroup: z.literal('contract_terms'),
+        values: personnelHistoryContractTermsPayloadV1Schema,
+      })
+      .strict(),
+    z
+      .object({
+        semanticGroup: z.literal('work_time'),
+        values: personnelHistoryWorkTimePayloadV1Schema,
+      })
+      .strict(),
+    z
+      .object({
+        semanticGroup: z.literal('entry'),
+        values: personnelHistoryEntryPayloadV1Schema,
+      })
+      .strict(),
+    z
+      .object({
+        semanticGroup: z.literal('departure'),
+        values: personnelHistoryDeparturePayloadV1Schema,
+      })
+      .strict(),
+  ],
+);
+
+export const personnelHistoryMutationGroupMetadataSchema = z
+  .object({
+    semanticGroup: personnelHistorySemanticGroupSchema,
+    classification: personnelHistoryClassificationSchema,
+    effectiveDate: z.string().date().nullable(),
+    correctionReason: personnelHistoryCorrectionReasonSchema.nullable(),
+  })
+  .strict();
+
+const personnelHistorySafeIdentityValuesSchema =
+  personnelHistoryIdentityPayloadV1Schema.omit({ payloadVersion: true });
+const personnelHistorySafeRoleValuesSchema =
+  personnelHistoryRolePayloadV1Schema.omit({ payloadVersion: true });
+const personnelHistorySafeContractTermsValuesSchema =
+  personnelHistoryContractTermsPayloadV1Schema.omit({ payloadVersion: true });
+const personnelHistorySafeWorkTimeValuesSchema =
+  personnelHistoryWorkTimePayloadV1Schema.omit({ payloadVersion: true });
+const personnelHistorySafeEntryValuesSchema =
+  personnelHistoryEntryPayloadV1Schema.omit({ payloadVersion: true });
+const personnelHistorySafeDepartureValuesSchema =
+  personnelHistoryDeparturePayloadV1Schema.omit({ payloadVersion: true });
+
+function personnelHistorySafeGroupSchema<
+  TGroup extends z.ZodLiteral<
+    'identity' | 'role' | 'contract_terms' | 'work_time' | 'entry' | 'departure'
+  >,
+  TValues extends z.ZodTypeAny,
+>(semanticGroup: TGroup, values: TValues) {
+  return z
+    .object({
+      semanticGroup,
+      classification: personnelHistoryClassificationSchema,
+      previousValues: values,
+      newValues: values,
+      effectiveDate: z.string().date().nullable(),
+      correctionReason: personnelHistoryCorrectionReasonSchema.nullable(),
+    })
+    .strict();
+}
+
+function personnelHistorySafeBaselineGroupSchema<
+  TGroup extends z.ZodLiteral<
+    'identity' | 'role' | 'contract_terms' | 'work_time' | 'entry' | 'departure'
+  >,
+  TValues extends z.ZodTypeAny,
+>(semanticGroup: TGroup, values: TValues) {
+  return z.object({ semanticGroup, currentValues: values }).strict();
+}
+
+export const personnelReconstructableHistoryMutationGroupSchema =
+  z.discriminatedUnion('semanticGroup', [
+    personnelHistorySafeGroupSchema(
+      z.literal('identity'),
+      personnelHistorySafeIdentityValuesSchema,
+    ),
+    personnelHistorySafeGroupSchema(
+      z.literal('role'),
+      personnelHistorySafeRoleValuesSchema,
+    ),
+    personnelHistorySafeGroupSchema(
+      z.literal('contract_terms'),
+      personnelHistorySafeContractTermsValuesSchema,
+    ),
+    personnelHistorySafeGroupSchema(
+      z.literal('work_time'),
+      personnelHistorySafeWorkTimeValuesSchema,
+    ),
+    personnelHistorySafeGroupSchema(
+      z.literal('entry'),
+      personnelHistorySafeEntryValuesSchema,
+    ),
+    personnelHistorySafeGroupSchema(
+      z.literal('departure'),
+      personnelHistorySafeDepartureValuesSchema,
+    ),
+  ]);
+
+export const personnelReconstructableHistoryBaselineGroupSchema =
+  z.discriminatedUnion('semanticGroup', [
+    personnelHistorySafeBaselineGroupSchema(
+      z.literal('identity'),
+      personnelHistorySafeIdentityValuesSchema,
+    ),
+    personnelHistorySafeBaselineGroupSchema(
+      z.literal('role'),
+      personnelHistorySafeRoleValuesSchema,
+    ),
+    personnelHistorySafeBaselineGroupSchema(
+      z.literal('contract_terms'),
+      personnelHistorySafeContractTermsValuesSchema,
+    ),
+    personnelHistorySafeBaselineGroupSchema(
+      z.literal('work_time'),
+      personnelHistorySafeWorkTimeValuesSchema,
+    ),
+    personnelHistorySafeBaselineGroupSchema(
+      z.literal('entry'),
+      personnelHistorySafeEntryValuesSchema,
+    ),
+    personnelHistorySafeBaselineGroupSchema(
+      z.literal('departure'),
+      personnelHistorySafeDepartureValuesSchema,
+    ),
+  ]);
+
+export const personnelReconstructableHistoryEventSchema = z.discriminatedUnion(
+  'kind',
+  [
+    z
+      .object({
+        kind: z.literal('mutation'),
+        id: identifierSchema,
+        actorDisplayName: z.string().min(1).max(200).nullable(),
+        occurredAt: isoDateTimeSchema,
+        groups: z
+          .array(personnelReconstructableHistoryMutationGroupSchema)
+          .min(1)
+          .max(6),
+      })
+      .strict(),
+    z
+      .object({
+        kind: z.literal('cutover_baseline'),
+        id: identifierSchema,
+        actorDisplayName: z.null(),
+        occurredAt: isoDateTimeSchema,
+        groups: z
+          .array(personnelReconstructableHistoryBaselineGroupSchema)
+          .length(6),
+      })
+      .strict(),
+  ],
+);
 export const personnelCompletenessReasonSchema = z.enum([
   'given_names_missing',
   'family_name_missing',
@@ -235,6 +476,10 @@ export const updatePersonnelEmployeeInputSchema = z
     contractWeeklyMinutes: z.number().int().min(1).max(2_880).nullable(),
     entryDate: dateOnlySchema,
     confirmFixedTermReasonClear: z.boolean().default(false),
+    historyMetadata: z
+      .array(personnelHistoryMutationGroupMetadataSchema)
+      .max(5)
+      .optional(),
   })
   .strict()
   .superRefine((input, context) => {
@@ -336,6 +581,21 @@ export const personnelEmployeeAuditEventSchema = z
 export const personnelEmployeeAuditHistorySchema = z
   .object({
     items: z.array(personnelEmployeeAuditEventSchema).max(50),
+    truncated: z.boolean(),
+  })
+  .strict();
+
+export const personnelEmployeeUnifiedHistoryEventSchema = z.discriminatedUnion(
+  'kind',
+  [
+    personnelEmployeeAuditEventSchema.extend({ kind: z.literal('legacy') }),
+    ...personnelReconstructableHistoryEventSchema.options,
+  ],
+);
+
+export const personnelEmployeeUnifiedHistorySchema = z
+  .object({
+    items: z.array(personnelEmployeeUnifiedHistoryEventSchema).max(50),
     truncated: z.boolean(),
   })
   .strict();
@@ -792,6 +1052,21 @@ export const replacePersonnelContractAmendmentMetadataInputSchema = z
   .strict();
 
 export type PersonnelEmployeeView = z.infer<typeof personnelEmployeeViewSchema>;
+export type PersonnelHistorySemanticGroup = z.infer<
+  typeof personnelHistorySemanticGroupSchema
+>;
+export type PersonnelHistoryClassification = z.infer<
+  typeof personnelHistoryClassificationSchema
+>;
+export type PersonnelHistoryStoredSnapshot = z.infer<
+  typeof personnelHistoryStoredSnapshotSchema
+>;
+export type PersonnelHistoryMutationGroupMetadata = z.infer<
+  typeof personnelHistoryMutationGroupMetadataSchema
+>;
+export type PersonnelReconstructableHistoryEvent = z.infer<
+  typeof personnelReconstructableHistoryEventSchema
+>;
 export type PersonnelCompletenessReason = z.infer<
   typeof personnelCompletenessReasonSchema
 >;
@@ -840,6 +1115,12 @@ export type PersonnelEmployeeAuditEvent = z.infer<
 >;
 export type PersonnelEmployeeAuditHistory = z.infer<
   typeof personnelEmployeeAuditHistorySchema
+>;
+export type PersonnelEmployeeUnifiedHistoryEvent = z.infer<
+  typeof personnelEmployeeUnifiedHistoryEventSchema
+>;
+export type PersonnelEmployeeUnifiedHistory = z.infer<
+  typeof personnelEmployeeUnifiedHistorySchema
 >;
 export type PersonnelEmployeeAccessEvent = z.infer<
   typeof personnelEmployeeAccessEventSchema

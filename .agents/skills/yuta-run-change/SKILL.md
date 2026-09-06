@@ -221,6 +221,33 @@ For a sensitive change, create `02b-design-review.md` and stop before tasks/appl
 
 For a normal change, proceed directly to State 4 without a separate design gate.
 
+For absent Design, evaluate the criteria and use the `DESIGN APPLICABILITY`
+block in `docs/YUTA_AUTOMATED_CHANGE_WORKFLOW.md` as the evidence contract.
+If Design applies, create it normally; uncertainty or a required sensitive gate
+cannot be classified away. If none apply, explicitly classify
+`NOT_APPLICABLE` and persist the rationale, each criteria finding, exact
+authority/approved scope/spec references, and expected Design absence in
+`tasks.md` when State 4 first creates it. Do not create a new artifact or fake
+Design. `skip_specs: true` does not skip this independent assessment.
+
+Use only the existing controlled adapter exception: retrieve Tasks instructions
+and proceed despite raw blocking only when deliberately omitted Design is its
+sole missing dependency and every other prerequisite and earlier gate is
+satisfied. Do not use Continue as an implicit bypass or let Propose cross a
+human gate. Raw Design remains ready and planning may remain incomplete; report
+`RAW OPENSPEC STATUS` separately from `YUTA OPERATIONAL READINESS`.
+
+On resume/adoption when Tasks exists and Design is absent, require valid
+persisted omission evidence; absence alone is never evidence. Re-evaluate
+against current approved Specs/scope, verify expected absence, and recompute
+all applicable reviewed hashes. Missing, drifted, invalidated evidence or scope
+that now requires Design means STOP at the appropriate planning/review point,
+not silent backfilling. Preserve the omission block during ordinary checkbox
+progress; revising its rationale/scope requires explicit authorization.
+Invalidate an affected review if reviewed evidence changes or Design appears.
+Fresh creation of Tasks after a first valid omission assessment is distinct
+from repairing missing evidence in pre-existing Tasks.
+
 The same preservation rule applies to any existing later artifact: reaching its state permits use and review, not automatic regeneration. Only explicit user-requested post-review changes authorize edits.
 
 ### State 4 — Tasks and phased implementation plan
@@ -393,6 +420,11 @@ Create `03-final-review.md` containing:
 - approved Gate 1, Gate 2, and conditional Design Gate references and hashes;
 - hashes of all current planning artifacts;
 - design summary;
+- when Design is omitted, `Design applicability: NOT_APPLICABLE`, rationale,
+  authority/evidence sources, exact `tasks.md` path/hash containing the block,
+  and the resolved expected-absent Design path; recheck applicability and absence
+  before issuing the packet. Later Design addition, applicability/rationale
+  change, or reviewed Tasks-evidence drift invalidates the affected review;
 - tasks summary and completion count;
 - implementation files changed;
 - requirement/scenario-to-code-and-test mapping;

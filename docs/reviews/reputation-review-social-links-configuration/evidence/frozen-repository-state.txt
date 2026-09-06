@@ -1,0 +1,163 @@
+Captured: 2026-09-05T23:33:21+02:00
+Command: git rev-parse HEAD; git status --short
+Note: docs/reviews/reputation-review-social-links-configuration/ was already an untracked directory at freeze time; subsequent review-only files remain collapsed under the same status entry.
+
+07d9d6d88e07f6a819c7894ef2e35f79d1eb32fa
+ M .agents/skills/yuta-finish-change/SKILL.md
+ M .agents/skills/yuta-run-change/SKILL.md
+ M .github/workflows/ci.yml
+ M .gitignore
+ M README.md
+D  apps/backoffice/next-env.d.ts
+ M apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/[employeeId]/page.tsx
+ M apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-connected-read-prototype.tsx
+ M apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_lib/cdi-draft-connected-read-model.ts
+ M apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/employee-edit-dialog.tsx
+ M apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/salaries-page.tsx
+ M apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-edit-flow.test.ts
+ M apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-edit-flow.ts
+ M apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-history-refresh.test.ts
+ M apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-history-refresh.ts
+ M apps/backoffice/src/app/(authenticated)/equipe/salaries/actions.ts
+ M apps/backoffice/src/components/backoffice/tenant-switcher.tsx
+ M apps/backoffice/src/server/auth/permissions.ts
+D  apps/booking-web/next-env.d.ts
+D  apps/feedback-web/next-env.d.ts
+D  apps/web/next-env.d.ts
+D  apps/yuta-display/next-env.d.ts
+D  apps/yuta-pos/next-env.d.ts
+ M docs/AUTHORITY_MODEL.md
+ M docs/CURRENT_STATE.md
+ M docs/DEVELOPMENT_WORKFLOW.md
+ M docs/MODULE_REGISTRY.md
+ D docs/OPENSPEC_BASELINE_AUDIT.md
+ M docs/OPENSPEC_YUTA_ACTIVATION_POLICY_REVIEW.md
+ D docs/OPENSPEC_YUTA_ACTIVATION_REPORT.md
+ M docs/OPENSPEC_YUTA_NORMATIVITY_POLICY_REVIEW.md
+ D docs/OPENSPEC_YUTA_SCHEMA_HARDENING_IMPLEMENTATION_REPORT.md
+ D docs/OPENSPEC_YUTA_SCHEMA_HARDENING_REVIEW.md
+ D docs/OPENSPEC_YUTA_SCHEMA_REVIEW.md
+ D docs/OPENSPEC_YUTA_SCHEMA_SMOKE_TEST_REPORT.md
+ M docs/PRODUCT_KNOWLEDGE.md
+ M docs/README.md
+ M docs/YUTA_AUTOMATED_CHANGE_WORKFLOW.md
+ D docs/YUTA_AUTOMATED_CHANGE_WORKFLOW_SETUP_REPORT.md
+ M docs/YUTA_KNOWLEDGE_CONSOLIDATION_PROTOCOL.md
+ M docs/YUTA_QA_PROTOCOL.md
+ D docs/YUTA_WORKFLOW_V3_UPDATE_REPORT.md
+ M docs/architecture/AUTHENTICATION.md
+ M docs/archive/README.md
+ D docs/chatGPT/YUTA_CONTROL_TOWER_HANDOFF_TEMPLATE.md
+ M docs/chatGPT/YUTA_CONTROL_TOWER_HANDOFF_TEMPLATE_V3.md
+ D docs/chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT.md
+ M docs/chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT_V3.md
+ D docs/chatGPT/YUTA_PAGE_CHAT_OPERATING_PROMPT.md
+ M docs/chatGPT/YUTA_PAGE_CHAT_OPERATING_PROMPT_V3.md
+ D docs/chatGPT/YuTa_Workflow_v2.pdf
+ D docs/chatGPT/YuTa_Workflow_v3.pdf
+ M docs/features/identity-access/README.md
+ M docs/features/personnel/README.md
+ M docs/features/reputation/README.md
+ M docs/operations/LOCAL_DEVELOPMENT.md
+ M docs/reviews/README.md
+ D docs/tasks/YUTA_AUTOMATED_OPEN_SPEC_REVIEW_WORKFLOW_SETUP_TASK.md
+ D docs/tasks/YUTA_STEP_7_0B_OPENSPEC_1_11_DELTA_REAUDIT_TASK.md
+ D docs/tasks/YUTA_STEP_7_0_OPENSPEC_LOCAL_BASELINE_AUDIT_TASK.md
+ D docs/tasks/YUTA_STEP_7_1_FORK_AND_DESIGN_YUTA_SCHEMA_TASK.md
+ D docs/tasks/YUTA_STEP_7_2_ISOLATED_OPENSPEC_SCHEMA_SMOKE_TEST_TASK.md
+ D docs/tasks/YUTA_STEP_7_3A_OPENSPEC_SCHEMA_HARDENING_ANALYSIS_TASK.md
+ D docs/tasks/YUTA_STEP_7_3B_MINIMAL_SCHEMA_HARDENING_TASK.md
+ D docs/tasks/YUTA_STEP_7_4_OPENSPEC_ACTIVATION_POLICY_REVIEW_TASK.md
+ D docs/tasks/YUTA_STEP_7_5_ACTIVATE_YUTA_SPEC_DRIVEN_TASK.md
+ D docs/tasks/YUTA_STEP_7_6A_OPENSPEC_NORMATIVITY_POLICY_REVIEW_TASK.md
+ D docs/tasks/YUTA_STEP_7_6B_ENABLE_NORMATIVE_SPECS_TASK.md
+ D docs/tasks/YUTA_WORKFLOW_V3_AUTOMATION_UPDATE_TASK.md
+ M docs/ui/pages/backoffice-equipe-formalites-personnel/ACCEPTANCE_CHECKLIST.md
+ M docs/ui/pages/backoffice-equipe-formalites-personnel/DATA_AND_INTERACTION_SPEC.md
+ M docs/ui/pages/backoffice-equipe-formalites-personnel/PRODUCT_SCOPE.md
+ M docs/ui/pages/backoffice-equipe-formalites-personnel/README.md
+ M docs/ui/pages/backoffice-equipe-formalites-personnel/UI_SPEC.md
+ M docs/ui/pages/backoffice-equipe-salaries/README.md
+ M package.json
+ M packages/contracts/src/index.ts
+ M packages/contracts/src/personnel/index.ts
+ M packages/contracts/src/reputation/index.ts
+ M packages/contracts/test/personnel.test.ts
+ M packages/db-cloud/drizzle/meta/_journal.json
+ M packages/db-cloud/src/auth-repository.ts
+ M packages/db-cloud/src/demo-seed.ts
+ M packages/db-cloud/src/index.ts
+ M packages/db-cloud/src/personnel-repository.ts
+ M packages/db-cloud/src/reputation-repository.ts
+ M packages/db-cloud/src/schema/index.ts
+ M packages/db-cloud/src/schema/personnel.ts
+ M packages/db-cloud/test/auth-selection.integration.test.ts
+ M packages/db-cloud/test/personnel-repository.integration.test.ts
+ M packages/db-cloud/test/schema.test.ts
+ M scripts/test-pos-offline.mjs
+?? apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/[employeeId]/actions.ts
+?? apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-workspace.tsx
+?? apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_lib/cdi-draft-workspace-state.ts
+?? apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/employee-history-metadata-fields.tsx
+?? apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/employee-history.tsx
+?? apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-history-action-errors.ts
+?? apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-history-presentation.ts
+?? apps/backoffice/src/components/backoffice/tenant-switcher-submission.ts
+?? apps/backoffice/src/server/auth/formalites.ts
+?? apps/backoffice/test/formalites-authorization-context.test.ts
+?? apps/backoffice/test/formalites-permissions.test.ts
+?? apps/backoffice/test/formalites-persistent-draft-actions.test.ts
+?? apps/backoffice/test/formalites-persistent-draft-component.test.tsx
+?? apps/backoffice/test/formalites-persistent-draft-state.test.ts
+?? apps/backoffice/test/personnel-history-action.test.ts
+?? apps/backoffice/test/personnel-reconstructable-history-ui.test.tsx
+?? apps/backoffice/test/tenant-switcher-submission.test.ts
+?? apps/backoffice/test/tenant-switcher.test.tsx
+?? docs/YUTA_WORKFLOW_V3.md
+?? docs/YUTA_WORKFLOW_V3_APPLY_VERIFY_QA_CLARIFICATION_REVIEW.md
+?? docs/YUTA_WORKFLOW_V3_DOCUMENTATION_AUDIT.md
+?? docs/YUTA_WORKFLOW_V3_HISTORY_CLEANUP_REVIEW.md
+?? docs/YUTA_WORKFLOW_V3_LEGACY_CLEANUP_REVIEW.md
+?? docs/YUTA_WORKFLOW_V3_PDF_B_REVIEW.md
+?? docs/archive/yuta-workflow/
+?? docs/reference/
+?? docs/reviews/authenticated-establishment-switching/
+?? docs/reviews/feedback-public-trusted-boundary-hardening/
+?? docs/reviews/formalites-authorization/
+?? docs/reviews/formalites-persistent-draft-foundation/
+?? docs/reviews/next-generated-types-bootstrap/
+?? docs/reviews/personnel-reconstructable-value-history/
+?? docs/reviews/reputation-review-social-links-configuration/
+?? openspec/changes/archive/2026-09-03-personnel-reconstructable-value-history/
+?? openspec/changes/archive/2026-09-04-formalites-authorization/
+?? openspec/changes/archive/2026-09-04-next-generated-types-bootstrap/
+?? openspec/changes/archive/2026-09-05-formalites-persistent-draft-foundation/
+?? openspec/changes/feedback-public-trusted-boundary-hardening/
+?? openspec/changes/reputation-review-social-links-configuration/
+?? openspec/specs/authorization/formalites/
+?? openspec/specs/formalites/
+?? openspec/specs/personnel/
+?? packages/contracts/src/formalites/
+?? packages/contracts/test/formalites.test.ts
+?? packages/contracts/test/reputation.test.ts
+?? packages/db-cloud/drizzle/0017_whole_warbound.sql
+?? packages/db-cloud/drizzle/0018_elite_hardball.sql
+?? packages/db-cloud/drizzle/meta/0017_snapshot.json
+?? packages/db-cloud/drizzle/meta/0018_snapshot.json
+?? packages/db-cloud/src/formalites-personnel-draft-domain.ts
+?? packages/db-cloud/src/formalites-personnel-draft-repository.ts
+?? packages/db-cloud/src/personnel-history-cutover.ts
+?? packages/db-cloud/src/personnel-history-domain.ts
+?? packages/db-cloud/src/reputation-review-social-links.ts
+?? packages/db-cloud/src/schema/formalites.ts
+?? packages/db-cloud/test/auth-password-reset.integration.test.ts
+?? packages/db-cloud/test/formalites-personnel-draft-domain.test.ts
+?? packages/db-cloud/test/formalites-personnel-draft-repository.integration.test.ts
+?? packages/db-cloud/test/formalites-personnel-draft-schema.integration.test.ts
+?? packages/db-cloud/test/personnel-history-cutover.integration.test.ts
+?? packages/db-cloud/test/personnel-history-cutover.test.ts
+?? packages/db-cloud/test/personnel-history-domain.test.ts
+?? packages/db-cloud/test/reputation-review-social-links-inventory.test.ts
+?? packages/db-cloud/test/reputation-review-social-links.integration.test.ts
+?? scripts/generate-next-types.mjs
+?? scripts/next-generated-types-bootstrap.test.mjs

@@ -1,0 +1,419 @@
+{
+  "change": "next-generated-types-bootstrap",
+  "schema": "yuta-spec-driven",
+  "created": "2026-09-04",
+  "reviewStatus": "AWAITING_HUMAN_REVIEW",
+  "syncAuthorization": "PENDING",
+  "head": "07d9d6d88e07f6a819c7894ef2e35f79d1eb32fa",
+  "aggregateSource": "docs/reviews/next-generated-types-bootstrap/03-implementation.diff",
+  "aggregateSha256": "6f1643414f375b72c5bff659285da448f4679b9d4e1cad2da3f90d09e03685ff",
+  "aggregateDefinition": "SHA-256 of exact full attributed implementation diff bytes; deterministic commands and before/after raw hashes in 03-implementation-inventory.json. Not a concatenation of hashes.",
+  "implementationInventory": "docs/reviews/next-generated-types-bootstrap/03-implementation-inventory.json",
+  "implementationPaths": [
+    ".github/workflows/ci.yml",
+    ".gitignore",
+    "README.md",
+    "apps/backoffice/next-env.d.ts",
+    "apps/booking-web/next-env.d.ts",
+    "apps/feedback-web/next-env.d.ts",
+    "apps/web/next-env.d.ts",
+    "apps/yuta-display/next-env.d.ts",
+    "apps/yuta-pos/next-env.d.ts",
+    "docs/DEVELOPMENT_WORKFLOW.md",
+    "package.json",
+    "scripts/generate-next-types.mjs",
+    "scripts/next-generated-types-bootstrap.test.mjs",
+    "scripts/test-pos-offline.mjs"
+  ],
+  "files": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "0f738c855e627da68f9304754117488744a4d2fa2e39e9dc0db6c5b71da5702e"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "31262a06e1e330502c323eda7ac811cdcd8bd6e9e2b10c0c73bd6ca60543351b"
+    },
+    {
+      "path": "docs/DEVELOPMENT_WORKFLOW.md",
+      "sha256": "892db065b41c932152ea56bd55f043eb6ae94d5181894ace69cb26746b8f2b6f"
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/01-analysis-review.md",
+      "sha256": "59e040c79b06b4d1f050ee3d964f1ca0dce969e59921a1531285c0cb57cad163",
+      "bytes": 41754
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/02b-design-review.md",
+      "sha256": "ff9e3496b0162ca89d45b9cabadbaf2143635a6abb505d190933ef0810398a14",
+      "bytes": 47490
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/02b-investigation-baseline.json",
+      "sha256": "5911d8813672a59922196ca5022730afec7cf6d8972730d111e1068035b18def",
+      "bytes": 396686
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/02b-investigation.json",
+      "sha256": "ce4afd212c621dea6bcf38f24debc5c8486b498dda6048e1438ff0d4506bf4a3",
+      "bytes": 139559
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/02b-investigation.md",
+      "sha256": "dff3517bb658b7bcaccf88fe4cccf0fcf2ffd175273e0b19ee9c125112905e60",
+      "bytes": 11417
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/03-implementation-inventory.json",
+      "sha256": "62b10efc0959be9bd2363c09fe0a75b50db10ae9a41ad09de20f45b78be9d26e",
+      "bytes": 9410
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/03-implementation.diff",
+      "sha256": "6f1643414f375b72c5bff659285da448f4679b9d4e1cad2da3f90d09e03685ff",
+      "bytes": 45072
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/03-phase3-baseline.json",
+      "sha256": "eef4c0c58f9bb68803cbc5cf47f4e731d670544d96164d803b7b4cbba9b2f45b",
+      "bytes": 405844
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/03-phase3-closure-evidence.json",
+      "sha256": "a2164205ac7fade5fcee73b15282750b7ff214833c489a435818d6619f51021f",
+      "bytes": 481335
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/03-phase3-completion-evidence.json",
+      "sha256": "0393c57f4f6411666527d7652661d918441ce66124c51bb7bbde3123a8865f8c",
+      "bytes": 1012570
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/03-phase3-completion-stopped-review.md",
+      "sha256": "e9404f3a2db23c62783fa1996ef1179a85da0c0b70817381a97e6227ef69160b",
+      "bytes": 14954
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/03-phase3-evidence.json",
+      "sha256": "9281693fe4229bf17850493d5754ab63d08f1b6c73915d6891fd6d89b0cd0009",
+      "bytes": 95797
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/03-phase3-remediation-evidence.json",
+      "sha256": "14b5adc084665e1ff74a31995932c676c3ed545f0b36887ca1efdc3280f2ba6d",
+      "bytes": 961354
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/03-phase3-remediation-matrix.md",
+      "sha256": "dad229aeedd71a4f134a4680c58e7a140680d2d66be0bb1877f8ee963640853d",
+      "bytes": 11773
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/03-phase3-remediation-review.md",
+      "sha256": "a18404cdca2ccae0ca459b2b1cd6b091a262588b3a97b98dc5b361bdc6cc2ed9",
+      "bytes": 15297
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/03-phase3-review.md",
+      "sha256": "425df8be0684e1a75efd3aa328ed2e71d0c7ee7c11f55b9bf153b1e3a68ee21f",
+      "bytes": 13678
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/03-verify-summary.txt",
+      "sha256": "6a28824a351173b7504bfa7faba1b933c7189f17484820e3783bf1fa977a636b",
+      "bytes": 20300
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/03-verify.md",
+      "sha256": "d2ea65e59e8533adcd8964197d1bd1511c7b58c0df377878a60212f3856017f7",
+      "bytes": 24120
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/phase-1-baseline.json",
+      "sha256": "ef366ae0767a0e2d1096e8e1588efa9eb37c574cfdc93e21a97c706d851a6e31",
+      "bytes": 409346
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/phase-1-candidate.json",
+      "sha256": "3954ec4670975e39409c80e170a1da892af22b99c0c9a3604b30bc8abb630078",
+      "bytes": 838958
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/phase-1-commands.json",
+      "sha256": "8ad4a9427075488ca64a5bd5d0411830ab66c9dd8eb8795fbfbf029ca063aa7a",
+      "bytes": 11933
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/phase-1-remediation-baseline.json",
+      "sha256": "a3866c19241306e107ac6a33dde45e7e7279411dd8e63aba2c38b2fc3ba17152",
+      "bytes": 397607
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/phase-1-remediation-evidence.json",
+      "sha256": "79894a158b85f69ef1a5e9514d5dd5bf7f6246c9db32a8f9c8f8126835999cb1",
+      "bytes": 461927
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/phase-1-remediation-revalidation-review.md",
+      "sha256": "1261d21955bf9e7c4a96495c35fd97556033e5827dabe84a0f256feac7f75846",
+      "bytes": 14288
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/phase-1-remediation-revalidation.json",
+      "sha256": "9d113b442aa883167e456a097465067c9556e2d9a1d44850d15c47e4bed2d973",
+      "bytes": 469728
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/phase-1-remediation-review.md",
+      "sha256": "d804f0ef06c7fb0b0fecdbdc8135437d618d542d011cc1bdaa6c9e9fd46aea54",
+      "bytes": 18639
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/phase-1-remediation.diff",
+      "sha256": "11abd30274d8f0e394e66c9f5ead048eab3413b892887dcf8877181f90bad97f",
+      "bytes": 39787
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/phase-1-revalidation-review.md",
+      "sha256": "3a8f848783aceac878eb699ced0045520842baa527da78e910a11f7a661c167a",
+      "bytes": 16040
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/phase-1-revalidation.json",
+      "sha256": "d9e06d91a8175e7ae70d64486bd8cb829f4f241cdcb63b4ed7f298772e521aa3",
+      "bytes": 913729
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/phase-1-review.md",
+      "sha256": "86b1a1b026d5ca1c3f7dfc424d081872182a013805f1914a23480ed8e3c298ec",
+      "bytes": 15070
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/phase-2-evidence.json",
+      "sha256": "4b598a0285858bf59debb46e24212ff0ef562d87720ddff5da82a6ef8f1a5474",
+      "bytes": 29429
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/phase-2-implementation.diff",
+      "sha256": "5b0a35bba33aba5be370f44316033c9d5d7a76a4f5be892f7815d97927f60867",
+      "bytes": 6002
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/phase-2-review.md",
+      "sha256": "eb8df1621769ccb490d5d633d25c1d2681c12a8f7dfe169307e0145df2e23a3a",
+      "bytes": 15295
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/qa/phase3-remediation/QA_REPORT.md",
+      "sha256": "58af5d7eb1e42efbaaa79fd6de5b3bc6996e425cc32886e3160af2f4eea940ee",
+      "bytes": 3047
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/qa/QA_REPORT.md",
+      "sha256": "532a4a47caf8bc50c35c21167842371ac6fb985bee1ac6433ad41ba3f33431ba",
+      "bytes": 13310
+    },
+    {
+      "path": "openspec/changes/next-generated-types-bootstrap/.openspec.yaml",
+      "sha256": "3994c732a35b66600bfde953f28a4169ca9138804c634a11e1775a1bd1594896",
+      "bytes": 62
+    },
+    {
+      "path": "openspec/changes/next-generated-types-bootstrap/analysis.md",
+      "sha256": "322846fe2553a9579b64d8afce607388b7f92f1d55787b32c8491ca9599cc59a",
+      "bytes": 15493
+    },
+    {
+      "path": "openspec/changes/next-generated-types-bootstrap/design.md",
+      "sha256": "52468e84e4287c0fa2b87c758cd4d1b6fa7835dd15b3d110372072eff430fbd3",
+      "bytes": 33781
+    },
+    {
+      "path": "openspec/changes/next-generated-types-bootstrap/proposal.md",
+      "sha256": "036e03c7e588d8970dc7255d364ab489612952edcf74f7633ba65e472817b18f",
+      "bytes": 3118
+    },
+    {
+      "path": "openspec/changes/next-generated-types-bootstrap/tasks.md",
+      "sha256": "4eea496c5fb7c4fc6d54ba13386a3e029bd95a4f686ec68936d551201222ec98",
+      "bytes": 47572
+    },
+    {
+      "path": "package.json",
+      "sha256": "fc6fdde9d6ee80a5a8861c94082c64829a18dafde2eae238f5d1cbc4e0d31595"
+    },
+    {
+      "path": "README.md",
+      "sha256": "5404c00ca3032a34137096edd34a6b4997e2c460d02ded3a63b8f224b9a74ef8"
+    },
+    {
+      "path": "scripts/generate-next-types.mjs",
+      "sha256": "f4c4f981923b851ae7598301d607e8f0b5917ba5269f7bce30bdcfd9b110df78"
+    },
+    {
+      "path": "scripts/next-generated-types-bootstrap.test.mjs",
+      "sha256": "3de15afdbcea8b0cdb8c3ed025290bbbe484c1d2085d9752eedf91523ac8e615"
+    },
+    {
+      "path": "scripts/test-pos-offline.mjs",
+      "sha256": "ef08133a64c67a5dae5c5a4b5845a2f95286d9397af77b7678d993c522fd8764"
+    }
+  ],
+  "trackingRemovals": [
+    {
+      "path": "apps/backoffice/next-env.d.ts",
+      "requiredGitTracked": false,
+      "ignoreRule": "/apps/backoffice/next-env.d.ts",
+      "localGeneratedFile": "ALLOWED; non-authoritative; bytes are not reviewed authority",
+      "beforeSha256": "4e4da12aa061aac172fb1bcb48e9b6e4b293080d2f494327925fdba8f39632ac"
+    },
+    {
+      "path": "apps/booking-web/next-env.d.ts",
+      "requiredGitTracked": false,
+      "ignoreRule": "/apps/booking-web/next-env.d.ts",
+      "localGeneratedFile": "ALLOWED; non-authoritative; bytes are not reviewed authority",
+      "beforeSha256": "7b550dda9686c16f36a17bf9051d5dbf31e98555b30d114ac49fc49a1e712651"
+    },
+    {
+      "path": "apps/feedback-web/next-env.d.ts",
+      "requiredGitTracked": false,
+      "ignoreRule": "/apps/feedback-web/next-env.d.ts",
+      "localGeneratedFile": "ALLOWED; non-authoritative; bytes are not reviewed authority",
+      "beforeSha256": "7b550dda9686c16f36a17bf9051d5dbf31e98555b30d114ac49fc49a1e712651"
+    },
+    {
+      "path": "apps/web/next-env.d.ts",
+      "requiredGitTracked": false,
+      "ignoreRule": "/apps/web/next-env.d.ts",
+      "localGeneratedFile": "ALLOWED; non-authoritative; bytes are not reviewed authority",
+      "beforeSha256": "4e4da12aa061aac172fb1bcb48e9b6e4b293080d2f494327925fdba8f39632ac"
+    },
+    {
+      "path": "apps/yuta-display/next-env.d.ts",
+      "requiredGitTracked": false,
+      "ignoreRule": "/apps/yuta-display/next-env.d.ts",
+      "localGeneratedFile": "ALLOWED; non-authoritative; bytes are not reviewed authority",
+      "beforeSha256": "83a6738771334a63124c8acf38250eccd39fd0aba62846bb0815d952a7936205"
+    },
+    {
+      "path": "apps/yuta-pos/next-env.d.ts",
+      "requiredGitTracked": false,
+      "ignoreRule": "/apps/yuta-pos/next-env.d.ts",
+      "localGeneratedFile": "ALLOWED; non-authoritative; bytes are not reviewed authority",
+      "beforeSha256": "4e4da12aa061aac172fb1bcb48e9b6e4b293080d2f494327925fdba8f39632ac"
+    }
+  ],
+  "planningPathSet": [
+    "openspec/changes/next-generated-types-bootstrap/.openspec.yaml",
+    "openspec/changes/next-generated-types-bootstrap/analysis.md",
+    "openspec/changes/next-generated-types-bootstrap/design.md",
+    "openspec/changes/next-generated-types-bootstrap/proposal.md",
+    "openspec/changes/next-generated-types-bootstrap/tasks.md"
+  ],
+  "reviewPathSet": [
+    "docs/reviews/next-generated-types-bootstrap/01-analysis-review.md",
+    "docs/reviews/next-generated-types-bootstrap/02b-design-review.md",
+    "docs/reviews/next-generated-types-bootstrap/02b-investigation-baseline.json",
+    "docs/reviews/next-generated-types-bootstrap/02b-investigation.json",
+    "docs/reviews/next-generated-types-bootstrap/02b-investigation.md",
+    "docs/reviews/next-generated-types-bootstrap/03-implementation-inventory.json",
+    "docs/reviews/next-generated-types-bootstrap/03-implementation.diff",
+    "docs/reviews/next-generated-types-bootstrap/03-phase3-baseline.json",
+    "docs/reviews/next-generated-types-bootstrap/03-phase3-closure-evidence.json",
+    "docs/reviews/next-generated-types-bootstrap/03-phase3-completion-evidence.json",
+    "docs/reviews/next-generated-types-bootstrap/03-phase3-completion-stopped-review.md",
+    "docs/reviews/next-generated-types-bootstrap/03-phase3-evidence.json",
+    "docs/reviews/next-generated-types-bootstrap/03-phase3-remediation-evidence.json",
+    "docs/reviews/next-generated-types-bootstrap/03-phase3-remediation-matrix.md",
+    "docs/reviews/next-generated-types-bootstrap/03-phase3-remediation-review.md",
+    "docs/reviews/next-generated-types-bootstrap/03-phase3-review.md",
+    "docs/reviews/next-generated-types-bootstrap/03-verify-summary.txt",
+    "docs/reviews/next-generated-types-bootstrap/03-verify.md",
+    "docs/reviews/next-generated-types-bootstrap/phase-1-baseline.json",
+    "docs/reviews/next-generated-types-bootstrap/phase-1-candidate.json",
+    "docs/reviews/next-generated-types-bootstrap/phase-1-commands.json",
+    "docs/reviews/next-generated-types-bootstrap/phase-1-remediation-baseline.json",
+    "docs/reviews/next-generated-types-bootstrap/phase-1-remediation-evidence.json",
+    "docs/reviews/next-generated-types-bootstrap/phase-1-remediation-revalidation-review.md",
+    "docs/reviews/next-generated-types-bootstrap/phase-1-remediation-revalidation.json",
+    "docs/reviews/next-generated-types-bootstrap/phase-1-remediation-review.md",
+    "docs/reviews/next-generated-types-bootstrap/phase-1-remediation.diff",
+    "docs/reviews/next-generated-types-bootstrap/phase-1-revalidation-review.md",
+    "docs/reviews/next-generated-types-bootstrap/phase-1-revalidation.json",
+    "docs/reviews/next-generated-types-bootstrap/phase-1-review.md",
+    "docs/reviews/next-generated-types-bootstrap/phase-2-evidence.json",
+    "docs/reviews/next-generated-types-bootstrap/phase-2-implementation.diff",
+    "docs/reviews/next-generated-types-bootstrap/phase-2-review.md",
+    "docs/reviews/next-generated-types-bootstrap/qa/phase3-remediation/QA_REPORT.md",
+    "docs/reviews/next-generated-types-bootstrap/qa/QA_REPORT.md"
+  ],
+  "selfExcluded": [
+    "docs/reviews/next-generated-types-bootstrap/03-integrity.json",
+    "docs/reviews/next-generated-types-bootstrap/03-final-review.md"
+  ],
+  "selfExclusionReason": "Avoid circular hash; Gate 3 packet separately records this manifest hash. Does not exempt any implementation/source from drift detection.",
+  "canonicalVerifyBlock": {
+    "path": "docs/reviews/next-generated-types-bootstrap/03-verify-summary.txt",
+    "sha256": "6a28824a351173b7504bfa7faba1b933c7189f17484820e3783bf1fa977a636b",
+    "encoding": "UTF-8 no BOM, LF, final LF; packet contains exact block unchanged"
+  },
+  "technicalComplianceMatrix": {
+    "path": "docs/reviews/next-generated-types-bootstrap/03-verify.md",
+    "sha256": "d2ea65e59e8533adcd8964197d1bd1511c7b58c0df377878a60212f3856017f7"
+  },
+  "qa": {
+    "path": "docs/reviews/next-generated-types-bootstrap/qa/QA_REPORT.md",
+    "sha256": "532a4a47caf8bc50c35c21167842371ac6fb985bee1ac6433ad41ba3f33431ba",
+    "status": "PASS",
+    "uiAffecting": false,
+    "browserRequired": false
+  },
+  "beforeClosureCandidate": {
+    "path": "docs/reviews/next-generated-types-bootstrap/03-phase3-closure-evidence.json",
+    "sha256": "a2164205ac7fade5fcee73b15282750b7ff214833c489a435818d6619f51021f",
+    "property": "currentCandidate.inventory",
+    "count": 2221
+  },
+  "closureAuthorizedReportingPaths": [
+    "docs/reviews/next-generated-types-bootstrap/02b-design-review.md",
+    "docs/reviews/next-generated-types-bootstrap/03-verify.md",
+    "docs/reviews/next-generated-types-bootstrap/qa/QA_REPORT.md",
+    "docs/reviews/next-generated-types-bootstrap/03-implementation-inventory.json",
+    "docs/reviews/next-generated-types-bootstrap/03-implementation.diff",
+    "docs/reviews/next-generated-types-bootstrap/03-phase3-closure-evidence.json",
+    "docs/reviews/next-generated-types-bootstrap/03-verify-summary.txt",
+    "docs/reviews/next-generated-types-bootstrap/03-integrity.json",
+    "docs/reviews/next-generated-types-bootstrap/03-final-review.md",
+    "openspec/changes/next-generated-types-bootstrap/tasks.md"
+  ],
+  "canonicalIndexSha256": "cb06e0450599f335de1d95e90b075824c9043cd15db6cab4a354b4fc77b17d8a",
+  "lockfileSha256": "bebba4709d2f5fc893921c475a6149788f25f5ffcb439e4a62257a73bf78bbdb",
+  "protection": {
+    "formalitesImplementation": "4/4 MATCH",
+    "formalitesIntegrity": "18/18 MATCH",
+    "formalitesSupplemental": "17/17 MATCH",
+    "sources": [
+      "docs/reviews/formalites-authorization/03-integrity.json",
+      "docs/reviews/next-generated-types-bootstrap/phase-1-revalidation.json"
+    ],
+    "unchanged": true
+  },
+  "outcomes": {
+    "technicalImplementationCompliance": "PASS",
+    "verify": "PASS",
+    "qa": "PASS",
+    "tasks": "26/26"
+  },
+  "fullFormat": {
+    "result": "FAIL",
+    "exit": 1,
+    "count": 62,
+    "classification": "PRE_EXISTING_UNRELATED_UNCHANGED",
+    "scopedFormat": "PASS",
+    "evidence": "docs/reviews/next-generated-types-bootstrap/03-phase3-closure-evidence.json#formatDebt"
+  },
+  "noDeltaSpecs": true,
+  "productionAuthorized": false,
+  "sync": false,
+  "archive": false
+}

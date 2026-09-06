@@ -1,5 +1,9 @@
 # YUTA — Control Tower Handoff Template v3
 
+Operating notice: This is an operational template, not normative workflow
+authority. Use [`YUTA_WORKFLOW_V3.md`](../YUTA_WORKFLOW_V3.md) as the canonical
+human-readable YUTA Workflow v3 operating guide.
+
 Dùng khi Page Chat phân loại feature là `CROSS_MODULE` hoặc `UNCERTAIN`.
 
 ```text
@@ -14,38 +18,38 @@ Impact classification:
 Why cross-module:
 
 Affected pages/modules:
-- 
-- 
+-
+-
 
 Owning capability currently known:
-- 
+-
 
 Canonical data owners currently known:
-- 
+-
 
 Consumers / downstream dependencies:
-- 
+-
 
 Runtime boundaries involved:
 - Cloud / POS / Site Agent / Display / External / Other
 
 Security / tenancy / permission boundaries:
-- 
+-
 
 Existing Product decisions:
-- 
+-
 
 Relevant ADR / durable boundary:
-- 
+-
 
 Current normative specs involved:
-- 
+-
 
 CONFLICT:
 - None / ...
 
 NEEDS REVIEW:
-- 
+-
 
 UI_AFFECTING across multiple pages:
 - YES / NO / UNKNOWN

@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-30
+Last updated: 2026-09-03
 
 ## Finding the right authority
 
@@ -107,6 +107,28 @@ in the shared operations documents.
 - [`ui/pages/pos-order-detail/README.md`](ui/pages/pos-order-detail/README.md)
 
 ### Operations and process
+
+#### YUTA Workflow v3
+
+Start with [`YUTA_WORKFLOW_V3.md`](YUTA_WORKFLOW_V3.md), the **Canonical
+human-readable YUTA Workflow v3 operating guide**. It explains the complete
+operating model and routes to the detailed sources below; those sources retain
+their specialized authority and executable responsibilities.
+
+| Source                                                                                                                                                    | Role                                                                    |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| [`YUTA_WORKFLOW_V3.md`](YUTA_WORKFLOW_V3.md)                                                                                                              | Primary human-readable operating guide                                  |
+| [`YUTA_AUTOMATED_CHANGE_WORKFLOW.md`](YUTA_AUTOMATED_CHANGE_WORKFLOW.md)                                                                                  | Detailed automation/workflow protocol                                   |
+| [`YUTA_QA_PROTOCOL.md`](YUTA_QA_PROTOCOL.md)                                                                                                              | Detailed QA protocol                                                    |
+| [`YUTA_KNOWLEDGE_CONSOLIDATION_PROTOCOL.md`](YUTA_KNOWLEDGE_CONSOLIDATION_PROTOCOL.md)                                                                    | Detailed post-archive knowledge protocol                                |
+| [`.agents/skills/yuta-run-change/SKILL.md`](../.agents/skills/yuta-run-change/SKILL.md)                                                                   | Executable change start/run/resume behavior through the next human gate |
+| [`.agents/skills/yuta-finish-change/SKILL.md`](../.agents/skills/yuta-finish-change/SKILL.md)                                                             | Executable finalization and archived Knowledge Review resume behavior   |
+| [`openspec/config.yaml`](../openspec/config.yaml) and [`openspec/schemas/yuta-spec-driven/schema.yaml`](../openspec/schemas/yuta-spec-driven/schema.yaml) | OpenSpec artifact and dependency mechanics                              |
+| [`chatGPT/YuTa_Workflow_v3.pdf`](archive/yuta-workflow/reference/YuTa_Workflow_v3.pdf)                                                                    | Static snapshot only; non-canonical—use the human-readable guide        |
+
+Historical setup, approval evidence, and completed tasks are indexed in
+[`archive/yuta-workflow/README.md`](archive/yuta-workflow/README.md).
+They are provenance, not current workflow instructions.
 
 - [`operations/LOCAL_DEVELOPMENT.md`](operations/LOCAL_DEVELOPMENT.md)
 - [`operations/DEPLOYMENT.md`](operations/DEPLOYMENT.md)

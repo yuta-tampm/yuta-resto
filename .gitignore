@@ -1,5 +1,11 @@
 node_modules
 .next
+/apps/backoffice/next-env.d.ts
+/apps/web/next-env.d.ts
+/apps/booking-web/next-env.d.ts
+/apps/feedback-web/next-env.d.ts
+/apps/yuta-pos/next-env.d.ts
+/apps/yuta-display/next-env.d.ts
 .turbo
 dist
 coverage

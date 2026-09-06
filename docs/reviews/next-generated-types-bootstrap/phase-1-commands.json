@@ -1,0 +1,151 @@
+{
+  "cwd": "D:/working/yuta/.tmp-bootstrap-phase1-20260904",
+  "install": {
+    "cmd": "pnpm install --frozen-lockfile",
+    "exit_code": 0,
+    "output": "[\r\n  {\r\n    \"app\": \"backoffice\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"incrementalAbsent\": true,\r\n    \"envLocalAbsent\": true,\r\n    \"modulesAbsent\": true\r\n  },\r\n  {\r\n    \"app\": \"web\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"incrementalAbsent\": true,\r\n    \"envLocalAbsent\": true,\r\n    \"modulesAbsent\": true\r\n  },\r\n  {\r\n    \"app\": \"booking-web\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"incrementalAbsent\": true,\r\n    \"envLocalAbsent\": true,\r\n    \"modulesAbsent\": true\r\n  },\r\n  {\r\n    \"app\": \"feedback-web\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"incrementalAbsent\": true,\r\n    \"envLocalAbsent\": true,\r\n    \"modulesAbsent\": true\r\n  },\r\n  {\r\n    \"app\": \"yuta-pos\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"incrementalAbsent\": true,\r\n    \"envLocalAbsent\": true,\r\n    \"modulesAbsent\": true\r\n  },\r\n  {\r\n    \"app\": \"yuta-display\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"incrementalAbsent\": true,\r\n    \"envLocalAbsent\": true,\r\n    \"modulesAbsent\": true\r\n  }\r\n]\r\n D apps/backoffice/next-env.d.ts\n D apps/booking-web/next-env.d.ts\n D apps/feedback-web/next-env.d.ts\n D apps/web/next-env.d.ts\n D apps/yuta-display/next-env.d.ts\n D apps/yuta-pos/next-env.d.ts\nScope: all 16 workspace projects\n✓ Lockfile passes supply-chain policies (verified 17d ago)\nLockfile is up to date, resolution step is skipped\nProgress: resolved 1, reused 0, downloaded 0, added 0\nPackages: +220\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nProgress: resolved 220, reused 216, downloaded 0, added 16\nProgress: resolved 220, reused 220, downloaded 0, added 86\nProgress: resolved 220, reused 220, downloaded 0, added 132\nProgress: resolved 220, reused 220, downloaded 0, added 215\nProgress: resolved 220, reused 220, downloaded 0, added 216\nProgress: resolved 220, reused 220, downloaded 0, added 217\nProgress: resolved 220, reused 220, downloaded 0, added 218\nProgress: resolved 220, reused 220, downloaded 0, added 219\nProgress: resolved 220, reused 220, downloaded 0, added 220\nProgress: resolved 220, reused 220, downloaded 0, added 220, done\n\ndevDependencies:\n+ prettier 3.8.4\n\nDone in 16.5s using pnpm v11.8.0\n"
+  },
+  "typegen": {
+    "cmd": "pnpm typegen:next",
+    "exit_code": 0,
+    "output": "[\r\n  {\r\n    \"app\": \"backoffice\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"nextVersion\": \"16.2.9\"\r\n  },\r\n  {\r\n    \"app\": \"web\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"nextVersion\": \"16.2.9\"\r\n  },\r\n  {\r\n    \"app\": \"booking-web\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"nextVersion\": \"16.2.9\"\r\n  },\r\n  {\r\n    \"app\": \"feedback-web\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"nextVersion\": \"16.2.9\"\r\n  },\r\n  {\r\n    \"app\": \"yuta-pos\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"nextVersion\": \"16.2.9\"\r\n  },\r\n  {\r\n    \"app\": \"yuta-display\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"nextVersion\": \"16.2.9\"\r\n  }\r\n]\r\n$ pnpm --filter @yuta/backoffice --fail-if-no-match exec next typegen && pnpm --filter @yuta/web --fail-if-no-match exec next typegen && pnpm --filter @yuta/booking-web --fail-if-no-match exec next typegen && pnpm --filter @yuta/feedback-web --fail-if-no-match exec next typegen && pnpm --filter @yuta/pos --fail-if-no-match exec next typegen && pnpm --filter @yuta/display --fail-if-no-match exec next typegen\nGenerating route types...\n✓ Types generated successfully\nGenerating route types...\n✓ Types generated successfully\nGenerating route types...\n✓ Types generated successfully\nGenerating route types...\n✓ Types generated successfully\nGenerating route types...\n✓ Types generated successfully\nGenerating route types...\n✓ Types generated successfully\n",
+    "perApp": [
+      {
+        "app": "backoffice",
+        "cmd": "pnpm --filter @yuta/backoffice --fail-if-no-match exec next typegen",
+        "sequence": 1,
+        "exit_code": 0,
+        "output": "Generating route types...\n✓ Types generated successfully\n",
+        "attribution": "Contiguous child output in the exact sequential && root script; root exit 0 proves every child exit 0. Not a separate invocation."
+      },
+      {
+        "app": "web",
+        "cmd": "pnpm --filter @yuta/web --fail-if-no-match exec next typegen",
+        "sequence": 2,
+        "exit_code": 0,
+        "output": "Generating route types...\n✓ Types generated successfully\n",
+        "attribution": "Contiguous child output in the exact sequential && root script; root exit 0 proves every child exit 0. Not a separate invocation."
+      },
+      {
+        "app": "booking-web",
+        "cmd": "pnpm --filter @yuta/booking-web --fail-if-no-match exec next typegen",
+        "sequence": 3,
+        "exit_code": 0,
+        "output": "Generating route types...\n✓ Types generated successfully\n",
+        "attribution": "Contiguous child output in the exact sequential && root script; root exit 0 proves every child exit 0. Not a separate invocation."
+      },
+      {
+        "app": "feedback-web",
+        "cmd": "pnpm --filter @yuta/feedback-web --fail-if-no-match exec next typegen",
+        "sequence": 4,
+        "exit_code": 0,
+        "output": "Generating route types...\n✓ Types generated successfully\n",
+        "attribution": "Contiguous child output in the exact sequential && root script; root exit 0 proves every child exit 0. Not a separate invocation."
+      },
+      {
+        "app": "yuta-pos",
+        "cmd": "pnpm --filter @yuta/pos --fail-if-no-match exec next typegen",
+        "sequence": 5,
+        "exit_code": 0,
+        "output": "Generating route types...\n✓ Types generated successfully\n",
+        "attribution": "Contiguous child output in the exact sequential && root script; root exit 0 proves every child exit 0. Not a separate invocation."
+      },
+      {
+        "app": "yuta-display",
+        "cmd": "pnpm --filter @yuta/display --fail-if-no-match exec next typegen",
+        "sequence": 6,
+        "exit_code": 0,
+        "output": "Generating route types...\n✓ Types generated successfully\n",
+        "attribution": "Contiguous child output in the exact sequential && root script; root exit 0 proves every child exit 0. Not a separate invocation."
+      }
+    ]
+  },
+  "directTypechecks": [
+    {
+      "app": "backoffice",
+      "cmd": "pnpm --filter @yuta/backoffice typecheck",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase1-20260904",
+      "exit_code": 0,
+      "output": "$ tsc --noEmit\n"
+    },
+    {
+      "app": "web",
+      "cmd": "pnpm --filter @yuta/web typecheck",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase1-20260904",
+      "exit_code": 0,
+      "output": "$ tsc --noEmit\n"
+    },
+    {
+      "app": "booking-web",
+      "cmd": "pnpm --filter @yuta/booking-web typecheck",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase1-20260904",
+      "exit_code": 0,
+      "output": "$ tsc --noEmit\n"
+    },
+    {
+      "app": "feedback-web",
+      "cmd": "pnpm --filter @yuta/feedback-web typecheck",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase1-20260904",
+      "exit_code": 0,
+      "output": "$ tsc --noEmit\n"
+    },
+    {
+      "app": "yuta-pos",
+      "cmd": "pnpm --filter @yuta/pos typecheck",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase1-20260904",
+      "exit_code": 0,
+      "output": "$ tsc --noEmit\n"
+    },
+    {
+      "app": "yuta-display",
+      "cmd": "pnpm --filter @yuta/display typecheck",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase1-20260904",
+      "exit_code": 0,
+      "output": "$ tsc --noEmit\n"
+    }
+  ],
+  "recursive": {
+    "cmd": "pnpm -r --if-present typecheck",
+    "exit_code": 0,
+    "output": "Scope: 15 of 16 workspace projects\npackages/contracts typecheck$ tsc --noEmit\npackages/db-pos typecheck$ tsc --noEmit\npackages/tenant typecheck$ tsc --noEmit\npackages/core typecheck$ tsc --noEmit\npackages/tenant typecheck: Done\npackages/core typecheck: Done\npackages/db-pos typecheck: Done\npackages/contracts typecheck: Done\napps/yuta-display typecheck$ tsc --noEmit\napps/site-agent typecheck$ tsc --noEmit\npackages/auth typecheck$ tsc --noEmit\napps/yuta-pos typecheck$ tsc --noEmit\npackages/auth typecheck: Done\npackages/booking typecheck$ tsc --noEmit\npackages/booking typecheck: Done\napps/yuta-pos typecheck: Done\napps/yuta-display typecheck: Done\napps/site-agent typecheck: Done\npackages/db-cloud typecheck$ tsc --noEmit\npackages/db-cloud typecheck: Done\napps/backoffice typecheck$ tsc --noEmit\napps/feedback-web typecheck$ tsc --noEmit\napps/web typecheck$ tsc --noEmit\napps/booking-web typecheck$ tsc --noEmit\napps/feedback-web typecheck: Done\napps/web typecheck: Done\napps/booking-web typecheck: Done\napps/backoffice typecheck: Done\n"
+  },
+  "checksInOriginal": [
+    {
+      "cmd": "pnpm docs:check",
+      "chunk_id": "80dc36",
+      "wall_time_seconds": 1.6083044,
+      "exit_code": 0,
+      "original_token_count": 29,
+      "output": "$ node ./scripts/check-documentation-consistency.mjs\nDocumentation consistency check passed (36 current documents).\n"
+    },
+    {
+      "cmd": "pnpm architecture:check",
+      "chunk_id": "629a93",
+      "wall_time_seconds": 2.1586422,
+      "exit_code": 0,
+      "original_token_count": 40,
+      "output": "$ node ./scripts/check-import-boundaries.mjs\nArchitecture check passed: runtime imports, database URLs, client boundaries, and migration baselines are valid.\n"
+    },
+    {
+      "cmd": "pnpm exec prettier --check package.json .github/workflows/ci.yml README.md docs/DEVELOPMENT_WORKFLOW.md scripts/next-generated-types-bootstrap.test.mjs",
+      "chunk_id": "5528f4",
+      "wall_time_seconds": 1.7140469,
+      "exit_code": 0,
+      "original_token_count": 17,
+      "output": "Checking formatting...\nAll matched files use Prettier code style!\n"
+    },
+    {
+      "cmd": "node --test scripts/next-generated-types-bootstrap.test.mjs",
+      "chunk_id": "fd68d2",
+      "wall_time_seconds": 2.5434708,
+      "exit_code": 0,
+      "original_token_count": 263,
+      "output": "✔ root bootstrap targets exactly the six Next apps in approved order (3.8111ms)\n✔ existing root aliases keep their bounded meanings (0.3618ms)\n✔ CI gates recursive typecheck in its own job with no failure bypass (1.4849ms)\n✔ both development guides document the same explicit prerequisite (1.2084ms)\n✔ conjunction reaches recursive check only after six successful children (551.6316ms)\n✔ child failure at @yuta/backoffice stops later children and recursive check (116.6395ms)\n✔ child failure at @yuta/web stops later children and recursive check (181.7826ms)\n✔ child failure at @yuta/booking-web stops later children and recursive check (241.6886ms)\n✔ child failure at @yuta/feedback-web stops later children and recursive check (280.0601ms)\n✔ child failure at @yuta/pos stops later children and recursive check (342.5566ms)\n✔ child failure at @yuta/display stops later children and recursive check (434.2953ms)\nℹ tests 11\nℹ suites 0\nℹ pass 11\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 2293.4565\n"
+    }
+  ],
+  "fullFormat": {
+    "cmd": "pnpm format:check",
+    "exit_code": 1,
+    "summary": "Code style issues found in 62 files. Same unrelated baseline categories recorded at Gate 1; no changed Phase 1 implementation file warned."
+  }
+}

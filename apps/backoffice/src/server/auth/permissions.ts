@@ -1,6 +1,43 @@
 import 'server-only';
 
 import { TenantError, type TenantContext, type TenantRole } from '@yuta/tenant';
+import { requireEstablishment } from '@yuta/tenant';
+
+export type FormalitesPermission = 'formalites.read' | 'formalites.manage';
+
+const formalitesPermissionRoles: Record<
+  FormalitesPermission,
+  readonly TenantRole[]
+> = {
+  'formalites.read': ['OWNER'],
+  'formalites.manage': ['OWNER'],
+};
+
+export function hasFormalitesPermission(
+  context: TenantContext,
+  permission: FormalitesPermission,
+): boolean {
+  return (
+    Boolean(context.establishmentId) &&
+    context.actor.type === 'user' &&
+    Object.hasOwn(formalitesPermissionRoles, permission) &&
+    formalitesPermissionRoles[permission].includes(context.actor.role)
+  );
+}
+
+export function requireFormalitesPermission(
+  context: TenantContext,
+  permission: FormalitesPermission,
+): void {
+  requireEstablishment(context);
+  if (!hasFormalitesPermission(context, permission)) {
+    throw new TenantError(
+      'Permission denied.',
+      'CROSS_TENANT_ACCESS_DENIED',
+      403,
+    );
+  }
+}
 
 export type ReputationPermission =
   | 'reputation.read'

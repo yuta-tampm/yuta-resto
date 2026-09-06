@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process';
 import { randomInt, randomUUID } from 'node:crypto';
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { createServer } from 'node:net';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -10,15 +10,8 @@ const containerName = `yuta-pos-offline-acceptance-${randomUUID().slice(0, 8)}`;
 const pnpmEntrypoint = process.env.npm_execpath;
 const siteAgentPort = readPort('YUTA_OFFLINE_SITE_AGENT_PORT', 3004);
 const posPort = readPort('YUTA_OFFLINE_POS_PORT', 3003);
-const posNextEnvPath = join(
-  repositoryRoot,
-  'apps',
-  'yuta-pos',
-  'next-env.d.ts',
-);
 const childProcesses = [];
 let containerStarted = false;
-let originalPosNextEnv;
 
 function readPort(name, fallback) {
   const value = Number(process.env[name] ?? fallback);
@@ -177,10 +170,6 @@ async function stopChild(child) {
 async function cleanup() {
   await Promise.allSettled(childProcesses.reverse().map(stopChild));
 
-  if (originalPosNextEnv !== undefined) {
-    writeFileSync(posNextEnvPath, originalPosNextEnv);
-  }
-
   if (containerStarted) {
     await runCommand('docker', ['rm', '--force', containerName], {
       quiet: true,
@@ -319,9 +308,6 @@ async function main() {
   );
 
   console.log('Building the POS production bundle...');
-  if (existsSync(posNextEnvPath)) {
-    originalPosNextEnv = readFileSync(posNextEnvPath);
-  }
   await runPnpm(['--filter', '@yuta/pos', 'build'], {
     env: runtimeEnv,
   });

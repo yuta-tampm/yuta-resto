@@ -50,6 +50,11 @@ authority.
 
 ## Archive contents
 
+- [`yuta-workflow/README.md`](yuta-workflow/README.md) preserves completed
+  OpenSpec setup, Workflow v3 review/approval evidence, one-time tasks, and a
+  static non-canonical workflow reference. Start current operations with
+  [`YUTA_WORKFLOW_V3.md`](../YUTA_WORKFLOW_V3.md), not these historical records.
+
 - [`knowledge-normalization/KNOWLEDGE_AUDIT.md`](knowledge-normalization/KNOWLEDGE_AUDIT.md)
   preserves the initial 2026-08 Knowledge Normalization audit.
 - [`knowledge-normalization/tasks/`](knowledge-normalization/tasks/) preserves

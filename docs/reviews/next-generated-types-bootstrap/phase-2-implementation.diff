@@ -1,0 +1,166 @@
+diff --git a/.gitignore b/.gitignore
+index af38dcc..b84eae6 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,5 +1,11 @@
+ node_modules
+ .next
++/apps/backoffice/next-env.d.ts
++/apps/web/next-env.d.ts
++/apps/booking-web/next-env.d.ts
++/apps/feedback-web/next-env.d.ts
++/apps/yuta-pos/next-env.d.ts
++/apps/yuta-display/next-env.d.ts
+ .turbo
+ dist
+ coverage
+diff --git a/scripts/test-pos-offline.mjs b/scripts/test-pos-offline.mjs
+index ed5c0b4..75bf892 100644
+--- a/scripts/test-pos-offline.mjs
++++ b/scripts/test-pos-offline.mjs
+@@ -1,6 +1,6 @@
+ import { spawn } from 'node:child_process';
+ import { randomInt, randomUUID } from 'node:crypto';
+-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
++import { existsSync } from 'node:fs';
+ import { createServer } from 'node:net';
+ import { join, resolve } from 'node:path';
+ import { fileURLToPath } from 'node:url';
+@@ -10,15 +10,8 @@ const containerName = `yuta-pos-offline-acceptance-${randomUUID().slice(0, 8)}`;
+ const pnpmEntrypoint = process.env.npm_execpath;
+ const siteAgentPort = readPort('YUTA_OFFLINE_SITE_AGENT_PORT', 3004);
+ const posPort = readPort('YUTA_OFFLINE_POS_PORT', 3003);
+-const posNextEnvPath = join(
+-  repositoryRoot,
+-  'apps',
+-  'yuta-pos',
+-  'next-env.d.ts',
+-);
+ const childProcesses = [];
+ let containerStarted = false;
+-let originalPosNextEnv;
+ 
+ function readPort(name, fallback) {
+   const value = Number(process.env[name] ?? fallback);
+@@ -177,10 +170,6 @@ async function stopChild(child) {
+ async function cleanup() {
+   await Promise.allSettled(childProcesses.reverse().map(stopChild));
+ 
+-  if (originalPosNextEnv !== undefined) {
+-    writeFileSync(posNextEnvPath, originalPosNextEnv);
+-  }
+-
+   if (containerStarted) {
+     await runCommand('docker', ['rm', '--force', containerName], {
+       quiet: true,
+@@ -319,9 +308,6 @@ async function main() {
+   );
+ 
+   console.log('Building the POS production bundle...');
+-  if (existsSync(posNextEnvPath)) {
+-    originalPosNextEnv = readFileSync(posNextEnvPath);
+-  }
+   await runPnpm(['--filter', '@yuta/pos', 'build'], {
+     env: runtimeEnv,
+   });
+diff --git a/apps/backoffice/next-env.d.ts b/apps/backoffice/next-env.d.ts
+deleted file mode 100644
+index c4b7818..0000000
+--- a/apps/backoffice/next-env.d.ts
++++ /dev/null
+@@ -1,6 +0,0 @@
+-/// <reference types="next" />
+-/// <reference types="next/image-types/global" />
+-import "./.next/dev/types/routes.d.ts";
+-
+-// NOTE: This file should not be edited
+-// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
+diff --git a/apps/booking-web/next-env.d.ts b/apps/booking-web/next-env.d.ts
+deleted file mode 100644
+index 9edff1c..0000000
+--- a/apps/booking-web/next-env.d.ts
++++ /dev/null
+@@ -1,6 +0,0 @@
+-/// <reference types="next" />
+-/// <reference types="next/image-types/global" />
+-import "./.next/types/routes.d.ts";
+-
+-// NOTE: This file should not be edited
+-// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
+diff --git a/apps/feedback-web/next-env.d.ts b/apps/feedback-web/next-env.d.ts
+deleted file mode 100644
+index 9edff1c..0000000
+--- a/apps/feedback-web/next-env.d.ts
++++ /dev/null
+@@ -1,6 +0,0 @@
+-/// <reference types="next" />
+-/// <reference types="next/image-types/global" />
+-import "./.next/types/routes.d.ts";
+-
+-// NOTE: This file should not be edited
+-// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
+diff --git a/apps/web/next-env.d.ts b/apps/web/next-env.d.ts
+deleted file mode 100644
+index 9edff1c..0000000
+--- a/apps/web/next-env.d.ts
++++ /dev/null
+@@ -1,6 +0,0 @@
+-/// <reference types="next" />
+-/// <reference types="next/image-types/global" />
+-import "./.next/types/routes.d.ts";
+-
+-// NOTE: This file should not be edited
+-// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
+diff --git a/apps/yuta-display/next-env.d.ts b/apps/yuta-display/next-env.d.ts
+deleted file mode 100644
+index c4b7818..0000000
+--- a/apps/yuta-display/next-env.d.ts
++++ /dev/null
+@@ -1,6 +0,0 @@
+-/// <reference types="next" />
+-/// <reference types="next/image-types/global" />
+-import "./.next/dev/types/routes.d.ts";
+-
+-// NOTE: This file should not be edited
+-// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
+diff --git a/apps/yuta-pos/next-env.d.ts b/apps/yuta-pos/next-env.d.ts
+deleted file mode 100644
+index 9edff1c..0000000
+--- a/apps/yuta-pos/next-env.d.ts
++++ /dev/null
+@@ -1,6 +0,0 @@
+-/// <reference types="next" />
+-/// <reference types="next/image-types/global" />
+-import "./.next/types/routes.d.ts";
+-
+-// NOTE: This file should not be edited
+-// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
+diff --git a/scripts/next-generated-types-bootstrap.test.mjs b/scripts/next-generated-types-bootstrap.test.mjs
+index f47666e..3198dd9 100644
+--- a/scripts/next-generated-types-bootstrap.test.mjs
++++ b/scripts/next-generated-types-bootstrap.test.mjs
+@@ -76,6 +76,24 @@ test('both development guides document the same explicit prerequisite', () => {
+   }
+ });
+ 
++test('Next declarations have only the six exact root-anchored ignore rules', () => {
++  const rules = read('.gitignore').split(/\r?\n/);
++  assert.deepEqual(
++    rules.filter((rule) => rule.includes('.d.ts')),
++    apps.map(([path]) => `/${path}/next-env.d.ts`),
++  );
++});
++
++test('POS offline acceptance no longer captures or restores generated declarations', () => {
++  const source = read('scripts/test-pos-offline.mjs');
++  assert.match(source, /import \{ existsSync \} from 'node:fs';/);
++  assert.match(source, /!existsSync\(tsxCli\) \|\| !existsSync\(nextCli\)/);
++  assert.doesNotMatch(
++    source,
++    /next-env\.d\.ts|posNextEnv|originalPosNextEnv|readFileSync|writeFileSync/,
++  );
++});
++
+ // Exercise the actual conjunction structure with harmless child processes.
+ // This is not a substitute for the later six real Next failure-injection cases.
+ function probe(failedIndex) {

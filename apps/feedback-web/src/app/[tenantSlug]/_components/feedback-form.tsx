@@ -587,7 +587,7 @@ function InlineError({ message }: { message: string }) {
   );
 }
 
-function FeedbackSuccess({
+export function FeedbackSuccess({
   establishmentName,
   externalLinks,
   onReset,
@@ -638,7 +638,7 @@ function FeedbackSuccess({
               </p>
               {links.map((link) => (
                 <Button key={link.href} variant="secondary" asChild>
-                  <a href={link.href} target="_blank" rel="noreferrer">
+                  <a href={link.href} target="_blank" rel="noopener noreferrer">
                     {link.label}
                     <ExternalLink className="h-4 w-4" aria-hidden="true" />
                   </a>

@@ -52,7 +52,7 @@ jobs:
           pnpm db:reset:dev --dry-run
 
       - name: Type-check workspaces
-        run: pnpm -r --if-present typecheck
+        run: pnpm typegen:next && pnpm -r --if-present typecheck
 
   cloud-tests:
     runs-on: ubuntu-latest

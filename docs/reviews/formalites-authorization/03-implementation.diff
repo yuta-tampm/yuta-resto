@@ -1,0 +1,556 @@
+diff --git a/apps/backoffice/src/server/auth/formalites.ts b/apps/backoffice/src/server/auth/formalites.ts
+new file mode 100644
+index 0000000..2e7c8d0
+--- /dev/null
++++ b/apps/backoffice/src/server/auth/formalites.ts
+@@ -0,0 +1,20 @@
++import 'server-only';
++
++import { requireEstablishment } from '@yuta/tenant';
++import {
++  requireFormalitesPermission,
++  type FormalitesPermission,
++} from './permissions';
++import { requireAuthenticatedTenant } from './session';
++
++export async function requireFormalitesTenant(
++  permission: FormalitesPermission,
++  returnTo = '/equipe/formalites-personnel',
++) {
++  const context = await requireAuthenticatedTenant(returnTo);
++  requireEstablishment(context.tenant);
++  requireFormalitesPermission(context.tenant, permission);
++  return context as typeof context & {
++    tenant: typeof context.tenant & { establishmentId: string };
++  };
++}
+diff --git a/apps/backoffice/src/server/auth/permissions.ts b/apps/backoffice/src/server/auth/permissions.ts
+index 7d48127..2893554 100644
+--- a/apps/backoffice/src/server/auth/permissions.ts
++++ b/apps/backoffice/src/server/auth/permissions.ts
+@@ -1,6 +1,43 @@
+ import 'server-only';
+ 
+ import { TenantError, type TenantContext, type TenantRole } from '@yuta/tenant';
++import { requireEstablishment } from '@yuta/tenant';
++
++export type FormalitesPermission = 'formalites.read' | 'formalites.manage';
++
++const formalitesPermissionRoles: Record<
++  FormalitesPermission,
++  readonly TenantRole[]
++> = {
++  'formalites.read': ['OWNER'],
++  'formalites.manage': ['OWNER'],
++};
++
++export function hasFormalitesPermission(
++  context: TenantContext,
++  permission: FormalitesPermission,
++): boolean {
++  return (
++    Boolean(context.establishmentId) &&
++    context.actor.type === 'user' &&
++    Object.hasOwn(formalitesPermissionRoles, permission) &&
++    formalitesPermissionRoles[permission].includes(context.actor.role)
++  );
++}
++
++export function requireFormalitesPermission(
++  context: TenantContext,
++  permission: FormalitesPermission,
++): void {
++  requireEstablishment(context);
++  if (!hasFormalitesPermission(context, permission)) {
++    throw new TenantError(
++      'Permission denied.',
++      'CROSS_TENANT_ACCESS_DENIED',
++      403,
++    );
++  }
++}
+ 
+ export type ReputationPermission =
+   | 'reputation.read'
+diff --git a/apps/backoffice/test/formalites-authorization-context.test.ts b/apps/backoffice/test/formalites-authorization-context.test.ts
+new file mode 100644
+index 0000000..ba82be3
+--- /dev/null
++++ b/apps/backoffice/test/formalites-authorization-context.test.ts
+@@ -0,0 +1,330 @@
++import type { AuthenticatedSession } from '@yuta/auth';
++import {
++  TenantError,
++  type MembershipLookupPort,
++  type MembershipRecord,
++} from '@yuta/tenant';
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++
++const infrastructure = vi.hoisted(() => ({
++  findSession: vi.fn<(token: string) => Promise<AuthenticatedSession | null>>(),
++  membership: vi.fn<MembershipLookupPort['findActiveMembership']>(),
++  metadata: vi.fn(),
++  cookieGet: vi.fn(),
++  headers: vi.fn(),
++  database: Object.freeze({ testBoundary: true }),
++}));
++
++vi.mock('server-only', () => ({}));
++vi.mock('next/headers', () => ({
++  cookies: async () => ({ get: infrastructure.cookieGet }),
++  headers: infrastructure.headers,
++}));
++vi.mock('next/navigation', () => ({
++  redirect: (destination: string): never => {
++    throw new Error(`REDIRECT:${destination}`);
++  },
++}));
++vi.mock('react', async (importOriginal) => ({
++  ...(await importOriginal<typeof import('react')>()),
++  // No request cache survives a synthetic request or test case.
++  cache: <T>(callback: T): T => callback,
++}));
++vi.mock('../src/server/cloud-database', () => ({
++  cloudDatabase: infrastructure.database,
++}));
++vi.mock('@yuta/db-cloud', () => ({
++  createAuthRepository: () => ({ findSession: infrastructure.findSession }),
++  createMembershipLookup: () => ({
++    findActiveMembership: infrastructure.membership,
++  }),
++  findAuthenticatedTenantMetadata: infrastructure.metadata,
++}));
++
++// Real session.ts, real @yuta/tenant resolver and real permission guards.
++import { requireFormalitesTenant } from '../src/server/auth/formalites';
++import * as permissions from '../src/server/auth/permissions';
++
++const operations = ['formalites.read', 'formalites.manage'] as const;
++const returnTo = '/equipe/formalites-personnel';
++const recovery = `REDIRECT:/resolution-etablissement?returnTo=${encodeURIComponent(returnTo)}`;
++const login = `REDIRECT:/connexion?returnTo=${encodeURIComponent(returnTo)}`;
++
++function session(): AuthenticatedSession {
++  return {
++    id: 'synthetic-session',
++    userId: 'user-a',
++    userName: 'Synthetic Owner',
++    userEmail: 'owner@example.test',
++    systemRole: null,
++    organizationId: 'org-a',
++    establishmentId: 'est-a',
++    expiresAt: new Date('2099-01-01T00:00:00Z'),
++  };
++}
++
++function membership(
++  overrides: Partial<MembershipRecord> = {},
++): MembershipRecord {
++  return {
++    membershipId: 'member-a',
++    userId: 'user-a',
++    organizationId: 'org-a',
++    establishmentId: 'est-a',
++    status: 'active',
++    role: 'OWNER',
++    ...overrides,
++  };
++}
++
++beforeEach(() => {
++  vi.restoreAllMocks();
++  infrastructure.findSession.mockReset().mockResolvedValue(session());
++  infrastructure.membership.mockReset().mockResolvedValue(membership());
++  infrastructure.metadata.mockReset().mockResolvedValue({
++    locale: 'fr-FR',
++    timezone: 'Europe/Paris',
++    entitlements: [],
++  });
++  infrastructure.cookieGet
++    .mockReset()
++    .mockImplementation((name: string) =>
++      name === 'yuta_backoffice_session'
++        ? { value: 'synthetic-token' }
++        : undefined,
++    );
++  infrastructure.headers.mockReset();
++  vi.spyOn(permissions, 'requireFormalitesPermission');
++});
++
++describe.each(operations)('trusted composition: %s', (operation) => {
++  it('returns the real resolved OWNER establishment context', async () => {
++    const result = await requireFormalitesTenant(operation);
++    expect(result.session).toEqual(session());
++    expect(result.tenant).toMatchObject({
++      organizationId: 'org-a',
++      establishmentId: 'est-a',
++      actor: {
++        type: 'user',
++        userId: 'user-a',
++        membershipId: 'member-a',
++        role: 'OWNER',
++      },
++    });
++    expect(Object.isFrozen(result.tenant)).toBe(true);
++    expect(
++      permissions.requireFormalitesPermission,
++    ).toHaveBeenCalledExactlyOnceWith(result.tenant, operation);
++    expect(infrastructure.findSession).toHaveBeenCalledExactlyOnceWith(
++      'synthetic-token',
++    );
++    expect(infrastructure.metadata).toHaveBeenCalledExactlyOnceWith(
++      infrastructure.database,
++      { organizationId: 'org-a', establishmentId: 'est-a' },
++    );
++    expect(infrastructure.membership).toHaveBeenCalledWith(
++      expect.objectContaining({
++        userId: 'user-a',
++        organizationId: 'org-a',
++        establishmentId: 'est-a',
++      }),
++    );
++  });
++
++  it('rejects missing session cookie without looking up scope', async () => {
++    infrastructure.cookieGet.mockReturnValue(undefined);
++    await expect(requireFormalitesTenant(operation)).rejects.toThrow(login);
++    expect(infrastructure.findSession).not.toHaveBeenCalled();
++    expect(infrastructure.metadata).not.toHaveBeenCalled();
++    expect(permissions.requireFormalitesPermission).not.toHaveBeenCalled();
++  });
++
++  it('preserves login redirect for upstream invalid/expired session or inactive user', async () => {
++    // The repository owns these conditions and exposes null; no DB claim here.
++    infrastructure.findSession.mockResolvedValue(null);
++    await expect(requireFormalitesTenant(operation)).rejects.toThrow(login);
++    expect(infrastructure.metadata).not.toHaveBeenCalled();
++    expect(permissions.requireFormalitesPermission).not.toHaveBeenCalled();
++  });
++
++  it('preserves scope recovery for missing/inactive organization or establishment metadata', async () => {
++    infrastructure.metadata.mockResolvedValue(null);
++    await expect(requireFormalitesTenant(operation)).rejects.toThrow(recovery);
++    expect(infrastructure.membership).not.toHaveBeenCalled();
++    expect(permissions.requireFormalitesPermission).not.toHaveBeenCalled();
++  });
++
++  it.each([
++    ['missing', null],
++    ['inactive', membership({ status: 'suspended' })],
++    ['wrong user', membership({ userId: 'user-b' })],
++    ['wrong organization', membership({ organizationId: 'org-b' })],
++    ['wrong establishment', membership({ establishmentId: 'est-b' })],
++  ] as const)(
++    'rejects %s membership through actual resolver',
++    async (_label, record) => {
++      infrastructure.membership.mockResolvedValue(record);
++      await expect(requireFormalitesTenant(operation)).rejects.toThrow(
++        recovery,
++      );
++      expect(permissions.requireFormalitesPermission).not.toHaveBeenCalled();
++    },
++  );
++
++  it('rejects organization-only resolution with exact 400 rather than selecting scope', async () => {
++    // Malformed upstream fixture reaches the established missing-scope guard.
++    infrastructure.findSession.mockResolvedValue({
++      ...session(),
++      establishmentId: '',
++    });
++    infrastructure.membership.mockResolvedValue(
++      membership({ establishmentId: '' }),
++    );
++    await expect(requireFormalitesTenant(operation)).rejects.toMatchObject({
++      name: 'TenantError',
++      code: 'ESTABLISHMENT_REQUIRED',
++      statusCode: 400,
++      message: 'An establishment is required.',
++    });
++    expect(permissions.requireFormalitesPermission).not.toHaveBeenCalled();
++  });
++
++  it.each(['MANAGER', 'STAFF'] as const)(
++    'denies valid %s membership',
++    async (role) => {
++      infrastructure.membership.mockResolvedValue(membership({ role }));
++      await expect(requireFormalitesTenant(operation)).rejects.toMatchObject({
++        code: 'CROSS_TENANT_ACCESS_DENIED',
++        statusCode: 403,
++        message: 'Permission denied.',
++      });
++    },
++  );
++
++  it.each(['YUTA_ADMIN', 'YUTA_SUPPORT'] as const)(
++    'does not bypass membership/grants for %s',
++    async (systemRole) => {
++      infrastructure.findSession.mockResolvedValue({
++        ...session(),
++        systemRole,
++      });
++      infrastructure.membership.mockResolvedValue(null);
++      await expect(requireFormalitesTenant(operation)).rejects.toThrow(
++        recovery,
++      );
++      for (const role of ['MANAGER', 'STAFF'] as const) {
++        infrastructure.membership.mockResolvedValue(membership({ role }));
++        await expect(requireFormalitesTenant(operation)).rejects.toMatchObject({
++          code: 'CROSS_TENANT_ACCESS_DENIED',
++          statusCode: 403,
++        });
++      }
++    },
++  );
++
++  it('ignores browser authority claims in cookies, headers and returnTo query', async () => {
++    const claims = {
++      tenant: 'forged',
++      organization: 'org-b',
++      establishment: 'est-b',
++      role: 'OWNER',
++      membership: 'forged',
++      permissions: ['formalites.manage'],
++    };
++    infrastructure.cookieGet.mockImplementation((name: string) => ({
++      value:
++        name === 'yuta_backoffice_session'
++          ? 'synthetic-token'
++          : JSON.stringify(claims),
++    }));
++    infrastructure.headers.mockReturnValue(
++      new Headers({ 'x-tenant': JSON.stringify(claims) }),
++    );
++    const hint = `${returnTo}?${new URLSearchParams({ claims: JSON.stringify(claims) })}`;
++    const result = await requireFormalitesTenant(operation, hint);
++    expect(result.tenant.organizationId).toBe('org-a');
++    expect(result.tenant.establishmentId).toBe('est-a');
++    expect(infrastructure.headers).not.toHaveBeenCalled();
++    expect(infrastructure.cookieGet).toHaveBeenCalledExactlyOnceWith(
++      'yuta_backoffice_session',
++    );
++    expect(infrastructure.metadata).toHaveBeenCalledWith(
++      infrastructure.database,
++      { organizationId: 'org-a', establishmentId: 'est-a' },
++    );
++    expect(infrastructure.membership).toHaveBeenCalledWith(
++      expect.objectContaining({
++        userId: 'user-a',
++        organizationId: 'org-a',
++        establishmentId: 'est-a',
++      }),
++    );
++    infrastructure.membership.mockResolvedValue(membership({ role: 'STAFF' }));
++    await expect(
++      requireFormalitesTenant(operation, hint),
++    ).rejects.toMatchObject({ statusCode: 403 });
++  });
++});
++
++describe('composition independence and recovery', () => {
++  it('forwards each operation without reusing another operation result', async () => {
++    vi.mocked(permissions.requireFormalitesPermission).mockImplementation(
++      (_context, operation) => {
++        if (operation === 'formalites.manage')
++          throw new TenantError(
++            'Permission denied.',
++            'CROSS_TENANT_ACCESS_DENIED',
++            403,
++          );
++      },
++    );
++    await expect(
++      requireFormalitesTenant('formalites.read'),
++    ).resolves.toHaveProperty('tenant');
++    await expect(
++      requireFormalitesTenant('formalites.manage'),
++    ).rejects.toMatchObject({ statusCode: 403 });
++    expect(permissions.requireFormalitesPermission).toHaveBeenNthCalledWith(
++      1,
++      expect.anything(),
++      'formalites.read',
++    );
++    expect(permissions.requireFormalitesPermission).toHaveBeenNthCalledWith(
++      2,
++      expect.anything(),
++      'formalites.manage',
++    );
++  });
++
++  it('does not inherit Personnel allow or call Personnel authorization', async () => {
++    const hasPersonnel = vi
++      .spyOn(permissions, 'hasPersonnelPermission')
++      .mockReturnValue(true);
++    const requirePersonnel = vi
++      .spyOn(permissions, 'requirePersonnelPermission')
++      .mockImplementation(() => undefined);
++    infrastructure.membership.mockResolvedValue(membership({ role: 'STAFF' }));
++    for (const operation of operations)
++      await expect(requireFormalitesTenant(operation)).rejects.toMatchObject({
++        statusCode: 403,
++      });
++    expect(hasPersonnel).not.toHaveBeenCalled();
++    expect(requirePersonnel).not.toHaveBeenCalled();
++  });
++
++  it('preserves safeReturnTo sanitization', async () => {
++    infrastructure.findSession.mockResolvedValue(null);
++    await expect(
++      requireFormalitesTenant('formalites.read', '//evil.example'),
++    ).rejects.toThrow('REDIRECT:/connexion?returnTo=%2Faujourdhui');
++  });
++
++  it('propagates infrastructure failure instead of returning authorized context', async () => {
++    const failure = new Error('synthetic repository failure');
++    infrastructure.membership.mockRejectedValue(failure);
++    await expect(requireFormalitesTenant('formalites.read')).rejects.toBe(
++      failure,
++    );
++    expect(permissions.requireFormalitesPermission).not.toHaveBeenCalled();
++  });
++});
+diff --git a/apps/backoffice/test/formalites-permissions.test.ts b/apps/backoffice/test/formalites-permissions.test.ts
+new file mode 100644
+index 0000000..245f3a5
+--- /dev/null
++++ b/apps/backoffice/test/formalites-permissions.test.ts
+@@ -0,0 +1,140 @@
++import { readFileSync } from 'node:fs';
++import { TenantError, type TenantContext, type TenantRole } from '@yuta/tenant';
++import { describe, expect, expectTypeOf, it, vi } from 'vitest';
++
++vi.mock('server-only', () => ({}));
++
++import {
++  hasFormalitesPermission,
++  requireFormalitesPermission,
++  type FormalitesPermission,
++} from '../src/server/auth/permissions';
++
++const operations = ['formalites.read', 'formalites.manage'] as const;
++
++function context(role: TenantRole = 'OWNER'): TenantContext {
++  return {
++    organizationId: 'synthetic-organization',
++    establishmentId: 'synthetic-establishment',
++    actor: { type: 'user', userId: 'user', membershipId: 'membership', role },
++    locale: 'fr-FR',
++    timezone: 'Europe/Paris',
++    entitlements: new Set(),
++  };
++}
++
++function expectDenial(
++  tenant: TenantContext,
++  operation: FormalitesPermission,
++  missingScope = false,
++) {
++  expect(hasFormalitesPermission(tenant, operation)).toBe(false);
++  let caught: unknown;
++  try {
++    requireFormalitesPermission(tenant, operation);
++  } catch (error: unknown) {
++    caught = error;
++  }
++  expect(caught).toBeInstanceOf(TenantError);
++  expect(caught).toMatchObject({
++    code: missingScope
++      ? 'ESTABLISHMENT_REQUIRED'
++      : 'CROSS_TENANT_ACCESS_DENIED',
++    statusCode: missingScope ? 400 : 403,
++    message: missingScope
++      ? 'An establishment is required.'
++      : 'Permission denied.',
++  });
++}
++
++describe.each(operations)('%s', (operation) => {
++  it('allows OWNER independently', () => {
++    expect(hasFormalitesPermission(context(), operation)).toBe(true);
++    expect(() =>
++      requireFormalitesPermission(context(), operation),
++    ).not.toThrow();
++  });
++
++  it.each(['MANAGER', 'STAFF'] as const)(
++    'denies %s with exact error',
++    (role) => {
++      expectDenial(context(role), operation);
++    },
++  );
++
++  it.each([
++    { type: 'public' as const },
++    { type: 'service' as const, serviceName: 'synthetic-service' },
++  ])('denies $type with exact error', (actor) => {
++    expectDenial({ ...context(), actor }, operation);
++  });
++
++  it.each(['YUTA_ADMIN', 'YUTA_SUPPORT'])(
++    'does not elevate %s',
++    (systemRole) => {
++      for (const role of ['MANAGER', 'STAFF'] as const) {
++        const tenant = context(role);
++        const tenantWithSystemRole = {
++          ...tenant,
++          actor: { ...tenant.actor, systemRole },
++        };
++        expectDenial(tenantWithSystemRole, operation);
++      }
++    },
++  );
++
++  it.each([null, ''])(
++    'returns false/400 for missing establishment %s',
++    (establishmentId) => {
++      expectDenial({ ...context(), establishmentId }, operation, true);
++    },
++  );
++});
++
++describe('Formalites operation and Personnel isolation', () => {
++  it('has exactly two typed operations', () => {
++    expectTypeOf<FormalitesPermission>().toEqualTypeOf<
++      (typeof operations)[number]
++    >();
++  });
++
++  it.each([
++    'unknown',
++    'personnel.employee.manage',
++    'toString',
++    '__proto__',
++    'constructor',
++  ])('fails closed for runtime operation %s', (operation) => {
++    expectDenial(context(), operation as FormalitesPermission);
++  });
++
++  it('keeps independent literal grants and no Personnel delegation in Formalites blocks', () => {
++    const source = readFileSync(
++      new URL('../src/server/auth/permissions.ts', import.meta.url),
++      'utf8',
++    );
++    const additions = source.slice(
++      source.indexOf('export type FormalitesPermission'),
++      source.indexOf('export type ReputationPermission'),
++    );
++    expect(additions).toContain("'formalites.read': ['OWNER']");
++    expect(additions).toContain("'formalites.manage': ['OWNER']");
++    expect(additions).toContain('formalitesPermissionRoles[permission]');
++    expect(additions).not.toMatch(
++      /Personnel|personnel\.|restaurantKnowledge|RestaurantKnowledge/,
++    );
++    const helper = readFileSync(
++      new URL('../src/server/auth/formalites.ts', import.meta.url),
++      'utf8',
++    );
++    expect(helper).toContain("import 'server-only'");
++    expect(helper).not.toMatch(
++      /requirePersonnel|hasPersonnel|personnel\.employee|['"]use server['"]|@yuta\/db|fetch\(/,
++    );
++    expect(helper.match(/from ['"]([^'"]+)['"]/g)).toEqual([
++      "from '@yuta/tenant'",
++      "from './permissions'",
++      "from './session'",
++    ]);
++  });
++});

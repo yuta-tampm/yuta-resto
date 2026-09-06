@@ -169,8 +169,9 @@ bypass the matrix.
 - An OpenSpec main spec is normative only when its exact delta passed the
   accountable approval gate, sync was explicitly authorized and completed
   successfully, and the resulting main specs passed validation and diff review.
-- The current `openspec/specs/` tree is empty, so no normative main-spec content
-  exists yet.
+- The current `openspec/specs/` tree contains successfully gated, synced, and
+  validated normative main specs; each remains bounded to its accepted durable
+  product, architecture, security, runtime, and data-ownership boundaries.
 - `openspec/changes/` always represents proposed or in-progress work and is
   non-normative, including after apply or verify.
 

@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-05
+Last updated: 2026-09-04
 
 1. Read root and nearest nested `AGENTS.md`.
 2. Read `docs/README.md`, `docs/CURRENT_STATE.md`, and relevant current docs.
@@ -24,8 +24,54 @@ pnpm dev:env:sync
 pnpm docs:check
 pnpm format:check
 pnpm architecture:check
-pnpm -r --if-present typecheck
+pnpm typegen:next && pnpm -r --if-present typecheck
 ```
+
+### Next generated-type prerequisite
+
+`pnpm typegen:next` is the root bootstrap command for exactly
+`apps/backoffice`, `apps/web`, `apps/booking-web`, `apps/feedback-web`,
+`apps/yuta-pos`, and `apps/yuta-display`. It invokes their installed
+Next 16.2.9 public CLI sequentially through `scripts/generate-next-types.mjs`,
+using strict unhandled-rejection handling and installed TypeScript to validate
+fresh output. Missing/mismatched packages, process failure, or invalid output
+stop the bootstrap. CI runs this same prerequisite in its
+typecheck job before recursive TypeScript; a separate build job is not a
+substitute.
+
+Run generation after a clean checkout/install, route/config changes, or
+removal of `.next` output. No database bootstrap or environment-file copying
+is required for generation. Dependencies can be installed reproducibly with
+`pnpm install --frozen-lockfile` before running the command.
+
+The root `typecheck` alias remains Web-only; app `typecheck` scripts remain
+`tsc --noEmit` without implicit pretypecheck/postinstall generation. Before a
+direct `pnpm --filter <package> typecheck`, run `pnpm typegen:next`, even for
+one app. Raw `next typegen` is only a low-level diagnostic, not an equivalent
+fail-closed prerequisite.
+Only proceed if generation succeeds. Older PowerShell users without `&&`
+must check `$LASTEXITCODE -eq 0` before running the next command.
+
+Next owns `next-env.d.ts` and `.next` declarations; do not hand-edit them or
+commit regeneration-only changes. The six next-env files are untracked with
+exact root-anchored ignore rules. Missing generated types are not a
+reason to loosen TypeScript settings or copy another app's declarations.
+
+Bootstrap requires an exclusive checkout: stop your own Next dev/build/typegen
+processes first. An atomic `.tmp-next-typegen.lock` rejects overlapping bootstrap
+runs; existing `.next/lock` and `.next/dev/lock` also cause rejection. Do not
+remove another run's lock or kill unrelated processes. This lock does not
+control arbitrary external Next invocations.
+
+Before each app, bootstrap checks bounded non-linked/untracked paths and
+invalidates only `next-env.d.ts`, `.next/types/routes.d.ts`,
+`.next/types/validator.ts`, and `.next/types/cache-life.d.ts`. All four must be
+freshly generated, parseable and structurally valid. No complete `.next` removal
+or source editing is performed. A failed run may leave partial ignored output;
+after resolving the cause, rerun `pnpm typegen:next` from the beginning, then
+typecheck only on success. The 120-second per-child timeout terminates and waits
+for the owned generator before releasing its lock. Changed Next versions or
+output layouts require review rather than silently skipping validation.
 
 Run only the relevant package tests and application builds in addition to the
 baseline. Database integration tests require their documented disposable

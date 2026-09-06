@@ -19,12 +19,15 @@ import {
   personnelContractAmendmentCommandReceipts,
   personnelContractAmendments,
   personnelContractAmendmentVersions,
-  personnelEmployeeDossiers,
-  personnelEmployeeAuditEvents,
   personnelCommandReceipts,
   personnelDocumentCommandReceipts,
   personnelDocumentVersions,
   personnelDocuments,
+  personnelEmployeeAuditEvents,
+  personnelEmployeeDossiers,
+  personnelEmployeeHistoryEvents,
+  personnelEmployeeHistoryGroupChanges,
+  personnelHistoryCutovers,
   reputationAuditEvents,
   reputationConnectors,
   reputationSettings,
@@ -60,6 +63,9 @@ const tablesWithBusinessIds: PgTable[] = [
   personnelEmployeeDossiers,
   personnelEmployeeAuditEvents,
   personnelCommandReceipts,
+  personnelEmployeeHistoryEvents,
+  personnelEmployeeHistoryGroupChanges,
+  personnelHistoryCutovers,
   personnelDocuments,
   personnelDocumentVersions,
   personnelDocumentCommandReceipts,
@@ -101,6 +107,80 @@ describe('cloud schema boundaries', () => {
     expect(columns).not.toContain('tenant_id');
     expect(columns).not.toContain('status');
     expect(columns).not.toContain('display_name');
+  });
+
+  it('keeps reconstructable personnel history scoped and constrained', () => {
+    const eventConfig = getTableConfig(personnelEmployeeHistoryEvents);
+    const groupConfig = getTableConfig(personnelEmployeeHistoryGroupChanges);
+    const cutoverConfig = getTableConfig(personnelHistoryCutovers);
+
+    for (const config of [eventConfig, groupConfig]) {
+      expect(config.columns.map((column) => column.name)).toEqual(
+        expect.arrayContaining([
+          'organization_id',
+          'establishment_id',
+          'employee_id',
+        ]),
+      );
+      expect(config.columns.map((column) => column.name)).not.toContain(
+        'tenant_id',
+      );
+    }
+    expect(groupConfig.columns.map((column) => column.name)).toEqual(
+      expect.arrayContaining([
+        'event_id',
+        'event_kind',
+        'semantic_group',
+        'previous_values',
+        'new_values',
+      ]),
+    );
+    expect(
+      eventConfig.indexes.find(
+        (index) =>
+          index.config.name ===
+          'personnel_employee_history_events_one_cutover_idx',
+      )?.config,
+    ).toMatchObject({ unique: true });
+    expect(eventConfig.checks.map((constraint) => constraint.name)).toEqual(
+      expect.arrayContaining([
+        'personnel_employee_history_events_payload_version_check',
+        'personnel_employee_history_events_kind_metadata_check',
+      ]),
+    );
+    expect(groupConfig.checks.map((constraint) => constraint.name)).toContain(
+      'personnel_employee_history_groups_kind_metadata_check',
+    );
+    expect(
+      groupConfig.foreignKeys
+        .find(
+          (foreignKey) =>
+            foreignKey.getName() ===
+            'personnel_employee_history_groups_event_scope_fk',
+        )
+        ?.reference()
+        .columns.map((column) => column.name),
+    ).toEqual([
+      'organization_id',
+      'establishment_id',
+      'employee_id',
+      'event_kind',
+      'event_id',
+    ]);
+    expect(cutoverConfig.columns.map((column) => column.name)).toEqual([
+      'id',
+      'organization_id',
+      'establishment_id',
+      'cutover_version',
+      'cutover_at',
+      'completed_at',
+    ]);
+    expect(cutoverConfig.checks.map((constraint) => constraint.name)).toEqual(
+      expect.arrayContaining([
+        'personnel_history_cutovers_version_check',
+        'personnel_history_cutovers_timestamps_check',
+      ]),
+    );
   });
 
   it('keeps general profile ownership on establishments', () => {

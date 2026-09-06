@@ -1,6 +1,7 @@
 # Backoffice Équipe Formalités du personnel
 
-Status: Phase 5 internal decision matrix drafted; Phase 4 remains current runtime
+Status: Persistent draft foundation implemented — development local-only;
+production deferred
 
 Visibility: Engineering
 
@@ -42,20 +43,22 @@ No-image reference reason: `The 2026-08-22 approvals authorize a bounded fiction
 
 ## Current implementation
 
-The former `PlannedBackofficePage` placeholder is replaced by an OWNER-only
-server page containing a route-local interactive client prototype. It renders
-one typed fictional CDI-readiness fixture, three local steps, three illustrative
-inputs, demo-only readiness, an in-memory checkpoint, review acknowledgement,
-and reset. It performs no employee repository read, receives no employee
-identifier, persists nothing, and keeps document generation disabled.
+The generic `/equipe/formalites-personnel` fictional prototype remains unchanged.
+The development-gated employee route
+`/equipe/formalites-personnel/[employeeId]` now provides the bounded persistent
+draft foundation. An authorized OWNER can explicitly create, save, reopen,
+reconcile, and abandon one active CDI preparation draft for an employee in the
+trusted organization and active establishment.
 
-The approved Phase 3 development slice adds a gated full-dossier action and
-`/equipe/formalites-personnel/[employeeId]`. That server route repeats UUID,
-session, active-establishment, OWNER permission, and composite employee
-ownership checks, then maps only six allowlisted Salariés facts into a read-only
-presentation. It has no inputs, readiness simulation, mutation, persistence, or
-generation. The gate requires explicit development opt-in and always fails
-closed in production.
+The connected route uses current Personnel as the authoritative source for
+exactly seven facts: given names, family name, position, qualification, contract
+type, entry date, and contractual weekly minutes. It stores a Formalités-owned
+draft snapshot and the last acknowledged Personnel snapshot, never writes back
+to Personnel, and collects only the three-state probation preparation choice.
+It provides no contract generation, PDF, signature, provider, address,
+remuneration, legal recommendation, or production behavior. The existing gate
+still requires explicit development opt-in and always fails closed in
+production.
 
 ## Authority
 
@@ -90,23 +93,26 @@ invent a formality center, document library, provider selector, or legal status.
 
 - Authentication, active establishment, and OWNER personnel-read permission are
   resolved on the server.
-- All content inside the prototype is fictional and visibly labelled.
-- The generic Phase 2 demo reads no dossier. The gated Phase 3 route reads one
-  employee only through trusted server scope and an allowlisted projection.
+- The generic Phase 2 demo remains fictional and reads no dossier. The connected
+  route reads one employee only through trusted server scope and a seven-fact
+  projection.
 - No contract file, API, provider, or browser-supplied tenant scope is read.
-- No save, generation, signature, sending, audit, or production behavior exists.
-- Persisting contract-specific values or treating the three demonstration fields
-  as a real CDI model remains deferred.
+- Persistent draft actions require independent Formalités authorization and
+  Personnel source-read authorization; MANAGER and STAFF receive no new grant.
+- Draft mutations do not update Personnel, Personnel history, Personnel command
+  receipts, or the personnel register.
+- No generation, signature, sending, cleanup timer, hard delete, or production
+  behavior exists.
 
 ## Change impact
 
 ```text
-Files expected to modify: Formalités route, Backoffice navigation permission filter, current docs
-Files expected to create: route-local prototype component/model, tests, canonical page pack
-Packages affected: apps/backoffice, docs
+Files modified: connected Formalités route/components/actions, current docs
+Files created: bounded contracts/domain, cloud schema/repository/migration, tests
+Packages affected: apps/backoffice, packages/contracts, packages/db-cloud, docs
 Cross-application impact: NO
-Database change: NO
-API or contract change: NO
+Database change: YES — additive development schema/migration only
+API or contract change: YES — typed internal server-action contracts
 Permission/auth change: NO
 Runtime/device change: NO
 ```
@@ -146,13 +152,11 @@ or issue a contract automatically.
 
 ## Stop conditions
 
-Stop before using an employee identifier or real dossier fact, persisting an
-input or result, creating a PDF, adding schema/API/contracts, calling a provider,
-or claiming legal validity. F5-07 defines the intended lifecycle but does not
-authorize its implementation. F5-08 defines the legal/operational product
-boundary but closes no external production gate. Those steps still require
-explicit implementation approval and the applicable legal/DPO/privacy/security/
-operations evidence in `docs/operations/PRODUCTION_READINESS.md`.
+Stop before creating a PDF, choosing or calling a provider, adding address or
+remuneration, making a legal recommendation, expanding grants, enabling the
+route or migration in production, or adding automatic retention cleanup. The
+bounded persistent foundation does not close any legal, template, storage,
+signature, provider, privacy, operations, or production-readiness gate.
 
 ## Phase 2 as built
 
