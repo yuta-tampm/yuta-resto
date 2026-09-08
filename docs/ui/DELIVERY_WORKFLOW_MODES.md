@@ -132,6 +132,13 @@ presence of a visual mockup.
 | Some domain exists but the target flow is new | Start with New Capability Discovery and Delivery, then reuse the proven domain in vertical slices |
 | Status is ambiguous                           | Keep classification `UNKNOWN` and complete read-only repository analysis before selecting a mode  |
 
+## Advisory usage within either mode
+
+Record UI/UX Pro Max applicability and evidence through
+[External Design Intelligence](EXTERNAL_DESIGN_INTELLIGENCE.md) in the existing
+analysis/plan and VERIFY records. Neither mode, phase order, fixture boundary
+nor Browser QA requirement changes; sealed page-pack provenance stays untouched.
+
 ## Shared non-negotiable gates
 
 Both modes require:

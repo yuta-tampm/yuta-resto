@@ -29,3 +29,7 @@ apps/yuta-pos/.tmp/*.log
 /tmp/
 /exports/*
 !/exports/README.md
+
+# Reviewed local external design tooling; never vendored.
+/.agents/skills/ui-ux-pro-max/
+/.yuta-tooling/ui-ux-pro-max/

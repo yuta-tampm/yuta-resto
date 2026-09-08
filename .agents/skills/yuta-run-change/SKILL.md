@@ -123,6 +123,14 @@ Do not invent an approver name, role, or universal authority.
 
 Review packets are evidence, not Product Knowledge or normative specs. Write them as self-contained engineering review documents. Include exact artifact content where required, not paraphrase alone.
 
+## External design intelligence routing
+
+For applicability classification and existing TECHNICAL VERIFY evidence, read
+`docs/ui/EXTERNAL_DESIGN_INTELLIGENCE.md`. Carry the reviewed usage record forward
+without rewriting approved Analysis; no new state/gate or implicit installation
+permission. REQUIRED tool failure blocks dependent review conclusions; heuristics
+never replace Technical Implementation Compliance, VERIFY or QA.
+
 ## State machine
 
 ### State 0 — Discover

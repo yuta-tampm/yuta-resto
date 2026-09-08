@@ -87,6 +87,10 @@ Display Product Knowledge starts at `products/display/README.md`; runtime-local
 instructions remain in `apps/yuta-display/AGENTS.md`, with deployment authority
 in the shared operations documents.
 
+### External design intelligence
+
+- [`ui/EXTERNAL_DESIGN_INTELLIGENCE.md`](ui/EXTERNAL_DESIGN_INTELLIGENCE.md)
+
 ### UI implementation
 
 - [`ui/README.md`](ui/README.md)

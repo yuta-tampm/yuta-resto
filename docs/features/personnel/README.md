@@ -66,9 +66,10 @@ generic fictional prototype and existing grant mapping remain unchanged.
   storage, signature, signed-artifact handoff, final retention policy, and
   production operation remain proposed or separately gated. The bounded
   persistent-draft foundation does not implement those stages.
-- Planning, Pointage, and Tâches du jour are planned surfaces with unresolved
-  Product Decision status. Their placeholders do not establish an implemented
-  capability or data owner.
+- Planning, the usable Pointage clocking workflow, and Tâches du jour remain
+  planned surfaces with unresolved Product Decision status. Pointage now has a
+  separately approved and implemented server-only authority/access foundation;
+  that foundation does not make the placeholder a usable workflow.
 - Any broader employee category, document category, pre-cutover history
   reconstruction, production file provider, OCR/AI provider, or production
   operation remains separately approval-gated.
@@ -84,7 +85,8 @@ generic fictional prototype and existing grant mapping remain unchanged.
 | Formalités persistent draft foundation | OWNER-only, development-only CDI preparation draft with explicit save/reopen/reconciliation/abandonment, exactly seven Personnel source facts, and no Personnel write-back or generated artifact. |
 | Future Formalités generation/signature | Proposed generated-version, legal-template, file-storage, signature, Documents-handoff, final-retention, and production stages; not implemented by the persistent foundation.                     |
 | Planning                               | Planned related surface; no implemented Personnel integration.                                                                                                                                    |
-| Pointage                               | Planned related surface; no implemented Personnel or Today integration.                                                                                                                           |
+| Pointage authority/access foundation   | Implemented cloud server foundation reads the scoped Personnel dossier and employment period without transferring ownership or writing Personnel state; no Today integration.                     |
+| Future usable Pointage workflow        | Planned related surface; no browser transport, raw attendance evidence, clock-in/out UI, correction flow or downstream integration is implemented.                                                |
 | Tâches du jour                         | Planned related surface; no implemented Personnel or Today integration.                                                                                                                           |
 
 ## 5. Lifecycle summary
@@ -104,7 +106,8 @@ status remains unresolved until a dedicated registry assignment is approved.
 | Formalités persistent draft foundation | `APPROVED`       | `IMPLEMENTED`  | `DEVELOPMENT_ONLY` | `BLOCKED`            | `BLOCKED` — legal/template/privacy/retention/operations gates                                 | `OK` for bounded local repository scope; production remains deferred      |
 | Future Formalités generation/signature | `PROPOSED`       | `NOT_STARTED`  | `NOT_ENABLED`      | `BLOCKED`            | `BLOCKED` — legal/template/privacy/storage/signature gates                                    | `OK` — separate from the persistent draft foundation                      |
 | Planning                               | `—`              | `NOT_STARTED`  | `NOT_ENABLED`      | `NOT_ASSESSED`       | `NOT_ASSESSED`                                                                                | `NEEDS REVIEW` — planned wording does not resolve Product Decision status |
-| Pointage                               | `—`              | `NOT_STARTED`  | `NOT_ENABLED`      | `NOT_ASSESSED`       | `NOT_ASSESSED`                                                                                | `NEEDS REVIEW` — planned wording does not resolve Product Decision status |
+| Pointage authority/access foundation   | `APPROVED`       | `IMPLEMENTED`  | `NOT_ENABLED`      | `BLOCKED`            | `BLOCKED` — trusted production client-address provenance and legal/privacy gates              | `OK` — bounded foundation only; no usable clocking or readiness promotion |
+| Future usable Pointage workflow        | `—`              | `NOT_STARTED`  | `NOT_ENABLED`      | `NOT_ASSESSED`       | `NOT_ASSESSED`                                                                                | `NEEDS REVIEW` — foundation approval does not approve the workflow        |
 | Tâches du jour                         | `—`              | `NOT_STARTED`  | `NOT_ENABLED`      | `NOT_ASSESSED`       | `NOT_ASSESSED`                                                                                | `NEEDS REVIEW` — planned wording does not resolve Product Decision status |
 
 ## 6. Business boundaries
@@ -122,12 +125,72 @@ status remains unresolved until a dedicated registry assignment is approved.
 - Registre du personnel depends on reviewed Personnel candidate facts but owns
   its register-specific inscription, sequence, correction history, audit, and
   transient representation.
-- Planning, Pointage, and Tâches du jour may relate to Personnel, but their
-  placeholders neither duplicate Personnel identity nor establish an
-  integration. Any future integration must preserve the approved Personnel
-  source rather than silently creating a second employee identity source.
+- The Pointage authority/access foundation reads only trusted scoped Personnel
+  dossier and employment-period data. Personnel remains the canonical employee
+  and lifecycle source; Pointage credentials and contexts do not create a
+  second employee identity. Planning, the usable Pointage workflow and Tâches du
+  jour remain separately reviewable, and no Today integration is implemented.
 - Repository implementation, local QA, and development enablement do not close
   legal, privacy, security, provider, operational, or production gates.
+
+### GLOBAL YUTA Formalités legal-template foundation
+
+A separate [legal-template persistence foundation](../../../openspec/specs/formalites/legal-template-foundation/spec.md)
+is implemented in `packages/db-cloud` for GLOBAL YUTA Formalités resources.
+It owns stable template identities, at most one active mutable working draft
+per identity, and immutable frozen template versions. A frozen template
+version is a review candidate, not a generated employee contract or a
+reviewed, published or qualified template. These resources have no tenant
+owner; administration uses the existing exact system-operation authority,
+not restaurant membership.
+
+This foundation does not add a Platform Admin application, actual CDI/CDD
+content, legal-review evidence storage, publication/qualification/retirement,
+generation, signature or Documents handoff. Existing lifecycle/readiness
+values and production gates remain unchanged. Future legal-template scope
+elsewhere in this Home refers to those excluded content/lifecycle stages,
+not absence of this separate persistence foundation.
+
+### GLOBAL YUTA Formalités template governance
+
+The [normative legal-review governance contract](../../../openspec/specs/formalites/template-legal-review-governance/spec.md)
+defines the documentary prerequisites for future qualification and publication
+of GLOBAL YUTA Formalités templates. Formalités remains their semantic owner;
+Platform Admin remains the future internal administration runtime/access
+boundary. These resources are not organization- or establishment-owned, and
+restaurant memberships provide no global administration authority.
+
+External/manual review requires an identifiable reviewer with evidenced
+authority and competence for the exact review scope, but no YUTA account.
+The three review outcomes are `APPROVED`, `CHANGES_REQUIRED`, and `REJECTED`.
+Qualification binds to the exact immutable version/checksum and reviewed
+applicability envelope, including conditions and effective dates; it also
+requires complete accepted review evidence, a current approved review,
+successful authorized publication and a non-retired version. Authorization
+allow or review completion alone does not establish qualification.
+
+The external reviewer must differ from the internal publisher; the recorder
+may be that publisher. An authorized `YUTA_ADMIN` may record/link received
+external evidence within the future publication action, but does not author
+or alter the legal opinion. This creates no standalone evidence CRUD, reviewer
+identity in YUTA, or sixth system operation. The existing five-operation
+authorization foundation and tenant isolation remain unchanged.
+
+Content or applicability changes require a new version and new review.
+Supersession preserves historical attribution, while retirement blocks future
+use without rewriting historical evidence or previously generated artifacts.
+Authorization audit,
+legal-review evidence and publication/retirement audit retain distinct meanings.
+Qualification is not a legal-compliance or final-contract guarantee; the
+normative contract controls the exact bounded wording. Privacy and retention
+decisions remain prerequisites before corresponding evidence processing or
+persistence; deferred retention duration is not permission to collect or store.
+
+This is a governance contract, not a template implementation, actual legal
+review, publication service, evidence store or Platform Admin application.
+Generation, PDF, signature, Documents handoff and provider integration remain
+excluded. Existing lifecycle/readiness values and production/legal/privacy
+gates are unchanged; no production enablement follows.
 
 ## 7. Data and ownership
 
@@ -153,7 +216,7 @@ or storage scope is not authority.
 | Registre du personnel | Uses reviewed employee candidates without silently registering every dossier.                                                                                              | Personnel owns current dossier facts; Register owns register records, corrections, and representation.                                                                                                       |
 | Documents             | Stores signed base-contract and amendment evidence within the employee dossier experience.                                                                                 | Personnel owns structured facts; Documents owns signed artifacts and their versions.                                                                                                                         |
 | Planning              | Relationship is recorded, but the current route is only a planned placeholder.                                                                                             | Personnel remains the employee identity source; future Planning ownership needs approval.                                                                                                                    |
-| Pointage              | Relationship to Personnel and Today is recorded, but no integration is implemented.                                                                                        | Future data direction and owner need review; no current source may be inferred from the placeholder.                                                                                                         |
+| Pointage              | The server-only foundation resolves trusted scoped dossier/employment period; no Personnel write, Today integration, browser workflow or raw evidence exists.              | Personnel owns employee dossier/lifecycle; Pointage owns its credentials/authority and future raw actual-work evidence under the normative foundation specs.                                                 |
 | Today                 | Any relationship is only a potential future relationship through capabilities such as Pointage or Tâches du jour; no direct Personnel -> Today integration is implemented. | This document does not approve such an integration. If later approved, it must consume through the appropriate owning module and source of truth rather than making Today a second employee identity source. |
 | Tâches du jour        | Relationship to Personnel and Today is recorded, but the current route is only a planned placeholder.                                                                      | Future task ownership needs review; Personnel identity must not be duplicated silently.                                                                                                                      |
 
@@ -182,8 +245,10 @@ or storage scope is not authority.
   authority, or production rollout is introduced.
 - The Register development slice is not a legal-compliance certification, and
   its transient PDF is not the canonical data source.
-- Planning, Pointage, and Tâches du jour are not implemented Personnel
-  capabilities merely because their routes or navigation entries exist.
+- Planning, the usable Pointage workflow, and Tâches du jour are not implemented
+  Personnel capabilities merely because their routes or navigation entries
+  exist. The Pointage authority/access foundation remains a separate server-only
+  prerequisite, not a usable Personnel or Pointage page.
 
 ## 10. Source map
 

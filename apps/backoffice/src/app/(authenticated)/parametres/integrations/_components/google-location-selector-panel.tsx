@@ -18,6 +18,7 @@ import {
   formatGoogleLocationAddress,
   type GoogleConnectorSummary,
 } from '../integrations-model';
+import { GoogleLocationSubmitButton } from './google-location-submit-button';
 
 export function GoogleLocationSelectorPanel({
   accounts,
@@ -141,9 +142,7 @@ function GoogleLocationCard({
         <form action={selectGoogleLocationAction}>
           <input type="hidden" name="accountName" value={selectedAccount} />
           <input type="hidden" name="locationName" value={location.name} />
-          <Button type="submit" size="sm">
-            Sélectionner
-          </Button>
+          <GoogleLocationSubmitButton />
         </form>
       )}
     </Card>

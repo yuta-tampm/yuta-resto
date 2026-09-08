@@ -291,6 +291,13 @@ VERIFY phải có:
 
 Gate 3 không ready nếu matrix không PASS.
 
+## External advisory review routing
+
+Review usage, exact artifact/NOTICE acceptance và evidence theo
+[External Design Intelligence](../ui/EXTERNAL_DESIGN_INTELLIGENCE.md).
+License acceptance không cấp Apply/procurement/install authorization. Giữ
+external reference tách khỏi YUTA authority và ba đánh giá Gate 3 độc lập.
+
 ## 10. QA Coordination
 
 ### UI-affecting cross-module change

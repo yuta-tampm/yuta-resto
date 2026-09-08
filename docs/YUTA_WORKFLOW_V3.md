@@ -402,6 +402,13 @@ Với QA `FAIL`:
   → **STOP** và quay lại authority/gate phù hợp, không tự đổi requirements để
   làm QA PASS.
 
+## External design reference routing
+
+Trong Analysis/plan và TECHNICAL VERIFY hiện có, dùng
+[External Design Intelligence](ui/EXTERNAL_DESIGN_INTELLIGENCE.md) để ghi usage,
+provenance và disposition. Không thêm phase; Gate 3 vẫn đánh giá riêng Technical
+Implementation Compliance, VERIFY và QA. Không sửa approved Analysis bytes.
+
 ## 10. Gate 3 readiness
 
 Gate 3 chỉ ready khi:

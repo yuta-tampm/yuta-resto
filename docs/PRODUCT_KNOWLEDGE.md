@@ -242,6 +242,39 @@ state. Generated versions, approved templates, private file storage, signature,
 Documents handoff, final retention policy, and production operation remain
 unimplemented or separately gated.
 
+The [Formalités template legal-review governance specification](../openspec/specs/formalites/template-legal-review-governance/spec.md)
+now defines the bounded documentary contract for external review and exact
+version/applicability qualification prerequisites. Use the Personnel Product
+Knowledge home for context. This normative contract does not implement
+templates, legal-evidence persistence, Platform Admin runtime or publication,
+and does not change lifecycle/readiness or close production/legal/privacy gates.
+
+The separate [Formalités legal-template foundation](../openspec/specs/formalites/legal-template-foundation/spec.md)
+now defines the implemented global identity/working-draft/frozen-version
+persistence boundary. Use the Personnel Home for context; it is not the
+employee-connected preparation draft, generated contract, legal-review
+evidence store or publication/qualification workflow. No Platform Admin
+runtime or production enablement follows.
+
+### Pointage authority and access foundation
+
+- Precise normative ownership and behavioral boundaries:
+  `openspec/specs/pointage/authority-foundation/spec.md`
+- Precise normative credential and authorization behavior:
+  `openspec/specs/authorization/pointage/spec.md`
+- Current implementation: portable primitives in `packages/auth`, additive
+  credential/rate-limit/security-audit persistence in `packages/db-cloud`, and
+  server-only composition in `apps/backoffice/src/server/pointage`
+- Personnel relationship: `docs/features/personnel/README.md`
+- Security architecture: `docs/architecture/AUTHENTICATION.md`
+
+Only the cloud/online authority and access foundation is approved and
+implemented. The visible Pointage route remains a placeholder. There is no
+browser transport, usable clock-in/out workflow, raw attendance evidence,
+Planning/Today/payroll integration, POS/Site Agent/offline/sync behavior or
+production enablement. Legal/privacy gates and trusted production client-address
+provenance remain blocked.
+
 ### Local POS and Site Agent
 
 - Canonical Site Agent Product Knowledge home:

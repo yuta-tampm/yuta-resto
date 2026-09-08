@@ -252,6 +252,13 @@ Nếu backend/data-only:
 - correctness phải được chứng minh trong VERIFY;
 - QA có thể `NOT_APPLICABLE` chỉ khi thật sự không có user/runtime QA dimension.
 
+## External advisory handoff and VERIFY
+
+Khi handoff/VERIFY liên quan UI/UX Pro Max, dùng
+[External Design Intelligence](../ui/EXTERNAL_DESIGN_INTELLIGENCE.md) cho usage,
+source/provenance và disposition trong evidence hiện có. Không tự cài hoặc
+rewrite/reseal page-pack prompts; Browser QA và ba lớp Gate 3 giữ nguyên.
+
 ## 6. Technical Implementation Awareness
 
 Tasks chỉ chọn phase thực sự cần:

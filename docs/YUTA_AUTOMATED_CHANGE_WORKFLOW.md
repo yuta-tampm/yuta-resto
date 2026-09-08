@@ -241,6 +241,13 @@ Specs/Design with no unresolved critical issue. VERIFY never claims browser
 UX, visual/responsive correctness, deployment, environment enablement, or
 Production Readiness.
 
+## External advisory evidence routing
+
+Apply [External Design Intelligence](ui/EXTERNAL_DESIGN_INTELLIGENCE.md) to the
+existing Analysis/Tasks usage record and TECHNICAL VERIFY evidence block.
+Keep classification errors, required-tool blockers, exact provenance and finding
+dispositions explicit; do not change phase/gate order or approved artifact bytes.
+
 ## QA
 
 QA is independent of VERIFY and follows

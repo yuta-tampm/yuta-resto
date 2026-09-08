@@ -1,0 +1,460 @@
+diff --git a/packages/db-cloud/drizzle/0021_abandoned_black_queen.sql b/packages/db-cloud/drizzle/0021_abandoned_black_queen.sql
+--- a/packages/db-cloud/drizzle/0021_abandoned_black_queen.sql
++++ b/packages/db-cloud/drizzle/0021_abandoned_black_queen.sql
+@@ -244,34 +244,49 @@
+     WHERE organization_id = NEW.organization_id AND establishment_id = NEW.establishment_id
+       AND personnel_dossier_id = NEW.personnel_dossier_id ORDER BY ordinal
+   LOOP
+-    IF prior.ordinal <> next_ordinal OR prior.kind <> next_kind
+-      OR (previous_instant IS NOT NULL AND prior.accepted_at < previous_instant)
+-      OR NOT EXISTS (SELECT 1 FROM public.pointage_raw_command_receipts r
+-        WHERE r.organization_id = NEW.organization_id AND r.establishment_id = NEW.establishment_id
+-          AND r.personnel_dossier_id = NEW.personnel_dossier_id AND r.event_id = prior.id) THEN
+-      RAISE EXCEPTION USING ERRCODE = '23514', MESSAGE = 'POINTAGE_CHAIN_UNAVAILABLE';
+-    END IF;
+-    next_ordinal := next_ordinal + 1;
+-    next_kind := CASE next_kind WHEN 'CLOCK_IN' THEN 'CLOCK_OUT' ELSE 'CLOCK_IN' END;
+-    previous_instant := prior.accepted_at;
+-  END LOOP;
+-  IF NEW.kind IS DISTINCT FROM next_kind THEN
+-    RAISE EXCEPTION USING ERRCODE = '23514', MESSAGE = 'POINTAGE_TRANSITION_CONFLICT';
+-  END IF;
+-  observed_at := pg_catalog.clock_timestamp();
+-  local_day := (observed_at AT TIME ZONE current_zone)::pg_catalog.date;
+-  IF entry_on IS NULL OR local_day < entry_on OR (departure_on IS NOT NULL
+-    AND (departure_on < entry_on OR local_day > departure_on)) THEN
+-    RAISE EXCEPTION USING ERRCODE = '23514', MESSAGE = 'POINTAGE_LIFECYCLE_UNAVAILABLE';
+-  END IF;
+-  IF previous_instant IS NOT NULL AND observed_at < previous_instant THEN
+-    RAISE EXCEPTION USING ERRCODE = '23514', MESSAGE = 'POINTAGE_CLOCK_UNAVAILABLE';
+-  END IF;
+-  NEW.ordinal := next_ordinal;
+-  NEW.accepted_at := observed_at;
+-  NEW.timezone_name := current_zone;
+-  NEW.utc_offset_seconds := EXTRACT(EPOCH FROM
+-    (observed_at AT TIME ZONE current_zone) - (observed_at AT TIME ZONE 'UTC'))::pg_catalog.int4;
++    -- Historical calendar uses the retained offset, never today's zone/tzdb.
++    -- The approved inclusive seconds domain has no divisibility requirement.
++    IF NOT pg_catalog.isfinite(prior.accepted_at)
++      OR NOT pg_catalog.isfinite(prior.business_date)
++      OR prior.utc_offset_seconds NOT BETWEEN -50400 AND 50400
++      OR NOT EXISTS (SELECT 1 FROM pg_catalog.pg_timezone_names WHERE name = prior.timezone_name) THEN
++      RAISE EXCEPTION USING ERRCODE = '23514', MESSAGE = 'POINTAGE_CHAIN_UNAVAILABLE';
++    END IF;
++    IF prior.business_date IS DISTINCT FROM
++      ((prior.accepted_at AT TIME ZONE 'UTC') + pg_catalog.make_interval(secs => prior.utc_offset_seconds))::pg_catalog.date THEN
++      RAISE EXCEPTION USING ERRCODE = '23514', MESSAGE = 'POINTAGE_CHAIN_UNAVAILABLE';
++    END IF;
++    IF prior.ordinal <> next_ordinal OR prior.kind <> next_kind
++      OR (previous_instant IS NOT NULL AND prior.accepted_at < previous_instant)
++      OR NOT EXISTS (SELECT 1 FROM public.pointage_raw_command_receipts r
++        WHERE r.organization_id = NEW.organization_id AND r.establishment_id = NEW.establishment_id
++          AND r.personnel_dossier_id = NEW.personnel_dossier_id AND r.event_id = prior.id) THEN
++      RAISE EXCEPTION USING ERRCODE = '23514', MESSAGE = 'POINTAGE_CHAIN_UNAVAILABLE';
++    END IF;
++    next_ordinal := next_ordinal + 1;
++    next_kind := CASE next_kind WHEN 'CLOCK_IN' THEN 'CLOCK_OUT' ELSE 'CLOCK_IN' END;
++    previous_instant := prior.accepted_at;
++  END LOOP;
++  IF NEW.kind IS DISTINCT FROM next_kind THEN
++    RAISE EXCEPTION USING ERRCODE = '23514', MESSAGE = 'POINTAGE_TRANSITION_CONFLICT';
++  END IF;
++  observed_at := pg_catalog.clock_timestamp();
++  local_day := (observed_at AT TIME ZONE current_zone)::pg_catalog.date;
++  IF entry_on IS NULL OR local_day < entry_on OR (departure_on IS NOT NULL
++    AND (departure_on < entry_on OR local_day > departure_on)) THEN
++    RAISE EXCEPTION USING ERRCODE = '23514', MESSAGE = 'POINTAGE_LIFECYCLE_UNAVAILABLE';
++  END IF;
++  IF previous_instant IS NOT NULL AND observed_at < previous_instant THEN
++    RAISE EXCEPTION USING ERRCODE = '23514', MESSAGE = 'POINTAGE_CLOCK_UNAVAILABLE';
++  END IF;
++  NEW.ordinal := next_ordinal;
++  NEW.accepted_at := observed_at;
++  NEW.timezone_name := current_zone;
++  NEW.utc_offset_seconds := EXTRACT(EPOCH FROM
++    (observed_at AT TIME ZONE current_zone) - (observed_at AT TIME ZONE 'UTC'))::pg_catalog.int4;
++  IF NEW.utc_offset_seconds NOT BETWEEN -50400 AND 50400 THEN
++    RAISE EXCEPTION USING ERRCODE = '23514', MESSAGE = 'POINTAGE_CALENDAR_UNAVAILABLE';
++  END IF;
+   NEW.business_date := local_day;
+   RETURN NEW;
+ END
+diff --git a/packages/db-cloud/test/pointage-raw-clocking.integration.test.ts b/packages/db-cloud/test/pointage-raw-clocking.integration.test.ts
+--- a/packages/db-cloud/test/pointage-raw-clocking.integration.test.ts
++++ b/packages/db-cloud/test/pointage-raw-clocking.integration.test.ts
+@@ -576,36 +576,344 @@
+     await assertPointageRawDatabaseBoundary(drizzle(writer));
+   });
+ 
+-  it('F4: rejects append when a privileged synthetic corruption fixture has invalid historical calendar context', async () => {
+-    const corruptDossier = uuidv7();
+-    const corruptEvent = uuidv7();
+-    // Deliberate corrupt evidence fixture, not an accepted clocking operation.
+-    // Restore the original trigger inside this same fixture transaction; no
+-    // writer runs with enforcement disabled and no existing event is mutated.
+-    await admin.begin(async (tx) => {
+-      await tx`insert into public.personnel_employee_dossiers(id,organization_id,establishment_id,given_names,family_name,position,qualification,employment_term_type,work_time_category,entry_date) values(${corruptDossier},${organization},${establishment},'Synthetic','Corrupt-calendar fixture','Test','Test','indefinite','full_time','2020-01-01')`;
+-      await tx`alter table public.pointage_raw_events disable trigger pointage_raw_events_append`;
+-      await tx`insert into public.pointage_raw_events(id,organization_id,establishment_id,personnel_dossier_id,ordinal,kind,accepted_at,timezone_name,utc_offset_seconds,business_date) values(${corruptEvent},${organization},${establishment},${corruptDossier},1,'CLOCK_IN',clock_timestamp()-interval '1 minute','Not/AZone',0,'1900-01-01')`;
+-      await tx`insert into public.pointage_raw_command_receipts(organization_id,establishment_id,personnel_dossier_id,request_id,event_id,intent_version,intent_fingerprint) values(${organization},${establishment},${corruptDossier},${randomUUID()},${corruptEvent},1,${'b'.repeat(64)})`;
+-      await tx`set constraints all immediate`;
+-      await tx`alter table public.pointage_raw_events enable trigger pointage_raw_events_append`;
+-    });
+-    expect(
+-      await admin`select tgenabled from pg_trigger where tgrelid='public.pointage_raw_events'::regclass and tgname='pointage_raw_events_append'`,
+-    ).toEqual([{ tgenabled: 'O' }]);
+-    await assertPointageRawDatabaseBoundary(drizzle(writer));
+-    await expect(
+-      writer.begin(async (tx) => {
+-        await tx`insert into public.pointage_raw_events(id,organization_id,establishment_id,personnel_dossier_id,ordinal,kind,accepted_at,timezone_name,utc_offset_seconds,business_date) values(${uuidv7()},${organization},${establishment},${corruptDossier},999,'CLOCK_OUT','1900-01-01','ignored',0,'1900-01-01')`;
+-        // Always roll back an unexpectedly accepted INSERT, rather than making
+-        // a missing receipt at COMMIT mask the incomplete chain validation.
+-        throw new Error(
+-          'Invalid historical calendar accepted; synthetic append rolled back.',
+-        );
+-      }),
+-    ).rejects.toMatchObject({
+-      code: '23514',
+-      message: 'POINTAGE_CHAIN_UNAVAILABLE',
+-    });
++  type HistoricalRow = {
++    instant: string;
++    zone: string;
++    offset: number;
++    date: string;
++    kind?: 'CLOCK_IN' | 'CLOCK_OUT';
++    ordinal?: number;
++  };
++
++  const utcHistory: HistoricalRow = {
++    instant: '2025-01-01T12:00:00.123456Z',
++    zone: 'UTC',
++    offset: 0,
++    date: '2025-01-01',
++  };
++
++  async function historicalFixture(rows: HistoricalRow[]) {
++    const fixtureDossier = uuidv7();
++    // Test owner only, after both database identity and runtime-role admission.
++    // These are retained synthetic fixtures, not accepted runtime operations.
++    // No immutable prior row is changed; the trigger is restored before COMMIT.
++    await admin.begin(async (tx) => {
++      await tx`insert into public.personnel_employee_dossiers(id,organization_id,establishment_id,given_names,family_name,position,qualification,employment_term_type,work_time_category,entry_date) values(${fixtureDossier},${organization},${establishment},'Synthetic','Historical snapshot fixture','Test','Test','indefinite','full_time','2020-01-01')`;
++      await tx`alter table public.pointage_raw_events disable trigger pointage_raw_events_append`;
++      for (const [index, row] of rows.entries()) {
++        const event = uuidv7();
++        // Bind text before SQL conversion: postgres-js date serialization would
++        // truncate microseconds and cannot encode PostgreSQL infinity fixtures.
++        await tx`insert into public.pointage_raw_events(id,organization_id,establishment_id,personnel_dossier_id,ordinal,kind,accepted_at,timezone_name,utc_offset_seconds,business_date) values(${event},${organization},${establishment},${fixtureDossier},${row.ordinal ?? index + 1},${row.kind ?? 'CLOCK_IN'},${row.instant}::text::timestamptz,${row.zone},${row.offset},${row.date}::text::date)`;
++        expect(
++          await tx`select accepted_at = ${row.instant}::text::timestamptz as exact_instant, business_date = ${row.date}::text::date as exact_date from public.pointage_raw_events where organization_id=${organization} and establishment_id=${establishment} and personnel_dossier_id=${fixtureDossier} and id=${event}`,
++        ).toEqual([{ exact_instant: true, exact_date: true }]);
++        await tx`insert into public.pointage_raw_command_receipts(organization_id,establishment_id,personnel_dossier_id,request_id,event_id,intent_version,intent_fingerprint) values(${organization},${establishment},${fixtureDossier},${randomUUID()},${event},1,${'b'.repeat(64)})`;
++      }
++      await tx`set constraints all immediate`;
++      await tx`alter table public.pointage_raw_events enable trigger pointage_raw_events_append`;
++    });
++    expect(
++      await admin`select tgenabled from pg_trigger where tgrelid='public.pointage_raw_events'::regclass and tgname='pointage_raw_events_append'`,
++    ).toEqual([{ tgenabled: 'O' }]);
++    await assertPointageRawDatabaseBoundary(drizzle(writer));
++    return fixtureDossier;
++  }
++
++  async function evidenceSnapshot() {
++    // Database JSON retains all six microsecond digits and special date values.
++    // Never log rows, identity, credential/continuation material or audit payload.
++    const tables = [
++      'pointage_raw_events',
++      'pointage_raw_command_receipts',
++      'pointage_continuations',
++      'pointage_security_audit_events',
++      'pointage_employee_credentials',
++      'pointage_credential_rate_limits',
++      'organizations',
++      'establishments',
++      'personnel_employee_dossiers',
++    ];
++    const snapshot: Record<string, unknown> = {};
++    const counts: Record<string, number> = {};
++    for (const table of tables) {
++      const [row] = await admin.unsafe(
++        `select count(*)::int as count, coalesce(jsonb_agg(to_jsonb(t) order by to_jsonb(t)::text), '[]'::jsonb) as rows from public.${table} t`,
++      );
++      snapshot[table] = row;
++      counts[table] = Number(row!.count);
++    }
++    return { counts, rows: snapshot };
++  }
++
++  async function appendHistoricalNext(
++    tx: TransactionSql,
++    fixtureDossier: string,
++    kind = 'CLOCK_OUT',
++  ) {
++    const id = uuidv7();
++    const [row] =
++      await tx`insert into public.pointage_raw_events(id,organization_id,establishment_id,personnel_dossier_id,ordinal,kind,accepted_at,timezone_name,utc_offset_seconds,business_date) values(${id},${organization},${establishment},${fixtureDossier},999,${kind},'1900-01-01','ignored',999999,'1900-01-01') returning id, kind, ordinal, accepted_at::text, timezone_name, utc_offset_seconds, business_date::text`;
++    await tx`insert into public.pointage_raw_command_receipts(organization_id,establishment_id,personnel_dossier_id,request_id,event_id,intent_version,intent_fingerprint) values(${organization},${establishment},${fixtureDossier},${randomUUID()},${id},1,${'c'.repeat(64)})`;
++    return row!;
++  }
++
++  it.each([
++    {
++      name: 'invalid historical calendar (original failed F4 regression)',
++      rows: [{ ...utcHistory, zone: 'Not/AZone', date: '1900-01-01' }],
++    },
++    {
++      name: 'invalid zone alone',
++      rows: [{ ...utcHistory, zone: 'Not/AZone' }],
++    },
++    { name: 'blank zone', rows: [{ ...utcHistory, zone: '' }] },
++    {
++      name: 'zone whitespace is not normalized',
++      rows: [{ ...utcHistory, zone: ' UTC ' }],
++    },
++    {
++      name: 'offset below inclusive minimum',
++      rows: [{ ...utcHistory, offset: -50401 }],
++    },
++    {
++      name: 'offset above inclusive maximum',
++      rows: [{ ...utcHistory, offset: 50401 }],
++    },
++    {
++      name: 'inconsistent retained offset/date tuple',
++      rows: [
++        { ...utcHistory, instant: '2025-01-01T23:59:59.123456Z', offset: 1 },
++      ],
++    },
++    {
++      name: 'invalid infinite business date',
++      rows: [{ ...utcHistory, date: 'infinity' }],
++    },
++    {
++      name: 'invalid infinite accepted instant',
++      rows: [{ ...utcHistory, instant: 'infinity' }],
++    },
++    { name: 'ordinal gap', rows: [{ ...utcHistory, ordinal: 2 }] },
++    {
++      name: 'OUT first',
++      rows: [{ ...utcHistory, kind: 'CLOCK_OUT' as const }],
++    },
++    { name: 'double IN', rows: [utcHistory, utcHistory] },
++    {
++      name: 'decreasing instant',
++      rows: [
++        utcHistory,
++        {
++          ...utcHistory,
++          instant: '2025-01-01T11:00:00.123456Z',
++          kind: 'CLOCK_OUT' as const,
++        },
++      ],
++    },
++  ])(
++    'F4 rejects $name with exact rollback and untouched history',
++    async ({ name, rows }) => {
++      const fixtureDossier = await historicalFixture(rows);
++      const before = await evidenceSnapshot();
++      await expect(
++        writer.begin(async (tx) => {
++          await appendHistoricalNext(tx, fixtureDossier);
++          // Never allow a missing receipt at COMMIT to mask a trigger failure.
++          throw new Error(
++            'Invalid historical calendar accepted; synthetic append rolled back.',
++          );
++        }),
++      ).rejects.toMatchObject({
++        code: '23514',
++        message: 'POINTAGE_CHAIN_UNAVAILABLE',
++      });
++      const after = await evidenceSnapshot();
++      expect(after).toEqual(before);
++      console.info(
++        'F4_ROLLBACK_PROOF',
++        JSON.stringify({
++          case: name,
++          before: before.counts,
++          after: after.counts,
++          exactRowsUnchanged: true,
++        }),
++      );
++      // New transaction succeeds: no swallowed failed statement or leaked locks.
++      await writer.begin((tx) =>
++        tx.unsafe(helperCall, [organization, establishment, fixtureDossier]),
++      );
++    },
++  );
++
++  it.each([
++    { name: 'UTC', rows: [utcHistory], next: 'CLOCK_OUT' },
++    {
++      name: 'nonzero offset',
++      rows: [{ ...utcHistory, zone: 'Europe/Paris', offset: 3600 }],
++      next: 'CLOCK_OUT',
++    },
++    {
++      name: 'inclusive -50400',
++      rows: [
++        {
++          ...utcHistory,
++          zone: 'Etc/GMT+12',
++          offset: -50400,
++          date: '2024-12-31',
++        },
++      ],
++      next: 'CLOCK_OUT',
++    },
++    {
++      name: 'inclusive +50400',
++      rows: [
++        {
++          ...utcHistory,
++          zone: 'Pacific/Kiritimati',
++          offset: 50400,
++          date: '2025-01-02',
++        },
++      ],
++      next: 'CLOCK_OUT',
++    },
++    {
++      name: 'positive second-level offset without step size',
++      rows: [{ ...utcHistory, zone: 'Europe/Paris', offset: 561 }],
++      next: 'CLOCK_OUT',
++    },
++    {
++      name: 'negative second-level offset without step size',
++      rows: [{ ...utcHistory, offset: -1 }],
++      next: 'CLOCK_OUT',
++    },
++    {
++      name: 'DST repeated-hour retained snapshots',
++      rows: [
++        {
++          ...utcHistory,
++          instant: '2025-10-26T00:30:00.123456Z',
++          zone: 'Europe/Paris',
++          offset: 7200,
++          date: '2025-10-26',
++        },
++        {
++          ...utcHistory,
++          instant: '2025-10-26T01:30:00.123456Z',
++          zone: 'Europe/Paris',
++          offset: 3600,
++          date: '2025-10-26',
++          kind: 'CLOCK_OUT' as const,
++        },
++      ],
++      next: 'CLOCK_IN',
++    },
++    {
++      name: 'cross-midnight still one open session',
++      rows: [{ ...utcHistory, instant: '2025-01-01T23:59:59.999999Z' }],
++      next: 'CLOCK_OUT',
++    },
++    {
++      name: 'establishment timezone changed after historical acceptance',
++      rows: [{ ...utcHistory, zone: 'Europe/Paris', offset: 3600 }],
++      next: 'CLOCK_OUT',
++      newZone: 'America/New_York',
++    },
++  ])(
++    'F4 accepts $name without rewriting retained snapshots',
++    async ({ rows, next, newZone }) => {
++      const fixtureDossier = await historicalFixture(rows);
++      const [originalZone] =
++        await admin`select timezone from public.establishments where organization_id=${organization} and id=${establishment}`;
++      const history =
++        await admin`select to_jsonb(e) as row from public.pointage_raw_events e where organization_id=${organization} and establishment_id=${establishment} and personnel_dossier_id=${fixtureDossier} order by ordinal`;
++      try {
++        if (newZone)
++          await admin`update public.establishments set timezone=${newZone} where organization_id=${organization} and id=${establishment}`;
++        const result = await writer.begin((tx) =>
++          appendHistoricalNext(tx, fixtureDossier, next),
++        );
++        expect(result).toMatchObject({
++          kind: next,
++          ordinal: String(rows.length + 1),
++          timezone_name: newZone ?? originalZone!.timezone,
++        });
++        expect(
++          await admin`select to_jsonb(e) as row from public.pointage_raw_events e where organization_id=${organization} and establishment_id=${establishment} and personnel_dossier_id=${fixtureDossier} and ordinal<=${rows.length} order by ordinal`,
++        ).toEqual(history);
++        expect(
++          await writer`select count(*)::int as count from public.pointage_raw_events where organization_id=${organization} and establishment_id=${establishment} and personnel_dossier_id=${fixtureDossier}`,
++        ).toEqual([{ count: rows.length + 1 }]);
++        expect(
++          await writer`select count(*)::int as count from public.pointage_raw_command_receipts where organization_id=${organization} and establishment_id=${establishment} and personnel_dossier_id=${fixtureDossier}`,
++        ).toEqual([{ count: rows.length + 1 }]);
++      } finally {
++        if (newZone)
++          await admin`update public.establishments set timezone=${originalZone!.timezone} where organization_id=${organization} and id=${establishment}`;
++      }
++    },
++  );
++
++  it('F4 refuses a backward acceptance clock without clamping or rewriting history', async () => {
++    const fixtureDossier = await historicalFixture([
++      {
++        ...utcHistory,
++        instant: '2099-01-01T12:00:00.123456Z',
++        date: '2099-01-01',
++      },
++    ]);
++    const before = await evidenceSnapshot();
++    await expect(
++      writer.begin((tx) => appendHistoricalNext(tx, fixtureDossier)),
++    ).rejects.toMatchObject({
++      code: '23514',
++      message: 'POINTAGE_CLOCK_UNAVAILABLE',
++    });
++    expect(await evidenceSnapshot()).toEqual(before);
++  });
++
++  it('F4 refuses broken prior receipt linkage inside the same outer transaction', async () => {
++    const fixtureDossier = await historicalFixture([]);
++    const before = await evidenceSnapshot();
++    await expect(
++      writer.begin(async (tx) => {
++        await tx`insert into public.pointage_raw_events(id,organization_id,establishment_id,personnel_dossier_id,ordinal,kind,accepted_at,timezone_name,utc_offset_seconds,business_date) values(${uuidv7()},${organization},${establishment},${fixtureDossier},1,'CLOCK_IN',clock_timestamp(),'UTC',0,current_date)`;
++        await appendHistoricalNext(tx, fixtureDossier);
++      }),
++    ).rejects.toMatchObject({
++      code: '23514',
++      message: 'POINTAGE_CHAIN_UNAVAILABLE',
++    });
++    expect(await evidenceSnapshot()).toEqual(before);
++  });
++
++  it('F4 scope corruption is prevented by the existing composite FK, without disabling constraints', async () => {
++    const before = await evidenceSnapshot();
++    const otherOrganization = uuidv7();
++    await expect(
++      admin.begin(async (tx) => {
++        await tx`alter table public.pointage_raw_events disable trigger pointage_raw_events_append`;
++        await tx`insert into public.pointage_raw_events(id,organization_id,establishment_id,personnel_dossier_id,ordinal,kind,accepted_at,timezone_name,utc_offset_seconds,business_date) values(${uuidv7()},${otherOrganization},${establishment},${dossier},2,'CLOCK_OUT',clock_timestamp(),'UTC',0,current_date)`;
++        throw new Error(
++          'Composite scope corruption unexpectedly accepted; rollback.',
++        );
++      }),
++    ).rejects.toMatchObject({
++      code: '23503',
++      constraint_name: 'pointage_raw_events_establishment_fk',
++    });
++    expect(await evidenceSnapshot()).toEqual(before);
++    expect(
++      await admin`select tgenabled from pg_trigger where tgrelid='public.pointage_raw_events'::regclass and tgname='pointage_raw_events_append'`,
++    ).toEqual([{ tgenabled: 'O' }]);
++    await expect(
++      writer.begin((tx) =>
++        tx.unsafe(helperCall, [organization, establishment, uuidv7()]),
++      ),
++    ).rejects.toMatchObject({
++      code: 'P0001',
++      message: 'POINTAGE_LOCK_UNAVAILABLE',
++    });
++    expect(await evidenceSnapshot()).toEqual(before);
+   });
+ });

@@ -1,0 +1,131 @@
+diff --git a/docs/features/identity-access/README.md b/docs/features/identity-access/README.md
+--- a/docs/features/identity-access/README.md
++++ b/docs/features/identity-access/README.md
+@@ -67,8 +67,26 @@ establishment, membership, role, permission, and entitlement values supplied
+ by the browser are untrusted and cannot establish access.
+ 
+ `YUTA_ADMIN` and `YUTA_SUPPORT` are global system-role values, but they do not
+-bypass restaurant membership checks. No current Platform Admin product
+-behavior is established by their schema presence.
++bypass restaurant membership checks. Their schema presence alone establishes
++no Platform Admin product behavior.
++
++### Platform Admin Formalités template authority foundation
++
++The implemented portable authorization foundation defines exactly five
++independent system operations for GLOBAL YUTA Formalités templates:
++`formalites.template.read`, `formalites.template.draft.manage`,
++`formalites.template.review.submit`, `formalites.template.publish`, and
++`formalites.template.retire`. `YUTA_ADMIN` receives an explicit grant for each
++operation; `YUTA_SUPPORT` receives none. Authorization requires a trusted
++active internal user and the exact approved system-operation grant. Tenant
++membership and `TenantContext` are not required and provide no global
++authority. No wildcard, prefix matching, implication, or role hierarchy
++exists.
++
++This foundation adds no Platform Admin application/runtime, template data or
++lifecycle, legal-review evidence, tenant-resource access, or production
++enablement. Precise behavior is defined by the approved
++[Platform Admin Formalités template authorization specification](../../../openspec/specs/authorization/platform-admin-formalites-template-administration/spec.md).
+ 
+ ### Restaurant Knowledge authorization
+ 
+@@ -165,7 +183,8 @@ Out of the current bounded scope:
+ - public account registration, organization creation, ownership transfer,
+   support tooling, impersonation, account deletion, and billing-linked access;
+-- implemented Platform Admin identity and access behavior; and
+-- production provider configuration and dated deployment/runtime evidence.
++- general-purpose Platform Admin identity and access behavior beyond the
++  bounded Formalités template authority foundation; and
++- production provider configuration and dated deployment/runtime evidence.
+ 
+ These items are not approved or implemented merely because the schema or
+ architecture can accommodate future work.
+@@ -251,7 +270,7 @@ The following modules own their own authorization semantics while depending on
+ | Restaurant Knowledge      | READ and MANAGE require active tenant scope and their dedicated capability permissions; Establishment Profile grants do not authorize them. | Restaurant Knowledge semantics and Identity / Access permission guards.             |
+ | POS / Site Agent          | Uses an independent local user and session model; no cloud identity synchronization exists.                                                 | POS Product Knowledge, Site Agent, and `packages/db-pos`.                           |
+ | Public Booking / Feedback | Anonymous visitors have no Backoffice membership; server-side public resolution establishes bounded tenant context.                         | Public Booking/Reputation knowledge, ADR-002/ADR-004, and public tenant resolution. |
+-| Platform Admin            | `apps/platform-admin` is reserved and not implemented; global system-role schema values do not create its product behavior.                 | Repository model, Authentication architecture, and current implementation evidence. |
++| Platform Admin            | `apps/platform-admin` remains reserved and unimplemented; only the five-operation GLOBAL YUTA Formalités template authority foundation exists. | Repository model, approved authorization spec, and current implementation evidence. |
+ 
+ ## 11. Current limitations and non-goals
+ 
+@@ -263,8 +282,9 @@ The following modules own their own authorization semantics while depending on
+   current guard evaluates more than one of them.
+ - No cloud/POS identity synchronization, federation, or shared session is
+   approved.
+-- No implemented Platform Admin, public signup, custom-role editor,
++- No implemented Platform Admin application/runtime, public signup, custom-role editor,
+   impersonation, or support bypass is claimed.
++- The bounded Formalités template authority foundation is not production enablement.
+ - This home does not define module-specific business permissions or transfer
+   their data ownership into Identity / Access.
+ 
+diff --git a/docs/architecture/IDENTITY_AND_MEMBERSHIP.md b/docs/architecture/IDENTITY_AND_MEMBERSHIP.md
+--- a/docs/architecture/IDENTITY_AND_MEMBERSHIP.md
++++ b/docs/architecture/IDENTITY_AND_MEMBERSHIP.md
+@@ -41,6 +41,16 @@ createAuthService`. Provider payloads stop at the adapter. Domain code receives
+ only the internal `SessionUser`. Missing identities are unauthenticated;
+ disabled internal users are denied; system roles are checked explicitly.
+ 
++The portable auth service also exposes the bounded GLOBAL YUTA Formalités
++template authority foundation. It accepts only the five approved closed
++operations, grants each explicitly to `YUTA_ADMIN`, grants none to
++`YUTA_SUPPORT`, and returns a minimized system context only for a trusted active
++internal user. This system-only path does not construct or consume
++`TenantContext`, does not authorize tenant resources, and has no application,
++persistence, template-lifecycle, or production side effect. The normative
++behavior is in the
++[Platform Admin Formalités template authorization specification](../../openspec/specs/authorization/platform-admin-formalites-template-administration/spec.md).
++
+ The current back-office password flow continues to use opaque, hashed,
+ database-backed sessions. A future external provider implements `AuthAdapter`
+ and uses `createInternalUserLookup` from `@yuta/db-cloud`.
+diff --git a/docs/architecture/OVERVIEW.md b/docs/architecture/OVERVIEW.md
+--- a/docs/architecture/OVERVIEW.md
++++ b/docs/architecture/OVERVIEW.md
+@@ -31,6 +31,11 @@ import database packages, drivers, server environment modules, or secrets.
+ 
+ Platform-wide YUTA administration belongs in the future `apps/platform-admin`,
+ never in the restaurant back-office.
++The application remains unimplemented. The shared auth package now contains
++only a bounded, non-runtime authority foundation for five explicit GLOBAL YUTA
++Formalités template operations. It creates neither a general Platform Admin
++product nor tenant authority, template persistence/lifecycle, or production
++enablement.
+ 
+ ## Public-product visibility
+ 
+diff --git a/docs/CURRENT_STATE.md b/docs/CURRENT_STATE.md
+--- a/docs/CURRENT_STATE.md
++++ b/docs/CURRENT_STATE.md
+@@ -41,7 +41,7 @@ The maintained runtime families are:
+ | Backoffice                          | Authenticated restaurant administration over trusted organization and active-establishment context.                                                        | [Product Knowledge](PRODUCT_KNOWLEDGE.md), [Identity / Access](features/identity-access/README.md), and the [Module Registry](MODULE_REGISTRY.md).                                             |
+ | Restaurant-local POS and Site Agent | POS is the operator client; Site Agent owns local APIs, `packages/db-pos`, transactions, realtime, printing, and device boundaries.                        | [POS Product Knowledge](products/pos/README.md), [Site Agent Product Knowledge](products/pos/site-agent/README.md), and ADR-003.                                                               |
+ | Standalone Display                  | Display owns its application, app-local database access, media files, administration, and playback; it shares no cloud or POS persistence.                 | [Display Product Knowledge](products/display/README.md) and ADR-003.                                                                                                                           |
+-| Reserved Platform Admin             | `apps/platform-admin` is a reserved platform-wide administration boundary; no tracked application or approved capability scope currently exists within it. | [Architecture overview](architecture/OVERVIEW.md) and the [Module Registry](MODULE_REGISTRY.md).                                                                                               |
++| Reserved Platform Admin             | `apps/platform-admin` remains reserved with no tracked application. A portable, non-runtime auth foundation now covers five GLOBAL YUTA Formalités template operations only. | [Architecture overview](architecture/OVERVIEW.md), [Identity / Access](features/identity-access/README.md), the [authorization spec](../openspec/specs/authorization/platform-admin-formalites-template-administration/spec.md), and the [Module Registry](MODULE_REGISTRY.md). |
+ 
+ Local POS and Display products are first-class maintained components, not
+ legacy. Their local operational capabilities are not public YUTA service
+@@ -62,7 +62,7 @@ readiness for a specific environment or restaurant:
+ | Future Formalités lifecycle   | Generated versions, legal templates, PDF/file storage, signature, Documents handoff, final retention policy, and production operation remain proposed or separately gated. The development persistent-draft foundation does not implement or authorize those stages.                                                                   | [Personnel Product Knowledge](features/personnel/README.md), [Module Registry](MODULE_REGISTRY.md), and [Production Readiness](operations/PRODUCTION_READINESS.md).                                                                                              |
+ | POS / Site Agent              | Restaurant-local ordering, catalog, payments, kitchen, printing, management, reports, and local-user foundations are implemented behind Site Agent and `packages/db-pos`. This does not prove a particular host, migration state, timezone, printer, device, or restaurant release is ready.                                           | [POS Product Knowledge](products/pos/README.md), [Site Agent Product Knowledge](products/pos/site-agent/README.md), and the [UI page-pack index](ui/pages/README.md).                                                                                            |
+ | Display                       | Standalone media administration, app-owned metadata/files, and resilient playback are implemented in the repository. Application authentication, media-file reconciliation and retention, backup/restore, target device behavior, and site readiness remain unresolved or unverified.                                                  | [Display Product Knowledge](products/display/README.md).                                                                                                                                                                                                         |
+-| Platform Admin                | Only the platform-wide runtime boundary is reserved. The application is not started, not enabled, and has no approved capability scope.                                                                                                                                                                                                | [Module Registry](MODULE_REGISTRY.md) and [Architecture overview](architecture/OVERVIEW.md).                                                                                                                                                                     |
++| Platform Admin                | The application is not started or enabled. Only a portable authority foundation for five GLOBAL YUTA Formalités template operations is approved and implemented; no runtime, template lifecycle, tenant access, or production enablement follows. | [Identity / Access](features/identity-access/README.md), [Module Registry](MODULE_REGISTRY.md), [Architecture overview](architecture/OVERVIEW.md), and the [authorization spec](../openspec/specs/authorization/platform-admin-formalites-template-administration/spec.md). |
+ 
+ These summaries are bounded orientation, not a duplicated lifecycle table.
+ Use the Module Registry for the five independent lifecycle dimensions.
+diff --git a/docs/MODULE_REGISTRY.md b/docs/MODULE_REGISTRY.md
+--- a/docs/MODULE_REGISTRY.md
++++ b/docs/MODULE_REGISTRY.md
+@@ -56,7 +56,7 @@ Current ownership and lifecycle dimensions are recorded below. The table is a
+ | POS               | Restaurant-local operational client for ordering, kitchen, payment, printing, management, and reports | Restaurant-local client  | [POS product](products/pos/README.md), [ADR-001](decisions/ADR-001-runtime-families-and-product-visibility.md)                                                       | [`apps/yuta-pos`](../apps/yuta-pos)            | `packages/db-pos` through Site Agent                               | Decision `APPROVED`; Implementation `IMPLEMENTED`; Environment `UNVERIFIED`; Readiness `NOT_READY`                                    | `OK` for repository scope; release evidence is site-specific    |
+ | Site Agent        | Local POS API, persistence, realtime, printing, and device boundary                                   | Restaurant-local service | [Site Agent Product Knowledge](products/pos/site-agent/README.md), [Database boundaries](architecture/DATABASE_BOUNDARIES.md), [POS product](products/pos/README.md) | [`apps/site-agent`](../apps/site-agent)        | Runtime owner of `packages/db-pos`                                 | Decision `APPROVED` for boundary; Implementation `IMPLEMENTED`; Environment `UNVERIFIED`; Readiness `NOT_READY`                       | `OK` for repository scope; canonical home approved              |
+ | Display           | Standalone digital-signage administration and resilient playback                                      | Standalone local product | [Display Product Knowledge](products/display/README.md), [Repository Map](REPOSITORY_MAP.md), [ADR-003](decisions/ADR-003-database-ownership-boundaries.md)          | [`apps/yuta-display`](../apps/yuta-display)    | `apps/yuta-display/src/db`                                         | Decision `APPROVED` for boundary; Implementation `IMPLEMENTED`; Environment `UNVERIFIED`; Readiness `NOT_ASSESSED`                    | `NEEDS REVIEW` — admin security and media lifecycle remain open |
+-| Platform Admin    | Reserved future platform-wide YUTA administration boundary                                            | Reserved cloud product   | [Architecture overview](architecture/OVERVIEW.md), [Current State](CURRENT_STATE.md)                                                                                 | Reserved `apps/platform-admin`; no tracked app | `N/A`                                                              | Decision `APPROVED` only for the reserved boundary; Implementation `NOT_STARTED`; Environment `NOT_ENABLED`; Readiness `NOT_ASSESSED` | `OK` — no capability scope is approved yet                      |
++| Platform Admin    | Reserved platform-wide runtime boundary plus a bounded portable authority foundation for five GLOBAL YUTA Formalités template operations | Reserved cloud product | [Architecture overview](architecture/OVERVIEW.md), [Identity / Access](features/identity-access/README.md), [authorization spec](../openspec/specs/authorization/platform-admin-formalites-template-administration/spec.md), [Current State](CURRENT_STATE.md) | Reserved `apps/platform-admin`; no tracked app | `N/A` | Decision `APPROVED` only for the reserved runtime boundary; Implementation `NOT_STARTED`; Environment `NOT_ENABLED`; Readiness `NOT_ASSESSED` | `OK` — bounded auth foundation implemented outside the app; lifecycle values remain app-specific and unchanged |
+ 
+ ## Module / Capability Registry
+ 

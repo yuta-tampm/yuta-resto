@@ -1,0 +1,938 @@
+{
+  "change": "pointage-usable-raw-clocking",
+  "schema": "yuta-spec-driven",
+  "checkpoint": "C17 approved bootstrap and Apply continuation; blocked before task 2.8 runtime composition",
+  "status": {
+    "apply": "BLOCKED",
+    "completedTasks": 15,
+    "totalTasks": 32,
+    "technicalImplementationCompliance": "NOT_EVALUATED",
+    "verify": "NOT_RUN",
+    "qa": "NOT_RUN",
+    "productionEnablement": "NOT_AUTHORIZED"
+  },
+  "baseline": {
+    "at": "2026-09-08T16:20:22.9676947+02:00",
+    "head": "defbc50eba3952fa2e7b1c016637daf083b18c65",
+    "files": 2568
+  },
+  "capturedAt": "2026-09-08T17:23:11.7867365+02:00",
+  "implementationPaths": [
+    {
+      "path": "apps/backoffice/src/server/pointage/raw-chain.ts",
+      "beforeSha256": null,
+      "afterSha256": "0b8446a543cad544614ae7c7d366cfa771d0011d16adc7bc7d1d00405731f83c",
+      "attribution": "created during this resume"
+    },
+    {
+      "path": "apps/backoffice/src/server/pointage/raw-clocking-manager.ts",
+      "beforeSha256": null,
+      "afterSha256": "209183808c72c1a9c677d57b2603dd5030336ad864d1ff542df1f0d06f27d948",
+      "attribution": "created during this resume"
+    },
+    {
+      "path": "apps/backoffice/src/server/pointage/raw-clocking-service.ts",
+      "beforeSha256": null,
+      "afterSha256": "a144202f2b7af2955b458fc445b699342bb4ed8cdbda33a4d46905452dcd3d37",
+      "attribution": "created during this resume"
+    },
+    {
+      "path": "apps/backoffice/test/pointage-raw-chain.test.ts",
+      "beforeSha256": null,
+      "afterSha256": "b0fe2395ed36d944b911bafcf6dd51d20f08e3723d772189867c4f53d4a13277",
+      "attribution": "created during this resume"
+    },
+    {
+      "path": "apps/backoffice/test/pointage-raw-clocking-manager.test.ts",
+      "beforeSha256": null,
+      "afterSha256": "a36e3beaf3ee38da51eae92dafdb923a2d4d7364a45e58a3d4cdf3af338d1db7",
+      "attribution": "created during this resume"
+    },
+    {
+      "path": "apps/backoffice/test/pointage-raw-clocking-service.test.ts",
+      "beforeSha256": null,
+      "afterSha256": "6727c34fb9659f54068eccc8bc01dbf97f837a9142695fa821a032969ccdc0d4",
+      "attribution": "created during this resume"
+    },
+    {
+      "path": "packages/db-cloud/src/index.ts",
+      "beforeSha256": "7242c6e54fd7f1856e5077ea34a26e8f35c8e4ae16485e7d94f8aac7d0dd4bb0",
+      "afterSha256": "b1de68581dbb366e51d5387867d0724e897edd1e52832b3d356bfbc7e6e05122",
+      "attribution": "isolated LF export; removal reproduces exact before hash"
+    },
+    {
+      "path": "packages/db-cloud/src/pointage-raw-clocking-repository.ts",
+      "beforeSha256": "22855a1eb28c99d07512dd0e3724eef43a14e8a6ef920dcdf1a88ca389f81024",
+      "afterSha256": "fa73b8431af57b3f066869750350ac7f8f716b2ad0debd86ac69f4c15d43b106",
+      "attribution": "pre-existing change-owned untracked file; diff includes cumulative current content"
+    },
+    {
+      "path": "packages/db-cloud/test/helpers/pointage-raw-clocking-test-database.ts",
+      "beforeSha256": "ff46783b29e37ee4c609b7bc521476198135d10b23c0f5bed42c22b7fe9cafe2",
+      "afterSha256": "1b57abee9273150d828e6d9b640849ba42af459eae7d4e7dca4e523d4ee98234",
+      "attribution": "pre-existing change-owned untracked file; diff includes cumulative current content"
+    },
+    {
+      "path": "packages/db-cloud/test/pointage-raw-clocking-migration.integration.test.ts",
+      "beforeSha256": "47e684d9e997599fbbf1dbfe05619c83ae48aa8774325169da92b4bb4d0d52b7",
+      "afterSha256": "eb5693a3ba0f907e74862fa2e26c5d39e916c38ec54d219ed652a09af0aff2cc",
+      "attribution": "pre-existing change-owned untracked file; diff includes cumulative current content"
+    },
+    {
+      "path": "packages/db-cloud/test/pointage-raw-clocking-schema.test.ts",
+      "beforeSha256": "5374d1365328b30c061bfb5d8618ea16f9c03f516faa39958d54866a4c42612d",
+      "afterSha256": "d6a10caa9edb95878605e8f3d1fa439e07e2aec5c221097a2f17bdac38b2e291",
+      "attribution": "pre-existing change-owned untracked file; diff includes cumulative current content"
+    },
+    {
+      "path": "packages/db-cloud/test/pointage-raw-clocking.integration.test.ts",
+      "beforeSha256": "d367ab0c90514da00674747ee8018482eccdfb2015d093c07d53f8fbfc824e9a",
+      "afterSha256": "5d0ea83bacb946300030a135e2f150c5b34c4a63197d98e8f4abf8a914b82cce",
+      "attribution": "pre-existing change-owned untracked file; diff includes cumulative current content"
+    }
+  ],
+  "tasks": {
+    "path": "openspec/changes/pointage-usable-raw-clocking/tasks.md",
+    "beforeSha256": "f41282da6265bcd347bc2701ba9b552451babf1d857a076053305f416c816eb5",
+    "afterSha256": "7bf96f696edc16578e36e157fc6b3a2d2390b461898077be633f2c810d79bbe8"
+  },
+  "diff": {
+    "path": "docs/reviews/pointage-usable-raw-clocking/apply-c17-service-checkpoint.diff",
+    "sha256": "6363a602f65dbc85df9a3da0f4e72ea1ed33540a14e9256ac142e19a7476dec4",
+    "reverseCheckExit": 0,
+    "format": "Git review LF text; file byte hashes authoritative",
+    "scope": "12 touched implementation paths; 11 cumulative untracked full-file snapshots plus one isolated shared export; not a new-file claim for the 5 pre-existing Pointage files"
+  },
+  "unchangedAuthorityFiles": [
+    {
+      "path": "docs/reviews/pointage-usable-raw-clocking/01-analysis-review.md",
+      "sha256": "ee18fdbf3b9802978eb7d71000d001c1b32eb7672f333bf8fe452005414f3557"
+    },
+    {
+      "path": "docs/reviews/pointage-usable-raw-clocking/02-specs-review.md",
+      "sha256": "c5a7fd21c9fb04ea8f3617463241fc0ec8b41ea6e69b6074da5fefe98f0da566"
+    },
+    {
+      "path": "docs/reviews/pointage-usable-raw-clocking/02b-design-review.md",
+      "sha256": "00661679c3682679a0d0a31eb8b21c2f34248544f85c9cbc7730a5b243adb116"
+    },
+    {
+      "path": "docs/ui/pages/backoffice-pointage-employee/ACCEPTANCE_CHECKLIST.md",
+      "sha256": "cbcc464c79e57f3bc34c49989d936b1dc2411839b552a159e407a407c72166ed"
+    },
+    {
+      "path": "docs/ui/pages/backoffice-pointage-employee/DATA_AND_INTERACTION_SPEC.md",
+      "sha256": "25ffcdbb137b26568a01373c6a55c3ea714f97d70978c3c22310433bd40d68fd"
+    },
+    {
+      "path": "docs/ui/pages/backoffice-pointage-employee/DESIGN_HANDOFF.md",
+      "sha256": "d94fc07f4e318bda95507904640e5bd80f9f5bacc251babfbf85f7bc0fc56cae"
+    },
+    {
+      "path": "docs/ui/pages/backoffice-pointage-employee/IMPLEMENTATION_PLAN.md",
+      "sha256": "b7dfc8937893032253f801160c1e9fa21e2c8cd34439c0b80e9eb38e7ef5606e"
+    },
+    {
+      "path": "docs/ui/pages/backoffice-pointage-employee/PRODUCT_SCOPE.md",
+      "sha256": "16a14204820f4a1b2033f26dca03494db9e5e61b28474c87216ce206062582d8"
+    },
+    {
+      "path": "docs/ui/pages/backoffice-pointage-employee/prompt-provenance.json",
+      "sha256": "04c6c99bf8067e848cc4df1f0f871fd43bdf1ec964d786f2617dcca4692b8a61"
+    },
+    {
+      "path": "docs/ui/pages/backoffice-pointage-employee/prompts/00_REPOSITORY_ANALYSIS.md",
+      "sha256": "7ecab8ffd6d97de28f463d521172be6de8f66b7e3074e5e90e88f53f41ea394c"
+    },
+    {
+      "path": "docs/ui/pages/backoffice-pointage-employee/prompts/01_VISUAL_BASELINE.md",
+      "sha256": "d3075806ae38d0f9f6a945b3b42d1f3b8d7e2bd9eafa712a73587744c9f46119"
+    },
+    {
+      "path": "docs/ui/pages/backoffice-pointage-employee/prompts/02_COMPONENT_REFACTOR.md",
+      "sha256": "8b134cd4b462562416fb5c2e57c23eb4675a26eff7ea75fdfae44727b74648ac"
+    },
+    {
+      "path": "docs/ui/pages/backoffice-pointage-employee/prompts/03_INTERACTIONS.md",
+      "sha256": "e27c12d152d9270229eed6951898ab6f5e477d7d12ff9c170f4522ed45f00388"
+    },
+    {
+      "path": "docs/ui/pages/backoffice-pointage-employee/prompts/04_DATA_INTEGRATION.md",
+      "sha256": "f878f959d3afee428e67620c74f4c75231d2c7816f23cbf7fc6c701067538e79"
+    },
+    {
+      "path": "docs/ui/pages/backoffice-pointage-employee/prompts/05_VISUAL_QA.md",
+      "sha256": "5f31ec1c2a2bcfd3129643931e188365f9608958f1f8bd697ae7854e292eaad0"
+    },
+    {
+      "path": "docs/ui/pages/backoffice-pointage-employee/README.md",
+      "sha256": "77377af7a5f09d4884541e3a90de151e0ae11223b73e66f2dc57cfb08765d902"
+    },
+    {
+      "path": "docs/ui/pages/backoffice-pointage-employee/references/README.md",
+      "sha256": "e2ddabc5a6a004441847e71629b84281eeac075c41a195eea8955f5d30a72a45"
+    },
+    {
+      "path": "docs/ui/pages/backoffice-pointage-employee/UI_SPEC.md",
+      "sha256": "cd109fb341545a280189d92b891506b9211134600720cf5d2b9b107563aacb45"
+    },
+    {
+      "path": "openspec/changes/pointage-usable-raw-clocking/.openspec.yaml",
+      "sha256": "84963d5bb5659efe782a9e644fd11bc8fbedb5b4dc250c9d6f8122a029d3fa6e"
+    },
+    {
+      "path": "openspec/changes/pointage-usable-raw-clocking/analysis.md",
+      "sha256": "f04e66f9f2307dc92aa9cdbd134fb4a35f9c1089459440c0ccfdb40c4a3e9146"
+    },
+    {
+      "path": "openspec/changes/pointage-usable-raw-clocking/design.md",
+      "sha256": "a6ae1cc787b756c0695edc29897f3a50cd92a349d10905aa679641c13522e361"
+    },
+    {
+      "path": "openspec/changes/pointage-usable-raw-clocking/proposal.md",
+      "sha256": "d42975cd06290431701e39d499edac93774275c1bb0f28f8474f6ff0e61816f1"
+    },
+    {
+      "path": "openspec/changes/pointage-usable-raw-clocking/specs/authorization/pointage/spec.md",
+      "sha256": "1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66"
+    },
+    {
+      "path": "openspec/changes/pointage-usable-raw-clocking/specs/pointage/raw-clocking/spec.md",
+      "sha256": "4bfa64e863ad465a144341c18aa5d0db3ce0806ada52ad40183cf9a4e321f90e"
+    }
+  ],
+  "unchangedMainSpecsAndArchiveFiles": [
+    {
+      "path": "openspec/changes/archive/2026-08-30-establishment-copy-primary-contact-to-public/.openspec.yaml",
+      "sha256": "000332a82b7e5c59ebbdf5b875ae7ef9d2a0aeebb9d259bdc6c0c62e7ac5d179"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-30-establishment-copy-primary-contact-to-public/analysis.md",
+      "sha256": "cc46c4f9d3881f6fb930f88264f8a7c4021c0afe05a9b6dd48b899fbf3aaa0a2"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-30-establishment-copy-primary-contact-to-public/design.md",
+      "sha256": "6dbac8106a80165a7e7bb7ec8c3346980199a70e2ee13fc44a78822da37be873"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-30-establishment-copy-primary-contact-to-public/proposal.md",
+      "sha256": "77fd805c12a72d659f118cd813bb8a197ff57cd6fb6e363449e74fd3048f7eb3"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-30-establishment-copy-primary-contact-to-public/specs/establishment-profile/spec.md",
+      "sha256": "2253f7791b9feef29534f363d8e16612f9a8ffb4e03888948f6795269add5939"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-30-establishment-copy-primary-contact-to-public/tasks.md",
+      "sha256": "eb08d5a1a0049981f4dac900809dd27536d010971a9703383d4e8f7b67ee4031"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-30-restaurant-knowledge-authorization/.openspec.yaml",
+      "sha256": "000332a82b7e5c59ebbdf5b875ae7ef9d2a0aeebb9d259bdc6c0c62e7ac5d179"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-30-restaurant-knowledge-authorization/analysis.md",
+      "sha256": "88a4bf5b6ba44ca4be4fe631d04d49b867b6685f8c689a3c6e0ccb6c9c3cf6ff"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-30-restaurant-knowledge-authorization/design.md",
+      "sha256": "0acf4049546b8eb8df144fdd4b8bad8d499b20f6cd9381faf329820b134cfcf2"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-30-restaurant-knowledge-authorization/proposal.md",
+      "sha256": "356b47691970101a0e760da13d559895d24d7347cb177cdbd97c86c32259d3fe"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-30-restaurant-knowledge-authorization/specs/authorization/restaurant-knowledge/spec.md",
+      "sha256": "41ccb74dffcd56f5c23760a4bb11efbbf4363697feb1651980c27ef5134c67e0"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-30-restaurant-knowledge-authorization/tasks.md",
+      "sha256": "d4b5d3d69523fbe7c3cec221be2aecc1f6979a7bfd3556e9519bf46fa1925219"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-31-restaurant-knowledge-concept-history/.openspec.yaml",
+      "sha256": "000332a82b7e5c59ebbdf5b875ae7ef9d2a0aeebb9d259bdc6c0c62e7ac5d179"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-31-restaurant-knowledge-concept-history/analysis.md",
+      "sha256": "3e79cd9d7f8464edf9d5eda3d2c03da1f5716af024ab3717465df467afce7ea8"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-31-restaurant-knowledge-concept-history/design.md",
+      "sha256": "89afc116d25482e91b40efc299bf32ac5168d960b3369abf62746b089a85b295"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-31-restaurant-knowledge-concept-history/proposal.md",
+      "sha256": "071b1300029075719d69954f2fafe707173145d6e75a54c17251eb2c0be46ddc"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-31-restaurant-knowledge-concept-history/specs/restaurant-knowledge/concept-history/spec.md",
+      "sha256": "6a9b186070a8b2d9b02072ca109f256fed188babd1817726438f02bf8bc9893b"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-31-restaurant-knowledge-concept-history/tasks.md",
+      "sha256": "dec47e0a5dfcd68ae88ca91b7dd60a0c9fa26e69f6f999a39960de13c86d135c"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-31-restaurant-knowledge-cuisine-know-how/.openspec.yaml",
+      "sha256": "77d7cfec1b467e81653377cbae8284b75a000eb976bfac5d7b5bab1398e40ed0"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-31-restaurant-knowledge-cuisine-know-how/analysis.md",
+      "sha256": "fbf4fabcc6ef28420c33b42db89608dacfa6a9accb52ef39cde183628c9fe6a7"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-31-restaurant-knowledge-cuisine-know-how/design.md",
+      "sha256": "ecc8eb49d983ce2fb71b7e66590bd37e18c3b0f2515a676b2d0b04511d8e25c6"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-31-restaurant-knowledge-cuisine-know-how/proposal.md",
+      "sha256": "48a1c22588d7785520cd0fbc99aaf1845029bafbf84675888fc3e2a8b96d4b1d"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-31-restaurant-knowledge-cuisine-know-how/specs/restaurant-knowledge/cuisine-know-how/spec.md",
+      "sha256": "5b923da9db3095d1e216301875cb4d3d247763fb4ba5f0b6bb3c291f1b1444e7"
+    },
+    {
+      "path": "openspec/changes/archive/2026-08-31-restaurant-knowledge-cuisine-know-how/tasks.md",
+      "sha256": "123d957497bfdbbbd213760c3bc17f456073854673afc17c0441e7edad73a9cb"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-01-restaurant-knowledge-customer-experience/.openspec.yaml",
+      "sha256": "9b39fd3f7d550b8d1a8b1d0181ee1e7e12ffd354a71b985aa5e5dc9ce6851850"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-01-restaurant-knowledge-customer-experience/analysis.md",
+      "sha256": "bd7e2df308415adc95b17ff1002c775d12e6fbc66c8526a466a2efb9bca37aa9"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-01-restaurant-knowledge-customer-experience/design.md",
+      "sha256": "64228423fc7e3b0b94acb0f69ff13ae0b70f814426e6272b25b1a2dd1298edfb"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-01-restaurant-knowledge-customer-experience/proposal.md",
+      "sha256": "4b1cf04bbab4711918cee0166261f9c135d0db9911349c5ddaafca7757e992c3"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-01-restaurant-knowledge-customer-experience/specs/restaurant-knowledge/customer-experience/spec.md",
+      "sha256": "d028bcbbb1cec1dfb5c84c91174d1ea55985b7e056d776294626a1940f098ff6"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-01-restaurant-knowledge-customer-experience/tasks.md",
+      "sha256": "c51c921d6b706d00dc3c55b8eaf0ad8fa8f747c8f6183ae572abac734af4f4a8"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-02-restaurant-knowledge-communication-identity/.openspec.yaml",
+      "sha256": "0bef269fccb851f89db8bcb9586024b9f089fe3f8a9870a9080886b45971850b"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-02-restaurant-knowledge-communication-identity/analysis.md",
+      "sha256": "6203a25f11b83f80af89ec5f20cfa4d98df23659ff1b82f9c8c86a17f4fa35fb"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-02-restaurant-knowledge-communication-identity/design.md",
+      "sha256": "2d10088d01fd4102a1e16e4eb81e33f024d921601691574b0dc59c5a85626169"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-02-restaurant-knowledge-communication-identity/proposal.md",
+      "sha256": "a58e71eef2dbce764191dc0250cc812e00123fcb31fc2b7c98b5016db0e2d6c4"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-02-restaurant-knowledge-communication-identity/specs/restaurant-knowledge/communication-identity/spec.md",
+      "sha256": "a6b0d54a741ad8ac17c668c0fe3f8f8b8927fc9e7e1747e760e91b1131db408f"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-02-restaurant-knowledge-communication-identity/tasks.md",
+      "sha256": "f190145165616bd15d3d4341ddc246327d6dc1541f91ede2d62157e57ce6fd11"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-02-restaurant-knowledge-team-culture/.openspec.yaml",
+      "sha256": "9b39fd3f7d550b8d1a8b1d0181ee1e7e12ffd354a71b985aa5e5dc9ce6851850"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-02-restaurant-knowledge-team-culture/analysis.md",
+      "sha256": "7c0372d810a33b6828ad1014976d0685b35e112de6af8fedd7fdf016cf92ec95"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-02-restaurant-knowledge-team-culture/design.md",
+      "sha256": "fe99db86abcbafa624da5a7c2a272f31d1f5a85b38ccd125202afff3a872d76d"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-02-restaurant-knowledge-team-culture/proposal.md",
+      "sha256": "1538e96384b77c3cbc37a119dff4251b797744ab338175bb4d5e1c8cc8dc83d0"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-02-restaurant-knowledge-team-culture/specs/restaurant-knowledge/team-culture/spec.md",
+      "sha256": "0e7aa521a264b03cde23eefab5034d2b69019537809dd5a34f9b2b584d5b4d44"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-02-restaurant-knowledge-team-culture/tasks.md",
+      "sha256": "363cfb9bcb9521c77d9b51b018df7d2cbc85e11e8c53d7d70d1ab9351942f200"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-03-personnel-reconstructable-value-history/.openspec.yaml",
+      "sha256": "6766e675615f87c16f60cf61d6cff3c8149687bb14bf8d1f4451537b72fdea72"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-03-personnel-reconstructable-value-history/analysis.md",
+      "sha256": "09d50e50cb9a37af7df402025319078ddff446c146c67284f56278131dd25445"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-03-personnel-reconstructable-value-history/design.md",
+      "sha256": "d931e22022dc4a047a78d1fb276a60cb2b232797ebb78a68c11a5eb0e703cfd6"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-03-personnel-reconstructable-value-history/proposal.md",
+      "sha256": "9aa477361db22e88bfd6ceefd22b4a7975c1792daee3013da849116244fc913c"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-03-personnel-reconstructable-value-history/specs/personnel/reconstructable-value-history/spec.md",
+      "sha256": "0841018f7318820ab52bae6685d58ee4227b207d0ce1520f3eb2dcd3aca7f496"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-03-personnel-reconstructable-value-history/tasks.md",
+      "sha256": "64a432441091321be49d72b964c078d94b3f0726fedc0ad3a67b5f2d6ba387a6"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-03-restaurant-knowledge-validated-knowledge/.openspec.yaml",
+      "sha256": "0bef269fccb851f89db8bcb9586024b9f089fe3f8a9870a9080886b45971850b"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-03-restaurant-knowledge-validated-knowledge/analysis.md",
+      "sha256": "adfc226bc6cf2804833a099c1317bcad7f6e9939262accbe1da5bb23188d01e6"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-03-restaurant-knowledge-validated-knowledge/design.md",
+      "sha256": "b9f8d2475a8f3e9506ca67ef00f46245ee5792c2117db39e94611fa0cdf0a368"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-03-restaurant-knowledge-validated-knowledge/proposal.md",
+      "sha256": "dc874fbeb79d43ef31e9d109360033a46aea5c8f97beebb73abd538e300764e8"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-03-restaurant-knowledge-validated-knowledge/specs/restaurant-knowledge/validated-knowledge/spec.md",
+      "sha256": "9fd953a0a931593137dcc3f2d7c420906e087fa395251e17fe7bfd7328e7445c"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-03-restaurant-knowledge-validated-knowledge/tasks.md",
+      "sha256": "e941a3a9885901086b8e254b4412d8b76527d028095fc5d424dd9bd4d7a10c4f"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-04-formalites-authorization/.openspec.yaml",
+      "sha256": "6766e675615f87c16f60cf61d6cff3c8149687bb14bf8d1f4451537b72fdea72"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-04-formalites-authorization/analysis.md",
+      "sha256": "c3d1babc03b1bb3088fe2178065e4fa6b2975c329050c3de847f59ca359794c4"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-04-formalites-authorization/design.md",
+      "sha256": "4f8b77b216fb820bd637a6661d164bcf998fde5c26a76e4d236d1652ab1b194d"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-04-formalites-authorization/proposal.md",
+      "sha256": "2da37c1b35c5450318ed051e1dec4b23941102e324dc4d453d8a932794b04613"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-04-formalites-authorization/specs/authorization/formalites/spec.md",
+      "sha256": "601dd1417ac25527f201fdb3b95488b98474f6514ecfb0c428f68584d118ba46"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-04-formalites-authorization/tasks.md",
+      "sha256": "3d22add75fccb9ab2d48ff808afd1a0e23d81b7119f9bc54cfb14c4dd4595dc4"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-04-next-generated-types-bootstrap/.openspec.yaml",
+      "sha256": "3994c732a35b66600bfde953f28a4169ca9138804c634a11e1775a1bd1594896"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-04-next-generated-types-bootstrap/analysis.md",
+      "sha256": "322846fe2553a9579b64d8afce607388b7f92f1d55787b32c8491ca9599cc59a"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-04-next-generated-types-bootstrap/design.md",
+      "sha256": "52468e84e4287c0fa2b87c758cd4d1b6fa7835dd15b3d110372072eff430fbd3"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-04-next-generated-types-bootstrap/proposal.md",
+      "sha256": "036e03c7e588d8970dc7255d364ab489612952edcf74f7633ba65e472817b18f"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-04-next-generated-types-bootstrap/tasks.md",
+      "sha256": "4eea496c5fb7c4fc6d54ba13386a3e029bd95a4f686ec68936d551201222ec98"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-05-formalites-persistent-draft-foundation/.openspec.yaml",
+      "sha256": "f2a6161f0ba072ce18a67b898c5bf5e732ff953ff4584d8e40a51a8d7db19ea3"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-05-formalites-persistent-draft-foundation/analysis.md",
+      "sha256": "11f11ee989b339dad2286fd6e2bc34e3119514a55dd4717123bea529a28ad693"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-05-formalites-persistent-draft-foundation/design.md",
+      "sha256": "83585641dc2be89282ad5e810c97e23724572ae6aaebe655637b705bf78d5610"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-05-formalites-persistent-draft-foundation/proposal.md",
+      "sha256": "2166d890b0449b63c925c798724e9e66432a8bff5debbccab238851ade73db18"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-05-formalites-persistent-draft-foundation/specs/formalites/persistent-draft-foundation/spec.md",
+      "sha256": "c83da9a062dbe6b0e6308f0f9e391dc38e3a6335e9c56560063b4d6742eb0850"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-05-formalites-persistent-draft-foundation/tasks.md",
+      "sha256": "3088d958c101ae3184638451d3e2cefe1d2c53d7fe2d9c35fe3cac42beca1d35"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-06-platform-admin-formalites-template-authority-foundation/.openspec.yaml",
+      "sha256": "4335374069fa3e46cb56363f52c324d241941b2def3fe11275cce6a577eb2b3f"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-06-platform-admin-formalites-template-authority-foundation/analysis.md",
+      "sha256": "6f39ed1cb07ccc2b1db66c7cad920d97c01e4183d23bcbad5783c419dc3ec73b"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-06-platform-admin-formalites-template-authority-foundation/design.md",
+      "sha256": "c165a8ae8b21f78dd33dbd12d634bf52e9cf6acd65d4385e36ce5656981fd07d"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-06-platform-admin-formalites-template-authority-foundation/proposal.md",
+      "sha256": "ef4ce308839aa02bf15f89254bce366a65fe115c35eeec04da367ffcfc7efa91"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-06-platform-admin-formalites-template-authority-foundation/specs/authorization/platform-admin-formalites-template-administration/spec.md",
+      "sha256": "c2ff7c618b2d050f0fa259f2e01d226870446638c1138a9cf2a7cd0a6bb45dfb"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-06-platform-admin-formalites-template-authority-foundation/tasks.md",
+      "sha256": "d669403109e378954abed0f9ac4ce219b64312387436710a69ab89fc43378db9"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-06-reputation-review-social-links-configuration/.openspec.yaml",
+      "sha256": "2ab2c83aadbdd12752ebfeb970c28b4828916be298e2724e2e1a17e69f58217c"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-06-reputation-review-social-links-configuration/analysis.md",
+      "sha256": "02c0213d17c754b3617738da4c4ef04aca4566e3ec42d669192cbe086b2a1f4d"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-06-reputation-review-social-links-configuration/design.md",
+      "sha256": "3ab0ee2c9c84df1ef58157b3e026fab551cc973d88dd77448c0caa2a774f8582"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-06-reputation-review-social-links-configuration/proposal.md",
+      "sha256": "12f138ad7de17186a313e14a08cb26f4f06333be2a03f8fc2445a63f8338ad61"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-06-reputation-review-social-links-configuration/specs/reputation/review-social-links-configuration/spec.md",
+      "sha256": "ba36028f4d8461ca8f8742eff00d81ad14e45ee14ffbabc0b4787749679dad07"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-06-reputation-review-social-links-configuration/tasks.md",
+      "sha256": "4782ceb0b2279bbc30227a0bdf8c767a8fe47a3c5b6a43bfbbf3f29bcd979590"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-07-formalites-template-legal-review-governance/.openspec.yaml",
+      "sha256": "84963d5bb5659efe782a9e644fd11bc8fbedb5b4dc250c9d6f8122a029d3fa6e"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-07-formalites-template-legal-review-governance/analysis.md",
+      "sha256": "1cf8a62d41994d8a33ce56dfc03659a5a609f7b42e2a19acd7365fe2f5b9db1d"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-07-formalites-template-legal-review-governance/design.md",
+      "sha256": "9759d0fc4487fa0e037622e16f24308054480eb453a44ac027579a084e6ea6b1"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-07-formalites-template-legal-review-governance/proposal.md",
+      "sha256": "53bc674bb634576506bc50cb94bb38ab9a939939f6cc2c7fc8695647c45f6d7e"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-07-formalites-template-legal-review-governance/specs/formalites/template-legal-review-governance/spec.md",
+      "sha256": "9105bd3d7eace661169fda7717a8fb934916c4fc35209ccffc2264f1755e370e"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-07-formalites-template-legal-review-governance/tasks.md",
+      "sha256": "29692d7060e99253fc733a30de4ba9a3185f56cb3de2e57a00265f60f301eece"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-07-pointage-authority-and-access-foundation/.openspec.yaml",
+      "sha256": "4335374069fa3e46cb56363f52c324d241941b2def3fe11275cce6a577eb2b3f"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-07-pointage-authority-and-access-foundation/analysis.md",
+      "sha256": "fe06a094fb0b3772cbcd2b1ca8b222055ad96f2f00e54c06451e1b7adb40f0ed"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-07-pointage-authority-and-access-foundation/design.md",
+      "sha256": "27537f0287bfec6c5ad6d211e143fdbec6a11ccb0e60fff04ae7dd9c32371dfa"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-07-pointage-authority-and-access-foundation/proposal.md",
+      "sha256": "900e2c99c7f88d655a02ddc4b58d2dc5a61c140b1dea29319546d84458627494"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-07-pointage-authority-and-access-foundation/specs/authorization/pointage/spec.md",
+      "sha256": "55b550bb449d2fd2c342bb91d328b82c8cc5658252fa460c02de39fcddfd4058"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-07-pointage-authority-and-access-foundation/specs/pointage/authority-foundation/spec.md",
+      "sha256": "3d5dce5f6ed6149655cd29f2fc046b39801e2e3a86376b57abf78cee942cb613"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-07-pointage-authority-and-access-foundation/tasks.md",
+      "sha256": "20de1adeb010dd5c26395488ddb4c5acfbfcd93dc86fbd77cc06bedbed2491a5"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-08-formalites-legal-template-foundation/.openspec.yaml",
+      "sha256": "26bded8c207d4f1916a7733b9877e748de1536ffbb966b0f75839ab6a64d8820"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-08-formalites-legal-template-foundation/analysis.md",
+      "sha256": "c40e395a230518bb5ff2073204fb44ae083eee5a2b833898c58287d326d6a4c1"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-08-formalites-legal-template-foundation/design.md",
+      "sha256": "d6db50dc5db2a64e29e8b8a5148011bda1b4bb46127101fdf188e3b7a3526cf5"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-08-formalites-legal-template-foundation/proposal.md",
+      "sha256": "61d51cce2ddc75acd050ca0317865e3ddc60e38f41c8e7e2047e4d2a28a9951c"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-08-formalites-legal-template-foundation/specs/formalites/legal-template-foundation/spec.md",
+      "sha256": "b68b3581d46d7a12d029303a1e83f24b3943f19e707edde8b2f6ef577bfc9418"
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-08-formalites-legal-template-foundation/tasks.md",
+      "sha256": "38c79ae3abf6a8a0547cf35acfc036276ed7d099a304e9b487f0712e0098d96b"
+    },
+    {
+      "path": "openspec/specs/authorization/formalites/spec.md",
+      "sha256": "1815f4dcdd4236d08176b45377e08e9e72a7d187de89172458d7e796a6a05616"
+    },
+    {
+      "path": "openspec/specs/authorization/platform-admin-formalites-template-administration/spec.md",
+      "sha256": "3b53193f63cc3536d00506826d5281aea7607a01604112051edebef5bb810db2"
+    },
+    {
+      "path": "openspec/specs/authorization/pointage/spec.md",
+      "sha256": "871df9f0cbc1cbabd19ef79a9226baeae4e7ed57c852eeb2f601feaac22bdd2b"
+    },
+    {
+      "path": "openspec/specs/authorization/restaurant-knowledge/spec.md",
+      "sha256": "f924222ae59f13937da91c5272a26a6050e16dbe3b2ee994b823297d5e393322"
+    },
+    {
+      "path": "openspec/specs/establishment-profile/spec.md",
+      "sha256": "d435e2e9bbaa4dd49e177fdaf0b0f19fbaad50f2b010d7cd1257eed097bd0dba"
+    },
+    {
+      "path": "openspec/specs/formalites/legal-template-foundation/spec.md",
+      "sha256": "5ae4931fd7f252312d650f2941bc9b97a7f45998612f670ed18dc7951e90b32a"
+    },
+    {
+      "path": "openspec/specs/formalites/persistent-draft-foundation/spec.md",
+      "sha256": "b4c8077df69c7da638627836255b0a64a3b9b342751964bebe6860183c1b768e"
+    },
+    {
+      "path": "openspec/specs/formalites/template-legal-review-governance/spec.md",
+      "sha256": "cbb2dc9173120e9fbc7231bca542b974278ed5d249a9ec8af47a1165873ccb22"
+    },
+    {
+      "path": "openspec/specs/personnel/reconstructable-value-history/spec.md",
+      "sha256": "67c9dff9f78d80f8a9669763e718229df931e8d8f5395fc9284c6aac964abb63"
+    },
+    {
+      "path": "openspec/specs/pointage/authority-foundation/spec.md",
+      "sha256": "6c57de01c3c83502253df8ea59410c3d3e4f453fef64d7700ad775b487b10cdb"
+    },
+    {
+      "path": "openspec/specs/reputation/review-social-links-configuration/spec.md",
+      "sha256": "80a228f2fad6431d817218e9fde147159f583fab4f6bfd495e73d9d9e0d2c756"
+    },
+    {
+      "path": "openspec/specs/restaurant-knowledge/communication-identity/spec.md",
+      "sha256": "156e0e05aa4a3b72145ffad5c3dc38ae5a73213a1744d679777850ace4cd7323"
+    },
+    {
+      "path": "openspec/specs/restaurant-knowledge/concept-history/spec.md",
+      "sha256": "93ece2037955b7b208f506cf7581a9adf45ffe9570783828e159a5fef2fc25c1"
+    },
+    {
+      "path": "openspec/specs/restaurant-knowledge/cuisine-know-how/spec.md",
+      "sha256": "90e46a1a4e0c2f13679c3eb15cbb560b84b7b4206b1a09ff926f01b7f6624928"
+    },
+    {
+      "path": "openspec/specs/restaurant-knowledge/customer-experience/spec.md",
+      "sha256": "1fd47662b8122bde0b2a5029af246f39bf78efad6796b9712f2cff6dc6a254f8"
+    },
+    {
+      "path": "openspec/specs/restaurant-knowledge/team-culture/spec.md",
+      "sha256": "e4af63e50baed2262a18868fd8072ea050d494ce168cc1d0860322651f4d3166"
+    },
+    {
+      "path": "openspec/specs/restaurant-knowledge/validated-knowledge/spec.md",
+      "sha256": "203d674ad3f0afc1b4462b5584ca597412e09bf0a2c40f9b7937d736d7a73a70"
+    }
+  ],
+  "unrelatedBaselineFilesChanged": [],
+  "concurrentUnrelatedNewFiles": [
+    {
+      "path": "docs/reviews/ui-ux-pro-max-integration/01-analysis-review.md",
+      "sha256": "0b70e41d2201f3375ff567b927f9f17b2b6b4a66f5918e92fafb397994d03a8a"
+    },
+    {
+      "path": "docs/reviews/ui-ux-pro-max-integration/02-specs-review.md",
+      "sha256": "735ed0e987511f43ff817b5c38cc17be75ef0d9a6173a16f25a027033b7e94d3"
+    },
+    {
+      "path": "docs/reviews/ui-ux-pro-max-integration/02b-design-review.md",
+      "sha256": "d4c670941f459a4727d66ed5c699d24cd0fc611e097796af823fd0b7cf04a4f3"
+    },
+    {
+      "path": "docs/reviews/ui-ux-pro-max-integration/license-provenance-review.md",
+      "sha256": "971901cd24cc4d6a8d041a7357b368bc7fb36a3613e6a68361af64e94528d7fe"
+    },
+    {
+      "path": "openspec/changes/ui-ux-pro-max-integration/analysis.md",
+      "sha256": "88198e944804810a145e463513127e498a9e7dfccb19ef0656dcea019bb235d7"
+    },
+    {
+      "path": "openspec/changes/ui-ux-pro-max-integration/design.md",
+      "sha256": "77fcbdc9938f48c7414d037e5216a2d5f0d2b725561b55ed08d5e80db47dde33"
+    },
+    {
+      "path": "openspec/changes/ui-ux-pro-max-integration/specs/tooling/external-design-intelligence/spec.md",
+      "sha256": "568d37a253878fee2a9f853b027a21f95f708af77c8df496ae99fa67f38b2646"
+    },
+    {
+      "path": "openspec/changes/ui-ux-pro-max-integration/tasks.md",
+      "sha256": "9e58474ba55cd6242741d4fc7db1a8af5b1708ba76481e2045362fe044928157"
+    }
+  ],
+  "disposableEvidence": {
+    "at": "2026-09-08T15:22:10.156Z",
+    "clusters": [
+      {
+        "container": "yuta-pointage-raw-20260908-1252",
+        "id": "229f77e20063d830eba10d12272b7873a58dc1629d49db357a9d2de7ed9013b3",
+        "created": "2026-09-08T12:02:07.700341296Z",
+        "port": "127.0.0.1:56541",
+        "privateTmpfs": true,
+        "sharedMounts": 0,
+        "databases": [
+          {
+            "name": "yuta_pointage_foundation_test_c17",
+            "expectedEqualsActual": true,
+            "exactRegex": true,
+            "counts": {
+              "migrations": 22,
+              "raw": 0,
+              "receipts": 0,
+              "continuations": 0
+            },
+            "fingerprints": {
+              "pointage_raw_lock_dossier": "293dee4dfc8787ea891fe370668425dc97918b4412f62da6eb0f692e7521fe24",
+              "pointage_raw_enforce_append": "5b52387a758b30bcc188c2f383deee0024212d69a28d1ee9cbaa2d67bd85d327"
+            }
+          },
+          {
+            "name": "yuta_pointage_raw_clocking_test_b20260908a",
+            "expectedEqualsActual": true,
+            "exactRegex": true,
+            "counts": {
+              "migrations": 22,
+              "raw": 278,
+              "receipts": 278,
+              "continuations": 39
+            },
+            "fingerprints": {
+              "pointage_raw_lock_dossier": "293dee4dfc8787ea891fe370668425dc97918b4412f62da6eb0f692e7521fe24",
+              "pointage_raw_enforce_append": "5b52387a758b30bcc188c2f383deee0024212d69a28d1ee9cbaa2d67bd85d327"
+            }
+          },
+          {
+            "name": "yuta_pointage_raw_clocking_test_upgrade20260908b",
+            "expectedEqualsActual": true,
+            "exactRegex": true,
+            "counts": {
+              "migrations": 22,
+              "raw": 0,
+              "receipts": 0,
+              "continuations": 0
+            },
+            "fingerprints": {
+              "pointage_raw_lock_dossier": "293dee4dfc8787ea891fe370668425dc97918b4412f62da6eb0f692e7521fe24",
+              "pointage_raw_enforce_append": "5b52387a758b30bcc188c2f383deee0024212d69a28d1ee9cbaa2d67bd85d327"
+            }
+          }
+        ]
+      },
+      {
+        "container": "yuta-pointage-raw-f6-20260908",
+        "id": "e76897d841358dcfb6f834c9d11fe6616331247e8a3a8a4d6dc95ab2c5f3c6ff",
+        "created": "2026-09-08T14:33:09.937495005Z",
+        "port": "127.0.0.1:56542",
+        "privateTmpfs": true,
+        "sharedMounts": 0,
+        "databases": [
+          {
+            "name": "yuta_pointage_raw_clocking_test_upgrade20260908c",
+            "expectedEqualsActual": true,
+            "exactRegex": true,
+            "counts": {
+              "migrations": 22,
+              "raw": 0,
+              "receipts": 0,
+              "continuations": 0
+            },
+            "fingerprints": {
+              "pointage_raw_lock_dossier": "293dee4dfc8787ea891fe370668425dc97918b4412f62da6eb0f692e7521fe24",
+              "pointage_raw_enforce_append": "5b52387a758b30bcc188c2f383deee0024212d69a28d1ee9cbaa2d67bd85d327"
+            }
+          },
+          {
+            "name": "yuta_pointage_raw_clocking_test_upgrade20260908b",
+            "expectedEqualsActual": true,
+            "exactRegex": true,
+            "counts": {
+              "migrations": 22,
+              "raw": 0,
+              "receipts": 0,
+              "continuations": 0
+            },
+            "fingerprints": {
+              "pointage_raw_lock_dossier": "293dee4dfc8787ea891fe370668425dc97918b4412f62da6eb0f692e7521fe24",
+              "pointage_raw_enforce_append": "5b52387a758b30bcc188c2f383deee0024212d69a28d1ee9cbaa2d67bd85d327"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "commands": [
+    {
+      "command": "pnpm db:cloud:migrate",
+      "cwd": "D:/working/yuta/yuta-resto",
+      "target": "C17 foundation; separate F6 clean target",
+      "exit": 0,
+      "migrations": 22
+    },
+    {
+      "command": "pnpm --filter @yuta/db-cloud test test/pointage-repository.integration.test.ts",
+      "cwd": "D:/working/yuta/yuta-resto",
+      "target": "127.0.0.1:56541/yuta_pointage_foundation_test_c17",
+      "start": "2026-09-08T16:21:36+02:00",
+      "exit": 0,
+      "pass": 8,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "command": "pnpm --filter @yuta/db-cloud test test/pointage-raw-clocking-migration.integration.test.ts",
+      "target": "127.0.0.1:56542; separate clean and empty-upgrade targets",
+      "start": "2026-09-08T16:34:41+02:00",
+      "exit": 0,
+      "pass": 5,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "command": "pnpm --filter @yuta/db-cloud test test/pointage-raw-clocking.integration.test.ts --reporter=verbose",
+      "target": "127.0.0.1:56541/yuta_pointage_raw_clocking_test_b20260908a",
+      "start": "2026-09-08T17:13:10+02:00",
+      "exit": 0,
+      "pass": 62,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "command": "pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-service.test.ts --reporter=verbose",
+      "target": "127.0.0.1:56541/yuta_pointage_raw_clocking_test_b20260908a",
+      "start": "2026-09-08T17:13:03+02:00",
+      "exit": 0,
+      "pass": 52,
+      "fail": 0,
+      "skip": 0,
+      "composition": "45 unit + 7 actual PostgreSQL"
+    },
+    {
+      "command": "pnpm --filter @yuta/backoffice test test/pointage-raw-chain.test.ts test/pointage-raw-clocking-manager.test.ts test/pointage-foundation.test.ts",
+      "exit": 0,
+      "pass": 71
+    },
+    {
+      "command": "pnpm --filter @yuta/db-cloud test test/pointage-raw-clocking-migration.integration.test.ts -t \"F6|preserves every exact ledger\"",
+      "exit": 0,
+      "pass": 4,
+      "skip": 1,
+      "skipReason": "already-completed empty-upgrade target must not be reused as empty"
+    },
+    {
+      "command": "pnpm --filter @yuta/auth test test/pointage-continuation.test.ts",
+      "exit": 0,
+      "pass": 19
+    },
+    {
+      "command": "pnpm --filter @yuta/db-cloud test test/pointage-raw-clocking-schema.test.ts",
+      "exit": 0,
+      "pass": 7
+    },
+    {
+      "command": "pnpm -r --if-present typecheck",
+      "exit": 0
+    },
+    {
+      "command": "pnpm docs:check",
+      "exit": 0,
+      "documents": 36
+    },
+    {
+      "command": "pnpm architecture:check",
+      "exit": 0
+    },
+    {
+      "command": "pnpm exec openspec validate pointage-usable-raw-clocking --strict",
+      "exit": 0
+    },
+    {
+      "command": "pnpm ui:pack:check backoffice-pointage-employee",
+      "exit": 0,
+      "warnings": 0
+    },
+    {
+      "command": "pnpm format:check",
+      "exit": 1,
+      "warnings": 67,
+      "note": "existing unrelated; not fixed"
+    },
+    {
+      "command": "pnpm exec prettier --check apps/backoffice/src/server/pointage/raw-chain.ts apps/backoffice/src/server/pointage/raw-clocking-manager.ts apps/backoffice/src/server/pointage/raw-clocking-service.ts apps/backoffice/test/pointage-raw-chain.test.ts apps/backoffice/test/pointage-raw-clocking-manager.test.ts apps/backoffice/test/pointage-raw-clocking-service.test.ts packages/db-cloud/src/pointage-raw-clocking-repository.ts packages/db-cloud/test/helpers/pointage-raw-clocking-test-database.ts packages/db-cloud/test/pointage-raw-clocking-migration.integration.test.ts packages/db-cloud/test/pointage-raw-clocking-schema.test.ts packages/db-cloud/test/pointage-raw-clocking.integration.test.ts",
+      "exit": 0
+    }
+  ],
+  "unresolvedProductionBlockers": [
+    "exact retention duration",
+    "deletion/anonymization",
+    "legal hold",
+    "backup-retention interaction",
+    "employee notice",
+    "detailed audit visibility",
+    "trusted production client-address provenance"
+  ],
+  "noActions": [
+    "no real attendance",
+    "no app runtime/provider composition",
+    "no transport/UI",
+    "no formal VERIFY",
+    "no Browser QA",
+    "no Gate 3",
+    "no deploy/enable",
+    "no sync/archive",
+    "no production readiness promotion"
+  ]
+}

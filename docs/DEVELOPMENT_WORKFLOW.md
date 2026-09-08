@@ -73,6 +73,41 @@ typecheck only on success. The 120-second per-child timeout terminates and waits
 for the owned generator before releasing its lock. Changed Next versions or
 output layouts require review rather than silently skipping validation.
 
+### External design-intelligence controls
+
+Read [External Design Intelligence](ui/EXTERNAL_DESIGN_INTELLIGENCE.md) before
+using or maintaining the project-local advisory integration. Its acceptance,
+procurement, install and verification gates remain separate. Windows local
+NTFS on one volume and a known Python 3.10+ executable are the bounded host;
+other hosts or unknown ownership stop rather than receive a fallback installer.
+
+The new Phase-A control test command constructs inert local fixtures only:
+
+```bash
+python -B -m unittest discover -s scripts/ui-ux-pro-max -p test_bootstrap.py
+```
+
+It does not fetch the accepted archive, run upstream Python or install a skill.
+Native filesystem tests use exclusively owned temporary directories alongside
+the repository on its volume, outside all skill discovery roots.
+
+After a separately authorized installation has a verified receipt, the bounded
+content check and supported query surface are:
+
+```bash
+python -B scripts/ui-ux-pro-max/bootstrap.py verify-content
+python -B scripts/ui-ux-pro-max/query.py "keyboard accessibility" --domain ux --max-results 3
+```
+
+These are new tooling commands, not application/package scripts. A content
+check alone is not full `VERIFIED_NO_CHANGE` or Codex activation evidence.
+Phase A does not authorize running the query on real upstream bytes. The
+`install` and `replace-reviewed` command modes currently stop at the
+pre-procurement boundary; guarded placement/update mechanics are exercised only
+with inert fixtures. Actual orchestration, smoke and fresh-context activation
+remain the separately authorized tasks 5.x, followed by final setup validation
+in task 6.1. Never use npm/npx/dlx/uipro or formatter/install-all workarounds.
+
 Run only the relevant package tests and application builds in addition to the
 baseline. Database integration tests require their documented disposable
 database guards. Documentation-only changes do not require application builds,

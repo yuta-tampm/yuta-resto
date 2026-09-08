@@ -16,7 +16,7 @@ import {
   YutaBrandMark,
   cn,
 } from '@yuta/ui';
-import { Bell, ChevronLeft, LogOut, Menu, X } from 'lucide-react';
+import { Bell, ChevronLeft, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState, type ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
@@ -28,6 +28,7 @@ import {
   type NavigationCapabilities,
 } from './backoffice-navigation';
 import { TenantSwitcher } from './tenant-switcher';
+import { LogoutSubmitButton } from './logout-submit-button';
 
 export function BackofficeFrame({
   children,
@@ -160,15 +161,7 @@ export function BackofficeFrame({
                 className="bg-primary text-white"
               />
               <form action={logoutAction}>
-                <IconButton
-                  type="submit"
-                  variant="ghost"
-                  size="sm"
-                  aria-label="Se déconnecter"
-                  title="Se déconnecter"
-                >
-                  <LogOut className="h-4 w-4" />
-                </IconButton>
+                <LogoutSubmitButton />
               </form>
             </>
           }

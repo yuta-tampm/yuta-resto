@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-06
+Last updated: 2026-09-07
 
 The YUTA restaurant back-office uses server-side, database-backed sessions. Authentication is
 implemented by `@yuta/auth`, the cloud database boundary, and the server
@@ -113,6 +113,46 @@ Reputation permissions are enforced server-side:
 
 Client-side button visibility is only a usability aid and must not replace the
 server permission check.
+
+## Pointage authority foundation
+
+The Backoffice cloud runtime contains a server-only Pointage authentication and
+authorization foundation. It does not expose a route, browser transport,
+employee session, clock event, UI, or production-enabled capability.
+
+Pointage employee credentials are independent from Backoffice user sessions,
+Personnel permissions, POS users, and local PINs. A credential contains exactly
+eight ASCII digits, is generated with Node cryptographic randomness, and is
+persisted only through a scoped HMAC lookup digest plus a salted, peppered
+`scrypt` verifier. Versioned HKDF labels separate lookup, verifier, limiter, and
+dummy-verification keys. Plaintext is available only in the successful issue or
+reset command result after its database transaction commits; it cannot be read
+back from the repository.
+
+Every employee credential request must resolve an active organization and
+establishment from the public establishment slug on the server. Credential
+validation also requires an injected `TrustedPointageClientAddressProvider`.
+There is deliberately no production provider, forwarded-header reader,
+unknown-client bucket, or candidate-only fallback in this foundation. A missing
+secret or missing/untrusted address provenance fails closed before usable
+credential processing. Production enablement remains blocked until exact
+deployment provenance is reviewed separately.
+
+Cryptographic validation creates only a `VerifiedPointageCredential`. It does
+not create employee authority. The three employee operations—identify, own-state
+read, and own-operation creation—each require a separately checked, scoped
+Personnel employment period using the establishment timezone; entry and valid
+departure days are inclusive. Manager Pointage grants are separate and limited
+to active scoped OWNER or MANAGER contexts for establishment read, credential
+issue, and credential reset. STAFF has no Pointage grant, and there is no
+standalone revoke, suspend, or invalidate operation.
+
+Cloud persistence is additive and limited to credential versions, distributed
+candidate/client limiter state, and minimized write-only security attribution.
+It contains no raw Pointage evidence or offline/sync state. Exact retention,
+deletion/anonymization, legal hold, backup-retention interaction, employee notice,
+detailed audit visibility, and trusted production client-address provenance are
+still unresolved production gates.
 
 ## User and membership administration
 

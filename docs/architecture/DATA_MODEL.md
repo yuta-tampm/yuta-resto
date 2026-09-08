@@ -76,6 +76,16 @@ Cloud records use one of these scopes:
 2. **Organization-owned:** contains non-null `organization_id`.
 3. **Restaurant/branch-owned:** contains non-null `organization_id` and
    non-null `establishment_id`.
+4. **GLOBAL YUTA Formalités template resources:** dedicated non-tenant
+   template identity, working draft and immutable version in `packages/db-cloud`;
+   no organization/establishment owner or fabricated tenant fallback.
+
+The [legal-template foundation](../../openspec/specs/formalites/legal-template-foundation/spec.md)
+uses its [dedicated schema](../../packages/db-cloud/src/schema/formalites-legal-templates.ts)
+and authorized repository with existing exact system operations. Frozen template
+versions are not generated contracts or legal-review evidence. This boundary
+does not relax tenant-owned query rules or enable an administration application,
+template publication/qualification or production operation.
 
 Every tenant-owned repository method must receive the required scope
 explicitly. Reads, updates, and deletes must include scope predicates even when
@@ -381,7 +391,8 @@ reference, current version, and revision. Its version table stores sanitized
 file metadata and opaque private-storage keys; its command-receipt table stores
 hashed, 24-hour idempotency evidence without file or employee payload. Every
 table repeats organization, establishment, and employee scope with composite
-foreign keys. Payroll, register, and Formalités data are not active.
+foreign keys. Payroll and register data are not active. Formalités legal-template
+resources use the separate global foundation described in section 3.
 
 The employee-detail history reads at most the 50 most recent known events under
 the same organization-and-establishment scope. The repository maps stored

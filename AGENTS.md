@@ -165,6 +165,13 @@ and code owned by a route or route group.
 `packages/ui` continues to own only reusable, business-domain-neutral
 presentation primitives.
 
+## External design references
+
+For UI/UX Pro Max applicability, authority conflicts and VERIFY evidence, follow
+`docs/ui/EXTERNAL_DESIGN_INTELLIGENCE.md`. External advice is reference only;
+loading a skill grants no installation, command execution or source-mutation
+permission beyond the user's approved scope.
+
 ## Task workflow
 
 For meaningful work:

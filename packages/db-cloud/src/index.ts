@@ -17,6 +17,8 @@ export {
   type PersonnelHistoryRetentionEligibility,
 } from './personnel-history-cutover';
 export * from './personnel-register-repository';
+export * from './pointage-repository';
+export * from './pointage-raw-clocking-repository';
 export * from './personnel-action-overview-repository';
 export * from './personnel-document-repository';
 export * from './personnel-contract-amendment-repository';
@@ -27,3 +29,13 @@ export * from './schema';
 export * from './tenant-adapters';
 export * from './tenant-foundation-repository';
 export * from './tenant-user-repository';
+export {
+  createFormalitesLegalTemplateRepository,
+  type FormalitesLegalTemplateRepository,
+} from './formalites-legal-template-repository';
+export {
+  FORMALITES_LEGAL_SOURCE_PROFILE,
+  FormalitesLegalTemplateError,
+  type FormalitesLegalTemplateErrorCode,
+  type FormalitesTemplateApplicability,
+} from './formalites-legal-template-domain';

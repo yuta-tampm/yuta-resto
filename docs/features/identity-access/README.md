@@ -67,8 +67,26 @@ establishment, membership, role, permission, and entitlement values supplied
 by the browser are untrusted and cannot establish access.
 
 `YUTA_ADMIN` and `YUTA_SUPPORT` are global system-role values, but they do not
-bypass restaurant membership checks. No current Platform Admin product
-behavior is established by their schema presence.
+bypass restaurant membership checks. Their schema presence alone establishes
+no Platform Admin product behavior.
+
+### Platform Admin Formalités template authority foundation
+
+The implemented portable authorization foundation defines exactly five
+independent system operations for GLOBAL YUTA Formalités templates:
+`formalites.template.read`, `formalites.template.draft.manage`,
+`formalites.template.review.submit`, `formalites.template.publish`, and
+`formalites.template.retire`. `YUTA_ADMIN` receives an explicit grant for each
+operation; `YUTA_SUPPORT` receives none. Authorization requires a trusted
+active internal user and the exact approved system-operation grant. Tenant
+membership and `TenantContext` are not required and provide no global
+authority. No wildcard, prefix matching, implication, or role hierarchy
+exists.
+
+This foundation adds no Platform Admin application/runtime, template data or
+lifecycle, legal-review evidence, tenant-resource access, or production
+enablement. Precise behavior is defined by the approved
+[Platform Admin Formalités template authorization specification](../../../openspec/specs/authorization/platform-admin-formalites-template-administration/spec.md).
 
 ### Restaurant Knowledge authorization
 
@@ -164,7 +182,8 @@ Current sources explicitly defer or leave incomplete:
 - custom roles or a richer RBAC/ABAC administration model;
 - public account registration, organization creation, ownership transfer,
   support tooling, impersonation, account deletion, and billing-linked access;
-- implemented Platform Admin identity and access behavior; and
+- general-purpose Platform Admin identity and access behavior beyond the
+  bounded Formalités template authority foundation; and
 - production provider configuration and dated deployment/runtime evidence.
 
 These items are not approved or implemented merely because the schema or
@@ -241,17 +260,17 @@ equivalent without a separately accepted decision.
 
 ## 10. Related modules
 
-| Related module            | Current relationship                                                                                                                        | Source of truth / direction                                                         |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| Establishment             | Active membership selects establishment scope; profile data and establishment identity remain Establishment-owned.                          | Establishment Product Knowledge, Tenancy, and `establishments`.                     |
-| Personnel                 | A cloud account is not an employee dossier; current employee identity and employment facts remain Personnel-owned.                          | Personnel Product Knowledge and personnel repositories.                             |
-| Today                     | Today requires authenticated tenant context and source-module permissions; it owns no identity or access data.                              | Today Product Knowledge and Backoffice server guards.                               |
-| Reservations / Booking    | Backoffice operations require active tenant scope, `booking.enabled`, and Booking permissions.                                              | Public Booking knowledge, Booking repositories, and Booking permission guards.      |
-| Reputation                | Backoffice operations require active tenant scope, `reputation.enabled`, and Reputation permissions.                                        | Reputation knowledge, repositories, and permission guards.                          |
-| Restaurant Knowledge      | READ and MANAGE require active tenant scope and their dedicated capability permissions; Establishment Profile grants do not authorize them. | Restaurant Knowledge semantics and Identity / Access permission guards.             |
-| POS / Site Agent          | Uses an independent local user and session model; no cloud identity synchronization exists.                                                 | POS Product Knowledge, Site Agent, and `packages/db-pos`.                           |
-| Public Booking / Feedback | Anonymous visitors have no Backoffice membership; server-side public resolution establishes bounded tenant context.                         | Public Booking/Reputation knowledge, ADR-002/ADR-004, and public tenant resolution. |
-| Platform Admin            | `apps/platform-admin` is reserved and not implemented; global system-role schema values do not create its product behavior.                 | Repository model, Authentication architecture, and current implementation evidence. |
+| Related module            | Current relationship                                                                                                                           | Source of truth / direction                                                         |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Establishment             | Active membership selects establishment scope; profile data and establishment identity remain Establishment-owned.                             | Establishment Product Knowledge, Tenancy, and `establishments`.                     |
+| Personnel                 | A cloud account is not an employee dossier; current employee identity and employment facts remain Personnel-owned.                             | Personnel Product Knowledge and personnel repositories.                             |
+| Today                     | Today requires authenticated tenant context and source-module permissions; it owns no identity or access data.                                 | Today Product Knowledge and Backoffice server guards.                               |
+| Reservations / Booking    | Backoffice operations require active tenant scope, `booking.enabled`, and Booking permissions.                                                 | Public Booking knowledge, Booking repositories, and Booking permission guards.      |
+| Reputation                | Backoffice operations require active tenant scope, `reputation.enabled`, and Reputation permissions.                                           | Reputation knowledge, repositories, and permission guards.                          |
+| Restaurant Knowledge      | READ and MANAGE require active tenant scope and their dedicated capability permissions; Establishment Profile grants do not authorize them.    | Restaurant Knowledge semantics and Identity / Access permission guards.             |
+| POS / Site Agent          | Uses an independent local user and session model; no cloud identity synchronization exists.                                                    | POS Product Knowledge, Site Agent, and `packages/db-pos`.                           |
+| Public Booking / Feedback | Anonymous visitors have no Backoffice membership; server-side public resolution establishes bounded tenant context.                            | Public Booking/Reputation knowledge, ADR-002/ADR-004, and public tenant resolution. |
+| Platform Admin            | `apps/platform-admin` remains reserved and unimplemented; only the five-operation GLOBAL YUTA Formalités template authority foundation exists. | Repository model, approved authorization spec, and current implementation evidence. |
 
 ## 11. Current limitations and non-goals
 
@@ -264,8 +283,9 @@ equivalent without a separately accepted decision.
   current guard evaluates more than one of them.
 - No cloud/POS identity synchronization, federation, or shared session is
   approved.
-- No implemented Platform Admin, public signup, custom-role editor,
+- No implemented Platform Admin application/runtime, public signup, custom-role editor,
   impersonation, or support bypass is claimed.
+- The bounded Formalités template authority foundation is not production enablement.
 - This home does not define module-specific business permissions or transfer
   their data ownership into Identity / Access.
 

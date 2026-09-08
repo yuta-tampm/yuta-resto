@@ -117,6 +117,12 @@ For a new page, typed fixtures may establish a visual baseline only when the
 page specification explicitly permits them. Fixtures must not simulate an
 integrated capability as if it were implemented.
 
+## External advisory references
+
+Route UI/UX Pro Max usage and recommendation dispositions through
+[External Design Intelligence](EXTERNAL_DESIGN_INTELLIGENCE.md). Do not copy its
+stack suggestions into the existing component, token or application authorities.
+
 ## Reference-image policy
 
 Reference images may guide:

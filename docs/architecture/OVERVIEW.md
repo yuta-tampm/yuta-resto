@@ -31,6 +31,11 @@ import database packages, drivers, server environment modules, or secrets.
 
 Platform-wide YUTA administration belongs in the future `apps/platform-admin`,
 never in the restaurant back-office.
+The application remains unimplemented. The shared auth package now contains
+only a bounded, non-runtime authority foundation for five explicit GLOBAL YUTA
+Formalités template operations. It creates neither a general Platform Admin
+product nor tenant authority, template persistence/lifecycle, or production
+enablement.
 
 ## Public-product visibility
 

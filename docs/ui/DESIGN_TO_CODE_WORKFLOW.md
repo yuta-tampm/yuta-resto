@@ -121,6 +121,13 @@ Produce an Implementation Inventory covering, as applicable:
 
 No implementation begins in this step.
 
+## External advisory classification and VERIFY routing
+
+During Phase 0 classify UI/UX Pro Max usage using
+[External Design Intelligence](EXTERNAL_DESIGN_INTELLIGENCE.md). Carry the
+reviewed record into the existing plan and VERIFY/acceptance evidence; do not
+add a phase or use heuristic findings instead of functional or Browser QA.
+
 ## Step 1A — Shared UI context resolution gate
 
 Repository analysis identifies what the target does. Before a design-generation

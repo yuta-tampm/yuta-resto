@@ -58,6 +58,12 @@ pnpm test:ui-pack
 The generator creates mechanics and unresolved metadata only. The validator
 does not infer product decisions or silently migrate legacy packages.
 
+## External advisory routing
+
+For UI/UX Pro Max, use [External Design Intelligence](EXTERNAL_DESIGN_INTELLIGENCE.md)
+at classification and VERIFY. Its question-type routing and evidence contract
+preserve the existing application/page lifecycle and Browser QA requirements.
+
 ## Authority order
 
 When sources conflict, use this order:
