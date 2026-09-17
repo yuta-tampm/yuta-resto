@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "platform": "linux/amd64",
+  "baseImageDigest": "sha256:9c47360a2a0355e2da18516d0b1c2126ec22c195d2185e97347c9d98398c5bef",
+  "supplyClosureSha256": "792ec71e06951cc94fa317c9753530b778c727d75df457f184215a8b0bb6e9d3",
+  "reportlabInspectionClosureSha256": "41a07ed33619ab99c97d5bd5356b98774228114a79db38e966b04a7eee2047eb",
+  "python": {
+    "version": "3.12.14",
+    "executableSha256": "4dbf3143240288fb2170257ffaa7bd030cdda5d2703d1f5f30b627042267e2e3",
+    "libpythonSha256": "a3176871637b456567c80b853fcbb28f102308079f7c68e22b3c6f038d257627"
+  },
+  "artifacts": [
+    {
+      "filename": "charset_normalizer-3.4.4-py3-none-any.whl",
+      "version": "3.4.4",
+      "sha256": "7a32c560861a02ff789ad905a2fe94e3f840803362c84fecf1851cb4cf3dc37f"
+    },
+    {
+      "filename": "pillow-12.3.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "version": "12.3.0",
+      "sha256": "78cb2c6865a35ab8ff8b75fd122f6033b92a62c82801110e48ddd6c936a45d91"
+    },
+    {
+      "filename": "reportlab-4.4.9-py3-none-any.whl",
+      "version": "4.4.9",
+      "sha256": "68e2d103ae8041a37714e8896ec9b79a1c1e911d68c3bd2ea17546568cf17bfd"
+    }
+  ],
+  "font": {
+    "path": "reportlab/fonts/Vera.ttf",
+    "sha256": "c4c45690b345435b2cba52ecabe275f05e49b389b39fe68ad03afbb551288d3d",
+    "licensePath": "reportlab/fonts/bitstream-vera-license.txt",
+    "licenseSha256": "3361d054759a2fc686a2c058be82deaf9c2e6fe549be9004d7935a6c1736315d",
+    "role": "scan-roman"
+  },
+  "repertoireSha256": "94d6992b2a1965bab3800b7800993d832364b25cff1ccf3dbbb09021b3018d51",
+  "generatorClosureSha256": "088e372d9ac8f4dc4031e026095af0684461ff1d06eb1e582b3e111af758aaed",
+  "corpusClosureSha256": "35e3ff1fd1cef6d6f336b155d5b6bec7bee679ea6e12666e838f6cc78c46b9d5",
+  "expectedOutputClosureSha256": "a075ef0e47cfa288a93316c99d28bb1b74bab6362e081ded4b18e17a62f40560",
+  "controls": {
+    "locale": "C",
+    "timezone": "UTC",
+    "encoding": "UTF-8",
+    "cwd": "/work",
+    "source": "/input",
+    "output": "/work/output",
+    "temp": "/work/tmp",
+    "pythonHashSeed": "0",
+    "pdfInvariant": 1,
+    "pageCompression": 1,
+    "jpegQuality": [48, 88],
+    "jpegOptimize": false,
+    "jpegProgressive": false,
+    "fontSizes": [28, 34, 20],
+    "digitalFonts": ["Helvetica", "Helvetica-Bold", "Helvetica-Oblique"]
+  }
+}

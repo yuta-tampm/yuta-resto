@@ -1,5 +1,10 @@
 import type { AddressInfo } from 'node:net';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { PgDialect } from 'drizzle-orm/pg-core';
+import type { SQL } from 'drizzle-orm';
+import type { PosDatabaseClient } from '@yuta/db-pos/client';
+import { hashLocalSessionToken } from '@yuta/db-pos/local-auth-crypto';
+import { createLocalAuthService } from '../src/services/local-auth-service';
 import type {
   LocalKitchenEvent,
   LocalKitchenQueueQuery,
@@ -1235,3 +1240,153 @@ function managementReportSnapshot(query: LocalManagementReportsQuery) {
     },
   };
 }
+
+function localLookupFixture() {
+  const token = 'local-positive-token-with-at-least-thirty-two-characters';
+  const row = {
+    session: {
+      id: '33333333-3333-4333-8333-333333333333',
+      authVersion: 1,
+      lastSeenAt: new Date(),
+      expiresAt: new Date(Date.now() + 60000),
+    },
+    user: {
+      id: '11111111-1111-4111-8111-111111111111',
+      name: 'Synthetic',
+      email: null,
+      role: 'admin',
+      isActive: true,
+      authVersion: 1,
+    },
+  };
+  let parameters: unknown[] = [];
+  const limit = vi.fn(async () =>
+    parameters.includes(hashLocalSessionToken(token)) ? [row] : [],
+  );
+  const where = vi.fn((condition: SQL) => {
+    const query = new PgDialect().sqlToQuery(condition);
+    expect(query.sql).toContain('"local_auth_sessions"."token_hash"');
+    expect(query.sql).toContain('"local_auth_sessions"."revoked_at" is null');
+    expect(query.sql).toContain('"local_auth_sessions"."expires_at" >');
+    parameters = query.params;
+    return { limit };
+  });
+  const innerJoin = vi.fn(() => ({ where }));
+  const from = vi.fn(() => ({ innerJoin }));
+  const select = vi.fn(() => ({ from }));
+  const insert = vi.fn(),
+    update = vi.fn();
+  const db = { select, insert, update } as unknown as PosDatabaseClient;
+  const service = createLocalAuthService(db);
+  const findSession = vi.fn(service.findSession);
+  return {
+    token,
+    row,
+    findSession,
+    select,
+    from,
+    innerJoin,
+    where,
+    limit,
+    insert,
+    update,
+    parameters: () => parameters,
+  };
+}
+describe('A1.2 POS HTTP and actual local service composition', () => {
+  const wrong = 'ptc1_' + 'A'.repeat(43);
+  let server: ReturnType<typeof createSiteAgentServer>;
+  let base: string;
+  let f: ReturnType<typeof localLookupFixture>;
+  const report = vi.fn(),
+    signIn = vi.fn();
+  beforeEach(async () => {
+    f = localLookupFixture();
+    report.mockReset();
+    signIn.mockReset();
+    server = createSiteAgentServer({
+      env: {
+        NODE_ENV: 'test',
+        POS_DATABASE_URL: 'postgres://test:test@localhost:5432/yuta_pos_test',
+        SITE_AGENT_HOST: '127.0.0.1',
+        SITE_AGENT_PORT: 3004,
+        SITE_AGENT_ALLOWED_ORIGIN: 'http://localhost:3003',
+        TZ: 'Europe/Paris',
+        POS_PRINT_POLL_INTERVAL_MS: 1000,
+      },
+      service: {
+        ...createMockService(),
+        findSession: f.findSession,
+        getManagementReport: report,
+        signIn,
+      },
+    });
+    await new Promise<void>((done, reject) => {
+      server.once('error', reject);
+      server.listen(0, '127.0.0.1', done);
+    });
+    base = 'http://127.0.0.1:' + (server.address() as AddressInfo).port;
+  });
+  afterEach(async () => {
+    if (server)
+      await new Promise<void>((done, reject) =>
+        server.close((e) => (e ? reject(e) : done())),
+      );
+  });
+  it.each(['/api/v1/auth/session', '/api/v1/management/reports'])(
+    'rejects Pointage scheme at %s before lookup',
+    async (path) => {
+      const response = await fetch(base + path, {
+        headers: { Authorization: 'Pointage ' + wrong },
+      });
+      expect(response.status).toBe(401);
+      expect(await response.json()).toMatchObject({
+        error: { code: 'LOCAL_SESSION_REQUIRED' },
+      });
+      expect(f.findSession).not.toHaveBeenCalled();
+      expect(report).not.toHaveBeenCalled();
+      expect(f.insert).not.toHaveBeenCalled();
+      expect(f.update).not.toHaveBeenCalled();
+    },
+  );
+  it.each(['/api/v1/auth/session', '/api/v1/management/reports'])(
+    'rejects Bearer continuation at %s after real lookup',
+    async (path) => {
+      const response = await fetch(base + path, {
+        headers: { Authorization: 'Bearer ' + wrong },
+      });
+      expect(response.status).toBe(401);
+      expect(await response.json()).toMatchObject({
+        error: { code: 'LOCAL_SESSION_INVALID' },
+      });
+      expect(f.findSession).toHaveBeenCalledExactlyOnceWith(wrong);
+      expect(f.parameters()[0]).toBe(hashLocalSessionToken(wrong));
+      expect(report).not.toHaveBeenCalled();
+      expect(f.insert).not.toHaveBeenCalled();
+      expect(f.update).not.toHaveBeenCalled();
+    },
+  );
+  it('retains a legitimate local-session HTTP positive control', async () => {
+    const response = await fetch(base + '/api/v1/auth/session', {
+      headers: { Authorization: 'Bearer ' + f.token },
+    });
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({
+      session: { id: f.row.session.id, user: { role: 'admin' } },
+    });
+  });
+  it('rejects a Pointage-shaped local PIN before signIn', async () => {
+    const response = await fetch(base + '/api/v1/auth/login', {
+      method: 'POST',
+      headers: {
+        Origin: 'http://localhost:3003',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId, pin: wrong }),
+    });
+    expect(response.status).toBe(400);
+    expect(signIn).not.toHaveBeenCalled();
+    expect(f.insert).not.toHaveBeenCalled();
+    expect(f.update).not.toHaveBeenCalled();
+  });
+});

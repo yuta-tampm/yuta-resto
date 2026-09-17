@@ -1,0 +1,6 @@
+interface:
+  display_name: 'YUTA Research'
+  short_description: 'Evidence-led research within approved YUTA scope'
+
+policy:
+  allow_implicit_invocation: false

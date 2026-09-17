@@ -1,0 +1,6 @@
+interface:
+  display_name: 'YUTA TDD'
+  short_description: 'Red-green work only within authorized Apply'
+
+policy:
+  allow_implicit_invocation: false

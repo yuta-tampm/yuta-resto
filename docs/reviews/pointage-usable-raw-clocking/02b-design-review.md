@@ -1,4 +1,11143 @@
 Change: pointage-usable-raw-clocking
+Gate: SENSITIVE DESIGN — U3 ENVIRONMENT ISOLATION REVIEW
+Review status: APPROVED
+Created: 2026-09-11T07:19:31Z
+Schema: yuta-spec-driven
+Analysis conclusion: READY_FOR_SPECS
+Sensitive change: YES
+
+## Current Apply evidence — one approved traced E5-IDLE execution
+
+Recorded: 2026-09-11T22:08:42Z (2026-09-12 Europe/Paris).
+Approval source: explicit current-user attachment
+a7509fde-633d-4db5-be56-868888a47e62/pasted-text.txt.
+Approval recorded by: Codex workflow.
+ADMISSION_TRACE_V1 exact hashes/diff: APPROVED by that instruction.
+Execution authority: exactly one focused current-source E5-IDLE diagnostic.
+Current result review: AWAITING_HUMAN_REVIEW.
+Schema: yuta-spec-driven. Header APPROVED does not approve U8 completion.
+
+### 1. ADMISSION_TRACE_V1
+
+APPROVED HASHES STILL MATCH: YES.
+TRACE VALIDATION: PASS for both generations, 27 available ordered rows each.
+No malformed/extra-field/wrong-identity/gapped/duplicate/decreasing trace was
+accepted. The approved strict collector validated original IPC messages before
+interpretation; both final snapshots report VALID and identity/sequence PASS.
+The recorded table sequences were independently checked as contiguous 1..27.
+READY followed factory completion and READY trace rows in each generation.
+
+Fresh preflight: git status/HEAD 415990386327aaccab3c32b1fef0569a0fde7f3a, current OpenSpec status and
+apply instructions, 80 protected hashes all matched, 24/32 unchanged.
+Exact two delta Spec paths remain unchanged; 20 requirements / 62 scenarios.
+
+| Approved harness path                                              | Current SHA-256 (unchanged before/after execution)                 |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts`   | `7eda6186f92026fd0b7d742b716660315290161685e00a60333375e05185759e` |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-next-child.ts` | `0a0bc64479f9a62b5135d1036a7320d18eece0dd105fa27a31703b0c293994da` |
+| `apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts`     | `47fa0e73eef08b4cb4b702d38e41e3027bbe96da58dee1a3e58af0d604937bbe` |
+
+Approved bounded instrumentation diff SHA-256:
+3c9a3bdc32853a8e0a0c131186df5d38cc9064d0f2781935f2413ab9d6d57463.
+Re-extraction from both prior packet diff blocks matches exactly.
+No new implementation diff was manufactured for this execution.
+
+Design: 67e0920dfe6591612a314e301fec8bed68d0454a65eb103688138d9f69cbf172.
+Tasks: c48e0d88cb2d7feb64efcd193ae3079db6ea5547a8d3e13b3aa4be900cc8c93d.
+authorization/pointage delta:
+1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66.
+pointage/raw-clocking delta:
+4bfa64e863ad465a144341c18aa5d0db3ce0806ada52ad40183cf9a4e321f90e.
+Previous 02b: b7081bee08bd3e8d8f327ee02f42dd03cf1f3d85ac4e160b15a491e997d68312.
+Previous 02c: ab230048a50cb843e7b9978f5f8648388a5e1942dfa0bd801e130fd9593ea2ec.
+
+Disposable preflight: VERCEL/DOCKER*HOST/DOCKER_CONTEXT absent; port3001 bind
+probe PASS; Docker endpoint npipe:////./pipe/dockerDesktopLinuxEngine.
+The existing helper then performed its unchanged full guarded provisioning:
+development/test, loopback, exact case-sensitive whole database-name rule
+`^yuta_pointage_raw_clocking_test(?:*[a-z0-9]+)?$`, parsed/actual database equality,
+private tmpfs/labels/local Docker, existing journaled migration and role/F8
+boundaries before usable runtime. No shared or production DB or real employee.
+
+Disposable database retained by existing policy:
+yuta_pointage_raw_clocking_test_34c9fb1f2022465b9195dfb9.
+Owned container:
+849fc8c00518ae97ea6233c668966dabb454a372eba130479260d7fa2fad3871.
+No container deletion, evidence cleanup, provider adjustment or database repair.
+
+### 2. E5-IDLE PREVIOUS FAILURE
+
+CATEGORY: UNKNOWN.
+NOT REWRITTEN: YES.
+Previous failure: UNKNOWN / NOT REPRODUCED.
+The earlier green run remains PASS BUT NON-DIAGNOSTIC FOR THE PRIOR FAILURE.
+This new traced PASS does not discover or retrospectively assign that cause.
+Historical E5-IDLE evidence remains history, not substituted current proof.
+
+### 3. GENERATION A
+
+Fresh owned child spawn: PASS; PID19136.
+runId: 34c9fb1f-2022-465b-9195-dfb9c90f647e.
+runId equality: PASS. PID equality: PASS. Sequence: PASS, 1..27.
+Listener ownership: PASS, own 127.0.0.1:3001 listener under unchanged guard.
+INIT result: PASS. READY observed: YES; existing status/re-consumer proof passed.
+
+| seq | stage                       | state | failureClass |
+| --- | --------------------------- | ----- | ------------ |
+| 1   | PROCESS_STARTED             | ENTER | -            |
+| 2   | PROCESS_STARTED             | PASS  | -            |
+| 3   | INIT_VALIDATED              | ENTER | -            |
+| 4   | INIT_VALIDATED              | PASS  | -            |
+| 5   | LISTENER_BOUND              | ENTER | -            |
+| 6   | LISTENER_BOUND              | PASS  | -            |
+| 7   | FOUNDATION_CLIENT_OPENED    | ENTER | -            |
+| 8   | FOUNDATION_CLIENT_OPENED    | PASS  | -            |
+| 9   | RAW_CLIENT_OPENED           | ENTER | -            |
+| 10  | RAW_CLIENT_OPENED           | PASS  | -            |
+| 11  | RUNTIME_FACTORY_ENTERED     | ENTER | -            |
+| 12  | RUNTIME_FACTORY_ENTERED     | PASS  | -            |
+| 13  | RUNTIME_FACTORY_COMPLETED   | ENTER | -            |
+| 14  | PROVIDER_ADMISSION_VERIFIED | ENTER | -            |
+| 15  | PROVIDER_ADMISSION_VERIFIED | PASS  | -            |
+| 16  | RUNTIME_FACTORY_COMPLETED   | PASS  | -            |
+| 17  | READY_EMITTED               | ENTER | -            |
+| 18  | READY_EMITTED               | PASS  | -            |
+| 19  | TEARDOWN_STARTED            | ENTER | -            |
+| 20  | TEARDOWN_STARTED            | PASS  | -            |
+| 21  | LISTENER_CLOSED             | ENTER | -            |
+| 22  | LISTENER_CLOSED             | PASS  | -            |
+| 23  | FOUNDATION_CLIENT_CLOSED    | ENTER | -            |
+| 24  | RAW_CLIENT_CLOSED           | ENTER | -            |
+| 25  | RAW_CLIENT_CLOSED           | PASS  | -            |
+| 26  | FOUNDATION_CLIENT_CLOSED    | PASS  | -            |
+| 27  | PROCESS_TERMINATING         | ENTER | -            |
+
+Last ENTER: PROCESS_TERMINATING.
+Last PASS: FOUNDATION_CLIENT_CLOSED.
+Explicit FAIL stage/class: NONE.
+Snapshot failureClass: UNKNOWN is the defined no-FAIL default, not evidence
+of a current admission failure.
+Exit: 0; signal: null. Bounded STOP without Pointage end: PASS.
+Two owned clients closed: PASS; remaining owned database clients: 0.
+Listener close: PASS; A stopped before B launched.
+
+Safe elapsed timings relative to case start: disposable provision4114ms;
+fresh-fixture preflight4421ms; A spawn4500ms; A context200/READY16595ms;
+complete existing admission/re-consumer proof16603ms; identify19334ms;
+A stop/client-close19700ms. No additional trace-specific delay/acknowledgement.
+
+### 4. GENERATION B
+
+Fresh owned child spawn: PASS; PID2480, different from A.
+runId: d3c7ca1a-b402-4a6a-a81a-423d7526b98e, different from A.
+runId equality: PASS. PID equality: PASS. Sequence: PASS, 1..27.
+Fresh independent admission and listener ownership: PASS.
+INIT result: PASS. READY observed: YES.
+No identify/replacement continuation/pre-expiry state touch in B.
+
+| seq | stage                       | state | failureClass |
+| --- | --------------------------- | ----- | ------------ |
+| 1   | PROCESS_STARTED             | ENTER | -            |
+| 2   | PROCESS_STARTED             | PASS  | -            |
+| 3   | INIT_VALIDATED              | ENTER | -            |
+| 4   | INIT_VALIDATED              | PASS  | -            |
+| 5   | LISTENER_BOUND              | ENTER | -            |
+| 6   | LISTENER_BOUND              | PASS  | -            |
+| 7   | FOUNDATION_CLIENT_OPENED    | ENTER | -            |
+| 8   | FOUNDATION_CLIENT_OPENED    | PASS  | -            |
+| 9   | RAW_CLIENT_OPENED           | ENTER | -            |
+| 10  | RAW_CLIENT_OPENED           | PASS  | -            |
+| 11  | RUNTIME_FACTORY_ENTERED     | ENTER | -            |
+| 12  | RUNTIME_FACTORY_ENTERED     | PASS  | -            |
+| 13  | RUNTIME_FACTORY_COMPLETED   | ENTER | -            |
+| 14  | PROVIDER_ADMISSION_VERIFIED | ENTER | -            |
+| 15  | PROVIDER_ADMISSION_VERIFIED | PASS  | -            |
+| 16  | RUNTIME_FACTORY_COMPLETED   | PASS  | -            |
+| 17  | READY_EMITTED               | ENTER | -            |
+| 18  | READY_EMITTED               | PASS  | -            |
+| 19  | TEARDOWN_STARTED            | ENTER | -            |
+| 20  | TEARDOWN_STARTED            | PASS  | -            |
+| 21  | LISTENER_CLOSED             | ENTER | -            |
+| 22  | LISTENER_CLOSED             | PASS  | -            |
+| 23  | FOUNDATION_CLIENT_CLOSED    | ENTER | -            |
+| 24  | RAW_CLIENT_CLOSED           | ENTER | -            |
+| 25  | FOUNDATION_CLIENT_CLOSED    | PASS  | -            |
+| 26  | RAW_CLIENT_CLOSED           | PASS  | -            |
+| 27  | PROCESS_TERMINATING         | ENTER | -            |
+
+Last ENTER: PROCESS_TERMINATING.
+Last PASS: RAW_CLIENT_CLOSED.
+Explicit FAIL stage/class: NONE; no-FAIL snapshot default UNKNOWN.
+Exit: 0; signal: null (asserted by selected test).
+Two owned clients closed: PASS; remaining owned database clients: 0.
+Listener close: PASS; final port release: PASS.
+
+B spawn20109ms; context20031912ms; complete admission/re-consumer proof31914ms.
+Different client-close completion order in A/B is captured, not normalized.
+Both cleanup calls retain existing concurrency and ownership.
+
+Standalone SAME DB / foundation effective-privilege / F8 trace stages remain
+intentionally absent. The valid successful factory/provider/READY sequence
+does not reveal timing of each hidden check. No hidden-stage failure class
+is inferred; neither generation emitted a FAIL trace.
+
+### 5. E5-IDLE LIFETIME
+
+| Required assertion                                  | Current execution result                                   |
+| --------------------------------------------------- | ---------------------------------------------------------- |
+| A actual identify and continuation issuance         | PASS                                                       |
+| Original idle60s / absolute120s                     | PASS, original stored lifetime assertions unchanged        |
+| A STOP without Pointage end                         | PASS; original continuation/deadlines/ended state survived |
+| Fresh B admission without A runtime/client transfer | PASS                                                       |
+| B no identify/replacement token/pre-expiry touch    | PASS                                                       |
+| Only A-issued continuation consumed                 | PASS                                                       |
+| Real elapsed time beyond idle                       | PASS                                                       |
+| Absolute lifetime not yet expired                   | PASS                                                       |
+| Final protected state response                      | PASS, actual403 POINTAGE_ACCESS_DENIED                     |
+| No revival/touch after denial                       | PASS, exact stored continuation unchanged                  |
+| Raw-event delta                                     | 0, scoped before/after counts0                             |
+| Receipt delta                                       | 0, scoped before/after counts0                             |
+| Both generations' clients/listener closed           | PASS                                                       |
+| Port3001 released                                   | PASS                                                       |
+
+At the post-denial real database-time observation, elapsed since original
+issuance was62026ms: greater than60000ms and less than120000ms. The test also
+checks real time after waiting and before dispatch against original deadlines,
+so the denial is not explained by simultaneous absolute expiry.
+No clock override, direct deadline write, shortened idle, extended absolute,
+heartbeat or extra touch was used. Startup/teardown time counted normally.
+
+### 6. CURRENT TRACED E5-IDLE
+
+PASS.
+
+Exactly one test execution:
+`$env:YUTA_POINTAGE_SYNTHETIC_TEST_MODE='true'; pnpm --filter @yuta/backoffice exec vitest run test/pointage-raw-clocking-bootstrap.test.ts -t 'E5-IDLE uses A-issued continuation' --reporter=verbose`.
+
+The flag assignment is confined to that dedicated command shell.
+Exit0; 1 selected PASS / 95 not selected / 96 total.
+Started2026-09-12 00:06:30 Europe/Paris.
+Duration84.85s; test81.50s (81495ms selected case).
+No second E5-IDLE, broad U8/provider/bootstrap suite or Phase4 work.
+
+Approved source inspection plus observed normal exits confirm no added retry,
+sleep, acknowledgement wait, swallowed admission exception, trace-only
+keepalive or cleanup-ownership change. Trace remained one-way evidence.
+PROCESS_TERMINATING is ENTER only; actual exit is established separately by
+child exit handles and post-run process absence, not a fabricated post-exit row.
+
+Post-run, both owned PIDs were independently absent and a fresh
+127.0.0.1:3001 bind/close probe returned PORT_3001_RELEASE_PASS.
+Client closure is proven by each selected-test scoped SQL zero-count assertion
+and actual client-close trace PASSES; no post-run secret retrieval was needed.
+The disposable container is retained, not treated as an active Pointage child.
+
+### 7. U8
+
+U8: PARTIAL.
+Tasks: 24/32.
+Task3.8: PARTIAL / AWAITING_HUMAN_REVIEW.
+Task4.1+: NOT_AUTHORIZED.
+Current result review: AWAITING_HUMAN_REVIEW.
+
+A traced PASS is not automatic U8 acceptance. Human review must judge the
+historical unexplained failure together with this trace and existing U8 evidence.
+No Task checkbox or completion count was changed.
+
+### 8. Source integrity
+
+Changed implementation paths during execution: NONE.
+The exact three approved hashes, Design, Tasks, two delta Specs, all current
+protected paths and the nonignored file inventory remained unchanged.
+Only these two existing review packets receive new evidence; no new file.
+
+Before/after execution inventory: 2622 unique tracked/nonignored paths.
+Outside the five allowed harness/packet paths, sorted path+NUL+file-SHA256
+records joined by LF have unchanged aggregate SHA-256:
+516e20a41d91bf9ec532d6da746591213c45d26bd8f518437cb3efee9063ae5b.
+Both helpers and bootstrap test are also individually unchanged, so all source
+outside the two packet updates is preserved. This includes the unrelated
+ui-ux-pro-max/Formalités baseline. Ignored Next-generated cache is not an
+implementation artifact and is excluded from this source-byte inventory.
+
+Check-only validations after the owned diagnostic fully stopped:
+
+- `pnpm docs:check`: PASS, 36 current documents.
+- `pnpm architecture:check`: PASS.
+- `pnpm -r --if-present typecheck`: PASS.
+- Final packet-inclusive scoped Prettier: PASS. Post-write docs/architecture:
+  PASS. Final protected-path verification: all80 hashes match, inventory2622
+  unchanged, three harness hashes unchanged, outside-scope aggregate unchanged.
+- No broad tests, new build/start generation, Browser QA or formal VERIFY.
+  Global formatting/UI-pack/OpenSpec checks were not rerun: their source
+  artifacts are unchanged; no inherited formatting warnings were repaired.
+
+Exact file SHA-256: Node crypto.createHash('sha256') over readFileSync bytes.
+Final packet hashes are reported after evidence assembly to avoid self-hashing.
+
+### 9. Seven blockers
+
+Unchanged: exact retention duration; deletion/anonymization; legal hold;
+backup-retention interaction; employee notice wording; detailed audit
+visibility; trusted production client-address provenance.
+
+APPLY: PAUSED.
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED.
+VERIFY: NOT_RUN.
+QA: NOT_RUN.
+Production enablement: NOT_AUTHORIZED.
+Real employee attendance: NOT_AUTHORIZED.
+No Gate3, deployment, enablement, sync or archive.
+
+Next required authority: human acceptance/rejection of this one current traced
+E5-IDLE result and its relationship to U8. No further diagnostic or implementation
+execution is implicitly authorized.
+
+### Current protected paths
+
+| Repository-relative path                                                                           | SHA-256                                                            |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `apps/backoffice/src/app/(authenticated)/equipe/pointage/page.tsx`                                 | `f2fe5f9ccf167aaf4be6233046ce3765b385c3d452e2b8cd6e1314108fb85307` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-in/route.ts`                       | `29c16cfd705d7bef4b156b92ac1cad2186bf2ce17ac7fc7c9ca66f4b84444299` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-out/route.ts`                      | `1c0fa864ae27a4d1f7a7940aaa8ba0d7394db3e2f1da2bff01cc1e4537218c69` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/context/route.ts`                        | `45043e139c0c7e5f0740acc7d7b9da4d0ed4d59d87dcffa8069f9a1ee1dfe2b6` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/end/route.ts`                            | `93f5428e2e700f528dbde1464a31a9d5811dfacfb5531674fb605faf978a7ae0` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/identify/route.ts`                       | `8f6504f6fbd4207e34e5f06ccca1d88b266c6a52ebd1d4232697004be7cd2be5` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/recover/route.ts`                        | `0714021059b92505345cc94886358474a3125bb832f38bb20a8ee6a47332f77e` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/state/route.ts`                          | `7d199ac7aa8a40f3e7c10614a32429c0e0ee48f49dc4c806d036e501e2cdcb5d` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-active-interaction.tsx` | `c29916ab7f157959cc5a07c67d4a09dce07cc3d33503e51db98b122930b3430f` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-credential-entry.tsx`   | `82c2326d2f230d5de7e72a058187b1266fe822122604f45167b01b9dd8350d69` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-employee.tsx`           | `e6aacd7d31746ae9d8e0d5d935381620600abbddfb4ee84ce6abe11f6ab7d728` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_lib/pointage-client.ts`                     | `3cfc03d51f801866f8a528f671a92a17a4b1e630e1c801c82210809cff117188` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_lib/pointage-interaction.ts`                | `8d35dc54d47120e7ed3c4f5847b0743a1f676ea59cdd07b62babbb10c2a7e105` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/page.tsx`                                    | `8f3153a5aa08764a1a97633aceb162905e6e56fea15fa41f480dbb301bd8bd6e` |
+| `apps/backoffice/src/proxy.ts`                                                                     | `73b39a64d316155b7bc526a5f2dc5a1735624dbfa0a07ce2d596e53e46ce7aee` |
+| `apps/backoffice/src/server/pointage/authorization.ts`                                             | `c33a530483f76f29065729834e07b5d4512ee54255765645bece9cef8c87cc34` |
+| `apps/backoffice/src/server/pointage/index.ts`                                                     | `5a17ce9a793561f26e7eca9c62f7835925d54d9eba61074951d58871dd910133` |
+| `apps/backoffice/src/server/pointage/raw-chain.ts`                                                 | `0b8446a543cad544614ae7c7d366cfa771d0011d16adc7bc7d1d00405731f83c` |
+| `apps/backoffice/src/server/pointage/raw-clocking-bootstrap.ts`                                    | `17733bc004725c88a6aa506dbefdfadf7a3aa204005af2343413f5a770792e13` |
+| `apps/backoffice/src/server/pointage/raw-clocking-http.ts`                                         | `b4f57b8aeda30995f41a1a29008e9dae5c767d1e413a071488301aaae169e0ff` |
+| `apps/backoffice/src/server/pointage/raw-clocking-manager.ts`                                      | `209183808c72c1a9c677d57b2603dd5030336ad864d1ff542df1f0d06f27d948` |
+| `apps/backoffice/src/server/pointage/raw-clocking-runtime.ts`                                      | `ab9e7f157b53265ebcf62da8c7f8392018b8211c2d76e1ba467a6b2be8b53d57` |
+| `apps/backoffice/src/server/pointage/raw-clocking-service.ts`                                      | `a144202f2b7af2955b458fc445b699342bb4ed8cdbda33a4d46905452dcd3d37` |
+| `apps/backoffice/src/server/pointage/raw-clocking-test-boundary.ts`                                | `4aa15e7f9695b85ae418b1098b7bd57c14d4c39bcd8b81eb9093660eeeb8cc28` |
+| `apps/backoffice/src/server/pointage/service.ts`                                                   | `00d26799bf2fa8213161e221a28fbf75b4024fd88f549293e814e90dd935aff1` |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts`                                   | `7eda6186f92026fd0b7d742b716660315290161685e00a60333375e05185759e` |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-next-child.ts`                                 | `0a0bc64479f9a62b5135d1036a7320d18eece0dd105fa27a31703b0c293994da` |
+| `apps/backoffice/test/pointage-foundation-inventory.test.ts`                                       | `1a8d4d2f026d6444de11f1afc5d47e38a4098eedbd0059e330cb78d102242daa` |
+| `apps/backoffice/test/pointage-foundation.test.ts`                                                 | `e3f091057b9c0f21bfd2ed872b9e435fc4330ae9239ffa8e5bbd51534ed3729b` |
+| `apps/backoffice/test/pointage-interaction.test.ts`                                                | `5203b664056fc883a36d8818f8c3f144fd50f0716fad31e2e9ed8a74f8a269b8` |
+| `apps/backoffice/test/pointage-raw-chain.test.ts`                                                  | `b0fe2395ed36d944b911bafcf6dd51d20f08e3723d772189867c4f53d4a13277` |
+| `apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts`                                     | `47fa0e73eef08b4cb4b702d38e41e3027bbe96da58dee1a3e58af0d604937bbe` |
+| `apps/backoffice/test/pointage-raw-clocking-http.test.ts`                                          | `3e463e902b2e40d1fde2703c607902f5d704e32955e6f1c749b250c400623e1d` |
+| `apps/backoffice/test/pointage-raw-clocking-inventory.test.ts`                                     | `e11484f3773a4f8ab049e344b51046b3f867ee617c29424aa11699f8a52ef40a` |
+| `apps/backoffice/test/pointage-raw-clocking-manager.test.ts`                                       | `a36e3beaf3ee38da51eae92dafdb923a2d4d7364a45e58a3d4cdf3af338d1db7` |
+| `apps/backoffice/test/pointage-raw-clocking-runtime.test.ts`                                       | `bb9cd7db7152f7168c7adae80c96b4961b5f13bdf212671717f1e0e9dbd379fe` |
+| `apps/backoffice/test/pointage-raw-clocking-service.test.ts`                                       | `4a139b05bdabe81a6ec2ecab728792a215cd2b74273114f7bb4ae17a6d36b356` |
+| `docs/reviews/pointage-usable-raw-clocking/01-analysis-review.md`                                  | `ee18fdbf3b9802978eb7d71000d001c1b32eb7672f333bf8fe452005414f3557` |
+| `docs/reviews/pointage-usable-raw-clocking/02-specs-review.md`                                     | `c5a7fd21c9fb04ea8f3617463241fc0ec8b41ea6e69b6074da5fefe98f0da566` |
+| `docs/ui/pages/backoffice-pointage-employee/ACCEPTANCE_CHECKLIST.md`                               | `cbcc464c79e57f3bc34c49989d936b1dc2411839b552a159e407a407c72166ed` |
+| `docs/ui/pages/backoffice-pointage-employee/DATA_AND_INTERACTION_SPEC.md`                          | `25ffcdbb137b26568a01373c6a55c3ea714f97d70978c3c22310433bd40d68fd` |
+| `docs/ui/pages/backoffice-pointage-employee/DESIGN_HANDOFF.md`                                     | `d94fc07f4e318bda95507904640e5bd80f9f5bacc251babfbf85f7bc0fc56cae` |
+| `docs/ui/pages/backoffice-pointage-employee/IMPLEMENTATION_PLAN.md`                                | `b7dfc8937893032253f801160c1e9fa21e2c8cd34439c0b80e9eb38e7ef5606e` |
+| `docs/ui/pages/backoffice-pointage-employee/PRODUCT_SCOPE.md`                                      | `16a14204820f4a1b2033f26dca03494db9e5e61b28474c87216ce206062582d8` |
+| `docs/ui/pages/backoffice-pointage-employee/README.md`                                             | `77377af7a5f09d4884541e3a90de151e0ae11223b73e66f2dc57cfb08765d902` |
+| `docs/ui/pages/backoffice-pointage-employee/UI_SPEC.md`                                            | `cd109fb341545a280189d92b891506b9211134600720cf5d2b9b107563aacb45` |
+| `docs/ui/pages/backoffice-pointage-employee/prompt-provenance.json`                                | `04c6c99bf8067e848cc4df1f0f871fd43bdf1ec964d786f2617dcca4692b8a61` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/00_REPOSITORY_ANALYSIS.md`                     | `7ecab8ffd6d97de28f463d521172be6de8f66b7e3074e5e90e88f53f41ea394c` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/01_VISUAL_BASELINE.md`                         | `d3075806ae38d0f9f6a945b3b42d1f3b8d7e2bd9eafa712a73587744c9f46119` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/02_COMPONENT_REFACTOR.md`                      | `8b134cd4b462562416fb5c2e57c23eb4675a26eff7ea75fdfae44727b74648ac` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/03_INTERACTIONS.md`                            | `e27c12d152d9270229eed6951898ab6f5e477d7d12ff9c170f4522ed45f00388` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/04_DATA_INTEGRATION.md`                        | `f878f959d3afee428e67620c74f4c75231d2c7816f23cbf7fc6c701067538e79` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/05_VISUAL_QA.md`                               | `5f31ec1c2a2bcfd3129643931e188365f9608958f1f8bd697ae7854e292eaad0` |
+| `docs/ui/pages/backoffice-pointage-employee/references/README.md`                                  | `e2ddabc5a6a004441847e71629b84281eeac075c41a195eea8955f5d30a72a45` |
+| `openspec/changes/pointage-usable-raw-clocking/analysis.md`                                        | `f04e66f9f2307dc92aa9cdbd134fb4a35f9c1089459440c0ccfdb40c4a3e9146` |
+| `openspec/changes/pointage-usable-raw-clocking/proposal.md`                                        | `d42975cd06290431701e39d499edac93774275c1bb0f28f8474f6ff0e61816f1` |
+| `openspec/changes/pointage-usable-raw-clocking/specs/authorization/pointage/spec.md`               | `1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66` |
+| `openspec/changes/pointage-usable-raw-clocking/specs/pointage/raw-clocking/spec.md`                | `4bfa64e863ad465a144341c18aa5d0db3ce0806ada52ad40183cf9a4e321f90e` |
+| `packages/auth/src/index.ts`                                                                       | `464739729900d884af3ab82159151d7df5de6a0f8ee0a3a23feed7bc285a1c2a` |
+| `packages/auth/src/pointage-continuation.ts`                                                       | `f2c829c33030ae3550350ff4b5eac3d5dce774e5bd4774a5e46a0dd621465172` |
+| `packages/auth/src/pointage-credential.ts`                                                         | `8b294113e7a97fb83e5acff5df96224ed4c18d73d60c46a63abf824c37195fa1` |
+| `packages/auth/test/pointage-continuation.test.ts`                                                 | `6d9e78b745c47a96e4d59e256e67090ede1258860b140e28b6210fca57b07b4a` |
+| `packages/auth/test/pointage-credential.test.ts`                                                   | `6ea66dbb73a82f8586575c15f049be3ee0832987888045a593b982001c1479a0` |
+| `packages/contracts/src/index.ts`                                                                  | `cf72d2593fa90ffe590e2963f15160b232d069d1bf8848ec06d91946b18d95bd` |
+| `packages/contracts/src/pointage/index.ts`                                                         | `2bc3d6d491ce94864c2bae22a5ce96b66e052ce131be852328b4b68c2f0ba974` |
+| `packages/contracts/test/pointage.test.ts`                                                         | `4fff5b366e61c94098dc3e4238edfd4b61a2e9b5e62527465546db760f83a013` |
+| `packages/db-cloud/drizzle/0019_pointage_authority_foundation.sql`                                 | `143b6d1e47f92336b4359c4c85a17487ead97416afbbe2c0fd0b99880c0e7056` |
+| `packages/db-cloud/drizzle/0021_abandoned_black_queen.sql`                                         | `7794a5c02f2fa809a9985848bc455dbd3a5762415b5d96c216fb49ff4fd01ed9` |
+| `packages/db-cloud/drizzle/meta/0021_snapshot.json`                                                | `71052147af479bfb5f480f0981859a7af7235ff21a0be69a427a6faaeb06f4bf` |
+| `packages/db-cloud/drizzle/meta/_journal.json`                                                     | `897139ed88030e38adfffa55ba5f1bc4d4773b6bf8f1aac619f17653834907b0` |
+| `packages/db-cloud/src/pointage-raw-clocking-repository.ts`                                        | `f2cf173ea3a2ad06c30a7e1b7b70f32d33f9b520e0f705aafed1fd698d9ce802` |
+| `packages/db-cloud/src/pointage-repository.ts`                                                     | `4cfcfc4f5287590fde3ff44062a97efe1bd256771774495ae0ce91ab488034d8` |
+| `packages/db-cloud/src/schema/pointage-raw-clocking.ts`                                            | `d19c5c84c9b3352437aa839d97b54e800211bc956d28e70445e6b1247c5e4754` |
+| `packages/db-cloud/src/schema/pointage.ts`                                                         | `8f4f12cf76773dfca6f99ba59e37e5ee7d0a18ef13827f78caebddd51400de29` |
+| `packages/db-cloud/test/helpers/pointage-raw-clocking-test-database.ts`                            | `6bb342f09144e308b989d32d580c3b0d41223005e36834d74ddce7287dce0fe4` |
+| `packages/db-cloud/test/pointage-raw-clocking-migration.integration.test.ts`                       | `eb5693a3ba0f907e74862fa2e26c5d39e916c38ec54d219ed652a09af0aff2cc` |
+| `packages/db-cloud/test/pointage-raw-clocking-schema.test.ts`                                      | `d6a10caa9edb95878605e8f3d1fa439e07e2aec5c221097a2f17bdac38b2e291` |
+| `packages/db-cloud/test/pointage-raw-clocking.integration.test.ts`                                 | `5d0ea83bacb946300030a135e2f150c5b34c4a63197d98e8f4abf8a914b82cce` |
+| `packages/db-cloud/test/pointage-repository.integration.test.ts`                                   | `4761848b92e1ebb4f2db81d15e596f654f02b480c34bd290a339755302a6c1f1` |
+| `packages/db-cloud/test/pointage-schema.test.ts`                                                   | `e1026fbfc7adef0773a916ed230d302005c09c711c61503159799f35f5e1b090` |
+
+### Current workflow checkpoint
+
+ADMISSION_TRACE_V1: APPROVED.
+TRACE VALIDATION: PASS.
+CURRENT TRACED E5-IDLE: PASS.
+PREVIOUS FAILURE CATEGORY: UNKNOWN / NOT REPRODUCED.
+U8: PARTIAL / AWAITING_HUMAN_REVIEW.
+APPLY: PAUSED.
+Tasks: 24/32.
+Task3.8: PARTIAL.
+Task4.1+: NOT_AUTHORIZED.
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED.
+VERIFY: NOT_RUN.
+QA: NOT_RUN.
+Production enablement: NOT_AUTHORIZED.
+Real employee attendance: NOT_AUTHORIZED.
+
+## Historical Apply evidence — ADMISSION_TRACE_V1 instrumentation review
+
+Recorded: 2026-09-11T21:53:46Z.
+Approval source: explicit current-user attachment
+4dae5a3a-36d4-4109-a5bc-0fce44c2a049/pasted-text.txt.
+Approval recorded by: Codex workflow.
+Instrumentation review status: AWAITING_HUMAN_REVIEW.
+Classification: CROSS_MODULE test/evidence infrastructure, existing change.
+Product change: NO. Spec change: NO. Design change: NO.
+Runtime behavior change: NO; test-only observability and evidence validation.
+The APPROVED packet header retains prior Design/planning approval, not approval
+of this new exact instrumentation diff or any future actual-process execution.
+
+ADMISSION_TRACE_V1 implementation: COMPLETE_FOR_REVIEW.
+Pure validator/collector tests: PASS.
+Actual child transport/capture/cleanup behavior on these bytes: NOT_RUN.
+No inference of runtime proof from deterministic test success.
+
+### Exact write scope and preflight
+
+Fresh git status and HEAD 415990386327aaccab3c32b1fef0569a0fde7f3a; OpenSpec status/instructions apply
+resolve yuta-spec-driven, 24/32, same six context artifacts/two delta Spec paths.
+All 80 protected path/hash entries matched before editing. Existing dirty
+Pointage work was used as the approved baseline, not overwritten with HEAD.
+All five following paths already existed; no new file was created.
+
+| Harness path                                                       | Before SHA-256                                                     | After SHA-256                                                      |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts`   | `413bd76f3936669482f7e6c5dc03c06ab38b1b1889af7b0655afae8a8812f1e9` | `7eda6186f92026fd0b7d742b716660315290161685e00a60333375e05185759e` |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-next-child.ts` | `c25784c274b0640769612a368dc6d21634c8a6a2649d55e0e64e06b1f163d279` | `0a0bc64479f9a62b5135d1036a7320d18eece0dd105fa27a31703b0c293994da` |
+| `apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts`     | `38049058457540733094456d524148671a79f6e3e0fd8520581b18dc6a5dba78` | `47fa0e73eef08b4cb4b702d38e41e3027bbe96da58dee1a3e58af0d604937bbe` |
+
+The only other writes are evidence in these existing packets:
+docs/reviews/pointage-usable-raw-clocking/02b-design-review.md and
+docs/reviews/pointage-usable-raw-clocking/02c-implementation-plan-review.md.
+
+Previous 02b SHA-256: 571c0078d29bbabf39b35dab45438a12d2356f2fb51e8365f375f116b8cc1f53.
+Previous 02c SHA-256: 89115dad29b11fe3114dee62f4a947b875a6597c367fba94e4efca7e33f0306d.
+Design unchanged: 67e0920dfe6591612a314e301fec8bed68d0454a65eb103688138d9f69cbf172.
+Tasks unchanged: c48e0d88cb2d7feb64efcd193ae3079db6ea5547a8d3e13b3aa4be900cc8c93d.
+20 requirements / 62 scenarios unchanged. No normative/delta Spec, runtime,
+service/domain, API, auth/contracts, db-cloud, migration, app/UI, env, package
+script, task checkbox or task-contract edit.
+
+Snapshot inventory remains 2622 tracked/nonignored files (git ls-files -co
+--exclude-standard -z, deduplicated and sorted). Exact-byte hashing uses Node
+crypto.createHash('sha256').update(readFileSync(path)).digest('hex').
+Protected entries other than the three authorized harness files remain exact.
+
+**Concurrent unrelated-work disclosure:** the outside-five-path aggregate
+changed from 2a35bc6ba7c836e778231b5f072c05e96c9f7f4310ac3389b10fa6a73999b719
+to 516e20a41d91bf9ec532d6da746591213c45d26bd8f518437cb3efee9063ae5b.
+The non-Pointage file openspec/changes/ui-ux-pro-max-integration/tasks.md has
+mtime 2026-09-11T21:50:46.401Z and observed SHA-256
+555d678c67f2e5f1f5880331f2e33956e507660f236f0afe50ef22aeb1657b38.
+This turn did not write or revert that file. Its initial individual hash was
+not captured, so the aggregate alone does not prove that it is the only
+outside-file difference. No blanket outside-tree byte-equality claim is made.
+The 80-path Pointage comparison and explicit unchanged Design/Tasks hashes
+remain valid. Preserve unrelated work rather than normalize the checkout.
+
+### Trace schema and closed vocabulary
+
+Exactly one new outbound-only discriminator:
+
+```ts
+{
+  type: "POINTAGE_TEST_ADMISSION_TRACE";
+  version: 1;
+  runId: string; // Existing strict UUID v4.
+  childPid: number; // Positive safe integer.
+  seq: number; // Positive safe integer, starts at 1.
+  stage: AdmissionTraceStage;
+  state: "ENTER" | "PASS" | "FAIL";
+  failureClass?: AdmissionTraceFailureClass;
+}
+```
+
+The Zod object is strict. FAIL requires a valid failureClass; ENTER/PASS forbid
+the property, including an explicitly present undefined property.
+No message/details/error/stack/SQL/URL/header/secret fields.
+
+Exact AdmissionTraceStage enum (14):
+
+```text
+PROCESS_STARTED
+LISTENER_BOUND
+INIT_VALIDATED
+FOUNDATION_CLIENT_OPENED
+RAW_CLIENT_OPENED
+PROVIDER_ADMISSION_VERIFIED
+RUNTIME_FACTORY_ENTERED
+RUNTIME_FACTORY_COMPLETED
+READY_EMITTED
+TEARDOWN_STARTED
+FOUNDATION_CLIENT_CLOSED
+RAW_CLIENT_CLOSED
+LISTENER_CLOSED
+PROCESS_TERMINATING
+```
+
+Exact AdmissionTraceFailureClass enum (13):
+
+```text
+PRECHECK
+LISTENER
+INIT
+FOUNDATION_CLIENT
+RAW_CLIENT
+SAME_DATABASE
+PRIVILEGES
+F8
+PROVIDER
+RUNTIME_FACTORY
+TEARDOWN
+HARNESS_ORCHESTRATION
+UNKNOWN
+```
+
+SAME_DATABASE_VERIFIED, FOUNDATION_PRIVILEGES_VERIFIED and RAW_F8_VERIFIED are
+deliberately omitted. Their awaited checks are inside protected
+createPointageRawClockingRuntime/requireReady; the harness has no existing
+per-check callback. The provider callback follows them cumulatively but cannot
+honestly supply separate ENTER/PASS timing or identify which hidden check
+failed. No production/runtime hook or duplicate SQL validation was added.
+The reserved failure classes do not imply that these inner causes are observable.
+
+### Emission ownership, order and failure limits
+
+- PROCESS_STARTED observes the owned main-thread IPC test entry, not OS process
+  creation. Its two observations are buffered in memory until the existing
+  diagnostic UUID is validated. A failure before an available identity may
+  leave no trace; no synthetic identity or new startup command is introduced.
+- INIT_VALIDATED wraps the existing validatePointageTestInit call. Existing
+  strict INIT and STOP schemas are unchanged; the STOP schema is only exported
+  for pure inbound-rejection tests. Trace is not accepted inbound.
+- LISTENER_BOUND surrounds the existing awaited bind. Actual code validates
+  INIT before binding; the enum list is not an invented alternate execution order.
+- FOUNDATION_CLIENT_OPENED and RAW_CLIENT_OPENED surround their existing awaited
+  openPointageTestClient calls. Their PASSES mean those exact calls returned,
+  not that later effective-privilege/F8 factory checks passed.
+- RUNTIME_FACTORY_ENTERED observes the existing counted factory invocation;
+  RUNTIME_FACTORY_COMPLETED ENTER precedes its existing await and PASS follows
+  successful return. An owned factory rejection without a safely known inner
+  cause emits UNKNOWN, never fabricated SAME_DATABASE/PRIVILEGES/F8.
+- PROVIDER_ADMISSION_VERIFIED ENTER is emitted at the existing first admission
+  provider call. The existing null branch emits FAIL/PROVIDER and still returns
+  null. Healthy PASS is delayed until the unchanged runtime factory has returned,
+  proving it accepted the provider result. No healthy fallback, extra provider
+  call, revalidation query or new await is introduced. Later operation calls do
+  not create duplicate admission traces.
+- RUNTIME_FACTORY_COMPLETED PASS precedes READY_EMITTED ENTER/PASS, which precede
+  the existing READY status. READY_EMITTED PASS means the existing lifecycle
+  emission was prepared/count incremented, NOT IPC delivery acknowledgement.
+  READY remains the authoritative lifecycle status; the trace cannot create it.
+- Existing bounded catches classify only their owned INIT, listener, client
+  open or factory stage. Exceptions at live/source/inventory/other uninstrumented
+  points retain last-entered/last-passed and UNKNOWN. No broad admission catch,
+  swallowed stage exception or rejection-to-success conversion was added.
+- Existing cleanup emits TEARDOWN_STARTED, client close observations at each
+  existing end success/failure callback, and LISTENER_CLOSED at the existing
+  close callback. Already-closed listener loss may prove the closed listener
+  state without inventing cleanup failure. PROCESS_TERMINATING emits ENTER only:
+  process exit cannot honestly emit its own post-exit PASS.
+- No wait for IPC acknowledgement, new timeout, sleep, retry, polling, backoff,
+  guard/role/inventory weakening, TTL change or altered awaited call order.
+  IPC send failures are discarded only inside evidence emission; existing
+  parent-disconnect/cleanup authority and process exit still win over trace
+  completeness. No trace flush delay is added.
+
+### Collector and reliable bounded output
+
+The launcher keeps strict validated trace rows in memory, matching current
+runId/PID and exact next sequence (including gap, duplicate and decrease denial).
+Each stage can ENTER once and finish once, bounding accepted rows by the closed
+stage set. Malformed evidence remains invalid; later good rows cannot repair it.
+READY observed without the required prior factory/READY sequence and admission
+stage PASSES invalidates trace evidence. A read before queued READY arrives is
+missing evidence, not permanent corruption; later valid receipt may satisfy it.
+
+Invalid trace does not kill, repair, retry or keep alive a child. Existing status,
+INIT/STOP, listener-loss and provider-unavailable modes retain their behavior.
+Existing evidence-check methods now consult the trace separately. Snapshots
+compute deterministic lastEntered/lastPassed and retain UNKNOWN unless a
+legitimate FAIL exists. Returned rows are immutable and omit runId/PID.
+
+For a future separately authorized E5-IDLE run, the existing finally path emits
+only formatted seq/stage/state/failureClass rows and equality/sequence/validity
+labels from the collector, plus last-entered/last-passed. It uses stdout
+directly to avoid console reporter filtering; no raw IPC dump, file, secret,
+error object, arbitrary field or added process-control protocol. Output is
+best-effort without acknowledgement; output failure cannot skip fixture cleanup.
+This step does not claim actual-process delivery of those rows has been tested.
+
+Provider-unavailable source semantics remain null -> rejected admission ->
+no READY; expected trace ends at PROVIDER FAIL followed by existing cleanup.
+Prior accepted provider actual-process evidence is retained as history on its
+old exact source hashes. Because both helpers changed, there is NO newly
+validated actual-process provider proof on current instrumentation bytes.
+Provider rerun: NOT_RUN, explicitly prohibited in this authorization.
+
+### Pure tests and allowed checks
+
+The selected suite contains only deterministic schema/emitter/collector tests.
+It has no child/process fork, server bind, database access, Docker or Next start.
+The actual suite flag is explicitly false in its dedicated command shell; the
+anchored test-name selector excludes every other suite, including child-negative
+tests that do not depend on the database flag. Importing the existing test
+modules does not invoke their guarded child CLI entry.
+
+- `$env:YUTA_POINTAGE_SYNTHETIC_TEST_MODE='false'; pnpm --filter @yuta/backoffice exec vitest run test/pointage-raw-clocking-bootstrap.test.ts -t '^ADMISSION_TRACE_V1 pure' --reporter=verbose`:
+  PASS, 20/20 selected, 76 not selected; 96 total, 4.23s.
+- Same anchored pure selector after the final bounded instrumentation adjustment,
+  without verbose reporter: PASS, 20/20, 76 not selected, 6.16s.
+- Covered: wrong version/extra field/runId/PID/seq0/gap/duplicate/decrease;
+  unknown stage/state; missing/unknown FAIL class and class on PASS/ENTER;
+  strict inbound rejection; normal order/READY; invalid or premature READY;
+  immutable sanitized output; legitimate provider FAIL; UNKNOWN without owned
+  failure; buffered process observations, no sequence reset and lost IPC.
+- `pnpm --filter @yuta/backoffice typecheck`: PASS, including final-source rerun.
+- `pnpm -r --if-present typecheck`: PASS.
+- `pnpm docs:check`: PASS, 36 current documents.
+- `pnpm architecture:check`: PASS.
+- `pnpm exec openspec validate pointage-usable-raw-clocking --strict`: PASS.
+- `pnpm ui:pack:check backoffice-pointage-employee`: PASS, one pack, zero warnings.
+- Scoped Prettier on three harness files: PASS. Formatter write was limited to
+  those three authorized source paths; no unrelated formatting fix.
+- `pnpm format:check`: exit1, exactly 67 inherited warnings; diagnostic only.
+- Final packet-inclusive scoped formatting: PASS. Post-write docs and
+  architecture checks: PASS. Final inventory: 2622 files; all 80 current
+  protected hashes match, including the three authorized new source hashes.
+  Both embedded diff blocks independently hash to the exact diff SHA-256 below.
+  The disclosed outside-scope aggregate remains unchanged after packet writes.
+  Initial packet formatting diagnostics flagged diff context whitespace; an
+  adjacent prettier-ignore directive preserves exact diff bytes. No formatter
+  write was used on either packet, and final check-only validation passes.
+
+No DB/container provisioning, migration, actual child/D1b/provider/E5 run,
+build/start, Browser QA, formal compliance, formal VERIFY, Gate 3, deploy,
+enablement, sync or archive. No external UI advisory invocation: this bounded
+test observability step does not redesign UI or perform UI VERIFY.
+
+### Exact bounded source diff
+
+Diff SHA-256: 3c9a3bdc32853a8e0a0c131186df5d38cc9064d0f2781935f2413ab9d6d57463.
+The following is the complete three-file source diff relative to the captured
+pre-edit working-tree texts, NOT HEAD (these approved files were untracked).
+Deterministic in-memory line LCS, source paths sorted, three context lines;
+canonical UTF-8/LF unified diff ending with one LF. Hash is Node SHA-256 over
+those exact diff bytes. File hashes above separately bind original/final bytes.
+No temporary diff file is created. Review packet additions are evidence only
+and are excluded from this source-diff hash.
+
+<!-- prettier-ignore -->
+```diff
+--- a/apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts
++++ b/apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts
+@@ -23,6 +23,8 @@
+ } from '../../../../packages/db-cloud/test/helpers/pointage-raw-clocking-test-database';
+ import {
+   pointageSourceInventory,
++  pointageAdmissionTraceSchema,
++  type PointageAdmissionTrace,
+   type PointageTestInit,
+ } from './pointage-raw-clocking-next-child';
+ 
+@@ -40,6 +42,130 @@
+   .strict();
+ export type PointageTestStatus = z.infer<typeof statusSchema>;
+ 
++// Invalid trace invalidates evidence only; it must not stop/repair admission.
++export function createPointageAdmissionTraceCollector(
++  runId: string,
++  childPid: number,
++) {
++  const rows: PointageAdmissionTrace[] = [];
++  const entered = new Set<PointageAdmissionTrace['stage']>();
++  const finished = new Set<PointageAdmissionTrace['stage']>();
++  let invalid = false;
++  let readyObserved = false;
++  const refuse = (): never => {
++    invalid = true;
++    throw new Error('Pointage admission trace evidence refused.');
++  };
++  const requireValid = () => {
++    if (invalid) refuse();
++  };
++  return {
++    accept(message: unknown) {
++      const parsed = pointageAdmissionTraceSchema.safeParse(message);
++      if (
++        invalid ||
++        !parsed.success ||
++        parsed.data.runId !== runId ||
++        parsed.data.childPid !== childPid ||
++        parsed.data.seq !== rows.length + 1
++      )
++        refuse();
++      if (!parsed.success) return;
++      const row = parsed.data;
++      if (row.state === 'ENTER') {
++        if (entered.has(row.stage)) refuse();
++        entered.add(row.stage);
++      } else {
++        if (!entered.has(row.stage) || finished.has(row.stage)) refuse();
++        finished.add(row.stage);
++      }
++      rows.push(Object.freeze(row));
++    },
++    observeReady() {
++      requireValid();
++      const expected = [
++        'RUNTIME_FACTORY_COMPLETED:PASS',
++        'READY_EMITTED:ENTER',
++        'READY_EMITTED:PASS',
++      ];
++      if (
++        readyObserved ||
++        rows
++          .slice(-3)
++          .map((r) => `${r.stage}:${r.state}`)
++          .join(',') !== expected.join(',') ||
++        rows.some((r) => r.state === 'FAIL')
++      )
++        refuse();
++      for (const stage of [
++        'PROCESS_STARTED',
++        'INIT_VALIDATED',
++        'LISTENER_BOUND',
++        'FOUNDATION_CLIENT_OPENED',
++        'RAW_CLIENT_OPENED',
++        'RUNTIME_FACTORY_ENTERED',
++        'PROVIDER_ADMISSION_VERIFIED',
++      ] as const)
++        if (!rows.some((r) => r.stage === stage && r.state === 'PASS'))
++          refuse();
++      readyObserved = true;
++    },
++    requireValid,
++    requireReadyEvidence() {
++      requireValid();
++      if (!readyObserved)
++        throw new Error('Pointage admission trace READY evidence missing.');
++    },
++    formatEvidence() {
++      const result = this.snapshot();
++      const identity =
++        result.valid && rows.length > 0 ? 'PASS' : 'NOT_ESTABLISHED';
++      return (
++        [
++          'seq | stage | state | failureClass',
++          ...result.rows.map(
++            (r) =>
++              `${r.seq} | ${r.stage} | ${r.state} | ${r.failureClass ?? '-'}`,
++          ),
++          `runId equality: ${identity}`,
++          `PID equality: ${identity}`,
++          `sequence monotonic: ${identity}`,
++          `TRACE EVIDENCE: ${result.valid && rows.length > 0 ? 'VALID' : 'INVALID_OR_MISSING'}`,
++          `LAST_ENTERED: ${result.lastEntered ?? 'NOT_OBSERVED'}`,
++          `LAST_PASSED: ${result.lastPassed ?? 'NOT_OBSERVED'}`,
++          `failureClass: ${result.failureClass}`,
++        ].join('\n') + '\n'
++      );
++    },
++    snapshot() {
++      const lastEntered =
++        rows.findLast((r) => r.state === 'ENTER')?.stage ?? null;
++      const lastPassed =
++        rows.findLast((r) => r.state === 'PASS')?.stage ?? null;
++      const failureClass = invalid
++        ? 'UNKNOWN'
++        : (rows.findLast((r) => r.state === 'FAIL')?.failureClass ?? 'UNKNOWN');
++      return Object.freeze({
++        valid: !invalid,
++        readyObserved,
++        lastEntered,
++        lastPassed,
++        failureClass,
++        rows: Object.freeze(
++          rows.map(({ seq, stage, state, failureClass }) =>
++            Object.freeze({
++              seq,
++              stage,
++              state,
++              ...(failureClass ? { failureClass } : {}),
++            }),
++          ),
++        ),
++      });
++    },
++  };
++}
++
+ // No generic exit is sufficient: child exit 1 is proof-gated in this mode,
+ // while independent parent/database/listener observations are also mandatory.
+ export function assertPointageProviderUnavailableResult(
+@@ -206,6 +332,10 @@
+   const child = spawnPointageNextChild(environment, mode);
+   if (!child.pid) throw new Error('Pointage test launch refused.');
+   const statuses: PointageTestStatus[] = [];
++  const admissionTrace = createPointageAdmissionTraceCollector(
++    input.runId,
++    child.pid,
++  );
+   const proof = createPointageReconsumerReceiptCollector(
+     input.runId,
+     child.pid,
+@@ -216,6 +346,19 @@
+       typeof message === 'object' &&
+       message !== null &&
+       'type' in message &&
++      message.type === 'POINTAGE_TEST_ADMISSION_TRACE'
++    ) {
++      try {
++        admissionTrace.accept(message);
++      } catch {
++        /* Trace evidence remains invalid; runtime authority is unchanged. */
++      }
++      return;
++    }
++    if (
++      typeof message === 'object' &&
++      message !== null &&
++      'type' in message &&
+       message.type === 'POINTAGE_TEST_RECONSUMER_PROOF'
+     ) {
+       try {
+@@ -236,6 +379,13 @@
+       void stopPointageNextChild(child, input.runId);
+       return;
+     }
++    if (parsed.data.stage === 'READY') {
++      try {
++        admissionTrace.observeReady();
++      } catch {
++        /* READY stays authoritative; trace evidence does not. */
++      }
++    }
+     statuses.push(parsed.data);
+   });
+   const watcher = watch(root, { recursive: true }, (_event, file) => {
+@@ -265,10 +415,13 @@
+   return {
+     child,
+     statuses,
++    admissionTrace,
+     requireValidMessages: () => {
++      admissionTrace.requireValid();
+       if (invalidMessage) throw new Error('Pointage child evidence refused.');
+     },
+     requireReconsumerProof: () => {
++      admissionTrace.requireReadyEvidence();
+       if (invalidMessage)
+         throw new Error('Pointage re-consumer evidence refused.');
+       proof.requireComplete();
+--- a/apps/backoffice/test/helpers/pointage-raw-clocking-next-child.ts
++++ b/apps/backoffice/test/helpers/pointage-raw-clocking-next-child.ts
+@@ -43,13 +43,119 @@
+   })
+   .strict();
+ export type PointageTestInit = z.infer<typeof pointageTestInitSchema>;
++export const pointageTestStopSchema = z
+-const stopSchema = z
+   .object({
+     type: z.literal('POINTAGE_TEST_STOP'),
+     version: z.literal(1),
+     runId: uuid,
+   })
+   .strict();
++export const pointageAdmissionTraceStageSchema = z.enum([
++  'PROCESS_STARTED',
++  'LISTENER_BOUND',
++  'INIT_VALIDATED',
++  'FOUNDATION_CLIENT_OPENED',
++  'RAW_CLIENT_OPENED',
++  'PROVIDER_ADMISSION_VERIFIED',
++  'RUNTIME_FACTORY_ENTERED',
++  'RUNTIME_FACTORY_COMPLETED',
++  'READY_EMITTED',
++  'TEARDOWN_STARTED',
++  'FOUNDATION_CLIENT_CLOSED',
++  'RAW_CLIENT_CLOSED',
++  'LISTENER_CLOSED',
++  'PROCESS_TERMINATING',
++]);
++export const pointageAdmissionTraceFailureSchema = z.enum([
++  'PRECHECK',
++  'LISTENER',
++  'INIT',
++  'FOUNDATION_CLIENT',
++  'RAW_CLIENT',
++  'SAME_DATABASE',
++  'PRIVILEGES',
++  'F8',
++  'PROVIDER',
++  'RUNTIME_FACTORY',
++  'TEARDOWN',
++  'HARNESS_ORCHESTRATION',
++  'UNKNOWN',
++]);
++export const pointageAdmissionTraceSchema = z
++  .object({
++    type: z.literal('POINTAGE_TEST_ADMISSION_TRACE'),
++    version: z.literal(1),
++    runId: uuid,
++    childPid: z.number().int().positive().safe(),
++    seq: z.number().int().positive().safe(),
++    stage: pointageAdmissionTraceStageSchema,
++    state: z.enum(['ENTER', 'PASS', 'FAIL']),
++    failureClass: pointageAdmissionTraceFailureSchema.optional(),
++  })
++  .strict()
++  .superRefine((value, context) => {
++    if (
++      value.state === 'FAIL'
++        ? value.failureClass === undefined
++        : Object.hasOwn(value, 'failureClass')
++    )
++      context.addIssue({
++        code: z.ZodIssueCode.custom,
++        message: 'Invalid trace failure state.',
++      });
++  });
++export type PointageAdmissionTrace = z.infer<
++  typeof pointageAdmissionTraceSchema
++>;
++type AdmissionTraceStage = PointageAdmissionTrace['stage'];
++type AdmissionTraceFailureClass = NonNullable<
++  PointageAdmissionTrace['failureClass']
++>;
++type TraceObservation = Pick<
++  PointageAdmissionTrace,
++  'stage' | 'state' | 'failureClass'
++>;
++
++// One-way evidence only. Buffer the two process-start observations until the
++// existing diagnostic UUID is available; never wait for an acknowledgement.
++export function createPointageAdmissionTraceEmitter(
++  send: (message: PointageAdmissionTrace) => void,
++) {
++  let identity: { runId: string; childPid: number } | undefined;
++  let seq = 0;
++  const pending: TraceObservation[] = [];
++  const publish = (observation: TraceObservation) => {
++    if (!identity) {
++      pending.push(observation);
++      return;
++    }
++    const message = {
++      type: 'POINTAGE_TEST_ADMISSION_TRACE' as const,
++      version: 1 as const,
++      ...identity,
++      seq: ++seq,
++      ...observation,
++    };
++    try {
++      send(message);
++    } catch {
++      /* IPC loss cannot change admission/cleanup. */
++    }
++  };
++  return {
++    bind(runId: string, childPid: number) {
++      if (identity) return;
++      identity = { runId, childPid };
++      for (const observation of pending.splice(0)) publish(observation);
++    },
++    enter: (stage: AdmissionTraceStage) => publish({ stage, state: 'ENTER' }),
++    pass: (stage: AdmissionTraceStage) => publish({ stage, state: 'PASS' }),
++    fail: (
++      stage: AdmissionTraceStage,
++      failureClass: AdmissionTraceFailureClass,
++    ) => publish({ stage, state: 'FAIL', failureClass }),
++  };
++}
+ type Stage = 'LISTENING' | 'INITIALIZING' | 'READY' | 'FAILED' | 'STOPPED';
+ type Runtime = Awaited<ReturnType<typeof createPointageRawClockingRuntime>>;
+ type Client = Awaited<ReturnType<typeof openPointageTestClient>>;
+@@ -334,6 +440,11 @@
+     process.exitCode = 1;
+     return;
+   }
++  const trace = createPointageAdmissionTraceEmitter((message) => {
++    if (process.connected) process.send?.(message, () => undefined);
++  });
++  trace.enter('PROCESS_STARTED');
++  trace.pass('PROCESS_STARTED');
+   const inventory = pointageSourceInventory();
+   let input: PointageTestInit | undefined;
+   let diagnosticRunId: string | undefined;
+@@ -369,19 +480,29 @@
+ 
+   async function closeClient(client: Client | undefined) {
+     if (!client || ended.has(client)) return;
++    const traceStage =
++      client === foundation ? 'FOUNDATION_CLIENT_CLOSED' : 'RAW_CLIENT_CLOSED';
++    trace.enter(traceStage);
+     ended.add(client);
+     await client.connection.end({ timeout: 5 }).then(
+       () => {
+         clientCloseCount++;
++        trace.pass(traceStage);
+       },
+       () => {
+         clientCloseFailure = true;
++        trace.fail(traceStage, 'TEARDOWN');
+       },
+     );
+   }
+ 
+   function report(stage: Stage) {
++    if (stage === 'READY') {
++      trace.enter('READY_EMITTED');
++      readyCount++;
++      // Prepared lifecycle emission, not delivery/IPC acknowledgement proof.
++      trace.pass('READY_EMITTED');
++    }
+-    if (stage === 'READY') readyCount++;
+     if (!diagnosticRunId || !process.connected) return;
+     process.send?.(
+       {
+@@ -448,11 +569,21 @@
+ 
+   function stop(failed: boolean): Promise<void> {
+     if (shutdown) return shutdown;
++    trace.enter('TEARDOWN_STARTED');
+     closed = true;
+     state = failed ? 'FAILED' : 'STOPPED';
++    trace.pass('TEARDOWN_STARTED');
+     report(state);
+     shutdown = (async () => {
++      trace.enter('LISTENER_CLOSED');
++      const drained = new Promise<void>((done) =>
++        server.close(() => {
++          if (!server.listening && server.address() === null)
++            trace.pass('LISTENER_CLOSED');
++          else trace.fail('LISTENER_CLOSED', 'TEARDOWN');
++          done();
++        }),
++      );
+-      const drained = new Promise<void>((done) => server.close(() => done()));
+       await Promise.race([
+         drained,
+         new Promise<void>((done) => {
+@@ -536,6 +667,7 @@
+       guard?.fill(0);
+       decoded = guard = undefined;
+       input = undefined;
++      trace.enter('PROCESS_TERMINATING');
+       if (process.connected) process.disconnect?.();
+       // This process exists solely for the owned test generation. Next may
+       // retain development watcher handles after close; never keep that dead
+@@ -548,6 +680,10 @@
+   async function initialize(
+     factory: typeof createPointageRawClockingRuntime,
+   ): Promise<Runtime> {
++    let failedStage: AdmissionTraceStage | undefined;
++    let failedClass: AdmissionTraceFailureClass = 'UNKNOWN';
++    let providerTraceEntered = false;
++    let providerTraceFailed = false;
+     try {
+       live();
+       report('INITIALIZING');
+@@ -561,23 +697,38 @@
+         CLOUD_DATABASE_URL: admitted.foundationDatabaseUrl,
+       };
+       foundationCount++;
++      failedStage = 'FOUNDATION_CLIENT_OPENED';
++      failedClass = 'FOUNDATION_CLIENT';
++      trace.enter(failedStage);
+       foundation = await openPointageTestClient(
+         environment,
+         admitted.foundationDatabaseUrl,
+       );
++      trace.pass(failedStage);
++      failedStage = undefined;
+       if (closed) {
+         await closeClient(foundation);
+         throw new Error();
+       }
+       live();
+       rawCount++;
++      failedStage = 'RAW_CLIENT_OPENED';
++      failedClass = 'RAW_CLIENT';
++      trace.enter(failedStage);
+       raw = await openPointageTestClient(environment, admitted.rawDatabaseUrl);
++      trace.pass(failedStage);
++      failedStage = undefined;
+       if (closed) {
+         await closeClient(raw);
+         throw new Error();
+       }
+       live();
++      trace.enter('RUNTIME_FACTORY_ENTERED');
+       runtimeCount++;
++      trace.pass('RUNTIME_FACTORY_ENTERED');
++      failedStage = 'RUNTIME_FACTORY_COMPLETED';
++      failedClass = 'UNKNOWN';
++      trace.enter(failedStage);
+       const runtime = await factory({
+         environment,
+         listeningHost: '127.0.0.1',
+@@ -597,9 +748,17 @@
+           return Object.freeze({
+             getTrustedClientAddress: async () => {
+               live();
++              if (!serviceRuntime && !providerTraceEntered) {
++                providerTraceEntered = true;
++                trace.enter('PROVIDER_ADMISSION_VERIFIED');
++              }
+               providerCalls++;
+               if (providerProof) {
+                 unavailableResults++;
++                if (!serviceRuntime && !providerTraceFailed) {
++                  providerTraceFailed = true;
++                  trace.fail('PROVIDER_ADMISSION_VERIFIED', 'PROVIDER');
++                }
+                 return null;
+               }
+               healthyResults++;
+@@ -611,6 +770,10 @@
+           });
+         },
+       });
++      if (providerTraceEntered && !providerTraceFailed)
++        trace.pass('PROVIDER_ADMISSION_VERIFIED');
++      trace.pass('RUNTIME_FACTORY_COMPLETED');
++      failedStage = undefined;
+       live();
+       serviceRuntime = runtime;
+       state = 'READY';
+@@ -646,6 +809,8 @@
+         end: (request) => call(() => runtime.end(request)),
+       } satisfies Runtime);
+     } catch {
++      if (failedStage && !providerTraceFailed)
++        trace.fail(failedStage, failedClass);
+       factoryRejected = serviceRuntime === undefined;
+       // Do not await shutdown here: it drains this initialization promise.
+       void stop(true);
+@@ -654,11 +819,12 @@
+   }
+ 
+   async function start(message: unknown) {
++    let failedStage: AdmissionTraceStage | undefined;
+     try {
+       if (Buffer.byteLength(JSON.stringify(message) ?? '') > 16_384 && seenInit)
+         throw new Error();
+       if (seenInit) {
++        const stopMessage = pointageTestStopSchema.parse(message);
+-        const stopMessage = stopSchema.parse(message);
+         if (!input || stopMessage.runId !== input.runId) throw new Error();
+         await stop(pointageSourceInventory() !== inventory);
+         return;
+@@ -666,13 +832,21 @@
+       seenInit = true;
+       // Diagnostics may echo only a validated run UUID, never rejected input.
+       const diagnostic = z.object({ runId: uuid }).safeParse(message);
++      if (diagnostic.success) {
++        diagnosticRunId = diagnostic.data.runId;
++        trace.bind(diagnosticRunId, process.pid);
++      }
++      failedStage = 'INIT_VALIDATED';
++      trace.enter(failedStage);
+-      if (diagnostic.success) diagnosticRunId = diagnostic.data.runId;
+       input = validatePointageTestInit(
+         message,
+         process.env,
+         process.ppid,
+         process.pid,
+       );
++      trace.pass(failedStage);
++      failedStage = 'LISTENER_BOUND';
++      trace.enter(failedStage);
+       await new Promise<void>((done, reject) => {
+         server.once('error', reject);
+         server.listen(3001, '127.0.0.1', () => {
+@@ -680,6 +854,8 @@
+           done();
+         });
+       });
++      trace.pass(failedStage);
++      failedStage = undefined;
+       if (closed) {
+         server.close();
+         return;
+@@ -828,6 +1004,11 @@
+       });
+       nextReady = true;
+     } catch {
++      if (failedStage)
++        trace.fail(
++          failedStage,
++          failedStage === 'INIT_VALIDATED' ? 'INIT' : 'LISTENER',
++        );
+       await stop(true);
+     }
+   }
+--- a/apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts
++++ b/apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts
+@@ -33,6 +33,11 @@
+   assertPointageListenerLoss,
+   pointageChildProofMode,
+   assertPointageProviderUnavailableProof,
++  pointageAdmissionTraceSchema,
++  pointageTestInitSchema,
++  pointageTestStopSchema,
++  createPointageAdmissionTraceEmitter,
++  type PointageAdmissionTrace,
+ } from './helpers/pointage-raw-clocking-next-child';
+ import {
+   pointageChildEnvironment,
+@@ -42,6 +47,7 @@
+   launchPointageNextChild,
+   createPointageReconsumerReceiptCollector,
+   assertPointageProviderUnavailableResult,
++  createPointageAdmissionTraceCollector,
+ } from './helpers/pointage-raw-clocking-launcher';
+ 
+ const environment = {
+@@ -66,6 +72,161 @@
+ };
+ const safe = pointageChildEnvironment(environment);
+ 
++describe('ADMISSION_TRACE_V1 pure', () => {
++  const runId = '00000000-0000-4000-8000-000000000001';
++  const childPid = 321;
++  const first = {
++    type: 'POINTAGE_TEST_ADMISSION_TRACE',
++    version: 1,
++    runId,
++    childPid,
++    seq: 1,
++    stage: 'PROCESS_STARTED',
++    state: 'ENTER',
++  } as const;
++  const collector = () =>
++    createPointageAdmissionTraceCollector(runId, childPid);
++  it.each([
++    ['version', { version: 2 }],
++    ['extra field', { details: 'not permitted' }],
++    ['runId', { runId: '00000000-0000-4000-8000-000000000002' }],
++    ['childPid', { childPid: 322 }],
++    ['seq zero', { seq: 0 }],
++    ['sequence gap', { seq: 2 }],
++    ['unknown stage', { stage: 'DEBUG' }],
++    ['unknown state', { state: 'OK' }],
++    ['FAIL missing class', { state: 'FAIL' }],
++    ['FAIL invalid class', { state: 'FAIL', failureClass: 'raw exception' }],
++    ['PASS with class', { state: 'PASS', failureClass: 'UNKNOWN' }],
++    ['ENTER with class', { failureClass: 'UNKNOWN' }],
++    ['explicit undefined class', { failureClass: undefined }],
++  ])('rejects %s and keeps invalidity sticky', (_name, patch) => {
++    const trace = collector();
++    expect(() => trace.accept({ ...first, ...patch })).toThrow();
++    expect(() => trace.accept(first)).toThrow();
++    expect(trace.snapshot().failureClass).toBe('UNKNOWN');
++  });
++  it('rejects duplicate/decreasing seq and repeated stage without resetting', () => {
++    for (const seq of [1, 2, 3]) {
++      const trace = collector();
++      trace.accept(first);
++      trace.accept({ ...first, seq: 2, state: 'PASS' });
++      expect(() => trace.accept({ ...first, seq })).toThrow();
++    }
++  });
++  it('rejects inbound trace with both exact existing inbound schemas', () => {
++    expect(pointageTestInitSchema.safeParse(first).success).toBe(false);
++    expect(pointageTestStopSchema.safeParse(first).success).toBe(false);
++    expect(() =>
++      validatePointageTestInit(first, environment, 1, childPid),
++    ).toThrow();
++  });
++  it('accepts normal ordered trace, READY, immutable sanitized rows and UNKNOWN without a FAIL', () => {
++    const trace = collector();
++    // A read before queued IPC arrives is missing evidence, not corruption.
++    expect(() => trace.requireReadyEvidence()).toThrow();
++    const emitter = createPointageAdmissionTraceEmitter((message) =>
++      trace.accept(message),
++    );
++    emitter.enter('PROCESS_STARTED');
++    emitter.pass('PROCESS_STARTED');
++    expect(trace.snapshot().rows).toHaveLength(0);
++    emitter.bind(runId, childPid);
++    for (const stage of [
++      'INIT_VALIDATED',
++      'LISTENER_BOUND',
++      'FOUNDATION_CLIENT_OPENED',
++      'RAW_CLIENT_OPENED',
++      'RUNTIME_FACTORY_ENTERED',
++    ] as const) {
++      emitter.enter(stage);
++      emitter.pass(stage);
++    }
++    emitter.enter('RUNTIME_FACTORY_COMPLETED');
++    emitter.enter('PROVIDER_ADMISSION_VERIFIED');
++    emitter.pass('PROVIDER_ADMISSION_VERIFIED');
++    emitter.pass('RUNTIME_FACTORY_COMPLETED');
++    emitter.enter('READY_EMITTED');
++    emitter.pass('READY_EMITTED');
++    trace.observeReady();
++    trace.requireReadyEvidence();
++    expect(trace.snapshot()).toMatchObject({
++      valid: true,
++      readyObserved: true,
++      lastEntered: 'READY_EMITTED',
++      lastPassed: 'READY_EMITTED',
++      failureClass: 'UNKNOWN',
++    });
++    expect(Object.isFrozen(trace.snapshot().rows)).toBe(true);
++    expect(trace.formatEvidence()).toContain('runId equality: PASS');
++    expect(trace.formatEvidence()).not.toContain(runId);
++    expect(trace.formatEvidence()).not.toContain(String(childPid));
++    expect(() => trace.observeReady()).toThrow();
++  });
++  it('rejects READY without its required preceding trace and cannot repair it retrospectively', () => {
++    const trace = collector();
++    trace.accept(first);
++    expect(() => trace.observeReady()).toThrow();
++    expect(() => trace.requireReadyEvidence()).toThrow();
++  });
++  it('records a legitimate provider FAIL without READY and allows existing cleanup observations', () => {
++    const trace = collector();
++    trace.accept({ ...first, stage: 'PROVIDER_ADMISSION_VERIFIED' });
++    trace.accept({
++      ...first,
++      stage: 'PROVIDER_ADMISSION_VERIFIED',
++      seq: 2,
++      state: 'FAIL',
++      failureClass: 'PROVIDER',
++    });
++    trace.accept({ ...first, stage: 'TEARDOWN_STARTED', seq: 3 });
++    trace.accept({
++      ...first,
++      stage: 'TEARDOWN_STARTED',
++      seq: 4,
++      state: 'PASS',
++    });
++    trace.requireValid();
++    expect(trace.snapshot()).toMatchObject({
++      lastEntered: 'TEARDOWN_STARTED',
++      lastPassed: 'TEARDOWN_STARTED',
++      failureClass: 'PROVIDER',
++      readyObserved: false,
++    });
++  });
++  it('retains an unfinished stage with UNKNOWN when no owned FAIL exists', () => {
++    const trace = collector();
++    trace.accept(first);
++    trace.accept({ ...first, seq: 2, state: 'PASS' });
++    trace.accept({ ...first, stage: 'INIT_VALIDATED', seq: 3 });
++    expect(trace.snapshot()).toMatchObject({
++      lastEntered: 'INIT_VALIDATED',
++      lastPassed: 'PROCESS_STARTED',
++      failureClass: 'UNKNOWN',
++    });
++  });
++  it('emits strict rows without waiting, resetting sequence or propagating IPC loss', () => {
++    const messages: PointageAdmissionTrace[] = [];
++    const emitter = createPointageAdmissionTraceEmitter((message) => {
++      messages.push(message);
++      throw new Error('synthetic IPC loss');
++    });
++    emitter.bind(runId, childPid);
++    expect(() => emitter.enter('PROCESS_STARTED')).not.toThrow();
++    emitter.bind('00000000-0000-4000-8000-000000000002', 999);
++    expect(() => emitter.pass('PROCESS_STARTED')).not.toThrow();
++    expect(messages.map((m) => m.seq)).toEqual([1, 2]);
++    expect(
++      messages.every(
++        (m) =>
++          m.runId === runId &&
++          m.childPid === childPid &&
++          pointageAdmissionTraceSchema.safeParse(m).success,
++      ),
++    ).toBe(true);
++  });
++});
++
+ async function requireFreshFixture(
+   fixture: Awaited<ReturnType<typeof provisionPointageNextFixture>>,
+ ) {
+@@ -1667,6 +1828,25 @@
+             });
+             diagnose('PORT_3001_RELEASE_PASS');
+           } finally {
++            if (kind === 'IDLE') {
++              // Bypass console reporter filtering, not IPC validation. No raw
++              // message/identity/secret dump and no disk evidence side channel.
++              try {
++                process.stdout.write(
++                  'E5-IDLE A ADMISSION_TRACE_V1\n' +
++                    a.admissionTrace.formatEvidence(),
++                  () => undefined,
++                );
++                if (b)
++                  process.stdout.write(
++                    'E5-IDLE B ADMISSION_TRACE_V1\n' +
++                      b.admissionTrace.formatEvidence(),
++                    () => undefined,
++                  );
++              } catch {
++                /* Missing output is not permission to alter cleanup. */
++              }
++            }
+             await fixture.close();
+           }
+         }
+```
+
+### Current protected paths
+
+| Repository-relative path                                                                           | SHA-256                                                            |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `apps/backoffice/src/app/(authenticated)/equipe/pointage/page.tsx`                                 | `f2fe5f9ccf167aaf4be6233046ce3765b385c3d452e2b8cd6e1314108fb85307` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-in/route.ts`                       | `29c16cfd705d7bef4b156b92ac1cad2186bf2ce17ac7fc7c9ca66f4b84444299` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-out/route.ts`                      | `1c0fa864ae27a4d1f7a7940aaa8ba0d7394db3e2f1da2bff01cc1e4537218c69` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/context/route.ts`                        | `45043e139c0c7e5f0740acc7d7b9da4d0ed4d59d87dcffa8069f9a1ee1dfe2b6` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/end/route.ts`                            | `93f5428e2e700f528dbde1464a31a9d5811dfacfb5531674fb605faf978a7ae0` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/identify/route.ts`                       | `8f6504f6fbd4207e34e5f06ccca1d88b266c6a52ebd1d4232697004be7cd2be5` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/recover/route.ts`                        | `0714021059b92505345cc94886358474a3125bb832f38bb20a8ee6a47332f77e` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/state/route.ts`                          | `7d199ac7aa8a40f3e7c10614a32429c0e0ee48f49dc4c806d036e501e2cdcb5d` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-active-interaction.tsx` | `c29916ab7f157959cc5a07c67d4a09dce07cc3d33503e51db98b122930b3430f` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-credential-entry.tsx`   | `82c2326d2f230d5de7e72a058187b1266fe822122604f45167b01b9dd8350d69` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-employee.tsx`           | `e6aacd7d31746ae9d8e0d5d935381620600abbddfb4ee84ce6abe11f6ab7d728` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_lib/pointage-client.ts`                     | `3cfc03d51f801866f8a528f671a92a17a4b1e630e1c801c82210809cff117188` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_lib/pointage-interaction.ts`                | `8d35dc54d47120e7ed3c4f5847b0743a1f676ea59cdd07b62babbb10c2a7e105` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/page.tsx`                                    | `8f3153a5aa08764a1a97633aceb162905e6e56fea15fa41f480dbb301bd8bd6e` |
+| `apps/backoffice/src/proxy.ts`                                                                     | `73b39a64d316155b7bc526a5f2dc5a1735624dbfa0a07ce2d596e53e46ce7aee` |
+| `apps/backoffice/src/server/pointage/authorization.ts`                                             | `c33a530483f76f29065729834e07b5d4512ee54255765645bece9cef8c87cc34` |
+| `apps/backoffice/src/server/pointage/index.ts`                                                     | `5a17ce9a793561f26e7eca9c62f7835925d54d9eba61074951d58871dd910133` |
+| `apps/backoffice/src/server/pointage/raw-chain.ts`                                                 | `0b8446a543cad544614ae7c7d366cfa771d0011d16adc7bc7d1d00405731f83c` |
+| `apps/backoffice/src/server/pointage/raw-clocking-bootstrap.ts`                                    | `17733bc004725c88a6aa506dbefdfadf7a3aa204005af2343413f5a770792e13` |
+| `apps/backoffice/src/server/pointage/raw-clocking-http.ts`                                         | `b4f57b8aeda30995f41a1a29008e9dae5c767d1e413a071488301aaae169e0ff` |
+| `apps/backoffice/src/server/pointage/raw-clocking-manager.ts`                                      | `209183808c72c1a9c677d57b2603dd5030336ad864d1ff542df1f0d06f27d948` |
+| `apps/backoffice/src/server/pointage/raw-clocking-runtime.ts`                                      | `ab9e7f157b53265ebcf62da8c7f8392018b8211c2d76e1ba467a6b2be8b53d57` |
+| `apps/backoffice/src/server/pointage/raw-clocking-service.ts`                                      | `a144202f2b7af2955b458fc445b699342bb4ed8cdbda33a4d46905452dcd3d37` |
+| `apps/backoffice/src/server/pointage/raw-clocking-test-boundary.ts`                                | `4aa15e7f9695b85ae418b1098b7bd57c14d4c39bcd8b81eb9093660eeeb8cc28` |
+| `apps/backoffice/src/server/pointage/service.ts`                                                   | `00d26799bf2fa8213161e221a28fbf75b4024fd88f549293e814e90dd935aff1` |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts`                                   | `7eda6186f92026fd0b7d742b716660315290161685e00a60333375e05185759e` |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-next-child.ts`                                 | `0a0bc64479f9a62b5135d1036a7320d18eece0dd105fa27a31703b0c293994da` |
+| `apps/backoffice/test/pointage-foundation-inventory.test.ts`                                       | `1a8d4d2f026d6444de11f1afc5d47e38a4098eedbd0059e330cb78d102242daa` |
+| `apps/backoffice/test/pointage-foundation.test.ts`                                                 | `e3f091057b9c0f21bfd2ed872b9e435fc4330ae9239ffa8e5bbd51534ed3729b` |
+| `apps/backoffice/test/pointage-interaction.test.ts`                                                | `5203b664056fc883a36d8818f8c3f144fd50f0716fad31e2e9ed8a74f8a269b8` |
+| `apps/backoffice/test/pointage-raw-chain.test.ts`                                                  | `b0fe2395ed36d944b911bafcf6dd51d20f08e3723d772189867c4f53d4a13277` |
+| `apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts`                                     | `47fa0e73eef08b4cb4b702d38e41e3027bbe96da58dee1a3e58af0d604937bbe` |
+| `apps/backoffice/test/pointage-raw-clocking-http.test.ts`                                          | `3e463e902b2e40d1fde2703c607902f5d704e32955e6f1c749b250c400623e1d` |
+| `apps/backoffice/test/pointage-raw-clocking-inventory.test.ts`                                     | `e11484f3773a4f8ab049e344b51046b3f867ee617c29424aa11699f8a52ef40a` |
+| `apps/backoffice/test/pointage-raw-clocking-manager.test.ts`                                       | `a36e3beaf3ee38da51eae92dafdb923a2d4d7364a45e58a3d4cdf3af338d1db7` |
+| `apps/backoffice/test/pointage-raw-clocking-runtime.test.ts`                                       | `bb9cd7db7152f7168c7adae80c96b4961b5f13bdf212671717f1e0e9dbd379fe` |
+| `apps/backoffice/test/pointage-raw-clocking-service.test.ts`                                       | `4a139b05bdabe81a6ec2ecab728792a215cd2b74273114f7bb4ae17a6d36b356` |
+| `docs/reviews/pointage-usable-raw-clocking/01-analysis-review.md`                                  | `ee18fdbf3b9802978eb7d71000d001c1b32eb7672f333bf8fe452005414f3557` |
+| `docs/reviews/pointage-usable-raw-clocking/02-specs-review.md`                                     | `c5a7fd21c9fb04ea8f3617463241fc0ec8b41ea6e69b6074da5fefe98f0da566` |
+| `docs/ui/pages/backoffice-pointage-employee/ACCEPTANCE_CHECKLIST.md`                               | `cbcc464c79e57f3bc34c49989d936b1dc2411839b552a159e407a407c72166ed` |
+| `docs/ui/pages/backoffice-pointage-employee/DATA_AND_INTERACTION_SPEC.md`                          | `25ffcdbb137b26568a01373c6a55c3ea714f97d70978c3c22310433bd40d68fd` |
+| `docs/ui/pages/backoffice-pointage-employee/DESIGN_HANDOFF.md`                                     | `d94fc07f4e318bda95507904640e5bd80f9f5bacc251babfbf85f7bc0fc56cae` |
+| `docs/ui/pages/backoffice-pointage-employee/IMPLEMENTATION_PLAN.md`                                | `b7dfc8937893032253f801160c1e9fa21e2c8cd34439c0b80e9eb38e7ef5606e` |
+| `docs/ui/pages/backoffice-pointage-employee/PRODUCT_SCOPE.md`                                      | `16a14204820f4a1b2033f26dca03494db9e5e61b28474c87216ce206062582d8` |
+| `docs/ui/pages/backoffice-pointage-employee/README.md`                                             | `77377af7a5f09d4884541e3a90de151e0ae11223b73e66f2dc57cfb08765d902` |
+| `docs/ui/pages/backoffice-pointage-employee/UI_SPEC.md`                                            | `cd109fb341545a280189d92b891506b9211134600720cf5d2b9b107563aacb45` |
+| `docs/ui/pages/backoffice-pointage-employee/prompt-provenance.json`                                | `04c6c99bf8067e848cc4df1f0f871fd43bdf1ec964d786f2617dcca4692b8a61` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/00_REPOSITORY_ANALYSIS.md`                     | `7ecab8ffd6d97de28f463d521172be6de8f66b7e3074e5e90e88f53f41ea394c` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/01_VISUAL_BASELINE.md`                         | `d3075806ae38d0f9f6a945b3b42d1f3b8d7e2bd9eafa712a73587744c9f46119` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/02_COMPONENT_REFACTOR.md`                      | `8b134cd4b462562416fb5c2e57c23eb4675a26eff7ea75fdfae44727b74648ac` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/03_INTERACTIONS.md`                            | `e27c12d152d9270229eed6951898ab6f5e477d7d12ff9c170f4522ed45f00388` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/04_DATA_INTEGRATION.md`                        | `f878f959d3afee428e67620c74f4c75231d2c7816f23cbf7fc6c701067538e79` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/05_VISUAL_QA.md`                               | `5f31ec1c2a2bcfd3129643931e188365f9608958f1f8bd697ae7854e292eaad0` |
+| `docs/ui/pages/backoffice-pointage-employee/references/README.md`                                  | `e2ddabc5a6a004441847e71629b84281eeac075c41a195eea8955f5d30a72a45` |
+| `openspec/changes/pointage-usable-raw-clocking/analysis.md`                                        | `f04e66f9f2307dc92aa9cdbd134fb4a35f9c1089459440c0ccfdb40c4a3e9146` |
+| `openspec/changes/pointage-usable-raw-clocking/proposal.md`                                        | `d42975cd06290431701e39d499edac93774275c1bb0f28f8474f6ff0e61816f1` |
+| `openspec/changes/pointage-usable-raw-clocking/specs/authorization/pointage/spec.md`               | `1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66` |
+| `openspec/changes/pointage-usable-raw-clocking/specs/pointage/raw-clocking/spec.md`                | `4bfa64e863ad465a144341c18aa5d0db3ce0806ada52ad40183cf9a4e321f90e` |
+| `packages/auth/src/index.ts`                                                                       | `464739729900d884af3ab82159151d7df5de6a0f8ee0a3a23feed7bc285a1c2a` |
+| `packages/auth/src/pointage-continuation.ts`                                                       | `f2c829c33030ae3550350ff4b5eac3d5dce774e5bd4774a5e46a0dd621465172` |
+| `packages/auth/src/pointage-credential.ts`                                                         | `8b294113e7a97fb83e5acff5df96224ed4c18d73d60c46a63abf824c37195fa1` |
+| `packages/auth/test/pointage-continuation.test.ts`                                                 | `6d9e78b745c47a96e4d59e256e67090ede1258860b140e28b6210fca57b07b4a` |
+| `packages/auth/test/pointage-credential.test.ts`                                                   | `6ea66dbb73a82f8586575c15f049be3ee0832987888045a593b982001c1479a0` |
+| `packages/contracts/src/index.ts`                                                                  | `cf72d2593fa90ffe590e2963f15160b232d069d1bf8848ec06d91946b18d95bd` |
+| `packages/contracts/src/pointage/index.ts`                                                         | `2bc3d6d491ce94864c2bae22a5ce96b66e052ce131be852328b4b68c2f0ba974` |
+| `packages/contracts/test/pointage.test.ts`                                                         | `4fff5b366e61c94098dc3e4238edfd4b61a2e9b5e62527465546db760f83a013` |
+| `packages/db-cloud/drizzle/0019_pointage_authority_foundation.sql`                                 | `143b6d1e47f92336b4359c4c85a17487ead97416afbbe2c0fd0b99880c0e7056` |
+| `packages/db-cloud/drizzle/0021_abandoned_black_queen.sql`                                         | `7794a5c02f2fa809a9985848bc455dbd3a5762415b5d96c216fb49ff4fd01ed9` |
+| `packages/db-cloud/drizzle/meta/0021_snapshot.json`                                                | `71052147af479bfb5f480f0981859a7af7235ff21a0be69a427a6faaeb06f4bf` |
+| `packages/db-cloud/drizzle/meta/_journal.json`                                                     | `897139ed88030e38adfffa55ba5f1bc4d4773b6bf8f1aac619f17653834907b0` |
+| `packages/db-cloud/src/pointage-raw-clocking-repository.ts`                                        | `f2cf173ea3a2ad06c30a7e1b7b70f32d33f9b520e0f705aafed1fd698d9ce802` |
+| `packages/db-cloud/src/pointage-repository.ts`                                                     | `4cfcfc4f5287590fde3ff44062a97efe1bd256771774495ae0ce91ab488034d8` |
+| `packages/db-cloud/src/schema/pointage-raw-clocking.ts`                                            | `d19c5c84c9b3352437aa839d97b54e800211bc956d28e70445e6b1247c5e4754` |
+| `packages/db-cloud/src/schema/pointage.ts`                                                         | `8f4f12cf76773dfca6f99ba59e37e5ee7d0a18ef13827f78caebddd51400de29` |
+| `packages/db-cloud/test/helpers/pointage-raw-clocking-test-database.ts`                            | `6bb342f09144e308b989d32d580c3b0d41223005e36834d74ddce7287dce0fe4` |
+| `packages/db-cloud/test/pointage-raw-clocking-migration.integration.test.ts`                       | `eb5693a3ba0f907e74862fa2e26c5d39e916c38ec54d219ed652a09af0aff2cc` |
+| `packages/db-cloud/test/pointage-raw-clocking-schema.test.ts`                                      | `d6a10caa9edb95878605e8f3d1fa439e07e2aec5c221097a2f17bdac38b2e291` |
+| `packages/db-cloud/test/pointage-raw-clocking.integration.test.ts`                                 | `5d0ea83bacb946300030a135e2f150c5b34c4a63197d98e8f4abf8a914b82cce` |
+| `packages/db-cloud/test/pointage-repository.integration.test.ts`                                   | `4761848b92e1ebb4f2db81d15e596f654f02b480c34bd290a339755302a6c1f1` |
+| `packages/db-cloud/test/pointage-schema.test.ts`                                                   | `e1026fbfc7adef0773a916ed230d302005c09c711c61503159799f35f5e1b090` |
+
+### Current workflow checkpoint
+
+ADMISSION_TRACE_V1 instrumentation review: AWAITING_HUMAN_REVIEW.
+ACTUAL E5-IDLE RERUN: NOT_RUN.
+PREVIOUS FAILURE CATEGORY: UNKNOWN.
+Latest green diagnostic: PASS BUT NON-DIAGNOSTIC FOR THE PRIOR FAILURE.
+Second retry: NOT_RUN.
+Historical E5-IDLE PASS is not substituted for current unresolved U8 evidence.
+
+APPLY: PAUSED.
+Tasks: 24/32.
+Task 3.8: PARTIAL.
+Task 4.1+: NOT_AUTHORIZED.
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED.
+VERIFY: NOT_RUN.
+QA: NOT_RUN.
+Production enablement: NOT_AUTHORIZED.
+Real employee attendance: NOT_AUTHORIZED.
+
+All seven blockers remain: exact retention duration; deletion/anonymization;
+legal hold; backup-retention interaction; employee notice wording; detailed
+audit visibility; trusted production client-address provenance.
+Synthetic/disposable attendance only.
+
+Next authority: human review of the exact three harness hashes and bounded diff,
+then a SEPARATE explicit authorization deciding whether to run ONE traced
+E5-IDLE diagnostic. No such execution is self-authorized by this packet.
+
+## Historical Apply evidence — bounded E5-IDLE diagnosis; no retry
+
+Recorded: 2026-09-11T21:41:53Z.
+Approval source: explicit current-user attachment
+e6a1a8fe-9624-4d3b-a99c-ad1532d80d40/pasted-text.txt.
+Approval recorded by: Codex workflow.
+Current U8 checkpoint review: AWAITING_HUMAN_REVIEW.
+The APPROVED header retains earlier Design/planning authority only.
+No Product, Spec, Design, runtime, security, schema or UI authority changed.
+
+### Outcome and retry decision
+
+The single focused current-source diagnostic execution exited 0: one test
+passed, 75 not selected, 76 total; duration 84.75s, test time 81.55s.
+This does not diagnose the preceding Generation A admission failure.
+Its category remains **UNKNOWN**, at the previously recorded A ready-loop
+termination before identify. No concrete evidence establishes a harness
+deadline, startup race, transient condition, or security/admission defect.
+
+Attempt 1 (this diagnostic execution): test PASS, prior failure NOT_REPRODUCED;
+cause UNKNOWN. Retry eligibility: NOT_ESTABLISHED / NOT_ELIGIBLE.
+Attempt 2: NOT_RUN. There was no automatic repeat, third attempt, timeout
+increase, sleep adjustment or guard relaxation. The prior failed execution
+remains in the historical section below and is not erased or reclassified.
+
+The user explicitly requires E5-IDLE to remain FAIL/PARTIAL when the first
+failure cause is unknown. Therefore the workflow result remains
+E5-IDLE: PARTIAL; U8: PARTIAL; Task 3.8: PARTIAL; Tasks: 24/32.
+A green diagnostic run is not a diagnosis of the earlier failure, and no
+historical E5-IDLE PASS has been substituted for current evidence.
+The affected actual-process regression set was NOT_RUN after this stop.
+
+### Diagnostic scope and evidence limits
+
+Only the existing bootstrap test changed: optional parent-side ready-loop
+observations distinguish context fetch/status/body cancellation, re-consumer
+receipt verification, INITIALIZING/READY counts and child termination.
+The E5 case adds fixed-label elapsed-time observations, sanitized fresh
+PID/runId/disposable target labels, and final client/port checks.
+No IPC schema/message, DEBUG channel, argv, INIT, STOP, provider selector or
+public transport changed. Both launcher and Next child remain byte-identical,
+as do all admission/runtime/SQL/F8/ACL/auth/continuation implementations.
+
+The original 100-iteration ready loop, 5000ms fetch deadline, 250ms interval
+and 240000ms case timeout remain unchanged. Original 60000ms idle and 120000ms
+absolute lifetime remain unchanged; no clock/deadline mutation, B identify,
+heartbeat, replacement continuation or Pointage end in A was added.
+The diff adds 71 lines and removes 7; formatting changed only this authorized
+test's new content. Its unrelated baseline bytes were preserved.
+
+**Capture limitation:** the invoked reporter returned the aggregate passing
+result but no console.info diagnostics, including the test's existing E5
+receipt. Consequently this packet does not invent PID/runId, DB/container
+identity, per-stage timestamps, observed status order, or exact elapsed idle
+duration. No broad process/environment/SQL dump was used to recover them.
+
+| Requested evidence                                                                                         | Current diagnostic execution evidence                                                                                                                                                                                                                                        |
+| ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Parent preflight / disposable provenance                                                                   | Required existing fixture/preflight assertions completed in the passing test; exact emitted identity NOT_CAPTURED. Local loopback, disposable-name/actual-database, Docker labels/tmpfs and same-target guards unchanged.                                                    |
+| A spawn / listener / INIT / READY                                                                          | Passing ready helper requires successful context 200, complete existing re-consumer receipt, exactly one INITIALIZING and READY. Exact PID/runId/stage receipt NOT_CAPTURED.                                                                                                 |
+| Foundation and raw client authentication / SAME DB / effective privilege / F8 / provider / runtime factory | Existing unchanged admission is prerequisite to passing READY/context proof. No separate detailed stage trace captured; cannot locate the earlier failure within these stages.                                                                                               |
+| Organization / establishment / dossier prerequisites                                                       | Existing actual identify 200 and scoped continuation assertions passed in the selected case; no private identity emitted.                                                                                                                                                    |
+| A termination / B fresh admission                                                                          | Existing assertions require A exit 0, signal null, zero clients, unchanged live continuation, fresh distinct B PID/runId and independent admission. Identifier values NOT_CAPTURED.                                                                                          |
+| Idle-specific denial                                                                                       | Existing assertions require real DB time beyond original idle and before absolute, original A token in B state request, exact 403 POINTAGE_ACCESS_DENIED, no revival or raw/receipt side effects. Aggregate selected-test PASS only; individual timing receipt NOT_CAPTURED. |
+| Final teardown / port                                                                                      | Existing B exit 0/client assertions plus added finally zero-client and bind/close checks passed. Independent post-run port 3001 bind/close also returned PORT_3001_RELEASE_PASS.                                                                                             |
+| Safe timing                                                                                                | Vitest start 2026-09-11 23:39:16 Europe/Paris; total 84.75s, test 81.55s. Per-stage timings NOT_CAPTURED.                                                                                                                                                                    |
+| Earlier failed A                                                                                           | Historical generic ready failure only; PID/runId/inner stage unavailable. Category UNKNOWN, not an inferred transient.                                                                                                                                                       |
+
+PROVIDER_UNAVAILABLE_ACTUAL_PROCESS: PASS — accepted exact prior proof retained.
+Its test body, detector, launcher, child, runtime and source inventory are
+unchanged. The optional ready diagnostic is not used by that provider case;
+the E5 cleanup additions do not affect it. No provider-proof rerun or relabeling.
+The accepted proof remains PID15688 / runId
+aa3978b2-75e2-4778-b2bb-1318b4496210, exit1/signal null, no READY/publication,
+no fallback, zero raw/receipt delta, closed clients/listener. This is explicitly
+retained accepted evidence, not a newly executed result.
+
+### Baseline, hashes and exact scope
+
+HEAD: 415990386327aaccab3c32b1fef0569a0fde7f3a.
+Fresh git status and OpenSpec status/apply instructions: yuta-spec-driven,
+24/32. Before editing, all 80 protected path/hash entries matched.
+Exact nonignored/tracked inventory: 2622 files; no added/deleted paths.
+20 requirements / 62 scenarios, exact two delta Spec paths unchanged.
+
+Design SHA-256: 67e0920dfe6591612a314e301fec8bed68d0454a65eb103688138d9f69cbf172.
+Tasks SHA-256: c48e0d88cb2d7feb64efcd193ae3079db6ea5547a8d3e13b3aa4be900cc8c93d.
+Previous 02b SHA-256: 3680d522a7d67c4fe95810fd2735d304ca70b09141ba2fe511c38623ea127a26.
+Previous 02c SHA-256: ed21b84fe454f088e34b228843047b54e0405b7794c0ec81c9cbc1d394e182f3.
+Bootstrap test before SHA-256: 7d06ce4b1780b78428231396596c4c2beb760daacf45a29f7bfa2d7036bacd94.
+Bootstrap test after SHA-256: 38049058457540733094456d524148671a79f6e3e0fd8520581b18dc6a5dba78.
+SHA-256 uses Node crypto.createHash('sha256') over readFileSync exact bytes.
+
+Outside the five authorized test/packet paths, the sorted
+path + NUL + exact-file-SHA256 records joined with LF have aggregate SHA-256:
+2a35bc6ba7c836e778231b5f072c05e96c9f7f4310ac3389b10fa6a73999b719.
+This is the preflight comparator for final unchanged-byte/path-set verification.
+Only the bootstrap test and the two existing evidence packets are changed
+during this authorization. The two helpers remain unchanged. No Tasks checkbox
+or wording changes; no application, env, Specs, Design, migration or UI edits.
+Ignored .next build/type cache is not part of the source-byte inventory.
+
+### Commands and results — Apply checks only
+
+- First/only actual-process invocation:
+  `$env:YUTA_POINTAGE_SYNTHETIC_TEST_MODE='true'; pnpm --filter @yuta/backoffice exec vitest run test/pointage-raw-clocking-bootstrap.test.ts -t 'E5-IDLE uses A-issued continuation'`.
+  The environment assignment was confined to its disposable command shell.
+  Exit 0; 1 passed / 75 not selected. No second actual-process command.
+- `pnpm exec prettier --write apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts`:
+  authorized single-test formatting only.
+- Initial `pnpm --filter @yuta/backoffice typecheck`: FAIL, generated
+  .next/dev/types/routes.d.ts(127,27) TS1005 and (128,1) TS1128.
+  No manual generated-file repair. Later workspace typecheck PASS; the earlier
+  error remains recorded and is not asserted to explain E5.
+- `pnpm -r --if-present typecheck`: PASS across the current workspace.
+- `pnpm docs:check`: PASS, 36 current documents.
+- `pnpm architecture:check`: PASS.
+- `pnpm exec openspec validate pointage-usable-raw-clocking --strict`: PASS.
+- `pnpm ui:pack:check backoffice-pointage-employee`: PASS, one pack, zero warnings.
+  Prior help syntax `pnpm ui:pack:check -- --help` returned usage/exit1 only;
+  it performed no validation or mutation and is not counted as PASS.
+- `pnpm format:check`: exit1, exactly 67 inherited warnings, none repaired.
+- Independent Node net server bind/close at 127.0.0.1:3001: PASS.
+- Final scoped Prettier check of the test and these two packets: PASS.
+  Post-packet docs:check and architecture:check: PASS.
+  Final inventory: 2622 files, all 80 current protected hashes match;
+  outside-allowlist aggregate exactly matches the preflight comparator above.
+  Both helpers are unchanged. Only the bootstrap test and two evidence packets
+  differ from this turn's baseline; no added/deleted nonignored files.
+
+No broad test suites, new build/start generation, formal compliance/VERIFY,
+Browser QA, Gate 3, deployment, production enablement, sync or archive were run.
+One approved fresh synthetic/disposable fixture was used by the focused test.
+Its helper retains the disposable container by existing policy; no container
+cleanup or deletion was authorized or performed.
+
+### Exact bounded diagnostic source diff
+
+```diff
+--- a/apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts
++++ b/apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts
+@@ -718,34 +718,55 @@
+       new Promise<void>((done) => setTimeout(done, ms));
+     const route = (fixture: Fixture, operation: string) =>
+       `${base.origin}/api/pointage/${fixture.slug}/${operation}`;
++    async function ready(
++      fixture: Fixture,
++      running: Running,
++      diagnose?: (stage: string) => void,
++    ) {
++      let lastObservation = '';
++      const observe = (stage: string) => {
++        const observation = `${stage} statuses=${running.statuses.map((s) => s.stage).join(',')}`;
++        if (observation !== lastObservation) diagnose?.(observation);
++        lastObservation = observation;
++      };
+-    async function ready(fixture: Fixture, running: Running) {
+       for (let attempt = 0; attempt < 100; attempt++) {
+         if (
+           running.child.exitCode !== null ||
+           running.child.signalCode !== null
++        ) {
++          observe('CHILD_EXIT_BEFORE_READY');
+-        )
+           break;
++        }
++        let stage = 'CONTEXT_FETCH';
+         try {
+           const response = await fetch(route(fixture, 'context'), {
+             signal: AbortSignal.timeout(5_000),
+           });
+           const ok = response.status === 200;
++          observe(`CONTEXT_HTTP_${response.status}`);
++          stage = 'CONTEXT_BODY_CANCEL';
+           await response.body?.cancel();
+           if (ok) {
++            stage = 'RECONSUMER_PROOF';
+             running.requireReconsumerProof();
++            stage = 'INITIALIZING_COUNT';
+             expect(
+               running.statuses.filter((s) => s.stage === 'INITIALIZING'),
+             ).toHaveLength(1);
++            stage = 'READY_COUNT';
+             expect(
+               running.statuses.filter((s) => s.stage === 'READY'),
+             ).toHaveLength(1);
++            observe('COMPLETE_ADMISSION_AND_RECONSUMER_PROOF');
+             return;
+           }
+         } catch {
++          observe(`${stage}_NOT_COMPLETE`);
+           /* Only neutral context retries during initial compilation. */
+         }
+         await pause(250);
+       }
++      observe('READY_LOOP_ENDED');
+       throw new Error('E5 fresh admission did not complete.');
+     }
+     async function clientsClosed(fixture: Fixture) {
+@@ -1431,13 +1452,35 @@
+     it.each(['DEPARTURE', 'RESET', 'IDLE', 'ABSOLUTE'] as const)(
+       'E5-%s uses A-issued continuation only after A exit and B independent admission',
+       async (kind) => {
++        const started = performance.now();
++        const diagnose = (stage: string) => {
++          if (kind === 'IDLE')
++            console.info(
++              `E5-IDLE DIAG elapsedMs=${Math.round(performance.now() - started)} ${stage}`,
++            );
++        };
++        diagnose('PARENT_PREFLIGHT_AND_DISPOSABLE_PROVISION_START');
++        const fixture = await provisionPointageNextFixture(process.env).catch(
++          () => {
++            diagnose('PREFLIGHT_OR_PROVISION_FAILED_NO_CHILD');
++            throw new Error('E5 disposable preflight or provision failed.');
++          },
++        );
++        diagnose(
++          `DISPOSABLE_PROVISION_PASS db=${fixture.name} container=${fixture.containerId}`,
++        );
++        await requireFreshFixture(fixture).catch(() => {
++          diagnose('PARENT_FRESH_FIXTURE_CHECK_FAILED');
++          throw new Error('E5 fresh fixture check failed.');
++        });
++        diagnose('PARENT_PREFLIGHT_PASS');
+-        const fixture = await provisionPointageNextFixture(process.env);
+-        await requireFreshFixture(fixture);
+         await noAttendance(fixture);
+         const a = launchPointageNextChild(fixture.input, process.env);
++        diagnose(`A_SPAWN pid=${a.child.pid} runId=${fixture.input.runId}`);
+         let b: Running | undefined;
+         try {
++          await ready(fixture, a, (stage) => diagnose(`A_${stage}`));
++          diagnose('A_D1_D1a_SAME_DB_PRIVILEGE_F8_PROVIDER_FACTORY_PASS');
+-          await ready(fixture, a);
+           const identified = await fetch(route(fixture, 'identify'), {
+             method: 'POST',
+             headers: {
+@@ -1448,6 +1491,7 @@
+             signal: AbortSignal.timeout(15_000),
+           });
+           expect(identified.status).toBe(200);
++          diagnose('A_IDENTIFY_SCOPED_PREREQUISITES_PASS');
+           // Do not retain the employee state/identity; only the opaque token.
+           const token = pointageIdentifyResponseSchema.parse(
+             await identified.json(),
+@@ -1466,6 +1510,7 @@
+           expect(a.child.exitCode).toBe(0);
+           expect(a.child.signalCode).toBeNull();
+           await clientsClosed(fixture);
++          diagnose('A_STOP_EXIT_0_CLIENTS_CLOSED_PASS');
+           expect(
+             JSON.stringify(await continuation(fixture)) ===
+               JSON.stringify(original),
+@@ -1522,7 +1567,8 @@
+             { ...fixture.input, runId: runIdB },
+             process.env,
+           );
++          diagnose(`B_SPAWN pid=${b.child.pid} runId=${runIdB}`);
++          await ready(fixture, b, (stage) => diagnose(`B_${stage}`));
+-          await ready(fixture, b);
+           expect(
+             b.child.pid !== a.child.pid && runIdB !== fixture.input.runId,
+           ).toBe(true);
+@@ -1602,9 +1648,27 @@
+             `E5-${kind} PID_A=${a.child.pid} PID_B=${b.child.pid} runId_A=${fixture.input.runId} runId_B=${runIdB} A_exit=0 A_clients=0 continuationSurvived=true endedUnchanged=true originalDeadlines=true B_freshAdmission=true transfer=false route=state result=403_POINTAGE_ACCESS_DENIED rawBeforeAfter=0 receiptsBeforeAfter=0 elapsedMs=${Math.round(now - Number(original.issued_ms))} retainedDB=${fixture.name}`,
+           );
+         } finally {
++          diagnose(
++            `A_OUTCOME_BEFORE_TEARDOWN exit=${a.child.exitCode} signal=${a.child.signalCode} stages=${a.statuses.map((s) => s.stage).join(',')}`,
++          );
+           await a.stop();
+           await b?.stop();
++          try {
++            await clientsClosed(fixture);
++            diagnose(
++              `TEARDOWN_CLIENTS_CLOSED_PASS A_exit=${a.child.exitCode} A_signal=${a.child.signalCode} B_exit=${b?.child.exitCode ?? 'NOT_STARTED'}`,
++            );
++            await new Promise<void>((done, reject) => {
++              const probe = createServer();
++              probe.once('error', reject);
++              probe.listen(3001, '127.0.0.1', () =>
++                probe.close((error) => (error ? reject(error) : done())),
++              );
++            });
++            diagnose('PORT_3001_RELEASE_PASS');
++          } finally {
++            await fixture.close();
++          }
+-          await fixture.close();
+         }
+       },
+       240_000,
+```
+
+### Current protected paths
+
+| Repository-relative path                                                                           | SHA-256                                                            |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `apps/backoffice/src/app/(authenticated)/equipe/pointage/page.tsx`                                 | `f2fe5f9ccf167aaf4be6233046ce3765b385c3d452e2b8cd6e1314108fb85307` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-in/route.ts`                       | `29c16cfd705d7bef4b156b92ac1cad2186bf2ce17ac7fc7c9ca66f4b84444299` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-out/route.ts`                      | `1c0fa864ae27a4d1f7a7940aaa8ba0d7394db3e2f1da2bff01cc1e4537218c69` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/context/route.ts`                        | `45043e139c0c7e5f0740acc7d7b9da4d0ed4d59d87dcffa8069f9a1ee1dfe2b6` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/end/route.ts`                            | `93f5428e2e700f528dbde1464a31a9d5811dfacfb5531674fb605faf978a7ae0` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/identify/route.ts`                       | `8f6504f6fbd4207e34e5f06ccca1d88b266c6a52ebd1d4232697004be7cd2be5` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/recover/route.ts`                        | `0714021059b92505345cc94886358474a3125bb832f38bb20a8ee6a47332f77e` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/state/route.ts`                          | `7d199ac7aa8a40f3e7c10614a32429c0e0ee48f49dc4c806d036e501e2cdcb5d` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-active-interaction.tsx` | `c29916ab7f157959cc5a07c67d4a09dce07cc3d33503e51db98b122930b3430f` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-credential-entry.tsx`   | `82c2326d2f230d5de7e72a058187b1266fe822122604f45167b01b9dd8350d69` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-employee.tsx`           | `e6aacd7d31746ae9d8e0d5d935381620600abbddfb4ee84ce6abe11f6ab7d728` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_lib/pointage-client.ts`                     | `3cfc03d51f801866f8a528f671a92a17a4b1e630e1c801c82210809cff117188` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_lib/pointage-interaction.ts`                | `8d35dc54d47120e7ed3c4f5847b0743a1f676ea59cdd07b62babbb10c2a7e105` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/page.tsx`                                    | `8f3153a5aa08764a1a97633aceb162905e6e56fea15fa41f480dbb301bd8bd6e` |
+| `apps/backoffice/src/proxy.ts`                                                                     | `73b39a64d316155b7bc526a5f2dc5a1735624dbfa0a07ce2d596e53e46ce7aee` |
+| `apps/backoffice/src/server/pointage/authorization.ts`                                             | `c33a530483f76f29065729834e07b5d4512ee54255765645bece9cef8c87cc34` |
+| `apps/backoffice/src/server/pointage/index.ts`                                                     | `5a17ce9a793561f26e7eca9c62f7835925d54d9eba61074951d58871dd910133` |
+| `apps/backoffice/src/server/pointage/raw-chain.ts`                                                 | `0b8446a543cad544614ae7c7d366cfa771d0011d16adc7bc7d1d00405731f83c` |
+| `apps/backoffice/src/server/pointage/raw-clocking-bootstrap.ts`                                    | `17733bc004725c88a6aa506dbefdfadf7a3aa204005af2343413f5a770792e13` |
+| `apps/backoffice/src/server/pointage/raw-clocking-http.ts`                                         | `b4f57b8aeda30995f41a1a29008e9dae5c767d1e413a071488301aaae169e0ff` |
+| `apps/backoffice/src/server/pointage/raw-clocking-manager.ts`                                      | `209183808c72c1a9c677d57b2603dd5030336ad864d1ff542df1f0d06f27d948` |
+| `apps/backoffice/src/server/pointage/raw-clocking-runtime.ts`                                      | `ab9e7f157b53265ebcf62da8c7f8392018b8211c2d76e1ba467a6b2be8b53d57` |
+| `apps/backoffice/src/server/pointage/raw-clocking-service.ts`                                      | `a144202f2b7af2955b458fc445b699342bb4ed8cdbda33a4d46905452dcd3d37` |
+| `apps/backoffice/src/server/pointage/raw-clocking-test-boundary.ts`                                | `4aa15e7f9695b85ae418b1098b7bd57c14d4c39bcd8b81eb9093660eeeb8cc28` |
+| `apps/backoffice/src/server/pointage/service.ts`                                                   | `00d26799bf2fa8213161e221a28fbf75b4024fd88f549293e814e90dd935aff1` |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts`                                   | `413bd76f3936669482f7e6c5dc03c06ab38b1b1889af7b0655afae8a8812f1e9` |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-next-child.ts`                                 | `c25784c274b0640769612a368dc6d21634c8a6a2649d55e0e64e06b1f163d279` |
+| `apps/backoffice/test/pointage-foundation-inventory.test.ts`                                       | `1a8d4d2f026d6444de11f1afc5d47e38a4098eedbd0059e330cb78d102242daa` |
+| `apps/backoffice/test/pointage-foundation.test.ts`                                                 | `e3f091057b9c0f21bfd2ed872b9e435fc4330ae9239ffa8e5bbd51534ed3729b` |
+| `apps/backoffice/test/pointage-interaction.test.ts`                                                | `5203b664056fc883a36d8818f8c3f144fd50f0716fad31e2e9ed8a74f8a269b8` |
+| `apps/backoffice/test/pointage-raw-chain.test.ts`                                                  | `b0fe2395ed36d944b911bafcf6dd51d20f08e3723d772189867c4f53d4a13277` |
+| `apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts`                                     | `38049058457540733094456d524148671a79f6e3e0fd8520581b18dc6a5dba78` |
+| `apps/backoffice/test/pointage-raw-clocking-http.test.ts`                                          | `3e463e902b2e40d1fde2703c607902f5d704e32955e6f1c749b250c400623e1d` |
+| `apps/backoffice/test/pointage-raw-clocking-inventory.test.ts`                                     | `e11484f3773a4f8ab049e344b51046b3f867ee617c29424aa11699f8a52ef40a` |
+| `apps/backoffice/test/pointage-raw-clocking-manager.test.ts`                                       | `a36e3beaf3ee38da51eae92dafdb923a2d4d7364a45e58a3d4cdf3af338d1db7` |
+| `apps/backoffice/test/pointage-raw-clocking-runtime.test.ts`                                       | `bb9cd7db7152f7168c7adae80c96b4961b5f13bdf212671717f1e0e9dbd379fe` |
+| `apps/backoffice/test/pointage-raw-clocking-service.test.ts`                                       | `4a139b05bdabe81a6ec2ecab728792a215cd2b74273114f7bb4ae17a6d36b356` |
+| `docs/reviews/pointage-usable-raw-clocking/01-analysis-review.md`                                  | `ee18fdbf3b9802978eb7d71000d001c1b32eb7672f333bf8fe452005414f3557` |
+| `docs/reviews/pointage-usable-raw-clocking/02-specs-review.md`                                     | `c5a7fd21c9fb04ea8f3617463241fc0ec8b41ea6e69b6074da5fefe98f0da566` |
+| `docs/ui/pages/backoffice-pointage-employee/ACCEPTANCE_CHECKLIST.md`                               | `cbcc464c79e57f3bc34c49989d936b1dc2411839b552a159e407a407c72166ed` |
+| `docs/ui/pages/backoffice-pointage-employee/DATA_AND_INTERACTION_SPEC.md`                          | `25ffcdbb137b26568a01373c6a55c3ea714f97d70978c3c22310433bd40d68fd` |
+| `docs/ui/pages/backoffice-pointage-employee/DESIGN_HANDOFF.md`                                     | `d94fc07f4e318bda95507904640e5bd80f9f5bacc251babfbf85f7bc0fc56cae` |
+| `docs/ui/pages/backoffice-pointage-employee/IMPLEMENTATION_PLAN.md`                                | `b7dfc8937893032253f801160c1e9fa21e2c8cd34439c0b80e9eb38e7ef5606e` |
+| `docs/ui/pages/backoffice-pointage-employee/PRODUCT_SCOPE.md`                                      | `16a14204820f4a1b2033f26dca03494db9e5e61b28474c87216ce206062582d8` |
+| `docs/ui/pages/backoffice-pointage-employee/README.md`                                             | `77377af7a5f09d4884541e3a90de151e0ae11223b73e66f2dc57cfb08765d902` |
+| `docs/ui/pages/backoffice-pointage-employee/UI_SPEC.md`                                            | `cd109fb341545a280189d92b891506b9211134600720cf5d2b9b107563aacb45` |
+| `docs/ui/pages/backoffice-pointage-employee/prompt-provenance.json`                                | `04c6c99bf8067e848cc4df1f0f871fd43bdf1ec964d786f2617dcca4692b8a61` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/00_REPOSITORY_ANALYSIS.md`                     | `7ecab8ffd6d97de28f463d521172be6de8f66b7e3074e5e90e88f53f41ea394c` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/01_VISUAL_BASELINE.md`                         | `d3075806ae38d0f9f6a945b3b42d1f3b8d7e2bd9eafa712a73587744c9f46119` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/02_COMPONENT_REFACTOR.md`                      | `8b134cd4b462562416fb5c2e57c23eb4675a26eff7ea75fdfae44727b74648ac` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/03_INTERACTIONS.md`                            | `e27c12d152d9270229eed6951898ab6f5e477d7d12ff9c170f4522ed45f00388` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/04_DATA_INTEGRATION.md`                        | `f878f959d3afee428e67620c74f4c75231d2c7816f23cbf7fc6c701067538e79` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/05_VISUAL_QA.md`                               | `5f31ec1c2a2bcfd3129643931e188365f9608958f1f8bd697ae7854e292eaad0` |
+| `docs/ui/pages/backoffice-pointage-employee/references/README.md`                                  | `e2ddabc5a6a004441847e71629b84281eeac075c41a195eea8955f5d30a72a45` |
+| `openspec/changes/pointage-usable-raw-clocking/analysis.md`                                        | `f04e66f9f2307dc92aa9cdbd134fb4a35f9c1089459440c0ccfdb40c4a3e9146` |
+| `openspec/changes/pointage-usable-raw-clocking/proposal.md`                                        | `d42975cd06290431701e39d499edac93774275c1bb0f28f8474f6ff0e61816f1` |
+| `openspec/changes/pointage-usable-raw-clocking/specs/authorization/pointage/spec.md`               | `1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66` |
+| `openspec/changes/pointage-usable-raw-clocking/specs/pointage/raw-clocking/spec.md`                | `4bfa64e863ad465a144341c18aa5d0db3ce0806ada52ad40183cf9a4e321f90e` |
+| `packages/auth/src/index.ts`                                                                       | `464739729900d884af3ab82159151d7df5de6a0f8ee0a3a23feed7bc285a1c2a` |
+| `packages/auth/src/pointage-continuation.ts`                                                       | `f2c829c33030ae3550350ff4b5eac3d5dce774e5bd4774a5e46a0dd621465172` |
+| `packages/auth/src/pointage-credential.ts`                                                         | `8b294113e7a97fb83e5acff5df96224ed4c18d73d60c46a63abf824c37195fa1` |
+| `packages/auth/test/pointage-continuation.test.ts`                                                 | `6d9e78b745c47a96e4d59e256e67090ede1258860b140e28b6210fca57b07b4a` |
+| `packages/auth/test/pointage-credential.test.ts`                                                   | `6ea66dbb73a82f8586575c15f049be3ee0832987888045a593b982001c1479a0` |
+| `packages/contracts/src/index.ts`                                                                  | `cf72d2593fa90ffe590e2963f15160b232d069d1bf8848ec06d91946b18d95bd` |
+| `packages/contracts/src/pointage/index.ts`                                                         | `2bc3d6d491ce94864c2bae22a5ce96b66e052ce131be852328b4b68c2f0ba974` |
+| `packages/contracts/test/pointage.test.ts`                                                         | `4fff5b366e61c94098dc3e4238edfd4b61a2e9b5e62527465546db760f83a013` |
+| `packages/db-cloud/drizzle/0019_pointage_authority_foundation.sql`                                 | `143b6d1e47f92336b4359c4c85a17487ead97416afbbe2c0fd0b99880c0e7056` |
+| `packages/db-cloud/drizzle/0021_abandoned_black_queen.sql`                                         | `7794a5c02f2fa809a9985848bc455dbd3a5762415b5d96c216fb49ff4fd01ed9` |
+| `packages/db-cloud/drizzle/meta/0021_snapshot.json`                                                | `71052147af479bfb5f480f0981859a7af7235ff21a0be69a427a6faaeb06f4bf` |
+| `packages/db-cloud/drizzle/meta/_journal.json`                                                     | `897139ed88030e38adfffa55ba5f1bc4d4773b6bf8f1aac619f17653834907b0` |
+| `packages/db-cloud/src/pointage-raw-clocking-repository.ts`                                        | `f2cf173ea3a2ad06c30a7e1b7b70f32d33f9b520e0f705aafed1fd698d9ce802` |
+| `packages/db-cloud/src/pointage-repository.ts`                                                     | `4cfcfc4f5287590fde3ff44062a97efe1bd256771774495ae0ce91ab488034d8` |
+| `packages/db-cloud/src/schema/pointage-raw-clocking.ts`                                            | `d19c5c84c9b3352437aa839d97b54e800211bc956d28e70445e6b1247c5e4754` |
+| `packages/db-cloud/src/schema/pointage.ts`                                                         | `8f4f12cf76773dfca6f99ba59e37e5ee7d0a18ef13827f78caebddd51400de29` |
+| `packages/db-cloud/test/helpers/pointage-raw-clocking-test-database.ts`                            | `6bb342f09144e308b989d32d580c3b0d41223005e36834d74ddce7287dce0fe4` |
+| `packages/db-cloud/test/pointage-raw-clocking-migration.integration.test.ts`                       | `eb5693a3ba0f907e74862fa2e26c5d39e916c38ec54d219ed652a09af0aff2cc` |
+| `packages/db-cloud/test/pointage-raw-clocking-schema.test.ts`                                      | `d6a10caa9edb95878605e8f3d1fa439e07e2aec5c221097a2f17bdac38b2e291` |
+| `packages/db-cloud/test/pointage-raw-clocking.integration.test.ts`                                 | `5d0ea83bacb946300030a135e2f150c5b34c4a63197d98e8f4abf8a914b82cce` |
+| `packages/db-cloud/test/pointage-repository.integration.test.ts`                                   | `4761848b92e1ebb4f2db81d15e596f654f02b480c34bd290a339755302a6c1f1` |
+| `packages/db-cloud/test/pointage-schema.test.ts`                                                   | `e1026fbfc7adef0773a916ed230d302005c09c711c61503159799f35f5e1b090` |
+
+### Current workflow checkpoint
+
+APPLY: BLOCKED — UNKNOWN PRIOR E5-IDLE ADMISSION FAILURE.
+Tasks: 24/32.
+Task 3.8: PARTIAL.
+Task 4.1+: NOT_AUTHORIZED.
+E5-IDLE ATTEMPT 2: NOT_RUN.
+E5-IDLE FINAL: PARTIAL.
+U8: PARTIAL.
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED.
+VERIFY: NOT_RUN.
+QA: NOT_RUN.
+Production enablement: NOT_AUTHORIZED.
+Real employee attendance: NOT_AUTHORIZED.
+Current checkpoint review: AWAITING_HUMAN_REVIEW.
+
+All seven unresolved blockers are preserved: exact retention duration;
+deletion/anonymization; legal hold; backup-retention interaction; employee
+notice wording; detailed audit visibility; trusted production client-address
+provenance. Synthetic/disposable attendance only. No new readiness authority.
+
+Next authority needed: human direction for additional bounded diagnosis of the
+unreproduced admission failure and reliable sanitized evidence capture. This
+packet does not request or imply Task 4.1, production, or formal VERIFY approval.
+
+## Historical Apply evidence — Task 3.8 / U8 partial, admission stop
+
+Recorded: 2026-09-11T21:29:40Z.
+Approval source: explicit current-user instruction.
+Approval recorded by: Codex workflow.
+Approved scope: Task 3.8 / U8; attachments
+db59e2b2-1cc4-4e7e-81bd-09a5dbf507ac/pasted-text.txt,
+df6cd604-5539-4082-b9f5-ce057c354cda/pasted-text.txt, và controlling clarification
+da48384b-e529-4ba1-9b16-34f2ec8c9487/pasted-text.txt.
+Current U8 checkpoint review: AWAITING_HUMAN_REVIEW.
+Header APPROVED tiếp tục chỉ ghi existing Design/planning authority, không
+phải U8 completion, Gate 3 hoặc authorization cho Task 4.1.
+
+### Human clarification and unchanged admission boundary
+
+Current user rút yêu cầu unavailable provider đạt READY rồi identify mới fail.
+Trusted client-address provenance vẫn là ADMISSION prerequisite theo D1a.
+Provider unavailable -> admission rejected -> no usable runtime -> NO READY.
+Không chuyển check xuống request time; không valid address dù một lần,
+temporary admission, delayed teardown để dựng HTTP 503, hoặc header-spoof
+matrix giả trên runtime chưa admitted. CLOSED_TRANSPORT tự nhiên không là lỗi
+của negative này. Healthy provider vẫn cần actual-route evidence riêng.
+
+Chỉ child-only --serve-provider-unavailable-proof được thêm; exact argv sets:
+[], [--serve-listener-loss-proof], [--serve-provider-unavailable-proof].
+Unknown/duplicate/combined arguments reject. Parse một lần trước INIT.
+Không env/INIT/STOP/IPC/HTTP/header/query/body/browser/config selector,
+production provider, new path, public error code hoặc outbound proof receipt.
+Existing interface getTrustedClientAddress trả null cho test mode;
+normal fixed healthy provider vẫn giữ nguyên result/behavior.
+
+Runtime factory không sửa: callback provider chỉ được gọi sau D1, exact
+foundation/raw identities, SAME database, foundation effective privileges và
+raw F8/helper/ACL proofs. Child giữ immutable anchor, source inventory,
+main-thread/PID/runId/listener prerequisites. Internal proof detector đòi đúng
+one provider construction/call/null result, zero healthy result/READY/published
+runtime, one runtime attempt/two exact clients, unchanged generation và complete
+client/listener teardown. Theo existing listener-proof convention, exit 1 là
+expected terminal rejection chỉ khi detector đạt; failed assertion/earlier
+prerequisite -> exit 2. Không tính generic exit hoặc forced kill là PASS.
+Parent kiểm tra exact existing lifecycle, exit/signal, actual SQL counts và
+port release độc lập. Deterministic detector tests reject từng falsified field,
+earlier-stage failure, READY/publication/fallback/healthy result, residual
+clients/listener, changed attendance và SIGKILL.
+
+### Fresh baseline and bounded paths
+
+HEAD: 415990386327aaccab3c32b1fef0569a0fde7f3a.
+Fresh git status --short, openspec status/instructions apply --json:
+yuta-spec-driven, 24/32. Exact pre-write snapshot: 2622 unique tracked/nonignored
+files from git ls-files -co --exclude-standard -z; Node readFileSync + SHA-256.
+80 current protected entries matched before editing. Earlier Gate1/Gate2
+artifacts and exact two-Spec path set remain unchanged, 20 requirements /
+62 scenarios. No unrelated dirty/untracked work overwritten.
+
+Design unchanged: 67e0920dfe6591612a314e301fec8bed68d0454a65eb103688138d9f69cbf172.
+Tasks unchanged: c48e0d88cb2d7feb64efcd193ae3079db6ea5547a8d3e13b3aa4be900cc8c93d.
+Pre-U8 02b: e093fd0254c583f51004bb4ffa30e711a45bdfb01336f072351f949b99ce3963.
+Pre-U8 02c: 59787687aa375d83c425eb2204699f47a42ce387857cac4ea88c9c557f0c484a.
+Gate1 unchanged: ee18fdbf3b9802978eb7d71000d001c1b32eb7672f333bf8fe452005414f3557.
+Gate2 unchanged: c5a7fd21c9fb04ea8f3617463241fc0ec8b41ea6e69b6074da5fefe98f0da566.
+
+| Authorized test path                                               | Pre-U8 SHA-256                                                   | Current SHA-256                                                  |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts`   | b93f4b1bb29ba015571c944f3a17cb59a0c05306ae11482d945a59ddbcafd10e | 413bd76f3936669482f7e6c5dc03c06ab38b1b1889af7b0655afae8a8812f1e9 |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-next-child.ts` | 03f7024b1e739697bbf7fc4fad2f976d684595e598ed6db31129b50392cdb33a | c25784c274b0640769612a368dc6d21634c8a6a2649d55e0e64e06b1f163d279 |
+| `apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts`     | 987fd9eb31620de7777052dca7bfce99d7fef4a30faf71357d8cde011809b41e | 7d06ce4b1780b78428231396596c4c2beb760daacf45a29f7bfa2d7036bacd94 |
+
+Only these three implementation/test files changed. These two existing packets
+receive evidence only. No application/server/domain/U1-U7 implementation,
+Specs, Design, Tasks checkbox, Contracts/auth, schema/migration0021/journal,
+UI pack, env or PROCESS_ENV_SHADOW_ISOLATION_V1 change.
+No new files; all other 2619 snapshot files unchanged before packet updates.
+
+### Actual-process evidence — Apply only
+
+Commands use repository root D:/working/yuta/yuta-resto. Actual-process selectors
+set only YUTA_POINTAGE_SYNTHETIC_TEST_MODE=true in the bounded parent invocation,
+restore it in finally, and propagate pnpm exit. Vitest NODE_ENV=test; existing
+launcher validates rather than clears VERCEL, validates local Docker endpoint,
+fresh disposable name/loopback/tmpfs/labels/actual database, then runs existing
+journaled migration and role fixtures. Child gets existing sanitized development
+environment/private INIT. No dotenv/shared database fallback, retained DB reuse
+for fresh cases, functional production credentials or production provider.
+
+Exact actual command prefix:
+pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-bootstrap.test.ts
+with the -t selector and --reporter=verbose listed below.
+
+| Selector / result                                                                                          | Actual evidence                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| U8 PROVIDER_UNAVAILABLE_ACTUAL_PROCESS; exit 0; 1 PASS / 73 not selected; 43.44s                           | PID15688; runId aa3978b2-75e2-4778-b2bb-1318b4496210; provider-unavailable argv; DB yuta_pointage_raw_clocking_test_aa3978b275e24778b2bb1318; full pre-provider checks and provider stage reached; null1, healthy0; READY0, published0, replacement0; closedClients2, remaining0; child exit1/signal null; listener3001 released; whole-database raw delta0/receipt delta0.                                                              |
+| U8 healthy actual routes; exit 0; 1 PASS / 74 not selected; 52.43s                                         | PID4292; runId 133da120-1fa8-4c30-bf95-78de740cf524; DB yuta_pointage_raw_clocking_test_133da1201fa84c30bf9578de; D1/D1a/F8 and one foundation/raw pair; context/identify/state/IN/OUT/recover/end; exact SQL chain5/raw5/receipts5, scoped request/event binding and server calendar/instant; replay leaves exact rows unchanged; different intent409; competing OUT requests exactly one200/one409; child exit0/signal null, clients0. |
+| U8 scoped actual transport; part of combined run below; PASS 29.75s                                        | PID9008; runId d9f70c63-27d6-448e-a54a-b73a3869d558; DB yuta_pointage_raw_clocking_test_d9f70c6327d6448ea54ab73a; same-org other establishment and other-org state/IN/identify403; untrusted STAFF claims403, privileged operation input400; held genuine committed receipt ignored after clear/new identify, old tuple not recovered; raw1/receipt1/outside-scope0; child exit0/signal null/clients0.                                   |
+| E5-RESET; part of combined run; PASS 34.17s                                                                | PID_A1972/PID_B16656; runId_A f2dcdcff-01e0-4bfc-aacc-c1de1f4abe81 / B bcd2c619-197e-4a4d-9787-5d3493a02f60; DB yuta_pointage_raw_clocking_test_f2dcdcff01e04bfcaaccc1de; A-issued continuation retained without Pointage end, A exit0/clients0; actual repository reset; independent B admission; actual state403; original deadlines retained; no raw/receipt; no context/client transfer.                                             |
+| U8 scoped actual transport\|E5-RESET\|E5-IDLE; combined exit 1; 2 PASS / 1 FAIL / 73 not selected; 112.82s | Scope/clear and RESET passed. IDLE failed at first generation A fresh admission before identify, before any expiry wait or B launch. Exact error: E5 fresh admission did not complete. This is NOT expiry PASS and NOT proof of an expiry behavior defect.                                                                                                                                                                               |
+
+Healthy route assertions also deny browser acceptedAt input400 with no event;
+upcoming/former identify403; after a later accepted IN, departure change denies
+state/OUT/recover while preserving the raw chain/open session (no auto-close).
+Receipt replay compares original request/receipt/SQL, not response equality only.
+U7 uses the existing real controller and transport: loss after real COMMIT ->
+actual recover original receipt, zero resend; a request dropped before dispatch
+-> legitimate actual UNCONFIRMED -> one same-ID/kind/guard resend -> real receipt.
+Only delivery/origin/relative URL is controlled; no server payload fabricated.
+U6 integration holds a genuine response, clears/ends, performs new identify,
+then releases it: old completion cannot replace fresh presentation or tuple.
+These are controlled integration assertions, NOT browser/bfcache/UX evidence.
+
+STAFF evidence distinction: actual transport rejects untrusted role claims and
+unsupported establishment-read input; it does not authenticate a cloud STAFF
+session or exercise a manager HTTP API (none is approved). Existing 16 manager
+service tests pass as supplemental evidence, not a substitute actual-route
+manager proof. U8 is not completed from these partial observations.
+Own-credential/client threshold/reset-isolation matrix and any remaining full
+U8 obligations remain pending; broader R3/R4 work is not authorized here.
+Unselected/skipped cases never count as PASS.
+
+### Blocking outcome and diagnostic limits
+
+STOP at the IDLE case admission failure. No retry, runtime repair, guard
+weakening, provider fallback, new test channel or Design edit was attempted.
+The existing ready() error omits failed-generation PID/runId/status details;
+those facts and exact failed admission stage are UNKNOWN in captured output.
+Do not infer provider failure, SQL failure, timeout cause, or expiry defect.
+The stack identifies ready(fixture, a), before A identification. finally invoked
+existing bounded stop/fixture close. Exact successful shutdown/client counts
+for this failed generation were not independently captured and are NOT claimed.
+Final independent Node loopback bind/close proves PORT_3001_RELEASE: PASS.
+Disposable containers/databases are retained under existing evidence policy;
+none was deleted, repaired or used to create a passing final state.
+
+Next required human direction: bounded diagnosis/retry of E5-IDLE fresh
+admission using existing allowed harness, capture sanitized PID/runId/status,
+and then complete remaining U8 evidence. No Product/Spec change is proposed;
+no root cause is invented from this failed assertion.
+
+### Commands and results
+
+| Command                                                                                                                                                             | Result                                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| pnpm exec prettier --write on exactly the three authorized test paths                                                                                               | PASS; no formatter write on Design/Specs/Tasks/UI/env or unrelated files.                                                     |
+| pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-bootstrap.test.ts -t "D1b strict private bootstrap contract"                                         | Exit0; 19 PASS / 55 not selected at that checkpoint.                                                                          |
+| pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-bootstrap.test.ts test/pointage-raw-clocking-runtime.test.ts test/pointage-raw-clocking-http.test.ts | Exit0; 112 PASS / 10 guarded actual cases skipped at that checkpoint; includes existing unavailable-provider unit regression. |
+| pnpm --filter @yuta/backoffice test test/pointage-interaction.test.ts                                                                                               | Exit0; 111/111 PASS; unchanged U5/U6/U7 source.                                                                               |
+| pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-manager.test.ts                                                                                      | Exit0; 16/16 PASS, supplemental server-boundary evidence only.                                                                |
+| pnpm --filter @yuta/backoffice typecheck                                                                                                                            | Exit0; rerun after current three test cases were added.                                                                       |
+| pnpm -r --if-present typecheck                                                                                                                                      | Exit0; all workspace typechecks at earlier U8 checkpoint; later additions covered by Backoffice typecheck.                    |
+| pnpm docs:check                                                                                                                                                     | Exit0; 36 current documents, latest source checkpoint.                                                                        |
+| pnpm architecture:check                                                                                                                                             | Exit0; runtime/import/env/migration boundaries valid.                                                                         |
+| openspec validate pointage-usable-raw-clocking --strict                                                                                                             | Exit0; valid.                                                                                                                 |
+| pnpm ui:pack:check backoffice-pointage-employee                                                                                                                     | Exit0; 1 pack / 0 warnings.                                                                                                   |
+| pnpm exec prettier --check on exactly the three authorized test paths                                                                                               | Exit0; all matched files formatted.                                                                                           |
+| pnpm format:check                                                                                                                                                   | Exit1; exactly 67 inherited unrelated warnings; none repaired.                                                                |
+
+No build/start retry, Browser QA, screenshot, formal VERIFY, Technical
+Compliance evaluation, Gate3, deploy/enable, sync/archive or lifecycle promotion.
+Existing U3 production-mode evidence is historical, not rerun or relabelled.
+UI_UX_PRO_MAX_USAGE: OPTIONAL / NOT_USED; approved no-image direction unchanged.
+
+### Current protected paths
+
+| Protected path                                                                                     | SHA-256                                                            |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `apps/backoffice/src/app/(authenticated)/equipe/pointage/page.tsx`                                 | `f2fe5f9ccf167aaf4be6233046ce3765b385c3d452e2b8cd6e1314108fb85307` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-in/route.ts`                       | `29c16cfd705d7bef4b156b92ac1cad2186bf2ce17ac7fc7c9ca66f4b84444299` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-out/route.ts`                      | `1c0fa864ae27a4d1f7a7940aaa8ba0d7394db3e2f1da2bff01cc1e4537218c69` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/context/route.ts`                        | `45043e139c0c7e5f0740acc7d7b9da4d0ed4d59d87dcffa8069f9a1ee1dfe2b6` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/end/route.ts`                            | `93f5428e2e700f528dbde1464a31a9d5811dfacfb5531674fb605faf978a7ae0` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/identify/route.ts`                       | `8f6504f6fbd4207e34e5f06ccca1d88b266c6a52ebd1d4232697004be7cd2be5` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/recover/route.ts`                        | `0714021059b92505345cc94886358474a3125bb832f38bb20a8ee6a47332f77e` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/state/route.ts`                          | `7d199ac7aa8a40f3e7c10614a32429c0e0ee48f49dc4c806d036e501e2cdcb5d` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-active-interaction.tsx` | `c29916ab7f157959cc5a07c67d4a09dce07cc3d33503e51db98b122930b3430f` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-credential-entry.tsx`   | `82c2326d2f230d5de7e72a058187b1266fe822122604f45167b01b9dd8350d69` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-employee.tsx`           | `e6aacd7d31746ae9d8e0d5d935381620600abbddfb4ee84ce6abe11f6ab7d728` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_lib/pointage-client.ts`                     | `3cfc03d51f801866f8a528f671a92a17a4b1e630e1c801c82210809cff117188` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_lib/pointage-interaction.ts`                | `8d35dc54d47120e7ed3c4f5847b0743a1f676ea59cdd07b62babbb10c2a7e105` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/page.tsx`                                    | `8f3153a5aa08764a1a97633aceb162905e6e56fea15fa41f480dbb301bd8bd6e` |
+| `apps/backoffice/src/proxy.ts`                                                                     | `73b39a64d316155b7bc526a5f2dc5a1735624dbfa0a07ce2d596e53e46ce7aee` |
+| `apps/backoffice/src/server/pointage/authorization.ts`                                             | `c33a530483f76f29065729834e07b5d4512ee54255765645bece9cef8c87cc34` |
+| `apps/backoffice/src/server/pointage/index.ts`                                                     | `5a17ce9a793561f26e7eca9c62f7835925d54d9eba61074951d58871dd910133` |
+| `apps/backoffice/src/server/pointage/raw-chain.ts`                                                 | `0b8446a543cad544614ae7c7d366cfa771d0011d16adc7bc7d1d00405731f83c` |
+| `apps/backoffice/src/server/pointage/raw-clocking-bootstrap.ts`                                    | `17733bc004725c88a6aa506dbefdfadf7a3aa204005af2343413f5a770792e13` |
+| `apps/backoffice/src/server/pointage/raw-clocking-http.ts`                                         | `b4f57b8aeda30995f41a1a29008e9dae5c767d1e413a071488301aaae169e0ff` |
+| `apps/backoffice/src/server/pointage/raw-clocking-manager.ts`                                      | `209183808c72c1a9c677d57b2603dd5030336ad864d1ff542df1f0d06f27d948` |
+| `apps/backoffice/src/server/pointage/raw-clocking-runtime.ts`                                      | `ab9e7f157b53265ebcf62da8c7f8392018b8211c2d76e1ba467a6b2be8b53d57` |
+| `apps/backoffice/src/server/pointage/raw-clocking-service.ts`                                      | `a144202f2b7af2955b458fc445b699342bb4ed8cdbda33a4d46905452dcd3d37` |
+| `apps/backoffice/src/server/pointage/raw-clocking-test-boundary.ts`                                | `4aa15e7f9695b85ae418b1098b7bd57c14d4c39bcd8b81eb9093660eeeb8cc28` |
+| `apps/backoffice/src/server/pointage/service.ts`                                                   | `00d26799bf2fa8213161e221a28fbf75b4024fd88f549293e814e90dd935aff1` |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts`                                   | `413bd76f3936669482f7e6c5dc03c06ab38b1b1889af7b0655afae8a8812f1e9` |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-next-child.ts`                                 | `c25784c274b0640769612a368dc6d21634c8a6a2649d55e0e64e06b1f163d279` |
+| `apps/backoffice/test/pointage-foundation-inventory.test.ts`                                       | `1a8d4d2f026d6444de11f1afc5d47e38a4098eedbd0059e330cb78d102242daa` |
+| `apps/backoffice/test/pointage-foundation.test.ts`                                                 | `e3f091057b9c0f21bfd2ed872b9e435fc4330ae9239ffa8e5bbd51534ed3729b` |
+| `apps/backoffice/test/pointage-interaction.test.ts`                                                | `5203b664056fc883a36d8818f8c3f144fd50f0716fad31e2e9ed8a74f8a269b8` |
+| `apps/backoffice/test/pointage-raw-chain.test.ts`                                                  | `b0fe2395ed36d944b911bafcf6dd51d20f08e3723d772189867c4f53d4a13277` |
+| `apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts`                                     | `7d06ce4b1780b78428231396596c4c2beb760daacf45a29f7bfa2d7036bacd94` |
+| `apps/backoffice/test/pointage-raw-clocking-http.test.ts`                                          | `3e463e902b2e40d1fde2703c607902f5d704e32955e6f1c749b250c400623e1d` |
+| `apps/backoffice/test/pointage-raw-clocking-inventory.test.ts`                                     | `e11484f3773a4f8ab049e344b51046b3f867ee617c29424aa11699f8a52ef40a` |
+| `apps/backoffice/test/pointage-raw-clocking-manager.test.ts`                                       | `a36e3beaf3ee38da51eae92dafdb923a2d4d7364a45e58a3d4cdf3af338d1db7` |
+| `apps/backoffice/test/pointage-raw-clocking-runtime.test.ts`                                       | `bb9cd7db7152f7168c7adae80c96b4961b5f13bdf212671717f1e0e9dbd379fe` |
+| `apps/backoffice/test/pointage-raw-clocking-service.test.ts`                                       | `4a139b05bdabe81a6ec2ecab728792a215cd2b74273114f7bb4ae17a6d36b356` |
+| `docs/reviews/pointage-usable-raw-clocking/01-analysis-review.md`                                  | `ee18fdbf3b9802978eb7d71000d001c1b32eb7672f333bf8fe452005414f3557` |
+| `docs/reviews/pointage-usable-raw-clocking/02-specs-review.md`                                     | `c5a7fd21c9fb04ea8f3617463241fc0ec8b41ea6e69b6074da5fefe98f0da566` |
+| `docs/ui/pages/backoffice-pointage-employee/ACCEPTANCE_CHECKLIST.md`                               | `cbcc464c79e57f3bc34c49989d936b1dc2411839b552a159e407a407c72166ed` |
+| `docs/ui/pages/backoffice-pointage-employee/DATA_AND_INTERACTION_SPEC.md`                          | `25ffcdbb137b26568a01373c6a55c3ea714f97d70978c3c22310433bd40d68fd` |
+| `docs/ui/pages/backoffice-pointage-employee/DESIGN_HANDOFF.md`                                     | `d94fc07f4e318bda95507904640e5bd80f9f5bacc251babfbf85f7bc0fc56cae` |
+| `docs/ui/pages/backoffice-pointage-employee/IMPLEMENTATION_PLAN.md`                                | `b7dfc8937893032253f801160c1e9fa21e2c8cd34439c0b80e9eb38e7ef5606e` |
+| `docs/ui/pages/backoffice-pointage-employee/PRODUCT_SCOPE.md`                                      | `16a14204820f4a1b2033f26dca03494db9e5e61b28474c87216ce206062582d8` |
+| `docs/ui/pages/backoffice-pointage-employee/README.md`                                             | `77377af7a5f09d4884541e3a90de151e0ae11223b73e66f2dc57cfb08765d902` |
+| `docs/ui/pages/backoffice-pointage-employee/UI_SPEC.md`                                            | `cd109fb341545a280189d92b891506b9211134600720cf5d2b9b107563aacb45` |
+| `docs/ui/pages/backoffice-pointage-employee/prompt-provenance.json`                                | `04c6c99bf8067e848cc4df1f0f871fd43bdf1ec964d786f2617dcca4692b8a61` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/00_REPOSITORY_ANALYSIS.md`                     | `7ecab8ffd6d97de28f463d521172be6de8f66b7e3074e5e90e88f53f41ea394c` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/01_VISUAL_BASELINE.md`                         | `d3075806ae38d0f9f6a945b3b42d1f3b8d7e2bd9eafa712a73587744c9f46119` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/02_COMPONENT_REFACTOR.md`                      | `8b134cd4b462562416fb5c2e57c23eb4675a26eff7ea75fdfae44727b74648ac` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/03_INTERACTIONS.md`                            | `e27c12d152d9270229eed6951898ab6f5e477d7d12ff9c170f4522ed45f00388` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/04_DATA_INTEGRATION.md`                        | `f878f959d3afee428e67620c74f4c75231d2c7816f23cbf7fc6c701067538e79` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/05_VISUAL_QA.md`                               | `5f31ec1c2a2bcfd3129643931e188365f9608958f1f8bd697ae7854e292eaad0` |
+| `docs/ui/pages/backoffice-pointage-employee/references/README.md`                                  | `e2ddabc5a6a004441847e71629b84281eeac075c41a195eea8955f5d30a72a45` |
+| `openspec/changes/pointage-usable-raw-clocking/analysis.md`                                        | `f04e66f9f2307dc92aa9cdbd134fb4a35f9c1089459440c0ccfdb40c4a3e9146` |
+| `openspec/changes/pointage-usable-raw-clocking/proposal.md`                                        | `d42975cd06290431701e39d499edac93774275c1bb0f28f8474f6ff0e61816f1` |
+| `openspec/changes/pointage-usable-raw-clocking/specs/authorization/pointage/spec.md`               | `1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66` |
+| `openspec/changes/pointage-usable-raw-clocking/specs/pointage/raw-clocking/spec.md`                | `4bfa64e863ad465a144341c18aa5d0db3ce0806ada52ad40183cf9a4e321f90e` |
+| `packages/auth/src/index.ts`                                                                       | `464739729900d884af3ab82159151d7df5de6a0f8ee0a3a23feed7bc285a1c2a` |
+| `packages/auth/src/pointage-continuation.ts`                                                       | `f2c829c33030ae3550350ff4b5eac3d5dce774e5bd4774a5e46a0dd621465172` |
+| `packages/auth/src/pointage-credential.ts`                                                         | `8b294113e7a97fb83e5acff5df96224ed4c18d73d60c46a63abf824c37195fa1` |
+| `packages/auth/test/pointage-continuation.test.ts`                                                 | `6d9e78b745c47a96e4d59e256e67090ede1258860b140e28b6210fca57b07b4a` |
+| `packages/auth/test/pointage-credential.test.ts`                                                   | `6ea66dbb73a82f8586575c15f049be3ee0832987888045a593b982001c1479a0` |
+| `packages/contracts/src/index.ts`                                                                  | `cf72d2593fa90ffe590e2963f15160b232d069d1bf8848ec06d91946b18d95bd` |
+| `packages/contracts/src/pointage/index.ts`                                                         | `2bc3d6d491ce94864c2bae22a5ce96b66e052ce131be852328b4b68c2f0ba974` |
+| `packages/contracts/test/pointage.test.ts`                                                         | `4fff5b366e61c94098dc3e4238edfd4b61a2e9b5e62527465546db760f83a013` |
+| `packages/db-cloud/drizzle/0019_pointage_authority_foundation.sql`                                 | `143b6d1e47f92336b4359c4c85a17487ead97416afbbe2c0fd0b99880c0e7056` |
+| `packages/db-cloud/drizzle/0021_abandoned_black_queen.sql`                                         | `7794a5c02f2fa809a9985848bc455dbd3a5762415b5d96c216fb49ff4fd01ed9` |
+| `packages/db-cloud/drizzle/meta/0021_snapshot.json`                                                | `71052147af479bfb5f480f0981859a7af7235ff21a0be69a427a6faaeb06f4bf` |
+| `packages/db-cloud/drizzle/meta/_journal.json`                                                     | `897139ed88030e38adfffa55ba5f1bc4d4773b6bf8f1aac619f17653834907b0` |
+| `packages/db-cloud/src/pointage-raw-clocking-repository.ts`                                        | `f2cf173ea3a2ad06c30a7e1b7b70f32d33f9b520e0f705aafed1fd698d9ce802` |
+| `packages/db-cloud/src/pointage-repository.ts`                                                     | `4cfcfc4f5287590fde3ff44062a97efe1bd256771774495ae0ce91ab488034d8` |
+| `packages/db-cloud/src/schema/pointage-raw-clocking.ts`                                            | `d19c5c84c9b3352437aa839d97b54e800211bc956d28e70445e6b1247c5e4754` |
+| `packages/db-cloud/src/schema/pointage.ts`                                                         | `8f4f12cf76773dfca6f99ba59e37e5ee7d0a18ef13827f78caebddd51400de29` |
+| `packages/db-cloud/test/helpers/pointage-raw-clocking-test-database.ts`                            | `6bb342f09144e308b989d32d580c3b0d41223005e36834d74ddce7287dce0fe4` |
+| `packages/db-cloud/test/pointage-raw-clocking-migration.integration.test.ts`                       | `eb5693a3ba0f907e74862fa2e26c5d39e916c38ec54d219ed652a09af0aff2cc` |
+| `packages/db-cloud/test/pointage-raw-clocking-schema.test.ts`                                      | `d6a10caa9edb95878605e8f3d1fa439e07e2aec5c221097a2f17bdac38b2e291` |
+| `packages/db-cloud/test/pointage-raw-clocking.integration.test.ts`                                 | `5d0ea83bacb946300030a135e2f150c5b34c4a63197d98e8f4abf8a914b82cce` |
+| `packages/db-cloud/test/pointage-repository.integration.test.ts`                                   | `4761848b92e1ebb4f2db81d15e596f654f02b480c34bd290a339755302a6c1f1` |
+| `packages/db-cloud/test/pointage-schema.test.ts`                                                   | `e1026fbfc7adef0773a916ed230d302005c09c711c61503159799f35f5e1b090` |
+
+### Current workflow checkpoint
+
+APPLY: BLOCKED — U8 actual IDLE fresh admission did not complete.
+Tasks: 24/32.
+Task 3.7: COMPLETE.
+Task 3.8: PARTIAL.
+Task 4.1+: NOT_AUTHORIZED / NOT_STARTED.
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED.
+VERIFY: NOT_RUN.
+QA: NOT_RUN.
+Production enablement: NOT_AUTHORIZED.
+Real employee attendance: NOT_AUTHORIZED.
+
+All seven unresolved blockers remain: exact retention duration;
+deletion/anonymization; legal hold; backup-retention interaction; employee notice;
+detailed audit visibility; trusted production client-address provenance.
+Synthetic/disposable only. Review status: AWAITING_HUMAN_REVIEW.
+
+## Historical Apply evidence — Task 3.7 / U7
+
+Recorded: 2026-09-11T20:49:49Z.
+Approval source: explicit current-user instruction.
+Approval recorded by: Codex workflow.
+Approved scope: TASK 3.7 / U7 only, attachment
+1c0ab46c-35f1-457f-b753-40e4e53d07a2/pasted-text.txt;
+clarification approved: 90dc3267-ee0a-4d79-a7eb-2df6ec5d0107/pasted-text.txt.
+Impact: PAGE_LOCAL trong approved CROSS_MODULE change; yuta-spec-driven.
+Header APPROVED vẫn chỉ ghi Design/planning authority đã có; không phải
+Gate3 hoặc approval cho U8. U7 checkpoint review: AWAITING_HUMAN_REVIEW.
+
+### Explicit human clarification, not inference
+
+Lượt U7 trước dừng read-only vì Design D8 chỉ yêu cầu exact-tuple retry, chưa
+chỉ rõ resend có thuộc cùng “Vérifier le résultat” click. Current user đã
+giải quyết chính xác điểm đó; giữ nguyên historical observation và Design.
+
+Mỗi click explicit phải recover trước với nguyên frozen requestId, kind,
+observedStateGuard và currently live continuation. Matching COMMITTED:
+hiển thị original receipt và clear tuple, zero resend. Exact UNCONFIRMED:
+chỉ nghĩa chưa xác nhận được committed receipt, không khẳng định failed,
+not executed hoặc no in-flight work. Cùng click được tối đa một resend của
+nguyên tuple; không state request, new ID, guard hay kind xen giữa.
+Matching resend receipt kết thúc; uncertain resend giữ RESULT_UNKNOWN/tuple
+rồi dừng. Click tiếp theo có thể lặp lại bounded cycle, không background loop.
+Server-confirmed conflict trên resend đi explicit refresh boundary, không
+rewrite old intent. U6 clear hủy tuple và mọi recovery/resend eligibility.
+
+Không Product/Spec/server/API/contract change hoặc Design reopening. Không
+sentence trong Design cần sửa để thực hiện current clarification.
+
+### Fresh authority and byte preflight
+
+HEAD: 415990386327aaccab3c32b1fef0569a0fde7f3a.
+Fresh git status --short; exact baseline 2622 unique tracked/nonignored files
+qua git ls-files -co --exclude-standard -z và Node readFileSync/SHA-256.
+80 protected entries khớp trước Apply. Existing dirty/untracked U5/U6 source
+được snapshot riêng; không lấy HEAD làm preimage, không overwrite unrelated
+Formalités/ui-ux-pro-max-integration work.
+
+| Artifact / role                         | SHA-256                                                          |
+| --------------------------------------- | ---------------------------------------------------------------- |
+| Design — unchanged                      | 67e0920dfe6591612a314e301fec8bed68d0454a65eb103688138d9f69cbf172 |
+| Tasks — pre-U7                          | dbd28e040b7b33c291f43299780c78f7705b10362711b1d5f0e665514b5d551d |
+| Tasks — U7 checkpoint and checkbox only | c48e0d88cb2d7feb64efcd193ae3079db6ea5547a8d3e13b3aa4be900cc8c93d |
+| 02b — pre-U7                            | 050a013b898b5aa91b84e2ed65dfde2294d38814fd998ebb081995db0a26ae91 |
+| 02c — pre-U7                            | f9442ac64767eaa4727ef5130eacf5ba89fce057c7b5d94ba36d90ba51a8c97b |
+| Gate1 — unchanged                       | ee18fdbf3b9802978eb7d71000d001c1b32eb7672f333bf8fe452005414f3557 |
+| Gate2 — unchanged                       | c5a7fd21c9fb04ea8f3617463241fc0ec8b41ea6e69b6074da5fefe98f0da566 |
+
+Exact two-Spec path set, 20 requirements / 62 scenarios, Proposal/Analysis,
+Design, server/domain/grants, Contracts/auth, raw/receipt/continuation schema,
+migration0021/journal, proxy/root/CSP/cache, env files/profile và sealed UI pack
+không đổi. Không new path. Chỉ năm implementation paths sau được sửa;
+Tasks và hai existing packets chỉ nhận execution evidence/checkpoint.
+
+| Implementation path                                                                                | Pre-U7 SHA-256                                                   | Current SHA-256                                                  |
+| -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-active-interaction.tsx` | aca1322b91fdbba963d1b8c900081b103a1f28acb24b4338f3c2c11690b78e88 | c29916ab7f157959cc5a07c67d4a09dce07cc3d33503e51db98b122930b3430f |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-employee.tsx`           | 0a53b03e2418446c631dbd3d7ea958f18609b9055cce6a237996802aed90e88d | e6aacd7d31746ae9d8e0d5d935381620600abbddfb4ee84ce6abe11f6ab7d728 |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_lib/pointage-client.ts`                     | b956e349a09c2243e631e396e21a2d87d97edf3c1feecc6e82a2bfbb8f9587ed | 3cfc03d51f801866f8a528f671a92a17a4b1e630e1c801c82210809cff117188 |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_lib/pointage-interaction.ts`                | 207bc1b3c8663e489e832001cd553671a47e4d50cc54e90e7a1bdb551d8f8afa | 8d35dc54d47120e7ed3c4f5847b0743a1f676ea59cdd07b62babbb10c2a7e105 |
+| `apps/backoffice/test/pointage-interaction.test.ts`                                                | 92e24f02bd2edfb11d5a79af659231510a27efc542677b86d6f57136ba323a04 | 5203b664056fc883a36d8818f8c3f144fd50f0716fad31e2e9ed8a74f8a269b8 |
+
+### Exact bounded implementation
+
+- Controller freeze toàn bộ tuple trước initial dispatch. Một flight slot chặn
+  duplicate mutation/recover/resend/refresh; no optimistic result.
+- Stateless state/recover wrappers consume existing strict Zod contracts,
+  credentials omit/cache no-store/redirect error/AbortSignal. Recover receipt
+  phải đúng requestId và kind; UNCONFIRMED giữ riêng với RESULT_UNKNOWN.
+  Không wrapper retry policy hoặc tuple store.
+- Controller giữ tuple sau uncertainty, exact recover-first và one-resend
+  sequence theo current human clarification. Chỉ matching COMMITTED hiển thị
+  receipt, bỏ tuple; không lifetime fields hoặc state refresh trên receipt.
+- Confirmed state/request conflict chỉ cho explicit own-state refresh. Thành
+  công parse/install guard và minimal state, discard old tuple; không auto
+  mutate. New explicit action sau refresh mới tạo requestId mới.
+- State refresh anchor performance.now trước dispatch. Absolute min(existing,
+  requestStart + expiresInMs); idle min(newAbsolute, requestStart + idleInMs).
+  Failed requests không renew; superseded idle callbacks không clear nhầm.
+- ACCESS_DENIED trên protected operations dùng U6 clear/neutral. 503/network/
+  malformed/wrong receipt mutation uncertainty không bị đổi thành failure
+  hoặc conflict. Best-effort own-end không claim remote ACK.
+- U6 vẫn xóa tuple/flight/presentation/timers, abort và tăng generation; stale
+  recover/state/resend không restore. Pending presentation có aria-busy,
+  disabled primary và Terminer. Không requestId/guard/token trong visible UI.
+
+### Apply test matrix — not formal VERIFY or Browser QA
+
+111 interaction cases = 66 existing U5/U6 cases + 45 U7 cases. Các group dưới
+đây trỏ vào existing test/pointage-interaction.test.ts, suite
+U7 exact-tuple recovery and explicit conflict refresh (Apply only).
+
+| U7 obligation                                           | Deterministic test evidence                                                                                                                                              |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Freeze before first dispatch; duplicate initial request | Object.freeze interception inside fetch proves pre-dispatch frozen triple; UUID count1; duplicate mutation blocked.                                                      |
+| Recover first, exact token/ID/kind/guard                | Both IN/OUT controlled requests assert full bodies and Authorization, omit/no-store/AbortSignal; click uses actual component callback.                                   |
+| Matching recover, zero resend, tuple discarded          | Both-kind original receipt accepted; no extra mutation/recover; receipt9,999/10,000ms neutral boundary.                                                                  |
+| Wrong recovered ID/kind; strict failure                 | Seven cases: wrong ID, wrong kind, extra field, malformed, network,503,status mismatch remain unknown, no resend, next explicit recover same tuple.                      |
+| Exact UNCONFIRMED bounded resend                        | Both kinds; recover then exactly one original clock endpoint/body, no new UUID, no state request, no success while pending.                                              |
+| Duplicate recovery/resend                               | While either await is pending, further recover/mutate/refresh calls do not add requests; primary disabled/aria-busy.                                                     |
+| Unknown resend and next click                           | Five modes retain unknown/tuple; timer does not repeat; second explicit click yields recover -> at most one resend; identical bodies/UUIDcount1.                         |
+| Conflict on resend                                      | Both state/request conflicts stop cycle, explicit refresh only, no ID rewrite or auto-rebase.                                                                            |
+| Initial conflict and current state                      | Both conflict types; state endpoint only after user action, strict current state/guard installed, no automatic mutation.                                                 |
+| Fresh action after refresh                              | After successful refreshed CLOCKED_IN state, only new explicit OUT allocates next ID with fresh guard; old ID is never repurposed.                                       |
+| Failed state refresh                                    | Malformed/extra/network/503 cannot install employee or renew lifetime; keep explicit refresh boundary and no mutation/recover; original idle still clears.               |
+| Conservative lifetimes                                  | Request-start anchor subtracts roundtrip; repeated state success cannot move original absolute; superseded idle callback harmless; zero remaining clears before display. |
+| Denied current authority                                | Mutation/recover/resend/state denial all clear; recover unavailable after clear and after fresh identify; no tuple carried to next employee.                             |
+| Clear during recover                                    | End/hidden/pagehide/pageshow/dispose/idle/absolute cases abort and prevent UNCONFIRMED -> resend; tuple cannot revive.                                                   |
+| Late completion after generation change                 | Recover/resend/state old completion cannot overwrite second employee or revive recovery; AbortSignal observed aborted.                                                   |
+| Duplicate/restart model and minimization                | New controller cannot consume another tuple; no tuple fields in markup; source rejects storage/history/channel/service-worker/registry/heartbeat; wrappers stateless.    |
+
+Các 66 U5/U6 cases vẫn được chạy, không bị bỏ/skip. Chỉ expected behavior
+explicitly đổi bởi U7 được cập nhật: unknown có recovery action; confirmed
+conflicts có refresh action; denied continuation neutral; unavailable mutation
+unknown. /recover được bỏ khỏi blanket source prohibition vì nay authorized;
+mọi storage/secret/tenant/heartbeat prohibition giữ nguyên. Existing receipt10s,
+no optimistic success, double-submit và U6 lifetime/generation assertions giữ.
+
+Intermediate run: 57/66 passed, nine expectation failures do action flag thêm
+nhầm identify block thay vì mutation unknown block trong test edit; đã sửa
+đúng placement. Final111/111 và combined124/124 đều PASS, không bỏ assertion
+để bỏ qua implementation defect. Không runtime/server/DB failure bị che giấu.
+
+### Commands and results — Apply evidence only
+
+| Command / diagnostic                                                                                                           | Result                                                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| pnpm --filter @yuta/backoffice test test/pointage-interaction.test.ts                                                          | PASS,111/111                                                                                            |
+| pnpm --filter @yuta/backoffice test test/pointage-interaction.test.ts test/pointage-raw-clocking-http.test.ts                  | PASS,124/124:111 interaction +13 HTTP                                                                   |
+| pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-inventory.test.ts -t U3.isolated.header.implementation.evidence | PASS,40;5 actual DEV HTTP tests skipped                                                                 |
+| pnpm --filter @yuta/backoffice typecheck                                                                                       | PASS,exit0                                                                                              |
+| pnpm -r --if-present typecheck                                                                                                 | PASS,exit0                                                                                              |
+| pnpm docs:check                                                                                                                | PASS,exit0;36 current docs                                                                              |
+| pnpm architecture:check                                                                                                        | PASS,exit0                                                                                              |
+| openspec validate pointage-usable-raw-clocking --strict                                                                        | PASS,exit0                                                                                              |
+| pnpm ui:pack:check backoffice-pointage-employee                                                                                | PASS,1 pack,0 warnings                                                                                  |
+| Scoped Prettier check                                                                                                          | PASS for five sources and updated checkpoint artifacts                                                  |
+| pnpm format:check                                                                                                              | Diagnostic exit1,exactly67 unrelated warnings; no fixes                                                 |
+| Byte scope / exact inverse diff check                                                                                          | Five source files + Tasks/02b/02c only; no addition/removal; source reverse-check against current bytes |
+
+Không build/start, container/DB/migration, actual usable Next+DB runtime,
+Browser QA/screenshots, formal Technical Compliance/VERIFY, Gate3, deploy,
+enable/sync/archive. Tests dùng controlled synthetic responses/fake monotonic
+timers và actual controller/component callbacks; không giả làm final route
+integration hoặc browser/bfcache/visual proof. U8 chưa chạy.
+
+### Current protected paths
+
+| Protected path                                                                                     | SHA-256                                                            |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `apps/backoffice/src/app/(authenticated)/equipe/pointage/page.tsx`                                 | `f2fe5f9ccf167aaf4be6233046ce3765b385c3d452e2b8cd6e1314108fb85307` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-in/route.ts`                       | `29c16cfd705d7bef4b156b92ac1cad2186bf2ce17ac7fc7c9ca66f4b84444299` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-out/route.ts`                      | `1c0fa864ae27a4d1f7a7940aaa8ba0d7394db3e2f1da2bff01cc1e4537218c69` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/context/route.ts`                        | `45043e139c0c7e5f0740acc7d7b9da4d0ed4d59d87dcffa8069f9a1ee1dfe2b6` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/end/route.ts`                            | `93f5428e2e700f528dbde1464a31a9d5811dfacfb5531674fb605faf978a7ae0` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/identify/route.ts`                       | `8f6504f6fbd4207e34e5f06ccca1d88b266c6a52ebd1d4232697004be7cd2be5` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/recover/route.ts`                        | `0714021059b92505345cc94886358474a3125bb832f38bb20a8ee6a47332f77e` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/state/route.ts`                          | `7d199ac7aa8a40f3e7c10614a32429c0e0ee48f49dc4c806d036e501e2cdcb5d` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-active-interaction.tsx` | `c29916ab7f157959cc5a07c67d4a09dce07cc3d33503e51db98b122930b3430f` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-credential-entry.tsx`   | `82c2326d2f230d5de7e72a058187b1266fe822122604f45167b01b9dd8350d69` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-employee.tsx`           | `e6aacd7d31746ae9d8e0d5d935381620600abbddfb4ee84ce6abe11f6ab7d728` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_lib/pointage-client.ts`                     | `3cfc03d51f801866f8a528f671a92a17a4b1e630e1c801c82210809cff117188` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_lib/pointage-interaction.ts`                | `8d35dc54d47120e7ed3c4f5847b0743a1f676ea59cdd07b62babbb10c2a7e105` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/page.tsx`                                    | `8f3153a5aa08764a1a97633aceb162905e6e56fea15fa41f480dbb301bd8bd6e` |
+| `apps/backoffice/src/proxy.ts`                                                                     | `73b39a64d316155b7bc526a5f2dc5a1735624dbfa0a07ce2d596e53e46ce7aee` |
+| `apps/backoffice/src/server/pointage/authorization.ts`                                             | `c33a530483f76f29065729834e07b5d4512ee54255765645bece9cef8c87cc34` |
+| `apps/backoffice/src/server/pointage/index.ts`                                                     | `5a17ce9a793561f26e7eca9c62f7835925d54d9eba61074951d58871dd910133` |
+| `apps/backoffice/src/server/pointage/raw-chain.ts`                                                 | `0b8446a543cad544614ae7c7d366cfa771d0011d16adc7bc7d1d00405731f83c` |
+| `apps/backoffice/src/server/pointage/raw-clocking-bootstrap.ts`                                    | `17733bc004725c88a6aa506dbefdfadf7a3aa204005af2343413f5a770792e13` |
+| `apps/backoffice/src/server/pointage/raw-clocking-http.ts`                                         | `b4f57b8aeda30995f41a1a29008e9dae5c767d1e413a071488301aaae169e0ff` |
+| `apps/backoffice/src/server/pointage/raw-clocking-manager.ts`                                      | `209183808c72c1a9c677d57b2603dd5030336ad864d1ff542df1f0d06f27d948` |
+| `apps/backoffice/src/server/pointage/raw-clocking-runtime.ts`                                      | `ab9e7f157b53265ebcf62da8c7f8392018b8211c2d76e1ba467a6b2be8b53d57` |
+| `apps/backoffice/src/server/pointage/raw-clocking-service.ts`                                      | `a144202f2b7af2955b458fc445b699342bb4ed8cdbda33a4d46905452dcd3d37` |
+| `apps/backoffice/src/server/pointage/raw-clocking-test-boundary.ts`                                | `4aa15e7f9695b85ae418b1098b7bd57c14d4c39bcd8b81eb9093660eeeb8cc28` |
+| `apps/backoffice/src/server/pointage/service.ts`                                                   | `00d26799bf2fa8213161e221a28fbf75b4024fd88f549293e814e90dd935aff1` |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts`                                   | `b93f4b1bb29ba015571c944f3a17cb59a0c05306ae11482d945a59ddbcafd10e` |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-next-child.ts`                                 | `03f7024b1e739697bbf7fc4fad2f976d684595e598ed6db31129b50392cdb33a` |
+| `apps/backoffice/test/pointage-foundation-inventory.test.ts`                                       | `1a8d4d2f026d6444de11f1afc5d47e38a4098eedbd0059e330cb78d102242daa` |
+| `apps/backoffice/test/pointage-foundation.test.ts`                                                 | `e3f091057b9c0f21bfd2ed872b9e435fc4330ae9239ffa8e5bbd51534ed3729b` |
+| `apps/backoffice/test/pointage-interaction.test.ts`                                                | `5203b664056fc883a36d8818f8c3f144fd50f0716fad31e2e9ed8a74f8a269b8` |
+| `apps/backoffice/test/pointage-raw-chain.test.ts`                                                  | `b0fe2395ed36d944b911bafcf6dd51d20f08e3723d772189867c4f53d4a13277` |
+| `apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts`                                     | `987fd9eb31620de7777052dca7bfce99d7fef4a30faf71357d8cde011809b41e` |
+| `apps/backoffice/test/pointage-raw-clocking-http.test.ts`                                          | `3e463e902b2e40d1fde2703c607902f5d704e32955e6f1c749b250c400623e1d` |
+| `apps/backoffice/test/pointage-raw-clocking-inventory.test.ts`                                     | `e11484f3773a4f8ab049e344b51046b3f867ee617c29424aa11699f8a52ef40a` |
+| `apps/backoffice/test/pointage-raw-clocking-manager.test.ts`                                       | `a36e3beaf3ee38da51eae92dafdb923a2d4d7364a45e58a3d4cdf3af338d1db7` |
+| `apps/backoffice/test/pointage-raw-clocking-runtime.test.ts`                                       | `bb9cd7db7152f7168c7adae80c96b4961b5f13bdf212671717f1e0e9dbd379fe` |
+| `apps/backoffice/test/pointage-raw-clocking-service.test.ts`                                       | `4a139b05bdabe81a6ec2ecab728792a215cd2b74273114f7bb4ae17a6d36b356` |
+| `docs/reviews/pointage-usable-raw-clocking/01-analysis-review.md`                                  | `ee18fdbf3b9802978eb7d71000d001c1b32eb7672f333bf8fe452005414f3557` |
+| `docs/reviews/pointage-usable-raw-clocking/02-specs-review.md`                                     | `c5a7fd21c9fb04ea8f3617463241fc0ec8b41ea6e69b6074da5fefe98f0da566` |
+| `docs/ui/pages/backoffice-pointage-employee/ACCEPTANCE_CHECKLIST.md`                               | `cbcc464c79e57f3bc34c49989d936b1dc2411839b552a159e407a407c72166ed` |
+| `docs/ui/pages/backoffice-pointage-employee/DATA_AND_INTERACTION_SPEC.md`                          | `25ffcdbb137b26568a01373c6a55c3ea714f97d70978c3c22310433bd40d68fd` |
+| `docs/ui/pages/backoffice-pointage-employee/DESIGN_HANDOFF.md`                                     | `d94fc07f4e318bda95507904640e5bd80f9f5bacc251babfbf85f7bc0fc56cae` |
+| `docs/ui/pages/backoffice-pointage-employee/IMPLEMENTATION_PLAN.md`                                | `b7dfc8937893032253f801160c1e9fa21e2c8cd34439c0b80e9eb38e7ef5606e` |
+| `docs/ui/pages/backoffice-pointage-employee/PRODUCT_SCOPE.md`                                      | `16a14204820f4a1b2033f26dca03494db9e5e61b28474c87216ce206062582d8` |
+| `docs/ui/pages/backoffice-pointage-employee/README.md`                                             | `77377af7a5f09d4884541e3a90de151e0ae11223b73e66f2dc57cfb08765d902` |
+| `docs/ui/pages/backoffice-pointage-employee/UI_SPEC.md`                                            | `cd109fb341545a280189d92b891506b9211134600720cf5d2b9b107563aacb45` |
+| `docs/ui/pages/backoffice-pointage-employee/prompt-provenance.json`                                | `04c6c99bf8067e848cc4df1f0f871fd43bdf1ec964d786f2617dcca4692b8a61` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/00_REPOSITORY_ANALYSIS.md`                     | `7ecab8ffd6d97de28f463d521172be6de8f66b7e3074e5e90e88f53f41ea394c` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/01_VISUAL_BASELINE.md`                         | `d3075806ae38d0f9f6a945b3b42d1f3b8d7e2bd9eafa712a73587744c9f46119` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/02_COMPONENT_REFACTOR.md`                      | `8b134cd4b462562416fb5c2e57c23eb4675a26eff7ea75fdfae44727b74648ac` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/03_INTERACTIONS.md`                            | `e27c12d152d9270229eed6951898ab6f5e477d7d12ff9c170f4522ed45f00388` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/04_DATA_INTEGRATION.md`                        | `f878f959d3afee428e67620c74f4c75231d2c7816f23cbf7fc6c701067538e79` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/05_VISUAL_QA.md`                               | `5f31ec1c2a2bcfd3129643931e188365f9608958f1f8bd697ae7854e292eaad0` |
+| `docs/ui/pages/backoffice-pointage-employee/references/README.md`                                  | `e2ddabc5a6a004441847e71629b84281eeac075c41a195eea8955f5d30a72a45` |
+| `openspec/changes/pointage-usable-raw-clocking/analysis.md`                                        | `f04e66f9f2307dc92aa9cdbd134fb4a35f9c1089459440c0ccfdb40c4a3e9146` |
+| `openspec/changes/pointage-usable-raw-clocking/proposal.md`                                        | `d42975cd06290431701e39d499edac93774275c1bb0f28f8474f6ff0e61816f1` |
+| `openspec/changes/pointage-usable-raw-clocking/specs/authorization/pointage/spec.md`               | `1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66` |
+| `openspec/changes/pointage-usable-raw-clocking/specs/pointage/raw-clocking/spec.md`                | `4bfa64e863ad465a144341c18aa5d0db3ce0806ada52ad40183cf9a4e321f90e` |
+| `packages/auth/src/index.ts`                                                                       | `464739729900d884af3ab82159151d7df5de6a0f8ee0a3a23feed7bc285a1c2a` |
+| `packages/auth/src/pointage-continuation.ts`                                                       | `f2c829c33030ae3550350ff4b5eac3d5dce774e5bd4774a5e46a0dd621465172` |
+| `packages/auth/src/pointage-credential.ts`                                                         | `8b294113e7a97fb83e5acff5df96224ed4c18d73d60c46a63abf824c37195fa1` |
+| `packages/auth/test/pointage-continuation.test.ts`                                                 | `6d9e78b745c47a96e4d59e256e67090ede1258860b140e28b6210fca57b07b4a` |
+| `packages/auth/test/pointage-credential.test.ts`                                                   | `6ea66dbb73a82f8586575c15f049be3ee0832987888045a593b982001c1479a0` |
+| `packages/contracts/src/index.ts`                                                                  | `cf72d2593fa90ffe590e2963f15160b232d069d1bf8848ec06d91946b18d95bd` |
+| `packages/contracts/src/pointage/index.ts`                                                         | `2bc3d6d491ce94864c2bae22a5ce96b66e052ce131be852328b4b68c2f0ba974` |
+| `packages/contracts/test/pointage.test.ts`                                                         | `4fff5b366e61c94098dc3e4238edfd4b61a2e9b5e62527465546db760f83a013` |
+| `packages/db-cloud/drizzle/0019_pointage_authority_foundation.sql`                                 | `143b6d1e47f92336b4359c4c85a17487ead97416afbbe2c0fd0b99880c0e7056` |
+| `packages/db-cloud/drizzle/0021_abandoned_black_queen.sql`                                         | `7794a5c02f2fa809a9985848bc455dbd3a5762415b5d96c216fb49ff4fd01ed9` |
+| `packages/db-cloud/drizzle/meta/0021_snapshot.json`                                                | `71052147af479bfb5f480f0981859a7af7235ff21a0be69a427a6faaeb06f4bf` |
+| `packages/db-cloud/drizzle/meta/_journal.json`                                                     | `897139ed88030e38adfffa55ba5f1bc4d4773b6bf8f1aac619f17653834907b0` |
+| `packages/db-cloud/src/pointage-raw-clocking-repository.ts`                                        | `f2cf173ea3a2ad06c30a7e1b7b70f32d33f9b520e0f705aafed1fd698d9ce802` |
+| `packages/db-cloud/src/pointage-repository.ts`                                                     | `4cfcfc4f5287590fde3ff44062a97efe1bd256771774495ae0ce91ab488034d8` |
+| `packages/db-cloud/src/schema/pointage-raw-clocking.ts`                                            | `d19c5c84c9b3352437aa839d97b54e800211bc956d28e70445e6b1247c5e4754` |
+| `packages/db-cloud/src/schema/pointage.ts`                                                         | `8f4f12cf76773dfca6f99ba59e37e5ee7d0a18ef13827f78caebddd51400de29` |
+| `packages/db-cloud/test/helpers/pointage-raw-clocking-test-database.ts`                            | `6bb342f09144e308b989d32d580c3b0d41223005e36834d74ddce7287dce0fe4` |
+| `packages/db-cloud/test/pointage-raw-clocking-migration.integration.test.ts`                       | `eb5693a3ba0f907e74862fa2e26c5d39e916c38ec54d219ed652a09af0aff2cc` |
+| `packages/db-cloud/test/pointage-raw-clocking-schema.test.ts`                                      | `d6a10caa9edb95878605e8f3d1fa439e07e2aec5c221097a2f17bdac38b2e291` |
+| `packages/db-cloud/test/pointage-raw-clocking.integration.test.ts`                                 | `5d0ea83bacb946300030a135e2f150c5b34c4a63197d98e8f4abf8a914b82cce` |
+| `packages/db-cloud/test/pointage-repository.integration.test.ts`                                   | `4761848b92e1ebb4f2db81d15e596f654f02b480c34bd290a339755302a6c1f1` |
+| `packages/db-cloud/test/pointage-schema.test.ts`                                                   | `e1026fbfc7adef0773a916ed230d302005c09c711c61503159799f35f5e1b090` |
+
+### Current workflow checkpoint
+
+APPLY: PAUSED — U7 COMPLETE; STOP BEFORE TASK 3.8
+Tasks: 24/32
+Task 3.6: COMPLETE
+Task 3.7: COMPLETE
+Task 3.8: NOT_STARTED
+Task 3.8+ authorization: NOT_GRANTED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+UI_AFFECTING: YES; BROWSER_QA_REQUIRED: YES.
+UI_UX_PRO_MAX_USAGE: OPTIONAL / NOT_USED; no external-query evidence.
+Approved no-image pack giữ nguyên. Synthetic/disposable attendance only.
+Bảy blockers: retention duration; deletion/anonymization; legal hold;
+backup-retention interaction; employee notice; detailed audit visibility;
+trusted production client-address provenance. Không promote readiness/lifecycle.
+Không newly discovered blocker. Cần explicit human authorization trước U8.
+Exact U7-only diff nằm trong 02c, dựa trên fresh dirty-tree preimages, không HEAD.
+
+## Historical Apply evidence — Task 3.6 / U6
+
+Recorded: 2026-09-11.
+Approval: explicit current-user TASK 3.6 / U6 APPLY AUTHORIZATION: APPROVED,
+attachment fc4142e8-6e34-4ac6-b7bb-06ad1c0ac42c/pasted-text.txt.
+Impact: PAGE_LOCAL within the approved CROSS_MODULE change; yuta-spec-driven.
+The APPROVED packet header retains existing Design/planning approval, not U7
+authorization or final implementation approval. U6 checkpoint review:
+AWAITING_HUMAN_REVIEW. Design is not reopened.
+
+### Fresh preflight and exact scope
+
+HEAD: 415990386327aaccab3c32b1fef0569a0fde7f3a.
+Fresh scoped Git status and byte baseline cover 2622 unique tracked/nonignored
+files. All 80 prior protected entries matched before editing. Existing dirty
+Pointage/U5 work was captured as the preimage; unrelated dirty work, including
+Formalités and ui-ux-pro-max-integration, was preserved.
+
+| Artifact                         | SHA-256                                                          |
+| -------------------------------- | ---------------------------------------------------------------- |
+| Approved Design, unchanged       | 67e0920dfe6591612a314e301fec8bed68d0454a65eb103688138d9f69cbf172 |
+| Tasks, pre-U6                    | 85532655f985c028f4991efedc27b3cac36a6c6875f57fd16a26b1c6f2d32636 |
+| Tasks, U6 evidence/checkbox only | dbd28e040b7b33c291f43299780c78f7705b10362711b1d5f0e665514b5d551d |
+| 02b, pre-U6                      | 0eeaa8adf4ede28c147bb1af2e7bc8d38f7d95e5b94156561580d784b86a8877 |
+| 02c, pre-U6                      | 729e9b6746d5e3938a2b87b07bfd139d90ce0eda652311e5fedabdf6cb236f80 |
+
+Both delta Specs remain byte-identical: 20 requirements / 62 scenarios.
+Gate1/2, Proposal/Analysis, authorization catalog, server/domain/contracts,
+raw/receipt/continuation schema, migration0021/journal, CSP/cache, root layout,
+sealed UI pack, env files and PROCESS_ENV_SHADOW_ISOLATION_V1 remain unchanged.
+Only the following three implementation files changed; no file was created.
+Tasks and these two existing packets receive evidence/checkpoint changes only.
+
+| Implementation path                                                                      | Pre-U6 SHA-256                                                   | Current SHA-256                                                  |
+| ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-employee.tsx` | d10953a59174d30499ed52d35455f1224cbdd683cf44758d5e835ab1eae6d59a | 0a53b03e2418446c631dbd3d7ea958f18609b9055cce6a237996802aed90e88d |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_lib/pointage-client.ts`           | 8ba68a3e8bf2581f967d8aa8614b409bc040a8d31947d4651907d2695749a545 | b956e349a09c2243e631e396e21a2d87d97edf3c1feecc6e82a2bfbb8f9587ed |
+| `apps/backoffice/test/pointage-interaction.test.ts`                                      | d4ebaeb3e6711ae58d05c203b7704d5aa054600e51ec639d8182b32f388d7a80 | 92e24f02bd2edfb11d5a79af659231510a27efc542677b86d6f57136ba323a04 |
+
+### U6 implementation and deterministic evidence matrix
+
+| Requirement group                                                 | Implementation / test evidence                                                                                                                                                                                                                  |
+| ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Memory-only continuation, guard, PIN, identity, transient attempt | Route-owned controller closure; no protected exports or durable storage. Source checks prohibit storage/history/URL/channel/service-worker/global registry. New instances are neutral.                                                          |
+| Generation and coherent invalidation                              | Every end increments one generation before discarding references, deadlines and timers; aborts owned flight; reducer END neutralizes. Explicit/lifecycle/dispose and repeated-clear tests prove fencing and one captured-token best-effort end. |
+| Late network completion                                           | Identify/mutate capture generation and AbortSignal; stale success, failure and AbortError are ignored, including after a new employee starts. No old RESULT_UNKNOWN restore.                                                                    |
+| Server-explicit lifetime                                          | performance.now before identify dispatch anchors expiresInMs/idleInMs, conservatively subtracting the entire round trip. Absolute fixed; idle never refreshed by activity, render or mutation. No receipt DTO change.                           |
+| Timers and receipt                                                | Exact idle/absolute boundaries, coincident bounds, zero/elapsed response, early re-arm to same deadline, late wakeup, expired-operation guard and old callback isolation. Receipt remains max10s and clears earlier at a known lifetime bound.  |
+| Shared-device lifecycle                                           | Only visibilitychange(hidden), pagehide and pageshow registered. Browser callbacks flushSync neutral presentation; both persisted values tested. Visible never restores. Repeated events do not repeat own-end.                                 |
+| Unmount / new surface                                             | Dispose shares invalidation, aborts and removes all three listeners. Effect reattachment, refresh/restart/duplicate-instance model and sequential employees remain neutral/self-isolated.                                                       |
+| U5 and U7 boundary                                                | All 41 U5 regressions retained plus 25 U6 cases. No recover/resend/rebase/state refresh/retry store/heartbeat. One-shot mutation unchanged; no optimistic success or duplicate attendance request.                                              |
+
+The stateless client wrapper only accepts AbortSignal for existing identify and
+mutation fetches. No endpoint, DTO, shared framework or persistence change.
+The pure presentation reducer, existing credential/active components and
+inventory/HTTP test files are unchanged.
+
+The prior blanket addEventListener prohibition was narrowed to the exact three
+approved event names, retaining all other source-negative assertions. Two U5
+long-wait expectations now include exactly one own-end on the new known
+deadline; no-attendance-retry assertions and the 9,999/10,000ms receipt boundary
+remain intact. Two intermediate source-negative test failures matched a comment
+containing the /recover substring; only that comment was clarified, not the
+assertion. Final complete suites pass.
+
+Evidence uses fake monotonic timers, controlled EventTarget callbacks, the
+actual route controller and React static markup. This is NOT Browser QA.
+Actual personal-DOM/bfcache timing remains an explicit later browser-proof
+obligation; local clearing never claims a remote end ACK. Server expiry remains
+the fallback if the one best-effort end fails.
+
+### Apply checks and honest boundary
+
+| Command / check                                                                                                                | Result                                                                                                      |
+| ------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| pnpm --filter @yuta/backoffice test test/pointage-interaction.test.ts                                                          | PASS, 66/66                                                                                                 |
+| pnpm --filter @yuta/backoffice test test/pointage-interaction.test.ts test/pointage-raw-clocking-http.test.ts                  | PASS, combined 79/79: interaction66 + HTTP13                                                                |
+| pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-inventory.test.ts -t U3.isolated.header.implementation.evidence | PASS, 40; five actual DEV HTTP tests skipped                                                                |
+| pnpm --filter @yuta/backoffice typecheck                                                                                       | PASS, exit0                                                                                                 |
+| pnpm -r --if-present typecheck                                                                                                 | PASS, exit0                                                                                                 |
+| pnpm docs:check                                                                                                                | PASS, exit0; 36 docs                                                                                        |
+| pnpm architecture:check                                                                                                        | PASS, exit0                                                                                                 |
+| openspec validate pointage-usable-raw-clocking --strict                                                                        | PASS, exit0                                                                                                 |
+| pnpm ui:pack:check backoffice-pointage-employee                                                                                | PASS, one pack, zero warnings                                                                               |
+| Scoped Prettier check                                                                                                          | PASS; changed source and checkpoint documents only                                                          |
+| pnpm format:check                                                                                                              | Diagnostic exit1; exactly 67 unrelated warnings preserved without edits                                     |
+| Exact byte scope / inverse check                                                                                               | Three code paths plus Tasks/02b/02c only; no additions/removals. Per-file source diff reverse-check passed. |
+
+The exact U6-only code diff is embedded in 02c; its preimages are this turn's
+dirty-working-tree baseline, not HEAD. Historical evidence remains below.
+Current protected hashes follow; only three authorized source hashes differ
+from the 80-entry preflight. Evidence/checkpoint additions do not rewrite
+approved phase contracts or historical approval bytes.
+
+### Current protected implementation, specification and UI bytes
+
+| Protected path                                                                                     | SHA-256                                                            |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `apps/backoffice/src/app/(authenticated)/equipe/pointage/page.tsx`                                 | `f2fe5f9ccf167aaf4be6233046ce3765b385c3d452e2b8cd6e1314108fb85307` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-in/route.ts`                       | `29c16cfd705d7bef4b156b92ac1cad2186bf2ce17ac7fc7c9ca66f4b84444299` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-out/route.ts`                      | `1c0fa864ae27a4d1f7a7940aaa8ba0d7394db3e2f1da2bff01cc1e4537218c69` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/context/route.ts`                        | `45043e139c0c7e5f0740acc7d7b9da4d0ed4d59d87dcffa8069f9a1ee1dfe2b6` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/end/route.ts`                            | `93f5428e2e700f528dbde1464a31a9d5811dfacfb5531674fb605faf978a7ae0` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/identify/route.ts`                       | `8f6504f6fbd4207e34e5f06ccca1d88b266c6a52ebd1d4232697004be7cd2be5` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/recover/route.ts`                        | `0714021059b92505345cc94886358474a3125bb832f38bb20a8ee6a47332f77e` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/state/route.ts`                          | `7d199ac7aa8a40f3e7c10614a32429c0e0ee48f49dc4c806d036e501e2cdcb5d` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-active-interaction.tsx` | `aca1322b91fdbba963d1b8c900081b103a1f28acb24b4338f3c2c11690b78e88` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-credential-entry.tsx`   | `82c2326d2f230d5de7e72a058187b1266fe822122604f45167b01b9dd8350d69` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-employee.tsx`           | `0a53b03e2418446c631dbd3d7ea958f18609b9055cce6a237996802aed90e88d` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_lib/pointage-client.ts`                     | `b956e349a09c2243e631e396e21a2d87d97edf3c1feecc6e82a2bfbb8f9587ed` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_lib/pointage-interaction.ts`                | `207bc1b3c8663e489e832001cd553671a47e4d50cc54e90e7a1bdb551d8f8afa` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/page.tsx`                                    | `8f3153a5aa08764a1a97633aceb162905e6e56fea15fa41f480dbb301bd8bd6e` |
+| `apps/backoffice/src/proxy.ts`                                                                     | `73b39a64d316155b7bc526a5f2dc5a1735624dbfa0a07ce2d596e53e46ce7aee` |
+| `apps/backoffice/src/server/pointage/authorization.ts`                                             | `c33a530483f76f29065729834e07b5d4512ee54255765645bece9cef8c87cc34` |
+| `apps/backoffice/src/server/pointage/index.ts`                                                     | `5a17ce9a793561f26e7eca9c62f7835925d54d9eba61074951d58871dd910133` |
+| `apps/backoffice/src/server/pointage/raw-chain.ts`                                                 | `0b8446a543cad544614ae7c7d366cfa771d0011d16adc7bc7d1d00405731f83c` |
+| `apps/backoffice/src/server/pointage/raw-clocking-bootstrap.ts`                                    | `17733bc004725c88a6aa506dbefdfadf7a3aa204005af2343413f5a770792e13` |
+| `apps/backoffice/src/server/pointage/raw-clocking-http.ts`                                         | `b4f57b8aeda30995f41a1a29008e9dae5c767d1e413a071488301aaae169e0ff` |
+| `apps/backoffice/src/server/pointage/raw-clocking-manager.ts`                                      | `209183808c72c1a9c677d57b2603dd5030336ad864d1ff542df1f0d06f27d948` |
+| `apps/backoffice/src/server/pointage/raw-clocking-runtime.ts`                                      | `ab9e7f157b53265ebcf62da8c7f8392018b8211c2d76e1ba467a6b2be8b53d57` |
+| `apps/backoffice/src/server/pointage/raw-clocking-service.ts`                                      | `a144202f2b7af2955b458fc445b699342bb4ed8cdbda33a4d46905452dcd3d37` |
+| `apps/backoffice/src/server/pointage/raw-clocking-test-boundary.ts`                                | `4aa15e7f9695b85ae418b1098b7bd57c14d4c39bcd8b81eb9093660eeeb8cc28` |
+| `apps/backoffice/src/server/pointage/service.ts`                                                   | `00d26799bf2fa8213161e221a28fbf75b4024fd88f549293e814e90dd935aff1` |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts`                                   | `b93f4b1bb29ba015571c944f3a17cb59a0c05306ae11482d945a59ddbcafd10e` |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-next-child.ts`                                 | `03f7024b1e739697bbf7fc4fad2f976d684595e598ed6db31129b50392cdb33a` |
+| `apps/backoffice/test/pointage-foundation-inventory.test.ts`                                       | `1a8d4d2f026d6444de11f1afc5d47e38a4098eedbd0059e330cb78d102242daa` |
+| `apps/backoffice/test/pointage-foundation.test.ts`                                                 | `e3f091057b9c0f21bfd2ed872b9e435fc4330ae9239ffa8e5bbd51534ed3729b` |
+| `apps/backoffice/test/pointage-interaction.test.ts`                                                | `92e24f02bd2edfb11d5a79af659231510a27efc542677b86d6f57136ba323a04` |
+| `apps/backoffice/test/pointage-raw-chain.test.ts`                                                  | `b0fe2395ed36d944b911bafcf6dd51d20f08e3723d772189867c4f53d4a13277` |
+| `apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts`                                     | `987fd9eb31620de7777052dca7bfce99d7fef4a30faf71357d8cde011809b41e` |
+| `apps/backoffice/test/pointage-raw-clocking-http.test.ts`                                          | `3e463e902b2e40d1fde2703c607902f5d704e32955e6f1c749b250c400623e1d` |
+| `apps/backoffice/test/pointage-raw-clocking-inventory.test.ts`                                     | `e11484f3773a4f8ab049e344b51046b3f867ee617c29424aa11699f8a52ef40a` |
+| `apps/backoffice/test/pointage-raw-clocking-manager.test.ts`                                       | `a36e3beaf3ee38da51eae92dafdb923a2d4d7364a45e58a3d4cdf3af338d1db7` |
+| `apps/backoffice/test/pointage-raw-clocking-runtime.test.ts`                                       | `bb9cd7db7152f7168c7adae80c96b4961b5f13bdf212671717f1e0e9dbd379fe` |
+| `apps/backoffice/test/pointage-raw-clocking-service.test.ts`                                       | `4a139b05bdabe81a6ec2ecab728792a215cd2b74273114f7bb4ae17a6d36b356` |
+| `docs/reviews/pointage-usable-raw-clocking/01-analysis-review.md`                                  | `ee18fdbf3b9802978eb7d71000d001c1b32eb7672f333bf8fe452005414f3557` |
+| `docs/reviews/pointage-usable-raw-clocking/02-specs-review.md`                                     | `c5a7fd21c9fb04ea8f3617463241fc0ec8b41ea6e69b6074da5fefe98f0da566` |
+| `docs/ui/pages/backoffice-pointage-employee/ACCEPTANCE_CHECKLIST.md`                               | `cbcc464c79e57f3bc34c49989d936b1dc2411839b552a159e407a407c72166ed` |
+| `docs/ui/pages/backoffice-pointage-employee/DATA_AND_INTERACTION_SPEC.md`                          | `25ffcdbb137b26568a01373c6a55c3ea714f97d70978c3c22310433bd40d68fd` |
+| `docs/ui/pages/backoffice-pointage-employee/DESIGN_HANDOFF.md`                                     | `d94fc07f4e318bda95507904640e5bd80f9f5bacc251babfbf85f7bc0fc56cae` |
+| `docs/ui/pages/backoffice-pointage-employee/IMPLEMENTATION_PLAN.md`                                | `b7dfc8937893032253f801160c1e9fa21e2c8cd34439c0b80e9eb38e7ef5606e` |
+| `docs/ui/pages/backoffice-pointage-employee/PRODUCT_SCOPE.md`                                      | `16a14204820f4a1b2033f26dca03494db9e5e61b28474c87216ce206062582d8` |
+| `docs/ui/pages/backoffice-pointage-employee/README.md`                                             | `77377af7a5f09d4884541e3a90de151e0ae11223b73e66f2dc57cfb08765d902` |
+| `docs/ui/pages/backoffice-pointage-employee/UI_SPEC.md`                                            | `cd109fb341545a280189d92b891506b9211134600720cf5d2b9b107563aacb45` |
+| `docs/ui/pages/backoffice-pointage-employee/prompt-provenance.json`                                | `04c6c99bf8067e848cc4df1f0f871fd43bdf1ec964d786f2617dcca4692b8a61` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/00_REPOSITORY_ANALYSIS.md`                     | `7ecab8ffd6d97de28f463d521172be6de8f66b7e3074e5e90e88f53f41ea394c` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/01_VISUAL_BASELINE.md`                         | `d3075806ae38d0f9f6a945b3b42d1f3b8d7e2bd9eafa712a73587744c9f46119` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/02_COMPONENT_REFACTOR.md`                      | `8b134cd4b462562416fb5c2e57c23eb4675a26eff7ea75fdfae44727b74648ac` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/03_INTERACTIONS.md`                            | `e27c12d152d9270229eed6951898ab6f5e477d7d12ff9c170f4522ed45f00388` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/04_DATA_INTEGRATION.md`                        | `f878f959d3afee428e67620c74f4c75231d2c7816f23cbf7fc6c701067538e79` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/05_VISUAL_QA.md`                               | `5f31ec1c2a2bcfd3129643931e188365f9608958f1f8bd697ae7854e292eaad0` |
+| `docs/ui/pages/backoffice-pointage-employee/references/README.md`                                  | `e2ddabc5a6a004441847e71629b84281eeac075c41a195eea8955f5d30a72a45` |
+| `openspec/changes/pointage-usable-raw-clocking/analysis.md`                                        | `f04e66f9f2307dc92aa9cdbd134fb4a35f9c1089459440c0ccfdb40c4a3e9146` |
+| `openspec/changes/pointage-usable-raw-clocking/proposal.md`                                        | `d42975cd06290431701e39d499edac93774275c1bb0f28f8474f6ff0e61816f1` |
+| `openspec/changes/pointage-usable-raw-clocking/specs/authorization/pointage/spec.md`               | `1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66` |
+| `openspec/changes/pointage-usable-raw-clocking/specs/pointage/raw-clocking/spec.md`                | `4bfa64e863ad465a144341c18aa5d0db3ce0806ada52ad40183cf9a4e321f90e` |
+| `packages/auth/src/index.ts`                                                                       | `464739729900d884af3ab82159151d7df5de6a0f8ee0a3a23feed7bc285a1c2a` |
+| `packages/auth/src/pointage-continuation.ts`                                                       | `f2c829c33030ae3550350ff4b5eac3d5dce774e5bd4774a5e46a0dd621465172` |
+| `packages/auth/src/pointage-credential.ts`                                                         | `8b294113e7a97fb83e5acff5df96224ed4c18d73d60c46a63abf824c37195fa1` |
+| `packages/auth/test/pointage-continuation.test.ts`                                                 | `6d9e78b745c47a96e4d59e256e67090ede1258860b140e28b6210fca57b07b4a` |
+| `packages/auth/test/pointage-credential.test.ts`                                                   | `6ea66dbb73a82f8586575c15f049be3ee0832987888045a593b982001c1479a0` |
+| `packages/contracts/src/index.ts`                                                                  | `cf72d2593fa90ffe590e2963f15160b232d069d1bf8848ec06d91946b18d95bd` |
+| `packages/contracts/src/pointage/index.ts`                                                         | `2bc3d6d491ce94864c2bae22a5ce96b66e052ce131be852328b4b68c2f0ba974` |
+| `packages/contracts/test/pointage.test.ts`                                                         | `4fff5b366e61c94098dc3e4238edfd4b61a2e9b5e62527465546db760f83a013` |
+| `packages/db-cloud/drizzle/0019_pointage_authority_foundation.sql`                                 | `143b6d1e47f92336b4359c4c85a17487ead97416afbbe2c0fd0b99880c0e7056` |
+| `packages/db-cloud/drizzle/0021_abandoned_black_queen.sql`                                         | `7794a5c02f2fa809a9985848bc455dbd3a5762415b5d96c216fb49ff4fd01ed9` |
+| `packages/db-cloud/drizzle/meta/0021_snapshot.json`                                                | `71052147af479bfb5f480f0981859a7af7235ff21a0be69a427a6faaeb06f4bf` |
+| `packages/db-cloud/drizzle/meta/_journal.json`                                                     | `897139ed88030e38adfffa55ba5f1bc4d4773b6bf8f1aac619f17653834907b0` |
+| `packages/db-cloud/src/pointage-raw-clocking-repository.ts`                                        | `f2cf173ea3a2ad06c30a7e1b7b70f32d33f9b520e0f705aafed1fd698d9ce802` |
+| `packages/db-cloud/src/pointage-repository.ts`                                                     | `4cfcfc4f5287590fde3ff44062a97efe1bd256771774495ae0ce91ab488034d8` |
+| `packages/db-cloud/src/schema/pointage-raw-clocking.ts`                                            | `d19c5c84c9b3352437aa839d97b54e800211bc956d28e70445e6b1247c5e4754` |
+| `packages/db-cloud/src/schema/pointage.ts`                                                         | `8f4f12cf76773dfca6f99ba59e37e5ee7d0a18ef13827f78caebddd51400de29` |
+| `packages/db-cloud/test/helpers/pointage-raw-clocking-test-database.ts`                            | `6bb342f09144e308b989d32d580c3b0d41223005e36834d74ddce7287dce0fe4` |
+| `packages/db-cloud/test/pointage-raw-clocking-migration.integration.test.ts`                       | `eb5693a3ba0f907e74862fa2e26c5d39e916c38ec54d219ed652a09af0aff2cc` |
+| `packages/db-cloud/test/pointage-raw-clocking-schema.test.ts`                                      | `d6a10caa9edb95878605e8f3d1fa439e07e2aec5c221097a2f17bdac38b2e291` |
+| `packages/db-cloud/test/pointage-raw-clocking.integration.test.ts`                                 | `5d0ea83bacb946300030a135e2f150c5b34c4a63197d98e8f4abf8a914b82cce` |
+| `packages/db-cloud/test/pointage-repository.integration.test.ts`                                   | `4761848b92e1ebb4f2db81d15e596f654f02b480c34bd290a339755302a6c1f1` |
+| `packages/db-cloud/test/pointage-schema.test.ts`                                                   | `e1026fbfc7adef0773a916ed230d302005c09c711c61503159799f35f5e1b090` |
+
+### Current workflow checkpoint
+
+APPLY: PAUSED — U6 COMPLETE; STOP BEFORE TASK 3.7
+Tasks: 23/32
+Task 3.2: COMPLETE
+Task 3.3: COMPLETE
+Task 3.4: COMPLETE
+Task 3.5: COMPLETE
+Task 3.6: COMPLETE
+Task 3.7: NOT_STARTED
+Task 3.7+ authorization: NOT_GRANTED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+UI_AFFECTING: YES; BROWSER_QA_REQUIRED: YES.
+UI_UX_PRO_MAX_USAGE: OPTIONAL / NOT_USED; sealed no-image direction unchanged.
+Synthetic/disposable attendance only. No new dependency/scope blocker discovered.
+No build/start, database/container/migration operations, Browser QA, formal
+VERIFY, Gate3, deployment/enablement, sync/archive or lifecycle promotion.
+Seven unresolved blockers: exact retention; deletion/anonymization; legal hold;
+backup-retention interaction; employee notice; detailed audit visibility;
+trusted production client-address provenance. U7 needs explicit human authority.
+
+## Historical Apply evidence — Task 3.5 / U5
+
+Recorded: 2026-09-11T14:36:24.960Z.
+Approval source: explicit current-user TASK 3.5 / U5 APPLY AUTHORIZATION: APPROVED,
+attachment 9d196735-6b90-478d-b159-520a5c9796ef/pasted-text.txt.
+Approval recorded by: Codex workflow.
+Impact: PAGE_LOCAL trong approved CROSS_MODULE change; schema yuta-spec-driven.
+Header APPROVED giữ approval của Design/planning, không phê duyệt U6 hoặc
+coi execution evidence là final independent review.
+
+U5 checkpoint review: AWAITING_HUMAN_REVIEW.
+Chỉ Task 3.5 được thực hiện. STOP trước Task 3.6; không reopen Sensitive Design.
+UI_UX_PRO_MAX_USAGE: OPTIONAL / NOT_USED; không external query hoặc image.
+Sealed no-image UI pack và các historical review sections bên dưới giữ nguyên.
+
+### Fresh preflight and reviewed authority
+
+Fresh HEAD: 415990386327aaccab3c32b1fef0569a0fde7f3a.
+Fresh Git status giữ existing Pointage và unrelated ui-ux-pro-max-integration
+dirty work. Snapshot exact bytes của 2618 unique tracked/nonignored paths,
+dùng git ls-files -co --exclude-standard -z, Node readFileSync/SHA-256.
+Trước sửa code, cả 76 protected entries khớp. Existing untracked PAGE
+components đúng recorded U4 hashes; edits được giới hạn và reverse-check,
+không thay unrelated hunks. Không sửa Formalités export hoặc protected backend.
+
+| Artifact / role                                                         | SHA-256                                                          |
+| ----------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Approved Design — unchanged                                             | 67e0920dfe6591612a314e301fec8bed68d0454a65eb103688138d9f69cbf172 |
+| Tasks — pre-U5                                                          | d3b51f21bc04cd63a1b5f358ecf26abead00d8907ce4e5f443ab640b5bebe02b |
+| Tasks — U5 evidence and checkbox only                                   | 85532655f985c028f4991efedc27b3cac36a6c6875f57fd16a26b1c6f2d32636 |
+| 02b — pre-U5 evidence packet                                            | e55a2229200d1a0ebf365ebd300a3c42d941e11cfbcf2c808e574e29b9c3da93 |
+| 02c — pre-U5 evidence packet                                            | d00c82e9b316c8f101240d6defa795238cc638b80d865f3b66ed3fe179b642e6 |
+| authorization/pointage delta — unchanged, 7 requirements / 21 scenarios | 1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66 |
+| pointage/raw-clocking delta — unchanged, 13 requirements / 41 scenarios | 4bfa64e863ad465a144341c18aa5d0db3ce0806ada52ad40183cf9a4e321f90e |
+
+Gate 1/2, Proposal/Analysis, exact two-Spec path set, 20 requirements /
+62 scenarios, Design D1/D1a/D1b/D10b, schema/migration 0021/journal/history,
+raw/receipt/continuation/auth catalog, U1/U2/server foundation, proxy, root
+layout/fonts, sealed UI pack và env files không đổi. U5 không sửa unrelated
+tracked/untracked paths; late outside-scope drift được ghi riêng bên dưới.
+Source PAGE entry cũng không đổi. Production provider không được thêm.
+
+### Exact bounded implementation
+
+| Path                                                                                               | Pre-U5 SHA-256                                                   | Current SHA-256                                                  |
+| -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-active-interaction.tsx` | ABSENT                                                           | aca1322b91fdbba963d1b8c900081b103a1f28acb24b4338f3c2c11690b78e88 |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-credential-entry.tsx`   | 8b8636e21d8717ac6789574f13f21643c50351e2a6a6d78796ecefd4d6721bd8 | 82c2326d2f230d5de7e72a058187b1266fe822122604f45167b01b9dd8350d69 |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-employee.tsx`           | 097e70152a712b22beb24a50527e41788d0aeeb0ff602fd9f6274447823cb46a | d10953a59174d30499ed52d35455f1224cbdd683cf44758d5e835ab1eae6d59a |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_lib/pointage-client.ts`                     | ABSENT                                                           | 8ba68a3e8bf2581f967d8aa8614b409bc040a8d31947d4651907d2695749a545 |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_lib/pointage-interaction.ts`                | ABSENT                                                           | 207bc1b3c8663e489e832001cd553671a47e4d50cc54e90e7a1bdb551d8f8afa |
+| `apps/backoffice/test/pointage-interaction.test.ts`                                                | ABSENT                                                           | d4ebaeb3e6711ae58d05c203b7704d5aa054600e51ec639d8182b32f388d7a80 |
+| `apps/backoffice/test/pointage-raw-clocking-inventory.test.ts`                                     | a45ed95bb9ac800af0be3e8475a30c16ebd2c3cd9fdfff9808f95e3b489bc35b | e11484f3773a4f8ab049e344b51046b3f867ee617c29424aa11699f8a52ef40a |
+
+Có ba PAGE files mới, một UI test mới; hai existing PAGE components được sửa.
+Inventory test chỉ đổi một literal expected Flight client-boundary marker,
+PointageCredentialEntry -> PointageEmployee. Đây là genuine U5 consumer-boundary
+regression alignment, không thay CSP/cache/personal-data assertions hoặc runtime.
+HTTP adapter test và tất cả server/API/auth/domain/DB files byte-identical.
+
+### U5 outcome / evidence matrix
+
+| U5 obligation                        | Implementation evidence and focused test assertions                                                                                                                                                                                                                                                           |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Credential entry / identify pending  | Controlled masked exact eight-digit input; actual form submit/input callbacks gọi controller rồi existing identify POST. Duplicate submit bị chặn trước HTTP. Pending neutral, disabled controls, không previous employee.                                                                                    |
+| PIN settle / partial identify        | Strict existing combined response schema; missing state/token, extra prior-OUT field hoặc invalid token không expose protected state. Success và failure snapshots bỏ PIN.                                                                                                                                    |
+| Both active states                   | Own name/status, only IN hoặc OUT action tương ứng; current opening date/time khi CLOCKED_IN. Không history/totals/prior OUT/chooser.                                                                                                                                                                         |
+| Mutation pending / committed receipt | Actual action callback tới existing clock-in/out với one-shot UUIDv4 + guard; no optimistic state. Strict receipt schema, matching requestId/kind trước success.                                                                                                                                              |
+| Time / receipt lifecycle             | Canonical instant + stored seconds offset/calendar, giữ six fractional digits, không current tzdb/browser attendance time. Cả IN/OUT: receipt ở 9.999 ms, neutral ở 10.000 ms bằng controlled fake timer và receipt-visible transition timestamp.                                                             |
+| Failures                             | 403/429/409/400/503 theo exact public code/status; generic copy, alert semantics. Network/malformed/wrong-kind/wrong-ID/status mismatch thành local RESULT_UNKNOWN; không tự retry/rebase/recover.                                                                                                            |
+| End                                  | Terminer actual callback immediate neutral, best-effort existing end POST; network failure không restore protected display hoặc claim remote revocation. Minimal stale async completion marker only.                                                                                                          |
+| Accessibility / negative output      | Static React markup và callback tests: explicit label, native form/submit keyboard semantics, status/error/receipt announcements, disabled pending, 48px controls, no secret/ID/guard visible. Source assertions cho focus-to-region/neutral-input wiring; actual browser focus/responsiveness chưa kiểm tra. |
+
+Presentation reducer pure; side effects thuộc route-owned controller,
+React useSyncExternalStore connects snapshot/view, no new framework/dependency.
+Client wrappers stateless, credentials omit, cache no-store, redirect error;
+browser supplies Origin, không client trust/provenance logic hoặc env access.
+Không thêm fixture-success branch vào app.
+
+U5 không implement U6 pagehide/visibility/pageshow/bfcache/back/refresh,
+idle60/absolute120 lifecycle hoặc full generation clearing. Minimal in-flight
+marker/unmount cleanup chỉ ngăn obvious stale completion. Receipt10s không
+được gọi là full shared-device protection. U7 recovery/refresh/rebase/resend/
+stable-tuple retry controls chưa implement; conflict/unknown chỉ message +
+Terminer theo current authorization. Đây không phải completed usable workflow.
+
+### Apply checks — not formal VERIFY or Browser QA
+
+| Exact command / check                                                                                                          | Result                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| pnpm --filter @yuta/backoffice test test/pointage-interaction.test.ts                                                          | Exit 0; 41/41 final. Unit/controller callbacks + React static markup only.                                                |
+| pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-http.test.ts                                                    | Exit 0; 13/13 unchanged HTTP adapter unit tests, no actual server/DB.                                                     |
+| pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-inventory.test.ts -t U3.isolated.header.implementation.evidence | Exit 0; 40 passed, 5 actual DEV HTTP tests skipped deliberately.                                                          |
+| pnpm --filter @yuta/backoffice typecheck                                                                                       | Exit 0.                                                                                                                   |
+| pnpm -r --if-present typecheck                                                                                                 | Exit 0; repository recursive typecheck.                                                                                   |
+| pnpm docs:check                                                                                                                | Exit 0; 36 current documents.                                                                                             |
+| pnpm architecture:check                                                                                                        | Exit 0; runtime/import/DB URL/client/migration boundaries.                                                                |
+| openspec validate pointage-usable-raw-clocking --strict                                                                        | Exit 0; valid.                                                                                                            |
+| pnpm ui:pack:check backoffice-pointage-employee                                                                                | Exit 0; 1 package, 0 warnings.                                                                                            |
+| Scoped Prettier check via installed prettier.check + resolveConfig + filepath                                                  | Exit 0; six U5 source/test files. New evidence sections checked separately; no whole historical artifact formatter-write. |
+| pnpm format:check                                                                                                              | Exit 1; exactly 67 pre-existing unrelated warnings, preserved byte-for-byte.                                              |
+| git apply --reverse --check --whitespace=nowarn - via Node execFileSync, in-memory exact scoped patch                          | Exit 0; seven-file code patch reverse-applicable against current files.                                                   |
+
+Intermediate timer-test strengthening failed 2/41 because its reference clock
+was sampled before asynchronous JSON parsing. Test-only correction records
+the actual RECEIPT transition and asserts 9.999/10.000 ms exactly; final 41/41,
+runtime timer unchanged. Initial scoped-format helper had a command syntax
+error, then corrected check exited 0; no target write in that failed helper.
+Oversized evidence command hit Windows command-length limit; retried with
+in-memory generation from existing files, no temp/runtime source or workaround.
+No failure was counted as PASS.
+
+Exact code diff: UTF-8 LF, 42701 bytes, SHA-256
+952735bb29b7086d8eaa833c1e5b7e51c17be8ac56a13452e30cd6f6c275aa2d. Full seven-file patch is embedded in 02c below.
+Preimages for two existing components recover the recorded hashes; inventory
+preimage differs only by the single literal noted above. After code edits:
+2622 files = 2618 baseline + four authorized new files; only three baseline
+code files differ. Final evidence writes are only Tasks, 02b, 02c.
+No source removal or extra implementation path.
+
+Late preflight observation, 2026-09-11T14:40:20Z: ngoài phạm vi U5,
+openspec/changes/ui-ux-pro-max-integration/tasks.md đã đổi hash từ
+4704d0aaa1514d39c13ec802eba5c3adb643beba0375ab2c3d1b2b99e596840c sang
+8b6c1e66b910cac432805b8284c151ab09b00eff91eb5caa115932de8dfe1e05.
+Không có U5 write vào path này; không quy kết tác giả hoặc sửa/restore nó.
+Baseline toàn checkout vì vậy không còn byte-identical. Đây là out-of-scope
+concurrent/unattributed drift, không thuộc exact U5 diff. Cả 80 current
+Pointage protected paths vẫn khớp, Design/Specs không drift; U5 diff vẫn
+reverse-check PASS. Giữ nguyên biến động ngoài phạm vi và dừng trước U6.
+
+Not run: Next build/start or actual U3 HTTP/RSC, DB/container/migration tests,
+broad cloud/local tests/builds, final real-route integration U8, formal VERIFY,
+Browser QA, screenshots or Gate 3. Previous U3 production-mode proof stays
+historical for its exact source snapshot, not a new production-mode proof for
+this U5 diff. No production/readiness claim.
+
+### Current protected path set
+
+The following 80 paths include the original 76 and four authorized new U5 files.
+This table supersedes only the prior implementation snapshot; it does not
+revise any Design/Spec authority or erase previous evidence.
+
+| Protected path                                                                                     | Current SHA-256                                                    |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `apps/backoffice/src/app/(authenticated)/equipe/pointage/page.tsx`                                 | `f2fe5f9ccf167aaf4be6233046ce3765b385c3d452e2b8cd6e1314108fb85307` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-in/route.ts`                       | `29c16cfd705d7bef4b156b92ac1cad2186bf2ce17ac7fc7c9ca66f4b84444299` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-out/route.ts`                      | `1c0fa864ae27a4d1f7a7940aaa8ba0d7394db3e2f1da2bff01cc1e4537218c69` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/context/route.ts`                        | `45043e139c0c7e5f0740acc7d7b9da4d0ed4d59d87dcffa8069f9a1ee1dfe2b6` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/end/route.ts`                            | `93f5428e2e700f528dbde1464a31a9d5811dfacfb5531674fb605faf978a7ae0` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/identify/route.ts`                       | `8f6504f6fbd4207e34e5f06ccca1d88b266c6a52ebd1d4232697004be7cd2be5` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/recover/route.ts`                        | `0714021059b92505345cc94886358474a3125bb832f38bb20a8ee6a47332f77e` |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/state/route.ts`                          | `7d199ac7aa8a40f3e7c10614a32429c0e0ee48f49dc4c806d036e501e2cdcb5d` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-active-interaction.tsx` | `aca1322b91fdbba963d1b8c900081b103a1f28acb24b4338f3c2c11690b78e88` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-credential-entry.tsx`   | `82c2326d2f230d5de7e72a058187b1266fe822122604f45167b01b9dd8350d69` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-employee.tsx`           | `d10953a59174d30499ed52d35455f1224cbdd683cf44758d5e835ab1eae6d59a` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_lib/pointage-client.ts`                     | `8ba68a3e8bf2581f967d8aa8614b409bc040a8d31947d4651907d2695749a545` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_lib/pointage-interaction.ts`                | `207bc1b3c8663e489e832001cd553671a47e4d50cc54e90e7a1bdb551d8f8afa` |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/page.tsx`                                    | `8f3153a5aa08764a1a97633aceb162905e6e56fea15fa41f480dbb301bd8bd6e` |
+| `apps/backoffice/src/proxy.ts`                                                                     | `73b39a64d316155b7bc526a5f2dc5a1735624dbfa0a07ce2d596e53e46ce7aee` |
+| `apps/backoffice/src/server/pointage/authorization.ts`                                             | `c33a530483f76f29065729834e07b5d4512ee54255765645bece9cef8c87cc34` |
+| `apps/backoffice/src/server/pointage/index.ts`                                                     | `5a17ce9a793561f26e7eca9c62f7835925d54d9eba61074951d58871dd910133` |
+| `apps/backoffice/src/server/pointage/raw-chain.ts`                                                 | `0b8446a543cad544614ae7c7d366cfa771d0011d16adc7bc7d1d00405731f83c` |
+| `apps/backoffice/src/server/pointage/raw-clocking-bootstrap.ts`                                    | `17733bc004725c88a6aa506dbefdfadf7a3aa204005af2343413f5a770792e13` |
+| `apps/backoffice/src/server/pointage/raw-clocking-http.ts`                                         | `b4f57b8aeda30995f41a1a29008e9dae5c767d1e413a071488301aaae169e0ff` |
+| `apps/backoffice/src/server/pointage/raw-clocking-manager.ts`                                      | `209183808c72c1a9c677d57b2603dd5030336ad864d1ff542df1f0d06f27d948` |
+| `apps/backoffice/src/server/pointage/raw-clocking-runtime.ts`                                      | `ab9e7f157b53265ebcf62da8c7f8392018b8211c2d76e1ba467a6b2be8b53d57` |
+| `apps/backoffice/src/server/pointage/raw-clocking-service.ts`                                      | `a144202f2b7af2955b458fc445b699342bb4ed8cdbda33a4d46905452dcd3d37` |
+| `apps/backoffice/src/server/pointage/raw-clocking-test-boundary.ts`                                | `4aa15e7f9695b85ae418b1098b7bd57c14d4c39bcd8b81eb9093660eeeb8cc28` |
+| `apps/backoffice/src/server/pointage/service.ts`                                                   | `00d26799bf2fa8213161e221a28fbf75b4024fd88f549293e814e90dd935aff1` |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts`                                   | `b93f4b1bb29ba015571c944f3a17cb59a0c05306ae11482d945a59ddbcafd10e` |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-next-child.ts`                                 | `03f7024b1e739697bbf7fc4fad2f976d684595e598ed6db31129b50392cdb33a` |
+| `apps/backoffice/test/pointage-foundation-inventory.test.ts`                                       | `1a8d4d2f026d6444de11f1afc5d47e38a4098eedbd0059e330cb78d102242daa` |
+| `apps/backoffice/test/pointage-foundation.test.ts`                                                 | `e3f091057b9c0f21bfd2ed872b9e435fc4330ae9239ffa8e5bbd51534ed3729b` |
+| `apps/backoffice/test/pointage-interaction.test.ts`                                                | `d4ebaeb3e6711ae58d05c203b7704d5aa054600e51ec639d8182b32f388d7a80` |
+| `apps/backoffice/test/pointage-raw-chain.test.ts`                                                  | `b0fe2395ed36d944b911bafcf6dd51d20f08e3723d772189867c4f53d4a13277` |
+| `apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts`                                     | `987fd9eb31620de7777052dca7bfce99d7fef4a30faf71357d8cde011809b41e` |
+| `apps/backoffice/test/pointage-raw-clocking-http.test.ts`                                          | `3e463e902b2e40d1fde2703c607902f5d704e32955e6f1c749b250c400623e1d` |
+| `apps/backoffice/test/pointage-raw-clocking-inventory.test.ts`                                     | `e11484f3773a4f8ab049e344b51046b3f867ee617c29424aa11699f8a52ef40a` |
+| `apps/backoffice/test/pointage-raw-clocking-manager.test.ts`                                       | `a36e3beaf3ee38da51eae92dafdb923a2d4d7364a45e58a3d4cdf3af338d1db7` |
+| `apps/backoffice/test/pointage-raw-clocking-runtime.test.ts`                                       | `bb9cd7db7152f7168c7adae80c96b4961b5f13bdf212671717f1e0e9dbd379fe` |
+| `apps/backoffice/test/pointage-raw-clocking-service.test.ts`                                       | `4a139b05bdabe81a6ec2ecab728792a215cd2b74273114f7bb4ae17a6d36b356` |
+| `docs/reviews/pointage-usable-raw-clocking/01-analysis-review.md`                                  | `ee18fdbf3b9802978eb7d71000d001c1b32eb7672f333bf8fe452005414f3557` |
+| `docs/reviews/pointage-usable-raw-clocking/02-specs-review.md`                                     | `c5a7fd21c9fb04ea8f3617463241fc0ec8b41ea6e69b6074da5fefe98f0da566` |
+| `docs/ui/pages/backoffice-pointage-employee/ACCEPTANCE_CHECKLIST.md`                               | `cbcc464c79e57f3bc34c49989d936b1dc2411839b552a159e407a407c72166ed` |
+| `docs/ui/pages/backoffice-pointage-employee/DATA_AND_INTERACTION_SPEC.md`                          | `25ffcdbb137b26568a01373c6a55c3ea714f97d70978c3c22310433bd40d68fd` |
+| `docs/ui/pages/backoffice-pointage-employee/DESIGN_HANDOFF.md`                                     | `d94fc07f4e318bda95507904640e5bd80f9f5bacc251babfbf85f7bc0fc56cae` |
+| `docs/ui/pages/backoffice-pointage-employee/IMPLEMENTATION_PLAN.md`                                | `b7dfc8937893032253f801160c1e9fa21e2c8cd34439c0b80e9eb38e7ef5606e` |
+| `docs/ui/pages/backoffice-pointage-employee/PRODUCT_SCOPE.md`                                      | `16a14204820f4a1b2033f26dca03494db9e5e61b28474c87216ce206062582d8` |
+| `docs/ui/pages/backoffice-pointage-employee/README.md`                                             | `77377af7a5f09d4884541e3a90de151e0ae11223b73e66f2dc57cfb08765d902` |
+| `docs/ui/pages/backoffice-pointage-employee/UI_SPEC.md`                                            | `cd109fb341545a280189d92b891506b9211134600720cf5d2b9b107563aacb45` |
+| `docs/ui/pages/backoffice-pointage-employee/prompt-provenance.json`                                | `04c6c99bf8067e848cc4df1f0f871fd43bdf1ec964d786f2617dcca4692b8a61` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/00_REPOSITORY_ANALYSIS.md`                     | `7ecab8ffd6d97de28f463d521172be6de8f66b7e3074e5e90e88f53f41ea394c` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/01_VISUAL_BASELINE.md`                         | `d3075806ae38d0f9f6a945b3b42d1f3b8d7e2bd9eafa712a73587744c9f46119` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/02_COMPONENT_REFACTOR.md`                      | `8b134cd4b462562416fb5c2e57c23eb4675a26eff7ea75fdfae44727b74648ac` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/03_INTERACTIONS.md`                            | `e27c12d152d9270229eed6951898ab6f5e477d7d12ff9c170f4522ed45f00388` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/04_DATA_INTEGRATION.md`                        | `f878f959d3afee428e67620c74f4c75231d2c7816f23cbf7fc6c701067538e79` |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/05_VISUAL_QA.md`                               | `5f31ec1c2a2bcfd3129643931e188365f9608958f1f8bd697ae7854e292eaad0` |
+| `docs/ui/pages/backoffice-pointage-employee/references/README.md`                                  | `e2ddabc5a6a004441847e71629b84281eeac075c41a195eea8955f5d30a72a45` |
+| `openspec/changes/pointage-usable-raw-clocking/analysis.md`                                        | `f04e66f9f2307dc92aa9cdbd134fb4a35f9c1089459440c0ccfdb40c4a3e9146` |
+| `openspec/changes/pointage-usable-raw-clocking/proposal.md`                                        | `d42975cd06290431701e39d499edac93774275c1bb0f28f8474f6ff0e61816f1` |
+| `openspec/changes/pointage-usable-raw-clocking/specs/authorization/pointage/spec.md`               | `1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66` |
+| `openspec/changes/pointage-usable-raw-clocking/specs/pointage/raw-clocking/spec.md`                | `4bfa64e863ad465a144341c18aa5d0db3ce0806ada52ad40183cf9a4e321f90e` |
+| `packages/auth/src/index.ts`                                                                       | `464739729900d884af3ab82159151d7df5de6a0f8ee0a3a23feed7bc285a1c2a` |
+| `packages/auth/src/pointage-continuation.ts`                                                       | `f2c829c33030ae3550350ff4b5eac3d5dce774e5bd4774a5e46a0dd621465172` |
+| `packages/auth/src/pointage-credential.ts`                                                         | `8b294113e7a97fb83e5acff5df96224ed4c18d73d60c46a63abf824c37195fa1` |
+| `packages/auth/test/pointage-continuation.test.ts`                                                 | `6d9e78b745c47a96e4d59e256e67090ede1258860b140e28b6210fca57b07b4a` |
+| `packages/auth/test/pointage-credential.test.ts`                                                   | `6ea66dbb73a82f8586575c15f049be3ee0832987888045a593b982001c1479a0` |
+| `packages/contracts/src/index.ts`                                                                  | `cf72d2593fa90ffe590e2963f15160b232d069d1bf8848ec06d91946b18d95bd` |
+| `packages/contracts/src/pointage/index.ts`                                                         | `2bc3d6d491ce94864c2bae22a5ce96b66e052ce131be852328b4b68c2f0ba974` |
+| `packages/contracts/test/pointage.test.ts`                                                         | `4fff5b366e61c94098dc3e4238edfd4b61a2e9b5e62527465546db760f83a013` |
+| `packages/db-cloud/drizzle/0019_pointage_authority_foundation.sql`                                 | `143b6d1e47f92336b4359c4c85a17487ead97416afbbe2c0fd0b99880c0e7056` |
+| `packages/db-cloud/drizzle/0021_abandoned_black_queen.sql`                                         | `7794a5c02f2fa809a9985848bc455dbd3a5762415b5d96c216fb49ff4fd01ed9` |
+| `packages/db-cloud/drizzle/meta/0021_snapshot.json`                                                | `71052147af479bfb5f480f0981859a7af7235ff21a0be69a427a6faaeb06f4bf` |
+| `packages/db-cloud/drizzle/meta/_journal.json`                                                     | `897139ed88030e38adfffa55ba5f1bc4d4773b6bf8f1aac619f17653834907b0` |
+| `packages/db-cloud/src/pointage-raw-clocking-repository.ts`                                        | `f2cf173ea3a2ad06c30a7e1b7b70f32d33f9b520e0f705aafed1fd698d9ce802` |
+| `packages/db-cloud/src/pointage-repository.ts`                                                     | `4cfcfc4f5287590fde3ff44062a97efe1bd256771774495ae0ce91ab488034d8` |
+| `packages/db-cloud/src/schema/pointage-raw-clocking.ts`                                            | `d19c5c84c9b3352437aa839d97b54e800211bc956d28e70445e6b1247c5e4754` |
+| `packages/db-cloud/src/schema/pointage.ts`                                                         | `8f4f12cf76773dfca6f99ba59e37e5ee7d0a18ef13827f78caebddd51400de29` |
+| `packages/db-cloud/test/helpers/pointage-raw-clocking-test-database.ts`                            | `6bb342f09144e308b989d32d580c3b0d41223005e36834d74ddce7287dce0fe4` |
+| `packages/db-cloud/test/pointage-raw-clocking-migration.integration.test.ts`                       | `eb5693a3ba0f907e74862fa2e26c5d39e916c38ec54d219ed652a09af0aff2cc` |
+| `packages/db-cloud/test/pointage-raw-clocking-schema.test.ts`                                      | `d6a10caa9edb95878605e8f3d1fa439e07e2aec5c221097a2f17bdac38b2e291` |
+| `packages/db-cloud/test/pointage-raw-clocking.integration.test.ts`                                 | `5d0ea83bacb946300030a135e2f150c5b34c4a63197d98e8f4abf8a914b82cce` |
+| `packages/db-cloud/test/pointage-repository.integration.test.ts`                                   | `4761848b92e1ebb4f2db81d15e596f654f02b480c34bd290a339755302a6c1f1` |
+| `packages/db-cloud/test/pointage-schema.test.ts`                                                   | `e1026fbfc7adef0773a916ed230d302005c09c711c61503159799f35f5e1b090` |
+
+### U5 checkpoint and next authority
+
+```text
+APPLY: PAUSED — U5 COMPLETE; STOP BEFORE TASK 3.6
+Tasks: 22/32
+Task 3.2: COMPLETE
+Task 3.3: COMPLETE
+Task 3.4: COMPLETE
+Task 3.5: COMPLETE
+Task 3.6: NOT_STARTED
+Task 3.6+ authorization: NOT_GRANTED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+```
+
+Synthetic/disposable-only. Bảy unresolved blockers: exact retention duration;
+deletion/anonymization; legal hold; backup-retention interaction; employee notice;
+detailed audit visibility; trusted production client-address provenance.
+Không deploy/enable, provider, real attendance, lifecycle promotion, sync/archive.
+No new Product/Security/Architecture blocker discovered within U5. U6/U7
+vẫn chưa hoàn thành và không được tự triển khai trong review này.
+Cần explicit human approval/authorization trước Task 3.6.
+
+## Historical Apply evidence — continuous U3 retry and structural U4
+
+Recorded: 2026-09-11T14:09:48.129Z.
+Approval source: explicit current-user instruction, APPROVED — RETRY U3 LOCAL
+PRODUCTION-MODE EVIDENCE WITH ONE CONTINUOUS ORCHESTRATION GENERATION.
+Approval recorded by: Codex workflow.
+Execution retry only: không reopen Design hoặc thay đổi
+PROCESS_ENV_SHADOW_ISOLATION_V1. Previous successful build là historical only,
+không reused. Các sections cũ bên dưới giữ nguyên evidence lịch sử.
+
+### Authority, hashes và fresh preflight
+
+| Path / role                                                                                    | SHA-256                                                            |
+| ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| openspec/changes/pointage-usable-raw-clocking/design.md — unchanged approved                   | `67e0920dfe6591612a314e301fec8bed68d0454a65eb103688138d9f69cbf172` |
+| openspec/changes/pointage-usable-raw-clocking/tasks.md — pre-retry checkpoint                  | `7eca3697ea02b9fe4b05969a5a2d585147e405ceb35ddface0ed3e342e541ea4` |
+| openspec/changes/pointage-usable-raw-clocking/tasks.md — current evidence/checkbox update only | `d3b51f21bc04cd63a1b5f358ecf26abead00d8907ce4e5f443ab640b5bebe02b` |
+| openspec/changes/pointage-usable-raw-clocking/specs/authorization/pointage/spec.md             | `1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66` |
+| openspec/changes/pointage-usable-raw-clocking/specs/pointage/raw-clocking/spec.md              | `4bfa64e863ad465a144341c18aa5d0db3ce0806ada52ad40183cf9a4e321f90e` |
+
+Hash method: exact file bytes, node:crypto SHA-256/readFileSync;
+Get-FileHash -Algorithm SHA256 cross-check cho Tasks.
+Fresh HEAD: `415990386327aaccab3c32b1fef0569a0fde7f3a`.
+Fresh Git status giữ existing Pointage changes và unrelated
+ui-ux-pro-max-integration work. Tất cả 76 protected path/hash entries trong
+table của approved packet bên dưới khớp; hai delta Specs vẫn đúng path set,
+20 requirements / 62 scenarios. Không thay Gate 1, Gate 2, migration, UI pack.
+
+Trước BUILD và START, names-only inventory cùng kết quả:
+.env.production.local absent/0; .env.local present/5; .env.production absent/0;
+.env present/6. Union chính xác 8 names:
+AUTH_SECRET, CLOUD_DATABASE_SSL, CLOUD_DATABASE_URL, GOOGLE_CLIENT_ID,
+GOOGLE_CLIENT_SECRET, GOOGLE_TOKEN_ENCRYPTION_KEY, NEXT_PUBLIC_APP_URL,
+YUTA_OPENAI_EVALUATION_API_KEY. Không emit/copy/hash file values.
+Ba duplicate names: AUTH_SECRET, CLOUD_DATABASE_SSL, CLOUD_DATABASE_URL.
+
+Một frozen dedicated env object chứa đúng 10 approved entries + bảy reviewed
+OS keys; same object identity và content equality được assert trước mỗi
+child launch. All shadows non-empty; exact reviewed categories/values,
+NODE_ENV production, telemetry disabled, VERCEL absent. Không intentionally
+supplied NODE_OPTIONS/NODE_PATH, private Next key, synthetic/provider/bootstrap
+flag, broad parent-env spread hoặc thêm OS key. Windows OS-key resolution
+reject missing/case collisions. No separate @next/env probe. Framework origEnv
+presence rule và YUTA non-empty policy giữ nguyên, không đánh đồng hai điều đó.
+
+Verified identities giữ nguyên:
+
+| Tool                                        | SHA-256                                                            |
+| ------------------------------------------- | ------------------------------------------------------------------ |
+| C:/Program Files/nodejs/node.exe — v24.17.0 | `c6335d08331c23d68b9f2b18adb102002d76ef150b47248e954c507e0d033664` |
+| C:/Users/Tam/AppData/Local/pnpm/pnpm.CMD    | `080e142c3163cfee4feced5325ef548966f20b766b18b8631dd3c6b28b4c8d76` |
+| C:/WINDOWS/system32/cmd.exe                 | `97ac98b1a92c286054cce55239cfccdfc23a5517bd07fe693072c9ca96c7dabb` |
+
+### One continuous generation — actual execution
+
+Generation: `14f3baa8-ce14-41b2-ba8d-9c194d18f2be`.
+Orchestrator PID: 15332. Ephemeral Node child_process.spawn orchestration,
+không wrapper file/package script/env file. Verified COMSPEC nhận
+/d /v:off /s /c, cwd repository root, windowsHide true và cùng frozen env
+object qua env option. Không reconstruct profile hoặc serialize nó ra disk.
+Orchestrator tự await child exit và tiếp tục START/HTTP/shutdown/final checks;
+không dựa vào stdin hoặc một parent mới.
+
+| UTC                                    | Evidence                                                                                          |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| 2026-09-11T14:07:31.618Z               | PRECHECK PASS; ports 3001/65431 free; protected hashes và same-object/non-empty assertions PASS   |
+| 2026-09-11T14:07:31.631Z               | Fresh BUILD launch, child PID 19880                                                               |
+| 2026-09-11T14:08:14.442Z               | BUILD exit 0; previousBuildReused false; parent vẫn PID 15332                                     |
+| 2026-09-11T14:08:16.615Z               | PRESTART re-admission PASS; same object, same entries, union/identities unchanged; ports vẫn free |
+| 2026-09-11T14:08:16.631Z               | START launch, child PID 21152; cùng parent/profile                                                |
+| 2026-09-11T14:08:23.168Z               | Actual listener Node PID 13936, chỉ 127.0.0.1:3001, descendant của owned START child              |
+| 2026-09-11T14:08:23.386Z–14:08:23.518Z | Actual production HTML/RSC/CSP/isolation/no-owner assertions PASS                                 |
+| 2026-09-11T14:08:24.799Z               | Shutdown chỉ owned tree được xác minh                                                             |
+| 2026-09-11T14:08:24.938Z               | START child exit 1 do deliberate owned-tree termination, không spontaneous startup failure        |
+| 2026-09-11T14:08:27.541Z               | Exit confirmed; ports 3001/65431 free; parent tiếp tục final checks                               |
+| 2026-09-11T14:09:48.129Z               | FINAL CHECKS và continuous generation complete; orchestrator exit 0, không blocker                |
+
+Exact commands, từ repo root:
+
+```text
+pnpm --filter @yuta/backoffice build
+pnpm --filter @yuta/backoffice start --hostname 127.0.0.1
+```
+
+Build không reused từ generation trước. Owned listener ancestry:
+15332 → 21152 → 1488 → 1876 → 18488 → 1972 → 13936;
+conhost 11320 cũng thuộc tree 21152. Shutdown xác minh parent/child ownership
+bằng Win32_Process rồi taskkill /PID 21152 /T /F. Không target unrelated process.
+No DB/container/provider provisioning, fixture, migration, credentials,
+employee operation hoặc real attendance. Build/start diagnostics được suppress,
+chỉ safe categories; không observed credential rejection/DB-connection error.
+Không nâng absence-of-error-log thành packet-capture proof rằng mọi transient
+network attempt đều không tồn tại. Không fallback hoặc thay poison marker.
+
+### Actual production HTTP evidence — not DEV and not Browser QA
+
+Only neutral `/pointage/synthetic-establishment` được render; không identify,
+credential submission, employee hay attendance. RSC request dùng established
+shape `RSC: 1`, không private renderer API.
+
+| Response     | HTTP / content type            | Final Cache-Control          | Pragma / Expires | Set-Cookie |
+| ------------ | ------------------------------ | ---------------------------- | ---------------- | ---------- |
+| HTML 1       | 200 / text/html; charset=utf-8 | private, no-store, max-age=0 | no-cache / 0     | absent     |
+| RSC / Flight | 200 / text/x-component         | private, no-store, max-age=0 | no-cache / 0     | absent     |
+| HTML 2       | 200 / text/html; charset=utf-8 | private, no-store, max-age=0 | no-cache / 0     | absent     |
+
+Mọi representation có đúng required directives, không public/s-maxage,
+Referrer-Policy no-referrer, X-Content-Type-Options nosniff và không middleware
+request-override metadata. Actual neutral marker được assert; không protected
+identity/continuation/PIN/stateGuard, receipt/history, raw evidence hoặc
+bootstrap/database secret trong checked payload. Source neutrality được
+cross-check qua exact protected page/component hashes.
+
+Fresh production CSP có valid server nonce 16 bytes; mỗi HTML có 21 script
+tags và toàn bộ dùng đúng nonce. Hai HTML requests có nonce khác nhau.
+Inbound CSP, CSP-Report-Only và x-nonce sentinels không chọn được nonce.
+Không unsafe-inline/unsafe-eval; object-src none, base-uri none,
+frame-ancestors none, form-action self, connect-src self giữ đúng policy.
+Không persist full nonce hoặc HTML/RSC body.
+
+Representative unrelated actual routes:
+`/` → 307 /aujourdhui; `/favicon.ico` → 200;
+`/api/pointage-other` → 404. Cả ba không nhận Pointage CSP/referrer/nosniff/
+Pragma/Expires. No-owner `/api/pointage/synthetic-establishment/context`
+trả 503 với exact body `{"code":"POINTAGE_UNAVAILABLE"}`, no-store,
+không Set-Cookie. Không activate D1b hoặc production provider.
+
+U3 LOCAL PRODUCTION-MODE IMPLEMENTATION EVIDENCE: PASS.
+Task 3.3 được complete (20/32) trước khi đánh giá remaining U4.
+Previous DEV exact-cache FAIL và previous build-only orchestration failure
+vẫn historical, không bị rewrite thành production PASS.
+
+### U4 independent structural completion
+
+U4 được đối chiếu với approved Stage C, Tasks U4, UI_SPEC,
+shared/application rules và existing component sources. Một read-only
+in-memory Node assertion set đạt 20/20, không edit source:
+neutral route composition/named exports; hierarchy/entry responsibility;
+single responsive column; semantic canvas/text; root Geist/Inter;
+existing shared primitives/export catalog; French heading/action;
+section/input accessible names; masked numeric field structure;
+large-control variants và shared focus support; no shell/navigation;
+no raw colors; no U5-U7 behavior; disabled neutral controls;
+no unsupported display/trusted consumer.
+
+Đây là completion của structural U4, không completion của usable UI.
+Existing page/container/credential-entry đủ cho approved neutral structural
+composition; không tạo speculative active-interaction wrapper. Active state/
+receipt presentation và interaction logic thuộc U5-U7, chưa được triển khai.
+Browser viewport overflow, keyboard interaction, accessibility runtime và
+visual parity vẫn NOT_RUN, đúng separate QA plan; không claim từ source checks.
+UI_UX_PRO_MAX_USAGE OPTIONAL / NOT_USED; không external tool invocation.
+
+Source hashes:
+
+| Path                                                                                            | SHA-256                                                            |
+| ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| apps/backoffice/src/app/pointage/[establishmentSlug]/page.tsx                                   | `8f3153a5aa08764a1a97633aceb162905e6e56fea15fa41f480dbb301bd8bd6e` |
+| apps/backoffice/src/app/pointage/[establishmentSlug]/\_components/pointage-employee.tsx         | `097e70152a712b22beb24a50527e41788d0aeeb0ff602fd9f6274447823cb46a` |
+| apps/backoffice/src/app/pointage/[establishmentSlug]/\_components/pointage-credential-entry.tsx | `8b8636e21d8717ac6789574f13f21643c50351e2a6a6d78796ecefd4d6721bd8` |
+| apps/backoffice/src/proxy.ts                                                                    | `73b39a64d316155b7bc526a5f2dc5a1735624dbfa0a07ce2d596e53e46ce7aee` |
+| apps/backoffice/test/pointage-raw-clocking-inventory.test.ts                                    | `a45ed95bb9ac800af0be3e8475a30c16ebd2c3cd9fdfff9808f95e3b489bc35b` |
+
+### Checks, skipped attempts và scope integrity
+
+| Command / check                                                                                                                  | Actual result                                                                |
+| -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Fresh build command above                                                                                                        | Exit 0 under approved profile                                                |
+| Initial focused U3 invocation with quoted spaced selector inside COMSPEC                                                         | Exit 0 but 45 skipped / 0 selected; NOT counted as test PASS                 |
+| `pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-inventory.test.ts -t U3.isolated.header.implementation.evidence` | Exit 0; 40 passed, 5 skipped; independent corrected selector, no Next child  |
+| In-memory Node U4 structural assertion set                                                                                       | Exit 0; 20 passed; first shell-quoting attempt exit 1/no output, not counted |
+| `pnpm --filter @yuta/backoffice typecheck`                                                                                       | Exit 0                                                                       |
+| `pnpm -r --if-present typecheck`                                                                                                 | Exit 0                                                                       |
+| `pnpm docs:check`                                                                                                                | Exit 0                                                                       |
+| `pnpm architecture:check`                                                                                                        | Exit 0                                                                       |
+| `openspec validate pointage-usable-raw-clocking --strict`                                                                        | Exit 0                                                                       |
+| `pnpm ui:pack:check backoffice-pointage-employee`                                                                                | Exit 0                                                                       |
+| Scoped Prettier check of Design, Tasks, 02b, 02c                                                                                 | Exit 0 before evidence updates                                               |
+| `pnpm format:check`                                                                                                              | Exit 1; exactly 67 unrelated warnings; no formatter write                    |
+
+Final-check children trong generation chạy sau shutdown; parent PID 15332 giữ
+profile liên tục đến FINAL_CHECKS. Corrected focused selector là riêng
+source/header diagnostic, không được dùng để reconstruct START authority.
+Full cloud/local/DB suites và other-app builds không chạy vì không có code
+change và ngoài bounded retry; U2 real-DB proof không rerun hay relabel.
+Không formal VERIFY, Browser QA, Gate 3 hoặc no-image provenance change.
+
+Sau generation, exact-byte inventory của cả 2618 tracked/nonignored baseline
+paths không thêm/xóa/thay đổi tệp nào; generated .next remains ignored build
+state, không edit thủ công. Evidence writes sau đó chỉ Tasks và existing
+02b/02c packets. Design/Specs/protected source/migration/UI pack/unrelated work
+giữ nguyên. Hai checkbox 3.3/3.4 là thay đổi completion duy nhất.
+
+Post-record checks cũng đã chạy lại: docs (36 current documents), architecture,
+strict OpenSpec, UI pack (1 package / 0 warnings) và scoped Prettier trên
+Design/Tasks/02b/02c đều exit 0. Đây là Apply checks, không formal VERIFY/QA.
+
+### Exact allowed checkpoint — stop before 3.5
+
+APPLY: PAUSED — APPROVED U3/U4 CHECKPOINT COMPLETE
+Tasks: 21/32
+Task 3.2: COMPLETE
+Task 3.3: COMPLETE
+Task 3.4: COMPLETE — STRUCTURAL U4 ONLY
+Task 3.5: NOT_STARTED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+Không cần reopen Design cho execution result này. Tiếp tục 3.5 cần explicit
+human authorization; không tự tiếp tục các task còn lại. Synthetic/disposable
+attendance only. Bảy blockers không thay đổi: exact retention duration,
+deletion/anonymization, legal hold, backup-retention interaction, employee
+notice wording, detailed audit visibility, trusted production client-address
+provenance. Không deploy, enable, sync/archive hoặc lifecycle/readiness promotion.
+
+## Historical approval and U3 build-only checkpoint — 2026-09-11
+
+Approval source: explicit current-user instruction, attachment
+528d97be-84f7-49ec-901a-6f6e87c6d5b4/pasted-text.txt.
+Approval recorded by: Codex workflow
+Approved: 2026-09-11T13:42:46Z
+
+The exact D10b Design/Tasks/profile review is APPROVED. This records that
+approval and a subsequent incomplete execution; it does not approve new
+Design wording, complete U3, or promote readiness. The older awaiting-review
+section below is preserved as history.
+
+### Exact approved and checkpoint hashes
+
+| Artifact                                                                             | SHA-256                                                            |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| openspec/changes/pointage-usable-raw-clocking/design.md — approved/current unchanged | `67e0920dfe6591612a314e301fec8bed68d0454a65eb103688138d9f69cbf172` |
+| openspec/changes/pointage-usable-raw-clocking/tasks.md — approved pre-execution      | `2a5dbc287640ffa8be87f6da12d97b0dc14f7b50eed1d31b1f1e1a315bf971be` |
+| openspec/changes/pointage-usable-raw-clocking/tasks.md — evidence-only checkpoint    | `7eca3697ea02b9fe4b05969a5a2d585147e405ceb35ddface0ed3e342e541ea4` |
+| openspec/changes/pointage-usable-raw-clocking/specs/authorization/pointage/spec.md   | `1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66` |
+| openspec/changes/pointage-usable-raw-clocking/specs/pointage/raw-clocking/spec.md    | `4bfa64e863ad465a144341c18aa5d0db3ce0806ada52ad40183cf9a4e321f90e` |
+
+SHA-256 uses exact file bytes via node:crypto/readFileSync, independently checked
+with Get-FileHash for Tasks. HEAD:
+`415990386327aaccab3c32b1fef0569a0fde7f3a`.
+Fresh Git status retained existing Pointage work and unrelated
+ui-ux-pro-max-integration files. Before execution, all 76 entries in the
+protected-path table below matched. Both Specs remain 20 requirements /
+62 scenarios; all 32 checkboxes are unchanged, 19 complete.
+
+### Admission and actual command evidence
+
+The four production-loadable files were inventoried by key names only:
+.env.production.local absent (0), .env.local present (5), .env.production absent
+(0), .env present (6). The exact eight-key union and three duplicate names
+remain those of the approved table below. No env-file value was printed,
+persisted, hashed or copied to the profile. No separate @next/env probe ran.
+
+A dedicated frozen object contained exactly the ten approved non-empty profile
+entries plus SystemRoot, WINDIR, COMSPEC, PATH, PATHEXT, TEMP and TMP.
+Windows key matching rejected missing/ambiguous case collisions. Admission
+checked exact literal equality and categories without emitting values:
+NODE_ENV production, telemetry disabled, loopback origin/deny sink, VERCEL
+absent, no supplied private Next keys, synthetic/bootstrap/provider enablement,
+NODE_OPTIONS or NODE_PATH. The pnpm shim's own NODE_PATH behavior is tool
+metadata, not permission to inherit application configuration.
+
+Verified executable identities:
+
+| Tool                                        | SHA-256                                                            |
+| ------------------------------------------- | ------------------------------------------------------------------ |
+| C:/Program Files/nodejs/node.exe — v24.17.0 | `c6335d08331c23d68b9f2b18adb102002d76ef150b47248e954c507e0d033664` |
+| C:/Users/Tam/AppData/Local/pnpm/pnpm.CMD    | `080e142c3163cfee4feced5325ef548966f20b766b18b8631dd3c6b28b4c8d76` |
+| C:/WINDOWS/system32/cmd.exe                 | `97ac98b1a92c286054cce55239cfccdfc23a5517bd07fe693072c9ca96c7dabb` |
+
+Get-NetTCPConnection confirmed no listeners on 3001 or 65431 before BUILD.
+Admission timestamp: 2026-09-11T13:40:43.021Z.
+Generation: `04180af7-0900-44d5-bbab-005753a4bc77`.
+Node child_process.spawn used verified COMSPEC, /d /v:off /s /c, repository cwd,
+windowsHide true and the dedicated env object. Exact command:
+
+```text
+pnpm --filter @yuta/backoffice build
+```
+
+BUILD exit: 0. Owned COMSPEC PID: 16168; orchestrator PID: 16140.
+The sanitized classifier observed Next build/optimized compilation and no
+recognized credential rejection or DB connection error. No raw diagnostic
+was relayed. This does not establish an exhaustive absence of DB attempts,
+provider activity, unexpected tool-added application keys or bundled-value
+leakage; those conclusions are not silently inferred from missing logs.
+
+### Mandatory stop — orchestration lifetime, not environment dependency
+
+U3 LOCAL PRODUCTION-MODE EVIDENCE: INCOMPLETE.
+
+The agent's ephemeral orchestration ended after successful BUILD, before START:
+its stdin continuation did not retain the process. The frozen generation was
+lost. This is an agent orchestration defect, not an AUTH_SECRET rejection,
+new environment requirement or demonstrated Next/application defect.
+D10b explicitly requires STOP when orchestration ends; no START using this
+build and another generation, automatic retry or workaround was performed.
+
+START and all actual production HTML, RSC/Flight, final Cache-Control, CSP /
+nonce, unrelated-route and no-owner API assertions: NOT_RUN. Neither U3 nor
+U4 is complete. The historical DEV exact-cache FAIL remains unchanged.
+A future explicitly resumed attempt must build and start inside one retained
+generation; build success here alone is not final-response evidence.
+
+The owned build process tree exited. PIDs
+16140/16168/14788/15892/16724/13836/20420/22492/4016 were no longer present;
+ports 3001 and 65431 were again free. No Next start listener was created.
+No DB/container/provider setup command, fixture, migration, identify,
+credential submission or attendance write was executed. Generated .next
+output is retained only as generated build state and was not edited manually.
+
+### Regression checks and preservation
+
+| Command                                                                                                                            | Actual result                                                        |
+| ---------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| `pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-inventory.test.ts -t 'U3 isolated header implementation evidence'` | Exit 0; 40 passed, 5 skipped; isolated source/header assertions only |
+| `pnpm --filter @yuta/backoffice typecheck`                                                                                         | Exit 0                                                               |
+| `pnpm -r --if-present typecheck`                                                                                                   | Exit 0                                                               |
+| `pnpm docs:check`                                                                                                                  | Exit 0; 36 current documents                                         |
+| `pnpm architecture:check`                                                                                                          | Exit 0                                                               |
+| `openspec validate pointage-usable-raw-clocking --strict`                                                                          | Exit 0                                                               |
+| `pnpm ui:pack:check backoffice-pointage-employee`                                                                                  | Exit 0; 1 package, 0 warnings                                        |
+| `pnpm format:check`                                                                                                                | Exit 1; exactly 67 unrelated formatting warnings; no formatter write |
+
+Post-checkpoint scoped formatting also passed (exit 0):
+
+```text
+pnpm exec prettier --check openspec/changes/pointage-usable-raw-clocking/design.md openspec/changes/pointage-usable-raw-clocking/tasks.md docs/reviews/pointage-usable-raw-clocking/02b-design-review.md docs/reviews/pointage-usable-raw-clocking/02c-implementation-plan-review.md
+```
+
+Docs, architecture and strict OpenSpec checks were rerun after checkpoint
+writes and each exited 0. These remain Apply checks, not formal VERIFY or QA.
+
+Post-build exact-byte comparison of all 2618 tracked/nonignored baseline files
+found no added, removed or changed file. Subsequent checkpoint writes are
+limited to tasks.md and these existing 02b/02c packets. Design, both Specs,
+protected implementation/migrations/UI pack and unrelated work remain unchanged.
+No application/package implementation or test source was edited. Full cloud/
+local suites, other app builds, DB/container operations and Browser QA were
+not run because they are outside this bounded evidence attempt.
+
+### Current workflow and next authority
+
+APPLY: PAUSED
+Tasks: 19/32
+Task 3.2: COMPLETE
+Task 3.3: PARTIAL
+Task 3.4: PARTIAL
+Task 3.5: NOT_STARTED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+Return for explicit continuation after the D10b mandatory stop; no changed
+Design/profile or workaround is proposed. Preserve synthetic/disposable-only
+authority and all seven blockers: retention, deletion/anonymization, legal
+hold, backup-retention interaction, employee notice, detailed audit visibility,
+trusted production client-address provenance. No 3.5, Gate 3, Browser QA,
+deployment, enablement, sync/archive or lifecycle promotion.
+
+## Historical PROCESS_ENV_SHADOW_ISOLATION_V1 review
+
+Recorded: 2026-09-11T07:19:31Z.
+Authority: current-user planning authorization in attachment
+c56f19cd-e794-43b7-a89c-2bc631d6cd18/pasted-text.txt, followed by explicit human
+clarification that empty-string prohibition is YUTA policy, not Next behavior.
+Request status: CHANGES_REQUESTED được xử lý bằng bounded revision; revised
+Design/Tasks/profile hiện AWAITING_HUMAN_REVIEW, chưa có execution approval.
+
+SENSITIVE DESIGN — U3 ENVIRONMENT ISOLATION REVIEW
+Status: AWAITING_HUMAN_REVIEW
+U3 LOCAL PRODUCTION-MODE EVIDENCE:
+BLOCKED_BY_ENVIRONMENT_AUTHORITY
+
+APPLY: PAUSED
+Tasks: 19/32
+Task 3.3: PARTIAL
+Task 3.4: PARTIAL
+Task 3.5: NOT_STARTED
+
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+### Classification và framework/policy separation
+
+CROSS_MODULE vì profile áp dụng cho toàn bộ Backoffice Next process, không chỉ
+Pointage route. Evidence/test execution boundary only. Product/Specs/runtime
+architecture change NO; production enablement NO. D10a cache/CSP và historical
+DEV exact-cache FAIL giữ nguyên. Không giải thích false premise bằng fabricated
+probe hoặc hợp thức hóa unsafe environment.
+
+FRAMEWORK FACT: inspected installed Next/@next/env 16.2.9 và
+[version-pinned source](https://github.com/vercel/next.js/blob/v16.2.9/packages/next-env/index.ts#L26-L98).
+replaceProcessEnv xóa current keys có source undefined/empty, rồi gán mọi entry
+từ snapshot trở lại process.env. Empty string có thể được khôi phục.
+Merge kiểm tra `typeof parsed[key] === 'undefined'` đồng thời
+`typeof origEnv[key] === 'undefined'`: presence trong original environment,
+kể cả empty string, ngăn file value được chọn vào parsed. Không nói empty value
+làm .env thắng. Đây là read-only source finding, không phải probe đã chạy.
+Installed loader SHA-256:
+44e84a28e712bca30781e892e3e64d3aecdc46bef9d23b5b7f39bfa1fcef6baa.
+
+YUTA POLICY: EMPTY STRING SHADOWING IS FORBIDDEN. Mọi shadow deliberately
+non-empty vì consumer/validator có thể hiểu empty khác nhau, evidence yếu hơn
+explicit poison/deny override. Đây là current human safety policy, không gán cho
+Next. Không đề xuất VAR='' để isolation.
+
+[Next 16.2.9 public load order](https://github.com/vercel/next.js/blob/v16.2.9/docs/01-app/02-guides/environment-variables.mdx#environment-variable-load-order):
+process.env → .env.production.local → .env.local → .env.production → .env.
+Chỉ bốn file production-loadable dưới apps/backoffice thuộc inventory; không
+dùng .env.development.local. CLI và dependency version/source được inspect,
+không gọi @next/env loader hoặc probe.
+
+### Exact production-loadable key-name inventory
+
+Inventory dùng read-only Node util.parseEnv trên file bytes rồi chỉ trả keys;
+không load vào process.env, không in/persist/hash secret values.
+
+| File                                  | Exists | Key count | Key names only                                                                                                           |
+| ------------------------------------- | ------ | --------- | ------------------------------------------------------------------------------------------------------------------------ |
+| apps/backoffice/.env.production.local | NO     | 0         | —                                                                                                                        |
+| apps/backoffice/.env.local            | YES    | 5         | AUTH_SECRET, CLOUD_DATABASE_SSL, CLOUD_DATABASE_URL, NEXT_PUBLIC_APP_URL, YUTA_OPENAI_EVALUATION_API_KEY                 |
+| apps/backoffice/.env.production       | NO     | 0         | —                                                                                                                        |
+| apps/backoffice/.env                  | YES    | 6         | AUTH_SECRET, CLOUD_DATABASE_SSL, CLOUD_DATABASE_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_TOKEN_ENCRYPTION_KEY |
+
+Union chính xác: AUTH_SECRET, CLOUD_DATABASE_SSL, CLOUD_DATABASE_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_TOKEN_ENCRYPTION_KEY, NEXT_PUBLIC_APP_URL, YUTA_OPENAI_EVALUATION_API_KEY.
+Tổng 8 distinct keys. Duplicate names across files:
+AUTH_SECRET, CLOUD_DATABASE_SSL, CLOUD_DATABASE_URL.
+Trước future build/start phải inventory lại; drift/unknown/forbidden key STOP,
+không tự mở rộng profile hoặc copy file values.
+
+### Exact proposed shadow profile và consumers
+
+| Key                            | Category           | Giá trị evidence được đề xuất, không lấy từ env file                       |
+| ------------------------------ | ------------------ | -------------------------------------------------------------------------- |
+| AUTH_SECRET                    | POISON_SECRET      | `!U3_DENY!`                                                                |
+| CLOUD_DATABASE_SSL             | DENY_SINK_SSL      | `false`                                                                    |
+| CLOUD_DATABASE_URL             | LOOPBACK_DENY_SINK | `postgresql://u3_env_poison:!U3_DENY!@127.0.0.1:65431/yuta_u3_env_blocked` |
+| GOOGLE_CLIENT_ID               | POISON_PROVIDER    | `!U3_DENY!`                                                                |
+| GOOGLE_CLIENT_SECRET           | POISON_PROVIDER    | `!U3_DENY!`                                                                |
+| GOOGLE_TOKEN_ENCRYPTION_KEY    | POISON_SECRET      | `!U3_DENY!`                                                                |
+| NEXT_PUBLIC_APP_URL            | LOOPBACK_ORIGIN    | `http://127.0.0.1:3001`                                                    |
+| YUTA_OPENAI_EVALUATION_API_KEY | POISON_API_KEY     | `!U3_DENY!`                                                                |
+| NODE_ENV                       | EVIDENCE_MODE      | `production`                                                               |
+| NEXT_TELEMETRY_DISABLED        | TELEMETRY_DISABLED | `1`                                                                        |
+
+Bảng là deliberate public evidence literals, không phải actual env values.
+Không có file value nào được copy vào profile. Poison là 9-character
+!U3_DENY!, không phải functional secret. DB URL dùng username/marker hư cấu,
+không phải real credential, chỉ để URL parser qua syntax; sink không được
+provision và không phải disposable Pointage DB.
+
+Consumer review: packages/db-cloud/src/env.ts yêu cầu URL và literal true/false;
+apps/backoffice/src/server/cloud-database.ts gọi client factory khi import.
+Mọi DB attempt phải fail/STOP, kể cả dependency của module ngoài Pointage.
+apps/backoffice/src/server/auth/session.ts:getAuthSecret yêu cầu >=32 trong
+production; không kéo dài marker nếu build chạm validator này.
+Personnel extraction runtime chặn ngoài development trước key use.
+Exact GOOGLE*CLIENT_ID/GOOGLE_CLIENT_SECRET/GOOGLE_TOKEN_ENCRYPTION_KEY không
+có current exact-name consumer tìm thấy trong Backoffice/packages source;
+google-connector-config.ts dùng GOOGLE_BUSINESS_PROFILE*\* và
+REPUTATION_CREDENTIAL_ENCRYPTION_KEY. Không alias/thêm tên hoặc tạo connector.
+Root layout dùng NEXT_PUBLIC_APP_URL cho metadataBase; chỉ exact local origin.
+
+Sink target cố định 127.0.0.1:65431/yuta_u3_env_blocked; kiểm tra non-serving
+trước future build/start, không kết nối/provision để thử. Port có service hoặc
+không xác minh được: STOP, không tự đổi target. Không shared yuta_cloud/
+yuta_resto, retained Pointage DB hoặc real credentials. Không đánh đồng
+client-object creation với permission connect. Không suy từ absence of log
+thành chứng minh không có DB attempt; thiếu evidence cần STOP/review.
+
+### Dedicated process allowlist và propagation
+
+Chỉ inherit OS/runtime keys SystemRoot, WINDIR, COMSPEC, PATH, PATHEXT, TEMP,
+TMP khi hiện diện/cần thiết; không broadly clone shell. Không thêm inherited
+variable khác nếu chưa ghi exact name/reason và review. Resolve Windows key
+case/aliases fail-closed. Không inherit NODE_OPTIONS/NODE_PATH/user tokens/
+proxy/provider/APPDATA/USERPROFILE theo suy đoán.
+Current pnpm.CMD tự tạo NODE_PATH package-resolution metadata là tool-generated,
+không quyền inherit application config hoặc bí mật. Recheck tool identity/shim.
+
+Thêm đúng 10 profile entries trên và freeze một generation in memory, sử dụng
+cùng object cho cả hai dedicated child launches, cwd repository root.
+Future orchestration chỉ in memory, Node child_process.spawn qua verified
+COMSPEC với /d /v:off /s /c, windowsHide true; không file/script mới:
+
+```text
+pnpm --filter @yuta/backoffice build
+pnpm --filter @yuta/backoffice start --hostname 127.0.0.1
+```
+
+/d chặn AutoRun; /v:off tránh delayed expansion; không interpolate profile
+values vào command string. Không sửa package.json/Next config/Pointage launcher.
+Launcher hiện tại development/test chỉ được inspect để tham khảo OS allowlist;
+không tái dùng flags/admission hoặc sửa launcher.
+
+Trước cả build và start, kiểm tra full union có non-empty shadows; same exact
+key/category/value reuse trong memory; fixed mode/telemetry/origin; VERCEL absent;
+không **NEXT_PROCESSED_ENV, **NEXT_PRIVATE\*, private env-skip flag hoặc Pointage
+synthetic/provider/bootstrap enablement từ launch profile. Tên forbidden xuất
+hiện trong file union cũng STOP, không cấp shadow để bật tính năng.
+Profile/inventory drift hoặc thêm tool-generated application key: STOP;
+không reuse build của generation/profile khác, đặc biệt NEXT_PUBLIC values.
+
+Public names/categories manifest gồm 10 fixed entries và 7 OS allowlist entries.
+Hash không bao gồm values: SHA-256 trên UTF-8 JSON.stringify(sorted pairs),
+không newline, là 2c9534968c18c7cf6387cbbee1dee80445ea822c3e87053062e0926a9114a578.
+Đây chỉ là manifest integrity; không thay equality/propagation proof thực tế.
+
+Separate @next/env admission probe: NOT_PROPOSED. Không có probe command được
+cấp quyền ở packet này. Nếu bổ sung sau này, cần exact reviewed command/mechanism,
+same profile, output chỉ PASS/FAIL/counts/names, không application start/file
+mutation/private API. Probe không thay actual HTML/RSC/CSP build/start evidence.
+
+### Threat model và mandatory STOP
+
+V1 ngăn real file values thành effective Next process config, active DB/provider
+hoặc bundled NEXT_PUBLIC config. Standard loader vẫn có thể mở/parse file bytes;
+human chấp nhận điều này cho U3. Không claim filesystem isolation. Nếu cấm đọc
+file bytes: cơ chế này không đủ, cần separately reviewed workspace isolation.
+
+STOP trước/giữa future execution nếu thiếu/empty shadow; inventory/profile/tool
+drift; unknown key chưa phân loại consumer; private/enablement key; sink serving;
+DB attempt; functional credential/provider/shared-data requirement; unsafe
+endpoint/target; output cannot be safely sanitized; hoặc D10a cache/CSP failure.
+Không bù bằng real env value, functional dummy, DB/provider provisioning, env-file
+edit/rename, private flags/APIs, node_modules patch, wrapper source, root-layout/
+Next-config/global proxy/bootstrap change. Chỉ sanitized failure category/
+consumer, không persist raw secret-bearing diagnostics.
+
+Không đổi Product behavior, 20/62 Specs, D1-D10a, continuation/tenancy/raw evidence,
+UI scope, four phases/32 tasks hay UI pack. D10b chỉ future evidence isolation.
+Bảy blocker vẫn mở: retention, deletion/anonymization, legal hold, backup-retention,
+employee notice, detailed audit visibility, trusted production client-address
+provenance. Real attendance NOT_AUTHORIZED mọi environment; synthetic/disposable
+authority không phải permission deploy/enable/sync/archive.
+
+### Exact artifact hashes và evidence scope
+
+Hash command: Node createHash('sha256').update(readFileSync(path)).digest('hex'),
+exact file bytes. Fresh HEAD 415990386327aaccab3c32b1fef0569a0fde7f3a.
+Fresh scoped Git status và 76 protected paths khớp approved checkpoint trước sửa.
+Không auto-rebaseline source; unrelated dirty/concurrent work giữ nguyên.
+
+| Artifact                                                | Old SHA-256                                                      | Proposed SHA-256                                                 |
+| ------------------------------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- |
+| openspec/changes/pointage-usable-raw-clocking/design.md | 0eef88646ae34e64e98a3577d9b415bec987d9a69ac2b89815530001689a1b01 | 67e0920dfe6591612a314e301fec8bed68d0454a65eb103688138d9f69cbf172 |
+| openspec/changes/pointage-usable-raw-clocking/tasks.md  | b9c6daf0ef6f93aa467f0b4ad89bcda9da01ba7098aa188fcfc53d39319e3fa6 | 2a5dbc287640ffa8be87f6da12d97b0dc14f7b50eed1d31b1f1e1a315bf971be |
+
+Cả hai old hashes khớp exact previously approved artifacts. New hashes chưa
+được human approve. Packet trước lượt này:
+02b da3836bbeb4e44433b41f275a4b002d7cd68534dca64ff03bbf4e29b6f398860;
+02c cbc220c7aa0c96ac13f6e02ea34f494b73bba508bb0d8b738e7d0c702370a12a.
+Historical packets/observations bên dưới giữ nguyên, không cấp authority cho
+revised profile. Chờ explicit approval exact Design/Tasks hashes và profile.
+
+### Planning validation và protected-byte evidence
+
+| Command / check                                                                                                                           | Current result                                                                                                                  |
+| ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| pnpm docs:check                                                                                                                           | Exit 0; 36 current documents.                                                                                                   |
+| pnpm architecture:check                                                                                                                   | Exit 0.                                                                                                                         |
+| pnpm -r --if-present typecheck                                                                                                            | Exit 0; workspace including Backoffice.                                                                                         |
+| openspec validate pointage-usable-raw-clocking --strict                                                                                   | Exit 0; valid.                                                                                                                  |
+| pnpm ui:pack:check backoffice-pointage-employee                                                                                           | Exit 0; 1 package, 0 warnings.                                                                                                  |
+| pnpm exec prettier --check openspec/changes/pointage-usable-raw-clocking/design.md openspec/changes/pointage-usable-raw-clocking/tasks.md | Exit 0.                                                                                                                         |
+| pnpm format:check                                                                                                                         | Exit 1; exactly 67 unrelated warnings, no cleanup.                                                                              |
+| Exact diff reverse-check                                                                                                                  | Exit 0: Node pipes exact UTF-8 diff into git apply --reverse --check --whitespace=nowarn -. Check only; no reverse application. |
+| Inverse substitutions                                                                                                                     | Exact old Design/Tasks hashes recovered; no extra planning hunks.                                                               |
+| Probe/build/start/test/DB/container/migration/Browser QA                                                                                  | NOT_RUN trong lượt planning này; không dùng previous tests như current evidence.                                                |
+
+Scoped formatting của hai regenerated packets và inventory sau assembly được
+kiểm tra riêng bên dưới. Không formatter-write historical content/targets.
+
+Independent inventory: sorted unique git ls-files -co --exclude-standard -z,
+exclude đúng bốn authorized paths, SHA-256 từng file rồi hash UTF-8
+JSON.stringify([[path,hash],...]) không newline. Baseline:
+2614 files;
+7826bc638e864624a0836e34d6060d3bb34ac968a36db941e3144d9d05e52c2e.
+Fresh baseline giữ unrelated concurrent changes, không so sánh với old turn
+digest để tự rebaseline protected source. 76 protected hashes đều khớp,
+và outside-allowlist inventory phải vẫn khớp sau assembly.
+
+| Protected path                                                                                   | Unchanged SHA-256                                                |
+| ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------- |
+| `apps/backoffice/src/app/(authenticated)/equipe/pointage/page.tsx`                               | f2fe5f9ccf167aaf4be6233046ce3765b385c3d452e2b8cd6e1314108fb85307 |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-in/route.ts`                     | 29c16cfd705d7bef4b156b92ac1cad2186bf2ce17ac7fc7c9ca66f4b84444299 |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-out/route.ts`                    | 1c0fa864ae27a4d1f7a7940aaa8ba0d7394db3e2f1da2bff01cc1e4537218c69 |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/context/route.ts`                      | 45043e139c0c7e5f0740acc7d7b9da4d0ed4d59d87dcffa8069f9a1ee1dfe2b6 |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/end/route.ts`                          | 93f5428e2e700f528dbde1464a31a9d5811dfacfb5531674fb605faf978a7ae0 |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/identify/route.ts`                     | 8f6504f6fbd4207e34e5f06ccca1d88b266c6a52ebd1d4232697004be7cd2be5 |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/recover/route.ts`                      | 0714021059b92505345cc94886358474a3125bb832f38bb20a8ee6a47332f77e |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/state/route.ts`                        | 7d199ac7aa8a40f3e7c10614a32429c0e0ee48f49dc4c806d036e501e2cdcb5d |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-credential-entry.tsx` | 8b8636e21d8717ac6789574f13f21643c50351e2a6a6d78796ecefd4d6721bd8 |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/_components/pointage-employee.tsx`         | 097e70152a712b22beb24a50527e41788d0aeeb0ff602fd9f6274447823cb46a |
+| `apps/backoffice/src/app/pointage/[establishmentSlug]/page.tsx`                                  | 8f3153a5aa08764a1a97633aceb162905e6e56fea15fa41f480dbb301bd8bd6e |
+| `apps/backoffice/src/proxy.ts`                                                                   | 73b39a64d316155b7bc526a5f2dc5a1735624dbfa0a07ce2d596e53e46ce7aee |
+| `apps/backoffice/src/server/pointage/authorization.ts`                                           | c33a530483f76f29065729834e07b5d4512ee54255765645bece9cef8c87cc34 |
+| `apps/backoffice/src/server/pointage/index.ts`                                                   | 5a17ce9a793561f26e7eca9c62f7835925d54d9eba61074951d58871dd910133 |
+| `apps/backoffice/src/server/pointage/raw-chain.ts`                                               | 0b8446a543cad544614ae7c7d366cfa771d0011d16adc7bc7d1d00405731f83c |
+| `apps/backoffice/src/server/pointage/raw-clocking-bootstrap.ts`                                  | 17733bc004725c88a6aa506dbefdfadf7a3aa204005af2343413f5a770792e13 |
+| `apps/backoffice/src/server/pointage/raw-clocking-http.ts`                                       | b4f57b8aeda30995f41a1a29008e9dae5c767d1e413a071488301aaae169e0ff |
+| `apps/backoffice/src/server/pointage/raw-clocking-manager.ts`                                    | 209183808c72c1a9c677d57b2603dd5030336ad864d1ff542df1f0d06f27d948 |
+| `apps/backoffice/src/server/pointage/raw-clocking-runtime.ts`                                    | ab9e7f157b53265ebcf62da8c7f8392018b8211c2d76e1ba467a6b2be8b53d57 |
+| `apps/backoffice/src/server/pointage/raw-clocking-service.ts`                                    | a144202f2b7af2955b458fc445b699342bb4ed8cdbda33a4d46905452dcd3d37 |
+| `apps/backoffice/src/server/pointage/raw-clocking-test-boundary.ts`                              | 4aa15e7f9695b85ae418b1098b7bd57c14d4c39bcd8b81eb9093660eeeb8cc28 |
+| `apps/backoffice/src/server/pointage/service.ts`                                                 | 00d26799bf2fa8213161e221a28fbf75b4024fd88f549293e814e90dd935aff1 |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts`                                 | b93f4b1bb29ba015571c944f3a17cb59a0c05306ae11482d945a59ddbcafd10e |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-next-child.ts`                               | 03f7024b1e739697bbf7fc4fad2f976d684595e598ed6db31129b50392cdb33a |
+| `apps/backoffice/test/pointage-foundation-inventory.test.ts`                                     | 1a8d4d2f026d6444de11f1afc5d47e38a4098eedbd0059e330cb78d102242daa |
+| `apps/backoffice/test/pointage-foundation.test.ts`                                               | e3f091057b9c0f21bfd2ed872b9e435fc4330ae9239ffa8e5bbd51534ed3729b |
+| `apps/backoffice/test/pointage-raw-chain.test.ts`                                                | b0fe2395ed36d944b911bafcf6dd51d20f08e3723d772189867c4f53d4a13277 |
+| `apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts`                                   | 987fd9eb31620de7777052dca7bfce99d7fef4a30faf71357d8cde011809b41e |
+| `apps/backoffice/test/pointage-raw-clocking-http.test.ts`                                        | 3e463e902b2e40d1fde2703c607902f5d704e32955e6f1c749b250c400623e1d |
+| `apps/backoffice/test/pointage-raw-clocking-inventory.test.ts`                                   | a45ed95bb9ac800af0be3e8475a30c16ebd2c3cd9fdfff9808f95e3b489bc35b |
+| `apps/backoffice/test/pointage-raw-clocking-manager.test.ts`                                     | a36e3beaf3ee38da51eae92dafdb923a2d4d7364a45e58a3d4cdf3af338d1db7 |
+| `apps/backoffice/test/pointage-raw-clocking-runtime.test.ts`                                     | bb9cd7db7152f7168c7adae80c96b4961b5f13bdf212671717f1e0e9dbd379fe |
+| `apps/backoffice/test/pointage-raw-clocking-service.test.ts`                                     | 4a139b05bdabe81a6ec2ecab728792a215cd2b74273114f7bb4ae17a6d36b356 |
+| `docs/reviews/pointage-usable-raw-clocking/01-analysis-review.md`                                | ee18fdbf3b9802978eb7d71000d001c1b32eb7672f333bf8fe452005414f3557 |
+| `docs/reviews/pointage-usable-raw-clocking/02-specs-review.md`                                   | c5a7fd21c9fb04ea8f3617463241fc0ec8b41ea6e69b6074da5fefe98f0da566 |
+| `docs/ui/pages/backoffice-pointage-employee/ACCEPTANCE_CHECKLIST.md`                             | cbcc464c79e57f3bc34c49989d936b1dc2411839b552a159e407a407c72166ed |
+| `docs/ui/pages/backoffice-pointage-employee/DATA_AND_INTERACTION_SPEC.md`                        | 25ffcdbb137b26568a01373c6a55c3ea714f97d70978c3c22310433bd40d68fd |
+| `docs/ui/pages/backoffice-pointage-employee/DESIGN_HANDOFF.md`                                   | d94fc07f4e318bda95507904640e5bd80f9f5bacc251babfbf85f7bc0fc56cae |
+| `docs/ui/pages/backoffice-pointage-employee/IMPLEMENTATION_PLAN.md`                              | b7dfc8937893032253f801160c1e9fa21e2c8cd34439c0b80e9eb38e7ef5606e |
+| `docs/ui/pages/backoffice-pointage-employee/PRODUCT_SCOPE.md`                                    | 16a14204820f4a1b2033f26dca03494db9e5e61b28474c87216ce206062582d8 |
+| `docs/ui/pages/backoffice-pointage-employee/README.md`                                           | 77377af7a5f09d4884541e3a90de151e0ae11223b73e66f2dc57cfb08765d902 |
+| `docs/ui/pages/backoffice-pointage-employee/UI_SPEC.md`                                          | cd109fb341545a280189d92b891506b9211134600720cf5d2b9b107563aacb45 |
+| `docs/ui/pages/backoffice-pointage-employee/prompt-provenance.json`                              | 04c6c99bf8067e848cc4df1f0f871fd43bdf1ec964d786f2617dcca4692b8a61 |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/00_REPOSITORY_ANALYSIS.md`                   | 7ecab8ffd6d97de28f463d521172be6de8f66b7e3074e5e90e88f53f41ea394c |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/01_VISUAL_BASELINE.md`                       | d3075806ae38d0f9f6a945b3b42d1f3b8d7e2bd9eafa712a73587744c9f46119 |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/02_COMPONENT_REFACTOR.md`                    | 8b134cd4b462562416fb5c2e57c23eb4675a26eff7ea75fdfae44727b74648ac |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/03_INTERACTIONS.md`                          | e27c12d152d9270229eed6951898ab6f5e477d7d12ff9c170f4522ed45f00388 |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/04_DATA_INTEGRATION.md`                      | f878f959d3afee428e67620c74f4c75231d2c7816f23cbf7fc6c701067538e79 |
+| `docs/ui/pages/backoffice-pointage-employee/prompts/05_VISUAL_QA.md`                             | 5f31ec1c2a2bcfd3129643931e188365f9608958f1f8bd697ae7854e292eaad0 |
+| `docs/ui/pages/backoffice-pointage-employee/references/README.md`                                | e2ddabc5a6a004441847e71629b84281eeac075c41a195eea8955f5d30a72a45 |
+| `openspec/changes/pointage-usable-raw-clocking/analysis.md`                                      | f04e66f9f2307dc92aa9cdbd134fb4a35f9c1089459440c0ccfdb40c4a3e9146 |
+| `openspec/changes/pointage-usable-raw-clocking/proposal.md`                                      | d42975cd06290431701e39d499edac93774275c1bb0f28f8474f6ff0e61816f1 |
+| `openspec/changes/pointage-usable-raw-clocking/specs/authorization/pointage/spec.md`             | 1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66 |
+| `openspec/changes/pointage-usable-raw-clocking/specs/pointage/raw-clocking/spec.md`              | 4bfa64e863ad465a144341c18aa5d0db3ce0806ada52ad40183cf9a4e321f90e |
+| `packages/auth/src/index.ts`                                                                     | 464739729900d884af3ab82159151d7df5de6a0f8ee0a3a23feed7bc285a1c2a |
+| `packages/auth/src/pointage-continuation.ts`                                                     | f2c829c33030ae3550350ff4b5eac3d5dce774e5bd4774a5e46a0dd621465172 |
+| `packages/auth/src/pointage-credential.ts`                                                       | 8b294113e7a97fb83e5acff5df96224ed4c18d73d60c46a63abf824c37195fa1 |
+| `packages/auth/test/pointage-continuation.test.ts`                                               | 6d9e78b745c47a96e4d59e256e67090ede1258860b140e28b6210fca57b07b4a |
+| `packages/auth/test/pointage-credential.test.ts`                                                 | 6ea66dbb73a82f8586575c15f049be3ee0832987888045a593b982001c1479a0 |
+| `packages/contracts/src/index.ts`                                                                | cf72d2593fa90ffe590e2963f15160b232d069d1bf8848ec06d91946b18d95bd |
+| `packages/contracts/src/pointage/index.ts`                                                       | 2bc3d6d491ce94864c2bae22a5ce96b66e052ce131be852328b4b68c2f0ba974 |
+| `packages/contracts/test/pointage.test.ts`                                                       | 4fff5b366e61c94098dc3e4238edfd4b61a2e9b5e62527465546db760f83a013 |
+| `packages/db-cloud/drizzle/0019_pointage_authority_foundation.sql`                               | 143b6d1e47f92336b4359c4c85a17487ead97416afbbe2c0fd0b99880c0e7056 |
+| `packages/db-cloud/drizzle/0021_abandoned_black_queen.sql`                                       | 7794a5c02f2fa809a9985848bc455dbd3a5762415b5d96c216fb49ff4fd01ed9 |
+| `packages/db-cloud/drizzle/meta/0021_snapshot.json`                                              | 71052147af479bfb5f480f0981859a7af7235ff21a0be69a427a6faaeb06f4bf |
+| `packages/db-cloud/drizzle/meta/_journal.json`                                                   | 897139ed88030e38adfffa55ba5f1bc4d4773b6bf8f1aac619f17653834907b0 |
+| `packages/db-cloud/src/pointage-raw-clocking-repository.ts`                                      | f2cf173ea3a2ad06c30a7e1b7b70f32d33f9b520e0f705aafed1fd698d9ce802 |
+| `packages/db-cloud/src/pointage-repository.ts`                                                   | 4cfcfc4f5287590fde3ff44062a97efe1bd256771774495ae0ce91ab488034d8 |
+| `packages/db-cloud/src/schema/pointage-raw-clocking.ts`                                          | d19c5c84c9b3352437aa839d97b54e800211bc956d28e70445e6b1247c5e4754 |
+| `packages/db-cloud/src/schema/pointage.ts`                                                       | 8f4f12cf76773dfca6f99ba59e37e5ee7d0a18ef13827f78caebddd51400de29 |
+| `packages/db-cloud/test/helpers/pointage-raw-clocking-test-database.ts`                          | 6bb342f09144e308b989d32d580c3b0d41223005e36834d74ddce7287dce0fe4 |
+| `packages/db-cloud/test/pointage-raw-clocking-migration.integration.test.ts`                     | eb5693a3ba0f907e74862fa2e26c5d39e916c38ec54d219ed652a09af0aff2cc |
+| `packages/db-cloud/test/pointage-raw-clocking-schema.test.ts`                                    | d6a10caa9edb95878605e8f3d1fa439e07e2aec5c221097a2f17bdac38b2e291 |
+| `packages/db-cloud/test/pointage-raw-clocking.integration.test.ts`                               | 5d0ea83bacb946300030a135e2f150c5b34c4a63197d98e8f4abf8a914b82cce |
+| `packages/db-cloud/test/pointage-repository.integration.test.ts`                                 | 4761848b92e1ebb4f2db81d15e596f654f02b480c34bd290a339755302a6c1f1 |
+| `packages/db-cloud/test/pointage-schema.test.ts`                                                 | e1026fbfc7adef0773a916ed230d302005c09c711c61503159799f35f5e1b090 |
+
+Hai Specs giữ 20 requirements / 62 scenarios: authorization 7/21, raw-clocking
+13/41. Tasks giữ 19 checked / 32 total, 3.3/3.4 PARTIAL, 3.5 NOT_STARTED.
+Không thay implementation/migration/proxy/page/UI bytes hoặc public lifecycle.
+Gate 1/2, main Specs/archive, Formalités và unrelated work giữ nguyên.
+
+### Exact non-secret key/category manifest
+
+Đây là names/categories-only data, không chứa values. Hash algorithm: parse
+JSON, sort pairs theo key ordinal, JSON.stringify không newline rồi SHA-256.
+Digest: 2c9534968c18c7cf6387cbbee1dee80445ea822c3e87053062e0926a9114a578.
+Không dùng digest này thay same in-memory profile equality/propagation checks.
+
+```json
+[
+  ["AUTH_SECRET", "POISON_SECRET"],
+  ["CLOUD_DATABASE_SSL", "DENY_SINK_SSL"],
+  ["CLOUD_DATABASE_URL", "LOOPBACK_DENY_SINK"],
+  ["COMSPEC", "OS_RUNTIME_ALLOWLIST"],
+  ["GOOGLE_CLIENT_ID", "POISON_PROVIDER"],
+  ["GOOGLE_CLIENT_SECRET", "POISON_PROVIDER"],
+  ["GOOGLE_TOKEN_ENCRYPTION_KEY", "POISON_SECRET"],
+  ["NEXT_PUBLIC_APP_URL", "LOOPBACK_ORIGIN"],
+  ["NEXT_TELEMETRY_DISABLED", "TELEMETRY_DISABLED"],
+  ["NODE_ENV", "EVIDENCE_MODE"],
+  ["PATH", "OS_RUNTIME_ALLOWLIST"],
+  ["PATHEXT", "OS_RUNTIME_ALLOWLIST"],
+  ["SystemRoot", "OS_RUNTIME_ALLOWLIST"],
+  ["TEMP", "OS_RUNTIME_ALLOWLIST"],
+  ["TMP", "OS_RUNTIME_ALLOWLIST"],
+  ["WINDIR", "OS_RUNTIME_ALLOWLIST"],
+  ["YUTA_OPENAI_EVALUATION_API_KEY", "POISON_API_KEY"]
+]
+```
+
+### Exact bounded diff identity
+
+Diff body bên dưới dùng UTF-8 và một final LF; SHA-256:
+9df130798ff3e4dc46208fab3fb5dc94063ba4950794697b734766d6ffee1a31.
+Relative baseline là exact old Design/Tasks hashes, không phải dirty HEAD.
+Diff chứa đúng hai planning paths; hai write paths còn lại là current section/
+metadata của 02b/02c. Original history được giữ nguyên phía dưới.
+
+### Exact bounded Design / Tasks diff
+
+````diff
+diff --git a/openspec/changes/pointage-usable-raw-clocking/design.md b/openspec/changes/pointage-usable-raw-clocking/design.md
+--- a/openspec/changes/pointage-usable-raw-clocking/design.md
++++ b/openspec/changes/pointage-usable-raw-clocking/design.md
+@@ -1609,7 +1609,136 @@
+ provider approval or readiness promotion. All seven production/legal/privacy
+ blockers and P13/P14 synthetic/disposable-only authority remain unchanged.
+
+-### D11 — UI planning boundary and state model
++### D10b — PROCESS_ENV_SHADOW_ISOLATION_V1
++
++Impact classification: CROSS_MODULE. Profile áp dụng cho toàn bộ Backoffice
++Next build/start process, không chỉ Pointage. Đây chỉ là evidence/test boundary:
++Product change NO, Specs change NO, application runtime architecture change NO,
++production enablement NO. D10a final HTML/RSC/CSP assertions không đổi.
++
++FRAMEWORK FACT: Next/@next/env 16.2.9 snapshot initial process.env.
++replaceProcessEnv xóa current keys có sourceEnv undefined hoặc chuỗi rỗng,
++sau đó gán lại mọi entry của sourceEnv; empty string trong snapshot có thể
++được khôi phục. Điều kiện chọn file key vào parsed là
++`typeof parsed[key] === 'undefined' && typeof origEnv[key] === 'undefined'`.
++Presence trong origEnv, không phải truthiness/non-empty, quyết định eligibility.
++Key có empty-string value vẫn ngăn file key được chọn vào parsed. Không tuyên
++bố empty string làm giá trị .env thắng. Source và public precedence được pin
++16.2.9 trong review packet.
++
++YUTA POLICY: EMPTY STRING SHADOWING IS FORBIDDEN. Đây là safety policy được
++human duyệt, không phải kết luận Next precedence: empty value mơ hồ giữa các
++consumer/validator, có thể bị hiểu là missing/invalid và cho evidence yếu hơn
++một intentional non-empty poison/deny override. Mọi shadow MUST deliberately
++non-empty trước Next initialization.
++
++Production-load order: process.env, .env.production.local, .env.local,
++.env.production, .env. Trước mỗi future build và start, inventory lại đủ bốn
++file tại apps/backoffice: existence, key counts, union và duplicate names.
++Không lấy .env.development.local làm shadow source. Không in, persist hoặc
++hash giá trị file/secret. Inventory hiện tại: production-specific files vắng;
++.env.local có 5 keys, .env có 6 keys; union 8 keys và 3 duplicates
++AUTH_SECRET/CLOUD_DATABASE_SSL/CLOUD_DATABASE_URL. Key/category profile dưới
++đây bao phủ toàn bộ union, kể cả tên chưa có current consumer.
++
++| Key                            | Category           | Giá trị evidence được đề xuất, không lấy từ env file                       |
++| ------------------------------ | ------------------ | -------------------------------------------------------------------------- |
++| AUTH_SECRET                    | POISON_SECRET      | `!U3_DENY!`                                                                |
++| CLOUD_DATABASE_SSL             | DENY_SINK_SSL      | `false`                                                                    |
++| CLOUD_DATABASE_URL             | LOOPBACK_DENY_SINK | `postgresql://u3_env_poison:!U3_DENY!@127.0.0.1:65431/yuta_u3_env_blocked` |
++| GOOGLE_CLIENT_ID               | POISON_PROVIDER    | `!U3_DENY!`                                                                |
++| GOOGLE_CLIENT_SECRET           | POISON_PROVIDER    | `!U3_DENY!`                                                                |
++| GOOGLE_TOKEN_ENCRYPTION_KEY    | POISON_SECRET      | `!U3_DENY!`                                                                |
++| NEXT_PUBLIC_APP_URL            | LOOPBACK_ORIGIN    | `http://127.0.0.1:3001`                                                    |
++| YUTA_OPENAI_EVALUATION_API_KEY | POISON_API_KEY     | `!U3_DENY!`                                                                |
++| NODE_ENV                       | EVIDENCE_MODE      | `production`                                                               |
++| NEXT_TELEMETRY_DISABLED        | TELEMETRY_DISABLED | `1`                                                                        |
++
++Poison markers là public negative-test literals, không phải credentials,
++không tăng độ dài/encode/generate để qua credential validator. AUTH*SECRET
++marker có 9 ký tự, cố ý không đạt getAuthSecret production minimum 32.
++Nếu build gọi validator đó, STOP tại consumer, không tạo secret 32 ký tự.
++Ba GOOGLE*_ trong union không có exact-name reader được tìm thấy trong current
++Backoffice/packages source; connector đọc GOOGLE*BUSINESS_PROFILE*_ và
++REPUTATION_CREDENTIAL_ENCRYPTION_KEY. Không alias hoặc thêm các tên đó.
++Personnel extraction chặn ngoài development trước API-key use; không thêm mode
++hay enablement để qua guard. Recheck consumers trước future execution.
++
++CLOUD_DATABASE_URL chỉ là syntactically parseable deny target vì
++packages/db-cloud/src/env.ts yêu cầu URL; CLOUD_DATABASE_SSL chấp nhận literal
++false. Backoffice cloud-database module tạo client khi import; parsing/client
++object không phải permission connect. Không provision sink, dùng shared DB,
++retained evidence DB, yuta_cloud/yuta_resto hoặc copied username/password.
++Trước build/start phải xác nhận port 65431 không có listener/service; nếu có
++hoặc không chứng minh được non-serving, STOP, không chọn port khác ngầm.
++Mọi DB connection attempt là unexpected dependency và phải fail/STOP; không
++coi connection refusal bị nuốt như successful isolation evidence. Chỉ dựa vào
++không thấy log là chưa đủ để khẳng định không có attempt. Không sửa driver,
++bootstrap, firewall hay tạo listener để bù thiếu bằng chứng.
++
++Dùng một frozen in-memory profile cho một evidence generation. Không spread
++parent process.env. Chỉ copy các OS/runtime keys cần thiết:
++SystemRoot, WINDIR, COMSPEC, PATH, PATHEXT, TEMP, TMP; tìm tên Windows không
++phân biệt hoa/thường, từ chối aliases/collisions không rõ ràng. Sau đó thêm
++đúng 10 reviewed entries trên. Không inherit USERPROFILE/APPDATA/LOCALAPPDATA,
++NODE_OPTIONS, NODE_PATH, proxy/token/provider variables theo suy đoán. Nếu cần
++thêm inherited key, ghi exact name/reason và STOP để review trước khi thêm.
++Current pnpm.CMD có thể tự thiết lập NODE_PATH cho installed pnpm; đó là tool-
++generated resolution metadata, không phải inherited application configuration.
++Phải kiểm tra resolved Node/pnpm identity và shim trước future execution.
++
++Cả hai command MUST nhận cùng dedicated env object qua child-process env option;
++không launch từ broad developer/Codex shell environment. Future in-memory
++orchestration dùng Node child_process.spawn với COMSPEC đã xác minh, args
++`/d /v:off /s /c` và một trong đúng command literals sau, cwd repository root,
++windowsHide true, không tạo source wrapper/script:
++
++```text
++pnpm --filter @yuta/backoffice build
++pnpm --filter @yuta/backoffice start --hostname 127.0.0.1
++```
++
++/d tắt cmd AutoRun, /v:off không expand poison marker như delayed expansion;
++profile values chỉ đi qua env, không nội suy vào command text. Same generation
++giữ nguyên tất cả profile entries và NEXT_PUBLIC_APP_URL qua build và start.
++Nếu orchestration kết thúc, profile/inventory drift hoặc tool-added application
++key xuất hiện, STOP; không tái dùng build từ profile khác. Các Next-generated
++internal runtime keys không phải permission tự inject private bypass.
++
++Trước mỗi command: require full file union coverage/non-empty shadows, đúng
++key/category set, same profile equality, NODE_ENV production, telemetry off,
++VERCEL absent và không có **NEXT_PROCESSED_ENV, **NEXT_PRIVATE\* hoặc private
++env-skip option do launcher cung cấp. Không thêm Pointage synthetic/provider/
++bootstrap enablement; file union có forbidden key hoặc unknown key phải STOP.
++Unknown/future keys cần exact consumer/read-path classification và review
++safe poison trước khi mở rộng profile; không copy file value. Functional
++credential, external endpoint hoặc shared target requirement luôn STOP.
++Chỉ ghi names/categories, counts, equality assertions; không persist/hash
++secret values. Public profile literals không được trình bày như real secrets.
++
++Separate @next/env admission probe: NOT_PROPOSED trong V1 packet này.
++Không gọi private loader API hoặc probe ngầm; inventory dùng read-only parsing,
++không load env vào application. Future admission phải kiểm tra dedicated launch
++object và propagation; một probe bổ sung cần exact mechanism/output được review
++trước. Probe không bao giờ thay actual build/start evidence của D10a.
++
++Threat boundary: V1 chứng minh file values không thành effective Next process
++configuration/active provider/DB hoặc bundled NEXT_PUBLIC value. Nó KHÔNG hứa
++Next CLI không mở/parse env-file bytes; public loader vẫn có thể đọc chúng.
++Điều này được human chấp nhận cho U3. Nếu yêu cầu không đọc file bytes, STOP:
++cần filesystem/workspace isolation design riêng. Không nâng claim ngầm.
++
++Mọi build/start failure do valid credential, provider, DB/shared data hoặc key
++không safely poisonable đều STOP, giữ task PARTIAL; không copy real values,
++tạo functional dummy credential, provision DB/provider, sửa env/Next config/
++node_modules/launcher/bootstrap hoặc dùng private skip flag. Không dump raw
++diagnostics chứa env/header/body; chỉ sanitized failure category/consumer.
++D10a neutral page, loopback-only listener ownership/shutdown proof, no-owner
++denial, no real attendance và cả bảy production blockers giữ nguyên.
++V1 chỉ là proposal trong alignment: chưa probe/build/start, chưa U3 PASS;
++đợi explicit approval của exact Design/Tasks hashes và profile mới.
++
++### D11 — UI planning boundary and state model
+
+ NEW_PAGE, integrated target, NEW_CAPABILITY_DISCOVERY. Stable planning home:
+ `docs/ui/pages/backoffice-pointage-employee/`. Phase 0 inventory và
+@@ -1733,7 +1862,11 @@
+
+ ## Verification Design
+
+-### U3 final-page evidence — mode-separated and pending approval
++### U3 final-page evidence — mode-separated and pending approval
++
++D10b PROCESS_ENV_SHADOW_ISOLATION_V1 admission/profile propagation là prerequisite
++của D10a future build/start proof. Framework presence và YUTA non-empty policy
++phải được đánh giá riêng; profile/probe không thay final HTML/RSC/CSP evidence.
+
+ D10a controls final HTML/RSC cache and CSP evidence. Preserve the historical DEV
+ observations and failed exact-cache assertion; do not relabel them as production
+diff --git a/openspec/changes/pointage-usable-raw-clocking/tasks.md b/openspec/changes/pointage-usable-raw-clocking/tasks.md
+--- a/openspec/changes/pointage-usable-raw-clocking/tasks.md
++++ b/openspec/changes/pointage-usable-raw-clocking/tasks.md
+@@ -3,4 +3,66 @@
+-## Current Sensitive Design / Tasks alignment — U3 final cache evidence
++## Current U3 environment isolation planning — PROCESS_ENV_SHADOW_ISOLATION_V1
++
++Authority: current-user bounded planning decision và human clarification:
++empty-string prohibition là YUTA policy, không phải Next dotenv precedence.
++D10b định nghĩa exact 8-key production-file union + 2 fixed evidence values,
++7-key OS allowlist, non-empty poison/loopback deny profile và same-generation
++build/start propagation. Đây là CROSS_MODULE evidence boundary của toàn
++Backoffice process, không đổi Product/Specs/runtime architecture.
++
++SENSITIVE DESIGN — U3 ENVIRONMENT ISOLATION REVIEW
++Status: AWAITING_HUMAN_REVIEW
++U3 LOCAL PRODUCTION-MODE EVIDENCE:
++BLOCKED_BY_ENVIRONMENT_AUTHORITY
++APPLY: PAUSED
++Tasks: 19/32
++Task 3.3: PARTIAL
++Task 3.4: PARTIAL
++Task 3.5: NOT_STARTED
++
++U3 TECHNICAL IMPLEMENTATION CONTRACT bổ sung D10b admission: inventory đủ bốn
++production-loadable env files, không dùng development.local; mọi union key có
++non-empty shadow trước Next initialization; không copy/hash/persist file values.
++FRAMEWORK FACT: origEnv presence, kể cả empty string, ngăn file selection vào
++parsed. YUTA POLICY: vẫn cấm empty-string shadow vì consumer ambiguity.
++Không thay đổi F1-F8/S1-S9/U1-U8/R1-R7 khác, four phases hoặc 32 checkboxes.
++
++Exact profile/values, deny-sink port 65431/database yuta*u3_env_blocked, literal
++false SSL và loopback NEXT_PUBLIC_APP_URL theo D10b. AUTH_SECRET poison không
++đạt minimum 32; nếu consumer đòi valid credential thì STOP, không sửa marker.
++Không alias các GOOGLE*\* cũ thành current connector names hoặc bật Personnel
++extraction. No provider/bootstrap/synthetic enablement, VERCEL, private Next
++flags, broad parent-env inheritance hoặc functional temporary credentials.
++
++Future commands giữ nguyên, chỉ sau approval exact hashes/profile: một
++dedicated child env, cùng frozen generation, chạy existing Backoffice build
++rồi start --hostname 127.0.0.1 từ repo root theo D10b. Re-inventory/admit trước
++từng command; unknown key, forbidden collision, occupied sink, DB attempt,
++profile propagation mismatch hoặc unsafe validator requirement đều STOP.
++Không thêm script/path, env-file edit hay đổi Pointage child launcher.
++Separate @next/env probe NOT_PROPOSED; mọi probe tương lai cần review riêng.
++
++POST-APPLY VERIFY phải re-evaluate D10b admission/propagation cùng D10a actual
++final-response proof, không suy ra PASS từ profile hoặc source inspection.
++QA vẫn riêng sau VERIFY; UI_AFFECTING YES, BROWSER_QA_REQUIRED YES giữ nguyên.
++V1 không phải Browser QA, deployment, production readiness hoặc data authority.
++Không probe/build/start/DB/container/migration/test execution trong alignment.
++
++Chưa complete 3.3/3.4; future approved U3 PASS mới cho 20/32, remaining U4
++PASS riêng mới cho 21/32, rồi STOP trước 3.5. Historical DEV failed exact-cache
++test và 91 PASS / 1 FAIL giữ nguyên; không sửa lịch sử thành production proof.
++Các checkpoint cũ bên dưới là history, không cấp approval cho revised bytes.
++
++TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
++VERIFY: NOT_RUN
++QA: NOT_RUN
++Production enablement: NOT_AUTHORIZED
++Real employee attendance: NOT_AUTHORIZED
++
++Giữ synthetic/disposable-only và bảy blockers: retention, deletion/anonymization,
++legal hold, backup-retention, employee notice, audit visibility, trusted
++production client-address provenance. Không deploy/enable/sync/archive.
++
++## Historical Sensitive Design / Tasks alignment — U3 final cache evidence
+
+ Authority: explicit current-user planning-only request in attachment
+ 9ef79825-9910-4483-a6d9-ecc08a8fe6d4/pasted-text.txt. Revised exact Design/Tasks
+````
+
+### Final assembly validation
+
+Scoped Prettier check trên đúng bốn authorized files: exit 0. Docs và
+architecture sau packet assembly: exit 0. Final 76 protected hashes MATCH;
+outside-allowlist inventory vẫn 2614 files và digest
+7826bc638e864624a0836e34d6060d3bb34ac968a36db941e3144d9d05e52c2e.
+Exact packet diff reverse-check PASS; original review history phục hồi đúng
+old packet hashes nếu bỏ current insertion/metadata. Không có source/env/config/
+test/migration/UI/Spec edit. Counts được đếm lại: 20/62 và 19/32, không đổi.
+
+SENSITIVE DESIGN — U3 ENVIRONMENT ISOLATION REVIEW
+Status: AWAITING_HUMAN_REVIEW
+
+U3 LOCAL PRODUCTION-MODE EVIDENCE:
+BLOCKED_BY_ENVIRONMENT_AUTHORITY
+
+APPLY: PAUSED
+Tasks: 19/32
+Task 3.3: PARTIAL
+Task 3.4: PARTIAL
+Task 3.5: NOT_STARTED
+
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+
+## Historical U3 approval and environment checkpoint — 2026-09-11
+
+Approval source: explicit current-user instruction, attachment
+d006697f-7e17-43da-8d15-8ae7317c08d8/pasted-text.txt.
+Approval recorded by: Codex workflow.
+Approved: 2026-09-10T22:01:59Z (thời điểm ghi nhận, không suy đoán giờ người duyệt).
+Decision: APPROVED — U3 LOCAL_PRODUCTION_MODE_IMPLEMENTATION_EVIDENCE ONLY.
+Schema: yuta-spec-driven.
+
+U3 LOCAL PRODUCTION-MODE EVIDENCE:
+BLOCKED_BY_ENVIRONMENT_AUTHORITY
+
+APPLY: BLOCKED
+Tasks: 19/32
+Task 3.2: COMPLETE
+Task 3.3: PARTIAL
+Task 3.4: PARTIAL
+Task 3.5: NOT_STARTED
+
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+### Fresh preflight và approval nguyên vẹn
+
+Design SHA-256:
+0eef88646ae34e64e98a3577d9b415bec987d9a69ac2b89815530001689a1b01.
+Tasks SHA-256:
+b9c6daf0ef6f93aa467f0b4ad89bcda9da01ba7098aa188fcfc53d39319e3fa6.
+Exact bounded diff SHA-256:
+d759bde53e18555192e952eaa75c5dc47ff7157be2dd14b16c2cd5743a235883.
+
+Cả ba khớp current-user approval. Cả 76 protected paths trong packet đã
+đối chiếu SHA-256 từng file và khớp: code/proxy/page/tests, migration 0021,
+journal/snapshot, sealed UI pack, Formalités/auth barrel, Proposal/Analysis,
+Gate 1/2 và hai Specs. Path trong Markdown được hiểu theo filesystem,
+không coi escape Markdown là đổi tên file. Không auto-rebaseline.
+Authorization delta vẫn 7 requirements / 21 scenarios; raw-clocking delta vẫn
+13 requirements / 41 scenarios, tổng 20/62; checkbox vẫn 19/32.
+
+Fresh HEAD: 415990386327aaccab3c32b1fef0569a0fde7f3a.
+Fresh Git status đã đọc; preserved dirty/concurrent work, không sửa source.
+Cổng 3001 không có listening connection tại preflight. Không start process
+nào nên không có listener ownership/shutdown evidence để tuyên bố PASS.
+
+### Effective environment: giá trị bí mật không được in
+
+Đã đọc tên biến và kiểm tra có giá trị hay không; không in URL, credentials,
+token, key hoặc giá trị env. Các biến liên quan trong inherited process
+(DB/Pointage/VERCEL/NODE_ENV/provider/secret/token/API key/NEXT_PUBLIC) đều vắng.
+
+| Nguồn Backoffice       | Quan sát an toàn                                                                                                                                    |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| .env.production.local  | Không tồn tại.                                                                                                                                      |
+| .env.local             | CLOUD_DATABASE_URL, CLOUD_DATABASE_SSL, AUTH_SECRET, NEXT_PUBLIC_APP_URL, YUTA_OPENAI_EVALUATION_API_KEY đều có giá trị không rỗng.                 |
+| .env.production        | Không tồn tại.                                                                                                                                      |
+| .env                   | CLOUD_DATABASE_URL, CLOUD_DATABASE_SSL, AUTH_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_TOKEN_ENCRYPTION_KEY đều có giá trị không rỗng. |
+| .env.development.local | Có mặt; không thuộc production-mode load order. Có CLOUD_DATABASE_URL và YUTA_PERSONNEL_CONTRACT_EXTRACTION_MODE; không sử dụng làm fallback.       |
+
+Installed Next và @next/env đều 16.2.9. Đã inspect source
+`node_modules/.pnpm/@next+env@16.2.9/node_modules/@next/env/dist/index.js`,
+không gọi loader để khởi động ứng dụng.
+[Next 16.2.9 environment-file precedence](https://github.com/vercel/next.js/blob/v16.2.9/docs/01-app/02-guides/environment-variables.mdx#environment-variable-load-order)
+và installed loadEnvConfig xác nhận production invocation xét lần lượt
+process.env, .env.production.local, .env.local, .env.production, .env.
+Thiếu inherited key không chặn việc nạp nó từ file.
+
+Vì vậy hai lệnh được duyệt với NODE_ENV=production và
+NEXT_TELEMETRY_DISABLED=1 vẫn có thể nhận cấu hình DB/khóa ứng dụng đang có.
+Không suy đoán đó là dữ liệu synthetic hoặc cấu hình được phép dùng cho U3.
+Không kết nối để xác định dữ liệu DB; không tuyên bố provider đã được bật.
+Pointage bootstrap hiện không có environment fallback và cần owner capability,
+nhưng sự từ chối đó không thay thế yêu cầu cô lập effective environment của D10a.
+
+Existing pointageChildEnvironment tại
+apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts chỉ chấp nhận
+development/test, trả NODE_ENV=development và synthetic test flags; không phải
+production-mode boundary được phép tái dùng hoặc sửa trong lượt này.
+Hai package scripts vẫn là next build / next start -p 3001; không có cơ chế
+cô lập env-file đã được xác lập cho hai invocation này. Chưa chứng minh được
+safe effective isolation qua current reviewed process-level boundary.
+
+STOP theo D10a và current-user environment safety rule trước cả build.
+Không đổi/rename/move env files, không điền dummy credentials, không áp dụng
+private Next env-skip flags, không tự tạo wrapper/script/path hay thay bootstrap.
+Một phương án process-only loại trừ cấu hình file cần được review cụ thể về
+tập biến, precedence và propagation qua build/start trước khi được coi là
+bằng chứng cô lập; lượt này không tự chọn hoặc thực thi phương án đó.
+
+### Lệnh và kết quả trong lượt này
+
+| Lệnh / phép kiểm tra                                                                                                             | Kết quả                                                                                       |
+| -------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| openspec status / instructions apply --change pointage-usable-raw-clocking --json                                                | yuta-spec-driven; CLI ready; 19/32. CLI ready không bỏ qua environment gate.                  |
+| pnpm --filter @yuta/backoffice build                                                                                             | NOT_RUN — environment authority prerequisite chưa đạt, không phải build FAIL.                 |
+| pnpm --filter @yuta/backoffice start --hostname 127.0.0.1                                                                        | NOT_RUN — build và environment prerequisite chưa đạt.                                         |
+| Production-mode HTML/RSC final cache/CSP, nonce/script, isolation, no-owner HTTP                                                 | NOT_RUN; không đổi thành FAIL/PASS; không mượn DEV evidence.                                  |
+| pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-inventory.test.ts -t 'U3 isolated header implementation evidence' | Exit 0; 40 PASS / 5 SKIPPED. Chỉ isolated unit/source checks; 5 actual Next cases không chạy. |
+| pnpm --filter @yuta/backoffice typecheck                                                                                         | Exit 0.                                                                                       |
+| pnpm -r --if-present typecheck                                                                                                   | Exit 0; gồm Backoffice.                                                                       |
+| pnpm docs:check                                                                                                                  | Exit 0; 36 current documents.                                                                 |
+| pnpm architecture:check                                                                                                          | Exit 0.                                                                                       |
+| openspec validate pointage-usable-raw-clocking --strict                                                                          | Exit 0; change valid.                                                                         |
+| pnpm ui:pack:check backoffice-pointage-employee                                                                                  | Exit 0; 1 package, 0 warnings.                                                                |
+| pnpm format:check                                                                                                                | Exit 1; đúng 67 cảnh báo ngoài phạm vi; không cleanup.                                        |
+
+Historical DEV observation giữ nguyên:
+`Cache-Control: no-cache, must-revalidate`.
+Historical 91 PASS / 1 FAIL và exact-cache failed test không bị rewrite.
+40 isolated tests PASS không hoàn thành U3, không chứng minh final rendering,
+không đổi Technical Compliance/VERIFY/QA.
+
+Chỉ cập nhật approval và checkpoint trong hai review packets 02b/02c.
+Design/Tasks giữ nguyên exact approved bytes; không tick checkbox. Không
+tiếp tục U4, không bắt đầu 3.5. Không build/start, DB/container/migration/fixture,
+credential submission, identify, attendance, provider composition hoặc Browser QA.
+Không Gate 3, deploy/enable, sync/archive hoặc lifecycle promotion.
+
+Kiểm tra inventory độc lập: sorted unique
+`git ls-files -co --exclude-standard -z`, loại đúng hai review packets,
+SHA-256 từng file rồi hash UTF-8 JSON của các cặp path/hash. Baseline 2616 files,
+digest 0e1a0d6b7bd9e11327320b1d3840c39d0af2c77d14e6555f1738a5f0bc9f6c4f.
+Đối chiếu cuối và scoped formatting được ghi ngay bên dưới.
+
+### Authority cần tiếp theo
+
+Cần review/authorization cho một effective-environment isolation boundary cụ
+thể, không nhận cấu hình DB/khóa từ file và vẫn dùng production-mode neutral
+page trong giới hạn D10a. Approval hiện tại không được diễn giải thành quyền
+đổi env files, dùng shared DB, tạo provider, wrapper hoặc sửa implementation.
+Không yêu cầu lại Product/Spec behavior; đây là environment authority blocker.
+
+Giữ synthetic/disposable-only và đủ bảy blocker: exact retention duration,
+deletion/anonymization, legal hold, backup-retention interaction, employee notice,
+detailed audit visibility, trusted production client-address provenance.
+
+### Final checkpoint validation
+
+Scoped Prettier trên 02b/02c/Design/Tasks: exit 0. Docs và architecture sau
+packet assembly: exit 0. Non-review inventory sau cập nhật vẫn 2616 files và
+khớp digest baseline tuyệt đối. Design/Tasks, implementation/proxy/page/tests,
+migration, UI pack, Specs/archive và unrelated work không đổi bytes. Kiểm tra
+cuối cổng 3001: 0 listeners; không có process được start/kill trong lượt này.
+Kết quả production-mode vẫn NOT_RUN / BLOCKED_BY_ENVIRONMENT_AUTHORITY.
+
+## Historical U3 final Cache-Control evidence alignment — approved above
+
+Recorded: 2026-09-10T21:46:07Z.
+Authority: explicit current-user attachment
+9ef79825-9910-4483-a6d9-ecc08a8fe6d4/pasted-text.txt authorizes only bounded
+Sensitive Design / Tasks alignment. It does not approve the revised bytes or
+resume implementation. This current section supersedes historical gate/status
+headings below without rewriting their observations.
+
+SENSITIVE DESIGN — U3 FINAL CACHE-CONTROL EVIDENCE REVIEW
+Status: AWAITING_HUMAN_REVIEW
+
+APPLY: PAUSED
+Tasks: 19/32
+Task 3.2: COMPLETE
+Task 3.3: PARTIAL
+Task 3.4: PARTIAL
+Task 3.5: NOT_STARTED
+
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+### Decision and exact framework evidence
+
+Installed Next is 16.2.9, not an inference from the package's caret range.
+Installed `dist/server/base-server.js` lines 1055-1057 and the
+[version-pinned BaseServer source](https://github.com/vercel/next.js/blob/v16.2.9/packages/next/src/server/base-server.ts#L1660-L1685)
+show the DEV-only replacement after payload rendering and before sending:
+
+```js
+if (this.dev) {
+  res.setHeader('Cache-Control', 'no-cache, must-revalidate');
+  cacheControl = undefined;
+}
+```
+
+The [Next 16.2.9 self-hosting cache documentation](https://github.com/vercel/next.js/blob/v16.2.9/docs/01-app/02-guides/self-hosting.mdx#automatic-caching)
+describes dynamic final-page policy as
+`private, no-cache, no-store, max-age=0, must-revalidate`.
+Installed send-payload only supplies its calculated Cache-Control when a
+cacheControl value exists and a response header has not already been set.
+These are framework/source expectations, not a successful production-mode run
+of this application.
+
+Accordingly the historical actual DEV header remains exactly
+`Cache-Control: no-cache, must-revalidate`. The historical 91 PASS / 1 FAIL
+run is not edited or rerun: its exact private/no-store/max-age=0 assertion
+honestly failed on HTML and RSC. DEV override is not a Product rule or a YUTA
+runtime defect warranting interception. Accepting this DEV diagnostic does not
+waive final D10 proof, complete U3 or assert production-mode success.
+
+Preserved accepted DEV PASS observations: actual HTML 200 and RSC 200; neutral
+initial payload without protected employee data; per-request CSP nonce; all
+applicable Next scripts matching the response nonce; distinct second-request
+nonce; inbound CSP/report-only/x-nonce unable to choose it; unrelated-route
+isolation; normal no-owner Pointage API unavailable. DEV still must exclude
+public, s-maxage and user-controlled cache directives.
+
+### Exact proposed Design / Verification and Tasks boundary
+
+The exact bounded unified diff below is the proposed D10/D10a and Verification
+Design text, not a paraphrase standing in for the artifact. It also contains
+the exact Tasks current checkpoint, U3 contract, unchecked 3.3 wording and
+post-Apply VERIFY alignment. No Product, either Spec, four-phase structure,
+32-task count, 20-requirement/62-scenario mapping, other contract, file allowlist,
+D1b/E4/E5 mechanism, migration, UI provenance or no-image direction changes.
+
+Deployable dynamic final HTML requires status 200, private, no-store and
+max-age=0; public and s-maxage are forbidden. no-cache and must-revalidate may
+additionally appear. Actual RSC/Flight also requires status 200, neutral payload
+and equally non-cacheable final policy. Assert the same set first; record any
+different framework-owned form and its evidence. Cacheability or ambiguous
+equivalence requires human review; never silently weaken the RSC assertion.
+Keep applicable Pragma/Expires observations, no Set-Cookie and no protected data.
+
+Fresh actual production-mode CSP proof must establish final CSP/nonce presence,
+matching applicable framework scripts, distinct independent-request nonces,
+rejection of inbound CSP/report-only/x-nonce selection, and no unsafe-inline or
+unsafe-eval workaround. Recheck unrelated routes and no-owner API denial.
+Do not reuse DEV PASS as proof of production-mode CSP.
+
+### Existing commands and future environment admission
+
+Repository root and Backoffice manifests plus current AGENTS and Next config
+were inspected read-only. Root aliases build:backoffice/start:backoffice
+delegate to the existing Backoffice build/start scripts. Selected future
+commands, from the repository root, are exactly:
+
+```text
+pnpm --filter @yuta/backoffice build
+pnpm --filter @yuta/backoffice start --hostname 127.0.0.1
+```
+
+They resolve to next build and next start -p 3001 --hostname 127.0.0.1.
+The installed Next CLI supports hostname; no invented script or new path.
+Current next.config has existing redirects, not a custom cache mechanism.
+Actual build/start safety and success remain NOT_RUN, not established by
+script availability.
+
+Label the future run LOCAL_PRODUCTION_MODE_IMPLEMENTATION_EVIDENCE.
+Both commands require process-local NODE_ENV=production,
+NEXT_TELEMETRY_DISABLED=1, VERCEL absent, loopback-only listener, no external
+ingress, synthetic establishment slug and no real employee/attendance data.
+Request the actual filesystem page at
+http://127.0.0.1:3001/pointage/synthetic-establishment.
+No production DB configuration, shared development DB fallback, production
+trusted-client-address provider or D1b dual-DB/bootstrap is allowed.
+
+Environment-file names were inspected, not secret values: Backoffice currently
+has .env, .env.local, .env.development.local and .env.example. Before future
+build/start, inspect effective inherited and Next-autoloaded configuration
+without logging values. Clearing inherited variables alone does not establish
+safe isolation from .env/.env.local. If approved mechanisms cannot establish
+safe effective environment without new path/script, environment-file edits or
+guard weakening, STOP for environment authority. No renaming env files, dummy
+credentials, production provider or shared-DB fallback. Unexpected Pointage
+DB/provider dependency during build or neutral-page rendering also means STOP.
+
+Evidence must record sanitized admission result, exact commands/exits, final
+HTML/RSC statuses/headers, nonce/script assertions, isolation/no-owner results,
+source/test hashes, deviations and shutdown/port-release proof. This is HTTP
+implementation evidence, not Browser QA, deployment, staging, provider
+enablement, real attendance or production readiness.
+
+### Explicit rejection and next authority
+
+No Next/node_modules patch, ServerResponse monkey-patch, global handler
+wrapper, new reverse proxy/listener, D1b modification, instrumentation/private
+API, root-layout change, global proxy expansion, next.config/global headers
+workaround, service worker, CDN simulation or artificial page environment branch
+is proposed. Current proxy/page/tests remain unchanged. Actual production-mode
+failure must STOP before compensation; any later proxy correction requires a
+genuine scoped defect and review, never the DEV override alone.
+
+Only explicit human approval of the new exact Design/Tasks hashes may unlock
+the future bounded U3 evidence step. If approved U3 passes, 3.3 may become
+COMPLETE (20/32); then finish remaining approved U4 on its own evidence
+(21/32), and STOP before 3.5. No completion is recorded by this alignment.
+POST-APPLY VERIFY and its Technical Compliance Matrix remain independent;
+mandatory Browser QA follows formal VERIFY separately.
+
+All seven blockers remain unresolved: exact retention duration,
+deletion/anonymization, legal hold, backup-retention interaction, employee
+notice wording, detailed audit visibility and trusted production client-address
+provenance. P13/P14 remain synthetic/disposable-only authority. No real
+attendance in any environment, deploy, enablement, sync/archive, lifecycle
+promotion or Gate 3 is authorized.
+
+### Old/new exact planning hashes
+
+SHA-256 is over exact UTF-8 file bytes, calculated with Node
+`createHash('sha256').update(readFileSync(path)).digest('hex')`.
+Pre-write HEAD: 415990386327aaccab3c32b1fef0569a0fde7f3a.
+Fresh Git status was inspected; dirty unrelated work was not rewritten.
+
+| Repository-relative artifact                            | Before SHA-256                                                   | Proposed SHA-256                                                 |
+| ------------------------------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- |
+| openspec/changes/pointage-usable-raw-clocking/design.md | ae9e5c89f3b2e4124ce7ff1e64dcaf3182a285f317be44dd6118f13c96e8656c | 0eef88646ae34e64e98a3577d9b415bec987d9a69ac2b89815530001689a1b01 |
+| openspec/changes/pointage-usable-raw-clocking/tasks.md  | f8760b2e7d8e4a156c148d15d4a348bd388f6e76757ae4046793f02bf4988153 | b9c6daf0ef6f93aa467f0b4ad89bcda9da01ba7098aa188fcfc53d39319e3fa6 |
+
+Before packet hashes: 02b
+269cd5ef638c237b2cded011b970e7ea556bf87560fcd22dd48b307179358066;
+02c af5c59496ae6a7f09d5e5f4f02f06c061bd41d84afe4939853304ba8758a25d1.
+This packet is awaiting review, not an approved replacement of those bytes.
+
+### Protected preimages and unchanged implementation proof
+
+Before the first write, all 80 checkpoint paths/hashes matched. After the
+Design/Tasks edits, all 76 paths outside this turn's four-document allowlist
+still matched; the two review packets are permitted review-assembly changes.
+The table below binds implementation/proxy/page/migration/UI-pack and earlier
+authority bytes individually. No implementation, test, Spec, UI pack or
+migration path is part of the alignment diff.
+
+The independent non-allowlist Git inventory includes tracked and non-ignored
+untracked files. Sort unique `git ls-files -co --exclude-standard -z` paths,
+exclude only the four authorized planning/review paths, calculate each file's
+SHA-256, then hash `JSON.stringify([[path, hash], ...])` as UTF-8.
+Pre/post inventory: 2614 files;
+SHA-256 e33f4e4235f3aebeb026f24202e2271e8933879101ae8f1c914f9b1eff860c93.
+This checks unrelated dirty files as well as main Specs and archive. Ignored
+compiler caches are not implementation-source evidence; no build/runtime/DB
+was started.
+
+| Protected repository-relative path                                                              | Unchanged SHA-256                                                |
+| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| apps/backoffice/src/app/(authenticated)/equipe/pointage/page.tsx                                | f2fe5f9ccf167aaf4be6233046ce3765b385c3d452e2b8cd6e1314108fb85307 |
+| apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-in/route.ts                      | 29c16cfd705d7bef4b156b92ac1cad2186bf2ce17ac7fc7c9ca66f4b84444299 |
+| apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-out/route.ts                     | 1c0fa864ae27a4d1f7a7940aaa8ba0d7394db3e2f1da2bff01cc1e4537218c69 |
+| apps/backoffice/src/app/api/pointage/[establishmentSlug]/context/route.ts                       | 45043e139c0c7e5f0740acc7d7b9da4d0ed4d59d87dcffa8069f9a1ee1dfe2b6 |
+| apps/backoffice/src/app/api/pointage/[establishmentSlug]/end/route.ts                           | 93f5428e2e700f528dbde1464a31a9d5811dfacfb5531674fb605faf978a7ae0 |
+| apps/backoffice/src/app/api/pointage/[establishmentSlug]/identify/route.ts                      | 8f6504f6fbd4207e34e5f06ccca1d88b266c6a52ebd1d4232697004be7cd2be5 |
+| apps/backoffice/src/app/api/pointage/[establishmentSlug]/recover/route.ts                       | 0714021059b92505345cc94886358474a3125bb832f38bb20a8ee6a47332f77e |
+| apps/backoffice/src/app/api/pointage/[establishmentSlug]/state/route.ts                         | 7d199ac7aa8a40f3e7c10614a32429c0e0ee48f49dc4c806d036e501e2cdcb5d |
+| apps/backoffice/src/app/pointage/[establishmentSlug]/\_components/pointage-credential-entry.tsx | 8b8636e21d8717ac6789574f13f21643c50351e2a6a6d78796ecefd4d6721bd8 |
+| apps/backoffice/src/app/pointage/[establishmentSlug]/\_components/pointage-employee.tsx         | 097e70152a712b22beb24a50527e41788d0aeeb0ff602fd9f6274447823cb46a |
+| apps/backoffice/src/app/pointage/[establishmentSlug]/page.tsx                                   | 8f3153a5aa08764a1a97633aceb162905e6e56fea15fa41f480dbb301bd8bd6e |
+| apps/backoffice/src/proxy.ts                                                                    | 73b39a64d316155b7bc526a5f2dc5a1735624dbfa0a07ce2d596e53e46ce7aee |
+| apps/backoffice/src/server/pointage/authorization.ts                                            | c33a530483f76f29065729834e07b5d4512ee54255765645bece9cef8c87cc34 |
+| apps/backoffice/src/server/pointage/index.ts                                                    | 5a17ce9a793561f26e7eca9c62f7835925d54d9eba61074951d58871dd910133 |
+| apps/backoffice/src/server/pointage/raw-chain.ts                                                | 0b8446a543cad544614ae7c7d366cfa771d0011d16adc7bc7d1d00405731f83c |
+| apps/backoffice/src/server/pointage/raw-clocking-bootstrap.ts                                   | 17733bc004725c88a6aa506dbefdfadf7a3aa204005af2343413f5a770792e13 |
+| apps/backoffice/src/server/pointage/raw-clocking-http.ts                                        | b4f57b8aeda30995f41a1a29008e9dae5c767d1e413a071488301aaae169e0ff |
+| apps/backoffice/src/server/pointage/raw-clocking-manager.ts                                     | 209183808c72c1a9c677d57b2603dd5030336ad864d1ff542df1f0d06f27d948 |
+| apps/backoffice/src/server/pointage/raw-clocking-runtime.ts                                     | ab9e7f157b53265ebcf62da8c7f8392018b8211c2d76e1ba467a6b2be8b53d57 |
+| apps/backoffice/src/server/pointage/raw-clocking-service.ts                                     | a144202f2b7af2955b458fc445b699342bb4ed8cdbda33a4d46905452dcd3d37 |
+| apps/backoffice/src/server/pointage/raw-clocking-test-boundary.ts                               | 4aa15e7f9695b85ae418b1098b7bd57c14d4c39bcd8b81eb9093660eeeb8cc28 |
+| apps/backoffice/src/server/pointage/service.ts                                                  | 00d26799bf2fa8213161e221a28fbf75b4024fd88f549293e814e90dd935aff1 |
+| apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts                                  | b93f4b1bb29ba015571c944f3a17cb59a0c05306ae11482d945a59ddbcafd10e |
+| apps/backoffice/test/helpers/pointage-raw-clocking-next-child.ts                                | 03f7024b1e739697bbf7fc4fad2f976d684595e598ed6db31129b50392cdb33a |
+| apps/backoffice/test/pointage-foundation-inventory.test.ts                                      | 1a8d4d2f026d6444de11f1afc5d47e38a4098eedbd0059e330cb78d102242daa |
+| apps/backoffice/test/pointage-foundation.test.ts                                                | e3f091057b9c0f21bfd2ed872b9e435fc4330ae9239ffa8e5bbd51534ed3729b |
+| apps/backoffice/test/pointage-raw-chain.test.ts                                                 | b0fe2395ed36d944b911bafcf6dd51d20f08e3723d772189867c4f53d4a13277 |
+| apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts                                    | 987fd9eb31620de7777052dca7bfce99d7fef4a30faf71357d8cde011809b41e |
+| apps/backoffice/test/pointage-raw-clocking-http.test.ts                                         | 3e463e902b2e40d1fde2703c607902f5d704e32955e6f1c749b250c400623e1d |
+| apps/backoffice/test/pointage-raw-clocking-inventory.test.ts                                    | a45ed95bb9ac800af0be3e8475a30c16ebd2c3cd9fdfff9808f95e3b489bc35b |
+| apps/backoffice/test/pointage-raw-clocking-manager.test.ts                                      | a36e3beaf3ee38da51eae92dafdb923a2d4d7364a45e58a3d4cdf3af338d1db7 |
+| apps/backoffice/test/pointage-raw-clocking-runtime.test.ts                                      | bb9cd7db7152f7168c7adae80c96b4961b5f13bdf212671717f1e0e9dbd379fe |
+| apps/backoffice/test/pointage-raw-clocking-service.test.ts                                      | 4a139b05bdabe81a6ec2ecab728792a215cd2b74273114f7bb4ae17a6d36b356 |
+| docs/reviews/pointage-usable-raw-clocking/01-analysis-review.md                                 | ee18fdbf3b9802978eb7d71000d001c1b32eb7672f333bf8fe452005414f3557 |
+| docs/reviews/pointage-usable-raw-clocking/02-specs-review.md                                    | c5a7fd21c9fb04ea8f3617463241fc0ec8b41ea6e69b6074da5fefe98f0da566 |
+| docs/ui/pages/backoffice-pointage-employee/ACCEPTANCE_CHECKLIST.md                              | cbcc464c79e57f3bc34c49989d936b1dc2411839b552a159e407a407c72166ed |
+| docs/ui/pages/backoffice-pointage-employee/DATA_AND_INTERACTION_SPEC.md                         | 25ffcdbb137b26568a01373c6a55c3ea714f97d70978c3c22310433bd40d68fd |
+| docs/ui/pages/backoffice-pointage-employee/DESIGN_HANDOFF.md                                    | d94fc07f4e318bda95507904640e5bd80f9f5bacc251babfbf85f7bc0fc56cae |
+| docs/ui/pages/backoffice-pointage-employee/IMPLEMENTATION_PLAN.md                               | b7dfc8937893032253f801160c1e9fa21e2c8cd34439c0b80e9eb38e7ef5606e |
+| docs/ui/pages/backoffice-pointage-employee/PRODUCT_SCOPE.md                                     | 16a14204820f4a1b2033f26dca03494db9e5e61b28474c87216ce206062582d8 |
+| docs/ui/pages/backoffice-pointage-employee/prompt-provenance.json                               | 04c6c99bf8067e848cc4df1f0f871fd43bdf1ec964d786f2617dcca4692b8a61 |
+| docs/ui/pages/backoffice-pointage-employee/prompts/00_REPOSITORY_ANALYSIS.md                    | 7ecab8ffd6d97de28f463d521172be6de8f66b7e3074e5e90e88f53f41ea394c |
+| docs/ui/pages/backoffice-pointage-employee/prompts/01_VISUAL_BASELINE.md                        | d3075806ae38d0f9f6a945b3b42d1f3b8d7e2bd9eafa712a73587744c9f46119 |
+| docs/ui/pages/backoffice-pointage-employee/prompts/02_COMPONENT_REFACTOR.md                     | 8b134cd4b462562416fb5c2e57c23eb4675a26eff7ea75fdfae44727b74648ac |
+| docs/ui/pages/backoffice-pointage-employee/prompts/03_INTERACTIONS.md                           | e27c12d152d9270229eed6951898ab6f5e477d7d12ff9c170f4522ed45f00388 |
+| docs/ui/pages/backoffice-pointage-employee/prompts/04_DATA_INTEGRATION.md                       | f878f959d3afee428e67620c74f4c75231d2c7816f23cbf7fc6c701067538e79 |
+| docs/ui/pages/backoffice-pointage-employee/prompts/05_VISUAL_QA.md                              | 5f31ec1c2a2bcfd3129643931e188365f9608958f1f8bd697ae7854e292eaad0 |
+| docs/ui/pages/backoffice-pointage-employee/README.md                                            | 77377af7a5f09d4884541e3a90de151e0ae11223b73e66f2dc57cfb08765d902 |
+| docs/ui/pages/backoffice-pointage-employee/references/README.md                                 | e2ddabc5a6a004441847e71629b84281eeac075c41a195eea8955f5d30a72a45 |
+| docs/ui/pages/backoffice-pointage-employee/UI_SPEC.md                                           | cd109fb341545a280189d92b891506b9211134600720cf5d2b9b107563aacb45 |
+| openspec/changes/pointage-usable-raw-clocking/analysis.md                                       | f04e66f9f2307dc92aa9cdbd134fb4a35f9c1089459440c0ccfdb40c4a3e9146 |
+| openspec/changes/pointage-usable-raw-clocking/proposal.md                                       | d42975cd06290431701e39d499edac93774275c1bb0f28f8474f6ff0e61816f1 |
+| openspec/changes/pointage-usable-raw-clocking/specs/authorization/pointage/spec.md              | 1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66 |
+| openspec/changes/pointage-usable-raw-clocking/specs/pointage/raw-clocking/spec.md               | 4bfa64e863ad465a144341c18aa5d0db3ce0806ada52ad40183cf9a4e321f90e |
+| packages/auth/src/index.ts                                                                      | 464739729900d884af3ab82159151d7df5de6a0f8ee0a3a23feed7bc285a1c2a |
+| packages/auth/src/pointage-continuation.ts                                                      | f2c829c33030ae3550350ff4b5eac3d5dce774e5bd4774a5e46a0dd621465172 |
+| packages/auth/src/pointage-credential.ts                                                        | 8b294113e7a97fb83e5acff5df96224ed4c18d73d60c46a63abf824c37195fa1 |
+| packages/auth/test/pointage-continuation.test.ts                                                | 6d9e78b745c47a96e4d59e256e67090ede1258860b140e28b6210fca57b07b4a |
+| packages/auth/test/pointage-credential.test.ts                                                  | 6ea66dbb73a82f8586575c15f049be3ee0832987888045a593b982001c1479a0 |
+| packages/contracts/src/index.ts                                                                 | cf72d2593fa90ffe590e2963f15160b232d069d1bf8848ec06d91946b18d95bd |
+| packages/contracts/src/pointage/index.ts                                                        | 2bc3d6d491ce94864c2bae22a5ce96b66e052ce131be852328b4b68c2f0ba974 |
+| packages/contracts/test/pointage.test.ts                                                        | 4fff5b366e61c94098dc3e4238edfd4b61a2e9b5e62527465546db760f83a013 |
+| packages/db-cloud/drizzle/0019_pointage_authority_foundation.sql                                | 143b6d1e47f92336b4359c4c85a17487ead97416afbbe2c0fd0b99880c0e7056 |
+| packages/db-cloud/drizzle/0021_abandoned_black_queen.sql                                        | 7794a5c02f2fa809a9985848bc455dbd3a5762415b5d96c216fb49ff4fd01ed9 |
+| packages/db-cloud/drizzle/meta/\_journal.json                                                   | 897139ed88030e38adfffa55ba5f1bc4d4773b6bf8f1aac619f17653834907b0 |
+| packages/db-cloud/drizzle/meta/0021_snapshot.json                                               | 71052147af479bfb5f480f0981859a7af7235ff21a0be69a427a6faaeb06f4bf |
+| packages/db-cloud/src/pointage-raw-clocking-repository.ts                                       | f2cf173ea3a2ad06c30a7e1b7b70f32d33f9b520e0f705aafed1fd698d9ce802 |
+| packages/db-cloud/src/pointage-repository.ts                                                    | 4cfcfc4f5287590fde3ff44062a97efe1bd256771774495ae0ce91ab488034d8 |
+| packages/db-cloud/src/schema/pointage-raw-clocking.ts                                           | d19c5c84c9b3352437aa839d97b54e800211bc956d28e70445e6b1247c5e4754 |
+| packages/db-cloud/src/schema/pointage.ts                                                        | 8f4f12cf76773dfca6f99ba59e37e5ee7d0a18ef13827f78caebddd51400de29 |
+| packages/db-cloud/test/helpers/pointage-raw-clocking-test-database.ts                           | 6bb342f09144e308b989d32d580c3b0d41223005e36834d74ddce7287dce0fe4 |
+| packages/db-cloud/test/pointage-raw-clocking-migration.integration.test.ts                      | eb5693a3ba0f907e74862fa2e26c5d39e916c38ec54d219ed652a09af0aff2cc |
+| packages/db-cloud/test/pointage-raw-clocking-schema.test.ts                                     | d6a10caa9edb95878605e8f3d1fa439e07e2aec5c221097a2f17bdac38b2e291 |
+| packages/db-cloud/test/pointage-raw-clocking.integration.test.ts                                | 5d0ea83bacb946300030a135e2f150c5b34c4a63197d98e8f4abf8a914b82cce |
+| packages/db-cloud/test/pointage-repository.integration.test.ts                                  | 4761848b92e1ebb4f2db81d15e596f654f02b480c34bd290a339755302a6c1f1 |
+| packages/db-cloud/test/pointage-schema.test.ts                                                  | e1026fbfc7adef0773a916ed230d302005c09c711c61503159799f35f5e1b090 |
+
+### Inspected command/framework provenance
+
+| Read-only source                                              | SHA-256                                                          |
+| ------------------------------------------------------------- | ---------------------------------------------------------------- |
+| apps/backoffice/AGENTS.md                                     | 88924be9011e509f4924f895a522304d3a9132124798f5406105c5475eec70c8 |
+| apps/backoffice/next.config.ts                                | b13be70099048cda4b8ec4f0993ca7b331fa47cde1a960b2c5ab1be5c8cfab6c |
+| apps/backoffice/node_modules/next/dist/bin/next               | 8356d7db53c3a28bcdb4c0cffb7aa21533d56c5798b953332b5fca48b409a8ed |
+| apps/backoffice/node_modules/next/dist/server/base-server.js  | a9ef4dfe7e9ffcd362bf114a99ef6b2581f3ebb44b496dada893ac3dfb25479f |
+| apps/backoffice/node_modules/next/dist/server/send-payload.js | df0b52d6c602ba8729e1ea3c379a227be05c31c8b8e3a4c2975382adfe9ba54c |
+| apps/backoffice/node_modules/next/package.json                | d80d1672ce2b502402340e6c5aa8fa99449db3ccda705e864bfbb1e91df7999e |
+| apps/backoffice/package.json                                  | cc0b0843f6eda71064ce81775de568837bd414bac83f33843b4c77c4d77cbf4f |
+| package.json                                                  | fc6fdde9d6ee80a5a8861c94082c64829a18dafde2eae238f5d1cbc4e0d31595 |
+
+### Planning-only validation and attribution
+
+| Command / check                                                                                                                                                                                                                                                                        | Result                                                                                                                                                                                                                           |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm docs:check`                                                                                                                                                                                                                                                                      | Exit 0; 36 current documents.                                                                                                                                                                                                    |
+| `pnpm architecture:check`                                                                                                                                                                                                                                                              | Exit 0; import/runtime/database/client/migration boundaries valid.                                                                                                                                                               |
+| `pnpm -r --if-present typecheck`                                                                                                                                                                                                                                                       | Exit 0; workspace checks completed.                                                                                                                                                                                              |
+| `openspec validate pointage-usable-raw-clocking --strict`                                                                                                                                                                                                                              | Exit 0; change valid.                                                                                                                                                                                                            |
+| `pnpm ui:pack:check backoffice-pointage-employee`                                                                                                                                                                                                                                      | Exit 0; 1 package, 0 warnings.                                                                                                                                                                                                   |
+| `pnpm exec prettier --check openspec/changes/pointage-usable-raw-clocking/design.md openspec/changes/pointage-usable-raw-clocking/tasks.md docs/reviews/pointage-usable-raw-clocking/02b-design-review.md docs/reviews/pointage-usable-raw-clocking/02c-implementation-plan-review.md` | Final scoped check required after packet assembly; result recorded below.                                                                                                                                                        |
+| `pnpm format:check`                                                                                                                                                                                                                                                                    | Exit 1; exactly 67 pre-existing out-of-scope formatting warnings, no cleanup.                                                                                                                                                    |
+| Exact bounded diff reverse-check                                                                                                                                                                                                                                                       | Exit 0; Node pipes exact UTF-8 diff into `git apply --reverse --check --whitespace=nowarn -`. PowerShell text-pipeline transport failed on final line endings; Node exact-byte transport succeeds. No reverse patch was applied. |
+| Exact inverse substitution hash check                                                                                                                                                                                                                                                  | PASS; reversing only the recorded Design/Tasks substitutions recovers both old hashes exactly.                                                                                                                                   |
+| Requirement/scenario and checkbox counts                                                                                                                                                                                                                                               | Unchanged 20 requirements / 62 scenarios; 19 checked / 32 total; 3.3 and 3.4 unchecked/PARTIAL, 3.5 NOT_STARTED.                                                                                                                 |
+
+Scoped edits were checked with Prettier; no formatter write over historical
+content or unrelated files. The initial newly edited Tasks table needed only
+bounded column padding, then the Design/Tasks scoped check passed. Planning
+checks are not Apply completion, formal VERIFY, Technical Compliance or QA.
+
+Intentionally NOT_RUN: build/start and local production-mode evidence; focused
+runtime tests (including the historical failed DEV case); DB/container/fixtures/
+migration operations; Browser QA; formal VERIFY/QA; deployment/sync/archive.
+No convenient test bypass or success claim substitutes for pending U3 evidence.
+
+### Exact bounded Design / Tasks diff
+
+This diff is relative to the exact old hashes above, not to HEAD (the worktree
+already contained approved in-flight changes). The UTF-8 diff body ends in one
+LF; SHA-256 d759bde53e18555192e952eaa75c5dc47ff7157be2dd14b16c2cd5743a235883.
+Only the two planning paths occur in the patch. The other two permitted writes
+are this review section/header and the corresponding 02c alignment packet;
+earlier packet evidence is retained as history.
+
+````diff
+diff --git a/openspec/changes/pointage-usable-raw-clocking/design.md b/openspec/changes/pointage-usable-raw-clocking/design.md
+--- a/openspec/changes/pointage-usable-raw-clocking/design.md
++++ b/openspec/changes/pointage-usable-raw-clocking/design.md
+@@ -1491,9 +1491,12 @@
+ foundation audit taxonomy hoặc legal retention. Không log Next request errors
+ với body/header/SQL context; raw process diagnostics không thành QA evidence.
+
+-Employee page HTML/RSC chứa neutral entry shell only. force-dynamic, revalidate
+-0, no cached personal fetch/unstable_cache, all page/data responses private,
+-no-store, max-age=0; Pragma no-cache, Expires 0. No CDN caching/s-maxage,
++Employee page HTML/RSC chứa neutral entry shell only. force-dynamic, revalidate
++0, no cached personal fetch/unstable_cache. Deployable page final responses and
++data responses require private, no-store, max-age=0; Pragma no-cache, Expires 0.
++The Next 16.2.9 DEV-only diagnostic exception and mandatory actual local
++production-mode page proof are bounded below; data-response policy is unchanged.
++No CDN caching/s-maxage,
+ no service worker/offline store. No personal data in URLs, query, path segments
+ beyond public establishment slug, history.state, router params, telemetry,
+ analytics hoặc server component serialized props.
+@@ -1524,7 +1527,89 @@
+ No cache warming/prefetch protected state, no credentials in devtool screenshots.
+ Future QA screenshots only synthetic names, never plaintext PIN or continuation.
+
+-### D11 — UI planning boundary and state model
++### D10a — Final page cache evidence: DEV versus local production mode
++
++This technical clarification changes neither Product nor Specs. The exact
++Next 16.2.9 development observation remains
++`Cache-Control: no-cache, must-revalidate`. In installed `BaseServer.pipeImpl`,
++the `this.dev` branch replaces the page header and clears payload cacheControl
++before sending the rendered result. This is an accepted DEV-only diagnostic,
++not final D10 compliance and not a YUTA defect requiring a response interceptor.
++The historical failed final-header test remains FAIL as originally observed.
++
++Deployable dynamic employee-page final HTTP responses MUST include `private`,
++`no-store`, `max-age=0` and MUST NOT include `public` or `s-maxage`;
++`no-cache` and `must-revalidate` may additionally be present. Evidence must
++inspect the response after the complete Next render pipeline, not merely proxy
++intent, a mocked response or a framework source claim. DEV still must prove no
++public/shared or user-controlled cache directive, neutral HTML/RSC, per-request
++nonce correctness and Pointage-only isolation.
++
++The selected future proof is `LOCAL_PRODUCTION_MODE_IMPLEMENTATION_EVIDENCE`:
++build the existing Backoffice and request the real filesystem page at
++`http://127.0.0.1:3001/pointage/synthetic-establishment` through its actual
++supported production-mode Next server. From the repository root, use only:
++
++```text
++pnpm --filter @yuta/backoffice build
++pnpm --filter @yuta/backoffice start --hostname 127.0.0.1
++```
++
++The existing package scripts resolve to `next build` and
++`next start -p 3001 --hostname 127.0.0.1`; root aliases are
++`build:backoffice` and `start:backoffice`. No new script, path, app, listener
++wrapper or preview mechanism is approved. These commands are a future plan:
++do not run them until explicit human approval of the revised Design/Tasks hashes.
++
++For both future commands, require process-local `NODE_ENV=production`,
++`NEXT_TELEMETRY_DISABLED=1`, `VERCEL` absent, loopback-only listener and no
++external ingress. Use synthetic slug/neutral payload only, no real Personnel
++or attendance data, no production trusted-client-address provider, no production
++DB configuration and no shared development DB fallback. This rendering proof
++does not admit the D1/D1b usable runtime: do not bootstrap dual DBs, instantiate
++a provider, run fixtures/migrations or create attendance merely to test the page.
++
++Preflight both inherited environment and Next-autoloaded environment files
++without logging values. Existing Backoffice `.env` and `.env.local` must not
++silently supply a DB/provider/bootstrap configuration; clearing inherited
++variables alone is insufficient. If safe effective configuration cannot be
++established using current approved mechanisms without editing environment files,
++adding a path/script or weakening guards, STOP for environment authority.
++Do not rename environment files or manufacture fallback credentials. If build
++or the built neutral page unexpectedly needs Pointage DB/provider composition,
++STOP for review. A standard no-owner API must remain unavailable.
++
++Actual HTML MUST return 200 with all three required cache directives and neither
++forbidden directive. Actual RSC/Flight MUST return 200 with neutral payload and
++an equally non-cacheable final policy: assert the same directive set first,
++record the exact final header, and document any different framework-owned form.
++Do not silently accept an alternative by weakening the test. If RSC is cacheable
++or the alternative's equivalence is ambiguous, STOP for human review. Preserve
++`Pragma` / `Expires` evidence where applicable, no neutral-page `Set-Cookie`,
++and no protected personal payload in either representation.
++
++Re-run production-mode CSP evidence independently: final CSP/nonce present,
++every applicable rendered framework script matches the response nonce,
++independent requests have distinct nonces, inbound CSP/report-only/x-nonce
++cannot select that nonce, no `unsafe-inline` and no `unsafe-eval` workaround.
++Recheck unrelated-route isolation and normal no-owner API denial. DEV PASS
++cannot substitute for this production-mode proof; neither is Browser QA.
++
++Reject node_modules/Next patches, ServerResponse monkey-patches, global Next
++handler wrappers, custom reverse proxies/listeners, D1b bootstrap changes,
++instrumentation/private Next APIs, root-layout changes, global middleware/proxy
++expansion, next.config/global headers workarounds, service workers, CDN/proxy
++simulation and artificial production-only page branches. The existing proxy
++remains unchanged; do not compensate for a DEV override. If actual production
++final responses fail D10, STOP and report before correction. Any future proxy
++edit requires that genuine scoped defect and review within the approved U3
++boundary; no speculative interceptor is authorized.
++
++This proof is not deployment, staging, production enablement, real attendance,
++provider approval or readiness promotion. All seven production/legal/privacy
++blockers and P13/P14 synthetic/disposable-only authority remain unchanged.
++
++### D11 — UI planning boundary and state model
+
+ NEW_PAGE, integrated target, NEW_CAPABILITY_DISCOVERY. Stable planning home:
+ `docs/ui/pages/backoffice-pointage-employee/`. Phase 0 inventory và
+@@ -1646,8 +1731,24 @@
+ Deployment/production migration, runtime role provisioning, retention cleanup
+ hoặc data conversion không được authorize bởi Design hoặc tests.
+
+-## Verification Design
+-
++## Verification Design
++
++### U3 final-page evidence — mode-separated and pending approval
++
++D10a controls final HTML/RSC cache and CSP evidence. Preserve the historical DEV
++observations and failed exact-cache assertion; do not relabel them as production
++proof. After explicit approval of the revised exact Design/Tasks hashes, collect
++the actual local production-mode commands, sanitized effective-environment
++admission result, status/headers, nonce/script assertions, route isolation,
++no-owner denial and shutdown evidence. Record exact source/test hashes and any
++deviation; failure or ambiguous RSC cacheability stops U3.
++
++A passing approved U3 proof may complete only 3.3 (20/32); then finish the
++already-approved remaining U4 work (at most 21/32) and STOP before 3.5. No task
++completion is granted by this planning alignment. Formal post-Apply VERIFY
++must independently re-evaluate U3 against current bytes and D10a; QA remains
++a subsequent separate mandatory Browser QA stage, not this HTTP evidence.
++
+ ### D1b actual-process bootstrap proof — planned, not executed
+
+ U2/U8 và R3/R6/R7 MUST bổ sung actual Next file-route evidence sau Apply approval:
+diff --git a/openspec/changes/pointage-usable-raw-clocking/tasks.md b/openspec/changes/pointage-usable-raw-clocking/tasks.md
+--- a/openspec/changes/pointage-usable-raw-clocking/tasks.md
++++ b/openspec/changes/pointage-usable-raw-clocking/tasks.md
+@@ -1,6 +1,74 @@
+ # Pointage usable raw clocking — Tasks and Implementation Plan
+
+-## Current Apply checkpoint — bounded U3/U4 interleaving blocked, 2026-09-10
++## Current Sensitive Design / Tasks alignment — U3 final cache evidence
++
++Authority: explicit current-user planning-only request in attachment
++9ef79825-9910-4483-a6d9-ecc08a8fe6d4/pasted-text.txt. Revised exact Design/Tasks
++hashes require human review before any implementation resume or build/start.
++Only Design, Tasks, 02b and 02c may change in this alignment.
++
++APPLY: PAUSED
++Tasks: 19/32
++Task 3.2: COMPLETE
++Task 3.3: PARTIAL
++Task 3.4: PARTIAL
++Task 3.5: NOT_STARTED
++
++D10a and Verification Design distinguish the accepted Next 16.2.9 DEV-only
++`Cache-Control: no-cache, must-revalidate` from mandatory deployable final
++`private, no-store, max-age=0` page evidence. No `public` or `s-maxage`;
++additional `no-cache` / `must-revalidate` are allowed. Preserve the historical
++91 PASS / 1 FAIL run and its exact failing assertion; no test is edited or
++rerun here, and DEV acceptance does not complete U3.
++
++Preserved actual DEV PASS observations: HTML 200, RSC 200, neutral payload,
++per-request nonce, all applicable Next scripts matching, distinct nonce on a
++second request, rejection of inbound CSP/report-only/x-nonce control,
++unrelated-route isolation and normal no-owner API unavailability. DEV must
++still exclude public/shared/user-controlled cache policy.
++
++Future U3 evidence is `LOCAL_PRODUCTION_MODE_IMPLEMENTATION_EVIDENCE`, not
++deployment/readiness or Browser QA. Existing commands, from repository root:
++
++```text
++pnpm --filter @yuta/backoffice build
++pnpm --filter @yuta/backoffice start --hostname 127.0.0.1
++```
++
++Use the actual filesystem page at
++`http://127.0.0.1:3001/pointage/synthetic-establishment`. D10a defines the exact
++process-local production-rendering environment, loopback/no-ingress boundary,
++effective environment-file preflight, no DB/provider/bootstrap/fallback,
++HTML/RSC final cache assertions, fresh production-mode nonce/script proof,
++no Set-Cookie/personal payload, isolation, shutdown evidence and STOP conditions.
++Inspect inherited and Next-autoloaded configuration without printing values;
++existing .env/.env.local must not silently enable DB/provider composition.
++No new script/path, environment-file edit or D1b bootstrap is authorized.
++If safe isolation or neutral DB-free rendering cannot be established, STOP.
++
++No post-render interceptor or global workaround is proposed. Current proxy,
++page, tests, migration and UI pack remain byte-identical. Actual production-mode
++failure or ambiguous/cacheable RSC requires review, not silent compensation.
++No build/start, runtime test, database/container operation or Browser QA now.
++
++Only future approved U3 PASS may complete 3.3 (20/32); then return to remaining
++approved U4, complete 3.4 only on its own evidence (21/32), and STOP before 3.5.
++Four phases, 32 tasks, F1-F8/S1-S9/U1-U8/R1-R7 and all 20/62 mappings remain.
++The historical checkpoints below are preserved observations, not current
++approval of revised bytes or authority to execute superseded instructions.
++
++TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
++VERIFY: NOT_RUN
++QA: NOT_RUN
++Real employee attendance: NOT_AUTHORIZED
++Production enablement: NOT_AUTHORIZED
++
++P13/P14 synthetic/disposable-only authority and all seven blockers remain:
++retention, deletion/anonymization, legal hold, backup-retention interaction,
++employee notice, detailed audit visibility, trusted production client-address
++provenance. No lifecycle promotion, deploy, enablement, sync/archive or Gate 3.
++
++## Historical Apply checkpoint — bounded U3/U4 interleaving blocked, 2026-09-10
+
+ Authority: current-user attachment 24d42afd-c676-4c4e-8f5f-318f38c00f0f,
+ APPROVED — BOUNDED TASK INTERLEAVING. Order: structural 3.4 prerequisite,
+@@ -942,7 +1010,7 @@
+ | --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+ | U1  | Strict 4KiB JSON allowlists: identify credential, state/end empty body, IN/OUT requestId+observedStateGuard, recover same tuple+kind. Only neutral context GET; protected data POST. No trusted IDs/roles/context, browser accepted time or extra fields.                                                               | DTO strict/unknown-key, length, UUID, token/guard/kind and bounded serialization tests; no DB import/browser secret dependency.                                    |
+ | U2  | Exact D8 context/identify/state/clock-in/clock-out/recover/end handlers under approved prefix, Node runtime, delegated exact operation guards. Dedicated Authorization: Pointage, credentials omit, exact configured Origin and Sec-Fetch-Site rejection; no wildcard CORS/generic session.                             | Real handler tests for methods/body/origin/cross-scope/status, 204 own end, no extra operation or route.                                                           |
+-| U3  | Neutral dynamic HTML/RSC; private no-store/revalidate0 page and data; route-only nonce CSP and cache headers per D10, no personal SSR/URLs/analytics/logging/service worker. No other route/header behavior changes.                                                                                                    | Header/nonce/HTML payload tests, dependency inventory, negative cookie/cache/CORS/secret diagnostics.                                                              |
++| U3  | Neutral dynamic HTML/RSC/revalidate0; page evidence per D10a distinguishes DEV diagnostic from mandatory local production-mode final cache/CSP proof. Data no-store, route-only nonce, no personal SSR/URLs/analytics/logs/service worker remain; no other route changes.                                               | Actual final HTML/RSC cache and fresh production-mode nonce/script proof per D10a; cookie/payload/isolation/no-owner negatives.                                    |
+ | U4  | One responsive column under existing root fonts, NO_APPLICATION_SHELL; approved French copy and shared Card/Input/FormField/Button/Alert/Skeleton/StatusBadge as needed. Layout/semantic tokens/Lucide only, accessible keyboard/focus/touch.                                                                           | Route composition inspection, field/status accessible names, no sidebar/account/navigation, no horizontal overflow at QA viewports later.                          |
+ | U5  | Credential entry/identify pending/both states/mutation pending/both receipts/state conflict/request conflict/unknown/access failure/rate limit/unavailable/end-neutral. No optimistic success; no history/totals/prior OUT, no employee chooser. PIN clears on identify settle; receipt max10s.                         | State transition tests for all approved visible states, no protected rendering on partial identify, no duplicate submit or auto retry.                             |
+ | U6  | Memory-only token/identity/guard/tuple; end/hidden/pagehide/navigation/idle/absolute reset synchronously removes personal DOM/memory, aborts callbacks and increments generation; pageshow/bfcache/back/refresh/duplicate/restart neutral. Local clearing is not remote ACK; server end/expiry semantics remain honest. | Generation/late-response tests, boundary timer tests, no durable storage/URL/history/channel/cache; future real-browser adversarial navigation + sequential users. |
+@@ -957,7 +1025,7 @@
+
+ - [x] 3.1 Implement U1 strict DTOs and isolated contracts export; verify bounded bodies and exact response allowlists with DTO tests.
+ - [x] 3.2 Implement U2 approved Node handlers, transport adapter and exact D1b test bootstrap allowlist; verify actual child listener/two-client admission, concurrency/failure/E1-E5 re-consumer and lifetime evidence plus exact methods, current operation checks, origin/header validation and non-enumerating statuses. No completion from parent-only or mocked route proof.
+-- [ ] 3.3 Implement U3 route-scoped nonce/cache security boundary; verify neutral HTML/RSC, no-store and no effect on non-Pointage routes.
++- [ ] 3.3 Implement U3 route-scoped nonce/cache security boundary; verify neutral HTML/RSC, no-store and no effect on non-Pointage routes. U3 final-page evidence follows D10a: DEV-only diagnostic acceptance is insufficient; actual local production-mode proof remains mandatory after exact-hash approval.
+ - [ ] 3.4 Compose U4 approved employee page and meaningful route-local components; verify named exports, shared primitives/French labels and no application shell.
+ - [ ] 3.5 Implement U5 approved visible states and receipt lifecycle; verify no optimistic success, no forbidden employee output and accessible state transitions.
+ - [ ] 3.6 Implement U6 memory-only clearing/generation isolation; verify late response, timers, visibility/navigation/bfcache event logic and no durable personal state.
+@@ -1070,8 +1138,14 @@
+ guard, not a mocked adapter or bypass. No new QA/data/readiness authority.
+ None of these launch/test/DB/Browser QA actions is executed in this alignment.
+
+-## POST-APPLY VERIFY PLAN
+-
++## POST-APPLY VERIFY PLAN
++
++U3 must be independently re-evaluated against current Design D10a and current
++implementation bytes: actual local production-mode final HTML/RSC cache and
++fresh nonce/script proof, effective-environment isolation and deviations. DEV
++results alone cannot establish D10 compliance. This remains a post-Apply plan,
++not formal VERIFY or QA performed by the bounded U3 evidence collection.
++
+ Plans only until all 32 Apply tasks complete. Formal VERIFY is a new evaluation
+ after Apply, using openspec-verify-change and current workflow/authority reads.
+ Do not promote Apply test collection directly to formal PASS without reviewing
+````
+
+### Final planning assembly check
+
+Four-document scoped Prettier check: exit 0, all matched files use Prettier code
+style. This checks the regenerated packets together with the exact revised
+Design/Tasks; it does not evaluate implementation or authorize a runtime run.
+
+## Historical E5 Apply authorization — 2026-09-10
+
+Approval source: explicit current-user instruction, attachment
+b8e9e7aa-5abd-4b8e-b420-9dc4654a65bb/pasted-text.txt.
+Approval recorded by: Codex workflow.
+Approved: 2026-09-09T22:03:39Z
+
+Design SHA-256 ae9e5c89f3b2e4124ce7ff1e64dcaf3182a285f317be44dd6118f13c96e8656c.
+Tasks SHA-256 4c104534dadeaa5fc00cccf2de5cd0b9a02045d0ac1b60f75fb4615e844345db.
+Fresh exact hashes MATCH; both Specs, earlier Gate 1/2 artifacts and all 65
+protected implementation/migration/UI paths MATCH the reviewed checkpoint.
+The four writable implementation preimages MATCH; unrelated dirty files are
+preserved. Approval covers only bounded E5 work in the four existing evidence
+paths. No new path or receipt/channel/runtime authority is granted.
+
+APPLY: PAUSED_AT_SCOPE_BOUNDARY — bounded Task 3.2 complete.
+Tasks: 19/32; Task 3.2: COMPLETE; task 3.3 not started.
+E1/E2/E3/E4 accepted PASS; E4 historical CLOSED_TRANSPORT stays unchanged.
+E5: PASS; every mandatory named case has final-source evidence below.
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Real employee attendance: NOT_AUTHORIZED
+Production enablement: NOT_AUTHORIZED
+All seven legal/privacy/production blockers remain unresolved.
+
+## E5 final-source Apply evidence — 2026-09-10
+
+This is Apply-completion evidence for Task 3.2, not formal VERIFY or QA.
+Task 3.2 COMPLETE; 19/32; E1/E2/E3/E4/E5 PASS within their stated evidence
+classes. Stop at the current four-path scope boundary before Task 3.3.
+Further implementation needs the next task's path authorization; no fifth
+implementation path was opened in this bounded resume.
+
+Current Tasks execution SHA-256:
+5d6b819ddc1b7666e14cdf47b84e452f013b3d9e4a4f5e32f0f3ab3c45a31bcb.
+The approved plan hash above remains the pre-execution authority. Only the
+progress checkpoint and checkbox 3.2 changed; all 32 task descriptions,
+contracts, four phases and 20 requirements / 62 scenarios are preserved.
+Design bytes remain ae9e5c89f3b2e4124ce7ff1e64dcaf3182a285f317be44dd6118f13c96e8656c.
+
+### Exact final implementation hashes
+
+Method: Get-FileHash -LiteralPath <path> -Algorithm SHA256, exact bytes,
+lowercase hexadecimal. These bytes were unchanged across the focused and
+both actual-route test commands below.
+
+| Repository-relative path                                         | SHA-256                                                          |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------- |
+| apps/backoffice/src/server/pointage/raw-clocking-bootstrap.ts    | 17733bc004725c88a6aa506dbefdfadf7a3aa204005af2343413f5a770792e13 |
+| apps/backoffice/test/helpers/pointage-raw-clocking-next-child.ts | 03f7024b1e739697bbf7fc4fad2f976d684595e598ed6db31129b50392cdb33a |
+| apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts   | b93f4b1bb29ba015571c944f3a17cb59a0c05306ae11482d945a59ddbcafd10e |
+| apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts     | 987fd9eb31620de7777052dca7bfce99d7fef4a30faf71357d8cde011809b41e |
+
+Only next-child, launcher and bootstrap.test changed. The bridge is unchanged.
+The other eleven U2 implementation paths are unchanged; no runtime.ts, HTTP
+adapter, API route, contract, auth, repository/schema/migration, package/config,
+instrumentation, shared startup or UI pack edit. Against the fresh 2,613-known-
+file baseline, Pointage-attributed drift is restricted to these three implementation files, the
+ordinary Tasks progress update and the existing two review records. All other
+protected Pointage paths, migration/journal/snapshot, normative Specs/archive,
+Formalites and concurrent UI-UX work were preserved.
+
+Final read-only audit also observed an unrelated concurrent change in
+openspec/changes/ui-ux-pro-max-integration/tasks.md:
+23f98df5f79fc6ad82d0560cf1cd1e141fcfdf772b150e8f7841d34af9e12c64 ->
+6ff7f1dc9a2c753428e9255258d3fbefa3a07296b6cddedd89a724ad933b3e74.
+Codex did not edit or revert that path; it is excluded from Pointage attribution.
+The unrelated untracked %SystemDrive% directory shown in initial Git status is
+absent in final status; no cleanup/delete operation was performed by this resume.
+Neither observation overlaps an approved Pointage path or invalidates its hashes.
+
+### Named evidence outcomes
+
+| Case                    | Final result and evidence                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| E5-LISTENER-LOSS        | PASS. PID 2856, runId 7f1da7e8-d07a-4532-9b9c-fc3726d6308d. Exact launch-only argv, READY and original E2/E3 receipt; owner-side generation/anchor/inventory/reference/count assertions; public server.close(); non-listening/address null; existing live guard rejects; terminal FAILED; exact client close assertions; exit 1, signal null; HTTP refusal; parent DB clients 0; raw/receipt 0/0. No STOP or forced termination used for verdict, no new outbound payload. |
+| E5-DEPARTURE            | PASS. A PID 20888 -> B PID 8916; A runId 05e2ead6-292c-43e9-8ccf-5d815ffd4496 -> B runId 02e4fb1e-e5ae-40fd-adf3-9c34dd2df2ba. Actual B state returns 403 POINTAGE_ACCESS_DENIED at 12,283 ms from A issue, still inside original idle/absolute lifetime.                                                                                                                                                                                                                  |
+| E5-RESET                | PASS. A PID 4436 -> B PID 22144; A runId 87adc65c-3b3d-4da7-b325-4b8174c5c521 -> B runId e65f979e-3795-4ade-b671-fb4f192139d0. Existing guarded admin repository reset after A exit; exact new current version established. Actual B state rejects old bound token at 14,772 ms; no runtime privilege widening.                                                                                                                                                            |
+| E5-IDLE                 | PASS. A PID 11888 -> B PID 18584; A runId fdc7f10e-51fc-442c-9f3b-8d9a43a624da -> B runId 5757821c-5298-48d4-98c8-0b06110f990c. No B identify/touch before intended expiry. Actual state denial at 62,088 ms, after A idle and before A absolute deadline; denied request leaves row unchanged.                                                                                                                                                                            |
+| E5-ABSOLUTE             | PASS. A PID 21128 -> B PID 10884; A runId 9f687b21-6da0-49b0-867a-59ef95a6b4d4 -> B runId 75ba78ae-eb2d-49be-afab-c51413edb74b. B enters before A idle, uses only A token for explicit successful foreground state reads; idle monotonic and capped at unchanged A absolute deadline. Actual denial at 120,581 ms; no revival or replacement.                                                                                                                              |
+| E5-CLEAN-STOP           | PASS. Every continuation A exits 0/signal null; clients 0; no Pointage end. Positive regression PID 15776 also exits 0 after STOP.                                                                                                                                                                                                                                                                                                                                         |
+| E5-IPC-DISCONNECT       | PASS. Fresh admitted PID 3684 loses IPC; exit 1/signal null; runtime clients 0; previously committed two raw events retained.                                                                                                                                                                                                                                                                                                                                              |
+| E5-PARTIAL-STARTUP      | PASS. Actual failed second client, widened foundation grant, helper PUBLIC EXECUTE and helper body drift each reject without READY; bounded exit 1 and parent client count 0. Guarded changes restored in the disposable database; no runtime repair.                                                                                                                                                                                                                      |
+| E5-NORMAL-NEXT-NO-OWNER | PASS. Standard Next child has no bootstrap owner/anchor/provider; actual context and state return 503, regardless of retained opaque token.                                                                                                                                                                                                                                                                                                                                |
+| E5-NON-POINTAGE-SMOKE   | PASS. Existing root route returns 307 with Location /aujourdhui, no authenticated workflow or Browser QA.                                                                                                                                                                                                                                                                                                                                                                  |
+| E5-FRESH-PROCESS        | PASS. Every B has new PID/runId, fresh native anchor and independently completed actual D1/D1a/F8 and E2/E3 on its own exact dual clients. INIT carries no previous runtime/client/context.                                                                                                                                                                                                                                                                                |
+| E1/E2/E3 regression     | PASS. Actual concurrent context calls, single initialization, exact promise/facade/owner-client proof, child-derived stateGuard, all seven file routes, committed receipt recovery and end denial.                                                                                                                                                                                                                                                                         |
+| E4                      | Accepted PASS, historical CLOSED_TRANSPORT unchanged. Deliberately not rerun; not converted to 503 or HMR evidence. Bridge bytes unchanged and ordinary teardown semantics preserved.                                                                                                                                                                                                                                                                                      |
+
+For EACH of the four continuation cases, A actually identifies, then bootstrap
+STOP exits A without calling Pointage end. Read-only full selected continuation
+row equality before/after A exit proves existence, ended_at null, original
+issued_at/idle/absolute deadlines and unchanged credential binding. Parent
+confirms zero A runtime clients and zero scoped raw events/receipts. B receives
+only its approved INIT configuration; it never identifies/replaces the token.
+All current authority/lifecycle/TTL results use A's token on the actual B state
+file route. No raw or receipt appears; denied requests leave continuation
+metadata unchanged. Successful ABSOLUTE foreground touches alone advance idle,
+never original issued/absolute values. Both generations terminate cleanly.
+No clock override, reduced TTL, direct deadline mutation or heartbeat feature.
+
+### Commands and exact results
+
+Working directory: D:/working/yuta/yuta-resto. Runtime commands explicitly
+refuse unsafe parent NODE_ENV/VERCEL first, then set NODE_ENV=test and
+YUTA_POINTAGE_SYNTHETIC_TEST_MODE=true. Existing D1/F6 disposable cluster/name/
+loopback/actual-database guards and independent child D1/D1a/F8 remain required.
+No shared development database was used.
+
+| Command                                                                                                                                                             | Result                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-bootstrap.test.ts test/pointage-raw-clocking-http.test.ts test/pointage-raw-clocking-runtime.test.ts | Exit 0; 3 files; 109 PASS / 8 actual-route cases excluded by disabled synthetic mode; 27.42 s.           |
+| pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-bootstrap.test.ts -t 'E5-' --reporter verbose                                                        | Exit 0; 5 PASS / 65 filter exclusions; 295.72 s. All five named new E5 cases executed.                   |
+| pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-bootstrap.test.ts -t 'rejects a failed second client\|admits one actual runtime' --reporter verbose  | Exit 0; 2 PASS / 68 filter exclusions; 96.75 s. Covers the separately named remaining E5 outcomes above. |
+| pnpm --filter @yuta/backoffice typecheck                                                                                                                            | Exit 0 before actual runtime runs.                                                                       |
+| pnpm -r --if-present typecheck                                                                                                                                      | Exit 0 after all actual Next processes stopped; all applicable workspace projects complete.              |
+| pnpm docs:check                                                                                                                                                     | Exit 0; 36 current documents.                                                                            |
+| pnpm architecture:check                                                                                                                                             | Exit 0; runtime, database, client and migration boundaries valid.                                        |
+| openspec validate pointage-usable-raw-clocking --strict                                                                                                             | Exit 0.                                                                                                  |
+| pnpm ui:pack:check backoffice-pointage-employee                                                                                                                     | Exit 0; 1 pack / zero warnings.                                                                          |
+| pnpm exec prettier --check on the four authorized evidence source paths and the two existing review paths                                                           | Exit 0.                                                                                                  |
+| pnpm format:check                                                                                                                                                   | Exit 1; exactly 67 pre-existing unrelated warnings, no formatter write over those files.                 |
+
+Filter exclusions are NEVER counted as PASS. The union executes all mandatory
+current E5 cases and focused U2 regressions; E4 uses the explicit accepted
+historical evidence, not a skipped test result. Full test:cloud/test:local,
+Backoffice production build and build:cloud were not run in this bounded
+test-harness resume; broader completion/build and independent formal VERIFY
+remain later. No Browser QA or Gate 3 claim.
+
+Seven newly provisioned isolated tmpfs evidence databases/containers remain
+retained; no cleanup, reuse of old evidence targets, or shared DB mutation:
+ed1537b4094c, 70fbd5f2f5c1, df67495c9f26, abf95e727021,
+91dbef632dd1, 1a59f83aa010, 79892411b4f3. Exact names/ports were read from
+docker ps; no secret inspection fields were recorded. Existing seven Pointage
+evidence containers and cloud/POS/Display containers were left unchanged.
+Final port 3001 has no listener.
+
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Real employee attendance: NOT_AUTHORIZED
+Production enablement: NOT_AUTHORIZED
+
+All seven blockers remain unresolved: exact retention, deletion/anonymization,
+legal hold, backup-retention interaction, employee notice, detailed audit
+visibility, trusted production client-address provenance. No UI, usable public
+deployment, real attendance, production provider, sync/archive/deploy or
+lifecycle/readiness promotion is authorized by these results.
+
+## Historical authority and bounded recommendation — superseded by approval above
+
+Current human decision: CHANGES_REQUESTED — ONE BOUNDED CLARIFICATION.
+Đã chấp nhận E4 CLOSED_TRANSPORT, --serve-listener-loss-proof, INIT/STOP không
+đổi, không outbound receipt mới, exit 1 expected loss / exit 2 proof failure,
+NO NEW PATH. Chỉ sửa E5 retained-continuation để mọi case là cross-generation:
+A issues -> A terminates without Pointage end -> B independently re-admits ->
+B consumes continuation issued by A. Không mở lại các accepted decisions.
+Previous 02b packet SHA-256:
+24c8cc5a13c0ceb9bfb7697eaabf1ff62113af93b1d4d0de4cda24dc7e9fd1d8.
+Previous 02c packet SHA-256:
+8b064db29bb465e634d7ecc47cfe41f867a7d08f88e682fed4266bbead429c94.
+Các preimages này và reviewed Design/Tasks hashes đều MATCH trước khi sửa.
+
+Current-user attachment 946adbba-621a-4644-af70-e4a0c6b56685 authorize chỉ
+Design/Tasks alignment và hai review records. Human evidence review chấp nhận
+E1/E2/E3/E4 PASS; E5 PARTIAL. Không re-run hoặc chuyển historical failure thành
+new test PASS. Earlier runtime results giữ nguyên trong historical packet.
+Previous blocked E4 assessment được thay bởi human acceptance của chính
+CLOSED_TRANSPORT observation, không được rewrite thành HTTP 503.
+
+APPLY: PAUSED
+Tasks: 18/32
+Task 3.2: PARTIAL
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+
+Chỉ bốn planning paths được sửa: design.md, tasks.md, 02b-design-review.md và
+02c-implementation-plan-review.md dưới đúng change/review directory hiện tại.
+Không implementation, Next launch, DB operation, container inspection/cleanup,
+Browser QA, task 3.3, Product/Spec/UI/lifecycle change, sync/archive/deploy.
+No new file/path. UI_UX_PRO_MAX_USAGE OPTIONAL / NOT_USED; không external query.
+
+Using change: pointage-usable-raw-clocking; repo-local yuta-spec-driven.
+Fresh HEAD: 415990386327aaccab3c32b1fef0569a0fde7f3a. Dirty Git status được
+capture trước sửa. Current preimages khớp checkpoint trước, không lấy HEAD
+làm clean baseline hay gộp unrelated Formalites/ui-ux-pro-max edits.
+
+## Exact old/new artifact hashes
+
+| Repository-relative path                                | Old SHA-256                                                      | New SHA-256                                                      |
+| ------------------------------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- |
+| openspec/changes/pointage-usable-raw-clocking/design.md | b7885e19350f00a744a8b048324d346eb1b103de15e71aac8b336cdd87859e9f | ae9e5c89f3b2e4124ce7ff1e64dcaf3182a285f317be44dd6118f13c96e8656c |
+| openspec/changes/pointage-usable-raw-clocking/tasks.md  | 5ef04546a55fa940a3a7d593a733cd7d8d81af470349c8cff4be4261cbc65958 | 4c104534dadeaa5fc00cccf2de5cd0b9a02045d0ac1b60f75fb4615e844345db |
+
+Old Tasks hash là exact alignment được review trước correction này (18/32),
+không historical pre-Apply/execution preimage. Chỉ revised hashes trong bảng trên
+được đề nghị review; previous Apply approval không cover revision này.
+
+Hash method: PowerShell Get-FileHash -LiteralPath <exact path> -Algorithm SHA256,
+lowercase hexadecimal, exact bytes; inventory qua git ls-files --cached --others
+--exclude-standard và current 2,613-path baseline. Không newline/Unicode
+normalization khi hashing. No formatter write trong lượt alignment.
+
+Earlier approved path set và byte hashes giữ nguyên:
+
+| Repository-relative path                                                           | SHA-256                                                          |
+| ---------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| docs/reviews/pointage-usable-raw-clocking/01-analysis-review.md                    | ee18fdbf3b9802978eb7d71000d001c1b32eb7672f333bf8fe452005414f3557 |
+| docs/reviews/pointage-usable-raw-clocking/02-specs-review.md                       | c5a7fd21c9fb04ea8f3617463241fc0ec8b41ea6e69b6074da5fefe98f0da566 |
+| openspec/changes/pointage-usable-raw-clocking/analysis.md                          | f04e66f9f2307dc92aa9cdbd134fb4a35f9c1089459440c0ccfdb40c4a3e9146 |
+| openspec/changes/pointage-usable-raw-clocking/proposal.md                          | d42975cd06290431701e39d499edac93774275c1bb0f28f8474f6ff0e61816f1 |
+| openspec/changes/pointage-usable-raw-clocking/specs/authorization/pointage/spec.md | 1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66 |
+| openspec/changes/pointage-usable-raw-clocking/specs/pointage/raw-clocking/spec.md  | 4bfa64e863ad465a144341c18aa5d0db3ce0806ada52ad40183cf9a4e321f90e |
+
+Specs: authorization/pointage 7 requirements / 21 scenarios;
+pointage/raw-clocking 13 / 41. Total 20 / 62. Task checkboxes: 32 / checked 18.
+No checkbox hoặc requirement/scenario mapping thay đổi.
+
+## Accepted E4 wording diff — unchanged in this revision
+
+Design Verification Design E4, replacing only the following two lines:
+
+```diff
+-hash and assert deny new work, generic unavailable/terminal child failure,
+-bounded teardown, zero remaining owned clients and no replacement/admission.
++hash and assert deny new work with terminal child failure: dispatched requests
++before teardown ownership fail with generic 503 POINTAGE_UNAVAILABLE and no
++protected payload; closure/refusal before an HTTP response can be created is
++also valid fail closed. Do not delay teardown or keep a response window merely
++to manufacture HTTP 503. Require bounded teardown, both runtime clients closed,
++zero remaining owned clients, owned child termination, retained evidence DB
++and no replacement/admission. Historical CLOSED_TRANSPORT remains unchanged
++and is accepted as E4 PASS by current human evidence review.
+```
+
+Historical exact observation giữ nguyên: controlled byte drift; terminal
+generation; one admission; runtime clients 0; no replacement; child exit 1;
+evidence DB retained; controlled source restored after confirmed exit;
+CLOSED_TRANSPORT. Original/restored hash
+17733bc004725c88a6aa506dbefdfadf7a3aa204005af2343413f5a770792e13;
+changed hash 69eacd4798bcff59d0b801f9ac25502486f4629833278d8780abb3bf95bb1786.
+Không source mutation hoặc DB/Next revalidation trong lượt này.
+
+## Exact inserted Design alignment and E5 matrix
+
+Full Design source: openspec/changes/pointage-usable-raw-clocking/design.md,
+exact new hash ở bảng trên. Bổ sung nguyên văn dưới đây trước heading
+Teardown, diagnostics and disposable lifetime; ngoài block, exact E4 diff và
+minimal launcher-footprint wording, toàn bộ Design còn lại giữ nguyên.
+
+##### D1b E4/E5 evidence alignment — current proposed review
+
+Authority: current-user attachment 946adbba-621a-4644-af70-e4a0c6b56685.
+Human evidence review chấp nhận E1/E2/E3/E4 PASS; E5 vẫn PARTIAL.
+Đây là bounded Design/Tasks alignment, chưa cho phép implementation.
+APPLY: PAUSED; Tasks: 18/32; Task 3.2: PARTIAL. Không task 3.3/UI/DB/Next/QA.
+Không đổi Product, hai Specs (20 requirements / 62 scenarios), D1/D1a/F8,
+D4a/D4b/F6, migration 0021, singleton authority hoặc seven production blockers.
+Các approval/execution statements trước đây là lịch sử, không Apply grant mới.
+
+**E4 terminal response.** Nếu request đã tới owned listener / Pointage dispatch
+trước khi terminal teardown tiếp quản, failure MUST là
+503 POINTAGE_UNAVAILABLE, không protected payload. Nếu teardown do source
+drift đóng owned listener trước khi có thể tạo HTTP response, transport refusal/
+closure là valid fail-closed outcome. MUST NOT giữ listener sống, trì hoãn
+teardown hoặc tạo response window chỉ để ép quan sát HTTP 503.
+Mọi trường hợp vẫn deny new work, terminal generation, không replacement
+admission/runtime, đóng cả hai DB clients, kết thúc đúng owned child, giữ
+evidence DB và restore controlled bytes chính xác sau confirmed child exit.
+Historical observed CLOSED_TRANSPORT / exit 1 / one admission / clients 0 /
+no replacement / exact restored source được human review chấp nhận E4 PASS;
+không đổi observation đó thành HTTP 503 và không coi là E3/HMR proof.
+
+**Launch-only independent listener-loss mechanism.** Chỉ existing TEST_ONLY
+pointage-raw-clocking-next-child.ts entry nhận exact process argument
+`--serve-listener-loss-proof`. Parse một lần trước INIT: normal child dùng
+empty argument list; proof child dùng đúng singleton argument list này.
+Unknown/duplicate/combined arguments fail closed trước listener/client creation.
+Không chuyển flag vào INIT, process.env, app config, request hoặc browser.
+Existing launcher chọn fixed argument list trước fork; sau fork không có
+setter, trigger hoặc post-READY control method. Existing parent --serve mode
+không đổi; không thêm root/package script hay app/runtime topology.
+
+1. Child chạy cùng entry, strict INIT đúng một lần, cùng D1/F6 parent preflight,
+   child D1/D1a/F8 identity/privilege/helper proofs, exact owned IPv4 listener,
+   dual-client admission, fixed synthetic provider và runtime. Neutral actual
+   context request có thể kích hoạt lazy admission; không credential/mutation
+   nào cần để kích hoạt fault.
+2. Sau READY và complete E2/E3 owner proof, one-shot child lifecycle code kiểm
+   tra same PID/runId/main thread, exact source inventory/native anchor,
+   owned server.listening/address và runtime/foundation/raw counts đúng 1.
+   E3 receipt vẫn chỉ chứng minh E2/E3, không đổi schema hay meaning để giả
+   một listener-loss receipt. Missing E3 proof không qualify E5.
+3. Child-owned lifecycle đóng CHỈ exact httpServer đang sở hữu bằng public
+   Node server.close(). Không gọi STOP trước để giả independent listener loss.
+   Không await drain callback trước phát hiện mất listener: ngay sau close,
+   assert server.listening false và address() null; kiểm tra lại existing
+   requirePointageListener/live-prerequisite guard từ lifecycle code, không
+   đợi một Pointage operation. Guard MUST detect lost listener và chuyển vào
+   existing terminal failure/teardown path. Không auto-rebind/restart.
+4. Same bounded teardown giữ 10-second drain / 5-second client-close /
+   20-second parent ownership deadline. Đóng mỗi foundation/raw connection
+   đúng một lần; counter/reference assertions trước khi drop references
+   chứng minh không thêm listener/runtime/client pair. Không đổi raw/receipt/
+   continuation rows; parent kiểm tra scoped persisted evidence unchanged.
+5. Existing sanitized LISTENING -> INITIALIZING -> READY -> FAILED và existing
+   E3 receipt, cùng exact PID/runId, private assertions, refused subsequent
+   HTTP connections, parent SQL role counts 0/0 và bounded child exit là
+   evidence phối hợp; status FAILED đơn lẻ không chứng minh listener loss.
+   Parent không gửi STOP/disconnect trước khi observed terminal outcome;
+   watchdog cleanup không được tính là successful independent proof.
+6. Để assertion failure không giả thành expected negative: proof-mode expected
+   listener-loss lifecycle kết thúc exit 1, signal null; private proof assertion
+   failure phải drain/close theo cùng lifecycle nhưng kết thúc test exit 2,
+   không được test chấp nhận như exit 1. Đây chỉ là local test-process verdict,
+   không thêm IPC payload, stage hay application error code. Normal mode/E4
+   exit semantics không đổi. Detector negatives MUST chứng minh missing close,
+   failed precondition hoặc guard không phát hiện loss không thể pass.
+   Bất kỳ assertion/teardown timeout, forced exit hoặc missing evidence đều FAIL.
+
+INIT exact schema và STOP exact schema ở D1b giữ nguyên. Không LISTENER_LOSS,
+second INIT, generic fault IPC, HTTP/debug/fault endpoint, query/header/body
+selector, browser control, environment fault variable, registry, listener
+export, private Next API, HMR/cache hook hoặc instrumentation.
+Không thêm outbound receipt. Nếu actual implementation không thể chứng minh
+kết quả bằng private assertions + existing statuses/process exit/SQL evidence
+và cần payload mới, STOP xin review, không tự thêm hoặc repurpose E3 receipt.
+
+**E5 retained-continuation matrix — future Apply only.**
+
+Current human CHANGES_REQUESTED clarification: mọi retained-continuation case
+phải cross-generation A issues / A exits without Pointage end / B re-admits /
+B consumes A's continuation. Các accepted E4/listener/IPC/exit/path decisions
+giữ nguyên; không Product/Specs/task-count change hoặc Apply authorization.
+
+Tất cả cases dùng actual file routes, guarded migrated synthetic PostgreSQL,
+final approved source hashes; không mock clock, sửa TTL, rewrite deadline,
+production/runtime clock override hoặc privileged child. Mỗi fresh-process
+case phải record new PID/new runId, fresh native anchor và full D1/D1a/F8 trên
+hai actual child-owned handles trước provider/runtime. Không transfer Promise,
+runtime/client từ child cũ; persisted continuation rows chỉ là data.
+Sau setup/identity hoặc authorized reset, chụp scoped raw events/receipts và
+đối chiếu sau denied request; không insert/update/delete attendance để tạo proof.
+
+Cross-generation MUST cho TỪNG case DEPARTURE, RESET, IDLE và ABSOLUTE:
+Generation A tự admit rồi actual identify cấp continuation. Parent chỉ giữ token
+đó trong memory; A kết thúc bằng bounded bootstrap STOP (không gọi Pointage end,
+không clear/end continuation row), confirm child exit và cả hai clients đóng.
+Sau đó Generation B mới launch, new PID khác A / new runId khác A / fresh
+process anchor; B independently chạy full D1/D1a/F8 trên own actual clients
+và đúng approved target/security configuration trước nhận protected request.
+B MUST dùng chính continuation do A cấp, không identify lại hoặc cấp token
+thay thế ở B. Không chuyển Promise/runtime/client/trusted context giữa A/B.
+Read-only evidence xác nhận continuation chưa ended do teardown và original
+issuedAt/absolute deadline vẫn của A; restart không reset/extend TTL. Thời gian
+startup/teardown đều tính vào real lifetime. Nếu B không kịp prerequisite
+deadline của case, test FAIL/inconclusive, không đổi TTL/clock/deadline.
+
+- E5-DEPARTURE: Generation A identify hợp lệ cấp continuation rồi kết thúc
+  không Pointage end; sau confirmed A exit, parent dùng existing guarded
+  disposable Personnel setup đặt departure ngoài eligibility. Generation B
+  independently re-admit và actual state dùng continuation do A cấp phải
+  403 POINTAGE_ACCESS_DENIED, không
+  protected identity/state, không raw event/receipt side effect. Kiểm tra token
+  chưa idle/absolute-expired để không gán nhầm expiry failure cho departure.
+- E5-RESET: Generation A identify cấp token, kết thúc không Pointage end;
+  sau confirmed A exit, parent dùng existing authorized disposable admin
+  boundary và existing reset/regeneration repository operation, không
+  standalone revoke/suspend và không widen foundation runtime grants. Confirm
+  superseded old version/current new version; Generation B independently
+  re-admit và actual state dùng OLD continuation do A cấp
+  trả 403 POINTAGE_ACCESS_DENIED, không protected output/event/receipt. Old
+  token không regain authority. Child không nhận admin URL/client/proof.
+  Assert Personnel vẫn eligible và token chưa expired để isolate reset.
+- E5-IDLE: Generation A identify cấp continuation, record original DB-issued/
+  idle/absolute deadlines read-only tại parent, rồi A kết thúc không Pointage
+  end. Generation B independently re-admit, không identify hoặc foreground
+  touch; B dùng continuation do A cấp cho actual state. Dùng real elapsed
+  server/database time đợi vượt approved 60-second idle deadline, vẫn trước
+  absolute deadline; actual state phải 403 POINTAGE_ACCESS_DENIED. Expired
+  continuation không được revive/touch, raw/receipt unchanged. Không sửa DB
+  deadline hoặc clock để rút ngắn test; check current credential/lifecycle
+  hợp lệ để isolate idle.
+- E5-ABSOLUTE: Generation A identify cấp continuation, record original
+  issuedAt/absoluteExpiresAt (120 seconds), rồi A kết thúc không Pointage end.
+  Generation B independently re-admit trước idle deadline của A, không identify
+  lại; B dùng continuation do A cấp cho mọi foreground state read, kể cả final
+  denial. Trước mỗi idle deadline, B thực hiện explicit valid authorized
+  foreground state reads; đây là test user actions, không background heartbeat.
+  Read-only DB assertions chứng minh idle advance theo existing rules nhưng
+  không vượt và không di chuyển original absolute deadline. Tiếp tục bằng
+  real elapsed time tới sau original 120-second deadline; actual state phải
+  403 POINTAGE_ACCESS_DENIED dù đã có valid touches. Không revive/touch sau
+  expiry, không raw/receipt side effect, không TTL/clock override. Nếu idle đã
+  hết trước intended touch thì case không chứng minh absolute và phải FAIL.
+
+Mỗi case có own result/assertions, exact source set/commands/elapsed durations,
+sanitized generation/target provenance, no protected response payload và
+no raw/receipt side effects. Được phép test lâu hơn; timeout budget phải chứa
+real 60/120-second waits và bounded teardown, không đổi lifetime để pass.
+Không in token/credential/URL/secret/employee/attendance; deadline equality
+có thể record boolean/duration evidence, không dump row.
+
+E5-LISTENER-LOSS là named result độc lập, không EADDRINUSE/STOP/IPC/E4 substitute.
+Giữ các E5 prerequisites khác: fresh-process readmission, clean STOP, IPC loss,
+partial start, normal Next no-owner denial và non-Pointage route smoke.
+No skipped case counts. Full E5 chưa PASS thì task 3.2 vẫn PARTIAL / 18/32.
+
+Path impact: NO NEW PATH. Future code/test chỉ trong existing bốn evidence paths:
+apps/backoffice/src/server/pointage/raw-clocking-bootstrap.ts;
+apps/backoffice/test/helpers/pointage-raw-clocking-next-child.ts;
+apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts;
+apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts.
+Bridge không cần thêm capability; launcher chỉ launch-time fixed argv/validation,
+child giữ private loss lifecycle/assertions, existing test file giữ named matrix.
+Không cần sửa eleven U2 paths còn lại, runtime/HTTP/routes, contracts, migration,
+UI pack, shared startup hay auth/Personnel code. Nếu cần path khác -> STOP.
+UI_UX_PRO_MAX_USAGE OPTIONAL / NOT_USED; bảy production/legal/privacy blockers
+và synthetic-only / real attendance NOT_AUTHORIZED giữ nguyên.
+
+## Repository proof and proposed surface inventory
+
+Current inspection: child private server ownership, requirePointageListener,
+live(), stop(), sole native process anchor và E2/E3 promise/ref assertions
+đã có trong existing child helper. Launcher fork hiện dùng [] và strict
+POINTAGE_TEST_INIT / POINTAGE_TEST_STOP; implementation bytes không sửa.
+
+Future change chỉ thêm fixed launch-time [] versus
+['--serve-listener-loss-proof'] tại existing test-child fork, one-shot private
+lifecycle closure sau READY/E2/E3 và actual-route E5 tests. Không sửa
+pointageTestInitSchema, stopSchema, statusSchema, reconsumerProofSchema;
+không thêm IPC discriminator/key/stage/receipt. Same seven route URLs,
+methods, transport DTOs, HTTP adapter, runtime/service and production startup.
+Mode không được đọc từ app/request/headers/query/body/environment/browser,
+không export server handle hoặc add process-anchor method. Không app/public
+fault surface mới; đây là proposed design, không claim implemented control.
+
+Normal unchanged INIT remains exactly:
+type POINTAGE_TEST_INIT; version 1; runId; parentPid; childPid; origin;
+listenHost; listenPort; foundationDatabaseUrl; rawDatabaseUrl; encodedAuthSecret.
+After INIT: only type POINTAGE_TEST_STOP; version 1; runId. Strict validation
+và existing size/PID/role/target restrictions giữ nguyên; không mode field.
+
+Review focus: proposed test-only assertion-failure exit 2 phân biệt failure của
+proof với expected terminal listener-loss exit 1. Cùng bounded drain/client
+cleanup, không receipt mới; normal mode/E4 không đổi. Failure/forced kill/missing
+status không được coi là PASS. Nếu cần outbound proof mới -> STOP review.
+Không dựa solely vào FAILED status, E3 receipt, port refusal hoặc SQL count;
+owner-side assertions và no-false-positive detector tests đều bắt buộc.
+
+Implementation path impact: NO NEW PATH. Allowed future impact set vẫn đúng
+bốn evidence files; bridge không cần capability mới, eleven U2 siblings giữ
+nguyên. Không thấy repository requirement buộc thêm path. Nếu Apply phát hiện
+cần khác -> STOP, không tự mở allowlist.
+
+## Protected current hash manifest
+
+65 scoped implementation / auth-barrel / migration / sealed-page-pack files
+dưới đây là current protected preimages, không phải authorization để sửa.
+Full 2,613-path comparison cũng bảo vệ unrelated work và main Specs/archive.
+
+| Repository-relative path                                                     | Protected SHA-256                                                |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| apps/backoffice/src/app/(authenticated)/equipe/pointage/page.tsx             | f2fe5f9ccf167aaf4be6233046ce3765b385c3d452e2b8cd6e1314108fb85307 |
+| apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-in/route.ts   | 29c16cfd705d7bef4b156b92ac1cad2186bf2ce17ac7fc7c9ca66f4b84444299 |
+| apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-out/route.ts  | 1c0fa864ae27a4d1f7a7940aaa8ba0d7394db3e2f1da2bff01cc1e4537218c69 |
+| apps/backoffice/src/app/api/pointage/[establishmentSlug]/context/route.ts    | 45043e139c0c7e5f0740acc7d7b9da4d0ed4d59d87dcffa8069f9a1ee1dfe2b6 |
+| apps/backoffice/src/app/api/pointage/[establishmentSlug]/end/route.ts        | 93f5428e2e700f528dbde1464a31a9d5811dfacfb5531674fb605faf978a7ae0 |
+| apps/backoffice/src/app/api/pointage/[establishmentSlug]/identify/route.ts   | 8f6504f6fbd4207e34e5f06ccca1d88b266c6a52ebd1d4232697004be7cd2be5 |
+| apps/backoffice/src/app/api/pointage/[establishmentSlug]/recover/route.ts    | 0714021059b92505345cc94886358474a3125bb832f38bb20a8ee6a47332f77e |
+| apps/backoffice/src/app/api/pointage/[establishmentSlug]/state/route.ts      | 7d199ac7aa8a40f3e7c10614a32429c0e0ee48f49dc4c806d036e501e2cdcb5d |
+| apps/backoffice/src/server/pointage/authorization.ts                         | c33a530483f76f29065729834e07b5d4512ee54255765645bece9cef8c87cc34 |
+| apps/backoffice/src/server/pointage/index.ts                                 | 5a17ce9a793561f26e7eca9c62f7835925d54d9eba61074951d58871dd910133 |
+| apps/backoffice/src/server/pointage/raw-chain.ts                             | 0b8446a543cad544614ae7c7d366cfa771d0011d16adc7bc7d1d00405731f83c |
+| apps/backoffice/src/server/pointage/raw-clocking-bootstrap.ts                | 17733bc004725c88a6aa506dbefdfadf7a3aa204005af2343413f5a770792e13 |
+| apps/backoffice/src/server/pointage/raw-clocking-http.ts                     | b4f57b8aeda30995f41a1a29008e9dae5c767d1e413a071488301aaae169e0ff |
+| apps/backoffice/src/server/pointage/raw-clocking-manager.ts                  | 209183808c72c1a9c677d57b2603dd5030336ad864d1ff542df1f0d06f27d948 |
+| apps/backoffice/src/server/pointage/raw-clocking-runtime.ts                  | ab9e7f157b53265ebcf62da8c7f8392018b8211c2d76e1ba467a6b2be8b53d57 |
+| apps/backoffice/src/server/pointage/raw-clocking-service.ts                  | a144202f2b7af2955b458fc445b699342bb4ed8cdbda33a4d46905452dcd3d37 |
+| apps/backoffice/src/server/pointage/raw-clocking-test-boundary.ts            | 4aa15e7f9695b85ae418b1098b7bd57c14d4c39bcd8b81eb9093660eeeb8cc28 |
+| apps/backoffice/src/server/pointage/service.ts                               | 00d26799bf2fa8213161e221a28fbf75b4024fd88f549293e814e90dd935aff1 |
+| apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts               | a6437cc8d0c4ed9b444e5a5233c5c912368133eedf0f179b45d145e44a29beda |
+| apps/backoffice/test/helpers/pointage-raw-clocking-next-child.ts             | 5ab177d042f5cbe98a2da5b1d11f3891da9b002fef83b4ad1ffd06fce77d400a |
+| apps/backoffice/test/pointage-foundation-inventory.test.ts                   | 1a8d4d2f026d6444de11f1afc5d47e38a4098eedbd0059e330cb78d102242daa |
+| apps/backoffice/test/pointage-foundation.test.ts                             | e3f091057b9c0f21bfd2ed872b9e435fc4330ae9239ffa8e5bbd51534ed3729b |
+| apps/backoffice/test/pointage-raw-chain.test.ts                              | b0fe2395ed36d944b911bafcf6dd51d20f08e3723d772189867c4f53d4a13277 |
+| apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts                 | 542dd5c555081c3d3221bd035cd905e16dcefca3de6aa8ba2b14781fa8576b87 |
+| apps/backoffice/test/pointage-raw-clocking-http.test.ts                      | 3e463e902b2e40d1fde2703c607902f5d704e32955e6f1c749b250c400623e1d |
+| apps/backoffice/test/pointage-raw-clocking-manager.test.ts                   | a36e3beaf3ee38da51eae92dafdb923a2d4d7364a45e58a3d4cdf3af338d1db7 |
+| apps/backoffice/test/pointage-raw-clocking-runtime.test.ts                   | bb9cd7db7152f7168c7adae80c96b4961b5f13bdf212671717f1e0e9dbd379fe |
+| apps/backoffice/test/pointage-raw-clocking-service.test.ts                   | 4a139b05bdabe81a6ec2ecab728792a215cd2b74273114f7bb4ae17a6d36b356 |
+| docs/ui/pages/backoffice-pointage-employee/ACCEPTANCE_CHECKLIST.md           | cbcc464c79e57f3bc34c49989d936b1dc2411839b552a159e407a407c72166ed |
+| docs/ui/pages/backoffice-pointage-employee/DATA_AND_INTERACTION_SPEC.md      | 25ffcdbb137b26568a01373c6a55c3ea714f97d70978c3c22310433bd40d68fd |
+| docs/ui/pages/backoffice-pointage-employee/DESIGN_HANDOFF.md                 | d94fc07f4e318bda95507904640e5bd80f9f5bacc251babfbf85f7bc0fc56cae |
+| docs/ui/pages/backoffice-pointage-employee/IMPLEMENTATION_PLAN.md            | b7dfc8937893032253f801160c1e9fa21e2c8cd34439c0b80e9eb38e7ef5606e |
+| docs/ui/pages/backoffice-pointage-employee/PRODUCT_SCOPE.md                  | 16a14204820f4a1b2033f26dca03494db9e5e61b28474c87216ce206062582d8 |
+| docs/ui/pages/backoffice-pointage-employee/prompt-provenance.json            | 04c6c99bf8067e848cc4df1f0f871fd43bdf1ec964d786f2617dcca4692b8a61 |
+| docs/ui/pages/backoffice-pointage-employee/prompts/00_REPOSITORY_ANALYSIS.md | 7ecab8ffd6d97de28f463d521172be6de8f66b7e3074e5e90e88f53f41ea394c |
+| docs/ui/pages/backoffice-pointage-employee/prompts/01_VISUAL_BASELINE.md     | d3075806ae38d0f9f6a945b3b42d1f3b8d7e2bd9eafa712a73587744c9f46119 |
+| docs/ui/pages/backoffice-pointage-employee/prompts/02_COMPONENT_REFACTOR.md  | 8b134cd4b462562416fb5c2e57c23eb4675a26eff7ea75fdfae44727b74648ac |
+| docs/ui/pages/backoffice-pointage-employee/prompts/03_INTERACTIONS.md        | e27c12d152d9270229eed6951898ab6f5e477d7d12ff9c170f4522ed45f00388 |
+| docs/ui/pages/backoffice-pointage-employee/prompts/04_DATA_INTEGRATION.md    | f878f959d3afee428e67620c74f4c75231d2c7816f23cbf7fc6c701067538e79 |
+| docs/ui/pages/backoffice-pointage-employee/prompts/05_VISUAL_QA.md           | 5f31ec1c2a2bcfd3129643931e188365f9608958f1f8bd697ae7854e292eaad0 |
+| docs/ui/pages/backoffice-pointage-employee/README.md                         | 77377af7a5f09d4884541e3a90de151e0ae11223b73e66f2dc57cfb08765d902 |
+| docs/ui/pages/backoffice-pointage-employee/references/README.md              | e2ddabc5a6a004441847e71629b84281eeac075c41a195eea8955f5d30a72a45 |
+| docs/ui/pages/backoffice-pointage-employee/UI_SPEC.md                        | cd109fb341545a280189d92b891506b9211134600720cf5d2b9b107563aacb45 |
+| packages/auth/src/index.ts                                                   | 464739729900d884af3ab82159151d7df5de6a0f8ee0a3a23feed7bc285a1c2a |
+| packages/auth/src/pointage-continuation.ts                                   | f2c829c33030ae3550350ff4b5eac3d5dce774e5bd4774a5e46a0dd621465172 |
+| packages/auth/src/pointage-credential.ts                                     | 8b294113e7a97fb83e5acff5df96224ed4c18d73d60c46a63abf824c37195fa1 |
+| packages/auth/test/pointage-continuation.test.ts                             | 6d9e78b745c47a96e4d59e256e67090ede1258860b140e28b6210fca57b07b4a |
+| packages/auth/test/pointage-credential.test.ts                               | 6ea66dbb73a82f8586575c15f049be3ee0832987888045a593b982001c1479a0 |
+| packages/contracts/src/index.ts                                              | cf72d2593fa90ffe590e2963f15160b232d069d1bf8848ec06d91946b18d95bd |
+| packages/contracts/src/pointage/index.ts                                     | 2bc3d6d491ce94864c2bae22a5ce96b66e052ce131be852328b4b68c2f0ba974 |
+| packages/contracts/test/pointage.test.ts                                     | 4fff5b366e61c94098dc3e4238edfd4b61a2e9b5e62527465546db760f83a013 |
+| packages/db-cloud/drizzle/0019_pointage_authority_foundation.sql             | 143b6d1e47f92336b4359c4c85a17487ead97416afbbe2c0fd0b99880c0e7056 |
+| packages/db-cloud/drizzle/0021_abandoned_black_queen.sql                     | 7794a5c02f2fa809a9985848bc455dbd3a5762415b5d96c216fb49ff4fd01ed9 |
+| packages/db-cloud/drizzle/meta/\_journal.json                                | 897139ed88030e38adfffa55ba5f1bc4d4773b6bf8f1aac619f17653834907b0 |
+| packages/db-cloud/drizzle/meta/0021_snapshot.json                            | 71052147af479bfb5f480f0981859a7af7235ff21a0be69a427a6faaeb06f4bf |
+| packages/db-cloud/src/pointage-raw-clocking-repository.ts                    | f2cf173ea3a2ad06c30a7e1b7b70f32d33f9b520e0f705aafed1fd698d9ce802 |
+| packages/db-cloud/src/pointage-repository.ts                                 | 4cfcfc4f5287590fde3ff44062a97efe1bd256771774495ae0ce91ab488034d8 |
+| packages/db-cloud/src/schema/pointage-raw-clocking.ts                        | d19c5c84c9b3352437aa839d97b54e800211bc956d28e70445e6b1247c5e4754 |
+| packages/db-cloud/src/schema/pointage.ts                                     | 8f4f12cf76773dfca6f99ba59e37e5ee7d0a18ef13827f78caebddd51400de29 |
+| packages/db-cloud/test/helpers/pointage-raw-clocking-test-database.ts        | 6bb342f09144e308b989d32d580c3b0d41223005e36834d74ddce7287dce0fe4 |
+| packages/db-cloud/test/pointage-raw-clocking-migration.integration.test.ts   | eb5693a3ba0f907e74862fa2e26c5d39e916c38ec54d219ed652a09af0aff2cc |
+| packages/db-cloud/test/pointage-raw-clocking-schema.test.ts                  | d6a10caa9edb95878605e8f3d1fa439e07e2aec5c221097a2f17bdac38b2e291 |
+| packages/db-cloud/test/pointage-raw-clocking.integration.test.ts             | 5d0ea83bacb946300030a135e2f150c5b34c4a63197d98e8f4abf8a914b82cce |
+| packages/db-cloud/test/pointage-repository.integration.test.ts               | 4761848b92e1ebb4f2db81d15e596f654f02b480c34bd290a339755302a6c1f1 |
+| packages/db-cloud/test/pointage-schema.test.ts                               | e1026fbfc7adef0773a916ed230d302005c09c711c61503159799f35f5e1b090 |
+
+## Planning checks and stop
+
+Final scoped integrity: 65 protected hashes MATCH, 32 task checkboxes / 18 checked
+và 20 requirements / 62 scenarios giữ nguyên. Full fresh baseline scan dùng
+2,613 paths; chỉ bốn planning paths thuộc correction này được thay đổi.
+Unrelated ui-ux-pro-max-integration work đã có trong fresh baseline và không
+được sửa/revert bởi lượt này; không gộp vào approval/path set.
+Không new untracked path. Main Specs, archive, migration, implementation và
+sealed UI đều giữ exact preimage bytes. Hash scans chỉ filesystem, không DB.
+
+- pnpm exec openspec status --change pointage-usable-raw-clocking --json:
+  existing artifact paths; schema yuta-spec-driven; raw planning complete.
+  Không suy ra YUTA Apply readiness từ raw CLI.
+- pnpm exec openspec instructions design --change pointage-usable-raw-clocking --json:
+  current design dependency/instruction read; no artifact regeneration.
+- pnpm exec openspec validate pointage-usable-raw-clocking --strict: exit 0.
+- pnpm docs:check: exit 0; 36 current documents.
+- pnpm architecture:check: exit 0.
+- pnpm -r --if-present typecheck: exit 0.
+- pnpm ui:pack:check backoffice-pointage-employee: exit 0, zero warnings.
+- Scoped pnpm exec prettier --check on the four planning paths: exit 0 after
+  packet assembly; whitespace fixes only in new packet text via apply_patch.
+- pnpm format:check: exit 1, same 67 pre-existing unrelated warnings; untouched.
+
+Không chạy implementation/unit/integration tests, build:cloud/test:cloud/
+test:local, migration, DB, Next, Browser QA hoặc formal VERIFY trong planning.
+Previous test observations là historical evidence, không current rerun.
+Bảy unresolved blockers giữ nguyên: exact retention duration,
+deletion/anonymization, legal hold, backup-retention interaction, employee notice,
+detailed audit visibility, trusted production client-address provenance.
+Real attendance NOT_AUTHORIZED trong mọi environment. Synthetic/disposable only.
+
+Recommendation: review exact revised Design/Tasks hashes và A-to-B E5
+clarification; accepted launch/exit/E4 decisions giữ nguyên. Cần approval trước
+resume task 3.2. Không task-count promotion. Không Gate 3 hay production grant.
+
+## Historical packet — preserved, superseded only by current review above
+
+Change: pointage-usable-raw-clocking
+Gate: SENSITIVE DESIGN — MODULE REEVALUATION EVIDENCE REVIEW
+Review status: APPROVED
+Created: 2026-09-09T15:07:21Z
+Schema: yuta-spec-driven
+Analysis conclusion: READY_FOR_SPECS
+Sensitive change: YES
+
+## Current Apply authority — bounded E2/E3 correction
+
+Approval source: explicit current-user instruction, attachment
+39198d77-8b11-46cb-9ef5-6974e2aac964.
+Approval recorded by: Codex workflow
+Approved: 2026-09-09T20:57:34Z
+
+Approved Design SHA-256:
+cf9054b04a36ca3bf3384504b49dbfcfff0e17f57080b558c01339a629d02ae0
+Approved Tasks SHA-256:
+b6f6c8e07db6b1894d6992701d7fc7523939fe2149bc8341e460d7c05b0f5f49
+
+Fresh preflight: both approved hashes MATCH; all 15 current U2 checkpoint
+hashes MATCH, and 152 inherited protected paths MATCH, including two Specs,
+migration/journal/snapshot, sealed UI, foundation and Formalites evidence.
+Two older pre-Apply runtime hashes in historical sections are not current
+checkpoint hashes. Fresh dirty Git status was captured and unrelated work
+is preserved. Only the four expressly authorized implementation paths may
+change; the other eleven U2 files stay protected.
+
+Apply authorization: GRANTED — RESUME TASK 3.2 ONLY.
+APPLY: BLOCKED. Tasks: 18/32. Task 3.2: PARTIAL.
+The approval below supersedes the preceding awaiting-review stop only for
+this bounded correction. Neither callback function identity is runtime
+authority. No private Next API, second INIT, new inbound command, public
+test capability, production provider, Spec or Product change is approved.
+All seven blockers remain; synthetic/disposable data only.
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED.
+VERIFY: NOT_RUN. QA: NOT_RUN. Production enablement: NOT_AUTHORIZED.
+
+## Current Apply result — human evidence review required
+
+E1/E2/E3 actual-child proof passed after the approved four-file correction.
+E3 is independent re-consumer proof, NOT actual Next HMR. E4 is PARTIAL:
+terminal byte-drift teardown/restoration passed, but CLOSED_TRANSPORT was
+observed rather than a generic HTTP 503 response. E5 is PARTIAL: independent
+post-READY listener-loss evidence and the complete continuation-negative matrix
+remain incomplete. INIT/STOP and the approved fixed pair factory contain no
+independent listener-close trigger. Adding an unapproved fault channel or hook
+is not permitted; STOP for review, without changing approved Design.
+
+Exact current implementation/Tasks hashes, command results, historical failures,
+source-drift hashes and retained disposable targets are recorded in
+docs/reviews/pointage-usable-raw-clocking/02c-implementation-plan-review.md.
+The approved Design hash above remains unchanged. No task completion, task 3.3,
+formal VERIFY, QA, Gate 3 or production-readiness promotion is recorded.
+
+## Historical bounded review — approved by current authority above
+
+Repository: D:/working/yuta/yuta-resto.
+Fresh HEAD: `415990386327aaccab3c32b1fef0569a0fde7f3a`.
+Fresh Git status is dirty; pre-existing and concurrent unrelated hunks are
+preserved, not attributed to this planning revision.
+
+Current-user request: attachment d055cb8b-1584-42bc-8634-b5c93cd16cdb.
+Only D1b same-process reevaluation evidence/proof methodology is reopened.
+Prior reviewed launch architecture and Product/Specs remain unchanged.
+Current review supersedes the historical approval/execution statements below;
+the original historical packet is retained verbatim in its own section.
+Revised signature, proof receipt and evidence method are PROPOSED, not implemented.
+
+APPLY: PAUSED. Tasks: 18/32. Task 3.2: PARTIAL.
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED.
+VERIFY: NOT_RUN. QA: NOT_RUN. Production enablement: NOT_AUTHORIZED.
+No employee UI, task 3.3+, migration, code/test edit, DB operation, Next startup,
+Docker/container operation, Browser QA, sync/archive/deploy or lifecycle promotion.
+The eight retained disposable containers were not touched or inspected anew.
+Their prior running/port observations below are historical, not a fresh live claim.
+
+## Exact failed evidence — retained as failure
+
+Previous explicitly enabled command:
+
+```text
+pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-bootstrap.test.ts -t 'actual Next file routes' --reporter verbose
+```
+
+Observed in prior checkpoint, NOT rerun in this planning turn:
+exit 1; 1 passed, 1 failed, 29 excluded by filter. Actual Next context, identify,
+state, CLOCK_IN/CLOCK_OUT, recover and end reached the child; stateGuard matched
+the existing decoded-root HKDF derivation. Byte-preserving runtime source mtime
+touch left successful requests, READY and pools unchanged, but no second
+runtime factory identity was observed. Exact failed assertion:
+
+```text
+expected 1 to be greater than 1
+```
+
+mtime change is NOT proven module reevaluation. Neither HTTP 200 nor stable
+pool count proves a newly evaluated module. The failing source test is protected
+unchanged this turn; it is not relabelled PASS. Future approved Apply must replace
+the unsuitable trigger with reviewed E3 evidence, preserving this failed history.
+
+The passing actual negative test covered failed second-client authentication,
+foundation over-grant and helper body/ACL drift; it did not complete U2.
+Earlier two-test PASS output did not establish clean teardown: owned child
+PID 23088 (parent 14852) required forced termination after IPC loss. Final
+source fixed termination but the later failed mtime assertion prevented full
+restart/disconnect revalidation. E4 actual byte drift and remaining lifetime
+cases are still pending. No claim of rollback for uncertain commits.
+
+## Decision proposed — invariant is not the framework trigger
+
+Observable Next HMR itself is only one possible evidence mechanism, NOT the
+security/runtime requirement. The requirement is same child PID/runId/main
+thread/listener + unchanged inventory -> same immutable process anchor,
+same initialization promise, admitted runtime/facade and foundation/raw pair.
+Fresh process always repeats admission; source BYTE drift remains terminal.
+
+Selected: evidence B (decomposed actual-route + independent-consumer proof),
+using the narrow evidence D seam; C is mandatory structural support, not a
+substitute for dynamic evidence. A was not selected: no documented deterministic
+unchanged-server-module trigger was found in the inspected Next 16.2.9 public
+interfaces. See exact Design D1b below/in the paired 02b packet for official
+version-pinned links, A/B/C/D rationale and exact E1-E5 acceptance assertions.
+
+The selected proof instantiates fresh full resolver closures from the SAME
+private constructor used by the actual Next bridge, not cached getter calls,
+copied test logic, artificial READY counts or a claim of observed Next HMR.
+E2 A/B run before admission settles; E3 C/D after READY; all four are distinct.
+Child compares original promise and resolved facade, private service runtime
+and both wrapper/db/connection references by identity under live generation/
+listener/inventory checks. Only one runtime/pair may be constructed.
+A fixed pair constructor crosses the existing in-process admit call as a
+second typed argument; sole frozen admit property and private owner remain.
+No additional runtime/client constructor or default composition is introduced.
+
+The private one-shot child proof runs as admission-lifecycle instrumentation,
+not an HTTP/browser-selectable operation. It never awaits itself through the
+admission promise. Only a fixed child-to-parent evidence receipt is proposed:
+POINTAGE_TEST_RECONSUMER_PROOF, version 1, runId, childPid, result PASS,
+exact keys only. No object/secret/data payload. Parent-to-child INIT once then
+STOP is unchanged. Missing/failing evidence cannot complete U2. Generic IPC
+reload, second INIT, private caches, global registry, runtime replacement,
+test endpoint, browser trigger, eval/VM and shared startup edits stay forbidden.
+
+## Implementation path impact — NO PATH CHANGE
+
+Future proof-only changes are proposed for exactly these existing paths inside
+the current 15-path U2 allowlist:
+
+- apps/backoffice/src/server/pointage/raw-clocking-bootstrap.ts
+- apps/backoffice/test/helpers/pointage-raw-clocking-next-child.ts
+- apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts
+- apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts
+
+No implementation write occurs now. Other eleven U2 files remain protected for
+this correction, including runtime, adapter and seven API routes. Future path,
+channel or runtime-ownership expansion requires another review.
+The proposed E4 byte-drift negative uses only the owned bridge path, records
+before/changed/restored hashes, restores expected changed bytes only after
+child exit and refuses foreign edits. It is not an E3 workaround or permission
+to mutate source this turn.
+
+## Required tests after separate approval
+
+- E1: all seven actual Next file routes through owned listener/anchor, exact
+  dependency inventory, real methods/auth/lifecycle/atomic receipt behavior.
+- E2: concurrent initial real requests plus independent A/B resolver instances,
+  identical reserved promise, once-only runtime/client construction and actual
+  dual-client D1/D1a/F8 admission before credential work.
+- E3: independent C/D after READY, pairwise distinct closures, same anchor/
+  promise/facade/private runtime/wrapper/db/connection references and unchanged
+  PID/runId/thread/listener/inventory; strict one-shot receipt; unit detector
+  negatives for reused closure/wrong promise/facade/descriptor/reference.
+- E4: separately labelled actual byte drift -> unavailable, deny new work,
+  teardown, no replacement, preserved DB evidence; no hidden mutation/restore.
+- E5: separately labelled fresh PID/runId -> new full admission; old continuation
+  remains subject to lifecycle/reset/expiry. Separate clean STOP/IPC/listener/
+  partial-start failure, no-owner normal Next and non-Pointage smoke proof.
+
+Future focused command remains the existing bootstrap/runtime/HTTP test
+selection in Tasks. Disposable cases require D1/F6 and separately authorized
+synthetic fixture/migration setup; skips are not evidence. Broader planned
+regressions and the 20/62 mapping remain unchanged. Formal VERIFY re-evaluates
+Apply evidence, then separate Browser QA; no current technical/VERIFY/QA PASS.
+
+## Exact reviewed artifact hashes
+
+Hashing: Node crypto.createHash('sha256').update(fs.readFileSync(path)).digest('hex')
+over exact file bytes, no normalization. Paths below are repository-relative.
+Previous Design/Tasks values are current-turn preimages, not older pre-Apply
+Tasks. Earlier packet/source hashes remain protected as listed separately.
+
+```text
+3e6337b2a475b11610754f05228a027a272ec2485a7350c74cc5a9218ce12d69  openspec/changes/pointage-usable-raw-clocking/design.md BEFORE
+0e22c3b47f2da71498145a95c538e6c810d9f4f6975eee86ff747f32b9af70cd  openspec/changes/pointage-usable-raw-clocking/tasks.md BEFORE
+```
+
+```text
+cf9054b04a36ca3bf3384504b49dbfcfff0e17f57080b558c01339a629d02ae0  openspec/changes/pointage-usable-raw-clocking/design.md PROPOSED
+b6f6c8e07db6b1894d6992701d7fc7523939fe2149bc8341e460d7c05b0f5f49  openspec/changes/pointage-usable-raw-clocking/tasks.md PROPOSED
+```
+
+Previous packet preimages:
+
+```text
+796642e3a717010f4dac821d8f8808830f95dad9170c7445068a02e4aa6fdb93  docs/reviews/pointage-usable-raw-clocking/02b-design-review.md
+7c8255b400b0db7043b9e27cd9d5fd124fbdcdeaf5d26903982bf8f3d67e6372  docs/reviews/pointage-usable-raw-clocking/02c-implementation-plan-review.md
+```
+
+## Inherited authority and byte-preservation proof
+
+Two unchanged delta paths: authorization/pointage 7 requirements / 21 scenarios;
+pointage/raw-clocking 13 / 41. TOTAL 20 requirements / 62 scenarios.
+Tasks: 32 checkboxes, 18 checked; four phases and all F/S/U/R contract IDs remain.
+No normative main Spec, archive, implementation, UI pack or Formalités edits.
+
+```text
+29c16cfd705d7bef4b156b92ac1cad2186bf2ce17ac7fc7c9ca66f4b84444299  apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-in/route.ts
+1c0fa864ae27a4d1f7a7940aaa8ba0d7394db3e2f1da2bff01cc1e4537218c69  apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-out/route.ts
+45043e139c0c7e5f0740acc7d7b9da4d0ed4d59d87dcffa8069f9a1ee1dfe2b6  apps/backoffice/src/app/api/pointage/[establishmentSlug]/context/route.ts
+93f5428e2e700f528dbde1464a31a9d5811dfacfb5531674fb605faf978a7ae0  apps/backoffice/src/app/api/pointage/[establishmentSlug]/end/route.ts
+8f6504f6fbd4207e34e5f06ccca1d88b266c6a52ebd1d4232697004be7cd2be5  apps/backoffice/src/app/api/pointage/[establishmentSlug]/identify/route.ts
+0714021059b92505345cc94886358474a3125bb832f38bb20a8ee6a47332f77e  apps/backoffice/src/app/api/pointage/[establishmentSlug]/recover/route.ts
+7d199ac7aa8a40f3e7c10614a32429c0e0ee48f49dc4c806d036e501e2cdcb5d  apps/backoffice/src/app/api/pointage/[establishmentSlug]/state/route.ts
+2dbd18c646df732805789f3836076d6715db9224cf8611aaac78fe16574ca380  apps/backoffice/src/server/pointage/raw-clocking-bootstrap.ts
+b4f57b8aeda30995f41a1a29008e9dae5c767d1e413a071488301aaae169e0ff  apps/backoffice/src/server/pointage/raw-clocking-http.ts
+ab9e7f157b53265ebcf62da8c7f8392018b8211c2d76e1ba467a6b2be8b53d57  apps/backoffice/src/server/pointage/raw-clocking-runtime.ts
+98e4f52ccf448d67e25163c849eabbc136d2b2f60bc45e93a5bbec9362f36977  apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts
+d63300a7321c170881afcf597a96331c344f032576a75d0371ca2464c6229f1e  apps/backoffice/test/helpers/pointage-raw-clocking-next-child.ts
+ff7ddd69163459d13fd4f341f192ee3136c09dffd5c2e9f46133345648efca35  apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts
+3e463e902b2e40d1fde2703c607902f5d704e32955e6f1c749b250c400623e1d  apps/backoffice/test/pointage-raw-clocking-http.test.ts
+bb9cd7db7152f7168c7adae80c96b4961b5f13bdf212671717f1e0e9dbd379fe  apps/backoffice/test/pointage-raw-clocking-runtime.test.ts
+```
+
+```text
+1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66  openspec/changes/pointage-usable-raw-clocking/specs/authorization/pointage/spec.md
+4bfa64e863ad465a144341c18aa5d0db3ce0806ada52ad40183cf9a4e321f90e  openspec/changes/pointage-usable-raw-clocking/specs/pointage/raw-clocking/spec.md
+```
+
+```text
+ee18fdbf3b9802978eb7d71000d001c1b32eb7672f333bf8fe452005414f3557  docs/reviews/pointage-usable-raw-clocking/01-analysis-review.md
+c5a7fd21c9fb04ea8f3617463241fc0ec8b41ea6e69b6074da5fefe98f0da566  docs/reviews/pointage-usable-raw-clocking/02-specs-review.md
+f04e66f9f2307dc92aa9cdbd134fb4a35f9c1089459440c0ccfdb40c4a3e9146  openspec/changes/pointage-usable-raw-clocking/analysis.md
+d42975cd06290431701e39d499edac93774275c1bb0f28f8474f6ff0e61816f1  openspec/changes/pointage-usable-raw-clocking/proposal.md
+464739729900d884af3ab82159151d7df5de6a0f8ee0a3a23feed7bc285a1c2a  packages/auth/src/index.ts
+7794a5c02f2fa809a9985848bc455dbd3a5762415b5d96c216fb49ff4fd01ed9  packages/db-cloud/drizzle/0021_abandoned_black_queen.sql
+71052147af479bfb5f480f0981859a7af7235ff21a0be69a427a6faaeb06f4bf  packages/db-cloud/drizzle/meta/0021_snapshot.json
+897139ed88030e38adfffa55ba5f1bc4d4773b6bf8f1aac619f17653834907b0  packages/db-cloud/drizzle/meta/_journal.json
+```
+
+All 15 U2 hashes above match the incoming checkpoint. Existing checkpoint
+manifest recheck: 152 protected paths MATCH, zero protected drift after
+excluding its historical Design hash and two previously authorized U2 runtime
+preimages. Those two runtime files are instead locked to the current hashes
+above. Gate 1/2 path sets/hashes and 20/62 remain intact.
+
+Fresh inventory used git ls-files -co --exclude-standard -z, unique sorted
+regular paths, with byte hashes. 2,613 paths captured before edits. Comparing
+current file bytes against that in-memory preimage detected ONLY this turn's
+Design/Tasks edits plus concurrent changes in two unrelated planning files:
+
+```text
+77691d3772272ffcdc0a665bdc71b9f1a7183520d696e33b62c94e7720e5d914  openspec/changes/ui-ux-pro-max-integration/design.md BEFORE
+682b78c68338aa9c53639af3f34e919a5f91558d0150a8fdd5f241e6562c887f  openspec/changes/ui-ux-pro-max-integration/tasks.md BEFORE
+```
+
+```text
+c2a1f6fc3a6957e14b6f668afcdbd2fd2575e2b723f915be98004f60aa5bb737  openspec/changes/ui-ux-pro-max-integration/design.md OBSERVED_CONCURRENT
+bb3b8edf599938e2b352994e3d6bd4d76399ccc1f76d1e1f9796ed9fd4b7992b  openspec/changes/ui-ux-pro-max-integration/tasks.md OBSERVED_CONCURRENT
+```
+
+Those unrelated ui-ux-pro-max-integration files were neither written nor
+restored by this turn; do not report a clean global diff or attribute their
+hunks to Pointage. Current Pointage scope is exactly four planning/review
+files. The other 2,607 inventory paths are unchanged at the recorded comparison.
+Final scoped review/hashes must retain this distinction if concurrent work
+continues. Protected implementation and source authorities did not drift.
+
+Final scoped comparison: only the four Pointage planning/review files are
+attributed to this turn. Both unrelated planning paths continued to differ;
+the later observed ui-ux-pro-max-integration/tasks.md SHA-256 is
+`4d54453703625bb0a1622ba78fa0b7afa33b9165f22c1f80e6460fe20adb4d85`.
+This is external concurrent work, not a protected Pointage artifact failure.
+All 15 U2 files, 152 manifest-protected files, main Specs, archive, migration,
+sealed UI and Formalites implementation bytes still MATCH their preimages.
+Both embedded current artifact snapshots were extracted and byte-compared
+with the actual Design/Tasks files: MATCH. No broader clean-worktree claim.
+
+Unchanged group digests below use SHA-256 of UTF-8 JSON.stringify of sorted
+[path, exact-byte SHA-256] rows; counts include tracked and nonignored untracked
+files, not generated node_modules/.next or runtime/DB state:
+
+```text
+9aa4bcc5ab199e9ebb702b0a4a9b0a175359274aaf98fd4022d104129da6589b  apps/ (964 files)
+4704c877d3f383b723d81d08e7539ad7484fecbefa94b5a6d5dbd2670d11bba1  packages/ (296 files)
+0a9e7b7049f8a7582240ee93a998764c6549e7efd1e21705d43088ef17b0cd92  scripts/ (15 files)
+785f53d6d899ac5b66c2de8cf522ea19de68f0d60d6d1dd78e09e4a460398289  openspec/specs/ (17 files)
+cc03b55ea5fc41101c87689c23985c0686d8b9ded3cb1453d76350c35d6fb3e4  openspec/changes/archive/ (102 files)
+be1e1aff22c89a938fd9508999c8d03c62ffb0ae52ed9b16a5eea9360c0e905a  docs/ui/pages/backoffice-pointage-employee/ (15 files)
+```
+
+No Docker/DB command or Next process was executed. Thus retained resources
+are preserved by non-action, not a new health or data-content attestation.
+
+## Planning-only validation
+
+Commands resolved from current repository manifests; no formatter-write.
+
+- openspec validate pointage-usable-raw-clocking --strict: exit 0, valid.
+- pnpm docs:check: exit 0, 36 current documents.
+- pnpm architecture:check: exit 0.
+- pnpm -r --if-present typecheck: exit 0, workspace scripts complete.
+- pnpm ui:pack:check backoffice-pointage-employee: exit 0, 1 pack, 0 warnings.
+- pnpm exec prettier --check on exact Design, Tasks, 02b and 02c paths:
+  exit 0 after packet assembly. Initial review-only diagnostic named 02b/02c;
+  two missing blank lines and outer fence lengths were corrected by patch.
+  Embedded current artifact bytes still match their file hashes exactly.
+- pnpm format:check: exit 1, 67 pre-existing out-of-scope warnings; untouched.
+  Exact warning output is retained in the historical packet and checked against
+  this run's warning set, not called PASS.
+
+No focused tests, test:cloud/test:local, build:cloud, DB/migration/runtime
+experiment or Browser QA run: forbidden by current planning-only scope.
+Planning checks are not formal Technical Compliance, VERIFY or QA evidence.
+
+## Production and review boundary
+
+All seven unresolved blockers remain: retention duration, deletion/anonymization,
+legal hold, backup-retention interaction, employee notice, detailed audit
+visibility, trusted production client-address provenance. No production
+provider, real attendance, usable employee UI, production enablement, deploy,
+sync/archive or lifecycle/readiness promotion. UI_AFFECTING YES and
+BROWSER_QA_REQUIRED YES remain; optional UI/UX Pro Max NOT_USED; sealed no-image
+direction/provenance and UI Implementation Plan remain unchanged.
+
+Required next authority: explicit human approval of the proposed Design AND
+aligned Tasks hashes and exact bounded in-process seam/receipt. NO PATH CHANGE.
+This packet is a review proposal, not permission to resume task 3.2.
+
+SENSITIVE DESIGN — MODULE REEVALUATION EVIDENCE REVIEW
+Status: AWAITING_HUMAN_REVIEW
+APPLY: PAUSED
+Tasks: 18/32
+Task 3.2: PARTIAL
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+
+## Exact current design snapshot — proposed for this review
+
+```markdown
+## Context
+
+Change `pointage-usable-raw-clocking`, schema `yuta-spec-driven`.
+Xem [Proposal](proposal.md), [Analysis](analysis.md) và exact approved
+[raw-clocking delta](specs/pointage/raw-clocking/spec.md) /
+[authorization delta](specs/authorization/pointage/spec.md).
+Gate 2 đã approve 20 requirements / 62 scenarios. Design này là đề xuất cần
+Sensitive Design review, chưa cho phép Tasks hoặc Apply.
+
+Current repository: existing Backoffice Next.js cloud, postgres-js/Drizzle
+`@yuta/db-cloud`, portable `@yuta/auth`, Zod `@yuta/contracts`.
+Foundation đã có credential, distributed rate limiting, audit và closed six
+operations; chưa có employee route, continuation, raw events hoặc receipt.
+
+Sources trực tiếp: `apps/backoffice/src/server/pointage/{service,authorization}.ts`;
+`packages/db-cloud/src/{pointage-repository,client}.ts`;
+`packages/db-cloud/src/schema/{pointage,personnel,tenancy}.ts`;
+foundation tests và archived foundation Design. `issueCredential` và
+`resetCredential` đã khóa scoped Personnel dossier bằng FOR UPDATE.
+Personnel fields hiện có: id, givenNames, familyName, entryDate, departureDate.
+Không thêm employee identity hoặc Personnel permission.
+
+Authority: root/scoped AGENTS, docs README/CURRENT_STATE/AUTHORITY_MODEL,
+activation/normativity policies, Personnel Product Knowledge, authentication/
+tenancy/database architecture, ADR-003, Production Readiness, UI workflow và
+QA protocol. Code chứng minh implementation baseline, không thay Product authority.
+Gate 1 và hai delta Specs không được sửa.
+
+## Goals / Non-Goals
+
+**Goals:** chốt exact security/transaction/time/UI approach để implement
+approved outcomes sau gate; chứng minh atomic evidence/receipt, stale-client
+protection và shared-device isolation; giữ P13/P14 đúng authority layer.
+
+**Non-Goals:** toàn bộ explicit non-scope trong Proposal và raw R13 giữ nguyên.
+Không generic employee/cloud session, canonical/materialized session table,
+manager UI, credential-management UI, correction, Planning/Today/payroll/POS/
+Site Agent/Display/offline/sync hoặc production provider. Không Technical
+Implementation Contract hay Implementation Plan trong Design này.
+
+## Decisions
+
+### D1 — Placement, trusted entry và test-only composition
+
+Route đề xuất: `apps/backoffice/src/app/pointage/[establishmentSlug]/page.tsx`,
+ngoài authenticated restaurant layout; dùng existing root fonts/styles,
+`NO_APPLICATION_SHELL`. Không redirect qua cloud login hay consume cloud-user
+cookie để authorize employee. Manager placeholder không sửa.
+
+Node-runtime route handlers dưới `/api/pointage/[establishmentSlug]/...`.
+Mỗi handler normalize slug và resolve active organization/establishment bằng
+existing foundation repository. Request IDs/slug/header không tenant authority.
+Mỗi operation re-resolve current active scope, không trust client IDs.
+
+Composition off by default. Current change chỉ có local synthetic test factory:
+explicit `YUTA_POINTAGE_SYNTHETIC_TEST_MODE=true`, `NODE_ENV` development/test,
+`VERCEL` absent, server bind loopback, explicit
+`POINTAGE_TEST_ORIGIN=http://127.0.0.1:3001`. Parse `CLOUD_DATABASE_URL`
+bằng URL parser; hostname chỉ trong exact loopback allowlist `localhost`,
+`127.0.0.1`, `[::1]`, như foundation integration test hiện có.
+
+Exact disposable database-name rule:
+`^yuta_pointage_raw_clocking_test(?:_[a-z0-9]+)?$`.
+Case-sensitive whole-string match, không substring/glob/multiline; match phải
+tiêu thụ toàn bộ name, kể cả khi regex engine cho `$` khớp trước final newline.
+Path URL phải là đúng một leading slash + name hợp lệ, không percent-encoded
+alias, extra slash, whitespace/newline hoặc query/fragment database override.
+expectedName là exact pathname bỏ một leading slash, không trim/case/Unicode
+normalization. Không browser-controlled URL/database selection.
+
+Chỉ sau URL guard mới mở connection cho identity probe:
+`SELECT current_database()` MUST trả actualName exactly equal expectedName
+(case-sensitive), và actualName cũng phải pass cùng whole-string rule.
+Không instantiate usable Pointage/provider hoặc fixture/migration/attendance
+write trước cả hai kiểm tra. Reject `yuta_cloud`, staging/production,
+non-loopback, prefix/suffix sai, actual-name mismatch hoặc probe failure.
+`NODE_ENV=production` hoặc `VERCEL` vẫn deny dù tên DB có vẻ disposable.
+
+Integration và Browser QA dùng cùng guard, không skip/weaken để tiện test.
+Convention này giữ anchored allowlist của
+`packages/db-cloud/test/pointage-repository.integration.test.ts`,
+chỉ đổi capability-specific prefix; không mở quyền real attendance.
+
+Factory inject deterministic trusted-address test provider từ server-owned
+test composition, không từ request/body/header/cookie. Browser QA dùng real
+Next dev route + real disposable PostgreSQL synthetic fixtures, không mocked
+acceptance. Không expose provider selector hoặc spoof-address API cho browser.
+Standard production build/composition luôn unavailable; test module không trở
+thành production default, kể cả flag tồn tại. Missing/untrusted provider từ chối
+trước credential lookup/processing; giữ existing candidate 5/client 30 failures
+trong 15-minute window/block, không redesign thresholds.
+
+Không trực tiếp trust Forwarded/X-Forwarded-For/X-Real-IP/Host cho provenance.
+Test origin là server config kiểm tra chính xác, không derive từ browser Host.
+Origin dùng CSRF check, không client-address hoặc tenant proof.
+Future production provider vẫn cần authority riêng; Design không implement nó.
+
+Alternative: generic Backoffice session/cookie hoặc POS runtime bị loại vì
+khác authority/runtime. Test-mode switch giới hạn environment/composition,
+không field/classifier synthetic versus real employee.
+
+#### D1a — Dual-client / same-database synthetic runtime
+
+Human clarification chỉ cho phép alignment Design/Tasks, chưa resume Apply.
+Mô hình này thuộc existing Backoffice cloud, không runtime/app mới hoặc
+production credential contract. `CLOUD_DATABASE_URL` đã qua D1 là TARGET
+descriptor; bootstrap/migration identity trong URL đó không là runtime client.
+Cả hai nguồn kết nối MUST có cùng exact parsed hostname, port, database name
+với target D1. Không alias/normalization để làm khớp một nguồn khác.
+
+Runtime nhận hai server-only injected clients, xác thực PostgreSQL độc lập:
+`foundationClient` và `rawClient`. Test bootstrap/harness sau D1 identity proof
+có thể chuẩn bị ephemeral role-specific connection material để inject; secrets
+chỉ process/server memory, không log/commit/browser serialization. Không thêm
+production environment credential contract, generic multi-database service
+locator, merged pool hoặc untyped interchangeable database handle.
+
+- `foundationClient`: exact `yuta_pointage_foundation_runtime`, LOGIN,
+  NOSUPERUSER, NOCREATEDB, NOCREATEROLE, NOREPLICATION, NOBYPASSRLS, NOINHERIT.
+  Không membership/MEMBER/USAGE/SET path tới role khác, SET ROLE, database/schema/table/
+  function ownership, WITH GRANT OPTION, ACL administration hoặc owner fallback.
+  Đây chỉ là test-only DB execution identity, không Product permission,
+  employee/manager identity hay production role.
+- `rawClient`: exact `yuta_pointage_raw_writer`; giữ nguyên toàn bộ D4b/F8
+  attributes, privileges, delegated helper và same-connection admission.
+  Không nhận limiter/audit/credential-management quyền từ foundation.
+
+Cả hai MUST dùng SAME exact verified raw-clocking disposable database theo D1,
+không chỉ cùng cluster. `yuta_pointage_foundation_test...` chỉ dành C17 8/8
+regression evidence, KHÔNG dùng làm runtime foundation DB. Không split credential
+validation và raw evidence qua hai databases; không đổi C17 guard/prefix.
+
+##### Exact foundation validation footprint
+
+Nguồn hiện tại: `packages/db-cloud/src/pointage-repository.ts` và
+`packages/db-cloud/src/schema/pointage.ts`. Các cột dưới là SQL column names,
+bao gồm SELECT predicates/join keys, không chỉ returned fields. Chỉ column grants
+được liệt kê, không whole-table grants kể cả khi hiện tại INSERT cần mọi cột.
+
+| Table (public schema) | SELECT columns | INSERT columns | UPDATE columns |
+| `---` | `---` | `---` | `---` |
+| `organizations` | `id, status` | none | none |
+| `establishments` | `id, organization_id, locale, timezone, slug, status` | none | none |
+| `personnel_employee_dossiers` | `id, organization_id, establishment_id, entry_date, departure_date` | none | none |
+| `pointage_employee_credentials` | `id, organization_id, establishment_id, personnel_dossier_id, credential_version, credential_format_version, algorithm_version, key_version, lookup_digest, salt, verifier, superseded_at` | none | none |
+| `pointage_credential_rate_limits` | `organization_id, establishment_id, key_kind, key_digest, window_started_at, failure_count, blocked_until` | `organization_id, establishment_id, key_kind, key_digest, window_started_at, failure_count, blocked_until, updated_at` | `window_started_at, failure_count, blocked_until, updated_at` |
+| `pointage_security_audit_events` | none | `id, organization_id, establishment_id, event_type, outcome, reason_code, manager_user_id, personnel_dossier_id, credential_id, credential_version, requested_operation, occurred_at` | none |
+
+Exact method-to-footprint:
+
+1. `resolveActiveEntryScope`: organizations/establishments SELECT ở trên;
+   `lower(slug)`, active statuses và organization join, không Tenancy write.
+2. `findCredentialCandidate`: credential SELECT ở trên gồm scoped HMAC
+   predicate; không issued/superseded-by administrative columns hay mutation.
+3. `findPersonnelEmploymentPeriod`: chỉ năm Personnel SELECT columns;
+   không names, documents, history hoặc Personnel write.
+4. `isRateLimitBlocked`: SELECT organization_id, establishment_id, key_kind,
+   key_digest, blocked_until từ limiter.
+5. `recordRateLimitFailure`: INSERT tám limiter columns, ON CONFLICT DO NOTHING;
+   SELECT bảy limiter columns gồm WHERE keys và locked row's window/count/block,
+   FOR UPDATE; UPDATE đúng bốn mutable columns. Không SELECT updated_at.
+   Existing four-column UPDATE đủ cho limiter row lock, không source-row UPDATE.
+6. `resetCandidateRateLimit`: WHERE organization_id, establishment_id, key_kind,
+   key_digest (candidate only); UPDATE window_started_at, failure_count,
+   blocked_until, updated_at. Existing behavior không DELETE.
+7. `appendAudit`: INSERT đúng mười hai cột của `auditValues`; không RETURNING,
+   SELECT hoặc audit visibility. UUID được app tạo; không sequence grant,
+   không mở users/Personnel/credential SELECT chỉ vì audit có foreign keys.
+
+Không method nào trong bảy phương thức cần DELETE, credential/source mutation
+hoặc helper EXECUTE. Phát hiện footprint khác khi Apply -> STOP, không widen.
+Validation facade chỉ expose bảy methods này và employee foundation operations;
+existing constructor/repository có administration methods không cho phép publish
+hoặc sử dụng chúng từ synthetic employee runtime. DB grants độc lập MUST deny
+issueCredential, resetCredential, supersession và manager administration.
+
+Ngoài CONNECT tới exact target và USAGE public schema, không grant mới trên
+object khác. Không application-function EXECUTE, đặc biệt exact
+`public.pointage_raw_lock_dossier(uuid,uuid,uuid)`; không continuation
+SELECT/INSERT/UPDATE, raw/receipt access hoặc mutation, Personnel/Tenancy
+mutation, DDL/trigger disable, DELETE/TRUNCATE, schema CREATE hay role/ACL admin.
+Ordinary pg_catalog built-ins/catalog inspection phục vụ query/proof không là
+grant mở application functions. Không audit SELECT/UPDATE hay attendance copy.
+Effective database/schema CREATE và TEMP không được thành DDL bypass.
+
+##### Ordered composition proof and failure behavior
+
+Sau existing D1 environment/URL/actual-target proof, nhưng trước provider và
+usable runtime, kiểm tra đúng thứ tự:
+
+1. Foundation source tuple khớp D1; trên chính authenticated connection chạy
+   `SELECT current_database(), session_user, current_user`.
+   Expected DB đúng D1; cả hai user đúng `yuta_pointage_foundation_runtime`.
+2. Raw source tuple khớp D1; độc lập chạy cùng probe; expected DB đúng D1,
+   cả hai user đúng `yuta_pointage_raw_writer`.
+3. So sánh hai actual names bằng nhau và bằng D1 expected name; mỗi actual name
+   độc lập pass exact whole-string D1 regex. Không SET ROLE để giả identity.
+   Pool/connection provenance phải áp dụng tới clients thực sự dùng, không lấy
+   proof từ connection khác rồi hoán đổi hoặc dùng bootstrap handle.
+4. Foundation effective privileges khớp exact inventory; kiểm tra pg_roles,
+   pg_auth_members, pg_class, pg_namespace, pg_database ownership, pg_proc,
+   pg_default_acl; effective table/column/function/database/schema privileges,
+   PUBLIC/default ACL, pg_has_role MEMBER/USAGE/SET paths và grant options.
+   Cột thêm mới không tự được grant bởi table-wide privilege.
+5. Raw effective proof giữ nguyên D4b/F8; không weaken inventory để cho role
+   foundation mới tồn tại, không thêm raw limiter/audit quyền.
+6. Chỉ sau cả hai proof mới instantiate approved injected synthetic
+   TrustedPointageClientAddressProvider, kiểm tra trusted provenance rồi tạo
+   foundation service và raw runtime. Missing/untrusted provider vẫn deny
+   trước credential hash/lookup; không forwarded/unknown-client/candidate-only fallback.
+
+Missing client, another database/C17 target, owner/bootstrap identity,
+session_user/current_user mismatch, role membership/SET path, unexpected
+privilege/default/PUBLIC inheritance, unprovable target hoặc provider -> generic
+fail closed. Không runtime ACL repair, ALTER ROLE/GRANT fallback, silent client
+swap, production provider, .env/shared-DB fallback hoặc split-database workaround.
+Cần proof thực tế sau future Apply approval; planning không claim role đã tồn tại.
+
+Composition: foundationRepository chỉ backed by foundationClient;
+createPointageServerFoundation chỉ dùng foundationRepository.
+rawClockingRepository chỉ backed by rawClient; createPointageRawClockingService
+consume foundation service, raw repository và approved stateGuard key trong
+composition có approved synthetic provider. Không tráo clients hoặc expose
+administration methods/URLs/credentials vào browser.
+
+Không chia sẻ một PostgreSQL transaction giữa hai clients. Foundation
+prevalidation, distributed limiter và minimized audit giữ transaction/behavior
+hiện có. Final raw acceptance vẫn ở raw writer transaction: D4a delegated
+locks, current credential + Personnel re-read, continuation lock, exact
+operation/lifecycle/accepted-time guards, stateGuard và raw+receipt atomic commit.
+Stale foundation success không thay raw authority hoặc authorize mutation.
+Manager read/auth boundary D9 không được mở rộng bởi validation-only client;
+không cấp users/membership reads cho role này để ghép manager runtime cho tiện.
+
+#### D1b — Actual Next process bootstrap (task 3.2 alignment proposal)
+
+Đây là bounded Sensitive Design / Tasks alignment tại checkpoint 18/32,
+task 3.2 PARTIAL (18/32); checkpoint đã có 15 protected implementation paths.
+Chỉ planning được sửa; Apply PAUSED đến human approval
+exact revised Design/Tasks hashes và exact implementation allowlist trong
+Tasks. D1/D1a, D4a/D4b, F6/F8, S9, U1, Product, hai Specs, migration 0021,
+sealed UI pack và bảy blockers giữ nguyên. Các checkpoint trước trong Design
+là historical review context, không reset completed tasks hoặc UI-pack status.
+
+##### Repository evidence and alternatives
+
+Inspected baseline: Backoffice declares Next ^16.2.9, installed 16.2.9;
+Node v24.17.0. Existing scripts: dev = next dev -p 3001, start = next start
+-p 3001, build = next build. next.config.ts không có bootstrap hook;
+không có Pointage instrumentation/startup owner. Existing typed development
+review-store global không là authority cho generic registry mới.
+createCloudDatabaseClient mặc định pool không chứng minh max:1; không sửa
+shared factory. Existing guarded Pointage test helper đã có independently
+authenticated postgres-js max:1 + Drizzle clients và exact-target probe.
+Factory raw-clocking-runtime.ts mới có injected clients, không route accessor.
+Existing child-process tests chỉ là implementation pattern, không runtime proof.
+
+Official documentation tại exact tag 16.2.9 được kiểm tra, không dùng latest:
+[custom server](https://raw.githubusercontent.com/vercel/next.js/v16.2.9/docs/01-app/02-guides/custom-server.mdx)
+mô tả public next/prepare/getRequestHandler và httpServer option; entry file
+không qua Next compiler. Custom server có optimization/standalone trade-offs,
+nên chỉ test entry, không thay production startup.
+[instrumentation](https://raw.githubusercontent.com/vercel/next.js/v16.2.9/docs/01-app/03-api-reference/03-file-conventions/instrumentation.mdx)
+await register trước readiness, chạy mỗi server instance và có Node/Edge
+distinction; không chứng minh socket ownership/teardown cho D1.
+Installed next/dist/server/next.js, next.d.ts xác nhận public API, custom
+prepare/getRequestHandlers và close lifecycle. Không import Next private APIs.
+Version drift phải re-review lifecycle evidence; không upgrade để làm test pass.
+
+- A, process-local module alone: bounded cache khả thi nhưng standard CLI không
+  cấp actual listener owner, cleanup hoặc cross-reload guarantee. Không chọn
+  module-cache-only hay environment-driven lazy default.
+- B, dedicated test launcher + in-process bootstrap: CHOSEN, kết hợp narrowly
+  typed process-local promise của A. Cha chỉ chuẩn bị disposable infrastructure
+  và ephemeral inputs; actual Next child tạo/prove hai clients của chính nó.
+- C, instrumentation: không chọn. Hook existence không cung cấp actual socket,
+  shutdown hoặc cache-reload proof; thêm shared startup path không cần thiết.
+- D, plain next dev + env-only, private Next hooks hoặc proxy/sidecar: reject.
+  Không actual socket proof, hoặc tăng topology/registry/secret contract.
+  Không separate Pointage server, app, containerized app runtime hay new port.
+
+##### Owner and exact launch channel
+
+Launcher test-only khởi chạy MỘT Node child hosting existing apps/backoffice
+Next app bằng public next({ dev: true, dir: absoluteBackofficePath,
+hostname: '127.0.0.1', port: 3001, httpServer, quiet: true }).
+Tất cả page/API vẫn do Next file-system router; không implement HTTP business
+routes trong launcher, không reverse proxy hoặc second HTTP service. Chỉ
+test invocation thay CLI invocation; normal dev/start/build/config không đổi.
+Higher-risk process-wide effect nằm trong dedicated test child: listener
+ownership và lifecycle, không shared source/config path. Không launch cùng
+Backoffice khác trên port 3001; EADDRINUSE -> STOP, không auto-select port.
+
+Parent validates existing D1/F6 guards trên target trước provisioning/migration/
+fixtures; admin chỉ ở parent. Parent không gửi admin URL, open JS client,
+parent SQL proof hoặc runtime object qua process boundary. Parent-generated
+role passwords và encodedAuthSecret chỉ memory. Không .env write, command-line secrets,
+NEXT_PUBLIC inputs, durable production config hoặc implicit .env.local fallback.
+
+Child uses Node fork IPC, one strict INIT message <= 16 KiB, exact keys:
+type = POINTAGE_TEST_INIT; version = 1; runId = UUIDv4;
+parentPid / childPid = positive integers matching process.ppid / process.pid;
+origin = http://127.0.0.1:3001; listenHost = 127.0.0.1; listenPort = 3001;
+foundationDatabaseUrl / rawDatabaseUrl = role-specific URLs for SAME D1 tuple;
+encodedAuthSecret = canonical base64url 32 random bytes (existing auth format).
+Unknown keys, oversized/malformed/repeated INIT, wrong PID/channel or missing
+IPC reject. No browser/control endpoint can supply INIT or choose provider.
+After INIT only exact STOP { type: POINTAGE_TEST_STOP, version: 1, runId }
+is accepted from this same parent channel; unexpected messages fail closed.
+
+INIT không có stateGuardKeyBase64; nếu supplied thì reject như unknown key.
+Parent chỉ gửi encodedAuthSecret, không gửi independently generated hoặc derived
+stateGuard key. Trong actual Next child, strict validate/decode encodedAuthSecret
+bằng existing decodePointageAuthSecret, rồi gọi existing
+derivePointageStateGuardKey(decodedAuthSecret) với approved HKDF label
+yuta/pointage/raw-state-guard/v1. Child pass derived key đó vào
+createPointageRawClockingRuntime trong existing admission order; decode/derive
+failure giữ terminal fail-closed behavior, không publish runtime. Không nhận
+stateGuard key từ IPC, environment, CLI, request, browser hoặc process khác;
+không thêm secret contract hay viết lại crypto primitive của F1/D5.
+
+Planned D1b proof: reject INIT chứa stateGuardKeyBase64; inventory không có
+environment/CLI/browser stateGuard-key input; actual runtime nhận đúng output
+của existing derivation trên decoded auth secret; đổi auth secret phải cho
+corresponding domain-separated derived key; parent không gửi derived key riêng.
+Existing F1 vectors trong packages/auth/test/pointage-continuation.test.ts là
+authority, không duplicate thuật toán mới. Đây là planned tests, chưa chạy.
+
+Child environment is explicit allowlist: required Windows OS launch keys
+SystemRoot, WINDIR, COMSPEC, PATH, PATHEXT, TEMP, TMP only when present;
+NODE_ENV = development, YUTA_POINTAGE_SYNTHETIC_TEST_MODE = true,
+POINTAGE_TEST_ORIGIN = exact origin, NEXT_TELEMETRY_DISABLED = 1.
+Never inherit NODE_OPTIONS, arbitrary application secrets or NEXT_PUBLIC keys.
+Parent production/VERCEL check occurs BEFORE environment sanitization; cannot
+erase VERCEL to make an unsafe launch eligible. Child repeats live checks.
+Private projected D1 environment uses foundationDatabaseUrl as
+CLOUD_DATABASE_URL target descriptor; raw URL is separately checked against it.
+Neither URL is installed in process.env or read from Next dotenv loading.
+Normal CLI/build/start has no IPC owner/anchor and remains unavailable even
+with flags. No production provider is constructed; deterministic synthetic
+provider is fixed in server-owned child code, never derived from headers.
+
+##### Actual listener, admission and consumer handoff
+
+Order in actual child:
+
+1. Validate INIT/environment/URL tuples/roles and main-thread process identity,
+   before creating either client. Bind owned node:http server to exact IPv4
+   127.0.0.1:3001 with generic 503 gate. Inspect server.listening and address()
+   for exact address/port; derive origin from that socket tuple and compare
+   exact POINTAGE_TEST_ORIGIN. Config or successful parent fetch alone is not
+   listener proof. No credentials processed at this stage.
+2. Prepare existing Next against that exact httpServer. Before delegating any
+   request, verify socket.localAddress/localPort, live listener and process
+   generation; Host/Forwarded/X-Forwarded-\* never prove provenance. Origin
+   remains separate D8 CSRF check. No extra public health/bootstrap endpoint.
+3. Install one non-enumerable, non-writable, non-configurable property on Node
+   process keyed Symbol.for('yuta.pointage.raw-clocking.test-bootstrap.v1').
+   Value is frozen, Pointage-only typed admission accessor; private closure
+   owns INIT, listener, clients, state and promise. No mutable globalThis bag,
+   arbitrary keys, generic get/set/register or replace-client method.
+4. Server-only raw-clocking-bootstrap.ts, compiled by Next, supplies exactly
+   createPointageRawClockingRuntime to that one typed accessor. The child
+   DOES NOT import server-only application modules outside Next compilation
+   or enable global react-server conditions. The constructor callback is
+   fixed in this module, never supplied by handlers/request/browser.
+5. On the first accessor call, synchronously reserve the one initialization
+   promise, then create two distinct postgres-js max:1/Drizzle clients in this
+   actual process, reusing guarded test-client construction. On each actual
+   authenticated handle prove current_database() and session_user/current_user:
+   foundation = yuta_pointage_foundation_runtime; raw = yuta_pointage_raw_writer.
+   Both actual names equal the exact D1 target and independently pass the
+   whole-string rule. Rerun foundation D1a effective inventory and raw D4b/F8
+   body/owner/ACL/OID proof on these handles. No SET ROLE, parent proof,
+   admin/C17/default DB client, ACL repair or silently replaced connection.
+6. Only then instantiate fixed synthetic trusted-address provider and the
+   runtime; publish READY only after complete factory admission. Factory's
+   current per-operation requireReady and final raw transaction rechecks stay.
+   Neutral context availability additionally runs requireReady and existing
+   active-entry scope resolution, returning only { available: true } or 503;
+   it adds no authorization operation, dossier projection or credential work.
+
+Exact dependency: seven Node route.ts handlers -> raw-clocking-http.ts ->
+server-only getPointageRawClockingConsumer() in raw-clocking-bootstrap.ts ->
+typed process admission accessor -> existing admitted runtime.
+Consumer exposes only context/identify/readState/mutate/recover/end functions,
+not clients, URLs, admin/owner, provisioning, fixtures or generic DB factories.
+Internal constructor types are not consumer exports. Enforce import inventory
+and browser/RSC negative tests. The immutable process anchor is a narrowly
+scoped in-process capability, NOT a security sandbox against hostile server
+code/OS users; existing trusted-repository/host assumption remains explicit.
+
+No anchor, failed admission, wrong environment/listener/DB/role/privilege/helper/
+provider, connection failure or different worker/process -> D8 generic 503
+POINTAGE_UNAVAILABLE without credential work or partial identity. Readiness
+in another route never authorizes a bypass. Every accessor/dispatch checks
+live generation/listener/environment; every service call retains requireReady.
+A reconnect on either fixed max:1 client repeats identity/effective proof before
+use; reconnect failures cannot create a replacement pair or fallback identity.
+
+##### Concurrency, reload and failure lifetime
+
+Generation = child PID + parent-generated runId; main thread only. State starts
+INITIALIZING on the first call; all concurrent calls await the SAME promise.
+No partially admitted pair is cached/published. READY holds one bounded runtime.
+Initialization failure becomes terminal FAILED/UNAVAILABLE for that generation;
+close any opened client, drop input references, return only generic failure.
+No automatic retry, second factory invocation or in-process replacement.
+Live prerequisite failure also marks FAILED and initiates teardown; ordinary
+403/409/429 business outcomes do not. New admission needs a fresh child launch.
+
+Do not rely on Next module cache/HMR semantics. Immutable owner closure remains
+with actual process, while route module reload may obtain only its same typed
+promise. No pool lives only in an evictable module. Source/config/dependency
+change invalidates the generation: parent watches and child checks exact
+launch inventory hashes before each admission/dispatch. Inventory covers
+Backoffice src + test bootstrap entry files, imported auth/contracts/db-cloud/
+tenant source, their manifests, Backoffice config/tsconfig and pnpm-lock.yaml;
+path additions/removals also invalidate. Exclude .next generated output.
+Changes -> deny new work and teardown, no hot replacement or automatic restart;
+fresh manual launch recaptures and proves. A harmless module-cache reload with
+unchanged inventory must reuse the same promise/pair, never duplicate pools.
+Watch events alone are not proof; checksum validation is authoritative.
+
+Actual Next process/thread/generation agreement must be demonstrated by future
+real-route tests, independent re-consumer evidence E3 and process restart E5. Documentation
+does not establish this application-specific result. If Next executes the
+accessor in another worker/realm without the owned anchor, it is unavailable:
+STOP rather than global env fallback, cross-process registry or mocked proof.
+After restart the old runtime is dead; new clients require full admission.
+Existing continuation rows alone confer no authority; D2-D4 validation and
+shared-device clearing still apply.
+
+##### D1b evidence reopen — runtime invariant versus proof trigger
+
+Current-user attachment d055cb8b-1584-42bc-8634-b5c93cd16cdb chỉ authorize
+Design reopen về proof methodology. APPLY: PAUSED; Tasks: 18/32;
+task 3.2 PARTIAL. Không sửa 15 implementation paths, không chạy DB/Next/QA.
+Đề xuất dưới đây cần explicit approval của exact revised Design/Tasks hashes;
+không coi previous Apply grant là authorization cho seam mới.
+
+RUNTIME INVARIANT: trong một generation gồm child PID + runId + main thread +
+owned listener, mọi valid independent bootstrap consumer MUST resolve cùng
+immutable process anchor, đúng một initialization promise, một admitted
+runtime/facade, một foundation client và một raw client. Client wrapper và
+underlying postgres-js connection objects phải giữ identity riêng tương ứng.
+Module reevaluation không được tạo runtime/pair thứ hai. Fresh PID/runId MUST
+chạy lại toàn bộ D1/D1a/F8; missing anchor ở worker/realm khác vẫn fail closed.
+
+Observable Next HMR itself is NOT a security/runtime requirement; it is only
+one possible evidence mechanism. Đây là proposed clarification của D1b,
+không nới singleton invariant và không tuyên bố HMR đã được quan sát.
+mtime touch, HTTP 200, READY status hoặc pool count không đổi riêng lẻ không
+chứng minh module evaluation. Source BYTE drift vẫn là terminal negative E4,
+không phải unchanged-inventory test E3.
+
+**Version-pinned public-interface findings.** Installed Next 16.2.9,
+Node v24.17.0; inspected package main/index declarations và
+next/dist/server/next.d.ts. Public source
+[NextWrapperServer at v16.2.9](https://raw.githubusercontent.com/vercel/next.js/v16.2.9/packages/next/src/server/next.ts)
+phân biệt custom-server surface và internal methods. Public next(), prepare(),
+getRequestHandler(), close() cho phép hosting/request lifecycle; không tìm thấy
+documented deterministic API để đánh giá lại unchanged server module trong
+same process. Có method hiện diện trong .d.ts không đồng nghĩa với public
+reevaluation contract; getServer/load-config/setup-dev-bundler, private cache,
+getRequestHandlerWithMetadata và internal upgrade machinery không được dùng.
+
+[Custom-server guide v16.2.9](https://raw.githubusercontent.com/vercel/next.js/v16.2.9/docs/01-app/02-guides/custom-server.mdx)
+giữ approved hosting API; không cần thay dev/start/build/config.
+[Fast Refresh v16.2.9](https://raw.githubusercontent.com/vercel/next.js/v16.2.9/docs/03-architecture/fast-refresh.mdx)
+mô tả edit-driven refresh/re-run/reload, không hứa mtime-only server evaluation.
+[revalidatePath v16.2.9](https://raw.githubusercontent.com/vercel/next.js/v16.2.9/docs/01-app/03-api-reference/04-functions/revalidatePath.mdx)
+và [router.refresh v16.2.9](https://raw.githubusercontent.com/vercel/next.js/v16.2.9/docs/01-app/03-api-reference/04-functions/use-router.mdx)
+là data/render/cache behavior, không module-instantiation proof.
+[Instrumentation v16.2.9](https://raw.githubusercontent.com/vercel/next.js/v16.2.9/docs/01-app/03-api-reference/03-file-conventions/instrumentation.mdx)
+register gắn với server initialization, không unchanged-module trigger.
+Kết luận A là bounded finding từ các public interfaces/docs đã inspect, không
+claim mọi cơ chế Next đều bất khả thi. Không upgrade, private API invocation,
+cache deletion, eval/VM/compiler transform hoặc experimental loader.
+
+**Options for evidence (distinct from earlier launch options).**
+
+- Evidence A — actual public Next reevaluation trigger: NOT SELECTED. Không
+  tìm thấy API đáp ứng unchanged bytes + same generation + documented public
+  surface; mtime attempt đã fail. Chỉnh nguồn để ép refresh vi phạm E3.
+- Evidence B — decomposed proof: SELECTED. E1 chứng minh actual routes dùng
+  owned anchor; E2/E3 kiểm tra independent consumer instances từ đúng resolver
+  code trong cùng child. Không claim mô phỏng Next compiler/HMR behavior.
+- Evidence C — structural proof: REQUIRED SUPPORT, NOT SUFFICIENT ALONE.
+  Descriptor flags/frozen sole admit, stable Symbol, closure-owned promise/
+  clients, route import graph và no constructors ở consumers giải thích vì sao
+  mọi consumer cùng converge. E1-E5 dynamic assertions vẫn bắt buộc.
+- Evidence D — fixed test-only re-consumer seam: SELECTED only as the bounded
+  mechanism for B, defined below. Không HTTP/browser endpoint, test header,
+  generic IPC command, registry, runtime reset/replacement hoặc production hook.
+
+**Exact selected seam — equivalent independent consumer instantiation.**
+
+1. Trong existing raw-clocking-bootstrap.ts, một non-exported
+   createIndependentPointageAccessor() tạo một fresh zero-argument closure.
+   Mỗi closure chứa đầy đủ actual descriptor lookup/validation của native
+   node:process + stable Symbol và gọi fixed anchor.admit; không đóng trên
+   runtime/client/promise đã cache, không gọi lại cached get function.
+   Nó dùng fixed imported createPointageRawClockingRuntime như hiện tại.
+   Normal getPointageRawClockingConsumer dùng một closure tạo từ chính factory
+   này. Chỉ bounded consumer entry được export, không export probe/client.
+2. Một non-exported fixed createPointageAccessorPair() trả đúng hai fresh
+   closures từ factory đó, không argument/options/operation/input. Bridge
+   truyền function này làm second typed argument của sole admit method:
+   admit(fixedRuntimeFactory, fixedAccessorPairFactory). Đây là proposed
+   internal test-child signature alignment, không thêm method vào anchor,
+   public operation, consumer output hoặc replace/install API. Handler không
+   supply callback; child không import server-only bridge ngoài Next compiler.
+   Callback được Next-compiled bridge chuyển trong process, không serialize.
+3. Child owner reserve original admission promise đồng bộ trước mọi callback/
+   await như hiện tại. Một private one-shot proof state được reserve trước
+   gọi pair factory để recursive admit không khởi động probe lần hai.
+   E2 tạo pair A/B ngay sau reservation, trước initialize microtask hoàn tất:
+   A !== B; A và B đều chạy resolver riêng; cả hai returned promises phải ===
+   chính reserved promise (không async wrapper/.then tạo promise mới trong
+   accessor). Recursive admit vẫn chạy live guards, không skip validation.
+   Only initial fixed runtime factory có thể initialize; reentry không gọi lại.
+4. Sau promise thành công, owner giữ private reference tới returned facade,
+   underlying admitted service runtime, foundation wrapper/db/connection và
+   raw wrapper/db/connection. E3 tạo pair C/D MỚI bằng cùng fixed pair factory;
+   cả bốn closures A/B/C/D phải pairwise distinct. Invoke C/D independently
+   và concurrently; từng returned promise === original; mỗi resolved facade
+   === original facade. Trước/sau E2/E3 kiểm tra same native process anchor
+   object/descriptor, PID/runId/main-thread/listener và exact inventory hash.
+   Factory/client construction counters mỗi loại đúng một; từng reference
+   runtime, wrapper, db, connection giữ === baseline. DB pool count chỉ là
+   supporting observation, không thay object/consumer identity assertions.
+5. Đây là genuine independent consumer instantiation được option B cho phép,
+   KHÔNG phải genuine Next module reevaluation. Factory body có thể cached
+   nhưng closures mới phải có own identity và thực thi toàn bộ resolver;
+   gọi cached get hai lần hoặc hai wrapper chỉ delegate cached get không đủ.
+   Static source check MUST chứng minh real route getter và pair factory dùng
+   đúng cùng resolver constructor; không copy algorithm riêng cho test.
+   Separate module top-level side effects ngoài bounded accessor không được
+   claim covered; route/source inventory MUST chứng minh không có constructor/
+   mutable runtime owner khác. Nếu cần proof rộng hơn -> STOP review, không
+   tự chuyển sang private Next cache.
+6. Probe tự chạy đúng một lần từ owned test-child admission lifecycle, không
+   có command/route/query/body/header/browser selector để invoke hoặc repeat.
+   Sau original promise resolves, proof awaits re-consumers, KHÔNG await probe
+   trong promise mà probe đang kiểm tra (tránh self-await deadlock).
+   READY vẫn chỉ phản ánh runtime admission; proof result là evidence riêng.
+   Missing pair, reused closure, wrong identity, drift, timeout/exception hoặc
+   missing result không PASS: terminal failure/teardown hoặc test failure theo
+   existing bounded lifetime; không reset/retry/replace trong generation.
+7. Parent-to-child IPC giữ nguyên exact INIT một lần rồi STOP; không RELOAD,
+   second INIT hoặc extra parameter/key. Child-to-parent thêm đúng ONE typed
+   evidence receipt sau successful E2/E3: type POINTAGE_TEST_RECONSUMER_PROOF,
+   version 1, runId, childPid, result PASS. Không arbitrary payload/record,
+   function/object identity, counts, path, URL, key/hash of secret, credential,
+   token, employee hoặc attendance. PASS chỉ emit sau tất cả assertions ở
+   owner thành công; failure dùng existing generic FAILED status/teardown.
+   Parent validates exact keys/generation/sole occurrence và phải observe
+   receipt để pass E2/E3. Receipt không runtime authority hoặc readiness grant.
+   Không thay READY counter thành artificial HMR evaluation counter.
+8. Future tests trong existing bootstrap.test MUST có detector sensitivity:
+   riêng isolated child-owner unit tests đưa reused closures, mismatched
+   promise/facade hoặc altered descriptor/reference vào bounded proof logic
+   -> no PASS; test mock chỉ chứng minh detector, không thay E1-E3 actual-child
+   positive. Không thêm hostile callback selector vào real launch/IPC/HTTP.
+
+Path impact: NO PATH CHANGE. Future evidence-only changes dự kiến đúng bốn
+existing paths thuộc approved 15: raw-clocking-bootstrap.ts (private closure
+constructor/signature), test/helpers/pointage-raw-clocking-next-child.ts (owner
+assertions/receipt), test/helpers/pointage-raw-clocking-launcher.ts (strict
+receipt parsing only), test/pointage-raw-clocking-bootstrap.test.ts (E1-E5
+and detector tests), tất cả dưới apps/backoffice với src/server/pointage cho
+bridge. Exact full paths/hashes nằm trong review/Tasks. Không sửa runtime.ts,
+HTTP adapter, seven routes, shared startup/config/package hoặc migration.
+Nếu implementation cần thêm path/argument channel/runtime owner -> STOP.
+Không file nào trong 15 paths được sửa ở lượt Design này.
+
+##### Teardown, diagnostics and disposable lifetime
+
+SIGINT/SIGTERM, IPC disconnect/STOP, listener failure, source drift or terminal
+admission failure stop new requests immediately. Drain owned in-flight work
+for at most 10 seconds, then close remaining owned HTTP/HMR sockets and call
+Next close. End both postgres clients exactly once, including partial startup,
+with a 5-second close deadline; drop runtime/promise/secret references.
+Parent gives child 20 seconds to exit, then may terminate ONLY that positively
+identified owned child PID; never broad node/process/container kills.
+A timeout/forced exit leaves possible commit outcome unknown, not false rollback.
+No teardown deletes raw events, receipts or continuations inside active DB.
+
+Drop INIT message references after construction. Child sở hữu decoded auth
+secret và derived stateGuard material của generation; không log/persist, đặt
+trong process.env, serialize vào RSC/browser hoặc expose qua diagnostics.
+Chỉ clear owned mutable buffers best-effort khi ownership thực sự kết thúc,
+đặc biệt lúc teardown; không zero buffer mà live runtime vẫn phụ thuộc.
+Không claim xóa được immutable JS strings hoặc driver/runtime copies;
+driver credentials remain private until pool/process termination.
+Raw child stdout/stderr are piped, drained and discarded, not persisted or
+relayed via regex redaction. Only strict sanitized IPC diagnostics and the sole bounded re-consumer proof
+receipt defined above are exposed:
+type = POINTAGE_TEST_STATUS, version = 1, runId, childPid,
+stage in LISTENING/INITIALIZING/READY/FAILED/STOPPED and optional bounded
+code = POINTAGE_UNAVAILABLE. No input echo, exception/SQL stack, headers,
+URL, auth material, hashes of secrets, Personnel or attendance payload.
+Quiet mode supplements, never replaces, output suppression. Parent follows
+the same no-secret-output rule for driver/provision commands.
+
+Default shutdown retains positively identified disposable DB/container for
+evidence; no automatic destructive cleanup. Separate explicitly authorized
+cleanup uses existing F6 ownership/name/loopback/current_database guards and
+exact owned container/volume identity after child exit. Unknown identity or
+shared yuta_cloud/yuta_resto -> STOP. No real attendance or production activation.
+
+### D2 — Opaque continuation và authenticity
+
+Chọn 32 cryptographically random bytes, base64url không padding (43 chars),
+prefix `ptc1_`; secret chỉ có trong HTTPS response rồi browser module memory.
+Không JWT, không signed serialized employee context, không cookie/sessionStorage/
+localStorage/IndexedDB/service worker/history state/URL storage. Loopback HTTP
+chỉ là isolated synthetic test exception, không production policy.
+
+Durable continuation record lưu SHA-256(secret bytes), không token/plaintext
+credential. 256-bit random secret chống guessing; digest lookup scoped
+organization/establishment, server record bind dossier và exact credential ID/
+version. Khi lookup khớp, so sánh digest bằng constant-time primitive,
+revalidate current credential và build fresh PointageEmployeeContext cho exact
+operation server-side. Không expose record, role/grant hoặc context.
+
+Mỗi identify thành công cấp token mới; không rotate giữa một interaction để
+tránh lost-rotation response và parallel retry ambiguity. Không refresh token
+hoặc sliding absolute lifetime. Rotation là new identification/new random
+token; old interaction phải kết thúc hoặc hết hạn, không alias sang token mới.
+
+Lifetime: absolute 120 seconds từ DB issue time; idle 60 seconds từ latest
+successful authorized state/mutation/replay. Idle deadline không vượt absolute
+deadline. Failures/polling/background activity không gia hạn; UI không heartbeat
+tự động. Mỗi valid foreground state request/user mutation update idle deadline
+atomically, trả remaining durations để client dùng monotonic timer cho clearing.
+Server deadlines là authority; client clock không được kéo dài TTL.
+
+Reset/regeneration: mỗi authorized employee operation đọc current credential
+trong cùng dossier lock với reset. Superseded credential hoặc version mismatch
+deny mọi continuation old-version, kể cả receipt replay. Không sửa crypto hoặc
+issue/reset policy. Không cần background invalidation job; ended/expired/version
+checks chặn ngay future request. Credential reset không phải raw mutation.
+
+Alternative: stateless JWT cần serialize claims, khó immediate end/reset và
+shared-device handling; ambient cookie dễ share giữa tabs/next users. Opaque
+server-side revocable state phù hợp bounded interaction; không thành canonical
+identity hoặc attendance source. XSS/malicious browser extensions có thể đọc
+live memory; chống qua D10, không tuyên bố memory là bảo vệ trước compromised
+device/TLS endpoint.
+
+### D3 — Shared-device lifecycle và end semantics
+
+State flow:
+CREDENTIAL_ENTRY -> IDENTIFY_PENDING -> ACTIVE_STATE -> MUTATION_PENDING ->
+RECEIPT -> ENDING -> NEUTRAL.
+ACTIVE_STATE có NOT_CLOCKED_IN/CLOCKED_IN; domain mutation chỉ khi server đã
+cấp state guard. Mỗi committed receipt hiển thị 10 seconds rồi auto-end; explicit
+`Terminer` kết thúc sớm. Muốn mutation khác sau receipt bắt đầu interaction mới;
+multiple daily sessions vẫn không quota. Không extra history/totals view.
+
+Credential entry chỉ memory trong password input; clear ngay sau identify
+request settle, cả failure. Identity/state chỉ render sau valid identify +
+current-state load thành công; không SSR sensitive data.
+
+Explicit end: ngay lập tức phủ neutral UI, clear personal DOM synchronously,
+bump interaction-generation counter, abort pending fetch callbacks và gửi
+best-effort authenticated end request. Server end khóa dossier rồi continuation,
+set ended_at một lần; retry end idempotent. End capability chỉ terminate own
+continuation, không thêm operation/grant hoặc revoke/suspend credential.
+Own end được xử lý kể cả eligibility/version đã mất; không trả employee data.
+
+Phân biệt local clearing và server-confirmed end:
+
+- ENDING không cho state read/mutation/replay; không hiển thị employee.
+- End hoàn tất khi server commit ended_at (hoặc server-enforced expiry);
+  không claim network timeout đã revoke trên server.
+- Nếu end response mất/cloud unavailable, browser vẫn clear hết secrets/data,
+  không retry attendance, không restore interaction; server authorization còn
+  giới hạn bởi idle/absolute expiry. Không báo “server đã hủy” khi chưa có proof.
+- Any request sau committed end/expiry bị deny. Request đã được linearize trước
+  end có thể commit trước end; abort fetch không rollback server. End acknowledgement
+  chỉ sau lock order bảo đảm earlier accepted mutation đã settle.
+- Không thể hứa remote invalidation tức thì lúc offline; không định nghĩa
+  offline “end confirmed”. Đây là explicit failure semantics, không weakening
+  quyền sau completed interaction end.
+
+Client clears ngay khi idle deadline, absolute deadline, pagehide, visibility
+hidden, navigation/unmount hoặc explicit end. Không gia hạn timer bởi moving
+mouse. Khi hidden, best-effort end; bfcache entry lưu neutral DOM, không personal
+React tree. pageshow (gồm persisted), refresh, back/forward luôn neutralize trước
+render và yêu cầu identify mới; không auto-fetch previous employee bằng token.
+
+Tab duplication mở neutral page; không dùng copyable durable store hoặc
+BroadcastChannel/postMessage truyền token. Browser restart không có token để
+resume. Outstanding response chỉ apply khi same live generation; late success/
+identity không repopulate sau clearing. No-store alone không đủ cho history,
+nên bắt buộc synchronous pagehide clearing + pageshow reset.
+
+Khi timeout mutation trong live interaction, giữ request tuple trong memory
+cho exact retry; không auto-end vì timeout ngay lập tức. Nếu TTL/end/navigation
+xảy ra, purge tuple cùng interaction; không phục hồi lịch sử sau refresh hoặc
+tạo replacement mutation tự động. Người dùng identify mới và xem current state;
+existing committed receipt vẫn recoverable server-side bằng exact known tuple
+và current authority, nhưng không có history/list endpoint.
+
+Tests phải chứng minh tất cả transitions này; không claim UI privacy đối với
+ảnh chụp OS, shoulder surfing hoặc compromised browser ngoài app threat model.
+
+### D4 — Trusted Personnel projection và current authorization
+
+Không tạo Personnel contract/grant mới. Scoped query chỉ lấy
+id, given_names, family_name, entry_date, departure_date từ
+personnel_employee_dossiers với organization_id + establishment_id + id.
+Server compose displayName = trimmed givenNames + single separator + familyName;
+không persist tên vào Pointage tables hoặc expose từng Personnel field riêng.
+P5 approve minimal own projection; Personnel §3 cho downstream projections;
+OWNER-only dossier-management không bị mở cho employee/MANAGER.
+
+Identifier + nonempty names + valid entry/departure/date/timezone phải valid.
+Missing/cross-scope/unverifiable -> generic access/unavailable failure, không
+fabricated name/employee. Pointage không update Personnel.
+
+Identify, state.read, operation.create đều evaluate current lifecycle inclusive
+entry/departure theo authoritative current establishment business date.
+Không dựa vào CLOCK_IN grouping date cho later CLOCK_OUT.
+Missing lifecycle/invalid timezone fail closed, không default Europe/Paris.
+
+Public handlers không nhận PointageEmployeeContext input. Prevalidation dùng
+existing credential primitives/provider/rate limits, nhưng trước cấp continuation
+hoặc expose state phải transactionally recheck current credential + scoped
+Personnel; chỉ lúc đó tạo fresh context cho exact operation. Không dùng
+pre-transaction success để bypass reset/departure race.
+
+#### Identify trả initial state — không gộp hai operation authorities
+
+Credential verification vẫn chạy sau trusted scope/provider/rate prerequisites
+của foundation. Với verified proof, successful identify + state boundary là:
+trusted scope resolution/recheck dưới transaction locks -> exact
+`pointage.employee.identify` authorization + current Personnel eligibility ->
+continuation issuance candidate -> riêng exact
+`pointage.employee.state.read` authorization + current scope/credential/version/
+Personnel re-check -> canonical raw-chain validation -> derived minimal own
+state -> successful continuation + state response sau commit.
+
+Context mang operation identify không được dùng như state.read context.
+Cả hai exact guards phải được gọi và pass, không infer guard thứ hai từ
+identify success hoặc continuation existence; không merge identifiers/new grant.
+Candidate secret/digest/binding chỉ ở server memory, chưa usable/persisted.
+Trong cùng transaction và D4 lock order, derive state/projection trước INSERT
+continuation. Final server-time check trước INSERT re-evaluate lifecycle cho
+cả hai operations tại current business date (kể cả midnight), giữ current
+scope/version prerequisites; DB issue/deadline timestamps theo D2.
+Stage payload server-side, COMMIT rồi mới expose token/name/state; không
+commit identify-only row rồi gọi state.read ở transaction khác.
+
+State.read denied, lifecycle/scope uncertainty, inconsistent raw chain hoặc DB
+failure trước commit -> rollback candidate/insert, discard secret và staged
+state; existing generic access/unavailable response, không protected identity/
+state/token hoặc partial identify-only success. Identify không tạo raw event/
+receipt. Nếu COMMIT outcome/response mất, có thể có orphan continuation đã vượt
+đủ cả hai guards; không claim success, re-show secret hoặc bypass state.read.
+Token đó hết hạn D2, caller identify mới như D8. Test phải inject failure sau
+identify guard nhưng trước state-read/commit để chứng minh response/issuance
+không tạo partial authorization.
+
+Lock order không đổi: active organization FOR SHARE -> establishment FOR SHARE
+-> scoped Personnel dossier FOR UPDATE -> continuation FOR UPDATE khi có.
+READ COMMITTED trên cùng connection/transaction; không autocommit lock call.
+Ba lock đầu dùng duy nhất delegated function D4a; sau return, invoker đọc lại
+minimal Personnel/current credential và khóa continuation bằng full
+org+est+dossier+continuation key. Quyền UPDATE hai cột continuation đủ cho
+FOR UPDATE trên chính table đó; không suy ra quyền lock Tenancy/Personnel.
+Locks giữ đến outer COMMIT/ROLLBACK, không chỉ đến function return.
+
+Foundation issueCredential/resetCredential (pointage-repository.ts) vẫn dùng
+scoped dossier FOR UPDATE trong transaction riêng. Personnel updateEmployee
+(entryDate) và setEmployeeDeparture ghi cùng dossier với full scope + revision
+predicate; PostgreSQL row UPDATE conflict với FOR UPDATE dù writer không gọi
+helper. lockScopedPersonnel của formalites-personnel-draft-repository.ts cũng
+FOR UPDATE cùng row. Không sửa các writer này hoặc biến advisory locks
+idempotency hiện có thành cross-capability coordination.
+Nếu writer khác commit trước lock, Pointage đọc lại current row sau khi chờ;
+nếu Pointage lock trước, writer đó chờ đến transaction end. Current parent
+status/timezone không đổi dưới FOR SHARE. Lifecycle/version vẫn được kiểm tra
+ở D4 và actual accepted instant D7; lock không phải authorization.
+
+Deadlock/lock timeout/statement timeout: abort whole transaction, generic
+unavailable; giữ lock_timeout 2s, statement_timeout 5s, không bỏ lock, nới grant
+hoặc đổi request identity. Không swallow lock error trong savepoint rồi
+tiếp tục; rollback savepoint có thể release locks. Unknown COMMIT vẫn theo D5.
+
+#### D4a — Bounded delegated row locking (reopened proposal)
+
+PostgreSQL 17 yêu cầu UPDATE trên ít nhất một cột của mỗi table bị row-lock;
+SELECT-only không đủ. Đây là privilege prerequisite, không permission Product.
+[SELECT privilege](https://www.postgresql.org/docs/17/sql-select.html) và
+[row-lock compatibility](https://www.postgresql.org/docs/17/explicit-locking.html)
+là platform references; actual disposable proof còn bắt buộc.
+
+| Option                                    | Đánh giá                                                                                                                                                                                                                      | Quyết định                                                         |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| A — UPDATE một cột để lock                | UPDATE(id) dù hẹp vẫn cho SQL mutate key; convention “code không UPDATE” không chặn alternate writer. Thêm trigger/RLS trên Tenancy/Personnel để biến grant thành lock-only sẽ sửa owning boundary ngoài slice.               | Loại; không cấp cho runtime writer.                                |
+| B — SECURITY DEFINER chỉ lock             | Giữ đúng PostgreSQL tuple locks với existing writers, tách quyền lock khỏi quyền application mutate. Thêm một privileged executable boundary có owner/ACL/body cố định, được review trong revision này.                       | Chọn dưới đây; chưa authorize implementation.                      |
+| C — transaction advisory lock             | Existing issue/reset không dùng advisory key; Personnel keys hiện là operation/actor/request-specific, không chung dossier lock. Không tự phối hợp với UPDATE hay direct SQL writer.                                          | Loại; muốn dùng phải đổi nhiều writer ngoài scope.                 |
+| D — FK KEY SHARE, SERIALIZABLE hoặc mutex | KEY SHARE không chặn non-key lifecycle/timezone UPDATE; isolation alone không giữ nguyên D4 và mọi existing writer không cùng protocol; process mutex không cross-instance. Full-table locks quá rộng, không least privilege. | Loại; không có cơ chế tương đương đã chứng minh tốt hơn row locks. |
+
+Exact signature đề xuất:
+`public.pointage_raw_lock_dossier(p_organization_id pg_catalog.uuid,
+p_establishment_id pg_catalog.uuid, p_personnel_dossier_id pg_catalog.uuid)
+RETURNS pg_catalog.void`.
+
+- Một function, không overload/default/variadic/table-name/column-name/SQL
+  argument, không generic lock API; LANGUAGE plpgsql, VOLATILE, PARALLEL UNSAFE,
+  SECURITY DEFINER, CALLED ON NULL INPUT. Bất kỳ NULL -> generic exception,
+  không dùng STRICT để silently return trước locks.
+- Inputs chỉ từ trusted server-resolved scope + verified dossier binding D4,
+  không browser DTO/GUC/headers/session claims. Function không authenticate
+  employee, không trả context và không thay exact operation guards.
+- Trước lock, require session_user là dedicated `yuta_pointage_raw_writer`;
+  lỗi caller/null/missing/inactive/mismatched row có cùng SQLSTATE P0001,
+  message `POINTAGE_LOCK_UNAVAILABLE`, không DETAIL/HINT chứa IDs/status/data.
+  Runtime mapping vẫn D8 generic unavailable, không expose SQL error.
+- Ba static PERFORM statements, mỗi statement require FOUND:
+  (1) public.organizations WHERE id = p_organization_id AND status = 'active'
+  FOR SHARE;
+  (2) public.establishments WHERE organization_id = p_organization_id AND
+  id = p_establishment_id AND status = 'active' FOR SHARE;
+  (3) public.personnel_employee_dossiers WHERE organization_id = p_organization_id
+  AND establishment_id = p_establishment_id AND id = p_personnel_dossier_id
+  FOR UPDATE. Không filter employment dates trong helper; eligibility và
+  own-end exception vẫn D3/D4, không deny end vì former status.
+- Return void only; không SELECT INTO result/return name, lifecycle, token,
+  credential, row hoặc lock ownership claims. Missing tuple errors abort outer
+  transaction; không return partial lock success.
+- Fixed function-local `search_path = pg_catalog, pg_temp`; public tables và
+  helper call luôn schema-qualified; referenced types/functions/operators dùng
+  pg_catalog-qualified identities (UUID equality không resolve qua caller
+  schema). Không dynamic SQL, EXECUTE, dblink, filesystem/network, user callbacks,
+  SET ROLE/SESSION AUTHORIZATION, mutable request configuration hoặc secret.
+- Không INSERT/UPDATE/DELETE/TRUNCATE, DDL hay explicit table lock trong body.
+  Row-lock bookkeeping không đổi application columns. Không tự touch/end,
+  issue/reset, accept event hoặc commit; tất cả nằm ở invoker bên ngoài.
+- Không lock continuation trong helper: invoker có column UPDATE đã duyệt,
+  dùng full scoped key sau ba delegated locks. Reentrant helper call từ raw
+  INSERT trigger D5/D6 khóa lại cùng tuple trong same outer transaction.
+
+Một coherent foreign tuple từ compromised DB login có thể gây lock contention;
+function không phải RLS/tenant-authentication layer. Full predicates ngăn ghép
+mismatched tuple; server guards phải chặn chọn foreign tuple trước call.
+Không publish function qua browser/manager transport. Direct DB credential
+compromise/privileged DBA nằm ngoài employee threat model; không claim function
+tự chứng minh tenant authority hoặc loại mọi denial-of-service. Timeouts và
+same-session preflight giới hạn fail-closed execution, không thay public limiter.
+
+#### D4b — Owner, ACL và invoker separation
+
+Exact owner: `yuta_pointage_raw_lock_owner`, NOLOGIN, NOSUPERUSER,
+NOCREATEDB, NOCREATEROLE, NOREPLICATION, NOBYPASSRLS, NOINHERIT; không member
+role khác, không table/database/schema owner. Chỉ owns exact helper function.
+Dedicated runtime caller `yuta_pointage_raw_writer` cũng non-superuser,
+NOCREATEDB/NOCREATEROLE/NOREPLICATION/NOBYPASSRLS; không membership, inheritance,
+ADMIN/GRANT OPTION hoặc SET ROLE path tới lock owner, migration owner hay
+existing privileged foundation/Personnel roles.
+
+Exact helper-owner object privileges ngoài inherent function ownership:
+
+| Object                             | Allowed owner privileges                                        |
+| ---------------------------------- | --------------------------------------------------------------- |
+| public schema                      | USAGE only, no persistent CREATE.                               |
+| public.organizations               | SELECT(id, status), UPDATE(id) only.                            |
+| public.establishments              | SELECT(id, organization_id, status), UPDATE(id) only.           |
+| public.personnel_employee_dossiers | SELECT(id, organization_id, establishment_id), UPDATE(id) only. |
+| Other application tables/functions | No new grant, no inherited mutation/execution privileges.       |
+
+UPDATE(id) tồn tại ở inaccessible lock owner chỉ để PostgreSQL cho row locking;
+không cấp/inherit cho runtime, không column grants WITH GRANT OPTION. Đây là
+explicit delegated DB privilege proposal, không Personnel application permission.
+Locked function body không chứa mutation nên caller không sử dụng được owner
+UPDATE để đổi Tenancy/Personnel. Owner NOLOGIN alone không đủ: phải chứng minh
+không role membership/SET ROLE path và không owner-controlled writable schema.
+
+Runtime giữ F8: SELECT/INSERT cần thiết, continuation UPDATE chỉ idle_expires_at/
+ended_at; không thêm UPDATE bất kỳ cột nào của ba source tables, không broad
+table UPDATE, DDL/trigger-disable/DELETE/TRUNCATE hoặc owner fallback.
+Bổ sung duy nhất EXECUTE trên exact helper signature, không WITH GRANT OPTION.
+Existing foundation credential lifecycle/limiter operations giữ own existing
+repository/authority; helper không cấp credential-management hoặc limiter
+mutation quyền cho raw writer, không hợp nhất runtime writer với privileged
+foundation/Personnel connection để lấy quyền lock.
+
+D1a làm rõ riêng synthetic employee runtime: foundation validation dùng exact
+validation-only role/client trong cùng database; credential issue/reset vẫn
+ngoài runtime này. Không thay helper body/owner/ACL hoặc raw writer inventory.
+
+Migration revokes all function EXECUTE from PUBLIC và mọi non-owner/non-writer
+grantee; grant EXECUTE chỉ dedicated writer (owner's inherent right remains).
+Không dựa vào default ACL. Function create, ownership transfer, PUBLIC revoke
+và final grant nằm trong cùng journaled migration transaction, không window
+publicly executable. Final schema không writable bởi writer/PUBLIC/lock owner.
+Schema ownership vẫn migration boundary, không Pointage runtime.
+
+[SECURITY DEFINER precautions](https://www.postgresql.org/docs/17/sql-createfunction.html)
+giải thích owner execution, safe lookup và default PUBLIC EXECUTE; lựa chọn
+tên/ACL/body/role isolation trên là Design của YUTA, không upstream recommendation.
+
+Trước instantiate synthetic provider/runtime và trước mỗi raw dossier
+transaction trên chính connection dùng cho operation: verify exact session/
+current user; function OID/signature, owner, SECURITY DEFINER/language/volatility/
+parallel/null behavior, fixed search_path và body fingerprint khớp reviewed
+journaled migration; verify roles, object owners, effective table/column/function/
+schema privileges và defaults/PUBLIC/inherited paths. Check pg_catalog.pg_proc,
+pg_roles, pg_auth_members, pg_class, pg_namespace, pg_default_acl;
+has_table_privilege + has_column_privilege + has_function_privilege;
+pg_has_role với MEMBER/USAGE/SET, không chỉ trực tiếp grants.
+[Privilege inquiry](https://www.postgresql.org/docs/17/functions-info.html)
+là catalog reference; expected body fingerprint được chốt từ generated/reviewed
+migration khi Apply được duyệt, không browser/env supplied.
+
+Owner missing/wrong/LOGIN/superuser, extra UPDATE, unsafe schema/search_path,
+PUBLIC EXECUTE, missing EXECUTE, changed body/signature hoặc không chứng minh
+được effective privileges -> refuse composition/operation before credential/
+protected processing, no helper or attendance write; không auto-repair grants,
+fallback invoker/owner, hoặc “test-only” bypass. Helper còn deny wrong session
+caller nếu accidental EXECUTE grant xuất hiện. Concurrent malicious DBA changing
+ACL/body không thể bị app kiểm soát tuyệt đối; privileged migration/admin không
+được chạy khi synthetic runtime hoạt động, không giả catalog check là DBA-proof.
+
+Expiry/version/lifecycle deny trước state/receipt lookup response. New current
+credential sau reset có thể authorize own original receipt với exact request
+tuple; old continuation không thể. Receipt không bound như authorization vào
+old continuation, nên reset không phá recoverability sau valid re-identify.
+
+### D5 — Atomic transition, stale guard và linearization
+
+Dùng PostgreSQL transaction READ COMMITTED + scoped dossier row FOR UPDATE
+để serialize mọi writer cùng employee, không session/counter/projection table.
+Các statement đọc head/history chạy sau khi lock đã acquire; không dựa vào
+snapshot đọc trước lock. Invoker gọi D4a trong cùng transaction thay direct
+SELECT FOR SHARE/UPDATE trên Tenancy/Personnel. Schema raw INSERT trigger là
+SECURITY INVOKER, gọi exact schema-qualified D4a helper bằng NEW full scope trước
+chain read/validation; reentrant locks không thay order hoặc end transaction.
+Do đó alternate raw writer cũng gặp cùng dossier lock và append enforcement;
+không biến trigger thành arbitrary SECURITY DEFINER write executor.
+
+Từ current canonical raw head, server tạo opaque stateGuard =
+HMAC-SHA256(dedicated HKDF-SHA256 key, versioned length-delimited encoding của
+organization/establishment/dossier + head event ID hoặc START).
+Key derive existing Pointage secret bằng label riêng
+`yuta/pointage/raw-state-guard/v1`, không đổi credential keys/algorithms.
+Browser nhận MAC base64url 43 chars, không nhận head ID/dossier/context.
+MAC là stale-state precondition, không employee authority, không serialize
+trusted employee context; còn cần valid continuation và current checks.
+
+Command gửi requestId, kind, observedStateGuard. Receipt lookup xảy ra sau
+current authorization nhưng trước fresh stateGuard comparison:
+
+1. Re-resolve/lock scope, dossier, continuation; recheck validity/eligibility.
+2. Lookup scoped committed receipt by requestId. Same intent fingerprint ->
+   return original joined receipt; different intent -> request conflict.
+3. Với new request: fully validate existing event chain, compute current guard,
+   constant-time compare observed guard. Mismatch -> state conflict/no event.
+4. Evaluate exact four transitions. Only no-open+IN hoặc open+OUT accepted.
+5. Sample authoritative acceptance clock dưới locks, recheck deadlines/lifecycle
+   cho instant này; append raw event và linked receipt, validate constraints.
+6. Commit cả hai; chỉ sau successful commit trả committed receipt.
+   Nếu DB connection mất tại COMMIT -> unknown outcome, không tự chạy new identity.
+
+Stale OUT sau session A đã close và B open: guard(A head) khác guard(B head),
+deny dù kind OUT hợp lệ theo state chung. Stale IN từ một no-open state trước
+các sessions khác cũng conflict; UI refresh state rồi explicit new intent,
+không rebase request cũ vào head mới.
+
+Same-ID double submit serialize; first commit -> second receipt replay, không
+re-evaluate four-state transition. Distinct competing IN/OUT: first thay head,
+second stale guard/transition conflict. Không hai request cùng head commit.
+No-open induction: empty chain = none; alternation IN/OUT + contiguous ordinal
+cho tối đa một open, no overlap. Raw accepted order là dossier ordinal, không
+UUID sorting hoặc browser clock.
+
+Concrete DB limits: lock_timeout 2 seconds, statement_timeout 5 seconds cho
+bounded transactions; timeout là unavailable/unknown result, không Product quota.
+Không tự retry ambiguous commit. Safe pre-commit rollback retry dùng cùng tuple.
+Đây là Design choices, không sửa normative business rules.
+
+[PostgreSQL row-lock semantics](https://www.postgresql.org/docs/current/explicit-locking.html)
+xác nhận conflicting writers chờ lock tới transaction end; application
+serialization/proof ở trên là thiết kế của change, không phụ thuộc process-local mutex.
+
+Alternative: process mutex không bảo vệ multiple server instances; unique
+active-session table vi phạm P10; chỉ check latest kind không chống stale OUT.
+
+### D6 — Receipt, request identity và minimum additive persistence
+
+Ba additive tables, đều cloud-only; không fourth session/projection table.
+Schema definitions trong @yuta/db-cloud, transport types chỉ ở @yuta/contracts.
+Mọi query có trusted organization + establishment; employee query thêm dossier.
+
+#### Raw table: pointage_raw_events
+
+| Field                                                     | Type / purpose                                                                       |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| id                                                        | UUIDv7 server-generated; event identity, không ordering authority.                   |
+| organization_id / establishment_id / personnel_dossier_id | UUID, full tenancy/Personnel reference.                                              |
+| ordinal                                                   | bigint > 0, contiguous từ 1 theo dossier; reconstruction order, không counter table. |
+| kind                                                      | varchar CHECK IN ('CLOCK_IN','CLOCK_OUT'); chỉ hai raw kinds.                        |
+| accepted_at                                               | timestamptz(6), server DB-observed instant.                                          |
+| timezone_name                                             | text, validated establishment IANA name snapshot.                                    |
+| utc_offset_seconds                                        | integer, observed zone offset tại accepted instant; DST/history reconstruction.      |
+| business_date                                             | date, event-local calendar date tại acceptance.                                      |
+
+Không name copy, credential secret, correction, payroll/Planning, synthetic flag,
+canonical session ID hoặc expected end date. Unique (scope+dossier+ordinal),
+unique (scope+dossier+id), FK establishment và full scoped Personnel, ON DELETE
+RESTRICT. Index scoped accepted_at/business_date cho bounded manager reads.
+
+BEFORE INSERT trigger: acquire D4a parent/dossier locks qua exact helper trong
+same transaction, rồi invoker validate full existing chain; helper không cấp
+UPDATE/DDL cho trigger caller. Reject missing/corrupt scope, compute next
+ordinal/allowed kind; không tin
+client-supplied accepted_at/calendar/ordinal. DB-owned clock/calendar computation
+assign fields; backward clock so với previous event -> fail closed, không clamp.
+BEFORE UPDATE/DELETE và statement BEFORE TRUNCATE triggers reject trên raw table.
+Repository không export update/delete/truncate/raw-upsert path.
+
+#### Receipt table: pointage_raw_command_receipts
+
+| Field                                                     | Type / purpose                                                                |
+| --------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| organization_id / establishment_id / personnel_dossier_id | UUID scope; không receipt lookup bằng ID alone.                               |
+| request_id                                                | UUIDv4 browser CSPRNG, stable cho mutation intent.                            |
+| event_id                                                  | UUID, exactly one corresponding raw event.                                    |
+| intent_version                                            | smallint = 1, encoding compatibility.                                         |
+| intent_fingerprint                                        | SHA-256 hex của versioned intent bytes; non-authoritative technical metadata. |
+
+PK (org,est,dossier,request_id), UNIQUE (org,est,dossier,event_id).
+Fingerprint encoding: ordered JSON array of strings
+['pointage-raw-intent-v1', orgUUID, estUUID, dossierUUID, kind, observedStateGuard];
+UUID normalized lowercase; allowed kind exact; guard canonical base64url.
+UTF-8 SHA-256, server computes; browser không gửi fingerprint hoặc IDs.
+Same request ID + different kind/guard -> conflict. Continuation secret/version
+không thuộc intent fingerprint để valid re-identification không phá retry.
+
+Receipt FK (scope+dossier+event_id) -> raw (scope+dossier+id);
+raw reverse FK (scope+dossier+id) -> receipt (scope+dossier+event_id),
+DEFERRABLE INITIALLY DEFERRED, ON DELETE NO ACTION. UNIQUE referenced keys
+không deferred. Mutual completeness tại commit: event không thể thiếu receipt,
+receipt không thể có missing event. Chỉ successful operations có receipt row;
+denial/conflict không tạo raw event hoặc success receipt.
+
+Receipt INSERT/immutability trigger không cho update/delete/truncate; raw và
+receipt ở cùng transaction, không event-first asynchronous outbox. Không
+persist duplicated timestamp/kind/state/name/JSON success response.
+Public receipt luôn join canonical raw event:
+{ requestId, result: 'COMMITTED', kind, acceptedAt, timezoneName,
+utcOffsetSeconds, businessDate }. Không employee name/ID, grants, credential
+version, history hoặc daily total. Bytes/fields ổn định từ original raw event,
+không recompute historical calendar từ current timezone. Same-ID retry trả same
+receipt fields. Metadata không đủ để tạo attendance fact khi raw chain invalid.
+
+Không eviction hoặc receipt TTL cleanup trong change; đây không phải legal
+keep-forever policy. Cần separately approved retention handling trước real data.
+Nếu record corrupt/missing do privileged tampering, fail closed/investigate,
+không “sửa” bằng new event.
+
+#### Continuation table: pointage_continuations
+
+Fields: id UUIDv7; full scope+dossier; token_digest 64 lowercase hex UNIQUE
+within org/est; credential_id UUID; credential_version integer;
+issued_at, absolute_expires_at, idle_expires_at timestamptz(6); ended_at nullable.
+Không display name, request payload, plaintext token/PIN/IP hoặc attendance state.
+Full scoped dossier FK và credential binding FK:
+add UNIQUE (org,est,dossier,id,credential_version) trên existing credential table,
+rồi reference cả tuple. Existing credential meanings/rows không thay.
+Expiry là auth invalidity, không deletion/retention executor.
+
+Fields immutable sau INSERT: `id`, `organization_id`, `establishment_id`,
+`personnel_dossier_id`, `token_digest`, `credential_id`,
+`credential_version`, `issued_at`, `absolute_expires_at`.
+Chỉ bounded mutable: `idle_expires_at`, `ended_at`.
+Immutable fields và idle deadline NOT NULL; ended_at nullable. CHECK
+absolute_expires_at = issued_at + 120 seconds và
+issued_at < idle_expires_at <= absolute_expires_at. INSERT dùng server DB
+timestamps, initial idle theo 60-second policy và ended_at NULL.
+Rotation dùng row mới, không rebind existing row.
+
+Database/schema enforcement:
+
+- Row BEFORE UPDATE trigger áp dụng mọi UPDATE, không chỉ UPDATE OF two
+  columns. Null-safe OLD/NEW IS DISTINCT FROM trên tất cả immutable fields
+  (gồm id): có thay đổi -> reject statement.
+- Idle deadline chỉ giữ nguyên hoặc tiến lên, không NULL/lùi/vượt absolute.
+  Extension chỉ khi OLD.ended_at NULL và OLD còn trong idle/absolute lifetime
+  tại DB check; expired continuation không được touch để revive.
+- OLD.ended_at non-NULL: chỉ exact row no-op được phép. Không đổi idle,
+  ended_at, hoặc chuyển ended_at về NULL; không trở lại usable.
+- First end: NULL -> server-owned timestamp. BEFORE UPDATE trigger lấy DB
+  clock và assign ended_at, không giữ timestamp caller chọn. First-end
+  statement không được đồng thời extend idle. Repeated own-end giữ nguyên
+  original ended_at; repository đọc/return idempotent result, không rewrite.
+- CHECK/FK/unique enforce shape; trigger enforce OLD-to-NEW transitions.
+  Không chỉ dựa vào service convention; không thêm generic session capability.
+
+Runtime writer là non-owner/non-superuser role: SELECT/INSERT cần thiết và
+column-level UPDATE CHỈ (`idle_expires_at`, `ended_at`), không table-wide
+UPDATE/ALL, immutable-column UPDATE, DDL/trigger-disable/DELETE/TRUNCATE,
+owner-role membership hoặc SET ROLE bypass. Kiểm tra effective privileges
+gồm PUBLIC, inherited roles và default grants; column restriction không có
+tác dụng nếu vẫn tồn tại table-wide grant. Nếu không chứng minh được boundary,
+synthetic runtime composition fail closed, không dùng migration-owner fallback.
+Không provision hoặc claim production-role readiness trong revision này.
+D4a/D4b bổ sung chỉ dedicated lock-function EXECUTE, không source-row UPDATE
+cho runtime. Continuation/raw/receipt triggers vẫn SECURITY INVOKER; mọi
+application data reads/writes, continuation lock/touch/end, raw+receipt inserts
+và final authorization checks chạy invoker sau delegated locks. Existing
+foundation/Personnel writers không chuyển owner hoặc đổi grant theo revision.
+
+Repository chỉ expose scoped touch-idle và own-end, không generic
+updateContinuation/partial-row patch/upsert. Predicate luôn full trusted
+org+est+dossier+continuation key; giữ dossier/continuation lock order D4.
+Touch chỉ sau exact authorized foreground state/mutation/replay, compute bằng
+DB time theo 60-second policy, capped absolute và không decrease; không nhận
+deadline/binding từ browser. Own-end idempotent không credential revoke.
+DB column privileges không thay exact service operation/lifecycle authorization.
+
+Future disposable tests: actual runtime-role denial cho từng immutable field;
+trigger rejection bằng controlled test writer không disable trigger;
+backward/over-absolute idle, ended extension/revival, expired touch, repeated
+end và concurrent touch/end. Test setup/teardown không nới runtime role.
+[PostgreSQL column grants](https://www.postgresql.org/docs/current/sql-grant.html)
+và [OLD/NEW triggers](https://www.postgresql.org/docs/current/plpgsql-trigger.html)
+hỗ trợ enforcement đã chọn; tests chưa chạy và không production proof.
+
+Hash collision khi issuing continuation -> regenerate tối đa 3 lần, failure
+generic unavailable, không return token trước commit. Event UUID collision
+rollback entire command; same request retry vẫn safe. Receipt unique conflict
+được đọc lại dưới same dossier lock hoặc rollback/retry, không swallow partial
+transaction. Không persist one-time PIN hoặc re-show existing secret.
+
+Future database immutability proof phải chứng minh ordinary application writer không có DDL/table
+ownership/TRUNCATE bypass privileges. Disposable migration/test owner tách khỏi
+test runtime writer; runtime only SELECT/INSERT cần thiết + column-level
+UPDATE continuation idle_expires_at/ended_at theo enforcement ở trên,
+không generic table UPDATE hoặc ALTER/DROP/DISABLE TRIGGER/DELETE raw/receipt. Current production role
+privileges chưa được verify, không claim hardened deployment. Privileged DBA
+tampering nằm ngoài app threat boundary và phải có operations control; trigger
+không thể chống superuser. Không provision production role trong change.
+
+[PostgreSQL constraint/trigger mechanics](https://www.postgresql.org/docs/current/sql-createtrigger.html)
+là reference cho deferred checking và immutable-event rejection; actual
+migration proof phải kiểm thử both raw-only và receipt-only attempted commits.
+
+Alternative: receipt JSON độc lập dễ drift; event-only JSON response lost không
+có durable request association; asynchronous receipt tạo forbidden ambiguous state.
+
+### D7 — Time và deterministic reconstruction
+
+Authoritative clock abstraction trả UTC instant dạng integer epoch microseconds
+
+- RFC3339 six fractional digits. Production-independent default của cloud
+  repository lấy PostgreSQL clock_timestamp() dưới transaction locks, không
+  transaction-start now() hoặc browser Date. Acceptance boundary là DB append
+  statement sau current checks, không HTTP arrival hoặc response/commit time.
+
+Raw timestamp dùng full PostgreSQL microseconds; postgres-js Date mapping không
+được truncate xuống milliseconds: select/serialize accepted_at bằng explicit UTC
+text/epoch-microsecond representation; pure reducer dùng bigint/string. Browser
+Date chỉ presentation, không round raw instant hoặc reserialize nó vào mutation.
+Cùng microsecond vẫn order bằng ordinal; nếu clock lùi so với last event, deny
+unavailable, không tạo negative/overlapping interval, không adjust raw time.
+
+DB tính event business_date và offset_seconds từ accepted_at AT TIME ZONE
+validated current establishment timezone. Giữ timezone name + numeric offset +
+date trên từng event: historical wall time = UTC instant + stored offset,
+không phụ thuộc future tzdb/current establishment zone. DST repeated time có
+distinct absolute instant/offset; skipped local time không cần user input
+resolution vì input là absolute server instant. Establishment timezone đổi
+không rewrite events; new event dùng locked current zone. Session grouping giữ
+CLOCK_IN.business_date, kể cả CLOCK_OUT calendar/zone khác.
+
+Trigger lấy đúng một acceptance sample qua server-owned DB clock function
+mặc định clock_timestamp, assign NEW.accepted_at và derive calendar từ sample
+đó. Trigger kiểm tra lại Personnel entry/departure tại NEW.business_date dưới
+các locks đang giữ. Service precheck chỉ preliminary. Repository lấy chính
+INSERT RETURNING accepted_at để kiểm tra final continuation absolute/idle
+deadlines trước insert receipt/commit; nếu sample >= deadline thì rollback
+toàn bộ raw insert. Không gọi clock function lần hai như thể cùng sample,
+không return receipt/token trước commit. Credential/version/ended state và scope
+vẫn được khóa trong toàn bộ boundary. Vì vậy date và authorization deadlines
+cùng dùng một accepted instant, kể cả qua midnight. Không request GUC/body/
+header clock override.
+Pure tests inject clock; midnight/DST SQL integration dùng replacement clock
+function chỉ trong separately verified disposable test database/harness, không
+test override branch ở runtime/production composition. Migration proof cuối
+cùng chạy lại real clock implementation. Không thêm clock/synthetic field.
+
+Reconstruction (full scoped chain ORDER BY ordinal):
+
+- expected ordinal starts 1, open = null, closed = [] transient.
+- IN khi open null -> hold opening raw event.
+- OUT khi open exists -> emit derived pair(open, out); open = null.
+- Preserve independent instants/offsets; groupedBusinessDate từ opening event.
+- Cuối chain còn IN -> open session; không auto-close.
+- Reject gap/duplicate ordinal, unknown kind, OUT-first, double IN/OUT, decreasing
+  instant, invalid calendar/offset/scope hoặc broken receipt linkage as
+  EVIDENCE_INCONSISTENT; no fabricated/repair events. Public generic unavailable,
+  privileged diagnostic only minimized reason + safe correlation, không payload.
+- Không đọc security audit/receipt như source để reconstruct attendance.
+
+Employee state/read/mutation đều validate chain; manager bounded read không
+return partial misleading success nếu related dossier corrupt. Full scans là
+correctness-first synthetic implementation; không daily quota/truncation. Nếu
+scale cần projection/index redesign beyond this design, đo evidence và review
+riêng, không quietly thêm materialized session.
+
+[PostgreSQL time functions](https://www.postgresql.org/docs/current/functions-datetime.html)
+phân biệt wall-clock observation với transaction-start clock; timezone snapshots
+và reconstruction ở trên là quyết định riêng của change.
+
+### D8 — Employee transport/contracts, CSRF và recovery
+
+U2 handler dependency bắt buộc đi qua D1b server-only consumer accessor.
+Không handler/RSC nào tạo client hoặc đọc bootstrap inputs. Context GET cũng
+phải qua current runtime admission và active-scope resolution; no partial
+availability từ parent proof hoặc cached successful route. D1b listener proof
+không thay Origin/CSRF/operation guards dưới đây.
+
+`@yuta/contracts` owns strict Zod DTOs; unknown fields
+rejected. Body <= 4 KiB, JSON Content-Type only; no cookies used/required for
+employee auth, fetch credentials: omit. All personal endpoints POST, không
+GET query-secret mutation. Same-origin only, no CORS allow-origin wildcard.
+Require Origin exact configured approved test origin; Sec-Fetch-Site cross-site
+deny when present; JSON + custom Authorization header prevents ambient form
+CSRF, browser preflight không được grant cross-origin. Không dùng forwarded Host
+để quyết định origin. Missing Origin on these browser endpoints -> deny.
+TLS required outside explicit loopback test, nhưng production vẫn disabled.
+
+Authorization: `Pointage <ptc1_secret>` chỉ trong live memory fetch header,
+không cloud Bearer/session aliases. Strict token length/prefix before digest.
+Establishment context endpoint là unprivileged locator result, không authority.
+
+| Proposed route suffix under /api/pointage/[establishmentSlug] | Request                                                 | Response / boundary                                                                             |
+| ------------------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| context (GET)                                                 | no identity input                                       | { available: true } hoặc generic unavailable; không tenant IDs/dossier list.                    |
+| identify (POST)                                               | { credential: exact eight-digit string }                | { continuation, expiresInMs, idleInMs, state }; token only once after commit; state follows D9. |
+| state (POST)                                                  | empty JSON + continuation                               | { state, expiresInMs, idleInMs }; current eligibility và exact state.read.                      |
+| clock-in (POST)                                               | { requestId UUIDv4, observedStateGuard } + continuation | committed receipt hoặc scoped conflict/unavailable; operation.create.                           |
+| clock-out (POST)                                              | same shape + continuation                               | same boundary; requested kind do endpoint quy định.                                             |
+| recover (POST)                                                | { requestId, kind, observedStateGuard } + continuation  | original committed receipt hoặc { result: 'UNCONFIRMED' }; no mutation và không history list.   |
+| end (POST)                                                    | empty JSON + continuation                               | 204 after idempotent own-continuation termination; no protected response.                       |
+
+Recover current authority là operation.create (receipt của exact mutation),
+không bypass current lifecycle vì endpoint read-only. UNCONFIRMED không hứa
+server không in-flight; chỉ retry exact original tuple. Sau conflict, user phải
+fetch fresh state, explicit choose new action và requestId mới; không rewrite
+intent dưới old ID. End/refresh/expired interaction không restore pending tuple
+hoặc auto-replay. API có thể recover khi caller vẫn có exact tuple và new valid
+own continuation; không exposed receipt search/history.
+
+| Public outcome                                       | HTTP / public code                                 | Internal distinction                                                                               |
+| ---------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Credential/continuation/eligibility/authority denied | 403 POINTAGE_ACCESS_DENIED, identical shape/copy   | internal reason only; không disclose former/upcoming/match.                                        |
+| Candidate/client rate limit                          | 429 POINTAGE_TRY_LATER                             | không expose which key, count hoặc matching dossier; same code applies to unsuccessful candidates. |
+| Authorized stale head / invalid transition           | 409 POINTAGE_STATE_CONFLICT                        | no raw event; no foreign data.                                                                     |
+| Same scoped request ID different intent              | 409 POINTAGE_REQUEST_CONFLICT                      | no new raw event; retain original.                                                                 |
+| Malformed non-secret DTO                             | 400 POINTAGE_REQUEST_INVALID                       | generic, không validation echo containing secrets.                                                 |
+| Scope/provenance/DB/chain unavailable                | 503 POINTAGE_UNAVAILABLE                           | no partial identity/context/data.                                                                  |
+| Client timeout/network loss                          | local RESULT_UNKNOWN, not fabricated HTTP response | retry/recover exact tuple; no success or new ID.                                                   |
+
+Non-enumeration giữ foundation real/dummy verification + rate logic. Error
+classification không expose internal lifecycle field, credential ID/version,
+raw DB rows hoặc grant claims. Count-based rate response không xác nhận candidate
+validity. Identify lost response: token unavailable to browser, expires server-side;
+user re-enters credential; không attendance side effect.
+
+Alternative: Server Actions ambient cookies và HTTP redirect login không phù
+hợp dedicated no-cookie employee boundary; explicit route handlers rõ retry,
+cache và failure contract. Không thêm new application/service.
+
+### D9 — Employee view và manager server read
+
+Employee response state:
+{ displayName, status: NOT_CLOCKED_IN | CLOCKED_IN,
+openSessionStart: null | { instant, timezoneName, utcOffsetSeconds, businessDate },
+stateGuard }.
+stateGuard là opaque precondition, không historical display hoặc trusted context.
+NOT_CLOCKED_IN không prior OUT. CLOCKED_IN chỉ opening timestamp của current
+open session. Receipt riêng D6 không daily total/closed history; no broader name
+projection. Lifecycle deny không trả state/name.
+
+Manager chỉ server function nhận validated current cloud session +
+fresh tenant context và exact pointage.establishment.read. OWNER/MANAGER active
+matching membership, no STAFF/employee continuation. Không manager transport/UI.
+Read transaction REPEATABLE READ read-only cho consistent snapshot. Sau khi
+materialize bounded result nhưng trước response, chạy lại current server
+session/membership/scope/exact-grant guard trong fresh transaction ngoài snapshot
+đó; không reuse stale context hoặc gọi lại query trong cùng repeatable snapshot
+rồi gọi đó là fresh check. Deny và discard result nếu guard fail/unavailable.
+Snapshot data không cấp authority; final fresh guard là read authorization
+boundary. Không hứa authority còn tồn tại sau response nếu bị revoke sau đó.
+Server now defines today trong current establishment zone; include raw events
+có stored business_date = today, cùng current open session của scoped dossiers
+dù opening date trước today. Event-local historical context giữ nguyên; timezone
+change không reclassify old events. Không closed history ngoài today hoặc
+monthly/payroll/correction/audit visibility.
+
+Manager open session derived bằng scoped raw chain, không chỉ today filter
+(tránh mất IN từ hôm trước). Return projected event kind/instant/calendar + scoped
+dossier reference, current opening reference/time; không credential/security
+audit hoặc unrelated Personnel columns. Historical former dossier events/open
+session vẫn read theo manager grant, không áp employee self-eligibility lên
+manager visibility. No arbitrary daily event quota; timeout -> unavailable,
+không silent truncated success.
+
+### D10 — Cache, privacy, logs và leakage defense
+
+D1b IPC/owner closure là nơi duy nhất giữ ephemeral bootstrap secrets; no
+process.env credential fallback, stdout/stderr relay hoặc serialized RSC input.
+Owned runtime/client teardown và output suppression theo D1b, không sửa
+foundation audit taxonomy hoặc legal retention. Không log Next request errors
+với body/header/SQL context; raw process diagnostics không thành QA evidence.
+
+Employee page HTML/RSC chứa neutral entry shell only. force-dynamic, revalidate
+0, no cached personal fetch/unstable_cache, all page/data responses private,
+no-store, max-age=0; Pragma no-cache, Expires 0. No CDN caching/s-maxage,
+no service worker/offline store. No personal data in URLs, query, path segments
+beyond public establishment slug, history.state, router params, telemetry,
+analytics hoặc server component serialized props.
+
+Route-scoped CSP/headers trên /pointage và /api/pointage (existing Backoffice
+Next boundary, không global shell change): per-request nonce for Next scripts,
+script-src self + nonce; object-src none, base-uri none, frame-ancestors none,
+form-action self, connect-src self; Referrer-Policy no-referrer,
+X-Content-Type-Options nosniff. Development HMR only needs explicitly
+loopback dev connection allowances, không production unsafe-eval policy.
+No third-party analytics/scripts trên surface.
+
+D3 synchronous neutral cover/DOM wipe trước pagehide snapshot, pageshow
+generation reset và late-response rejection bắt buộc; Cache-Control không
+được coi là bfcache/OS erasure guarantee.
+[Cache-Control semantics](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control)
+hỗ trợ HTTP no-store boundary; lifecycle clearing phải được Browser QA riêng.
+
+No logging request body, Authorization header, continuation/PIN/digests,
+stateGuard, fingerprint, Personnel name, receipt payload hoặc raw event rows.
+Use bounded safe error code/correlation ID cho diagnostics; không query/stack
+tracing with secrets. Existing foundation audit taxonomy giữ nguyên cho credential/
+authorization; không thêm security-audit read UI, retention hoặc legal schema.
+Raw event/receipt success là canonical/technical pair, không nhân đôi attendance
+vào security audit. Failed audit required by existing auth fails closed; raw
+commit không bị báo failed chỉ vì later optional diagnostics sink failure.
+
+No cache warming/prefetch protected state, no credentials in devtool screenshots.
+Future QA screenshots only synthetic names, never plaintext PIN or continuation.
+
+### D11 — UI planning boundary and state model
+
+NEW_PAGE, integrated target, NEW_CAPABILITY_DISCOVERY. Stable planning home:
+`docs/ui/pages/backoffice-pointage-employee/`. Phase 0 inventory và
+DESIGN_HANDOFF precede draft UI spec; shared context NO_APPLICATION_SHELL.
+Existing root Geist/Inter, semantic tokens, Button/Input/FormField/Alert/Card/
+Skeleton/StatusBadge từ @yuta/ui, Lucide only. Không sửa shared primitive,
+sidebar/header/account/establishment selector.
+
+Six pre-approval planning docs only: README, PRODUCT_SCOPE, DESIGN_HANDOFF,
+UI_SPEC, DATA_AND_INTERACTION_SPEC, ACCEPTANCE_CHECKLIST. Không generate final
+pack vì generator tạo forbidden IMPLEMENTATION_PLAN và implementation prompts.
+Current validator mechanically requires những files đó even design; report
+specific missing-file/prompt/reference findings, không claim implementation-ready.
+Không tạo empty fake plan/provenance hoặc sửa workflow validator.
+
+UI copy French. Text state/action/copy, responsive hierarchy và keyboard/touch
+criteria nằm trong draft UI_SPEC; không manager UI. No image reference required
+cho written state-driven design; no-image decision vẫn thuộc human design review.
+Baseline NOT_APPLICABLE vì employee route chưa tồn tại, không fake screenshots.
+
+### D12 — P13/P14, readiness and failure boundaries
+
+P13/P14 là current change implementation/testing/readiness authority, không
+permanent domain rule. Synthetic/disposable attendance ONLY cho implementation,
+integration và Browser QA; real attendance NOT_AUTHORIZED ở development,
+staging, production. No synthetic/real employee field/enum/permission/classifier.
+No production provider; production enablement NOT_AUTHORIZED.
+
+Giữ unresolved exact retention duration, deletion/anonymization, legal hold,
+backup-retention interaction, employee notice, detailed audit visibility,
+trusted production client-address provenance. No cleanup executor hoặc default
+retention; technical TTL chỉ invalidate authentication, không xóa records.
+Carry forward nguyên vẹn vào future Tasks/TIC/test data policy/QA/gates.
+Runtime DB role privilege evidence cũng phải chứng minh trước immutable-evidence
+deployment; current repository chưa chứng minh production role hardening.
+Đây là technical readiness evidence gap, không new Product behavior/permission.
+
+Alternative: bật generic developer mode against real cloud DB hoặc classify
+employee synthetic để “cho chạy” bị loại; chỉ explicitly guarded disposable
+test composition. No production environment or lifecycle promotion.
+
+## Risks / Trade-offs
+
+- [Opaque token trong live memory vẫn bearer] -> short TTL, no ambient cookie,
+  CSP, no persistent stores, current credential/lifecycle checks; compromised
+  same-origin script/device ngoài khả năng cryptographic memory isolation.
+- [Offline end không thể remote-revoke ngay] -> neutral local state lập tức,
+  distinguish ENDING/confirmed end, deny UI reuse, server expiry bound 60/120s;
+  Browser QA phải verify không restore data và server end ordering.
+- [Full raw-chain scan tốn thời gian] -> synthetic bounded evaluation, scoped
+  indexes/timeouts, fail closed; không thêm projection hoặc quota khi chưa review.
+- [Clock rollback / corrupt chain] -> unavailable, no clamp/repair, preserve
+  evidence và minimized diagnostic; cần operational investigation riêng.
+- [Mutual FK và custom trigger không đủ được schema diff tool express] ->
+  generated additive migration + reviewed explicit SQL, disposable proof cả
+  constraints lẫn negative writes; không claim từ TypeScript schema alone.
+- [Existing dirty foundation/UI work] -> future pre-Apply fresh hashes/status,
+  preserve Formalités auth index hunk; stop nếu intended overlapping hunks
+  không thể isolate. Không refactor other feature để làm tests pass.
+- [UI pack checker đòi forbidden planning artifacts] -> retain honest partial
+  pre-approval design, không đổi lifecycle/tooling hoặc tạo plan sớm.
+
+## Migration Plan
+
+Đây là migration design, không execution authorization.
+
+Sau Sensitive Design và Tasks/Apply approval: generate additive Drizzle migration
+bằng current @yuta/db-cloud db:generate; allocate next journal sequence từ live
+repo, không assume số 0020 hoặc sửa 0019 đã có. Migration tạo ba tables,
+constraints/indexes/functions/triggers và credential composite unique support.
+Custom FK/trigger SQL nằm trong cùng new journaled migration với reviewed
+generated snapshot; không hand-author journal để bypass generator.
+Không seed/backfill raw events, sessions, credentials hoặc Personnel.
+
+D4a helper definition/ACL/owner transfer thuộc chính new generated/journaled
+migration, không standalone unjournaled SQL. Không sửa 0019/0020 hoặc prior
+snapshots/entries; next name/sequence vẫn để generator resolve sau fresh review.
+Không tạo SQL/migration, roles hay database trong Design revision này.
+Future guarded disposable harness provision exact lock-owner/writer roles
+D4b trước migration, chỉ sau toàn bộ D1 guards; role name đã tồn tại với
+unexpected attributes/grants/membership -> STOP, không ALTER unrelated role.
+Role provisioning là isolated test-cluster setup, không production migration
+default hoặc seed. Migration requires roles tồn tại đúng policy; thiếu -> fail.
+
+Riêng role D1a `yuta_pointage_foundation_runtime` thuộc future task 2.8 guarded
+synthetic harness, sau D1 identity proof, không thuộc migration 0021 và không
+thay bằng bootstrap runtime. Chỉ provision exact role/column grants D1a trên
+cùng raw target sau explicit Apply approval; existing unexpected role/ACL ->
+STOP, không repair unrelated role. Giữ nguyên 1.1-1.8/C17 evidence và 0021 bytes;
+proof role/client mới phải bổ sung ở 2.8, không suy ra từ completed Foundation.
+
+Migration identity giữ ownership tables/schema/triggers; helper ownership
+chuyển sang dedicated NOLOGIN role, không migration-owner SECURITY DEFINER.
+Nếu PostgreSQL ownership transfer cần CREATE schema hoặc role membership ở
+migration identity/lock owner trong setup, chỉ temporary migration transaction,
+revoke trước commit và trước runtime proof; runtime không bao giờ nhận chúng.
+Không cấp CREATE/role membership cho writer để generator/migration chạy.
+Apply kiểm tra Drizzle transaction boundary thực sự bao trọn create/revoke/
+owner/grant; nếu không đảm bảo atomic publication -> STOP trước execution.
+Empty và upgrade DB phải có cùng reviewed function body/ACL/owner; rerun no-op.
+Rollback disable synthetic composition, giữ rows/history; không DROP data hoặc
+rollback destructive để tránh review. Existing future production-role
+provisioning vẫn cần separate authority, không được suy ra từ test roles.
+
+Disposable DB proof: exact loopback host/current_database name kiểm tra trước
+migrate; new isolated test role/database, không production/general dev data.
+Apply full existing journal + new migration trên empty DB, và upgrade test
+baseline có synthetic foundation rows. Chạy writer-role concurrent tests,
+mutual orphan-FK commit failures, raw UPDATE/DELETE/TRUNCATE denial, same-ID
+retry, allowed reads/INSERT, reset/Personnel races; inspect pg_constraint/
+pg_trigger và actual migration journal. Rollback-transaction không để raw hoặc
+receipt residue. Test-only clock substitutions giới hạn disposable harness;
+restore actual clock implementation và validate lại migration result.
+
+Rollback runtime: disable test factory/route before changing application code;
+older foundation build bỏ qua additive tables. Giữ raw/receipt/auth metadata
+không destructive down migration; no automatic DROP/purge để rollback.
+Unknown commit -> exact recover/retry, không rollback committed event.
+Deployment/production migration, runtime role provisioning, retention cleanup
+hoặc data conversion không được authorize bởi Design hoặc tests.
+
+## Verification Design
+
+### D1b actual-process bootstrap proof — planned, not executed
+
+U2/U8 và R3/R6/R7 MUST bổ sung actual Next file-route evidence sau Apply approval:
+
+1. Same child PID/runId/main thread owns actual 127.0.0.1:3001 listener, two
+   independently authenticated max:1 handles và all D1/D1a/F8 SQL proofs.
+   Parent-only probe, direct factory/adapter call hoặc mocked handler không đủ.
+2. Concurrent initial context/identify/state requests publish one runtime only
+   after both proofs; failed second client/provider closes partial resources.
+   No credential processing or protected output before complete admission.
+3. Missing/malformed/replayed IPC; production/VERCEL; wrong/mismatched/C17/shared
+   DB; role/member/ACL/helper/body drift; listener/port mismatch; lost socket;
+   forged Host/Forwarded headers; missing provider/connection all fail closed.
+   Standard dev/start/build without owner never instantiate fallback runtime.
+4. Prove independent re-consumer behavior E3 with unchanged inventory, not
+   mtime/HMR inference. Source BYTE drift E4 and fresh-process readmission E5
+   are separate cases; IPC disconnect remains a separate teardown negative.
+   Old continuation rows do not bypass current authority.
+5. Exercise actual migrated synthetic Next context/identify/state/IN/OUT/recover/
+   end routes, dual identify/state.read and raw+receipt atomicity. Keep current
+   20/62 mapping; startup tests supplement, never replace behavioral scenarios.
+6. End/failed startup/forced shutdown closes both clients; capture sanitized
+   process/listener and SQL assertions, source hashes and exact command/exits.
+   DB evidence remains intact; logs/browser/RSC contain no bootstrap secrets.
+   Non-Pointage route smoke test shows no default/global startup modification.
+
+This reopen runs planning checks only. Prior partial actual-route results and
+failed mtime assertion remain historical evidence, not current completion.
+Revised E1-E5/socket/SQL proof is NOT_RUN and mandatory before task 3.2/3.8
+completion; neither Next docs nor this proposal supply dynamic PASS.
+
+#### D1b E1-E5 — separate future acceptance evidence
+
+E1 — actual Next route binding: drive all seven existing file routes over the
+owned listener in the actual child. Preserve method/auth/lifecycle/transaction
+assertions; correlate child PID/runId and anchor admission with real requests,
+plus exact route -> HTTP -> bridge import graph. Direct factory calls/mock
+routes cannot satisfy E1. No employee UI/3.3+ is needed for this U2 evidence.
+
+E2 — same-generation singleton: first real request lazily admits, with concurrent
+independent real requests plus independent A/B closures before initialization
+settles. Assert exact promise identity, one construction per runtime/client,
+both authenticated same-database proofs before credential work; failed second
+client/provider closes partial resources. Same-generation success is not HMR.
+
+E3 — deterministic re-consumer: C/D distinct from A/B and each other, full
+resolver body from real bridge, same PID/runId/main thread/listener/inventory,
+same anchor/promise/facade/service runtime/two wrapper/db/connection references.
+Require owner assertions and the single strictly parsed private PASS receipt;
+also detector-negative unit tests. No source write/mtime trigger, module cache
+operation or browser interaction. Proof does not assert actual Next HMR occurred.
+
+E4 — actual source BYTE drift: separate future explicitly approved negative on
+exact raw-clocking-bootstrap.ts in the owned launch inventory after READY.
+Capture original bytes/hash; append a fixed harmless comment, record the changed
+hash and assert deny new work, generic unavailable/terminal child failure,
+bounded teardown, zero remaining owned clients and no replacement/admission.
+This is intentionally a changed generation, never evidence of E3. Only after
+confirmed child exit restore the original bytes IF current bytes exactly equal
+the controlled changed preimage; unexpected edits -> STOP, never overwrite.
+No temporary change is hidden; record before/changed/restored hashes, child exit
+and retained DB evidence. No active shared developer app may use this inventory.
+Missing safe ownership blocks this test, not permission for another target.
+This Design turn performs none of these writes/launches.
+
+E5 — fresh process: after old child exit, launch fresh PID and fresh runId with
+unchanged/restored approved source. Full D1/D1a/F8 on NEW child-created handles
+must precede provider/runtime publish; old promise/anchor is not transferred.
+Retained continuation still requires D2-D4 current lifecycle/credential checks,
+including departure/reset/expiry denials; raw/receipt history is unchanged.
+Standard Next without owner remains unavailable. Separately prove STOP,
+IPC-loss, listener-loss, partial-start failure and bounded clean process exit;
+previous forced shutdown is not accepted as clean final evidence.
+
+All five need independent named results, exact final source hashes, commands,
+exits/skips and sanitized observations. E1 partial history does not pre-pass E2-E5.
+Apply evidence is re-evaluated during formal VERIFY; QA stays a separate later
+real-browser stage. Missing/failing case leaves 3.2 PARTIAL, no 3.3+ or Gate 3.
+
+Chưa chạy implementation tests/Browser QA. Đây là traceability và future
+verification design, không Tasks/Implementation Plan/Technical Implementation
+Contract hoặc VERIFY PASS.
+
+| Requirement | Exact approved heading                                                         | Design sections  | Future test family              |
+| ----------- | ------------------------------------------------------------------------------ | ---------------- | ------------------------------- |
+| A1          | Usable consumer dùng dedicated short-lived Pointage continuation               | D2, D3, D4, D8   | continuation-auth               |
+| A2          | Continuation chỉ self-only trong trusted binding và closed catalog             | D1, D2, D4, D8   | scope-and-grants                |
+| A3          | Current Personnel eligibility áp dụng cho cả ba employee operations            | D4, D5, D7       | personnel-eligibility           |
+| A4          | Committed replay không bypass current authorization                            | D4, D5, D6       | authorized-replay               |
+| A5          | Expiry reset và interaction end không để lại stale authority                   | D2, D3, D4       | expiry-reset-end                |
+| A6          | Continuation không serialize trusted context hoặc persist plaintext credential | D2, D6, D8, D10  | secret-and-context-minimization |
+| A7          | Usable consumer giữ non-enumeration và trusted-address prerequisite            | D1, D8, D10      | trusted-provenance              |
+| R1          | Raw clocking sử dụng trusted cloud scope và online acceptance                  | D1, D4, D8       | cloud-and-scope                 |
+| R2          | Raw command vocabulary và bốn transition outcomes là đóng                      | D5, D7           | four-transitions                |
+| R3          | Raw evidence immutable là sole canonical attendance source                     | D5, D6, D7       | immutable-canonical-source      |
+| R4          | Sessions và current state chỉ derived và không overlap                         | D5, D7           | derived-sessions                |
+| R5          | Stable request identity bảo toàn committed receipt và replay                   | D4, D5, D6, D8   | idempotent-retry                |
+| R6          | Concurrent competing requests có tối đa một acceptance                         | D5, D6           | multi-connection-concurrency    |
+| R7          | Accepted event time do server quyết định và giữ historical context             | D5, D7           | server-time                     |
+| R8          | Cross-midnight grouping không thay departure eligibility                       | D4, D7           | midnight-departure              |
+| R9          | Employee chỉ thấy own minimal current state và receipt                         | D4, D7, D9       | employee-projection             |
+| R10         | Manager read chỉ server-side và establishment-scoped                           | D9               | manager-scope                   |
+| R11         | Shared-device UI bảo toàn isolation và trung thực về operation state           | D3, D8, D10, D11 | shared-device-browser           |
+| R12         | Capability giữ fail-closed provenance và tách biệt production policy           | D1, D10, D12     | authority-separation            |
+| R13         | Usable slice không mở rộng explicit non-scope                                  | D1, D12          | negative-scope-inventory        |
+
+Tất cả 62 approved scenarios được map bên dưới. Mỗi row yêu cầu test assert
+đúng WHEN/THEN/AND của source scenario; reference không thay scenario semantics.
+
+| Scenario | Exact approved scenario heading                          | Design sections  | Future test family              |
+| -------- | -------------------------------------------------------- | ---------------- | ------------------------------- |
+| A1.1     | Tiếp tục own Pointage interaction                        | D2, D3, D4, D8   | continuation-auth               |
+| A1.2     | Pointage continuation dùng ngoài domain                  | D2, D3, D4, D8   | continuation-auth               |
+| A2.1     | Continuation được dùng cho employee khác                 | D1, D2, D4, D8   | scope-and-grants                |
+| A2.2     | Continuation yêu cầu privileged operation                | D1, D2, D4, D8   | scope-and-grants                |
+| A2.3     | Browser cung cấp trusted-context claims                  | D1, D2, D4, D8   | scope-and-grants                |
+| A3.1     | Identify trước entry hoặc sau departure                  | D4, D5, D7       | personnel-eligibility           |
+| A3.2     | State read ngoài employment period                       | D4, D5, D7       | personnel-eligibility           |
+| A3.3     | Mutation sau departure với session đang mở               | D4, D5, D7       | personnel-eligibility           |
+| A3.4     | Ngày entry hoặc final departure hợp lệ                   | D4, D5, D7       | personnel-eligibility           |
+| A3.5     | Không xác minh được lifecycle hiện tại                   | D4, D5, D7       | personnel-eligibility           |
+| A4.1     | Authorized replay                                        | D4, D5, D6       | authorized-replay               |
+| A4.2     | Prior success nhưng current access mất hiệu lực          | D4, D5, D6       | authorized-replay               |
+| A5.1     | Continuation hết hạn                                     | D2, D3, D4       | expiry-reset-end                |
+| A5.2     | Credential reset nhưng browser còn continuation cũ       | D2, D3, D4       | expiry-reset-end                |
+| A5.3     | Interaction đã kết thúc trên shared device               | D2, D3, D4       | expiry-reset-end                |
+| A6.1     | Browser nhận continuation và current-state response      | D2, D6, D8, D10  | secret-and-context-minimization |
+| A6.2     | Durable browser storage hoặc diagnostics                 | D2, D6, D8, D10  | secret-and-context-minimization |
+| A6.3     | Technical metadata được tái dùng làm evidence            | D2, D6, D8, D10  | secret-and-context-minimization |
+| A7.1     | Missing hoặc untrusted client-address provider           | D1, D8, D10      | trusted-provenance              |
+| A7.2     | Public access failure                                    | D1, D8, D10      | trusted-provenance              |
+| A7.3     | Provider composition cần authority riêng                 | D1, D8, D10      | trusted-provenance              |
+| R1.1     | Employee operation có đầy đủ prerequisites               | D1, D4, D8       | cloud-and-scope                 |
+| R1.2     | Browser đổi scope hoặc dossier                           | D1, D4, D8       | cloud-and-scope                 |
+| R1.3     | Cloud hoặc database không xác nhận được kết quả          | D1, D4, D8       | cloud-and-scope                 |
+| R2.1     | NO_OPEN_SESSION nhận CLOCK_IN                            | D5, D7           | four-transitions                |
+| R2.2     | OPEN_SESSION nhận CLOCK_OUT                              | D5, D7           | four-transitions                |
+| R2.3     | OPEN_SESSION nhận CLOCK_IN                               | D5, D7           | four-transitions                |
+| R2.4     | NO_OPEN_SESSION nhận CLOCK_OUT                           | D5, D7           | four-transitions                |
+| R2.5     | Caller gửi event kind ngoài vocabulary                   | D5, D7           | four-transitions                |
+| R3.1     | Derived state được tái dựng                              | D5, D6, D7       | immutable-canonical-source      |
+| R3.2     | Actor yêu cầu sửa hoặc xóa raw event                     | D5, D6, D7       | immutable-canonical-source      |
+| R3.3     | Technical metadata được dùng làm attendance fact         | D5, D6, D7       | immutable-canonical-source      |
+| R4.1     | Employee tạo nhiều sequential sessions                   | D5, D7           | derived-sessions                |
+| R4.2     | Session thiếu clock-out                                  | D5, D7           | derived-sessions                |
+| R5.1     | Cùng identity và intent sau commit                       | D4, D5, D6, D8   | idempotent-retry                |
+| R5.2     | Cùng identity nhưng intent khác                          | D4, D5, D6, D8   | idempotent-retry                |
+| R5.3     | Receipt lookup từ employee hoặc establishment khác       | D4, D5, D6, D8   | idempotent-retry                |
+| R5.4     | Timeout retry                                            | D4, D5, D6, D8   | idempotent-retry                |
+| R5.5     | Replay sau khi lifecycle hoặc authority không còn hợp lệ | D4, D5, D6, D8   | idempotent-retry                |
+| R6.1     | Hai distinct CLOCK_IN cạnh tranh từ no-open state        | D5, D6           | multi-connection-concurrency    |
+| R6.2     | Hai distinct CLOCK_OUT cạnh tranh đóng cùng session      | D5, D6           | multi-connection-concurrency    |
+| R6.3     | Double submit cùng request identity                      | D5, D6           | multi-connection-concurrency    |
+| R7.1     | Browser gửi clock hoặc backdated timestamp khác server   | D5, D7           | server-time                     |
+| R7.2     | Actual time lệch Planning                                | D5, D7           | server-time                     |
+| R7.3     | Local date/time cần được diễn giải lại                   | D5, D7           | server-time                     |
+| R8.1     | Session đi qua midnight trong employment period          | D4, D7           | midnight-departure              |
+| R8.2     | CLOCK_OUT sau departure date                             | D4, D7           | midnight-departure              |
+| R9.1     | Employee chưa clock-in                                   | D4, D7, D9       | employee-projection             |
+| R9.2     | Employee đang clock-in                                   | D4, D7, D9       | employee-projection             |
+| R9.3     | Minimal Personnel projection                             | D4, D7, D9       | employee-projection             |
+| R9.4     | Employee yêu cầu lịch sử                                 | D4, D7, D9       | employee-projection             |
+| R10.1    | Authorized manager đọc bounded state                     | D9               | manager-scope                   |
+| R10.2    | Manager thiếu scope hoặc exact grant                     | D9               | manager-scope                   |
+| R10.3    | STAFF hoặc employee xin manager read                     | D9               | manager-scope                   |
+| R11.1    | Interaction kết thúc trên shared tablet                  | D3, D8, D10, D11 | shared-device-browser           |
+| R11.2    | Browser khôi phục state cũ                               | D3, D8, D10, D11 | shared-device-browser           |
+| R11.3    | Mutation pending, success hoặc conflict                  | D3, D8, D10, D11 | shared-device-browser           |
+| R11.4    | Invalid credential, rate limit hoặc lifecycle denial     | D3, D8, D10, D11 | shared-device-browser           |
+| R12.1    | Thiếu trusted client-address provenance                  | D1, D10, D12     | authority-separation            |
+| R12.2    | Production legal policy chưa được duyệt                  | D1, D10, D12     | authority-separation            |
+| R12.3    | Capability được triển khai và kiểm tra thành công        | D1, D10, D12     | authority-separation            |
+| R13.1    | Downstream hoặc ngoài phạm vi yêu cầu capability         | D1, D12          | negative-scope-inventory        |
+
+Critical additional technical proofs: same-ID multi-connection commit; distinct
+IN/OUT contention; stale OUT across A-close/B-open; reset and lifecycle racing
+same dossier lock; direct raw-only/receipt-only transactions cannot commit;
+writer cannot destructive mutate; server microseconds/offset/DST and zone-change
+stable history; expired/end/replayed token deny; old-response generation dropped;
+pagehide/pageshow/back/duplicate/restart/cache isolation; absent/untrusted provider
+fails before credential processing; runtime refuses unsafe test environment.
+
+#### Reopened locking/privilege proof — planned, not executed
+
+D1 exact environment/URL/current_database guards không thay. Dedicated
+disposable PostgreSQL, distinct owner/writer connections; không mock thay SQL.
+Các assertions dưới đây bổ sung F8/S5 proof, chưa đánh dấu task hoàn thành:
+
+1. Catalog/effective ACL proof D4b; actual writer SELECT FOR SHARE/UPDATE trực
+   tiếp cả ba source tables bị 42501, nhưng exact helper + invoker continuation
+   FOR UPDATE thành công. Helper RETURN void không row/name/lifecycle data.
+2. Actual writer UPDATE mỗi column (gồm id, org/est keys, entry/departure,
+   status/timezone), INSERT/DELETE/TRUNCATE/ALTER/DROP/GRANT/trigger-disable trên
+   source tables bị deny; compare complete source rows before/after helper.
+   Continuation chỉ hai UPDATE cột được phép; all existing F5 negatives giữ.
+3. Wrong/NULL/mixed org-est-dossier tuple, missing/inactive parents -> generic
+   failure and outer rollback. Không partial token/state/event/receipt. Through
+   service, coherent foreign tuple bị deny trước helper; không claim SQL
+   helper tự xác thực tenant khi DB login đã compromise.
+4. Non-writer role không EXECUTE; PUBLIC revoke verified. Writer không SET ROLE/
+   SESSION AUTHORIZATION owner/migration role, ALTER function, create overload/
+   shadow object, grant EXECUTE hoặc disable trigger. Poisoned caller
+   search_path/temp lookalike không đổi referenced public tables; helper fixed
+   pg_catalog/pg_temp và qualification được kiểm tra bằng object identities.
+5. Controlled disposable misconfiguration tests: wrong/LOGIN/superuser owner,
+   owner extra column/table privilege or membership, writer inherited/PUBLIC
+   UPDATE, PUBLIC EXECUTE, missing EXECUTE, writable schema, changed body/
+   search_path. Runtime refuses before provider/credential processing/write;
+   no fallback. Restore exact reviewed setup before final proof.
+6. Multi-connection blocking both directions: helper holds locks after return
+   until outer commit/rollback; actual issue/reset repository waits on dossier;
+   actual Personnel entry/departure UPDATE waits (and vice versa). Later
+   Pointage reads current version/lifecycle after lock. Parent status/timezone
+   UPDATE and existing Formalités scoped dossier lock conflict as expected.
+   Không sửa/import unrelated Formalités test harness hoặc code để pass.
+7. Invoker raw INSERT trigger calls helper even without prior repository lock;
+   concurrent alternate inserts serialize; invalid chain/raw-only/receipt-only
+   commit still fail. Continuation/end/touch ordering, same-ID replay,
+   competing IN/OUT, stale OUT across A/B và accepted-instant departure remain
+   original D2-D7 tests, not replaced by helper-success test.
+8. Force lock_timeout/statement_timeout/deadlock: rollback all work, same tuple
+   recovery/no fresh identity; no catch-and-continue savepoint releasing locks.
+   Test migration absent/misowned helper and roles fail closed, no-op rerun,
+   old history unchanged; all controlled test changes restored and actual DB
+   clock rerun before migration proof.
+
+Cần corresponding Tasks/TIC planning correction sau revised Design approval:
+task 1.3 delegated lock call, 1.4 raw-trigger helper call, 1.5 F8 role/ACL proof,
+1.6 guarded role setup, 1.7 atomic helper publication, 1.8 và S5/R regression
+evidence. Không đổi task count, checkbox, code hoặc UI plan trong lượt này;
+2/32 checkpoint giữ nguyên và Apply PAUSED đến explicit approval của Design
+và required planning correction. Không coi original 02c approval đủ cho
+delegated mechanism chưa được review.
+
+Future exact existing command families:
+`pnpm --filter @yuta/auth test`,
+`pnpm --filter @yuta/contracts test`,
+`pnpm --filter @yuta/db-cloud test`,
+`pnpm --filter @yuta/backoffice test`,
+`pnpm test:cloud`, `pnpm build:cloud`,
+`pnpm docs:check`, `pnpm architecture:check`,
+`pnpm -r --if-present typecheck`, scoped Prettier.
+Integration enable flag `YUTA_ALLOW_DATABASE_INTEGRATION_TESTS=true` chỉ sau
+disposable guards, không dùng existing general .env.local target.
+
+Browser QA sau formal VERIFY theo YUTA_QA_PROTOCOL: 1440x900, 1024x768,
+768x1024 shared tablet và 390x844; all approved visible states, French copy,
+keyboard/focus/touch/overflow, pending/unknown result và end/cache races.
+Real Next local route + migrated synthetic DB, not fixture-success UI.
+Hashed screenshot manifest, QA report và console checks; no plaintext secrets
+trong evidence. Không QA NOT_APPLICABLE cho UI_AFFECTING YES.
+
+## Open Questions
+
+Không có unresolved Product/authority conflict được phát hiện cần đổi approved
+Specs. Technical representation, TTL, transaction/receipt, schema, clocks,
+transport, reset/end và UI-state choices đã được chọn để human Sensitive Design
+review; không tự coi review là passed.
+
+Các legal/privacy/production provenance và production DB-role evidence ở D12
+vẫn blocked, không đủ điều kiện dùng real attendance. Partial UI-pack structural
+validation chưa hoàn chỉnh vì current-user cấm Implementation Plan trước gate;
+không phải permission vượt gate. Reviewer cần đánh giá rõ offline ENDING versus
+confirmed end semantics và no-image UI direction cùng design này.
+
+SENSITIVE DESIGN GATE
+Review status: AWAITING_HUMAN_REVIEW
+UI_AFFECTING: YES
+BROWSER_QA_REQUIRED: YES
+Apply authorization: NOT_GRANTED
+Production enablement: NOT_AUTHORIZED
+```
+
+## Historical packet — superseded approval and checkpoint context only
+
+Everything below is preserved historical evidence, including obsolete statuses,
+hashes and prior snapshots. It does not override the current review above.
+The current review's exact artifact snapshot/hash is the one immediately above.
+
+Change: pointage-usable-raw-clocking
+Gate: SENSITIVE DESIGN / TASK 3.2 BOOTSTRAP ALIGNMENT REVIEW
+Review status: APPROVED
+Created: 2026-09-09
+Schema: yuta-spec-driven
+Analysis conclusion: READY_FOR_SPECS
+Sensitive change: YES
+
+## Current Apply disposition — mandatory proof blocker
+
+Checkpoint: 2026-09-09T14:46:25Z. APPLY: BLOCKED. Tasks: 18/32.
+Task 3.2: PARTIAL. Approved Design bytes remain unchanged; no further Design
+decision or implementation scope has been inferred from this approval.
+The actual unchanged-source mtime probe did not demonstrate a new Next runtime
+module evaluation. Same-process runtime reuse across reevaluation is therefore
+not proved. A separately reviewed test mechanism is needed before resuming;
+no private cache hook, extra IPC command, endpoint or fallback was added.
+See the current checkpoint in `02c-implementation-plan-review.md` for exact
+evidence, failed assertion, current hashes and preserved authority.
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED. VERIFY: NOT_RUN. QA: NOT_RUN.
+Production enablement: NOT_AUTHORIZED.
+
+## Current approval — task 3.2 Apply
+
+Approval source: explicit current-user instruction, attachment
+37279cfa-d09e-4fb5-a96f-ef8f64893295.
+Approval recorded by: Codex workflow
+Approved: 2026-09-09T14:06:59Z
+
+Approved Design: `3e6337b2a475b11610754f05228a027a272ec2485a7350c74cc5a9218ce12d69`.
+Approved Tasks: `a8d5b380a5a9d85f93a297beee89474f49e6a4c48481cfb10c918e2035a1ba98`.
+Fresh preflight: both hashes and both delta Specs match; 154 protected checkpoint
+paths match (excluding the explicitly superseded Design hash). All 15 U2 paths
+match their expected state: 13 absent, two existing with unchanged hashes.
+Port 3001 is unoccupied. Existing cloud/POS/display containers are excluded.
+Apply authorization: GRANTED — RESUME FROM TASK 3.2. Tasks: 18/32.
+Formal VERIFY, Browser QA, Gate 3, sync/archive and production remain unauthorized.
+The review narrative below records the preceding proposal, not a current pause.
+
+## Current correction — existing F1/D5 key derivation only
+
+Previous review disposition: CHANGES_REQUESTED, explicit current-user
+attachment 6b728f6f-9707-4e17-a89e-377235c1bc64. Correction authorized for
+four planning/review files only; no Apply approval.
+
+Đã bỏ stateGuardKeyBase64 khỏi strict POINTAGE_TEST_INIT schema. Trường đó
+chỉ còn xuất hiện như forbidden unknown-key negative. Parent chỉ gửi existing
+encodedAuthSecret làm Pointage auth root, không gửi stateGuard key riêng.
+Actual Next child strict decode bằng decodePointageAuthSecret và gọi existing
+derivePointageStateGuardKey(decodedAuthSecret), HKDF label
+yuta/pointage/raw-state-guard/v1, rồi pass derived key vào runtime. Không đổi
+crypto primitive, D5/F1 hoặc admission/provider ordering; không secret/env
+contract mới. Buffer không bị zero khi runtime còn phụ thuộc; child-owned
+material chỉ clear best-effort khi ownership kết thúc, không claim erase copies.
+
+Code authority inspected read-only: packages/auth/src/pointage-credential.ts
+decodePointageAuthSecret; packages/auth/src/pointage-continuation.ts existing
+HKDF primitive/label; packages/auth/test/pointage-continuation.test.ts F1 vector;
+apps/backoffice/test/pointage-raw-clocking-service.test.ts existing derived-key
+composition. No implementation/test file was edited or executed.
+Future D1b tests reference these existing vectors rather than duplicate crypto.
+
+B + narrowly typed A, custom Next child, listener/order, process Symbol anchor,
+dual-client SAME-DB D1/D1a/F6/F8 proof, provider ordering, terminal failure,
+reload/restart/teardown, route chain, C16, exact 15 paths and U1 remain unchanged.
+
+## Exact artifact hashes
+
+SHA-256 computed with Node crypto.createHash('sha256') over fs.readFileSync
+exact bytes, independently reproducible with Get-FileHash -Algorithm SHA256.
+
+| Exact path                                                | Before SHA-256                                                     | Proposed SHA-256                                                   |
+| --------------------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| `openspec/changes/pointage-usable-raw-clocking/design.md` | `591501dd733aad5a3d1f1a6455291030e21952a674400b296004448234a05f4d` | `3e6337b2a475b11610754f05228a027a272ec2485a7350c74cc5a9218ce12d69` |
+| `openspec/changes/pointage-usable-raw-clocking/tasks.md`  | `f986c00e8c8405e73b31d0d98253dabbe804f49c2a025299ba17a9d6c82620ab` | `a8d5b380a5a9d85f93a297beee89474f49e6a4c48481cfb10c918e2035a1ba98` |
+
+Old review packet hashes, retained as exact historical suffixes:
+02b: `12d248bd393ca34fea00e05378bedf89c9065bb55b00e6960da9745b38fbde95`.
+02c: `e670c1020577928af1e74d17a0ca4646adb9042f7926d14029a6bf95a37d0f87`.
+
+## Preservation and dirty-worktree evidence
+
+HEAD: `415990386327aaccab3c32b1fef0569a0fde7f3a`. Same four-file write boundary; no new path.
+All 32 task checkbox lines remain byte-identical: 18 complete / 14 unchecked;
+task 3.2 NOT_STARTED. Exact 15-path allowlist table unchanged.
+Design changes confined to D1b root input/child derivation/planned key proof/
+buffer ownership; Tasks adds only one U2/D1b key-evidence paragraph.
+20 requirements / 62 scenarios remain unchanged:
+
+- authorization/pointage: 7/21,
+  SHA-256 `1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66`.
+- pointage/raw-clocking: 13/41,
+  SHA-256 `4bfa64e863ad465a144341c18aa5d0db3ce0806ada52ad40183cf9a4e321f90e`.
+
+Revalidated [UI DTO checkpoint](apply-ui-dto-checkpoint.json): all 154 protected/
+implementation entries other than the explicitly revised Design match their
+recorded hashes, including Gate 1/Gate 2, Proposal/Analysis, sealed UI pack,
+migration 0021/journal/snapshot, completed U1/S9 and unrelated Formalités export.
+The old checkpoint's Design hash is intentionally superseded by the reviewed
+bootstrap proposal and this requested correction; not an unexplained drift.
+
+All 1262 tracked/untracked implementation/script files unchanged against fresh
+pre-edit baseline. Sorted [path, lowercase SHA-256] JSON aggregate:
+`5378b148b9808a67c21267a58b0857b6135465c77d37acb55d0d8a0081763c19`.
+Inventory command: git ls-files --cached --others --exclude-standard -z;
+existing files with apps/, packages/ or scripts/ prefix, lexicographic sort;
+SHA-256 of UTF-8 JSON.stringify(pairs). No ignored build-cache claim.
+
+The broader 2596-file outside-write-scope aggregate changed during this run:
+initial `9f2857bcff184ba019ef052dd3a9b34803719ba6143ca25c3a5ed7592c0d0acd`,
+intermediate `077546ef00b7f1f3dbd505b97f92d47056954cc0432b0becd562b1f16d70d386`.
+Fresh Git status records concurrent, unrelated
+docs/reviews/ui-ux-pro-max-integration/02b-design-review.md activity, alongside
+pre-existing ui-ux-pro-max-integration Design/Tasks changes. This turn did not
+edit, revert or format those artifacts. Do not claim whole-repository byte
+stability; scoped protected hashes and all implementation bytes remain proven.
+No evidence from that other change is approval for Pointage.
+
+## Unchanged future implementation allowlist
+
+| Exact repository path                                                         | Classification               | Owner / bounded reason                                                                                                   |
+| ----------------------------------------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts`              | `NEW; TEST_ONLY`             | `Parent disposable launcher, ephemeral IPC inputs, owned child shutdown; no route runtime/admin handoff.`                |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-next-child.ts`            | `NEW; TEST_ONLY`             | `Actual existing Next host, socket owner, strict IPC, one typed process cell, child-created clients/admission/lifetime.` |
+| `apps/backoffice/src/server/pointage/raw-clocking-bootstrap.ts`               | `NEW`                        | `Server-only fixed factory bridge; exports bounded consumer only, no normal/default composition.`                        |
+| `apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts`                | `NEW; TEST_ONLY`             | `IPC/environment/listener/concurrency/reload/cleanup negatives and future actual-process proof.`                         |
+| `apps/backoffice/src/server/pointage/raw-clocking-runtime.ts`                 | `EXISTING_MODIFY`            | `Only neutral context/readiness facade for D8 and D1b composition typing; preserve completed S9 proofs/operations.`      |
+| `apps/backoffice/test/pointage-raw-clocking-runtime.test.ts`                  | `EXISTING_MODIFY; TEST_ONLY` | `Add neutral-context/admission assertions; preserve all completed S9 test cases.`                                        |
+| `apps/backoffice/src/server/pointage/raw-clocking-http.ts`                    | `NEW`                        | `Existing U2 plan: DTO/status/headers adapter consuming only bootstrap consumer.`                                        |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/context/route.ts`   | `NEW`                        | `Existing U2 exact context Node handler; no bootstrap/client/provisioning logic.`                                        |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/identify/route.ts`  | `NEW`                        | `Existing U2 exact identify Node handler; no bootstrap/client/provisioning logic.`                                       |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/state/route.ts`     | `NEW`                        | `Existing U2 exact state Node handler; no bootstrap/client/provisioning logic.`                                          |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-in/route.ts`  | `NEW`                        | `Existing U2 exact clock-in Node handler; no bootstrap/client/provisioning logic.`                                       |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-out/route.ts` | `NEW`                        | `Existing U2 exact clock-out Node handler; no bootstrap/client/provisioning logic.`                                      |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/recover/route.ts`   | `NEW`                        | `Existing U2 exact recover Node handler; no bootstrap/client/provisioning logic.`                                        |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/end/route.ts`       | `NEW`                        | `Existing U2 exact end Node handler; no bootstrap/client/provisioning logic.`                                            |
+| `apps/backoffice/test/pointage-raw-clocking-http.test.ts`                     | `NEW; TEST_ONLY`             | `Existing UI_TEST path: exact HTTP/method/CSRF/operation tests and actual route consumer integration.`                   |
+
+No shared/global startup/config/package-script path added. No new database,
+Next, Browser QA or production operation. Any other future path requires review.
+
+## Exact bounded Design correction diff
+
+```diff
+--- a/openspec/changes/pointage-usable-raw-clocking/design.md
++++ b/openspec/changes/pointage-usable-raw-clocking/design.md
+@@ -296,1 +296,1 @@
++role passwords và encodedAuthSecret chỉ memory. Không .env write, command-line secrets,
+-role passwords và keys chỉ memory. Không .env write, command-line secrets,
+@@ -304,2 +304,1 @@
++encodedAuthSecret = canonical base64url 32 random bytes (existing auth format).
+-encodedAuthSecret = canonical base64url 32 random bytes (existing auth format);
+-stateGuardKeyBase64 = canonical base64 of exactly 32 random bytes.
+@@ -310,0 +310,18 @@
++INIT không có stateGuardKeyBase64; nếu supplied thì reject như unknown key.
++Parent chỉ gửi encodedAuthSecret, không gửi independently generated hoặc derived
++stateGuard key. Trong actual Next child, strict validate/decode encodedAuthSecret
++bằng existing decodePointageAuthSecret, rồi gọi existing
++derivePointageStateGuardKey(decodedAuthSecret) với approved HKDF label
++yuta/pointage/raw-state-guard/v1. Child pass derived key đó vào
++createPointageRawClockingRuntime trong existing admission order; decode/derive
++failure giữ terminal fail-closed behavior, không publish runtime. Không nhận
++stateGuard key từ IPC, environment, CLI, request, browser hoặc process khác;
++không thêm secret contract hay viết lại crypto primitive của F1/D5.
++
++Planned D1b proof: reject INIT chứa stateGuardKeyBase64; inventory không có
++environment/CLI/browser stateGuard-key input; actual runtime nhận đúng output
++của existing derivation trên decoded auth secret; đổi auth secret phải cho
++corresponding domain-separated derived key; parent không gửi derived key riêng.
++Existing F1 vectors trong packages/auth/test/pointage-continuation.test.ts là
++authority, không duplicate thuật toán mới. Đây là planned tests, chưa chạy.
++
+@@ -428,2 +445,6 @@
++Drop INIT message references after construction. Child sở hữu decoded auth
++secret và derived stateGuard material của generation; không log/persist, đặt
++trong process.env, serialize vào RSC/browser hoặc expose qua diagnostics.
++Chỉ clear owned mutable buffers best-effort khi ownership thực sự kết thúc,
++đặc biệt lúc teardown; không zero buffer mà live runtime vẫn phụ thuộc.
++Không claim xóa được immutable JS strings hoặc driver/runtime copies;
+-Drop INIT message references after construction; clear owned mutable key buffers
+-best-effort on close. No claim of erasing immutable JS strings/driver memory;
+```
+
+## Exact corrected Design content
+
+```text
+## Context
+
+Change `pointage-usable-raw-clocking`, schema `yuta-spec-driven`.
+Xem [Proposal](proposal.md), [Analysis](analysis.md) và exact approved
+[raw-clocking delta](specs/pointage/raw-clocking/spec.md) /
+[authorization delta](specs/authorization/pointage/spec.md).
+Gate 2 đã approve 20 requirements / 62 scenarios. Design này là đề xuất cần
+Sensitive Design review, chưa cho phép Tasks hoặc Apply.
+
+Current repository: existing Backoffice Next.js cloud, postgres-js/Drizzle
+`@yuta/db-cloud`, portable `@yuta/auth`, Zod `@yuta/contracts`.
+Foundation đã có credential, distributed rate limiting, audit và closed six
+operations; chưa có employee route, continuation, raw events hoặc receipt.
+
+Sources trực tiếp: `apps/backoffice/src/server/pointage/{service,authorization}.ts`;
+`packages/db-cloud/src/{pointage-repository,client}.ts`;
+`packages/db-cloud/src/schema/{pointage,personnel,tenancy}.ts`;
+foundation tests và archived foundation Design. `issueCredential` và
+`resetCredential` đã khóa scoped Personnel dossier bằng FOR UPDATE.
+Personnel fields hiện có: id, givenNames, familyName, entryDate, departureDate.
+Không thêm employee identity hoặc Personnel permission.
+
+Authority: root/scoped AGENTS, docs README/CURRENT_STATE/AUTHORITY_MODEL,
+activation/normativity policies, Personnel Product Knowledge, authentication/
+tenancy/database architecture, ADR-003, Production Readiness, UI workflow và
+QA protocol. Code chứng minh implementation baseline, không thay Product authority.
+Gate 1 và hai delta Specs không được sửa.
+
+## Goals / Non-Goals
+
+**Goals:** chốt exact security/transaction/time/UI approach để implement
+approved outcomes sau gate; chứng minh atomic evidence/receipt, stale-client
+protection và shared-device isolation; giữ P13/P14 đúng authority layer.
+
+**Non-Goals:** toàn bộ explicit non-scope trong Proposal và raw R13 giữ nguyên.
+Không generic employee/cloud session, canonical/materialized session table,
+manager UI, credential-management UI, correction, Planning/Today/payroll/POS/
+Site Agent/Display/offline/sync hoặc production provider. Không Technical
+Implementation Contract hay Implementation Plan trong Design này.
+
+## Decisions
+
+### D1 — Placement, trusted entry và test-only composition
+
+Route đề xuất: `apps/backoffice/src/app/pointage/[establishmentSlug]/page.tsx`,
+ngoài authenticated restaurant layout; dùng existing root fonts/styles,
+`NO_APPLICATION_SHELL`. Không redirect qua cloud login hay consume cloud-user
+cookie để authorize employee. Manager placeholder không sửa.
+
+Node-runtime route handlers dưới `/api/pointage/[establishmentSlug]/...`.
+Mỗi handler normalize slug và resolve active organization/establishment bằng
+existing foundation repository. Request IDs/slug/header không tenant authority.
+Mỗi operation re-resolve current active scope, không trust client IDs.
+
+Composition off by default. Current change chỉ có local synthetic test factory:
+explicit `YUTA_POINTAGE_SYNTHETIC_TEST_MODE=true`, `NODE_ENV` development/test,
+`VERCEL` absent, server bind loopback, explicit
+`POINTAGE_TEST_ORIGIN=http://127.0.0.1:3001`. Parse `CLOUD_DATABASE_URL`
+bằng URL parser; hostname chỉ trong exact loopback allowlist `localhost`,
+`127.0.0.1`, `[::1]`, như foundation integration test hiện có.
+
+Exact disposable database-name rule:
+`^yuta_pointage_raw_clocking_test(?:_[a-z0-9]+)?$`.
+Case-sensitive whole-string match, không substring/glob/multiline; match phải
+tiêu thụ toàn bộ name, kể cả khi regex engine cho `$` khớp trước final newline.
+Path URL phải là đúng một leading slash + name hợp lệ, không percent-encoded
+alias, extra slash, whitespace/newline hoặc query/fragment database override.
+expectedName là exact pathname bỏ một leading slash, không trim/case/Unicode
+normalization. Không browser-controlled URL/database selection.
+
+Chỉ sau URL guard mới mở connection cho identity probe:
+`SELECT current_database()` MUST trả actualName exactly equal expectedName
+(case-sensitive), và actualName cũng phải pass cùng whole-string rule.
+Không instantiate usable Pointage/provider hoặc fixture/migration/attendance
+write trước cả hai kiểm tra. Reject `yuta_cloud`, staging/production,
+non-loopback, prefix/suffix sai, actual-name mismatch hoặc probe failure.
+`NODE_ENV=production` hoặc `VERCEL` vẫn deny dù tên DB có vẻ disposable.
+
+Integration và Browser QA dùng cùng guard, không skip/weaken để tiện test.
+Convention này giữ anchored allowlist của
+`packages/db-cloud/test/pointage-repository.integration.test.ts`,
+chỉ đổi capability-specific prefix; không mở quyền real attendance.
+
+Factory inject deterministic trusted-address test provider từ server-owned
+test composition, không từ request/body/header/cookie. Browser QA dùng real
+Next dev route + real disposable PostgreSQL synthetic fixtures, không mocked
+acceptance. Không expose provider selector hoặc spoof-address API cho browser.
+Standard production build/composition luôn unavailable; test module không trở
+thành production default, kể cả flag tồn tại. Missing/untrusted provider từ chối
+trước credential lookup/processing; giữ existing candidate 5/client 30 failures
+trong 15-minute window/block, không redesign thresholds.
+
+Không trực tiếp trust Forwarded/X-Forwarded-For/X-Real-IP/Host cho provenance.
+Test origin là server config kiểm tra chính xác, không derive từ browser Host.
+Origin dùng CSRF check, không client-address hoặc tenant proof.
+Future production provider vẫn cần authority riêng; Design không implement nó.
+
+Alternative: generic Backoffice session/cookie hoặc POS runtime bị loại vì
+khác authority/runtime. Test-mode switch giới hạn environment/composition,
+không field/classifier synthetic versus real employee.
+
+#### D1a — Dual-client / same-database synthetic runtime
+
+Human clarification chỉ cho phép alignment Design/Tasks, chưa resume Apply.
+Mô hình này thuộc existing Backoffice cloud, không runtime/app mới hoặc
+production credential contract. `CLOUD_DATABASE_URL` đã qua D1 là TARGET
+descriptor; bootstrap/migration identity trong URL đó không là runtime client.
+Cả hai nguồn kết nối MUST có cùng exact parsed hostname, port, database name
+với target D1. Không alias/normalization để làm khớp một nguồn khác.
+
+Runtime nhận hai server-only injected clients, xác thực PostgreSQL độc lập:
+`foundationClient` và `rawClient`. Test bootstrap/harness sau D1 identity proof
+có thể chuẩn bị ephemeral role-specific connection material để inject; secrets
+chỉ process/server memory, không log/commit/browser serialization. Không thêm
+production environment credential contract, generic multi-database service
+locator, merged pool hoặc untyped interchangeable database handle.
+
+- `foundationClient`: exact `yuta_pointage_foundation_runtime`, LOGIN,
+  NOSUPERUSER, NOCREATEDB, NOCREATEROLE, NOREPLICATION, NOBYPASSRLS, NOINHERIT.
+  Không membership/MEMBER/USAGE/SET path tới role khác, SET ROLE, database/schema/table/
+  function ownership, WITH GRANT OPTION, ACL administration hoặc owner fallback.
+  Đây chỉ là test-only DB execution identity, không Product permission,
+  employee/manager identity hay production role.
+- `rawClient`: exact `yuta_pointage_raw_writer`; giữ nguyên toàn bộ D4b/F8
+  attributes, privileges, delegated helper và same-connection admission.
+  Không nhận limiter/audit/credential-management quyền từ foundation.
+
+Cả hai MUST dùng SAME exact verified raw-clocking disposable database theo D1,
+không chỉ cùng cluster. `yuta_pointage_foundation_test...` chỉ dành C17 8/8
+regression evidence, KHÔNG dùng làm runtime foundation DB. Không split credential
+validation và raw evidence qua hai databases; không đổi C17 guard/prefix.
+
+##### Exact foundation validation footprint
+
+Nguồn hiện tại: `packages/db-cloud/src/pointage-repository.ts` và
+`packages/db-cloud/src/schema/pointage.ts`. Các cột dưới là SQL column names,
+bao gồm SELECT predicates/join keys, không chỉ returned fields. Chỉ column grants
+được liệt kê, không whole-table grants kể cả khi hiện tại INSERT cần mọi cột.
+
+| Table (public schema) | SELECT columns | INSERT columns | UPDATE columns |
+| `---` | `---` | `---` | `---` |
+| `organizations` | `id, status` | none | none |
+| `establishments` | `id, organization_id, locale, timezone, slug, status` | none | none |
+| `personnel_employee_dossiers` | `id, organization_id, establishment_id, entry_date, departure_date` | none | none |
+| `pointage_employee_credentials` | `id, organization_id, establishment_id, personnel_dossier_id, credential_version, credential_format_version, algorithm_version, key_version, lookup_digest, salt, verifier, superseded_at` | none | none |
+| `pointage_credential_rate_limits` | `organization_id, establishment_id, key_kind, key_digest, window_started_at, failure_count, blocked_until` | `organization_id, establishment_id, key_kind, key_digest, window_started_at, failure_count, blocked_until, updated_at` | `window_started_at, failure_count, blocked_until, updated_at` |
+| `pointage_security_audit_events` | none | `id, organization_id, establishment_id, event_type, outcome, reason_code, manager_user_id, personnel_dossier_id, credential_id, credential_version, requested_operation, occurred_at` | none |
+
+Exact method-to-footprint:
+
+1. `resolveActiveEntryScope`: organizations/establishments SELECT ở trên;
+   `lower(slug)`, active statuses và organization join, không Tenancy write.
+2. `findCredentialCandidate`: credential SELECT ở trên gồm scoped HMAC
+   predicate; không issued/superseded-by administrative columns hay mutation.
+3. `findPersonnelEmploymentPeriod`: chỉ năm Personnel SELECT columns;
+   không names, documents, history hoặc Personnel write.
+4. `isRateLimitBlocked`: SELECT organization_id, establishment_id, key_kind,
+   key_digest, blocked_until từ limiter.
+5. `recordRateLimitFailure`: INSERT tám limiter columns, ON CONFLICT DO NOTHING;
+   SELECT bảy limiter columns gồm WHERE keys và locked row's window/count/block,
+   FOR UPDATE; UPDATE đúng bốn mutable columns. Không SELECT updated_at.
+   Existing four-column UPDATE đủ cho limiter row lock, không source-row UPDATE.
+6. `resetCandidateRateLimit`: WHERE organization_id, establishment_id, key_kind,
+   key_digest (candidate only); UPDATE window_started_at, failure_count,
+   blocked_until, updated_at. Existing behavior không DELETE.
+7. `appendAudit`: INSERT đúng mười hai cột của `auditValues`; không RETURNING,
+   SELECT hoặc audit visibility. UUID được app tạo; không sequence grant,
+   không mở users/Personnel/credential SELECT chỉ vì audit có foreign keys.
+
+Không method nào trong bảy phương thức cần DELETE, credential/source mutation
+hoặc helper EXECUTE. Phát hiện footprint khác khi Apply -> STOP, không widen.
+Validation facade chỉ expose bảy methods này và employee foundation operations;
+existing constructor/repository có administration methods không cho phép publish
+hoặc sử dụng chúng từ synthetic employee runtime. DB grants độc lập MUST deny
+issueCredential, resetCredential, supersession và manager administration.
+
+Ngoài CONNECT tới exact target và USAGE public schema, không grant mới trên
+object khác. Không application-function EXECUTE, đặc biệt exact
+`public.pointage_raw_lock_dossier(uuid,uuid,uuid)`; không continuation
+SELECT/INSERT/UPDATE, raw/receipt access hoặc mutation, Personnel/Tenancy
+mutation, DDL/trigger disable, DELETE/TRUNCATE, schema CREATE hay role/ACL admin.
+Ordinary pg_catalog built-ins/catalog inspection phục vụ query/proof không là
+grant mở application functions. Không audit SELECT/UPDATE hay attendance copy.
+Effective database/schema CREATE và TEMP không được thành DDL bypass.
+
+##### Ordered composition proof and failure behavior
+
+Sau existing D1 environment/URL/actual-target proof, nhưng trước provider và
+usable runtime, kiểm tra đúng thứ tự:
+
+1. Foundation source tuple khớp D1; trên chính authenticated connection chạy
+   `SELECT current_database(), session_user, current_user`.
+   Expected DB đúng D1; cả hai user đúng `yuta_pointage_foundation_runtime`.
+2. Raw source tuple khớp D1; độc lập chạy cùng probe; expected DB đúng D1,
+   cả hai user đúng `yuta_pointage_raw_writer`.
+3. So sánh hai actual names bằng nhau và bằng D1 expected name; mỗi actual name
+   độc lập pass exact whole-string D1 regex. Không SET ROLE để giả identity.
+   Pool/connection provenance phải áp dụng tới clients thực sự dùng, không lấy
+   proof từ connection khác rồi hoán đổi hoặc dùng bootstrap handle.
+4. Foundation effective privileges khớp exact inventory; kiểm tra pg_roles,
+   pg_auth_members, pg_class, pg_namespace, pg_database ownership, pg_proc,
+   pg_default_acl; effective table/column/function/database/schema privileges,
+   PUBLIC/default ACL, pg_has_role MEMBER/USAGE/SET paths và grant options.
+   Cột thêm mới không tự được grant bởi table-wide privilege.
+5. Raw effective proof giữ nguyên D4b/F8; không weaken inventory để cho role
+   foundation mới tồn tại, không thêm raw limiter/audit quyền.
+6. Chỉ sau cả hai proof mới instantiate approved injected synthetic
+   TrustedPointageClientAddressProvider, kiểm tra trusted provenance rồi tạo
+   foundation service và raw runtime. Missing/untrusted provider vẫn deny
+   trước credential hash/lookup; không forwarded/unknown-client/candidate-only fallback.
+
+Missing client, another database/C17 target, owner/bootstrap identity,
+session_user/current_user mismatch, role membership/SET path, unexpected
+privilege/default/PUBLIC inheritance, unprovable target hoặc provider -> generic
+fail closed. Không runtime ACL repair, ALTER ROLE/GRANT fallback, silent client
+swap, production provider, .env/shared-DB fallback hoặc split-database workaround.
+Cần proof thực tế sau future Apply approval; planning không claim role đã tồn tại.
+
+Composition: foundationRepository chỉ backed by foundationClient;
+createPointageServerFoundation chỉ dùng foundationRepository.
+rawClockingRepository chỉ backed by rawClient; createPointageRawClockingService
+consume foundation service, raw repository và approved stateGuard key trong
+composition có approved synthetic provider. Không tráo clients hoặc expose
+administration methods/URLs/credentials vào browser.
+
+Không chia sẻ một PostgreSQL transaction giữa hai clients. Foundation
+prevalidation, distributed limiter và minimized audit giữ transaction/behavior
+hiện có. Final raw acceptance vẫn ở raw writer transaction: D4a delegated
+locks, current credential + Personnel re-read, continuation lock, exact
+operation/lifecycle/accepted-time guards, stateGuard và raw+receipt atomic commit.
+Stale foundation success không thay raw authority hoặc authorize mutation.
+Manager read/auth boundary D9 không được mở rộng bởi validation-only client;
+không cấp users/membership reads cho role này để ghép manager runtime cho tiện.
+
+#### D1b — Actual Next process bootstrap (task 3.2 alignment proposal)
+
+Đây là bounded Sensitive Design / Tasks alignment tại checkpoint 18/32,
+task 3.2 NOT_STARTED. Chỉ planning được sửa; Apply PAUSED đến human approval
+exact revised Design/Tasks hashes và exact implementation allowlist trong
+Tasks. D1/D1a, D4a/D4b, F6/F8, S9, U1, Product, hai Specs, migration 0021,
+sealed UI pack và bảy blockers giữ nguyên. Các checkpoint trước trong Design
+là historical review context, không reset completed tasks hoặc UI-pack status.
+
+##### Repository evidence and alternatives
+
+Inspected baseline: Backoffice declares Next ^16.2.9, installed 16.2.9;
+Node v24.17.0. Existing scripts: dev = next dev -p 3001, start = next start
+-p 3001, build = next build. next.config.ts không có bootstrap hook;
+không có Pointage instrumentation/startup owner. Existing typed development
+review-store global không là authority cho generic registry mới.
+createCloudDatabaseClient mặc định pool không chứng minh max:1; không sửa
+shared factory. Existing guarded Pointage test helper đã có independently
+authenticated postgres-js max:1 + Drizzle clients và exact-target probe.
+Factory raw-clocking-runtime.ts mới có injected clients, không route accessor.
+Existing child-process tests chỉ là implementation pattern, không runtime proof.
+
+Official documentation tại exact tag 16.2.9 được kiểm tra, không dùng latest:
+[custom server](https://raw.githubusercontent.com/vercel/next.js/v16.2.9/docs/01-app/02-guides/custom-server.mdx)
+mô tả public next/prepare/getRequestHandler và httpServer option; entry file
+không qua Next compiler. Custom server có optimization/standalone trade-offs,
+nên chỉ test entry, không thay production startup.
+[instrumentation](https://raw.githubusercontent.com/vercel/next.js/v16.2.9/docs/01-app/03-api-reference/03-file-conventions/instrumentation.mdx)
+await register trước readiness, chạy mỗi server instance và có Node/Edge
+distinction; không chứng minh socket ownership/teardown cho D1.
+Installed next/dist/server/next.js, next.d.ts xác nhận public API, custom
+prepare/getRequestHandlers và close lifecycle. Không import Next private APIs.
+Version drift phải re-review lifecycle evidence; không upgrade để làm test pass.
+
+- A, process-local module alone: bounded cache khả thi nhưng standard CLI không
+  cấp actual listener owner, cleanup hoặc cross-reload guarantee. Không chọn
+  module-cache-only hay environment-driven lazy default.
+- B, dedicated test launcher + in-process bootstrap: CHOSEN, kết hợp narrowly
+  typed process-local promise của A. Cha chỉ chuẩn bị disposable infrastructure
+  và ephemeral inputs; actual Next child tạo/prove hai clients của chính nó.
+- C, instrumentation: không chọn. Hook existence không cung cấp actual socket,
+  shutdown hoặc cache-reload proof; thêm shared startup path không cần thiết.
+- D, plain next dev + env-only, private Next hooks hoặc proxy/sidecar: reject.
+  Không actual socket proof, hoặc tăng topology/registry/secret contract.
+  Không separate Pointage server, app, containerized app runtime hay new port.
+
+##### Owner and exact launch channel
+
+Launcher test-only khởi chạy MỘT Node child hosting existing apps/backoffice
+Next app bằng public next({ dev: true, dir: absoluteBackofficePath,
+hostname: '127.0.0.1', port: 3001, httpServer, quiet: true }).
+Tất cả page/API vẫn do Next file-system router; không implement HTTP business
+routes trong launcher, không reverse proxy hoặc second HTTP service. Chỉ
+test invocation thay CLI invocation; normal dev/start/build/config không đổi.
+Higher-risk process-wide effect nằm trong dedicated test child: listener
+ownership và lifecycle, không shared source/config path. Không launch cùng
+Backoffice khác trên port 3001; EADDRINUSE -> STOP, không auto-select port.
+
+Parent validates existing D1/F6 guards trên target trước provisioning/migration/
+fixtures; admin chỉ ở parent. Parent không gửi admin URL, open JS client,
+parent SQL proof hoặc runtime object qua process boundary. Parent-generated
+role passwords và encodedAuthSecret chỉ memory. Không .env write, command-line secrets,
+NEXT_PUBLIC inputs, durable production config hoặc implicit .env.local fallback.
+
+Child uses Node fork IPC, one strict INIT message <= 16 KiB, exact keys:
+type = POINTAGE_TEST_INIT; version = 1; runId = UUIDv4;
+parentPid / childPid = positive integers matching process.ppid / process.pid;
+origin = http://127.0.0.1:3001; listenHost = 127.0.0.1; listenPort = 3001;
+foundationDatabaseUrl / rawDatabaseUrl = role-specific URLs for SAME D1 tuple;
+encodedAuthSecret = canonical base64url 32 random bytes (existing auth format).
+Unknown keys, oversized/malformed/repeated INIT, wrong PID/channel or missing
+IPC reject. No browser/control endpoint can supply INIT or choose provider.
+After INIT only exact STOP { type: POINTAGE_TEST_STOP, version: 1, runId }
+is accepted from this same parent channel; unexpected messages fail closed.
+
+INIT không có stateGuardKeyBase64; nếu supplied thì reject như unknown key.
+Parent chỉ gửi encodedAuthSecret, không gửi independently generated hoặc derived
+stateGuard key. Trong actual Next child, strict validate/decode encodedAuthSecret
+bằng existing decodePointageAuthSecret, rồi gọi existing
+derivePointageStateGuardKey(decodedAuthSecret) với approved HKDF label
+yuta/pointage/raw-state-guard/v1. Child pass derived key đó vào
+createPointageRawClockingRuntime trong existing admission order; decode/derive
+failure giữ terminal fail-closed behavior, không publish runtime. Không nhận
+stateGuard key từ IPC, environment, CLI, request, browser hoặc process khác;
+không thêm secret contract hay viết lại crypto primitive của F1/D5.
+
+Planned D1b proof: reject INIT chứa stateGuardKeyBase64; inventory không có
+environment/CLI/browser stateGuard-key input; actual runtime nhận đúng output
+của existing derivation trên decoded auth secret; đổi auth secret phải cho
+corresponding domain-separated derived key; parent không gửi derived key riêng.
+Existing F1 vectors trong packages/auth/test/pointage-continuation.test.ts là
+authority, không duplicate thuật toán mới. Đây là planned tests, chưa chạy.
+
+Child environment is explicit allowlist: required Windows OS launch keys
+SystemRoot, WINDIR, COMSPEC, PATH, PATHEXT, TEMP, TMP only when present;
+NODE_ENV = development, YUTA_POINTAGE_SYNTHETIC_TEST_MODE = true,
+POINTAGE_TEST_ORIGIN = exact origin, NEXT_TELEMETRY_DISABLED = 1.
+Never inherit NODE_OPTIONS, arbitrary application secrets or NEXT_PUBLIC keys.
+Parent production/VERCEL check occurs BEFORE environment sanitization; cannot
+erase VERCEL to make an unsafe launch eligible. Child repeats live checks.
+Private projected D1 environment uses foundationDatabaseUrl as
+CLOUD_DATABASE_URL target descriptor; raw URL is separately checked against it.
+Neither URL is installed in process.env or read from Next dotenv loading.
+Normal CLI/build/start has no IPC owner/anchor and remains unavailable even
+with flags. No production provider is constructed; deterministic synthetic
+provider is fixed in server-owned child code, never derived from headers.
+
+##### Actual listener, admission and consumer handoff
+
+Order in actual child:
+
+1. Validate INIT/environment/URL tuples/roles and main-thread process identity,
+   before creating either client. Bind owned node:http server to exact IPv4
+   127.0.0.1:3001 with generic 503 gate. Inspect server.listening and address()
+   for exact address/port; derive origin from that socket tuple and compare
+   exact POINTAGE_TEST_ORIGIN. Config or successful parent fetch alone is not
+   listener proof. No credentials processed at this stage.
+2. Prepare existing Next against that exact httpServer. Before delegating any
+   request, verify socket.localAddress/localPort, live listener and process
+   generation; Host/Forwarded/X-Forwarded-\* never prove provenance. Origin
+   remains separate D8 CSRF check. No extra public health/bootstrap endpoint.
+3. Install one non-enumerable, non-writable, non-configurable property on Node
+   process keyed Symbol.for('yuta.pointage.raw-clocking.test-bootstrap.v1').
+   Value is frozen, Pointage-only typed admission accessor; private closure
+   owns INIT, listener, clients, state and promise. No mutable globalThis bag,
+   arbitrary keys, generic get/set/register or replace-client method.
+4. Server-only raw-clocking-bootstrap.ts, compiled by Next, supplies exactly
+   createPointageRawClockingRuntime to that one typed accessor. The child
+   DOES NOT import server-only application modules outside Next compilation
+   or enable global react-server conditions. The constructor callback is
+   fixed in this module, never supplied by handlers/request/browser.
+5. On the first accessor call, synchronously reserve the one initialization
+   promise, then create two distinct postgres-js max:1/Drizzle clients in this
+   actual process, reusing guarded test-client construction. On each actual
+   authenticated handle prove current_database() and session_user/current_user:
+   foundation = yuta_pointage_foundation_runtime; raw = yuta_pointage_raw_writer.
+   Both actual names equal the exact D1 target and independently pass the
+   whole-string rule. Rerun foundation D1a effective inventory and raw D4b/F8
+   body/owner/ACL/OID proof on these handles. No SET ROLE, parent proof,
+   admin/C17/default DB client, ACL repair or silently replaced connection.
+6. Only then instantiate fixed synthetic trusted-address provider and the
+   runtime; publish READY only after complete factory admission. Factory's
+   current per-operation requireReady and final raw transaction rechecks stay.
+   Neutral context availability additionally runs requireReady and existing
+   active-entry scope resolution, returning only { available: true } or 503;
+   it adds no authorization operation, dossier projection or credential work.
+
+Exact dependency: seven Node route.ts handlers -> raw-clocking-http.ts ->
+server-only getPointageRawClockingConsumer() in raw-clocking-bootstrap.ts ->
+typed process admission accessor -> existing admitted runtime.
+Consumer exposes only context/identify/readState/mutate/recover/end functions,
+not clients, URLs, admin/owner, provisioning, fixtures or generic DB factories.
+Internal constructor types are not consumer exports. Enforce import inventory
+and browser/RSC negative tests. The immutable process anchor is a narrowly
+scoped in-process capability, NOT a security sandbox against hostile server
+code/OS users; existing trusted-repository/host assumption remains explicit.
+
+No anchor, failed admission, wrong environment/listener/DB/role/privilege/helper/
+provider, connection failure or different worker/process -> D8 generic 503
+POINTAGE_UNAVAILABLE without credential work or partial identity. Readiness
+in another route never authorizes a bypass. Every accessor/dispatch checks
+live generation/listener/environment; every service call retains requireReady.
+A reconnect on either fixed max:1 client repeats identity/effective proof before
+use; reconnect failures cannot create a replacement pair or fallback identity.
+
+##### Concurrency, reload and failure lifetime
+
+Generation = child PID + parent-generated runId; main thread only. State starts
+INITIALIZING on the first call; all concurrent calls await the SAME promise.
+No partially admitted pair is cached/published. READY holds one bounded runtime.
+Initialization failure becomes terminal FAILED/UNAVAILABLE for that generation;
+close any opened client, drop input references, return only generic failure.
+No automatic retry, second factory invocation or in-process replacement.
+Live prerequisite failure also marks FAILED and initiates teardown; ordinary
+403/409/429 business outcomes do not. New admission needs a fresh child launch.
+
+Do not rely on Next module cache/HMR semantics. Immutable owner closure remains
+with actual process, while route module reload may obtain only its same typed
+promise. No pool lives only in an evictable module. Source/config/dependency
+change invalidates the generation: parent watches and child checks exact
+launch inventory hashes before each admission/dispatch. Inventory covers
+Backoffice src + test bootstrap entry files, imported auth/contracts/db-cloud/
+tenant source, their manifests, Backoffice config/tsconfig and pnpm-lock.yaml;
+path additions/removals also invalidate. Exclude .next generated output.
+Changes -> deny new work and teardown, no hot replacement or automatic restart;
+fresh manual launch recaptures and proves. A harmless module-cache reload with
+unchanged inventory must reuse the same promise/pair, never duplicate pools.
+Watch events alone are not proof; checksum validation is authoritative.
+
+Actual Next process/thread/generation agreement must be demonstrated by future
+real-route tests, including cache reload and process restart. Documentation
+does not establish this application-specific result. If Next executes the
+accessor in another worker/realm without the owned anchor, it is unavailable:
+STOP rather than global env fallback, cross-process registry or mocked proof.
+After restart the old runtime is dead; new clients require full admission.
+Existing continuation rows alone confer no authority; D2-D4 validation and
+shared-device clearing still apply.
+
+##### Teardown, diagnostics and disposable lifetime
+
+SIGINT/SIGTERM, IPC disconnect/STOP, listener failure, source drift or terminal
+admission failure stop new requests immediately. Drain owned in-flight work
+for at most 10 seconds, then close remaining owned HTTP/HMR sockets and call
+Next close. End both postgres clients exactly once, including partial startup,
+with a 5-second close deadline; drop runtime/promise/secret references.
+Parent gives child 20 seconds to exit, then may terminate ONLY that positively
+identified owned child PID; never broad node/process/container kills.
+A timeout/forced exit leaves possible commit outcome unknown, not false rollback.
+No teardown deletes raw events, receipts or continuations inside active DB.
+
+Drop INIT message references after construction. Child sở hữu decoded auth
+secret và derived stateGuard material của generation; không log/persist, đặt
+trong process.env, serialize vào RSC/browser hoặc expose qua diagnostics.
+Chỉ clear owned mutable buffers best-effort khi ownership thực sự kết thúc,
+đặc biệt lúc teardown; không zero buffer mà live runtime vẫn phụ thuộc.
+Không claim xóa được immutable JS strings hoặc driver/runtime copies;
+driver credentials remain private until pool/process termination.
+Raw child stdout/stderr are piped, drained and discarded, not persisted or
+relayed via regex redaction. Only strict sanitized IPC diagnostics are exposed:
+type = POINTAGE_TEST_STATUS, version = 1, runId, childPid,
+stage in LISTENING/INITIALIZING/READY/FAILED/STOPPED and optional bounded
+code = POINTAGE_UNAVAILABLE. No input echo, exception/SQL stack, headers,
+URL, auth material, hashes of secrets, Personnel or attendance payload.
+Quiet mode supplements, never replaces, output suppression. Parent follows
+the same no-secret-output rule for driver/provision commands.
+
+Default shutdown retains positively identified disposable DB/container for
+evidence; no automatic destructive cleanup. Separate explicitly authorized
+cleanup uses existing F6 ownership/name/loopback/current_database guards and
+exact owned container/volume identity after child exit. Unknown identity or
+shared yuta_cloud/yuta_resto -> STOP. No real attendance or production activation.
+
+### D2 — Opaque continuation và authenticity
+
+Chọn 32 cryptographically random bytes, base64url không padding (43 chars),
+prefix `ptc1_`; secret chỉ có trong HTTPS response rồi browser module memory.
+Không JWT, không signed serialized employee context, không cookie/sessionStorage/
+localStorage/IndexedDB/service worker/history state/URL storage. Loopback HTTP
+chỉ là isolated synthetic test exception, không production policy.
+
+Durable continuation record lưu SHA-256(secret bytes), không token/plaintext
+credential. 256-bit random secret chống guessing; digest lookup scoped
+organization/establishment, server record bind dossier và exact credential ID/
+version. Khi lookup khớp, so sánh digest bằng constant-time primitive,
+revalidate current credential và build fresh PointageEmployeeContext cho exact
+operation server-side. Không expose record, role/grant hoặc context.
+
+Mỗi identify thành công cấp token mới; không rotate giữa một interaction để
+tránh lost-rotation response và parallel retry ambiguity. Không refresh token
+hoặc sliding absolute lifetime. Rotation là new identification/new random
+token; old interaction phải kết thúc hoặc hết hạn, không alias sang token mới.
+
+Lifetime: absolute 120 seconds từ DB issue time; idle 60 seconds từ latest
+successful authorized state/mutation/replay. Idle deadline không vượt absolute
+deadline. Failures/polling/background activity không gia hạn; UI không heartbeat
+tự động. Mỗi valid foreground state request/user mutation update idle deadline
+atomically, trả remaining durations để client dùng monotonic timer cho clearing.
+Server deadlines là authority; client clock không được kéo dài TTL.
+
+Reset/regeneration: mỗi authorized employee operation đọc current credential
+trong cùng dossier lock với reset. Superseded credential hoặc version mismatch
+deny mọi continuation old-version, kể cả receipt replay. Không sửa crypto hoặc
+issue/reset policy. Không cần background invalidation job; ended/expired/version
+checks chặn ngay future request. Credential reset không phải raw mutation.
+
+Alternative: stateless JWT cần serialize claims, khó immediate end/reset và
+shared-device handling; ambient cookie dễ share giữa tabs/next users. Opaque
+server-side revocable state phù hợp bounded interaction; không thành canonical
+identity hoặc attendance source. XSS/malicious browser extensions có thể đọc
+live memory; chống qua D10, không tuyên bố memory là bảo vệ trước compromised
+device/TLS endpoint.
+
+### D3 — Shared-device lifecycle và end semantics
+
+State flow:
+CREDENTIAL_ENTRY -> IDENTIFY_PENDING -> ACTIVE_STATE -> MUTATION_PENDING ->
+RECEIPT -> ENDING -> NEUTRAL.
+ACTIVE_STATE có NOT_CLOCKED_IN/CLOCKED_IN; domain mutation chỉ khi server đã
+cấp state guard. Mỗi committed receipt hiển thị 10 seconds rồi auto-end; explicit
+`Terminer` kết thúc sớm. Muốn mutation khác sau receipt bắt đầu interaction mới;
+multiple daily sessions vẫn không quota. Không extra history/totals view.
+
+Credential entry chỉ memory trong password input; clear ngay sau identify
+request settle, cả failure. Identity/state chỉ render sau valid identify +
+current-state load thành công; không SSR sensitive data.
+
+Explicit end: ngay lập tức phủ neutral UI, clear personal DOM synchronously,
+bump interaction-generation counter, abort pending fetch callbacks và gửi
+best-effort authenticated end request. Server end khóa dossier rồi continuation,
+set ended_at một lần; retry end idempotent. End capability chỉ terminate own
+continuation, không thêm operation/grant hoặc revoke/suspend credential.
+Own end được xử lý kể cả eligibility/version đã mất; không trả employee data.
+
+Phân biệt local clearing và server-confirmed end:
+
+- ENDING không cho state read/mutation/replay; không hiển thị employee.
+- End hoàn tất khi server commit ended_at (hoặc server-enforced expiry);
+  không claim network timeout đã revoke trên server.
+- Nếu end response mất/cloud unavailable, browser vẫn clear hết secrets/data,
+  không retry attendance, không restore interaction; server authorization còn
+  giới hạn bởi idle/absolute expiry. Không báo “server đã hủy” khi chưa có proof.
+- Any request sau committed end/expiry bị deny. Request đã được linearize trước
+  end có thể commit trước end; abort fetch không rollback server. End acknowledgement
+  chỉ sau lock order bảo đảm earlier accepted mutation đã settle.
+- Không thể hứa remote invalidation tức thì lúc offline; không định nghĩa
+  offline “end confirmed”. Đây là explicit failure semantics, không weakening
+  quyền sau completed interaction end.
+
+Client clears ngay khi idle deadline, absolute deadline, pagehide, visibility
+hidden, navigation/unmount hoặc explicit end. Không gia hạn timer bởi moving
+mouse. Khi hidden, best-effort end; bfcache entry lưu neutral DOM, không personal
+React tree. pageshow (gồm persisted), refresh, back/forward luôn neutralize trước
+render và yêu cầu identify mới; không auto-fetch previous employee bằng token.
+
+Tab duplication mở neutral page; không dùng copyable durable store hoặc
+BroadcastChannel/postMessage truyền token. Browser restart không có token để
+resume. Outstanding response chỉ apply khi same live generation; late success/
+identity không repopulate sau clearing. No-store alone không đủ cho history,
+nên bắt buộc synchronous pagehide clearing + pageshow reset.
+
+Khi timeout mutation trong live interaction, giữ request tuple trong memory
+cho exact retry; không auto-end vì timeout ngay lập tức. Nếu TTL/end/navigation
+xảy ra, purge tuple cùng interaction; không phục hồi lịch sử sau refresh hoặc
+tạo replacement mutation tự động. Người dùng identify mới và xem current state;
+existing committed receipt vẫn recoverable server-side bằng exact known tuple
+và current authority, nhưng không có history/list endpoint.
+
+Tests phải chứng minh tất cả transitions này; không claim UI privacy đối với
+ảnh chụp OS, shoulder surfing hoặc compromised browser ngoài app threat model.
+
+### D4 — Trusted Personnel projection và current authorization
+
+Không tạo Personnel contract/grant mới. Scoped query chỉ lấy
+id, given_names, family_name, entry_date, departure_date từ
+personnel_employee_dossiers với organization_id + establishment_id + id.
+Server compose displayName = trimmed givenNames + single separator + familyName;
+không persist tên vào Pointage tables hoặc expose từng Personnel field riêng.
+P5 approve minimal own projection; Personnel §3 cho downstream projections;
+OWNER-only dossier-management không bị mở cho employee/MANAGER.
+
+Identifier + nonempty names + valid entry/departure/date/timezone phải valid.
+Missing/cross-scope/unverifiable -> generic access/unavailable failure, không
+fabricated name/employee. Pointage không update Personnel.
+
+Identify, state.read, operation.create đều evaluate current lifecycle inclusive
+entry/departure theo authoritative current establishment business date.
+Không dựa vào CLOCK_IN grouping date cho later CLOCK_OUT.
+Missing lifecycle/invalid timezone fail closed, không default Europe/Paris.
+
+Public handlers không nhận PointageEmployeeContext input. Prevalidation dùng
+existing credential primitives/provider/rate limits, nhưng trước cấp continuation
+hoặc expose state phải transactionally recheck current credential + scoped
+Personnel; chỉ lúc đó tạo fresh context cho exact operation. Không dùng
+pre-transaction success để bypass reset/departure race.
+
+#### Identify trả initial state — không gộp hai operation authorities
+
+Credential verification vẫn chạy sau trusted scope/provider/rate prerequisites
+của foundation. Với verified proof, successful identify + state boundary là:
+trusted scope resolution/recheck dưới transaction locks -> exact
+`pointage.employee.identify` authorization + current Personnel eligibility ->
+continuation issuance candidate -> riêng exact
+`pointage.employee.state.read` authorization + current scope/credential/version/
+Personnel re-check -> canonical raw-chain validation -> derived minimal own
+state -> successful continuation + state response sau commit.
+
+Context mang operation identify không được dùng như state.read context.
+Cả hai exact guards phải được gọi và pass, không infer guard thứ hai từ
+identify success hoặc continuation existence; không merge identifiers/new grant.
+Candidate secret/digest/binding chỉ ở server memory, chưa usable/persisted.
+Trong cùng transaction và D4 lock order, derive state/projection trước INSERT
+continuation. Final server-time check trước INSERT re-evaluate lifecycle cho
+cả hai operations tại current business date (kể cả midnight), giữ current
+scope/version prerequisites; DB issue/deadline timestamps theo D2.
+Stage payload server-side, COMMIT rồi mới expose token/name/state; không
+commit identify-only row rồi gọi state.read ở transaction khác.
+
+State.read denied, lifecycle/scope uncertainty, inconsistent raw chain hoặc DB
+failure trước commit -> rollback candidate/insert, discard secret và staged
+state; existing generic access/unavailable response, không protected identity/
+state/token hoặc partial identify-only success. Identify không tạo raw event/
+receipt. Nếu COMMIT outcome/response mất, có thể có orphan continuation đã vượt
+đủ cả hai guards; không claim success, re-show secret hoặc bypass state.read.
+Token đó hết hạn D2, caller identify mới như D8. Test phải inject failure sau
+identify guard nhưng trước state-read/commit để chứng minh response/issuance
+không tạo partial authorization.
+
+Lock order không đổi: active organization FOR SHARE -> establishment FOR SHARE
+-> scoped Personnel dossier FOR UPDATE -> continuation FOR UPDATE khi có.
+READ COMMITTED trên cùng connection/transaction; không autocommit lock call.
+Ba lock đầu dùng duy nhất delegated function D4a; sau return, invoker đọc lại
+minimal Personnel/current credential và khóa continuation bằng full
+org+est+dossier+continuation key. Quyền UPDATE hai cột continuation đủ cho
+FOR UPDATE trên chính table đó; không suy ra quyền lock Tenancy/Personnel.
+Locks giữ đến outer COMMIT/ROLLBACK, không chỉ đến function return.
+
+Foundation issueCredential/resetCredential (pointage-repository.ts) vẫn dùng
+scoped dossier FOR UPDATE trong transaction riêng. Personnel updateEmployee
+(entryDate) và setEmployeeDeparture ghi cùng dossier với full scope + revision
+predicate; PostgreSQL row UPDATE conflict với FOR UPDATE dù writer không gọi
+helper. lockScopedPersonnel của formalites-personnel-draft-repository.ts cũng
+FOR UPDATE cùng row. Không sửa các writer này hoặc biến advisory locks
+idempotency hiện có thành cross-capability coordination.
+Nếu writer khác commit trước lock, Pointage đọc lại current row sau khi chờ;
+nếu Pointage lock trước, writer đó chờ đến transaction end. Current parent
+status/timezone không đổi dưới FOR SHARE. Lifecycle/version vẫn được kiểm tra
+ở D4 và actual accepted instant D7; lock không phải authorization.
+
+Deadlock/lock timeout/statement timeout: abort whole transaction, generic
+unavailable; giữ lock_timeout 2s, statement_timeout 5s, không bỏ lock, nới grant
+hoặc đổi request identity. Không swallow lock error trong savepoint rồi
+tiếp tục; rollback savepoint có thể release locks. Unknown COMMIT vẫn theo D5.
+
+#### D4a — Bounded delegated row locking (reopened proposal)
+
+PostgreSQL 17 yêu cầu UPDATE trên ít nhất một cột của mỗi table bị row-lock;
+SELECT-only không đủ. Đây là privilege prerequisite, không permission Product.
+[SELECT privilege](https://www.postgresql.org/docs/17/sql-select.html) và
+[row-lock compatibility](https://www.postgresql.org/docs/17/explicit-locking.html)
+là platform references; actual disposable proof còn bắt buộc.
+
+| Option                                    | Đánh giá                                                                                                                                                                                                                      | Quyết định                                                         |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| A — UPDATE một cột để lock                | UPDATE(id) dù hẹp vẫn cho SQL mutate key; convention “code không UPDATE” không chặn alternate writer. Thêm trigger/RLS trên Tenancy/Personnel để biến grant thành lock-only sẽ sửa owning boundary ngoài slice.               | Loại; không cấp cho runtime writer.                                |
+| B — SECURITY DEFINER chỉ lock             | Giữ đúng PostgreSQL tuple locks với existing writers, tách quyền lock khỏi quyền application mutate. Thêm một privileged executable boundary có owner/ACL/body cố định, được review trong revision này.                       | Chọn dưới đây; chưa authorize implementation.                      |
+| C — transaction advisory lock             | Existing issue/reset không dùng advisory key; Personnel keys hiện là operation/actor/request-specific, không chung dossier lock. Không tự phối hợp với UPDATE hay direct SQL writer.                                          | Loại; muốn dùng phải đổi nhiều writer ngoài scope.                 |
+| D — FK KEY SHARE, SERIALIZABLE hoặc mutex | KEY SHARE không chặn non-key lifecycle/timezone UPDATE; isolation alone không giữ nguyên D4 và mọi existing writer không cùng protocol; process mutex không cross-instance. Full-table locks quá rộng, không least privilege. | Loại; không có cơ chế tương đương đã chứng minh tốt hơn row locks. |
+
+Exact signature đề xuất:
+`public.pointage_raw_lock_dossier(p_organization_id pg_catalog.uuid,
+p_establishment_id pg_catalog.uuid, p_personnel_dossier_id pg_catalog.uuid)
+RETURNS pg_catalog.void`.
+
+- Một function, không overload/default/variadic/table-name/column-name/SQL
+  argument, không generic lock API; LANGUAGE plpgsql, VOLATILE, PARALLEL UNSAFE,
+  SECURITY DEFINER, CALLED ON NULL INPUT. Bất kỳ NULL -> generic exception,
+  không dùng STRICT để silently return trước locks.
+- Inputs chỉ từ trusted server-resolved scope + verified dossier binding D4,
+  không browser DTO/GUC/headers/session claims. Function không authenticate
+  employee, không trả context và không thay exact operation guards.
+- Trước lock, require session_user là dedicated `yuta_pointage_raw_writer`;
+  lỗi caller/null/missing/inactive/mismatched row có cùng SQLSTATE P0001,
+  message `POINTAGE_LOCK_UNAVAILABLE`, không DETAIL/HINT chứa IDs/status/data.
+  Runtime mapping vẫn D8 generic unavailable, không expose SQL error.
+- Ba static PERFORM statements, mỗi statement require FOUND:
+  (1) public.organizations WHERE id = p_organization_id AND status = 'active'
+  FOR SHARE;
+  (2) public.establishments WHERE organization_id = p_organization_id AND
+  id = p_establishment_id AND status = 'active' FOR SHARE;
+  (3) public.personnel_employee_dossiers WHERE organization_id = p_organization_id
+  AND establishment_id = p_establishment_id AND id = p_personnel_dossier_id
+  FOR UPDATE. Không filter employment dates trong helper; eligibility và
+  own-end exception vẫn D3/D4, không deny end vì former status.
+- Return void only; không SELECT INTO result/return name, lifecycle, token,
+  credential, row hoặc lock ownership claims. Missing tuple errors abort outer
+  transaction; không return partial lock success.
+- Fixed function-local `search_path = pg_catalog, pg_temp`; public tables và
+  helper call luôn schema-qualified; referenced types/functions/operators dùng
+  pg_catalog-qualified identities (UUID equality không resolve qua caller
+  schema). Không dynamic SQL, EXECUTE, dblink, filesystem/network, user callbacks,
+  SET ROLE/SESSION AUTHORIZATION, mutable request configuration hoặc secret.
+- Không INSERT/UPDATE/DELETE/TRUNCATE, DDL hay explicit table lock trong body.
+  Row-lock bookkeeping không đổi application columns. Không tự touch/end,
+  issue/reset, accept event hoặc commit; tất cả nằm ở invoker bên ngoài.
+- Không lock continuation trong helper: invoker có column UPDATE đã duyệt,
+  dùng full scoped key sau ba delegated locks. Reentrant helper call từ raw
+  INSERT trigger D5/D6 khóa lại cùng tuple trong same outer transaction.
+
+Một coherent foreign tuple từ compromised DB login có thể gây lock contention;
+function không phải RLS/tenant-authentication layer. Full predicates ngăn ghép
+mismatched tuple; server guards phải chặn chọn foreign tuple trước call.
+Không publish function qua browser/manager transport. Direct DB credential
+compromise/privileged DBA nằm ngoài employee threat model; không claim function
+tự chứng minh tenant authority hoặc loại mọi denial-of-service. Timeouts và
+same-session preflight giới hạn fail-closed execution, không thay public limiter.
+
+#### D4b — Owner, ACL và invoker separation
+
+Exact owner: `yuta_pointage_raw_lock_owner`, NOLOGIN, NOSUPERUSER,
+NOCREATEDB, NOCREATEROLE, NOREPLICATION, NOBYPASSRLS, NOINHERIT; không member
+role khác, không table/database/schema owner. Chỉ owns exact helper function.
+Dedicated runtime caller `yuta_pointage_raw_writer` cũng non-superuser,
+NOCREATEDB/NOCREATEROLE/NOREPLICATION/NOBYPASSRLS; không membership, inheritance,
+ADMIN/GRANT OPTION hoặc SET ROLE path tới lock owner, migration owner hay
+existing privileged foundation/Personnel roles.
+
+Exact helper-owner object privileges ngoài inherent function ownership:
+
+| Object                             | Allowed owner privileges                                        |
+| ---------------------------------- | --------------------------------------------------------------- |
+| public schema                      | USAGE only, no persistent CREATE.                               |
+| public.organizations               | SELECT(id, status), UPDATE(id) only.                            |
+| public.establishments              | SELECT(id, organization_id, status), UPDATE(id) only.           |
+| public.personnel_employee_dossiers | SELECT(id, organization_id, establishment_id), UPDATE(id) only. |
+| Other application tables/functions | No new grant, no inherited mutation/execution privileges.       |
+
+UPDATE(id) tồn tại ở inaccessible lock owner chỉ để PostgreSQL cho row locking;
+không cấp/inherit cho runtime, không column grants WITH GRANT OPTION. Đây là
+explicit delegated DB privilege proposal, không Personnel application permission.
+Locked function body không chứa mutation nên caller không sử dụng được owner
+UPDATE để đổi Tenancy/Personnel. Owner NOLOGIN alone không đủ: phải chứng minh
+không role membership/SET ROLE path và không owner-controlled writable schema.
+
+Runtime giữ F8: SELECT/INSERT cần thiết, continuation UPDATE chỉ idle_expires_at/
+ended_at; không thêm UPDATE bất kỳ cột nào của ba source tables, không broad
+table UPDATE, DDL/trigger-disable/DELETE/TRUNCATE hoặc owner fallback.
+Bổ sung duy nhất EXECUTE trên exact helper signature, không WITH GRANT OPTION.
+Existing foundation credential lifecycle/limiter operations giữ own existing
+repository/authority; helper không cấp credential-management hoặc limiter
+mutation quyền cho raw writer, không hợp nhất runtime writer với privileged
+foundation/Personnel connection để lấy quyền lock.
+
+D1a làm rõ riêng synthetic employee runtime: foundation validation dùng exact
+validation-only role/client trong cùng database; credential issue/reset vẫn
+ngoài runtime này. Không thay helper body/owner/ACL hoặc raw writer inventory.
+
+Migration revokes all function EXECUTE from PUBLIC và mọi non-owner/non-writer
+grantee; grant EXECUTE chỉ dedicated writer (owner's inherent right remains).
+Không dựa vào default ACL. Function create, ownership transfer, PUBLIC revoke
+và final grant nằm trong cùng journaled migration transaction, không window
+publicly executable. Final schema không writable bởi writer/PUBLIC/lock owner.
+Schema ownership vẫn migration boundary, không Pointage runtime.
+
+[SECURITY DEFINER precautions](https://www.postgresql.org/docs/17/sql-createfunction.html)
+giải thích owner execution, safe lookup và default PUBLIC EXECUTE; lựa chọn
+tên/ACL/body/role isolation trên là Design của YUTA, không upstream recommendation.
+
+Trước instantiate synthetic provider/runtime và trước mỗi raw dossier
+transaction trên chính connection dùng cho operation: verify exact session/
+current user; function OID/signature, owner, SECURITY DEFINER/language/volatility/
+parallel/null behavior, fixed search_path và body fingerprint khớp reviewed
+journaled migration; verify roles, object owners, effective table/column/function/
+schema privileges và defaults/PUBLIC/inherited paths. Check pg_catalog.pg_proc,
+pg_roles, pg_auth_members, pg_class, pg_namespace, pg_default_acl;
+has_table_privilege + has_column_privilege + has_function_privilege;
+pg_has_role với MEMBER/USAGE/SET, không chỉ trực tiếp grants.
+[Privilege inquiry](https://www.postgresql.org/docs/17/functions-info.html)
+là catalog reference; expected body fingerprint được chốt từ generated/reviewed
+migration khi Apply được duyệt, không browser/env supplied.
+
+Owner missing/wrong/LOGIN/superuser, extra UPDATE, unsafe schema/search_path,
+PUBLIC EXECUTE, missing EXECUTE, changed body/signature hoặc không chứng minh
+được effective privileges -> refuse composition/operation before credential/
+protected processing, no helper or attendance write; không auto-repair grants,
+fallback invoker/owner, hoặc “test-only” bypass. Helper còn deny wrong session
+caller nếu accidental EXECUTE grant xuất hiện. Concurrent malicious DBA changing
+ACL/body không thể bị app kiểm soát tuyệt đối; privileged migration/admin không
+được chạy khi synthetic runtime hoạt động, không giả catalog check là DBA-proof.
+
+Expiry/version/lifecycle deny trước state/receipt lookup response. New current
+credential sau reset có thể authorize own original receipt với exact request
+tuple; old continuation không thể. Receipt không bound như authorization vào
+old continuation, nên reset không phá recoverability sau valid re-identify.
+
+### D5 — Atomic transition, stale guard và linearization
+
+Dùng PostgreSQL transaction READ COMMITTED + scoped dossier row FOR UPDATE
+để serialize mọi writer cùng employee, không session/counter/projection table.
+Các statement đọc head/history chạy sau khi lock đã acquire; không dựa vào
+snapshot đọc trước lock. Invoker gọi D4a trong cùng transaction thay direct
+SELECT FOR SHARE/UPDATE trên Tenancy/Personnel. Schema raw INSERT trigger là
+SECURITY INVOKER, gọi exact schema-qualified D4a helper bằng NEW full scope trước
+chain read/validation; reentrant locks không thay order hoặc end transaction.
+Do đó alternate raw writer cũng gặp cùng dossier lock và append enforcement;
+không biến trigger thành arbitrary SECURITY DEFINER write executor.
+
+Từ current canonical raw head, server tạo opaque stateGuard =
+HMAC-SHA256(dedicated HKDF-SHA256 key, versioned length-delimited encoding của
+organization/establishment/dossier + head event ID hoặc START).
+Key derive existing Pointage secret bằng label riêng
+`yuta/pointage/raw-state-guard/v1`, không đổi credential keys/algorithms.
+Browser nhận MAC base64url 43 chars, không nhận head ID/dossier/context.
+MAC là stale-state precondition, không employee authority, không serialize
+trusted employee context; còn cần valid continuation và current checks.
+
+Command gửi requestId, kind, observedStateGuard. Receipt lookup xảy ra sau
+current authorization nhưng trước fresh stateGuard comparison:
+
+1. Re-resolve/lock scope, dossier, continuation; recheck validity/eligibility.
+2. Lookup scoped committed receipt by requestId. Same intent fingerprint ->
+   return original joined receipt; different intent -> request conflict.
+3. Với new request: fully validate existing event chain, compute current guard,
+   constant-time compare observed guard. Mismatch -> state conflict/no event.
+4. Evaluate exact four transitions. Only no-open+IN hoặc open+OUT accepted.
+5. Sample authoritative acceptance clock dưới locks, recheck deadlines/lifecycle
+   cho instant này; append raw event và linked receipt, validate constraints.
+6. Commit cả hai; chỉ sau successful commit trả committed receipt.
+   Nếu DB connection mất tại COMMIT -> unknown outcome, không tự chạy new identity.
+
+Stale OUT sau session A đã close và B open: guard(A head) khác guard(B head),
+deny dù kind OUT hợp lệ theo state chung. Stale IN từ một no-open state trước
+các sessions khác cũng conflict; UI refresh state rồi explicit new intent,
+không rebase request cũ vào head mới.
+
+Same-ID double submit serialize; first commit -> second receipt replay, không
+re-evaluate four-state transition. Distinct competing IN/OUT: first thay head,
+second stale guard/transition conflict. Không hai request cùng head commit.
+No-open induction: empty chain = none; alternation IN/OUT + contiguous ordinal
+cho tối đa một open, no overlap. Raw accepted order là dossier ordinal, không
+UUID sorting hoặc browser clock.
+
+Concrete DB limits: lock_timeout 2 seconds, statement_timeout 5 seconds cho
+bounded transactions; timeout là unavailable/unknown result, không Product quota.
+Không tự retry ambiguous commit. Safe pre-commit rollback retry dùng cùng tuple.
+Đây là Design choices, không sửa normative business rules.
+
+[PostgreSQL row-lock semantics](https://www.postgresql.org/docs/current/explicit-locking.html)
+xác nhận conflicting writers chờ lock tới transaction end; application
+serialization/proof ở trên là thiết kế của change, không phụ thuộc process-local mutex.
+
+Alternative: process mutex không bảo vệ multiple server instances; unique
+active-session table vi phạm P10; chỉ check latest kind không chống stale OUT.
+
+### D6 — Receipt, request identity và minimum additive persistence
+
+Ba additive tables, đều cloud-only; không fourth session/projection table.
+Schema definitions trong @yuta/db-cloud, transport types chỉ ở @yuta/contracts.
+Mọi query có trusted organization + establishment; employee query thêm dossier.
+
+#### Raw table: pointage_raw_events
+
+| Field                                                     | Type / purpose                                                                       |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| id                                                        | UUIDv7 server-generated; event identity, không ordering authority.                   |
+| organization_id / establishment_id / personnel_dossier_id | UUID, full tenancy/Personnel reference.                                              |
+| ordinal                                                   | bigint > 0, contiguous từ 1 theo dossier; reconstruction order, không counter table. |
+| kind                                                      | varchar CHECK IN ('CLOCK_IN','CLOCK_OUT'); chỉ hai raw kinds.                        |
+| accepted_at                                               | timestamptz(6), server DB-observed instant.                                          |
+| timezone_name                                             | text, validated establishment IANA name snapshot.                                    |
+| utc_offset_seconds                                        | integer, observed zone offset tại accepted instant; DST/history reconstruction.      |
+| business_date                                             | date, event-local calendar date tại acceptance.                                      |
+
+Không name copy, credential secret, correction, payroll/Planning, synthetic flag,
+canonical session ID hoặc expected end date. Unique (scope+dossier+ordinal),
+unique (scope+dossier+id), FK establishment và full scoped Personnel, ON DELETE
+RESTRICT. Index scoped accepted_at/business_date cho bounded manager reads.
+
+BEFORE INSERT trigger: acquire D4a parent/dossier locks qua exact helper trong
+same transaction, rồi invoker validate full existing chain; helper không cấp
+UPDATE/DDL cho trigger caller. Reject missing/corrupt scope, compute next
+ordinal/allowed kind; không tin
+client-supplied accepted_at/calendar/ordinal. DB-owned clock/calendar computation
+assign fields; backward clock so với previous event -> fail closed, không clamp.
+BEFORE UPDATE/DELETE và statement BEFORE TRUNCATE triggers reject trên raw table.
+Repository không export update/delete/truncate/raw-upsert path.
+
+#### Receipt table: pointage_raw_command_receipts
+
+| Field                                                     | Type / purpose                                                                |
+| --------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| organization_id / establishment_id / personnel_dossier_id | UUID scope; không receipt lookup bằng ID alone.                               |
+| request_id                                                | UUIDv4 browser CSPRNG, stable cho mutation intent.                            |
+| event_id                                                  | UUID, exactly one corresponding raw event.                                    |
+| intent_version                                            | smallint = 1, encoding compatibility.                                         |
+| intent_fingerprint                                        | SHA-256 hex của versioned intent bytes; non-authoritative technical metadata. |
+
+PK (org,est,dossier,request_id), UNIQUE (org,est,dossier,event_id).
+Fingerprint encoding: ordered JSON array of strings
+['pointage-raw-intent-v1', orgUUID, estUUID, dossierUUID, kind, observedStateGuard];
+UUID normalized lowercase; allowed kind exact; guard canonical base64url.
+UTF-8 SHA-256, server computes; browser không gửi fingerprint hoặc IDs.
+Same request ID + different kind/guard -> conflict. Continuation secret/version
+không thuộc intent fingerprint để valid re-identification không phá retry.
+
+Receipt FK (scope+dossier+event_id) -> raw (scope+dossier+id);
+raw reverse FK (scope+dossier+id) -> receipt (scope+dossier+event_id),
+DEFERRABLE INITIALLY DEFERRED, ON DELETE NO ACTION. UNIQUE referenced keys
+không deferred. Mutual completeness tại commit: event không thể thiếu receipt,
+receipt không thể có missing event. Chỉ successful operations có receipt row;
+denial/conflict không tạo raw event hoặc success receipt.
+
+Receipt INSERT/immutability trigger không cho update/delete/truncate; raw và
+receipt ở cùng transaction, không event-first asynchronous outbox. Không
+persist duplicated timestamp/kind/state/name/JSON success response.
+Public receipt luôn join canonical raw event:
+{ requestId, result: 'COMMITTED', kind, acceptedAt, timezoneName,
+utcOffsetSeconds, businessDate }. Không employee name/ID, grants, credential
+version, history hoặc daily total. Bytes/fields ổn định từ original raw event,
+không recompute historical calendar từ current timezone. Same-ID retry trả same
+receipt fields. Metadata không đủ để tạo attendance fact khi raw chain invalid.
+
+Không eviction hoặc receipt TTL cleanup trong change; đây không phải legal
+keep-forever policy. Cần separately approved retention handling trước real data.
+Nếu record corrupt/missing do privileged tampering, fail closed/investigate,
+không “sửa” bằng new event.
+
+#### Continuation table: pointage_continuations
+
+Fields: id UUIDv7; full scope+dossier; token_digest 64 lowercase hex UNIQUE
+within org/est; credential_id UUID; credential_version integer;
+issued_at, absolute_expires_at, idle_expires_at timestamptz(6); ended_at nullable.
+Không display name, request payload, plaintext token/PIN/IP hoặc attendance state.
+Full scoped dossier FK và credential binding FK:
+add UNIQUE (org,est,dossier,id,credential_version) trên existing credential table,
+rồi reference cả tuple. Existing credential meanings/rows không thay.
+Expiry là auth invalidity, không deletion/retention executor.
+
+Fields immutable sau INSERT: `id`, `organization_id`, `establishment_id`,
+`personnel_dossier_id`, `token_digest`, `credential_id`,
+`credential_version`, `issued_at`, `absolute_expires_at`.
+Chỉ bounded mutable: `idle_expires_at`, `ended_at`.
+Immutable fields và idle deadline NOT NULL; ended_at nullable. CHECK
+absolute_expires_at = issued_at + 120 seconds và
+issued_at < idle_expires_at <= absolute_expires_at. INSERT dùng server DB
+timestamps, initial idle theo 60-second policy và ended_at NULL.
+Rotation dùng row mới, không rebind existing row.
+
+Database/schema enforcement:
+
+- Row BEFORE UPDATE trigger áp dụng mọi UPDATE, không chỉ UPDATE OF two
+  columns. Null-safe OLD/NEW IS DISTINCT FROM trên tất cả immutable fields
+  (gồm id): có thay đổi -> reject statement.
+- Idle deadline chỉ giữ nguyên hoặc tiến lên, không NULL/lùi/vượt absolute.
+  Extension chỉ khi OLD.ended_at NULL và OLD còn trong idle/absolute lifetime
+  tại DB check; expired continuation không được touch để revive.
+- OLD.ended_at non-NULL: chỉ exact row no-op được phép. Không đổi idle,
+  ended_at, hoặc chuyển ended_at về NULL; không trở lại usable.
+- First end: NULL -> server-owned timestamp. BEFORE UPDATE trigger lấy DB
+  clock và assign ended_at, không giữ timestamp caller chọn. First-end
+  statement không được đồng thời extend idle. Repeated own-end giữ nguyên
+  original ended_at; repository đọc/return idempotent result, không rewrite.
+- CHECK/FK/unique enforce shape; trigger enforce OLD-to-NEW transitions.
+  Không chỉ dựa vào service convention; không thêm generic session capability.
+
+Runtime writer là non-owner/non-superuser role: SELECT/INSERT cần thiết và
+column-level UPDATE CHỈ (`idle_expires_at`, `ended_at`), không table-wide
+UPDATE/ALL, immutable-column UPDATE, DDL/trigger-disable/DELETE/TRUNCATE,
+owner-role membership hoặc SET ROLE bypass. Kiểm tra effective privileges
+gồm PUBLIC, inherited roles và default grants; column restriction không có
+tác dụng nếu vẫn tồn tại table-wide grant. Nếu không chứng minh được boundary,
+synthetic runtime composition fail closed, không dùng migration-owner fallback.
+Không provision hoặc claim production-role readiness trong revision này.
+D4a/D4b bổ sung chỉ dedicated lock-function EXECUTE, không source-row UPDATE
+cho runtime. Continuation/raw/receipt triggers vẫn SECURITY INVOKER; mọi
+application data reads/writes, continuation lock/touch/end, raw+receipt inserts
+và final authorization checks chạy invoker sau delegated locks. Existing
+foundation/Personnel writers không chuyển owner hoặc đổi grant theo revision.
+
+Repository chỉ expose scoped touch-idle và own-end, không generic
+updateContinuation/partial-row patch/upsert. Predicate luôn full trusted
+org+est+dossier+continuation key; giữ dossier/continuation lock order D4.
+Touch chỉ sau exact authorized foreground state/mutation/replay, compute bằng
+DB time theo 60-second policy, capped absolute và không decrease; không nhận
+deadline/binding từ browser. Own-end idempotent không credential revoke.
+DB column privileges không thay exact service operation/lifecycle authorization.
+
+Future disposable tests: actual runtime-role denial cho từng immutable field;
+trigger rejection bằng controlled test writer không disable trigger;
+backward/over-absolute idle, ended extension/revival, expired touch, repeated
+end và concurrent touch/end. Test setup/teardown không nới runtime role.
+[PostgreSQL column grants](https://www.postgresql.org/docs/current/sql-grant.html)
+và [OLD/NEW triggers](https://www.postgresql.org/docs/current/plpgsql-trigger.html)
+hỗ trợ enforcement đã chọn; tests chưa chạy và không production proof.
+
+Hash collision khi issuing continuation -> regenerate tối đa 3 lần, failure
+generic unavailable, không return token trước commit. Event UUID collision
+rollback entire command; same request retry vẫn safe. Receipt unique conflict
+được đọc lại dưới same dossier lock hoặc rollback/retry, không swallow partial
+transaction. Không persist one-time PIN hoặc re-show existing secret.
+
+Future database immutability proof phải chứng minh ordinary application writer không có DDL/table
+ownership/TRUNCATE bypass privileges. Disposable migration/test owner tách khỏi
+test runtime writer; runtime only SELECT/INSERT cần thiết + column-level
+UPDATE continuation idle_expires_at/ended_at theo enforcement ở trên,
+không generic table UPDATE hoặc ALTER/DROP/DISABLE TRIGGER/DELETE raw/receipt. Current production role
+privileges chưa được verify, không claim hardened deployment. Privileged DBA
+tampering nằm ngoài app threat boundary và phải có operations control; trigger
+không thể chống superuser. Không provision production role trong change.
+
+[PostgreSQL constraint/trigger mechanics](https://www.postgresql.org/docs/current/sql-createtrigger.html)
+là reference cho deferred checking và immutable-event rejection; actual
+migration proof phải kiểm thử both raw-only và receipt-only attempted commits.
+
+Alternative: receipt JSON độc lập dễ drift; event-only JSON response lost không
+có durable request association; asynchronous receipt tạo forbidden ambiguous state.
+
+### D7 — Time và deterministic reconstruction
+
+Authoritative clock abstraction trả UTC instant dạng integer epoch microseconds
+
+- RFC3339 six fractional digits. Production-independent default của cloud
+  repository lấy PostgreSQL clock_timestamp() dưới transaction locks, không
+  transaction-start now() hoặc browser Date. Acceptance boundary là DB append
+  statement sau current checks, không HTTP arrival hoặc response/commit time.
+
+Raw timestamp dùng full PostgreSQL microseconds; postgres-js Date mapping không
+được truncate xuống milliseconds: select/serialize accepted_at bằng explicit UTC
+text/epoch-microsecond representation; pure reducer dùng bigint/string. Browser
+Date chỉ presentation, không round raw instant hoặc reserialize nó vào mutation.
+Cùng microsecond vẫn order bằng ordinal; nếu clock lùi so với last event, deny
+unavailable, không tạo negative/overlapping interval, không adjust raw time.
+
+DB tính event business_date và offset_seconds từ accepted_at AT TIME ZONE
+validated current establishment timezone. Giữ timezone name + numeric offset +
+date trên từng event: historical wall time = UTC instant + stored offset,
+không phụ thuộc future tzdb/current establishment zone. DST repeated time có
+distinct absolute instant/offset; skipped local time không cần user input
+resolution vì input là absolute server instant. Establishment timezone đổi
+không rewrite events; new event dùng locked current zone. Session grouping giữ
+CLOCK_IN.business_date, kể cả CLOCK_OUT calendar/zone khác.
+
+Trigger lấy đúng một acceptance sample qua server-owned DB clock function
+mặc định clock_timestamp, assign NEW.accepted_at và derive calendar từ sample
+đó. Trigger kiểm tra lại Personnel entry/departure tại NEW.business_date dưới
+các locks đang giữ. Service precheck chỉ preliminary. Repository lấy chính
+INSERT RETURNING accepted_at để kiểm tra final continuation absolute/idle
+deadlines trước insert receipt/commit; nếu sample >= deadline thì rollback
+toàn bộ raw insert. Không gọi clock function lần hai như thể cùng sample,
+không return receipt/token trước commit. Credential/version/ended state và scope
+vẫn được khóa trong toàn bộ boundary. Vì vậy date và authorization deadlines
+cùng dùng một accepted instant, kể cả qua midnight. Không request GUC/body/
+header clock override.
+Pure tests inject clock; midnight/DST SQL integration dùng replacement clock
+function chỉ trong separately verified disposable test database/harness, không
+test override branch ở runtime/production composition. Migration proof cuối
+cùng chạy lại real clock implementation. Không thêm clock/synthetic field.
+
+Reconstruction (full scoped chain ORDER BY ordinal):
+
+- expected ordinal starts 1, open = null, closed = [] transient.
+- IN khi open null -> hold opening raw event.
+- OUT khi open exists -> emit derived pair(open, out); open = null.
+- Preserve independent instants/offsets; groupedBusinessDate từ opening event.
+- Cuối chain còn IN -> open session; không auto-close.
+- Reject gap/duplicate ordinal, unknown kind, OUT-first, double IN/OUT, decreasing
+  instant, invalid calendar/offset/scope hoặc broken receipt linkage as
+  EVIDENCE_INCONSISTENT; no fabricated/repair events. Public generic unavailable,
+  privileged diagnostic only minimized reason + safe correlation, không payload.
+- Không đọc security audit/receipt như source để reconstruct attendance.
+
+Employee state/read/mutation đều validate chain; manager bounded read không
+return partial misleading success nếu related dossier corrupt. Full scans là
+correctness-first synthetic implementation; không daily quota/truncation. Nếu
+scale cần projection/index redesign beyond this design, đo evidence và review
+riêng, không quietly thêm materialized session.
+
+[PostgreSQL time functions](https://www.postgresql.org/docs/current/functions-datetime.html)
+phân biệt wall-clock observation với transaction-start clock; timezone snapshots
+và reconstruction ở trên là quyết định riêng của change.
+
+### D8 — Employee transport/contracts, CSRF và recovery
+
+U2 handler dependency bắt buộc đi qua D1b server-only consumer accessor.
+Không handler/RSC nào tạo client hoặc đọc bootstrap inputs. Context GET cũng
+phải qua current runtime admission và active-scope resolution; no partial
+availability từ parent proof hoặc cached successful route. D1b listener proof
+không thay Origin/CSRF/operation guards dưới đây.
+
+`@yuta/contracts` owns strict Zod DTOs; unknown fields
+rejected. Body <= 4 KiB, JSON Content-Type only; no cookies used/required for
+employee auth, fetch credentials: omit. All personal endpoints POST, không
+GET query-secret mutation. Same-origin only, no CORS allow-origin wildcard.
+Require Origin exact configured approved test origin; Sec-Fetch-Site cross-site
+deny when present; JSON + custom Authorization header prevents ambient form
+CSRF, browser preflight không được grant cross-origin. Không dùng forwarded Host
+để quyết định origin. Missing Origin on these browser endpoints -> deny.
+TLS required outside explicit loopback test, nhưng production vẫn disabled.
+
+Authorization: `Pointage <ptc1_secret>` chỉ trong live memory fetch header,
+không cloud Bearer/session aliases. Strict token length/prefix before digest.
+Establishment context endpoint là unprivileged locator result, không authority.
+
+| Proposed route suffix under /api/pointage/[establishmentSlug] | Request                                                 | Response / boundary                                                                             |
+| ------------------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| context (GET)                                                 | no identity input                                       | { available: true } hoặc generic unavailable; không tenant IDs/dossier list.                    |
+| identify (POST)                                               | { credential: exact eight-digit string }                | { continuation, expiresInMs, idleInMs, state }; token only once after commit; state follows D9. |
+| state (POST)                                                  | empty JSON + continuation                               | { state, expiresInMs, idleInMs }; current eligibility và exact state.read.                      |
+| clock-in (POST)                                               | { requestId UUIDv4, observedStateGuard } + continuation | committed receipt hoặc scoped conflict/unavailable; operation.create.                           |
+| clock-out (POST)                                              | same shape + continuation                               | same boundary; requested kind do endpoint quy định.                                             |
+| recover (POST)                                                | { requestId, kind, observedStateGuard } + continuation  | original committed receipt hoặc { result: 'UNCONFIRMED' }; no mutation và không history list.   |
+| end (POST)                                                    | empty JSON + continuation                               | 204 after idempotent own-continuation termination; no protected response.                       |
+
+Recover current authority là operation.create (receipt của exact mutation),
+không bypass current lifecycle vì endpoint read-only. UNCONFIRMED không hứa
+server không in-flight; chỉ retry exact original tuple. Sau conflict, user phải
+fetch fresh state, explicit choose new action và requestId mới; không rewrite
+intent dưới old ID. End/refresh/expired interaction không restore pending tuple
+hoặc auto-replay. API có thể recover khi caller vẫn có exact tuple và new valid
+own continuation; không exposed receipt search/history.
+
+| Public outcome                                       | HTTP / public code                                 | Internal distinction                                                                               |
+| ---------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Credential/continuation/eligibility/authority denied | 403 POINTAGE_ACCESS_DENIED, identical shape/copy   | internal reason only; không disclose former/upcoming/match.                                        |
+| Candidate/client rate limit                          | 429 POINTAGE_TRY_LATER                             | không expose which key, count hoặc matching dossier; same code applies to unsuccessful candidates. |
+| Authorized stale head / invalid transition           | 409 POINTAGE_STATE_CONFLICT                        | no raw event; no foreign data.                                                                     |
+| Same scoped request ID different intent              | 409 POINTAGE_REQUEST_CONFLICT                      | no new raw event; retain original.                                                                 |
+| Malformed non-secret DTO                             | 400 POINTAGE_REQUEST_INVALID                       | generic, không validation echo containing secrets.                                                 |
+| Scope/provenance/DB/chain unavailable                | 503 POINTAGE_UNAVAILABLE                           | no partial identity/context/data.                                                                  |
+| Client timeout/network loss                          | local RESULT_UNKNOWN, not fabricated HTTP response | retry/recover exact tuple; no success or new ID.                                                   |
+
+Non-enumeration giữ foundation real/dummy verification + rate logic. Error
+classification không expose internal lifecycle field, credential ID/version,
+raw DB rows hoặc grant claims. Count-based rate response không xác nhận candidate
+validity. Identify lost response: token unavailable to browser, expires server-side;
+user re-enters credential; không attendance side effect.
+
+Alternative: Server Actions ambient cookies và HTTP redirect login không phù
+hợp dedicated no-cookie employee boundary; explicit route handlers rõ retry,
+cache và failure contract. Không thêm new application/service.
+
+### D9 — Employee view và manager server read
+
+Employee response state:
+{ displayName, status: NOT_CLOCKED_IN | CLOCKED_IN,
+openSessionStart: null | { instant, timezoneName, utcOffsetSeconds, businessDate },
+stateGuard }.
+stateGuard là opaque precondition, không historical display hoặc trusted context.
+NOT_CLOCKED_IN không prior OUT. CLOCKED_IN chỉ opening timestamp của current
+open session. Receipt riêng D6 không daily total/closed history; no broader name
+projection. Lifecycle deny không trả state/name.
+
+Manager chỉ server function nhận validated current cloud session +
+fresh tenant context và exact pointage.establishment.read. OWNER/MANAGER active
+matching membership, no STAFF/employee continuation. Không manager transport/UI.
+Read transaction REPEATABLE READ read-only cho consistent snapshot. Sau khi
+materialize bounded result nhưng trước response, chạy lại current server
+session/membership/scope/exact-grant guard trong fresh transaction ngoài snapshot
+đó; không reuse stale context hoặc gọi lại query trong cùng repeatable snapshot
+rồi gọi đó là fresh check. Deny và discard result nếu guard fail/unavailable.
+Snapshot data không cấp authority; final fresh guard là read authorization
+boundary. Không hứa authority còn tồn tại sau response nếu bị revoke sau đó.
+Server now defines today trong current establishment zone; include raw events
+có stored business_date = today, cùng current open session của scoped dossiers
+dù opening date trước today. Event-local historical context giữ nguyên; timezone
+change không reclassify old events. Không closed history ngoài today hoặc
+monthly/payroll/correction/audit visibility.
+
+Manager open session derived bằng scoped raw chain, không chỉ today filter
+(tránh mất IN từ hôm trước). Return projected event kind/instant/calendar + scoped
+dossier reference, current opening reference/time; không credential/security
+audit hoặc unrelated Personnel columns. Historical former dossier events/open
+session vẫn read theo manager grant, không áp employee self-eligibility lên
+manager visibility. No arbitrary daily event quota; timeout -> unavailable,
+không silent truncated success.
+
+### D10 — Cache, privacy, logs và leakage defense
+
+D1b IPC/owner closure là nơi duy nhất giữ ephemeral bootstrap secrets; no
+process.env credential fallback, stdout/stderr relay hoặc serialized RSC input.
+Owned runtime/client teardown và output suppression theo D1b, không sửa
+foundation audit taxonomy hoặc legal retention. Không log Next request errors
+với body/header/SQL context; raw process diagnostics không thành QA evidence.
+
+Employee page HTML/RSC chứa neutral entry shell only. force-dynamic, revalidate
+0, no cached personal fetch/unstable_cache, all page/data responses private,
+no-store, max-age=0; Pragma no-cache, Expires 0. No CDN caching/s-maxage,
+no service worker/offline store. No personal data in URLs, query, path segments
+beyond public establishment slug, history.state, router params, telemetry,
+analytics hoặc server component serialized props.
+
+Route-scoped CSP/headers trên /pointage và /api/pointage (existing Backoffice
+Next boundary, không global shell change): per-request nonce for Next scripts,
+script-src self + nonce; object-src none, base-uri none, frame-ancestors none,
+form-action self, connect-src self; Referrer-Policy no-referrer,
+X-Content-Type-Options nosniff. Development HMR only needs explicitly
+loopback dev connection allowances, không production unsafe-eval policy.
+No third-party analytics/scripts trên surface.
+
+D3 synchronous neutral cover/DOM wipe trước pagehide snapshot, pageshow
+generation reset và late-response rejection bắt buộc; Cache-Control không
+được coi là bfcache/OS erasure guarantee.
+[Cache-Control semantics](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control)
+hỗ trợ HTTP no-store boundary; lifecycle clearing phải được Browser QA riêng.
+
+No logging request body, Authorization header, continuation/PIN/digests,
+stateGuard, fingerprint, Personnel name, receipt payload hoặc raw event rows.
+Use bounded safe error code/correlation ID cho diagnostics; không query/stack
+tracing with secrets. Existing foundation audit taxonomy giữ nguyên cho credential/
+authorization; không thêm security-audit read UI, retention hoặc legal schema.
+Raw event/receipt success là canonical/technical pair, không nhân đôi attendance
+vào security audit. Failed audit required by existing auth fails closed; raw
+commit không bị báo failed chỉ vì later optional diagnostics sink failure.
+
+No cache warming/prefetch protected state, no credentials in devtool screenshots.
+Future QA screenshots only synthetic names, never plaintext PIN or continuation.
+
+### D11 — UI planning boundary and state model
+
+NEW_PAGE, integrated target, NEW_CAPABILITY_DISCOVERY. Stable planning home:
+`docs/ui/pages/backoffice-pointage-employee/`. Phase 0 inventory và
+DESIGN_HANDOFF precede draft UI spec; shared context NO_APPLICATION_SHELL.
+Existing root Geist/Inter, semantic tokens, Button/Input/FormField/Alert/Card/
+Skeleton/StatusBadge từ @yuta/ui, Lucide only. Không sửa shared primitive,
+sidebar/header/account/establishment selector.
+
+Six pre-approval planning docs only: README, PRODUCT_SCOPE, DESIGN_HANDOFF,
+UI_SPEC, DATA_AND_INTERACTION_SPEC, ACCEPTANCE_CHECKLIST. Không generate final
+pack vì generator tạo forbidden IMPLEMENTATION_PLAN và implementation prompts.
+Current validator mechanically requires những files đó even design; report
+specific missing-file/prompt/reference findings, không claim implementation-ready.
+Không tạo empty fake plan/provenance hoặc sửa workflow validator.
+
+UI copy French. Text state/action/copy, responsive hierarchy và keyboard/touch
+criteria nằm trong draft UI_SPEC; không manager UI. No image reference required
+cho written state-driven design; no-image decision vẫn thuộc human design review.
+Baseline NOT_APPLICABLE vì employee route chưa tồn tại, không fake screenshots.
+
+### D12 — P13/P14, readiness and failure boundaries
+
+P13/P14 là current change implementation/testing/readiness authority, không
+permanent domain rule. Synthetic/disposable attendance ONLY cho implementation,
+integration và Browser QA; real attendance NOT_AUTHORIZED ở development,
+staging, production. No synthetic/real employee field/enum/permission/classifier.
+No production provider; production enablement NOT_AUTHORIZED.
+
+Giữ unresolved exact retention duration, deletion/anonymization, legal hold,
+backup-retention interaction, employee notice, detailed audit visibility,
+trusted production client-address provenance. No cleanup executor hoặc default
+retention; technical TTL chỉ invalidate authentication, không xóa records.
+Carry forward nguyên vẹn vào future Tasks/TIC/test data policy/QA/gates.
+Runtime DB role privilege evidence cũng phải chứng minh trước immutable-evidence
+deployment; current repository chưa chứng minh production role hardening.
+Đây là technical readiness evidence gap, không new Product behavior/permission.
+
+Alternative: bật generic developer mode against real cloud DB hoặc classify
+employee synthetic để “cho chạy” bị loại; chỉ explicitly guarded disposable
+test composition. No production environment or lifecycle promotion.
+
+## Risks / Trade-offs
+
+- [Opaque token trong live memory vẫn bearer] -> short TTL, no ambient cookie,
+  CSP, no persistent stores, current credential/lifecycle checks; compromised
+  same-origin script/device ngoài khả năng cryptographic memory isolation.
+- [Offline end không thể remote-revoke ngay] -> neutral local state lập tức,
+  distinguish ENDING/confirmed end, deny UI reuse, server expiry bound 60/120s;
+  Browser QA phải verify không restore data và server end ordering.
+- [Full raw-chain scan tốn thời gian] -> synthetic bounded evaluation, scoped
+  indexes/timeouts, fail closed; không thêm projection hoặc quota khi chưa review.
+- [Clock rollback / corrupt chain] -> unavailable, no clamp/repair, preserve
+  evidence và minimized diagnostic; cần operational investigation riêng.
+- [Mutual FK và custom trigger không đủ được schema diff tool express] ->
+  generated additive migration + reviewed explicit SQL, disposable proof cả
+  constraints lẫn negative writes; không claim từ TypeScript schema alone.
+- [Existing dirty foundation/UI work] -> future pre-Apply fresh hashes/status,
+  preserve Formalités auth index hunk; stop nếu intended overlapping hunks
+  không thể isolate. Không refactor other feature để làm tests pass.
+- [UI pack checker đòi forbidden planning artifacts] -> retain honest partial
+  pre-approval design, không đổi lifecycle/tooling hoặc tạo plan sớm.
+
+## Migration Plan
+
+Đây là migration design, không execution authorization.
+
+Sau Sensitive Design và Tasks/Apply approval: generate additive Drizzle migration
+bằng current @yuta/db-cloud db:generate; allocate next journal sequence từ live
+repo, không assume số 0020 hoặc sửa 0019 đã có. Migration tạo ba tables,
+constraints/indexes/functions/triggers và credential composite unique support.
+Custom FK/trigger SQL nằm trong cùng new journaled migration với reviewed
+generated snapshot; không hand-author journal để bypass generator.
+Không seed/backfill raw events, sessions, credentials hoặc Personnel.
+
+D4a helper definition/ACL/owner transfer thuộc chính new generated/journaled
+migration, không standalone unjournaled SQL. Không sửa 0019/0020 hoặc prior
+snapshots/entries; next name/sequence vẫn để generator resolve sau fresh review.
+Không tạo SQL/migration, roles hay database trong Design revision này.
+Future guarded disposable harness provision exact lock-owner/writer roles
+D4b trước migration, chỉ sau toàn bộ D1 guards; role name đã tồn tại với
+unexpected attributes/grants/membership -> STOP, không ALTER unrelated role.
+Role provisioning là isolated test-cluster setup, không production migration
+default hoặc seed. Migration requires roles tồn tại đúng policy; thiếu -> fail.
+
+Riêng role D1a `yuta_pointage_foundation_runtime` thuộc future task 2.8 guarded
+synthetic harness, sau D1 identity proof, không thuộc migration 0021 và không
+thay bằng bootstrap runtime. Chỉ provision exact role/column grants D1a trên
+cùng raw target sau explicit Apply approval; existing unexpected role/ACL ->
+STOP, không repair unrelated role. Giữ nguyên 1.1-1.8/C17 evidence và 0021 bytes;
+proof role/client mới phải bổ sung ở 2.8, không suy ra từ completed Foundation.
+
+Migration identity giữ ownership tables/schema/triggers; helper ownership
+chuyển sang dedicated NOLOGIN role, không migration-owner SECURITY DEFINER.
+Nếu PostgreSQL ownership transfer cần CREATE schema hoặc role membership ở
+migration identity/lock owner trong setup, chỉ temporary migration transaction,
+revoke trước commit và trước runtime proof; runtime không bao giờ nhận chúng.
+Không cấp CREATE/role membership cho writer để generator/migration chạy.
+Apply kiểm tra Drizzle transaction boundary thực sự bao trọn create/revoke/
+owner/grant; nếu không đảm bảo atomic publication -> STOP trước execution.
+Empty và upgrade DB phải có cùng reviewed function body/ACL/owner; rerun no-op.
+Rollback disable synthetic composition, giữ rows/history; không DROP data hoặc
+rollback destructive để tránh review. Existing future production-role
+provisioning vẫn cần separate authority, không được suy ra từ test roles.
+
+Disposable DB proof: exact loopback host/current_database name kiểm tra trước
+migrate; new isolated test role/database, không production/general dev data.
+Apply full existing journal + new migration trên empty DB, và upgrade test
+baseline có synthetic foundation rows. Chạy writer-role concurrent tests,
+mutual orphan-FK commit failures, raw UPDATE/DELETE/TRUNCATE denial, same-ID
+retry, allowed reads/INSERT, reset/Personnel races; inspect pg_constraint/
+pg_trigger và actual migration journal. Rollback-transaction không để raw hoặc
+receipt residue. Test-only clock substitutions giới hạn disposable harness;
+restore actual clock implementation và validate lại migration result.
+
+Rollback runtime: disable test factory/route before changing application code;
+older foundation build bỏ qua additive tables. Giữ raw/receipt/auth metadata
+không destructive down migration; no automatic DROP/purge để rollback.
+Unknown commit -> exact recover/retry, không rollback committed event.
+Deployment/production migration, runtime role provisioning, retention cleanup
+hoặc data conversion không được authorize bởi Design hoặc tests.
+
+## Verification Design
+
+### D1b actual-process bootstrap proof — planned, not executed
+
+U2/U8 và R3/R6/R7 MUST bổ sung actual Next file-route evidence sau Apply approval:
+
+1. Same child PID/runId/main thread owns actual 127.0.0.1:3001 listener, two
+   independently authenticated max:1 handles và all D1/D1a/F8 SQL proofs.
+   Parent-only probe, direct factory/adapter call hoặc mocked handler không đủ.
+2. Concurrent initial context/identify/state requests publish one runtime only
+   after both proofs; failed second client/provider closes partial resources.
+   No credential processing or protected output before complete admission.
+3. Missing/malformed/replayed IPC; production/VERCEL; wrong/mismatched/C17/shared
+   DB; role/member/ACL/helper/body drift; listener/port mismatch; lost socket;
+   forged Host/Forwarded headers; missing provider/connection all fail closed.
+   Standard dev/start/build without owner never instantiate fallback runtime.
+4. Repeat module evaluation with unchanged inventory: one promise/pair; source
+   drift/HMR and IPC disconnect: unavailable + teardown; fresh process repeats
+   all proofs. Old continuation row does not bypass current authority.
+5. Exercise actual migrated synthetic Next context/identify/state/IN/OUT/recover/
+   end routes, dual identify/state.read and raw+receipt atomicity. Keep current
+   20/62 mapping; startup tests supplement, never replace behavioral scenarios.
+6. End/failed startup/forced shutdown closes both clients; capture sanitized
+   process/listener and SQL assertions, source hashes and exact command/exits.
+   DB evidence remains intact; logs/browser/RSC contain no bootstrap secrets.
+   Non-Pointage route smoke test shows no default/global startup modification.
+
+This turn runs planning checks only. Real-process/HMR/socket/SQL proof is still
+NOT_RUN and mandatory before task 3.2/3.8 completion, not inferred from Next docs.
+
+Chưa chạy implementation tests/Browser QA. Đây là traceability và future
+verification design, không Tasks/Implementation Plan/Technical Implementation
+Contract hoặc VERIFY PASS.
+
+| Requirement | Exact approved heading                                                         | Design sections  | Future test family              |
+| ----------- | ------------------------------------------------------------------------------ | ---------------- | ------------------------------- |
+| A1          | Usable consumer dùng dedicated short-lived Pointage continuation               | D2, D3, D4, D8   | continuation-auth               |
+| A2          | Continuation chỉ self-only trong trusted binding và closed catalog             | D1, D2, D4, D8   | scope-and-grants                |
+| A3          | Current Personnel eligibility áp dụng cho cả ba employee operations            | D4, D5, D7       | personnel-eligibility           |
+| A4          | Committed replay không bypass current authorization                            | D4, D5, D6       | authorized-replay               |
+| A5          | Expiry reset và interaction end không để lại stale authority                   | D2, D3, D4       | expiry-reset-end                |
+| A6          | Continuation không serialize trusted context hoặc persist plaintext credential | D2, D6, D8, D10  | secret-and-context-minimization |
+| A7          | Usable consumer giữ non-enumeration và trusted-address prerequisite            | D1, D8, D10      | trusted-provenance              |
+| R1          | Raw clocking sử dụng trusted cloud scope và online acceptance                  | D1, D4, D8       | cloud-and-scope                 |
+| R2          | Raw command vocabulary và bốn transition outcomes là đóng                      | D5, D7           | four-transitions                |
+| R3          | Raw evidence immutable là sole canonical attendance source                     | D5, D6, D7       | immutable-canonical-source      |
+| R4          | Sessions và current state chỉ derived và không overlap                         | D5, D7           | derived-sessions                |
+| R5          | Stable request identity bảo toàn committed receipt và replay                   | D4, D5, D6, D8   | idempotent-retry                |
+| R6          | Concurrent competing requests có tối đa một acceptance                         | D5, D6           | multi-connection-concurrency    |
+| R7          | Accepted event time do server quyết định và giữ historical context             | D5, D7           | server-time                     |
+| R8          | Cross-midnight grouping không thay departure eligibility                       | D4, D7           | midnight-departure              |
+| R9          | Employee chỉ thấy own minimal current state và receipt                         | D4, D7, D9       | employee-projection             |
+| R10         | Manager read chỉ server-side và establishment-scoped                           | D9               | manager-scope                   |
+| R11         | Shared-device UI bảo toàn isolation và trung thực về operation state           | D3, D8, D10, D11 | shared-device-browser           |
+| R12         | Capability giữ fail-closed provenance và tách biệt production policy           | D1, D10, D12     | authority-separation            |
+| R13         | Usable slice không mở rộng explicit non-scope                                  | D1, D12          | negative-scope-inventory        |
+
+Tất cả 62 approved scenarios được map bên dưới. Mỗi row yêu cầu test assert
+đúng WHEN/THEN/AND của source scenario; reference không thay scenario semantics.
+
+| Scenario | Exact approved scenario heading                          | Design sections  | Future test family              |
+| -------- | -------------------------------------------------------- | ---------------- | ------------------------------- |
+| A1.1     | Tiếp tục own Pointage interaction                        | D2, D3, D4, D8   | continuation-auth               |
+| A1.2     | Pointage continuation dùng ngoài domain                  | D2, D3, D4, D8   | continuation-auth               |
+| A2.1     | Continuation được dùng cho employee khác                 | D1, D2, D4, D8   | scope-and-grants                |
+| A2.2     | Continuation yêu cầu privileged operation                | D1, D2, D4, D8   | scope-and-grants                |
+| A2.3     | Browser cung cấp trusted-context claims                  | D1, D2, D4, D8   | scope-and-grants                |
+| A3.1     | Identify trước entry hoặc sau departure                  | D4, D5, D7       | personnel-eligibility           |
+| A3.2     | State read ngoài employment period                       | D4, D5, D7       | personnel-eligibility           |
+| A3.3     | Mutation sau departure với session đang mở               | D4, D5, D7       | personnel-eligibility           |
+| A3.4     | Ngày entry hoặc final departure hợp lệ                   | D4, D5, D7       | personnel-eligibility           |
+| A3.5     | Không xác minh được lifecycle hiện tại                   | D4, D5, D7       | personnel-eligibility           |
+| A4.1     | Authorized replay                                        | D4, D5, D6       | authorized-replay               |
+| A4.2     | Prior success nhưng current access mất hiệu lực          | D4, D5, D6       | authorized-replay               |
+| A5.1     | Continuation hết hạn                                     | D2, D3, D4       | expiry-reset-end                |
+| A5.2     | Credential reset nhưng browser còn continuation cũ       | D2, D3, D4       | expiry-reset-end                |
+| A5.3     | Interaction đã kết thúc trên shared device               | D2, D3, D4       | expiry-reset-end                |
+| A6.1     | Browser nhận continuation và current-state response      | D2, D6, D8, D10  | secret-and-context-minimization |
+| A6.2     | Durable browser storage hoặc diagnostics                 | D2, D6, D8, D10  | secret-and-context-minimization |
+| A6.3     | Technical metadata được tái dùng làm evidence            | D2, D6, D8, D10  | secret-and-context-minimization |
+| A7.1     | Missing hoặc untrusted client-address provider           | D1, D8, D10      | trusted-provenance              |
+| A7.2     | Public access failure                                    | D1, D8, D10      | trusted-provenance              |
+| A7.3     | Provider composition cần authority riêng                 | D1, D8, D10      | trusted-provenance              |
+| R1.1     | Employee operation có đầy đủ prerequisites               | D1, D4, D8       | cloud-and-scope                 |
+| R1.2     | Browser đổi scope hoặc dossier                           | D1, D4, D8       | cloud-and-scope                 |
+| R1.3     | Cloud hoặc database không xác nhận được kết quả          | D1, D4, D8       | cloud-and-scope                 |
+| R2.1     | NO_OPEN_SESSION nhận CLOCK_IN                            | D5, D7           | four-transitions                |
+| R2.2     | OPEN_SESSION nhận CLOCK_OUT                              | D5, D7           | four-transitions                |
+| R2.3     | OPEN_SESSION nhận CLOCK_IN                               | D5, D7           | four-transitions                |
+| R2.4     | NO_OPEN_SESSION nhận CLOCK_OUT                           | D5, D7           | four-transitions                |
+| R2.5     | Caller gửi event kind ngoài vocabulary                   | D5, D7           | four-transitions                |
+| R3.1     | Derived state được tái dựng                              | D5, D6, D7       | immutable-canonical-source      |
+| R3.2     | Actor yêu cầu sửa hoặc xóa raw event                     | D5, D6, D7       | immutable-canonical-source      |
+| R3.3     | Technical metadata được dùng làm attendance fact         | D5, D6, D7       | immutable-canonical-source      |
+| R4.1     | Employee tạo nhiều sequential sessions                   | D5, D7           | derived-sessions                |
+| R4.2     | Session thiếu clock-out                                  | D5, D7           | derived-sessions                |
+| R5.1     | Cùng identity và intent sau commit                       | D4, D5, D6, D8   | idempotent-retry                |
+| R5.2     | Cùng identity nhưng intent khác                          | D4, D5, D6, D8   | idempotent-retry                |
+| R5.3     | Receipt lookup từ employee hoặc establishment khác       | D4, D5, D6, D8   | idempotent-retry                |
+| R5.4     | Timeout retry                                            | D4, D5, D6, D8   | idempotent-retry                |
+| R5.5     | Replay sau khi lifecycle hoặc authority không còn hợp lệ | D4, D5, D6, D8   | idempotent-retry                |
+| R6.1     | Hai distinct CLOCK_IN cạnh tranh từ no-open state        | D5, D6           | multi-connection-concurrency    |
+| R6.2     | Hai distinct CLOCK_OUT cạnh tranh đóng cùng session      | D5, D6           | multi-connection-concurrency    |
+| R6.3     | Double submit cùng request identity                      | D5, D6           | multi-connection-concurrency    |
+| R7.1     | Browser gửi clock hoặc backdated timestamp khác server   | D5, D7           | server-time                     |
+| R7.2     | Actual time lệch Planning                                | D5, D7           | server-time                     |
+| R7.3     | Local date/time cần được diễn giải lại                   | D5, D7           | server-time                     |
+| R8.1     | Session đi qua midnight trong employment period          | D4, D7           | midnight-departure              |
+| R8.2     | CLOCK_OUT sau departure date                             | D4, D7           | midnight-departure              |
+| R9.1     | Employee chưa clock-in                                   | D4, D7, D9       | employee-projection             |
+| R9.2     | Employee đang clock-in                                   | D4, D7, D9       | employee-projection             |
+| R9.3     | Minimal Personnel projection                             | D4, D7, D9       | employee-projection             |
+| R9.4     | Employee yêu cầu lịch sử                                 | D4, D7, D9       | employee-projection             |
+| R10.1    | Authorized manager đọc bounded state                     | D9               | manager-scope                   |
+| R10.2    | Manager thiếu scope hoặc exact grant                     | D9               | manager-scope                   |
+| R10.3    | STAFF hoặc employee xin manager read                     | D9               | manager-scope                   |
+| R11.1    | Interaction kết thúc trên shared tablet                  | D3, D8, D10, D11 | shared-device-browser           |
+| R11.2    | Browser khôi phục state cũ                               | D3, D8, D10, D11 | shared-device-browser           |
+| R11.3    | Mutation pending, success hoặc conflict                  | D3, D8, D10, D11 | shared-device-browser           |
+| R11.4    | Invalid credential, rate limit hoặc lifecycle denial     | D3, D8, D10, D11 | shared-device-browser           |
+| R12.1    | Thiếu trusted client-address provenance                  | D1, D10, D12     | authority-separation            |
+| R12.2    | Production legal policy chưa được duyệt                  | D1, D10, D12     | authority-separation            |
+| R12.3    | Capability được triển khai và kiểm tra thành công        | D1, D10, D12     | authority-separation            |
+| R13.1    | Downstream hoặc ngoài phạm vi yêu cầu capability         | D1, D12          | negative-scope-inventory        |
+
+Critical additional technical proofs: same-ID multi-connection commit; distinct
+IN/OUT contention; stale OUT across A-close/B-open; reset and lifecycle racing
+same dossier lock; direct raw-only/receipt-only transactions cannot commit;
+writer cannot destructive mutate; server microseconds/offset/DST and zone-change
+stable history; expired/end/replayed token deny; old-response generation dropped;
+pagehide/pageshow/back/duplicate/restart/cache isolation; absent/untrusted provider
+fails before credential processing; runtime refuses unsafe test environment.
+
+#### Reopened locking/privilege proof — planned, not executed
+
+D1 exact environment/URL/current_database guards không thay. Dedicated
+disposable PostgreSQL, distinct owner/writer connections; không mock thay SQL.
+Các assertions dưới đây bổ sung F8/S5 proof, chưa đánh dấu task hoàn thành:
+
+1. Catalog/effective ACL proof D4b; actual writer SELECT FOR SHARE/UPDATE trực
+   tiếp cả ba source tables bị 42501, nhưng exact helper + invoker continuation
+   FOR UPDATE thành công. Helper RETURN void không row/name/lifecycle data.
+2. Actual writer UPDATE mỗi column (gồm id, org/est keys, entry/departure,
+   status/timezone), INSERT/DELETE/TRUNCATE/ALTER/DROP/GRANT/trigger-disable trên
+   source tables bị deny; compare complete source rows before/after helper.
+   Continuation chỉ hai UPDATE cột được phép; all existing F5 negatives giữ.
+3. Wrong/NULL/mixed org-est-dossier tuple, missing/inactive parents -> generic
+   failure and outer rollback. Không partial token/state/event/receipt. Through
+   service, coherent foreign tuple bị deny trước helper; không claim SQL
+   helper tự xác thực tenant khi DB login đã compromise.
+4. Non-writer role không EXECUTE; PUBLIC revoke verified. Writer không SET ROLE/
+   SESSION AUTHORIZATION owner/migration role, ALTER function, create overload/
+   shadow object, grant EXECUTE hoặc disable trigger. Poisoned caller
+   search_path/temp lookalike không đổi referenced public tables; helper fixed
+   pg_catalog/pg_temp và qualification được kiểm tra bằng object identities.
+5. Controlled disposable misconfiguration tests: wrong/LOGIN/superuser owner,
+   owner extra column/table privilege or membership, writer inherited/PUBLIC
+   UPDATE, PUBLIC EXECUTE, missing EXECUTE, writable schema, changed body/
+   search_path. Runtime refuses before provider/credential processing/write;
+   no fallback. Restore exact reviewed setup before final proof.
+6. Multi-connection blocking both directions: helper holds locks after return
+   until outer commit/rollback; actual issue/reset repository waits on dossier;
+   actual Personnel entry/departure UPDATE waits (and vice versa). Later
+   Pointage reads current version/lifecycle after lock. Parent status/timezone
+   UPDATE and existing Formalités scoped dossier lock conflict as expected.
+   Không sửa/import unrelated Formalités test harness hoặc code để pass.
+7. Invoker raw INSERT trigger calls helper even without prior repository lock;
+   concurrent alternate inserts serialize; invalid chain/raw-only/receipt-only
+   commit still fail. Continuation/end/touch ordering, same-ID replay,
+   competing IN/OUT, stale OUT across A/B và accepted-instant departure remain
+   original D2-D7 tests, not replaced by helper-success test.
+8. Force lock_timeout/statement_timeout/deadlock: rollback all work, same tuple
+   recovery/no fresh identity; no catch-and-continue savepoint releasing locks.
+   Test migration absent/misowned helper and roles fail closed, no-op rerun,
+   old history unchanged; all controlled test changes restored and actual DB
+   clock rerun before migration proof.
+
+Cần corresponding Tasks/TIC planning correction sau revised Design approval:
+task 1.3 delegated lock call, 1.4 raw-trigger helper call, 1.5 F8 role/ACL proof,
+1.6 guarded role setup, 1.7 atomic helper publication, 1.8 và S5/R regression
+evidence. Không đổi task count, checkbox, code hoặc UI plan trong lượt này;
+2/32 checkpoint giữ nguyên và Apply PAUSED đến explicit approval của Design
+và required planning correction. Không coi original 02c approval đủ cho
+delegated mechanism chưa được review.
+
+Future exact existing command families:
+`pnpm --filter @yuta/auth test`,
+`pnpm --filter @yuta/contracts test`,
+`pnpm --filter @yuta/db-cloud test`,
+`pnpm --filter @yuta/backoffice test`,
+`pnpm test:cloud`, `pnpm build:cloud`,
+`pnpm docs:check`, `pnpm architecture:check`,
+`pnpm -r --if-present typecheck`, scoped Prettier.
+Integration enable flag `YUTA_ALLOW_DATABASE_INTEGRATION_TESTS=true` chỉ sau
+disposable guards, không dùng existing general .env.local target.
+
+Browser QA sau formal VERIFY theo YUTA_QA_PROTOCOL: 1440x900, 1024x768,
+768x1024 shared tablet và 390x844; all approved visible states, French copy,
+keyboard/focus/touch/overflow, pending/unknown result và end/cache races.
+Real Next local route + migrated synthetic DB, not fixture-success UI.
+Hashed screenshot manifest, QA report và console checks; no plaintext secrets
+trong evidence. Không QA NOT_APPLICABLE cho UI_AFFECTING YES.
+
+## Open Questions
+
+Không có unresolved Product/authority conflict được phát hiện cần đổi approved
+Specs. Technical representation, TTL, transaction/receipt, schema, clocks,
+transport, reset/end và UI-state choices đã được chọn để human Sensitive Design
+review; không tự coi review là passed.
+
+Các legal/privacy/production provenance và production DB-role evidence ở D12
+vẫn blocked, không đủ điều kiện dùng real attendance. Partial UI-pack structural
+validation chưa hoàn chỉnh vì current-user cấm Implementation Plan trước gate;
+không phải permission vượt gate. Reviewer cần đánh giá rõ offline ENDING versus
+confirmed end semantics và no-image UI direction cùng design này.
+
+SENSITIVE DESIGN GATE
+Review status: AWAITING_HUMAN_REVIEW
+UI_AFFECTING: YES
+BROWSER_QA_REQUIRED: YES
+Apply authorization: NOT_GRANTED
+Production enablement: NOT_AUTHORIZED
+```
+
+## Planning checks and review boundary
+
+- `openspec validate pointage-usable-raw-clocking --strict`: exit 0, valid.
+- `pnpm docs:check`: exit 0, 36 current documents.
+- `pnpm architecture:check`: exit 0, runtime/database/client/migration
+  boundary checks passed.
+- `pnpm -r --if-present typecheck`: exit 0, all participating workspace
+  typechecks completed.
+- `pnpm ui:pack:check backoffice-pointage-employee`: exit 0,
+  one pack / zero warnings.
+- `pnpm exec prettier --check openspec/changes/pointage-usable-raw-clocking/design.md openspec/changes/pointage-usable-raw-clocking/tasks.md docs/reviews/pointage-usable-raw-clocking/02b-design-review.md docs/reviews/pointage-usable-raw-clocking/02c-implementation-plan-review.md`:
+  exit 0, all four targets conform. Only local apply_patch formatting; no
+  formatter write over historical content or unrelated files.
+- `pnpm format:check`: exit 1, exactly 67 unrelated warnings; no target
+  warning and no global formatter write. Diagnostic is not whole-repo PASS.
+- Exact embedded diff extraction followed by
+  `git apply --reverse --check --unidiff-zero -`: both exit 0, check-only.
+  Design diff SHA-256:
+  `32ec07c3c6723d8bbab0b659fa3f13789963ef4a691b2362df7c43193bcce84a`.
+  Tasks diff SHA-256:
+  `1851e0c4607b47d745d50c434768c414cc0cbdcc859da98ee3a5010150f70e33`.
+- Exact corrected Design snapshot equals design.md bytes. Both previous packet
+  suffixes match old hashes. 15-path table and all 32 checkbox lines are exact.
+  All 154 retained protected entries and implementation aggregate rechecked.
+  No test/DB/Next/Browser QA execution; key negatives remain planned evidence.
+
+Synthetic/disposable-only; real employee attendance NOT_AUTHORIZED.
+UI_UX_PRO_MAX_USAGE: OPTIONAL; UI_UX_PRO_MAX_EXECUTION: NOT_USED.
+Seven production blockers unchanged: exact retention; deletion/anonymization;
+legal hold; backup-retention interaction; employee notice; detailed audit
+visibility; trusted production client-address provenance.
+No Product/Spec/UI-pack/implementation/migration change, DB operation, Next
+startup, Browser QA, deployment, enablement, sync/archive or readiness promotion.
+
+Human review must accept the exact revised Design/Tasks hashes and unchanged
+15-path allowlist before task 3.2 resumes. Planned negatives are not test PASS;
+formal Technical Implementation Compliance, VERIFY and QA remain unrun.
+
+```text
+SENSITIVE DESIGN / TASK 3.2 BOOTSTRAP ALIGNMENT REVIEW
+Status: AWAITING_HUMAN_REVIEW
+
+APPLY: PAUSED
+Tasks: 18/32
+Task 3.2: NOT_STARTED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+```
+
+## Historical packet — superseded independent-key proposal
+
+The following exact previous packet is review history only. Its INIT schema
+and stateGuard input are superseded by the current correction; no old input
+contract or old hash can authorize Apply.
+
+Change: pointage-usable-raw-clocking
+Gate: SENSITIVE DESIGN / TASK 3.2 BOOTSTRAP ALIGNMENT REVIEW
+Review status: AWAITING_HUMAN_REVIEW
+Created: 2026-09-09
+Schema: yuta-spec-driven
+Analysis conclusion: READY_FOR_SPECS
+Sensitive change: YES
+
+## Bounded bootstrap proposal
+
+Current-user attachment 67acbce8-52d7-47a4-a5fb-37c7eadf250a authorizes planning
+alignment only. Cơ chế đề xuất: B + narrowly typed A — dedicated test launcher
+khởi chạy existing Backoffice Next child; child sở hữu actual loopback socket,
+tạo/prove hai independently authenticated SAME-DB clients và giữ một typed
+Pointage-only admission promise. Không separate Pointage server/app, generic
+registry, production/default provider hoặc shared configuration edit.
+
+D1b trong exact Design dưới đây chốt alternatives A-D, strict private IPC input,
+actual-process trust, listener-before-clients ordering, fixed consumer dependency,
+single-attempt concurrency, terminal failure, reload/restart và teardown.
+D8/D10/Verification Design chỉ thêm các hệ quả của bootstrap. D1/D1a và
+D4a/D4b không bị viết lại. Exact diff below contains four insertion regions only.
+
+## Exact proposed future implementation allowlist
+
+| Exact repository path                                                         | Classification               | Owner / bounded reason                                                                                                   |
+| ----------------------------------------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts`              | `NEW; TEST_ONLY`             | `Parent disposable launcher, ephemeral IPC inputs, owned child shutdown; no route runtime/admin handoff.`                |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-next-child.ts`            | `NEW; TEST_ONLY`             | `Actual existing Next host, socket owner, strict IPC, one typed process cell, child-created clients/admission/lifetime.` |
+| `apps/backoffice/src/server/pointage/raw-clocking-bootstrap.ts`               | `NEW`                        | `Server-only fixed factory bridge; exports bounded consumer only, no normal/default composition.`                        |
+| `apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts`                | `NEW; TEST_ONLY`             | `IPC/environment/listener/concurrency/reload/cleanup negatives and future actual-process proof.`                         |
+| `apps/backoffice/src/server/pointage/raw-clocking-runtime.ts`                 | `EXISTING_MODIFY`            | `Only neutral context/readiness facade for D8 and D1b composition typing; preserve completed S9 proofs/operations.`      |
+| `apps/backoffice/test/pointage-raw-clocking-runtime.test.ts`                  | `EXISTING_MODIFY; TEST_ONLY` | `Add neutral-context/admission assertions; preserve all completed S9 test cases.`                                        |
+| `apps/backoffice/src/server/pointage/raw-clocking-http.ts`                    | `NEW`                        | `Existing U2 plan: DTO/status/headers adapter consuming only bootstrap consumer.`                                        |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/context/route.ts`   | `NEW`                        | `Existing U2 exact context Node handler; no bootstrap/client/provisioning logic.`                                        |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/identify/route.ts`  | `NEW`                        | `Existing U2 exact identify Node handler; no bootstrap/client/provisioning logic.`                                       |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/state/route.ts`     | `NEW`                        | `Existing U2 exact state Node handler; no bootstrap/client/provisioning logic.`                                          |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-in/route.ts`  | `NEW`                        | `Existing U2 exact clock-in Node handler; no bootstrap/client/provisioning logic.`                                       |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/clock-out/route.ts` | `NEW`                        | `Existing U2 exact clock-out Node handler; no bootstrap/client/provisioning logic.`                                      |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/recover/route.ts`   | `NEW`                        | `Existing U2 exact recover Node handler; no bootstrap/client/provisioning logic.`                                        |
+| `apps/backoffice/src/app/api/pointage/[establishmentSlug]/end/route.ts`       | `NEW`                        | `Existing U2 exact end Node handler; no bootstrap/client/provisioning logic.`                                            |
+| `apps/backoffice/test/pointage-raw-clocking-http.test.ts`                     | `NEW; TEST_ONLY`             | `Existing UI_TEST path: exact HTTP/method/CSRF/operation tests and actual route consumer integration.`                   |
+
+15 paths total: 13 NEW (including already planned HTTP paths), 2 EXISTING_MODIFY.
+TEST_ONLY is a scope qualifier, not permission to bypass D1 or write elsewhere.
+Shared/global startup/config/package-script writes: NONE. Only the dedicated
+test child changes process-wide listener/lifetime for that test run; no default
+Next startup modification. This higher-risk test host boundary still requires
+human review and real-process proof. No file in this list is edited/created now.
+
+## Exact baseline and preservation evidence
+
+Fresh HEAD: `415990386327aaccab3c32b1fef0569a0fde7f3a`. Pre-existing tracked/untracked work was inventoried
+before edits, not reset or normalized. Old review packet hashes:
+02b `916689779ef22750f158e46ce1632e8f697ec835d3f5613b4bcdf5cf865e2ddd`;
+02c `0c0a0bf780759581c4c7f4e96d93e92c01b4c7eae4c4bfdaa53eee605f43a27d`.
+Historical packet bodies below remain exact, including prior status statements;
+only the new leading packet controls this review.
+
+| Exact artifact path                                       | Before SHA-256                                                     | Proposed SHA-256                                                   |
+| --------------------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| `openspec/changes/pointage-usable-raw-clocking/design.md` | `9a50dd1e76ce950b137d107ad66cb8e56fcb541ec882ef002379f26207606197` | `591501dd733aad5a3d1f1a6455291030e21952a674400b296004448234a05f4d` |
+| `openspec/changes/pointage-usable-raw-clocking/tasks.md`  | `1b5ccca6212fd350bd2ceae7caf010f49b04712d5d10775370601c95197d162b` | `f986c00e8c8405e73b31d0d98253dabbe804f49c2a025299ba17a9d6c82620ab` |
+
+Hash algorithm: SHA-256 over exact file bytes via Node crypto/createHash +
+fs.readFileSync (independently reproducible with Get-FileHash -Algorithm SHA256).
+Preservation inventory: `git ls-files --cached --others --exclude-standard -z`,
+existing files only, excluding exactly the four current writable artifacts;
+sort paths, form [path, lowercase SHA-256] pairs, hash UTF-8 JSON.stringify(pairs).
+Before/after inventory: 2596 files; same aggregate
+`9464df54705862972f6f743eb72c1fef9a12e6938f728ad0492951c7d9c836b9`. This includes all 1262 implementation/script files,
+main Specs, archive, Product Knowledge, every sealed UI-pack file and unrelated
+dirty changes. No tracked/untracked path added or removed. Ignored generated
+typecheck caches are not implementation source and are not lifecycle evidence.
+
+All 152 protected entries and three U1 implementation hashes in
+[approved UI DTO checkpoint](apply-ui-dto-checkpoint.json) were rechecked: zero
+drift. Gate 1/Gate 2, Proposal/Analysis, two deltas and sealed pack were not edited.
+Requirement/scenario headings counted from both exact Spec files: 20/62.
+All 32 task checkbox identities/states preserved: 18 checked, 14 unchecked;
+only descriptions of 3.2 and 3.8 extended. U1/TIC tables and completed tasks
+remain byte-identical; U2/U8/R3/R6/R7 receive explicit binding supplements.
+
+| Exact delta path                                                                     | Unchanged SHA-256                                                  | Requirements / scenarios |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------ | ------------------------ |
+| `openspec/changes/pointage-usable-raw-clocking/specs/authorization/pointage/spec.md` | `1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66` | 7 / 21                   |
+| `openspec/changes/pointage-usable-raw-clocking/specs/pointage/raw-clocking/spec.md`  | `4bfa64e863ad465a144341c18aa5d0db3ce0806ada52ad40183cf9a4e321f90e` | 13 / 41                  |
+
+| Checkpoint implementation / migration path                              | Unchanged SHA-256                                                  |
+| ----------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `apps/backoffice/src/server/pointage/raw-clocking-runtime.ts`           | `1965b4f92fa60d5eeeba1216a33f7d05db95110a2626e0291e7fbb0740948326` |
+| `apps/backoffice/src/server/pointage/raw-clocking-test-boundary.ts`     | `4aa15e7f9695b85ae418b1098b7bd57c14d4c39bcd8b81eb9093660eeeb8cc28` |
+| `apps/backoffice/src/server/pointage/service.ts`                        | `00d26799bf2fa8213161e221a28fbf75b4024fd88f549293e814e90dd935aff1` |
+| `apps/backoffice/test/pointage-raw-clocking-runtime.test.ts`            | `c1fbb32fdf68474f4c3e7e4819453f00226e6f2cc8a10db274ff282e8a36be7f` |
+| `apps/backoffice/test/pointage-raw-clocking-service.test.ts`            | `4a139b05bdabe81a6ec2ecab728792a215cd2b74273114f7bb4ae17a6d36b356` |
+| `packages/auth/src/index.ts`                                            | `464739729900d884af3ab82159151d7df5de6a0f8ee0a3a23feed7bc285a1c2a` |
+| `packages/contracts/src/index.ts`                                       | `cf72d2593fa90ffe590e2963f15160b232d069d1bf8848ec06d91946b18d95bd` |
+| `packages/contracts/src/pointage/index.ts`                              | `2bc3d6d491ce94864c2bae22a5ce96b66e052ce131be852328b4b68c2f0ba974` |
+| `packages/contracts/test/pointage.test.ts`                              | `4fff5b366e61c94098dc3e4238edfd4b61a2e9b5e62527465546db760f83a013` |
+| `packages/db-cloud/drizzle/0021_abandoned_black_queen.sql`              | `7794a5c02f2fa809a9985848bc455dbd3a5762415b5d96c216fb49ff4fd01ed9` |
+| `packages/db-cloud/drizzle/meta/_journal.json`                          | `897139ed88030e38adfffa55ba5f1bc4d4773b6bf8f1aac619f17653834907b0` |
+| `packages/db-cloud/drizzle/meta/0021_snapshot.json`                     | `71052147af479bfb5f480f0981859a7af7235ff21a0be69a427a6faaeb06f4bf` |
+| `packages/db-cloud/src/pointage-raw-clocking-repository.ts`             | `f2cf173ea3a2ad06c30a7e1b7b70f32d33f9b520e0f705aafed1fd698d9ce802` |
+| `packages/db-cloud/test/helpers/pointage-raw-clocking-test-database.ts` | `6bb342f09144e308b989d32d580c3b0d41223005e36834d74ddce7287dce0fe4` |
+
+Protected raw clocking migration 0021/journal/snapshot, auth Formalités export
+and completed source bytes stay unchanged. No SQL query, provisioning, migration,
+Next startup, application test execution or Browser QA in this planning turn.
+Only planning validation/typecheck/format diagnostics were executed.
+
+## Exact bounded Design diff
+
+```diff
+--- a/openspec/changes/pointage-usable-raw-clocking/design.md
++++ b/openspec/changes/pointage-usable-raw-clocking/design.md
+@@ -234,0 +235,211 @@
++#### D1b — Actual Next process bootstrap (task 3.2 alignment proposal)
++
++Đây là bounded Sensitive Design / Tasks alignment tại checkpoint 18/32,
++task 3.2 NOT_STARTED. Chỉ planning được sửa; Apply PAUSED đến human approval
++exact revised Design/Tasks hashes và exact implementation allowlist trong
++Tasks. D1/D1a, D4a/D4b, F6/F8, S9, U1, Product, hai Specs, migration 0021,
++sealed UI pack và bảy blockers giữ nguyên. Các checkpoint trước trong Design
++là historical review context, không reset completed tasks hoặc UI-pack status.
++
++##### Repository evidence and alternatives
++
++Inspected baseline: Backoffice declares Next ^16.2.9, installed 16.2.9;
++Node v24.17.0. Existing scripts: dev = next dev -p 3001, start = next start
++-p 3001, build = next build. next.config.ts không có bootstrap hook;
++không có Pointage instrumentation/startup owner. Existing typed development
++review-store global không là authority cho generic registry mới.
++createCloudDatabaseClient mặc định pool không chứng minh max:1; không sửa
++shared factory. Existing guarded Pointage test helper đã có independently
++authenticated postgres-js max:1 + Drizzle clients và exact-target probe.
++Factory raw-clocking-runtime.ts mới có injected clients, không route accessor.
++Existing child-process tests chỉ là implementation pattern, không runtime proof.
++
++Official documentation tại exact tag 16.2.9 được kiểm tra, không dùng latest:
++[custom server](https://raw.githubusercontent.com/vercel/next.js/v16.2.9/docs/01-app/02-guides/custom-server.mdx)
++mô tả public next/prepare/getRequestHandler và httpServer option; entry file
++không qua Next compiler. Custom server có optimization/standalone trade-offs,
++nên chỉ test entry, không thay production startup.
++[instrumentation](https://raw.githubusercontent.com/vercel/next.js/v16.2.9/docs/01-app/03-api-reference/03-file-conventions/instrumentation.mdx)
++await register trước readiness, chạy mỗi server instance và có Node/Edge
++distinction; không chứng minh socket ownership/teardown cho D1.
++Installed next/dist/server/next.js, next.d.ts xác nhận public API, custom
++prepare/getRequestHandlers và close lifecycle. Không import Next private APIs.
++Version drift phải re-review lifecycle evidence; không upgrade để làm test pass.
++
++- A, process-local module alone: bounded cache khả thi nhưng standard CLI không
++  cấp actual listener owner, cleanup hoặc cross-reload guarantee. Không chọn
++  module-cache-only hay environment-driven lazy default.
++- B, dedicated test launcher + in-process bootstrap: CHOSEN, kết hợp narrowly
++  typed process-local promise của A. Cha chỉ chuẩn bị disposable infrastructure
++  và ephemeral inputs; actual Next child tạo/prove hai clients của chính nó.
++- C, instrumentation: không chọn. Hook existence không cung cấp actual socket,
++  shutdown hoặc cache-reload proof; thêm shared startup path không cần thiết.
++- D, plain next dev + env-only, private Next hooks hoặc proxy/sidecar: reject.
++  Không actual socket proof, hoặc tăng topology/registry/secret contract.
++  Không separate Pointage server, app, containerized app runtime hay new port.
++
++##### Owner and exact launch channel
++
++Launcher test-only khởi chạy MỘT Node child hosting existing apps/backoffice
++Next app bằng public next({ dev: true, dir: absoluteBackofficePath,
++hostname: '127.0.0.1', port: 3001, httpServer, quiet: true }).
++Tất cả page/API vẫn do Next file-system router; không implement HTTP business
++routes trong launcher, không reverse proxy hoặc second HTTP service. Chỉ
++test invocation thay CLI invocation; normal dev/start/build/config không đổi.
++Higher-risk process-wide effect nằm trong dedicated test child: listener
++ownership và lifecycle, không shared source/config path. Không launch cùng
++Backoffice khác trên port 3001; EADDRINUSE -> STOP, không auto-select port.
++
++Parent validates existing D1/F6 guards trên target trước provisioning/migration/
++fixtures; admin chỉ ở parent. Parent không gửi admin URL, open JS client,
++parent SQL proof hoặc runtime object qua process boundary. Parent-generated
++role passwords và keys chỉ memory. Không .env write, command-line secrets,
++NEXT_PUBLIC inputs, durable production config hoặc implicit .env.local fallback.
++
++Child uses Node fork IPC, one strict INIT message <= 16 KiB, exact keys:
++type = POINTAGE_TEST_INIT; version = 1; runId = UUIDv4;
++parentPid / childPid = positive integers matching process.ppid / process.pid;
++origin = http://127.0.0.1:3001; listenHost = 127.0.0.1; listenPort = 3001;
++foundationDatabaseUrl / rawDatabaseUrl = role-specific URLs for SAME D1 tuple;
++encodedAuthSecret = canonical base64url 32 random bytes (existing auth format);
++stateGuardKeyBase64 = canonical base64 of exactly 32 random bytes.
++Unknown keys, oversized/malformed/repeated INIT, wrong PID/channel or missing
++IPC reject. No browser/control endpoint can supply INIT or choose provider.
++After INIT only exact STOP { type: POINTAGE_TEST_STOP, version: 1, runId }
++is accepted from this same parent channel; unexpected messages fail closed.
++
++Child environment is explicit allowlist: required Windows OS launch keys
++SystemRoot, WINDIR, COMSPEC, PATH, PATHEXT, TEMP, TMP only when present;
++NODE_ENV = development, YUTA_POINTAGE_SYNTHETIC_TEST_MODE = true,
++POINTAGE_TEST_ORIGIN = exact origin, NEXT_TELEMETRY_DISABLED = 1.
++Never inherit NODE_OPTIONS, arbitrary application secrets or NEXT_PUBLIC keys.
++Parent production/VERCEL check occurs BEFORE environment sanitization; cannot
++erase VERCEL to make an unsafe launch eligible. Child repeats live checks.
++Private projected D1 environment uses foundationDatabaseUrl as
++CLOUD_DATABASE_URL target descriptor; raw URL is separately checked against it.
++Neither URL is installed in process.env or read from Next dotenv loading.
++Normal CLI/build/start has no IPC owner/anchor and remains unavailable even
++with flags. No production provider is constructed; deterministic synthetic
++provider is fixed in server-owned child code, never derived from headers.
++
++##### Actual listener, admission and consumer handoff
++
++Order in actual child:
++
++1. Validate INIT/environment/URL tuples/roles and main-thread process identity,
++   before creating either client. Bind owned node:http server to exact IPv4
++   127.0.0.1:3001 with generic 503 gate. Inspect server.listening and address()
++   for exact address/port; derive origin from that socket tuple and compare
++   exact POINTAGE_TEST_ORIGIN. Config or successful parent fetch alone is not
++   listener proof. No credentials processed at this stage.
++2. Prepare existing Next against that exact httpServer. Before delegating any
++   request, verify socket.localAddress/localPort, live listener and process
++   generation; Host/Forwarded/X-Forwarded-\* never prove provenance. Origin
++   remains separate D8 CSRF check. No extra public health/bootstrap endpoint.
++3. Install one non-enumerable, non-writable, non-configurable property on Node
++   process keyed Symbol.for('yuta.pointage.raw-clocking.test-bootstrap.v1').
++   Value is frozen, Pointage-only typed admission accessor; private closure
++   owns INIT, listener, clients, state and promise. No mutable globalThis bag,
++   arbitrary keys, generic get/set/register or replace-client method.
++4. Server-only raw-clocking-bootstrap.ts, compiled by Next, supplies exactly
++   createPointageRawClockingRuntime to that one typed accessor. The child
++   DOES NOT import server-only application modules outside Next compilation
++   or enable global react-server conditions. The constructor callback is
++   fixed in this module, never supplied by handlers/request/browser.
++5. On the first accessor call, synchronously reserve the one initialization
++   promise, then create two distinct postgres-js max:1/Drizzle clients in this
++   actual process, reusing guarded test-client construction. On each actual
++   authenticated handle prove current_database() and session_user/current_user:
++   foundation = yuta_pointage_foundation_runtime; raw = yuta_pointage_raw_writer.
++   Both actual names equal the exact D1 target and independently pass the
++   whole-string rule. Rerun foundation D1a effective inventory and raw D4b/F8
++   body/owner/ACL/OID proof on these handles. No SET ROLE, parent proof,
++   admin/C17/default DB client, ACL repair or silently replaced connection.
++6. Only then instantiate fixed synthetic trusted-address provider and the
++   runtime; publish READY only after complete factory admission. Factory's
++   current per-operation requireReady and final raw transaction rechecks stay.
++   Neutral context availability additionally runs requireReady and existing
++   active-entry scope resolution, returning only { available: true } or 503;
++   it adds no authorization operation, dossier projection or credential work.
++
++Exact dependency: seven Node route.ts handlers -> raw-clocking-http.ts ->
++server-only getPointageRawClockingConsumer() in raw-clocking-bootstrap.ts ->
++typed process admission accessor -> existing admitted runtime.
++Consumer exposes only context/identify/readState/mutate/recover/end functions,
++not clients, URLs, admin/owner, provisioning, fixtures or generic DB factories.
++Internal constructor types are not consumer exports. Enforce import inventory
++and browser/RSC negative tests. The immutable process anchor is a narrowly
++scoped in-process capability, NOT a security sandbox against hostile server
++code/OS users; existing trusted-repository/host assumption remains explicit.
++
++No anchor, failed admission, wrong environment/listener/DB/role/privilege/helper/
++provider, connection failure or different worker/process -> D8 generic 503
++POINTAGE_UNAVAILABLE without credential work or partial identity. Readiness
++in another route never authorizes a bypass. Every accessor/dispatch checks
++live generation/listener/environment; every service call retains requireReady.
++A reconnect on either fixed max:1 client repeats identity/effective proof before
++use; reconnect failures cannot create a replacement pair or fallback identity.
++
++##### Concurrency, reload and failure lifetime
++
++Generation = child PID + parent-generated runId; main thread only. State starts
++INITIALIZING on the first call; all concurrent calls await the SAME promise.
++No partially admitted pair is cached/published. READY holds one bounded runtime.
++Initialization failure becomes terminal FAILED/UNAVAILABLE for that generation;
++close any opened client, drop input references, return only generic failure.
++No automatic retry, second factory invocation or in-process replacement.
++Live prerequisite failure also marks FAILED and initiates teardown; ordinary
++403/409/429 business outcomes do not. New admission needs a fresh child launch.
++
++Do not rely on Next module cache/HMR semantics. Immutable owner closure remains
++with actual process, while route module reload may obtain only its same typed
++promise. No pool lives only in an evictable module. Source/config/dependency
++change invalidates the generation: parent watches and child checks exact
++launch inventory hashes before each admission/dispatch. Inventory covers
++Backoffice src + test bootstrap entry files, imported auth/contracts/db-cloud/
++tenant source, their manifests, Backoffice config/tsconfig and pnpm-lock.yaml;
++path additions/removals also invalidate. Exclude .next generated output.
++Changes -> deny new work and teardown, no hot replacement or automatic restart;
++fresh manual launch recaptures and proves. A harmless module-cache reload with
++unchanged inventory must reuse the same promise/pair, never duplicate pools.
++Watch events alone are not proof; checksum validation is authoritative.
++
++Actual Next process/thread/generation agreement must be demonstrated by future
++real-route tests, including cache reload and process restart. Documentation
++does not establish this application-specific result. If Next executes the
++accessor in another worker/realm without the owned anchor, it is unavailable:
++STOP rather than global env fallback, cross-process registry or mocked proof.
++After restart the old runtime is dead; new clients require full admission.
++Existing continuation rows alone confer no authority; D2-D4 validation and
++shared-device clearing still apply.
++
++##### Teardown, diagnostics and disposable lifetime
++
++SIGINT/SIGTERM, IPC disconnect/STOP, listener failure, source drift or terminal
++admission failure stop new requests immediately. Drain owned in-flight work
++for at most 10 seconds, then close remaining owned HTTP/HMR sockets and call
++Next close. End both postgres clients exactly once, including partial startup,
++with a 5-second close deadline; drop runtime/promise/secret references.
++Parent gives child 20 seconds to exit, then may terminate ONLY that positively
++identified owned child PID; never broad node/process/container kills.
++A timeout/forced exit leaves possible commit outcome unknown, not false rollback.
++No teardown deletes raw events, receipts or continuations inside active DB.
++
++Drop INIT message references after construction; clear owned mutable key buffers
++best-effort on close. No claim of erasing immutable JS strings/driver memory;
++driver credentials remain private until pool/process termination.
++Raw child stdout/stderr are piped, drained and discarded, not persisted or
++relayed via regex redaction. Only strict sanitized IPC diagnostics are exposed:
++type = POINTAGE_TEST_STATUS, version = 1, runId, childPid,
++stage in LISTENING/INITIALIZING/READY/FAILED/STOPPED and optional bounded
++code = POINTAGE_UNAVAILABLE. No input echo, exception/SQL stack, headers,
++URL, auth material, hashes of secrets, Personnel or attendance payload.
++Quiet mode supplements, never replaces, output suppression. Parent follows
++the same no-secret-output rule for driver/provision commands.
++
++Default shutdown retains positively identified disposable DB/container for
++evidence; no automatic destructive cleanup. Separate explicitly authorized
++cleanup uses existing F6 ownership/name/loopback/current_database guards and
++exact owned container/volume identity after child exit. Unknown identity or
++shared yuta_cloud/yuta_resto -> STOP. No real attendance or production activation.
++
+@@ -844,0 +1056,6 @@
++U2 handler dependency bắt buộc đi qua D1b server-only consumer accessor.
++Không handler/RSC nào tạo client hoặc đọc bootstrap inputs. Context GET cũng
++phải qua current runtime admission và active-scope resolution; no partial
++availability từ parent proof hoặc cached successful route. D1b listener proof
++không thay Origin/CSRF/operation guards dưới đây.
++
+@@ -933,0 +1151,6 @@
++D1b IPC/owner closure là nơi duy nhất giữ ephemeral bootstrap secrets; no
++process.env credential fallback, stdout/stderr relay hoặc serialized RSC input.
++Owned runtime/client teardown và output suppression theo D1b, không sửa
++foundation audit taxonomy hoặc legal retention. Không log Next request errors
++với body/header/SQL context; raw process diagnostics không thành QA evidence.
++
+@@ -1090,0 +1314,28 @@
++### D1b actual-process bootstrap proof — planned, not executed
++
++U2/U8 và R3/R6/R7 MUST bổ sung actual Next file-route evidence sau Apply approval:
++
++1. Same child PID/runId/main thread owns actual 127.0.0.1:3001 listener, two
++   independently authenticated max:1 handles và all D1/D1a/F8 SQL proofs.
++   Parent-only probe, direct factory/adapter call hoặc mocked handler không đủ.
++2. Concurrent initial context/identify/state requests publish one runtime only
++   after both proofs; failed second client/provider closes partial resources.
++   No credential processing or protected output before complete admission.
++3. Missing/malformed/replayed IPC; production/VERCEL; wrong/mismatched/C17/shared
++   DB; role/member/ACL/helper/body drift; listener/port mismatch; lost socket;
++   forged Host/Forwarded headers; missing provider/connection all fail closed.
++   Standard dev/start/build without owner never instantiate fallback runtime.
++4. Repeat module evaluation with unchanged inventory: one promise/pair; source
++   drift/HMR and IPC disconnect: unavailable + teardown; fresh process repeats
++   all proofs. Old continuation row does not bypass current authority.
++5. Exercise actual migrated synthetic Next context/identify/state/IN/OUT/recover/
++   end routes, dual identify/state.read and raw+receipt atomicity. Keep current
++   20/62 mapping; startup tests supplement, never replace behavioral scenarios.
++6. End/failed startup/forced shutdown closes both clients; capture sanitized
++   process/listener and SQL assertions, source hashes and exact command/exits.
++   DB evidence remains intact; logs/browser/RSC contain no bootstrap secrets.
++   Non-Pointage route smoke test shows no default/global startup modification.
++
++This turn runs planning checks only. Real-process/HMR/socket/SQL proof is still
++NOT_RUN and mandatory before task 3.2/3.8 completion, not inferred from Next docs.
++
+```
+
+## Exact proposed Design content
+
+```text
+## Context
+
+Change `pointage-usable-raw-clocking`, schema `yuta-spec-driven`.
+Xem [Proposal](proposal.md), [Analysis](analysis.md) và exact approved
+[raw-clocking delta](specs/pointage/raw-clocking/spec.md) /
+[authorization delta](specs/authorization/pointage/spec.md).
+Gate 2 đã approve 20 requirements / 62 scenarios. Design này là đề xuất cần
+Sensitive Design review, chưa cho phép Tasks hoặc Apply.
+
+Current repository: existing Backoffice Next.js cloud, postgres-js/Drizzle
+`@yuta/db-cloud`, portable `@yuta/auth`, Zod `@yuta/contracts`.
+Foundation đã có credential, distributed rate limiting, audit và closed six
+operations; chưa có employee route, continuation, raw events hoặc receipt.
+
+Sources trực tiếp: `apps/backoffice/src/server/pointage/{service,authorization}.ts`;
+`packages/db-cloud/src/{pointage-repository,client}.ts`;
+`packages/db-cloud/src/schema/{pointage,personnel,tenancy}.ts`;
+foundation tests và archived foundation Design. `issueCredential` và
+`resetCredential` đã khóa scoped Personnel dossier bằng FOR UPDATE.
+Personnel fields hiện có: id, givenNames, familyName, entryDate, departureDate.
+Không thêm employee identity hoặc Personnel permission.
+
+Authority: root/scoped AGENTS, docs README/CURRENT_STATE/AUTHORITY_MODEL,
+activation/normativity policies, Personnel Product Knowledge, authentication/
+tenancy/database architecture, ADR-003, Production Readiness, UI workflow và
+QA protocol. Code chứng minh implementation baseline, không thay Product authority.
+Gate 1 và hai delta Specs không được sửa.
+
+## Goals / Non-Goals
+
+**Goals:** chốt exact security/transaction/time/UI approach để implement
+approved outcomes sau gate; chứng minh atomic evidence/receipt, stale-client
+protection và shared-device isolation; giữ P13/P14 đúng authority layer.
+
+**Non-Goals:** toàn bộ explicit non-scope trong Proposal và raw R13 giữ nguyên.
+Không generic employee/cloud session, canonical/materialized session table,
+manager UI, credential-management UI, correction, Planning/Today/payroll/POS/
+Site Agent/Display/offline/sync hoặc production provider. Không Technical
+Implementation Contract hay Implementation Plan trong Design này.
+
+## Decisions
+
+### D1 — Placement, trusted entry và test-only composition
+
+Route đề xuất: `apps/backoffice/src/app/pointage/[establishmentSlug]/page.tsx`,
+ngoài authenticated restaurant layout; dùng existing root fonts/styles,
+`NO_APPLICATION_SHELL`. Không redirect qua cloud login hay consume cloud-user
+cookie để authorize employee. Manager placeholder không sửa.
+
+Node-runtime route handlers dưới `/api/pointage/[establishmentSlug]/...`.
+Mỗi handler normalize slug và resolve active organization/establishment bằng
+existing foundation repository. Request IDs/slug/header không tenant authority.
+Mỗi operation re-resolve current active scope, không trust client IDs.
+
+Composition off by default. Current change chỉ có local synthetic test factory:
+explicit `YUTA_POINTAGE_SYNTHETIC_TEST_MODE=true`, `NODE_ENV` development/test,
+`VERCEL` absent, server bind loopback, explicit
+`POINTAGE_TEST_ORIGIN=http://127.0.0.1:3001`. Parse `CLOUD_DATABASE_URL`
+bằng URL parser; hostname chỉ trong exact loopback allowlist `localhost`,
+`127.0.0.1`, `[::1]`, như foundation integration test hiện có.
+
+Exact disposable database-name rule:
+`^yuta_pointage_raw_clocking_test(?:_[a-z0-9]+)?$`.
+Case-sensitive whole-string match, không substring/glob/multiline; match phải
+tiêu thụ toàn bộ name, kể cả khi regex engine cho `$` khớp trước final newline.
+Path URL phải là đúng một leading slash + name hợp lệ, không percent-encoded
+alias, extra slash, whitespace/newline hoặc query/fragment database override.
+expectedName là exact pathname bỏ một leading slash, không trim/case/Unicode
+normalization. Không browser-controlled URL/database selection.
+
+Chỉ sau URL guard mới mở connection cho identity probe:
+`SELECT current_database()` MUST trả actualName exactly equal expectedName
+(case-sensitive), và actualName cũng phải pass cùng whole-string rule.
+Không instantiate usable Pointage/provider hoặc fixture/migration/attendance
+write trước cả hai kiểm tra. Reject `yuta_cloud`, staging/production,
+non-loopback, prefix/suffix sai, actual-name mismatch hoặc probe failure.
+`NODE_ENV=production` hoặc `VERCEL` vẫn deny dù tên DB có vẻ disposable.
+
+Integration và Browser QA dùng cùng guard, không skip/weaken để tiện test.
+Convention này giữ anchored allowlist của
+`packages/db-cloud/test/pointage-repository.integration.test.ts`,
+chỉ đổi capability-specific prefix; không mở quyền real attendance.
+
+Factory inject deterministic trusted-address test provider từ server-owned
+test composition, không từ request/body/header/cookie. Browser QA dùng real
+Next dev route + real disposable PostgreSQL synthetic fixtures, không mocked
+acceptance. Không expose provider selector hoặc spoof-address API cho browser.
+Standard production build/composition luôn unavailable; test module không trở
+thành production default, kể cả flag tồn tại. Missing/untrusted provider từ chối
+trước credential lookup/processing; giữ existing candidate 5/client 30 failures
+trong 15-minute window/block, không redesign thresholds.
+
+Không trực tiếp trust Forwarded/X-Forwarded-For/X-Real-IP/Host cho provenance.
+Test origin là server config kiểm tra chính xác, không derive từ browser Host.
+Origin dùng CSRF check, không client-address hoặc tenant proof.
+Future production provider vẫn cần authority riêng; Design không implement nó.
+
+Alternative: generic Backoffice session/cookie hoặc POS runtime bị loại vì
+khác authority/runtime. Test-mode switch giới hạn environment/composition,
+không field/classifier synthetic versus real employee.
+
+#### D1a — Dual-client / same-database synthetic runtime
+
+Human clarification chỉ cho phép alignment Design/Tasks, chưa resume Apply.
+Mô hình này thuộc existing Backoffice cloud, không runtime/app mới hoặc
+production credential contract. `CLOUD_DATABASE_URL` đã qua D1 là TARGET
+descriptor; bootstrap/migration identity trong URL đó không là runtime client.
+Cả hai nguồn kết nối MUST có cùng exact parsed hostname, port, database name
+với target D1. Không alias/normalization để làm khớp một nguồn khác.
+
+Runtime nhận hai server-only injected clients, xác thực PostgreSQL độc lập:
+`foundationClient` và `rawClient`. Test bootstrap/harness sau D1 identity proof
+có thể chuẩn bị ephemeral role-specific connection material để inject; secrets
+chỉ process/server memory, không log/commit/browser serialization. Không thêm
+production environment credential contract, generic multi-database service
+locator, merged pool hoặc untyped interchangeable database handle.
+
+- `foundationClient`: exact `yuta_pointage_foundation_runtime`, LOGIN,
+  NOSUPERUSER, NOCREATEDB, NOCREATEROLE, NOREPLICATION, NOBYPASSRLS, NOINHERIT.
+  Không membership/MEMBER/USAGE/SET path tới role khác, SET ROLE, database/schema/table/
+  function ownership, WITH GRANT OPTION, ACL administration hoặc owner fallback.
+  Đây chỉ là test-only DB execution identity, không Product permission,
+  employee/manager identity hay production role.
+- `rawClient`: exact `yuta_pointage_raw_writer`; giữ nguyên toàn bộ D4b/F8
+  attributes, privileges, delegated helper và same-connection admission.
+  Không nhận limiter/audit/credential-management quyền từ foundation.
+
+Cả hai MUST dùng SAME exact verified raw-clocking disposable database theo D1,
+không chỉ cùng cluster. `yuta_pointage_foundation_test...` chỉ dành C17 8/8
+regression evidence, KHÔNG dùng làm runtime foundation DB. Không split credential
+validation và raw evidence qua hai databases; không đổi C17 guard/prefix.
+
+##### Exact foundation validation footprint
+
+Nguồn hiện tại: `packages/db-cloud/src/pointage-repository.ts` và
+`packages/db-cloud/src/schema/pointage.ts`. Các cột dưới là SQL column names,
+bao gồm SELECT predicates/join keys, không chỉ returned fields. Chỉ column grants
+được liệt kê, không whole-table grants kể cả khi hiện tại INSERT cần mọi cột.
+
+| Table (public schema) | SELECT columns | INSERT columns | UPDATE columns |
+| `---` | `---` | `---` | `---` |
+| `organizations` | `id, status` | none | none |
+| `establishments` | `id, organization_id, locale, timezone, slug, status` | none | none |
+| `personnel_employee_dossiers` | `id, organization_id, establishment_id, entry_date, departure_date` | none | none |
+| `pointage_employee_credentials` | `id, organization_id, establishment_id, personnel_dossier_id, credential_version, credential_format_version, algorithm_version, key_version, lookup_digest, salt, verifier, superseded_at` | none | none |
+| `pointage_credential_rate_limits` | `organization_id, establishment_id, key_kind, key_digest, window_started_at, failure_count, blocked_until` | `organization_id, establishment_id, key_kind, key_digest, window_started_at, failure_count, blocked_until, updated_at` | `window_started_at, failure_count, blocked_until, updated_at` |
+| `pointage_security_audit_events` | none | `id, organization_id, establishment_id, event_type, outcome, reason_code, manager_user_id, personnel_dossier_id, credential_id, credential_version, requested_operation, occurred_at` | none |
+
+Exact method-to-footprint:
+
+1. `resolveActiveEntryScope`: organizations/establishments SELECT ở trên;
+   `lower(slug)`, active statuses và organization join, không Tenancy write.
+2. `findCredentialCandidate`: credential SELECT ở trên gồm scoped HMAC
+   predicate; không issued/superseded-by administrative columns hay mutation.
+3. `findPersonnelEmploymentPeriod`: chỉ năm Personnel SELECT columns;
+   không names, documents, history hoặc Personnel write.
+4. `isRateLimitBlocked`: SELECT organization_id, establishment_id, key_kind,
+   key_digest, blocked_until từ limiter.
+5. `recordRateLimitFailure`: INSERT tám limiter columns, ON CONFLICT DO NOTHING;
+   SELECT bảy limiter columns gồm WHERE keys và locked row's window/count/block,
+   FOR UPDATE; UPDATE đúng bốn mutable columns. Không SELECT updated_at.
+   Existing four-column UPDATE đủ cho limiter row lock, không source-row UPDATE.
+6. `resetCandidateRateLimit`: WHERE organization_id, establishment_id, key_kind,
+   key_digest (candidate only); UPDATE window_started_at, failure_count,
+   blocked_until, updated_at. Existing behavior không DELETE.
+7. `appendAudit`: INSERT đúng mười hai cột của `auditValues`; không RETURNING,
+   SELECT hoặc audit visibility. UUID được app tạo; không sequence grant,
+   không mở users/Personnel/credential SELECT chỉ vì audit có foreign keys.
+
+Không method nào trong bảy phương thức cần DELETE, credential/source mutation
+hoặc helper EXECUTE. Phát hiện footprint khác khi Apply -> STOP, không widen.
+Validation facade chỉ expose bảy methods này và employee foundation operations;
+existing constructor/repository có administration methods không cho phép publish
+hoặc sử dụng chúng từ synthetic employee runtime. DB grants độc lập MUST deny
+issueCredential, resetCredential, supersession và manager administration.
+
+Ngoài CONNECT tới exact target và USAGE public schema, không grant mới trên
+object khác. Không application-function EXECUTE, đặc biệt exact
+`public.pointage_raw_lock_dossier(uuid,uuid,uuid)`; không continuation
+SELECT/INSERT/UPDATE, raw/receipt access hoặc mutation, Personnel/Tenancy
+mutation, DDL/trigger disable, DELETE/TRUNCATE, schema CREATE hay role/ACL admin.
+Ordinary pg_catalog built-ins/catalog inspection phục vụ query/proof không là
+grant mở application functions. Không audit SELECT/UPDATE hay attendance copy.
+Effective database/schema CREATE và TEMP không được thành DDL bypass.
+
+##### Ordered composition proof and failure behavior
+
+Sau existing D1 environment/URL/actual-target proof, nhưng trước provider và
+usable runtime, kiểm tra đúng thứ tự:
+
+1. Foundation source tuple khớp D1; trên chính authenticated connection chạy
+   `SELECT current_database(), session_user, current_user`.
+   Expected DB đúng D1; cả hai user đúng `yuta_pointage_foundation_runtime`.
+2. Raw source tuple khớp D1; độc lập chạy cùng probe; expected DB đúng D1,
+   cả hai user đúng `yuta_pointage_raw_writer`.
+3. So sánh hai actual names bằng nhau và bằng D1 expected name; mỗi actual name
+   độc lập pass exact whole-string D1 regex. Không SET ROLE để giả identity.
+   Pool/connection provenance phải áp dụng tới clients thực sự dùng, không lấy
+   proof từ connection khác rồi hoán đổi hoặc dùng bootstrap handle.
+4. Foundation effective privileges khớp exact inventory; kiểm tra pg_roles,
+   pg_auth_members, pg_class, pg_namespace, pg_database ownership, pg_proc,
+   pg_default_acl; effective table/column/function/database/schema privileges,
+   PUBLIC/default ACL, pg_has_role MEMBER/USAGE/SET paths và grant options.
+   Cột thêm mới không tự được grant bởi table-wide privilege.
+5. Raw effective proof giữ nguyên D4b/F8; không weaken inventory để cho role
+   foundation mới tồn tại, không thêm raw limiter/audit quyền.
+6. Chỉ sau cả hai proof mới instantiate approved injected synthetic
+   TrustedPointageClientAddressProvider, kiểm tra trusted provenance rồi tạo
+   foundation service và raw runtime. Missing/untrusted provider vẫn deny
+   trước credential hash/lookup; không forwarded/unknown-client/candidate-only fallback.
+
+Missing client, another database/C17 target, owner/bootstrap identity,
+session_user/current_user mismatch, role membership/SET path, unexpected
+privilege/default/PUBLIC inheritance, unprovable target hoặc provider -> generic
+fail closed. Không runtime ACL repair, ALTER ROLE/GRANT fallback, silent client
+swap, production provider, .env/shared-DB fallback hoặc split-database workaround.
+Cần proof thực tế sau future Apply approval; planning không claim role đã tồn tại.
+
+Composition: foundationRepository chỉ backed by foundationClient;
+createPointageServerFoundation chỉ dùng foundationRepository.
+rawClockingRepository chỉ backed by rawClient; createPointageRawClockingService
+consume foundation service, raw repository và approved stateGuard key trong
+composition có approved synthetic provider. Không tráo clients hoặc expose
+administration methods/URLs/credentials vào browser.
+
+Không chia sẻ một PostgreSQL transaction giữa hai clients. Foundation
+prevalidation, distributed limiter và minimized audit giữ transaction/behavior
+hiện có. Final raw acceptance vẫn ở raw writer transaction: D4a delegated
+locks, current credential + Personnel re-read, continuation lock, exact
+operation/lifecycle/accepted-time guards, stateGuard và raw+receipt atomic commit.
+Stale foundation success không thay raw authority hoặc authorize mutation.
+Manager read/auth boundary D9 không được mở rộng bởi validation-only client;
+không cấp users/membership reads cho role này để ghép manager runtime cho tiện.
+
+#### D1b — Actual Next process bootstrap (task 3.2 alignment proposal)
+
+Đây là bounded Sensitive Design / Tasks alignment tại checkpoint 18/32,
+task 3.2 NOT_STARTED. Chỉ planning được sửa; Apply PAUSED đến human approval
+exact revised Design/Tasks hashes và exact implementation allowlist trong
+Tasks. D1/D1a, D4a/D4b, F6/F8, S9, U1, Product, hai Specs, migration 0021,
+sealed UI pack và bảy blockers giữ nguyên. Các checkpoint trước trong Design
+là historical review context, không reset completed tasks hoặc UI-pack status.
+
+##### Repository evidence and alternatives
+
+Inspected baseline: Backoffice declares Next ^16.2.9, installed 16.2.9;
+Node v24.17.0. Existing scripts: dev = next dev -p 3001, start = next start
+-p 3001, build = next build. next.config.ts không có bootstrap hook;
+không có Pointage instrumentation/startup owner. Existing typed development
+review-store global không là authority cho generic registry mới.
+createCloudDatabaseClient mặc định pool không chứng minh max:1; không sửa
+shared factory. Existing guarded Pointage test helper đã có independently
+authenticated postgres-js max:1 + Drizzle clients và exact-target probe.
+Factory raw-clocking-runtime.ts mới có injected clients, không route accessor.
+Existing child-process tests chỉ là implementation pattern, không runtime proof.
+
+Official documentation tại exact tag 16.2.9 được kiểm tra, không dùng latest:
+[custom server](https://raw.githubusercontent.com/vercel/next.js/v16.2.9/docs/01-app/02-guides/custom-server.mdx)
+mô tả public next/prepare/getRequestHandler và httpServer option; entry file
+không qua Next compiler. Custom server có optimization/standalone trade-offs,
+nên chỉ test entry, không thay production startup.
+[instrumentation](https://raw.githubusercontent.com/vercel/next.js/v16.2.9/docs/01-app/03-api-reference/03-file-conventions/instrumentation.mdx)
+await register trước readiness, chạy mỗi server instance và có Node/Edge
+distinction; không chứng minh socket ownership/teardown cho D1.
+Installed next/dist/server/next.js, next.d.ts xác nhận public API, custom
+prepare/getRequestHandlers và close lifecycle. Không import Next private APIs.
+Version drift phải re-review lifecycle evidence; không upgrade để làm test pass.
+
+- A, process-local module alone: bounded cache khả thi nhưng standard CLI không
+  cấp actual listener owner, cleanup hoặc cross-reload guarantee. Không chọn
+  module-cache-only hay environment-driven lazy default.
+- B, dedicated test launcher + in-process bootstrap: CHOSEN, kết hợp narrowly
+  typed process-local promise của A. Cha chỉ chuẩn bị disposable infrastructure
+  và ephemeral inputs; actual Next child tạo/prove hai clients của chính nó.
+- C, instrumentation: không chọn. Hook existence không cung cấp actual socket,
+  shutdown hoặc cache-reload proof; thêm shared startup path không cần thiết.
+- D, plain next dev + env-only, private Next hooks hoặc proxy/sidecar: reject.
+  Không actual socket proof, hoặc tăng topology/registry/secret contract.
+  Không separate Pointage server, app, containerized app runtime hay new port.
+
+##### Owner and exact launch channel
+
+Launcher test-only khởi chạy MỘT Node child hosting existing apps/backoffice
+Next app bằng public next({ dev: true, dir: absoluteBackofficePath,
+hostname: '127.0.0.1', port: 3001, httpServer, quiet: true }).
+Tất cả page/API vẫn do Next file-system router; không implement HTTP business
+routes trong launcher, không reverse proxy hoặc second HTTP service. Chỉ
+test invocation thay CLI invocation; normal dev/start/build/config không đổi.
+Higher-risk process-wide effect nằm trong dedicated test child: listener
+ownership và lifecycle, không shared source/config path. Không launch cùng
+Backoffice khác trên port 3001; EADDRINUSE -> STOP, không auto-select port.
+
+Parent validates existing D1/F6 guards trên target trước provisioning/migration/
+fixtures; admin chỉ ở parent. Parent không gửi admin URL, open JS client,
+parent SQL proof hoặc runtime object qua process boundary. Parent-generated
+role passwords và keys chỉ memory. Không .env write, command-line secrets,
+NEXT_PUBLIC inputs, durable production config hoặc implicit .env.local fallback.
+
+Child uses Node fork IPC, one strict INIT message <= 16 KiB, exact keys:
+type = POINTAGE_TEST_INIT; version = 1; runId = UUIDv4;
+parentPid / childPid = positive integers matching process.ppid / process.pid;
+origin = http://127.0.0.1:3001; listenHost = 127.0.0.1; listenPort = 3001;
+foundationDatabaseUrl / rawDatabaseUrl = role-specific URLs for SAME D1 tuple;
+encodedAuthSecret = canonical base64url 32 random bytes (existing auth format);
+stateGuardKeyBase64 = canonical base64 of exactly 32 random bytes.
+Unknown keys, oversized/malformed/repeated INIT, wrong PID/channel or missing
+IPC reject. No browser/control endpoint can supply INIT or choose provider.
+After INIT only exact STOP { type: POINTAGE_TEST_STOP, version: 1, runId }
+is accepted from this same parent channel; unexpected messages fail closed.
+
+Child environment is explicit allowlist: required Windows OS launch keys
+SystemRoot, WINDIR, COMSPEC, PATH, PATHEXT, TEMP, TMP only when present;
+NODE_ENV = development, YUTA_POINTAGE_SYNTHETIC_TEST_MODE = true,
+POINTAGE_TEST_ORIGIN = exact origin, NEXT_TELEMETRY_DISABLED = 1.
+Never inherit NODE_OPTIONS, arbitrary application secrets or NEXT_PUBLIC keys.
+Parent production/VERCEL check occurs BEFORE environment sanitization; cannot
+erase VERCEL to make an unsafe launch eligible. Child repeats live checks.
+Private projected D1 environment uses foundationDatabaseUrl as
+CLOUD_DATABASE_URL target descriptor; raw URL is separately checked against it.
+Neither URL is installed in process.env or read from Next dotenv loading.
+Normal CLI/build/start has no IPC owner/anchor and remains unavailable even
+with flags. No production provider is constructed; deterministic synthetic
+provider is fixed in server-owned child code, never derived from headers.
+
+##### Actual listener, admission and consumer handoff
+
+Order in actual child:
+
+1. Validate INIT/environment/URL tuples/roles and main-thread process identity,
+   before creating either client. Bind owned node:http server to exact IPv4
+   127.0.0.1:3001 with generic 503 gate. Inspect server.listening and address()
+   for exact address/port; derive origin from that socket tuple and compare
+   exact POINTAGE_TEST_ORIGIN. Config or successful parent fetch alone is not
+   listener proof. No credentials processed at this stage.
+2. Prepare existing Next against that exact httpServer. Before delegating any
+   request, verify socket.localAddress/localPort, live listener and process
+   generation; Host/Forwarded/X-Forwarded-\* never prove provenance. Origin
+   remains separate D8 CSRF check. No extra public health/bootstrap endpoint.
+3. Install one non-enumerable, non-writable, non-configurable property on Node
+   process keyed Symbol.for('yuta.pointage.raw-clocking.test-bootstrap.v1').
+   Value is frozen, Pointage-only typed admission accessor; private closure
+   owns INIT, listener, clients, state and promise. No mutable globalThis bag,
+   arbitrary keys, generic get/set/register or replace-client method.
+4. Server-only raw-clocking-bootstrap.ts, compiled by Next, supplies exactly
+   createPointageRawClockingRuntime to that one typed accessor. The child
+   DOES NOT import server-only application modules outside Next compilation
+   or enable global react-server conditions. The constructor callback is
+   fixed in this module, never supplied by handlers/request/browser.
+5. On the first accessor call, synchronously reserve the one initialization
+   promise, then create two distinct postgres-js max:1/Drizzle clients in this
+   actual process, reusing guarded test-client construction. On each actual
+   authenticated handle prove current_database() and session_user/current_user:
+   foundation = yuta_pointage_foundation_runtime; raw = yuta_pointage_raw_writer.
+   Both actual names equal the exact D1 target and independently pass the
+   whole-string rule. Rerun foundation D1a effective inventory and raw D4b/F8
+   body/owner/ACL/OID proof on these handles. No SET ROLE, parent proof,
+   admin/C17/default DB client, ACL repair or silently replaced connection.
+6. Only then instantiate fixed synthetic trusted-address provider and the
+   runtime; publish READY only after complete factory admission. Factory's
+   current per-operation requireReady and final raw transaction rechecks stay.
+   Neutral context availability additionally runs requireReady and existing
+   active-entry scope resolution, returning only { available: true } or 503;
+   it adds no authorization operation, dossier projection or credential work.
+
+Exact dependency: seven Node route.ts handlers -> raw-clocking-http.ts ->
+server-only getPointageRawClockingConsumer() in raw-clocking-bootstrap.ts ->
+typed process admission accessor -> existing admitted runtime.
+Consumer exposes only context/identify/readState/mutate/recover/end functions,
+not clients, URLs, admin/owner, provisioning, fixtures or generic DB factories.
+Internal constructor types are not consumer exports. Enforce import inventory
+and browser/RSC negative tests. The immutable process anchor is a narrowly
+scoped in-process capability, NOT a security sandbox against hostile server
+code/OS users; existing trusted-repository/host assumption remains explicit.
+
+No anchor, failed admission, wrong environment/listener/DB/role/privilege/helper/
+provider, connection failure or different worker/process -> D8 generic 503
+POINTAGE_UNAVAILABLE without credential work or partial identity. Readiness
+in another route never authorizes a bypass. Every accessor/dispatch checks
+live generation/listener/environment; every service call retains requireReady.
+A reconnect on either fixed max:1 client repeats identity/effective proof before
+use; reconnect failures cannot create a replacement pair or fallback identity.
+
+##### Concurrency, reload and failure lifetime
+
+Generation = child PID + parent-generated runId; main thread only. State starts
+INITIALIZING on the first call; all concurrent calls await the SAME promise.
+No partially admitted pair is cached/published. READY holds one bounded runtime.
+Initialization failure becomes terminal FAILED/UNAVAILABLE for that generation;
+close any opened client, drop input references, return only generic failure.
+No automatic retry, second factory invocation or in-process replacement.
+Live prerequisite failure also marks FAILED and initiates teardown; ordinary
+403/409/429 business outcomes do not. New admission needs a fresh child launch.
+
+Do not rely on Next module cache/HMR semantics. Immutable owner closure remains
+with actual process, while route module reload may obtain only its same typed
+promise. No pool lives only in an evictable module. Source/config/dependency
+change invalidates the generation: parent watches and child checks exact
+launch inventory hashes before each admission/dispatch. Inventory covers
+Backoffice src + test bootstrap entry files, imported auth/contracts/db-cloud/
+tenant source, their manifests, Backoffice config/tsconfig and pnpm-lock.yaml;
+path additions/removals also invalidate. Exclude .next generated output.
+Changes -> deny new work and teardown, no hot replacement or automatic restart;
+fresh manual launch recaptures and proves. A harmless module-cache reload with
+unchanged inventory must reuse the same promise/pair, never duplicate pools.
+Watch events alone are not proof; checksum validation is authoritative.
+
+Actual Next process/thread/generation agreement must be demonstrated by future
+real-route tests, including cache reload and process restart. Documentation
+does not establish this application-specific result. If Next executes the
+accessor in another worker/realm without the owned anchor, it is unavailable:
+STOP rather than global env fallback, cross-process registry or mocked proof.
+After restart the old runtime is dead; new clients require full admission.
+Existing continuation rows alone confer no authority; D2-D4 validation and
+shared-device clearing still apply.
+
+##### Teardown, diagnostics and disposable lifetime
+
+SIGINT/SIGTERM, IPC disconnect/STOP, listener failure, source drift or terminal
+admission failure stop new requests immediately. Drain owned in-flight work
+for at most 10 seconds, then close remaining owned HTTP/HMR sockets and call
+Next close. End both postgres clients exactly once, including partial startup,
+with a 5-second close deadline; drop runtime/promise/secret references.
+Parent gives child 20 seconds to exit, then may terminate ONLY that positively
+identified owned child PID; never broad node/process/container kills.
+A timeout/forced exit leaves possible commit outcome unknown, not false rollback.
+No teardown deletes raw events, receipts or continuations inside active DB.
+
+Drop INIT message references after construction; clear owned mutable key buffers
+best-effort on close. No claim of erasing immutable JS strings/driver memory;
+driver credentials remain private until pool/process termination.
+Raw child stdout/stderr are piped, drained and discarded, not persisted or
+relayed via regex redaction. Only strict sanitized IPC diagnostics are exposed:
+type = POINTAGE_TEST_STATUS, version = 1, runId, childPid,
+stage in LISTENING/INITIALIZING/READY/FAILED/STOPPED and optional bounded
+code = POINTAGE_UNAVAILABLE. No input echo, exception/SQL stack, headers,
+URL, auth material, hashes of secrets, Personnel or attendance payload.
+Quiet mode supplements, never replaces, output suppression. Parent follows
+the same no-secret-output rule for driver/provision commands.
+
+Default shutdown retains positively identified disposable DB/container for
+evidence; no automatic destructive cleanup. Separate explicitly authorized
+cleanup uses existing F6 ownership/name/loopback/current_database guards and
+exact owned container/volume identity after child exit. Unknown identity or
+shared yuta_cloud/yuta_resto -> STOP. No real attendance or production activation.
+
+### D2 — Opaque continuation và authenticity
+
+Chọn 32 cryptographically random bytes, base64url không padding (43 chars),
+prefix `ptc1_`; secret chỉ có trong HTTPS response rồi browser module memory.
+Không JWT, không signed serialized employee context, không cookie/sessionStorage/
+localStorage/IndexedDB/service worker/history state/URL storage. Loopback HTTP
+chỉ là isolated synthetic test exception, không production policy.
+
+Durable continuation record lưu SHA-256(secret bytes), không token/plaintext
+credential. 256-bit random secret chống guessing; digest lookup scoped
+organization/establishment, server record bind dossier và exact credential ID/
+version. Khi lookup khớp, so sánh digest bằng constant-time primitive,
+revalidate current credential và build fresh PointageEmployeeContext cho exact
+operation server-side. Không expose record, role/grant hoặc context.
+
+Mỗi identify thành công cấp token mới; không rotate giữa một interaction để
+tránh lost-rotation response và parallel retry ambiguity. Không refresh token
+hoặc sliding absolute lifetime. Rotation là new identification/new random
+token; old interaction phải kết thúc hoặc hết hạn, không alias sang token mới.
+
+Lifetime: absolute 120 seconds từ DB issue time; idle 60 seconds từ latest
+successful authorized state/mutation/replay. Idle deadline không vượt absolute
+deadline. Failures/polling/background activity không gia hạn; UI không heartbeat
+tự động. Mỗi valid foreground state request/user mutation update idle deadline
+atomically, trả remaining durations để client dùng monotonic timer cho clearing.
+Server deadlines là authority; client clock không được kéo dài TTL.
+
+Reset/regeneration: mỗi authorized employee operation đọc current credential
+trong cùng dossier lock với reset. Superseded credential hoặc version mismatch
+deny mọi continuation old-version, kể cả receipt replay. Không sửa crypto hoặc
+issue/reset policy. Không cần background invalidation job; ended/expired/version
+checks chặn ngay future request. Credential reset không phải raw mutation.
+
+Alternative: stateless JWT cần serialize claims, khó immediate end/reset và
+shared-device handling; ambient cookie dễ share giữa tabs/next users. Opaque
+server-side revocable state phù hợp bounded interaction; không thành canonical
+identity hoặc attendance source. XSS/malicious browser extensions có thể đọc
+live memory; chống qua D10, không tuyên bố memory là bảo vệ trước compromised
+device/TLS endpoint.
+
+### D3 — Shared-device lifecycle và end semantics
+
+State flow:
+CREDENTIAL_ENTRY -> IDENTIFY_PENDING -> ACTIVE_STATE -> MUTATION_PENDING ->
+RECEIPT -> ENDING -> NEUTRAL.
+ACTIVE_STATE có NOT_CLOCKED_IN/CLOCKED_IN; domain mutation chỉ khi server đã
+cấp state guard. Mỗi committed receipt hiển thị 10 seconds rồi auto-end; explicit
+`Terminer` kết thúc sớm. Muốn mutation khác sau receipt bắt đầu interaction mới;
+multiple daily sessions vẫn không quota. Không extra history/totals view.
+
+Credential entry chỉ memory trong password input; clear ngay sau identify
+request settle, cả failure. Identity/state chỉ render sau valid identify +
+current-state load thành công; không SSR sensitive data.
+
+Explicit end: ngay lập tức phủ neutral UI, clear personal DOM synchronously,
+bump interaction-generation counter, abort pending fetch callbacks và gửi
+best-effort authenticated end request. Server end khóa dossier rồi continuation,
+set ended_at một lần; retry end idempotent. End capability chỉ terminate own
+continuation, không thêm operation/grant hoặc revoke/suspend credential.
+Own end được xử lý kể cả eligibility/version đã mất; không trả employee data.
+
+Phân biệt local clearing và server-confirmed end:
+
+- ENDING không cho state read/mutation/replay; không hiển thị employee.
+- End hoàn tất khi server commit ended_at (hoặc server-enforced expiry);
+  không claim network timeout đã revoke trên server.
+- Nếu end response mất/cloud unavailable, browser vẫn clear hết secrets/data,
+  không retry attendance, không restore interaction; server authorization còn
+  giới hạn bởi idle/absolute expiry. Không báo “server đã hủy” khi chưa có proof.
+- Any request sau committed end/expiry bị deny. Request đã được linearize trước
+  end có thể commit trước end; abort fetch không rollback server. End acknowledgement
+  chỉ sau lock order bảo đảm earlier accepted mutation đã settle.
+- Không thể hứa remote invalidation tức thì lúc offline; không định nghĩa
+  offline “end confirmed”. Đây là explicit failure semantics, không weakening
+  quyền sau completed interaction end.
+
+Client clears ngay khi idle deadline, absolute deadline, pagehide, visibility
+hidden, navigation/unmount hoặc explicit end. Không gia hạn timer bởi moving
+mouse. Khi hidden, best-effort end; bfcache entry lưu neutral DOM, không personal
+React tree. pageshow (gồm persisted), refresh, back/forward luôn neutralize trước
+render và yêu cầu identify mới; không auto-fetch previous employee bằng token.
+
+Tab duplication mở neutral page; không dùng copyable durable store hoặc
+BroadcastChannel/postMessage truyền token. Browser restart không có token để
+resume. Outstanding response chỉ apply khi same live generation; late success/
+identity không repopulate sau clearing. No-store alone không đủ cho history,
+nên bắt buộc synchronous pagehide clearing + pageshow reset.
+
+Khi timeout mutation trong live interaction, giữ request tuple trong memory
+cho exact retry; không auto-end vì timeout ngay lập tức. Nếu TTL/end/navigation
+xảy ra, purge tuple cùng interaction; không phục hồi lịch sử sau refresh hoặc
+tạo replacement mutation tự động. Người dùng identify mới và xem current state;
+existing committed receipt vẫn recoverable server-side bằng exact known tuple
+và current authority, nhưng không có history/list endpoint.
+
+Tests phải chứng minh tất cả transitions này; không claim UI privacy đối với
+ảnh chụp OS, shoulder surfing hoặc compromised browser ngoài app threat model.
+
+### D4 — Trusted Personnel projection và current authorization
+
+Không tạo Personnel contract/grant mới. Scoped query chỉ lấy
+id, given_names, family_name, entry_date, departure_date từ
+personnel_employee_dossiers với organization_id + establishment_id + id.
+Server compose displayName = trimmed givenNames + single separator + familyName;
+không persist tên vào Pointage tables hoặc expose từng Personnel field riêng.
+P5 approve minimal own projection; Personnel §3 cho downstream projections;
+OWNER-only dossier-management không bị mở cho employee/MANAGER.
+
+Identifier + nonempty names + valid entry/departure/date/timezone phải valid.
+Missing/cross-scope/unverifiable -> generic access/unavailable failure, không
+fabricated name/employee. Pointage không update Personnel.
+
+Identify, state.read, operation.create đều evaluate current lifecycle inclusive
+entry/departure theo authoritative current establishment business date.
+Không dựa vào CLOCK_IN grouping date cho later CLOCK_OUT.
+Missing lifecycle/invalid timezone fail closed, không default Europe/Paris.
+
+Public handlers không nhận PointageEmployeeContext input. Prevalidation dùng
+existing credential primitives/provider/rate limits, nhưng trước cấp continuation
+hoặc expose state phải transactionally recheck current credential + scoped
+Personnel; chỉ lúc đó tạo fresh context cho exact operation. Không dùng
+pre-transaction success để bypass reset/departure race.
+
+#### Identify trả initial state — không gộp hai operation authorities
+
+Credential verification vẫn chạy sau trusted scope/provider/rate prerequisites
+của foundation. Với verified proof, successful identify + state boundary là:
+trusted scope resolution/recheck dưới transaction locks -> exact
+`pointage.employee.identify` authorization + current Personnel eligibility ->
+continuation issuance candidate -> riêng exact
+`pointage.employee.state.read` authorization + current scope/credential/version/
+Personnel re-check -> canonical raw-chain validation -> derived minimal own
+state -> successful continuation + state response sau commit.
+
+Context mang operation identify không được dùng như state.read context.
+Cả hai exact guards phải được gọi và pass, không infer guard thứ hai từ
+identify success hoặc continuation existence; không merge identifiers/new grant.
+Candidate secret/digest/binding chỉ ở server memory, chưa usable/persisted.
+Trong cùng transaction và D4 lock order, derive state/projection trước INSERT
+continuation. Final server-time check trước INSERT re-evaluate lifecycle cho
+cả hai operations tại current business date (kể cả midnight), giữ current
+scope/version prerequisites; DB issue/deadline timestamps theo D2.
+Stage payload server-side, COMMIT rồi mới expose token/name/state; không
+commit identify-only row rồi gọi state.read ở transaction khác.
+
+State.read denied, lifecycle/scope uncertainty, inconsistent raw chain hoặc DB
+failure trước commit -> rollback candidate/insert, discard secret và staged
+state; existing generic access/unavailable response, không protected identity/
+state/token hoặc partial identify-only success. Identify không tạo raw event/
+receipt. Nếu COMMIT outcome/response mất, có thể có orphan continuation đã vượt
+đủ cả hai guards; không claim success, re-show secret hoặc bypass state.read.
+Token đó hết hạn D2, caller identify mới như D8. Test phải inject failure sau
+identify guard nhưng trước state-read/commit để chứng minh response/issuance
+không tạo partial authorization.
+
+Lock order không đổi: active organization FOR SHARE -> establishment FOR SHARE
+-> scoped Personnel dossier FOR UPDATE -> continuation FOR UPDATE khi có.
+READ COMMITTED trên cùng connection/transaction; không autocommit lock call.
+Ba lock đầu dùng duy nhất delegated function D4a; sau return, invoker đọc lại
+minimal Personnel/current credential và khóa continuation bằng full
+org+est+dossier+continuation key. Quyền UPDATE hai cột continuation đủ cho
+FOR UPDATE trên chính table đó; không suy ra quyền lock Tenancy/Personnel.
+Locks giữ đến outer COMMIT/ROLLBACK, không chỉ đến function return.
+
+Foundation issueCredential/resetCredential (pointage-repository.ts) vẫn dùng
+scoped dossier FOR UPDATE trong transaction riêng. Personnel updateEmployee
+(entryDate) và setEmployeeDeparture ghi cùng dossier với full scope + revision
+predicate; PostgreSQL row UPDATE conflict với FOR UPDATE dù writer không gọi
+helper. lockScopedPersonnel của formalites-personnel-draft-repository.ts cũng
+FOR UPDATE cùng row. Không sửa các writer này hoặc biến advisory locks
+idempotency hiện có thành cross-capability coordination.
+Nếu writer khác commit trước lock, Pointage đọc lại current row sau khi chờ;
+nếu Pointage lock trước, writer đó chờ đến transaction end. Current parent
+status/timezone không đổi dưới FOR SHARE. Lifecycle/version vẫn được kiểm tra
+ở D4 và actual accepted instant D7; lock không phải authorization.
+
+Deadlock/lock timeout/statement timeout: abort whole transaction, generic
+unavailable; giữ lock_timeout 2s, statement_timeout 5s, không bỏ lock, nới grant
+hoặc đổi request identity. Không swallow lock error trong savepoint rồi
+tiếp tục; rollback savepoint có thể release locks. Unknown COMMIT vẫn theo D5.
+
+#### D4a — Bounded delegated row locking (reopened proposal)
+
+PostgreSQL 17 yêu cầu UPDATE trên ít nhất một cột của mỗi table bị row-lock;
+SELECT-only không đủ. Đây là privilege prerequisite, không permission Product.
+[SELECT privilege](https://www.postgresql.org/docs/17/sql-select.html) và
+[row-lock compatibility](https://www.postgresql.org/docs/17/explicit-locking.html)
+là platform references; actual disposable proof còn bắt buộc.
+
+| Option                                    | Đánh giá                                                                                                                                                                                                                      | Quyết định                                                         |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| A — UPDATE một cột để lock                | UPDATE(id) dù hẹp vẫn cho SQL mutate key; convention “code không UPDATE” không chặn alternate writer. Thêm trigger/RLS trên Tenancy/Personnel để biến grant thành lock-only sẽ sửa owning boundary ngoài slice.               | Loại; không cấp cho runtime writer.                                |
+| B — SECURITY DEFINER chỉ lock             | Giữ đúng PostgreSQL tuple locks với existing writers, tách quyền lock khỏi quyền application mutate. Thêm một privileged executable boundary có owner/ACL/body cố định, được review trong revision này.                       | Chọn dưới đây; chưa authorize implementation.                      |
+| C — transaction advisory lock             | Existing issue/reset không dùng advisory key; Personnel keys hiện là operation/actor/request-specific, không chung dossier lock. Không tự phối hợp với UPDATE hay direct SQL writer.                                          | Loại; muốn dùng phải đổi nhiều writer ngoài scope.                 |
+| D — FK KEY SHARE, SERIALIZABLE hoặc mutex | KEY SHARE không chặn non-key lifecycle/timezone UPDATE; isolation alone không giữ nguyên D4 và mọi existing writer không cùng protocol; process mutex không cross-instance. Full-table locks quá rộng, không least privilege. | Loại; không có cơ chế tương đương đã chứng minh tốt hơn row locks. |
+
+Exact signature đề xuất:
+`public.pointage_raw_lock_dossier(p_organization_id pg_catalog.uuid,
+p_establishment_id pg_catalog.uuid, p_personnel_dossier_id pg_catalog.uuid)
+RETURNS pg_catalog.void`.
+
+- Một function, không overload/default/variadic/table-name/column-name/SQL
+  argument, không generic lock API; LANGUAGE plpgsql, VOLATILE, PARALLEL UNSAFE,
+  SECURITY DEFINER, CALLED ON NULL INPUT. Bất kỳ NULL -> generic exception,
+  không dùng STRICT để silently return trước locks.
+- Inputs chỉ từ trusted server-resolved scope + verified dossier binding D4,
+  không browser DTO/GUC/headers/session claims. Function không authenticate
+  employee, không trả context và không thay exact operation guards.
+- Trước lock, require session_user là dedicated `yuta_pointage_raw_writer`;
+  lỗi caller/null/missing/inactive/mismatched row có cùng SQLSTATE P0001,
+  message `POINTAGE_LOCK_UNAVAILABLE`, không DETAIL/HINT chứa IDs/status/data.
+  Runtime mapping vẫn D8 generic unavailable, không expose SQL error.
+- Ba static PERFORM statements, mỗi statement require FOUND:
+  (1) public.organizations WHERE id = p_organization_id AND status = 'active'
+  FOR SHARE;
+  (2) public.establishments WHERE organization_id = p_organization_id AND
+  id = p_establishment_id AND status = 'active' FOR SHARE;
+  (3) public.personnel_employee_dossiers WHERE organization_id = p_organization_id
+  AND establishment_id = p_establishment_id AND id = p_personnel_dossier_id
+  FOR UPDATE. Không filter employment dates trong helper; eligibility và
+  own-end exception vẫn D3/D4, không deny end vì former status.
+- Return void only; không SELECT INTO result/return name, lifecycle, token,
+  credential, row hoặc lock ownership claims. Missing tuple errors abort outer
+  transaction; không return partial lock success.
+- Fixed function-local `search_path = pg_catalog, pg_temp`; public tables và
+  helper call luôn schema-qualified; referenced types/functions/operators dùng
+  pg_catalog-qualified identities (UUID equality không resolve qua caller
+  schema). Không dynamic SQL, EXECUTE, dblink, filesystem/network, user callbacks,
+  SET ROLE/SESSION AUTHORIZATION, mutable request configuration hoặc secret.
+- Không INSERT/UPDATE/DELETE/TRUNCATE, DDL hay explicit table lock trong body.
+  Row-lock bookkeeping không đổi application columns. Không tự touch/end,
+  issue/reset, accept event hoặc commit; tất cả nằm ở invoker bên ngoài.
+- Không lock continuation trong helper: invoker có column UPDATE đã duyệt,
+  dùng full scoped key sau ba delegated locks. Reentrant helper call từ raw
+  INSERT trigger D5/D6 khóa lại cùng tuple trong same outer transaction.
+
+Một coherent foreign tuple từ compromised DB login có thể gây lock contention;
+function không phải RLS/tenant-authentication layer. Full predicates ngăn ghép
+mismatched tuple; server guards phải chặn chọn foreign tuple trước call.
+Không publish function qua browser/manager transport. Direct DB credential
+compromise/privileged DBA nằm ngoài employee threat model; không claim function
+tự chứng minh tenant authority hoặc loại mọi denial-of-service. Timeouts và
+same-session preflight giới hạn fail-closed execution, không thay public limiter.
+
+#### D4b — Owner, ACL và invoker separation
+
+Exact owner: `yuta_pointage_raw_lock_owner`, NOLOGIN, NOSUPERUSER,
+NOCREATEDB, NOCREATEROLE, NOREPLICATION, NOBYPASSRLS, NOINHERIT; không member
+role khác, không table/database/schema owner. Chỉ owns exact helper function.
+Dedicated runtime caller `yuta_pointage_raw_writer` cũng non-superuser,
+NOCREATEDB/NOCREATEROLE/NOREPLICATION/NOBYPASSRLS; không membership, inheritance,
+ADMIN/GRANT OPTION hoặc SET ROLE path tới lock owner, migration owner hay
+existing privileged foundation/Personnel roles.
+
+Exact helper-owner object privileges ngoài inherent function ownership:
+
+| Object                             | Allowed owner privileges                                        |
+| ---------------------------------- | --------------------------------------------------------------- |
+| public schema                      | USAGE only, no persistent CREATE.                               |
+| public.organizations               | SELECT(id, status), UPDATE(id) only.                            |
+| public.establishments              | SELECT(id, organization_id, status), UPDATE(id) only.           |
+| public.personnel_employee_dossiers | SELECT(id, organization_id, establishment_id), UPDATE(id) only. |
+| Other application tables/functions | No new grant, no inherited mutation/execution privileges.       |
+
+UPDATE(id) tồn tại ở inaccessible lock owner chỉ để PostgreSQL cho row locking;
+không cấp/inherit cho runtime, không column grants WITH GRANT OPTION. Đây là
+explicit delegated DB privilege proposal, không Personnel application permission.
+Locked function body không chứa mutation nên caller không sử dụng được owner
+UPDATE để đổi Tenancy/Personnel. Owner NOLOGIN alone không đủ: phải chứng minh
+không role membership/SET ROLE path và không owner-controlled writable schema.
+
+Runtime giữ F8: SELECT/INSERT cần thiết, continuation UPDATE chỉ idle_expires_at/
+ended_at; không thêm UPDATE bất kỳ cột nào của ba source tables, không broad
+table UPDATE, DDL/trigger-disable/DELETE/TRUNCATE hoặc owner fallback.
+Bổ sung duy nhất EXECUTE trên exact helper signature, không WITH GRANT OPTION.
+Existing foundation credential lifecycle/limiter operations giữ own existing
+repository/authority; helper không cấp credential-management hoặc limiter
+mutation quyền cho raw writer, không hợp nhất runtime writer với privileged
+foundation/Personnel connection để lấy quyền lock.
+
+D1a làm rõ riêng synthetic employee runtime: foundation validation dùng exact
+validation-only role/client trong cùng database; credential issue/reset vẫn
+ngoài runtime này. Không thay helper body/owner/ACL hoặc raw writer inventory.
+
+Migration revokes all function EXECUTE from PUBLIC và mọi non-owner/non-writer
+grantee; grant EXECUTE chỉ dedicated writer (owner's inherent right remains).
+Không dựa vào default ACL. Function create, ownership transfer, PUBLIC revoke
+và final grant nằm trong cùng journaled migration transaction, không window
+publicly executable. Final schema không writable bởi writer/PUBLIC/lock owner.
+Schema ownership vẫn migration boundary, không Pointage runtime.
+
+[SECURITY DEFINER precautions](https://www.postgresql.org/docs/17/sql-createfunction.html)
+giải thích owner execution, safe lookup và default PUBLIC EXECUTE; lựa chọn
+tên/ACL/body/role isolation trên là Design của YUTA, không upstream recommendation.
+
+Trước instantiate synthetic provider/runtime và trước mỗi raw dossier
+transaction trên chính connection dùng cho operation: verify exact session/
+current user; function OID/signature, owner, SECURITY DEFINER/language/volatility/
+parallel/null behavior, fixed search_path và body fingerprint khớp reviewed
+journaled migration; verify roles, object owners, effective table/column/function/
+schema privileges và defaults/PUBLIC/inherited paths. Check pg_catalog.pg_proc,
+pg_roles, pg_auth_members, pg_class, pg_namespace, pg_default_acl;
+has_table_privilege + has_column_privilege + has_function_privilege;
+pg_has_role với MEMBER/USAGE/SET, không chỉ trực tiếp grants.
+[Privilege inquiry](https://www.postgresql.org/docs/17/functions-info.html)
+là catalog reference; expected body fingerprint được chốt từ generated/reviewed
+migration khi Apply được duyệt, không browser/env supplied.
+
+Owner missing/wrong/LOGIN/superuser, extra UPDATE, unsafe schema/search_path,
+PUBLIC EXECUTE, missing EXECUTE, changed body/signature hoặc không chứng minh
+được effective privileges -> refuse composition/operation before credential/
+protected processing, no helper or attendance write; không auto-repair grants,
+fallback invoker/owner, hoặc “test-only” bypass. Helper còn deny wrong session
+caller nếu accidental EXECUTE grant xuất hiện. Concurrent malicious DBA changing
+ACL/body không thể bị app kiểm soát tuyệt đối; privileged migration/admin không
+được chạy khi synthetic runtime hoạt động, không giả catalog check là DBA-proof.
+
+Expiry/version/lifecycle deny trước state/receipt lookup response. New current
+credential sau reset có thể authorize own original receipt với exact request
+tuple; old continuation không thể. Receipt không bound như authorization vào
+old continuation, nên reset không phá recoverability sau valid re-identify.
+
+### D5 — Atomic transition, stale guard và linearization
+
+Dùng PostgreSQL transaction READ COMMITTED + scoped dossier row FOR UPDATE
+để serialize mọi writer cùng employee, không session/counter/projection table.
+Các statement đọc head/history chạy sau khi lock đã acquire; không dựa vào
+snapshot đọc trước lock. Invoker gọi D4a trong cùng transaction thay direct
+SELECT FOR SHARE/UPDATE trên Tenancy/Personnel. Schema raw INSERT trigger là
+SECURITY INVOKER, gọi exact schema-qualified D4a helper bằng NEW full scope trước
+chain read/validation; reentrant locks không thay order hoặc end transaction.
+Do đó alternate raw writer cũng gặp cùng dossier lock và append enforcement;
+không biến trigger thành arbitrary SECURITY DEFINER write executor.
+
+Từ current canonical raw head, server tạo opaque stateGuard =
+HMAC-SHA256(dedicated HKDF-SHA256 key, versioned length-delimited encoding của
+organization/establishment/dossier + head event ID hoặc START).
+Key derive existing Pointage secret bằng label riêng
+`yuta/pointage/raw-state-guard/v1`, không đổi credential keys/algorithms.
+Browser nhận MAC base64url 43 chars, không nhận head ID/dossier/context.
+MAC là stale-state precondition, không employee authority, không serialize
+trusted employee context; còn cần valid continuation và current checks.
+
+Command gửi requestId, kind, observedStateGuard. Receipt lookup xảy ra sau
+current authorization nhưng trước fresh stateGuard comparison:
+
+1. Re-resolve/lock scope, dossier, continuation; recheck validity/eligibility.
+2. Lookup scoped committed receipt by requestId. Same intent fingerprint ->
+   return original joined receipt; different intent -> request conflict.
+3. Với new request: fully validate existing event chain, compute current guard,
+   constant-time compare observed guard. Mismatch -> state conflict/no event.
+4. Evaluate exact four transitions. Only no-open+IN hoặc open+OUT accepted.
+5. Sample authoritative acceptance clock dưới locks, recheck deadlines/lifecycle
+   cho instant này; append raw event và linked receipt, validate constraints.
+6. Commit cả hai; chỉ sau successful commit trả committed receipt.
+   Nếu DB connection mất tại COMMIT -> unknown outcome, không tự chạy new identity.
+
+Stale OUT sau session A đã close và B open: guard(A head) khác guard(B head),
+deny dù kind OUT hợp lệ theo state chung. Stale IN từ một no-open state trước
+các sessions khác cũng conflict; UI refresh state rồi explicit new intent,
+không rebase request cũ vào head mới.
+
+Same-ID double submit serialize; first commit -> second receipt replay, không
+re-evaluate four-state transition. Distinct competing IN/OUT: first thay head,
+second stale guard/transition conflict. Không hai request cùng head commit.
+No-open induction: empty chain = none; alternation IN/OUT + contiguous ordinal
+cho tối đa một open, no overlap. Raw accepted order là dossier ordinal, không
+UUID sorting hoặc browser clock.
+
+Concrete DB limits: lock_timeout 2 seconds, statement_timeout 5 seconds cho
+bounded transactions; timeout là unavailable/unknown result, không Product quota.
+Không tự retry ambiguous commit. Safe pre-commit rollback retry dùng cùng tuple.
+Đây là Design choices, không sửa normative business rules.
+
+[PostgreSQL row-lock semantics](https://www.postgresql.org/docs/current/explicit-locking.html)
+xác nhận conflicting writers chờ lock tới transaction end; application
+serialization/proof ở trên là thiết kế của change, không phụ thuộc process-local mutex.
+
+Alternative: process mutex không bảo vệ multiple server instances; unique
+active-session table vi phạm P10; chỉ check latest kind không chống stale OUT.
+
+### D6 — Receipt, request identity và minimum additive persistence
+
+Ba additive tables, đều cloud-only; không fourth session/projection table.
+Schema definitions trong @yuta/db-cloud, transport types chỉ ở @yuta/contracts.
+Mọi query có trusted organization + establishment; employee query thêm dossier.
+
+#### Raw table: pointage_raw_events
+
+| Field                                                     | Type / purpose                                                                       |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| id                                                        | UUIDv7 server-generated; event identity, không ordering authority.                   |
+| organization_id / establishment_id / personnel_dossier_id | UUID, full tenancy/Personnel reference.                                              |
+| ordinal                                                   | bigint > 0, contiguous từ 1 theo dossier; reconstruction order, không counter table. |
+| kind                                                      | varchar CHECK IN ('CLOCK_IN','CLOCK_OUT'); chỉ hai raw kinds.                        |
+| accepted_at                                               | timestamptz(6), server DB-observed instant.                                          |
+| timezone_name                                             | text, validated establishment IANA name snapshot.                                    |
+| utc_offset_seconds                                        | integer, observed zone offset tại accepted instant; DST/history reconstruction.      |
+| business_date                                             | date, event-local calendar date tại acceptance.                                      |
+
+Không name copy, credential secret, correction, payroll/Planning, synthetic flag,
+canonical session ID hoặc expected end date. Unique (scope+dossier+ordinal),
+unique (scope+dossier+id), FK establishment và full scoped Personnel, ON DELETE
+RESTRICT. Index scoped accepted_at/business_date cho bounded manager reads.
+
+BEFORE INSERT trigger: acquire D4a parent/dossier locks qua exact helper trong
+same transaction, rồi invoker validate full existing chain; helper không cấp
+UPDATE/DDL cho trigger caller. Reject missing/corrupt scope, compute next
+ordinal/allowed kind; không tin
+client-supplied accepted_at/calendar/ordinal. DB-owned clock/calendar computation
+assign fields; backward clock so với previous event -> fail closed, không clamp.
+BEFORE UPDATE/DELETE và statement BEFORE TRUNCATE triggers reject trên raw table.
+Repository không export update/delete/truncate/raw-upsert path.
+
+#### Receipt table: pointage_raw_command_receipts
+
+| Field                                                     | Type / purpose                                                                |
+| --------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| organization_id / establishment_id / personnel_dossier_id | UUID scope; không receipt lookup bằng ID alone.                               |
+| request_id                                                | UUIDv4 browser CSPRNG, stable cho mutation intent.                            |
+| event_id                                                  | UUID, exactly one corresponding raw event.                                    |
+| intent_version                                            | smallint = 1, encoding compatibility.                                         |
+| intent_fingerprint                                        | SHA-256 hex của versioned intent bytes; non-authoritative technical metadata. |
+
+PK (org,est,dossier,request_id), UNIQUE (org,est,dossier,event_id).
+Fingerprint encoding: ordered JSON array of strings
+['pointage-raw-intent-v1', orgUUID, estUUID, dossierUUID, kind, observedStateGuard];
+UUID normalized lowercase; allowed kind exact; guard canonical base64url.
+UTF-8 SHA-256, server computes; browser không gửi fingerprint hoặc IDs.
+Same request ID + different kind/guard -> conflict. Continuation secret/version
+không thuộc intent fingerprint để valid re-identification không phá retry.
+
+Receipt FK (scope+dossier+event_id) -> raw (scope+dossier+id);
+raw reverse FK (scope+dossier+id) -> receipt (scope+dossier+event_id),
+DEFERRABLE INITIALLY DEFERRED, ON DELETE NO ACTION. UNIQUE referenced keys
+không deferred. Mutual completeness tại commit: event không thể thiếu receipt,
+receipt không thể có missing event. Chỉ successful operations có receipt row;
+denial/conflict không tạo raw event hoặc success receipt.
+
+Receipt INSERT/immutability trigger không cho update/delete/truncate; raw và
+receipt ở cùng transaction, không event-first asynchronous outbox. Không
+persist duplicated timestamp/kind/state/name/JSON success response.
+Public receipt luôn join canonical raw event:
+{ requestId, result: 'COMMITTED', kind, acceptedAt, timezoneName,
+utcOffsetSeconds, businessDate }. Không employee name/ID, grants, credential
+version, history hoặc daily total. Bytes/fields ổn định từ original raw event,
+không recompute historical calendar từ current timezone. Same-ID retry trả same
+receipt fields. Metadata không đủ để tạo attendance fact khi raw chain invalid.
+
+Không eviction hoặc receipt TTL cleanup trong change; đây không phải legal
+keep-forever policy. Cần separately approved retention handling trước real data.
+Nếu record corrupt/missing do privileged tampering, fail closed/investigate,
+không “sửa” bằng new event.
+
+#### Continuation table: pointage_continuations
+
+Fields: id UUIDv7; full scope+dossier; token_digest 64 lowercase hex UNIQUE
+within org/est; credential_id UUID; credential_version integer;
+issued_at, absolute_expires_at, idle_expires_at timestamptz(6); ended_at nullable.
+Không display name, request payload, plaintext token/PIN/IP hoặc attendance state.
+Full scoped dossier FK và credential binding FK:
+add UNIQUE (org,est,dossier,id,credential_version) trên existing credential table,
+rồi reference cả tuple. Existing credential meanings/rows không thay.
+Expiry là auth invalidity, không deletion/retention executor.
+
+Fields immutable sau INSERT: `id`, `organization_id`, `establishment_id`,
+`personnel_dossier_id`, `token_digest`, `credential_id`,
+`credential_version`, `issued_at`, `absolute_expires_at`.
+Chỉ bounded mutable: `idle_expires_at`, `ended_at`.
+Immutable fields và idle deadline NOT NULL; ended_at nullable. CHECK
+absolute_expires_at = issued_at + 120 seconds và
+issued_at < idle_expires_at <= absolute_expires_at. INSERT dùng server DB
+timestamps, initial idle theo 60-second policy và ended_at NULL.
+Rotation dùng row mới, không rebind existing row.
+
+Database/schema enforcement:
+
+- Row BEFORE UPDATE trigger áp dụng mọi UPDATE, không chỉ UPDATE OF two
+  columns. Null-safe OLD/NEW IS DISTINCT FROM trên tất cả immutable fields
+  (gồm id): có thay đổi -> reject statement.
+- Idle deadline chỉ giữ nguyên hoặc tiến lên, không NULL/lùi/vượt absolute.
+  Extension chỉ khi OLD.ended_at NULL và OLD còn trong idle/absolute lifetime
+  tại DB check; expired continuation không được touch để revive.
+- OLD.ended_at non-NULL: chỉ exact row no-op được phép. Không đổi idle,
+  ended_at, hoặc chuyển ended_at về NULL; không trở lại usable.
+- First end: NULL -> server-owned timestamp. BEFORE UPDATE trigger lấy DB
+  clock và assign ended_at, không giữ timestamp caller chọn. First-end
+  statement không được đồng thời extend idle. Repeated own-end giữ nguyên
+  original ended_at; repository đọc/return idempotent result, không rewrite.
+- CHECK/FK/unique enforce shape; trigger enforce OLD-to-NEW transitions.
+  Không chỉ dựa vào service convention; không thêm generic session capability.
+
+Runtime writer là non-owner/non-superuser role: SELECT/INSERT cần thiết và
+column-level UPDATE CHỈ (`idle_expires_at`, `ended_at`), không table-wide
+UPDATE/ALL, immutable-column UPDATE, DDL/trigger-disable/DELETE/TRUNCATE,
+owner-role membership hoặc SET ROLE bypass. Kiểm tra effective privileges
+gồm PUBLIC, inherited roles và default grants; column restriction không có
+tác dụng nếu vẫn tồn tại table-wide grant. Nếu không chứng minh được boundary,
+synthetic runtime composition fail closed, không dùng migration-owner fallback.
+Không provision hoặc claim production-role readiness trong revision này.
+D4a/D4b bổ sung chỉ dedicated lock-function EXECUTE, không source-row UPDATE
+cho runtime. Continuation/raw/receipt triggers vẫn SECURITY INVOKER; mọi
+application data reads/writes, continuation lock/touch/end, raw+receipt inserts
+và final authorization checks chạy invoker sau delegated locks. Existing
+foundation/Personnel writers không chuyển owner hoặc đổi grant theo revision.
+
+Repository chỉ expose scoped touch-idle và own-end, không generic
+updateContinuation/partial-row patch/upsert. Predicate luôn full trusted
+org+est+dossier+continuation key; giữ dossier/continuation lock order D4.
+Touch chỉ sau exact authorized foreground state/mutation/replay, compute bằng
+DB time theo 60-second policy, capped absolute và không decrease; không nhận
+deadline/binding từ browser. Own-end idempotent không credential revoke.
+DB column privileges không thay exact service operation/lifecycle authorization.
+
+Future disposable tests: actual runtime-role denial cho từng immutable field;
+trigger rejection bằng controlled test writer không disable trigger;
+backward/over-absolute idle, ended extension/revival, expired touch, repeated
+end và concurrent touch/end. Test setup/teardown không nới runtime role.
+[PostgreSQL column grants](https://www.postgresql.org/docs/current/sql-grant.html)
+và [OLD/NEW triggers](https://www.postgresql.org/docs/current/plpgsql-trigger.html)
+hỗ trợ enforcement đã chọn; tests chưa chạy và không production proof.
+
+Hash collision khi issuing continuation -> regenerate tối đa 3 lần, failure
+generic unavailable, không return token trước commit. Event UUID collision
+rollback entire command; same request retry vẫn safe. Receipt unique conflict
+được đọc lại dưới same dossier lock hoặc rollback/retry, không swallow partial
+transaction. Không persist one-time PIN hoặc re-show existing secret.
+
+Future database immutability proof phải chứng minh ordinary application writer không có DDL/table
+ownership/TRUNCATE bypass privileges. Disposable migration/test owner tách khỏi
+test runtime writer; runtime only SELECT/INSERT cần thiết + column-level
+UPDATE continuation idle_expires_at/ended_at theo enforcement ở trên,
+không generic table UPDATE hoặc ALTER/DROP/DISABLE TRIGGER/DELETE raw/receipt. Current production role
+privileges chưa được verify, không claim hardened deployment. Privileged DBA
+tampering nằm ngoài app threat boundary và phải có operations control; trigger
+không thể chống superuser. Không provision production role trong change.
+
+[PostgreSQL constraint/trigger mechanics](https://www.postgresql.org/docs/current/sql-createtrigger.html)
+là reference cho deferred checking và immutable-event rejection; actual
+migration proof phải kiểm thử both raw-only và receipt-only attempted commits.
+
+Alternative: receipt JSON độc lập dễ drift; event-only JSON response lost không
+có durable request association; asynchronous receipt tạo forbidden ambiguous state.
+
+### D7 — Time và deterministic reconstruction
+
+Authoritative clock abstraction trả UTC instant dạng integer epoch microseconds
+
+- RFC3339 six fractional digits. Production-independent default của cloud
+  repository lấy PostgreSQL clock_timestamp() dưới transaction locks, không
+  transaction-start now() hoặc browser Date. Acceptance boundary là DB append
+  statement sau current checks, không HTTP arrival hoặc response/commit time.
+
+Raw timestamp dùng full PostgreSQL microseconds; postgres-js Date mapping không
+được truncate xuống milliseconds: select/serialize accepted_at bằng explicit UTC
+text/epoch-microsecond representation; pure reducer dùng bigint/string. Browser
+Date chỉ presentation, không round raw instant hoặc reserialize nó vào mutation.
+Cùng microsecond vẫn order bằng ordinal; nếu clock lùi so với last event, deny
+unavailable, không tạo negative/overlapping interval, không adjust raw time.
+
+DB tính event business_date và offset_seconds từ accepted_at AT TIME ZONE
+validated current establishment timezone. Giữ timezone name + numeric offset +
+date trên từng event: historical wall time = UTC instant + stored offset,
+không phụ thuộc future tzdb/current establishment zone. DST repeated time có
+distinct absolute instant/offset; skipped local time không cần user input
+resolution vì input là absolute server instant. Establishment timezone đổi
+không rewrite events; new event dùng locked current zone. Session grouping giữ
+CLOCK_IN.business_date, kể cả CLOCK_OUT calendar/zone khác.
+
+Trigger lấy đúng một acceptance sample qua server-owned DB clock function
+mặc định clock_timestamp, assign NEW.accepted_at và derive calendar từ sample
+đó. Trigger kiểm tra lại Personnel entry/departure tại NEW.business_date dưới
+các locks đang giữ. Service precheck chỉ preliminary. Repository lấy chính
+INSERT RETURNING accepted_at để kiểm tra final continuation absolute/idle
+deadlines trước insert receipt/commit; nếu sample >= deadline thì rollback
+toàn bộ raw insert. Không gọi clock function lần hai như thể cùng sample,
+không return receipt/token trước commit. Credential/version/ended state và scope
+vẫn được khóa trong toàn bộ boundary. Vì vậy date và authorization deadlines
+cùng dùng một accepted instant, kể cả qua midnight. Không request GUC/body/
+header clock override.
+Pure tests inject clock; midnight/DST SQL integration dùng replacement clock
+function chỉ trong separately verified disposable test database/harness, không
+test override branch ở runtime/production composition. Migration proof cuối
+cùng chạy lại real clock implementation. Không thêm clock/synthetic field.
+
+Reconstruction (full scoped chain ORDER BY ordinal):
+
+- expected ordinal starts 1, open = null, closed = [] transient.
+- IN khi open null -> hold opening raw event.
+- OUT khi open exists -> emit derived pair(open, out); open = null.
+- Preserve independent instants/offsets; groupedBusinessDate từ opening event.
+- Cuối chain còn IN -> open session; không auto-close.
+- Reject gap/duplicate ordinal, unknown kind, OUT-first, double IN/OUT, decreasing
+  instant, invalid calendar/offset/scope hoặc broken receipt linkage as
+  EVIDENCE_INCONSISTENT; no fabricated/repair events. Public generic unavailable,
+  privileged diagnostic only minimized reason + safe correlation, không payload.
+- Không đọc security audit/receipt như source để reconstruct attendance.
+
+Employee state/read/mutation đều validate chain; manager bounded read không
+return partial misleading success nếu related dossier corrupt. Full scans là
+correctness-first synthetic implementation; không daily quota/truncation. Nếu
+scale cần projection/index redesign beyond this design, đo evidence và review
+riêng, không quietly thêm materialized session.
+
+[PostgreSQL time functions](https://www.postgresql.org/docs/current/functions-datetime.html)
+phân biệt wall-clock observation với transaction-start clock; timezone snapshots
+và reconstruction ở trên là quyết định riêng của change.
+
+### D8 — Employee transport/contracts, CSRF và recovery
+
+U2 handler dependency bắt buộc đi qua D1b server-only consumer accessor.
+Không handler/RSC nào tạo client hoặc đọc bootstrap inputs. Context GET cũng
+phải qua current runtime admission và active-scope resolution; no partial
+availability từ parent proof hoặc cached successful route. D1b listener proof
+không thay Origin/CSRF/operation guards dưới đây.
+
+`@yuta/contracts` owns strict Zod DTOs; unknown fields
+rejected. Body <= 4 KiB, JSON Content-Type only; no cookies used/required for
+employee auth, fetch credentials: omit. All personal endpoints POST, không
+GET query-secret mutation. Same-origin only, no CORS allow-origin wildcard.
+Require Origin exact configured approved test origin; Sec-Fetch-Site cross-site
+deny when present; JSON + custom Authorization header prevents ambient form
+CSRF, browser preflight không được grant cross-origin. Không dùng forwarded Host
+để quyết định origin. Missing Origin on these browser endpoints -> deny.
+TLS required outside explicit loopback test, nhưng production vẫn disabled.
+
+Authorization: `Pointage <ptc1_secret>` chỉ trong live memory fetch header,
+không cloud Bearer/session aliases. Strict token length/prefix before digest.
+Establishment context endpoint là unprivileged locator result, không authority.
+
+| Proposed route suffix under /api/pointage/[establishmentSlug] | Request                                                 | Response / boundary                                                                             |
+| ------------------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| context (GET)                                                 | no identity input                                       | { available: true } hoặc generic unavailable; không tenant IDs/dossier list.                    |
+| identify (POST)                                               | { credential: exact eight-digit string }                | { continuation, expiresInMs, idleInMs, state }; token only once after commit; state follows D9. |
+| state (POST)                                                  | empty JSON + continuation                               | { state, expiresInMs, idleInMs }; current eligibility và exact state.read.                      |
+| clock-in (POST)                                               | { requestId UUIDv4, observedStateGuard } + continuation | committed receipt hoặc scoped conflict/unavailable; operation.create.                           |
+| clock-out (POST)                                              | same shape + continuation                               | same boundary; requested kind do endpoint quy định.                                             |
+| recover (POST)                                                | { requestId, kind, observedStateGuard } + continuation  | original committed receipt hoặc { result: 'UNCONFIRMED' }; no mutation và không history list.   |
+| end (POST)                                                    | empty JSON + continuation                               | 204 after idempotent own-continuation termination; no protected response.                       |
+
+Recover current authority là operation.create (receipt của exact mutation),
+không bypass current lifecycle vì endpoint read-only. UNCONFIRMED không hứa
+server không in-flight; chỉ retry exact original tuple. Sau conflict, user phải
+fetch fresh state, explicit choose new action và requestId mới; không rewrite
+intent dưới old ID. End/refresh/expired interaction không restore pending tuple
+hoặc auto-replay. API có thể recover khi caller vẫn có exact tuple và new valid
+own continuation; không exposed receipt search/history.
+
+| Public outcome                                       | HTTP / public code                                 | Internal distinction                                                                               |
+| ---------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Credential/continuation/eligibility/authority denied | 403 POINTAGE_ACCESS_DENIED, identical shape/copy   | internal reason only; không disclose former/upcoming/match.                                        |
+| Candidate/client rate limit                          | 429 POINTAGE_TRY_LATER                             | không expose which key, count hoặc matching dossier; same code applies to unsuccessful candidates. |
+| Authorized stale head / invalid transition           | 409 POINTAGE_STATE_CONFLICT                        | no raw event; no foreign data.                                                                     |
+| Same scoped request ID different intent              | 409 POINTAGE_REQUEST_CONFLICT                      | no new raw event; retain original.                                                                 |
+| Malformed non-secret DTO                             | 400 POINTAGE_REQUEST_INVALID                       | generic, không validation echo containing secrets.                                                 |
+| Scope/provenance/DB/chain unavailable                | 503 POINTAGE_UNAVAILABLE                           | no partial identity/context/data.                                                                  |
+| Client timeout/network loss                          | local RESULT_UNKNOWN, not fabricated HTTP response | retry/recover exact tuple; no success or new ID.                                                   |
+
+Non-enumeration giữ foundation real/dummy verification + rate logic. Error
+classification không expose internal lifecycle field, credential ID/version,
+raw DB rows hoặc grant claims. Count-based rate response không xác nhận candidate
+validity. Identify lost response: token unavailable to browser, expires server-side;
+user re-enters credential; không attendance side effect.
+
+Alternative: Server Actions ambient cookies và HTTP redirect login không phù
+hợp dedicated no-cookie employee boundary; explicit route handlers rõ retry,
+cache và failure contract. Không thêm new application/service.
+
+### D9 — Employee view và manager server read
+
+Employee response state:
+{ displayName, status: NOT_CLOCKED_IN | CLOCKED_IN,
+openSessionStart: null | { instant, timezoneName, utcOffsetSeconds, businessDate },
+stateGuard }.
+stateGuard là opaque precondition, không historical display hoặc trusted context.
+NOT_CLOCKED_IN không prior OUT. CLOCKED_IN chỉ opening timestamp của current
+open session. Receipt riêng D6 không daily total/closed history; no broader name
+projection. Lifecycle deny không trả state/name.
+
+Manager chỉ server function nhận validated current cloud session +
+fresh tenant context và exact pointage.establishment.read. OWNER/MANAGER active
+matching membership, no STAFF/employee continuation. Không manager transport/UI.
+Read transaction REPEATABLE READ read-only cho consistent snapshot. Sau khi
+materialize bounded result nhưng trước response, chạy lại current server
+session/membership/scope/exact-grant guard trong fresh transaction ngoài snapshot
+đó; không reuse stale context hoặc gọi lại query trong cùng repeatable snapshot
+rồi gọi đó là fresh check. Deny và discard result nếu guard fail/unavailable.
+Snapshot data không cấp authority; final fresh guard là read authorization
+boundary. Không hứa authority còn tồn tại sau response nếu bị revoke sau đó.
+Server now defines today trong current establishment zone; include raw events
+có stored business_date = today, cùng current open session của scoped dossiers
+dù opening date trước today. Event-local historical context giữ nguyên; timezone
+change không reclassify old events. Không closed history ngoài today hoặc
+monthly/payroll/correction/audit visibility.
+
+Manager open session derived bằng scoped raw chain, không chỉ today filter
+(tránh mất IN từ hôm trước). Return projected event kind/instant/calendar + scoped
+dossier reference, current opening reference/time; không credential/security
+audit hoặc unrelated Personnel columns. Historical former dossier events/open
+session vẫn read theo manager grant, không áp employee self-eligibility lên
+manager visibility. No arbitrary daily event quota; timeout -> unavailable,
+không silent truncated success.
+
+### D10 — Cache, privacy, logs và leakage defense
+
+D1b IPC/owner closure là nơi duy nhất giữ ephemeral bootstrap secrets; no
+process.env credential fallback, stdout/stderr relay hoặc serialized RSC input.
+Owned runtime/client teardown và output suppression theo D1b, không sửa
+foundation audit taxonomy hoặc legal retention. Không log Next request errors
+với body/header/SQL context; raw process diagnostics không thành QA evidence.
+
+Employee page HTML/RSC chứa neutral entry shell only. force-dynamic, revalidate
+0, no cached personal fetch/unstable_cache, all page/data responses private,
+no-store, max-age=0; Pragma no-cache, Expires 0. No CDN caching/s-maxage,
+no service worker/offline store. No personal data in URLs, query, path segments
+beyond public establishment slug, history.state, router params, telemetry,
+analytics hoặc server component serialized props.
+
+Route-scoped CSP/headers trên /pointage và /api/pointage (existing Backoffice
+Next boundary, không global shell change): per-request nonce for Next scripts,
+script-src self + nonce; object-src none, base-uri none, frame-ancestors none,
+form-action self, connect-src self; Referrer-Policy no-referrer,
+X-Content-Type-Options nosniff. Development HMR only needs explicitly
+loopback dev connection allowances, không production unsafe-eval policy.
+No third-party analytics/scripts trên surface.
+
+D3 synchronous neutral cover/DOM wipe trước pagehide snapshot, pageshow
+generation reset và late-response rejection bắt buộc; Cache-Control không
+được coi là bfcache/OS erasure guarantee.
+[Cache-Control semantics](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control)
+hỗ trợ HTTP no-store boundary; lifecycle clearing phải được Browser QA riêng.
+
+No logging request body, Authorization header, continuation/PIN/digests,
+stateGuard, fingerprint, Personnel name, receipt payload hoặc raw event rows.
+Use bounded safe error code/correlation ID cho diagnostics; không query/stack
+tracing with secrets. Existing foundation audit taxonomy giữ nguyên cho credential/
+authorization; không thêm security-audit read UI, retention hoặc legal schema.
+Raw event/receipt success là canonical/technical pair, không nhân đôi attendance
+vào security audit. Failed audit required by existing auth fails closed; raw
+commit không bị báo failed chỉ vì later optional diagnostics sink failure.
+
+No cache warming/prefetch protected state, no credentials in devtool screenshots.
+Future QA screenshots only synthetic names, never plaintext PIN or continuation.
+
+### D11 — UI planning boundary and state model
+
+NEW_PAGE, integrated target, NEW_CAPABILITY_DISCOVERY. Stable planning home:
+`docs/ui/pages/backoffice-pointage-employee/`. Phase 0 inventory và
+DESIGN_HANDOFF precede draft UI spec; shared context NO_APPLICATION_SHELL.
+Existing root Geist/Inter, semantic tokens, Button/Input/FormField/Alert/Card/
+Skeleton/StatusBadge từ @yuta/ui, Lucide only. Không sửa shared primitive,
+sidebar/header/account/establishment selector.
+
+Six pre-approval planning docs only: README, PRODUCT_SCOPE, DESIGN_HANDOFF,
+UI_SPEC, DATA_AND_INTERACTION_SPEC, ACCEPTANCE_CHECKLIST. Không generate final
+pack vì generator tạo forbidden IMPLEMENTATION_PLAN và implementation prompts.
+Current validator mechanically requires những files đó even design; report
+specific missing-file/prompt/reference findings, không claim implementation-ready.
+Không tạo empty fake plan/provenance hoặc sửa workflow validator.
+
+UI copy French. Text state/action/copy, responsive hierarchy và keyboard/touch
+criteria nằm trong draft UI_SPEC; không manager UI. No image reference required
+cho written state-driven design; no-image decision vẫn thuộc human design review.
+Baseline NOT_APPLICABLE vì employee route chưa tồn tại, không fake screenshots.
+
+### D12 — P13/P14, readiness and failure boundaries
+
+P13/P14 là current change implementation/testing/readiness authority, không
+permanent domain rule. Synthetic/disposable attendance ONLY cho implementation,
+integration và Browser QA; real attendance NOT_AUTHORIZED ở development,
+staging, production. No synthetic/real employee field/enum/permission/classifier.
+No production provider; production enablement NOT_AUTHORIZED.
+
+Giữ unresolved exact retention duration, deletion/anonymization, legal hold,
+backup-retention interaction, employee notice, detailed audit visibility,
+trusted production client-address provenance. No cleanup executor hoặc default
+retention; technical TTL chỉ invalidate authentication, không xóa records.
+Carry forward nguyên vẹn vào future Tasks/TIC/test data policy/QA/gates.
+Runtime DB role privilege evidence cũng phải chứng minh trước immutable-evidence
+deployment; current repository chưa chứng minh production role hardening.
+Đây là technical readiness evidence gap, không new Product behavior/permission.
+
+Alternative: bật generic developer mode against real cloud DB hoặc classify
+employee synthetic để “cho chạy” bị loại; chỉ explicitly guarded disposable
+test composition. No production environment or lifecycle promotion.
+
+## Risks / Trade-offs
+
+- [Opaque token trong live memory vẫn bearer] -> short TTL, no ambient cookie,
+  CSP, no persistent stores, current credential/lifecycle checks; compromised
+  same-origin script/device ngoài khả năng cryptographic memory isolation.
+- [Offline end không thể remote-revoke ngay] -> neutral local state lập tức,
+  distinguish ENDING/confirmed end, deny UI reuse, server expiry bound 60/120s;
+  Browser QA phải verify không restore data và server end ordering.
+- [Full raw-chain scan tốn thời gian] -> synthetic bounded evaluation, scoped
+  indexes/timeouts, fail closed; không thêm projection hoặc quota khi chưa review.
+- [Clock rollback / corrupt chain] -> unavailable, no clamp/repair, preserve
+  evidence và minimized diagnostic; cần operational investigation riêng.
+- [Mutual FK và custom trigger không đủ được schema diff tool express] ->
+  generated additive migration + reviewed explicit SQL, disposable proof cả
+  constraints lẫn negative writes; không claim từ TypeScript schema alone.
+- [Existing dirty foundation/UI work] -> future pre-Apply fresh hashes/status,
+  preserve Formalités auth index hunk; stop nếu intended overlapping hunks
+  không thể isolate. Không refactor other feature để làm tests pass.
+- [UI pack checker đòi forbidden planning artifacts] -> retain honest partial
+  pre-approval design, không đổi lifecycle/tooling hoặc tạo plan sớm.
+
+## Migration Plan
+
+Đây là migration design, không execution authorization.
+
+Sau Sensitive Design và Tasks/Apply approval: generate additive Drizzle migration
+bằng current @yuta/db-cloud db:generate; allocate next journal sequence từ live
+repo, không assume số 0020 hoặc sửa 0019 đã có. Migration tạo ba tables,
+constraints/indexes/functions/triggers và credential composite unique support.
+Custom FK/trigger SQL nằm trong cùng new journaled migration với reviewed
+generated snapshot; không hand-author journal để bypass generator.
+Không seed/backfill raw events, sessions, credentials hoặc Personnel.
+
+D4a helper definition/ACL/owner transfer thuộc chính new generated/journaled
+migration, không standalone unjournaled SQL. Không sửa 0019/0020 hoặc prior
+snapshots/entries; next name/sequence vẫn để generator resolve sau fresh review.
+Không tạo SQL/migration, roles hay database trong Design revision này.
+Future guarded disposable harness provision exact lock-owner/writer roles
+D4b trước migration, chỉ sau toàn bộ D1 guards; role name đã tồn tại với
+unexpected attributes/grants/membership -> STOP, không ALTER unrelated role.
+Role provisioning là isolated test-cluster setup, không production migration
+default hoặc seed. Migration requires roles tồn tại đúng policy; thiếu -> fail.
+
+Riêng role D1a `yuta_pointage_foundation_runtime` thuộc future task 2.8 guarded
+synthetic harness, sau D1 identity proof, không thuộc migration 0021 và không
+thay bằng bootstrap runtime. Chỉ provision exact role/column grants D1a trên
+cùng raw target sau explicit Apply approval; existing unexpected role/ACL ->
+STOP, không repair unrelated role. Giữ nguyên 1.1-1.8/C17 evidence và 0021 bytes;
+proof role/client mới phải bổ sung ở 2.8, không suy ra từ completed Foundation.
+
+Migration identity giữ ownership tables/schema/triggers; helper ownership
+chuyển sang dedicated NOLOGIN role, không migration-owner SECURITY DEFINER.
+Nếu PostgreSQL ownership transfer cần CREATE schema hoặc role membership ở
+migration identity/lock owner trong setup, chỉ temporary migration transaction,
+revoke trước commit và trước runtime proof; runtime không bao giờ nhận chúng.
+Không cấp CREATE/role membership cho writer để generator/migration chạy.
+Apply kiểm tra Drizzle transaction boundary thực sự bao trọn create/revoke/
+owner/grant; nếu không đảm bảo atomic publication -> STOP trước execution.
+Empty và upgrade DB phải có cùng reviewed function body/ACL/owner; rerun no-op.
+Rollback disable synthetic composition, giữ rows/history; không DROP data hoặc
+rollback destructive để tránh review. Existing future production-role
+provisioning vẫn cần separate authority, không được suy ra từ test roles.
+
+Disposable DB proof: exact loopback host/current_database name kiểm tra trước
+migrate; new isolated test role/database, không production/general dev data.
+Apply full existing journal + new migration trên empty DB, và upgrade test
+baseline có synthetic foundation rows. Chạy writer-role concurrent tests,
+mutual orphan-FK commit failures, raw UPDATE/DELETE/TRUNCATE denial, same-ID
+retry, allowed reads/INSERT, reset/Personnel races; inspect pg_constraint/
+pg_trigger và actual migration journal. Rollback-transaction không để raw hoặc
+receipt residue. Test-only clock substitutions giới hạn disposable harness;
+restore actual clock implementation và validate lại migration result.
+
+Rollback runtime: disable test factory/route before changing application code;
+older foundation build bỏ qua additive tables. Giữ raw/receipt/auth metadata
+không destructive down migration; no automatic DROP/purge để rollback.
+Unknown commit -> exact recover/retry, không rollback committed event.
+Deployment/production migration, runtime role provisioning, retention cleanup
+hoặc data conversion không được authorize bởi Design hoặc tests.
+
+## Verification Design
+
+### D1b actual-process bootstrap proof — planned, not executed
+
+U2/U8 và R3/R6/R7 MUST bổ sung actual Next file-route evidence sau Apply approval:
+
+1. Same child PID/runId/main thread owns actual 127.0.0.1:3001 listener, two
+   independently authenticated max:1 handles và all D1/D1a/F8 SQL proofs.
+   Parent-only probe, direct factory/adapter call hoặc mocked handler không đủ.
+2. Concurrent initial context/identify/state requests publish one runtime only
+   after both proofs; failed second client/provider closes partial resources.
+   No credential processing or protected output before complete admission.
+3. Missing/malformed/replayed IPC; production/VERCEL; wrong/mismatched/C17/shared
+   DB; role/member/ACL/helper/body drift; listener/port mismatch; lost socket;
+   forged Host/Forwarded headers; missing provider/connection all fail closed.
+   Standard dev/start/build without owner never instantiate fallback runtime.
+4. Repeat module evaluation with unchanged inventory: one promise/pair; source
+   drift/HMR and IPC disconnect: unavailable + teardown; fresh process repeats
+   all proofs. Old continuation row does not bypass current authority.
+5. Exercise actual migrated synthetic Next context/identify/state/IN/OUT/recover/
+   end routes, dual identify/state.read and raw+receipt atomicity. Keep current
+   20/62 mapping; startup tests supplement, never replace behavioral scenarios.
+6. End/failed startup/forced shutdown closes both clients; capture sanitized
+   process/listener and SQL assertions, source hashes and exact command/exits.
+   DB evidence remains intact; logs/browser/RSC contain no bootstrap secrets.
+   Non-Pointage route smoke test shows no default/global startup modification.
+
+This turn runs planning checks only. Real-process/HMR/socket/SQL proof is still
+NOT_RUN and mandatory before task 3.2/3.8 completion, not inferred from Next docs.
+
+Chưa chạy implementation tests/Browser QA. Đây là traceability và future
+verification design, không Tasks/Implementation Plan/Technical Implementation
+Contract hoặc VERIFY PASS.
+
+| Requirement | Exact approved heading                                                         | Design sections  | Future test family              |
+| ----------- | ------------------------------------------------------------------------------ | ---------------- | ------------------------------- |
+| A1          | Usable consumer dùng dedicated short-lived Pointage continuation               | D2, D3, D4, D8   | continuation-auth               |
+| A2          | Continuation chỉ self-only trong trusted binding và closed catalog             | D1, D2, D4, D8   | scope-and-grants                |
+| A3          | Current Personnel eligibility áp dụng cho cả ba employee operations            | D4, D5, D7       | personnel-eligibility           |
+| A4          | Committed replay không bypass current authorization                            | D4, D5, D6       | authorized-replay               |
+| A5          | Expiry reset và interaction end không để lại stale authority                   | D2, D3, D4       | expiry-reset-end                |
+| A6          | Continuation không serialize trusted context hoặc persist plaintext credential | D2, D6, D8, D10  | secret-and-context-minimization |
+| A7          | Usable consumer giữ non-enumeration và trusted-address prerequisite            | D1, D8, D10      | trusted-provenance              |
+| R1          | Raw clocking sử dụng trusted cloud scope và online acceptance                  | D1, D4, D8       | cloud-and-scope                 |
+| R2          | Raw command vocabulary và bốn transition outcomes là đóng                      | D5, D7           | four-transitions                |
+| R3          | Raw evidence immutable là sole canonical attendance source                     | D5, D6, D7       | immutable-canonical-source      |
+| R4          | Sessions và current state chỉ derived và không overlap                         | D5, D7           | derived-sessions                |
+| R5          | Stable request identity bảo toàn committed receipt và replay                   | D4, D5, D6, D8   | idempotent-retry                |
+| R6          | Concurrent competing requests có tối đa một acceptance                         | D5, D6           | multi-connection-concurrency    |
+| R7          | Accepted event time do server quyết định và giữ historical context             | D5, D7           | server-time                     |
+| R8          | Cross-midnight grouping không thay departure eligibility                       | D4, D7           | midnight-departure              |
+| R9          | Employee chỉ thấy own minimal current state và receipt                         | D4, D7, D9       | employee-projection             |
+| R10         | Manager read chỉ server-side và establishment-scoped                           | D9               | manager-scope                   |
+| R11         | Shared-device UI bảo toàn isolation và trung thực về operation state           | D3, D8, D10, D11 | shared-device-browser           |
+| R12         | Capability giữ fail-closed provenance và tách biệt production policy           | D1, D10, D12     | authority-separation            |
+| R13         | Usable slice không mở rộng explicit non-scope                                  | D1, D12          | negative-scope-inventory        |
+
+Tất cả 62 approved scenarios được map bên dưới. Mỗi row yêu cầu test assert
+đúng WHEN/THEN/AND của source scenario; reference không thay scenario semantics.
+
+| Scenario | Exact approved scenario heading                          | Design sections  | Future test family              |
+| -------- | -------------------------------------------------------- | ---------------- | ------------------------------- |
+| A1.1     | Tiếp tục own Pointage interaction                        | D2, D3, D4, D8   | continuation-auth               |
+| A1.2     | Pointage continuation dùng ngoài domain                  | D2, D3, D4, D8   | continuation-auth               |
+| A2.1     | Continuation được dùng cho employee khác                 | D1, D2, D4, D8   | scope-and-grants                |
+| A2.2     | Continuation yêu cầu privileged operation                | D1, D2, D4, D8   | scope-and-grants                |
+| A2.3     | Browser cung cấp trusted-context claims                  | D1, D2, D4, D8   | scope-and-grants                |
+| A3.1     | Identify trước entry hoặc sau departure                  | D4, D5, D7       | personnel-eligibility           |
+| A3.2     | State read ngoài employment period                       | D4, D5, D7       | personnel-eligibility           |
+| A3.3     | Mutation sau departure với session đang mở               | D4, D5, D7       | personnel-eligibility           |
+| A3.4     | Ngày entry hoặc final departure hợp lệ                   | D4, D5, D7       | personnel-eligibility           |
+| A3.5     | Không xác minh được lifecycle hiện tại                   | D4, D5, D7       | personnel-eligibility           |
+| A4.1     | Authorized replay                                        | D4, D5, D6       | authorized-replay               |
+| A4.2     | Prior success nhưng current access mất hiệu lực          | D4, D5, D6       | authorized-replay               |
+| A5.1     | Continuation hết hạn                                     | D2, D3, D4       | expiry-reset-end                |
+| A5.2     | Credential reset nhưng browser còn continuation cũ       | D2, D3, D4       | expiry-reset-end                |
+| A5.3     | Interaction đã kết thúc trên shared device               | D2, D3, D4       | expiry-reset-end                |
+| A6.1     | Browser nhận continuation và current-state response      | D2, D6, D8, D10  | secret-and-context-minimization |
+| A6.2     | Durable browser storage hoặc diagnostics                 | D2, D6, D8, D10  | secret-and-context-minimization |
+| A6.3     | Technical metadata được tái dùng làm evidence            | D2, D6, D8, D10  | secret-and-context-minimization |
+| A7.1     | Missing hoặc untrusted client-address provider           | D1, D8, D10      | trusted-provenance              |
+| A7.2     | Public access failure                                    | D1, D8, D10      | trusted-provenance              |
+| A7.3     | Provider composition cần authority riêng                 | D1, D8, D10      | trusted-provenance              |
+| R1.1     | Employee operation có đầy đủ prerequisites               | D1, D4, D8       | cloud-and-scope                 |
+| R1.2     | Browser đổi scope hoặc dossier                           | D1, D4, D8       | cloud-and-scope                 |
+| R1.3     | Cloud hoặc database không xác nhận được kết quả          | D1, D4, D8       | cloud-and-scope                 |
+| R2.1     | NO_OPEN_SESSION nhận CLOCK_IN                            | D5, D7           | four-transitions                |
+| R2.2     | OPEN_SESSION nhận CLOCK_OUT                              | D5, D7           | four-transitions                |
+| R2.3     | OPEN_SESSION nhận CLOCK_IN                               | D5, D7           | four-transitions                |
+| R2.4     | NO_OPEN_SESSION nhận CLOCK_OUT                           | D5, D7           | four-transitions                |
+| R2.5     | Caller gửi event kind ngoài vocabulary                   | D5, D7           | four-transitions                |
+| R3.1     | Derived state được tái dựng                              | D5, D6, D7       | immutable-canonical-source      |
+| R3.2     | Actor yêu cầu sửa hoặc xóa raw event                     | D5, D6, D7       | immutable-canonical-source      |
+| R3.3     | Technical metadata được dùng làm attendance fact         | D5, D6, D7       | immutable-canonical-source      |
+| R4.1     | Employee tạo nhiều sequential sessions                   | D5, D7           | derived-sessions                |
+| R4.2     | Session thiếu clock-out                                  | D5, D7           | derived-sessions                |
+| R5.1     | Cùng identity và intent sau commit                       | D4, D5, D6, D8   | idempotent-retry                |
+| R5.2     | Cùng identity nhưng intent khác                          | D4, D5, D6, D8   | idempotent-retry                |
+| R5.3     | Receipt lookup từ employee hoặc establishment khác       | D4, D5, D6, D8   | idempotent-retry                |
+| R5.4     | Timeout retry                                            | D4, D5, D6, D8   | idempotent-retry                |
+| R5.5     | Replay sau khi lifecycle hoặc authority không còn hợp lệ | D4, D5, D6, D8   | idempotent-retry                |
+| R6.1     | Hai distinct CLOCK_IN cạnh tranh từ no-open state        | D5, D6           | multi-connection-concurrency    |
+| R6.2     | Hai distinct CLOCK_OUT cạnh tranh đóng cùng session      | D5, D6           | multi-connection-concurrency    |
+| R6.3     | Double submit cùng request identity                      | D5, D6           | multi-connection-concurrency    |
+| R7.1     | Browser gửi clock hoặc backdated timestamp khác server   | D5, D7           | server-time                     |
+| R7.2     | Actual time lệch Planning                                | D5, D7           | server-time                     |
+| R7.3     | Local date/time cần được diễn giải lại                   | D5, D7           | server-time                     |
+| R8.1     | Session đi qua midnight trong employment period          | D4, D7           | midnight-departure              |
+| R8.2     | CLOCK_OUT sau departure date                             | D4, D7           | midnight-departure              |
+| R9.1     | Employee chưa clock-in                                   | D4, D7, D9       | employee-projection             |
+| R9.2     | Employee đang clock-in                                   | D4, D7, D9       | employee-projection             |
+| R9.3     | Minimal Personnel projection                             | D4, D7, D9       | employee-projection             |
+| R9.4     | Employee yêu cầu lịch sử                                 | D4, D7, D9       | employee-projection             |
+| R10.1    | Authorized manager đọc bounded state                     | D9               | manager-scope                   |
+| R10.2    | Manager thiếu scope hoặc exact grant                     | D9               | manager-scope                   |
+| R10.3    | STAFF hoặc employee xin manager read                     | D9               | manager-scope                   |
+| R11.1    | Interaction kết thúc trên shared tablet                  | D3, D8, D10, D11 | shared-device-browser           |
+| R11.2    | Browser khôi phục state cũ                               | D3, D8, D10, D11 | shared-device-browser           |
+| R11.3    | Mutation pending, success hoặc conflict                  | D3, D8, D10, D11 | shared-device-browser           |
+| R11.4    | Invalid credential, rate limit hoặc lifecycle denial     | D3, D8, D10, D11 | shared-device-browser           |
+| R12.1    | Thiếu trusted client-address provenance                  | D1, D10, D12     | authority-separation            |
+| R12.2    | Production legal policy chưa được duyệt                  | D1, D10, D12     | authority-separation            |
+| R12.3    | Capability được triển khai và kiểm tra thành công        | D1, D10, D12     | authority-separation            |
+| R13.1    | Downstream hoặc ngoài phạm vi yêu cầu capability         | D1, D12          | negative-scope-inventory        |
+
+Critical additional technical proofs: same-ID multi-connection commit; distinct
+IN/OUT contention; stale OUT across A-close/B-open; reset and lifecycle racing
+same dossier lock; direct raw-only/receipt-only transactions cannot commit;
+writer cannot destructive mutate; server microseconds/offset/DST and zone-change
+stable history; expired/end/replayed token deny; old-response generation dropped;
+pagehide/pageshow/back/duplicate/restart/cache isolation; absent/untrusted provider
+fails before credential processing; runtime refuses unsafe test environment.
+
+#### Reopened locking/privilege proof — planned, not executed
+
+D1 exact environment/URL/current_database guards không thay. Dedicated
+disposable PostgreSQL, distinct owner/writer connections; không mock thay SQL.
+Các assertions dưới đây bổ sung F8/S5 proof, chưa đánh dấu task hoàn thành:
+
+1. Catalog/effective ACL proof D4b; actual writer SELECT FOR SHARE/UPDATE trực
+   tiếp cả ba source tables bị 42501, nhưng exact helper + invoker continuation
+   FOR UPDATE thành công. Helper RETURN void không row/name/lifecycle data.
+2. Actual writer UPDATE mỗi column (gồm id, org/est keys, entry/departure,
+   status/timezone), INSERT/DELETE/TRUNCATE/ALTER/DROP/GRANT/trigger-disable trên
+   source tables bị deny; compare complete source rows before/after helper.
+   Continuation chỉ hai UPDATE cột được phép; all existing F5 negatives giữ.
+3. Wrong/NULL/mixed org-est-dossier tuple, missing/inactive parents -> generic
+   failure and outer rollback. Không partial token/state/event/receipt. Through
+   service, coherent foreign tuple bị deny trước helper; không claim SQL
+   helper tự xác thực tenant khi DB login đã compromise.
+4. Non-writer role không EXECUTE; PUBLIC revoke verified. Writer không SET ROLE/
+   SESSION AUTHORIZATION owner/migration role, ALTER function, create overload/
+   shadow object, grant EXECUTE hoặc disable trigger. Poisoned caller
+   search_path/temp lookalike không đổi referenced public tables; helper fixed
+   pg_catalog/pg_temp và qualification được kiểm tra bằng object identities.
+5. Controlled disposable misconfiguration tests: wrong/LOGIN/superuser owner,
+   owner extra column/table privilege or membership, writer inherited/PUBLIC
+   UPDATE, PUBLIC EXECUTE, missing EXECUTE, writable schema, changed body/
+   search_path. Runtime refuses before provider/credential processing/write;
+   no fallback. Restore exact reviewed setup before final proof.
+6. Multi-connection blocking both directions: helper holds locks after return
+   until outer commit/rollback; actual issue/reset repository waits on dossier;
+   actual Personnel entry/departure UPDATE waits (and vice versa). Later
+   Pointage reads current version/lifecycle after lock. Parent status/timezone
+   UPDATE and existing Formalités scoped dossier lock conflict as expected.
+   Không sửa/import unrelated Formalités test harness hoặc code để pass.
+7. Invoker raw INSERT trigger calls helper even without prior repository lock;
+   concurrent alternate inserts serialize; invalid chain/raw-only/receipt-only
+   commit still fail. Continuation/end/touch ordering, same-ID replay,
+   competing IN/OUT, stale OUT across A/B và accepted-instant departure remain
+   original D2-D7 tests, not replaced by helper-success test.
+8. Force lock_timeout/statement_timeout/deadlock: rollback all work, same tuple
+   recovery/no fresh identity; no catch-and-continue savepoint releasing locks.
+   Test migration absent/misowned helper and roles fail closed, no-op rerun,
+   old history unchanged; all controlled test changes restored and actual DB
+   clock rerun before migration proof.
+
+Cần corresponding Tasks/TIC planning correction sau revised Design approval:
+task 1.3 delegated lock call, 1.4 raw-trigger helper call, 1.5 F8 role/ACL proof,
+1.6 guarded role setup, 1.7 atomic helper publication, 1.8 và S5/R regression
+evidence. Không đổi task count, checkbox, code hoặc UI plan trong lượt này;
+2/32 checkpoint giữ nguyên và Apply PAUSED đến explicit approval của Design
+và required planning correction. Không coi original 02c approval đủ cho
+delegated mechanism chưa được review.
+
+Future exact existing command families:
+`pnpm --filter @yuta/auth test`,
+`pnpm --filter @yuta/contracts test`,
+`pnpm --filter @yuta/db-cloud test`,
+`pnpm --filter @yuta/backoffice test`,
+`pnpm test:cloud`, `pnpm build:cloud`,
+`pnpm docs:check`, `pnpm architecture:check`,
+`pnpm -r --if-present typecheck`, scoped Prettier.
+Integration enable flag `YUTA_ALLOW_DATABASE_INTEGRATION_TESTS=true` chỉ sau
+disposable guards, không dùng existing general .env.local target.
+
+Browser QA sau formal VERIFY theo YUTA_QA_PROTOCOL: 1440x900, 1024x768,
+768x1024 shared tablet và 390x844; all approved visible states, French copy,
+keyboard/focus/touch/overflow, pending/unknown result và end/cache races.
+Real Next local route + migrated synthetic DB, not fixture-success UI.
+Hashed screenshot manifest, QA report và console checks; no plaintext secrets
+trong evidence. Không QA NOT_APPLICABLE cho UI_AFFECTING YES.
+
+## Open Questions
+
+Không có unresolved Product/authority conflict được phát hiện cần đổi approved
+Specs. Technical representation, TTL, transaction/receipt, schema, clocks,
+transport, reset/end và UI-state choices đã được chọn để human Sensitive Design
+review; không tự coi review là passed.
+
+Các legal/privacy/production provenance và production DB-role evidence ở D12
+vẫn blocked, không đủ điều kiện dùng real attendance. Partial UI-pack structural
+validation chưa hoàn chỉnh vì current-user cấm Implementation Plan trước gate;
+không phải permission vượt gate. Reviewer cần đánh giá rõ offline ENDING versus
+confirmed end semantics và no-image UI direction cùng design này.
+
+SENSITIVE DESIGN GATE
+Review status: AWAITING_HUMAN_REVIEW
+UI_AFFECTING: YES
+BROWSER_QA_REQUIRED: YES
+Apply authorization: NOT_GRANTED
+Production enablement: NOT_AUTHORIZED
+```
+
+## Planning checks — current alignment
+
+- `openspec validate pointage-usable-raw-clocking --strict`: exit 0;
+  Change 'pointage-usable-raw-clocking' is valid.
+- `pnpm docs:check`: exit 0; 36 current documents.
+- `pnpm architecture:check`: exit 0; runtime imports, database URLs,
+  client boundaries and migration baselines valid.
+- `pnpm -r --if-present typecheck`: exit 0; all participating workspace
+  package/application typechecks completed. No implementation file edited.
+- `pnpm ui:pack:check backoffice-pointage-employee`: exit 0;
+  one package, zero warnings; sealed bytes unchanged.
+- `pnpm exec prettier --check openspec/changes/pointage-usable-raw-clocking/design.md openspec/changes/pointage-usable-raw-clocking/tasks.md docs/reviews/pointage-usable-raw-clocking/02b-design-review.md docs/reviews/pointage-usable-raw-clocking/02c-implementation-plan-review.md`:
+  exit 0, all four matched files use Prettier code style.
+- `pnpm format:check`: final exit 1, exactly 67 unrelated existing warnings,
+  no warning on any of these four targets. Initial diagnostic had 69 warnings:
+  two newly edited planning files needed local formatting and were corrected
+  via bounded apply_patch only; the 67 unrelated files were not normalized.
+- Each embedded bounded diff was extracted unchanged and checked with
+  `git apply --reverse --check --unidiff-zero -`: both exit 0, no filesystem
+  mutation. SHA-256 of exact UTF-8 diff including final newline:
+  Design `08bba7e38bff0c4a0090be943b0da269d1bf0f98bf31e37a3a977fb30609399b`;
+  Tasks `56bc104b2330ff1482aec9a724def70b3b6c4360714c6c2ed2876bc01ced0ad6`.
+- Exact Design snapshot matches design.md bytes/hash. Historical review suffixes
+  match their old packet hashes. Preservation inventory aggregate is unchanged.
+
+Global formatting diagnostic paths (check-only; unchanged):
+
+```text
+.agents/skills/openspec-apply-change/SKILL.md
+.agents/skills/openspec-archive-change/SKILL.md
+.agents/skills/openspec-continue-change/SKILL.md
+.agents/skills/openspec-explore/SKILL.md
+.agents/skills/openspec-new-change/SKILL.md
+.agents/skills/openspec-propose/SKILL.md
+.agents/skills/openspec-sync-specs/SKILL.md
+.agents/skills/openspec-update-change/SKILL.md
+.agents/skills/openspec-verify-change/SKILL.md
+docs/archive/knowledge-normalization/tasks/YUTA_KNOWLEDGE_AUDIT_TASK.md
+docs/archive/knowledge-normalization/tasks/YUTA_STEP_1_AUTHORITY_MODEL_TASK.md
+docs/archive/knowledge-normalization/tasks/YUTA_STEP_2_LIFECYCLE_STATUS_MODEL_TASK.md
+docs/archive/knowledge-normalization/tasks/YUTA_STEP_3_MODULE_REGISTRY_TASK.md
+docs/archive/knowledge-normalization/tasks/YUTA_STEP_5_1_PERSONNEL_PRODUCT_KNOWLEDGE_HOME_TASK.md
+docs/archive/knowledge-normalization/tasks/YUTA_STEP_5_2_TODAY_PRODUCT_KNOWLEDGE_HOME_TASK.md
+docs/archive/knowledge-normalization/tasks/YUTA_STEP_5_3_ESTABLISHMENT_PRODUCT_KNOWLEDGE_HOME_TASK.md
+docs/archive/knowledge-normalization/tasks/YUTA_STEP_5_4_IDENTITY_ACCESS_PRODUCT_KNOWLEDGE_HOME_TASK.md
+docs/archive/knowledge-normalization/tasks/YUTA_STEP_5_5_SITE_AGENT_PRODUCT_KNOWLEDGE_HOME_TASK.md
+docs/archive/knowledge-normalization/tasks/YUTA_STEP_5_6_DISPLAY_PRODUCT_KNOWLEDGE_HOME_TASK.md
+docs/archive/yuta-workflow/tasks/YUTA_AUTOMATED_OPEN_SPEC_REVIEW_WORKFLOW_SETUP_TASK.md
+docs/archive/yuta-workflow/tasks/YUTA_STEP_7_0_OPENSPEC_LOCAL_BASELINE_AUDIT_TASK.md
+docs/archive/yuta-workflow/tasks/YUTA_STEP_7_0B_OPENSPEC_1_11_DELTA_REAUDIT_TASK.md
+docs/archive/yuta-workflow/tasks/YUTA_STEP_7_1_FORK_AND_DESIGN_YUTA_SCHEMA_TASK.md
+docs/archive/yuta-workflow/tasks/YUTA_STEP_7_2_ISOLATED_OPENSPEC_SCHEMA_SMOKE_TEST_TASK.md
+docs/archive/yuta-workflow/tasks/YUTA_STEP_7_3A_OPENSPEC_SCHEMA_HARDENING_ANALYSIS_TASK.md
+docs/archive/yuta-workflow/tasks/YUTA_STEP_7_3B_MINIMAL_SCHEMA_HARDENING_TASK.md
+docs/archive/yuta-workflow/tasks/YUTA_STEP_7_4_OPENSPEC_ACTIVATION_POLICY_REVIEW_TASK.md
+docs/archive/yuta-workflow/tasks/YUTA_STEP_7_5_ACTIVATE_YUTA_SPEC_DRIVEN_TASK.md
+docs/archive/yuta-workflow/tasks/YUTA_STEP_7_6A_OPENSPEC_NORMATIVITY_POLICY_REVIEW_TASK.md
+docs/archive/yuta-workflow/tasks/YUTA_STEP_7_6B_ENABLE_NORMATIVE_SPECS_TASK.md
+docs/archive/yuta-workflow/tasks/YUTA_WORKFLOW_V3_AUTOMATION_UPDATE_TASK.md
+docs/features/establishment/general-information/README.md
+docs/features/establishment/README.md
+docs/features/personnel/README.md
+docs/PRODUCT_KNOWLEDGE.md
+docs/reviews/async-interaction-feedback-foundation/01-analysis-review.md
+docs/reviews/async-interaction-feedback-foundation/02-specs-review.md
+docs/reviews/personnel-reconstructable-value-history/04-knowledge-consolidation-review.md
+docs/reviews/restaurant-knowledge-communication-identity/04-knowledge-consolidation-review.md
+docs/reviews/restaurant-knowledge-team-culture/04-knowledge-consolidation-review.md
+docs/reviews/restaurant-knowledge-validated-knowledge/02-specs-review.md
+docs/reviews/restaurant-knowledge-validated-knowledge/02b-design-review.md
+docs/reviews/restaurant-knowledge-validated-knowledge/04-knowledge-consolidation-review.md
+docs/tasks/INFORMATIONS_GENERALES_PAGE_PRODUCT_KNOWLEDGE.md
+docs/tasks/YUTA_INFORMATIONS_GENERALES_PAGE_KNOWLEDGE_INTEGRATION_AUDIT_TASK.md
+docs/tasks/YUTA_INFORMATIONS_GENERALES_PRODUCT_DECISION_INTEGRATION_TASK.md
+docs/tasks/YUTA_PILOT_01_ESTABLISHMENT_CONTACT_COPY_DESIGN_TASK.md
+docs/tasks/YUTA_PILOT_01_ESTABLISHMENT_CONTACT_COPY_PROPOSAL_ANALYSIS_TASK.md
+docs/tasks/YUTA_PILOT_01_ESTABLISHMENT_CONTACT_COPY_SPECS_TASK.md
+docs/tasks/YUTA_PILOT_01_ESTABLISHMENT_CONTACT_COPY_TASKS_TASK.md
+docs/tasks/YUTA_STEP_6_1_DOCUMENTATION_CLEANUP_AUDIT_TASK.md
+docs/tasks/YUTA_STEP_6_2A_INDEX_TRUTHFULNESS_CLEANUP_TASK.md
+docs/tasks/YUTA_STEP_6_2B1_CURRENT_STATE_SLIM_PLAN_TASK.md
+docs/tasks/YUTA_STEP_6_2C_ARCHIVE_KNOWLEDGE_NORMALIZATION_HISTORY_TASK.md
+docs/tasks/YUTA_STEP_6_2D1_PUBLIC_BOOKING_PRODUCT_SPEC_REVIEW_TASK.md
+docs/tasks/YUTA_STEP_6_2D3_POS_PRODUCT_SPEC_REVIEW_TASK.md
+docs/tasks/YUTA_STEP_6_2E1_UI_PROMPT_TOPOLOGY_REVIEW_TASK.md
+docs/tasks/YUTA_STEP_6_2E2_IMPLEMENT_GENERATED_SNAPSHOT_TOPOLOGY_TASK.md
+docs/tasks/YUTA_STEP_6_2E3_MIGRATE_EXISTING_PROMPT_PROVENANCE_TASK.md
+docs/tasks/YUTA_STEP_6_2F_FINAL_DOCUMENTATION_CLEANUP_VALIDATION_TASK.md
+openspec/changes/archive/2026-08-30-establishment-copy-primary-contact-to-public/analysis.md
+openspec/changes/async-interaction-feedback-foundation/analysis.md
+openspec/schemas/yuta-spec-driven/templates/design.md
+openspec/schemas/yuta-spec-driven/templates/proposal.md
+openspec/schemas/yuta-spec-driven/templates/spec.md
+openspec/specs/restaurant-knowledge/cuisine-know-how/spec.md
+openspec/specs/restaurant-knowledge/validated-knowledge/spec.md
+```
+
+No Apply, formal VERIFY or QA result is inferred from these checks.
+No DB/Next/Browser QA command was run. Installed framework documentation was
+read-only research, not an external UI/design query. Usage remains OPTIONAL /
+NOT_USED under explicit UI classification; sealed pack is sufficient.
+
+## Retained authority and decision requested
+
+Synthetic/disposable attendance only; real employee attendance NOT_AUTHORIZED
+in development, staging or production. No production provider or deployment.
+All seven unresolved blockers remain: exact retention duration; deletion/
+anonymization; legal hold; backup-retention interaction; employee notice;
+detailed audit visibility; trusted production client-address provenance.
+No Product/Spec/UI redesign, new app, manager UI, raw-data correction, Planning,
+payroll/POS/Site Agent/offline/sync, production readiness promotion or archive.
+
+Reviewer must approve the exact revised Design and Tasks hashes and the exact
+15-path future bootstrap/U2 allowlist before task 3.2 can resume. Actual-process,
+HMR/restart and SQL admission remain future proof obligations, not demonstrated
+by planning PASS. If implementation cannot satisfy the public Next API/process
+contract in D1b, STOP; no shared hook/config/provider fallback is pre-authorized.
+
+```text
+SENSITIVE DESIGN / TASK 3.2 BOOTSTRAP ALIGNMENT REVIEW
+Status: AWAITING_HUMAN_REVIEW
+
+APPLY: PAUSED
+Tasks: 18/32
+Task 3.2: NOT_STARTED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+```
+
+## Historical packet — unchanged prior review and approvals
+
+The following exact body is provenance only. Its prior approvals/stop counts
+cannot approve or supersede the current pending bootstrap alignment.
+
+# Approved task 2.8 alignment — current authority
+
+Review status: APPROVED
+Approval source: explicit current-user attachment
+85c59e37-596d-41cc-9b73-26e54d88b63d.
+Approval recorded: 2026-09-08T21:46:20Z.
+Approved Design SHA-256:
+9a50dd1e76ce950b137d107ad66cb8e56fcb541ec882ef002379f26207606197.
+Approved pre-Apply Tasks SHA-256:
+7488d05ebc11dce56f64de5c21f6f6866a01893f53c532d14be5efaf35996574.
+Apply authorization: GRANTED, bounded by the approved plan and stop conditions.
+Design bytes remain unchanged. Current execution: 17/32; see
+[Apply checkpoint](02c-implementation-plan-review.md).
+No formal VERIFY, QA, Gate 3, sync/archive or production authorization.
+
+## Historical exact alignment packet — approved snapshot
+
+The following packet is retained verbatim as reviewed provenance. Its pending
+status and planning-only statements describe the pre-approval snapshot, not
+current authority. The approval above supersedes only those status statements.
+
+Change: pointage-usable-raw-clocking
 Gate: SENSITIVE DESIGN / TASK 2.8 ALIGNMENT REVIEW
 Review status: AWAITING_HUMAN_REVIEW
 Created: 2026-09-08T20:50:10.952Z

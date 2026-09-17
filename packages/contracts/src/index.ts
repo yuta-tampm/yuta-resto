@@ -6,6 +6,7 @@ export * from './formalites';
 export * from './local-pos';
 export * from './orders';
 export * from './personnel';
+export * from './pointage';
 export * from './reputation';
 export * from './reservations';
 export * from './tenant-foundation';

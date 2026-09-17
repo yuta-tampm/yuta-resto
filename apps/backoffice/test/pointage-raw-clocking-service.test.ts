@@ -21,11 +21,419 @@ import {
   createPointageRepository,
   createPointageRawClockingRepository,
   assertPointageRawDatabaseBoundary,
+  assertPointageFoundationDatabaseBoundary,
 } from '@yuta/db-cloud';
 import {
   openPointageTestClient,
   pointageDisposableWriterUrl,
+  pointageDisposableFoundationUrl,
 } from '../../../packages/db-cloud/test/helpers/pointage-raw-clocking-test-database';
+import { createPointageRawClockingRuntime } from '../src/server/pointage/raw-clocking-runtime';
+
+sqlD1aProof();
+
+function sqlD1aProof() {
+  const suite =
+    process.env.YUTA_POINTAGE_SYNTHETIC_TEST_MODE === 'true'
+      ? describe
+      : describe.skip;
+  suite('D1a actual same-database validation-only runtime', () => {
+    type Client = Awaited<ReturnType<typeof openPointageTestClient>>;
+    let admin: Client, foundation: Client, raw: Client;
+    const scope = {
+      organizationId: randomUUID(),
+      establishmentId: randomUUID(),
+      personnelDossierId: randomUUID(),
+    };
+    const slug = 'synthetic-d1a-' + scope.establishmentId;
+    const userId = randomUUID(),
+      secret = randomBytes(32);
+    let pin: string;
+    const role = 'yuta_pointage_foundation_runtime';
+    const provider = vi.fn(() => ({
+      getTrustedClientAddress: async () => ({
+        address: '127.0.0.1',
+        provenance: 'SERVER_VERIFIED' as const,
+      }),
+    }));
+    const compose = () =>
+      createPointageRawClockingRuntime({
+        environment: process.env,
+        listeningHost: '127.0.0.1',
+        foundationClient: foundation.db,
+        rawClient: raw.db,
+        encodedAuthSecret: secret.toString('base64url'),
+        stateGuardKey: derivePointageStateGuardKey(secret),
+        createSyntheticClientAddressProvider: provider,
+      });
+    beforeAll(async () => {
+      admin = await openPointageTestClient(
+        process.env,
+        process.env.CLOUD_DATABASE_URL!,
+      );
+      foundation = await openPointageTestClient(
+        process.env,
+        pointageDisposableFoundationUrl(process.env.CLOUD_DATABASE_URL!),
+      );
+      raw = await openPointageTestClient(
+        process.env,
+        pointageDisposableWriterUrl(process.env.CLOUD_DATABASE_URL!),
+      );
+      await assertPointageFoundationDatabaseBoundary(foundation.db);
+      await assertPointageRawDatabaseBoundary(raw.db);
+      const db = admin.connection;
+      await db.begin(async (tx) => {
+        await tx`insert into public.organizations(id,name,slug) values(${scope.organizationId},'Synthetic D1a',${'synthetic-' + scope.organizationId})`;
+        await tx`insert into public.establishments(id,organization_id,name,slug,timezone) values(${scope.establishmentId},${scope.organizationId},'Synthetic D1a',${slug},'UTC')`;
+        await tx`insert into public.personnel_employee_dossiers(id,organization_id,establishment_id,given_names,family_name,position,qualification,employment_term_type,work_time_category,entry_date) values(${scope.personnelDossierId},${scope.organizationId},${scope.establishmentId},'Synthetic','D1a','Test','Test','indefinite','full_time','2020-01-01')`;
+        await tx`insert into public.users(id,auth_provider_id,email) values(${userId},${'synthetic-' + userId},${userId + '@example.test'})`;
+      });
+      const setupFoundation = createPointageServerFoundation({
+        repository: createPointageRepository(admin.db),
+        encodedAuthSecret: secret.toString('base64url'),
+        clientAddressProvider: provider(),
+      });
+      pin = (
+        await setupFoundation.issueCredential({
+          manager: {
+            actorType: 'POINTAGE_MANAGER',
+            organizationId: scope.organizationId,
+            establishmentId: scope.establishmentId,
+            userId,
+            membershipId: randomUUID(),
+            role: 'OWNER',
+            operation: 'pointage.credential.issue',
+          },
+          personnelDossierId: scope.personnelDossierId,
+        })
+      ).credential;
+      provider.mockClear();
+    });
+    afterAll(async () => {
+      pin = '';
+      secret.fill(0);
+      await Promise.all([
+        admin?.connection.end(),
+        foundation?.connection.end(),
+        raw?.connection.end(),
+      ]);
+    });
+    it('uses all seven methods with exact column grants and preserves candidate/client thresholds', async () => {
+      const repository = createPointageRepository(foundation.db);
+      expect(await repository.resolveActiveEntryScope(slug)).toMatchObject({
+        organizationId: scope.organizationId,
+        establishmentId: scope.establishmentId,
+      });
+      expect(
+        await repository.findPersonnelEmploymentPeriod(
+          scope,
+          scope.personnelDossierId,
+        ),
+      ).toMatchObject({ entryDate: '2020-01-01' });
+      const now = new Date();
+      for (const [keyKind, failureLimit, keyDigest] of [
+        ['candidate', 5, 'c'.repeat(64)],
+        ['client', 30, 'd'.repeat(64)],
+      ] as const) {
+        expect(
+          await repository.isRateLimitBlocked(scope, keyKind, keyDigest, now),
+        ).toBe(false);
+        for (let index = 1; index <= failureLimit; index++) {
+          const failure = await repository.recordRateLimitFailure({
+            scope,
+            keyKind,
+            keyDigest,
+            now,
+            failureLimit,
+            windowMs: 900_000,
+            blockMs: 900_000,
+          });
+          expect(failure).toEqual({
+            failureCount: index,
+            blocked: index === failureLimit,
+          });
+        }
+        expect(
+          await repository.isRateLimitBlocked(scope, keyKind, keyDigest, now),
+        ).toBe(true);
+        await repository.resetCandidateRateLimit(scope, keyDigest, now);
+        expect(
+          await repository.isRateLimitBlocked(scope, keyKind, keyDigest, now),
+        ).toBe(keyKind === 'client');
+      }
+      await repository.appendAudit({
+        ...scope,
+        eventType: 'pointage.authorization.denied',
+        outcome: 'denied',
+        reasonCode: 'operation_not_granted',
+        requestedOperation: 'pointage.employee.state.read',
+        occurredAt: now,
+      });
+      // Successful actual identify exercises current credential lookup/verifier,
+      // distributed limiter reset, minimized audit and raw transaction authority.
+      const runtime = await compose();
+      const identified = await runtime.identify({
+        establishmentSlug: slug,
+        credential: pin,
+      });
+      expect(identified.ok).toBe(true);
+      if (!identified.ok) throw new Error('Synthetic D1a identify failed.');
+      expect(identified.value.state.displayName).toBe('Synthetic D1a');
+      const command = {
+        establishmentSlug: slug,
+        continuation: identified.value.continuation,
+        requestId: randomUUID(),
+        kind: 'CLOCK_IN' as const,
+        observedStateGuard: identified.value.state.stateGuard,
+      };
+      const receipt = await runtime.mutate(command);
+      expect(receipt.ok).toBe(true);
+      expect(await runtime.mutate(command)).toEqual(receipt);
+    });
+    it('denies alternate SQL and administration with the real foundation identity', async () => {
+      for (const statement of [
+        'select * from public.pointage_raw_events',
+        'select * from public.pointage_raw_command_receipts',
+        'select * from public.pointage_continuations',
+        'select * from public.pointage_security_audit_events',
+        'select issued_at from public.pointage_employee_credentials',
+        'update public.pointage_employee_credentials set superseded_at=now()',
+        'update public.personnel_employee_dossiers set entry_date=entry_date',
+        'update public.establishments set timezone=timezone',
+        'update public.organizations set status=status',
+        'delete from public.pointage_credential_rate_limits',
+        'truncate public.pointage_credential_rate_limits',
+        'select public.pointage_raw_lock_dossier(null,null,null)',
+        'create temporary table d1a_forbidden(id int)',
+        'create table public.d1a_forbidden(id int)',
+        'create schema d1a_forbidden',
+        'alter table public.pointage_credential_rate_limits disable trigger all',
+        'drop table public.pointage_credential_rate_limits',
+        'create role d1a_forbidden',
+      ])
+        await expect(
+          foundation.connection.unsafe(statement),
+        ).rejects.toMatchObject({ code: '42501' });
+      const repository = createPointageRepository(foundation.db);
+      const command = {
+        scope,
+        personnelDossierId: scope.personnelDossierId,
+        managerUserId: userId,
+        now: new Date(),
+        createMaterial: vi.fn(),
+      };
+      await expect(repository.issueCredential(command)).rejects.toThrow();
+      await expect(repository.resetCredential(command)).rejects.toThrow();
+      expect(command.createMaterial).not.toHaveBeenCalled();
+      await expect(
+        assertPointageRawDatabaseBoundary(foundation.db),
+      ).rejects.toThrow();
+      await expect(
+        assertPointageFoundationDatabaseBoundary(raw.db),
+      ).rejects.toThrow();
+    });
+    const grants = [
+      ['select on public.pointage_raw_events', role],
+      ['select on public.pointage_raw_command_receipts', role],
+      ['select on public.pointage_continuations', role],
+      ['insert on public.pointage_raw_events', role],
+      ['insert on public.pointage_raw_command_receipts', role],
+      ['insert on public.pointage_continuations', role],
+      ['update (ended_at) on public.pointage_continuations', role],
+      ['insert on public.pointage_employee_credentials', role],
+      ['update (superseded_at) on public.pointage_employee_credentials', role],
+      ['update (entry_date) on public.personnel_employee_dossiers', role],
+      ['update (status) on public.organizations', role],
+      ['update (timezone) on public.establishments', role],
+      ['select on public.pointage_security_audit_events', role],
+      [
+        'execute on function public.pointage_raw_lock_dossier(uuid,uuid,uuid)',
+        role,
+      ],
+      ['select on public.pointage_raw_events', 'public'],
+      ['create on schema public', role],
+      [
+        'select on public.pointage_credential_rate_limits',
+        'yuta_pointage_raw_writer',
+      ],
+      [
+        'insert on public.pointage_security_audit_events',
+        'yuta_pointage_raw_writer',
+      ],
+    ];
+    it.each(grants)(
+      'rejects effective excess %s to %s before provider',
+      async (grant, grantee) => {
+        await admin.connection.unsafe(`grant ${grant} to ${grantee}`);
+        provider.mockClear();
+        try {
+          await expect(compose()).rejects.toThrow(
+            'Pointage runtime is unavailable.',
+          );
+          expect(provider).not.toHaveBeenCalled();
+        } finally {
+          await admin.connection.unsafe(`revoke ${grant} from ${grantee}`);
+        }
+        await assertPointageFoundationDatabaseBoundary(foundation.db);
+        await assertPointageRawDatabaseBoundary(raw.db);
+      },
+    );
+    it.each([
+      ['superuser', 'nosuperuser'],
+      ['createdb', 'nocreatedb'],
+      ['createrole', 'nocreaterole'],
+      ['replication', 'noreplication'],
+      ['bypassrls', 'nobypassrls'],
+      ['inherit', 'noinherit'],
+      ['nologin', 'login'],
+    ])(
+      'rejects unexpected foundation attribute %s before provider',
+      async (attribute, restore) => {
+        await admin.connection.unsafe(`alter role ${role} ${attribute}`);
+        provider.mockClear();
+        try {
+          await expect(compose()).rejects.toThrow(
+            'Pointage runtime is unavailable.',
+          );
+          expect(provider).not.toHaveBeenCalled();
+        } finally {
+          await admin.connection.unsafe(`alter role ${role} ${restore}`);
+        }
+        await assertPointageFoundationDatabaseBoundary(foundation.db);
+      },
+    );
+    it('rejects membership, default ACL, grant option, ownership and PUBLIC TEMP', async () => {
+      const [{ name }] = await admin.connection<
+        { name: string }[]
+      >`select current_database() as name`;
+      const mutations = [
+        [
+          `grant yuta_pointage_raw_writer to ${role}`,
+          `revoke yuta_pointage_raw_writer from ${role}`,
+        ],
+        [
+          `alter default privileges grant select on tables to ${role}`,
+          `alter default privileges revoke select on tables from ${role}`,
+        ],
+        [
+          `alter default privileges grant select on tables to public`,
+          `alter default privileges revoke select on tables from public`,
+        ],
+        [
+          `grant select (id) on public.organizations to ${role} with grant option`,
+          `revoke grant option for select (id) on public.organizations from ${role}`,
+        ],
+        [
+          `grant temporary on database "${name}" to public`,
+          `revoke temporary on database "${name}" from public`,
+        ],
+        [
+          `alter database "${name}" owner to ${role}`,
+          `alter database "${name}" owner to pointage_bootstrap_20260908a`,
+        ],
+      ];
+      for (const [mutate, restore] of mutations) {
+        await admin.connection.unsafe(mutate!);
+        provider.mockClear();
+        try {
+          await expect(compose()).rejects.toThrow(
+            'Pointage runtime is unavailable.',
+          );
+          expect(provider).not.toHaveBeenCalled();
+        } finally {
+          await admin.connection.unsafe(restore!);
+        }
+        await assertPointageFoundationDatabaseBoundary(foundation.db);
+        await assertPointageRawDatabaseBoundary(raw.db);
+      }
+    });
+    it('rejects actual administrative clients and preserves the writer effective TEMP baseline', async () => {
+      const db = admin.connection;
+      const [rights] = await db`select
+        has_database_privilege('yuta_pointage_raw_writer',current_database(),'TEMP') as writer_temp,
+        has_database_privilege('yuta_pointage_foundation_runtime',current_database(),'TEMP') as foundation_temp`;
+      expect(rights).toEqual({ writer_temp: true, foundation_temp: false });
+      for (const [foundationClient, rawClient] of [
+        [admin.db, raw.db],
+        [foundation.db, admin.db],
+        [raw.db, foundation.db],
+      ]) {
+        provider.mockClear();
+        await expect(
+          createPointageRawClockingRuntime({
+            environment: process.env,
+            listeningHost: '127.0.0.1',
+            foundationClient,
+            rawClient,
+            encodedAuthSecret: secret.toString('base64url'),
+            stateGuardKey: derivePointageStateGuardKey(secret),
+            createSyntheticClientAddressProvider: provider,
+          }),
+        ).rejects.toThrow('Pointage runtime is unavailable.');
+        expect(provider).not.toHaveBeenCalled();
+      }
+    });
+    it('uses actual 5/30 authentication limits and never logs credential or employee state', async () => {
+      const runtime = await compose();
+      const spies = [
+        vi.spyOn(console, 'log'),
+        vi.spyOn(console, 'warn'),
+        vi.spyOn(console, 'error'),
+      ];
+      try {
+        for (let i = 0; i < 5; i++)
+          expect(
+            await runtime.identify({
+              establishmentSlug: slug,
+              credential: 'synthetic-invalid-repeat',
+            }),
+          ).toEqual({ ok: false, code: 'POINTAGE_ACCESS_DENIED' });
+        expect(
+          await runtime.identify({
+            establishmentSlug: slug,
+            credential: 'synthetic-invalid-repeat',
+          }),
+        ).toEqual({ ok: false, code: 'POINTAGE_TRY_LATER' });
+        for (let i = 0; i < 25; i++)
+          expect(
+            await runtime.identify({
+              establishmentSlug: slug,
+              credential: 'synthetic-invalid-' + i,
+            }),
+          ).toEqual({ ok: false, code: 'POINTAGE_ACCESS_DENIED' });
+        expect(
+          await runtime.identify({ establishmentSlug: slug, credential: pin }),
+        ).toEqual({ ok: false, code: 'POINTAGE_TRY_LATER' });
+        for (const spy of spies) expect(spy).not.toHaveBeenCalled();
+      } finally {
+        for (const spy of spies) spy.mockRestore();
+      }
+      const rows =
+        await admin.connection`select * from public.pointage_security_audit_events where organization_id=${scope.organizationId} and establishment_id=${scope.establishmentId}`;
+      expect(rows.length).toBeGreaterThan(30);
+      const serialized = JSON.stringify(rows);
+      expect(serialized.includes(pin)).toBe(false);
+      expect(serialized.includes(secret.toString('base64url'))).toBe(false);
+      expect(serialized.includes('Synthetic D1a')).toBe(false);
+      expect(Object.keys(rows[0]!).sort()).toEqual(
+        [
+          'id',
+          'organization_id',
+          'establishment_id',
+          'event_type',
+          'outcome',
+          'reason_code',
+          'manager_user_id',
+          'personnel_dossier_id',
+          'credential_id',
+          'credential_version',
+          'requested_operation',
+          'occurred_at',
+        ].sort(),
+      );
+    }, 30_000);
+  });
+}
 
 type Continuation = NonNullable<
   Awaited<ReturnType<PointageRawDossierOperations['insertContinuation']>>
@@ -656,6 +1064,120 @@ function fixture() {
 }
 
 describe('S3 dual-authority identify and S8 minimal Personnel projection', () => {
+  for (const denied of [false, true]) {
+    it.each([
+      ['state', 'CLOCK_IN', 'pointage.employee.state.read', 3],
+      ['mutate', 'CLOCK_IN', 'pointage.employee.operation.create', 3],
+      ['mutate', 'CLOCK_OUT', 'pointage.employee.operation.create', 3],
+      ['recover', 'CLOCK_IN', 'pointage.employee.operation.create', 2],
+      ['recover', 'CLOCK_OUT', 'pointage.employee.operation.create', 2],
+    ] as const)(
+      `A1.1 continuation %s %s exact authority (denied=${denied})`,
+      async (consumer, kind, expectedOperation, checks) => {
+        const f = fixture();
+        const identified = await f.service.identify(f.request);
+        if (!identified.ok) throw new Error('Synthetic identify failed.');
+        const auth = {
+          establishmentSlug: f.request.establishmentSlug,
+          continuation: identified.value.continuation,
+        };
+        let guard = identified.value.state.stateGuard;
+        if (kind === 'CLOCK_OUT') {
+          expect(
+            (
+              await f.service.mutate({
+                ...auth,
+                requestId: randomUUID(),
+                kind: 'CLOCK_IN',
+                observedStateGuard: guard,
+              })
+            ).ok,
+          ).toBe(true);
+          const opened = await f.service.readState(auth);
+          if (!opened.ok) throw new Error('Synthetic open state failed.');
+          guard = opened.value.state.stateGuard;
+        }
+        const tuple = Object.freeze({
+          ...auth,
+          requestId: randomUUID(),
+          kind,
+          observedStateGuard: guard,
+        });
+        const committed =
+          consumer === 'recover' ? await f.service.mutate(tuple) : null;
+        if (committed !== null) expect(committed.ok).toBe(true);
+        const before = { raw: [...f.rawEvents], receipts: [...f.receipts] };
+        for (const method of Object.values(f.ops))
+          vi.mocked(method).mockClear();
+        f.calls.length = 0;
+        f.foundation.authorizeEmployeeOperation.mockClear();
+        const original =
+          f.foundation.authorizeEmployeeOperation.getMockImplementation()!;
+        f.foundation.authorizeEmployeeOperation.mockImplementation(
+          async (input) => {
+            expect(input).toEqual({
+              credential: f.credential,
+              entryScope: {
+                organizationId: f.credential.organizationId,
+                establishmentId: f.credential.establishmentId,
+                timezone: f.personnel.timezone,
+                locale: 'fr-FR',
+              },
+              operation: expectedOperation,
+            });
+            // A validated, scoped locked continuation and current credential must
+            // precede the first authority call, never a receipt or prior success.
+            expect(f.ops.lockContinuation).toHaveBeenCalledWith(
+              f.committed[0]!.id,
+            );
+            expect(f.ops.findCurrentCredential).toHaveBeenCalled();
+            if (f.calls.length === 0) {
+              expect(f.ops.readRawChain).not.toHaveBeenCalled();
+              expect(f.ops.findCommandReceipt).not.toHaveBeenCalled();
+              expect(f.ops.appendRawEvent).not.toHaveBeenCalled();
+            }
+            const actor = await original(input);
+            return denied
+              ? { ...actor, operation: 'pointage.employee.identify' as const }
+              : actor;
+          },
+        );
+        const result =
+          consumer === 'state'
+            ? await f.service.readState(auth)
+            : await f.service[consumer](tuple);
+        expect(f.calls).toEqual(
+          Array(denied ? 1 : checks).fill(expectedOperation),
+        );
+        if (denied) {
+          expect(result).toEqual({ ok: false, code: 'POINTAGE_ACCESS_DENIED' });
+          expect(f.ops.readRawChain).not.toHaveBeenCalled();
+          expect(f.ops.findCommandReceipt).not.toHaveBeenCalled();
+          expect(f.ops.appendRawEvent).not.toHaveBeenCalled();
+          expect(f.ops.insertCommandReceipt).not.toHaveBeenCalled();
+          expect(f.ops.touchContinuationIdle).not.toHaveBeenCalled();
+        } else {
+          expect(result.ok).toBe(true);
+          if (consumer === 'recover') {
+            expect(result).toEqual(committed);
+            expect(f.ops.findCommandReceipt).toHaveBeenCalledExactlyOnceWith(
+              tuple.requestId,
+            );
+            expect(f.ops.appendRawEvent).not.toHaveBeenCalled();
+          } else if (consumer === 'mutate') {
+            expect(f.ops.appendRawEvent).toHaveBeenCalledExactlyOnceWith(kind);
+            expect(result).toMatchObject({
+              value: { kind, requestId: tuple.requestId },
+            });
+          }
+        }
+        if (denied || consumer !== 'mutate') {
+          expect(f.rawEvents).toEqual(before.raw);
+          expect(f.receipts).toEqual(before.receipts);
+        }
+      },
+    );
+  }
   for (const operation of ['mutate', 'recover'] as const) {
     it.each(['upcoming', 'former', 'idle-expiry', 'ended'] as const)(
       `${operation} checks current lifecycle/lifetime: %s`,

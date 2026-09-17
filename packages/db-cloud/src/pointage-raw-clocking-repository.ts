@@ -264,6 +264,211 @@ export async function assertPointageRawDatabaseBoundary(
   if (!sequences?.safe) fail();
 }
 
+// D1a is validation-only. These are column privileges, never table grants.
+// Kept separate from the unchanged raw writer/helper F8 admission above.
+export const POINTAGE_FOUNDATION_RUNTIME_COLUMNS: Readonly<
+  Record<
+    string,
+    Readonly<Record<'SELECT' | 'INSERT' | 'UPDATE', readonly string[]>>
+  >
+> = Object.freeze({
+  organizations: { SELECT: ['id', 'status'], INSERT: [], UPDATE: [] },
+  establishments: {
+    SELECT: ['id', 'organization_id', 'locale', 'timezone', 'slug', 'status'],
+    INSERT: [],
+    UPDATE: [],
+  },
+  personnel_employee_dossiers: {
+    SELECT: [
+      'id',
+      'organization_id',
+      'establishment_id',
+      'entry_date',
+      'departure_date',
+    ],
+    INSERT: [],
+    UPDATE: [],
+  },
+  pointage_employee_credentials: {
+    SELECT: [
+      'id',
+      'organization_id',
+      'establishment_id',
+      'personnel_dossier_id',
+      'credential_version',
+      'credential_format_version',
+      'algorithm_version',
+      'key_version',
+      'lookup_digest',
+      'salt',
+      'verifier',
+      'superseded_at',
+    ],
+    INSERT: [],
+    UPDATE: [],
+  },
+  pointage_credential_rate_limits: {
+    SELECT: [
+      'organization_id',
+      'establishment_id',
+      'key_kind',
+      'key_digest',
+      'window_started_at',
+      'failure_count',
+      'blocked_until',
+    ],
+    INSERT: [
+      'organization_id',
+      'establishment_id',
+      'key_kind',
+      'key_digest',
+      'window_started_at',
+      'failure_count',
+      'blocked_until',
+      'updated_at',
+    ],
+    UPDATE: [
+      'window_started_at',
+      'failure_count',
+      'blocked_until',
+      'updated_at',
+    ],
+  },
+  pointage_security_audit_events: {
+    SELECT: [],
+    INSERT: [
+      'id',
+      'organization_id',
+      'establishment_id',
+      'event_type',
+      'outcome',
+      'reason_code',
+      'manager_user_id',
+      'personnel_dossier_id',
+      'credential_id',
+      'credential_version',
+      'requested_operation',
+      'occurred_at',
+    ],
+    UPDATE: [],
+  },
+});
+
+for (const grants of Object.values(POINTAGE_FOUNDATION_RUNTIME_COLUMNS)) {
+  for (const columns of Object.values(grants)) Object.freeze(columns);
+  Object.freeze(grants);
+}
+
+export async function assertPointageFoundationDatabaseBoundary(
+  connection: Pick<RawTransaction, 'execute'>,
+): Promise<void> {
+  const role = 'yuta_pointage_foundation_runtime';
+  const fail = () => {
+    throw new PointageRawScopeUnavailableError();
+  };
+  const [identity] = await connection.execute<{
+    session: string;
+    current: string;
+  }>(sql`select session_user as session, current_user as current`);
+  if (identity?.session !== role || identity.current !== role) fail();
+  const [attributes] = await connection.execute<{ safe: boolean }>(sql`
+    select count(*)=1 and bool_and(
+      r.rolcanlogin and not r.rolsuper and not r.rolcreatedb and not r.rolcreaterole
+      and not r.rolreplication and not r.rolbypassrls and not r.rolinherit
+      and r.rolconfig is null
+      and not exists (select 1 from pg_catalog.pg_auth_members m where m.member=r.oid or m.roleid=r.oid)
+      and not exists (select 1 from pg_catalog.pg_roles other where other.oid<>r.oid
+        and (pg_catalog.pg_has_role(r.oid,other.oid,'MEMBER')
+          or pg_catalog.pg_has_role(r.oid,other.oid,'USAGE')
+          or pg_catalog.pg_has_role(r.oid,other.oid,'SET')))
+      and not exists (select 1 from pg_catalog.pg_database d where d.datdba=r.oid)
+      and not exists (select 1 from pg_catalog.pg_namespace n where n.nspowner=r.oid)
+      and not exists (select 1 from pg_catalog.pg_class c where c.relowner=r.oid)
+      and not exists (select 1 from pg_catalog.pg_proc p where p.proowner=r.oid)
+      and not exists (select 1 from pg_catalog.pg_shdepend d where d.refclassid='pg_catalog.pg_authid'::pg_catalog.regclass
+        and d.refobjid=r.oid and d.deptype='o')
+      and pg_catalog.has_database_privilege(r.oid,current_database(),'CONNECT')
+      and not pg_catalog.has_database_privilege(r.oid,current_database(),
+        'CREATE,TEMP,CONNECT WITH GRANT OPTION,CREATE WITH GRANT OPTION,TEMP WITH GRANT OPTION')
+      and not exists (select 1 from pg_catalog.pg_namespace n
+        where n.nspname not like 'pg_%' and n.nspname<>'information_schema'
+          and (pg_catalog.has_schema_privilege(r.oid,n.oid,'CREATE,USAGE WITH GRANT OPTION,CREATE WITH GRANT OPTION')
+            or (n.nspname<>'public' and pg_catalog.has_schema_privilege(r.oid,n.oid,'USAGE'))))
+      and pg_catalog.has_schema_privilege(r.oid,'public','USAGE')
+      and not exists (select 1 from pg_catalog.pg_default_acl d
+        cross join lateral pg_catalog.aclexplode(d.defaclacl) a where a.grantee in (0,r.oid))
+      and not exists (select 1 from pg_catalog.pg_parameter_acl p
+        cross join lateral pg_catalog.aclexplode(p.paracl) a where a.grantee in (0,r.oid))
+      and not exists (select 1 from pg_catalog.pg_proc p
+        join pg_catalog.pg_namespace n on n.oid=p.pronamespace
+        where n.nspname not like 'pg_%' and n.nspname<>'information_schema'
+          and pg_catalog.has_function_privilege(r.oid,p.oid,'EXECUTE'))
+    ) as safe from pg_catalog.pg_roles r where r.rolname=${role}
+  `);
+  if (!attributes?.safe) fail();
+  const [tables] = await connection.execute<{ safe: boolean }>(sql`
+    select not exists (
+      select 1 from pg_catalog.pg_class c
+      join pg_catalog.pg_namespace n on n.oid=c.relnamespace
+      cross join pg_catalog.pg_roles r
+      where r.rolname=${role} and n.nspname not like 'pg_%' and n.nspname<>'information_schema'
+        and ((c.relkind in ('r','p','v','m','f') and pg_catalog.has_table_privilege(r.oid,c.oid,
+          'SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER,MAINTAIN,SELECT WITH GRANT OPTION,INSERT WITH GRANT OPTION,UPDATE WITH GRANT OPTION'))
+          or (c.relkind='S' and pg_catalog.has_sequence_privilege(r.oid,c.oid,'USAGE,SELECT,UPDATE')))
+    ) as safe
+  `);
+  if (!tables?.safe) fail();
+  const columns = await connection.execute<{
+    schema: string;
+    table: string;
+    column: string;
+    select: boolean;
+    insert: boolean;
+    update: boolean;
+    forbidden: boolean;
+  }>(sql`
+    select n.nspname as schema,c.relname as table,a.attname as column,
+      pg_catalog.has_column_privilege(r.oid,c.oid,a.attnum,'SELECT') as select,
+      pg_catalog.has_column_privilege(r.oid,c.oid,a.attnum,'INSERT') as insert,
+      pg_catalog.has_column_privilege(r.oid,c.oid,a.attnum,'UPDATE') as update,
+      pg_catalog.has_column_privilege(r.oid,c.oid,a.attnum,
+        'REFERENCES,SELECT WITH GRANT OPTION,INSERT WITH GRANT OPTION,UPDATE WITH GRANT OPTION,REFERENCES WITH GRANT OPTION') as forbidden
+    from pg_catalog.pg_class c join pg_catalog.pg_namespace n on n.oid=c.relnamespace
+    join pg_catalog.pg_attribute a on a.attrelid=c.oid and a.attnum>0 and not a.attisdropped
+    cross join pg_catalog.pg_roles r
+    where r.rolname=${role} and c.relkind in ('r','p','v','m','f')
+      and n.nspname not like 'pg_%' and n.nspname<>'information_schema'
+  `);
+  for (const column of columns) {
+    const expected =
+      column.schema === 'public'
+        ? POINTAGE_FOUNDATION_RUNTIME_COLUMNS[column.table]
+        : undefined;
+    if (
+      column.forbidden ||
+      column.select !== (expected?.SELECT.includes(column.column) === true) ||
+      column.insert !== (expected?.INSERT.includes(column.column) === true) ||
+      column.update !== (expected?.UPDATE.includes(column.column) === true)
+    )
+      fail();
+  }
+  for (const [table, grants] of Object.entries(
+    POINTAGE_FOUNDATION_RUNTIME_COLUMNS,
+  )) {
+    for (const column of new Set(Object.values(grants).flat())) {
+      if (
+        !columns.some(
+          (row) =>
+            row.schema === 'public' &&
+            row.table === table &&
+            row.column === column,
+        )
+      )
+        fail();
+    }
+  }
+}
+
 function continuationPredicate(scope: PointageRawDossierScope, id: string) {
   return and(
     eq(pointageContinuations.organizationId, scope.organizationId),

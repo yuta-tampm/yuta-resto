@@ -4,6 +4,10 @@ import postgres from 'postgres';
 import { z } from 'zod';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import * as schema from '../../src/schema';
+import {
+  POINTAGE_FOUNDATION_RUNTIME_COLUMNS,
+  assertPointageRawDatabaseBoundary,
+} from '../../src/pointage-raw-clocking-repository';
 
 const databaseRule = /^yuta_pointage_raw_clocking_test(?:_[a-z0-9]+)?$/;
 const loopback = new Set(['localhost', '127.0.0.1', '[::1]']);
@@ -123,7 +127,7 @@ export function pointageDisposableWriterUrl(bootstrapUrl: string): string {
 // identity plus private tmpfs and exact loopback port prove this is an isolated
 // test cluster, not a database with a conveniently matching name on a shared
 // server. Existing roles are refused rather than silently repaired.
-export async function provisionPointageTestRoles(
+async function requireIsolatedPointageTestCluster(
   environment: NodeJS.ProcessEnv,
   bootstrapUrl: string,
   expectedContainerId: string,
@@ -201,6 +205,18 @@ export async function provisionPointageTestRoles(
   }
   if (!isolated)
     throw new Error('Pointage disposable cluster identity refused.');
+}
+
+export async function provisionPointageTestRoles(
+  environment: NodeJS.ProcessEnv,
+  bootstrapUrl: string,
+  expectedContainerId: string,
+): Promise<void> {
+  await requireIsolatedPointageTestCluster(
+    environment,
+    bootstrapUrl,
+    expectedContainerId,
+  );
   const writerUrl = new URL(pointageDisposableWriterUrl(bootstrapUrl));
   if (!/^[a-f0-9]{64}$/u.test(writerUrl.password))
     throw new Error('Pointage disposable writer material refused.');
@@ -242,6 +258,88 @@ export async function provisionPointageTestRoles(
     });
   } catch {
     throw new Error('Pointage disposable role provisioning refused.');
+  } finally {
+    await db.end();
+  }
+}
+
+export function pointageDisposableFoundationUrl(bootstrapUrl: string): string {
+  const target = new URL(bootstrapUrl);
+  if (target.username !== 'pointage_bootstrap_20260908a')
+    throw new Error('Unexpected Pointage bootstrap identity.');
+  target.password = createHmac('sha256', target.password)
+    .update('pointage-disposable-foundation-d1a')
+    .digest('hex');
+  target.username = 'yuta_pointage_foundation_runtime';
+  return target.toString();
+}
+
+// D1a only: provision after verified isolated-cluster/actual-target admission.
+// Never invoked by application composition and never rewrites migration 0021.
+export async function provisionPointageFoundationTestRole(
+  environment: NodeJS.ProcessEnv,
+  bootstrapUrl: string,
+  expectedContainerId: string,
+): Promise<void> {
+  await requireIsolatedPointageTestCluster(
+    environment,
+    bootstrapUrl,
+    expectedContainerId,
+  );
+  const raw = await openPointageTestClient(
+    environment,
+    pointageDisposableWriterUrl(bootstrapUrl),
+  );
+  try {
+    await assertPointageRawDatabaseBoundary(raw.db);
+  } finally {
+    await raw.connection.end();
+  }
+  const { name } = requirePointageTestConfiguration(environment, bootstrapUrl);
+  const password = new URL(pointageDisposableFoundationUrl(bootstrapUrl))
+    .password;
+  if (!/^[a-f0-9]{64}$/u.test(password))
+    throw new Error('Pointage disposable foundation material refused.');
+  const db = await openPointageTestDatabase(environment, bootstrapUrl);
+  try {
+    await db.begin(async (tx) => {
+      const [state] = await tx`
+        select current_user=session_user and current_user='pointage_bootstrap_20260908a' as bootstrap,
+          not exists (select 1 from pg_roles where rolname='yuta_pointage_foundation_runtime') as absent,
+          has_database_privilege('yuta_pointage_raw_writer',current_database(),'TEMP') as writer_temp
+      `;
+      if (!state?.bootstrap || !state.absent)
+        throw new Error('Pointage disposable foundation state refused.');
+      await tx.unsafe(
+        `create role yuta_pointage_foundation_runtime login nosuperuser nocreatedb nocreaterole noreplication nobypassrls noinherit password '${password}'`,
+      );
+      // PostgreSQL has no per-role DENY overriding PUBLIC TEMP. Restrict the
+      // verified disposable target, never a shared cluster or application ACL.
+      await tx.unsafe(`revoke temporary on database "${name}" from public`);
+      // Preserve, never expand, the writer's pre-existing effective TEMP right
+      // used by the approved D4b poisoned-caller regression. PostgreSQL cannot
+      // deny PUBLIC's grant to the foundation role individually.
+      if (state.writer_temp === true)
+        await tx.unsafe(
+          `grant temporary on database "${name}" to yuta_pointage_raw_writer`,
+        );
+      await tx.unsafe(
+        `grant connect on database "${name}" to yuta_pointage_foundation_runtime`,
+      );
+      await tx`grant usage on schema public to yuta_pointage_foundation_runtime`;
+      for (const [table, grants] of Object.entries(
+        POINTAGE_FOUNDATION_RUNTIME_COLUMNS,
+      )) {
+        for (const [privilege, columns] of Object.entries(grants)) {
+          if (columns.length)
+            await tx.unsafe(
+              `grant ${privilege} (${columns.join(', ')}) on public.${table} to yuta_pointage_foundation_runtime`,
+            );
+        }
+      }
+    });
+  } catch {
+    throw new Error('Pointage disposable foundation provisioning refused.');
   } finally {
     await db.end();
   }

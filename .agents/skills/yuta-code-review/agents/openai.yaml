@@ -1,0 +1,6 @@
+interface:
+  display_name: 'YUTA Code Review'
+  short_description: 'Review standards, specs, TIC, verification and QA'
+
+policy:
+  allow_implicit_invocation: false

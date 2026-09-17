@@ -26,6 +26,30 @@ function context(role: TenantRole): TenantContext {
 }
 
 describe('personnel permissions', () => {
+  it.each(['personnel.employee.read', 'personnel.employee.manage'] as const)(
+    'A1.2 PERSONNEL denies untrusted Pointage actor for %s without conversion',
+    (permission) => {
+      const actor = Object.freeze({
+        actorType: 'POINTAGE_EMPLOYEE',
+        organizationId: randomUUID(),
+        establishmentId: randomUUID(),
+        personnelDossierId: randomUUID(),
+        credentialId: randomUUID(),
+        credentialVersion: 1,
+        operation: 'pointage.employee.state.read',
+      });
+      const untrusted = {
+        ...context('OWNER'),
+        actor,
+      } as unknown as TenantContext;
+      expect(hasPersonnelPermission(untrusted, permission)).toBe(false);
+      expect(() => requirePersonnelPermission(untrusted, permission)).toThrow(
+        expect.objectContaining({ code: 'CROSS_TENANT_ACCESS_DENIED' }),
+      );
+      expect(untrusted.actor).toBe(actor);
+      expect(untrusted.actor.type).not.toBe('user');
+    },
+  );
   it('allows only owners to read and manage employee dossiers', () => {
     for (const permission of [
       'personnel.employee.read',

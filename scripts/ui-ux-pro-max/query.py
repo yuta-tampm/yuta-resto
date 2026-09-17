@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import argparse
+import ctypes
 from datetime import datetime, timezone
 import json
+import ntpath
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tempfile
@@ -48,6 +51,37 @@ def _global_paths():
             Path(os.environ.get("PROGRAMDATA", "C:/ProgramData")) / "codex"]
 
 
+def _windows_directory():
+    b.require(os.name == "nt", "UNSUPPORTED_HOST_OR_PYTHON")
+    kernel = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel.GetWindowsDirectoryW.argtypes = [ctypes.c_wchar_p, ctypes.c_uint]
+    kernel.GetWindowsDirectoryW.restype = ctypes.c_uint
+    buffer = ctypes.create_unicode_buffer(32768)
+    size = kernel.GetWindowsDirectoryW(buffer, len(buffer))
+    b.require(0 < size < len(buffer), "WINDOWS_DIRECTORY_UNKNOWN")
+    return buffer.value
+
+
+def _query_environment(cwd):
+    # Resolve OS runtime paths from Windows, never inherit the parent environment.
+    # Missing SystemDrive makes this host's Python startup create a literal
+    # %SystemDrive% cache tree in cwd even for "-c pass".
+    windows = _windows_directory()
+    b.require(isinstance(windows, str) and "%" not in windows,
+              "WINDOWS_DIRECTORY_INVALID")
+    drive, tail = ntpath.splitdrive(windows)
+    b.require(re.fullmatch(r"[A-Za-z]:", drive) is not None
+              and tail.startswith("\\") and len(tail) > 1
+              and ntpath.normpath(windows) == windows, "WINDOWS_DIRECTORY_INVALID")
+    b.safe_name(tail[1:].replace("\\", "/"))
+    system_drive = drive + "\\"
+    b.require(Path(windows).is_dir() and Path(system_drive).is_dir(),
+              "WINDOWS_DIRECTORY_MISSING")
+    b.require(cwd.is_absolute() and cwd.is_dir(), "INVALID_QUERY_SCRATCH")
+    return {"SystemRoot": windows, "WINDIR": windows, "SystemDrive": system_drive,
+            "TEMP": str(cwd), "TMP": str(cwd)}
+
+
 class QueryFailure(b.Blocked):
     def __init__(self, reason, evidence):
         self.evidence = evidence
@@ -70,8 +104,7 @@ def _execute(args, root, record, target, verification=None):
             cwd = Path(tempfile.mkdtemp(prefix="query-", dir=scratch_parent))
             owned_identity = guard.api.inspect(cwd)
             try:
-                environment = {k: os.environ[k] for k in ("SystemRoot", "WINDIR") if k in os.environ}
-                environment.update(TEMP=str(cwd), TMP=str(cwd))
+                environment = _query_environment(cwd)
                 guard.recheck()
                 started = datetime.now(timezone.utc).isoformat()
                 timed_out = False
@@ -83,6 +116,8 @@ def _execute(args, root, record, target, verification=None):
                     timed_out = True
                     exit_code, stdout, stderr = None, error.stdout or b"", error.stderr or b""
                 evidence = {"utc": started, "argv": command, "interpreter": interpreter,
+                            "environmentKeys": sorted(environment),
+                            "scratchPath": str(cwd), "scratchIdentity": owned_identity,
                             "exitCode": exit_code, "timedOut": timed_out,
                             "stdoutSha256": b.sha(stdout), "stderrSha256": b.sha(stderr),
                             "receiptSha256": b.sha((target / "installation.json").read_bytes()),
@@ -93,7 +128,8 @@ def _execute(args, root, record, target, verification=None):
                     b.require(_fingerprint(_global_paths()) == globals_before, "GLOBAL_MUTATION")
                     b.require(b.fingerprint([root / ".agents/skills"], [root / b.TARGET]) ==
                               siblings_before, "SIBLING_MUTATION")
-                    b.require(not any(cwd.iterdir()), "UNEXPECTED_QUERY_OUTPUT")
+                    evidence["scratchEmpty"] = not any(cwd.iterdir())
+                    b.require(evidence["scratchEmpty"], "UNEXPECTED_QUERY_OUTPUT")
                     b.require(not timed_out, "QUERY_TIMEOUT")
                     b.require(exit_code == 0, "QUERY_FAILED")
                     b.require(len(stdout) <= 2 * 1024 * 1024, "QUERY_OUTPUT_BOUND")

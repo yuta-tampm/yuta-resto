@@ -106,9 +106,44 @@ invent a formality center, document library, provider selector, or legal status.
 
 ## Change impact
 
+The protocol labels below record the already-delivered persistent-draft
+foundation retrospectively: modified means an existing file was changed;
+created means a file was introduced by that foundation. All listed files now
+exist. This is as-built attribution, not a new implementation plan or permission
+to modify or create these files. Shared exports and migration metadata refer
+only to the bounded Formalités additions, not unrelated changes.
+
 ```text
-Files modified: connected Formalités route/components/actions, current docs
-Files created: bounded contracts/domain, cloud schema/repository/migration, tests
+Files expected to modify: existing files modified by the delivered foundation
+  apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/[employeeId]/page.tsx
+  apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-connected-read-prototype.tsx
+  apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_lib/cdi-draft-connected-read-model.ts
+  docs/ui/pages/backoffice-equipe-formalites-personnel/ACCEPTANCE_CHECKLIST.md
+  docs/ui/pages/backoffice-equipe-formalites-personnel/DATA_AND_INTERACTION_SPEC.md
+  docs/ui/pages/backoffice-equipe-formalites-personnel/PRODUCT_SCOPE.md
+  docs/ui/pages/backoffice-equipe-formalites-personnel/README.md
+  docs/ui/pages/backoffice-equipe-formalites-personnel/UI_SPEC.md
+  packages/contracts/src/index.ts
+  packages/db-cloud/drizzle/meta/_journal.json
+  packages/db-cloud/src/index.ts
+  packages/db-cloud/src/schema/index.ts
+Files expected to create: files introduced by the delivered foundation, already present
+  apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/[employeeId]/actions.ts
+  apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-workspace.tsx
+  apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_lib/cdi-draft-workspace-state.ts
+  apps/backoffice/test/formalites-persistent-draft-actions.test.ts
+  apps/backoffice/test/formalites-persistent-draft-component.test.tsx
+  apps/backoffice/test/formalites-persistent-draft-state.test.ts
+  packages/contracts/src/formalites/index.ts
+  packages/contracts/test/formalites.test.ts
+  packages/db-cloud/drizzle/0018_elite_hardball.sql
+  packages/db-cloud/drizzle/meta/0018_snapshot.json
+  packages/db-cloud/src/formalites-personnel-draft-domain.ts
+  packages/db-cloud/src/formalites-personnel-draft-repository.ts
+  packages/db-cloud/src/schema/formalites.ts
+  packages/db-cloud/test/formalites-personnel-draft-domain.test.ts
+  packages/db-cloud/test/formalites-personnel-draft-repository.integration.test.ts
+  packages/db-cloud/test/formalites-personnel-draft-schema.integration.test.ts
 Packages affected: apps/backoffice, packages/contracts, packages/db-cloud, docs
 Cross-application impact: NO
 Database change: YES — additive development schema/migration only

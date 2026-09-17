@@ -83,7 +83,7 @@ export type OneTimePointageCredentialPresentation = Readonly<{
   credentialVersion: number;
 }>;
 
-type ValidationRepository = Pick<
+export type PointageValidationRepository = Pick<
   PointageRepository,
   | 'resolveActiveEntryScope'
   | 'findCredentialCandidate'
@@ -138,7 +138,8 @@ function credentialMaterial(
 
 export function createPointageServerFoundation(
   input: Readonly<{
-    repository: PointageRepository;
+    repository: PointageValidationRepository &
+      Partial<Pick<PointageRepository, 'issueCredential' | 'resetCredential'>>;
     encodedAuthSecret: string;
     clientAddressProvider: TrustedPointageClientAddressProvider;
     now?: () => Date;
@@ -512,6 +513,9 @@ export function createPointageServerFoundation(
         inputCommand.manager,
         'pointage.credential.issue',
       );
+      if (!input.repository.issueCredential) {
+        throw new Error('Pointage credential administration is unavailable.');
+      }
       const persisted = await input.repository.issueCredential({
         scope: inputCommand.manager,
         personnelDossierId: inputCommand.personnelDossierId,
@@ -570,6 +574,9 @@ export function createPointageServerFoundation(
         inputCommand.manager,
         'pointage.credential.reset',
       );
+      if (!input.repository.resetCredential) {
+        throw new Error('Pointage credential administration is unavailable.');
+      }
       const persisted = await input.repository.resetCredential({
         scope: inputCommand.manager,
         personnelDossierId: inputCommand.personnelDossierId,

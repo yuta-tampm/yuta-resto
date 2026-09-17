@@ -143,18 +143,128 @@ force overwrite, unrestricted tar extraction, vendored upstream instructions.
 
 #### Receipt and verification transition
 
-`installation.json` chứa hashes của 69 files còn lại, không chứa hash của
-chính nó. Validation receipt kiểm tra exact schema, artifact/acceptance/
-wrapper identity và controlled state; hash exact receipt sau transition được
-ghi trong external review evidence, tránh self-hash cycle. Tổng path-set luôn
-là 70. Chỉ bootstrap đang giữ run/parent guards được đổi pending thành verified.
+Bounded revision, 2026-09-09: PROPOSED / AWAITING_SENSITIVE_DESIGN_REVIEW.
+This revises only pending resume and receipt completion; it is not Apply
+authorization. The previous all-checks receipt contract creates a cycle:
+pending -> complete requires M12 -> M12 requires verified -> pending.
 
-Pending installation chỉ cho phép verification do bootstrap sở hữu với
-run-scoped in-memory verification context đã kiểm acceptance/content, không
-public `skip-check` flag. General query runner từ chối pending. M05–M08 trong
-post-placement smoke dùng context này; M11 kiểm discovery/instruction behavior
-không cấp quyền general query trước completion. Nếu activation không được
-kiểm chứng ngay, giữ pending và báo blocker, không mở tool cho use bình thường.
+Keep exactly two receipt states, pending and verified. The receipt still hashes
+the other 69 files, never itself, and the output contract remains exactly 70
+files. Keep schemaVersion 1 and the existing exact top-level field set; tighten
+the state-specific checks contract: pending has an empty checks object;
+verified has exactly M01–M10, M11, M13 and PRE_COMPLETION_INTEGRITY, each PASS.
+M12 is forbidden in this initial verified receipt. No legacy verified receipt
+with another check set is silently accepted, migrated or repaired. There is no
+known approved verified installation to migrate. A discovered one requires
+review. Exact receipt hashes are external evidence, not self-hashes.
+
+PRE_COMPLETION_VERIFICATION is an in-memory result, not another receipt state.
+It requires actual current M01–M10 and M13, valid M11 evidence and final
+pre-transition integrity. Receipt verified proves these prerequisites only;
+it does not prove M12, normal-query sanity, task 5.4 completion or INTEGRATED.
+General queries continue to reject pending before scratch creation or spawn.
+
+#### Trusted pending-resume entrypoint
+
+Bounded identity clarification, 2026-09-09: the current Control Tower approves
+CURRENT_RESUME_IDENTITY_BASELINE_METHOD only. Gate 2b is reopened solely for
+this D4/D17 clarification; captured baseline bytes remain CANDIDATE pending
+separate review. No source implementation or task 5.4 execution is authorized.
+
+HISTORICAL_RUN_IDENTITY_PROVENANCE means identities actually recorded during
+the original staging/placement lifecycle. Its current status is
+INCOMPLETE_NOT_RECONSTRUCTED; HISTORICAL_RUN_DIRECTORY_IDENTITY is NOT_RECORDED.
+CURRENT_RESUME_IDENTITY_BASELINE means a new read-only identity capture under
+explicit Control Tower authorization, with its own capture UTC and exact
+bounded evidence hash. It is not recovered historical provenance, proves no
+continuity before that UTC, does not fill or overwrite historical gaps and
+does not imply that a path has remained unchanged since placement. Preserve
+task-5.3 historical evidence byte-for-byte.
+
+Only a separately Control-Tower-approved current baseline may later become
+the forward-looking identity trust anchor. Future authorized resume must
+revalidate its exact path set, native identities, file hashes, absence records,
+environment and approval binding before mutation. Current observation or
+approval of the capture method alone is insufficient. Keep the original
+receipt runId, pending receipt preimage, target manifest and approved M11
+snapshot bindings; they establish the current visible relationship only.
+
+Record the candidate only in the existing Tasks bounded
+CURRENT_RESUME_IDENTITY_BASELINE_BEGIN/END evidence unit. Hash every byte
+strictly after its BEGIN marker line up to the byte before its END marker
+line, including the interior terminal LF, without trim or newline conversion.
+Hash the exact identity map with bootstrap.canonical, separately from this
+block. Use existing bootstrap native identity semantics, not a new identity
+representation or a generic checkpoint file.
+
+For an absent path record type ABSENT, normalized absolute path, nearest
+existing parent and its exact identity, intended final component, containment,
+existing ancestor-chain reparse status and before/after absence observations.
+Never invent owner, SID, file ID or volume/index fields for the absent path.
+Absence is not creation authority. If the original run or a recovery parent is
+absent, preserve it, finish this read-only capture and STOP for an explicit
+Control Tower decision before source resume implementation may assume any
+parent-creation semantics. Do not create a run, quarantine, lease, lock or
+scratch as part of capture. Existing D8 read-only/non-delete-sharing directory
+handles may be opened, checked and released without constructing a fake run.
+
+Proposed bootstrap API:
+`resume_pending(root, artifact_path, acceptance_path, reviewed_checkpoint)`.
+It returns a bootstrap-owned guarded resume context, never a fabricated \_Run.
+The supported bootstrap orchestration calls it; callers cannot construct the
+context, assign PASS flags, supply a query verification token or skip checks.
+The context is private, active only within its owning guard lifetime and bound
+to the exact accepted artifact, target identity and original receipt runId.
+It does not call the new-install constructor or create another candidate.
+
+The first three arguments are validated repository-local inputs under D8.
+The target is derived only from root plus the fixed D3 path. The checkpoint is
+loaded by bootstrap from the existing change Tasks/review evidence whose exact
+bytes and approval reference are explicitly accepted by Control Tower; it is
+not an arbitrary receipt, caller policy or a new standalone checkpoint file.
+Its exact required facts are: approved artifact/acceptance packet and record
+digests; original runId and pending receipt digest; exact 70-file manifest and
+69 non-receipt hashes; target and ancestor volume/file-ID/owner evidence from
+actual recorded history or the separately approved forward-looking current
+baseline, with their provenance and time boundaries kept distinct;
+protected source/package/lock hashes; reviewed sibling/global inventory and
+fingerprint; interpreter identity; M11 invocation/evidence and environment
+binding; permitted owned recovery destination and current resume authority.
+Missing facts, unknown fields, stale approval or mismatches fail closed before
+verification or mutation. A supplied hash is not itself human authorization.
+Do not reconstruct missing provenance from current files or a state string.
+
+Before creating the private context, reacquire every D8 guard for the real
+root, artifact, acceptance, evidence, target, original run and recovery parent.
+Validate exact owner/SID, file IDs, volume, path type and containment, including
+the target root and every recorded file. Acquire an exclusive bootstrap
+mutation lease bound to real root and fixed target; reject another writer.
+Hold non-delete-sharing ancestor handles and recheck identities/hashes and
+surroundings before and after each check and immediately before transition.
+Reacquisition is a new validation, not continuation of an expired guard.
+The D8 trusted-workstation threat boundary remains unchanged.
+
+Resume runs actual M01–M10 using only its private verification context, then
+revalidates the approved M11 evidence against the current accepted environment
+and runs current M13. A material or unresolved discovery/configuration change
+requires new fresh Codex M11 before transition, after explicit environment
+approval; an old PASS is retained historically, not transplanted. No baseline
+is updated by resume. Any fresh drift stops the operation for review.
+
+Only the owning context may perform its internal completion transition, once:
+compare the exact reviewed pending receipt preimage on the same exclusively
+opened receipt handle; reject a concurrent writer or state/runId change; write
+only the exact canonical verified receipt, flush and recheck all 70 files and
+the unchanged 69 non-receipt hashes. No 71st temporary target file. Hold guards
+and the mutation lease through post-transition checks/recovery. This is not a
+power-loss-atomic file transaction: partial/invalid receipt after a crash is
+denied and preserved for review, never rebuilt or overwritten on resume.
+
+Crash before transition leaves exact pending state resumable only through this
+entrypoint after all guards/evidence are revalidated. Crash after transition
+does not make task 5.4 complete; pending resume must reject verified state.
+Only the separately approved verified-state path below can reassess it, and
+missing exact postimage/ownership evidence remains a recovery blocker.
 
 ### D5. Distinct provenance record
 
@@ -390,13 +500,68 @@ For final target, proposed commands from repo root:
 | M09 | runner query with `--persist`, `--force`, `--output-dir`, `--design-system` one at a time       | nonzero pre-spawn denial, no created files                                                            |
 | M10 | pre/post owned scratch and full target/global fingerprint                                       | No MASTER.md, design-system output, unexpected files, global config modifications                     |
 | M11 | Fresh Codex discovery + explicit selected local skill, no application changes                   | Exact local path loaded; external conflict rejected, internal conflict STOP, invalid REQUIRED blocked |
-| M12 | repeated verified bootstrap same artifact                                                       | VERIFIED_NO_CHANGE only after full hash/content/smoke; no silent skip                                 |
+| M12 | bootstrap verify_existing after verified transition                                             | VERIFIED_NO_CHANGE after full identity/content and bound smoke-evidence revalidation; no mutation     |
 | M13 | own bootstrap unit/negative suite                                                               | Traversal, case collision, links, target race, partial stage, digest and Python failures fail closed  |
 
-M01–M10 run staged before placement where applicable, then final verification;
-M11 only after provisional placement, before integration completion. Save actual
-stdout/results and inventory hashes. Search process exit 0 without relevant
-results fails smoke. No upstream tests claiming legal/UI correctness.
+M01–M10 run staged before placement where applicable and are rerun in the
+guarded pending-resume context. M11 follows provisional placement and must
+remain valid for the approved current environment; otherwise fresh M11 is
+required. Current M13 and pre-completion integrity precede receipt transition.
+M12 follows transition and is external evidence, never a prerequisite for
+creating the initial verified receipt. Save actual stdout/results, invocation
+and inventory hashes. Exit zero without relevant results fails search smoke.
+No upstream tests claim legal/UI correctness.
+
+```text
+exact pending target (general query = PENDING_DENIED)
+  -> trusted resume + all D8 guards + exact reviewed checkpoint
+  -> current M01–M10 + valid/fresh M11 + current M13 + integrity
+  -> PRE_COMPLETION_VERIFICATION = PASS
+  -> one guarded pending -> verified receipt transition
+  -> M12 verify_existing = VERIFIED_NO_CHANGE
+  -> one normal verified-state query sanity PASS
+  -> final exact integrity PASS -> task 5.4 eligible for completion
+any failure -> D17; never INTEGRATED by receipt state alone
+```
+
+#### Supported verified-state M12 operation
+
+Proposed bootstrap API:
+`verify_existing(root, artifact_path, acceptance_path, reviewed_checkpoint)`.
+It derives the same fixed target as resume and returns VERIFIED_NO_CHANGE
+only after full read-only revalidation, not target-exists -> skip. It can be
+called by the guarded post-transition orchestration; standalone use must
+reacquire all guards and the exact approved evidence independently. No
+caller-supplied target, receipt, replacement or update policy is accepted.
+
+Re-read and validate the accepted compressed artifact SHA-256/SRI, complete
+196-member inventory and exact 67-member projection; independently derive and
+compare all 67 raw hashes plus reviewed SKILL and NOTICE. Verify record and
+acceptance identity, exact target location, all 70 paths and directories,
+strict verified receipt schema/check-set and externally recorded exact
+postimage; check every file identity, protected ancestors and the reviewed
+protected/sibling/global state before and after. Validate interpreter identity
+and actual pre-completion smoke/M11/M13 evidence bound to these exact bytes,
+source hashes and environment. PASS labels or receipt existence alone are
+insufficient. Missing/stale smoke evidence fails closed; this read-only
+operation does not repair it or manufacture another smoke run.
+
+M12 does not write the receipt, target, stage, global configuration, source,
+scratch or other files, and does not run an updater. It reads the actual
+checks performed immediately before transition and verifies their binding;
+the separately required normal query is a real post-M12 execution, not part
+of a no-change claim. Record M12 argv/UTC/exit/result and before/after hashes
+externally in existing task/review evidence. Repeating the operation on the
+same fully verified state returns VERIFIED_NO_CHANGE with identical bytes.
+Any mismatch returns failure without mutation. Bootstrap orchestration, not
+this read-only operation, owns subsequent D17 recovery.
+
+Task 5.4 requires verified receipt, actual M12 PASS, a normal D10 gateway
+query (`keyboard accessibility`, domain ux, max-results 3) with meaningful
+JSON and actual exit/output evidence, and final path/hash/identity integrity.
+The normal query receives no pending verification context or bypass token.
+It must preserve the target and globals; its approved scratch behavior remains
+D10. All M01–M13 remain required for overall integration completion.
 
 ### D16. Controlled update sequence
 
@@ -435,6 +600,52 @@ required M check, scope integrity and evidence is accepted for completion.
 Do not delete broad roots; cleanup failures are explicit blockers, not hidden.
 Local malicious administrator/same-user arbitrary process is not neutralized by
 advisory instructions; require trusted workstation and exclusive guarded run.
+
+#### Bounded resume and post-transition failure handling
+
+For forward-looking recovery, the separately approved current identity
+baseline described in D4 may bind the original run and recovery ancestors.
+It does not establish historical run-directory continuity or change the
+INCOMPLETE_NOT_RECONSTRUCTED historical status. Record each run/quarantine
+path as EXISTING_EXACT, ABSENT or CONFLICTING_OR_UNKNOWN at capture time;
+EXISTING_EXACT describes current native observations, not baseline approval.
+An absent run/recovery parent has only its exact nearest-existing-parent
+identity and absence evidence, never a fabricated identity of its own.
+Keep it absent and STOP after capture for Control Tower review; later creation
+requires explicit authorization and is not implied by D17 recovery. A future
+authorized recovery must revalidate the approved current identity/absence
+baseline before any mutation, without weakening the existing owned-tree,
+postimage, same-volume or guarded no-replace requirements below.
+
+The D4/D15 revision preserves existing D17 failures and adds explicit handling
+after pending -> verified. M12 failure, normal-query failure or final integrity
+failure means task 5.4 BLOCKED and NOT_INTEGRATED, even if receipt says verified.
+Never silently rewrite verified back to pending, retry completion in place,
+repair content or label the failed command PASS.
+
+The owning resume orchestration may quarantine only the exact still-owned
+post-transition tree to
+`.yuta-tooling/ui-ux-pro-max/<original-runId>/quarantine`, outside discovery.
+Before that move, require the destination absent, the original run and target
+identities still matching, all 70 paths and the recorded verified postimage
+matching, and recovery ancestor/owner/volume guards valid. Use D8 guarded
+same-volume no-replace movement, then verify the moved identity and bytes.
+Preserve the verified receipt there and record both failed checks and recovery
+outcome externally. No deletion or in-place receipt rollback is authorized.
+
+If failure concerns only surroundings or query behavior while this exact owned
+tree and recovery path remain provably intact, quarantine does not adopt or
+modify the changed surroundings; record that drift for review. If ownership,
+target bytes, receipt, ancestors or destination conflict, preserve all paths
+and STOP with RECOVERY_BLOCKED_BY_DRIFT. Do not move unknown contents. This
+initial installation has no prior verified backup to restore. D16 restoration
+remains limited to separately reviewed updates and exact owned backup evidence.
+
+After a crash, a partial/unrecorded receipt or missing ownership/postimage
+evidence is preserved for explicit recovery review, not inferred from current
+bytes. No automatic recovery, activation or lifecycle promotion follows from
+the presence of a verified receipt. A quarantined tree requires a separately
+approved recovery path; it is not silently reinstalled by pending resume.
 
 ### D18. Validation / QA plan
 

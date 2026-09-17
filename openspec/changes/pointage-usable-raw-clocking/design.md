@@ -232,6 +232,554 @@ Stale foundation success không thay raw authority hoặc authorize mutation.
 Manager read/auth boundary D9 không được mở rộng bởi validation-only client;
 không cấp users/membership reads cho role này để ghép manager runtime cho tiện.
 
+#### D1b — Actual Next process bootstrap (task 3.2 alignment proposal)
+
+Đây là bounded Sensitive Design / Tasks alignment tại checkpoint 18/32,
+task 3.2 PARTIAL (18/32); checkpoint đã có 15 protected implementation paths.
+Chỉ planning được sửa; Apply PAUSED đến human approval
+exact revised Design/Tasks hashes và exact implementation allowlist trong
+Tasks. D1/D1a, D4a/D4b, F6/F8, S9, U1, Product, hai Specs, migration 0021,
+sealed UI pack và bảy blockers giữ nguyên. Các checkpoint trước trong Design
+là historical review context, không reset completed tasks hoặc UI-pack status.
+
+##### Repository evidence and alternatives
+
+Inspected baseline: Backoffice declares Next ^16.2.9, installed 16.2.9;
+Node v24.17.0. Existing scripts: dev = next dev -p 3001, start = next start
+-p 3001, build = next build. next.config.ts không có bootstrap hook;
+không có Pointage instrumentation/startup owner. Existing typed development
+review-store global không là authority cho generic registry mới.
+createCloudDatabaseClient mặc định pool không chứng minh max:1; không sửa
+shared factory. Existing guarded Pointage test helper đã có independently
+authenticated postgres-js max:1 + Drizzle clients và exact-target probe.
+Factory raw-clocking-runtime.ts mới có injected clients, không route accessor.
+Existing child-process tests chỉ là implementation pattern, không runtime proof.
+
+Official documentation tại exact tag 16.2.9 được kiểm tra, không dùng latest:
+[custom server](https://raw.githubusercontent.com/vercel/next.js/v16.2.9/docs/01-app/02-guides/custom-server.mdx)
+mô tả public next/prepare/getRequestHandler và httpServer option; entry file
+không qua Next compiler. Custom server có optimization/standalone trade-offs,
+nên chỉ test entry, không thay production startup.
+[instrumentation](https://raw.githubusercontent.com/vercel/next.js/v16.2.9/docs/01-app/03-api-reference/03-file-conventions/instrumentation.mdx)
+await register trước readiness, chạy mỗi server instance và có Node/Edge
+distinction; không chứng minh socket ownership/teardown cho D1.
+Installed next/dist/server/next.js, next.d.ts xác nhận public API, custom
+prepare/getRequestHandlers và close lifecycle. Không import Next private APIs.
+Version drift phải re-review lifecycle evidence; không upgrade để làm test pass.
+
+- A, process-local module alone: bounded cache khả thi nhưng standard CLI không
+  cấp actual listener owner, cleanup hoặc cross-reload guarantee. Không chọn
+  module-cache-only hay environment-driven lazy default.
+- B, dedicated test launcher + in-process bootstrap: CHOSEN, kết hợp narrowly
+  typed process-local promise của A. Cha chỉ chuẩn bị disposable infrastructure
+  và ephemeral inputs; actual Next child tạo/prove hai clients của chính nó.
+- C, instrumentation: không chọn. Hook existence không cung cấp actual socket,
+  shutdown hoặc cache-reload proof; thêm shared startup path không cần thiết.
+- D, plain next dev + env-only, private Next hooks hoặc proxy/sidecar: reject.
+  Không actual socket proof, hoặc tăng topology/registry/secret contract.
+  Không separate Pointage server, app, containerized app runtime hay new port.
+
+##### Owner and exact launch channel
+
+Launcher test-only khởi chạy MỘT Node child hosting existing apps/backoffice
+Next app bằng public next({ dev: true, dir: absoluteBackofficePath,
+hostname: '127.0.0.1', port: 3001, httpServer, quiet: true }).
+Tất cả page/API vẫn do Next file-system router; không implement HTTP business
+routes trong launcher, không reverse proxy hoặc second HTTP service. Chỉ
+test invocation thay CLI invocation; normal dev/start/build/config không đổi.
+Higher-risk process-wide effect nằm trong dedicated test child: listener
+ownership và lifecycle, không shared source/config path. Không launch cùng
+Backoffice khác trên port 3001; EADDRINUSE -> STOP, không auto-select port.
+
+Parent validates existing D1/F6 guards trên target trước provisioning/migration/
+fixtures; admin chỉ ở parent. Parent không gửi admin URL, open JS client,
+parent SQL proof hoặc runtime object qua process boundary. Parent-generated
+role passwords và encodedAuthSecret chỉ memory. Không .env write, command-line secrets,
+NEXT_PUBLIC inputs, durable production config hoặc implicit .env.local fallback.
+
+Child uses Node fork IPC, one strict INIT message <= 16 KiB, exact keys:
+type = POINTAGE_TEST_INIT; version = 1; runId = UUIDv4;
+parentPid / childPid = positive integers matching process.ppid / process.pid;
+origin = http://127.0.0.1:3001; listenHost = 127.0.0.1; listenPort = 3001;
+foundationDatabaseUrl / rawDatabaseUrl = role-specific URLs for SAME D1 tuple;
+encodedAuthSecret = canonical base64url 32 random bytes (existing auth format).
+Unknown keys, oversized/malformed/repeated INIT, wrong PID/channel or missing
+IPC reject. No browser/control endpoint can supply INIT or choose provider.
+After INIT only exact STOP { type: POINTAGE_TEST_STOP, version: 1, runId }
+is accepted from this same parent channel; unexpected messages fail closed.
+
+INIT không có stateGuardKeyBase64; nếu supplied thì reject như unknown key.
+Parent chỉ gửi encodedAuthSecret, không gửi independently generated hoặc derived
+stateGuard key. Trong actual Next child, strict validate/decode encodedAuthSecret
+bằng existing decodePointageAuthSecret, rồi gọi existing
+derivePointageStateGuardKey(decodedAuthSecret) với approved HKDF label
+yuta/pointage/raw-state-guard/v1. Child pass derived key đó vào
+createPointageRawClockingRuntime trong existing admission order; decode/derive
+failure giữ terminal fail-closed behavior, không publish runtime. Không nhận
+stateGuard key từ IPC, environment, CLI, request, browser hoặc process khác;
+không thêm secret contract hay viết lại crypto primitive của F1/D5.
+
+Planned D1b proof: reject INIT chứa stateGuardKeyBase64; inventory không có
+environment/CLI/browser stateGuard-key input; actual runtime nhận đúng output
+của existing derivation trên decoded auth secret; đổi auth secret phải cho
+corresponding domain-separated derived key; parent không gửi derived key riêng.
+Existing F1 vectors trong packages/auth/test/pointage-continuation.test.ts là
+authority, không duplicate thuật toán mới. Đây là planned tests, chưa chạy.
+
+Child environment is explicit allowlist: required Windows OS launch keys
+SystemRoot, WINDIR, COMSPEC, PATH, PATHEXT, TEMP, TMP only when present;
+NODE_ENV = development, YUTA_POINTAGE_SYNTHETIC_TEST_MODE = true,
+POINTAGE_TEST_ORIGIN = exact origin, NEXT_TELEMETRY_DISABLED = 1.
+Never inherit NODE_OPTIONS, arbitrary application secrets or NEXT_PUBLIC keys.
+Parent production/VERCEL check occurs BEFORE environment sanitization; cannot
+erase VERCEL to make an unsafe launch eligible. Child repeats live checks.
+Private projected D1 environment uses foundationDatabaseUrl as
+CLOUD_DATABASE_URL target descriptor; raw URL is separately checked against it.
+Neither URL is installed in process.env or read from Next dotenv loading.
+Normal CLI/build/start has no IPC owner/anchor and remains unavailable even
+with flags. No production provider is constructed; deterministic synthetic
+provider is fixed in server-owned child code, never derived from headers.
+
+##### Actual listener, admission and consumer handoff
+
+Order in actual child:
+
+1. Validate INIT/environment/URL tuples/roles and main-thread process identity,
+   before creating either client. Bind owned node:http server to exact IPv4
+   127.0.0.1:3001 with generic 503 gate. Inspect server.listening and address()
+   for exact address/port; derive origin from that socket tuple and compare
+   exact POINTAGE_TEST_ORIGIN. Config or successful parent fetch alone is not
+   listener proof. No credentials processed at this stage.
+2. Prepare existing Next against that exact httpServer. Before delegating any
+   request, verify socket.localAddress/localPort, live listener and process
+   generation; Host/Forwarded/X-Forwarded-\* never prove provenance. Origin
+   remains separate D8 CSRF check. No extra public health/bootstrap endpoint.
+3. Install one non-enumerable, non-writable, non-configurable property on Node
+   process keyed Symbol.for('yuta.pointage.raw-clocking.test-bootstrap.v1').
+   Value is frozen, Pointage-only typed admission accessor; private closure
+   owns INIT, listener, clients, state and promise. No mutable globalThis bag,
+   arbitrary keys, generic get/set/register or replace-client method.
+4. Server-only raw-clocking-bootstrap.ts, compiled by Next, supplies exactly
+   createPointageRawClockingRuntime to that one typed accessor. The child
+   DOES NOT import server-only application modules outside Next compilation
+   or enable global react-server conditions. The constructor callback is
+   fixed in this module, never supplied by handlers/request/browser.
+5. On the first accessor call, synchronously reserve the one initialization
+   promise, then create two distinct postgres-js max:1/Drizzle clients in this
+   actual process, reusing guarded test-client construction. On each actual
+   authenticated handle prove current_database() and session_user/current_user:
+   foundation = yuta_pointage_foundation_runtime; raw = yuta_pointage_raw_writer.
+   Both actual names equal the exact D1 target and independently pass the
+   whole-string rule. Rerun foundation D1a effective inventory and raw D4b/F8
+   body/owner/ACL/OID proof on these handles. No SET ROLE, parent proof,
+   admin/C17/default DB client, ACL repair or silently replaced connection.
+6. Only then instantiate fixed synthetic trusted-address provider and the
+   runtime; publish READY only after complete factory admission. Factory's
+   current per-operation requireReady and final raw transaction rechecks stay.
+   Neutral context availability additionally runs requireReady and existing
+   active-entry scope resolution, returning only { available: true } or 503;
+   it adds no authorization operation, dossier projection or credential work.
+
+Exact dependency: seven Node route.ts handlers -> raw-clocking-http.ts ->
+server-only getPointageRawClockingConsumer() in raw-clocking-bootstrap.ts ->
+typed process admission accessor -> existing admitted runtime.
+Consumer exposes only context/identify/readState/mutate/recover/end functions,
+not clients, URLs, admin/owner, provisioning, fixtures or generic DB factories.
+Internal constructor types are not consumer exports. Enforce import inventory
+and browser/RSC negative tests. The immutable process anchor is a narrowly
+scoped in-process capability, NOT a security sandbox against hostile server
+code/OS users; existing trusted-repository/host assumption remains explicit.
+
+No anchor, failed admission, wrong environment/listener/DB/role/privilege/helper/
+provider, connection failure or different worker/process -> D8 generic 503
+POINTAGE_UNAVAILABLE without credential work or partial identity. Readiness
+in another route never authorizes a bypass. Every accessor/dispatch checks
+live generation/listener/environment; every service call retains requireReady.
+A reconnect on either fixed max:1 client repeats identity/effective proof before
+use; reconnect failures cannot create a replacement pair or fallback identity.
+
+##### Concurrency, reload and failure lifetime
+
+Generation = child PID + parent-generated runId; main thread only. State starts
+INITIALIZING on the first call; all concurrent calls await the SAME promise.
+No partially admitted pair is cached/published. READY holds one bounded runtime.
+Initialization failure becomes terminal FAILED/UNAVAILABLE for that generation;
+close any opened client, drop input references, return only generic failure.
+No automatic retry, second factory invocation or in-process replacement.
+Live prerequisite failure also marks FAILED and initiates teardown; ordinary
+403/409/429 business outcomes do not. New admission needs a fresh child launch.
+
+Do not rely on Next module cache/HMR semantics. Immutable owner closure remains
+with actual process, while route module reload may obtain only its same typed
+promise. No pool lives only in an evictable module. Source/config/dependency
+change invalidates the generation: parent watches and child checks exact
+launch inventory hashes before each admission/dispatch. Inventory covers
+Backoffice src + test bootstrap entry files, imported auth/contracts/db-cloud/
+tenant source, their manifests, Backoffice config/tsconfig and pnpm-lock.yaml;
+path additions/removals also invalidate. Exclude .next generated output.
+Changes -> deny new work and teardown, no hot replacement or automatic restart;
+fresh manual launch recaptures and proves. A harmless module-cache reload with
+unchanged inventory must reuse the same promise/pair, never duplicate pools.
+Watch events alone are not proof; checksum validation is authoritative.
+
+Actual Next process/thread/generation agreement must be demonstrated by future
+real-route tests, independent re-consumer evidence E3 and process restart E5. Documentation
+does not establish this application-specific result. If Next executes the
+accessor in another worker/realm without the owned anchor, it is unavailable:
+STOP rather than global env fallback, cross-process registry or mocked proof.
+After restart the old runtime is dead; new clients require full admission.
+Existing continuation rows alone confer no authority; D2-D4 validation and
+shared-device clearing still apply.
+
+##### D1b evidence reopen — runtime invariant versus proof trigger
+
+Current-user attachment d055cb8b-1584-42bc-8634-b5c93cd16cdb chỉ authorize
+Design reopen về proof methodology. APPLY: PAUSED; Tasks: 18/32;
+task 3.2 PARTIAL. Không sửa 15 implementation paths, không chạy DB/Next/QA.
+Đề xuất dưới đây cần explicit approval của exact revised Design/Tasks hashes;
+không coi previous Apply grant là authorization cho seam mới.
+
+RUNTIME INVARIANT: trong một generation gồm child PID + runId + main thread +
+owned listener, mọi valid independent bootstrap consumer MUST resolve cùng
+immutable process anchor, đúng một initialization promise, một admitted
+runtime/facade, một foundation client và một raw client. Client wrapper và
+underlying postgres-js connection objects phải giữ identity riêng tương ứng.
+Module reevaluation không được tạo runtime/pair thứ hai. Fresh PID/runId MUST
+chạy lại toàn bộ D1/D1a/F8; missing anchor ở worker/realm khác vẫn fail closed.
+
+Observable Next HMR itself is NOT a security/runtime requirement; it is only
+one possible evidence mechanism. Đây là proposed clarification của D1b,
+không nới singleton invariant và không tuyên bố HMR đã được quan sát.
+mtime touch, HTTP 200, READY status hoặc pool count không đổi riêng lẻ không
+chứng minh module evaluation. Source BYTE drift vẫn là terminal negative E4,
+không phải unchanged-inventory test E3.
+
+**Version-pinned public-interface findings.** Installed Next 16.2.9,
+Node v24.17.0; inspected package main/index declarations và
+next/dist/server/next.d.ts. Public source
+[NextWrapperServer at v16.2.9](https://raw.githubusercontent.com/vercel/next.js/v16.2.9/packages/next/src/server/next.ts)
+phân biệt custom-server surface và internal methods. Public next(), prepare(),
+getRequestHandler(), close() cho phép hosting/request lifecycle; không tìm thấy
+documented deterministic API để đánh giá lại unchanged server module trong
+same process. Có method hiện diện trong .d.ts không đồng nghĩa với public
+reevaluation contract; getServer/load-config/setup-dev-bundler, private cache,
+getRequestHandlerWithMetadata và internal upgrade machinery không được dùng.
+
+[Custom-server guide v16.2.9](https://raw.githubusercontent.com/vercel/next.js/v16.2.9/docs/01-app/02-guides/custom-server.mdx)
+giữ approved hosting API; không cần thay dev/start/build/config.
+[Fast Refresh v16.2.9](https://raw.githubusercontent.com/vercel/next.js/v16.2.9/docs/03-architecture/fast-refresh.mdx)
+mô tả edit-driven refresh/re-run/reload, không hứa mtime-only server evaluation.
+[revalidatePath v16.2.9](https://raw.githubusercontent.com/vercel/next.js/v16.2.9/docs/01-app/03-api-reference/04-functions/revalidatePath.mdx)
+và [router.refresh v16.2.9](https://raw.githubusercontent.com/vercel/next.js/v16.2.9/docs/01-app/03-api-reference/04-functions/use-router.mdx)
+là data/render/cache behavior, không module-instantiation proof.
+[Instrumentation v16.2.9](https://raw.githubusercontent.com/vercel/next.js/v16.2.9/docs/01-app/03-api-reference/03-file-conventions/instrumentation.mdx)
+register gắn với server initialization, không unchanged-module trigger.
+Kết luận A là bounded finding từ các public interfaces/docs đã inspect, không
+claim mọi cơ chế Next đều bất khả thi. Không upgrade, private API invocation,
+cache deletion, eval/VM/compiler transform hoặc experimental loader.
+
+**Options for evidence (distinct from earlier launch options).**
+
+- Evidence A — actual public Next reevaluation trigger: NOT SELECTED. Không
+  tìm thấy API đáp ứng unchanged bytes + same generation + documented public
+  surface; mtime attempt đã fail. Chỉnh nguồn để ép refresh vi phạm E3.
+- Evidence B — decomposed proof: SELECTED. E1 chứng minh actual routes dùng
+  owned anchor; E2/E3 kiểm tra independent consumer instances từ đúng resolver
+  code trong cùng child. Không claim mô phỏng Next compiler/HMR behavior.
+- Evidence C — structural proof: REQUIRED SUPPORT, NOT SUFFICIENT ALONE.
+  Descriptor flags/frozen sole admit, stable Symbol, closure-owned promise/
+  clients, route import graph và no constructors ở consumers giải thích vì sao
+  mọi consumer cùng converge. E1-E5 dynamic assertions vẫn bắt buộc.
+- Evidence D — fixed test-only re-consumer seam: SELECTED only as the bounded
+  mechanism for B, defined below. Không HTTP/browser endpoint, test header,
+  generic IPC command, registry, runtime reset/replacement hoặc production hook.
+
+**Exact selected seam — equivalent independent consumer instantiation.**
+
+1. Trong existing raw-clocking-bootstrap.ts, một non-exported
+   createIndependentPointageAccessor() tạo một fresh zero-argument closure.
+   Mỗi closure chứa đầy đủ actual descriptor lookup/validation của native
+   node:process + stable Symbol và gọi fixed anchor.admit; không đóng trên
+   runtime/client/promise đã cache, không gọi lại cached get function.
+   Nó dùng fixed imported createPointageRawClockingRuntime như hiện tại.
+   Normal getPointageRawClockingConsumer dùng một closure tạo từ chính factory
+   này. Chỉ bounded consumer entry được export, không export probe/client.
+2. Một non-exported fixed createPointageAccessorPair() trả đúng hai fresh
+   closures từ factory đó, không argument/options/operation/input. Bridge
+   truyền function này làm second typed argument của sole admit method:
+   admit(fixedRuntimeFactory, fixedAccessorPairFactory). Đây là proposed
+   internal test-child signature alignment, không thêm method vào anchor,
+   public operation, consumer output hoặc replace/install API. Handler không
+   supply callback; child không import server-only bridge ngoài Next compiler.
+   Callback được Next-compiled bridge chuyển trong process, không serialize.
+3. Child owner reserve original admission promise đồng bộ trước mọi callback/
+   await như hiện tại. Một private one-shot proof state được reserve trước
+   gọi pair factory để recursive admit không khởi động probe lần hai.
+   E2 tạo pair A/B ngay sau reservation, trước initialize microtask hoàn tất:
+   A !== B; A và B đều chạy resolver riêng; cả hai returned promises phải ===
+   chính reserved promise (không async wrapper/.then tạo promise mới trong
+   accessor). Recursive admit vẫn chạy live guards, không skip validation.
+   Only initial fixed runtime factory có thể initialize; reentry không gọi lại.
+4. Sau promise thành công, owner giữ private reference tới returned facade,
+   underlying admitted service runtime, foundation wrapper/db/connection và
+   raw wrapper/db/connection. E3 tạo pair C/D MỚI bằng cùng fixed pair factory;
+   cả bốn closures A/B/C/D phải pairwise distinct. Invoke C/D independently
+   và concurrently; từng returned promise === original; mỗi resolved facade
+   === original facade. Trước/sau E2/E3 kiểm tra same native process anchor
+   object/descriptor, PID/runId/main-thread/listener và exact inventory hash.
+   Factory/client construction counters mỗi loại đúng một; từng reference
+   runtime, wrapper, db, connection giữ === baseline. DB pool count chỉ là
+   supporting observation, không thay object/consumer identity assertions.
+5. Đây là genuine independent consumer instantiation được option B cho phép,
+   KHÔNG phải genuine Next module reevaluation. Factory body có thể cached
+   nhưng closures mới phải có own identity và thực thi toàn bộ resolver;
+   gọi cached get hai lần hoặc hai wrapper chỉ delegate cached get không đủ.
+   Static source check MUST chứng minh real route getter và pair factory dùng
+   đúng cùng resolver constructor; không copy algorithm riêng cho test.
+   Separate module top-level side effects ngoài bounded accessor không được
+   claim covered; route/source inventory MUST chứng minh không có constructor/
+   mutable runtime owner khác. Nếu cần proof rộng hơn -> STOP review, không
+   tự chuyển sang private Next cache.
+6. Probe tự chạy đúng một lần từ owned test-child admission lifecycle, không
+   có command/route/query/body/header/browser selector để invoke hoặc repeat.
+   Sau original promise resolves, proof awaits re-consumers, KHÔNG await probe
+   trong promise mà probe đang kiểm tra (tránh self-await deadlock).
+   READY vẫn chỉ phản ánh runtime admission; proof result là evidence riêng.
+   Missing pair, reused closure, wrong identity, drift, timeout/exception hoặc
+   missing result không PASS: terminal failure/teardown hoặc test failure theo
+   existing bounded lifetime; không reset/retry/replace trong generation.
+7. Parent-to-child IPC giữ nguyên exact INIT một lần rồi STOP; không RELOAD,
+   second INIT hoặc extra parameter/key. Child-to-parent thêm đúng ONE typed
+   evidence receipt sau successful E2/E3: type POINTAGE_TEST_RECONSUMER_PROOF,
+   version 1, runId, childPid, result PASS. Không arbitrary payload/record,
+   function/object identity, counts, path, URL, key/hash of secret, credential,
+   token, employee hoặc attendance. PASS chỉ emit sau tất cả assertions ở
+   owner thành công; failure dùng existing generic FAILED status/teardown.
+   Parent validates exact keys/generation/sole occurrence và phải observe
+   receipt để pass E2/E3. Receipt không runtime authority hoặc readiness grant.
+   Không thay READY counter thành artificial HMR evaluation counter.
+8. Future tests trong existing bootstrap.test MUST có detector sensitivity:
+   riêng isolated child-owner unit tests đưa reused closures, mismatched
+   promise/facade hoặc altered descriptor/reference vào bounded proof logic
+   -> no PASS; test mock chỉ chứng minh detector, không thay E1-E3 actual-child
+   positive. Không thêm hostile callback selector vào real launch/IPC/HTTP.
+
+Path impact: NO PATH CHANGE. Future evidence-only changes dự kiến đúng bốn
+existing paths thuộc approved 15: raw-clocking-bootstrap.ts (private closure
+constructor/signature), test/helpers/pointage-raw-clocking-next-child.ts (owner
+assertions/receipt), test/helpers/pointage-raw-clocking-launcher.ts (strict
+receipt parsing and proposed fixed E5 launch argv only), test/pointage-raw-clocking-bootstrap.test.ts (E1-E5
+and detector tests), tất cả dưới apps/backoffice với src/server/pointage cho
+bridge. Exact full paths/hashes nằm trong review/Tasks. Không sửa runtime.ts,
+HTTP adapter, seven routes, shared startup/config/package hoặc migration.
+Nếu implementation cần thêm path/argument channel/runtime owner -> STOP.
+Không file nào trong 15 paths được sửa ở lượt Design này.
+
+##### D1b E4/E5 evidence alignment — current proposed review
+
+Authority: current-user attachment 946adbba-621a-4644-af70-e4a0c6b56685.
+Human evidence review chấp nhận E1/E2/E3/E4 PASS; E5 vẫn PARTIAL.
+Đây là bounded Design/Tasks alignment, chưa cho phép implementation.
+APPLY: PAUSED; Tasks: 18/32; Task 3.2: PARTIAL. Không task 3.3/UI/DB/Next/QA.
+Không đổi Product, hai Specs (20 requirements / 62 scenarios), D1/D1a/F8,
+D4a/D4b/F6, migration 0021, singleton authority hoặc seven production blockers.
+Các approval/execution statements trước đây là lịch sử, không Apply grant mới.
+
+**E4 terminal response.** Nếu request đã tới owned listener / Pointage dispatch
+trước khi terminal teardown tiếp quản, failure MUST là
+503 POINTAGE_UNAVAILABLE, không protected payload. Nếu teardown do source
+drift đóng owned listener trước khi có thể tạo HTTP response, transport refusal/
+closure là valid fail-closed outcome. MUST NOT giữ listener sống, trì hoãn
+teardown hoặc tạo response window chỉ để ép quan sát HTTP 503.
+Mọi trường hợp vẫn deny new work, terminal generation, không replacement
+admission/runtime, đóng cả hai DB clients, kết thúc đúng owned child, giữ
+evidence DB và restore controlled bytes chính xác sau confirmed child exit.
+Historical observed CLOSED_TRANSPORT / exit 1 / one admission / clients 0 /
+no replacement / exact restored source được human review chấp nhận E4 PASS;
+không đổi observation đó thành HTTP 503 và không coi là E3/HMR proof.
+
+**Launch-only independent listener-loss mechanism.** Chỉ existing TEST_ONLY
+pointage-raw-clocking-next-child.ts entry nhận exact process argument
+`--serve-listener-loss-proof`. Parse một lần trước INIT: normal child dùng
+empty argument list; proof child dùng đúng singleton argument list này.
+Unknown/duplicate/combined arguments fail closed trước listener/client creation.
+Không chuyển flag vào INIT, process.env, app config, request hoặc browser.
+Existing launcher chọn fixed argument list trước fork; sau fork không có
+setter, trigger hoặc post-READY control method. Existing parent --serve mode
+không đổi; không thêm root/package script hay app/runtime topology.
+
+1. Child chạy cùng entry, strict INIT đúng một lần, cùng D1/F6 parent preflight,
+   child D1/D1a/F8 identity/privilege/helper proofs, exact owned IPv4 listener,
+   dual-client admission, fixed synthetic provider và runtime. Neutral actual
+   context request có thể kích hoạt lazy admission; không credential/mutation
+   nào cần để kích hoạt fault.
+2. Sau READY và complete E2/E3 owner proof, one-shot child lifecycle code kiểm
+   tra same PID/runId/main thread, exact source inventory/native anchor,
+   owned server.listening/address và runtime/foundation/raw counts đúng 1.
+   E3 receipt vẫn chỉ chứng minh E2/E3, không đổi schema hay meaning để giả
+   một listener-loss receipt. Missing E3 proof không qualify E5.
+3. Child-owned lifecycle đóng CHỈ exact httpServer đang sở hữu bằng public
+   Node server.close(). Không gọi STOP trước để giả independent listener loss.
+   Không await drain callback trước phát hiện mất listener: ngay sau close,
+   assert server.listening false và address() null; kiểm tra lại existing
+   requirePointageListener/live-prerequisite guard từ lifecycle code, không
+   đợi một Pointage operation. Guard MUST detect lost listener và chuyển vào
+   existing terminal failure/teardown path. Không auto-rebind/restart.
+4. Same bounded teardown giữ 10-second drain / 5-second client-close /
+   20-second parent ownership deadline. Đóng mỗi foundation/raw connection
+   đúng một lần; counter/reference assertions trước khi drop references
+   chứng minh không thêm listener/runtime/client pair. Không đổi raw/receipt/
+   continuation rows; parent kiểm tra scoped persisted evidence unchanged.
+5. Existing sanitized LISTENING -> INITIALIZING -> READY -> FAILED và existing
+   E3 receipt, cùng exact PID/runId, private assertions, refused subsequent
+   HTTP connections, parent SQL role counts 0/0 và bounded child exit là
+   evidence phối hợp; status FAILED đơn lẻ không chứng minh listener loss.
+   Parent không gửi STOP/disconnect trước khi observed terminal outcome;
+   watchdog cleanup không được tính là successful independent proof.
+6. Để assertion failure không giả thành expected negative: proof-mode expected
+   listener-loss lifecycle kết thúc exit 1, signal null; private proof assertion
+   failure phải drain/close theo cùng lifecycle nhưng kết thúc test exit 2,
+   không được test chấp nhận như exit 1. Đây chỉ là local test-process verdict,
+   không thêm IPC payload, stage hay application error code. Normal mode/E4
+   exit semantics không đổi. Detector negatives MUST chứng minh missing close,
+   failed precondition hoặc guard không phát hiện loss không thể pass.
+   Bất kỳ assertion/teardown timeout, forced exit hoặc missing evidence đều FAIL.
+
+INIT exact schema và STOP exact schema ở D1b giữ nguyên. Không LISTENER_LOSS,
+second INIT, generic fault IPC, HTTP/debug/fault endpoint, query/header/body
+selector, browser control, environment fault variable, registry, listener
+export, private Next API, HMR/cache hook hoặc instrumentation.
+Không thêm outbound receipt. Nếu actual implementation không thể chứng minh
+kết quả bằng private assertions + existing statuses/process exit/SQL evidence
+và cần payload mới, STOP xin review, không tự thêm hoặc repurpose E3 receipt.
+
+**E5 retained-continuation matrix — future Apply only.**
+
+Current human CHANGES_REQUESTED clarification: mọi retained-continuation case
+phải cross-generation A issues / A exits without Pointage end / B re-admits /
+B consumes A's continuation. Các accepted E4/listener/IPC/exit/path decisions
+giữ nguyên; không Product/Specs/task-count change hoặc Apply authorization.
+
+Tất cả cases dùng actual file routes, guarded migrated synthetic PostgreSQL,
+final approved source hashes; không mock clock, sửa TTL, rewrite deadline,
+production/runtime clock override hoặc privileged child. Mỗi fresh-process
+case phải record new PID/new runId, fresh native anchor và full D1/D1a/F8 trên
+hai actual child-owned handles trước provider/runtime. Không transfer Promise,
+runtime/client từ child cũ; persisted continuation rows chỉ là data.
+Sau setup/identity hoặc authorized reset, chụp scoped raw events/receipts và
+đối chiếu sau denied request; không insert/update/delete attendance để tạo proof.
+
+Cross-generation MUST cho TỪNG case DEPARTURE, RESET, IDLE và ABSOLUTE:
+Generation A tự admit rồi actual identify cấp continuation. Parent chỉ giữ token
+đó trong memory; A kết thúc bằng bounded bootstrap STOP (không gọi Pointage end,
+không clear/end continuation row), confirm child exit và cả hai clients đóng.
+Sau đó Generation B mới launch, new PID khác A / new runId khác A / fresh
+process anchor; B independently chạy full D1/D1a/F8 trên own actual clients
+và đúng approved target/security configuration trước nhận protected request.
+B MUST dùng chính continuation do A cấp, không identify lại hoặc cấp token
+thay thế ở B. Không chuyển Promise/runtime/client/trusted context giữa A/B.
+Read-only evidence xác nhận continuation chưa ended do teardown và original
+issuedAt/absolute deadline vẫn của A; restart không reset/extend TTL. Thời gian
+startup/teardown đều tính vào real lifetime. Nếu B không kịp prerequisite
+deadline của case, test FAIL/inconclusive, không đổi TTL/clock/deadline.
+
+- E5-DEPARTURE: Generation A identify hợp lệ cấp continuation rồi kết thúc
+  không Pointage end; sau confirmed A exit, parent dùng existing guarded
+  disposable Personnel setup đặt departure ngoài eligibility. Generation B
+  independently re-admit và actual state dùng continuation do A cấp phải
+  403 POINTAGE_ACCESS_DENIED, không
+  protected identity/state, không raw event/receipt side effect. Kiểm tra token
+  chưa idle/absolute-expired để không gán nhầm expiry failure cho departure.
+- E5-RESET: Generation A identify cấp token, kết thúc không Pointage end;
+  sau confirmed A exit, parent dùng existing authorized disposable admin
+  boundary và existing reset/regeneration repository operation, không
+  standalone revoke/suspend và không widen foundation runtime grants. Confirm
+  superseded old version/current new version; Generation B independently
+  re-admit và actual state dùng OLD continuation do A cấp
+  trả 403 POINTAGE_ACCESS_DENIED, không protected output/event/receipt. Old
+  token không regain authority. Child không nhận admin URL/client/proof.
+  Assert Personnel vẫn eligible và token chưa expired để isolate reset.
+- E5-IDLE: Generation A identify cấp continuation, record original DB-issued/
+  idle/absolute deadlines read-only tại parent, rồi A kết thúc không Pointage
+  end. Generation B independently re-admit, không identify hoặc foreground
+  touch; B dùng continuation do A cấp cho actual state. Dùng real elapsed
+  server/database time đợi vượt approved 60-second idle deadline, vẫn trước
+  absolute deadline; actual state phải 403 POINTAGE_ACCESS_DENIED. Expired
+  continuation không được revive/touch, raw/receipt unchanged. Không sửa DB
+  deadline hoặc clock để rút ngắn test; check current credential/lifecycle
+  hợp lệ để isolate idle.
+- E5-ABSOLUTE: Generation A identify cấp continuation, record original
+  issuedAt/absoluteExpiresAt (120 seconds), rồi A kết thúc không Pointage end.
+  Generation B independently re-admit trước idle deadline của A, không identify
+  lại; B dùng continuation do A cấp cho mọi foreground state read, kể cả final
+  denial. Trước mỗi idle deadline, B thực hiện explicit valid authorized
+  foreground state reads; đây là test user actions, không background heartbeat.
+  Read-only DB assertions chứng minh idle advance theo existing rules nhưng
+  không vượt và không di chuyển original absolute deadline. Tiếp tục bằng
+  real elapsed time tới sau original 120-second deadline; actual state phải
+  403 POINTAGE_ACCESS_DENIED dù đã có valid touches. Không revive/touch sau
+  expiry, không raw/receipt side effect, không TTL/clock override. Nếu idle đã
+  hết trước intended touch thì case không chứng minh absolute và phải FAIL.
+
+Mỗi case có own result/assertions, exact source set/commands/elapsed durations,
+sanitized generation/target provenance, no protected response payload và
+no raw/receipt side effects. Được phép test lâu hơn; timeout budget phải chứa
+real 60/120-second waits và bounded teardown, không đổi lifetime để pass.
+Không in token/credential/URL/secret/employee/attendance; deadline equality
+có thể record boolean/duration evidence, không dump row.
+
+E5-LISTENER-LOSS là named result độc lập, không EADDRINUSE/STOP/IPC/E4 substitute.
+Giữ các E5 prerequisites khác: fresh-process readmission, clean STOP, IPC loss,
+partial start, normal Next no-owner denial và non-Pointage route smoke.
+No skipped case counts. Full E5 chưa PASS thì task 3.2 vẫn PARTIAL / 18/32.
+
+Path impact: NO NEW PATH. Future code/test chỉ trong existing bốn evidence paths:
+apps/backoffice/src/server/pointage/raw-clocking-bootstrap.ts;
+apps/backoffice/test/helpers/pointage-raw-clocking-next-child.ts;
+apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts;
+apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts.
+Bridge không cần thêm capability; launcher chỉ launch-time fixed argv/validation,
+child giữ private loss lifecycle/assertions, existing test file giữ named matrix.
+Không cần sửa eleven U2 paths còn lại, runtime/HTTP/routes, contracts, migration,
+UI pack, shared startup hay auth/Personnel code. Nếu cần path khác -> STOP.
+UI_UX_PRO_MAX_USAGE OPTIONAL / NOT_USED; bảy production/legal/privacy blockers
+và synthetic-only / real attendance NOT_AUTHORIZED giữ nguyên.
+
+##### Teardown, diagnostics and disposable lifetime
+
+SIGINT/SIGTERM, IPC disconnect/STOP, listener failure, source drift or terminal
+admission failure stop new requests immediately. Drain owned in-flight work
+for at most 10 seconds, then close remaining owned HTTP/HMR sockets and call
+Next close. End both postgres clients exactly once, including partial startup,
+with a 5-second close deadline; drop runtime/promise/secret references.
+Parent gives child 20 seconds to exit, then may terminate ONLY that positively
+identified owned child PID; never broad node/process/container kills.
+A timeout/forced exit leaves possible commit outcome unknown, not false rollback.
+No teardown deletes raw events, receipts or continuations inside active DB.
+
+Drop INIT message references after construction. Child sở hữu decoded auth
+secret và derived stateGuard material của generation; không log/persist, đặt
+trong process.env, serialize vào RSC/browser hoặc expose qua diagnostics.
+Chỉ clear owned mutable buffers best-effort khi ownership thực sự kết thúc,
+đặc biệt lúc teardown; không zero buffer mà live runtime vẫn phụ thuộc.
+Không claim xóa được immutable JS strings hoặc driver/runtime copies;
+driver credentials remain private until pool/process termination.
+Raw child stdout/stderr are piped, drained and discarded, not persisted or
+relayed via regex redaction. Only strict sanitized IPC diagnostics and the sole bounded re-consumer proof
+receipt defined above are exposed:
+type = POINTAGE_TEST_STATUS, version = 1, runId, childPid,
+stage in LISTENING/INITIALIZING/READY/FAILED/STOPPED and optional bounded
+code = POINTAGE_UNAVAILABLE. No input echo, exception/SQL stack, headers,
+URL, auth material, hashes of secrets, Personnel or attendance payload.
+Quiet mode supplements, never replaces, output suppression. Parent follows
+the same no-secret-output rule for driver/provision commands.
+
+Default shutdown retains positively identified disposable DB/container for
+evidence; no automatic destructive cleanup. Separate explicitly authorized
+cleanup uses existing F6 ownership/name/loopback/current_database guards and
+exact owned container/volume identity after child exit. Unknown identity or
+shared yuta_cloud/yuta_resto -> STOP. No real attendance or production activation.
+
 ### D2 — Opaque continuation và authenticity
 
 Chọn 32 cryptographically random bytes, base64url không padding (43 chars),
@@ -842,6 +1390,12 @@ và reconstruction ở trên là quyết định riêng của change.
 
 ### D8 — Employee transport/contracts, CSRF và recovery
 
+U2 handler dependency bắt buộc đi qua D1b server-only consumer accessor.
+Không handler/RSC nào tạo client hoặc đọc bootstrap inputs. Context GET cũng
+phải qua current runtime admission và active-scope resolution; no partial
+availability từ parent proof hoặc cached successful route. D1b listener proof
+không thay Origin/CSRF/operation guards dưới đây.
+
 `@yuta/contracts` owns strict Zod DTOs; unknown fields
 rejected. Body <= 4 KiB, JSON Content-Type only; no cookies used/required for
 employee auth, fetch credentials: omit. All personal endpoints POST, không
@@ -931,9 +1485,18 @@ không silent truncated success.
 
 ### D10 — Cache, privacy, logs và leakage defense
 
+D1b IPC/owner closure là nơi duy nhất giữ ephemeral bootstrap secrets; no
+process.env credential fallback, stdout/stderr relay hoặc serialized RSC input.
+Owned runtime/client teardown và output suppression theo D1b, không sửa
+foundation audit taxonomy hoặc legal retention. Không log Next request errors
+với body/header/SQL context; raw process diagnostics không thành QA evidence.
+
 Employee page HTML/RSC chứa neutral entry shell only. force-dynamic, revalidate
-0, no cached personal fetch/unstable_cache, all page/data responses private,
-no-store, max-age=0; Pragma no-cache, Expires 0. No CDN caching/s-maxage,
+0, no cached personal fetch/unstable_cache. Deployable page final responses and
+data responses require private, no-store, max-age=0; Pragma no-cache, Expires 0.
+The Next 16.2.9 DEV-only diagnostic exception and mandatory actual local
+production-mode page proof are bounded below; data-response policy is unchanged.
+No CDN caching/s-maxage,
 no service worker/offline store. No personal data in URLs, query, path segments
 beyond public establishment slug, history.state, router params, telemetry,
 analytics hoặc server component serialized props.
@@ -963,6 +1526,217 @@ commit không bị báo failed chỉ vì later optional diagnostics sink failure
 
 No cache warming/prefetch protected state, no credentials in devtool screenshots.
 Future QA screenshots only synthetic names, never plaintext PIN or continuation.
+
+### D10a — Final page cache evidence: DEV versus local production mode
+
+This technical clarification changes neither Product nor Specs. The exact
+Next 16.2.9 development observation remains
+`Cache-Control: no-cache, must-revalidate`. In installed `BaseServer.pipeImpl`,
+the `this.dev` branch replaces the page header and clears payload cacheControl
+before sending the rendered result. This is an accepted DEV-only diagnostic,
+not final D10 compliance and not a YUTA defect requiring a response interceptor.
+The historical failed final-header test remains FAIL as originally observed.
+
+Deployable dynamic employee-page final HTTP responses MUST include `private`,
+`no-store`, `max-age=0` and MUST NOT include `public` or `s-maxage`;
+`no-cache` and `must-revalidate` may additionally be present. Evidence must
+inspect the response after the complete Next render pipeline, not merely proxy
+intent, a mocked response or a framework source claim. DEV still must prove no
+public/shared or user-controlled cache directive, neutral HTML/RSC, per-request
+nonce correctness and Pointage-only isolation.
+
+The selected future proof is `LOCAL_PRODUCTION_MODE_IMPLEMENTATION_EVIDENCE`:
+build the existing Backoffice and request the real filesystem page at
+`http://127.0.0.1:3001/pointage/synthetic-establishment` through its actual
+supported production-mode Next server. From the repository root, use only:
+
+```text
+pnpm --filter @yuta/backoffice build
+pnpm --filter @yuta/backoffice start --hostname 127.0.0.1
+```
+
+The existing package scripts resolve to `next build` and
+`next start -p 3001 --hostname 127.0.0.1`; root aliases are
+`build:backoffice` and `start:backoffice`. No new script, path, app, listener
+wrapper or preview mechanism is approved. These commands are a future plan:
+do not run them until explicit human approval of the revised Design/Tasks hashes.
+
+For both future commands, require process-local `NODE_ENV=production`,
+`NEXT_TELEMETRY_DISABLED=1`, `VERCEL` absent, loopback-only listener and no
+external ingress. Use synthetic slug/neutral payload only, no real Personnel
+or attendance data, no production trusted-client-address provider, no production
+DB configuration and no shared development DB fallback. This rendering proof
+does not admit the D1/D1b usable runtime: do not bootstrap dual DBs, instantiate
+a provider, run fixtures/migrations or create attendance merely to test the page.
+
+Preflight both inherited environment and Next-autoloaded environment files
+without logging values. Existing Backoffice `.env` and `.env.local` must not
+silently supply a DB/provider/bootstrap configuration; clearing inherited
+variables alone is insufficient. If safe effective configuration cannot be
+established using current approved mechanisms without editing environment files,
+adding a path/script or weakening guards, STOP for environment authority.
+Do not rename environment files or manufacture fallback credentials. If build
+or the built neutral page unexpectedly needs Pointage DB/provider composition,
+STOP for review. A standard no-owner API must remain unavailable.
+
+Actual HTML MUST return 200 with all three required cache directives and neither
+forbidden directive. Actual RSC/Flight MUST return 200 with neutral payload and
+an equally non-cacheable final policy: assert the same directive set first,
+record the exact final header, and document any different framework-owned form.
+Do not silently accept an alternative by weakening the test. If RSC is cacheable
+or the alternative's equivalence is ambiguous, STOP for human review. Preserve
+`Pragma` / `Expires` evidence where applicable, no neutral-page `Set-Cookie`,
+and no protected personal payload in either representation.
+
+Re-run production-mode CSP evidence independently: final CSP/nonce present,
+every applicable rendered framework script matches the response nonce,
+independent requests have distinct nonces, inbound CSP/report-only/x-nonce
+cannot select that nonce, no `unsafe-inline` and no `unsafe-eval` workaround.
+Recheck unrelated-route isolation and normal no-owner API denial. DEV PASS
+cannot substitute for this production-mode proof; neither is Browser QA.
+
+Reject node_modules/Next patches, ServerResponse monkey-patches, global Next
+handler wrappers, custom reverse proxies/listeners, D1b bootstrap changes,
+instrumentation/private Next APIs, root-layout changes, global middleware/proxy
+expansion, next.config/global headers workarounds, service workers, CDN/proxy
+simulation and artificial production-only page branches. The existing proxy
+remains unchanged; do not compensate for a DEV override. If actual production
+final responses fail D10, STOP and report before correction. Any future proxy
+edit requires that genuine scoped defect and review within the approved U3
+boundary; no speculative interceptor is authorized.
+
+This proof is not deployment, staging, production enablement, real attendance,
+provider approval or readiness promotion. All seven production/legal/privacy
+blockers and P13/P14 synthetic/disposable-only authority remain unchanged.
+
+### D10b — PROCESS_ENV_SHADOW_ISOLATION_V1
+
+Impact classification: CROSS_MODULE. Profile áp dụng cho toàn bộ Backoffice
+Next build/start process, không chỉ Pointage. Đây chỉ là evidence/test boundary:
+Product change NO, Specs change NO, application runtime architecture change NO,
+production enablement NO. D10a final HTML/RSC/CSP assertions không đổi.
+
+FRAMEWORK FACT: Next/@next/env 16.2.9 snapshot initial process.env.
+replaceProcessEnv xóa current keys có sourceEnv undefined hoặc chuỗi rỗng,
+sau đó gán lại mọi entry của sourceEnv; empty string trong snapshot có thể
+được khôi phục. Điều kiện chọn file key vào parsed là
+`typeof parsed[key] === 'undefined' && typeof origEnv[key] === 'undefined'`.
+Presence trong origEnv, không phải truthiness/non-empty, quyết định eligibility.
+Key có empty-string value vẫn ngăn file key được chọn vào parsed. Không tuyên
+bố empty string làm giá trị .env thắng. Source và public precedence được pin
+16.2.9 trong review packet.
+
+YUTA POLICY: EMPTY STRING SHADOWING IS FORBIDDEN. Đây là safety policy được
+human duyệt, không phải kết luận Next precedence: empty value mơ hồ giữa các
+consumer/validator, có thể bị hiểu là missing/invalid và cho evidence yếu hơn
+một intentional non-empty poison/deny override. Mọi shadow MUST deliberately
+non-empty trước Next initialization.
+
+Production-load order: process.env, .env.production.local, .env.local,
+.env.production, .env. Trước mỗi future build và start, inventory lại đủ bốn
+file tại apps/backoffice: existence, key counts, union và duplicate names.
+Không lấy .env.development.local làm shadow source. Không in, persist hoặc
+hash giá trị file/secret. Inventory hiện tại: production-specific files vắng;
+.env.local có 5 keys, .env có 6 keys; union 8 keys và 3 duplicates
+AUTH_SECRET/CLOUD_DATABASE_SSL/CLOUD_DATABASE_URL. Key/category profile dưới
+đây bao phủ toàn bộ union, kể cả tên chưa có current consumer.
+
+| Key                            | Category           | Giá trị evidence được đề xuất, không lấy từ env file                       |
+| ------------------------------ | ------------------ | -------------------------------------------------------------------------- |
+| AUTH_SECRET                    | POISON_SECRET      | `!U3_DENY!`                                                                |
+| CLOUD_DATABASE_SSL             | DENY_SINK_SSL      | `false`                                                                    |
+| CLOUD_DATABASE_URL             | LOOPBACK_DENY_SINK | `postgresql://u3_env_poison:!U3_DENY!@127.0.0.1:65431/yuta_u3_env_blocked` |
+| GOOGLE_CLIENT_ID               | POISON_PROVIDER    | `!U3_DENY!`                                                                |
+| GOOGLE_CLIENT_SECRET           | POISON_PROVIDER    | `!U3_DENY!`                                                                |
+| GOOGLE_TOKEN_ENCRYPTION_KEY    | POISON_SECRET      | `!U3_DENY!`                                                                |
+| NEXT_PUBLIC_APP_URL            | LOOPBACK_ORIGIN    | `http://127.0.0.1:3001`                                                    |
+| YUTA_OPENAI_EVALUATION_API_KEY | POISON_API_KEY     | `!U3_DENY!`                                                                |
+| NODE_ENV                       | EVIDENCE_MODE      | `production`                                                               |
+| NEXT_TELEMETRY_DISABLED        | TELEMETRY_DISABLED | `1`                                                                        |
+
+Poison markers là public negative-test literals, không phải credentials,
+không tăng độ dài/encode/generate để qua credential validator. AUTH*SECRET
+marker có 9 ký tự, cố ý không đạt getAuthSecret production minimum 32.
+Nếu build gọi validator đó, STOP tại consumer, không tạo secret 32 ký tự.
+Ba GOOGLE*_ trong union không có exact-name reader được tìm thấy trong current
+Backoffice/packages source; connector đọc GOOGLE*BUSINESS_PROFILE*_ và
+REPUTATION_CREDENTIAL_ENCRYPTION_KEY. Không alias hoặc thêm các tên đó.
+Personnel extraction chặn ngoài development trước API-key use; không thêm mode
+hay enablement để qua guard. Recheck consumers trước future execution.
+
+CLOUD_DATABASE_URL chỉ là syntactically parseable deny target vì
+packages/db-cloud/src/env.ts yêu cầu URL; CLOUD_DATABASE_SSL chấp nhận literal
+false. Backoffice cloud-database module tạo client khi import; parsing/client
+object không phải permission connect. Không provision sink, dùng shared DB,
+retained evidence DB, yuta_cloud/yuta_resto hoặc copied username/password.
+Trước build/start phải xác nhận port 65431 không có listener/service; nếu có
+hoặc không chứng minh được non-serving, STOP, không chọn port khác ngầm.
+Mọi DB connection attempt là unexpected dependency và phải fail/STOP; không
+coi connection refusal bị nuốt như successful isolation evidence. Chỉ dựa vào
+không thấy log là chưa đủ để khẳng định không có attempt. Không sửa driver,
+bootstrap, firewall hay tạo listener để bù thiếu bằng chứng.
+
+Dùng một frozen in-memory profile cho một evidence generation. Không spread
+parent process.env. Chỉ copy các OS/runtime keys cần thiết:
+SystemRoot, WINDIR, COMSPEC, PATH, PATHEXT, TEMP, TMP; tìm tên Windows không
+phân biệt hoa/thường, từ chối aliases/collisions không rõ ràng. Sau đó thêm
+đúng 10 reviewed entries trên. Không inherit USERPROFILE/APPDATA/LOCALAPPDATA,
+NODE_OPTIONS, NODE_PATH, proxy/token/provider variables theo suy đoán. Nếu cần
+thêm inherited key, ghi exact name/reason và STOP để review trước khi thêm.
+Current pnpm.CMD có thể tự thiết lập NODE_PATH cho installed pnpm; đó là tool-
+generated resolution metadata, không phải inherited application configuration.
+Phải kiểm tra resolved Node/pnpm identity và shim trước future execution.
+
+Cả hai command MUST nhận cùng dedicated env object qua child-process env option;
+không launch từ broad developer/Codex shell environment. Future in-memory
+orchestration dùng Node child_process.spawn với COMSPEC đã xác minh, args
+`/d /v:off /s /c` và một trong đúng command literals sau, cwd repository root,
+windowsHide true, không tạo source wrapper/script:
+
+```text
+pnpm --filter @yuta/backoffice build
+pnpm --filter @yuta/backoffice start --hostname 127.0.0.1
+```
+
+/d tắt cmd AutoRun, /v:off không expand poison marker như delayed expansion;
+profile values chỉ đi qua env, không nội suy vào command text. Same generation
+giữ nguyên tất cả profile entries và NEXT_PUBLIC_APP_URL qua build và start.
+Nếu orchestration kết thúc, profile/inventory drift hoặc tool-added application
+key xuất hiện, STOP; không tái dùng build từ profile khác. Các Next-generated
+internal runtime keys không phải permission tự inject private bypass.
+
+Trước mỗi command: require full file union coverage/non-empty shadows, đúng
+key/category set, same profile equality, NODE_ENV production, telemetry off,
+VERCEL absent và không có **NEXT_PROCESSED_ENV, **NEXT_PRIVATE\* hoặc private
+env-skip option do launcher cung cấp. Không thêm Pointage synthetic/provider/
+bootstrap enablement; file union có forbidden key hoặc unknown key phải STOP.
+Unknown/future keys cần exact consumer/read-path classification và review
+safe poison trước khi mở rộng profile; không copy file value. Functional
+credential, external endpoint hoặc shared target requirement luôn STOP.
+Chỉ ghi names/categories, counts, equality assertions; không persist/hash
+secret values. Public profile literals không được trình bày như real secrets.
+
+Separate @next/env admission probe: NOT_PROPOSED trong V1 packet này.
+Không gọi private loader API hoặc probe ngầm; inventory dùng read-only parsing,
+không load env vào application. Future admission phải kiểm tra dedicated launch
+object và propagation; một probe bổ sung cần exact mechanism/output được review
+trước. Probe không bao giờ thay actual build/start evidence của D10a.
+
+Threat boundary: V1 chứng minh file values không thành effective Next process
+configuration/active provider/DB hoặc bundled NEXT_PUBLIC value. Nó KHÔNG hứa
+Next CLI không mở/parse env-file bytes; public loader vẫn có thể đọc chúng.
+Điều này được human chấp nhận cho U3. Nếu yêu cầu không đọc file bytes, STOP:
+cần filesystem/workspace isolation design riêng. Không nâng claim ngầm.
+
+Mọi build/start failure do valid credential, provider, DB/shared data hoặc key
+không safely poisonable đều STOP, giữ task PARTIAL; không copy real values,
+tạo functional dummy credential, provision DB/provider, sửa env/Next config/
+node_modules/launcher/bootstrap hoặc dùng private skip flag. Không dump raw
+diagnostics chứa env/header/body; chỉ sanitized failure category/consumer.
+D10a neutral page, loopback-only listener ownership/shutdown proof, no-owner
+denial, no real attendance và cả bảy production blockers giữ nguyên.
+V1 chỉ là proposal trong alignment: chưa probe/build/start, chưa U3 PASS;
+đợi explicit approval của exact Design/Tasks hashes và profile mới.
 
 ### D11 — UI planning boundary and state model
 
@@ -1087,6 +1861,111 @@ Deployment/production migration, runtime role provisioning, retention cleanup
 hoặc data conversion không được authorize bởi Design hoặc tests.
 
 ## Verification Design
+
+### U3 final-page evidence — mode-separated and pending approval
+
+D10b PROCESS_ENV_SHADOW_ISOLATION_V1 admission/profile propagation là prerequisite
+của D10a future build/start proof. Framework presence và YUTA non-empty policy
+phải được đánh giá riêng; profile/probe không thay final HTML/RSC/CSP evidence.
+
+D10a controls final HTML/RSC cache and CSP evidence. Preserve the historical DEV
+observations and failed exact-cache assertion; do not relabel them as production
+proof. After explicit approval of the revised exact Design/Tasks hashes, collect
+the actual local production-mode commands, sanitized effective-environment
+admission result, status/headers, nonce/script assertions, route isolation,
+no-owner denial and shutdown evidence. Record exact source/test hashes and any
+deviation; failure or ambiguous RSC cacheability stops U3.
+
+A passing approved U3 proof may complete only 3.3 (20/32); then finish the
+already-approved remaining U4 work (at most 21/32) and STOP before 3.5. No task
+completion is granted by this planning alignment. Formal post-Apply VERIFY
+must independently re-evaluate U3 against current bytes and D10a; QA remains
+a subsequent separate mandatory Browser QA stage, not this HTTP evidence.
+
+### D1b actual-process bootstrap proof — planned, not executed
+
+U2/U8 và R3/R6/R7 MUST bổ sung actual Next file-route evidence sau Apply approval:
+
+1. Same child PID/runId/main thread owns actual 127.0.0.1:3001 listener, two
+   independently authenticated max:1 handles và all D1/D1a/F8 SQL proofs.
+   Parent-only probe, direct factory/adapter call hoặc mocked handler không đủ.
+2. Concurrent initial context/identify/state requests publish one runtime only
+   after both proofs; failed second client/provider closes partial resources.
+   No credential processing or protected output before complete admission.
+3. Missing/malformed/replayed IPC; production/VERCEL; wrong/mismatched/C17/shared
+   DB; role/member/ACL/helper/body drift; listener/port mismatch; lost socket;
+   forged Host/Forwarded headers; missing provider/connection all fail closed.
+   Standard dev/start/build without owner never instantiate fallback runtime.
+4. Prove independent re-consumer behavior E3 with unchanged inventory, not
+   mtime/HMR inference. Source BYTE drift E4 and fresh-process readmission E5
+   are separate cases; IPC disconnect remains a separate teardown negative.
+   Old continuation rows do not bypass current authority.
+5. Exercise actual migrated synthetic Next context/identify/state/IN/OUT/recover/
+   end routes, dual identify/state.read and raw+receipt atomicity. Keep current
+   20/62 mapping; startup tests supplement, never replace behavioral scenarios.
+6. End/failed startup/forced shutdown closes both clients; capture sanitized
+   process/listener and SQL assertions, source hashes and exact command/exits.
+   DB evidence remains intact; logs/browser/RSC contain no bootstrap secrets.
+   Non-Pointage route smoke test shows no default/global startup modification.
+
+This reopen runs planning checks only. Prior partial actual-route results and
+failed mtime assertion remain historical evidence, not current completion.
+Revised E1-E5/socket/SQL proof is NOT_RUN and mandatory before task 3.2/3.8
+completion; neither Next docs nor this proposal supply dynamic PASS.
+
+#### D1b E1-E5 — separate future acceptance evidence
+
+E1 — actual Next route binding: drive all seven existing file routes over the
+owned listener in the actual child. Preserve method/auth/lifecycle/transaction
+assertions; correlate child PID/runId and anchor admission with real requests,
+plus exact route -> HTTP -> bridge import graph. Direct factory calls/mock
+routes cannot satisfy E1. No employee UI/3.3+ is needed for this U2 evidence.
+
+E2 — same-generation singleton: first real request lazily admits, with concurrent
+independent real requests plus independent A/B closures before initialization
+settles. Assert exact promise identity, one construction per runtime/client,
+both authenticated same-database proofs before credential work; failed second
+client/provider closes partial resources. Same-generation success is not HMR.
+
+E3 — deterministic re-consumer: C/D distinct from A/B and each other, full
+resolver body from real bridge, same PID/runId/main thread/listener/inventory,
+same anchor/promise/facade/service runtime/two wrapper/db/connection references.
+Require owner assertions and the single strictly parsed private PASS receipt;
+also detector-negative unit tests. No source write/mtime trigger, module cache
+operation or browser interaction. Proof does not assert actual Next HMR occurred.
+
+E4 — actual source BYTE drift: separate future explicitly approved negative on
+exact raw-clocking-bootstrap.ts in the owned launch inventory after READY.
+Capture original bytes/hash; append a fixed harmless comment, record the changed
+hash and assert deny new work with terminal child failure: dispatched requests
+before teardown ownership fail with generic 503 POINTAGE_UNAVAILABLE and no
+protected payload; closure/refusal before an HTTP response can be created is
+also valid fail closed. Do not delay teardown or keep a response window merely
+to manufacture HTTP 503. Require bounded teardown, both runtime clients closed,
+zero remaining owned clients, owned child termination, retained evidence DB
+and no replacement/admission. Historical CLOSED_TRANSPORT remains unchanged
+and is accepted as E4 PASS by current human evidence review.
+This is intentionally a changed generation, never evidence of E3. Only after
+confirmed child exit restore the original bytes IF current bytes exactly equal
+the controlled changed preimage; unexpected edits -> STOP, never overwrite.
+No temporary change is hidden; record before/changed/restored hashes, child exit
+and retained DB evidence. No active shared developer app may use this inventory.
+Missing safe ownership blocks this test, not permission for another target.
+This Design turn performs none of these writes/launches.
+
+E5 — fresh process: after old child exit, launch fresh PID and fresh runId with
+unchanged/restored approved source. Full D1/D1a/F8 on NEW child-created handles
+must precede provider/runtime publish; old promise/anchor is not transferred.
+Retained continuation still requires D2-D4 current lifecycle/credential checks,
+including departure/reset/expiry denials; raw/receipt history is unchanged.
+Standard Next without owner remains unavailable. Separately prove STOP,
+IPC-loss, listener-loss, partial-start failure and bounded clean process exit;
+previous forced shutdown is not accepted as clean final evidence.
+
+All five need independent named results, exact final source hashes, commands,
+exits/skips and sanitized observations. E1 partial history does not pre-pass E2-E5.
+Apply evidence is re-evaluated during formal VERIFY; QA stays a separate later
+real-browser stage. Missing/failing case leaves 3.2 PARTIAL, no 3.3+ or Gate 3.
 
 Chưa chạy implementation tests/Browser QA. Đây là traceability và future
 verification design, không Tasks/Implementation Plan/Technical Implementation
