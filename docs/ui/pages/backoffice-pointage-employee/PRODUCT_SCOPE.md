@@ -1,6 +1,6 @@
 # Pointage employee — Product Scope
 
-Status: Approved requirements; Design proposal awaiting review
+Status: APPROVED / IMPLEMENTED / TEST-EVIDENCED — Browser QA pending
 
 Visibility: Engineering
 
@@ -14,7 +14,7 @@ Gate 2: APPROVED_FOR_DESIGN. P1-P14 preserved.
 | [pointage/raw-clocking](../../../../openspec/changes/pointage-usable-raw-clocking/specs/pointage/raw-clocking/spec.md)   | 4bfa64e863ad465a144341c18aa5d0db3ce0806ada52ad40183cf9a4e321f90e | 13 / 41                  |
 | [authorization/pointage](../../../../openspec/changes/pointage-usable-raw-clocking/specs/authorization/pointage/spec.md) | 1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66 | 7 / 21                   |
 
-The exact Specs remain normative change requirements. This page proposal does
+The exact Specs remain normative change requirements. This page record does
 not rewrite them. Technical representation belongs to
 [Design](../../../../openspec/changes/pointage-usable-raw-clocking/design.md).
 
@@ -66,5 +66,6 @@ expiry, not a legal deletion/retention policy.
 ## Review boundary
 
 UI_AFFECTING: YES. BROWSER_QA_REQUIRED: YES.
-Design only; no Tasks, Implementation Plan, Technical Implementation Contract,
-migration, implementation, deployment, enablement, sync or archive.
+Implementation and automated Apply evidence exist within the approved Design
+and contracts. Formal VERIFY and Browser QA have not run. Deployment,
+production enablement, real attendance, sync and archive remain unauthorized.

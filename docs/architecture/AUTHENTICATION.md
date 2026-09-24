@@ -114,11 +114,18 @@ Reputation permissions are enforced server-side:
 Client-side button visibility is only a usability aid and must not replace the
 server permission check.
 
-## Pointage authority foundation
+## Pointage authority and raw-clocking consumer
 
-The Backoffice cloud runtime contains a server-only Pointage authentication and
-authorization foundation. It does not expose a route, browser transport,
-employee session, clock event, UI, or production-enabled capability.
+The Backoffice cloud runtime contains the server-only Pointage authentication
+and authorization foundation plus the implemented employee raw-clocking
+consumer at `/pointage/[establishmentSlug]`. The implementation, formal VERIFY
+and Browser QA cover strict employee transport, a Pointage-specific
+continuation, immutable raw-event/receipt behavior, derived current state, the
+shared-device UI, and the bounded server-only manager read. Browser QA passed
+with the accepted residual evidence limitations for hidden/background
+lifecycle, BFCache triggering and independently observable absolute expiry.
+This is implemented but not production-enabled: real employee attendance is
+not authorized, and no production trusted-client-address provider exists.
 
 Pointage employee credentials are independent from Backoffice user sessions,
 Personnel permissions, POS users, and local PINs. A credential contains exactly
@@ -147,12 +154,17 @@ to active scoped OWNER or MANAGER contexts for establishment read, credential
 issue, and credential reset. STAFF has no Pointage grant, and there is no
 standalone revoke, suspend, or invalidate operation.
 
-Cloud persistence is additive and limited to credential versions, distributed
-candidate/client limiter state, and minimized write-only security attribution.
-It contains no raw Pointage evidence or offline/sync state. Exact retention,
-deletion/anonymization, legal hold, backup-retention interaction, employee notice,
-detailed audit visibility, and trusted production client-address provenance are
-still unresolved production gates.
+Canonical production cloud migrations remain limited to credential versions,
+distributed candidate/client limiter state, and minimized write-only security
+attribution. Raw events, idempotency receipts, and continuations are exercised
+only through the guarded disposable test extension; no production database is
+enabled for raw attendance. Raw events are the sole attendance source, while
+receipts, continuations, sessions, and current state cannot become competing
+attendance sources. There is no offline/sync state.
+
+Exact retention, deletion/anonymization, legal hold, backup-retention
+interaction, employee notice, detailed audit visibility, and trusted production
+client-address provenance are still unresolved production gates.
 
 ## User and membership administration
 

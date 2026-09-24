@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { getTableConfig } from 'drizzle-orm/pg-core';
 import { describe, expect, it } from 'vitest';
 import {
@@ -9,6 +10,75 @@ import { pointageEmployeeCredentials } from '../src/schema/pointage';
 import { readFileSync } from 'node:fs';
 
 describe('Pointage raw clocking F2 schema', () => {
+  it('F7: keeps raw clocking outside the canonical cloud migration stream', () => {
+    const config = readFileSync(
+      new URL('../drizzle.config.ts', import.meta.url),
+      'utf8',
+    );
+    const cloudSchema = readFileSync(
+      new URL('../src/schema/cloud.ts', import.meta.url),
+      'utf8',
+    );
+    const canonicalJournal = JSON.parse(
+      readFileSync(
+        new URL('../drizzle/meta/_journal.json', import.meta.url),
+        'utf8',
+      ),
+    ) as { entries: { tag: string }[] };
+    const extension = JSON.parse(
+      readFileSync(
+        new URL(
+          './fixtures/pointage-raw-clocking/extension.json',
+          import.meta.url,
+        ),
+        'utf8',
+      ),
+    ) as {
+      entry: { tag: string };
+      sqlSha256: string;
+      snapshotSha256: string;
+    };
+    const extensionSql = readFileSync(
+      new URL(
+        './fixtures/pointage-raw-clocking/0021_abandoned_black_queen.sql',
+        import.meta.url,
+      ),
+    );
+
+    expect(config).toContain("schema: './src/schema/cloud.ts'");
+    expect(cloudSchema).not.toContain('pointage-raw-clocking');
+    expect(canonicalJournal.entries).toHaveLength(21);
+    expect(canonicalJournal.entries.at(-1)?.tag).toBe(
+      '0020_formalites_legal_template_foundation',
+    );
+    expect(
+      canonicalJournal.entries.some(
+        ({ tag }) => tag === '0021_abandoned_black_queen',
+      ),
+    ).toBe(false);
+    const canonicalSql = canonicalJournal.entries
+      .map(({ tag }) =>
+        readFileSync(new URL(`../drizzle/${tag}.sql`, import.meta.url), 'utf8'),
+      )
+      .join('\n');
+    expect(canonicalSql).not.toMatch(
+      /pointage_raw_(?:events|command_receipts|lock_dossier|writer|lock_owner)|pointage_continuations/u,
+    );
+    expect(extension.entry.tag).toBe('0021_abandoned_black_queen');
+    expect(createHash('sha256').update(extensionSql).digest('hex')).toBe(
+      extension.sqlSha256,
+    );
+    const extensionSnapshot = readFileSync(
+      new URL(
+        './fixtures/pointage-raw-clocking/0021_snapshot.json',
+        import.meta.url,
+      ),
+    );
+    expect(createHash('sha256').update(extensionSnapshot).digest('hex')).toBe(
+      extension.snapshotSha256,
+    );
+  });
+
   it('F5: continuation is scoped technical metadata with full credential-version binding', () => {
     const config = getTableConfig(pointageContinuations);
     expect(config.columns.map((column) => column.name)).toEqual([
@@ -114,7 +184,10 @@ describe('Pointage raw clocking F2 schema', () => {
   });
   it('D4a: migration leaves active literals typed by the existing status enum', () => {
     const migration = readFileSync(
-      new URL('../drizzle/0021_abandoned_black_queen.sql', import.meta.url),
+      new URL(
+        './fixtures/pointage-raw-clocking/0021_abandoned_black_queen.sql',
+        import.meta.url,
+      ),
       'utf8',
     );
     const helper = migration.split('AS $lock$')[1]?.split('$lock$;')[0];

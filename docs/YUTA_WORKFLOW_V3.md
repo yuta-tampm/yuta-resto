@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-09-03
+Last updated: 2026-09-24
 
 ## 1. Workflow này là gì
 
@@ -76,9 +76,10 @@ IDEA
 → Verify
 → QA
 → Gate 3
-→ Approval
-→ Sync
-→ Validate
+→ Human Approval
+→ $yuta-finish-change
+→ Sync or valid no-spec finalization
+→ Validate Main Specs when applicable
 → Archive
 → Knowledge Consolidation
 → Done
@@ -255,6 +256,90 @@ implementation outcome **và** compliance evidence cùng tồn tại; trước k
 tất phase phải đánh giá mọi contract item áp dụng. Vòng này không thêm human
 approval sau mỗi phase. UI checks trong APPLY không thay thế Browser QA sau
 VERIFY.
+
+### Phản hồi phát triển có điều kiện sau Apply
+
+Trong đường Apply hiện có, trước khi kết luận Technical Implementation
+Compliance và formal VERIFY/QA, đánh giá hai assertion độc lập:
+`DEV_USABLE` và `MANUAL_TEST_READY`. Đây không phải stage, gate, QA status hoặc
+đường tắt qua một evidence bắt buộc. Cả hai ở trạng thái vận hành `pending`
+trước khi được đánh giá; kết quả assessed chỉ là `YES | NO | NOT_APPLICABLE`.
+Ghi kết quả cùng scope, candidate và evidence/lý do trong `tasks.md` theo
+[`YUTA_AUTOMATED_CHANGE_WORKFLOW.md`](YUTA_AUTOMATED_CHANGE_WORKFLOW.md).
+
+`DEV_USABLE = YES` chỉ khi feature áp dụng có thể dùng an toàn trong local/dev
+qua intended real boundaries, với dev/test data và identity thích hợp. `NO`
+ghi blocker thật; `NOT_APPLICABLE` cần lý do vì không có flow dev/runtime có
+thể tương tác. Không suy applicability từ UI: một service không có browser vẫn
+có thể có manual dev flow. `MANUAL_TEST_READY = YES` đòi handoff mà con người
+có thể dùng: command/runtime, route/entry, safe data, test identity khi cần,
+basic flow, reset/retry và dev-only limitations. Thiếu setup của flow có thật
+là `NO`, không phải `NOT_APPLICABLE`. Handoff này không phải Browser QA,
+Technical Compliance, VERIFY hoặc Gate 3 evidence.
+
+Một assertion còn `pending` hoặc `NO` khi applicable giữ post-Apply work mở;
+không đi tiếp bằng cách gán `NOT_APPLICABLE` giả. Lý do N/A hợp lệ phải được
+ghi cho từng assertion trước khi tiếp tục.
+
+Với interactive Product flow áp dụng, chờ human feedback cho đúng candidate:
+`HUMAN_PRODUCT_VALIDATION = ACCEPTED | CHANGES_REQUESTED | BLOCKED`; trước
+human decision là awaiting response. `ACCEPTED` không là VERIFY PASS, QA PASS,
+Gate 3 approval hay Production Readiness. `CHANGES_REQUESTED` chỉ dùng vòng
+`LOCAL_CORRECTION` khi giữ nguyên approved requirement, Product scope,
+authorization/role/permission, schema, API/contract, data owner, business
+semantics, sensitive durable boundary và acceptance criteria. Sau correction,
+chạy targeted checks rồi human retest phần bị ảnh hưởng. Copy, layout, focus,
+loading hoặc label không tự được miễn boundary này. Nếu cần đổi một boundary
+đã duyệt, ghi `SCOPE_CHANGE_REQUIRES_REVIEW` và quay về gate sở hữu.
+`CHANGES_REQUESTED`, `BLOCKED` hoặc awaiting response chưa hoàn tất Product
+validation cho candidate hiện hành; chỉ tiếp tục sau disposition và human
+look cần thiết, trong khi formal VERIFY/QA vẫn độc lập.
+
+`DEV_USABLE != PRODUCTION_READY`: local/dev usable không cấp quyền Release,
+Deploy, staging, legal hoặc Production Readiness. Các authority vận hành tại
+[`operations/DEPLOYMENT.md`](operations/DEPLOYMENT.md) và
+[`operations/PRODUCTION_READINESS.md`](operations/PRODUCTION_READINESS.md)
+vẫn độc lập; `DEV_USABLE = YES` có thể cùng tồn tại với production blocked.
+
+### Dừng vòng lặp tại gate hiện có
+
+`ITERATION_STOP_CONTROL` là conditional stop/handoff trong anti-loop/evidence-stop
+rule hiện có của [Control Tower](chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT_V3.md),
+không là Gate 4, stage hoặc QA status. Blocker lineage dựa trên affected claim,
+blocker class và evidenced causal root cause; stage/evaluator purpose chỉ là
+context của occurrence. Đổi câu chữ hoặc chuyển stage không xoá history. Mặc
+định tối đa hai recovery attempts thất bại trên cùng lineage và ba actual
+execution generations cho cùng lineage/stage/evaluator purpose, gồm initial run
+là generation 1. Read-only diagnosis và rejected preflight không tự tiêu
+counter. Agent không tự cấp thêm budget.
+
+Khi hết budget, retry không an toàn hoặc evidence cho thấy không còn useful
+progress, automation dừng tại gate bị ảnh hưởng để human chọn đúng một trong
+`FIX`, `ACCEPT_LIMITATION`, `SPLIT_CHANGE`, `DEFER_OR_CLOSE`. `FIX` cần defect
+Product/implementation đã xác lập; split không xoá dependency còn bắt buộc;
+defer/close không giả completion. `ACCEPT_LIMITATION` chỉ disposition cho
+`KNOWN_EVIDENCE_LIMITATION` được approved criteria cho phép: không tạo PASS,
+không đổi FAIL/BLOCKED, không waive mandatory Browser QA/security/legal/payment/
+fiscal evidence, không sửa history hoặc làm yếu criteria. Thiếu evidence bắt
+buộc vẫn giữ gate blocked. Accounting và handoff record cụ thể nằm trong
+Automated Workflow và Control Tower owner, không tạo rule cạnh tranh tại đây.
+
+### Adoption theo finalization
+
+Quy tắc trên chỉ bắt đầu áp dụng sau **successful human-authorized finalization
+and archive of `development-usability-and-iteration-control`**, sau khi
+canonical workflow edits được Apply và VERIFY thành công. Draft hoặc partial
+edit, ngày trên lịch và file timestamp không phải adoption event. Chính
+governance change này dùng pre-adoption workflow; không tự đòi các checkpoint
+hoặc iteration ledger mới để hoàn tất nó.
+
+DONE/archived và completed no-spec work giữ lịch sử, không dựng lại checkpoint
+hoặc relabel PASS/FAIL/BLOCKED. Active pre-Apply change tại adoption dùng
+checkpoint mới khi applicable. Active change đã vào Apply/VERIFY/QA không tự
+rewind; chỉ opt-in bằng human instruction rõ ràng. Đây là ngoại lệ hẹp cho
+**checkpoint mới**; earliest missing/unapproved/invalidated gate rule của các
+gate cũ vẫn nguyên. Nếu không xác định được phase tại adoption bằng evidence
+hiện hữu, dừng `NEEDS_REVIEW`, không suy từ timestamp.
 
 ### Technical defect trong approved behavior
 
@@ -564,8 +649,12 @@ Gate 1 approved
 → no normative spec promotion
 → continue applicable Design/Tasks/Apply/Verify/QA
 → Gate 3
+→ Human Approval
+→ $yuta-finish-change
+→ valid no-spec finalization
 → Archive
 → Knowledge Consolidation
+→ DONE
 ```
 
 Gate 3 vẫn cần human approval và explicit finalization authorization; mọi
@@ -624,7 +713,9 @@ IDEA → [Discovery] → Proposal → Analysis → Gate 1
 → Design [when applicable]
 → Sensitive Design Gate [conditional]
 → Tasks → Apply → Verify → QA
-→ Gate 3 → Approval → Sync → Validate → Archive
+→ Gate 3 → Human Approval → $yuta-finish-change
+→ Sync or valid no-spec finalization
+→ Validate Main Specs when applicable → Archive
 → Knowledge Consolidation → DONE
 
 PACKETS

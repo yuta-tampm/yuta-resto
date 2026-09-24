@@ -16,6 +16,8 @@ import { createPointageRepository } from '@yuta/db-cloud';
 import {
   requirePointageTestConfiguration,
   openPointageTestClient,
+  migratePointageCanonicalTestDatabase,
+  migratePointageDisposableExtension,
   provisionPointageTestRoles,
   provisionPointageFoundationTestRole,
   pointageDisposableFoundationUrl,
@@ -571,18 +573,38 @@ export async function provisionPointageNextFixture(
   }
   if (!admin) throw new Error('Pointage disposable setup unavailable.');
   const secret = randomBytes(32);
-  let stage = 'role admission';
+  let stage = 'canonical migration';
   try {
+    const rolesBefore = await admin.connection`
+      select rolname from pg_roles
+      where rolname in ('yuta_pointage_raw_lock_owner','yuta_pointage_raw_writer')
+    `;
+    if (rolesBefore.length !== 0)
+      throw new Error('Unexpected Pointage role before canonical migration.');
+    await migratePointageCanonicalTestDatabase(admin);
+    const [canonical] = await admin.connection`
+      select
+        (select count(*) from drizzle.__drizzle_migrations)=21 as journal,
+        not exists (
+          select 1 from pg_roles
+          where rolname in ('yuta_pointage_raw_lock_owner','yuta_pointage_raw_writer')
+        ) as roles_absent,
+        to_regclass('public.pointage_raw_events') is null
+          and to_regclass('public.pointage_raw_command_receipts') is null
+          and to_regclass('public.pointage_continuations') is null
+          and to_regprocedure('public.pointage_raw_lock_dossier(uuid,uuid,uuid)') is null
+          as raw_absent
+    `;
+    if (!canonical?.journal || !canonical.roles_absent || !canonical.raw_absent)
+      throw new Error('Canonical cloud migration isolation refused.');
+    stage = 'role admission';
     await provisionPointageTestRoles(safe, bootstrapUrl, containerId);
-    stage = 'journaled migration';
-    await quietCommand(
-      process.execPath,
-      [
-        join(root, 'packages/db-cloud/node_modules/drizzle-kit/bin.cjs'),
-        'migrate',
-      ],
-      { ...safe, CLOUD_DATABASE_URL: bootstrapUrl },
-      join(root, 'packages/db-cloud'),
+    stage = 'test extension migration';
+    await migratePointageDisposableExtension(
+      admin,
+      safe,
+      bootstrapUrl,
+      containerId,
     );
     stage = 'foundation admission';
     await provisionPointageFoundationTestRole(safe, bootstrapUrl, containerId);

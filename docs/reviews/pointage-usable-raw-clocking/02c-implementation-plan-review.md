@@ -6,6 +6,3153 @@ Schema: yuta-spec-driven
 Analysis conclusion: READY_FOR_SPECS
 Sensitive change: YES
 
+## Current-generation concrete-HostPort runtime evidence — 2026-09-19
+
+Authority: explicit current-user cross-module attachment
+`64fcccd7-95ce-4f81-8a83-c504ee9d59a3`. The authority covered exactly one
+current-generation runtime evidence retry with the unchanged canonical guard
+and the approved `KEEP_GUARD_PREALLOCATE_CONCRETE_PORT` model. No source, test,
+Design or Spec byte was edited; no dynamic HostPort fallback or second target
+was used. The historical formal VERIFY failure and both earlier HostPort
+orchestration-drift attempts remain historical evidence, not current PASS.
+
+### Hash and child-process preflight
+
+- HEAD: `14dd0f35645586abc5877da28df0fcd16eba971d`.
+- Current service-test SHA-256:
+  `6c020fea3e5db3a57a2ae611492239034e658531f3251134c6c09d097a4f868a`.
+- Pre-update Tasks SHA-256:
+  `801057bb5276b1c5369163037c621101fb968c149c51ef4a3df56d4b427f0db6`.
+- Pre-update 02c SHA-256:
+  `9d46977556e5504a36010a08bce55c03d2740809e227d5be730e991418e92441`.
+- All 13 protected production hashes matched; `PRODUCTION_DRIFT=0`.
+- Scoped service-test `git diff --check`: PASS, with only Git's non-mutating
+  LF/CRLF notice.
+- Direct Windows child preflight: Node `v24.17.0`, Vitest `4.1.9`,
+  `node.exe -> vitest.mjs`, `shell=false`: PASS. `pnpm.cmd` was not spawned.
+
+### One target, exact binding and admission
+
+Sanitized generation `9927ac2c37b1c03b` preallocated port `54273` by binding
+`127.0.0.1:0`, reading the assigned concrete port and closing the probe. The
+endpoint `127.0.0.1:54273` and database
+`yuta_pointage_raw_clocking_test_9927ac2c37b1c03b` were frozen before Docker
+creation. Exactly one `postgres:17` target was created, container prefix
+`8e07616c2208`, with the approved labels, zero ordinary mounts and only
+`/var/lib/postgresql/data=rw,size=512m`.
+
+| Property           | Expected             | Observed    | Result |
+| ------------------ | -------------------- | ----------- | ------ |
+| Requested HostIp   | `127.0.0.1`          | `127.0.0.1` | PASS   |
+| Requested HostPort | preallocated `54273` | `54273`     | PASS   |
+| Actual HostIp      | `127.0.0.1`          | `127.0.0.1` | PASS   |
+| Actual HostPort    | preallocated `54273` | `54273`     | PASS   |
+| Endpoint port      | preallocated `54273` | `54273`     | PASS   |
+
+`requireIsolatedPointageTestCluster` was invoked unchanged and passed before
+migration. Pre-bootstrap proof was: migration count 0; extension ABSENT; test
+roles ABSENT; provider/fixture publication ABSENT; protected writes 0. Thus
+`PRE_ADMISSION_PROTECTED_EFFECTS=0`.
+
+Canonical migrations 0000-0020 completed with 21 records and exact terminal
+`0020_formalites_legal_template_foundation`. Guarded role provisioning,
+test-only extension 0021 and foundation/raw-writer admission then passed; total
+migration records were 22 and all three approved test roles were present.
+Bootstrap secret handoff was process-memory/child-environment only: no value in
+argv, logs, files or evidence.
+
+### Runtime, persistence and teardown evidence
+
+| Evidence                      | Result                                                                                                                                                                                                                                                                                                                                                                                             |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Lost-ack isolated             | PASS; one selected test, 0 fail. Dedicated fixture identified successfully, accepted initial `CLOCK_IN`, committed one raw event plus one receipt, then simulated acknowledgement loss after COMMIT. Caller received `POINTAGE_UNAVAILABLE`; recover and exact replay returned the original receipt tuple; scoped raw and receipt counts were each baseline+1, with no duplicate event or receipt. |
+| Selector A isolated           | PASS; one selected test, 0 fail. Exact dossier blocker, both entry markers and both pending promises were observed before release. One transition committed, the other returned `POINTAGE_STATE_CONFLICT`; chain was `CLOCK_IN -> CLOCK_OUT`; raw=2, receipts=2, loser produced neither.                                                                                                           |
+| Selector B isolated           | PASS; one selected test, 0 fail. Dedicated valid slug/dossier/credential identified, deterministic attendance was seeded, current-day events and open session were correct, unrelated-establishment rows were absent, and manager authority was rechecked after the read.                                                                                                                          |
+| Full guarded DB service file  | PASS; 1 file, 125 executed, 125 passed, 0 failed, 0 skipped. All three selectors plus idle-boundary, concurrent IN/OUT, same-ID replay, different-intent conflict and all other present guarded cases passed in full-suite ordering.                                                                                                                                                               |
+| New isolation debt            | NONE                                                                                                                                                                                                                                                                                                                                                                                               |
+| Target teardown               | PASS; owned connections closed, sole container removed, subsequent inspect reported target not found.                                                                                                                                                                                                                                                                                              |
+| Focused non-DB Pointage suite | PASS; 9 files, 409 total, 366 passed, 0 failed, 43 guarded skips. The 43 remain the already-inventoried 38 DB/synthetic cases plus 5 actual-Next cases and are not counted as PASS.                                                                                                                                                                                                                |
+| Backoffice typecheck          | PASS                                                                                                                                                                                                                                                                                                                                                                                               |
+| Workspace typecheck           | PASS; scope 15 of 16 projects, every selected project completed                                                                                                                                                                                                                                                                                                                                    |
+| Production hash freshness     | PASS; all 13 protected production hashes unchanged, `PRODUCTION_DRIFT=0`                                                                                                                                                                                                                                                                                                                           |
+
+Old protected manifest:
+`6037312434374eeb80d7d2103aa52a73e09223285f28a94fd5ed85d0cc925e7a`.
+
+New protected manifest, using the same authoritative ordered 12-path set and
+line/hash algorithm:
+`ca13b2cc30e26a1f75c9c35f206a9b0c3ffe69872699ac8bde2c67fa2ba3fdfd`.
+
+Expected attribution remains test-only in
+`apps/backoffice/test/pointage-raw-clocking-service.test.ts`; production is
+UNCHANGED.
+
+| Remediation                                   | Disposition |
+| --------------------------------------------- | ----------- |
+| Lost-ack shared fixture dependency            | RESOLVED    |
+| Historical lost-ack absolute count dependency | RESOLVED    |
+| Selector A assertion scope                    | RESOLVED    |
+| Selector A waiter-query instrumentation       | RESOLVED    |
+| Selector A synchronization                    | RESOLVED    |
+| Selector B cardinality isolation              | RESOLVED    |
+| Selector B invalid slug                       | RESOLVED    |
+| S7 typed path errors                          | RESOLVED    |
+| Idle-boundary isolation                       | RESOLVED    |
+| Current lost-ack                              | PASS        |
+| Current Selector A                            | PASS        |
+| Current Selector B                            | PASS        |
+| Full guarded service suite                    | PASS        |
+
+APPLY: COMPLETE
+
+Tasks: 32/32
+
+TECHNICAL IMPLEMENTATION COMPLIANCE:
+REQUIRES_REEVALUATION_ON_NEW_TEST_BYTES
+
+VERIFY: FAIL — PREVIOUS/HISTORICAL GENERATION
+
+QA: NOT_RUN
+
+Browser QA: NOT_RUN
+
+Gate 3: NOT_CREATED
+
+Production enablement: NOT_AUTHORIZED
+
+Real employee attendance: NOT_AUTHORIZED
+
+The next separately authorized stage is formal Technical Implementation
+Compliance re-evaluation against the new manifest. Only if that result is
+`COMPLIANT_FOR_VERIFY` may a later authority start full formal VERIFY again
+from the beginning. This packet stops before compliance re-evaluation and does
+not create `03-final-review.md`.
+
+## Current R7 final Apply completion evidence — 2026-09-19
+
+Authority: explicit current-user cross-module attachment
+`8a489087-1e9a-41a2-b09f-e4de49206645`. Scope is Task 4.7 / R7 completion
+checks and Apply evidence only. Technical Implementation Compliance, formal
+VERIFY, QA, Browser QA, Gate 3, production enablement, real attendance,
+sync/archive and knowledge consolidation remain outside this authority.
+
+### Preflight and completed-task reconciliation
+
+- HEAD: `14dd0f35645586abc5877da28df0fcd16eba971d`.
+- Protected 12-path source/test manifest SHA-256:
+  `6037312434374eeb80d7d2103aa52a73e09223285f28a94fd5ed85d0cc925e7a`;
+  exact match before and after R7.
+- R1: COMPLETE, 20/20 requirements and 62/62 scenarios.
+- R2, R3, R4, R5 and R6: COMPLETE.
+- No completed row has an unresolved required result, undispositioned stale
+  evidence, unauthorized source change or current documentation contradiction.
+- Design SHA-256 remains
+  `01b2b7b870d7793a8277fda83c87586c673a3edc2a0f63e405b5b6d27e3534b7`;
+  authorization delta Spec remains
+  `1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66`;
+  raw-clocking delta Spec remains
+  `4bfa64e863ad465a144341c18aa5d0db3ce0806ada52ad40183cf9a4e321f90e`.
+- Pre-R7 Tasks SHA-256:
+  `80013ce65b7f0219165d0fd49b88b674b8f381301234efa5e25ca05124dd9f04`;
+  final formatted Tasks SHA-256:
+  `801057bb5276b1c5369163037c621101fb968c149c51ef4a3df56d4b427f0db6`.
+- Pre-R7 02c SHA-256:
+  `e2dbca9f688c27a433914e2e9576e00a9b7ce8a657057726c0365f5b310d7d41`.
+
+### Commands and exact current results
+
+| Area                      | Command / evidence                                                                                                  | Current result                                                                                                                                                                                                                       | Deferred owner                                                           |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| R1                        | Accepted exact mapping plus unchanged manifest                                                                      | COMPLETE; 20/20 requirements, 62/62 scenarios                                                                                                                                                                                        | Formal VERIFY re-evaluation                                              |
+| R2                        | Accepted concurrency/replay evidence                                                                                | COMPLETE                                                                                                                                                                                                                             | Formal VERIFY re-evaluation                                              |
+| R3                        | Accepted hostile scope/lifecycle/provider/rate-limit evidence                                                       | COMPLETE                                                                                                                                                                                                                             | Formal VERIFY re-evaluation                                              |
+| R4                        | Accepted disposable DB/writer/time/corruption evidence                                                              | COMPLETE                                                                                                                                                                                                                             | Formal VERIFY re-evaluation                                              |
+| R5                        | Accepted interaction/navigation/recovery evidence                                                                   | COMPLETE                                                                                                                                                                                                                             | Mandatory Browser QA                                                     |
+| R6                        | Accepted negative inventory and current documentation reconciliation                                                | COMPLETE                                                                                                                                                                                                                             | Formal VERIFY re-evaluation                                              |
+| Auth                      | `pnpm --filter @yuta/auth test test/pointage-continuation.test.ts test/pointage-credential.test.ts`                 | Exit 0; 2 files; 24/24 PASS                                                                                                                                                                                                          | None for Apply                                                           |
+| Contracts                 | `pnpm --filter @yuta/contracts test test/pointage.test.ts`                                                          | Exit 0; 1 file; 14/14 PASS                                                                                                                                                                                                           | None for Apply                                                           |
+| Backoffice Pointage       | Exact C11 nine-file package invocation                                                                              | Exit 0; 9 files; 366 PASS; 43 guarded skips                                                                                                                                                                                          | Accepted R1-R6 evidence; formal VERIFY later                             |
+| Backoffice skip inventory | Same exact nine files with verbose and JSON reporters                                                               | Exit 0; exact 38+5 inventory below; skipped cases not counted PASS                                                                                                                                                                   | Accepted DB/actual-process evidence; formal VERIFY later                 |
+| Cloud regression          | `pnpm test:cloud` after removing DB/synthetic opt-ins and parent `CLOUD_DATABASE_URL`                               | Exit 0 for Auth, Core, Contracts, Booking, Booking Web, Tenant, db-cloud and Backoffice; guarded DB/provider/actual-process skips preserved                                                                                          | Formal VERIFY for independent guarded evidence                           |
+| Cloud build               | `pnpm build:cloud` with the approved non-empty poison/loopback deny-sink profile after port 65431 non-serving proof | Exit 0; Web, Backoffice, Booking and Feedback PASS; no database connection/provisioning                                                                                                                                              | Not deployment or production enablement                                  |
+| Backoffice typecheck      | `pnpm --filter @yuta/backoffice typecheck`                                                                          | Exit 0                                                                                                                                                                                                                               | None for Apply                                                           |
+| Workspace typecheck       | `pnpm -r --if-present typecheck`                                                                                    | Exit 0; scope 15 of 16 workspace projects; every selected project PASS                                                                                                                                                               | None for Apply                                                           |
+| Docs                      | `pnpm docs:check`                                                                                                   | Exit 0; 36 current documents                                                                                                                                                                                                         | Knowledge sync later-owned                                               |
+| Architecture              | `pnpm architecture:check`                                                                                           | Exit 0                                                                                                                                                                                                                               | Technical Compliance re-evaluation                                       |
+| OpenSpec                  | `pnpm exec openspec validate pointage-usable-raw-clocking --strict`                                                 | Exit 0; valid                                                                                                                                                                                                                        | Formal VERIFY re-evaluation                                              |
+| UI pack                   | `pnpm ui:pack:check backoffice-pointage-employee`                                                                   | Exit 0; 0 warnings                                                                                                                                                                                                                   | Mandatory Browser QA                                                     |
+| Scoped formatting         | Prettier check over exact format-eligible attributed current paths                                                  | Exit 0; no formatter write                                                                                                                                                                                                           | Generated test snapshot and approved 02b are not formatter-write targets |
+| Scoped diff               | `git diff --check -- <exact attributed paths>`                                                                      | Exit 0; no whitespace error; non-mutating LF/CRLF notices only                                                                                                                                                                       | None for Apply                                                           |
+| Global format diagnostic  | `pnpm format:check`                                                                                                 | Exit 1; 69 current warnings: 67 historical plus unchanged approved `02b` and generated test-only 0021 snapshot; no cleanup/write                                                                                                     | Repository-wide formatting ownership                                     |
+| Worktree                  | Complete porcelain inventory plus ignored build output                                                              | Expected categories only; `UNAUTHORIZED_CHANGE=0`; four `.next` directories are `GENERATED_IGNORED`                                                                                                                                  | Preserve unrelated work                                                  |
+| Dependencies/config       | Package, lockfile, workspace, tsconfig, scripts and PostgreSQL-extension inventory                                  | Unauthorized drift 0; no PostgreSQL extension declaration; approved Task 1.7 `drizzle.config.ts` retained                                                                                                                            | None for Apply                                                           |
+| Secret/PII/logging        | Attributed diff and Pointage-specific runtime log scan                                                              | `NO_LEAK_FOUND`; zero sensitive Pointage log call; one added DB URL is the approved public deny-sink literal, not a functional credential                                                                                            | Legal/audit visibility remains blocked                                   |
+| Migration topology        | Static canonical/test-only inventory                                                                                | Canonical journal has 21 entries ending index 20 / `0020_formalites_legal_template_foundation`; canonical 0021 SQL/snapshot absent; production cloud schema has zero raw-clocking reference; fixture owns SQL/snapshot/manifest 0021 | Formal VERIFY migration proof                                            |
+| Authorization/Product     | Closed catalog and negative runtime inventory                                                                       | Exact six operations; forbidden operations/runtime dependencies absent; no usable manager attendance UI or production provider                                                                                                       | Any expansion requires new authority                                     |
+| Documentation             | Seven top-level page-pack Markdown files plus current technical docs                                                | Semantically aligned; stale README contradiction count 0                                                                                                                                                                             | Knowledge sources remain later-owned                                     |
+| Browser QA                | Explicit carry-forward                                                                                              | NOT_RUN; required because UI_AFFECTING=YES and BROWSER_QA_REQUIRED=YES                                                                                                                                                               | Separate QA after formal VERIFY                                          |
+| Production blockers       | Exact seven-item review                                                                                             | UNRESOLVED; production-readiness blockers, not Apply blockers                                                                                                                                                                        | Separate legal/privacy/deployment authority                              |
+| Knowledge sync            | `CURRENT_STATE.md`, `PRODUCT_KNOWLEDGE.md`, `MODULE_REGISTRY.md`, Personnel README status                           | No worktree drift; `LATER_SYNC_OWNED`                                                                                                                                                                                                | Finish workflow only after future Gate 3 authority                       |
+
+The focused run was repeated only to obtain exact reporter evidence; each
+execution used the same current bytes and exited 0. The broad cloud test did
+not receive `YUTA_ALLOW_DATABASE_INTEGRATION_TESTS`,
+`YUTA_POINTAGE_SYNTHETIC_TEST_MODE` or `CLOUD_DATABASE_URL`; it provisioned no
+database and its guarded suites remain skips rather than proof.
+
+### Exact focused Pointage guarded skips
+
+All 43 skips are expected and explained. No unexpected skip exists. None is
+counted as PASS.
+
+File:
+`apps/backoffice/test/pointage-raw-clocking-service.test.ts` — 38 skips because
+the R7 process deliberately lacks the synthetic/disposable PostgreSQL opt-in
+and admitted dual-client target. Accepted R2-R4/R6 evidence owns these
+behaviors pending independent formal VERIFY:
+
+1. D1a actual same-database validation-only runtime > uses all seven methods with exact column grants and preserves candidate/client thresholds.
+2. D1a actual same-database validation-only runtime > denies alternate SQL and administration with the real foundation identity.
+3. D1a actual same-database validation-only runtime > rejects effective excess select on public.pointage_raw_events to yuta_pointage_foundation_runtime before provider.
+4. D1a actual same-database validation-only runtime > rejects effective excess select on public.pointage_raw_command_receipts to yuta_pointage_foundation_runtime before provider.
+5. D1a actual same-database validation-only runtime > rejects effective excess select on public.pointage_continuations to yuta_pointage_foundation_runtime before provider.
+6. D1a actual same-database validation-only runtime > rejects effective excess insert on public.pointage_raw_events to yuta_pointage_foundation_runtime before provider.
+7. D1a actual same-database validation-only runtime > rejects effective excess insert on public.pointage_raw_command_receipts to yuta_pointage_foundation_runtime before provider.
+8. D1a actual same-database validation-only runtime > rejects effective excess insert on public.pointage_continuations to yuta_pointage_foundation_runtime before provider.
+9. D1a actual same-database validation-only runtime > rejects effective excess update (ended_at) on public.pointage_continuations to yuta_pointage_foundation_runtime before provider.
+10. D1a actual same-database validation-only runtime > rejects effective excess insert on public.pointage_employee_credentials to yuta_pointage_foundation_runtime before provider.
+11. D1a actual same-database validation-only runtime > rejects effective excess update (superseded_at) on public.pointage_employee_credentials to yuta_pointage_foundation_runtime before provider.
+12. D1a actual same-database validation-only runtime > rejects effective excess update (entry_date) on public.personnel_employee_dossiers to yuta_pointage_foundation_runtime before provider.
+13. D1a actual same-database validation-only runtime > rejects effective excess update (status) on public.organizations to yuta_pointage_foundation_runtime before provider.
+14. D1a actual same-database validation-only runtime > rejects effective excess update (timezone) on public.establishments to yuta_pointage_foundation_runtime before provider.
+15. D1a actual same-database validation-only runtime > rejects effective excess select on public.pointage_security_audit_events to yuta_pointage_foundation_runtime before provider.
+16. D1a actual same-database validation-only runtime > rejects effective excess execute on function public.pointage_raw_lock_dossier(uuid,uuid,uuid) to yuta_pointage_foundation_runtime before provider.
+17. D1a actual same-database validation-only runtime > rejects effective excess select on public.pointage_raw_events to public before provider.
+18. D1a actual same-database validation-only runtime > rejects effective excess create on schema public to yuta_pointage_foundation_runtime before provider.
+19. D1a actual same-database validation-only runtime > rejects effective excess select on public.pointage_credential_rate_limits to yuta_pointage_raw_writer before provider.
+20. D1a actual same-database validation-only runtime > rejects effective excess insert on public.pointage_security_audit_events to yuta_pointage_raw_writer before provider.
+21. D1a actual same-database validation-only runtime > rejects unexpected foundation attribute superuser before provider.
+22. D1a actual same-database validation-only runtime > rejects unexpected foundation attribute createdb before provider.
+23. D1a actual same-database validation-only runtime > rejects unexpected foundation attribute createrole before provider.
+24. D1a actual same-database validation-only runtime > rejects unexpected foundation attribute replication before provider.
+25. D1a actual same-database validation-only runtime > rejects unexpected foundation attribute bypassrls before provider.
+26. D1a actual same-database validation-only runtime > rejects unexpected foundation attribute inherit before provider.
+27. D1a actual same-database validation-only runtime > rejects unexpected foundation attribute nologin before provider.
+28. D1a actual same-database validation-only runtime > rejects membership, default ACL, grant option, ownership and PUBLIC TEMP.
+29. D1a actual same-database validation-only runtime > rejects actual administrative clients and preserves the writer effective TEMP baseline.
+30. D1a actual same-database validation-only runtime > uses actual 5/30 authentication limits and never logs credential or employee state.
+31. S3-S6 actual disposable PostgreSQL service composition > denied state.read after successful identify commits no continuation or attendance.
+32. S3-S6 actual disposable PostgreSQL service composition > two separate restricted-writer connections compete for one transition and commit exactly one pair.
+33. S3-S6 actual disposable PostgreSQL service composition > actual reset rejects old continuation replay; new identification recovers the unchanged receipt.
+34. S3-S6 actual disposable PostgreSQL service composition > actual DB accepted sample at the idle boundary rolls back raw INSERT and leaves the clock definition unchanged.
+35. S3-S6 actual disposable PostgreSQL service composition > two separate connections competing to CLOCK_OUT close the existing session only once.
+36. S3-S6 actual disposable PostgreSQL service composition > a response lost after real COMMIT recovers the original receipt with the same tuple, without a second event.
+37. S3-S6 actual disposable PostgreSQL service composition > two separate restricted-writer connections submitting the same request identity converge on one original receipt.
+38. S3-S6 actual disposable PostgreSQL service composition > S7 reads an actual restricted-writer snapshot and rechecks manager authority after it ends.
+
+File:
+`apps/backoffice/test/pointage-raw-clocking-inventory.test.ts` — five skips
+because the R7 process deliberately lacks the actual local production-mode Next
+prerequisite. Accepted U3/U8/R6 evidence owns these behaviors pending formal
+VERIFY; they do not substitute for Browser QA:
+
+1. U3 actual neutral Next page (HTTP implementation proof, not Browser QA) > real HTML has matching framework script nonces, fresh per response and browser-proof.
+2. U3 actual neutral Next page (HTTP implementation proof, not Browser QA) > real RSC remains neutral with no protected serialization.
+3. U3 actual neutral Next page (HTTP implementation proof, not Browser QA) > actual HTML and RSC preserve every required final Cache-Control directive.
+4. U3 actual neutral Next page (HTTP implementation proof, not Browser QA) > actual unrelated redirect/static/missing routes keep their own policy.
+5. U3 actual neutral Next page (HTTP implementation proof, not Browser QA) > ordinary Next still refuses the Pointage consumer without an admitted owner.
+
+The global `test:cloud` run also preserved unrelated guarded provider/database
+suites: Booking Web reported 3 PASS / 4 skipped; db-cloud reported 148 PASS /
+224 skipped; Backoffice reported 983 PASS / 54 skipped. These broad guarded
+skips are not counted as Pointage PASS and no missing infrastructure was
+provisioned for R7.
+
+### Final worktree attribution and diff summary
+
+Current complete nonignored worktree classification:
+
+- `EXPECTED_IMPLEMENTATION` (1):
+  `packages/db-cloud/src/pointage-raw-clocking-repository.ts`.
+- `EXPECTED_TEST` (9): the five modified Backoffice Pointage test/launcher
+  paths and four modified db-cloud Pointage test/helper paths recorded in the
+  protected manifest.
+- `EXPECTED_TASK1_7` (9): `packages/db-cloud/drizzle.config.ts`; deleted
+  canonical SQL/snapshot 0021; modified canonical journal and schema index; new
+  production cloud schema manifest; new test-only SQL/snapshot/extension
+  manifest.
+- `EXPECTED_EVIDENCE` (4): Design, Tasks, 02b and 02c.
+- `EXPECTED_DOC` (10): AUTHENTICATION, DEPLOYMENT, LOCAL_DEVELOPMENT and the
+  seven top-level employee Pointage page-pack Markdown files.
+- `PREEXISTING_DIRTY` (7): two workflow documents, three Control Tower prompt
+  documents and two pre-existing PDF outputs.
+- `GENERATED_IGNORED` (4): Web, Backoffice, Booking and Feedback `.next`
+  directories after C13.
+- `UNRELATED_CHANGE` (0); `UNAUTHORIZED_CHANGE` (0).
+
+Tracked attributed diff summary at collection time: 29 paths, 9,551 insertions
+and 10,866 deletions relative to HEAD, dominated by preserved cumulative
+historical review evidence and relocation of the generated 0021 snapshot.
+Four additional attributed Task 1.7 paths are untracked: production cloud
+schema manifest and test-only SQL/snapshot/extension manifest. This is current
+working-tree evidence, not a claim that every full-change implementation file
+was introduced after current HEAD.
+
+No package manifest, lockfile, workspace topology, dependency version,
+tsconfig, package script or PostgreSQL extension drift exists. The only config
+path is the approved Task 1.7 `drizzle.config.ts` migration-schema selection.
+
+### Preserved boundaries and post-Apply handoff
+
+The exact catalog remains:
+
+- `pointage.employee.identify`;
+- `pointage.employee.state.read`;
+- `pointage.employee.operation.create`;
+- `pointage.establishment.read`;
+- `pointage.credential.issue`;
+- `pointage.credential.reset`.
+
+No `raw.edit`, `raw.delete`, `raw.correct`, `session.force-close`, generic admin
+or manager arbitrary mutation exists. The existing `/equipe/pointage` route is
+still only the pre-existing `PlannedBackofficePage`, not a usable manager
+attendance UI. Employee chooser/history/totals/export, offline sync, POS/Site
+Agent authority, automatic correction and production provider composition
+remain absent.
+
+Technical/as-built documents agree that the employee route and implementation
+exist and are IMPLEMENTED / TEST-EVIDENCED while package status remains
+`implementation-ready` until mandatory Browser QA. `NO_APPLICATION_SHELL`,
+Browser QA NOT_RUN, production NOT_AUTHORIZED, real attendance NOT_AUTHORIZED
+and all seven blockers remain explicit. Knowledge documents remain unchanged
+and `LATER_SYNC_OWNED`.
+
+Browser QA remains NOT_RUN and must later cover back/forward/BFCache,
+navigation away/return, hard reload, duplicate tab, sequential browser users,
+focus, live announcements, touch, responsive/reflow, long-name overflow,
+required viewports, cache/storage/network residue and real-browser CSP/nonce.
+
+All seven production-readiness blockers remain UNRESOLVED: retention duration,
+deletion/anonymization, legal hold, backup-retention interaction, employee
+notice, detailed audit visibility and trusted production client-address
+provenance. They are not Apply blockers and were not resolved.
+
+`docs/reviews/pointage-usable-raw-clocking/03-final-review.md` is absent.
+
+Task 4.7: COMPLETE
+
+Tasks: 32/32
+
+APPLY: COMPLETE
+
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+
+VERIFY: NOT_RUN
+
+QA: NOT_RUN
+
+Browser QA: NOT_RUN
+
+Production enablement: NOT_AUTHORIZED
+
+Real employee attendance: NOT_AUTHORIZED
+
+STOP before Technical Implementation Compliance Matrix.
+
+## Current R6 documentation reconciliation — 2026-09-19
+
+Authority: explicit current-user cross-module attachment
+`65cc2d81-ecde-4a68-bb4e-bd2a41cf1373`.
+
+The page-pack README had one stale internal contradiction. Its status and six
+sibling technical documents described the employee Pointage surface as
+implemented/test-evidenced, while `## Current implementation` still said the
+employee route, continuation, raw events, transport and employee screen did not
+exist. This was classified `R7_DOCUMENTATION_CONFLICT`, not a Product, Spec,
+Design, implementation or evidence-freshness conflict.
+
+The bounded documentation-only correction changed that paragraph to the
+current as-built facts: `/pointage/[establishmentSlug]`, the employee UI,
+browser-memory-only continuation, guarded synthetic/disposable immutable raw
+events and employee transport/API endpoints exist and are test-evidenced.
+Mandatory Browser QA remains pending. Package status remains
+`implementation-ready`; production enablement and real employee attendance
+remain `NOT_AUTHORIZED`; trusted production client-address provenance and all
+seven production/legal/privacy blockers remain unresolved.
+
+Exact SHA-256 transition:
+
+| Path                                                     | Before                                                             | After                                                              |
+| -------------------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| `docs/ui/pages/backoffice-pointage-employee/README.md`   | `33e96e807f65ae53cb81f360a7f6d961126ac5531bf515450db80aa476e46443` | `984c2550fa31e607aad6975a71fa6849ea23b72f88afef4662c23de79a15954b` |
+| `openspec/changes/pointage-usable-raw-clocking/tasks.md` | `62a142f6740e105ff35d4ca9b5b57d176f5b130206b36c775448a09fccd1b537` | `80013ce65b7f0219165d0fd49b88b674b8f381301234efa5e25ca05124dd9f04` |
+
+The preflight protected source/test manifest covers the 12 current modified or
+untracked Pointage implementation/test paths identified by the accepted R7
+discovery. Every individual pre/post hash is equal; canonical UTF-8 manifest
+SHA-256 is
+`6037312434374eeb80d7d2103aa52a73e09223285f28a94fd5ed85d0cc925e7a`.
+No source, test, Product, Spec or Design byte changed, and no R1-R6 behavioral
+or inventory evidence was invalidated. Historical setup/orchestration failures
+remain historical; in particular, E5-IDLE remains `UNKNOWN / NOT REPRODUCED /
+ROOT CAUSE NOT ESTABLISHED` historically and current traced E5-IDLE remains
+`PASS`.
+
+Task 4.6 is COMPLETE after this bounded reconciliation; Tasks remain 31/32.
+Task 4.7 is NOT_STARTED and still requires separate revalidation/final-check
+authority. Formal Technical Implementation Compliance, formal VERIFY, Browser
+QA, Gate 3, sync/archive, production enablement and real attendance were not
+run or authorized by this correction.
+
+## Current R6 completion evidence — 2026-09-18
+
+Authority: explicit current-user cross-module attachment
+`c3e31a1c-2063-411e-a683-ec99dfe172b6`.
+
+- Canonical guard invocation: PASS without tracked source modification.
+- Windows child preflight: PASS (`node.exe` → direct `vitest.mjs`,
+  `shell=false`).
+- Single target: `f6897dafabf0b93e3e50219f1b9e2e40237954781d6ae3377be6f0a1627a2f4d`;
+  `postgres:17`; bridge network; zero mounts; private
+  `rw,size=512m` tmpfs; sole `127.0.0.1:51475 -> 5432` binding; exact synthetic
+  database and approved labels. Sanitized predicate evidence was captured before
+  teardown without inspecting secret-bearing environment.
+- `CANONICAL_TOPOLOGY_ADMISSION=PASS`; `BOOTSTRAP_SECRET_HANDOFF=PASS`;
+  `R6_TARGET_ADMISSION=PASS`; target disposition `REMOVED`.
+- Lost-ack selector: PASS; local raw/receipt counts `0 -> 1`; exact committed
+  tuple and original receipt recovered without a second pair.
+- Idle-boundary selector: PASS; self-contained dossier, credential, open
+  CLOCK_IN and guard; only prerequisite counts `1 -> 2`; boundary CLOCK_OUT
+  delta zero and transaction rollback preserved the clock definition.
+- Historical test-debt classifications are preserved. Current lost-ack and
+  idle-boundary statuses: `TEST_DEBT_RESOLVED`; `R6-TEST-DEBT=PASS`.
+- HTTP/inventory: PASS, 53 tests passed and 5 documented actual-Next prerequisite
+  skips; strict DTO, wire, origin, method, auth, response, cache, session and
+  durable-storage negative boundaries passed.
+- Closed authorization catalog: exact six operations. Canonical cloud migration:
+  0000-0020; raw-clocking 0021 remains test-only.
+- R6 documentation: `AUTHENTICATION.md` plus exactly seven top-level page-pack
+  technical Markdown files updated to current implementation/test evidence.
+  Prompt/reference/provenance and excluded knowledge documents are unchanged.
+- Final Batch D: Backoffice and recursive typechecks, docs, architecture, strict
+  OpenSpec, page-pack validation, scoped Prettier and scoped diff/whitespace all
+  PASS. Dependency/lockfile drift, secret/PII patterns, `.only`, `.todo`,
+  unauthorized run-owned changes, canonical 0021 and durable browser authority:
+  zero. Existing conditional `describe.skip` gates are the documented synthetic
+  disposable-environment prerequisite; no new or unexplained skip exists.
+- Current boundary: Task 4.6 COMPLETE; Tasks 31/32; Task 4.7 NOT_AUTHORIZED.
+  Formal Technical Implementation Compliance, formal VERIFY, Browser QA, Gate
+  3, sync/archive, production enablement and real attendance remain unrun or
+  unauthorized. All seven blockers remain unresolved.
+
+## Current R5 checkpoint — current-byte execution COMPLETE, 2026-09-18
+
+Authority: explicit current-user cross-module attachment
+`4059aca8-6972-44ca-b0d8-b8f0d576c84e`. This checkpoint completes only Task
+4.5 and stops before Task 4.6, formal VERIFY, Browser QA, Gate 3 or production
+enablement. No source/test bytes changed; no DB, container, actual-process or U8
+execution occurred.
+
+All five approved preflight hashes matched exactly: interaction
+`5203b664056fc883a36d8818f8c3f144fd50f0716fad31e2e9ed8a74f8a269b8`,
+service `5c34b2b1f7760dbac9097b0e5bad1bf5845161a41d667440d274aa99687fb1db`,
+HTTP `3e463e902b2e40d1fde2703c607902f5d704e32955e6f1c749b250c400623e1d`,
+runtime `6571033fc2e98faf75951eccd19729b40de0b9db887d7b3e61952e22d9b38f47`
+and inventory
+`e11484f3773a4f8ab049e344b51046b3f867ee617c29424aa11699f8a52ef40a`.
+
+`R5-UI-INTERACTION: PASS`:
+`pnpm --filter @yuta/backoffice test test/pointage-interaction.test.ts`
+completed 1 file PASS, 111/111 tests PASS, zero skipped. Current execution
+proves memory-only state, complete end/generation clearing, approved lifecycle
+events/listener inventory, monotonic deadlines and no activity renewal,
+identify/mutation/recover duplicate suppression, exact frozen tuple and matching
+receipt validation, RESULT_UNKNOWN, bounded UNCONFIRMED resend, explicit
+conflict refresh with fresh ID/guard, receipt lifetime, rejection of late
+identify/mutation/recover/resend/state responses, sequential-employee isolation
+and unit-testable functional accessibility behavior.
+
+`R5-SERVICE-RECOVERY: PASS`. Bounded current selectors completed as follows:
+A4.1 1 PASS / 124 skipped; A4.2 5 PASS / 120 skipped; recovery without a
+receipt 1 PASS / 124 skipped; reset/recovery 1 PASS / 124 skipped. The
+order-dependent PostgreSQL lost-ack test was not selected. That boundary remains
+R2-owned `PASS_CURRENT` and is `PASS_COMPOSITIONAL` for R5.
+
+Durable-storage composition remains `PASS_COMPOSITIONAL` on unchanged approved
+bytes. R5-08 and R5-33 remain `QA_DEFERRED`; actual back/forward/BFCache,
+focus/announcement, touch/reflow and residue inspection remain mandatory later
+because `UI_AFFECTING: YES` and `BROWSER_QA_REQUIRED: YES`.
+Private/no-store/CSP remains `LATER_TASK_OWNED` by R6 plus later QA.
+
+### Final R5 matrix
+
+| ID    | Condition                                         | Primary owner       | Final status       |
+| ----- | ------------------------------------------------- | ------------------- | ------------------ |
+| R5-01 | Memory-only protected interaction state           | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-02 | Explicit end generation and complete clear        | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-03 | Hidden visibility clearing                        | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-04 | Pagehide persisted true/false                     | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-05 | Pageshow persisted true/false                     | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-06 | Navigation/unmount disposal                       | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-07 | Refresh/restart/new-controller neutrality         | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-08 | Real-browser back/forward/BFCache                 | BROWSER_QA          | QA_DEFERRED        |
+| R5-09 | Approved listener-only boundary                   | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-10 | Monotonic expiry                                  | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-11 | No activity TTL renewal                           | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-12 | Identify duplicate suppression                    | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-13 | Mutation duplicate suppression                    | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-14 | Honest pending mutation                           | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-15 | Frozen mutation tuple                             | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-16 | Matching committed response only                  | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-17 | Unknown transport/result                          | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-18 | Committed recover without resend                  | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-19 | UNCONFIRMED one-resend cycle                      | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-20 | Exact same resend tuple                           | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-21 | Repeated unknown stops and retains tuple          | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-22 | Recover duplicate suppression                     | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-23 | Explicit conflict refresh only                    | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-24 | Refresh clears old tuple and stores fresh guard   | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-25 | Fresh action creates fresh ID/guard               | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-26 | Receipt maximum lifetime                          | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-27 | End during protected flight rejects late result   | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-28 | Reset/lifecycle/current-authority replay denial   | SERVICE_TEST        | PASS_EXECUTED      |
+| R5-29 | Sequential-employee isolation                     | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-30 | No durable storage/channel authority              | COMPOSITIONAL       | PASS_COMPOSITIONAL |
+| R5-31 | French minimal self-only surface                  | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-32 | Functional accessibility interaction              | UI_INTERACTION_TEST | PASS_EXECUTED      |
+| R5-33 | Real-browser focus/touch/reflow/announcement      | BROWSER_QA          | QA_DEFERRED        |
+| R5-34 | Private/no-store/CSP final inventory              | LATER_TASK_OWNED    | LATER_TASK_OWNED   |
+| R5-35 | Existing route/no new shell-navigation-permission | COMPOSITIONAL       | PASS_COMPOSITIONAL |
+
+No R5-required row remains stale, partial, missing or authority-unclear. No
+implementation defect, Spec/Design conflict, recovery-contract conflict,
+lifecycle-isolation conflict or new Product decision was found.
+
+Final checks PASS: Backoffice typecheck; recursive workspace typecheck; docs
+check; architecture check; strict OpenSpec validation; employee Pointage UI
+pack; scoped Prettier; and scoped diff/whitespace check. The first scoped
+Prettier diagnostic identified only the two newly updated evidence files; the
+approved scoped formatter write normalized those files, after which the final
+check passed. The diff check emitted only Git's existing LF-to-CRLF
+working-copy notices. No lint claim is made.
+
+Task 4.5: COMPLETE
+
+Tasks: 30/32
+
+APPLY: PAUSED
+
+Task 4.6+: NOT_AUTHORIZED
+
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+
+VERIFY: NOT_RUN
+
+QA: NOT_RUN
+
+Production enablement: NOT_AUTHORIZED
+
+Real employee attendance: NOT_AUTHORIZED
+
+All seven production/legal/privacy blockers remain unresolved.
+
+## Current R4 checkpoint — bootstrap-corrected execution COMPLETE, 2026-09-18
+
+Authority: explicit current-user cross-module attachment
+`544a9511-a0b1-4436-864c-24bd63865c9e`.
+
+`R4_BOOTSTRAP_SQL_HANDOFF_PREFLIGHT: PASS`. The ephemeral runner allowlisted
+only the exact harness-owned bootstrap, raw-writer and foundation-runtime role
+names. It passed role and password into PostgreSQL
+`format('ALTER ROLE %I PASSWORD %L', $1::text, $2::text)` as bind parameters,
+then executed the returned statement on the same trusted admin connection. The
+generated statement and credentials were not logged, written, placed in argv or
+recovered from Docker metadata. No repository source/test/fixture/migration,
+`.env` or temporary file changed.
+
+Execution-critical hashes matched the approved current checkpoint. In
+particular, DB integration SHA-256 was
+`964ad9d0ada5d5e7878cfce5dd4db117c95612736aec34e518efe16d7e8c19a5`;
+pre-execution Tasks and 02c hashes were respectively
+`71b011cfbc0e3b6c3186389157acb7ecda89affebccc41370d436649162041e8`
+and `23c97956c7f8990fc19042fa8ef438cd7a29ac616db53d186258638c62cd86dd`;
+HEAD remained `14dd0f35645586abc5877da28df0fcd16eba971d`.
+
+One fresh target only was used: database
+`yuta_pointage_raw_clocking_test_f283a5cb06c34c2c8e98b3af`, container prefix
+`c55e0a4ad40f`, PostgreSQL 17, loopback-only binding, private
+`rw,size=512m` PostgreSQL tmpfs, zero mounts, correct Pointage labels and no
+shared/dev fallback. Exact database identity, 22-entry ledger, installed raw
+objects/function, role attributes, both runtime identities and bounded writer/
+foundation privileges passed. `BOOTSTRAP_SECRET_HANDOFF: PASS`.
+
+Execution results:
+
+- upgrade fixture owner: 1 selected PASS / 4 skipped;
+- full current-hash DB integration: 63/63 PASS, 69.95s, no skip;
+- new R4 clock-owner test: PASS within the full suite, including exact installed
+  definition capture, deterministic `2025-01-15T12:34:56.123456Z` protected
+  append, timezone/offset/business-date and receipt checks, guaranteed exact
+  restoration, post-restoration source, DB-bracketed real-clock append and final
+  installed source;
+- raw-chain: 34/34 PASS;
+- direct service corruption: 1 selected PASS / 124 skipped;
+- manager corrupt projection: 1 selected PASS / 16 skipped;
+- runtime writer topology: 1 selected PASS / 35 skipped;
+- `R4-SERVICE-TIME-CORRUPTION: PASS`.
+
+Independent post-suite inspection proved the installed append function still
+used `pg_catalog.clock_timestamp()` and retained no deterministic assignment.
+The independent final restricted-writer append/receipt committed inside DB-side
+clock brackets with timezone `Europe/Paris`, UTC offset `7200`, business date
+`2026-09-18`, internally consistent calendar fields and an exact receipt link.
+Final database identity and 22-entry ledger with terminal test-only
+`0021_abandoned_black_queen` passed; the function definition remained unchanged.
+
+All owned clients closed. Normal stop/remove and the post-removal absence check
+passed: `R4_TARGET_DISPOSITION: REMOVED`.
+
+R4 matrix: migration/isolation `PASS_CURRENT`; current-byte DB integrity and
+clock owner `PASS_EXECUTED`; corrected service corruption and runtime writer
+`PASS_EXECUTED`; independent final real-clock proof `PASS_EXECUTED`. No new
+Product, Spec, Design, authorization, persistence or runtime-boundary conflict
+was found.
+
+Final repository checks PASS: Backoffice typecheck, recursive workspace
+typecheck, docs check, architecture check, strict OpenSpec validation, employee
+Pointage UI pack, scoped Prettier and scoped diff/whitespace check. The diff
+check emitted only Git's existing LF-to-CRLF working-copy notices. No lint claim
+is made.
+
+Task 4.4: COMPLETE
+
+Tasks: 29/32
+
+APPLY: PAUSED
+
+Task 4.5+: NOT_AUTHORIZED
+
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+
+VERIFY: NOT_RUN
+
+QA: NOT_RUN
+
+Production enablement: NOT_AUTHORIZED
+
+Real employee attendance: NOT_AUTHORIZED
+
+All seven production/legal/privacy blockers remain unresolved.
+
+## Current R4 checkpoint — bounded clock-owner added; execution stopped before tests, 2026-09-18
+
+Authority: explicit current-user cross-module attachment
+`18a19a62-31f0-439b-840a-82925a76774f`.
+
+Exactly one test-only DB integration regression was added:
+`R4 restores the real append clock after deterministic substitution and accepts a real-clock event`.
+It captures the exact installed append-function definition, reuses the existing
+single-assignment clock-source replacement with deterministic instant
+`2025-01-15T12:34:56.123456Z`, proves deterministic protected append behavior,
+restores in `finally`, checks the installed definition after restoration,
+performs a DB-bracketed real-clock append and checks the installed definition a
+second time. Static review of all nine required points PASS. Classification:
+`R4_TEST_EVIDENCE_ONLY`.
+
+DB integration SHA-256:
+
+- previous approved bytes:
+  `7df9908051ee2361bd6375541cfeaace7c17d3afae574e027eeba8d0135aeb38`;
+- current bytes:
+  `964ad9d0ada5d5e7878cfce5dd4db117c95612736aec34e518efe16d7e8c19a5`.
+
+The one authorized execution attempt created and admitted fresh PostgreSQL 17
+target `yuta_pointage_raw_clocking_test_2a7bcfdc2b524ef6aa0a0108`, container
+prefix `08f5e05fe87b`: loopback only, private `rw,size=512m` PostgreSQL tmpfs,
+zero mounts, correct Pointage labels and not `yuta-cloud-db-dev`.
+
+Execution stopped before any child, upgrade database, migration, test or append.
+The parent attempted to hand an ephemeral bootstrap credential to children
+without persistence or argv exposure, but PostgreSQL rejected the parameterized
+`ALTER ROLE ... PASSWORD` syntax at `$1`. No secret was printed or recovered
+from Docker metadata. Per the explicit one-target/no-retry condition, no repair
+or second target was attempted. Owned clients were closed; normal stop/remove
+succeeded and the post-removal lookup was empty.
+
+Final repository checks PASS: Backoffice typecheck, recursive workspace
+typecheck, docs check, architecture check, strict OpenSpec validation, employee
+Pointage UI pack, scoped Prettier and scoped diff/whitespace check. The diff
+check emitted only Git's existing LF-to-CRLF working-copy notices. No lint claim
+is made.
+
+Evidence matrix:
+
+- `BOOTSTRAP_SECRET_HANDOFF: NOT_COMPLETED`;
+- `FULL_DB_INTEGRATION_NEW_HASH: NOT_RUN`;
+- `R4-SERVICE-TIME-CORRUPTION: NOT_RUN`;
+- independent installed clock/final append/final ledger: `NOT_RUN`;
+- `R4_TARGET_DISPOSITION: REMOVED`.
+
+Task 4.4: PARTIAL — `BLOCKED_BY_R4_ORCHESTRATION_BOOTSTRAP_HANDOFF`
+
+Tasks: 28/32
+
+APPLY: PAUSED
+
+Task 4.5+: NOT_AUTHORIZED
+
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+
+VERIFY: NOT_RUN
+
+QA: NOT_RUN
+
+Production enablement: NOT_AUTHORIZED
+
+Real employee attendance: NOT_AUTHORIZED
+
+All seven production/legal/privacy blockers remain unresolved.
+
+## Current R2 checkpoint — Windows-safe replacement run PASS; Task 4.2 complete, 2026-09-18
+
+Authority: explicit current-user cross-module attachment
+`58c16e48-bef8-44ca-9713-35f12d941b98`. No source, test, package,
+migration, Spec, Design, env-file, runtime, HTTP or UI bytes changed.
+
+### Blocked-target cleanup and Windows child preflight
+
+The exact blocked target
+`1adcc06167fe1b07c30e9ac3f6e83c161267d2dd20cd040ecaaff4810529cdbd`
+was revalidated by selected, non-secret Docker fields only: exact name,
+PostgreSQL 17 image, Pointage change/run labels, running state, bridge network,
+private `rw,size=512m` tmpfs, zero mounts and sole loopback port matched the
+record. `BLOCKED_TARGET_PROVENANCE=PASS`; normal Docker stop/remove completed
+and `BLOCKED_TARGET_FINAL_STATE=REMOVED`. No credential metadata was read.
+
+The failed invocation used executable `pnpm.cmd`, a direct argument array,
+repository-root cwd, `shell=false`, sanitized child environment and pipe stdio.
+`pnpm.cmd` is a Windows command wrapper while direct `spawn` assumed native
+executable semantics; `ComSpec` was available but was not used. Classification:
+`WINDOWS_CMD_WRAPPER_INVOCATION`.
+
+The selected correction used `node.exe` directly with the package's existing
+`vitest.mjs` entry, an argument array, package cwd and `shell=false`. A no-DB
+`vitest.mjs --version` child exited 0 from repository root, preserved its
+arguments, created no container and modified no file.
+`WINDOWS_CHILD_SPAWN_PREFLIGHT=PASS`.
+
+### Replacement target and admission
+
+All execution-critical hashes matched their accepted values. With
+`NODE_ENV=test` scoped to the orchestration process and `VERCEL` absent, the
+existing `provisionPointageNextFixture()` harness created exactly one
+replacement:
+
+- container ID:
+  `15508f8ff9723bf707a3d13f49d0ac6fc267b25fc822ff74999673e5550a8248`;
+- name: `yuta-pointage-next-758ede9032044674b89b0de7`;
+- image/network: `postgres:17` / `bridge`;
+- database: `yuta_pointage_raw_clocking_test_758ede9032044674b89b0de7`;
+- sole binding: `127.0.0.1:59198 -> 5432`;
+- private tmpfs: `rw,size=512m`; mounts: zero;
+- canonical 0000-0020 plus pinned test-only extension 0021; journal count 22;
+- raw events, receipts, continuations and lock helper: present;
+- three expected Pointage roles and exact writer/foundation boundary checks:
+  PASS;
+- current database identity and no shared/dev/prod fallback: PASS;
+- `BOOTSTRAP_SECRET_HANDOFF=PASS`; secret remained process-memory/child-env
+  only and was never printed or persisted.
+
+### R2 execution
+
+R2-SERVICE used direct Node/Vitest with cwd `apps/backoffice`, `shell=false`,
+the service test path and the exact four-title selector. Result: exit 0,
+1 file PASS, 4 PASS / 111 skipped. Current executable proof establishes:
+
+- same-ID/same-intent overlapping restricted-writer calls converge on the same
+  original receipt, accepted instant/calendar tuple and canonical event link;
+  one raw event and one receipt only;
+- distinct-ID CLOCK_IN has one winner, one current conflict, one linked pair
+  and no loser receipt;
+- distinct-ID CLOCK_OUT closes the existing open session once, with one winning
+  receipt and no double-close;
+- acknowledgement loss occurs after real COMMIT and exact-tuple recovery
+  returns the original linked receipt without a second event/receipt.
+
+R2-DB integration used direct Node/Vitest with cwd `packages/db-cloud`,
+`shell=false` and the exact F4/D4 selector. Result: exit 0, 1 file PASS,
+3 PASS / 59 skipped. F4 competing connections serialize to one canonical
+transition and retain locks through commit. D4 timeout and D4 deadlock each
+abort the complete operation before protected callback effects and leave no
+partial raw/receipt effects.
+
+The separate schema selector exited 0, 1 file PASS, 1 PASS / 7 skipped. It
+proves the scoped organization/establishment/dossier/request association,
+raw-event linkage/uniqueness and absence of duplicated protected attendance or
+employee identity in the receipt.
+
+### Final R2 matrix
+
+| Row   | Evidence                                                         | Disposition            |
+| ----- | ---------------------------------------------------------------- | ---------------------- |
+| R2-01 | Serial same-ID/same-intent replay                                | PASS_CURRENT           |
+| R2-02 | Concurrent same-ID/same-intent convergence                       | PASS_EXECUTED          |
+| R2-03 | Same-ID/different-intent conflict                                | PASS_CURRENT           |
+| R2-04 | Distinct-ID CLOCK_IN race                                        | PASS_EXECUTED          |
+| R2-05 | Distinct-ID CLOCK_OUT race                                       | PASS_EXECUTED          |
+| R2-06 | Post-COMMIT acknowledgement-loss recovery                        | PASS_EXECUTED          |
+| R2-07 | Service UNCONFIRMED handling                                     | PASS_CURRENT           |
+| R2-08 | U7 exact frozen recovery tuple                                   | PASS_CURRENT           |
+| R2-09 | U7 one-click exact-tuple resend                                  | PASS_CURRENT           |
+| R2-10 | U7 stop-after-uncertain resend                                   | PASS_CURRENT           |
+| R2-11 | U7 conflict refresh then fresh action                            | PASS_CURRENT           |
+| R2-12 | Recovery current-authority/lifecycle invalidation                | PASS_CURRENT           |
+| R2-13 | Credential-reset recovery denial/current re-identification bound | PASS_CURRENT           |
+| R2-14 | Scoped receipt association and canonical event linkage           | PASS_EXECUTED          |
+| R2-15 | F4 competing transition serialization                            | PASS_EXECUTED          |
+| R2-16 | D4 timeout/deadlock whole-operation rollback                     | PASS_EXECUTED          |
+| R2-17 | U8 actual-process defense-in-depth refresh                       | DEFENSE_IN_DEPTH_STALE |
+
+All Task 4.2-required rows are current, executed or compositional; only the
+explicitly non-required U8 defense-in-depth refresh remains stale. No
+Spec/Design/implementation conflict was found. R2-SERVICE and R2-DB are PASS.
+Task 4.2 is COMPLETE; tasks are 27/32. STOP before Task 4.3.
+
+Final harness disposition: the replacement fixture connection closed; the
+container remains running under existing harness behavior. No credential was
+retained by the evidence record, and no unrelated container was touched.
+
+APPLY: PAUSED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+
+## Apply evidence addendum — Task 4.4 / R4 regex-corrected retry (2026-09-18)
+
+The one additionally authorized retry corrected only the ephemeral JavaScript
+parser expression. The prior error was `SyntaxError: Invalid regular
+expression` at `eval1:113`; the regex starts at column 28 and the invalid
+escape starts at column 50 (one-based), for
+`/observed_at\s*:=\s*['\"][0-9]/u`; `\"` is invalid as an identity escape in
+Unicode mode. The corrected expression
+`/observed_at\s*:=\s*['"][0-9]/u` retains the exact intent of detecting a quoted
+numeric timestamp assignment in the installed append-function definition.
+Classification: `ORCHESTRATION_PARSE_ONLY`.
+
+`R4_ORCHESTRATION_PARSE_PREFLIGHT: PASS`. The exact full script parsed; the
+canonical loader URL initialized the launcher module without provisioning,
+secret creation, container creation, DB access or test execution. All ten
+approved execution-critical hashes and HEAD
+`14dd0f35645586abc5877da28df0fcd16eba971d` then matched. Repository source,
+test, fixture and migration changes from this retry: NONE.
+
+One fresh Task 1.7 target was provisioned: container prefix `85fdd0a928ea`, run
+label `2a9ec70ada134ef2904d9b1e`, loopback port `61720`, no mounts and private
+tmpfs. `BOOTSTRAP_SECRET_HANDOFF: PASS`; `NODE_ENV=test`; `VERCEL` absent; no
+secret was logged, written, passed on argv or recovered from Docker metadata.
+
+R4 execution matrix:
+
+- `R4-MIGRATION-ISOLATION: PASS` — full migration integration 5/5, clean
+  canonical `0000-0020`, guarded test-only `0021`, same-container upgrade,
+  source preservation and no-op ledger PASS.
+- `R4-DB-INTEGRITY: PASS` — schema 8/8 and full DB integration exit 0;
+  restricted writer, mutation denial, atomic pair, rollback/locking, DB
+  time/calendar and corruption regressions ran without required setup skip.
+- `R4-SERVICE-TIME-CORRUPTION: FAIL` — full raw-chain passed; focused service
+  run had 2 failed, 4 passed and 119 unselected. Idle-boundary returned
+  `POINTAGE_STATE_CONFLICT` instead of `POINTAGE_ACCESS_DENIED`;
+  lost-acknowledgement counts were `1/1` instead of expected `3/3`.
+  Manager/runtime selectors were not reached.
+- `R4-FINAL-REAL-CLOCK: NOT_RUN` — STOP occurred before installed-function
+  inspection, real-clock append and final DB/ledger check.
+
+The target remains running and retained as evidence; teardown was not claimed.
+No correction or retry followed the Batch 3 failure.
+
+Task 4.4: PARTIAL — `BLOCKED_BY_R4_SERVICE_FOCUSED_FAILURE`
+
+Tasks: 28/32
+
+APPLY: PAUSED
+
+Task 4.5+: NOT_AUTHORIZED
+
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+
+VERIFY: NOT_RUN
+
+QA: NOT_RUN
+
+Production enablement: NOT_AUTHORIZED
+
+Real employee attendance: NOT_AUTHORIZED
+
+All seven production/legal/privacy blockers remain unresolved.
+
+## Apply evidence addendum — R4 selector-corrected run stopped before provisioning (2026-09-18)
+
+Authority: explicit current-user cross-module attachment
+`66500a89-a611-475c-9af5-a8daf6d476e3`.
+
+The approved correction removes the isolated idle-boundary selector from R4 in
+favor of current A5.1 ownership and removes the order-dependent lost-ack selector
+from R4 in favor of completed R2 ownership. Neither test was edited.
+
+`OLD_R4_TARGET_PROVENANCE: PASS`. Selected non-secret fields matched exact
+container
+`85fdd0a928ea6f3dbcca43ca39b636c6243796a2b8e2edaad55300a21fd07a30`,
+name `yuta-pointage-next-2a9ec70ada134ef2904d9b1e`, run label
+`2a9ec70ada134ef2904d9b1e`, PostgreSQL 17, bridge network, sole loopback
+`127.0.0.1:61720 -> 5432` binding, private `rw,size=512m` PostgreSQL tmpfs and
+zero mounts. No environment or secret-bearing metadata was inspected. Normal
+stop/remove and the subsequent absence check passed:
+`OLD_R4_TARGET_DISPOSITION: REMOVED`.
+
+The seven approved execution-critical hashes all matched. The manifest-owned
+extension SQL path is
+`packages/db-cloud/test/fixtures/pointage-raw-clocking/0021_abandoned_black_queen.sql`;
+its hash matched `7794a5c02f2fa809a9985848bc455dbd3a5762415b5d96c216fb49ff4fd01ed9`.
+
+Read-only Phase 4A inspection found no current DB integration test that replaces
+the `public.pointage_raw_enforce_append()` clock source, executes deterministic
+time behavior and restores the saved authoritative function definition. The DB
+integration helper `historicalFixture()` disables/re-enables the append trigger;
+it does not substitute/restore the function clock. The only current test with a
+function replacement and `try/finally` restoration is the service idle-boundary
+selector that this authority explicitly removed from R4; its isolated empty
+chain rejects `CLOCK_OUT` before append and cannot be reused as valid R4 proof.
+
+Required stop result:
+
+`R4_REAL_CLOCK_RESTORATION_EVIDENCE_INCOMPLETE`
+
+This was established before fresh-target creation. No fresh target, bootstrap
+secret, DB connection, migration, test, SQL, corrected Batch 3, installed
+function inspection or real-clock append ran. `BOOTSTRAP_SECRET_HANDOFF:
+NOT_RUN`; corrected `R4-SERVICE-TIME-CORRUPTION: PARTIAL`;
+`R4-FINAL-REAL-CLOCK: NOT_RUN`.
+
+Required checks passed: Backoffice typecheck, recursive workspace typecheck,
+docs, architecture, strict OpenSpec validation, employee Pointage UI pack,
+scoped Prettier and scoped diff/whitespace. No lint was run or claimed. The
+scoped diff check reported only Git's existing LF-to-CRLF working-copy notice
+for the two evidence files.
+
+Task 4.4: PARTIAL — `R4_REAL_CLOCK_RESTORATION_EVIDENCE_INCOMPLETE`
+
+Tasks: 28/32
+
+APPLY: PAUSED
+
+Task 4.5+: NOT_AUTHORIZED
+
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+
+VERIFY: NOT_RUN
+
+QA: NOT_RUN
+
+Production enablement: NOT_AUTHORIZED
+
+Real employee attendance: NOT_AUTHORIZED
+
+All seven production/legal/privacy blockers remain unresolved. A new human
+decision is required before any test/source change or additional R4 execution.
+
+## APPLY evidence addendum — Task 4.3 / R3 (2026-09-18)
+
+This addendum records Apply evidence only. It does not alter the approved
+Design/Specs, reopen R1/R2, start Task 4.4, or claim formal VERIFY/QA.
+
+### Integrity and setup ownership
+
+Execution-critical SHA-256 preflight matched the human-approved values:
+
+| Path                                                                                   | SHA-256                                                            |
+| -------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `packages/db-cloud/test/pointage-raw-clocking.integration.test.ts`                     | `7df9908051ee2361bd6375541cfeaace7c17d3afae574e027eeba8d0135aeb38` |
+| `packages/db-cloud/test/helpers/pointage-raw-clocking-test-database.ts`                | `a2dee8453e09be3794a4b0d07316d845bc85fead131d7a196af37ee47ada0d87` |
+| `packages/db-cloud/test/fixtures/pointage-raw-clocking/0021_abandoned_black_queen.sql` | `7794a5c02f2fa809a9985848bc455dbd3a5762415b5d96c216fb49ff4fd01ed9` |
+| `packages/db-cloud/test/fixtures/pointage-raw-clocking/0021_snapshot.json`             | `a6ccaa77bf4445c0336366708763ade2410ecca6faceca52db26242886fbc4bb` |
+| `packages/db-cloud/test/fixtures/pointage-raw-clocking/extension.json`                 | `15f3e7be616bdf7ae4a8a03cbc20272bd5fe138ae5f72e1b664e9248bb985eae` |
+| `apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts`                       | `e18841622c4f2ba5df8b72b54d387a4b093c79d344230cb685c5aa46c5a56dea` |
+| `apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts`                         | `d7fe2d0de72a4e5432c6979537ae6d6de1764f8e2ff6a1dffc848ebbf0b240f9` |
+| `apps/backoffice/test/pointage-raw-clocking-service.test.ts`                           | `7b28f0574f4657429b603f23c77c1bb7007bbf7cc5552ace2d24dc37fa8cff9e` |
+| `apps/backoffice/test/pointage-foundation.test.ts`                                     | `1ddaa498736b700980d8fe85b7f7bf9f04cb55b3bb79f7601f9a7a049d0b152b` |
+| `apps/backoffice/test/pointage-raw-clocking-runtime.test.ts`                           | `6571033fc2e98faf75951eccd19729b40de0b9db887d7b3e61952e22d9b38f47` |
+
+The current migration test named
+`upgrades a separately identity-verified target through canonical 0020 then the raw extension`
+is the exact setup owner for
+`yuta_pointage_raw_clocking_test_upgrade20260908b`. Its explicit initial state
+is an empty database; it then applies canonical 0000-0020, writes scoped
+foundation proof rows, applies disposable extension 0021, verifies preservation
+and proves a no-op rerun. The F8 aggregate consumes this state; it does not own
+database creation.
+
+### One-target orchestration evidence
+
+- Fresh target: ID prefix `9aaa8a92cc9c`, name
+  `yuta-pointage-next-09b80d20394e48afaf8dc569`, database
+  `yuta_pointage_raw_clocking_test_09b80d20394e48afaf8dc569`, loopback port
+  `53721`, PostgreSQL 17, private tmpfs, zero persistent bind mount.
+- `BOOTSTRAP_SECRET_HANDOFF: PASS`; parent-memory/subprocess-environment only.
+- `PRIMARY_DB_ADMISSION: PASS`: canonical 0000-0020, disposable 0021, expected
+  roles/helper/privileges and same-database topology.
+- `DB_VITEST_CWD_PREFLIGHT: PASS`: exact cwd
+  `D:\working\yuta\yuta-resto\packages\db-cloud`; fixture path stayed inside
+  that package.
+- `F8_UPGRADE_DB_PREREQUISITE: PASS`: exact empty database created inside the
+  same container; owning migration selector 1 PASS / 4 skipped.
+- `F8_UPGRADE_DB_PREREQUISITE_ADMISSION: PASS`: canonical 0000-0020 plus
+  test-only 0021 with foundation rows preserved.
+- F8 aggregate hostile selector: 1 PASS / 61 skipped; all intended hostile
+  role/ACL/default-ACL/ownership/helper search-path/body boundaries refused
+  twice without admission repair or fallback.
+- Previously accepted current Batch B evidence remains: distributed 5/30 and
+  blocked-attempt zero effects 29 PASS / 96 skipped; writer role/session/owner
+  denial and D4 poisoned search-path PASS.
+- `R3-RATE-TOPOLOGY-DB: PASS`.
+- Provider-unavailable actual process: admission trace ENTER then PROVIDER FAIL,
+  READY=0, rawDelta=0, receiptDelta=0, continuationDelta=0, clients=0, exit 1.
+- Actual-process failed raw client, widened foundation privilege, public helper
+  EXECUTE and helper-body drift: every case READY=0, rawDelta=0,
+  receiptDelta=0, continuationDelta=0, clients=0, exit 1; hostile state remained
+  present until explicit fixture restoration.
+- `R3-ACTUAL-PROCESS: PASS`; same target and continuously live parent across
+  Batch B and Batch C.
+- Fresh target disposition: STOPPED and REMOVED. Its primary and upgrade
+  databases disappeared with the private tmpfs target.
+
+### Final R3 disposition
+
+The complete hostile matrix is recorded in `tasks.md`. All Task 4.3-required
+rows are `PASS_CURRENT`, `PASS_EXECUTED`, `PASS_COMPOSITIONAL` or
+`LATER_TASK_OWNED`; none remains missing, partial or stale. Route-level
+forwarded-header actual-process testing remains defense-in-depth because the
+current compositional provider evidence owns the required invariant.
+
+Historical E5-IDLE remains exactly: UNKNOWN / NOT REPRODUCED / ROOT CAUSE NOT
+ESTABLISHED; current traced historical execution PASS. It was not rerun and is
+not described as fixed.
+
+### Required-check result
+
+- TS2345 cause 1: the fixture mock inferred `validateCredential` as a
+  zero-argument function returning only the verified member with UUID-template
+  scope fields, so the real one-argument function returning
+  `PointageValidationResult` was not assignable. Correction: exact ignored
+  request parameter plus exported `PointageValidationResult` return annotation.
+- TS2345 causes 2 and 3: TypeScript could not correlate the `consumer`
+  discriminator with the separately assigned identify/command request union at
+  `readState(request)` and `service[consumer](request)`. Correction: an exact
+  `continuation in request` test-local guard before those two branches.
+- Behavioral equivalence: no organization, establishment, dossier, lifecycle,
+  continuation, credential, provider, rate-limit, requestId, kind, guard, mock
+  ordering or assertion changed. Parameter/return annotations erase at emit;
+  the guard only rejects an impossible fixture mismatch before the same calls.
+- Focused service selector
+  `R3 denies credential identification|R3 fails`: 6 PASS / 119 skipped. It was
+  refreshed because the narrowing guard emits a runtime branch.
+- DB/F8/rate-limit actual evidence: NOT_RERUN because DB integration,
+  launcher/bootstrap and runtime/provider bytes are unchanged and the service
+  correction is assertion/input-equivalent.
+- Actual-process evidence: NOT_RERUN for the same reason.
+- `pnpm --filter @yuta/backoffice typecheck`: PASS.
+- `pnpm -r --if-present typecheck`: PASS for all 15 participating projects.
+- `pnpm docs:check`: PASS.
+- `pnpm architecture:check`: PASS.
+- `pnpm exec openspec validate pointage-usable-raw-clocking --strict`: PASS.
+- `pnpm ui:pack:check backoffice-pointage-employee`: PASS, zero warnings.
+- Scoped Prettier check on exactly the four authorized files: PASS.
+- Scoped `git diff --check`: PASS; line-ending notices were non-mutating Git
+  diagnostics.
+- Diff classification: service test `TEST_TYPING_ONLY` plus mechanical format;
+  foundation test `FORMAT_ONLY`; Tasks and this packet
+  `EVIDENCE_CHECKPOINT_FORMAT_ONLY`. No production, test-behavior, Spec, Design
+  or DB-behavior hunk was introduced.
+
+Task 4.3: COMPLETE
+
+Tasks: 28/32
+
+APPLY: PAUSED
+
+Task 4.4+: NOT_AUTHORIZED
+
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+
+VERIFY: NOT_RUN
+
+QA: NOT_RUN
+
+Production enablement: NOT_AUTHORIZED
+
+Real employee attendance: NOT_AUTHORIZED
+
+All seven production/legal/privacy blockers remain unresolved.
+Real employee attendance: NOT_AUTHORIZED
+
+## Current R2 checkpoint — environment and target admission PASS; R2 child spawn refused, 2026-09-18
+
+Authority: explicit current-user cross-module attachment
+`0ebdc50a-4a84-47d3-bb69-4c59517abadd`. It authorized exactly one
+orchestration retry with `NODE_ENV=test` in process memory only, then the
+previously approved fresh-disposable R2 flow. No source or env file changed.
+
+Sanitized environment admission before provisioning:
+
+- `NODE_ENV_PRESENT=true`;
+- `NODE_ENV_ALLOWED=true`;
+- `NODE_ENV_VALUE_CLASS=test`;
+- `VERCEL_PRESENT=false`;
+- `SECRET_HANDOFF_SAFE=PASS`.
+
+All four execution-critical hashes matched the accepted values. The corrected
+repository-root invocation entered `provisionPointageNextFixture(process.env)`
+once. The existing Task 1.7 harness created and bootstrapped exactly one new
+target:
+
+- container ID:
+  `1adcc06167fe1b07c30e9ac3f6e83c161267d2dd20cd040ecaaff4810529cdbd`;
+- container name: `yuta-pointage-next-e9ab707db67a4980b1603987`;
+- image: `postgres:17`; Docker network mode: `bridge`;
+- database: `yuta_pointage_raw_clocking_test_e9ab707db67a4980b1603987`;
+- loopback-only binding: `127.0.0.1:59790 -> 5432`;
+- private tmpfs: `/var/lib/postgresql/data=rw,size=512m`; mounts: zero;
+- migration journal count: 22, representing canonical 0000-0020 plus the
+  pinned test-only 0021 extension;
+- raw events, command receipts, continuations and scoped lock helper: present;
+- lock-owner, restricted-writer and foundation runtime roles: present with
+  expected non-superuser/non-create/non-replication/non-bypass/non-inherit
+  attributes;
+- raw-writer and foundation database boundary assertions: PASS;
+- `current_database()` and guarded target identity: PASS;
+- `BOOTSTRAP_SECRET_HANDOFF=PASS` inside the parent/harness admission path;
+  no secret value, URL or environment dump was emitted or persisted.
+
+Fresh target/bootstrap/admission therefore PASS. When the same orchestration
+attempt proceeded to the approved R2-SERVICE child command, Node rejected the
+Windows child launch with `spawn EINVAL` before Vitest started. This is an
+R2-child orchestration launch failure, not a service assertion, implementation,
+database or migration failure. No focused service case executed, so the
+bootstrap credential was not successfully consumed by an R2 test child and no
+behavioral result exists. Per the one-retry boundary, no alternative shell,
+second child launch, second target, retained-target reuse or test edit was
+attempted. R2-DB remained gated and NOT_RUN.
+
+Final harness disposition: the fixture's admin connection closed successfully;
+the new container remains running because the existing harness has no
+remove/stop teardown in this path. It was not manually retained, stopped,
+deleted or inspected for secrets.
+
+Current result:
+
+- R2-SERVICE: NOT_RUN / BLOCKED_BY_CHILD_PROCESS_SPAWN_EINVAL;
+- same-ID, distinct CLOCK_IN, distinct CLOCK_OUT and lost-ack selectors:
+  NOT_RUN;
+- R2-DB F4, D4 timeout, D4 deadlock and schema/receipt selector: NOT_RUN;
+- Task 4.2: PARTIAL / BLOCKED_BY_ORCHESTRATION_CHILD_SPAWN;
+- tasks: 26/32; Task 4.3+: NOT_AUTHORIZED;
+- U8 remains `DEFENSE_IN_DEPTH_STALE`; U8 and Browser QA were not run.
+
+APPLY: PAUSED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+## Current R2 checkpoint — corrected import PASS; helper refused pre-provision environment, 2026-09-18
+
+Authority: explicit current-user cross-module attachment
+`c605b429-dd02-4eba-9310-0b7d825a6a6e`. This authority classified the prior
+failure as `ORCHESTRATION_PATH_RESOLUTION_FAILURE`, permitted one read-only
+import-resolution preflight and then exactly one corrected orchestration
+attempt. No source edit was authorized or made.
+
+The previous failed command executed `tsx` with effective cwd
+`D:\working\yuta\yuta-resto\packages\db-cloud`, so its root-relative launcher
+import resolved incorrectly under `packages/db-cloud/apps/...`. The corrected
+preflight executed from `D:\working\yuta\yuta-resto` using the existing tsx
+CLI by its resolved filesystem path. It proved:
+
+- cwd and repository root:
+  `D:\working\yuta\yuta-resto`;
+- resolved launcher:
+  `D:\working\yuta\yuta-resto\apps\backoffice\test\helpers\pointage-raw-clocking-launcher.ts`;
+- launcher exists and exports `provisionPointageNextFixture`;
+- import completed without invoking provisioning;
+- disposable-container count remained unchanged at 33.
+
+`IMPORT_RESOLUTION_PREFLIGHT: PASS`.
+
+The one corrected orchestration attempt then imported the launcher correctly
+and entered `provisionPointageNextFixture(process.env)`. It stopped immediately
+inside the helper's existing `pointageChildEnvironment` admission with the
+generic error `Pointage test launch refused.` Read-only boolean inspection
+showed `NODE_ENV_PRESENT=false`, `NODE_ENV_ALLOWED=false` and
+`VERCEL_PRESENT=false`. Therefore this is a pre-provision orchestration
+environment-admission failure: the helper requires incoming `NODE_ENV` to be
+exactly `development` or `test`. It is not a helper implementation, database,
+migration or behavioral regression failure.
+
+The helper did not reach random run/secret generation or Docker creation. The
+container inventory remained 33, no fixture handle was returned, no fresh
+target/database existed, no migration or SQL ran and no R2 subprocess began.
+The old retained target and every prior disposable target remained untouched.
+`SECRET_HANDOFF_SAFE` remains PASS; `BOOTSTRAP_SECRET_HANDOFF` is NOT_RUN
+because no secret was generated.
+
+The authority allowed one corrected attempt and requires STOP if orchestration
+fails again before provisioning. No retry with an injected `NODE_ENV`, retained
+target or second invocation was performed. Current result:
+
+- fresh target/bootstrap/admission: NOT_RUN;
+- R2-SERVICE: NOT_RUN;
+- R2-DB: NOT_RUN;
+- Task 4.2: PARTIAL / BLOCKED_BY_ORCHESTRATION_ENVIRONMENT_ADMISSION;
+- tasks: 26/32; Task 4.3+: NOT_AUTHORIZED.
+
+APPLY: PAUSED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+## Current R2 checkpoint — fresh-target attempt stopped before helper invocation, 2026-09-18
+
+Authority: explicit current-user cross-module attachment
+`cf4557c8-4e55-478b-8ed7-80872215661e`. The approved path was one invocation
+of `provisionPointageNextFixture()` from
+`apps/backoffice/test/helpers/pointage-raw-clocking-launcher.ts`, followed by
+the already-authorized R2-SERVICE and R2-DB selectors. Read-only preflight
+confirmed that this helper owns the PostgreSQL 17 container creation, private
+tmpfs and loopback binding, canonical 0000-0020 migration, disposable role
+provisioning, temporary extension 0021 migration, foundation role and
+synthetic fixture. The helper captures Docker output, discards Docker stderr
+and emits only generic setup errors; it does not intentionally print a
+bootstrap password, credential-bearing URL or environment dump.
+
+All execution-critical hashes matched the approved values before execution:
+
+- service test:
+  `1cd0185f1673d5c070081df38c2fe3386ecadc72e48ee004eec8119a99ca0d90`;
+- DB integration test:
+  `7df9908051ee2361bd6375541cfeaace7c17d3afae574e027eeba8d0135aeb38`;
+- test-only extension SQL:
+  `7794a5c02f2fa809a9985848bc455dbd3a5762415b5d96c216fb49ff4fd01ed9`;
+- disposable DB helper:
+  `a2dee8453e09be3794a4b0d07316d845bc85fead131d7a196af37ee47ada0d87`.
+
+The continuous in-memory orchestration command failed during module loading,
+before `provisionPointageNextFixture()` could be imported or called. Because
+`pnpm --filter @yuta/db-cloud exec tsx -` evaluates stdin relative to the
+package directory, its repository-root-relative import resolved under
+`packages/db-cloud/apps/...` and returned `ERR_MODULE_NOT_FOUND`. No bootstrap
+secret was generated or handed off, no fresh target/container was created,
+no database operation or migration ran, and no R2 Vitest subprocess started.
+The old retained target was not started, inspected for secrets, mutated or
+deleted. A sanitized label-only container inventory confirmed no target from
+this failed orchestration; existing prior targets remain untouched.
+
+The explicit failure rule requires STOP rather than correcting the import and
+retrying under the same authority. Therefore:
+
+- `SECRET_HANDOFF_SAFE` preflight: PASS;
+- `BOOTSTRAP_SECRET_HANDOFF`: NOT_RUN;
+- fresh target creation/admission: NOT_RUN;
+- R2-SERVICE: NOT_RUN;
+- R2-DB: NOT_RUN;
+- Task 4.2: PARTIAL / BLOCKED_BY_ORCHESTRATION;
+- tasks: 26/32; Task 4.3+: NOT_AUTHORIZED.
+
+No source, Spec, Design, migration, journal, DB test, runtime, HTTP or UI path
+changed. U8 and Browser QA were not run. A new human execution authorization
+is required before any corrected orchestration attempt.
+
+APPLY: PAUSED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+## Current R2 checkpoint — bounded regression added; execution blocked before database start, 2026-09-18
+
+Authority: explicit current-user cross-module attachment
+`beb89e82-b189-431f-b1b6-f57ad09ef2b0`. The only source edit is
+`apps/backoffice/test/pointage-raw-clocking-service.test.ts`; this packet and
+`tasks.md` record evidence. No production, Spec, Design, DB-test, migration,
+canonical migration, runtime, HTTP or UI path changed.
+
+### Source result
+
+- Service test before:
+  `984cdbc2c7debc304bcf74a3ff27ab4b2d6fdc566b6cce3de3cd84bb3daf29c8`.
+- Service test after:
+  `1cd0185f1673d5c070081df38c2fe3386ecadc72e48ee004eec8119a99ca0d90`.
+- New exact title:
+  `two separate restricted-writer connections submitting the same request identity converge on one original receipt`.
+- Synchronization: existing two restricted-writer connections plus
+  observer-proved dossier-lock edge; no sleep/timing race control.
+- New assertions: equal original/replay result, one pair delta, same
+  request/kind/time/calendar receipt and receipt event ID equal to raw event ID.
+- Strengthened existing cases: exact winner linkage for distinct CLOCK_IN,
+  distinct CLOCK_OUT and lost acknowledgement; no loser receipt for distinct
+  races.
+- Scoped format: PASS before the evidence-document update.
+
+These assertions are current source only, not execution PASS.
+
+### Disposable target preflight
+
+The accepted retained Task 1.7 target matched exactly before any attempted
+start:
+
+- container ID:
+  `229f77e20063d830eba10d12272b7873a58dc1629d49db357a9d2de7ed9013b3`;
+- name: `yuta-pointage-raw-20260908-1252`;
+- labels: change `pointage-usable-raw-clocking`, run `r20260908c`;
+- image:
+  `sha256:7958605b474b3d264a969cb3a123d6aa00ad1e1fe9da8a69984dabb704d93317`;
+- stopped, private `/var/lib/postgresql/data` tmpfs `rw,size=512m`, Mounts=[];
+- sole binding `127.0.0.1:56541 -> 5432`;
+- selected database `yuta_pointage_raw_clocking_test_b20260908a`;
+- canonical 0000-0020 plus test-only extension 0021; no canonical 0021.
+
+Execution-critical preflight hashes remained exact:
+
+- `packages/db-cloud/test/pointage-raw-clocking.integration.test.ts`:
+  `7df9908051ee2361bd6375541cfeaace7c17d3afae574e027eeba8d0135aeb38`.
+- `packages/db-cloud/test/fixtures/pointage-raw-clocking/0021_abandoned_black_queen.sql`:
+  `7794a5c02f2fa809a9985848bc455dbd3a5762415b5d96c216fb49ff4fd01ed9`.
+- `packages/db-cloud/test/helpers/pointage-raw-clocking-test-database.ts`:
+  `a2dee8453e09be3794a4b0d07316d845bc85fead131d7a196af37ee47ada0d87`.
+
+### Environmental stop
+
+The planned focused service command was:
+
+```text
+pnpm --filter @yuta/backoffice exec vitest run test/pointage-raw-clocking-service.test.ts -t "two separate restricted-writer connections compete for one transition and commit exactly one pair|two separate connections competing to CLOCK_OUT close the existing session only once|a response lost after real COMMIT recovers the original receipt with the same tuple, without a second event|two separate restricted-writer connections submitting the same request identity converge on one original receipt" --reporter=verbose
+```
+
+It was NOT_RUN. Before `docker start`, child-environment injection or Vitest,
+the orchestration boundary rejected access to the bootstrap secret stored in
+the old container metadata. No secret was displayed/persisted, no port opened,
+no database operation occurred and no test outcome was manufactured. The
+current approved helper opens/guards an explicitly configured target but does
+not create one. A new container/target, ad-hoc password change/bootstrap or
+env-file fallback would exceed this authorization.
+
+R2-SERVICE: BLOCKED_BY_ENVIRONMENT. Part B R2-DB is NOT_RUN because it is gated
+on R2-SERVICE PASS. Therefore F4, D4 timeout, D4 deadlock and schema selectors
+remain stale/not refreshed; U8 remains intentionally stale defense in depth
+and was not run. No implementation/Spec conflict was observed.
+
+Task 4.2: PARTIAL / NOT_COMPLETE. Tasks: 26/32. Task 4.3+: NOT_AUTHORIZED.
+
+Historical E5-IDLE disposition remains UNKNOWN / NOT REPRODUCED / ROOT CAUSE
+NOT ESTABLISHED; current traced E5-IDLE remains PASS.
+
+APPLY: PAUSED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+All seven production/legal/privacy blockers remain unresolved. STOP before any
+R2 execution retry or Task 4.3.
+
+## Current R1 checkpoint — A5.3 PASS; all 62 scenarios mapped, 2026-09-18
+
+Authority: explicit current-user cross-module attachment
+`c27ac0e8-72b3-4ac6-a91d-2432da0c1bf3`. Authorized source scope was
+exactly `apps/backoffice/test/pointage-raw-clocking-service.test.ts`; only this
+checkpoint and `02c-implementation-plan-review.md` record evidence. No
+production, auth, Personnel, contract, repository, DB, migration, runtime,
+HTTP, UI, Design or Spec path changed.
+
+Exact A5.3 has one WHEN and one THEN and no separate AND: after an interaction
+ends, a later caller reusing its continuation must be denied without previous
+employee identity, state or receipt. Before the edit, actual end, ended-state
+read denial, ended mutation denial and ended committed-replay denial existed
+only across separate scenarios; the coherent commit -> actual end -> retained
+old-token reuse sequence was missing.
+
+The added test
+`A5.3 denies protected reuse after explicitly ending a committed interaction`
+uses valid scoped Personnel, current credential/version and exact employee
+authority. It identifies, commits one real CLOCK_IN event and one real receipt,
+reads the resulting open state, then calls the production service `end` path on
+the same continuation. End returns `{ ok: true, value: null }` and commits only
+`endedAt`; binding, token digest, issued/deadline fields, raw event and receipt
+remain unchanged.
+
+The caller retains that exact old token. Subsequent `state.read`, an otherwise
+valid CLOCK_OUT, and replay of the original CLOCK_IN request all return only
+`POINTAGE_ACCESS_DENIED`. Each branch locks the ended continuation and reads
+the current clock, then stops before credential/grant, raw-chain or receipt
+lookup. Per branch, `appendRawEvent`, `insertCommandReceipt` and
+`touchContinuationIdle` deltas are zero. No value, display name, dossier ID,
+original request ID or acceptedAt is returned; no token is generated, no new
+continuation is inserted, and `endedAt`/deadlines/binding are not revived.
+Fresh identification is owned elsewhere and was not added to A5.3.
+
+Focused A5.3 execution passed 1/1 with 113 skipped. Same-file freshness passed:
+A1.1 10/10; A2.1 2/2; four A3.1/A3.2 upcoming/former cases 4/4;
+A3.3 1/1; A3.4 6/6; A3.5 4/4; A4.1 1/1; A4.2 5/5; A5.1 2/2; and the A5.2
+mutation/state/replay group 3/3. No DB, container, U8, actual-process or Browser
+QA execution occurred.
+
+R1 then continued read-only in canonical order. A6.1-A6.3 passed from current
+strict response/service/auth/UI evidence plus unchanged accepted receipt,
+continuation and minimized-audit evidence. A7.1-A7.3 passed from current
+fail-closed provider, forged-header, generic-failure and no-production-provider
+composition evidence. R1.1-R13.1 all retain concrete implementation/test
+references in the approved 62-scenario matrix; focused current executions
+covered unknown outcomes, closed transitions, raw-chain derivation, sequential
+sessions, replay/conflict/time/midnight, employee UI, manager scope, shared
+device, HTTP and explicit non-scope. Previously accepted DB concurrency,
+immutability, same-database and U8 actual-process evidence remains current
+because none of its protected implementation/test inputs changed. No further
+R1 evidence gap was found. This completes Task 4.1 mapping only; it is not
+formal VERIFY or Browser QA.
+
+R1 final totals: 20/20 requirements touched; 62/62 scenarios evaluated;
+implementation/test trace PASS 62, PARTIAL 0, MISSING 0. Post-Apply Browser QA
+applicability remains separately unevaluated.
+
+Pre-edit service-test SHA-256:
+`006a4e9d87b6bc07a9ec837528ca3e4b164c92586c890c2f1fb53b435701bbe8`.
+Post-edit service-test SHA-256:
+`984cdbc2c7debc304bcf74a3ff27ab4b2d6fdc566b6cce3de3cd84bb3daf29c8`.
+
+Tasks: 26/32. Task 4.1: COMPLETE. Task 4.2+: NOT_AUTHORIZED.
+
+APPLY: PAUSED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+Seven blockers retained: retention, deletion/anonymization, legal hold,
+backup-retention interaction, employee notice, detailed audit visibility and
+trusted production client-address provenance. STOP before Task 4.2.
+
++## Historical R1 checkpoint — A5.2 PASS; A5.3 incomplete evidence, 2026-09-18
+
+Authority: explicit current-user cross-module attachment
+`eab528a0-3e42-48fc-9868-467bc53502ed`. Authorized source scope was exactly
+`apps/backoffice/test/pointage-raw-clocking-service.test.ts`, with this packet
+and `tasks.md` allowed for evidence updates. No production, credential-manager,
+foundation, auth, contract, repository, DB, migration, runtime, HTTP, UI,
+Design or Spec file changed.
+
+### Exact A5.2 Spec and Design ownership
+
+```text
+#### Scenario: Credential reset nhưng browser còn continuation cũ
+
+- **WHEN** successful reset/regeneration đã thay credential và một future request dùng continuation từ superseded credential
+- **THEN** hệ thống MUST không cho continuation giữ old employee authority hoặc bypass reset bằng receipt replay
+```
+
+There is no separate AND. The WHEN requires a continuation legitimately issued
+before reset and retained afterward. The THEN covers protected employee
+authority and committed-receipt replay against current credential state. Design
+D2-D4 binds a continuation to exact credential ID/version and requires each
+employee operation to re-read current credential under the dossier lock.
+Version mismatch denies future use immediately; no end/delete/background
+invalidation or standalone revoke operation is required.
+
+### Existing evidence classification before the edit
+
+| A5.2 consumer            | Classification            | Current evidence                                                                                                                                                                                                                                      |
+| ------------------------ | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| state.read               | COMPLETE_CURRENT_EVIDENCE | `state denies reset without extending idle or leaking identity` begins with successful identify, changes current credential/version, retains the old token, returns generic denial and performs no idle touch.                                        |
+| committed receipt replay | COMPLETE_CURRENT_EVIDENCE | `reset rejects old continuation replay while a new current credential can recover the known own tuple`, composed with A4.2 credential-version side-effect assertions, begins with a real commit and denies old-token replay before receipt authority. |
+| operation.create         | MISSING_EVIDENCE          | No explicit service case isolated reset/version mismatch for an otherwise-valid new transition and asserted zero mutation side effects.                                                                                                               |
+
+### Added A5.2 mutation regression
+
+Final title:
+`A5.2 denies operation.create with an existing continuation after credential reset`.
+
+Phase A uses valid Personnel lifecycle, unchanged organization/establishment/
+dossier, current credential ID/version 1, successful identify, exact employee
+authority and a continuation whose endedAt is null and whose idle/absolute
+deadlines are both after the injected clock. The persisted continuation is
+observably bound to that exact version-1 credential.
+
+Phase B changes only `findCurrentCredential` through the existing fixture seam
+to return a replacement ID and version 2. Personnel, scope, grants, clock,
+continuation deadlines and old continuation bytes stay unchanged. The retained
+token then attempts otherwise-valid NO_OPEN_SESSION+CLOCK_IN with its valid
+state guard.
+
+Observed result is exactly `{ ok: false, code: 'POINTAGE_ACCESS_DENIED' }`
+with only `ok`/`code`, no value, employee name or dossier identifier. Ordering
+is continuation lock -> current clock/lifetime -> current credential/version
+check. Mismatch short-circuits before foundation `operation.create` authority,
+raw-chain read, receipt lookup or protected command execution.
+
+Post-reset deltas:
+
+- `appendRawEvent`: 0;
+- `insertCommandReceipt`: 0;
+- `touchContinuationIdle`: 0;
+- raw events: empty before and after;
+- receipts: empty before and after;
+- continuation insertion/token generation: 0;
+- old continuation: unchanged, still unexpired and retained, not ended/deleted/
+  renewed/replaced;
+- Personnel/scope: unchanged;
+- auto-close/correction/protected output: none.
+
+The first focused run reached the correct production denial but failed only on
+a synchronous `toHaveReturnedWith` assertion against an async mock. The bounded
+test assertion was corrected to inspect the resolved Promise; production code
+was not changed. Final A5.2 execution exited 0: 1 file passed; 1 passed, 112
+skipped, 113 total; test body 12ms.
+
+Current-byte existing evidence refresh:
+
+- `state denies reset without extending idle or leaking identity`: 1 passed,
+  112 skipped;
+- `reset rejects old continuation replay while a new current credential can recover the known own tuple`:
+  1 passed, 112 skipped;
+- A5.1 family: 2 passed, 111 skipped;
+- A1.1, A2.1, A3.3-A3.5, A4.1-A4.2 aggregate: 29 passed, 84 skipped;
+- A3.1/A3.2 identify/state upcoming/former: four selectors, each 1 passed and
+  112 skipped.
+
+The existing replay positive control already establishes that a new current
+credential may use normal identify to begin a new interaction and recover the
+unchanged own receipt. A5.2 does not explicitly require another positive
+fresh-identification test, so the new regression remains mutation-only.
+
+Pre-edit service-test SHA-256:
+`ec32ffd0deba454db3df41ebbd4e7d3252ddd780b2202f6b1fae1c6b0b3e7d07`.
+Post-edit SHA-256:
+`006a4e9d87b6bc07a9ec837528ca3e4b164c92586c890c2f1fb53b435701bbe8`.
+
+A5.2: PASS.
+
+### First next gap — A5.3
+
+Exact next canonical scenario:
+
+```text
+#### Scenario: Interaction đã kết thúc trên shared device
+
+- **WHEN** subsequent caller cố reuse previous interaction continuation sau khi interaction kết thúc
+- **THEN** hệ thống MUST deny reuse và không trả previous employee identity, state hoặc receipt
+```
+
+Assessment: `PARTIAL — INCOMPLETE_EVIDENCE`.
+
+Current-byte read-only selectors passed for actual idempotent `end` followed by
+state denial, state denial against an ended row, and mutation denial against an
+ended row. Current A4.2 evidence also passes committed-receipt denial when the
+continuation row is injected as ended. These independently support the design,
+but no single executable scenario starts with a genuine committed receipt,
+performs the actual interaction-end operation, then attempts subsequent reuse
+and jointly proves no prior identity, state or receipt can be returned. That
+exact shared-device sequence remains inferred across tests rather than directly
+executable.
+
+No A5.3 edit was authorized or performed. Three A6.1-focused selectors were
+executed read-only during adjacent source inventory before finalizing this gap;
+they do not assign or advance A6.1 R1 status. R1 stops at A5.3.
+
+R1 running totals: 7/20 requirements touched; 16/62 scenarios evaluated;
+PASS 15, PARTIAL 1, MISSING 0, QA_DEFERRED 0, not evaluated 46.
+
+Tasks: 25/32
+Task 4.1: PARTIAL
+Task 4.2+: NOT_AUTHORIZED
+APPLY: PAUSED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+All seven blockers remain unresolved: retention, deletion/anonymization, legal
+hold, backup-retention interaction, employee notice, detailed audit visibility
+and trusted production client-address provenance. STOP before Task 4.2.
+
+## Historical R1 checkpoint — A5.1 PASS; A5.2 incomplete evidence, 2026-09-18
+
+Authority: explicit current-user cross-module attachment
+`23914167-a914-4783-b1fe-17cc9da3c82f`. Authorized source scope was exactly
+`apps/backoffice/test/pointage-raw-clocking-service.test.ts`, with this packet
+and `tasks.md` allowed for evidence updates. No production, foundation, auth,
+contract, repository, DB, migration, runtime, HTTP, UI, Design or Spec file
+changed.
+
+### Exact A5.1 Spec and timing ownership
+
+```text
+#### Scenario: Continuation hết hạn
+
+- **WHEN** caller dùng expired continuation cho state, mutation hoặc replay
+- **THEN** hệ thống MUST deny theo continuation đó và yêu cầu valid identification cho interaction mới
+```
+
+There is no separate AND. The WHEN owns all three protected consumer branches;
+the THEN owns both denial of the expired interaction and explicit valid
+identification for a new interaction. Design D2-D4 assigns the 60-second idle
+and 120-second absolute lifetime to this continuation lifecycle. Current
+service logic accepts only `now < expiry`; `now == expiry` and `now > expiry`
+deny, with no grace period. Expiry is rejection without an automatic end,
+deletion, renewal or replacement mutation.
+
+### Existing evidence classification before the edit
+
+| A5.1 branch                           | Classification            | Reason                                                                                                              |
+| ------------------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| state.read after expiry               | PARTIAL_EXISTING_EVIDENCE | Generic state cases covered idle/absolute denial but not the complete valid-to-expired/new-interaction proof.       |
+| operation.create after expiry         | PARTIAL_EXISTING_EVIDENCE | Generic mutation covered idle expiry but not both owned deadlines or the complete interaction boundary.             |
+| committed receipt replay after expiry | MISSING_EVIDENCE          | Existing recover expiry case had no genuine committed receipt.                                                      |
+| fresh identification after expiry     | MISSING_EVIDENCE          | No current test proved a new token/lifetime and subsequent protected success while the old token remained unusable. |
+
+### A5.1 service-level regression
+
+Final parameterized title:
+`A5.1 denies protected consumers at the %s expiry boundary and requires fresh identification`.
+Cases: `idle`, `absolute`.
+
+For every case, Phase A establishes eligible Personnel, exact trusted scope,
+current credential/version, successful identify and a continuation for which
+the injected clock is below both deadlines. It then commits a genuine CLOCK_IN
+through the service, stores exactly one canonical event and one receipt, and
+reads the resulting CLOCKED_IN state to obtain the otherwise-valid CLOCK_OUT
+guard. No receipt is fabricated.
+
+Phase B advances the same authoritative test clock to exact equality with the
+owned deadline. Idle expiry remains before the absolute deadline. For the
+absolute case, the synthetic row models a successful prior idle touch capped at
+the absolute deadline, so equality proves the hard absolute cap without an
+invalid idle deadline beyond it.
+
+At both boundaries:
+
+- old-token `state.read` returns only
+  `{ ok: false, code: 'POINTAGE_ACCESS_DENIED' }`;
+- an otherwise legal old-token CLOCK_OUT returns the same generic denial;
+- old-token `recover` of the original committed CLOCK_IN tuple returns the same
+  denial and never calls `findCommandReceipt`;
+- `appendRawEvent` delta is 0 and `insertCommandReceipt` delta is 0 for every
+  denied branch;
+- raw count remains 1 and receipt count remains 1;
+- no authority call, raw-chain read, idle touch, continuation insert or token
+  generation occurs after expiry;
+- the old continuation row remains byte-equivalent to its expiry snapshot and
+  is not ended, renewed, transparently replaced or reissued.
+
+Explicit normal `identify` after expiry succeeds with the unchanged valid
+Personnel/credential/scope prerequisites. It executes the exact alternating
+identify/state.read checks, returns a token different from the old token, and
+commits a second continuation whose issuedAt is the current clock and whose new
+idle/absolute deadlines are later than both that clock and the old deadlines.
+A subsequent protected read using only the new continuation succeeds with three
+exact `pointage.employee.state.read` checks and one idle touch. A final read
+with the old token still denies with zero authority/touch and unchanged raw and
+receipt counts.
+
+Pre-edit service-test SHA-256:
+`53d596d98ccc94f3ec7a58f69b0d91655946c4ed3093bc7e5ce1e4fd3d112f13`.
+Post-edit SHA-256:
+`ec32ffd0deba454db3df41ebbd4e7d3252ddd780b2202f6b1fae1c6b0b3e7d07`.
+
+Focused command/result: A5.1 selector exited 0; 1 file passed; 2 passed,
+110 skipped, 112 total; test body 18ms in the final run. The explicit A1.1,
+A2.1, A3.3-A3.5 and A4.1-A4.2 aggregate freshness selector exited 0; 29
+passed, 83 skipped, 112 total; test body 55ms. The separately named A3.1
+identify-upcoming, A3.1 identify-former, A3.2 state-upcoming and A3.2
+state-former selectors each exited 0 with 1 passed and 111 skipped. An initial
+shell attempt using pipe-separated title alternatives did not reach Vitest
+correctly; it was replaced by bounded selectors. No DB, container, U8,
+actual-process or browser execution occurred.
+
+A5.1: PASS.
+
+### First next gap — A5.2
+
+Exact next canonical scenario:
+
+```text
+#### Scenario: Credential reset nhưng browser còn continuation cũ
+
+- **WHEN** successful reset/regeneration đã thay credential và một future request dùng continuation từ superseded credential
+- **THEN** hệ thống MUST không cho continuation giữ old employee authority hoặc bypass reset bằng receipt replay
+```
+
+Assessment: `PARTIAL — INCOMPLETE_EVIDENCE`.
+
+Read-only current-byte execution confirms two existing service cases: state
+denial for `reset` passed 1/1, and old-continuation committed-replay denial plus
+fresh current-credential identify/recovery passed 1/1. These prove protected
+state and replay aspects. Source inventory found no explicit current service
+case proving that an otherwise legal new mutation using the superseded-
+credential continuation is denied with zero raw/receipt writes and no idle
+renewal. The environment-gated actual-reset DB test was not authorized to run
+and cannot replace the missing service branch by inference.
+
+No A5.2 edit or broad selector run occurred. R1 stops at this first gap.
+
+R1 running totals: 7/20 requirements touched; 15/62 scenarios evaluated;
+PASS 14, PARTIAL 1, MISSING 0, QA_DEFERRED 0, not evaluated 47.
+
+Tasks: 25/32
+Task 4.1: PARTIAL
+Task 4.2+: NOT_AUTHORIZED
+APPLY: PAUSED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+All seven blockers remain unresolved: retention, deletion/anonymization, legal
+hold, backup-retention interaction, employee notice, detailed audit visibility
+and trusted production client-address provenance. STOP before Task 4.2.
+
+## Historical R1 checkpoint — A4.2 PASS; A5.1 incomplete evidence, 2026-09-18
+
+Authority: explicit current-user cross-module attachment
+`509c00b8-a6be-4245-b5d1-cfbba20354db`. Authorized implementation scope was
+exactly `apps/backoffice/test/pointage-raw-clocking-service.test.ts`, with these
+two checkpoint documents allowed for evidence updates. No production, helper,
+DB, migration, runtime, HTTP, bootstrap, UI, Design or Spec path changed.
+
+### Exact A4.2 Spec and owned branches
+
+```text
+#### Scenario: Prior success nhưng current access mất hiệu lực
+
+- **WHEN** requester có committed request identity nhưng current credential/continuation, scope, exact authority hoặc lifecycle không còn hợp lệ
+- **THEN** hệ thống MUST deny protected receipt replay và không cấp partial authority
+```
+
+There is no separate AND clause. The exact wording owns these current
+invalidation dimensions for protected receipt replay:
+
+- Personnel lifecycle;
+- trusted scoped binding;
+- exact employee operation authority;
+- credential/version;
+- continuation validity.
+
+Credential-reset and continuation-expiry requirements also have dedicated A5.2
+and A5.1 scenarios for their broader interaction behavior. That does not remove
+A4.2 ownership of denying protected replay when those current prerequisites are
+invalid.
+
+### A4.2 service-level regression
+
+Test family:
+`A4.2 denies committed receipt replay after current %s invalidation`.
+
+Cases: `lifecycle`, `trusted-scope`, `exact-authority`, `credential-version`,
+`ended-continuation`.
+
+Pre-edit test SHA-256:
+`a6352000ea556b431b9c37827da5c5e8c06f19ed97ed923994149b6716b3f055`.
+Post-edit SHA-256:
+`53d596d98ccc94f3ec7a58f69b0d91655946c4ed3093bc7e5ce1e4fd3d112f13`.
+
+For every case, Phase A performs valid identify and a real service `mutate`
+with a frozen CLOCK_IN tuple. It asserts successful COMMITTED receipt, exact
+requestId/kind, three exact operation.create grants, one linked canonical raw
+event and one stored command receipt. No receipt is fabricated directly.
+
+Phase B clears repository/foundation call history and keeps the same requestId,
+kind, state guard and original evidence before invalidating exactly one current
+dimension:
+
+| Case               | Current replay ordering and denial point                                                                                                 |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| lifecycle          | continuation lock -> current clock/lifetime -> Personnel departure denial; credential, grant and receipt lookup not reached              |
+| trusted-scope      | current trusted entry scope resolves to another establishment -> continuation candidate absent; lock and receipt lookup not reached      |
+| exact-authority    | continuation -> lifecycle -> credential/version -> exact operation.create request returns mismatched actor operation; lookup not reached |
+| credential-version | continuation -> lifecycle -> current credential version mismatch; foundation grant and receipt lookup not reached                        |
+| ended-continuation | continuation lock -> current clock/lifetime detects ended row; lifecycle, credential, grant and receipt lookup not reached               |
+
+All cases return exactly `{ ok: false, code: 'POINTAGE_ACCESS_DENIED' }`, with
+only `ok` and `code`, no protected value and no serialized requestId,
+acceptedAt, dossier id or employee name. The original receipt still exists in
+the fixture but is not returned.
+
+Replay-specific deltas for every case:
+
+- `findCommandReceipt`: 0 calls because the current prerequisite fails first;
+- `appendRawEvent`: 0 new calls;
+- `insertCommandReceipt`: 0 new calls;
+- `touchContinuationIdle`: 0 calls;
+- raw events: 1 before, 1 after, byte-equivalent object snapshot;
+- receipts: 1 before, 1 after, byte-equivalent object snapshot;
+- replacement receipt/new acceptedAt: none.
+
+Focused command:
+
+```text
+pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-service.test.ts -t "A4.2" --reporter=dot
+```
+
+Result: exit 0; 1 file passed; 5 passed, 105 skipped, 110 total; duration
+2.00s, test body 31ms. A4.2: PASS.
+
+### Same-file freshness refresh
+
+- A1.1: 10 passed, 100 skipped.
+- A2.1: 2 passed, 108 skipped.
+- A3.1 identify upcoming/former: 2 passed, 108 skipped.
+- A3.2 state upcoming/former: 2 passed, 108 skipped.
+- A3.3: 1 passed, 109 skipped.
+- A3.4: 6 passed, 104 skipped.
+- A3.5: 4 passed, 106 skipped.
+- A4.1: 1 passed, 109 skipped.
+
+All exited 0 on the final A4.2 test bytes. No full suite, DB, container, U8,
+actual-process or browser execution occurred.
+
+### First next gap — A5.1
+
+Exact current scenario:
+
+```text
+#### Scenario: Continuation hết hạn
+
+- **WHEN** caller dùng expired continuation cho state, mutation hoặc replay
+- **THEN** hệ thống MUST deny theo continuation đó và yêu cầu valid identification cho interaction mới
+```
+
+There is no separate AND clause. Assessment:
+`PARTIAL — INCOMPLETE_EVIDENCE`.
+
+Existing service cases cover state denial at idle and absolute expiry and
+mutation/recover denial at idle expiry. They were not refreshed after the A4.2
+test edit. They also do not provide one current traceable scenario proof that
+all three state/mutation/replay branches deny and that the next interaction
+requires a fresh valid identification. Source behavior and partial stale tests
+cannot be relabeled as complete A5.1 evidence.
+
+Minimum proposed owner remains the same service suite. A bounded regression or
+current-byte evidence step should prove expired continuation denial for state,
+mutation and replay, no protected output/writes/idle extension, and successful
+new interaction only through fresh valid identification. No DB/runtime/browser
+execution appears required for this bounded scenario.
+
+No A5.1 test was edited or run. R1 stops at this first gap; no later scenario
+was evaluated.
+
+R1 running totals: 7/20 requirements touched; 14/62 scenarios evaluated;
+PASS 13, PARTIAL 1, MISSING 0, QA_DEFERRED 0, not evaluated 48.
+
+Tasks: 25/32
+Task 4.1: PARTIAL
+Task 4.2+: NOT_AUTHORIZED
+APPLY: PAUSED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+All seven blockers remain unresolved: retention, deletion/anonymization, legal
+hold, backup-retention interaction, employee notice, detailed audit visibility
+and trusted production client-address provenance. STOP before Task 4.2.
+
+## Historical R1 checkpoint — A4.1 PASS; A4.2 incomplete evidence, 2026-09-18
+
+Authority: explicit current-user cross-module attachment
+`4cea59a5-0b6c-4c55-830e-20f60bcb7ce6`. Authorized implementation scope was
+exactly `apps/backoffice/test/pointage-raw-clocking-service.test.ts`, with these
+two evidence documents allowed for checkpoint updates. No production, helper,
+DB, migration, runtime, HTTP, bootstrap, UI, Design or Spec file changed.
+
+### A4.1 hardened service evidence
+
+Final test title:
+`A4.1 revalidates current authority and replays the original committed receipt without new side effects`.
+
+Pre-edit test SHA-256:
+`c02025c032bf2c73c6004538097a78eea0d205dfbe0f9d883ea39cf3ea31f84a`.
+Post-edit SHA-256:
+`a6352000ea556b431b9c37827da5c5e8c06f19ed97ed923994149b6716b3f055`.
+
+Phase A uses one frozen CLOCK_IN request tuple and proves:
+
+- the committed continuation has the exact organization, establishment,
+  dossier, credential id/version binding, is unended and inside idle/absolute
+  lifetime;
+- current Personnel entry/departure values are eligible;
+- all three commit-path foundation calls receive exact
+  `pointage.employee.operation.create` plus current credential and scope;
+- exactly one canonical linked CLOCK_IN event and one command receipt commit;
+- the original receipt contains only requestId, result, kind, acceptedAt,
+  timezoneName, utcOffsetSeconds and businessDate with expected values.
+
+Immediately before Phase B, repository-operation and foundation mock histories
+are reset while the same continuation, requestId, kind, observed state guard,
+scope, lifecycle and credential/version remain current. Lifecycle fields use
+observable getters only for the replay phase.
+
+Phase B executable ordering is:
+
+```text
+continuation lock/validation
+< first current lifecycle read
+< first current credential/version lookup
+< exact operation.create authorization
+< committed receipt lookup
+< second current lifecycle read
+< second current credential/version lookup
+< second exact operation.create authorization
+< continuation idle touch
+< returned original receipt
+```
+
+The replay locks the same continuation once, reads the current clock twice,
+reads both lifecycle fields twice, performs two current credential lookups and
+two exact operation.create grants, finds the receipt exactly once by the
+original requestId, and performs the current contract's one idle touch. It does
+not impose a zero-touch rule.
+
+The returned receipt is structurally equal to the original and separately
+asserts unchanged requestId, result, kind, acceptedAt, timezoneName,
+utcOffsetSeconds and businessDate. Replay-specific deltas are:
+
+- `appendRawEvent`: 0 new calls
+- `insertCommandReceipt`: 0 new calls
+- raw event count: 1 before, 1 after
+- receipt count: 1 before, 1 after
+- original raw event identity/content: unchanged
+
+The same test retains recover coverage. A later authorized CLOCK_OUT changes
+the derived current state and adds its own valid second event/receipt; replaying
+the original CLOCK_IN tuple afterwards still returns the first receipt with
+zero replay writes and stable 2/2 event/receipt counts. No replay timestamp or
+calendar field is recomputed from the later state.
+
+Focused command:
+
+```text
+pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-service.test.ts -t "A4.1" --reporter=dot
+```
+
+Result: exit 0; 1 file passed; 1 passed, 104 skipped, 105 total; duration
+4.40s, test body 18ms. A4.1: PASS.
+
+### Same-file freshness refresh
+
+- A1.1: 10 passed, 95 skipped.
+- A2.1: 2 passed, 103 skipped.
+- A3.1 identify upcoming/former: 2 passed, 103 skipped.
+- A3.2 state upcoming/former: 2 passed, 103 skipped.
+- A3.3: 1 passed, 104 skipped.
+- A3.4: 6 passed, 99 skipped.
+- A3.5: 4 passed, 101 skipped.
+
+All exited 0 on the final A4.1 test bytes. No full test suite, DB, container,
+U8, actual-process or browser execution occurred.
+
+### First next gap — A4.2
+
+Exact current scenario:
+
+```text
+#### Scenario: Prior success nhưng current access mất hiệu lực
+
+- **WHEN** requester có committed request identity nhưng current credential/continuation, scope, exact authority hoặc lifecycle không còn hợp lệ
+- **THEN** hệ thống MUST deny protected receipt replay và không cấp partial authority
+```
+
+There is no separate AND clause. Assessment:
+`PARTIAL — INCOMPLETE_EVIDENCE`.
+
+Current refreshed A1.1 service evidence covers the exact-authority branch with
+a committed recover tuple: denial occurs before receipt lookup, raw/receipt
+writes or idle touch. The existing test
+`reset rejects old continuation replay while a new current credential can recover the known own tuple`
+covers stale credential/continuation against an actual committed receipt, but
+was not refreshed after the A4.1 file edit. The parameterized
+`recover checks current lifecycle/lifetime: %s` cases deny before lookup but do
+not first commit that request identity, so they do not satisfy the A4.2 WHEN.
+The current scope-substitution evidence protects state.read, not committed
+receipt replay. These pieces cannot be relabeled as complete A4.2 evidence.
+
+Minimum proposed owner is the same service suite. A bounded test should first
+commit one request tuple, then independently invalidate current continuation,
+credential/version, scoped binding, exact operation grant and lifecycle; every
+case must deny protected receipt replay before publication, with no partial
+authority, idle extension or event/receipt write. Service-only evidence appears
+sufficient; no DB/runtime/browser execution is required by this scenario.
+
+No A4.2 test was edited or run. R1 stops at this first gap; no later scenario
+was evaluated.
+
+R1 running totals: 6/20 requirements touched; 13/62 scenarios evaluated;
+PASS 12, PARTIAL 1, MISSING 0, QA_DEFERRED 0, not evaluated 49.
+
+Tasks: 25/32
+Task 4.1: PARTIAL
+Task 4.2+: NOT_AUTHORIZED
+APPLY: PAUSED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+All seven blockers remain unresolved: retention, deletion/anonymization, legal
+hold, backup-retention interaction, employee notice, detailed audit visibility
+and trusted production client-address provenance. STOP before Task 4.2.
+
+## Historical R1 checkpoint — A4.1 incomplete existing evidence, 2026-09-17
+
+Authority: explicit current-user cross-module attachment
+`b73e9a6c-d43b-48b6-aa3a-075a8c11f1ee`. Authorized scope was read-only
+inspection, exactly one focused A4.1 execution only after a complete-existing-
+test gate, and checkpoint evidence updates. No test, fixture or production edit
+was authorized.
+
+### Exact A4.1 Spec
+
+```text
+#### Scenario: Authorized replay
+
+- **WHEN** current eligible employee có exact own-operation authority retry cùng committed identity/intent trong đúng scope
+- **THEN** consumer SHALL cho phép original receipt replay theo raw-clocking requirements, không tạo event mới
+```
+
+The authoritative scenario has no separate AND clause. Its containing
+requirement additionally requires current exact employee authority, scoped
+binding and Personnel lifecycle; own original committed receipt only; no
+history browsing; and no new raw evidence.
+
+### Evidence owner and implementation ordering
+
+Evidence owner SHA-256 before and after this evidence-only turn:
+`c02025c032bf2c73c6004538097a78eea0d205dfbe0f9d883ea39cf3ea31f84a`.
+
+- Path: `apps/backoffice/test/pointage-raw-clocking-service.test.ts`
+- Test: `commits one canonical event/receipt and replays the original receipt after subsequent state changes`
+- Service symbols: `identify`, `mutate`, `recover`, `readState`,
+  `withContinuation`, `authorize`, `findCommandReceipt`, `projectReceipt`
+- Boundary: real service replay over fixture repository operations; not a bare
+  repository receipt lookup
+
+Current implementation order is:
+
+1. `withContinuation` resolves scope, finds and locks the continuation, verifies
+   its digest and exact organization/establishment/dossier binding.
+2. It reads the current clock and checks continuation lifetime.
+3. `authorize` validates current Personnel lifecycle.
+4. `authorize` loads and matches current credential id/version.
+5. `authorizeEmployeeOperation` must return the exact
+   `pointage.employee.operation.create` actor and bindings.
+6. Only then does the command callback derive the chain and call
+   `findCommandReceipt`.
+7. A matching identity/intent resolves the original committed raw event.
+8. Before return, the branch again reads current clock and repeats lifecycle,
+   credential/version and exact-operation authorization, touches continuation
+   idle, and returns `projectReceipt` from the original event.
+
+Therefore a receipt cannot be returned before current authorization succeeds;
+no implementation defect was found by this inspection. Authorized replay does
+touch continuation idle under the current contract. A4.1 does not define a
+zero-touch rule.
+
+### Existing-test sufficiency gate
+
+Classification: `INCOMPLETE_EXISTING_TEST`.
+
+The existing test proves that an initial `CLOCK_IN` command commits, reuses the
+same command object/request id/intent for `mutate` and `recover`, returns full
+object equality with the first receipt, and leaves aggregate event/receipt
+counts consistent after one separately authorized `CLOCK_OUT`. It also checks
+the receipt field catalog and `acceptedAt`.
+
+It does not, however, reset or snapshot mock histories immediately around a
+replay. Consequently, its executable assertions cannot distinguish the
+replay-specific continuation validation, current Personnel eligibility,
+current credential/version lookup or exact operation grant from calls made by
+the original commit and intervening state operations. It likewise lacks
+replay-specific assertions that `appendRawEvent` and `insertCommandReceipt`
+have zero new calls. Source inference closes the implementation-order question
+but cannot substitute for the executable current-authority proof explicitly
+required by this review.
+
+The authorized focused command was therefore not executed. Executed: 0;
+skipped: 0. This is not a behavioral failure and not a selector PASS.
+
+Minimum proposed test-only scope: modify only the existing service test to
+snapshot counts or clear mock histories after the original commit; replay the
+same command; assert the current continuation/lifecycle/credential/exact
+operation path, full original receipt equality, zero new event/receipt writes,
+and unchanged `acceptedAt`, `timezoneName`, `utcOffsetSeconds` and
+`businessDate`. Assert the existing idle-touch behavior without inventing a new
+rule. Service-only evidence appears sufficient; DB, actual-process and browser
+execution are not required for A4.1. Same-id/different-intent and lost-current-
+access denial remain separately owned scenarios.
+
+A4.1: PARTIAL — INCOMPLETE_EVIDENCE. No later scenario was evaluated. First
+next genuine gap remains A4.1 itself.
+
+R1 running totals: 6/20 requirements touched; 12/62 scenarios evaluated;
+PASS 11, PARTIAL 1, MISSING 0, QA_DEFERRED 0, not evaluated 50.
+
+Tasks: 25/32
+Task 4.1: PARTIAL
+Task 4.2+: NOT_AUTHORIZED
+APPLY: PAUSED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+All seven blockers remain unresolved: retention, deletion/anonymization, legal
+hold, backup-retention interaction, employee notice, detailed audit visibility
+and trusted production client-address provenance. STOP before Task 4.2.
+
+## Historical R1 checkpoint — A3.5 PASS; A4.1 stale-evidence gap, 2026-09-17
+
+Authority: explicit current-user cross-module attachment
+376ce648-9ca2-4d4c-b80f-b94197f9c1b5. No production implementation change was
+authorized or made. The only regression implementation is in
+`apps/backoffice/test/pointage-raw-clocking-service.test.ts`.
+
+### Exact A3.5 Spec and evidence
+
+```text
+#### Scenario: Không xác minh được lifecycle hiện tại
+
+- **WHEN** consumer không đọc hoặc xác minh được trusted scoped Personnel lifecycle cho requested employee operation
+- **THEN** hệ thống MUST deny, không dùng cached prior success như authority thay thế
+```
+
+The current Spec has no separate AND clause for A3.5. Its containing requirement
+also states that missing/unverifiable lifecycle must fail closed for identify,
+state.read and operation.create.
+
+Existing identify evidence
+`denies %s from current locked data before protected publication` was refreshed
+for `inverted` and `bad-date`: 2/2 passed on current bytes, each returns generic
+access denial and commits no continuation.
+
+New exact test:
+`A3.5 denies %s when current lifecycle becomes %s despite valid continuation`.
+
+| Protected branch | Malformed lifecycle                                                                                                       | Inverted lifecycle                                                                                                |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| state.read       | PASS: valid continuation first; entry date then becomes `2026-02-30`; generic denial, no protected state/identity         | PASS: valid continuation first; departure becomes earlier than entry; generic denial, no protected state/identity |
+| operation.create | PASS: initially legal `NOT_CLOCKED_IN + CLOCK_IN`; current entry date becomes malformed; generic denial, no event/receipt | PASS: same legal transition; current departure becomes earlier than entry; generic denial, no event/receipt       |
+
+For all four cases the test proves the initial identify succeeded, state was
+`NOT_CLOCKED_IN`, continuation was unended and within idle/absolute lifetime,
+credential id/version remained current, and organization/establishment/dossier
+binding matched. Only current Personnel lifecycle changes afterwards.
+
+The exact consumer method identifies the requested operation. The locked
+continuation and authoritative current clock are observed, then
+`requireEligibility` rejects the current Personnel projection before current
+credential lookup, foundation grant publication or protected callback work.
+This ordering is itself the fail-closed contract: no operation grant can bypass
+an unverifiable lifecycle. Every result is exactly
+`{ ok: false, code: 'POINTAGE_ACCESS_DENIED' }` with only `ok` and `code`;
+serialized output contains neither employee name nor dossier id.
+
+Call counts after clearing successful-identify history, for each case:
+
+- `appendRawEvent`: 0
+- `insertCommandReceipt`: 0
+- `touchContinuationIdle`: 0
+- `readRawChain`: 0
+- `findCommandReceipt`: 0
+- `authorizeEmployeeOperation`: 0 because current lifecycle fails before grant
+
+Raw chain, receipts and the committed continuation remain unchanged; no
+synthetic correction, auto-close, protected state, identity or receipt is
+published.
+
+Focused final command:
+
+```text
+pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-service.test.ts -t "A3.5" --reporter=dot
+```
+
+Result on current hash
+`c02025c032bf2c73c6004538097a78eea0d205dfbe0f9d883ea39cf3ea31f84a`:
+exit 0; 1 file passed; 4 passed, 101 skipped, 105 total; duration 4.88s,
+test body 70ms. A3.5: PASS.
+
+### Current-byte freshness refresh
+
+- Identify A3.5 `inverted|bad-date`: 2 passed, 103 skipped.
+- A1.1: 10 passed, 95 skipped.
+- A2.1: 2 passed, 103 skipped.
+- A3.1 `upcoming|former`: 2 passed, 103 skipped.
+- A3.2 state `upcoming|former`: 2 passed, 103 skipped.
+- A3.3: 1 passed, 104 skipped.
+- A3.4: 6 passed, 99 skipped.
+
+All exited 0 on the same final test bytes. No DB, container, U8,
+actual-process, build or browser was started.
+
+### First next gap — A4.1
+
+There is no A3.6 in the approved 62-scenario matrix. The canonical next
+scenario is:
+
+```text
+#### Scenario: Authorized replay
+
+- **WHEN** current eligible employee có exact own-operation authority retry cùng committed identity/intent trong đúng scope
+- **THEN** consumer SHALL cho phép original receipt replay theo raw-clocking requirements, không tạo event mới
+```
+
+Assessment: PARTIAL. Gap classification: `STALE_EVIDENCE`.
+
+Current source rechecks continuation, scope, current lifecycle, current
+credential and exact operation.create authority before receipt lookup/replay.
+The existing service test
+`commits one canonical event/receipt and replays the original receipt after subsequent state changes`
+commits one tuple, replays it through mutate and recover, and retains stable
+event/receipt counts. It was not executed after the A3.5 test edit. Historical
+DB/UI evidence is not current and cannot be rerun under this authorization.
+Source inspection plus stale execution is insufficient under R1, so audit stops
+at A4.1 without patching or running its selector.
+
+R1 running totals: 6/20 requirements touched; 12/62 scenarios evaluated;
+PASS 11, PARTIAL 1, MISSING 0, QA_DEFERRED 0, not evaluated 50.
+
+Tasks: 25/32
+Task 4.1: PARTIAL
+Task 4.2+: NOT_AUTHORIZED
+APPLY: PAUSED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+All seven blockers remain unresolved: retention, deletion/anonymization, legal
+hold, backup-retention interaction, employee notice, detailed audit visibility
+and trusted production client-address provenance. STOP before Task 4.2.
+
+## Current R1 checkpoint — A3.4 PASS; A3.5 evidence gap, 2026-09-17
+
+Authority: explicit current-user attachment
+ad52ad75-dbe5-49f2-810d-ca7559c71771. No production implementation change was
+authorized or made. The only regression implementation is in
+`apps/backoffice/test/pointage-raw-clocking-service.test.ts`; the optional
+foundation test was unnecessary.
+
+### A3.4 exact requirement and ownership
+
+```text
+#### Scenario: Ngày entry hoặc final departure hợp lệ
+
+- **WHEN** một trong ba employee operations được yêu cầu đúng entry hoặc valid departure day
+- **THEN** lifecycle check SHALL cho phép tới các current credential, exact authority và domain prerequisites còn lại, không blanket allow
+```
+
+| Employee operation | Current lifecycle owner and call path                                              |
+| ------------------ | ---------------------------------------------------------------------------------- |
+| identify           | `identify` -> `authorize` -> `requireEligibility`                                  |
+| state.read         | `readState` -> `withContinuation` -> `authorize` -> `requireEligibility`           |
+| operation.create   | `mutate` -> `command` -> `withContinuation` -> `authorize` -> `requireEligibility` |
+
+All paths consume the injected repository `readCurrentClock()` business date
+and the scoped Personnel timezone; none uses browser/local time authority.
+
+### Exact A3.4 boundary matrix
+
+Exact parameterized test:
+`A3.4 %s boundary accepts %s with exact authority`.
+
+| Boundary                        | identify                                                                                                                    | state.read                                                                                       | operation.create                                                                                    |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| `businessDate == entryDate`     | PASS: verified credential, exact identify plus separate state.read grants, one committed continuation and initial own state | PASS: valid self-scoped continuation, three exact state.read grants and own current state        | PASS: legal `NOT_CLOCKED_IN + CLOCK_IN`, three exact operation.create grants, one raw event/receipt |
+| `businessDate == departureDate` | PASS: same current prerequisites and exact dual authority; lifecycle equality does not deny                                 | PASS: same current continuation/scope and exact state.read authority; own current state returned | PASS: legal `NOT_CLOCKED_IN + CLOCK_IN`; equality does not collide with A3.3 after-departure denial |
+
+Every case explicitly asserts the selected Personnel date equals the injected
+business date and timezone remains `Europe/Paris`. Identify checks the exact six
+grant calls required by the three pre-publication lifecycle/authority passes:
+identify and state.read alternating. State.read and operation.create each check
+three exact grants. Every grant call is asserted with the current verified
+credential, organization, establishment, dossier, timezone/locale entry scope
+and expected operation. Equality creates no blanket privilege: credential,
+continuation, scope, exact authority and legal domain transition remain
+required. No auto-close, forced CLOCK_OUT, implicit session end or new UI state
+was added.
+
+Focused command:
+
+```text
+pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-service.test.ts -t "A3.4" --reporter=dot
+```
+
+Final result after formatting on the exact current bytes: exit 0; 1 file passed;
+6 passed, 95 skipped, 101 total; duration 3.71s, test body 46ms. Current
+test hash:
+`a0646bd5dfaa167940c081927c28a0b5f5a45963a47257585d929933e6a63eb8`.
+A3.4: PASS.
+
+### Current-byte freshness refresh
+
+Because the edited file owns earlier accepted service evidence, the smallest
+selectors were rerun after the final edit:
+
+- A1.1: 10 passed, 91 skipped.
+- A2.1: 2 passed, 99 skipped.
+- A3.1 `upcoming|former`: 2 passed, 99 skipped.
+- A3.2 state `upcoming|former`: 2 passed, 99 skipped.
+- A3.3: 1 passed, 100 skipped.
+
+All exited 0. Skipped tests are not counted as evidence. No DB, container,
+listener, actual-process, build or browser was started. Historical DB F4/U8
+were not rerun.
+
+### First next gap — A3.5
+
+Exact current Spec text:
+
+```text
+#### Scenario: Không xác minh được lifecycle hiện tại
+
+- **WHEN** consumer không đọc hoặc xác minh được trusted scoped Personnel lifecycle cho requested employee operation
+- **THEN** hệ thống MUST deny, không dùng cached prior success như authority thay thế
+```
+
+Assessment: PARTIAL. Gap classification: `INCOMPLETE_EVIDENCE`.
+
+Current `authorize` always calls `requireEligibility` on the transaction's
+scoped Personnel projection before current credential/grant use. Current tests
+explicitly deny identify for malformed date and inverted lifecycle and publish
+no continuation. However, no current explicit executable case was found for
+state.read or operation.create with a previously valid continuation/prior
+success after the current lifecycle becomes missing or unverifiable. Their
+fail-closed behavior is presently inferred from shared source, which is
+insufficient under R1. No additional regression edit is authorized; audit
+stops at A3.5.
+
+R1 running totals: 5/20 requirements touched; 11/62 scenarios evaluated;
+PASS 10, PARTIAL 1, MISSING 0, QA_DEFERRED 0, not evaluated 51.
+
+Tasks: 25/32
+Task 4.1: PARTIAL
+Task 4.2+: NOT_AUTHORIZED
+APPLY: PAUSED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+All seven blockers remain unresolved: retention, deletion/anonymization, legal
+hold, backup-retention interaction, employee notice, detailed audit visibility
+and trusted production client-address provenance. STOP before Task 4.2.
+
+## Current R1 checkpoint — A3.3 PASS; A3.4 evidence gap, 2026-09-17
+
+Authority: explicit current-user attachment
+1ecee364-3977-4906-9689-f92c96059341. No production change was authorized or
+made. The only regression implementation is in
+`apps/backoffice/test/pointage-raw-clocking-service.test.ts`.
+
+### A3.3 exact evidence
+
+Exact test:
+`A3.3 denies CLOCK_OUT after departure while preserving the existing open session`.
+
+| Required clause             | Current executable evidence                                                                                                                                                                                                          |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Continuation lifetime valid | Successful identify; committed continuation is unended, current credential id/version match, and both idle/absolute expiry are later than the unchanged operation clock                                                              |
+| Session genuinely open      | Real service `CLOCK_IN` succeeds; `readState` reports `CLOCKED_IN` and the expected open start; fixture raw-chain observable contains exactly one receipt-linked `CLOCK_IN`                                                          |
+| Departure is blocker        | After clearing operation mocks, only Personnel departure moves to the prior business date; locked continuation and current clock are read, then `requireEligibility` denies before current-credential/grant or command callback work |
+| Exact result                | Exact `{ ok: false, code: 'POINTAGE_ACCESS_DENIED' }`; response keys are only `ok` and `code`                                                                                                                                        |
+| No raw append               | `appendRawEvent`: 0 calls after reset                                                                                                                                                                                                |
+| No receipt                  | `insertCommandReceipt`: 0 calls; no committed receipt returned and the prior receipt count remains one                                                                                                                               |
+| No continuation touch       | `touchContinuationIdle`: 0 calls; no other denial bookkeeping write occurs                                                                                                                                                           |
+| No auto-close               | Before/after raw-chain observable is unchanged, still exactly one `CLOCK_IN`; no `CLOCK_OUT` or closing evidence appears; open start is unchanged                                                                                    |
+| No leakage                  | Generic denial has no value, identity, state or receipt payload                                                                                                                                                                      |
+
+Service chain exercised: `mutate` -> `command` -> `withContinuation` ->
+`remaining` -> `authorize` -> `requireEligibility`. Lifecycle is evaluated
+before raw-event or receipt mutation. This is current in-memory consumer proof;
+it does not claim DB-trigger or actual-process freshness.
+
+Focused command:
+
+```text
+pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-service.test.ts -t "A3.3" --reporter=dot
+```
+
+Result: exit 0; 1 file passed; 1 passed, 94 skipped, 95 total; duration 1.80s,
+test body 17ms. Test hash:
+`426b4ecbb51e39c846b5fa1a7987a41f215c198ae0808e6b9ffec9db4925910e`.
+A3.3: PASS.
+
+The same file owns accepted A1.1 and A2.1 evidence, so both were refreshed on
+the same current bytes. `-t "A1.1"` passed 10/10 with 85 skipped; `-t "A2.1"`
+passed 2/2 with 93 skipped. Historical F4 and U8 were not rerun and remain
+historical/stale where previously classified. No DB, container, listener,
+actual-process, build or browser was started.
+
+### First next gap — A3.4
+
+Exact current Spec text:
+
+```text
+#### Scenario: Ngày entry hoặc final departure hợp lệ
+
+- **WHEN** một trong ba employee operations được yêu cầu đúng entry hoặc valid departure day
+- **THEN** lifecycle check SHALL cho phép tới các current credential, exact authority và domain prerequisites còn lại, không blanket allow
+```
+
+Assessment: PARTIAL. Gap classification:
+`STALE_AND_INCOMPLETE_EVIDENCE`.
+
+Current `requireEligibility` source encodes inclusive boundaries by denying only
+when business date is earlier than entry or later than departure. The service
+test `keeps inclusive entry/departure and denies an INSERT crossing the departure midnight`
+explicitly reaches identify with entry and departure both equal to the business
+date, but it was not rerun after the approved A3.3 edit and does not explicitly
+exercise exact-boundary state.read or operation.create. Historical DB F4 covers
+final-day mutation, but its owner changed later and DB rerun is forbidden here.
+No current explicit state.read boundary case was found. These facts are not
+enough to prove all three employee-operation branches and remaining-prerequisite
+semantics on current bytes. No further regression edit is authorized; audit
+stops at this first gap.
+
+R1 running totals: 5/20 requirements touched; 10/62 scenarios evaluated;
+PASS 9, PARTIAL 1, MISSING 0, QA_DEFERRED 0, not evaluated 52.
+
+Tasks: 25/32
+Task 4.1: PARTIAL
+Task 4.2+: NOT_AUTHORIZED
+APPLY: PAUSED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+All seven blockers remain unresolved: retention, deletion/anonymization, legal
+hold, backup-retention interaction, employee notice, detailed audit visibility
+and trusted production client-address provenance. STOP before Task 4.2.
+
+## Current R1 checkpoint — A3.2 PASS; A3.3 STALE_EVIDENCE, 2026-09-17
+
+Authority: explicit current-user attachment
+dd3c8d4c-f15b-4276-b676-490e8816caf4. A2.2 is accepted PASS and remains closed;
+this audit found no relevant A2.2 drift and did not reopen its composition.
+
+### A3.2 exact requirement and assessment
+
+Exact current Spec text:
+
+```text
+#### Scenario: State read ngoài employment period
+
+- **WHEN** continuation còn trong lifetime nhưng employee yêu cầu state.read trước entry hoặc sau departure
+- **THEN** hệ thống MUST deny, không trả protected state hoặc historical self-service
+```
+
+| Required evidence field | Current evidence                                                                                                                                                                                                                                                                          |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Design authority        | D4 trusted Personnel/current authorization; D5 current lifecycle before protected continuation work; D7 authoritative current establishment business date                                                                                                                                 |
+| Implementation owner    | `apps/backoffice/src/server/pointage/raw-clocking-service.ts`                                                                                                                                                                                                                             |
+| Exact symbols           | `createPointageRawClockingService` -> `readState` -> `withContinuation` -> `authorize` -> `requireEligibility`                                                                                                                                                                            |
+| Behavior ordering       | Candidate and locked continuation are validated; `remaining` proves lifetime; `authorize` rechecks exact scope, current Personnel dates, current credential version and exact `pointage.employee.state.read` before the protected callback; later pre-touch/final checks repeat the guard |
+| Test owner              | `apps/backoffice/test/pointage-raw-clocking-service.test.ts`                                                                                                                                                                                                                              |
+| Exact test              | `state denies %s without extending idle or leaking identity`, focused cases `upcoming` and `former`                                                                                                                                                                                       |
+| Actual assertions       | Successful identify first; unchanged live continuation; entry moved to next business date or departure to prior business date; exact `{ ok: false, code: 'POINTAGE_ACCESS_DENIED' }`; no returned `value`; `touchContinuationIdle` not called                                             |
+| Evidence class          | In-memory SERVICE_TEST exercising current production service implementation with repository/foundation doubles; no DB/HTTP/Browser claim                                                                                                                                                  |
+| Hash freshness          | Service `a144202f2b7af2955b458fc445b699342bb4ed8cdbda33a4d46905452dcd3d37`; test `c6dc92334c1e3c672a9b9f3fa6c116e04f3120debf65fd5bf2fd92a1f7ae792e`; focused execution performed on these current bytes                                                                                   |
+| Result                  | PASS                                                                                                                                                                                                                                                                                      |
+
+Fresh command, with `YUTA_POINTAGE_SYNTHETIC_TEST_MODE` and
+`CLOUD_DATABASE_URL` absent from the child environment:
+
+```text
+pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-service.test.ts -t "state denies (upcoming|former) without extending idle or leaking identity" --reporter=dot
+```
+
+Result: exit 0; 1 file passed; 2 passed, 92 skipped, 94 total; duration 1.97s,
+test body 16ms. The skipped cases are not evidence. No DB, container, listener,
+actual process, build or browser was started.
+
+Clause assessment:
+
+- WHEN continuation remains within lifetime: PASS. Identify succeeds first and
+  neither clock nor continuation expiry/end/version is changed in these cases.
+- WHEN state.read is requested before entry or after departure: PASS. Both exact
+  cases run through `readState` on the current Personnel object.
+- THEN deny: PASS through exact generic access-denied outcome.
+- THEN no protected state: PASS; exact response has no value and service does
+  not enter the protected state callback after the first eligibility failure.
+- THEN no historical self-service: PASS for this bounded consumer response; no
+  state/history payload is returned or idle authority extended. This does not
+  claim a separate history endpoint exists.
+
+### First next gap — A3.3
+
+Exact current Spec text:
+
+```text
+#### Scenario: Mutation sau departure với session đang mở
+
+- **WHEN** employee có open session và yêu cầu operation.create sau departure date
+- **THEN** hệ thống MUST deny; open session và valid continuation SHALL không override lifecycle
+```
+
+Assessment: PARTIAL. Gap classification: `STALE_EVIDENCE`.
+
+Current implementation owner is the same service, especially `mutate`,
+`withContinuation`, `authorize` and `requireEligibility`, plus the Pointage raw
+INSERT lifecycle trigger owned by the test-only extension. Current source orders
+current Personnel authorization before receipt lookup/new mutation and the raw
+trigger rechecks departure at the accepted event business date. No implementation
+conflict was observed, but source inspection alone cannot close A3.3.
+
+Existing exact executable evidence owners:
+
+1. `packages/db-cloud/test/pointage-raw-clocking.integration.test.ts` —
+   `F4 applies DB-observed employment dates, includes the final day and never auto-closes after departure`.
+   It commits CLOCK_IN on the final valid day, moves departure to the prior day,
+   expects CLOCK_OUT to fail with `23514 / POINTAGE_LIFECYCLE_UNAVAILABLE`,
+   asserts the snapshot unchanged and retains only CLOCK_IN.
+2. `apps/backoffice/test/pointage-raw-clocking-bootstrap.test.ts` —
+   `U8 healthy actual routes preserve canonical receipts, concurrency, lifecycle and controlled U6/U7 transport`.
+   It opens a session through the actual clock-in route, moves departure before
+   current date, expects state/clock-out/recover denial, and asserts the exact
+   canonical raw chain remains open with no auto-close.
+
+Freshness failure:
+
+- DB integration file is currently
+  `7df9908051ee2361bd6375541cfeaace7c17d3afae574e027eeba8d0135aeb38`
+  after hardened F3 edits. Only the exact focused F3 selector was rerun on those
+  bytes; F4 was not.
+- Bootstrap file is currently
+  `d7fe2d0de72a4e5432c6979537ae6d6de1764f8e2ff6a1dffc848ebbf0b240f9`
+  after provider-trace hardening. The subsequent current-byte execution was the
+  provider-unavailable selector; the healthy U8 lifecycle path was not rerun.
+
+Both exact test bodies remain present, but their historical PASS labels cannot
+be silently inherited after owning-file drift. Running either current exact
+proof needs disposable DB and, for U8, actual-process authority; neither is
+granted by this read-only audit. No DB/container/actual-process execution was
+attempted. This is not an implementation-defect finding.
+
+Minimal proposed next scope: one test-only case in the existing service test
+fixture. Create and retain an open session, move current Personnel departure
+before the current business date, call CLOCK_OUT with the same still-live
+continuation, and assert exact generic denial, zero append/receipt/idle-touch and
+an unchanged open chain. A focused in-memory SERVICE_TEST appears sufficient to
+close the consumer-level clause without DB/runtime authority. Re-establishing
+defense-in-depth DB or actual-route freshness would be a separate explicitly
+authorized execution. Cross-module impact is unchanged: Pointage consumes the
+Personnel-owned lifecycle under the existing authorization boundary.
+
+### Running checkpoint
+
+R1 now touches 5/20 requirements and evaluates 9/62 scenarios: PASS 8,
+PARTIAL 1, MISSING 0, QA_DEFERRED 0, not evaluated 53. Counts reconcile to 62.
+Task 4.1 remains PARTIAL. Tasks remain 25/32. Task 4.2+ is NOT_AUTHORIZED.
+
+Historical E5-IDLE remains exactly UNKNOWN / NOT REPRODUCED /
+ROOT CAUSE NOT ESTABLISHED. Current traced E5-IDLE remains PASS.
+Canonical cloud remains 0000-0020. Pointage disposable topology remains
+canonical 0000-0020 plus test-only extension 0021. No canonical 0021 restoration
+or persistent `yuta-cloud-db-dev` migration occurred.
+
+CODE CHANGES: NONE
+TEST CHANGES: NONE
+Evidence-document writes only: current `tasks.md` and this `02c` packet.
+
+APPLY: PAUSED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+All seven blockers remain unresolved: retention; deletion/anonymization; legal
+hold; backup-retention interaction; employee notice; detailed audit visibility;
+trusted production client-address provenance. STOP before Task 4.2.
+
+## Current R1 checkpoint — bootstrap/F3 PASS; A3.1 PASS, 2026-09-17
+
+Authority: explicit user attachment d4816085-08b7-4032-89fd-fdcd339ef3b4.
+This section supersedes only the immediately preceding pending-execution
+checkpoint. It does not rewrite Task 1.7 history or authorize Task 4.2.
+
+### Target, bootstrap ownership and admission
+
+| Evidence                                 | Result                                                                                                                                                                                                                                                                                                                                        |
+| ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| TARGET_REVALIDATION                      | PASS: exact container ID `00dc40759c50e9bab8673f2b9afcf61aac9e211667bdb506cd2faaa8f35ca188`, name `yuta-pointage-next-5dd86aaee98740b4a9f344e4`, PostgreSQL 17 approved image identity, expected labels/run marker, DB/user metadata, bridge network, loopback `127.0.0.1:61237`, no mounts and exact tmpfs `/var/lib/postgresql/data`        |
+| CONTAINER_START                          | PASS: exactly one start attempt and bounded PostgreSQL readiness                                                                                                                                                                                                                                                                              |
+| PRE_BOOTSTRAP_STATE                      | `EMPTY_DISPOSABLE_TARGET`: exact `current_database()`, migration relation/raw objects/helper/Pointage roles absent                                                                                                                                                                                                                            |
+| BOOTSTRAP_OWNER                          | `packages/db-cloud/test/helpers/pointage-raw-clocking-test-database.ts`: `migratePointageCanonicalTestDatabase`, `provisionPointageTestRoles`, `migratePointageDisposableExtension`, `provisionPointageFoundationTestRole`                                                                                                                    |
+| BOOTSTRAP_MODE                           | Manual orchestration through only the existing exported helper symbols; no ad-hoc SQL or helper edit. One initial inline-runner command failed at TypeScript transform before module import or DB access. The succeeding helper invocation performed the only bootstrap sequence.                                                             |
+| DISPOSABLE_BOOTSTRAP                     | PASS: canonical 0000-0020 applied; canonical absence of specialized roles/raw objects rechecked; lock-owner/writer roles provisioned; pinned disposable extension 0021 applied; foundation runtime role provisioned; the focused F3 later created its own scoped synthetic fixture                                                            |
+| POST_BOOTSTRAP_DB_TARGET_ADMISSION       | PASS: exact database; 22 migration rows; row 21 matches canonical 0020 and row 22 matches pinned extension; raw events, receipts and continuations present; helper present; all three expected roles present; zero role memberships; approved attributes/ACL boundary/helper owner-security-search-path/triggers; actual writer boundary PASS |
+| Persistent `yuta-cloud-db-dev` untouched | YES: no command or connection configuration targeted it; no migration, role, raw table or fixture operation was directed there                                                                                                                                                                                                                |
+
+Canonical repository topology stayed unchanged: canonical journal count 21,
+terminal `0020_formalites_legal_template_foundation`, canonical raw-clocking 0021
+absent, canonical raw snapshot absent, `drizzle.config.ts` uses
+`src/schema/cloud.ts`, and that canonical manifest does not export the raw
+extension.
+
+### Exactly one hardened F3 execution
+
+Command:
+
+```text
+pnpm --filter @yuta/db-cloud test test/pointage-raw-clocking.integration.test.ts -t "F3: rejects raw/receipt mutation and rolls back every attempted SQL probe" --reporter=dot
+```
+
+Result: PASS, exit 0; 1 passed, 61 skipped, 62 total. Vitest duration 1.74s;
+observed wall duration 3.208s. No retry and no other DB test was deliberately
+invoked.
+
+| Target                       | UPDATE                                | DELETE                                | TRUNCATE                              | Preservation after every rejection |
+| ---------------------------- | ------------------------------------- | ------------------------------------- | ------------------------------------- | ---------------------------------- |
+| raw event, restricted writer | 42501                                 | 42501                                 | 42501                                 | PASS                               |
+| receipt, restricted writer   | 42501                                 | 42501                                 | 42501                                 | PASS                               |
+| raw event, privileged/admin  | 23514 / `POINTAGE_IMMUTABLE_EVIDENCE` | 23514 / `POINTAGE_IMMUTABLE_EVIDENCE` | 23514 / `POINTAGE_IMMUTABLE_EVIDENCE` | PASS                               |
+| receipt, privileged/admin    | 23514 / `POINTAGE_IMMUTABLE_EVIDENCE` | 23514 / `POINTAGE_IMMUTABLE_EVIDENCE` | 23514 / `POINTAGE_IMMUTABLE_EVIDENCE` | PASS                               |
+
+The executable preservation assertion re-read after each of the 12 rejected
+probes. It retained exactly one scoped raw event and one scoped receipt with
+unchanged IDs, organization, establishment and Personnel dossier binding,
+ordinal, kind, canonical timestamp, timezone, UTC offset, business date,
+request/event link, intent version and fingerprint. No deleted, altered or
+replacement evidence was accepted. Receipt protection remains technical
+metadata protection and does not make receipts an attendance source.
+
+A2.2 interpretation: Part A PASS; Part B PASS; overall PASS. Employee
+continuation derives no establishment/credential manager grant. Raw edit/delete
+are not Product capabilities: the production surface exposes no destructive
+operation, the catalog is closed, the writer lacks destructive privilege, and
+the immutable trigger plus fresh DB evidence rejects destructive probes. This
+does not claim a nonexistent edit/delete route returns 403.
+
+### Read-only R1 continuation — authorized scenario 7 only
+
+A3.1 (`Identify trước entry hoặc sau departure`): PASS. The current service
+requires a verified credential, exact O/E/dossier binding, locked current
+Personnel record, valid employment period, current credential version and exact
+identify authority before it can publish identity or continuation. The current
+parameterized test uses the default verified credential and separately changes
+entry date to the next business date and departure date to the prior business
+date. Both cases assert only `{ ok: false, code: 'POINTAGE_ACCESS_DENIED' }` and
+an empty committed-continuation set. Source order also places the eligibility
+guard before continuation generation. No additional test was run for this
+read-only audit.
+
+No genuine evidence gap was found inside authorized scenario 7. A3.2 is the
+first next unevaluated scenario; it is not classified by this checkpoint.
+R1 totals are now 5/20 requirements touched and 7/62 scenarios evaluated:
+7 PASS, 0 PARTIAL, 0 MISSING, 0 QA_DEFERRED, 55 not evaluated.
+
+### Final lifecycle and hashes
+
+The selected container was stopped and retained: `exited`, exit code 0,
+finished `2026-09-17T20:56:19.457238776Z`. Every other labelled candidate
+remained exited; none was started or selected.
+
+| Execution-critical path                                                                | SHA-256 after run                                                  |
+| -------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `packages/db-cloud/test/pointage-raw-clocking.integration.test.ts`                     | `7df9908051ee2361bd6375541cfeaace7c17d3afae574e027eeba8d0135aeb38` |
+| `packages/db-cloud/test/helpers/pointage-raw-clocking-test-database.ts`                | `a2dee8453e09be3794a4b0d07316d845bc85fead131d7a196af37ee47ada0d87` |
+| `packages/db-cloud/test/fixtures/pointage-raw-clocking/0021_abandoned_black_queen.sql` | `7794a5c02f2fa809a9985848bc455dbd3a5762415b5d96c216fb49ff4fd01ed9` |
+| `packages/db-cloud/test/fixtures/pointage-raw-clocking/0021_snapshot.json`             | `a6ccaa77bf4445c0336366708763ade2410ecca6faceca52db26242886fbc4bb` |
+| `packages/db-cloud/test/fixtures/pointage-raw-clocking/extension.json`                 | `15f3e7be616bdf7ae4a8a03cbc20272bd5fe138ae5f72e1b664e9248bb985eae` |
+| `openspec/changes/pointage-usable-raw-clocking/specs/authorization/pointage/spec.md`   | `1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66` |
+
+Tasks remain 25/32. Task 4.1/R1 remains PARTIAL. Task 4.2+ is NOT_AUTHORIZED.
+
+APPLY: PAUSED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+All seven blockers remain unresolved: retention; deletion/anonymization; legal
+hold; backup-retention interaction; employee notice; detailed audit visibility;
+trusted production client-address provenance. STOP before Task 4.2. No deploy,
+sync, archive, production enablement or readiness promotion.
+
+## Current R1 checkpoint — F3 hardened, execution not authorized, 2026-09-17
+
+Authority: explicit user attachment ad7e3130-7b49-45a3-8698-3b5a046f6957.
+Schema: yuta-spec-driven. Review status: AWAITING_HUMAN_REVIEW.
+A2.2 Part A accepted PASS; its foundation/manager test hashes unchanged.
+Part B test hardening complete by source inspection only. No F3/DB/Docker/
+container/migration/runtime execution; no new file or helper.
+Recommendation: FOCUSED_HARDENED_F3_READY_FOR_EXECUTION_REVIEW.
+Execution prerequisite: BLOCKED_PENDING_DISPOSABLE_TARGET_ADMISSION.
+No currently available target was verified; no fallback or provisioning authority.
+
+A2.2 remains PARTIAL. Tasks 25/32; R1 PARTIAL; Task4.2+ NOT_AUTHORIZED.
+R1 unchanged: 4/20 requirements touched, 6/62 evaluated, 5 PASS, 1 PARTIAL,
+0 MISSING, 0 QA_DEFERRED, 56 not evaluated. No scenario7 audit.
+APPLY: PAUSED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+Seven blockers retained: retention, deletion/anonymization, legal hold,
+backup-retention interaction, employee notice, detailed audit visibility and
+trusted production client-address provenance. No deploy/sync/archive/promotion.
+
+### Static F3 review
+
+Static checks completed with exit 0: db-cloud typecheck, workspace recursive
+typecheck, docs:check, architecture:check, strict OpenSpec validation and
+ui:pack:check backoffice-pointage-employee. Scoped Prettier check passed for all
+three authorized paths; integration-test git diff --check passed. No test was
+executed. Global format:check was not rerun; 72 unrelated warnings remain the
+reported historical baseline, not a fresh measurement. Full tracked/nonignored
+raw-byte inventory comparison found exactly the three authorized changed paths,
+no added/removed paths and no protected source changes. Ignored files are not
+claimed covered by that inventory.
+
+Exact title before/after unchanged:
+F3: rejects raw/receipt mutation and rolls back every attempted SQL probe
+
+Only the F3 body changed. It creates its own UUID organization, establishment,
+Personnel dossier, event and request IDs after admitted clients from beforeAll.
+Existing SQL primitives create synthetic parents through admin, then atomically
+commit one CLOCK_IN and its required receipt through the restricted writer.
+Existing INSERT trigger supplies server time/calendar. No shared mutable rows,
+prior it(), retained prior mutation or prior F3/F4 result is needed.
+beforeAll still performs existing identity/role/helper admission; no helper edit.
+
+Immediately after COMMIT, readEvidence captures explicitly selected raw columns:
+id, organization_id, establishment_id, personnel_dossier_id, ordinal, kind,
+accepted_at, timezone_name, utc_offset_seconds, business_date. Timestamp/ordinal/
+date are selected as text to avoid JS Date microsecond truncation. Receipt:
+organization_id, establishment_id, personnel_dossier_id, request_id, event_id,
+intent_version, intent_fingerprint. No secrets, ORM metadata, invented chain hash
+or log output. Baseline asserts exactly one scoped raw and receipt, exact IDs,
+binding, CLOCK_IN/ordinal1 and receipt link/fingerprint/version.
+
+Preserved probes: raw and receipt UPDATE organization_id=organization_id,
+DELETE, plus existing TRUNCATE of both tables. UPDATE remains a no-op target
+assignment by explicit bounded instruction: it proves all UPDATE denied, not
+an exhaustive changed-value matrix. UPDATE/DELETE predicates now include all
+three fixture scope IDs. Writer expects42501. Admin expects23514 and exact
+POINTAGE_IMMUTABLE_EVIDENCE; sentinel throws/rolls back if mutation succeeds.
+
+After EACH writer rejection and EACH admin rejection, outside the failed
+transaction, expectPreserved re-reads both tables. It asserts one scoped row
+each, same raw ID, same request/event IDs and complete structured baseline
+equality. This excludes delete/replacement, changed binding/calendar/time and
+receipt alteration. No global count assertion. Successful post-rollback reads
+also show usable connection state. Runtime outcomes remain NOT_RUN.
+
+Receipt coverage is retained because it already belongs to F3; receipts remain
+technical metadata, not canonical attendance. No new receipt capability.
+
+### Freshness and protected bytes
+
+Integration test before:
+769d70cbc9ae919e97ce17ddc785abc35bf4027d457cef4155c74a74f99673b3
+Integration test after:
+7df9908051ee2361bd6375541cfeaace7c17d3afae574e027eeba8d0135aeb38
+
+Unchanged extension SQL:
+7794a5c02f2fa809a9985848bc455dbd3a5762415b5d96c216fb49ff4fd01ed9
+Unchanged DB helper:
+a2dee8453e09be3794a4b0d07316d845bc85fead131d7a196af37ee47ada0d87
+Accepted Part A foundation test:
+08bd36f5192883b1d29c431d012ab3f04de2e6ecaf87f0bac655100099c318ce
+Accepted Part A manager test:
+b6baba22d9e56adb42f0f9573f0066f59e59d5d697bc47dea5f318c49648ef8e
+
+Hash method: SHA-256 exact raw bytes via Node crypto/readFileSync.
+No Design, Specs, implementation, migration/schema, DB helper, package script,
+environment or Part A changes. Existing migration-isolation dirty hunk in this
+integration test remains preserved.
+
+Historical whole-file DBTEST passes/hashes are not evidence for new bytes.
+Affected referenced evidence families in this file: F3 raw/receipt atomicity
+and immutability, F4 transition/time/calendar/corruption/isolation, F5 continuation,
+F8 role/ACL/admission, D4/D4a source-lock/concurrency/lifecycle/parent/issue-reset/
+Formalites/search-path and S2 scoped time snapshots. Their unchanged test bodies
+are not labelled defects, but no new execution PASS is claimed. F3 explicitly
+requires fresh execution. The five accepted R1 scenarios and Part A tests are
+not changed by this edit; no blanket invalidation or unauthorized rerun.
+No later requirement/scenario is newly marked evaluated from historical DBTEST.
+
+### Proposed execution contract — explicit review required
+
+Current package manifest test script is vitest run.
+Path: packages/db-cloud/test/pointage-raw-clocking.integration.test.ts.
+Exact command, NOT_RUN:
+pnpm --filter @yuta/db-cloud test test/pointage-raw-clocking.integration.test.ts -t "F3: rejects raw/receipt mutation and rolls back every attempted SQL probe" --reporter=dot
+
+NODE*ENV=test, YUTA_POINTAGE_SYNTHETIC_TEST_MODE=true, VERCEL absent,
+POINTAGE_TEST_ORIGIN literal approved loopback; dedicated credentials supplied
+without dotenv/secret logging. Existing requirePointageTestConfiguration and
+openPointageTestDatabase enforce literal loopback allowlist and exact
+case-sensitive whole-string ^yuta_pointage_raw_clocking_test(?:*[a-z0-9]+)?$.
+Parsed database name must equal SELECT current_database(); actual name must
+independently match. Reject malformed/encoded/whitespace/newline aliases,
+shared yuta_cloud, persistent dev, staging/production and remote targets.
+
+Before fixture write, separately admit exact prior-authorized isolated cluster/
+container identity, loopback mapping, disposable storage/no shared mount and
+current canonical0000-0020 plus approved extension0021 migration hashes/state.
+Verify bootstrap/admin authority, actual yuta_pointage_raw_writer identity and
+exact yuta_pointage_raw_lock_owner role, ACL/helper body properties through
+existing boundary checks. Current target availability UNKNOWN; execution
+BLOCKED_PENDING_DISPOSABLE_TARGET_ADMISSION. No Docker or DB command was run.
+No migration/provision/repair/role alteration or shared-target fallback.
+
+Expected fresh proof: one scoped committed pair before probes; writer UPDATE,
+DELETE, TRUNCATE42501; privileged UPDATE/DELETE/TRUNCATE23514 /
+POINTAGE_IMMUTABLE_EVIDENCE; both original rows present with same IDs and all
+baseline fields after every rejection. No skipped case counted as PASS.
+
+afterAll keeps disposable evidence and closes clients. No row cleanup, DB/container
+drop or new teardown. STOP for guard/provenance/hash/schema/role drift, absent
+target, fixture failure, unexpected SQLSTATE, successful mutation, changed row,
+or need for implementation/helper/migration edit. Execution cannot be authorized
+by successful typecheck/static review.
+
+## Current R1 checkpoint — A2.2 Part A PASS; Part B insufficient, 2026-09-17
+
+Authority: explicit user attachment b4adf62b-b6bf-4ac3-9f05-4787f96788b3.
+Schema: yuta-spec-driven. Review status: AWAITING_HUMAN_REVIEW.
+AUTH_PLUS_DB_IMMUTABILITY accepted; only AUTH/SERVICE execution authorized.
+Part A: PASS, three focused unit/service cases; no DB proof claim.
+Part B recommendation: DB_EVIDENCE_INSUFFICIENT. No DB execution authorized/run.
+
+A2.2 remains PARTIAL. R1 totals unchanged: 4/20 requirements touched,
+6/62 scenarios evaluated; PASS 5, PARTIAL 1, MISSING 0, QA_DEFERRED 0,
+not evaluated 56. No audit after A2.2.
+
+APPLY: PAUSED
+Tasks: 25/32
+Task 4.1: PARTIAL
+Task 4.2+: NOT_AUTHORIZED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+All seven blockers remain: retention, deletion/anonymization, legal hold,
+backup-retention interaction, employee notice, detailed audit visibility,
+trusted production client-address provenance. No sync/archive/deploy/enable.
+
+### Part A execution
+
+Checks: Backoffice and recursive typecheck, docs:check, architecture:check,
+strict OpenSpec, UI pack and scoped Prettier PASS. Global format:check is
+diagnostic exit1 with72 unrelated warnings, unchanged; no lint claim.
+
+Exact test names:
+
+- A2.2 denies employee identity from establishment read without deriving manager grant
+- A2.2 denies employee identity from credential issue without running repository command
+- A2.2 denies employee identity from credential reset without running repository command
+
+Commands, 2026-09-17 Europe/Paris:
+
+- pnpm --filter @yuta/backoffice test test/pointage-foundation.test.ts -t "A2.2" --reporter=dot: exit0, 2 PASS / 21 skipped, 21:59:42.
+- pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-manager.test.ts -t "A2.2" --reporter=dot: exit0, 1 PASS / 16 skipped, 21:59:46.
+
+Real createPointageEmployeeContext creates the employee self identity.
+Manager-read injects that actor through existing loadCurrentAccess; matching
+session/scope does not convert it into user/manager authority. Exact denial
+POINTAGE_ACCESS_DENIED; snapshot read zero, access lookup once, actor reference
+and value unchanged, no role added. No browser manager route is claimed.
+Its production createPointageRawManagerRead composition requests exactly
+pointage.establishment.read.
+
+Independent issue/reset cases pass the employee actor into real foundation
+authorizeManagerOperation with each exact grant; both return null, no manager
+context. Existing composition does not audit non-user actors. A separate
+defensive command invocation with the unchanged employee context rejects with
+PointageAuthorizationError. Both issue/reset repository calls remain zero;
+credential generation zero; no plaintext result; employee credential tuple
+unchanged. No persisted credential-state/SQL claim from doubles.
+Each direct denied command appends one existing authorization.denied audit with
+operation_not_granted, exact requestedOperation and undefined managerUserId;
+this allowed denial audit is not a credential mutation.
+
+Freshness: accepted R1 A1.1/A2.1 use raw service test, A1.2 its cross-domain files,
+A7.1/R12.1 runtime/bootstrap files; none imports these two test modules.
+Their accepted evidence is not blanket invalidated. Historical full foundation/
+manager suite hashes are superseded for future whole-file claims, not rerun or
+reported current. No DB/actual-process refresh was authorized or attempted.
+
+### Part B source inspection, no execution
+
+Requested old path packages/db-cloud/drizzle/0021_abandoned_black_queen.sql is
+absent following the accepted migration-isolation revision. Exact extension is
+packages/db-cloud/test/fixtures/pointage-raw-clocking/0021_abandoned_black_queen.sql.
+No attempt to restore canonical 0021.
+
+Catalog remains six operations, with no edit/delete/correction grant. Existing
+raw service/repository has no edit/delete API. Raw/receipt writer grants are
+SELECT,INSERT only; continuation alone has column UPDATE for idle/end.
+BEFORE UPDATE/DELETE and BEFORE TRUNCATE triggers on raw and receipts reject
+with SQLSTATE23514 / POINTAGE_IMMUTABLE_EVIDENCE. Writer probes expect42501.
+These are test-extension enforcement definitions, not production enablement.
+
+Exact F3: "F3: rejects raw/receipt mutation and rolls back every attempted SQL probe".
+Loops raw/receipt UPDATE, DELETE and TRUNCATE. Actual writer expects42501;
+admin transaction expects23514 / POINTAGE_IMMUTABLE_EVIDENCE. If an admin
+mutation succeeds, a sentinel error rolls back and fails the assertion.
+No before/after raw/receipt row snapshot or original-row-presence assertion.
+beforeAll creates organization/establishment/dossier only. Committed raw/receipt
+pair is created by preceding "F3/F4: raw-only and receipt-only COMMIT fail; a
+scoped synthetic pair commits once". Selecting only F3 excludes that producer.
+Therefore UPDATE/DELETE on that fresh organization's empty tables cannot prove
+row-trigger rejection; the selector is not independently sufficient.
+No test edit, fixture injection or wider selector is silently authorized.
+
+Old F3 PASS is historical: integration file/helper/migration placement changed
+with isolation revision; exact SQL bytes alone do not refresh execution.
+Current migrated target availability was not inspected or asserted.
+
+### Future execution contract — proposal only, NOT RUNNABLE AS SUFFICIENT PROOF
+
+Path: packages/db-cloud/test/pointage-raw-clocking.integration.test.ts.
+Selector: F3: rejects raw/receipt mutation and rolls back every attempted SQL probe.
+Candidate command (not run):
+pnpm --filter @yuta/db-cloud test test/pointage-raw-clocking.integration.test.ts -t "F3: rejects raw/receipt mutation and rolls back every attempted SQL probe" --reporter=dot
+
+Prerequisites before approval/execution:
+
+1. Separately approve self-contained committed synthetic raw/receipt setup and
+   exact row snapshots/identity equality after each failed transaction, or
+   another explicitly reviewed composition proving these missing assertions.
+2. NODE_ENV=test; YUTA_POINTAGE_SYNTHETIC_TEST_MODE=true; no VERCEL;
+   loopback POINTAGE_TEST_ORIGIN and dedicated in-memory credentials, no dotenv.
+3. Existing requirePointageTestConfiguration + openPointageTestDatabase:
+   exact case-sensitive whole-string ^yuta*pointage_raw_clocking_test(?:*[a-z0-9]+)?$;
+   allowed literal loopback hosts only; reject aliases/whitespace/query/fragment;
+   parsed name equals actual current_database, both independently match.
+4. Independently verify prior-authorized isolated disposable cluster identity,
+   loopback binding, no persistent/shared mounts or external target, exact
+   migrated canonical-plus-extension journal/hashes and expected role/helper/
+   privilege boundary. Loopback/name alone are not cluster provenance.
+5. Already migrated target only: no provisioning, migration, role repair or
+   fallback to shared yuta_cloud/development/staging/production.
+6. Expected outcomes: writer42501; admin trigger23514 with exact message;
+   original raw/receipt rows present and value-identical after every rollback.
+7. Existing afterAll closes admin/writer connections and retains disposable
+   evidence; no delete/drop/teardown beyond approved connection closure.
+8. STOP on missing target/provenance, hash drift, guard/role/journal mismatch,
+   missing original rows, successful destructive statement, unexpected SQLSTATE,
+   inability to prove rollback or need for source/helper/migration change.
+
+Next authorization needed: bounded F3 evidence correction proposal, not a
+blind FOCUSED_EXISTING_F3_RERUN. No new Product capability or operation needed.
+
+### Exact byte hashes
+
+apps/backoffice/test/pointage-foundation.test.ts
+Before: e3f091057b9c0f21bfd2ed872b9e435fc4330ae9239ffa8e5bbd51534ed3729b
+After: 08bd36f5192883b1d29c431d012ab3f04de2e6ecaf87f0bac655100099c318ce
+
+apps/backoffice/test/pointage-raw-clocking-manager.test.ts
+Before: a36e3beaf3ee38da51eae92dafdb923a2d4d7364a45e58a3d4cdf3af338d1db7
+After: b6baba22d9e56adb42f0f9573f0066f59e59d5d697bc47dea5f318c49648ef8e
+
+packages/db-cloud/test/pointage-raw-clocking.integration.test.ts
+Unchanged: 769d70cbc9ae919e97ce17ddc785abc35bf4027d457cef4155c74a74f99673b3
+
+packages/db-cloud/test/helpers/pointage-raw-clocking-test-database.ts
+Unchanged: a2dee8453e09be3794a4b0d07316d845bc85fead131d7a196af37ee47ada0d87
+
+packages/db-cloud/test/fixtures/pointage-raw-clocking/0021_abandoned_black_queen.sql
+Unchanged: 7794a5c02f2fa809a9985848bc455dbd3a5762415b5d96c216fb49ff4fd01ed9
+
+Hash method: Node crypto SHA-256 over raw readFileSync bytes. Evidence-file
+final hashes reported outside the packet to avoid recursive self-hashing.
+
+## Current R1 checkpoint — A2.1 defensive mismatch PASS, 2026-09-17
+
+Authority: explicit current-user clarification and bounded test authorization,
+attachment 20bade6c-e65f-4f83-a14f-927b8206118b/pasted-text.txt.
+Classification: PAGE_LOCAL test-only evidence within the approved CROSS_MODULE change.
+Schema: yuta-spec-driven. Review status: AWAITING_HUMAN_REVIEW at A2.2.
+
+A2.1: PASS under the approved defensive interpretation. Two service cases use
+the existing fixture: Personnel identity mismatch and foundation actor mismatch.
+Organization/establishment remain identical; only dossier differs. Both return
+exactly POINTAGE_ACCESS_DENIED without a value, protected read/write, token
+generation or continuation binding change. No browser dossier selector is claimed.
+
+A1.1 freshness refreshed on final test bytes: exact-authority 10 PASS,
+current lifecycle/lifetime 8 PASS, state denial 8 PASS. A2.1 2 PASS.
+Skipped tests are not evidence. No DB/container/actual-process execution.
+
+Next scenario A2.2: PARTIAL / TEST_EVIDENCE_GAP. Current evidence includes
+employee manager-read denial and employee-context rejection of credential.issue,
+but does not explicitly prove every employee-continuation privileged request:
+credential.reset and raw-event edit/delete remain unmapped at the consumer
+boundary. Catalog/source absence is not substituted for executable evidence.
+No implementation defect established; no A2.2 patch or later audit performed.
+
+R1: 4/20 requirements touched; 6/62 scenarios evaluated.
+PASS: 5 (A1.1, A1.2, A2.1, A7.1, R12.1); PARTIAL: 1 (A2.2).
+MISSING: 0; QA_DEFERRED: 0; not evaluated: 56.
+Existing A7.1/R12.1 and A1.2 acceptance is not upgraded by this test-only run;
+no new actual-process freshness claim is made for the migration-isolation revision.
+Historical E5-IDLE remains UNKNOWN / NOT REPRODUCED / ROOT CAUSE NOT ESTABLISHED;
+current traced E5-IDLE remains the accepted PASS, not a FIXED claim.
+
+APPLY: PAUSED
+Tasks: 25/32
+Task 4.1: PARTIAL
+Task 4.2+: NOT_AUTHORIZED
+TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+VERIFY: NOT_RUN
+QA: NOT_RUN
+Production enablement: NOT_AUTHORIZED
+Real employee attendance: NOT_AUTHORIZED
+
+All seven blockers remain unresolved: retention; deletion/anonymization; legal
+hold; backup-retention interaction; employee notice; detailed audit visibility;
+trusted production client-address provenance. No deployment, enablement,
+sync, archive or lifecycle promotion.
+
+### Exact evidence and clause mapping
+
+"A2.1 does not rely on a browser dossier selector, because no such selector
+exists in the approved transport contract.
+
+The executable evidence represents the normative cross-dossier attack at the
+service enforcement boundary: a continuation bound to dossier A encounters a
+same-organization/same-establishment current Personnel/authority identity for
+dossier B and is rejected before protected access or identity transfer."
+
+Exact test titles:
+
+- A2.1 rejects same-establishment Personnel dossier substitution without protected access or identity transfer
+- A2.1 rejects same-establishment foundation dossier substitution without protected access or identity transfer
+
+Evidence class: SERVICE (dependency doubles, not SQL/HTTP/Browser proof).
+Owner: apps/backoffice/test/pointage-raw-clocking-service.test.ts.
+Implementation: createPointageRawClockingService -> readState ->
+withContinuation -> authorize, in apps/backoffice/src/server/pointage/raw-clocking-service.ts.
+Design authority: D4 continuation/current Personnel authorization.
+
+Successful identify creates A's committed continuation; its digest matches the
+token used by readState. Snapshot preserves every continuation field.
+Attempted B copies O/E and has a distinct UUID. Personnel case changes only
+the existing Personnel dependency identity/name; foundation case returns actor B
+while Personnel and the credential submitted to foundation remain A.
+
+Each case asserts exact denial object with no value, no B identifier/name.
+lockContinuation is called once with A's ID. readRawChain and findCommandReceipt:
+zero calls. appendRawEvent, insertCommandReceipt, touchContinuationIdle,
+endOwnContinuation and insertContinuation: zero calls after identification.
+Raw/receipt arrays remain empty; committed continuation remains byte-value equal
+to its pre-request snapshot; no token generation. Personnel mismatch never calls
+foundation authority. Foundation mismatch calls it once with credential A and
+exact state.read, but rejects returned actor B.
+
+Prerequisite lookup/locking/clock/Personnel metadata reads are allowed, not
+misreported as zero repository access. No new B existence/lifecycle matrix,
+DTO, API, permission, fixture helper or production behavior.
+
+### Execution and freshness
+
+Commands on final formatted bytes, 2026-09-17 Europe/Paris:
+
+- pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-service.test.ts -t "A2.1" --reporter=dot: exit0, 2 PASS / 92 skipped, 21:50:38.
+- pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-service.test.ts -t "A1.1" --reporter=dot: exit0, 10 PASS / 84 skipped, 21:50:42.
+- pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-service.test.ts -t "checks current lifecycle/lifetime" --reporter=dot: exit0, 8 PASS / 86 skipped, 21:50:46.
+- pnpm --filter @yuta/backoffice test test/pointage-raw-clocking-service.test.ts -t "state denies" --reporter=dot: exit0, 8 PASS / 86 skipped, 21:50:50.
+
+One combined pipe selector was rejected by Windows command parsing; it is not
+test evidence. The separate selectors above succeeded. No broad suite, DB,
+container, migration, actual-process or Browser QA was run.
+A1.1 cases/fixture implementations are unchanged; only two tests were inserted.
+Their former file hash is not reused as current execution proof.
+
+Service test SHA-256:
+before 7d9fdfb5370669de5ac09321cb755b28bedf96c6584cb9615170936cd166ecce
+after c6dc92334c1e3c672a9b9f3fa6c116e04f3120debf65fd5bf2fd92a1f7ae792e.
+Service source unchanged:
+a144202f2b7af2955b458fc445b699342bb4ed8cdbda33a4d46905452dcd3d37.
+Repository unchanged:
+2c7b2f9a4d52871acd6e963ca6fb06d0bcc4f3422baffa0367f87014153b856c.
+DB integration test unchanged:
+769d70cbc9ae919e97ce17ddc785abc35bf4027d457cef4155c74a74f99673b3.
+Hash method: Node crypto SHA-256 of readFileSync raw bytes; final evidence-file
+hashes reported externally, avoiding recursive packet self-hash.
+
+### A2.2 first next gap
+
+Final validation: Backoffice typecheck and recursive typecheck PASS; docs:check,
+architecture:check, strict OpenSpec, UI pack and scoped Prettier PASS (exit0).
+Global pnpm format:check: diagnostic exit1, 72 unrelated files, left unchanged.
+Initial typecheck found an overly narrow inferred UUID type in the new mock;
+the test-only correction preserves the original actor and substitutes only its
+dossier. All four focused selectors were rerun after that correction; the
+final hashes/results above supersede the earlier successful runtime-only runs.
+No production source, Specs, Design, migration or existing helper was changed.
+
+Spec: openspec/changes/pointage-usable-raw-clocking/specs/authorization/pointage/spec.md.
+Requirement A2: Continuation chỉ self-only trong trusted binding và closed catalog.
+Scenario A2.2: Continuation yêu cầu privileged operation.
+WHEN employee continuation yêu cầu establishment.read, credential.issue/reset hoặc sửa/xóa raw event
+THEN hệ thống MUST deny, không derive manager grant từ employee identity.
+No separate AND.
+
+Inspected exact existing assertions:
+
+- pointage-raw-clocking-manager.test.ts: "denies %s before reading", employee
+  branch denies and readEstablishmentSnapshot is not called. This is a manager
+  context double, not an actual continuation-consuming privileged request.
+- pointage-foundation.test.ts: "denies STAFF, unknown operations and mismatched
+  validated scope" rejects createPointageEmployeeContext with credential.issue.
+- Same foundation file: "audits an exact lifecycle grant denial without running
+  the command" uses an issue-only MANAGER for reset; not employee continuation.
+- pointage-raw-clocking-bootstrap.test.ts: "U8 scoped actual transport denies
+  other establishments and fences a late committed receipt after clear" sends
+  operation=pointage.establishment.read to state; expects 400 and noAttendance.
+  It does not exercise reset or edit/delete. No fresh runtime claim from this
+  historical run after launcher changes.
+- Closed operation catalog and strict transport support denial by source
+  inspection, but do not close every missing executable clause.
+
+Classification TEST_EVIDENCE_GAP, not implementation defect. Proposed next step:
+bounded read-only evidence-owner/representation review for absent privileged
+consumer operations, without inventing routes or manager grants. Potential
+existing owners: pointage-foundation.test.ts, pointage-raw-clocking-manager.test.ts,
+pointage-raw-clocking-http.test.ts. Exact edit allowance requires a separate
+decision; this turn authorizes none of those paths.
+
 ## Current R1 review — A1.2 PASS; A2.1 missing assertion
 
 Recorded: 2026-09-12.

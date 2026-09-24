@@ -20,6 +20,7 @@ import {
   createPointageEmployeeContext,
   requirePointageManagerOperation,
   type PointageEmployeeOperation,
+  type PointageManagerContext,
   type VerifiedPointageCredential,
 } from '../src/server/pointage/authorization';
 import {
@@ -208,6 +209,73 @@ describe('Pointage closed authority catalog', () => {
 });
 
 describe('Pointage server foundation', () => {
+  for (const command of ['issue', 'reset'] as const) {
+    it(`A2.2 denies employee identity from credential ${command} without running repository command`, async () => {
+      const operation =
+        command === 'issue'
+          ? ('pointage.credential.issue' as const)
+          : ('pointage.credential.reset' as const);
+      const employee = createPointageEmployeeContext({
+        credential: {
+          proofType: 'VERIFIED_POINTAGE_CREDENTIAL',
+          organizationId: scope.organizationId,
+          establishmentId: scope.establishmentId,
+          personnelDossierId: '55555555-5555-4555-8555-555555555555',
+          credentialId: '66666666-6666-4666-8666-666666666666',
+          credentialVersion: 1,
+        },
+        operation: 'pointage.employee.state.read',
+      });
+      const before = structuredClone(employee);
+      const employeeTenant = {
+        ...tenant('OWNER'),
+        actor: employee,
+      } as unknown as TenantContext;
+      const repo = repository();
+      const generateCredential = vi.fn(() => '12345678');
+      const foundation = createPointageServerFoundation({
+        repository: repo,
+        encodedAuthSecret: encodedSecret,
+        clientAddressProvider: trustedProvider,
+        generateCredential,
+      });
+      // A matching cloud session cannot turn a Pointage self actor into a user.
+      expect(
+        await foundation.authorizeManagerOperation({
+          session,
+          tenant: employeeTenant,
+          operation,
+        }),
+      ).toBeNull();
+      expect(repo.appendAudit).not.toHaveBeenCalled();
+      const invoke =
+        command === 'issue'
+          ? foundation.issueCredential
+          : foundation.resetCredential;
+      await expect(
+        invoke({
+          manager: employee as unknown as PointageManagerContext,
+          personnelDossierId: employee.personnelDossierId,
+        }),
+      ).rejects.toBeInstanceOf(PointageAuthorizationError);
+      expect(repo.issueCredential).not.toHaveBeenCalled();
+      expect(repo.resetCredential).not.toHaveBeenCalled();
+      expect(generateCredential).not.toHaveBeenCalled();
+      expect(employeeTenant.actor).toBe(employee);
+      expect(employee).toEqual(before);
+      expect(employee).not.toHaveProperty('role');
+      expect(repo.appendAudit).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({
+          eventType: 'pointage.authorization.denied',
+          outcome: 'denied',
+          reasonCode: 'operation_not_granted',
+          requestedOperation: operation,
+          managerUserId: undefined,
+        }),
+      );
+    });
+  }
+
   it('fails composition closed without secret or a trusted-address provider', () => {
     expect(() =>
       createPointageServerFoundation({
@@ -319,6 +387,65 @@ describe('Pointage server foundation', () => {
       }),
     ).resolves.toEqual({ status: 'POINTAGE_UNAVAILABLE' });
   });
+
+  it.each([
+    'client-block-lookup',
+    'candidate-block-lookup',
+    'failure-record',
+  ] as const)(
+    'R3 maps %s repository failure to unavailable without partial credential authority',
+    async (boundary) => {
+      const findCredentialCandidate = vi.fn(async () => null);
+      const recordRateLimitFailure = vi.fn(async () => {
+        if (boundary === 'failure-record')
+          throw new Error('Synthetic limiter write unavailable.');
+        return { blocked: false, failureCount: 1 };
+      });
+      const isRateLimitBlocked = vi.fn(
+        async (_scope, kind: 'candidate' | 'client') => {
+          if (
+            boundary === 'client-block-lookup' ||
+            (boundary === 'candidate-block-lookup' && kind === 'candidate')
+          )
+            throw new Error('Synthetic limiter read unavailable.');
+          return false;
+        },
+      );
+      const resetCandidateRateLimit = vi.fn(async () => undefined);
+      const foundation = createPointageServerFoundation({
+        repository: repository({
+          findCredentialCandidate,
+          isRateLimitBlocked,
+          recordRateLimitFailure,
+          resetCandidateRateLimit,
+        }),
+        encodedAuthSecret: encodedSecret,
+        clientAddressProvider: trustedProvider,
+      });
+
+      const result = await foundation.validateCredential({
+        establishmentSlug: 'restaurant',
+        credential: '12345678',
+      });
+
+      expect(result).toEqual({ status: 'POINTAGE_UNAVAILABLE' });
+      expect(result).not.toHaveProperty('credential');
+      expect(result).not.toHaveProperty('entryScope');
+      expect(resetCandidateRateLimit).not.toHaveBeenCalled();
+      if (boundary === 'client-block-lookup') {
+        expect(findCredentialCandidate).not.toHaveBeenCalled();
+        expect(recordRateLimitFailure).not.toHaveBeenCalled();
+      }
+      if (boundary === 'candidate-block-lookup') {
+        expect(findCredentialCandidate).not.toHaveBeenCalled();
+        expect(recordRateLimitFailure).not.toHaveBeenCalled();
+      }
+      if (boundary === 'failure-record') {
+        expect(findCredentialCandidate).toHaveBeenCalledOnce();
+        expect(recordRateLimitFailure).toHaveBeenCalledTimes(2);
+      }
+    },
+  );
 
   it('separates verified identity proof from employee authority', async () => {
     const credential = '12345678';

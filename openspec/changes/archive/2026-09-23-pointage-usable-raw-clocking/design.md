@@ -26,6 +26,38 @@ tenancy/database architecture, ADR-003, Production Readiness, UI workflow và
 QA protocol. Code chứng minh implementation baseline, không thay Product authority.
 Gate 1 và hai delta Specs không được sửa.
 
+### Current migration-stream correction — 2026-09-17
+
+Current-user review xác nhận migration raw-clocking chưa được áp dụng ở bất kỳ
+persistent development, staging hoặc production database nào. Repository
+inspection phát hiện conflict: raw-clocking chỉ được authorize cho guarded
+synthetic/disposable execution, nhưng generated `0021_abandoned_black_queen`
+lại nằm trong canonical `@yuta/db-cloud` journal mà shared development và
+production migration service consume tuần tự.
+
+Revision này thay quyết định migration placement, không thay hai delta Specs,
+Product behavior, runtime authorization hoặc production readiness:
+
+- canonical cloud journal/schema manifest MUST không chứa raw-clocking tables,
+  helper, triggers hoặc role grants trong change này;
+- exact raw-clocking migration SQL/snapshot được chuyển thành test-only
+  extension dưới `packages/db-cloud/test/fixtures/pointage-raw-clocking/`;
+- guarded disposable harness dựng temporary migration directory từ current
+  canonical cloud journal rồi append test-only extension bằng manifest cố định;
+- chỉ harness đã pass D1/F6 isolated-cluster guards được provision test roles và
+  apply extension; `pnpm db:cloud:migrate`, shared `.env.local`, staging và
+  production không nhìn thấy extension;
+- production Drizzle manifest dùng explicit cloud schema entry không export
+  `pointage-raw-clocking`; package/runtime code vẫn có thể import exact module
+  trực tiếp cho guarded synthetic composition;
+- CI MUST prove canonical clean/upgrade migration không cần Pointage roles và
+  không publish raw-clocking objects, đồng thời disposable extension vẫn giữ
+  toàn bộ F2-F8 PostgreSQL evidence.
+
+Các đoạn historical checkpoint nói giữ `0021` trong canonical journal chỉ là
+provenance của quyết định cũ và bị mục này supersede. Không được dùng chúng làm
+authority để migrate shared hoặc production database.
+
 ## Goals / Non-Goals
 
 **Goals:** chốt exact security/transaction/time/UI approach để implement
@@ -1064,12 +1096,12 @@ D1a làm rõ riêng synthetic employee runtime: foundation validation dùng exac
 validation-only role/client trong cùng database; credential issue/reset vẫn
 ngoài runtime này. Không thay helper body/owner/ACL hoặc raw writer inventory.
 
-Migration revokes all function EXECUTE from PUBLIC và mọi non-owner/non-writer
+Disposable extension migration revokes all function EXECUTE from PUBLIC và mọi non-owner/non-writer
 grantee; grant EXECUTE chỉ dedicated writer (owner's inherent right remains).
 Không dựa vào default ACL. Function create, ownership transfer, PUBLIC revoke
-và final grant nằm trong cùng journaled migration transaction, không window
+và final grant nằm trong cùng test-extension transaction, không window
 publicly executable. Final schema không writable bởi writer/PUBLIC/lock owner.
-Schema ownership vẫn migration boundary, không Pointage runtime.
+Schema ownership vẫn disposable migration boundary, không Pointage runtime.
 
 [SECURITY DEFINER precautions](https://www.postgresql.org/docs/17/sql-createfunction.html)
 giải thích owner execution, safe lookup và default PUBLIC EXECUTE; lựa chọn
@@ -1079,7 +1111,7 @@ Trước instantiate synthetic provider/runtime và trước mỗi raw dossier
 transaction trên chính connection dùng cho operation: verify exact session/
 current user; function OID/signature, owner, SECURITY DEFINER/language/volatility/
 parallel/null behavior, fixed search_path và body fingerprint khớp reviewed
-journaled migration; verify roles, object owners, effective table/column/function/
+test-only extension migration; verify roles, object owners, effective table/column/function/
 schema privileges và defaults/PUBLIC/inherited paths. Check pg_catalog.pg_proc,
 pg_roles, pg_auth_members, pg_class, pg_namespace, pg_default_acl;
 has_table_privilege + has_column_privilege + has_function_privilege;
@@ -1793,7 +1825,7 @@ test composition. No production environment or lifecycle promotion.
 - [Clock rollback / corrupt chain] -> unavailable, no clamp/repair, preserve
   evidence và minimized diagnostic; cần operational investigation riêng.
 - [Mutual FK và custom trigger không đủ được schema diff tool express] ->
-  generated additive migration + reviewed explicit SQL, disposable proof cả
+  generated test-only extension + reviewed explicit SQL, disposable proof cả
   constraints lẫn negative writes; không claim từ TypeScript schema alone.
 - [Existing dirty foundation/UI work] -> future pre-Apply fresh hashes/status,
   preserve Formalités auth index hunk; stop nếu intended overlapping hunks
@@ -1805,29 +1837,43 @@ test composition. No production environment or lifecycle promotion.
 
 Đây là migration design, không execution authorization.
 
-Sau Sensitive Design và Tasks/Apply approval: generate additive Drizzle migration
-bằng current @yuta/db-cloud db:generate; allocate next journal sequence từ live
-repo, không assume số 0020 hoặc sửa 0019 đã có. Migration tạo ba tables,
-constraints/indexes/functions/triggers và credential composite unique support.
-Custom FK/trigger SQL nằm trong cùng new journaled migration với reviewed
-generated snapshot; không hand-author journal để bypass generator.
-Không seed/backfill raw events, sessions, credentials hoặc Personnel.
+Canonical `packages/db-cloud/drizzle/` giữ 0000-0020 và mọi future
+production-bound migration; loại exact un-deployed 0021 SQL, snapshot và journal
+entry. Không sửa bytes/hash của 0000-0020. Trước code edit phải recompute exact
+path/hash set và xác nhận không environment persistent nào đã apply 0021; nếu
+phát hiện contrary evidence thì STOP, không rewrite deployed history.
 
-D4a helper definition/ACL/owner transfer thuộc chính new generated/journaled
-migration, không standalone unjournaled SQL. Không sửa 0019/0020 hoặc prior
-snapshots/entries; next name/sequence vẫn để generator resolve sau fresh review.
-Không tạo SQL/migration, roles hay database trong Design revision này.
-Future guarded disposable harness provision exact lock-owner/writer roles
-D4b trước migration, chỉ sau toàn bộ D1 guards; role name đã tồn tại với
-unexpected attributes/grants/membership -> STOP, không ALTER unrelated role.
-Role provisioning là isolated test-cluster setup, không production migration
-default hoặc seed. Migration requires roles tồn tại đúng policy; thiếu -> fail.
+Production Drizzle config chuyển sang explicit cloud schema manifest không chứa
+`pointage-raw-clocking`. Raw schema module và repository chỉ thuộc guarded
+synthetic code path; chúng không được generator tự tái-publish vào canonical
+journal ở lần generate sau. Architecture/inventory tests phải giữ separation này.
+
+Exact 0021 SQL và snapshot được relocate, không silently rewrite, dưới
+`packages/db-cloud/test/fixtures/pointage-raw-clocking/`. Harness tạo temporary
+migration folder bằng cách copy current canonical journal/migrations rồi append
+extension entry từ fixed test manifest; không symlink tới mutable external path,
+không edit canonical journal tại runtime và không dùng general `.env.local`.
+Temporary folder được sở hữu/dọn bởi disposable fixture.
+
+Test extension tạo ba tables, constraints/indexes/functions/triggers và
+credential composite unique support. Custom FK/trigger SQL, D4a helper,
+ownership transfer, PUBLIC revoke và writer EXECUTE ở cùng atomic extension
+transaction. Không seed/backfill raw events, sessions, credentials hoặc
+Personnel. Exact extension hash/body fingerprint là test admission evidence,
+không production migration identifier.
+
+Guarded disposable harness provision exact lock-owner/writer roles D4b trước
+extension, chỉ sau toàn bộ D1/F6 guards; role name đã tồn tại với unexpected
+attributes/grants/membership -> STOP, không ALTER unrelated role. Role
+provisioning không nằm trong canonical migration, production default hoặc seed.
+Missing roles làm test extension fail closed.
 
 Riêng role D1a `yuta_pointage_foundation_runtime` thuộc future task 2.8 guarded
-synthetic harness, sau D1 identity proof, không thuộc migration 0021 và không
+synthetic harness, sau D1 identity proof, không thuộc raw test extension và không
 thay bằng bootstrap runtime. Chỉ provision exact role/column grants D1a trên
 cùng raw target sau explicit Apply approval; existing unexpected role/ACL ->
-STOP, không repair unrelated role. Giữ nguyên 1.1-1.8/C17 evidence và 0021 bytes;
+STOP, không repair unrelated role. Giữ nguyên foundation/C17 evidence; exact
+raw extension bytes chỉ được relocate và re-hash trong approved fixture path;
 proof role/client mới phải bổ sung ở 2.8, không suy ra từ completed Foundation.
 
 Migration identity giữ ownership tables/schema/triggers; helper ownership
@@ -1845,7 +1891,7 @@ provisioning vẫn cần separate authority, không được suy ra từ test ro
 
 Disposable DB proof: exact loopback host/current_database name kiểm tra trước
 migrate; new isolated test role/database, không production/general dev data.
-Apply full existing journal + new migration trên empty DB, và upgrade test
+Apply full canonical journal + test-only extension trên empty DB, và upgrade test
 baseline có synthetic foundation rows. Chạy writer-role concurrent tests,
 mutual orphan-FK commit failures, raw UPDATE/DELETE/TRUNCATE denial, same-ID
 retry, allowed reads/INSERT, reset/Personnel races; inspect pg_constraint/
@@ -1857,8 +1903,10 @@ Rollback runtime: disable test factory/route before changing application code;
 older foundation build bỏ qua additive tables. Giữ raw/receipt/auth metadata
 không destructive down migration; no automatic DROP/purge để rollback.
 Unknown commit -> exact recover/retry, không rollback committed event.
-Deployment/production migration, runtime role provisioning, retention cleanup
-hoặc data conversion không được authorize bởi Design hoặc tests.
+Canonical clean/upgrade proof riêng MUST chạy không Pointage roles và assert
+không raw tables/helper/grants. Deployment/production migration, runtime role
+provisioning, retention cleanup hoặc data conversion không được authorize bởi
+Design hoặc tests.
 
 ## Verification Design
 

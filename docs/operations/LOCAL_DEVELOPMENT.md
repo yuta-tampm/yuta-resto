@@ -157,6 +157,15 @@ All active database boundaries now have committed clean baselines:
   app-owned `display_media` table, uses application-generated UUIDv7 IDs, and
   has been verified through migrate plus CRUD on an empty PostgreSQL database.
 
+The canonical cloud migration journal currently ends at
+`0020_formalites_legal_template_foundation`. Pointage raw-clocking remains a
+synthetic/disposable-only change: its SQL, snapshot, roles, helper and raw
+tables live under the guarded test fixture and are not consumed by
+`pnpm db:cloud:migrate`. Shared development databases must not create Pointage
+test roles or append that extension. The Pointage harness first proves the
+canonical journal migrates without those roles, then applies the extension only
+inside its verified loopback `tmpfs` test cluster.
+
 ## Root scripts
 
 The root provides explicit database commands for the cloud and POS boundaries:

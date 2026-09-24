@@ -1,6 +1,6 @@
 # Pointage employee — Acceptance Checklist
 
-Status: PLANNED — no implementation or QA evidence yet
+Status: IMPLEMENTED / TEST-EVIDENCED — Browser QA pending
 
 Visibility: Engineering
 
@@ -10,25 +10,25 @@ Visibility: Engineering
 - [x] Shared UI context resolved as NO_APPLICATION_SHELL.
 - [x] Exact revised approved Specs bound to this draft.
 - [x] Design-generation prompt prepared before the written UI proposal.
-- [ ] Human approval of Sensitive Design, page proposal and no-image direction.
-- [ ] Authorized final pack / execution planning after the Sensitive Design gate.
+- [x] Human approval of Sensitive Design, page proposal and no-image direction.
+- [x] Authorized final pack / execution planning after the Sensitive Design gate.
 
-## Future functional and security acceptance
+## Implemented and test-evidenced functional/security acceptance
 
-- [ ] Exactly two kinds and all four transition outcomes.
-- [ ] Atomic immutable event/receipt; orphan commit attempts fail.
-- [ ] Stable retry, same-intent replay and different-intent conflict.
-- [ ] Competing requests accept at most one; stale OUT cannot close later session.
-- [ ] Scoped isolation and current Personnel eligibility on all three operations.
-- [ ] Reset/expiry/end deny previous continuation; no generic cloud-user alias.
-- [ ] Server instants, equal-time ordering, DST and cross-midnight grouping.
-- [ ] Departure-boundary denied OUT leaves open session without fabrication.
-- [ ] Employee output limited to own name/state/open start/immediate receipt.
-- [ ] Manager server read has exact grant/membership and no manager UI.
-- [ ] Missing/untrusted provider fails closed; no production/default fallback.
-- [ ] Synthetic/disposable-only fixtures and runtime, no real attendance.
-- [ ] No raw history/totals/correction/Planning/payroll/offline scope expansion.
-- [ ] No secret/identity persistence, URL leakage or diagnostic leakage.
+- [x] Exactly two kinds and all four transition outcomes.
+- [x] Atomic immutable event/receipt; orphan commit attempts fail.
+- [x] Stable retry, same-intent replay and different-intent conflict.
+- [x] Competing requests accept at most one; stale OUT cannot close later session.
+- [x] Scoped isolation and current Personnel eligibility on all three operations.
+- [x] Reset/expiry/end deny previous continuation; no generic cloud-user alias.
+- [x] Server instants, equal-time ordering, DST and cross-midnight grouping.
+- [x] Departure-boundary denied OUT leaves open session without fabrication.
+- [x] Employee output limited to own name/state/open start/immediate receipt.
+- [x] Manager server read has exact grant/membership and no manager UI.
+- [x] Missing/untrusted provider fails closed; no production/default fallback.
+- [x] Synthetic/disposable-only fixtures and runtime, no real attendance.
+- [x] No raw history/totals/correction/Planning/payroll/offline scope expansion.
+- [x] No secret/identity persistence, URL leakage or diagnostic leakage.
 
 ## Future Browser QA — mandatory
 
@@ -49,7 +49,7 @@ UI_AFFECTING: YES. BROWSER_QA_REQUIRED: YES.
 
 ## Delivery boundary
 
-All future boxes remain unchecked until real evidence exists.
-No Apply, migration, Tasks, Implementation Plan or Technical Implementation
-Contract is authorized at this gate. No production enablement or provider.
-Legal/privacy/readiness blockers remain open; no sync/archive.
+The functional/security boxes above are supported by current automated Apply
+evidence. Browser QA boxes remain deliberately unchecked and formal VERIFY has
+not run. Production enablement and real attendance remain NOT_AUTHORIZED. The
+seven legal/privacy/provenance blockers remain open; no sync/archive.

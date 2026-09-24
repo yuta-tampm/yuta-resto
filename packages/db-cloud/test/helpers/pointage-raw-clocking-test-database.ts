@@ -1,8 +1,20 @@
-import { createHmac } from 'node:crypto';
+import { createHash, createHmac } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
+import {
+  copyFile,
+  mkdir,
+  mkdtemp,
+  readFile,
+  rm,
+  writeFile,
+} from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { basename, join, resolve, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import postgres from 'postgres';
 import { z } from 'zod';
 import { drizzle } from 'drizzle-orm/postgres-js';
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import * as schema from '../../src/schema';
 import {
   POINTAGE_FOUNDATION_RUNTIME_COLUMNS,
@@ -11,6 +23,130 @@ import {
 
 const databaseRule = /^yuta_pointage_raw_clocking_test(?:_[a-z0-9]+)?$/;
 const loopback = new Set(['localhost', '127.0.0.1', '[::1]']);
+const packageRoot = resolve(fileURLToPath(new URL('../..', import.meta.url)));
+const canonicalMigrationRoot = join(packageRoot, 'drizzle');
+const extensionRoot = join(
+  packageRoot,
+  'test',
+  'fixtures',
+  'pointage-raw-clocking',
+);
+const journalSchema = z
+  .object({
+    version: z.string(),
+    dialect: z.literal('postgresql'),
+    entries: z.array(
+      z
+        .object({
+          idx: z.number().int().nonnegative(),
+          version: z.string(),
+          when: z.number().int().positive(),
+          tag: z.string().regex(/^\d{4}_[a-z0-9_]+$/u),
+          breakpoints: z.boolean(),
+        })
+        .strict(),
+    ),
+  })
+  .strict();
+const extensionManifestSchema = z
+  .object({
+    version: z.literal(1),
+    entry: journalSchema.shape.entries.element,
+    sqlSha256: z.string().regex(/^[a-f0-9]{64}$/u),
+    snapshotSha256: z.string().regex(/^[a-f0-9]{64}$/u),
+  })
+  .strict();
+
+export const POINTAGE_RAW_CLOCKING_EXTENSION_TAG = '0021_abandoned_black_queen';
+
+export function pointageCanonicalMigrationDirectory(): string {
+  return canonicalMigrationRoot;
+}
+
+export function pointageRawClockingExtensionSqlPath(): string {
+  return join(extensionRoot, `${POINTAGE_RAW_CLOCKING_EXTENSION_TAG}.sql`);
+}
+
+export async function createPointageDisposableMigrationDirectory(
+  environment: NodeJS.ProcessEnv,
+  bootstrapUrl: string,
+  expectedContainerId: string,
+): Promise<string> {
+  await requireIsolatedPointageTestCluster(
+    environment,
+    bootstrapUrl,
+    expectedContainerId,
+  );
+  return assemblePointageDisposableMigrationDirectory();
+}
+
+// Pure test-fixture assembly is not migration authority. Callers still need
+// the D1 target/identity guard, and role provisioning uses the stronger
+// isolated-cluster admission before any extension execution.
+export async function assemblePointageDisposableMigrationDirectory(): Promise<string> {
+  const [journalValue, manifestValue, extensionSql, extensionSnapshot] =
+    await Promise.all([
+      readFile(join(canonicalMigrationRoot, 'meta', '_journal.json'), 'utf8'),
+      readFile(join(extensionRoot, 'extension.json'), 'utf8'),
+      readFile(pointageRawClockingExtensionSqlPath()),
+      readFile(join(extensionRoot, '0021_snapshot.json')),
+    ]);
+  const journal = journalSchema.parse(JSON.parse(journalValue));
+  const manifest = extensionManifestSchema.parse(JSON.parse(manifestValue));
+  const last = journal.entries.at(-1);
+  if (
+    last?.tag !== '0020_formalites_legal_template_foundation' ||
+    manifest.entry.idx !== journal.entries.length ||
+    manifest.entry.tag !== POINTAGE_RAW_CLOCKING_EXTENSION_TAG ||
+    manifest.entry.when <= last.when ||
+    createHash('sha256').update(extensionSql).digest('hex') !==
+      manifest.sqlSha256 ||
+    createHash('sha256').update(extensionSnapshot).digest('hex') !==
+      manifest.snapshotSha256
+  ) {
+    throw new Error('Pointage disposable migration manifest refused.');
+  }
+  const directory = await mkdtemp(join(tmpdir(), 'yuta-pointage-migration-'));
+  try {
+    await mkdir(join(directory, 'meta'));
+    for (const entry of journal.entries) {
+      await copyFile(
+        join(canonicalMigrationRoot, `${entry.tag}.sql`),
+        join(directory, `${entry.tag}.sql`),
+      );
+    }
+    await copyFile(
+      pointageRawClockingExtensionSqlPath(),
+      join(directory, `${manifest.entry.tag}.sql`),
+    );
+    await writeFile(
+      join(directory, 'meta', '_journal.json'),
+      `${JSON.stringify(
+        { ...journal, entries: [...journal.entries, manifest.entry] },
+        null,
+        2,
+      )}\n`,
+    );
+    return directory;
+  } catch {
+    await removePointageDisposableMigrationDirectory(directory);
+    throw new Error('Pointage disposable migration assembly refused.');
+  }
+}
+
+export async function removePointageDisposableMigrationDirectory(
+  directory: string,
+): Promise<void> {
+  const target = resolve(directory);
+  const root = resolve(tmpdir());
+  if (
+    !target.startsWith(root + sep) ||
+    !basename(target).startsWith('yuta-pointage-migration-')
+  ) {
+    throw new Error('Unexpected temporary fixture path; cleanup refused.');
+  }
+  await rm(target, { recursive: true });
+}
 
 export function exactPointageTestDatabaseName(name: string): boolean {
   return databaseRule.exec(name)?.[0] === name;
@@ -107,6 +243,32 @@ export async function openPointageTestClient(
 ) {
   const connection = await openPointageTestDatabase(environment, databaseUrl);
   return { connection, db: drizzle(connection, { schema }) };
+}
+
+export async function migratePointageCanonicalTestDatabase(
+  client: Awaited<ReturnType<typeof openPointageTestClient>>,
+): Promise<void> {
+  await migrate(client.db, {
+    migrationsFolder: pointageCanonicalMigrationDirectory(),
+  });
+}
+
+export async function migratePointageDisposableExtension(
+  client: Awaited<ReturnType<typeof openPointageTestClient>>,
+  environment: NodeJS.ProcessEnv,
+  bootstrapUrl: string,
+  expectedContainerId: string,
+): Promise<void> {
+  const migrationDirectory = await createPointageDisposableMigrationDirectory(
+    environment,
+    bootstrapUrl,
+    expectedContainerId,
+  );
+  try {
+    await migrate(client.db, { migrationsFolder: migrationDirectory });
+  } finally {
+    await removePointageDisposableMigrationDirectory(migrationDirectory);
+  }
 }
 
 // Mirrors this explicitly authorized disposable bootstrap run only. The
@@ -226,9 +388,19 @@ export async function provisionPointageTestRoles(
       const [state] = await tx`
         select current_user=session_user and current_user='pointage_bootstrap_20260908a' as bootstrap,
           not exists (select 1 from pg_roles where rolname in ('yuta_pointage_raw_lock_owner','yuta_pointage_raw_writer')) as absent,
-          not exists (select 1 from pg_tables where schemaname not in ('pg_catalog','information_schema')) as empty
+          (select count(*) from drizzle.__drizzle_migrations)=21 as canonical,
+          to_regclass('public.pointage_raw_events') is null
+            and to_regclass('public.pointage_raw_command_receipts') is null
+            and to_regclass('public.pointage_continuations') is null
+            and to_regprocedure('public.pointage_raw_lock_dossier(uuid,uuid,uuid)') is null
+            as raw_absent
       `;
-      if (!state?.bootstrap || !state.absent || !state.empty)
+      if (
+        !state?.bootstrap ||
+        !state.absent ||
+        !state.canonical ||
+        !state.raw_absent
+      )
         throw new Error('Pointage disposable bootstrap state refused.');
       await tx`create role yuta_pointage_raw_lock_owner nologin nosuperuser nocreatedb nocreaterole noreplication nobypassrls noinherit`;
       // Only a validated hex digest is interpolated into this fixed DDL; neither
@@ -275,7 +447,7 @@ export function pointageDisposableFoundationUrl(bootstrapUrl: string): string {
 }
 
 // D1a only: provision after verified isolated-cluster/actual-target admission.
-// Never invoked by application composition and never rewrites migration 0021.
+// Never invoked by application composition and never rewrites the test extension.
 export async function provisionPointageFoundationTestRole(
   environment: NodeJS.ProcessEnv,
   bootstrapUrl: string,

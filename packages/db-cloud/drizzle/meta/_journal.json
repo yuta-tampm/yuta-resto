@@ -148,13 +148,6 @@
       "when": 1788853104815,
       "tag": "0020_formalites_legal_template_foundation",
       "breakpoints": true
-    },
-    {
-      "idx": 21,
-      "version": "7",
-      "when": 1788864899846,
-      "tag": "0021_abandoned_black_queen",
-      "breakpoints": true
     }
   ]
 }

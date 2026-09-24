@@ -34,7 +34,7 @@ type RawTransaction = Parameters<
   Parameters<CloudDatabaseClient['transaction']>[0]
 >[0];
 
-// Bound to the exact function body in the reviewed generated 0021 migration.
+// Bound to the exact function body in the reviewed disposable test extension.
 // Neither a browser nor environment configuration may supply this fingerprint.
 const lockBodyFingerprint =
   '293dee4dfc8787ea891fe370668425dc97918b4412f62da6eb0f692e7521fe24';

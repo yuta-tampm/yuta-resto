@@ -1,3 +1,4 @@
+import { CURRENT_YUTA_PRODUCT_RELEASE, formatProductRelease } from '@yuta/core';
 import { Button, cn, type ButtonProps } from '@yuta/ui';
 import { ArrowRight, ChevronDown, Mail, Menu } from 'lucide-react';
 import Image from 'next/image';
@@ -288,7 +289,10 @@ export function MarketingFooter() {
 
         <div className="mt-6 flex flex-col gap-2 border-t border-border-default pt-4 text-[13px] leading-5 text-secondary sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} YUTA — Tous droits réservés.</p>
-          <p>Projet pilote · Déployé sur Vercel</p>
+          <p>
+            {formatProductRelease(CURRENT_YUTA_PRODUCT_RELEASE)} · Déployé sur
+            Vercel
+          </p>
         </div>
       </PublicContainer>
     </footer>

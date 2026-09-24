@@ -2,6 +2,10 @@
 
 import type { AvailableTenant } from '@yuta/auth';
 import {
+  CURRENT_YUTA_PRODUCT_RELEASE,
+  formatCompactProductRelease,
+} from '@yuta/core';
+import {
   AppFooter,
   AppMain,
   AppShell,
@@ -170,8 +174,9 @@ export function BackofficeFrame({
         <AppMain>{children}</AppMain>
 
         <AppFooter>
-          Espace restaurateur YUTA v1.0.0&nbsp;&nbsp; &copy; 2025 YuTa
-          Solutions. Tous droits reserves.
+          Espace restaurateur YUTA{' '}
+          {formatCompactProductRelease(CURRENT_YUTA_PRODUCT_RELEASE)}
+          &nbsp;&nbsp; &copy; 2025 YuTa Solutions. Tous droits reserves.
         </AppFooter>
       </div>
 

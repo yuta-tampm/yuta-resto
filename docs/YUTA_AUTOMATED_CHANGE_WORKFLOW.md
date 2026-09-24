@@ -39,9 +39,10 @@ IDEA
   -> VERIFY
   -> QA
   -> GATE 3 — FINAL INDEPENDENT REVIEW
-  -> APPROVAL + EXPLICIT SYNC AUTHORIZATION
-  -> SYNC NORMATIVE SPECS
-  -> VALIDATE MAIN SPECS
+  -> HUMAN APPROVAL + EXPLICIT SYNC/ARCHIVE AUTHORIZATION
+  -> $yuta-finish-change                             existing orchestrator
+  -> SYNC NORMATIVE SPECS OR VALID NO-SPEC FINALIZATION
+  -> VALIDATE MAIN SPECS                             when applicable
   -> ARCHIVE
   -> KNOWLEDGE CONSOLIDATION
        -> NO_UPDATE_REQUIRED -> DONE
@@ -107,6 +108,27 @@ An existing in-flight change always resumes at its earliest missing,
 unapproved, invalidated, or changes-requested gate. Later artifacts never bypass
 an earlier gate and are preserved byte-for-byte unless an approved revision
 explicitly authorizes edits.
+
+The only prospective exception is for the **new post-Apply development
+checkpoints** below. Their adoption event is successful human-authorized
+finalization and archive of `development-usability-and-iteration-control` after
+its canonical workflow edits have been applied and successfully verified. Do
+not infer adoption from a calendar date, file timestamp, partial edit, or
+planning approval. This governance change itself remains on the pre-adoption
+workflow through its own archive and does not recursively require its new
+checkpoints or iteration ledger.
+
+At that event, DONE/archived and completed no-spec work is grandfathered with
+immutable historical evidence. Active changes not yet in Apply must use the
+new checkpoints when applicable. Active changes already in Apply/VERIFY/QA do
+not automatically rewind; an explicit human opt-in for the named change/scope
+is required. New changes after the event use the new checkpoints when they
+reach post-Apply. Record the event or opt-in reference in Tasks only when the
+new checkpoints are required or explicitly opted in; do not backfill a
+grandfathered change. If the target's phase at the event cannot be established
+from existing evidence, stop
+`NEEDS_REVIEW` instead of reconstructing history. All earlier-gate and hash
+integrity rules continue unchanged.
 
 ## Conditional Design and persisted omission
 
@@ -213,6 +235,151 @@ is unresolved. A phase completes only when both its implementation outcome and
 its contract evidence exist. Any need to change a permission, contract, API,
 canonical owner, cross-runtime behavior, or durable boundary returns to the
 applicable Design/Product/authority gate.
+
+### Conditional post-Apply development feedback
+
+Within the existing Apply path, before formal Technical Implementation
+Compliance/VERIFY/QA, assess `DEV_USABLE` and `MANUAL_TEST_READY` separately.
+They are assertions, not stages, gate approvals or QA statuses. A change to
+which the prospective policy applies keeps the durable
+`POST_APPLY_DEVELOPMENT_FEEDBACK` section in its existing `tasks.md`; no
+database, new OpenSpec artifact or review gate is created. Gate 3 hashes the
+current Tasks as a planning artifact under the existing integrity rule, but
+manual Product feedback is not Gate 3 evidence or a substitute for Technical
+Compliance, VERIFY or QA.
+
+The section records `Adoption: REQUIRED | GRANDFATHERED | OPTED_IN` and its
+event/opt-in evidence, the exact current candidate and scoped diff/revision
+reference, and for **each** assertion: `applicability: YES | NO`,
+`result: PENDING | YES | NO | NOT_APPLICABLE`, tested scope/entry point,
+local/dev environment/runtime, observation or N/A reason, and blocker reference
+when `NO`. `PENDING` is the operational pre-assessment marker, never a fourth
+assessed value. `applicability: NO` pairs with `NOT_APPLICABLE` and a bounded
+reason; a real flow blocked by absent setup gets `NO`, not N/A. Evidence must
+identify the candidate and actual observation; do not invent a reviewer or
+approval timestamp. Keep old candidate/decision history when updating the
+record, and mark changed candidate assessments stale/pending until reassessed.
+
+`DEV_USABLE = YES` requires that an applicable feature can actually be used
+safely through its intended real local/dev boundaries with appropriate
+dev/test data and identity. A build or typecheck alone cannot establish it.
+`MANUAL_TEST_READY = YES` requires a human-usable handoff with command/runtime,
+route/entry point, safe dev/test data, test identity or credential reference
+when needed (never store a secret), expected basic flow, reset/retry steps and
+known dev-only limitations. Missing required setup is a `NO` blocker. This
+handoff prepares Product/manual testing; it is not Browser QA evidence,
+Technical Compliance, VERIFY, Gate 3 evidence or production authorization.
+An applicable `PENDING` or `NO` leaves post-Apply work open; do not advance by
+assigning a false N/A. Record the separate reason for each genuine N/A.
+
+Determine applicability from approved scope and the real as-built flow, not
+from `UI_AFFECTING` alone:
+
+| As-built change                                           | Development assertions                                                                          | Human Product validation                                         |
+| --------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Interactive UI                                            | Both apply on the real local/dev route.                                                         | Applies to the candidate/flow.                                   |
+| Interactive non-UI service, CLI or endpoint               | Apply when a real manual dev flow exists; no browser UI is not N/A.                             | Applies when Product/operator behavior requires human judgement. |
+| Pure deterministic library without an operable flow       | Both may be `NOT_APPLICABLE` with distinct reasons.                                             | Not applicable; technical tests/VERIFY remain.                   |
+| Docs/governance only without an interactable runtime flow | Both may be `NOT_APPLICABLE` with distinct reasons.                                             | Not applicable; semantic review/VERIFY remain.                   |
+| Infrastructure only                                       | Assess actual local/dev setup or probe: applicable when human-operable, otherwise reasoned N/A. | Applies only for interactive Product/operator behavior.          |
+
+The two assertion results may differ; record independent scope/reason for each.
+Missing provider, environment, data or permission cannot convert an existing
+flow into N/A. Reassess applicability if approved scope materially changes.
+
+For an applicable interactive Product flow, record
+`HUMAN_PRODUCT_VALIDATION` with candidate/scope, handoff reference, actual human
+decision source/time, feedback, disposition and whether another human look is
+required. Before human action use `AWAITING_RESPONSE`, not a fourth verdict.
+The only verdicts are `ACCEPTED | CHANGES_REQUESTED | BLOCKED`. `ACCEPTED` is
+not QA PASS, VERIFY PASS, Gate 3 approval or Production Readiness. A changed
+candidate retains its prior verdict as history and awaits a fresh human look
+where the affected flow changed.
+`AWAITING_RESPONSE`, `CHANGES_REQUESTED` and `BLOCKED` leave the current
+candidate's Product feedback unresolved; continue only after the relevant
+disposition and required human relook. Formal VERIFY and QA remain independent.
+
+Classify `CHANGES_REQUESTED` against the approved Proposal/Analysis, Specs when
+present, Design, Tasks/TIC and owning Product/authority source. A
+`LOCAL_CORRECTION` may change implementation only while preserving approved
+requirements, Product scope, authorization/role/permission, schema,
+API/contract, data ownership, business semantics, sensitive durable boundaries
+and acceptance criteria. Copy, layout, focus, loading or labels are not
+automatically local. Record the classification and exact candidate/diff; make
+the bounded correction, run targeted checks, update affected assertions,
+request affected human retest and wait for the new verdict. If any approved
+boundary must change or authority is unclear, record
+`SCOPE_CHANGE_REQUIRES_REVIEW` and stop at the owning Product/authority/Design
+gate. Repeated failure of the same blocker follows the iteration ledger below;
+the feedback loop supplies no unlimited retry budget.
+
+`DEV_USABLE != PRODUCTION_READY`. Local/dev usability may be `YES` while
+production remains blocked. Release, Deploy, legal/staging and Production
+Readiness stay with their existing operations authority; no
+`PRODUCTION_READY` development stage or lifecycle value is introduced.
+
+### Iteration accounting and stop handoff
+
+The existing [Control Tower anti-loop/evidence-stop rule](chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT_V3.md)
+owns the decision. This section defines the workflow record and counting
+mechanics; Page Chat/handoff carry facts, and the run skill will execute them
+after adoption. `ITERATION_STOP_CONTROL` is conditional inside the affected
+gate, not Gate 4, a stage, QA status or a parallel anti-loop authority.
+
+Keep an `ITERATION_STOP_CONTROL` ledger in the same Tasks section when a
+blocker/retry exists; otherwise record `NONE` with reason. One stable lineage
+ID denotes `(affected claim, blocker class, evidenced causal root cause)`.
+Stage and evaluator purpose describe each occurrence, not automatic new
+identity. Unknown cause is `PROVISIONAL` with evidence; reconcile occurrences
+when cause becomes known, retaining counts/history. Wording, wrapper rename,
+or orchestration restart cannot reset a lineage. A newly proven Product or
+implementation defect is a separate evidenced finding/remediation, not a
+renaming device for an exhausted blocker.
+
+Each occurrence records stage, evaluator purpose and material equivalence,
+action/preflight, actual execution, observation/evidence, resulting blocker,
+last material outcome, cumulative recovery count for its lineage and execution
+generation count for its `(lineage, stage, materially same evaluator purpose)`
+bucket. A material change of stage/purpose may open a new generation bucket
+with its rationale, while prior lineage and recovery history remain visible.
+The defaults are `MAX_RECOVERY_ATTEMPTS = 2` per causal lineage and
+`MAX_EXECUTION_GENERATIONS = 3` per bucket; generation 1 is the first actual
+execution. No agent may self-authorize extra budget.
+
+| Event                                                         | Recovery attempt                                                                                 | Execution generation                                                                        |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| First actual evaluator/browser/runtime/evidence run           | No increment                                                                                     | Increment to 1, whether success or failure.                                                 |
+| Later actual successful or failed equivalent run              | Increment only if it follows an actual corrective action **and** the same causal blocker remains | Increment once for the run.                                                                 |
+| Read-only diagnosis                                           | No increment                                                                                     | No increment unless it actually executes the equivalent evaluator process for the claim.    |
+| Rejected preflight before evaluator execution                 | No increment                                                                                     | No increment.                                                                               |
+| Corrective action resolves blocker on subsequent observation  | No increment                                                                                     | Count the observation run if the evaluator actually executes.                               |
+| Corrective action followed by observation of the same blocker | Increment once for the action/observation pair                                                   | Count the actual observation run once.                                                      |
+| Proven new defect                                             | Preserve old lineage count                                                                       | Preserve old bucket count; establish a separate evidenced finding.                          |
+| Stage/purpose transition or wording-only change               | Never reset lineage count                                                                        | New bucket only for materially different stage/purpose; mere renaming keeps the old bucket. |
+
+Stop before another default retry when either applicable budget is exhausted;
+also stop earlier if retry is unsafe or evidence shows no useful progress.
+Record lineage/claim/class/cause confidence, current stage/purpose/bucket,
+chronological actions and executions, counts, affected acceptance/evidence
+obligation, last outcome, mandatory-evidence status and a bounded handoff with
+`human decision: PENDING`. The human decision must be exactly `FIX`,
+`ACCEPT_LIMITATION`, `SPLIT_CHANGE` or `DEFER_OR_CLOSE`, with source and scope.
+`FIX` requires an established Product/implementation defect and bounded
+remediation; `SPLIT_CHANGE` requires a genuinely independent workstream and
+cannot erase a still-mandatory dependency; `DEFER_OR_CLOSE` retains truthful
+incomplete history. An exception to either budget needs an
+explicit human instruction with extra bounded count, purpose and stop
+condition; do not alter prior counters.
+
+`ACCEPT_LIMITATION` may record `KNOWN_EVIDENCE_LIMITATION` only when approved
+acceptance criteria permit a bounded limitation for the affected claim. Record
+the criterion, actual missing/partial evidence, residual risk and human
+disposition separately from observed results. It creates no PASS, cannot turn
+FAIL/BLOCKED/`BLOCKED_BY_ENVIRONMENT` into PASS, waive mandatory Browser
+QA/security/legal/payment/fiscal evidence, rewrite history or weaken criteria.
+When current gate criteria still require missing evidence, that gate remains
+blocked. Formal QA vocabulary, Technical Compliance, VERIFY and Gate 3
+readiness remain independent.
 
 ## VERIFY
 

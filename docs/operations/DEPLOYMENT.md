@@ -319,6 +319,14 @@ Persisted station copy counts and font presets are added by
 Ticket top, left, and bottom spacing is added by the journaled `0003` POS
 migration.
 
+Production cloud migration services consume only
+`packages/db-cloud/drizzle/`. Test fixtures and extension migrations under
+`packages/db-cloud/test/fixtures/` must never be selected as a migration folder
+or applied to development, staging, or production databases. In particular,
+Pointage raw-clocking roles, helper functions, triggers and raw tables remain
+synthetic/disposable-only until a separately approved production design adds a
+canonical migration and credential-provisioning contract.
+
 Supply unique four-to-eight-digit `YUTA_POS_SEED_ADMIN_PIN`,
 `YUTA_POS_SEED_STAFF_PIN`, and `YUTA_POS_SEED_KITCHEN_PIN` values to the
 explicit POS seed maintenance job. PINs are not runtime environment variables

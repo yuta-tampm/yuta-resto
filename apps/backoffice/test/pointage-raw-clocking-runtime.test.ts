@@ -369,6 +369,18 @@ describe('D1a/S9 dual-client admission ordering', () => {
     expectNoProviderFallback();
   });
 
+  it('provider factory failure refuses admission without credential or limiter fallback', async () => {
+    const s = setup();
+    s.provider.mockImplementation(() => {
+      throw new Error('Synthetic provider initialization failure.');
+    });
+    await expect(createPointageRawClockingRuntime(s.input)).rejects.toThrow(
+      'Pointage runtime is unavailable.',
+    );
+    expect(s.provider).toHaveBeenCalledOnce();
+    expectNoProviderFallback();
+  });
+
   it('A7.1/R12.1 HTTP forwarding headers cannot override trusted provider or limiter identity', async () => {
     // Real admission factory, HTTP adapter, service and credential foundation;
     // only database operations/bootstrap publication are injected unit doubles.

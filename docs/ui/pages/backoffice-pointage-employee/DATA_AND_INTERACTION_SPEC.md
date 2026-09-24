@@ -1,24 +1,25 @@
 # Pointage employee — Data and Interaction Spec
 
-Status: DRAFT — AWAITING_HUMAN_REVIEW
+Status: APPROVED / IMPLEMENTED / TEST-EVIDENCED — Browser QA pending
 
 Visibility: Engineering
 
 ## Sources and ownership
 
-Canonical attendance: proposed immutable Pointage raw events only.
+Canonical attendance: immutable Pointage raw events only.
 Session/current state: deterministic server derivation, never canonical tables.
 Personnel owns dossier/lifecycle and minimal scoped display-name projection.
 Authorization owns credential/current continuation validation and exact grants.
 Tenancy is server-resolved from the establishment locator, never browser IDs.
 
-All new handlers, contracts, raw/receipt/continuation tables and page consumers
-are Design proposals, not current implementation. Existing foundation
-credentials/rate/audit do not prove usable clocking exists.
+The handlers, contracts, raw-event/receipt/continuation persistence and page
+consumer are implemented and covered by current automated Apply evidence. Raw
+attendance persistence remains restricted to the guarded disposable test
+extension and is absent from the canonical production migration stream.
 
 ## Exact transport boundary
 
-See Sensitive Design D8 for authoritative proposed strict DTOs/statuses.
+See Sensitive Design D8 for the authoritative strict DTOs/statuses.
 Prefix: /api/pointage/[establishmentSlug].
 
 - context GET: neutral availability only; no tenant IDs or employee list.
@@ -119,11 +120,11 @@ deletion/anonymization, legal hold, backup-retention, employee notice, detailed
 audit visibility and production client provenance remain unresolved. Technical
 auth deadlines do not define deletion or legal retention.
 
-## Future evidence
+## Remaining Browser QA evidence
 
 Use actual Next route plus disposable PostgreSQL, not fabricated screenshots
 or mocked attendance success. Exercise two tabs and concurrent requests, reset,
 expiry, departure midnight, unavailable server, hidden/bfcache/refresh/restart,
 late callbacks and sequential shared-device users. Capture synthetic-only
-screenshots and command traces with secret-free hashes/manifests after Apply;
-none is claimed complete now.
+screenshots and command traces with secret-free hashes/manifests. No Browser QA
+completion is claimed yet.

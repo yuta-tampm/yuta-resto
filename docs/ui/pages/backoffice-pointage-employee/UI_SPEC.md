@@ -1,6 +1,6 @@
 # Pointage employee — UI Spec
 
-Status: DRAFT — AWAITING_HUMAN_REVIEW
+Status: APPROVED / IMPLEMENTED / TEST-EVIDENCED — Browser QA pending
 
 Visibility: Engineering
 
@@ -16,7 +16,7 @@ as needed. Geist Sans with existing Inter fallback, semantic tokens, Lucide
 when meaningful. No raw colors, extra library, decorative illustration,
 custom shared primitive or global stylesheet change.
 
-Proposed dimensions: full width on narrow viewports with 16px minimum gutters,
+Dimensions: full width on narrow viewports with 16px minimum gutters,
 maximum 480px content width; at least 48px touch controls. Existing spacing and
 typography tokens implement these visual targets after approval. Do not crop
 long synthetic names: wrap without horizontal scroll. One primary action at
@@ -71,7 +71,7 @@ announcements for pending/conflict/receipt without reading the secret.
 Errors are text-associated, not color-only; focus returns to neutral entry
 after clearing. Loading placeholders contain no personal residue.
 
-Future Browser QA: 1440x900 desktop, 1024x768 tablet landscape, 768x1024 tablet
+Pending Browser QA: 1440x900 desktop, 1024x768 tablet landscape, 768x1024 tablet
 portrait, 390x844 narrow viewport; keyboard and touch, long names, zoom/reflow,
 contrast and accessible status announcements. These are planned checks, not
 completed evidence.

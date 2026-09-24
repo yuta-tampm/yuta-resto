@@ -1,6 +1,6 @@
 # Pointage employee — Implementation Plan
 
-Status: AWAITING_HUMAN_REVIEW
+Status: IMPLEMENTED / TEST-EVIDENCED THROUGH TASK 4.6 — Browser QA pending
 
 Visibility: Engineering
 
@@ -12,22 +12,21 @@ UI_AFFECTING: YES
 
 BROWSER_QA_REQUIRED: YES
 
-Apply authorization: NOT_GRANTED
+Current Apply checkpoint: Task 4.6 completion; Task 4.7 NOT_AUTHORIZED
 
 Production enablement: NOT_AUTHORIZED
 
 ## Authority and exact phase mapping
 
 The [master Tasks / Implementation Plan](../../../../openspec/changes/pointage-usable-raw-clocking/tasks.md)
-owns the four Apply phases, 32 unchecked tasks, embedded contracts and complete
+owns the four Apply phases, 32 tasks, embedded contracts and complete
 20-requirement / 62-scenario traceability. This page plan specializes the
 Employee Transport / UI phase; it creates neither an additional Apply phase nor
 new Product/security authority. The [approved Design](../../../../openspec/changes/pointage-usable-raw-clocking/design.md)
-and byte-locked PRODUCT_SCOPE, UI_SPEC, DATA_AND_INTERACTION_SPEC,
-DESIGN_HANDOFF and ACCEPTANCE_CHECKLIST remain the reviewed sources.
-The README records current approval; historical DRAFT/pre-approval labels and
-unchecked planning boxes in those five documents are preserved by explicit
-user instruction, not a request to reopen their approved content.
+and approved PRODUCT_SCOPE, UI_SPEC, DATA_AND_INTERACTION_SPEC, DESIGN_HANDOFF
+and ACCEPTANCE_CHECKLIST remain the reviewed sources. The seven top-level
+technical page-pack documents now record the current implementation/test
+evidence without changing their approved Product/UI/Design behavior.
 
 | Canonical UI checkpoint | Placement in this change                                                    | Execution boundary                                                                                                                   |
 | ----------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
@@ -49,10 +48,11 @@ The user's four-phase grouping takes precedence over optional template labels.
 Current target is NEW_PAGE / integrated / NEW_CAPABILITY_DISCOVERY.
 The existing root document owns fonts/styles; the authenticated restaurant
 shell is a different subtree. NO_APPLICATION_SHELL is approved.
-Foundation credential service/repository and Personnel fields exist; the new
-employee route, raw evidence, continuation consumer and browser transport do not
-exist at this planning checkpoint. Baseline is NOT_APPLICABLE, not a fabricated
-screen capture. Inventory details remain in DESIGN_HANDOFF.
+Foundation credential service/repository, Personnel projection, employee route,
+raw evidence, continuation consumer and browser transport are implemented and
+covered by automated Apply evidence. Baseline remains NOT_APPLICABLE; no
+fabricated screen capture is used. Browser QA is still pending. Inventory
+details remain in DESIGN_HANDOFF.
 
 Before any Apply, reread root/scoped AGENTS, docs/README.md, CURRENT_STATE,
 AUTHORITY_MODEL, current architecture/auth/tenancy/database/Personnel docs and
@@ -82,9 +82,10 @@ scope, auth, persistence and transactions. No generic app/components folder.
 
 Packages affected: @yuta/backoffice, @yuta/contracts, @yuta/auth, @yuta/db-cloud.
 Cross-application impact: NO; no other app/runtime modification.
-Database change: YES, approved additive cloud Design, future Apply only.
-API or contract change: YES, only approved D8 employee endpoints.
-Permission/auth change: YES, bounded Pointage continuation; no new grant.
+Database change: YES, implemented only through the guarded disposable test
+extension; canonical production migrations remain unchanged.
+API or contract change: YES, implemented only for approved D8 employee endpoints.
+Permission/auth change: YES, implemented bounded Pointage continuation; no new grant.
 Runtime/device change: NO new runtime/device; guarded cloud local-test composition.
 
 ## Approved visual implementation
@@ -233,9 +234,7 @@ No stage can clear the seven legal/privacy/provenance blockers.
 No real attendance in development/staging/production; no synthetic classifier.
 No manager UI, history/totals, raw mutation, Planning/payroll/local/offline scope.
 
-The existing five reviewed UI documents stay byte-locked under current
-authority. Later as-built synchronization must record evidence in allowed
-metadata/review locations and request explicit permission before touching their
-locked content. Do not mark Package status implemented until implementation,
-VERIFY, mandatory QA and authorized as-built synchronization are complete.
-Planning review now: AWAITING_HUMAN_REVIEW. Apply authorization: NOT_GRANTED.
+The current authorized Batch C updates exactly the seven top-level technical
+page-pack Markdown files. Prompt snapshots, references and provenance remain
+unchanged. Formal VERIFY and mandatory Browser QA remain separate later stages.
+Production enablement and real attendance remain NOT_AUTHORIZED.

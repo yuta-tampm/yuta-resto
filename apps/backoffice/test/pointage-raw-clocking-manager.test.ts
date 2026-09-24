@@ -5,6 +5,7 @@ import type { TenantContext } from '@yuta/tenant';
 import type { PointageRawChainEvent } from '../src/server/pointage/raw-chain';
 vi.mock('server-only', () => ({}));
 import { createPointageRawManagerRead } from '../src/server/pointage/raw-clocking-manager';
+import { createPointageEmployeeContext } from '../src/server/pointage/authorization';
 
 const scope = { organizationId: randomUUID(), establishmentId: randomUUID() };
 const session: AuthenticatedSession = {
@@ -98,6 +99,36 @@ function fixture() {
   };
 }
 describe('S7 minimal manager server read', () => {
+  it('A2.2 denies employee identity from establishment read without deriving manager grant', async () => {
+    const f = fixture();
+    const employee = createPointageEmployeeContext({
+      credential: {
+        proofType: 'VERIFIED_POINTAGE_CREDENTIAL',
+        ...scope,
+        personnelDossierId: randomUUID(),
+        credentialId: randomUUID(),
+        credentialVersion: 1,
+      },
+      operation: 'pointage.employee.state.read',
+    });
+    const before = structuredClone(employee);
+    const current = access();
+    current.tenant = {
+      ...current.tenant,
+      actor: employee,
+    } as unknown as TenantContext;
+    f.loadCurrentAccess.mockResolvedValue(current);
+    expect(await f.run()).toEqual({
+      ok: false,
+      code: 'POINTAGE_ACCESS_DENIED',
+    });
+    expect(f.loadCurrentAccess).toHaveBeenCalledOnce();
+    expect(f.readEstablishmentSnapshot).not.toHaveBeenCalled();
+    expect(current.tenant.actor).toBe(employee);
+    expect(employee).toEqual(before);
+    expect(employee).not.toHaveProperty('role');
+  });
+
   it.each(['OWNER', 'MANAGER'] as const)(
     'permits fresh %s and exposes only today plus the earlier open session',
     async (role) => {

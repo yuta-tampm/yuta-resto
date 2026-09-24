@@ -74,6 +74,35 @@ An existing change may already contain proposal, analysis, specs, design, or lat
 - Treat packet creation as evidence assembly, not permission to normalize artifact wording, formatting, metadata, or content.
 - If an existing artifact is invalid, inconsistent, or blocked, record that result in the applicable packet and stop. Do not repair it during adoption without explicit user authorization.
 
+### Prospective adoption of post-Apply controls
+
+Apply the conditional controls in `docs/YUTA_AUTOMATED_CHANGE_WORKFLOW.md`
+only after the successful human-authorized finalization and archive of
+`development-usability-and-iteration-control`, with its canonical edits applied
+and verified. Verify that event from its recorded finish/archive evidence; a
+date, file timestamp, partial edit or planning approval is insufficient. This
+governance change itself stays on the pre-adoption workflow through its own
+archive. Do not create its new checkpoint or iteration records to complete it.
+
+For another change, use existing phase evidence at that event to classify:
+
+- `REQUIRED`: a new change after the event, or an active change not yet in
+  Apply at the event. Assess the new controls when its candidate reaches the
+  post-Apply point.
+- `GRANDFATHERED`: DONE/archived or completed no-spec work, or an active change
+  already in Apply/VERIFY/QA at the event. Preserve historical evidence; do
+  not rewind or backfill its new records.
+- `OPTED_IN`: an already-in-Apply/VERIFY/QA change for which a human explicitly
+  opts the named change and scope into the new controls. Preserve earlier
+  evidence and record the opt-in source.
+
+For a change that existed at the event, if phase-at-event evidence is
+insufficient, stop `NEEDS_REVIEW`; do not reconstruct it or infer opt-in.
+Record the event or opt-in reference in Tasks
+only for `REQUIRED` or `OPTED_IN`. These rules affect only the new post-Apply
+controls. The earliest-missing-gate and review-hash rules above still apply
+first, including for grandfathered changes.
+
 ## Review packet integrity protocol
 
 Review packets live under `docs/reviews/<change-name>/` and are created only when their gate is reached:
@@ -340,10 +369,122 @@ The same preservation rule applies to any existing later artifact: reaching its 
    compliance would require changing that rule or its owning boundary, stop for
    the authority that owns the rule.
 
+#### Conditional post-Apply development feedback
+
+For `REQUIRED` or `OPTED_IN` changes, after an actual implementation candidate
+exists and before formal Technical Implementation Compliance, VERIFY or QA,
+execute the existing workflow's conditional post-Apply procedure. It is part
+of Apply, not another state or review gate. On resume, read the current
+`tasks.md` record before acting; preserve prior candidates, human responses,
+blocker lineage and counts. Do not duplicate a pending human request or
+replace a recorded decision with an inferred one.
+
+1. Maintain `POST_APPLY_DEVELOPMENT_FEEDBACK` in the change's existing
+   `tasks.md`. Record `Adoption: REQUIRED | OPTED_IN` and the event/opt-in
+   reference, exact current candidate and scoped diff/revision. Keep each old
+   candidate's assessment and decision as history. A changed candidate makes
+   affected current assessments stale and `PENDING` until re-observed; it does
+   not reset iteration accounting.
+2. Determine each assertion's applicability independently from approved scope
+   and the real as-built flow, not `UI_AFFECTING` alone. Interactive UI uses its
+   real local/dev route; an interactive service, CLI or endpoint can have a
+   manual dev flow without a browser. A pure library, docs/governance change or
+   infrastructure change may have no operable flow, but each N/A needs its own
+   bounded reason. Missing setup for a real flow is a blocker, not N/A.
+3. For **each** of `DEV_USABLE` and `MANUAL_TEST_READY`, record applicability
+   `YES | NO`, result `PENDING | YES | NO | NOT_APPLICABLE`, tested scope/entry,
+   local/dev environment/runtime, actual observation or N/A reason, and a
+   blocker reference for `NO`. Pair applicability `NO` with reasoned
+   `NOT_APPLICABLE`. `PENDING` is unassessed, never a successful verdict.
+   `DEV_USABLE = YES` needs actual safe use through intended local/dev
+   boundaries with appropriate data and identity; a build alone is
+   insufficient. `MANUAL_TEST_READY = YES` needs a usable handoff covering
+   command/runtime, route/entry, safe data, test identity or credential
+   reference without secrets, basic flow, reset/retry and known dev limits.
+   An applicable `PENDING` or `NO` keeps this Apply work open.
+4. For interactive UI, and for a non-UI Product/operator flow requiring human
+   judgement, record
+   `HUMAN_PRODUCT_VALIDATION` for the exact candidate/scope and handoff.
+   `AWAITING_RESPONSE` means a request is pending; stop for the actual human
+   response. Record source/time and feedback for only an actual `ACCEPTED`,
+   `CHANGES_REQUESTED` or `BLOCKED` verdict. `BLOCKED` stops the affected
+   flow. A changed affected flow needs a fresh human look; retain the old
+   verdict as history rather than carrying it forward as acceptance.
+5. For `CHANGES_REQUESTED`, classify feedback against approved
+   Proposal/Analysis, Specs when present, Design, Tasks/TIC and the owning
+   Product/authority source. `LOCAL_CORRECTION` is limited to implementation
+   changes that preserve approved requirements, Product scope,
+   authorization/role/permission, schema, API/contract, data ownership,
+   business semantics, sensitive durable boundaries and acceptance criteria.
+   Record the classification and exact candidate/diff, make the bounded
+   correction, run targeted checks, update affected assertions, request the
+   affected human retest once and wait for its verdict. If a boundary must
+   change or authority is unclear, record `SCOPE_CHANGE_REQUIRES_REVIEW` and
+   stop at its owning Product/authority/Design gate. Copy, layout, focus,
+   loading and labels are not automatically local corrections.
+
+The two assertions, human Product verdict, Technical Compliance, VERIFY, QA
+and Gate 3 remain separate facts. The current Tasks hash enters Gate 3 under
+its existing planning-artifact integrity rule; Product feedback does not
+substitute for Gate 3 evidence. `DEV_USABLE = YES` does not promote Release,
+Deploy or Production Readiness; those retain their operations authority.
+
+#### Iteration accounting and stop control
+
+Use the existing Control Tower anti-loop/evidence-stop owner and the counting
+rules in `docs/YUTA_AUTOMATED_CHANGE_WORKFLOW.md`; this skill executes them
+without creating a parallel policy. For an adopted change, keep
+`ITERATION_STOP_CONTROL` in the same Tasks section when a blocker/retry exists,
+or `NONE` with reason otherwise. Before an equivalent retry, inspect its
+chronological ledger and preflight both budgets.
+
+- A stable lineage identifies `(affected claim, blocker class, evidenced causal
+root cause)`. Record stage, evaluator purpose, material equivalence, action,
+  execution, observation and evidence for each occurrence. Use `PROVISIONAL`
+  with evidence when cause is unknown, then reconcile without losing history.
+  Wording, wrapper changes and restarts do not create a new lineage. A proven
+  different defect gets a separate evidenced finding without erasing the old.
+- Default maximums are two failed recovery attempts per causal lineage and
+  three actual execution generations per `(lineage, stage, materially same
+evaluator purpose)` bucket. The first actual evaluator/browser/runtime or
+  evidence run is generation 1. Read-only diagnosis and rejected preflight do
+  not count unless the equivalent evaluator actually executes. A corrective
+  action followed by observation of the **same** blocker counts one recovery
+  attempt; a resolving action counts none. Each actual run counts one
+  generation, even when it also establishes a failed recovery. A materially
+  different stage/purpose may start a new generation bucket with rationale,
+  while lineage recovery history remains.
+- Stop before another default retry when either budget is exhausted, or
+  earlier if unsafe or without useful progress. Record the affected claim,
+  lineage/class/cause confidence, current stage/purpose/bucket, chronological
+  actions and runs, used/maximum counts, last outcome, proven Product defect
+  `YES | NO`, proven implementation defect `YES | NO`, evidence/environment
+  limitation `YES | NO`, remaining acceptance/evidence obligation,
+  mandatory-evidence status and relevant historical `FAIL`/`BLOCKED`. Attach a
+  bounded handoff with `human decision: PENDING`. The only human dispositions
+  are `FIX`, `ACCEPT_LIMITATION`,
+  `SPLIT_CHANGE` and `DEFER_OR_CLOSE`; record their actual source and scope.
+  No agent grants itself extra budget. A human exception must specify extra
+  bounded count, purpose and stop condition without resetting prior counts.
+- `FIX` needs an established defect and bounded remediation. `SPLIT_CHANGE`
+  needs an independent workstream and preserves mandatory dependencies.
+  `DEFER_OR_CLOSE` preserves incomplete history. `ACCEPT_LIMITATION` may record
+  `KNOWN_EVIDENCE_LIMITATION` only when an approved acceptance criterion permits
+  that bounded limitation; record the criterion, missing evidence, residual
+  risk and human disposition. It never waives mandatory Browser QA,
+  security/legal/payment/fiscal evidence, rewrites FAIL/BLOCKED history,
+  manufactures PASS or changes QA/VERIFY/Gate 3 readiness. If required
+  evidence remains missing, the current gate remains blocked.
+
 ### State 6 — VERIFY
 
 VERIFY is technical verification and answers whether repository implementation
 matches the approved Specs and Design. Keep it distinct from QA.
+
+For a `REQUIRED` or `OPTED_IN` change, enter this state only after the
+applicable current post-Apply assertions and human Product validation are
+resolved. Grandfathered changes keep their existing path. Do not treat a
+Product verdict as technical evidence.
 
 1. Run the current generated `openspec-verify-change` workflow plus applicable
    repository checks.
@@ -483,6 +624,8 @@ Stop at the first applicable condition:
 - authority or requirement decisions remain unresolved;
 - sensitive design lacks approval;
 - apply/verify discovers a spec or durable-boundary conflict;
+- an adopted change has an applicable pending/failed development assertion,
+  unresolved human Product response or feedback, or an iteration stop;
 - a scoped implementation diff cannot be isolated;
 - Technical Implementation Compliance is not `PASS`;
 - VERIFY is not `PASS`;

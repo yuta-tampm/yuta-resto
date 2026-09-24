@@ -1,33 +1,35 @@
 # Pointage employee — Design Handoff
 
-Status: Draft — AWAITING_HUMAN_REVIEW
+Status: APPROVED / IMPLEMENTED / TEST-EVIDENCED — Browser QA pending
 
 Visibility: Engineering
 
 ## Phase 0 source and Implementation Inventory
 
-Target: proposed `apps/backoffice/src/app/pointage/[establishmentSlug]/page.tsx`.
+Target: implemented `apps/backoffice/src/app/pointage/[establishmentSlug]/page.tsx`.
 Classification: NEW_PAGE / NEW_CAPABILITY_DISCOVERY. Implementation class:
-integrated. Inventory status: COMPLETE (repository inspection, not implementation).
+integrated. Inventory status: COMPLETE (current implementation inspected).
 
 Current repository evidence:
 
 - `apps/backoffice/src/app/layout.tsx` supplies root fonts/styles and document
   structure. The authenticated restaurant shell belongs to a different subtree.
-- No employee Pointage page or usable raw-clocking handler exists yet.
+- The employee Pointage page and strict raw-clocking handlers are implemented.
 - `apps/backoffice/src/server/pointage/authorization.ts` owns the closed six
   operations; `service.ts` owns scoped credential authentication and trusted
-  client-address composition. Employee continuation is not implemented.
+  client-address composition and the Pointage-specific continuation.
 - `packages/db-cloud/src/pointage-repository.ts` already locks a scoped Personnel
   dossier for issue/reset. Existing Pointage schema has credentials, rate limits
-  and minimized audit, but no attendance events or retry receipts.
+  and minimized audit. Raw attendance events, retry receipts and continuations
+  are implemented only in the guarded disposable test extension; the canonical
+  production migration stream intentionally excludes them.
 - `packages/db-cloud/src/schema/personnel.ts` supplies scoped dossier,
   givenNames/familyName and entry/departure dates. Own display-name projection is
   approved; no Personnel management permission is granted to this page.
 - `packages/ui/src/index.ts` supplies Button, Input, FormField, Card, Alert,
   Skeleton and StatusBadge. Existing shared styles/fonts remain unchanged.
-- Current foundation unit/integration tests are evidence for the foundation,
-  not proof of this new page, continuation, raw events or Browser QA.
+- Current unit/integration evidence covers the page, continuation, raw events,
+  receipts, transport and shared-device behavior. Browser QA remains pending.
 
 Sources: [approved scope](PRODUCT_SCOPE.md), [Sensitive Design](../../../../openspec/changes/pointage-usable-raw-clocking/design.md).
 Goal: identify self, observe minimal current state, submit one explicit raw
@@ -37,20 +39,20 @@ transition, receive a committed receipt and clear the shared device.
 
 Shared context status: RESOLVED
 
-| Layer        | Owner/source                                         | Reference status | Reuse exactly                                                  | May adapt                | Excluded                                  | Decision/blocker                       |
-| ------------ | ---------------------------------------------------- | ---------------- | -------------------------------------------------------------- | ------------------------ | ----------------------------------------- | -------------------------------------- |
-| YUTA global  | YUTA_FRONTEND_RULES, shared UI styles/export catalog | APPROVED         | Geist/Inter, semantic tokens, accessibility, shared primitives | Page-local composition   | New framework/raw color system            | No shared primitive changes            |
-| Application  | BACKOFFICE_FRONTEND_RULES, root layout               | APPROVED         | Root typography/styles                                         | Public employee content  | Cloud account/restaurant shell/navigation | NO_APPLICATION_SHELL                   |
-| Section/flow | Approved raw/auth Specs                              | APPROVED         | Pointage-specific self-only online authority                   | Draft state presentation | Manager/Personnel navigation              | No missing section shell to invent     |
-| Page/screen  | This handoff and UI_SPEC                             | DRAFT            | Approved behavioral scope                                      | Layout/copy under review | History/totals/payroll/manager UI         | Human Sensitive Design review required |
+| Layer        | Owner/source                                         | Reference status | Reuse exactly                                                  | May adapt                | Excluded                                  | Decision/blocker                   |
+| ------------ | ---------------------------------------------------- | ---------------- | -------------------------------------------------------------- | ------------------------ | ----------------------------------------- | ---------------------------------- |
+| YUTA global  | YUTA_FRONTEND_RULES, shared UI styles/export catalog | APPROVED         | Geist/Inter, semantic tokens, accessibility, shared primitives | Page-local composition   | New framework/raw color system            | No shared primitive changes        |
+| Application  | BACKOFFICE_FRONTEND_RULES, root layout               | APPROVED         | Root typography/styles                                         | Public employee content  | Cloud account/restaurant shell/navigation | NO_APPLICATION_SHELL               |
+| Section/flow | Approved raw/auth Specs                              | APPROVED         | Pointage-specific self-only online authority                   | Draft state presentation | Manager/Personnel navigation              | No missing section shell to invent |
+| Page/screen  | This handoff and UI_SPEC                             | APPROVED         | Approved behavioral scope                                      | Browser QA evidence      | History/totals/payroll/manager UI         | Browser QA pending                 |
 
 Shell mode: NO_APPLICATION_SHELL.
 
 Shell owner/reference: existing Backoffice root document only. No application
 header, primary navigation, sidebar, mobile navigation, account/session area or
 establishment selector. A small page title is content, not a new shared header.
-The only planned employee destination is `/pointage/[establishmentSlug]`;
-it is not an implemented route yet. Do not link placeholder manager routes,
+The employee destination is `/pointage/[establishmentSlug]`; it is implemented
+without an application shell. Do not link placeholder manager routes,
 cloud login, Personnel, Planning or any invented route.
 
 Curated shared constraints: [global rules](../../YUTA_FRONTEND_RULES.md),
@@ -119,10 +121,10 @@ No implementation code, implementation plan, tasks or execution prompts.
 
 ## Handoff result
 
-Written proposal: [UI_SPEC](UI_SPEC.md) and
-[DATA_AND_INTERACTION_SPEC](DATA_AND_INTERACTION_SPEC.md), DRAFT.
-No image generated. No-image direction: PROPOSED, not approved.
+Written design: [UI_SPEC](UI_SPEC.md) and
+[DATA_AND_INTERACTION_SPEC](DATA_AND_INTERACTION_SPEC.md), APPROVED and
+implemented/test-evidenced. No image generated. No-image direction: APPROVED.
 Rejected directions: generic cloud login, manager shell, attendance history,
 daily total and offline fallback.
-Next approval owner: human Sensitive Design reviewer.
-This partial Design-stage pack is not a generated implementation-ready package.
+Next evidence owner: post-Apply Browser QA reviewer after formal VERIFY.
+Production enablement and real attendance remain NOT_AUTHORIZED.

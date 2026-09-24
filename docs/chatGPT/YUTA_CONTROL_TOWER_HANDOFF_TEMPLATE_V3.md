@@ -2,6 +2,8 @@
 
 Operating notice:
 This is an operational handoff template, not normative workflow authority.
+Fields and existing reminders below only transport current evidence; the
+canonical Workflow, Automated Workflow and Control Tower prompt own decisions.
 
 Canonical workflow authority:
 [`YUTA_WORKFLOW_V3.md`](../YUTA_WORKFLOW_V3.md)
@@ -74,6 +76,29 @@ Current evidence state:
 - Known limitations:
 - Historical failures/blockers that must not be relabeled:
 
+Post-Apply development feedback (only when adopted/applicable; copy from Tasks):
+- Adoption disposition and event / explicit opt-in reference:
+- `POST_APPLY_DEVELOPMENT_FEEDBACK` Tasks path and tested candidate:
+- DEV_USABLE applicability / current state / evidence or reason / NO blocker:
+- MANUAL_TEST_READY applicability / current state / evidence or reason / NO blocker:
+- Manual-test command/runtime, route/entry, safe data/identity reference:
+- Basic flow, reset/retry and dev-only limitations:
+- HUMAN_PRODUCT_VALIDATION state, human feedback/source and tested candidate:
+- LOCAL_CORRECTION or SCOPE_CHANGE_REQUIRES_REVIEW disposition / owning gate:
+- Affected human retest required and current response:
+- Separate Production Readiness / Release / Deploy state (no DEV_USABLE inference):
+
+Iteration facts (copy existing lineage/occurrences; do not recalculate here):
+- Blocker lineage ID, affected claim, class and evidenced/provisional cause:
+- Observed stage, evaluator purpose and last material outcome:
+- Corrective actions and observed results:
+- Recovery attempts used / applicable bound and evidence:
+- Execution generations used / bucket and applicable bound:
+- ITERATION_STOP_CONTROL state and trigger, if any:
+- Product defect proven / implementation defect proven / evidence limitation:
+- Historical FAIL/BLOCKED and remaining mandatory criterion:
+- Requested human decision and exact Control Tower decision reference, if any:
+
 CONFLICT:
 - None / ...
 
@@ -109,6 +134,9 @@ Control Tower must decide:
 
 ANTI-LOOP RULE:
 
+The Control Tower Operating Prompt owns this rule and any human stop decision;
+the lines below are carry-through reminders, not a second policy source.
+
 Do not open repeated
 attribution → correction → revalidation
 cycles for the same evidence limitation unless:
@@ -116,9 +144,18 @@ cycles for the same evidence limitation unless:
 - a new behavioral / implementation failure is established; or
 - a required workflow criterion cannot otherwise be satisfied.
 
-When an accepted evaluator / runtime / tooling limitation remains and no
-implementation failure is established, record it as a known limitation and
-continue toward the next workflow gate.
+After bounded investigation/correction/retry, record an evaluator / runtime /
+tooling limitation as KNOWN_EVIDENCE_LIMITATION only when approved criteria
+permit continuation. Record the affected claim and explicit acceptance
+authority. Otherwise stop at the affected gate. Do not build generic evidence
+infrastructure merely to convert limitations to PASS.
+
+QA status: PASS / FAIL / BLOCKED_BY_ENVIRONMENT / NOT_APPLICABLE
+KNOWN_EVIDENCE_LIMITATIONS: <separate bounded list, or NONE>
+
+The canonical QA Protocol controls these statuses. A limitation is not PASS,
+does not hide established failure and does not waive mandatory evidence.
+Gate 3 may aggregate limitations without redefining QA or its readiness rules.
 
 HISTORICAL TRUTH RULE:
 
@@ -131,3 +168,18 @@ Do not:
 
 If lifecycle history is missing, Control Tower must explicitly authorize any
 present-day reconciliation path.
+Its archive must not impersonate original implementation history.
+Do not create a change merely because a new chat lacks context.
+
+FINISH / CLOSURE:
+
+Gate 3 → Human Approval → $yuta-finish-change
+→ Sync or valid no-spec finalization
+→ Validate Main Specs when applicable → Archive
+→ Knowledge Consolidation → DONE
+
+Require explicit sync/archive authorization and branch-specific prerequisites.
+Missing original lifecycle inputs: FINISH_CHANGE_BLOCKED /
+LIFECYCLE_RECONCILIATION_REQUIRED; escalate even for PAGE_LOCAL work.
+No stage is added or removed. Release/Deploy remains separate.
+```

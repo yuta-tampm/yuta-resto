@@ -1,22 +1,17 @@
 import { createHash, randomUUID } from 'node:crypto';
-import {
-  copyFile,
-  mkdir,
-  mkdtemp,
-  readFile,
-  rm,
-  writeFile,
-} from 'node:fs/promises';
-import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { readFile } from 'node:fs/promises';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { describe, expect, it } from 'vitest';
 import { createPointageRepository } from '../src/pointage-repository';
 import * as schema from '../src/schema';
 import {
+  assemblePointageDisposableMigrationDirectory,
   exactPointageTestDatabaseName,
   openPointageTestDatabase,
+  pointageCanonicalMigrationDirectory,
+  pointageRawClockingExtensionSqlPath,
+  removePointageDisposableMigrationDirectory,
   requirePointageTestConfiguration,
   requirePointageTestDatabaseIdentity,
 } from './helpers/pointage-raw-clocking-test-database';
@@ -117,9 +112,11 @@ integration('F7 clean and foundation upgrade migration evidence', () => {
       process.env,
       process.env.CLOUD_DATABASE_URL!,
     );
+    const migrationDirectory =
+      await assemblePointageDisposableMigrationDirectory();
     try {
       const journal = JSON.parse(
-        await readFile('drizzle/meta/_journal.json', 'utf8'),
+        await readFile(`${migrationDirectory}/meta/_journal.json`, 'utf8'),
       ) as {
         entries: { tag: string; when: number }[];
       };
@@ -129,27 +126,28 @@ integration('F7 clean and foundation upgrade migration evidence', () => {
       for (let i = 0; i < journal.entries.length; i++) {
         const entry = journal.entries[i]!;
         const digest = createHash('sha256')
-          .update(await readFile(`drizzle/${entry.tag}.sql`))
+          .update(await readFile(`${migrationDirectory}/${entry.tag}.sql`))
           .digest('hex');
         expect(before[i]).toMatchObject({
           hash: digest,
           created_at: String(entry.when),
         });
       }
-      await migrate(drizzle(db), { migrationsFolder: 'drizzle' });
+      await migrate(drizzle(db), { migrationsFolder: migrationDirectory });
       expect(
         await db`select hash, created_at from drizzle.__drizzle_migrations order by created_at`,
       ).toEqual(before);
     } finally {
       await db.end();
+      await removePointageDisposableMigrationDirectory(migrationDirectory);
     }
   });
 
-  it('upgrades a separately identity-verified empty target through 0020 then corrected 0021', async () => {
+  it('upgrades a separately identity-verified target through canonical 0020 then the raw extension', async () => {
     const target = new URL(process.env.CLOUD_DATABASE_URL!);
     target.pathname = '/yuta_pointage_raw_clocking_test_upgrade20260908b';
     const db = await openPointageTestDatabase(process.env, target.toString());
-    let fixtureDirectory: string | undefined;
+    let migrationDirectory: string | undefined;
     try {
       expect(
         await db`select tablename from pg_tables where schemaname not in ('pg_catalog','information_schema')`,
@@ -159,28 +157,12 @@ integration('F7 clean and foundation upgrade migration evidence', () => {
       ) as {
         entries: { tag: string; when: number }[];
       };
-      expect(journal.entries.at(-1)?.tag).toBe('0021_abandoned_black_queen');
-      const prefix = { ...journal, entries: journal.entries.slice(0, -1) };
-      expect(prefix.entries.at(-1)?.tag).toBe(
+      expect(journal.entries.at(-1)?.tag).toBe(
         '0020_formalites_legal_template_foundation',
       );
-      // Ephemeral test input for the same official migrator; repository SQL,
-      // snapshots and the authoritative journal are never edited or rewritten.
-      fixtureDirectory = await mkdtemp(
-        join(tmpdir(), 'yuta-pointage-migration-'),
-      );
-      await mkdir(join(fixtureDirectory, 'meta'));
-      await writeFile(
-        join(fixtureDirectory, 'meta', '_journal.json'),
-        JSON.stringify(prefix),
-      );
-      for (const entry of prefix.entries) {
-        await copyFile(
-          resolve('drizzle', `${entry.tag}.sql`),
-          join(fixtureDirectory, `${entry.tag}.sql`),
-        );
-      }
-      await migrate(drizzle(db), { migrationsFolder: fixtureDirectory });
+      await migrate(drizzle(db), {
+        migrationsFolder: pointageCanonicalMigrationDirectory(),
+      });
       const baseline =
         await db`select hash, created_at from drizzle.__drizzle_migrations order by created_at`;
       expect(baseline).toHaveLength(21);
@@ -227,40 +209,30 @@ integration('F7 clean and foundation upgrade migration evidence', () => {
       const foundationBefore = await foundationRows();
       expect(foundationBefore.credential).toHaveLength(1);
       expect(foundationBefore.audit.length).toBeGreaterThan(0);
-      await migrate(drizzle(db), { migrationsFolder: 'drizzle' });
+      migrationDirectory = await assemblePointageDisposableMigrationDirectory();
+      await migrate(drizzle(db), { migrationsFolder: migrationDirectory });
       const upgraded =
         await db`select hash, created_at from drizzle.__drizzle_migrations order by created_at`;
       expect(upgraded).toHaveLength(22);
       expect(upgraded.slice(0, -1)).toEqual(baseline);
       expect(upgraded.at(-1)?.hash).toBe(
         createHash('sha256')
-          .update(await readFile('drizzle/0021_abandoned_black_queen.sql'))
+          .update(await readFile(pointageRawClockingExtensionSqlPath()))
           .digest('hex'),
       );
       expect(
         await db`select count(*)::int as count from public.pointage_raw_events`,
       ).toEqual([{ count: 0 }]);
       expect(await foundationRows()).toEqual(foundationBefore);
-      await migrate(drizzle(db), { migrationsFolder: 'drizzle' });
+      await migrate(drizzle(db), { migrationsFolder: migrationDirectory });
       expect(await foundationRows()).toEqual(foundationBefore);
       expect(
         await db`select hash,created_at from drizzle.__drizzle_migrations order by created_at`,
       ).toEqual(upgraded);
     } finally {
       await db.end();
-      if (fixtureDirectory) {
-        const directory = resolve(fixtureDirectory);
-        const root = resolve(tmpdir());
-        if (
-          !directory.startsWith(root + '\\') &&
-          !directory.startsWith(root + '/')
-        ) {
-          throw new Error(
-            'Unexpected temporary fixture path; cleanup refused.',
-          );
-        }
-        await rm(directory, { recursive: true });
-      }
+      if (migrationDirectory)
+        await removePointageDisposableMigrationDirectory(migrationDirectory);
     }
   });
 });

@@ -61,6 +61,7 @@ sensitive details never belong in the repository.
 
 ### Cloud features
 
+- [`features/product-release/README.md`](features/product-release/README.md)
 - [`features/identity-access/README.md`](features/identity-access/README.md)
 - [`features/establishment/README.md`](features/establishment/README.md)
 - [`features/establishment/general-information/README.md`](features/establishment/general-information/README.md)

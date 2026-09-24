@@ -66,10 +66,13 @@ generic fictional prototype and existing grant mapping remain unchanged.
   storage, signature, signed-artifact handoff, final retention policy, and
   production operation remain proposed or separately gated. The bounded
   persistent-draft foundation does not implement those stages.
-- Planning, the usable Pointage clocking workflow, and Tâches du jour remain
-  planned surfaces with unresolved Product Decision status. Pointage now has a
-  separately approved and implemented server-only authority/access foundation;
-  that foundation does not make the placeholder a usable workflow.
+- Planning and Tâches du jour remain planned surfaces with unresolved Product
+  Decision status. Pointage has a separately approved and implemented bounded
+  employee raw-clocking slice with `CLOCK_IN`/`CLOCK_OUT`, immutable raw
+  attendance evidence and derived sessions; it is not a Personnel workflow.
+  This does not implement corrections or Planning/Today/payroll integration.
+  Real employee attendance and production enablement remain `NOT_AUTHORIZED`;
+  all seven legal/privacy/provenance blockers remain unresolved.
 - Any broader employee category, document category, pre-cutover history
   reconstruction, production file provider, OCR/AI provider, or production
   operation remains separately approval-gated.
@@ -85,8 +88,8 @@ generic fictional prototype and existing grant mapping remain unchanged.
 | Formalités persistent draft foundation | OWNER-only, development-only CDI preparation draft with explicit save/reopen/reconciliation/abandonment, exactly seven Personnel source facts, and no Personnel write-back or generated artifact. |
 | Future Formalités generation/signature | Proposed generated-version, legal-template, file-storage, signature, Documents-handoff, final-retention, and production stages; not implemented by the persistent foundation.                     |
 | Planning                               | Planned related surface; no implemented Personnel integration.                                                                                                                                    |
-| Pointage authority/access foundation   | Implemented cloud server foundation reads the scoped Personnel dossier and employment period without transferring ownership or writing Personnel state; no Today integration.                     |
-| Future usable Pointage workflow        | Planned related surface; no browser transport, raw attendance evidence, clock-in/out UI, correction flow or downstream integration is implemented.                                                |
+| Pointage authority/access foundation | Implemented cloud foundation reads the scoped Personnel dossier and employment period without transferring ownership or writing Personnel state; no Today integration. |
+| Pointage usable raw clocking | Implemented bounded employee route and raw-clocking service recheck current Personnel eligibility; Pointage owns immutable raw attendance evidence. Real attendance and production remain unauthorized. |
 | Tâches du jour                         | Planned related surface; no implemented Personnel or Today integration.                                                                                                                           |
 
 ## 5. Lifecycle summary
@@ -106,8 +109,8 @@ status remains unresolved until a dedicated registry assignment is approved.
 | Formalités persistent draft foundation | `APPROVED`       | `IMPLEMENTED`  | `DEVELOPMENT_ONLY` | `BLOCKED`            | `BLOCKED` — legal/template/privacy/retention/operations gates                                 | `OK` for bounded local repository scope; production remains deferred      |
 | Future Formalités generation/signature | `PROPOSED`       | `NOT_STARTED`  | `NOT_ENABLED`      | `BLOCKED`            | `BLOCKED` — legal/template/privacy/storage/signature gates                                    | `OK` — separate from the persistent draft foundation                      |
 | Planning                               | `—`              | `NOT_STARTED`  | `NOT_ENABLED`      | `NOT_ASSESSED`       | `NOT_ASSESSED`                                                                                | `NEEDS REVIEW` — planned wording does not resolve Product Decision status |
-| Pointage authority/access foundation   | `APPROVED`       | `IMPLEMENTED`  | `NOT_ENABLED`      | `BLOCKED`            | `BLOCKED` — trusted production client-address provenance and legal/privacy gates              | `OK` — bounded foundation only; no usable clocking or readiness promotion |
-| Future usable Pointage workflow        | `—`              | `NOT_STARTED`  | `NOT_ENABLED`      | `NOT_ASSESSED`       | `NOT_ASSESSED`                                                                                | `NEEDS REVIEW` — foundation approval does not approve the workflow        |
+| Pointage authority/access foundation | `APPROVED` | `IMPLEMENTED` | `NOT_ENABLED` | `BLOCKED` | `BLOCKED` — trusted production client-address provenance and legal/privacy gates | `OK` — bounded foundation only; no readiness promotion |
+| Pointage usable raw clocking | `APPROVED` | `IMPLEMENTED` | `NOT_ENABLED` | `BLOCKED` | `BLOCKED` — trusted production client-address provenance and six legal/privacy gates | `OK` — synthetic/disposable evidence only; real attendance unauthorized |
 | Tâches du jour                         | `—`              | `NOT_STARTED`  | `NOT_ENABLED`      | `NOT_ASSESSED`       | `NOT_ASSESSED`                                                                                | `NEEDS REVIEW` — planned wording does not resolve Product Decision status |
 
 ## 6. Business boundaries
@@ -125,11 +128,13 @@ status remains unresolved until a dedicated registry assignment is approved.
 - Registre du personnel depends on reviewed Personnel candidate facts but owns
   its register-specific inscription, sequence, correction history, audit, and
   transient representation.
-- The Pointage authority/access foundation reads only trusted scoped Personnel
-  dossier and employment-period data. Personnel remains the canonical employee
-  and lifecycle source; Pointage credentials and contexts do not create a
-  second employee identity. Planning, the usable Pointage workflow and Tâches du
-  jour remain separately reviewable, and no Today integration is implemented.
+- Pointage authority and usable raw clocking read only the trusted scoped
+  Personnel dossier, display-name projection and employment period. Personnel
+  remains the canonical employee/lifecycle source; Pointage credentials,
+  continuations and raw events do not create a second employee identity or
+  write Personnel state. Pointage owns immutable actual-work evidence. Planning,
+  corrections, payroll, Tâches du jour and Today integration remain separately
+  reviewable and are not implemented by this slice.
 - Repository implementation, local QA, and development enablement do not close
   legal, privacy, security, provider, operational, or production gates.
 
@@ -216,7 +221,7 @@ or storage scope is not authority.
 | Registre du personnel | Uses reviewed employee candidates without silently registering every dossier.                                                                                              | Personnel owns current dossier facts; Register owns register records, corrections, and representation.                                                                                                       |
 | Documents             | Stores signed base-contract and amendment evidence within the employee dossier experience.                                                                                 | Personnel owns structured facts; Documents owns signed artifacts and their versions.                                                                                                                         |
 | Planning              | Relationship is recorded, but the current route is only a planned placeholder.                                                                                             | Personnel remains the employee identity source; future Planning ownership needs approval.                                                                                                                    |
-| Pointage              | The server-only foundation resolves trusted scoped dossier/employment period; no Personnel write, Today integration, browser workflow or raw evidence exists.              | Personnel owns employee dossier/lifecycle; Pointage owns its credentials/authority and future raw actual-work evidence under the normative foundation specs.                                                 |
+| Pointage | The foundation and bounded employee raw-clocking slice resolve trusted scoped dossier/employment period and minimal display name; they do not write Personnel or integrate Today. | Personnel owns employee dossier/lifecycle; Pointage owns its credentials/authority and immutable raw actual-work evidence. Planning, corrections and downstream integrations require separate approval. |
 | Today                 | Any relationship is only a potential future relationship through capabilities such as Pointage or Tâches du jour; no direct Personnel -> Today integration is implemented. | This document does not approve such an integration. If later approved, it must consume through the appropriate owning module and source of truth rather than making Today a second employee identity source. |
 | Tâches du jour        | Relationship to Personnel and Today is recorded, but the current route is only a planned placeholder.                                                                      | Future task ownership needs review; Personnel identity must not be duplicated silently.                                                                                                                      |
 
@@ -245,10 +250,11 @@ or storage scope is not authority.
   authority, or production rollout is introduced.
 - The Register development slice is not a legal-compliance certification, and
   its transient PDF is not the canonical data source.
-- Planning, the usable Pointage workflow, and Tâches du jour are not implemented
-  Personnel capabilities merely because their routes or navigation entries
-  exist. The Pointage authority/access foundation remains a separate server-only
-  prerequisite, not a usable Personnel or Pointage page.
+- Planning and Tâches du jour are not implemented Personnel capabilities merely
+  because routes or navigation entries exist. Pointage now has a bounded usable
+  employee raw-clocking slice, but it remains a separate capability: it does not
+  add a Personnel workflow, correction, history/total view, Today/Planning/
+  payroll integration, real-attendance authorization or production readiness.
 
 ## 10. Source map
 

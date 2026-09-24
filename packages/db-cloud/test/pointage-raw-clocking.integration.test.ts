@@ -87,7 +87,7 @@ integration('D4a/D4b actual restricted-writer row locking', () => {
       provariadic: 0,
     });
     const candidate = readFileSync(
-      'drizzle/0021_abandoned_black_queen.sql',
+      'test/fixtures/pointage-raw-clocking/0021_abandoned_black_queen.sql',
       'utf8',
     );
     expect(helper?.prosrc).toBe(
@@ -434,19 +434,84 @@ integration('D4a/D4b actual restricted-writer row locking', () => {
   });
 
   it('F3: rejects raw/receipt mutation and rolls back every attempted SQL probe', async () => {
+    // Independent fixture: only admitted clients come from beforeAll, never rows
+    // or mutable state produced by another test. Retain disposable evidence.
+    const fixtureOrganization = randomUUID();
+    const fixtureEstablishment = randomUUID();
+    const fixtureDossier = randomUUID();
+    const fixtureEvent = uuidv7();
+    const fixtureRequest = randomUUID();
+    await admin.begin(async (tx) => {
+      await tx`insert into public.organizations(id,name,slug) values(${fixtureOrganization},'Synthetic F3',${'test-f3-' + fixtureOrganization})`;
+      await tx`insert into public.establishments(id,organization_id,name,slug) values(${fixtureEstablishment},${fixtureOrganization},'Synthetic F3',${'test-f3-' + fixtureEstablishment})`;
+      await tx`insert into public.personnel_employee_dossiers(id,organization_id,establishment_id,given_names,family_name,position,qualification,employment_term_type,work_time_category,entry_date) values(${fixtureDossier},${fixtureOrganization},${fixtureEstablishment},'Synthetic','F3','Test','Test','indefinite','full_time','2020-01-01')`;
+    });
+    await writer.begin(async (tx) => {
+      // The existing INSERT trigger supplies the authoritative time/calendar.
+      await tx`insert into public.pointage_raw_events(id,organization_id,establishment_id,personnel_dossier_id,ordinal,kind,accepted_at,timezone_name,utc_offset_seconds,business_date)
+        values(${fixtureEvent},${fixtureOrganization},${fixtureEstablishment},${fixtureDossier},1,'CLOCK_IN',clock_timestamp(),'Europe/Paris',0,current_date)`;
+      await tx`insert into public.pointage_raw_command_receipts(organization_id,establishment_id,personnel_dossier_id,request_id,event_id,intent_version,intent_fingerprint)
+        values(${fixtureOrganization},${fixtureEstablishment},${fixtureDossier},${fixtureRequest},${fixtureEvent},1,${'b'.repeat(64)})`;
+    });
+    const readEvidence = async () => ({
+      raw: await admin`select id, organization_id, establishment_id, personnel_dossier_id,
+        ordinal::text as ordinal, kind, accepted_at::text as accepted_at,
+        timezone_name, utc_offset_seconds, business_date::text as business_date
+        from public.pointage_raw_events where organization_id=${fixtureOrganization}
+          and establishment_id=${fixtureEstablishment} and personnel_dossier_id=${fixtureDossier}
+        order by ordinal`,
+      receipts:
+        await admin`select organization_id, establishment_id, personnel_dossier_id,
+        request_id, event_id, intent_version, intent_fingerprint
+        from public.pointage_raw_command_receipts where organization_id=${fixtureOrganization}
+          and establishment_id=${fixtureEstablishment} and personnel_dossier_id=${fixtureDossier}
+        order by request_id`,
+    });
+    const baseline = await readEvidence();
+    expect(baseline.raw).toHaveLength(1);
+    expect(baseline.raw[0]).toMatchObject({
+      id: fixtureEvent,
+      organization_id: fixtureOrganization,
+      establishment_id: fixtureEstablishment,
+      personnel_dossier_id: fixtureDossier,
+      ordinal: '1',
+      kind: 'CLOCK_IN',
+    });
+    expect(baseline.receipts).toHaveLength(1);
+    expect(baseline.receipts[0]).toMatchObject({
+      organization_id: fixtureOrganization,
+      establishment_id: fixtureEstablishment,
+      personnel_dossier_id: fixtureDossier,
+      request_id: fixtureRequest,
+      event_id: fixtureEvent,
+      intent_version: 1,
+      intent_fingerprint: 'b'.repeat(64),
+    });
+    const expectPreserved = async () => {
+      const current = await readEvidence();
+      expect(current.raw).toHaveLength(1);
+      expect(current.receipts).toHaveLength(1);
+      expect(current.raw[0]!.id).toBe(fixtureEvent);
+      expect(current.receipts[0]!.request_id).toBe(fixtureRequest);
+      expect(current.receipts[0]!.event_id).toBe(fixtureEvent);
+      expect(current).toEqual(baseline);
+    };
     for (const table of [
       'pointage_raw_events',
       'pointage_raw_command_receipts',
     ]) {
       for (const statement of [
-        `update public.${table} set organization_id=organization_id where organization_id=$1`,
-        `delete from public.${table} where organization_id=$1`,
+        `update public.${table} set organization_id=organization_id where organization_id=$1 and establishment_id=$2 and personnel_dossier_id=$3`,
+        `delete from public.${table} where organization_id=$1 and establishment_id=$2 and personnel_dossier_id=$3`,
         'truncate public.pointage_raw_events, public.pointage_raw_command_receipts',
       ]) {
-        const params = statement.includes('$1') ? [organization] : [];
+        const params = statement.includes('$1')
+          ? [fixtureOrganization, fixtureEstablishment, fixtureDossier]
+          : [];
         await expect(
           writer.begin((tx) => tx.unsafe(statement, params)),
         ).rejects.toMatchObject({ code: '42501' });
+        await expectPreserved();
         await expect(
           admin.begin(async (tx) => {
             await tx.unsafe(statement, params);
@@ -458,6 +523,7 @@ integration('D4a/D4b actual restricted-writer row locking', () => {
           code: '23514',
           message: 'POINTAGE_IMMUTABLE_EVIDENCE',
         });
+        await expectPreserved();
       }
     }
   });
@@ -1615,5 +1681,124 @@ integration('D4a/D4b actual restricted-writer row locking', () => {
       message: 'POINTAGE_LOCK_UNAVAILABLE',
     });
     expect(await evidenceSnapshot()).toEqual(before);
+  });
+
+  it('R4 restores the real append clock after deterministic substitution and accepts a real-clock event', async () => {
+    const appendSignature = 'public.pointage_raw_enforce_append()' as const;
+    const realClockAssignment =
+      'observed_at := pg_catalog.clock_timestamp();' as const;
+    const deterministicInstant = '2025-01-15T12:34:56.123456Z' as const;
+    const deterministicAssignment =
+      `observed_at := TIMESTAMPTZ '${deterministicInstant}';` as const;
+    const [installed] =
+      await admin`select pg_get_functiondef(to_regprocedure(${appendSignature})) as definition`;
+    const originalDefinition = installed?.definition as string | undefined;
+    expect(originalDefinition).toBeTypeOf('string');
+    expect(originalDefinition!.split(realClockAssignment)).toHaveLength(2);
+
+    const deterministicDossier = await historicalFixture([]);
+    let substitutionInstalled = false;
+    try {
+      await admin.unsafe(
+        originalDefinition!.replace(
+          realClockAssignment,
+          deterministicAssignment,
+        ),
+      );
+      substitutionInstalled = true;
+      const [substituted] =
+        await admin`select pg_get_functiondef(to_regprocedure(${appendSignature})) as definition`;
+      expect(substituted?.definition).toContain(deterministicAssignment);
+      expect(substituted?.definition).not.toContain(realClockAssignment);
+
+      const deterministic = await writer.begin((tx) =>
+        appendHistoricalNext(tx, deterministicDossier, 'CLOCK_IN'),
+      );
+      expect(
+        await admin`
+          select
+            to_char(accepted_at at time zone 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"') as accepted_at,
+            timezone_name,
+            utc_offset_seconds,
+            business_date::text as business_date,
+            utc_offset_seconds = extract(epoch from ((accepted_at at time zone timezone_name) - (accepted_at at time zone 'UTC')))::int as offset_consistent,
+            business_date = (accepted_at at time zone timezone_name)::date as date_consistent,
+            exists (
+              select 1 from public.pointage_raw_command_receipts r
+              where r.organization_id=${organization}
+                and r.establishment_id=${establishment}
+                and r.personnel_dossier_id=${deterministicDossier}
+                and r.event_id=${deterministic.id}
+            ) as receipt_linked
+          from public.pointage_raw_events
+          where organization_id=${organization}
+            and establishment_id=${establishment}
+            and personnel_dossier_id=${deterministicDossier}
+            and id=${deterministic.id}
+        `,
+      ).toEqual([
+        {
+          accepted_at: deterministicInstant,
+          timezone_name: 'Europe/Paris',
+          utc_offset_seconds: 3600,
+          business_date: '2025-01-15',
+          offset_consistent: true,
+          date_consistent: true,
+          receipt_linked: true,
+        },
+      ]);
+    } finally {
+      if (substitutionInstalled) await admin.unsafe(originalDefinition!);
+    }
+
+    const [restored] =
+      await admin`select pg_get_functiondef(to_regprocedure(${appendSignature})) as definition`;
+    expect(restored?.definition).toBe(originalDefinition);
+    expect(restored?.definition).toContain(realClockAssignment);
+    expect(restored?.definition).not.toContain(deterministicAssignment);
+
+    const realClockDossier = await historicalFixture([]);
+    const [before] = await admin`select clock_timestamp() as observed_at`;
+    const realClock = await writer.begin((tx) =>
+      appendHistoricalNext(tx, realClockDossier, 'CLOCK_IN'),
+    );
+    const [after] = await admin`select clock_timestamp() as observed_at`;
+    expect(
+      await admin`
+        select
+          accepted_at >= ${before!.observed_at}::timestamptz and accepted_at <= ${after!.observed_at}::timestamptz as database_bracketed,
+          to_char(accepted_at at time zone 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"') <> ${deterministicInstant} as differs_from_deterministic,
+          timezone_name,
+          utc_offset_seconds = extract(epoch from ((accepted_at at time zone timezone_name) - (accepted_at at time zone 'UTC')))::int as offset_consistent,
+          business_date = (accepted_at at time zone timezone_name)::date as date_consistent,
+          exists (
+            select 1 from public.pointage_raw_command_receipts r
+            where r.organization_id=${organization}
+              and r.establishment_id=${establishment}
+              and r.personnel_dossier_id=${realClockDossier}
+              and r.event_id=${realClock.id}
+          ) as receipt_linked
+        from public.pointage_raw_events
+        where organization_id=${organization}
+          and establishment_id=${establishment}
+          and personnel_dossier_id=${realClockDossier}
+          and id=${realClock.id}
+      `,
+    ).toEqual([
+      {
+        database_bracketed: true,
+        differs_from_deterministic: true,
+        timezone_name: 'Europe/Paris',
+        offset_consistent: true,
+        date_consistent: true,
+        receipt_linked: true,
+      },
+    ]);
+
+    const [finalInstalled] =
+      await admin`select pg_get_functiondef(to_regprocedure(${appendSignature})) as definition`;
+    expect(finalInstalled?.definition).toBe(originalDefinition);
+    expect(finalInstalled?.definition).toContain(realClockAssignment);
+    expect(finalInstalled?.definition).not.toContain(deterministicAssignment);
   });
 });

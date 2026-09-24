@@ -123,6 +123,14 @@ and tests.
 
 ## Primary product and module sources
 
+### Product Release identity
+
+- Canonical Product Knowledge home: `docs/features/product-release/README.md`
+- Runtime current-release authority: `CURRENT_YUTA_PRODUCT_RELEASE` in
+  `packages/core/src/product-release.ts`
+- Implemented direct presentation consumers: Public Web and authenticated
+  Backoffice
+
 ### Public website
 
 - Product source: `docs/features/public-website/README.md`
@@ -256,24 +264,36 @@ employee-connected preparation draft, generated contract, legal-review
 evidence store or publication/qualification workflow. No Platform Admin
 runtime or production enablement follows.
 
-### Pointage authority and access foundation
+### Pointage authority, access and usable raw clocking
 
 - Precise normative ownership and behavioral boundaries:
   `openspec/specs/pointage/authority-foundation/spec.md`
-- Precise normative credential and authorization behavior:
+- Precise normative credential, continuation and authorization behavior:
   `openspec/specs/authorization/pointage/spec.md`
-- Current implementation: portable primitives in `packages/auth`, additive
-  credential/rate-limit/security-audit persistence in `packages/db-cloud`, and
-  server-only composition in `apps/backoffice/src/server/pointage`
+- Precise normative raw-clocking behavior:
+  `openspec/specs/pointage/raw-clocking/spec.md`
+- Current implementation: portable primitives in `packages/auth`, guarded
+  credential/raw-event/receipt/continuation persistence in `packages/db-cloud`,
+  and employee transport/UI plus server composition in `apps/backoffice`
+- Employee page and QA evidence:
+  `docs/ui/pages/backoffice-pointage-employee/README.md`
 - Personnel relationship: `docs/features/personnel/README.md`
 - Security architecture: `docs/architecture/AUTHENTICATION.md`
 
-Only the cloud/online authority and access foundation is approved and
-implemented. The visible Pointage route remains a placeholder. There is no
-browser transport, usable clock-in/out workflow, raw attendance evidence,
-Planning/Today/payroll integration, POS/Site Agent/offline/sync behavior or
-production enablement. Legal/privacy gates and trusted production client-address
-provenance remain blocked.
+The cloud/online authority foundation and bounded employee raw-clocking slice
+are approved and implemented. The employee route
+`/pointage/[establishmentSlug]` supports identification, `CLOCK_IN`,
+`CLOCK_OUT`, immutable canonical raw evidence, derived current state/session,
+shared-device clearing and a minimal server-only manager read. Browser QA passed
+with the three recorded residual lifecycle-evidence limitations.
+
+Canonical production migrations still exclude raw-clocking persistence. The
+implemented attendance path remains synthetic/disposable-only; real employee
+attendance and production enablement are not authorized. There is no manager UI,
+correction, history/total view, Planning/Today/payroll integration, POS/Site
+Agent/offline/sync behavior or production trusted-client-address provider.
+Legal/privacy gates and trusted production client-address provenance remain
+blocked.
 
 ### Local POS and Site Agent
 
