@@ -1,0 +1,593 @@
+diff --git a/apps/backoffice/src/components/backoffice/backoffice-frame.tsx b/apps/backoffice/src/components/backoffice/backoffice-frame.tsx
+--- a/apps/backoffice/src/components/backoffice/backoffice-frame.tsx
++++ b/apps/backoffice/src/components/backoffice/backoffice-frame.tsx
+@@ -1,6 +1,10 @@
+ 'use client';
+ 
+ import type { AvailableTenant } from '@yuta/auth';
++import {
++  CURRENT_YUTA_PRODUCT_RELEASE,
++  formatCompactProductRelease,
++} from '@yuta/core';
+ import {
+   AppFooter,
+   AppMain,
+@@ -170,8 +174,9 @@
+         <AppMain>{children}</AppMain>
+ 
+         <AppFooter>
+-          Espace restaurateur YUTA v1.0.0&nbsp;&nbsp; &copy; 2025 YuTa
+-          Solutions. Tous droits reserves.
++          Espace restaurateur YUTA{' '}
++          {formatCompactProductRelease(CURRENT_YUTA_PRODUCT_RELEASE)}
++          &nbsp;&nbsp; &copy; 2025 YuTa Solutions. Tous droits reserves.
+         </AppFooter>
+       </div>
+ 
+diff --git a/apps/backoffice/test/product-release-footer.test.tsx b/apps/backoffice/test/product-release-footer.test.tsx
+--- /dev/null
++++ b/apps/backoffice/test/product-release-footer.test.tsx
+@@ -0,0 +1,46 @@
++import { renderToStaticMarkup } from 'react-dom/server';
++import { describe, expect, it, vi } from 'vitest';
++
++vi.mock('next/navigation', () => ({
++  usePathname: () => '/aujourdhui',
++}));
++
++vi.mock('../src/app/(authenticated)/actions', () => ({
++  logoutAction: vi.fn(),
++}));
++
++vi.mock('../src/components/backoffice/tenant-switcher', () => ({
++  TenantSwitcher: () => <div>Établissement actif</div>,
++}));
++
++vi.mock('../src/components/backoffice/logout-submit-button', () => ({
++  LogoutSubmitButton: () => <button type="submit">Se déconnecter</button>,
++}));
++
++import { BackofficeFrame } from '../src/components/backoffice/backoffice-frame';
++
++describe('BackofficeFrame Product Release footer', () => {
++  it('renders the Core release in the existing authenticated shell footer', () => {
++    const markup = renderToStaticMarkup(
++      <BackofficeFrame
++        currentUser={{ name: 'Test User', email: 'test@example.test' }}
++        tenantSwitcher={{ tenants: [], currentMembershipId: 'membership-1' }}
++        canManageUsers={false}
++        canReadPersonnel={false}
++        canManageBookingSettings={false}
++        bookingEnabled={false}
++        reputationEnabled={false}
++      >
++        <p>Page content</p>
++      </BackofficeFrame>,
++    );
++
++    const footer = markup.match(/<footer\b[^>]*>(.*?)<\/footer>/s)?.[1];
++    expect(footer).toBeDefined();
++    expect(footer).toContain('Espace restaurateur YUTA Alpha · v0.1.0-alpha.1');
++    expect(footer).toContain('© 2025 YuTa Solutions. Tous droits reserves.');
++    expect(markup).not.toContain('YUTA v1.0.0');
++    expect(markup).toContain('Page content');
++    expect(markup).toContain('Établissement actif');
++  });
++});
+diff --git a/apps/web/src/components/marketing/MarketingShell.tsx b/apps/web/src/components/marketing/MarketingShell.tsx
+--- a/apps/web/src/components/marketing/MarketingShell.tsx
++++ b/apps/web/src/components/marketing/MarketingShell.tsx
+@@ -1,3 +1,4 @@
++import { CURRENT_YUTA_PRODUCT_RELEASE, formatProductRelease } from '@yuta/core';
+ import { Button, cn, type ButtonProps } from '@yuta/ui';
+ import { ArrowRight, ChevronDown, Mail, Menu } from 'lucide-react';
+ import Image from 'next/image';
+@@ -288,7 +289,10 @@
+ 
+         <div className="mt-6 flex flex-col gap-2 border-t border-border-default pt-4 text-[13px] leading-5 text-secondary sm:flex-row sm:items-center sm:justify-between">
+           <p>© {new Date().getFullYear()} YUTA — Tous droits réservés.</p>
+-          <p>Projet pilote · Déployé sur Vercel</p>
++          <p>
++            {formatProductRelease(CURRENT_YUTA_PRODUCT_RELEASE)} · Déployé sur
++            Vercel
++          </p>
+         </div>
+       </PublicContainer>
+     </footer>
+diff --git a/docs/MODULE_REGISTRY.md b/docs/MODULE_REGISTRY.md
+--- a/docs/MODULE_REGISTRY.md
++++ b/docs/MODULE_REGISTRY.md
+@@ -60,6 +60,11 @@
+ 
+ ## Module / Capability Registry
+ 
++### Product-wide shared foundation
++
++| Product / Runtime | Module                   | Capability / Scope                                                                                                                       | Primary Knowledge Source                                                | Implementation Evidence                                                                                                                                                                                                                                                                                                                                                      | Runtime Owner                                                                          | Data Owner                                 | Related Modules                                                       | Product Decision | Implementation                                                       | Environment                                 | Production Readiness | External Dependency                                         | Review Marker                                                                                             |
++| ----------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------ | --------------------------------------------------------------------- | ---------------- | -------------------------------------------------------------------- | ------------------------------------------- | -------------------- | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
++| YUTA              | Product Release identity | Pure current-release metadata, canonical stage/version logic, and derived footer presentation in Public Web and authenticated Backoffice | [Product Release Product Knowledge](features/product-release/README.md) | [Core source](../packages/core/src/product-release.ts), [Core tests](../packages/core/test/product-release.test.ts), [Public Web footer](../apps/web/src/components/marketing/MarketingShell.tsx), [Backoffice footer](../apps/backoffice/src/components/backoffice/backoffice-frame.tsx), [Backoffice render test](../apps/backoffice/test/product-release-footer.test.tsx) | `apps/web` and `apps/backoffice` own presentation; `@yuta/core` owns release semantics | `N/A` — static Core record, no persistence | Web and Backoffice consume Core; other runtimes remain follow-up only | `APPROVED`       | `IMPLEMENTED` — bounded repository scope with focused phase evidence | `UNVERIFIED` — no dated deployment evidence | `NOT_ASSESSED`       | `NOT_APPLICABLE` — no external dependency for this metadata | `UNVERIFIED` — technical VERIFY and local Browser QA PASS; Gate 3 and deployment/readiness remain pending |
+ ### Cloud and public capabilities
+ 
+ | Product / Runtime | Module           | Capability / Scope                                                                                    | Primary Knowledge Source                                                                                                           | Implementation Evidence                                                                                                                                                                                                                      | Runtime Owner       | Data Owner          | Related Modules                                                                | Product Decision | Implementation | Environment  | Production Readiness | External Dependency                                                                   | Review Marker                                                          |
+diff --git a/docs/PRODUCT_KNOWLEDGE.md b/docs/PRODUCT_KNOWLEDGE.md
+--- a/docs/PRODUCT_KNOWLEDGE.md
++++ b/docs/PRODUCT_KNOWLEDGE.md
+@@ -122,6 +122,14 @@
+ | What does OpenSpec currently require?            | approved `openspec/specs/` when present                           | relevant change status and implemented evidence                                          |
+ 
+ ## Primary product and module sources
++
++### Product Release identity
++
++- Canonical Product Knowledge home: `docs/features/product-release/README.md`
++- Runtime current-release authority: `CURRENT_YUTA_PRODUCT_RELEASE` in
++  `packages/core/src/product-release.ts`
++- Implemented direct presentation consumers: Public Web and authenticated
++  Backoffice
+ 
+ ### Public website
+ 
+diff --git a/docs/README.md b/docs/README.md
+--- a/docs/README.md
++++ b/docs/README.md
+@@ -61,6 +61,7 @@
+ 
+ ### Cloud features
+ 
++- [`features/product-release/README.md`](features/product-release/README.md)
+ - [`features/identity-access/README.md`](features/identity-access/README.md)
+ - [`features/establishment/README.md`](features/establishment/README.md)
+ - [`features/establishment/general-information/README.md`](features/establishment/general-information/README.md)
+diff --git a/docs/features/product-release/README.md b/docs/features/product-release/README.md
+--- /dev/null
++++ b/docs/features/product-release/README.md
+@@ -0,0 +1,133 @@
++# YUTA Product Release
++
++Status: Current
++
++Visibility: Engineering
++
++Owner: YUTA product and engineering
++
++Last updated: 2026-09-24
++
++## Purpose and current release
++
++YUTA Product Version is the global semantic version of the YUTA Product
++Release. It is independent of individual application and package versions.
++Product Maturity Stage describes the product as a whole; it does not report the
++readiness of each capability.
++
++The current approved release is shown here for human reference:
++
++| Release metadata       | Current value   |
++| ---------------------- | --------------- |
++| Product                | `YUTA`          |
++| Maturity stage         | `ALPHA`         |
++| Canonical public label | `Alpha`         |
++| Product Version        | `0.1.0-alpha.1` |
++| Release name           | `Foundation`    |
++
++Its full public representation is `YUTA Alpha · v0.1.0-alpha.1`. The single
++authoritative current-release record for runtime consumers is
++[`CURRENT_YUTA_PRODUCT_RELEASE`](../../../packages/core/src/product-release.ts)
++in `packages/core/src/product-release.ts`. This document is not a runtime
++configuration or a second source of current-release values.
++
++## Product Version and package versions
++
++`package.json.version` is package/workspace metadata, independent of YUTA
++Product Version. Changing the Product Version does not automatically require a
++package-version change. A package version does not determine Product Maturity
++Stage. Do not synchronize package versions merely to match a Product Release.
++
++The canonical Product Version has either of these forms:
++
++```text
++MAJOR.MINOR.PATCH
++MAJOR.MINOR.PATCH-PRERELEASE
++```
++
++The numeric components are nonnegative integers without leading zeroes, except
++`0` itself. A prerelease suffix contains nonempty dot-separated identifiers;
++fully numeric identifiers also have no leading zeroes. The canonical value has
++no leading `v` and this foundation does not accept build metadata (`+...`).
++The `v` in a rendered label is presentation text. Prerelease text does not
++determine or automatically change Product Maturity Stage.
++
++## Canonical maturity stages
++
++| Stage                  | Public label |
++| ---------------------- | ------------ |
++| `PROTOTYPE`            | Prototype    |
++| `ALPHA`                | Alpha        |
++| `PRIVATE_BETA`         | Private Beta |
++| `PUBLIC_BETA`          | Public Beta  |
++| `RELEASE_CANDIDATE`    | RC           |
++| `GENERAL_AVAILABILITY` | Stable       |
++
++These are the six approved stages and their only canonical public labels.
++Changing this mapping requires a separately approved change.
++
++## Release name and consumers
++
++Release name is human-readable metadata. The current name is `Foundation`.
++It does not control authorization, routing, feature availability, capability
++lifecycle, tenant behavior, or deployment.
++
++The implemented direct consumers are:
++
++- Public Web: its existing marketing footer derives the full representation
++  from the Core record.
++- Authenticated Backoffice: its existing `AppFooter` derives the compact
++  `Alpha · v0.1.0-alpha.1` representation from the same Core record.
++
++Booking Web, Feedback Web, POS, and Display are follow-up compatibility
++consumers, not implemented Product Version surfaces in this foundation. Site
++Agent and reserved Platform Admin are outside its implementation scope.
++
++## Manual release update
++
++1. Obtain a separate Product decision approving the next release metadata and
++   any stage change. Do not infer a stage from the version suffix or a
++   capability's status.
++2. Update only `CURRENT_YUTA_PRODUCT_RELEASE` in
++   `packages/core/src/product-release.ts` with the approved product, stage,
++   version, and release name. Change the canonical stage mapping only through
++   its own approved change.
++3. Run relevant Core tests and typecheck, consumer tests/typechecks/builds, and
++   architecture checks for the affected code.
++4. Complete the required technical review and real Web/Backoffice Browser QA
++   for the exact candidate before claiming that presentation is verified.
++5. Release or deploy only under the separate authority in
++   [Deployment](../../operations/DEPLOYMENT.md) and
++   [Production Readiness](../../operations/PRODUCTION_READINESS.md).
++
++This foundation has no release CLI, automatic version bump, runtime provider,
++or deployment automation.
++
++## Lifecycle, readiness, and deployment boundaries
++
++Product Release and Product Maturity are independent of capability lifecycle
++and readiness. `YUTA Alpha · v0.1.0-alpha.1` does not establish that every
++capability is `IMPLEMENTED`, `READY`, `PRODUCTION_ENABLED`, or externally
++`READY`. A capability becoming production-ready does not automatically move
++YUTA from Alpha to Beta.
++
++Product Release metadata itself authorizes no deployment, production release,
++production enablement, or tenant rollout. The existing operations documents
++remain authoritative for those decisions and procedures.
++
++## Illustrative future releases
++
++The examples below illustrate the versioning mechanism only. They do not
++authorize any future release, stage promotion, capability readiness, or
++deployment.
++
++| Example Product Version | Illustrative presentation           |
++| ----------------------- | ----------------------------------- |
++| `0.1.0-alpha.1`         | YUTA Alpha — Foundation             |
++| `0.2.0-beta.1`          | YUTA Private Beta — Reputation Core |
++| `0.3.0-beta.1`          | YUTA Private Beta — Direct Feedback |
++| `0.9.0-rc.1`            | YUTA RC                             |
++| `1.0.0`                 | YUTA Stable                         |
++
++The current approved release remains `YUTA Alpha — Foundation /
++0.1.0-alpha.1` until a separate Product decision changes it.
+diff --git a/packages/core/src/index.ts b/packages/core/src/index.ts
+--- a/packages/core/src/index.ts
++++ b/packages/core/src/index.ts
+@@ -2,3 +2,4 @@
+ export * from './combos';
+ export * from './formatting';
+ export * from './dates';
++export * from './product-release';
+diff --git a/packages/core/src/product-release.ts b/packages/core/src/product-release.ts
+--- /dev/null
++++ b/packages/core/src/product-release.ts
+@@ -0,0 +1,108 @@
++export const PRODUCT_MATURITY_STAGES = Object.freeze([
++  'PROTOTYPE',
++  'ALPHA',
++  'PRIVATE_BETA',
++  'PUBLIC_BETA',
++  'RELEASE_CANDIDATE',
++  'GENERAL_AVAILABILITY',
++] as const);
++
++export type ProductMaturityStage = (typeof PRODUCT_MATURITY_STAGES)[number];
++
++export const PRODUCT_MATURITY_LABELS = Object.freeze({
++  PROTOTYPE: 'Prototype',
++  ALPHA: 'Alpha',
++  PRIVATE_BETA: 'Private Beta',
++  PUBLIC_BETA: 'Public Beta',
++  RELEASE_CANDIDATE: 'RC',
++  GENERAL_AVAILABILITY: 'Stable',
++} as const satisfies Record<ProductMaturityStage, string>);
++
++export type ProductRelease = Readonly<{
++  product: 'YUTA';
++  maturityStage: ProductMaturityStage;
++  version: string;
++  releaseName: string;
++}>;
++
++export const CURRENT_YUTA_PRODUCT_RELEASE = Object.freeze({
++  product: 'YUTA',
++  maturityStage: 'ALPHA',
++  version: '0.1.0-alpha.1',
++  releaseName: 'Foundation',
++} as const satisfies ProductRelease);
++
++const productVersionPattern =
++  /^(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/;
++
++function isProductMaturityStage(value: unknown): value is ProductMaturityStage {
++  return PRODUCT_MATURITY_STAGES.some((stage) => stage === value);
++}
++
++export function isValidProductVersion(value: string): boolean {
++  if (typeof value !== 'string') return false;
++
++  const match = productVersionPattern.exec(value);
++  if (!match || match[0] !== value) return false;
++
++  const prerelease = match[1];
++  if (!prerelease) return true;
++
++  return prerelease
++    .split('.')
++    .every(
++      (identifier) =>
++        !/^[0-9]+$/.test(identifier) ||
++        identifier === '0' ||
++        identifier[0] !== '0',
++    );
++}
++
++export function parseProductRelease(value: unknown): ProductRelease {
++  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
++    throw new Error('Invalid Product Release metadata');
++  }
++
++  const keys = Reflect.ownKeys(value);
++  if (
++    keys.length !== 4 ||
++    !['product', 'maturityStage', 'version', 'releaseName'].every((key) =>
++      keys.includes(key),
++    )
++  ) {
++    throw new Error('Invalid Product Release metadata');
++  }
++
++  const input = value as Record<string, unknown>;
++  const { product, maturityStage, version, releaseName } = input;
++  if (
++    product !== 'YUTA' ||
++    !isProductMaturityStage(maturityStage) ||
++    typeof version !== 'string' ||
++    !isValidProductVersion(version) ||
++    typeof releaseName !== 'string' ||
++    releaseName.trim().length === 0
++  ) {
++    throw new Error('Invalid Product Release metadata');
++  }
++
++  return { product, maturityStage, version, releaseName };
++}
++
++export function getProductMaturityLabel(stage: ProductMaturityStage): string {
++  if (!isProductMaturityStage(stage)) {
++    throw new Error('Invalid Product Maturity Stage');
++  }
++
++  return PRODUCT_MATURITY_LABELS[stage];
++}
++
++export function formatProductRelease(release: ProductRelease): string {
++  const validated = parseProductRelease(release);
++  return `${validated.product} ${getProductMaturityLabel(validated.maturityStage)} · v${validated.version}`;
++}
++
++export function formatCompactProductRelease(release: ProductRelease): string {
++  const validated = parseProductRelease(release);
++  return `${getProductMaturityLabel(validated.maturityStage)} · v${validated.version}`;
++}
+diff --git a/packages/core/test/product-release.test.ts b/packages/core/test/product-release.test.ts
+--- /dev/null
++++ b/packages/core/test/product-release.test.ts
+@@ -0,0 +1,192 @@
++import { describe, expect, it } from 'vitest';
++import {
++  CURRENT_YUTA_PRODUCT_RELEASE,
++  PRODUCT_MATURITY_LABELS,
++  PRODUCT_MATURITY_STAGES,
++  formatCompactProductRelease,
++  formatProductRelease,
++  getProductMaturityLabel,
++  isValidProductVersion,
++  parseProductRelease,
++  type ProductMaturityStage,
++  type ProductRelease,
++} from '../src';
++
++const expectedLabels = {
++  PROTOTYPE: 'Prototype',
++  ALPHA: 'Alpha',
++  PRIVATE_BETA: 'Private Beta',
++  PUBLIC_BETA: 'Public Beta',
++  RELEASE_CANDIDATE: 'RC',
++  GENERAL_AVAILABILITY: 'Stable',
++} as const;
++
++describe('Product Release maturity stages', () => {
++  it('exposes exactly the six approved stages and canonical labels', () => {
++    expect(PRODUCT_MATURITY_STAGES).toEqual([
++      'PROTOTYPE',
++      'ALPHA',
++      'PRIVATE_BETA',
++      'PUBLIC_BETA',
++      'RELEASE_CANDIDATE',
++      'GENERAL_AVAILABILITY',
++    ]);
++    expect(PRODUCT_MATURITY_LABELS).toEqual(expectedLabels);
++    expect(Object.isFrozen(PRODUCT_MATURITY_STAGES)).toBe(true);
++    expect(Object.isFrozen(PRODUCT_MATURITY_LABELS)).toBe(true);
++
++    for (const stage of PRODUCT_MATURITY_STAGES) {
++      expect(getProductMaturityLabel(stage)).toBe(expectedLabels[stage]);
++    }
++  });
++
++  it('rejects unsupported runtime stages instead of returning a fallback', () => {
++    expect(() =>
++      getProductMaturityLabel('BETA' as ProductMaturityStage),
++    ).toThrow('Invalid Product Maturity Stage');
++    expect(() =>
++      parseProductRelease({
++        ...CURRENT_YUTA_PRODUCT_RELEASE,
++        maturityStage: 'BETA',
++      }),
++    ).toThrow('Invalid Product Release metadata');
++  });
++});
++
++describe('Product Version validation', () => {
++  it.each([
++    '0.1.0',
++    '1.0.0',
++    '2.13.4',
++    '0.1.0-alpha.1',
++    '0.2.0-beta.1',
++    '0.9.0-rc.1',
++    '1.0.0-alpha.0',
++    '1.0.0-alpha-1',
++  ])('accepts approved grammar: %s', (version) => {
++    expect(isValidProductVersion(version)).toBe(true);
++  });
++
++  it.each([
++    '',
++    '1',
++    '1.0',
++    'v0.1.0-alpha.1',
++    '01.0.0',
++    '1.01.0',
++    '1.0.00',
++    '0.1.0-',
++    '0.1.0-alpha..1',
++    '0.1.0-alpha.01',
++    '1.0.0+build.42',
++    '1.0.0-alpha+build.42',
++    '1.0.0-01',
++    '1.0.0-ALPHA_1',
++    '1.0.0\n',
++    '1.0.0\r\n',
++  ])('rejects values outside the approved grammar: %s', (version) => {
++    expect(isValidProductVersion(version)).toBe(false);
++    expect(() =>
++      parseProductRelease({ ...CURRENT_YUTA_PRODUCT_RELEASE, version }),
++    ).toThrow('Invalid Product Release metadata');
++  });
++});
++
++describe('YUTA Product Release identity', () => {
++  it('has one immutable four-field current release without a release ID or label copy', () => {
++    expect(CURRENT_YUTA_PRODUCT_RELEASE).toEqual({
++      product: 'YUTA',
++      maturityStage: 'ALPHA',
++      version: '0.1.0-alpha.1',
++      releaseName: 'Foundation',
++    });
++    expect(Reflect.ownKeys(CURRENT_YUTA_PRODUCT_RELEASE)).toEqual([
++      'product',
++      'maturityStage',
++      'version',
++      'releaseName',
++    ]);
++    expect(Object.isFrozen(CURRENT_YUTA_PRODUCT_RELEASE)).toBe(true);
++    expect(parseProductRelease(CURRENT_YUTA_PRODUCT_RELEASE)).toEqual(
++      CURRENT_YUTA_PRODUCT_RELEASE,
++    );
++  });
++
++  it('rejects extra metadata and blank release names', () => {
++    expect(() =>
++      parseProductRelease({
++        ...CURRENT_YUTA_PRODUCT_RELEASE,
++        releaseId: 'some-id',
++      }),
++    ).toThrow('Invalid Product Release metadata');
++    expect(() =>
++      parseProductRelease({
++        ...CURRENT_YUTA_PRODUCT_RELEASE,
++        publicLabel: 'Alpha',
++      }),
++    ).toThrow('Invalid Product Release metadata');
++    expect(() =>
++      parseProductRelease({
++        ...CURRENT_YUTA_PRODUCT_RELEASE,
++        releaseName: ' ',
++      }),
++    ).toThrow('Invalid Product Release metadata');
++  });
++
++  it('derives full and compact representations without altering canonical version', () => {
++    expect(formatProductRelease(CURRENT_YUTA_PRODUCT_RELEASE)).toBe(
++      'YUTA Alpha · v0.1.0-alpha.1',
++    );
++    expect(formatCompactProductRelease(CURRENT_YUTA_PRODUCT_RELEASE)).toBe(
++      'Alpha · v0.1.0-alpha.1',
++    );
++    expect(CURRENT_YUTA_PRODUCT_RELEASE.version).toBe('0.1.0-alpha.1');
++  });
++
++  it('keeps the release name separate from stage and version', () => {
++    const renamed: ProductRelease = {
++      ...CURRENT_YUTA_PRODUCT_RELEASE,
++      releaseName: 'Next Foundation',
++    };
++
++    expect(parseProductRelease(renamed)).toEqual(renamed);
++    expect(formatProductRelease(renamed)).toBe('YUTA Alpha · v0.1.0-alpha.1');
++  });
++
++  it('keeps maturity independent of prerelease text', () => {
++    for (const maturityStage of ['PRIVATE_BETA', 'PUBLIC_BETA'] as const) {
++      const release: ProductRelease = {
++        ...CURRENT_YUTA_PRODUCT_RELEASE,
++        maturityStage,
++        version: '0.2.0-beta.1',
++      };
++
++      expect(parseProductRelease(release).maturityStage).toBe(maturityStage);
++      expect(formatCompactProductRelease(release)).toBe(
++        `${expectedLabels[maturityStage]} · v0.2.0-beta.1`,
++      );
++    }
++
++    expect(
++      parseProductRelease({
++        ...CURRENT_YUTA_PRODUCT_RELEASE,
++        version: '1.0.0',
++      }).maturityStage,
++    ).toBe('ALPHA');
++  });
++
++  it('validates metadata before formatting', () => {
++    expect(() =>
++      formatProductRelease({
++        ...CURRENT_YUTA_PRODUCT_RELEASE,
++        version: 'v0.1.0-alpha.1',
++      }),
++    ).toThrow('Invalid Product Release metadata');
++    expect(() =>
++      formatCompactProductRelease({
++        ...CURRENT_YUTA_PRODUCT_RELEASE,
++        maturityStage: 'UNKNOWN',
++      } as unknown as ProductRelease),
++    ).toThrow('Invalid Product Release metadata');
++  });
++});

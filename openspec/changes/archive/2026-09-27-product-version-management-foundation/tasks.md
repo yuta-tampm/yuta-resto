@@ -2,7 +2,8 @@
 
 Change: `product-version-management-foundation`  
 Schema: `yuta-spec-driven`  
-Planning state: Tasks/TIC prepared; `APPLY: NOT AUTHORIZED`; mọi checkbox còn mở.  
+Execution state (2026-09-27): Phase 1–6 checkboxes complete; current technical `VERIFY: PASS` is recorded in the reassessment, and Browser `QA: PASS` in the QA report. Gate 3 human review remains pending.
+
 `UI_AFFECTING: YES`  
 `BROWSER_QA_REQUIRED: YES`  
 Sensitive Design Gate: `NOT_TRIGGERED` theo Design hiện hành.
@@ -74,7 +75,7 @@ Trước Apply, ghi lại `git status --short`, HEAD, hash và scoped diff của
 - Targeted checks (`REQUIRED_FOR_PHASE`): `pnpm docs:check`, scoped documentation review/attribution; `pnpm format:check` cho formatting-sensitive diff khi chạy ở final check.
 - Completion evidence: doc links, current-record reference, release-update steps, exact docs-check result, isolated diff và truthful Registry row.
 
-## 5. Integration / Regression — Technical VERIFY (future, after Apply)
+## 5. Integration / Regression — Technical VERIFY
 
 - [x] 5.1 Đối chiếu 7 requirements/21 scenarios với Core tests/API/metadata, chạy `pnpm --filter @yuta/core test` và `pnpm --filter @yuta/core typecheck`; ghi từng case/command/result trong VERIFY evidence, không biến structural validation thành implementation PASS.
 - [x] 5.2 Trong exclusive checkout, chạy `pnpm typegen:next` thành công trước Web/Backoffice Next typechecks; chạy `pnpm --filter @yuta/web typecheck`, `pnpm --filter @yuta/web build`, kiểm tra Web không giữ release literal cũ hoặc đổi footer ngoài scope; ghi exact results và source evidence.
@@ -90,11 +91,24 @@ Trước Apply, ghi lại `git status --short`, HEAD, hash và scoped diff của
 - Required checks (`REQUIRED_FOR_FINAL_VERIFY`): các command ở 5.1–5.4 và bảng Verification matrix dưới đây. `pnpm test:local`/POS/DB migration checks `NOT_APPLICABLE` vì scope không đổi local runtime/persistence; không dùng `pnpm --filter @yuta/web test` vì manifest không có script. Broader cloud tests/builds không thay thế focused Core/Web/Backoffice evidence; mở rộng chỉ nếu VERIFY phát hiện dependency regression cụ thể.
 - Completion evidence: exact command/exit outputs, reviewed scoped diff, 7×21 mapping, TIC matrix và truthful VERIFY result. Technical PASS không cấp QA/Gate 3/deploy approval.
 
-## 6. Integration / Regression — Browser QA (future, after VERIFY)
+### Phase 5 formatting acceptance amendment — 2026-09-27
 
-- [ ] 6.1 Trên real/local Public Web route, kiểm tra footer desktop `1366x768` và mobile `390x844`: full release đúng từ Core, không `Projet pilote`, nội dung footer quanh đó giữ nguyên, text readable/accessible theo tokens, không overflow/clipping với prerelease string; xác nhận bằng screenshot thật và observation.
-- [ ] 6.2 Trên authenticated Backoffice route, kiểm tra `AppFooter` desktop `1366x768` và mobile/responsive `390x844` khi áp dụng: compact release đúng, không `YUTA v1.0.0`, navigation/auth shell không regress, text readable/accessible, không overflow; xác nhận bằng screenshot thật và observation. Thêm `768x1024` nếu breakpoint có layout/state khác đáng kể.
-- [ ] 6.3 Đối chiếu hai app với cùng `CURRENT_YUTA_PRODUCT_RELEASE`, lập `docs/reviews/product-version-management-foundation/qa/QA_REPORT.md`, `screenshot-manifest.md` và ảnh PNG thật; ghi route, role/state, viewport, scenario, screenshot path/SHA-256, accessibility/regression findings và canonical QA status `PASS | FAIL | BLOCKED_BY_ENVIRONMENT`, rồi xác nhận manifest hash khớp file bytes. Không dùng `NOT_APPLICABLE` cho UI-affecting change.
+Approval source: the current user's instruction to handle the VERIFY condition directly so Product Version can proceed, following the specific recommendation to use change-scoped formatting evidence while preserving the repository-wide failure. This amendment changes only the Phase 5 formatting acceptance criterion for `product-version-management-foundation`; it does not alter Product Release behavior, approved Specs/Design, the mandatory Browser QA, repository formatting policy, or another change's acceptance contract.
+
+The 2026-09-24 `pnpm format:check` exit 1 with 82 warnings and `VERIFY: FAIL` remain historical evidence. They MUST NOT be relabeled as a global PASS. For a fresh Product Version VERIFY, the former `pnpm format:check` mandatory-PASS row in task 5.4, the Phase 5 TIC and the verification matrix above is superseded by all of these bounded obligations:
+
+1. The exact attributed Core, Web, Backoffice, Product Release Home, `docs/README.md`, Design and Tasks files SHALL pass scoped Prettier checks on current bytes. Existing approved Proposal, Analysis, delta Spec and review packets are hash-bound and SHALL NOT be reformatted to make a broad check green.
+2. For `docs/PRODUCT_KNOWLEDGE.md` and `docs/MODULE_REGISTRY.md`, the Product Version additions SHALL match their isolated formatted snippets and the accepted Phase 4 preimage attribution. If either full-file hash has changed since the prior attribution, re-establish the exact scoped diff and snippet formatting before accepting this row; unrelated pre-existing whole-file failures remain separate.
+3. The recorded global formatter failure SHALL be reported separately as repository baseline debt with its exact historical result. A failure in an attributed Product Version file or newly added Product Version text remains a current formatting failure. Neither scoped PASS nor this amendment claims repository-wide formatting PASS.
+4. All other Phase 5 Technical VERIFY obligations remain required. A fresh Technical Compliance Matrix SHALL evaluate this amended scoped formatting row and retain the historical global FAIL as a distinct, non-current-gate observation. No Browser QA or Gate 3 readiness is inferred from a technical result.
+
+This is a change-specific review criterion, not a general exception for future work. The current-user decision authorizes a fresh Phase 5 VERIFY assessment against this amendment; it does not retroactively change the 2026-09-24 result.
+
+## 6. Integration / Regression — Browser QA
+
+- [x] 6.1 Trên real/local Public Web route, kiểm tra footer desktop `1366x768` và mobile `390x844`: full release đúng từ Core, không `Projet pilote`, nội dung footer quanh đó giữ nguyên, text readable/accessible theo tokens, không overflow/clipping với prerelease string; xác nhận bằng screenshot thật và observation.
+- [x] 6.2 Trên authenticated Backoffice route, kiểm tra `AppFooter` desktop `1366x768` và mobile/responsive `390x844` khi áp dụng: compact release đúng, không `YUTA v1.0.0`, navigation/auth shell không regress, text readable/accessible, không overflow; xác nhận bằng screenshot thật và observation. Thêm `768x1024` nếu breakpoint có layout/state khác đáng kể.
+- [x] 6.3 Đối chiếu hai app với cùng `CURRENT_YUTA_PRODUCT_RELEASE`, lập `docs/reviews/product-version-management-foundation/qa/QA_REPORT.md`, `screenshot-manifest.md` và ảnh PNG thật; ghi route, role/state, viewport, scenario, screenshot path/SHA-256, accessibility/regression findings và canonical QA status `PASS | FAIL | BLOCKED_BY_ENVIRONMENT`, rồi xác nhận manifest hash khớp file bytes. Không dùng `NOT_APPLICABLE` cho UI-affecting change.
 
 ### TECHNICAL IMPLEMENTATION CONTRACT — Phase 6
 
@@ -105,7 +119,7 @@ Trước Apply, ghi lại `git status --short`, HEAD, hash và scoped diff của
 - Required checks (`REQUIRED_FOR_FINAL_VERIFY` là tiền đề): `VERIFY: PASS`; Browser QA tự có status độc lập. `BROWSER_QA_REQUIRED: YES` và QA `PASS` là điều kiện Gate 3, không được suy từ typecheck/build.
 - Completion evidence: report, manifest, hashed screenshots, viewport/role/state/scenario mapping và exact QA result; environment block/failure giữ nguyên, không fabricate PASS.
 
-## Verification matrix — proposed commands, no results yet
+## Verification matrix — original planned commands
 
 | Command/evidence                                                                                         | Classification                                     | Owner và điều kiện                                                                                                                                         |
 | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -123,7 +137,7 @@ Trước Apply, ghi lại `git status --short`, HEAD, hash và scoped diff của
 | `pnpm test:local`, POS/DB migration checks, `pnpm --filter @yuta/web test`                               | `NOT_APPLICABLE`                                   | Không đổi local/persistence; Web không có test script.                                                                                                     |
 | `pnpm test:cloud`, `pnpm build:cloud`                                                                    | `NOT_APPLICABLE` cho bounded default               | Bao gồm Auth/Booking/Feedback/DB ngoài direct scope; mở rộng theo concrete regression risk hoặc required gate, không thay thế targeted checks.             |
 
-Trước khi chạy bất kỳ wrapper trong Apply/VERIFY, kiểm tra side effects, cache, subprocess, service/network và trạng thái exclusive checkout theo `docs/DEVELOPMENT_WORKFLOW.md`; không chạy kiểm tra nào chỉ vì nó được ghi trong kế hoạch. Current planning chỉ định command, chưa có kết quả `PASS`/`FAIL` mới.
+Trước khi chạy bất kỳ wrapper trong Apply/VERIFY, kiểm tra side effects, cache, subprocess, service/network và trạng thái exclusive checkout theo `docs/DEVELOPMENT_WORKFLOW.md`; không chạy kiểm tra nào chỉ vì nó được ghi trong kế hoạch. Bảng trên là kế hoạch gốc; kết quả lịch sử và reassessment hiện tại được ghi trong các VERIFY evidence riêng, còn Browser QA trong `qa/QA_REPORT.md`.
 
 ## Traceability — approved intent to future evidence
 
@@ -137,10 +151,10 @@ Trước khi chạy bất kỳ wrapper trong Apply/VERIFY, kiểm tra side effec
 | Backoffice footer uses same authority       | Existing authenticated `AppFooter`, compact text | 3.1–3.3; TIC 3                | test/typecheck/build/client graph, QA 6.2–6.3                               |
 | Maturity separate from capability lifecycle | No promotion/availability logic                  | 1.3, 1.6, 4.1, 4.3; TIC 1/4/5 | independence tests, docs/registry review, VERIFY 5.4                        |
 
-Trace chain: approved Proposal/Analysis → Gate 1 Product decisions → exact Gate 2 Spec → Design decisions → numbered task/TIC owner → future VERIFY/QA evidence above. Current task checkboxes are planning obligations, not implementation or test results.
+Trace chain: approved Proposal/Analysis → Gate 1 Product decisions → exact Gate 2 Spec → Design decisions → numbered task/TIC owner → VERIFY reassessment và Browser QA evidence. Checked tasks refer to their separate implementation/verification/QA evidence; checkboxes alone are not a PASS claim.
 
 ## Scope stop and next gate
 
 If Apply discovers need for database state/schema, API route, tenant-scoped versioning, feature flags or SHOW/HIDE/LOCK, release ID, deployment integration, GitHub Actions, runtime release provider, package-version synchronization, Product Release-specific `@yuta/ui` component, maturity inference from Product Version, changed auth/tenant/routing/Server–Client behavior, or a qualifying Sensitive Design boundary, stop with `NEEDS_REVIEW` and return to the owning Product/Design/authority gate. Do not edit approved Specs/Design to fit implementation or infer permission from technical PASS.
 
-Recommended first later Apply phase: **Phase 1 — Core Product Release foundation**, after explicit Control Tower/human Apply authorization, integrity recheck and pre-Apply baseline/isolation. This Tasks/TIC artifact does not authorize Apply, VERIFY, Browser QA, Gate 3, sync/archive or deployment.
+Current next gate: assemble `03-final-review.md` with current artifact hashes, implementation attribution, technical VERIFY reassessment and Browser QA evidence; stop for explicit Gate 3 human review and sync authorization. This Tasks/TIC artifact alone does not approve Gate 3, sync/archive or deployment.
