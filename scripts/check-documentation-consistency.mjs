@@ -295,6 +295,49 @@ for (const file of currentDocuments) {
   }
 }
 
+const bridgePromptSections = [
+  {
+    file: 'docs/chatGPT/YUTA_PAGE_CHAT_OPERATING_PROMPT_V3.md',
+    nextHeading: '## Existing change / workflow state / evidence state',
+  },
+  {
+    file: 'docs/chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT_V3.md',
+    nextHeading: '## Existing-state intake',
+  },
+];
+
+const bridgeModeSections = bridgePromptSections.map(({ file, nextHeading }) => {
+  if (!existsSync(join(repositoryRoot, file))) {
+    addFailure('missing-bridge-prompt', file, 'copy-paste prompt is missing');
+    return null;
+  }
+
+  const content = read(file).replace(/\r\n/g, '\n');
+  const start = content.indexOf('## Browser Bridge Mode v1\n');
+  const end = content.indexOf(nextHeading, start);
+  if (start < 0 || end < 0) {
+    addFailure(
+      'missing-bridge-mode',
+      file,
+      'complete Bridge Mode section is missing',
+    );
+    return null;
+  }
+
+  return content.slice(start, end).trimEnd();
+});
+
+if (
+  bridgeModeSections.every((section) => section !== null) &&
+  bridgeModeSections[0] !== bridgeModeSections[1]
+) {
+  addFailure(
+    'bridge-mode-drift',
+    bridgePromptSections[0].file,
+    'Page and Global copy-paste prompts must contain identical Bridge Mode v1 sections',
+  );
+}
+
 if (failures.length > 0) {
   console.error('Documentation consistency check failed:\n');
 

@@ -120,16 +120,20 @@ human-readable YUTA Workflow v3 operating guide**. It explains the complete
 operating model and routes to the detailed sources below; those sources retain
 their specialized authority and executable responsibilities.
 
-| Source                                                                                                                                                    | Role                                                                    |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| [`YUTA_WORKFLOW_V3.md`](YUTA_WORKFLOW_V3.md)                                                                                                              | Primary human-readable operating guide                                  |
-| [`YUTA_AUTOMATED_CHANGE_WORKFLOW.md`](YUTA_AUTOMATED_CHANGE_WORKFLOW.md)                                                                                  | Detailed automation/workflow protocol                                   |
-| [`YUTA_QA_PROTOCOL.md`](YUTA_QA_PROTOCOL.md)                                                                                                              | Detailed QA protocol                                                    |
-| [`YUTA_KNOWLEDGE_CONSOLIDATION_PROTOCOL.md`](YUTA_KNOWLEDGE_CONSOLIDATION_PROTOCOL.md)                                                                    | Detailed post-archive knowledge protocol                                |
-| [`.agents/skills/yuta-run-change/SKILL.md`](../.agents/skills/yuta-run-change/SKILL.md)                                                                   | Executable change start/run/resume behavior through the next human gate |
-| [`.agents/skills/yuta-finish-change/SKILL.md`](../.agents/skills/yuta-finish-change/SKILL.md)                                                             | Executable finalization and archived Knowledge Review resume behavior   |
-| [`openspec/config.yaml`](../openspec/config.yaml) and [`openspec/schemas/yuta-spec-driven/schema.yaml`](../openspec/schemas/yuta-spec-driven/schema.yaml) | OpenSpec artifact and dependency mechanics                              |
-| [`chatGPT/YuTa_Workflow_v3.pdf`](archive/yuta-workflow/reference/YuTa_Workflow_v3.pdf)                                                                    | Static snapshot only; non-canonical—use the human-readable guide        |
+| Source                                                                                                                                                    | Role                                                                     |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| [`YUTA_WORKFLOW_V3.md`](YUTA_WORKFLOW_V3.md)                                                                                                              | Primary human-readable operating guide                                   |
+| [`YUTA_AUTOMATED_CHANGE_WORKFLOW.md`](YUTA_AUTOMATED_CHANGE_WORKFLOW.md)                                                                                  | Detailed automation/workflow protocol                                    |
+| [`chatGPT/YUTA_PAGE_CHAT_OPERATING_PROMPT_V3.md`](chatGPT/YUTA_PAGE_CHAT_OPERATING_PROMPT_V3.md)                                                          | Complete copy-paste startup prompt for a Page Chat / Local Control Tower |
+| [`chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT_V3.md`](chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT_V3.md)                                                  | Complete copy-paste startup prompt for a Global Control Tower            |
+| [`chatGPT/YUTA_CONTROL_TOWER_HANDOFF_TEMPLATE_V3.md`](chatGPT/YUTA_CONTROL_TOWER_HANDOFF_TEMPLATE_V3.md)                                                  | Manual Local/Global context handoff templates                            |
+| [`.agents/skills/yuta-control-tower-bridge/SKILL.md`](../.agents/skills/yuta-control-tower-bridge/SKILL.md)                                               | Codex browser target, protocol and result-delivery rules                 |
+| [`YUTA_QA_PROTOCOL.md`](YUTA_QA_PROTOCOL.md)                                                                                                              | Detailed QA protocol                                                     |
+| [`YUTA_KNOWLEDGE_CONSOLIDATION_PROTOCOL.md`](YUTA_KNOWLEDGE_CONSOLIDATION_PROTOCOL.md)                                                                    | Detailed post-archive knowledge protocol                                 |
+| [`.agents/skills/yuta-run-change/SKILL.md`](../.agents/skills/yuta-run-change/SKILL.md)                                                                   | Executable change start/run/resume behavior through the next human gate  |
+| [`.agents/skills/yuta-finish-change/SKILL.md`](../.agents/skills/yuta-finish-change/SKILL.md)                                                             | Executable finalization and archived Knowledge Review resume behavior    |
+| [`openspec/config.yaml`](../openspec/config.yaml) and [`openspec/schemas/yuta-spec-driven/schema.yaml`](../openspec/schemas/yuta-spec-driven/schema.yaml) | OpenSpec artifact and dependency mechanics                               |
+| [`chatGPT/YuTa_Workflow_v3.pdf`](archive/yuta-workflow/reference/YuTa_Workflow_v3.pdf)                                                                    | Static snapshot only; non-canonical—use the human-readable guide         |
 
 Historical setup, approval evidence, and completed tasks are indexed in
 [`archive/yuta-workflow/README.md`](archive/yuta-workflow/README.md).

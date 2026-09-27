@@ -1,4 +1,4 @@
-# YUTA — Control Tower Handoff Template v3.1
+# YUTA — Control Tower Handoff Template v3.2
 
 Operating notice:
 This is an operational handoff template, not normative workflow authority.
@@ -7,6 +7,27 @@ canonical Workflow, Automated Workflow and Control Tower prompt own decisions.
 
 Canonical workflow authority:
 [`YUTA_WORKFLOW_V3.md`](../YUTA_WORKFLOW_V3.md)
+
+## Manual Global to owning Page Chat
+
+For work classified `PAGE_LOCAL`, Global gives Human this short, sourced relay
+and stops dependent work. Human chooses the exact owning Page Chat. Codex then
+verifies that selected chat and its Bridge Mode before a fresh run. This relay
+does not move runtime authority, approve a gate or authorize Apply; the chats
+do not communicate automatically.
+
+```text
+PAGE_LOCAL MANUAL HANDOFF
+Owning Page Chat: <title and exact conversation URL/ID, or UNKNOWN>
+Task and PAGE_LOCAL reason: <bounded request and source>
+Requirement baseline: <source and hard constraints, or UNKNOWN>
+Current change/gate: <exact change and next gate, or NONE/UNKNOWN>
+Evidence and blockers: <exact references and unresolved gaps>
+Last run/command and causal lineage: <identities if applicable; no replay>
+Next action for Human: select the owning Page Chat and continue there
+```
+
+## Page Chat to Global Control Tower
 
 Use this template when a Page Chat classifies a request as:
 
@@ -23,6 +44,7 @@ CROSS-MODULE CHANGE HANDOFF
 
 Origin page:
 Feature / request:
+Requirement baseline and source (including hard constraints/out-of-scope):
 
 Impact classification:
 - CROSS_MODULE / UNCERTAIN

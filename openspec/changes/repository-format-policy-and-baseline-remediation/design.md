@@ -72,6 +72,16 @@ layout/ownership contract supplied as a separately reviewed immutable policy
 document; its exact bytes/hash must accompany future approval. No remote lookup,
 OS ownership or linked-layout fallback is part of that policy.
 
+The portable repository-state candidate used before that independent RAM3
+approval has exactly head, headTreeId, indexTreeId,
+sourceProjectionIdentity and logicalRuntimeRoot. The last value is `/input`.
+Require matching HEAD and index tree identities for this candidate and hash its
+VL5 canonical bytes. This candidate identity binds the exact Git-object source
+projection but does not itself approve the RAM3 repositoryKey, ownership policy,
+host binding or mapping. Host checkout and temporary projection paths, machine
+identity and raw `.git/index` SHA remain separate execution observations; none
+enters this portable candidate identity.
+
 Anchor mapping descriptor has exactly schemaVersion, scopeKind,
 repositoryAnchorIdentity, repositoryOwnershipPolicyIdentity, consumerMountTarget,
 deliveryMode, readOnly, mappingPolicyIdentity, consumerContractIdentity,
@@ -391,7 +401,7 @@ not permissions. No repository-wide authority replaces per-target authority.
 
 | Input type                  | Authority                                                                      |
 | --------------------------- | ------------------------------------------------------------------------------ |
-| WORKSPACE_DIRECTORY_TARGET  | Exact per-target DA1 and LC1–LC4 current-byte closure                          |
+| WORKSPACE_DIRECTORY_TARGET  | Exact per-target DA1 and LC1–LC4 Git-object-byte closure                       |
 | LINK_DIRECTORY_TARGET       | Exact per-target DA1 after approved importer-relative resolution               |
 | FILE_DIRECTORY_TARGET       | Exact per-target DA1 only for supported directory semantics                    |
 | LOCAL_TARBALL               | Graph input closure: exact raw length/hash and native integrity                |
@@ -741,7 +751,8 @@ Adopt HOST_SIDE_READ_ONLY_GIT_OUTPUT_ADAPTER with a
 VERSION_BOUND_FAIL_CLOSED_GIT_OUTPUT_ADAPTER. EXISTING_TRACKED_INVENTORY_PRODUCER:
 PARTIAL: scripts/format-policy/check.mjs inventoryRepository() demonstrates
 tracked-path discovery and current-worktree byte reads but lacks the required
-stage/flag/provenance envelope. Reuse its path-safety/current-byte principles;
+stage/flag/provenance envelope. Reuse its path-safety principles, but replace
+its source-byte reads with exact bound Git-object supply and equality checks;
 do not accept its existing output as sufficient V-LOCK authority.
 
 Owner is V-LOCK outer orchestration, using a separate host-side helper. Proposed
@@ -836,8 +847,10 @@ objectId, trackedState and flags. mode is the exact six-digit Git mode string;
 stage is integer; objectId is index evidence only. Accepted trackedState is
 TRACKED_REGULAR; flags explicitly records intentToAdd, assumeUnchanged and
 skipWorktree as false plus reviewed rawFlags. Only reviewed normal stage-0
-regular modes 100644/100755 are supported. Modified tracked worktree bytes are
-supported subject to current-byte approval, never replaced by Git object bytes.
+regular modes 100644/100755 are supported. Canonical tracked V-LOCK source bytes
+are the exact Git object bytes selected by the bound tree, with matching index
+tree identity. A modified host checkout is non-authoritative representation
+evidence, never a source-byte substitution or normalization step.
 
 Missing/deleted file, type mismatch, unmerged/multiple stages, intent-to-add,
 assume-unchanged, skip-worktree, tracked symlink, unsupported flags/mode/grammar
@@ -882,9 +895,11 @@ outer orchestration supplies the independently approved binding, not a digest
 inside the same untrusted envelope. No raw caller path list or self-approval.
 The child verifies bound evidence, not a claim that it independently ran Git.
 
-Git determines membership/index state; guarded filesystem reads determine exact
-CURRENT WORKTREE BYTES under LC3/LC4. Verify file/parent type and identity before
-and after reading and rehash/reinventory before acceptance. No Git blob fallback.
+Git determines membership/index state and exact tracked object bytes under
+LC3/LC4. Verify Git mode/type, object ID, raw object SHA-256 and exact equality
+to runtime-supplied bytes before and after delivery. Host checkout bytes are
+non-authoritative observations; no checkout filter or EOL conversion may alter
+candidate supply.
 Combined discovery compares physical target contents against bound tracked
 records, explicitly admitted inputs and LC2 install exclusions. Every remaining
 non-install member is UNBOUND_SOURCE_MEMBER. Supplemental ignored evidence
@@ -894,7 +909,7 @@ retain LC2 review rules. Never expose secret raw bytes as incidental evidence.
 ### GI6 — PRE/POST acceptance and lifecycle
 
 Sequence: host PRE capture → canonical inventory/envelope identity → read-only
-input delivery → child evidence verification → current-byte hashing and unbound
+Git-object input delivery → child evidence verification → supplied-byte hashing and unbound
 member discovery → candidate directory identity → host POST capture → compare
 all required state → accept only stable evidence. Within capture, bracket Git
 queries with index/config/anchor checks as well. Recheck HEAD, raw index,
@@ -929,7 +944,7 @@ It does not approve implementation, a graph identity, or any historical rebind.
 REPOSITORY_OWNED_LOCAL_SOURCE_CLOSURE is the selected model, not recursive
 PHYSICAL_DIRECTORY_CONTENT. Bind the repository-relative target, authoritative
 package/workspace manifest and package identity, deterministic repository-owned
-member inventory, current approved worktree bytes and explicitly admitted local
+member inventory, exact bound Git-object bytes and explicitly admitted local
 inputs required by the approved graph semantics. No execution of manifests.
 
 Repository ownership authority is partial but sufficient for this bounded
@@ -939,12 +954,12 @@ material; docs/DEVELOPMENT_WORKFLOW.md separately governs required generated
 Next types. Ignore status is not admission or a universal exclusion policy.
 
 The primary member set is the exact Git tracked-path inventory beneath the
-target, plus separately authorized required local inputs. Git determines path
-membership, not accepted content. Hash CURRENT APPROVED WORKTREE BYTES, never
-substitute HEAD/index blob content for modified working files. Staged and
-unstaged differences are recorded as distinct context; neither staging nor
-tracking grants content approval. Bind inventory and current bytes to separate
-reviewed input approval; additions/removals or changed bytes require review.
+target, plus separately authorized required local inputs. For tracked members,
+the bound Git tree selects both membership and canonical exact object bytes.
+Bind mode/type, object ID, raw SHA-256 and runtime-supplied SHA-256; require
+byte-for-byte equality. Staged and unstaged host checkout differences remain
+separate observations and confer no source approval. A changed tree, object or
+supplied byte requires review; never normalize checkout bytes into supply.
 
 Explicit inputs require exact path, role, owner/approval and byte identity;
 discovering a dependency does not self-admit its source. Required inputs outside
@@ -987,13 +1002,14 @@ follow arbitrary links. Preserve containment, exact case, hardlink/physical
 alias rejection and canonical relative-path checks. Excluded install children
 are not traversed; exclusion must not mask an authoritative ancestor or overlap.
 
-Fail closed on missing/deleted tracked members, unexpected type, unmerged index,
-index/worktree path collision, case/path ambiguity, unsupported ownership state,
-submodules/gitlinks or nested repositories with unresolved ownership. Git blobs
-do not reconstruct missing files. Bind fresh inventory and bytes before/after
-validation; concurrent drift invalidates the run. No auto-rebaseline. Identical
-approved source bytes/inventory produce the same identity across platforms;
-line-ending differences remain byte differences, not normalized equivalence.
+Fail closed on missing Git objects, unsupported mode/type, unmerged index,
+index/tree mismatch, case/path ambiguity, unsupported ownership state,
+submodules/gitlinks or nested repositories with unresolved ownership. A host
+checkout difference is recorded as non-authoritative representation evidence,
+not silently supplied. Bind fresh inventory and object/supplied bytes before
+and after validation; concurrent drift invalidates the run. No auto-rebaseline.
+Identical approved Git-object bytes/inventory produce the same identity across
+platforms; checkout line endings cannot change candidate source identity.
 
 ### LC4 — Deterministic directory descriptor and target types
 
@@ -1003,7 +1019,8 @@ repository-relative paths; packageIdentity binds exact manifest name/version
 when applicable (explicit null only for a separately admitted non-package
 directory). The manifest is itself a required member. members is an array of
 records with exactly path, type, bytes and sha256: repository-relative path,
-type file, raw byte length and SHA-256 of current authoritative worktree bytes.
+type file, raw byte length and SHA-256 of exact bound Git-object bytes supplied
+to the candidate runtime.
 Unsupported member types fail. Physical empty directories and install layout
 do not enter this source-member descriptor; required directory structure is
 derived from admitted file paths, not an ambient directory walk.

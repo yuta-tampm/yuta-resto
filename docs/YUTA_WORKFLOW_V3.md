@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-09-24
+Last updated: 2026-09-27
 
 ## 1. Workflow này là gì
 
@@ -42,17 +42,17 @@ Release, deploy và Production Readiness không nằm trong định nghĩa repos
 
 ## 2. Vai trò và trách nhiệm
 
-| Vai trò / lớp authority           | Trách nhiệm chính                                                                                  | Không được tự suy ra                                                                               |
-| --------------------------------- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| **Page Chat**                     | Giữ Product context của một page; thực hiện Cross-Module Impact Check; review các gate page-local. | Không khởi tạo change page-local khi kết quả là `CROSS_MODULE` hoặc `UNCERTAIN`.                   |
-| **YUTA Control Tower**            | Điều phối cross-page/module/runtime; làm rõ owner, authority, shared contract và review routing.   | Không thay thế chiều sâu Product context của Page Chat hoặc tự giải quyết blocker bằng assumption. |
-| **Codex**                         | Đọc authority, tạo/tiếp tục artifact, implement, kiểm tra, tập hợp evidence và dừng đúng gate.     | Không phải Product approver; không tự tạo approval, permission, owner hoặc durable boundary.       |
-| **OpenSpec**                      | Giữ proposal, analysis, delta specs, design và tasks của một change có cấu trúc.                   | Change trong `openspec/changes/**` không phải normative authority.                                 |
-| **Product Knowledge**             | Giải thích WHY, broader WHAT, mục đích module, quan hệ, scope và non-goals.                        | Không tự chứng minh code hiện tại, deployment hoặc readiness.                                      |
-| **Normative main specs**          | Sau approved sync, định nghĩa yêu cầu hành vi chính xác trong durable boundaries đã chấp nhận.     | Không thay thế ADR, security/runtime/data authority, code hoặc bằng chứng production.              |
-| **Code/tests**                    | Chứng minh repository Implemented State và mức độ test coverage.                                   | Không tự tạo Product approval hoặc chứng minh bản nào đang chạy production.                        |
-| **QA evidence**                   | Chứng minh hành vi người dùng/runtime, responsive, accessibility và visual khi áp dụng.            | Screenshot không định nghĩa business rule, permission, schema, owner hoặc lifecycle.               |
-| **Human reviewer / current user** | Ra quyết định tại đúng gate trên đúng artifact/hashes; cấp authorization rõ ràng khi cần.          | Một approval không tự mở rộng sang gate, change, path hoặc phiên bản artifact khác.                |
+| Vai trò / lớp authority             | Trách nhiệm chính                                                                                         | Không được tự suy ra                                                                         |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| **Page Chat / Local Control Tower** | Giữ Product context và gate của một page; làm việc trực tiếp với Codex khi Human chọn và xác minh bridge. | Không khởi tạo change page-local khi kết quả là `CROSS_MODULE` hoặc `UNCERTAIN`.             |
+| **Global Control Tower**            | Điều phối cross-page/module/runtime; làm rõ owner, authority, shared contract và review routing.          | Không thay Product context của Page Chat hoặc tự chuyển chat/quyền thực thi.                 |
+| **Codex**                           | Đọc authority, tạo/tiếp tục artifact, implement, kiểm tra, tập hợp evidence và dừng đúng gate.            | Không phải Product approver; không tự tạo approval, permission, owner hoặc durable boundary. |
+| **OpenSpec**                        | Giữ proposal, analysis, delta specs, design và tasks của một change có cấu trúc.                          | Change trong `openspec/changes/**` không phải normative authority.                           |
+| **Product Knowledge**               | Giải thích WHY, broader WHAT, mục đích module, quan hệ, scope và non-goals.                               | Không tự chứng minh code hiện tại, deployment hoặc readiness.                                |
+| **Normative main specs**            | Sau approved sync, định nghĩa yêu cầu hành vi chính xác trong durable boundaries đã chấp nhận.            | Không thay thế ADR, security/runtime/data authority, code hoặc bằng chứng production.        |
+| **Code/tests**                      | Chứng minh repository Implemented State và mức độ test coverage.                                          | Không tự tạo Product approval hoặc chứng minh bản nào đang chạy production.                  |
+| **QA evidence**                     | Chứng minh hành vi người dùng/runtime, responsive, accessibility và visual khi áp dụng.                   | Screenshot không định nghĩa business rule, permission, schema, owner hoặc lifecycle.         |
+| **Human reviewer / current user**   | Ra quyết định tại đúng gate trên đúng artifact/hashes; cấp authorization rõ ràng khi cần.                 | Một approval không tự mở rộng sang gate, change, path hoặc phiên bản artifact khác.          |
 
 Các lớp này bổ sung cho nhau. Khi chúng mâu thuẫn, dùng
 [`AUTHORITY_MODEL.md`](AUTHORITY_MODEL.md) để phân loại câu hỏi, ghi `CONFLICT`
@@ -115,6 +115,42 @@ và chọn đúng một kết quả:
 | `CROSS_MODULE` | Không tạo/tiếp tục local change. Lập handoff theo [Control Tower Handoff Template v3](chatGPT/YUTA_CONTROL_TOWER_HANDOFF_TEMPLATE_V3.md). |
 | `UNCERTAIN`    | Xử lý như `CROSS_MODULE` cho đến khi ownership và scope được làm rõ.                                                                      |
 
+### Human chọn Control Tower theo phạm vi công việc
+
+Với `PAGE_LOCAL`, owning Page Chat giữ Product/shaping authority và có thể là
+Local Control Tower giao việc trực tiếp cho Codex trong phạm vi page đó. Khi
+cần chuyển từ Global Control Tower sang Local Control Tower, dừng phần việc
+phụ thuộc và nêu rõ Page Chat đích, mục tiêu, change/gate, bằng chứng và blocker.
+Human tự chọn và chuyển sang đúng chat; Global Control Tower không cần truy
+xuất lịch sử Page Chat để Local Control Tower ra quyết định.
+Để khởi động một chat mới, Human dán **toàn bộ một file** tương ứng: [Page Chat
+Operating Prompt](chatGPT/YUTA_PAGE_CHAT_OPERATING_PROMPT_V3.md) cho Local
+Control Tower hoặc [Control Tower Operating
+Prompt](chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT_V3.md) cho Global Control
+Tower. Mỗi file tự chứa Bridge Mode v1; không cần dán thêm prompt thứ hai.
+Mỗi chat phải được xác minh bằng một vòng bridge chỉ đọc mới trước việc phụ
+thuộc; prompt trong repository không tự đồng bộ sang chat đang mở.
+
+Codex chỉ nhận lệnh từ chat Control Tower mà Human đã chọn và Codex đã xác minh
+đúng title, URL/conversation ID, role và scope cho run hiện tại. Local Control
+Tower có thể tiếp tục cùng Codex qua browser bridge sau khi operating context
+và protocol ở chính chat đó được xác minh. Không lấy lệnh từ hai chat cùng lúc,
+không coi việc đổi tab là approval hoặc tự động chuyển executable authority,
+không tái dùng command đã thực thi hay bỏ qua Human Gate/Apply authorization.
+Nếu target, quyền thực thi hoặc lịch sử chưa rõ, dừng trước khi gửi hay thực thi.
+Giữ nguyên causal lineage, budget, evidence, VERIFY/QA và các giới hạn chống
+replay. Bàn giao thủ công không biến QA federation còn thiếu thành `PASS`.
+Luồng chọn chat thủ công dùng browser bridge đã xác minh của từng chat; nó
+không phụ thuộc việc hoàn tất cơ chế chuyển quyền tự động của change
+`federated-control-towers-foundation`. Change đó giữ nguyên tiêu chí và trạng
+thái QA riêng cho đến khi được xử lý qua gate của chính nó.
+
+Với `CROSS_MODULE` hoặc `UNCERTAIN`, Local Control Tower dừng phần việc phụ
+thuộc và lập handoff có nguồn; Human chọn Global Control Tower để điều phối.
+Codex xác minh lại target và authorization trước khi tiếp tục. Hai chat không
+tự giao tiếp với nhau, và Global Control Tower không thay Page Chat quyết định
+Product cho `PAGE_LOCAL`.
+
 Một thay đổi cần Control Tower khi nó đọc/ghi data của nhiều owner, thay đổi
 shared permission/security/tenancy, đi qua nhiều runtime, cần provider/legal/
 privacy review, chạm durable boundary, hoặc cần contract và QA phối hợp giữa
@@ -176,6 +212,51 @@ NO_SPEC_BEHAVIOR_CHANGE
 `CONFLICT` là một finding (phát hiện), không phải Analysis conclusion. Nếu
 conflict ảnh hưởng requirement readiness, conclusion phải là
 `BLOCKED_NEEDS_REVIEW`; approval chung chung không giải quyết được blocker.
+
+### Giữ yêu cầu gốc và đưa change đến kết quả
+
+Với change mới, Proposal/Analysis và Gate 1 ghi ngắn gọn yêu cầu current-user
+đã đối chiếu authority (`AUTHORITATIVE_USER_REQUIREMENT`), ràng buộc cứng
+(`HARD_CONSTRAINTS`), phần ngoài phạm vi (`OUT_OF_SCOPE`) và kết quả quan sát
+được cần đạt (`SUCCESS_OUTCOMES`), cùng nguồn của chúng. Đây là phần của
+artifact/gate hiện có, không tạo artifact hoặc approval mới. Design phục vụ
+yêu cầu đã duyệt; approval Design, Tasks hoặc implementation không tự đổi
+baseline. Muốn đổi một phần của baseline phải có quyết định Human rõ ràng tại
+gate sở hữu và review lại các artifact/hash bị ảnh hưởng. Không dựng lại
+baseline như thể nó đã có trong hồ sơ lịch sử.
+
+Trước khi thêm subsystem, dependency lớn hoặc thay một khả năng sẵn có của
+Codex/nền tảng, kiểm tra việc đó có cần cho `SUCCESS_OUTCOMES`, có phù hợp
+`HARD_CONSTRAINTS` và `OUT_OF_SCOPE` không; dùng khả năng sẵn có khi đủ.
+Khả năng nền tảng như built-in browser là transport sẵn có, nhưng không tự
+chứng minh authorization, trusted
+observation hoặc kết quả QA của YUTA. Nếu giải pháp đổi requirement/scope hoặc
+vượt ràng buộc, dừng phần mở rộng và trình đúng thay đổi cần Human quyết định;
+không tự mở nhánh kiến trúc mới.
+Ví dụ hồi quy: nếu Gate 1 yêu cầu Codex dùng built-in browser, đề xuất thêm
+Playwright/Chrome và quản lý session riêng phải dừng để xét scope; bằng chứng
+browser do caller tự khai vẫn không đủ chứng minh quyền thực thi hay QA.
+
+Sau khi Design, Sensitive Design khi áp dụng, Tasks và phạm vi Apply đã được
+duyệt, bước mặc định là implement phạm vi được cấp quyền và kiểm tra tập trung.
+`FAIL` trước hết được phân loại: defect trong approved behavior thì sửa tại
+Apply; chỉ quay lại Design/gate sở hữu khi evidence cho thấy Design không thể
+đạt requirement/acceptance, phải đổi scope/authority, hoặc vi phạm một bất
+biến an toàn trọng yếu được nêu đích danh. Ghi vì sao correction trong scope
+hiện tại không đủ. Naming, field placement, fixture hoặc implementation
+mechanics tương đương không tự là lý do mở lại Design.
+
+Trước một vòng planning hoặc chạy lại tương đương, hỏi: điều gì đã thay đổi,
+evidence mới nào sẽ có và quyết định nào có thể thay đổi? Hai vòng planning
+liên tiếp cho cùng mục tiêu mà không có executable evidence mới là tín hiệu
+dừng planning, dùng `ITERATION_STOP_CONTROL` hiện có và chọn bước thực thi đã
+được cấp quyền hoặc một quyết định còn thiếu tại gate hiện có. Không thêm gate,
+bộ đếm hoặc QA status. Khi outcome được yêu cầu và evidence bắt buộc đã đủ,
+dừng công việc trong scope; hardening suy đoán để sau. Báo tiến triển bằng
+outcome quan sát được và evidence, không chỉ đếm task hoàn thành; giữ riêng
+Technical Compliance, VERIFY, QA và FAIL/BLOCKED lịch sử. Khi cần Human quyết
+định, tóm tắt bằng lời ngắn: quyết định gì, vì sao, lựa chọn và hệ quả chính;
+bằng chứng/hash chi tiết vẫn nằm trong review packet.
 
 ## 7. Review gates và integrity
 
@@ -732,8 +813,9 @@ $yuta-run-change     = start/resume/adopt; stop at next human gate
 $yuta-finish-change  = authorized finalization OR archived knowledge resume
 
 ESCALATION
-PAGE_LOCAL → owning Page Chat
-CROSS_MODULE / UNCERTAIN → YUTA Control Tower
+PAGE_LOCAL → owning Page Chat / Local Control Tower → Codex
+CROSS_MODULE / UNCERTAIN → Global Control Tower → Codex
+Human chọn chat đích; hai chat không tự giao tiếp hoặc tự chuyển quyền
 Codex finding CONFLICT / requirement-level NEEDS REVIEW → stop and route
 
 QA

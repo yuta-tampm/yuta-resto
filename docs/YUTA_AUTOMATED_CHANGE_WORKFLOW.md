@@ -90,6 +90,16 @@ Reviews exact Proposal and Analysis bytes. Requirement-level conflicts return to
 Analysis. Valid conclusions remain `READY_FOR_SPECS`,
 `BLOCKED_NEEDS_REVIEW`, and `NO_SPEC_BEHAVIOR_CHANGE`.
 
+For a new change, record one concise `REQUIREMENT_BASELINE` in the existing
+Proposal/Analysis and expose it at Gate 1: sourced, authority-reconciled
+`AUTHORITATIVE_USER_REQUIREMENT`, `HARD_CONSTRAINTS`, `OUT_OF_SCOPE`, and
+observable `SUCCESS_OUTCOMES`. Use `NONE` with a reason for a genuinely empty
+constraint or exclusion; do not invent one. This adds no artifact or gate.
+Later Design/Tasks approval cannot silently amend the baseline. A material
+change needs an explicit current-user decision at the owning gate and normal
+path/hash re-review. Preserve already approved history without backfilling a
+baseline into its old bytes.
+
 ### Gate 2 — Requirements review
 
 Reviews every exact delta spec and strict validation evidence. It is omitted
@@ -236,6 +246,25 @@ its contract evidence exist. Any need to change a permission, contract, API,
 canonical owner, cross-runtime behavior, or durable boundary returns to the
 applicable Design/Product/authority gate.
 
+Before proposing a new subsystem, major dependency, or replacement for a
+Codex/platform capability, compare it with the reviewed requirement baseline
+and the smallest approved acceptance path. Platform transport, repository and
+terminal access are available capabilities, not automatic proof of YUTA
+authorization, observation or QA. A conflicting or material scope expansion
+stops for the exact owning Human decision; bounded read-only diagnosis may
+establish necessity, but does not authorize the new implementation.
+
+After the applicable planning and Apply scope are approved, implement rather
+than repeat broad planning. Classify a FAIL against the approved requirement,
+Design, contract and observed evidence. Correct an implementation defect within
+approved scope and run affected checks. Reopen Design only when evidence shows
+that approved acceptance cannot be met, scope/authority must change, or a
+named material safety invariant is violated; record why local correction is
+insufficient. Ordinary deterministic mechanics do not create a new Human Gate.
+Report the requested observable outcomes with actual evidence separately from
+task counts and from Technical Compliance, VERIFY and QA. Preserve historical
+FAIL/BLOCKED records until a new, attributable reassessment exists.
+
 ### Conditional post-Apply development feedback
 
 Within the existing Apply path, before formal Technical Implementation
@@ -359,6 +388,15 @@ execution. No agent may self-authorize extra budget.
 
 Stop before another default retry when either applicable budget is exhausted;
 also stop earlier if retry is unsafe or evidence shows no useful progress.
+Before another materially equivalent planning/review or evaluator round, state
+what changed, what new executable evidence the round can produce, and which
+decision it can affect. Two consecutive planning reconciliations for the same
+objective without new executable evidence trigger one convergence assessment
+inside the affected existing gate: proceed with the already authorized smallest
+implementation, or stop with the exact missing decision. This is an early-stop
+signal, not a new gate, counter, automatic Apply authorization, or replacement
+for the lineage budgets above. Stop work when the requested outcomes and
+mandatory evidence are met; defer speculative hardening separately.
 Record lineage/claim/class/cause confidence, current stage/purpose/bucket,
 chronological actions and executions, counts, affected acceptance/evidence
 obligation, last outcome, mandatory-evidence status and a bounded handoff with

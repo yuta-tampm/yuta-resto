@@ -133,7 +133,7 @@ SPECS_CHANGE_REQUIRED: NO. This refines Task 3.3 only; no checkbox is completed.
    projection hashes, results and exact failure attribution.
 9. Full gate must invoke live host producer and Job/helper path, produce actual
    evidence, deliver separate read-only authority/actual inputs to Linux and
-   exercise guarded consumer/current-worktree closure with bounded PRE/POST.
+   exercise guarded consumer/Git-object source closure with bounded PRE/POST.
 10. Require 94/94 logical cases with zero incorrect/skipped AND mandatory live
     integration PASS; separately approved low-level faults need current binding.
 
@@ -165,8 +165,9 @@ These refine existing Task 3.3 only; no task is added, renumbered or completed.
    approval, raw index plus canonical entries and trusted mount mapping.
 6. Fail closed on unsupported stage/flags, intent-to-add, assume-unchanged,
    skip-worktree, symlink/gitlink, missing/type/case/index ownership ambiguity.
-7. Read/hash CURRENT WORKTREE BYTES, not Git blobs; modified tracked files do
-   not require a clean checkout but still require current-byte approval.
+7. Read/hash exact tracked Git-object bytes from the bound tree and require
+   equality with runtime-supplied bytes; host checkout bytes, including modified
+   files and EOL conversions, are non-authoritative observations.
 8. Detect untracked non-install members through guarded traversal plus bound
    membership; retain UNBOUND_SOURCE_MEMBER until separate disposition.
 9. Supplemental ignored evidence uses GI3 exact command/input binding, never
@@ -199,8 +200,9 @@ The following refine TC3-VL3/TC3-VL4/TC3-VL7, not task count or Apply scope:
 
 1. Require reviewed REPOSITORY_OWNED_LOCAL_SOURCE_CLOSURE authority before graph
    candidate approval; physical directory contents are not the member set.
-2. Bind exact tracked membership and CURRENT APPROVED WORKTREE BYTES; no Git
-   blob substitution, silent deletion or staged-content approval inference.
+2. Bind exact tracked membership and canonical Git-object bytes from the bound
+   tree; no host checkout substitution, silent deletion or staged-content
+   approval inference.
 3. Bind separately admitted required local inputs and exact manifest/package
    identity; discovery cannot admit new members or dependency authority.
 4. Apply only approved install-managed exclusion, reject authoritative overlap
@@ -209,7 +211,7 @@ The following refine TC3-VL3/TC3-VL4/TC3-VL7, not task count or Apply scope:
    Pointage untracked diagnostics without auto-inclusion/exclusion/disposition.
 6. Enforce authoritative symlink/reparse, containment, physical alias and
    index/worktree/submodule/case ambiguity rejection under LC3.
-7. Prove LC4 deterministic descriptor, current byte binding, member ordering and
+7. Prove LC4 deterministic descriptor, Git-object/supplied-byte equality, member ordering and
    identity stability when only non-authoritative install state changes.
 8. Preserve target-type-specific native semantics: workspace/link/file directory
    closure versus raw tarball and raw/native patch identities.

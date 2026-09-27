@@ -1,0 +1,45 @@
+# Bounded Browser QA recovery evidence — control-tower-bridge-protocol-v1
+
+Date: 2026-09-25; bounded continuation: 2026-09-27. Evidence source: live transcript of the existing user-selected **YUTA — Control Tower** conversation, ID `6ab40aa1-ea94-83eb-85be-dafbbef3ddef`, in YuTa SARL, plus direct browser target observations. This record does not assert full Browser QA PASS.
+
+## Delivery uncertainty probe
+
+- Fresh run: `BRIDGE-QA-20260925-U6M4`; one accepted command: `ROUND_ID: 1`, `COMMAND_ID: BRIDGE-QA-20260925-U6M4:1`, `CAUSAL_LINEAGE_ID: BRIDGE-QA-DELIVERY-UNCERTAINTY`.
+- Target title and conversation ID were verified before the handshake and bound result. The handshake was visible once; the UI then showed response generation and one complete valid command. The result was visible once, and Control Tower evaluated it.
+- Genuine `DELIVERY_UNCERTAIN` was **not observed**. The authorized single reload was conditional on observable ambiguity, so it was not used. No resend, alternate chat, login/session change, partial-command execution, repository mutation, or other QA action occurred.
+- Control Tower's completed evaluation retained `DELIVERY_UNCERTAIN = NOT_OBSERVED`, `RELOAD_RECOVERY_BRANCH = NOT_TESTED`, `BROWSER_QA = BLOCKED_BY_ENVIRONMENT`, and `GATE_3 = NOT_READY`. At the time of this run, case 16 was `PARTIAL_EVIDENCE` and case 17 was `NOT_RUN`; later bounded reload evidence is recorded below.
+
+## Exact Page Chat context-source probe
+
+- Fresh run: `BRIDGE-QA-20260925-P7K2`. The Human first gave the full title `Avis & commentaires v`, then supplied a ChatGPT URL with conversation ID `6a760691-3674-83eb-9347-9e4ef8c60acf`. Codex did **not** open that URL or any Page Chat.
+- Round 1, `COMMAND_ID: BRIDGE-QA-20260925-P7K2:1`, was a valid `HUMAN_REQUIRED` identity gate. After receiving the current Human's exact URL, Codex sent one bound result conveying the conversation ID and the Human-confirmed title. The result explicitly kept `PAGE_CONTEXT_INTAKE = UNKNOWN` pending source verification.
+- Control Tower reported attempting exact-source resolution through its available Project/personal-context retrieval surface. It could not identify the exact conversation ID and title pair from that surface. It rejected similar `Avis & commentaires` or reputation-related conversations rather than substituting them. This is a reported Control Tower lookup outcome, not independent inspection of its internal retrieval log or the Page Chat by Codex.
+- Round 2, `COMMAND_ID: BRIDGE-QA-20260925-P7K2:2`, returned one bound `STATUS: BLOCKED`, `CAUSAL_LINEAGE_ID: BRIDGE-QA-PAGE-CONTEXT-SOURCE-UNAVAILABLE`, and `BLOCKERS: BRIDGE_QA_PAGE_CONTEXT_SOURCE_UNAVAILABLE`. Control Tower evaluated it and ended the run without a further round.
+- Actual fail-closed `UNKNOWN` handling satisfies case 21. No real Page Chat content was routed, so cases 18–20 remain `PARTIAL_EVIDENCE`. The source's prior decisions are not treated as absent. No repository, Product, Page Chat, live-context, or lifecycle mutation occurred in these browser rounds.
+
+## Remaining evidence limits
+
+### Parser and accepted-command replay continuation
+
+- Fresh run: `BRIDGE-QA-20260927-M6R2` in the exact `YUTA — Control Tower` conversation. The handshake was posted once. The first completed assistant response displayed a top-level round-1 `YUTA_CODEX_COMMAND` without its closing delimiter. Codex rejected the entire block, performed no action, sent no bound result, and sent one English non-executable diagnostic. The missing delimiter was an intentional live negative test; the malformed block did not consume round 1.
+- The next complete round-1 command, `BRIDGE-QA-20260927-M6R2:1`, `CAUSAL_LINEAGE_ID: BRIDGE-CONTROL-TOWER-PROTOCOL-V1-QA`, `STAGE: BRIDGE_V1_ACCEPTED_COMMAND_REPLAY_BASELINE`, required only a read-only no-op. Codex accepted and executed it once and posted exactly one matching result. The posted message and Control Tower response were visible in the same conversation.
+- The Control Tower then emitted a second complete command with the same round, command ID, lineage, stage, and instructions. Codex treated it as replay, performed no second action, and sent no second result for round 1. One non-executable diagnostic reported rejection. A fresh valid round-2 `STOP` command received one bound `STATUS: STOPPED` result; the Control Tower evaluated the run as stopped, with one execution, replay rejected, and no second result or repository/runtime mutation.
+- Case 04 now has live replay rejection evidence and is `PASS`. The `M6R2` run also tested a missing closing delimiter, but did not test the missing-field or malformed-multiline variants. It did not test delivery uncertainty or Page Chat context.
+
+### Missing field and multiline grammar continuation
+
+- Fresh run: `BRIDGE-QA-20260927-P3L7` in the same verified Control Tower conversation. The first completed round-1 command omitted mandatory `STOP_CONDITION`. Codex rejected it without action or bound result, identified the missing field in one non-executable diagnostic, and kept round 1 available.
+- The next completed round-1 command used `INSTRUCTIONS: |` followed by a column-zero continuation line instead of the required two-space indentation. Codex rejected the full block without action or bound result, sent one non-executable diagnostic, and again kept round 1 available.
+- A fresh complete round-1 `STOP` command was accepted and received exactly one bound `STATUS: STOPPED` result. The Control Tower evaluated both parser rejections, zero malformed-command executions, and no repository/runtime mutation. Case 06 now has live evidence for the previously missing variants and is `PASS`; the full Browser QA suite remains blocked by other cases.
+
+On 2026-09-27, Codex opened a separate hidden in-app browser tab at `https://chatgpt.com/`. Its visible title was `ChatGPT` and it had no selected Control Tower conversation ID. Codex also opened the YuTa SARL Project overview, which showed multiple chats and a new-chat composer but no selected conversation ID. Neither tab matched the selected `YUTA — Control Tower` title and conversation URL. No bridge message was entered or sent there; both tabs were closed. This is direct wrong and ambiguous target preflight evidence for case 02. The approved behavior is to send nothing when title, URL, or ID is wrong or missing; no attempted send to a wrong target is required or performed.
+
+Codex then reselected the exact `YUTA — Control Tower` conversation, confirmed title and project/conversation IDs, and reloaded it only after the prior bridge run had a complete terminal evaluation. The reload preserved the prior posted result and Control Tower evaluation. The URL normalized from the project slug form to a project path without the slug, while the project ID and conversation ID stayed the same. No result or command was resent. This is limited reload continuity evidence for case 17, not a test of delivery ambiguity, session loss, or interrupted response.
+
+### Controlled response-generation reload
+
+- Fresh run: `BRIDGE-QA-20260927-U9T4`. Codex posted one read-only handshake in the exact Control Tower conversation and observed the UI state `ChatGPT is responding`. It then performed exactly one reload. Immediately after reload, the same conversation ID and posted handshake were visible, while the assistant response was absent from that first recovered view. No resend occurred.
+- A later read-only observation showed response generation resumed. The assistant then completed one command. Its instruction required sending that command and reporting `COMMAND_SENT_COUNT=1` while also requiring the already completed single reload. Codex did not treat the post-reload command as retrospectively sent or executed. One non-executable diagnostic reported the chronology mismatch; no bound result was sent for that command.
+- A fresh complete round-1 `STOP` command received one bound `STATUS: STOPPED` result, and the Control Tower evaluated the run as stopped. The observed handshake delivery was certain, the same conversation recovered, no partial command was executed, and no repository/runtime mutation occurred. Case 17 gains real response-generation reload evidence but remains `PARTIAL_EVIDENCE` because login loss and an unrecoverable interrupted response were not observed. Case 16 remains `PARTIAL_EVIDENCE`: genuine `DELIVERY_UNCERTAIN` did not occur.
+
+The earlier `U6M4` and `P7K2` runs did not prove actual uncertain delivery, full reload recovery, real `AVAILABLE` or `PARTIAL` Page Chat intake, real `PAGE_LOCAL` context routing, or a real repository/context discrepancy for this Page Chat. The remaining partial cases are recorded in [`case-matrix.md`](case-matrix.md). Historical Technical Implementation Compliance and formal VERIFY were PASS for bridge skill SHA-256 `149e48785980fd16affbade76e7c50957b6ae5f0e7e5f71954f19f4d8031aa3e`; the current skill SHA-256 `95c36019369ca4a7cc9e9cd402c8c5722523f8ad04e38bafa78d3c5193d95f56` differs and was not formally reassessed here. Browser QA remains `BLOCKED_BY_ENVIRONMENT`; Gate 3 remains `NOT_READY`.

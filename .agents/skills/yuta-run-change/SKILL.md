@@ -178,6 +178,9 @@ When a change has artifacts but no packets, enter adoption mode. Create only the
 For a new change, or a change genuinely missing Gate 1 artifacts:
 
 1. Follow the artifact graph and instructions to create proposal and analysis in dependency order. Re-read dependencies before each artifact.
+   For a new change, record the sourced four-part requirement baseline within
+   those existing artifacts before Gate 1; do not add an artifact or rewrite
+   approved history on adoption.
 2. Apply YUTA authority routing. Use code/tests only for Implemented State, not as Product approval.
 3. Read the analysis conclusion exactly. The only valid YUTA analysis conclusions are `READY_FOR_SPECS`, `BLOCKED_NEEDS_REVIEW`, and `NO_SPEC_BEHAVIOR_CHANGE`.
 4. Create `01-analysis-review.md`, then stop before specs.
@@ -194,6 +197,10 @@ If proposal and analysis already exist but `01-analysis-review.md` does not:
 Gate 1 packet includes:
 
 - request and bounded-change summary;
+- for a new change, the sourced four-part `REQUIREMENT_BASELINE` from the
+  existing Proposal/Analysis: authoritative user requirement, hard constraints,
+  out-of-scope items and observable success outcomes; do not backfill an
+  adopted change's approved history;
 - exact proposal content;
 - exact analysis content;
 - authorities consulted;
@@ -291,6 +298,10 @@ The same preservation rule applies to any existing later artifact: reaching its 
 
 1. Create tasks from the current artifact graph/instructions. Resolve any
    design question that would change what gets built before writing tasks.
+   Compare each proposed subsystem, major dependency or platform-capability
+   replacement with the reviewed requirement baseline. Stop a conflicting or
+   material scope expansion for the exact owning Human decision; a bounded
+   read-only feasibility check does not authorize implementation.
 2. Organize checkbox tasks in dependency order under only the implementation
    phases the change actually needs. The allowed planning labels are:
    - `Foundation / Data`;
@@ -362,9 +373,14 @@ The same preservation rule applies to any existing later artifact: reaching its 
    UI/components, interaction/state logic, integration, regression work, and
    tests. It does not create Product authority.
 4. Technical defects inside approved behavior may be corrected autonomously.
-   If implementation discovery changes Product behavior or a durable boundary,
-   stop and return to the appropriate earlier gate. Never silently revise or
-   weaken Specs/Design to fit implementation.
+   Classify a FAIL before considering another Design round: correct within the
+   approved contract and run affected checks when possible. Reopen Design only
+   with evidence that approved acceptance cannot be met, scope/authority must
+   change, or a named material safety invariant is violated; record why local
+   correction is insufficient. Ordinary implementation mechanics do not need
+   a new Human Gate. If implementation discovery changes Product behavior or a
+   durable boundary, stop and return to the appropriate earlier gate. Never
+   silently revise or weaken Specs/Design to fit implementation.
 5. Do not bypass a current scoped technical rule to complete a phase. If
    compliance would require changing that rule or its owning boundary, stop for
    the authority that owns the rule.
@@ -437,6 +453,17 @@ without creating a parallel policy. For an adopted change, keep
 `ITERATION_STOP_CONTROL` in the same Tasks section when a blocker/retry exists,
 or `NONE` with reason otherwise. Before an equivalent retry, inspect its
 chronological ledger and preflight both budgets.
+
+Before another equivalent planning/review or evaluator round, identify what
+changed, the new executable evidence expected and the decision it could alter.
+Two planning reconciliations for one objective without new executable evidence
+trigger a convergence assessment inside the existing gate. Continue with the
+smallest implementation only if that scope is already authorized; otherwise
+stop with the exact missing decision. This adds no gate, retry counter or
+approval. When Human input is necessary, lead with a short summary of the
+decision, reason, bounded choices and main consequences; keep exact evidence
+and hashes in the packet. Stop after requested outcomes and mandatory evidence
+are met; defer speculative hardening.
 
 - A stable lineage identifies `(affected claim, blocker class, evidenced causal
 root cause)`. Record stage, evaluator purpose, material equivalence, action,

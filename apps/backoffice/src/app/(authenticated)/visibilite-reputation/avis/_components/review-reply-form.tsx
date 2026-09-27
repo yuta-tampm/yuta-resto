@@ -71,7 +71,7 @@ function ReplySubmit({ disabled }: { disabled: boolean }) {
       disabled={disabled || pending}
     >
       <FilePenLine className="h-4 w-4" />
-      Enregistrer
+      {pending ? 'Enregistrement du brouillon…' : 'Enregistrer'}
     </Button>
   );
 }

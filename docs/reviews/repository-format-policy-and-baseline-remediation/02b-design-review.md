@@ -1,5 +1,112 @@
 # Gate 2b — Repository Format Policy Sensitive Design
 
+## Current Gate 2b clarification — portable Git-object candidate
+
+```text
+Change: repository-format-policy-and-baseline-remediation
+Gate: 2b — Sensitive Design Review
+Review status: APPROVED
+Approval scope: tracked-byte authority and portable anchor Design/TIC clarification
+Approved: 2026-09-24T17:39:39Z
+Approval source: explicit current-user Gate 2b clarification
+Approval recorded by: Codex workflow
+Schema: yuta-spec-driven
+Sensitive change: YES
+```
+
+Reviewed exact file-byte SHA-256 (computed with `Get-FileHash -Algorithm SHA256`):
+
+- Design: `openspec/changes/repository-format-policy-and-baseline-remediation/design.md`
+  — `5b159166b0706174db0aa752e730cf04b7a10f573b00ca5c558fcb8ee849e91a`.
+- Task 3.3 TIC: `openspec/changes/repository-format-policy-and-baseline-remediation/tasks.md`
+  — `da5e962a2c314a1ef016c3879121081a48d8f069fe73cf19f787c765136dc9c1`.
+
+Canonical tracked V-LOCK input bytes are exact objects from the bound Git tree;
+host checkout bytes, including transformed line endings, are non-authoritative.
+The portable repository-state candidate binds HEAD, HEAD/index tree identities,
+the exact source-projection identity and logical `/input` mapping. It excludes
+host temporary paths and the raw `.git/index` SHA. The candidate is not the
+independently approved RAM3 logical anchor or host/mapping approval.
+
+The prior capture is reused under
+`NO_FRESH_CAPTURE_REQUIRED_NO_MATERIAL_DEPENDENCY`: HEAD and tree identities,
+raw lock object, capture sidecar SHA-256
+`c527cbec16a3f9788d43b943c5a33e1bd1a4ceae20ff19761556310a89ff610d`
+and the 301-member inventory SHA-256
+`31b66f8c2adf08578fde8ce5f475b6d6a14b4e212877d39d68baa28cec239c09`
+are unchanged; all eight target path/mode/type/object-ID inventories match the
+bound tree. The earlier host-path-bearing capture identity remains historical
+diagnostic evidence, not portable authority. No graph, native writer, Apply,
+Task 3.3 completion or Product Version action is authorized here. Earlier
+FAIL/BLOCKED records and review sections below retain their historical state.
+
+Portable repository-state candidate SHA-256:
+`30af71924973cc63828b347e118ce863edc5d91a4785c6be492cc4a2524797ab`,
+over exactly head, headTreeId, indexTreeId, sourceProjectionIdentity and
+logicalRuntimeRoot `/input` in VL5 canonical form. Source-projection identity:
+`e2b150d7225a707d4aafab82a78691b447b102f80f98a55fbf49b4d236f06823`.
+This is candidate state evidence, not independent RAM3 approval.
+
+Exact pnpm 11.8.0 bundle inspection identifies default `dedupePeers=false`,
+`peersSuffixMaxLength=1000` and `injectWorkspacePackages=false`, with the
+previously recorded lock settings unchanged. The sanitized Linux qualification
+probe observed read-only `/input` and `/pnpm` mounts, writable `/scratch`, and
+loopback-only interfaces. The local image index is
+`733e1c06ada118ed9f6133a31aa1290be6929664026fb28821500437c61f2c6f`,
+linux/amd64 manifest is
+`acaf2d5ed8d725de4e228d0006c1f72a79df17bd332a2d83d9ba173e703be04d`,
+and config is
+`968931aba662134d64048095448f91ccd511d69293740259e515f57f108a4573`.
+Effective-settings and input-closure candidate hashes
+remain NONE because actual native invocation/config-source closure is not fully
+bound. Linux index/platform-manifest and Node/library observations do not close
+pnpm H3 extraction, full loader/supply and write/process/network-attempt
+instrumentation. Runtime candidate identity remains NONE. Current disposition:
+`VLOCK_INPUT_AND_RUNTIME_NEED_REVIEW`; Task 3.3 BLOCKED / UNCHECKED.
+
+## Current Gate 2b decision — Task 3.3 candidate capture
+
+```text
+Change: repository-format-policy-and-baseline-remediation
+Gate: 2b — Sensitive Design Review
+Review status: APPROVED
+Approval scope: current Design and Task 3.3 TIC
+Created: 2026-09-13
+Analysis conclusion: historical artifact preserved; bounded Gate 2b approval recorded below
+Approved: 2026-09-24T17:00:50Z
+Approval source: explicit current-user Gate 2b instruction
+Approval recorded by: Codex workflow
+Schema: yuta-spec-driven
+Sensitive change: YES
+```
+
+Reviewed exact file-byte SHA-256 (computed with `Get-FileHash -Algorithm SHA256`):
+
+- Design: `openspec/changes/repository-format-policy-and-baseline-remediation/design.md`
+  — `fd439a43fed714eb60051649443315a2485209a4eee4aec524ca3a9dd6cfa975`.
+- Task 3.3 TIC: `openspec/changes/repository-format-policy-and-baseline-remediation/tasks.md`
+  — `9f7183432f76c9dec899d6b0b3c935a533d29a17c35e55d315c9c96b69aff457`.
+
+The current user approved the Design/TIC direction and clarified that every
+tracked V-LOCK input must be supplied as exact Git object bytes from an
+independently bound repository tree. This includes the raw lock, the 17-file
+base, all tracked members of the eight local-source targets, and any later
+admitted tracked input. For each supplied file, bind Git object ID and mode/type,
+the raw object-byte SHA-256, the supplied-byte SHA-256, and exact equality.
+Host checkout bytes and line-ending normalization have no supply authority.
+The db-cloud Pointage snapshot fixture's canonical candidate SHA-256 is
+`71052147af479bfb5f480f0981859a7af7235ff21a0be69a427a6faaeb06f4bf`;
+its Windows CRLF checkout is non-authoritative evidence and must not be changed.
+
+This approval authorizes only the bounded candidate capture and qualification
+specified by the current user. Exact input, runtime, anchor approval, mapping,
+target/aggregate and resolved-graph identities remain pending. The new byte
+supply clarification must be reconciled with earlier current-worktree-byte
+wording before any real V-LOCK execution. Task 3.3 remains BLOCKED / UNCHECKED;
+native V-LOCK writer/roundtrip, package resolution, graph computation, Apply,
+and later lifecycle gates are not authorized. Historical FAIL/BLOCKED and prior
+review sections below retain their recorded meanings.
+
 ## RAM1–RAM8 — REAL repository anchor/mapping sensitive review
 
 DA4_REPOSITORY_ANCHOR_MAPPING_DESIGN_STATUS: AWAITING_GATE_2B_REVIEW.
