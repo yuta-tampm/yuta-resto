@@ -246,6 +246,14 @@ biến an toàn trọng yếu được nêu đích danh. Ghi vì sao correction 
 hiện tại không đủ. Naming, field placement, fixture hoặc implementation
 mechanics tương đương không tự là lý do mở lại Design.
 
+Ưu tiên đường đi sản phẩm nhỏ nhất đạt `SUCCESS_OUTCOMES` và bằng chứng/an toàn
+bắt buộc. Không mở rộng task để hoàn thiện Windows, Linux, công cụ nền tảng,
+thư viện bên thứ ba hoặc tương thích đa nền tảng khi chúng không chặn kết quả
+đã duyệt. Chỉ điều tra ngắn và sửa ở lớp đó khi có bằng chứng về blocker thực
+sự; nếu việc sửa làm đổi scope hoặc authority, trình Human quyết định ngắn tại
+gate sở hữu. Ghi giới hạn không chặn và hardening còn lại để xử lý sau, không
+đổi `FAIL`/`BLOCKED` thành `PASS` khi chưa có bằng chứng mới.
+
 Trước một vòng planning hoặc chạy lại tương đương, hỏi: điều gì đã thay đổi,
 evidence mới nào sẽ có và quyết định nào có thể thay đổi? Hai vòng planning
 liên tiếp cho cùng mục tiêu mà không có executable evidence mới là tín hiệu

@@ -2,11 +2,17 @@
 
 Change: vlock-h3-observable-runtime-foundation  
 Gate: 2 — Specs Review  
-Review status: AWAITING_HUMAN_REVIEW  
+Review status: CHANGES_REQUESTED
 Created: 2026-09-24  
 Schema: yuta-spec-driven  
 Analysis conclusion: READY_FOR_SPECS  
 Sensitive change: YES; `SENSITIVE_DESIGN_GATE = REQUIRED` after Gate 2 approval
+
+## Current-user scope correction — 2026-09-27
+
+The current user requested a simpler, product-first path and rejected further expansion of V-LOCK into broad third-party tooling, Windows, or repository-perfection work. The exact Spec snapshot below remains the historical Gate 2 candidate; it is **not approved** and must not be used to start Design or Apply. Its Gate 1 scope includes H3 extraction, a native caller, Linux isolation, and attempted-event observation, so removing those obligations would change the approved intent and requires a bounded replacement decision at the owning gate. Do not silently weaken the Spec or rewrite historical parent/Product Version `FAIL`/`BLOCKED` evidence.
+
+Recommended disposition for review: defer this child and address Product Version's actual Phase 5 blocker with a narrowly revised, explicitly approved formatting acceptance contract for its own changed files. Preserve the recorded repository-wide `pnpm format:check` failure as separate repository debt; scoped PASS must not be described as a global PASS. This recommendation is not approval to amend Product Version's existing TIC or to start Phase 6 Browser QA.
 
 ## Decision boundary
 
@@ -67,9 +73,9 @@ No controlling-source conflict is identified at this Spec gate. The exact parser
 
 No code, runtime, image, observer or dependency was implemented. No runtime synthetic test, recursive typecheck, build, Browser QA or focused non-browser runtime QA was run. Recursive typecheck is deferred for this planning-only gate because its generated Next prerequisite and exclusive checkout would create effects outside this Spec review. No QA status is claimed. The root validation commands above do not establish native feasibility or complete observation.
 
-## Gate 2 review request
+## Original Gate 2 review questions — superseded by scope correction
 
-Approve or request changes to the exact delta Spec snapshot below. Approval authorizes Design only, with `SENSITIVE_DESIGN_GATE = REQUIRED` before Tasks/Apply. Review these exact questions:
+The original packet asked for approval of the exact delta Spec snapshot below. These questions are retained as historical review context; the current-user scope correction above withdraws the unchanged Spec from approval consideration.
 
 1. Do R1–R2 adequately require deterministic, byte-provenant H3 extraction and canonical identity without selecting a parser implementation?
 2. Do R3–R4 bind a safe non-CLI native caller and its effective inputs/settings, with fail-closed behavior when safe exposure is unavailable?
@@ -78,7 +84,7 @@ Approve or request changes to the exact delta Spec snapshot below. Approval auth
 5. Do R9 and R11 preserve parent Task 3.3, real graph/input approval, Product Version, lifecycle and deployment authority outside this child?
 6. May the deferred parser, caller, runtime, observer and QA decisions proceed to Design under the required Sensitive Design Gate, subject to separate review before any dependency change affecting `pnpm-lock.yaml`?
 
-Until that human decision, workflow status is `AWAITING_HUMAN_REVIEW` at Gate 2 even though raw OpenSpec status reports Design as ready.
+Current workflow status is `CHANGES_REQUESTED` at Gate 2 even though raw OpenSpec status reports Design as ready. No Design or Apply follows from this packet.
 
 ## Exact delta Spec
 

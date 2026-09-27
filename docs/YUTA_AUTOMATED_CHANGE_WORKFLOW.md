@@ -261,6 +261,12 @@ approved scope and run affected checks. Reopen Design only when evidence shows
 that approved acceptance cannot be met, scope/authority must change, or a
 named material safety invariant is violated; record why local correction is
 insufficient. Ordinary deterministic mechanics do not create a new Human Gate.
+Prioritize the smallest usable product path that meets approved outcomes and
+mandatory safety/evidence. Do not repair Windows, Linux, platform internals,
+third-party libraries or speculative cross-platform behavior as part of a
+product task unless evidence shows a direct blocker. Diagnose briefly; if the
+repair changes scope or authority, stop for the owning Human decision. Record
+nonblocking limitations and deferred hardening separately.
 Report the requested observable outcomes with actual evidence separately from
 task counts and from Technical Compliance, VERIFY and QA. Preserve historical
 FAIL/BLOCKED records until a new, attributable reassessment exists.

@@ -464,6 +464,9 @@ approval. When Human input is necessary, lead with a short summary of the
 decision, reason, bounded choices and main consequences; keep exact evidence
 and hashes in the packet. Stop after requested outcomes and mandatory evidence
 are met; defer speculative hardening.
+Keep the change on the smallest usable product path. Investigate OS, platform
+or third-party internals only for an evidenced blocker to approved acceptance;
+stop for the owning Human decision before any scope-changing repair.
 
 - A stable lineage identifies `(affected claim, blocker class, evidenced causal
 root cause)`. Record stage, evaluator purpose, material equivalence, action,

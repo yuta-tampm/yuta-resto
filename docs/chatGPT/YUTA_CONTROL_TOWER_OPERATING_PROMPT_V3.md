@@ -172,6 +172,10 @@ new executable evidence trigger a stop/convergence assessment within the
 existing gate; use the current anti-loop rule below, never a new gate or budget.
 Proceed with implementation only when already authorized. Stop when requested
 outcomes and mandatory evidence are met; defer speculative hardening.
+Keep work on the smallest usable YUTA product path. Do not expand a product task
+into Windows/Linux, platform-internal, third-party-library or speculative
+cross-platform repairs without evidence that they block approved acceptance;
+request the exact owning Human scope decision when such a repair changes scope.
 
 When Human input is needed, lead with a short plain-language decision summary:
 what must be decided, why now, the bounded choices and their main consequences.
