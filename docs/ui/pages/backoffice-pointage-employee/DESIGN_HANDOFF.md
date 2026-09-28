@@ -1,6 +1,6 @@
 # Pointage employee — Design Handoff
 
-Status: APPROVED / IMPLEMENTED / TEST-EVIDENCED — Browser QA pending
+Status: APPROVED / IMPLEMENTED / VERIFIED / BROWSER-QA-PASS — production blocked
 
 Visibility: Engineering
 
@@ -17,7 +17,8 @@ Current repository evidence:
 - The employee Pointage page and strict raw-clocking handlers are implemented.
 - `apps/backoffice/src/server/pointage/authorization.ts` owns the closed six
   operations; `service.ts` owns scoped credential authentication and trusted
-  client-address composition and the Pointage-specific continuation.
+  client-address requirements; `raw-clocking-service.ts` owns the consumer and
+  Pointage-specific continuation composition.
 - `packages/db-cloud/src/pointage-repository.ts` already locks a scoped Personnel
   dossier for issue/reset. Existing Pointage schema has credentials, rate limits
   and minimized audit. Raw attendance events, retry receipts and continuations
@@ -29,9 +30,10 @@ Current repository evidence:
 - `packages/ui/src/index.ts` supplies Button, Input, FormField, Card, Alert,
   Skeleton and StatusBadge. Existing shared styles/fonts remain unchanged.
 - Current unit/integration evidence covers the page, continuation, raw events,
-  receipts, transport and shared-device behavior. Browser QA remains pending.
+  receipts, transport and shared-device behavior. Formal VERIFY and Browser QA
+  passed with the three retained browser-evidence limitations.
 
-Sources: [approved scope](PRODUCT_SCOPE.md), [Sensitive Design](../../../../openspec/changes/pointage-usable-raw-clocking/design.md).
+Sources: [approved scope](PRODUCT_SCOPE.md), [Sensitive Design](../../../../openspec/changes/archive/2026-09-23-pointage-usable-raw-clocking/design.md).
 Goal: identify self, observe minimal current state, submit one explicit raw
 transition, receive a committed receipt and clear the shared device.
 
@@ -39,12 +41,12 @@ transition, receive a committed receipt and clear the shared device.
 
 Shared context status: RESOLVED
 
-| Layer        | Owner/source                                         | Reference status | Reuse exactly                                                  | May adapt                | Excluded                                  | Decision/blocker                   |
-| ------------ | ---------------------------------------------------- | ---------------- | -------------------------------------------------------------- | ------------------------ | ----------------------------------------- | ---------------------------------- |
-| YUTA global  | YUTA_FRONTEND_RULES, shared UI styles/export catalog | APPROVED         | Geist/Inter, semantic tokens, accessibility, shared primitives | Page-local composition   | New framework/raw color system            | No shared primitive changes        |
-| Application  | BACKOFFICE_FRONTEND_RULES, root layout               | APPROVED         | Root typography/styles                                         | Public employee content  | Cloud account/restaurant shell/navigation | NO_APPLICATION_SHELL               |
-| Section/flow | Approved raw/auth Specs                              | APPROVED         | Pointage-specific self-only online authority                   | Draft state presentation | Manager/Personnel navigation              | No missing section shell to invent |
-| Page/screen  | This handoff and UI_SPEC                             | APPROVED         | Approved behavioral scope                                      | Browser QA evidence      | History/totals/payroll/manager UI         | Browser QA pending                 |
+| Layer        | Owner/source                                         | Reference status | Reuse exactly                                                  | May adapt                | Excluded                                  | Decision/blocker                                     |
+| ------------ | ---------------------------------------------------- | ---------------- | -------------------------------------------------------------- | ------------------------ | ----------------------------------------- | ---------------------------------------------------- |
+| YUTA global  | YUTA_FRONTEND_RULES, shared UI styles/export catalog | APPROVED         | Geist/Inter, semantic tokens, accessibility, shared primitives | Page-local composition   | New framework/raw color system            | No shared primitive changes                          |
+| Application  | BACKOFFICE_FRONTEND_RULES, root layout               | APPROVED         | Root typography/styles                                         | Public employee content  | Cloud account/restaurant shell/navigation | NO_APPLICATION_SHELL                                 |
+| Section/flow | Approved raw/auth Specs                              | APPROVED         | Pointage-specific self-only online authority                   | Draft state presentation | Manager/Personnel navigation              | No missing section shell to invent                   |
+| Page/screen  | This handoff and UI_SPEC                             | APPROVED         | Approved behavioral scope                                      | Browser QA evidence      | History/totals/payroll/manager UI         | Browser QA PASS; three residual evidence limitations |
 
 Shell mode: NO_APPLICATION_SHELL.
 
@@ -59,12 +61,13 @@ Curated shared constraints: [global rules](../../YUTA_FRONTEND_RULES.md),
 [Backoffice rules](../../BACKOFFICE_FRONTEND_RULES.md), existing root typography
 and the small component set above. No full token/catalog dump is needed.
 
-## Current baseline capture
+## Design-time baseline capture
 
 Baseline status: NOT_APPLICABLE
 
-This is a new employee route with no current screen to capture. Repository
-inspection is not a visual baseline. No synthetic screenshot claims are made.
+At the Design gate this was a new employee route with no screen to capture.
+Repository inspection was not a visual baseline, and no synthetic screenshot
+claim was made. The route was implemented later in the approved delivery.
 
 ## Design-generation prompt
 
@@ -102,22 +105,26 @@ interaction end. A timeout is not success or failure proof: preserve the same
 request identity in live memory for recovery/retry. Never silently repeat a
 mutation with a fresh identity or rebase a stale action.
 
-Follow Sensitive Design D2/D3: memory-only continuation; absolute 120 seconds,
-idle 60 seconds, receipt display 10 seconds then end; explicit end available.
-Clear all employee-specific state on end, hidden/navigation, expiry or restart.
-Late responses cannot restore identity. Local clearing while offline does not
-claim confirmed server termination. No durable identity/credential/context
-storage, service worker, offline acceptance or generic employee session.
+Follow Sensitive Design D2/D3: the browser-held continuation token and protected
+state are memory-only, while the server persists the bounded validation record;
+absolute 120 seconds, idle 60 seconds, receipt display 10 seconds then end;
+explicit end available. Clear all employee-specific browser state on end,
+hidden/navigation, expiry or restart. Late responses cannot restore identity.
+Local clearing while offline does not claim confirmed server termination. No
+durable browser identity/credential/context storage, service worker, offline
+acceptance or generic employee session.
 
-Only synthetic/disposable data may be used in future implementation/tests/QA.
-No real attendance is authorized anywhere for this change. No production
-client-address provider or production enablement. Do not introduce schema,
-permissions, extra fields, business policy or new runtime/device capability
-through visual design. The approved Specs and technical Design remain authority.
+Only synthetic/disposable data was used in implementation, tests, and QA. No
+real attendance is authorized anywhere for this change. No production
+client-address provider or production enablement. The delivery introduced no
+unapproved schema, permission, field, business policy, or runtime/device
+capability through visual design. The approved Specs and technical Design remain
+authority.
 
-Deliver a state hierarchy, responsive/keyboard behavior and French copy proposal.
-Review against exact scopes, recovery honesty and shared-device isolation.
-No implementation code, implementation plan, tasks or execution prompts.
+This handoff delivered the state hierarchy, responsive/keyboard behavior, and
+French copy proposal for review against exact scopes, recovery honesty, and
+shared-device isolation. At its Design gate it did not authorize implementation
+code, tasks, or execution prompts; those later followed the approved workflow.
 
 ## Handoff result
 
@@ -126,5 +133,5 @@ Written design: [UI_SPEC](UI_SPEC.md) and
 implemented/test-evidenced. No image generated. No-image direction: APPROVED.
 Rejected directions: generic cloud login, manager shell, attendance history,
 daily total and offline fallback.
-Next evidence owner: post-Apply Browser QA reviewer after formal VERIFY.
+Final evidence owner: the approved Gate 3 review and linked Browser QA report.
 Production enablement and real attendance remain NOT_AUTHORIZED.

@@ -1,6 +1,6 @@
 # Pointage employee — Implementation Plan
 
-Status: IMPLEMENTED / TEST-EVIDENCED THROUGH TASK 4.6 — Browser QA pending
+Status: IMPLEMENTED / VERIFIED / BROWSER-QA-PASS — production blocked
 
 Visibility: Engineering
 
@@ -12,17 +12,17 @@ UI_AFFECTING: YES
 
 BROWSER_QA_REQUIRED: YES
 
-Current Apply checkpoint: Task 4.6 completion; Task 4.7 NOT_AUTHORIZED
+Final delivery checkpoint: 32/32 tasks complete; Gate 3 approved; main Specs synced; change archived
 
 Production enablement: NOT_AUTHORIZED
 
 ## Authority and exact phase mapping
 
-The [master Tasks / Implementation Plan](../../../../openspec/changes/pointage-usable-raw-clocking/tasks.md)
+The [master Tasks / Implementation Plan](../../../../openspec/changes/archive/2026-09-23-pointage-usable-raw-clocking/tasks.md)
 owns the four Apply phases, 32 tasks, embedded contracts and complete
 20-requirement / 62-scenario traceability. This page plan specializes the
 Employee Transport / UI phase; it creates neither an additional Apply phase nor
-new Product/security authority. The [approved Design](../../../../openspec/changes/pointage-usable-raw-clocking/design.md)
+new Product/security authority. The [approved Design](../../../../openspec/changes/archive/2026-09-23-pointage-usable-raw-clocking/design.md)
 and approved PRODUCT_SCOPE, UI_SPEC, DATA_AND_INTERACTION_SPEC, DESIGN_HANDOFF
 and ACCEPTANCE_CHECKLIST remain the reviewed sources. The seven top-level
 technical page-pack documents now record the current implementation/test
@@ -51,8 +51,8 @@ shell is a different subtree. NO_APPLICATION_SHELL is approved.
 Foundation credential service/repository, Personnel projection, employee route,
 raw evidence, continuation consumer and browser transport are implemented and
 covered by automated Apply evidence. Baseline remains NOT_APPLICABLE; no
-fabricated screen capture is used. Browser QA is still pending. Inventory
-details remain in DESIGN_HANDOFF.
+fabricated screen capture is used. Formal VERIFY and Browser QA passed with
+three retained evidence limitations. Inventory details remain in DESIGN_HANDOFF.
 
 Before any Apply, reread root/scoped AGENTS, docs/README.md, CURRENT_STATE,
 AUTHORITY_MODEL, current architecture/auth/tenancy/database/Personnel docs and
@@ -124,10 +124,12 @@ pointage.employee.state.read with current scope/Personnel/version guards,
 validate/derive the raw chain, and commit continuation before exposing combined
 token/state. Do not render an identify-only partial response. All state/mutation/
 replay checks remain current; reset/expiry/end deny old continuation.
-No merging exact operation IDs or broader employee/session grants.
+Protected state, mutation, and replay are denied; bounded cleanup end remains
+allowed. No merging exact operation IDs or broader employee/session grants.
 
-Token is ptc1\_ opaque256-bit, memory-only; server absolute120s/idle60s,
-no background heartbeat or durable browser state. On Terminer, expiry, hidden,
+The browser token is ptc1\_ opaque256-bit and memory-only; the server persists
+its bounded digest, binding, and deadlines. Server absolute120s/idle60s, no
+background heartbeat or durable browser state. On Terminer, expiry, hidden,
 pagehide, navigation, refresh, back/forward, pageshow, bfcache, duplicate tab or
 restart return to neutral and reject old-generation responses. Clear before
 bfcache snapshot as well as pageshow; Cache-Control alone is insufficient.
@@ -145,13 +147,14 @@ only; no restored receipt history/search. Server-confirmed own end serializes
 with command locks; lost network means only local clearing is confirmed until
 server expiry/end commit. Never fabricate an attendance auto-close.
 
-## Functional and integration completion checks — Apply only
+## Historical functional and integration completion checks — Apply
 
-Run exact focused commands C8-C11 and negative inventory from master Tasks,
-then broader C12/C13 with safe environment boundaries. Check component
-ownership/imports, strict DTO serialization, cache/nonce behavior and
-generation/timer logic. These are implementation checks, not formal VERIFY
-or completed Browser QA. Do not create QA_REPORT or Gate3 during Apply.
+During Apply, the change ran exact focused commands C8-C11 and negative
+inventory from master Tasks, then broader C12/C13 with safe environment
+boundaries. It checked component ownership/imports, strict DTO serialization,
+cache/nonce behavior, and generation/timer logic. These implementation checks
+were inputs to formal VERIFY and Browser QA; they were not themselves those
+later results.
 
 Actual current command families:
 
@@ -170,60 +173,69 @@ Actual current command families:
 Scoped Prettier is check-only for approved bytes. Exact planned focused file
 selectors, migration commands and separated disposable databases are in master
 Tasks; do not use ordinary .env.local or broad integration opt-in indiscriminately.
-Future QA server command: `pnpm --filter @yuta/backoffice dev --hostname 127.0.0.1`.
-Do not run it during planning or imply the page exists.
+The planned QA server command was
+`pnpm --filter @yuta/backoffice dev --hostname 127.0.0.1`; it was not run during
+planning or used to imply implementation before Apply.
 
-## POST-APPLY VERIFY PLAN
+## Completed post-Apply verification
 
-After32 Apply tasks complete, independently re-evaluate approved Specs/Design
-against actual current code, tests, exact scoped diff and changed artifact
-hashes. Master Tasks defines the Technical Compliance Matrix F1-F8, S1-S9,
-U1-U8, R1-R7, migration/privilege/time proof and command/results/deviations.
-Apply checks are inputs to a fresh evaluation, not automatic formal PASS.
+After 32 Apply tasks completed, the independent review re-evaluated the approved
+Specs and Design against current code, tests, the exact scoped diff, and changed
+artifact hashes. The master Tasks defined the Technical Compliance Matrix F1-F8,
+S1-S9, U1-U8, R1-R7, migration/privilege/time proof, and command results and
+deviations. Apply checks were inputs to that fresh evaluation, not automatic
+formal PASS.
 
-TECHNICAL IMPLEMENTATION COMPLIANCE: NOT_EVALUATED
+TECHNICAL IMPLEMENTATION COMPLIANCE: PASS
 
-VERIFY: NOT_RUN
+VERIFY: PASS
 
-## QA PLAN — after formal VERIFY
+## Completed QA after formal VERIFY
 
-UI_AFFECTING: YES. BROWSER_QA_REQUIRED: YES. QA has not been evaluated.
-Use docs/YUTA_QA_PROTOCOL.md. QA NOT_APPLICABLE is not valid here.
+UI_AFFECTING: YES. BROWSER_QA_REQUIRED: YES. QA: PASS with three retained
+browser-evidence limitations. The run used docs/YUTA_QA_PROTOCOL.md; QA
+NOT_APPLICABLE was not valid here.
 
-Real implemented Next route plus migrated disposable PostgreSQL, actual
-restricted writer and approved injected synthetic trusted-address provider are
-mandatory. Require `NODE_ENV` development/test and all other Design D1 environment gates.
-The URL hostname allowlist is `localhost`, `127.0.0.1`, `[::1]`; the exact
+The completed QA program required the real implemented Next route, migrated
+disposable PostgreSQL, actual restricted writer, approved injected synthetic
+trusted-address provider, `NODE_ENV` development/test, and all other Design D1
+environment gates. The URL hostname allowlist was `localhost`, `127.0.0.1`,
+`[::1]`; the exact
 case-sensitive whole-string database-name rule is
 `^yuta_pointage_raw_clocking_test(?:_[a-z0-9]+)?$`.
-After the URL guard, `SELECT current_database()` must exactly equal the parsed
-name and independently match that same exact rule. No provider instantiation,
-fixture, migration or attendance write before all guards pass. Reject
+After the URL guard, `SELECT current_database()` had to exactly equal the parsed
+name and independently match that same rule. No provider instantiation,
+fixture, migration, or attendance write was allowed before all guards passed.
+The harness rejected
 `yuta_cloud`, staging/production, non-loopback, malformed/prefix/suffix/
 whitespace/newline/encoded aliases, query/fragment overrides, name mismatch or
-probe failure; no normalization. Browser QA may not bypass or weaken this guard.
-No mocked-success screen is final evidence. No production provider or real data.
+probe failure without normalization. Browser QA did not bypass or weaken this
+guard. No mocked-success screen, production provider, or real data supplied
+final evidence.
 
-| Required viewport | Evidence                                                                   |
-| ----------------- | -------------------------------------------------------------------------- |
-| 1440x900          | All applicable state families, keyboard/focus and column hierarchy.        |
-| 1024x768          | Shared-tablet landscape, touch targets, pending/end/conflict/recovery.     |
-| 768x1024          | Shared-tablet portrait, two-user clearing/navigation and state layout.     |
-| 390x844           | Narrow layout, long-name wrap/zoom/reflow, no overflow or clipped actions. |
+| Approved viewport requirement | Planned coverage                                                           |
+| ----------------------------- | -------------------------------------------------------------------------- |
+| 1440x900                      | Applicable state families, keyboard/focus, and column hierarchy.           |
+| 1024x768                      | Shared-tablet landscape, touch targets, pending/end/conflict/recovery.     |
+| 768x1024                      | Shared-tablet portrait, two-user clearing/navigation, and state layout.    |
+| 390x844                       | Narrow layout, long-name wrap/zoom/reflow, no overflow or clipped actions. |
 
-Cover all14 UI state rows from UI_SPEC, both committed mutations, multiple
-sessions, stale two-tab OUT, same-tuple timeout recovery, reset/expiry/departure,
-10s receipt/end, hidden/pagehide/pageshow/bfcache/back/refresh/duplicate/restart,
-late response after clearing and subsequent employee isolation.
-Inspect storage/cache/HTML/RSC/URLs/history/network diagnostics for prohibited
-residue without recording secrets. Capture truthful local versus remote end.
+The table above records the approved QA requirements, not the result of each
+individual browser observation. The final
+[QA report](../../../reviews/pointage-usable-raw-clocking/qa/QA_REPORT.md) is the
+authority for executed browser coverage: the final targeted Edge generation
+recorded 12 PASS, 0 FAIL, and the three retained direct-observation limitations.
+Accepted service, interaction, runtime, and actual-process evidence complements
+the browser run for the bounded lifecycle, reset, expiry, departure, and
+concurrency requirements.
 
-Create real QA_REPORT.md, screenshot-manifest.md and actual PNGs only later
-under docs/reviews/pointage-usable-raw-clocking/qa/. Manifest requires path,
-SHA-256, viewport/state/scenario/role/route/capture conditions and synthetic-only
-provenance. Nonvisual auth/DB claims need tests, not screenshots alone.
-If environment is unavailable, report BLOCKED_BY_ENVIRONMENT; do not fabricate
-PASS. In-scope defects require re-VERIFY and affected QA again.
+The run created `QA_REPORT.md`, `screenshot-manifest.md`, and actual PNGs under
+`docs/reviews/pointage-usable-raw-clocking/qa/`. The manifest records path,
+SHA-256, viewport, state, scenario, role, route, capture conditions, and
+synthetic-only provenance. Nonvisual authorization and database claims rely on
+tests rather than screenshots alone. The run preserved the fail-closed rule:
+environment unavailability could only produce `BLOCKED_BY_ENVIRONMENT`, never a
+fabricated PASS, and an in-scope defect would require affected re-VERIFY and QA.
 
 ## Stop conditions and delivery
 
@@ -234,7 +246,8 @@ No stage can clear the seven legal/privacy/provenance blockers.
 No real attendance in development/staging/production; no synthetic classifier.
 No manager UI, history/totals, raw mutation, Planning/payroll/local/offline scope.
 
-The current authorized Batch C updates exactly the seven top-level technical
-page-pack Markdown files. Prompt snapshots, references and provenance remain
-unchanged. Formal VERIFY and mandatory Browser QA remain separate later stages.
-Production enablement and real attendance remain NOT_AUTHORIZED.
+The authorized Batch C updated exactly the seven top-level technical page-pack
+Markdown files. Prompt snapshots, references and provenance remained unchanged.
+Formal VERIFY and mandatory Browser QA later passed; the three recorded direct
+browser limitations remain evidence qualifications. Production enablement and
+real attendance remain NOT_AUTHORIZED.

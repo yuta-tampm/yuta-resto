@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-09-03
+Last updated: 2026-09-28
 
 ## Finding the right authority
 
@@ -24,6 +24,13 @@ the appropriate authority.
   highest authority for every question.
 - Keep accepted decisions authoritative for their durable boundaries and use
   the specific verification source required by the Authority Model.
+
+For bounded discovery, follow `PRODUCT_KNOWLEDGE.md` -> `MODULE_REGISTRY.md` ->
+the owning feature/product home -> relevant decisions, normative specs and UI
+knowledge -> code, schemas and tests. Product Intent and Implemented State remain
+separate. The [scope-bound Page Chat transition](AUTHORITY_MODEL.md#scope-bound-legacy-page-chat-transition)
+does not retire an unmigrated Page Chat; [Workflow v3](YUTA_WORKFLOW_V3.md#legacy-page-knowledge-migration--separate-governance-maintenance)
+defines the fresh-agent PASS cutover.
 
 Completed plans, audits, migration checkpoints, implementation reports, and
 task history are not current product or architecture authority.
@@ -66,6 +73,7 @@ sensitive details never belong in the repository.
 - [`features/establishment/README.md`](features/establishment/README.md)
 - [`features/establishment/general-information/README.md`](features/establishment/general-information/README.md)
 - [`features/personnel/README.md`](features/personnel/README.md)
+- [`features/pointage/README.md`](features/pointage/README.md)
 - [`features/today/README.md`](features/today/README.md)
 - [`features/public-website/README.md`](features/public-website/README.md)
 - [`features/public-booking/README.md`](features/public-booking/README.md)

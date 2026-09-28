@@ -1,6 +1,6 @@
 # Pointage employee — Data and Interaction Spec
 
-Status: APPROVED / IMPLEMENTED / TEST-EVIDENCED — Browser QA pending
+Status: APPROVED / IMPLEMENTED / VERIFIED / BROWSER-QA-PASS — production blocked
 
 Visibility: Engineering
 
@@ -120,11 +120,11 @@ deletion/anonymization, legal hold, backup-retention, employee notice, detailed
 audit visibility and production client provenance remain unresolved. Technical
 auth deadlines do not define deletion or legal retention.
 
-## Remaining Browser QA evidence
+## Browser QA evidence
 
-Use actual Next route plus disposable PostgreSQL, not fabricated screenshots
-or mocked attendance success. Exercise two tabs and concurrent requests, reset,
-expiry, departure midnight, unavailable server, hidden/bfcache/refresh/restart,
-late callbacks and sequential shared-device users. Capture synthetic-only
-screenshots and command traces with secret-free hashes/manifests. No Browser QA
-completion is claimed yet.
+Formal Browser QA used the actual Next route plus disposable PostgreSQL and the
+approved synthetic provider. The final targeted Microsoft Edge generation
+passed with no Product failure. Direct hidden/background observation remained
+unavailable, BFCache was not triggered, and absolute expiry was not independently
+observable before idle expiry; the accepted complementary evidence and exact
+limitations are recorded in the [QA report](../../../reviews/pointage-usable-raw-clocking/qa/QA_REPORT.md).

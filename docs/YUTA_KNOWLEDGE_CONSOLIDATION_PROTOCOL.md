@@ -16,6 +16,11 @@ Knowledge Consolidation runs after a successfully validated OpenSpec change is
 archived. It reconciles current repository knowledge with completed evidence
 without treating every change as a documentation rewrite.
 
+The separate, scope-bound legacy Page Chat knowledge migration in
+[Workflow v3](YUTA_WORKFLOW_V3.md#legacy-page-knowledge-migration--separate-governance-maintenance)
+does not invoke this post-archive protocol or alter its approval, sync, archive,
+knowledge-review, or lifecycle rules for normal Product Changes.
+
 ```text
 ARCHIVE
   -> KNOWLEDGE SCAN

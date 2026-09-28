@@ -186,6 +186,30 @@ behavioral spec. A sync command does not create approval, and apply, verify,
 sync, or archive does not by itself prove that a capability is implemented,
 deployed, legally approved, externally enabled, or production-ready.
 
+### Scope-bound legacy Page Chat transition
+
+The repository becomes canonical knowledge for a bounded module or capability
+only after its legacy Page Chat knowledge is extracted, inventoried, reconciled
+against the authorities above, and canonicalized in the owning repository
+sources. Genuine conflicts require Human review. A fresh agent with repository
+access and no Page Chat history must then pass a bounded discovery test covering
+the applicable capabilities, lifecycle state, rules, permissions, user flows,
+decisions, unresolved questions, specs, implementation, tests, and boundaries.
+Record the exact migrated scope and PASS evidence in its owning knowledge source
+and link it from the Module Registry. Only then does that Page Chat become legacy
+evidence rather than Product/shaping authority for that exact scope. Creating a
+home, copying text, or completing extraction does not retire authority. Other
+unmigrated scopes retain their existing Page Chat authority.
+
+The transition changes where approved knowledge is remembered, not the matrix
+above: chats may discuss, propose, and relay Human decisions, while accepted
+ADRs, current Product Knowledge, normative specs, code/tests, and dated runtime
+evidence keep their question-specific roles. Legacy chat material remains
+available as provenance, but does not override canonical repository knowledge
+after a scope passes. Conflicts remain `CONFLICT` / `NEEDS REVIEW`; code alone
+never creates a Product decision. See [Workflow v3](YUTA_WORKFLOW_V3.md) for the
+bounded migration and routing rules.
+
 ## 7. Examples
 
 ### Example 1 — Public feedback ownership

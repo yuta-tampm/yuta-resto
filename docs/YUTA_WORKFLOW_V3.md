@@ -42,17 +42,17 @@ Release, deploy và Production Readiness không nằm trong định nghĩa repos
 
 ## 2. Vai trò và trách nhiệm
 
-| Vai trò / lớp authority             | Trách nhiệm chính                                                                                         | Không được tự suy ra                                                                         |
-| ----------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| **Page Chat / Local Control Tower** | Giữ Product context và gate của một page; làm việc trực tiếp với Codex khi Human chọn và xác minh bridge. | Không khởi tạo change page-local khi kết quả là `CROSS_MODULE` hoặc `UNCERTAIN`.             |
-| **Global Control Tower**            | Điều phối cross-page/module/runtime; làm rõ owner, authority, shared contract và review routing.          | Không thay Product context của Page Chat hoặc tự chuyển chat/quyền thực thi.                 |
-| **Codex**                           | Đọc authority, tạo/tiếp tục artifact, implement, kiểm tra, tập hợp evidence và dừng đúng gate.            | Không phải Product approver; không tự tạo approval, permission, owner hoặc durable boundary. |
-| **OpenSpec**                        | Giữ proposal, analysis, delta specs, design và tasks của một change có cấu trúc.                          | Change trong `openspec/changes/**` không phải normative authority.                           |
-| **Product Knowledge**               | Giải thích WHY, broader WHAT, mục đích module, quan hệ, scope và non-goals.                               | Không tự chứng minh code hiện tại, deployment hoặc readiness.                                |
-| **Normative main specs**            | Sau approved sync, định nghĩa yêu cầu hành vi chính xác trong durable boundaries đã chấp nhận.            | Không thay thế ADR, security/runtime/data authority, code hoặc bằng chứng production.        |
-| **Code/tests**                      | Chứng minh repository Implemented State và mức độ test coverage.                                          | Không tự tạo Product approval hoặc chứng minh bản nào đang chạy production.                  |
-| **QA evidence**                     | Chứng minh hành vi người dùng/runtime, responsive, accessibility và visual khi áp dụng.                   | Screenshot không định nghĩa business rule, permission, schema, owner hoặc lifecycle.         |
-| **Human reviewer / current user**   | Ra quyết định tại đúng gate trên đúng artifact/hashes; cấp authorization rõ ràng khi cần.                 | Một approval không tự mở rộng sang gate, change, path hoặc phiên bản artifact khác.          |
+| Vai trò / lớp authority             | Trách nhiệm chính                                                                                                                                                                       | Không được tự suy ra                                                                                                                      |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| **Page Chat / Local Control Tower** | Giữ Product/shaping authority của scope chưa migration PASS; sau PASS chỉ còn legacy evidence cho đúng scope đó. Có thể làm việc trực tiếp với Codex khi Human chọn và xác minh bridge. | Không khởi tạo change page-local khi kết quả là `CROSS_MODULE` hoặc `UNCERTAIN`; không giữ Product authority của scope đã migration PASS. |
+| **Global Control Tower**            | Điều phối cross-page/module/runtime và shaping của scope đã migration PASS; làm rõ owner, authority, shared contract và review routing.                                                 | Không thay Product context của Page Chat ở scope chưa migration PASS hoặc tự chuyển chat/quyền thực thi.                                  |
+| **Codex**                           | Đọc authority, tạo/tiếp tục artifact, implement, kiểm tra, tập hợp evidence và dừng đúng gate.                                                                                          | Không phải Product approver; không tự tạo approval, permission, owner hoặc durable boundary.                                              |
+| **OpenSpec**                        | Giữ proposal, analysis, delta specs, design và tasks của một change có cấu trúc.                                                                                                        | Change trong `openspec/changes/**` không phải normative authority.                                                                        |
+| **Product Knowledge**               | Giải thích WHY, broader WHAT, mục đích module, quan hệ, scope và non-goals.                                                                                                             | Không tự chứng minh code hiện tại, deployment hoặc readiness.                                                                             |
+| **Normative main specs**            | Sau approved sync, định nghĩa yêu cầu hành vi chính xác trong durable boundaries đã chấp nhận.                                                                                          | Không thay thế ADR, security/runtime/data authority, code hoặc bằng chứng production.                                                     |
+| **Code/tests**                      | Chứng minh repository Implemented State và mức độ test coverage.                                                                                                                        | Không tự tạo Product approval hoặc chứng minh bản nào đang chạy production.                                                               |
+| **QA evidence**                     | Chứng minh hành vi người dùng/runtime, responsive, accessibility và visual khi áp dụng.                                                                                                 | Screenshot không định nghĩa business rule, permission, schema, owner hoặc lifecycle.                                                      |
+| **Human reviewer / current user**   | Ra quyết định tại đúng gate trên đúng artifact/hashes; cấp authorization rõ ràng khi cần.                                                                                               | Một approval không tự mở rộng sang gate, change, path hoặc phiên bản artifact khác.                                                       |
 
 Các lớp này bổ sung cho nhau. Khi chúng mâu thuẫn, dùng
 [`AUTHORITY_MODEL.md`](AUTHORITY_MODEL.md) để phân loại câu hỏi, ghi `CONFLICT`
@@ -104,8 +104,8 @@ cảm, không tự phát sinh chỉ vì có Design. `skip_specs: true` không t�
 
 ## 4. Routing cross-module trước một change
 
-Trước mọi feature/change mới, Page Chat thực hiện `CROSS-MODULE IMPACT CHECK`
-theo
+Trước feature/change mới thuộc scope chưa migration PASS, owning Page Chat thực
+hiện `CROSS-MODULE IMPACT CHECK` theo
 [`YUTA_PAGE_CHAT_OPERATING_PROMPT_V3.md`](chatGPT/YUTA_PAGE_CHAT_OPERATING_PROMPT_V3.md)
 và chọn đúng một kết quả:
 
@@ -117,9 +117,14 @@ và chọn đúng một kết quả:
 
 ### Human chọn Control Tower theo phạm vi công việc
 
-Với `PAGE_LOCAL`, owning Page Chat giữ Product/shaping authority và có thể là
-Local Control Tower giao việc trực tiếp cho Codex trong phạm vi page đó. Khi
-cần chuyển từ Global Control Tower sang Local Control Tower, dừng phần việc
+Với `PAGE_LOCAL` chưa migration PASS, owning Page Chat giữ Product/shaping
+authority và có thể là Local Control Tower giao việc trực tiếp cho Codex trong
+phạm vi page đó. Với scope đã PASS, agent lấy Product Knowledge từ repository;
+Control Tower làm shaping, Human Decision, giải quyết conflict và điều phối
+governance. Page Chat cũ chỉ còn legacy evidence cho đúng scope đã PASS, không
+là Product/shaping gate. Phân loại impact và các gate của Product Change vẫn
+áp dụng; không dùng migration PASS làm Apply authorization. Với scope chưa PASS,
+khi cần chuyển từ Global Control Tower sang Local Control Tower, dừng phần việc
 phụ thuộc và nêu rõ Page Chat đích, mục tiêu, change/gate, bằng chứng và blocker.
 Human tự chọn và chuyển sang đúng chat; Global Control Tower không cần truy
 xuất lịch sử Page Chat để Local Control Tower ra quyết định.
@@ -149,7 +154,7 @@ Với `CROSS_MODULE` hoặc `UNCERTAIN`, Local Control Tower dừng phần việ
 thuộc và lập handoff có nguồn; Human chọn Global Control Tower để điều phối.
 Codex xác minh lại target và authorization trước khi tiếp tục. Hai chat không
 tự giao tiếp với nhau, và Global Control Tower không thay Page Chat quyết định
-Product cho `PAGE_LOCAL`.
+Product cho `PAGE_LOCAL` thuộc scope chưa migration PASS.
 
 Một thay đổi cần Control Tower khi nó đọc/ghi data của nhiều owner, thay đổi
 shared permission/security/tenancy, đi qua nhiều runtime, cần provider/legal/
@@ -726,6 +731,30 @@ boundary/owner/permission/API, promote lifecycle/readiness, rewrite normative
 specs hoặc giải quyết `NEEDS REVIEW` bằng assumption. Chi tiết nằm trong
 [`YUTA_KNOWLEDGE_CONSOLIDATION_PROTOCOL.md`](YUTA_KNOWLEDGE_CONSOLIDATION_PROTOCOL.md).
 
+### Legacy Page Knowledge Migration — separate governance maintenance
+
+Migration knowledge của một scope cũ không tự mở Product Change, OpenSpec
+change, Gate 1/2/3, sync hay archive. Nó không thay Knowledge Consolidation
+sau archive cho các Product Changes bình thường. Dùng discovery spine hiện có:
+`docs/README.md` → `docs/PRODUCT_KNOWLEDGE.md` → `docs/MODULE_REGISTRY.md`
+→ owning module/capability home → ADR/main specs/UI knowledge → code/schema/tests.
+Giữ Product Truth và Implementation Truth riêng; không dump transcript vào repo
+hoặc tạo knowledge system thứ hai.
+
+Cho từng scope được phép migration: lấy legacy extract một lần, inventory các
+claim, reconcile với Product Knowledge, accepted decisions, normative main
+specs, active/archive provenance, architecture/authorization, code và tests;
+classify `CONFIRMED`, `IMPLEMENTED`, `DECIDED_NOT_IMPLEMENTED`, `PROPOSED`,
+`UNRESOLVED`, `CONFLICT` hoặc `OBSOLETE`. Canonicalize vào owning repository
+sources; chỉ Human quyết định conflict hoặc Product/authority gap thật sự.
+Sau đó cho fresh agent chỉ dùng repository và không có Page Chat history tìm
+đúng bounded knowledge. Ghi exact scope, evidence và PASS trong owning source,
+link từ Module Registry. Chỉ sau PASS mới retire Product/shaping authority của
+Page Chat cho scope đó; Page Chat vẫn là legacy evidence. Scope khác chưa PASS
+giữ authority cũ. Nếu fresh agent cần Page Chat để thiết lập canonical knowledge,
+chưa đạt PASS và chưa cutover. Việc đã lấy extract cho phép tiếp tục công việc
+đối soát mà không phải liên tục quay lại Page Chat, nhưng không tự retire authority.
+
 ## 15. No-spec path
 
 `skip_specs: true` chỉ dùng khi thật sự không có spec-level behavior change,
@@ -767,7 +796,9 @@ dùng QA repository để tuyên bố production enabled.
 
 ### Example A — small page-local UI change
 
-Page Chat xác nhận `PAGE_LOCAL`; nếu scope đã rõ thì bỏ Discovery/Shaping.
+Với scope chưa migration PASS, Page Chat xác nhận `PAGE_LOCAL`; nếu scope đã rõ
+thì bỏ Discovery/Shaping. Với scope đã PASS, dùng repository knowledge và
+Control Tower/Human routing theo mục 4.
 Change đi qua Proposal → Analysis → Gate 1 → Specs → Gate 2; Design chỉ tạo khi
 applicable và không có Sensitive Design Gate nếu không chạm boundary nhạy cảm.
 Tasks chọn `UI / Components`, `Interaction / States` và regression cần thiết.
@@ -786,9 +817,10 @@ dimension. Gate 3 vẫn review exact technical evidence và diff.
 
 ### Example C — cross-module feature
 
-Page Chat thực hiện impact check và trả `CROSS_MODULE` hoặc `UNCERTAIN`, lập
-handoff rồi dừng local change. Control Tower map owning/consumer capabilities,
-data owners, authority, shared contract và quyết định một coordinated change
+Với scope chưa migration PASS, Page Chat thực hiện impact check và trả
+`CROSS_MODULE` hoặc `UNCERTAIN`, lập handoff rồi dừng local change. Với scope đã
+PASS, Control Tower dựa vào repository để phân loại impact. Control Tower map
+owning/consumer capabilities, data owners, authority, shared contract và quyết định một coordinated change
 hay nhiều bounded changes. Chỉ sau khi Product/durable blockers được giải quyết,
 Control Tower mới cấp bounded `$yuta-run-change` request và routing cho các
 gate/QA liên quan.
@@ -821,7 +853,8 @@ $yuta-run-change     = start/resume/adopt; stop at next human gate
 $yuta-finish-change  = authorized finalization OR archived knowledge resume
 
 ESCALATION
-PAGE_LOCAL → owning Page Chat / Local Control Tower → Codex
+PAGE_LOCAL chưa migration PASS → owning Page Chat / Local Control Tower → Codex
+Scope đã migration PASS → repository knowledge + Global Control Tower → Codex
 CROSS_MODULE / UNCERTAIN → Global Control Tower → Codex
 Human chọn chat đích; hai chat không tự giao tiếp hoặc tự chuyển quyền
 Codex finding CONFLICT / requirement-level NEEDS REVIEW → stop and route

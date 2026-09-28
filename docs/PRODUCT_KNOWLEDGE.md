@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last reviewed: 2026-09-03
+Last reviewed: 2026-09-28
 
 ## Purpose
 
@@ -21,6 +21,13 @@ Use the approved [`AUTHORITY_MODEL.md`](AUTHORITY_MODEL.md) to choose authority
 by question type, [`LIFECYCLE_STATUS_MODEL.md`](LIFECYCLE_STATUS_MODEL.md) to
 interpret status dimensions, and [`MODULE_REGISTRY.md`](MODULE_REGISTRY.md) to
 locate bounded capabilities, ownership, evidence, and review markers.
+
+Discover progressively: this product map -> the bounded Module Registry row ->
+its owning feature/product home -> relevant accepted decisions, normative main
+specs and UI knowledge -> current code, schemas and tests. A Page Chat remains
+Product/shaping authority for its unmigrated scope. For an exact scope with a
+recorded fresh-agent migration PASS, the repository is canonical knowledge and
+the Page Chat is legacy evidence only; see the [Authority Model](AUTHORITY_MODEL.md#scope-bound-legacy-page-chat-transition).
 
 ## The four knowledge locations
 
@@ -78,7 +85,8 @@ A change is non-normative and is not evidence that a capability is implemented:
 - conflicting change artifacts must not silently override accepted decisions or
   current documents.
 
-The directory exists, but it contains no current change artifact.
+Inspect the current directory and exact change status rather than relying on a
+cached active-change count. Change presence never makes a delta normative.
 
 ### Code, schemas, contracts, manifests, and tests
 
@@ -153,15 +161,31 @@ all of it as implemented.
 
 ### Reputation and direct feedback
 
-- Product/current boundary: `docs/features/reputation/README.md`
-- Remaining work: `docs/features/reputation/STATUS.md`
+- Canonical Avis/Reputation Product Knowledge and provider/flow matrix:
+  `docs/features/reputation/README.md`
+- Implementation tracker, not Product authority:
+  `docs/features/reputation/STATUS.md`
 - Decision: ADR-004
 - Implementation: `apps/feedback-web`, Backoffice reputation/integration
   routes, contracts, tenant resolution, and db-cloud reputation persistence
 
-AI assistance, Google synchronization, and publication must be checked
-individually; their presence in schemas or plans is not proof of a connected
-production service.
+Public direct-feedback collection is approved. The provider-independent Avis
+intent covers recent/unanswered visibility, grounded AI-draft direction,
+manual edit and Human validation before external publication. Facebook and
+Instagram have confirmed Human-decided high-level inclusion; each provider's
+`CURRENT_V1_STATUS` remains `UNRESOLVED`. Google Product V1, exact provider
+interaction types, AI/Restaurant Knowledge consumption, publication,
+synchronization, retry, approval workflow and analytics remain unresolved.
+Confirmed provider inclusion does not approve a provider contract, integration
+behavior, automation or production enablement. Current code and plans are implementation evidence
+and do not approve those Product/provider boundaries.
+
+For the exact bounded Avis & commentaires scope recorded in the Reputation
+home, repository-only fresh-agent acceptance passed and the Human authorized
+the authority cutover. Repository knowledge is canonical for that scope, and
+the Avis & commentaires Page Chat is legacy evidence only. Satisfaction client,
+public feedback, Marketing, Visibility, other Reputation scopes, and all other
+Page Chats retain their existing authority.
 
 ### Restaurant Backoffice foundation
 
@@ -266,6 +290,8 @@ runtime or production enablement follows.
 
 ### Pointage authority, access and usable raw clocking
 
+- Canonical Pointage Product Knowledge home; fresh-agent migration PASS recorded:
+  `docs/features/pointage/README.md`
 - Precise normative ownership and behavioral boundaries:
   `openspec/specs/pointage/authority-foundation/spec.md`
 - Precise normative credential, continuation and authorization behavior:
@@ -294,6 +320,13 @@ correction, history/total view, Planning/Today/payroll integration, POS/Site
 Agent/offline/sync behavior or production trusted-client-address provider.
 Legal/privacy gates and trusted production client-address provenance remain
 blocked.
+
+For the exact bounded scope recorded in the Pointage home, repository-only
+fresh-agent acceptance passed and the Human authorized the authority cutover.
+Repository knowledge is canonical for that scope, and the Pointage Page Chat is
+legacy evidence only. No other Page Chat authority, Product decision,
+implementation state, environment status, readiness gate, or unresolved item
+changes by association.
 
 ### Local POS and Site Agent
 
@@ -378,14 +411,9 @@ The legacy `packages/db` is not an active tracked package. Do not restore or use
 
 ## OpenSpec integration checkpoint
 
-Current observed state:
-
-```text
-default schema                 yuta-spec-driven
-normative main-spec role       enabled
-normative main-spec count      10
-active OpenSpec change count   0
-```
+The default schema is `yuta-spec-driven` and the normative main-spec role is
+enabled. Inspect the current `openspec/specs/` and `openspec/changes/` trees for
+their live contents; historical counts are not a navigation authority.
 
 Successfully gated, synced, and validated main specs are the primary authority
 for precise behavior inside accepted durable boundaries. Product Knowledge

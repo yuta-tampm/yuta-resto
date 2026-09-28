@@ -10,11 +10,14 @@ Canonical workflow authority:
 
 ## Manual Global to owning Page Chat
 
-For work classified `PAGE_LOCAL`, Global gives Human this short, sourced relay
+For unmigrated work classified `PAGE_LOCAL`, Global gives Human this short, sourced relay
 and stops dependent work. Human chooses the exact owning Page Chat. Codex then
 verifies that selected chat and its Bridge Mode before a fresh run. This relay
 does not move runtime authority, approve a gate or authorize Apply; the chats
-do not communicate automatically.
+do not communicate automatically. A scope with recorded migration PASS uses
+repository knowledge and Control Tower coordination under
+[Workflow v3](../YUTA_WORKFLOW_V3.md#legacy-page-knowledge-migration--separate-governance-maintenance);
+this Page Chat handoff does not restore its retired Product/shaping authority.
 
 ```text
 PAGE_LOCAL MANUAL HANDOFF

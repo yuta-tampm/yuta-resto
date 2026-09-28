@@ -17,20 +17,24 @@ Maintain capability and authority maps, owning data/runtime boundaries, review
 routing and OpenSpec Strategy A/B/C decisions under current authority. Preserve
 PAGE_LOCAL / CROSS_MODULE / UNCERTAIN routing and conditional Discovery/Shaping.
 Lifecycle/governance uncertainty escalates here even for page-local work. For
-`PAGE_LOCAL`, the owning Page Chat may also act as Local Control Tower and
+`PAGE_LOCAL` in an unmigrated scope, the owning Page Chat may also act as Local Control Tower and
 communicate directly with Codex when the Human selects it and its exact target,
 scope and Bridge operating context are verified. This Global Control Tower
 coordinates `CROSS_MODULE`/`UNCERTAIN` work; it does not need to retrieve a
-Page Chat's history before that Page Chat can decide its own Product scope.
-When work is `PAGE_LOCAL`, provide a short sourced handoff naming the owning
+Page Chat's history before that Page Chat can decide its own unmigrated Product scope.
+For an exact scope with a recorded fresh-agent migration PASS, use canonical
+repository knowledge and coordinate shaping, Human Decisions, conflicts and
+governance here; its Page Chat is legacy evidence only. Other scopes retain
+their existing authority. See the [Authority Model](../AUTHORITY_MODEL.md#scope-bound-legacy-page-chat-transition).
+When unmigrated work is `PAGE_LOCAL`, provide a short sourced handoff naming the owning
 Page Chat, exact target if known, task, current change/gate, evidence and
 blockers. Stop dependent Global work and let Human select the Page Chat; do not
 switch browser targets or issue commands on its behalf. Use the
 [manual Global-to-Page handoff](YUTA_CONTROL_TOWER_HANDOFF_TEMPLATE_V3.md#manual-global-to-owning-page-chat)
 when a written relay is useful. A handoff is context, not Apply, Human Gate or
 executable authority. On `CROSS_MODULE`/`UNCERTAIN`, coordinate from this
-Global conversation using the Page-to-Global handoff without replacing the
-Page Chat's Product decision.
+Global conversation using the Page-to-Global handoff without replacing an
+unmigrated Page Chat's Product decision.
 
 ## Browser Bridge Mode v1
 
@@ -38,8 +42,8 @@ Activate only for a browser-delivered, complete `[YUTA_BRIDGE_HANDSHAKE]` block
 from Codex in the user-selected Control Tower conversation. Bind the fresh
 `RUN_ID` to that verified conversation. Handshake starts Existing-State Intake;
 it is not implementation or side-effect authorization. Codex communicates with
-the Human-selected, verified Control Tower through the browser. For `PAGE_LOCAL`,
-the owning Page Chat can be the direct Local Control Tower endpoint; for
+the Human-selected, verified Control Tower through the browser. For `PAGE_LOCAL`
+in an unmigrated scope, the owning Page Chat can be the direct Local Control Tower endpoint; for
 `CROSS_MODULE`/`UNCERTAIN`, use Workflow v3 Global coordination. This role grants
 no new Product authority. Retrieve only context actually available through
 Project/Page Chat sources, decisions or handoffs, record provenance and gaps as

@@ -1,6 +1,6 @@
 # Pointage employee — Product Scope
 
-Status: APPROVED / IMPLEMENTED / TEST-EVIDENCED — Browser QA pending
+Status: APPROVED / IMPLEMENTED / VERIFIED / BROWSER-QA-PASS — production blocked
 
 Visibility: Engineering
 
@@ -9,14 +9,17 @@ Visibility: Engineering
 Change: pointage-usable-raw-clocking. CROSS_MODULE.
 Gate 2: APPROVED_FOR_DESIGN. P1-P14 preserved.
 
-| Approved delta                                                                                                           | SHA-256                                                          | Requirements / scenarios |
-| ------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------- | ------------------------ |
-| [pointage/raw-clocking](../../../../openspec/changes/pointage-usable-raw-clocking/specs/pointage/raw-clocking/spec.md)   | 4bfa64e863ad465a144341c18aa5d0db3ce0806ada52ad40183cf9a4e321f90e | 13 / 41                  |
-| [authorization/pointage](../../../../openspec/changes/pointage-usable-raw-clocking/specs/authorization/pointage/spec.md) | 1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66 | 7 / 21                   |
+| Approved delta                                                                                                                              | SHA-256                                                          | Requirements / scenarios |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ------------------------ |
+| [pointage/raw-clocking](../../../../openspec/changes/archive/2026-09-23-pointage-usable-raw-clocking/specs/pointage/raw-clocking/spec.md)   | 4bfa64e863ad465a144341c18aa5d0db3ce0806ada52ad40183cf9a4e321f90e | 13 / 41                  |
+| [authorization/pointage](../../../../openspec/changes/archive/2026-09-23-pointage-usable-raw-clocking/specs/authorization/pointage/spec.md) | 1ba6a0e6bfd3d82fb0f0d010f62e01dd2eacd7e934158ea3144c84ecf203fd66 | 7 / 21                   |
 
-The exact Specs remain normative change requirements. This page record does
-not rewrite them. Technical representation belongs to
-[Design](../../../../openspec/changes/pointage-usable-raw-clocking/design.md).
+The archived delta Specs were the normative change requirements and remain
+change provenance. The current [raw-clocking](../../../../openspec/specs/pointage/raw-clocking/spec.md)
+and [authorization](../../../../openspec/specs/authorization/pointage/spec.md)
+main Specs are the current normative authority. Technical representation for
+the delivered change belongs to its archived
+[Design](../../../../openspec/changes/archive/2026-09-23-pointage-usable-raw-clocking/design.md).
 
 ## Employee goal and approved scope
 
@@ -67,5 +70,7 @@ expiry, not a legal deletion/retention policy.
 
 UI_AFFECTING: YES. BROWSER_QA_REQUIRED: YES.
 Implementation and automated Apply evidence exist within the approved Design
-and contracts. Formal VERIFY and Browser QA have not run. Deployment,
-production enablement, real attendance, sync and archive remain unauthorized.
+and contracts. Formal VERIFY and Browser QA passed with the three retained
+browser-evidence limitations recorded in the final QA report. Gate 3 was
+approved, the main Specs were synced, and the change was archived. Deployment,
+production enablement, and real attendance remain unauthorized.

@@ -1,6 +1,6 @@
 # Pointage employee — UI Spec
 
-Status: APPROVED / IMPLEMENTED / TEST-EVIDENCED — Browser QA pending
+Status: APPROVED / IMPLEMENTED / VERIFIED / BROWSER-QA-PASS — production blocked
 
 Visibility: Engineering
 
@@ -71,10 +71,11 @@ announcements for pending/conflict/receipt without reading the secret.
 Errors are text-associated, not color-only; focus returns to neutral entry
 after clearing. Loading placeholders contain no personal residue.
 
-Pending Browser QA: 1440x900 desktop, 1024x768 tablet landscape, 768x1024 tablet
-portrait, 390x844 narrow viewport; keyboard and touch, long names, zoom/reflow,
-contrast and accessible status announcements. These are planned checks, not
-completed evidence.
+Browser QA passed at 1440x900 desktop, 1024x768 tablet landscape, 768x1024
+tablet portrait, and 390x844 narrow viewport, including keyboard and touch,
+long names, reflow, and accessible status behavior. The current QA result keeps
+the three explicit evidence limitations for hidden/background lifecycle,
+BFCache triggering, and independently observable absolute expiry.
 
 ## Excluded visible features
 

@@ -6,14 +6,22 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-09-06
+Last updated: 2026-09-28
 
 This file is the operational implementation tracker for
 the reputation feature. Durable behavior belongs in the adjacent `README.md`.
 
-## Current objective
+This tracker records implementation state and historical sequencing. It is not
+Product approval. Google V1 remains `UNRESOLVED`. Facebook and Instagram have
+confirmed Human-decided high-level inclusion, while each provider's
+`CURRENT_V1_STATUS` and all provider-specific behavior remain `UNRESOLVED`.
 
-Implement idempotent Google review import and a manual synchronization action.
+## Current bounded status
+
+No provider implementation is authorized by this tracker. The Google
+implementation sequence below records an incomplete technical track: review
+import, manual or scheduled synchronization, publication, reconciliation, and
+retry remain absent.
 
 ## Completed foundation
 
@@ -65,7 +73,7 @@ Acceptance result: a manager can process feedback, assign it, save a manual
 Google reply draft, add an internal note, reload the page, and see every change
 persisted. Publishing remains disabled until the Google connector is complete.
 
-## Next task: Google connector
+## Incomplete Google implementation track
 
 Implement the connector in this order:
 
@@ -164,9 +172,11 @@ Required external configuration:
 - [ ] End-to-end tests for the eight required Phase 1 scenarios.
 - [ ] Desktop, tablet, and mobile acceptance verification.
 
-## Deferred beyond Phase 1
+## Outside the current implemented scope
 
-- Facebook and Instagram connectors.
+- Facebook and Instagram connectors. Their high-level Product inclusion is
+  confirmed, but their current V1/release status, exact interaction types, and
+  provider contracts remain unresolved.
 - Private social messages.
 - Automatic AI publication.
 - Advanced approval workflows.
