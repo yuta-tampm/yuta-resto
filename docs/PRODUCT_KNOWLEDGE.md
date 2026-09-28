@@ -276,6 +276,20 @@ retain their existing authority.
   canonical for that exact migrated Formalités scope, and the Formalités Page
   Chat is legacy evidence only for that scope. Other Personnel capabilities and
   all other Page Chats retain their existing authority.
+- The same home now records the completed bounded Salariés / Personnel dossier
+  reconciliation: F01–F12, current data families, F03, normative F07, OWNER-only
+  authorization, tenancy, Register/Documents boundaries, cross-module
+  projections, readiness, and 11 grouped open decisions. It preserves confirmed
+  high-level inclusion of salary/remuneration, probation, monthly hours,
+  `stagiaire`, and Human-confirmed AI document assistance while leaving their
+  exact models, current V1, implementation, legal/privacy status, and downstream
+  integration separately classified. Repository-only fresh-agent acceptance
+  passed, and the Human-authorized scope-bound authority cutover is complete.
+  Repository knowledge is canonical for this exact Salariés / Personnel dossier
+  scope, and the Salariés Page Chat is legacy evidence only for this scope. The
+  cutover does not reopen the completed Formalités or Pointage migrations,
+  migrate Planning Product Truth or the full Register/Documents capabilities,
+  resolve a SAL decision, or change another Page Chat's authority.
 - Normative F07 behavior:
   `openspec/specs/personnel/reconstructable-value-history/spec.md`
 - Current summary and production gates: `CURRENT_STATE.md` and

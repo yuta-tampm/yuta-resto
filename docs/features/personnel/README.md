@@ -549,3 +549,306 @@ Status: APPROVED
 Formalités repository reconciliation, bounded canonicalization, fresh-agent
 acceptance, and authority cutover: `COMPLETE` on 2026-09-28. Formalités Page
 Chat role for the exact migrated scope: `LEGACY EVIDENCE ONLY`.
+
+## 15. Salariés / Personnel dossier knowledge reconciliation
+
+### Migration scope and authority state
+
+This section is the canonical repository entry point for the reconciled
+Salariés / Personnel dossier knowledge extracted from the legacy Page Chat. It
+covers the Personnel purpose, the F01–F12 capability map, employee dossier data
+families, F03 dossier behavior, F07 reconstructable history, authorization and
+tenancy, current-fact/document boundaries, Register, the bounded links to
+Formalités and Pointage, readiness, and the remaining grouped decisions.
+
+The legacy extract was evidence only. Its SHA-256 was
+`143c386af9a287c159703ae80fa675a29c67f5ca1420df99fc9a53fdf6e95ca2`.
+The reconciliation did not copy the extract, accept its classifications without
+repository evidence, or create Product, legal, privacy, security, or production
+authority. Repository reconciliation and bounded canonicalization are complete.
+
+The canonical owner remains this shared Personnel home. No parallel Salariés
+home is created. The completed Formalités and Pointage migrations are unchanged,
+and Planning knowledge is outside this migration.
+
+### Fresh-agent acceptance evidence and authority cutover
+
+The repository-only
+`SALARIES_PERSONNEL_DOSSIER_FRESH_AGENT_ACCEPTANCE_REPORT_PASS.md` has SHA-256
+`efa58a3beffc05d22fa62278998b2ea9ccc4f1639a6fdd140c2fcb10bcebebc3`.
+The fresh agent used no Page Chat history, legacy extract, reconciliation
+report, correction report, remediation report, or external research. It
+reported:
+
+```text
+REPOSITORY_MUTATED: NO
+PAGE_CHAT_HISTORY_USED: NO
+LEGACY_EXTRACT_USED: NO
+RECONCILIATION_REPORT_USED: NO
+CORRECTION_REPORT_USED: NO
+REMEDIATION_REPORT_USED: NO
+EXTERNAL_RESEARCH_USED: NO
+MATERIAL_KNOWLEDGE_GAPS: 0
+GENUINE_CONFLICTS_IDENTIFIED: 0
+POINTAGE_SCOPE_REOPENED: NO
+FORMALITES_SCOPE_REOPENED: NO
+PLANNING_SCOPE_MIGRATED: NO
+FRESH_AGENT_ACCEPTANCE: PASS
+READY_FOR_AUTHORITY_CUTOVER: YES
+```
+
+The report establishes repository discoverability for the exact reconciled
+scope only. It is acceptance evidence rather than Product, implementation,
+legal, privacy, security, environment, readiness, or production authority and
+does not resolve `SAL-01` through `SAL-11`.
+
+Repository reconciliation, bounded canonicalization, fresh-agent acceptance,
+and the Human-authorized cutover are complete for the exact Salariés /
+Personnel dossier scope above. Under the
+[Authority Model](../../AUTHORITY_MODEL.md#scope-bound-legacy-page-chat-transition):
+
+- the repository is canonical knowledge for this migrated scope;
+- the Salariés Page Chat is `LEGACY EVIDENCE ONLY` for this exact scope and
+  remains available for historical or forensic lookup;
+- Control Tower owns shaping, genuine conflict resolution, Human Decision
+  routing, cross-module reasoning, and governance coordination; and
+- Coding Agents use repository discovery for analysis and perform only
+  separately authorized execution and verification.
+
+This cutover does not retire authority for Personnel scope outside this
+reconciliation, migrate the full Register or Documents capabilities, migrate
+Planning, reopen the completed Formalités or Pointage migrations, change
+another Page Chat's authority, close a SAL decision, authorize Product work or
+production, or create a current legal, privacy, or security conclusion.
+
+### Canonical Personnel dossier model
+
+Personnel owns the establishment-scoped employee dossier and its approved
+current employment facts. A dossier is distinct from a cloud user, membership,
+application role, Pointage credential, and POS staff identity. Current repository
+authority does not require an employee to have a cloud user and defines no
+persisted employee-to-user relation. It also does not establish a global person
+record, cross-establishment dossier identity, transfer, or merge model.
+
+The current bounded dossier supports list/search/sort, read, create, minimum
+edit, non-destructive departure/correction/reopening, completeness and action
+overview, access evidence, and reconstructable history. The current structured
+facts are given names, family name, position, qualification, employment term,
+expected end date, controlled fixed-term reason, work-time category,
+contractual weekly minutes, entry date, departure date, and revision/system
+metadata. Birth, contact, address, national identifiers, salary, probation,
+monthly-hours semantics, payroll facts, and trainee-specific facts are not part
+of the current approved executable dossier model.
+
+At Product-map level, salary/remuneration, probation, monthly hours, and
+`stagiaire` are confirmed high-level Personnel inclusions. They are intended to
+support bounded employment or contract workflows when those workflows are
+separately approved. This inclusion does not approve their exact current V1,
+domain fields, units, optionality, validation, permissions, history, legal use,
+downstream projection, or implementation. Contractual weekly minutes remain the
+only implemented duration authority; no monthly derivation is approved.
+
+Current Personnel reads and mutations are server-authorized, fail closed, and
+scoped by trusted `organizationId`, `establishmentId`, and employee identifier.
+The implemented operation catalog grants Personnel employee, document,
+extraction, and Register operations to `OWNER` only. No `MANAGER`, `STAFF`,
+self-service, support, or service-role Personnel authority may be inferred.
+
+Departure is a dated, non-destructive Personnel fact. The repository derives
+upcoming, active, and former views from current facts; it does not define a
+general employment state machine for suspension, archive, deletion, restore,
+rehire, transfer, or anonymization.
+
+### F01–F12 capability matrix
+
+| ID  | Capability                                  | Current Product / ownership position                                                                                                                                                               | Implementation and environment                                                                                                                                                                               | Legal, privacy, readiness, and limits                                                                                                                                |
+| --- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F01 | Consult / search employees                  | Approved bounded Personnel capability; Personnel owns the dossier.                                                                                                                                 | Implemented repository slice for scoped list, search, filter, sort, and lifecycle views; live environment unverified.                                                                                        | OWNER-only; production remains blocked.                                                                                                                              |
+| F02 | Add an employee                             | Approved bounded Personnel capability.                                                                                                                                                             | Implemented create flow with validation, duplicate review, idempotency, audit, and scoped persistence.                                                                                                       | Required fields are only the current contract/schema fields; no document-family expansion follows.                                                                   |
+| F03 | Manage the employee dossier                 | Approved bounded Personnel capability and current-fact source.                                                                                                                                     | Implemented read/edit, revision conflict, idempotency, audit, non-destructive departure, reopening, completeness, and access evidence.                                                                       | No employee self-service or broader role policy; production gates remain open.                                                                                       |
+| F04 | Contract and current employment facts       | Personnel owns the current structured facts. Salary/remuneration, probation, and monthly hours are confirmed high-level Personnel inclusions; Formalités and Documents own their separate outputs. | Employment term, end date, fixed-term reason, work-time category, weekly minutes, role facts, entry, and departure are implemented. Salary, probation, and monthly hours are not implemented dossier fields. | Their exact V1, domain model, permissions, history, legal/privacy treatment, payroll boundary, and signed-document reconciliation remain unresolved.                 |
+| F05 | Documents                                   | Documents owns signed employment artifacts; Personnel supplies current facts and employee context.                                                                                                 | Development-only signed base-contract and signed-amendment storage/scan are implemented with production fail-closed.                                                                                         | Other document families, sensitive visibility, retention, rights, and production storage are unresolved; no broad upload catalog is approved.                        |
+| F06 | Incomplete dossiers / actions               | Personnel owns bounded completeness and action derivation.                                                                                                                                         | Implemented development slice for incomplete dossier, missing signed base contract, and departure within five days.                                                                                          | This is not a legal-compliance alert catalog; broader rules and notifications remain unresolved.                                                                     |
+| F07 | Modify a value with reconstructable history | Approved Personnel capability; the normative F07 specification controls exact behavior.                                                                                                            | Implemented and tested for the six bounded value groups below; live/production use remains blocked.                                                                                                          | It is not general event sourcing. The retention value is a Product baseline awaiting external review.                                                                |
+| F08 | Formalités integration                      | Personnel owns seven source facts; Formalités owns draft/workflow state and cannot write the source facts back.                                                                                    | Separately implemented, OWNER-only, development-only CDI draft projection and reconciliation.                                                                                                                | Formalités migration remains complete; this mission does not reopen or extend it.                                                                                    |
+| F09 | Departure                                   | Personnel owns the departure fact.                                                                                                                                                                 | Implemented dated departure, correction/cancellation with reason, former view, and reopening behavior.                                                                                                       | Departure is not deletion and creates no legal-termination conclusion; archive/rehire/deletion semantics remain unresolved.                                          |
+| F10 | Personnel Register / PDF                    | Register is the separate current owner of register records, append-only corrections, sequence, audit, and transient PDF; Personnel supplies candidates.                                            | Implemented OWNER-only, development-only, one-establishment route with production fail-closed.                                                                                                               | Exact legally reviewed field dictionary, intern/service-civic coverage, retention/legal hold, and production authorization remain open. No compliance claim is made. |
+| F11 | Trainee                                     | `Stagiaire` inclusion in the Human-approved F01–F12 map is confirmed; its exact current V1 and domain model remain unresolved.                                                                     | Not implemented as a trainee-specific dossier, document, lifecycle, or permission model.                                                                                                                     | The unresolved decision concerns the exact model, scope, documents, permissions, and legal rules. Employee contract semantics cannot be reused automatically.        |
+| F12 | Planning / Pointage / Formalités links      | Each module retains ownership of its facts and authorization.                                                                                                                                      | Formalités consumes its exact projection; Pointage consumes a minimal employee eligibility/display projection and owns clocking; Planning remains a placeholder.                                             | No generic cross-module write-back or inherited permission exists. Planning Product Truth is not migrated here.                                                      |
+
+### Personnel data-family matrix
+
+| Data family                             | Owner and source                                                                                                                                         | Current / historical / documentary                                                 | Current repository status                                         | Consumers and write-back                                                                                | Open boundary                                                                                              |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Employee identity                       | Personnel direct entry                                                                                                                                   | Current; `givenNames` and `familyName` are in F07 identity history                 | Implemented                                                       | Bounded Formalités and Pointage projections; no consumer write-back                                     | Contact, birth, national identity, user linkage, and global-person model                                   |
+| Role                                    | Personnel                                                                                                                                                | Current plus F07 history for `position` and `qualification`                        | Implemented                                                       | Bounded Formalités projection; no write-back                                                            | Canonical job-classification catalog                                                                       |
+| Contract terms                          | Personnel current-fact source                                                                                                                            | Current plus F07 history for term, expected end, and fixed-term reason             | Implemented bounded fields                                        | Formalités reads an allowlist; Documents remains artifact owner                                         | Salary, probation, payroll boundary, and documentary reconciliation                                        |
+| Contractual work time                   | Personnel                                                                                                                                                | Current plus F07 history for category and weekly minutes                           | Implemented bounded fields                                        | Only separately approved consumers                                                                      | Monthly-hours meaning and other work-time projections                                                      |
+| Entry                                   | Personnel                                                                                                                                                | Current plus correction-only F07 history                                           | Implemented                                                       | Bounded Formalités projection                                                                           | Relationship to legally reviewed hiring evidence                                                           |
+| Departure                               | Personnel                                                                                                                                                | Current plus F07 correction/cancellation history                                   | Implemented                                                       | Separately authorized lifecycle consumers                                                               | Archive, deletion, rehire, anonymization, and legal-termination semantics                                  |
+| Completeness and action overview        | Personnel derivation over current facts and Documents presence                                                                                           | Current derived view                                                               | Implemented development slice                                     | Personnel UI only under current authority                                                               | Broader rule catalog and notifications                                                                     |
+| Signed employment artifacts             | Documents                                                                                                                                                | Documentary base contract and amendments                                           | Implemented development-only storage/scan; production fail-closed | Personnel links context; Formalités may hand off a future signed result only through separate authority | Other families, access segmentation, retention, rights, storage, and signature workflow                    |
+| Personnel value history                 | Personnel atomic mutations and cutover baseline                                                                                                          | Historical structured evidence                                                     | Implemented for six bounded groups                                | Personnel Historique only under current approval                                                        | Cleanup, legal hold, production migration, and external validation                                         |
+| Register                                | Register from explicit inscription/correction, with Personnel as candidate source                                                                        | Separate current record, append-only correction history, audit, transient PDF      | Implemented development-only                                      | No silent dossier backfill and no Personnel-history inference                                           | Legally reviewed dictionary, non-employee persons, retention, legal hold, production                       |
+| Formalités draft snapshot               | Formalités from seven allowlisted Personnel facts                                                                                                        | Separate durable draft and acknowledged source snapshot                            | Implemented development-only                                      | No Formalités-to-Personnel write-back                                                                   | Post-draft lifecycle remains governed in Formalités scope                                                  |
+| Pointage eligibility/display projection | Personnel supplies minimal dossier/employment identity; Pointage owns clocking authority and evidence                                                    | Current read projection; clocking is not Personnel history                         | Implemented in the separate Pointage scope                        | No Pointage-to-Personnel write-back                                                                     | No broader Personnel projection is authorized here                                                         |
+| High-level-only Personnel inclusions    | Personnel Product direction includes salary/remuneration, probation, monthly hours, and `stagiaire`; exact executable ownership/model remains unresolved | No approved current or historical representation beyond implemented weekly minutes | Not implemented as canonical dossier fields                       | No payroll, Formalités, trainee, or other downstream projection/write-back approved                     | Exact fields, units, optionality, validation, permissions, history, legal/privacy treatment, and lifecycle |
+
+### F07 Personnel history model
+
+The normative source is the
+[Personnel reconstructable-value-history specification](../../../openspec/specs/personnel/reconstructable-value-history/spec.md).
+It covers exactly six groups:
+
+1. identity: given names and family name;
+2. role: position and qualification;
+3. contract terms: term, expected end, and fixed-term reason;
+4. contractual work time: category and weekly minutes;
+5. entry date; and
+6. departure date.
+
+`CORRECTION` replaces an erroneous current value and records prior/new evidence.
+`CHANGE` records a business-effective change for role, contract terms, or
+contractual work time; its effective date must be within the employment period
+and cannot be future-dated. Identity supports both `CORRECTION` and `CHANGE`
+without a separate business-effective date. Entry is correction-only. Departure
+correction/cancellation is handled by its exact normative rules. Reasons are
+required for entry correction, contract correction, contractual-work-time
+correction, and departure correction/cancellation; they are optional for
+identity and role correction and are not required for `CHANGE`.
+
+The current-value mutation, history append, revision check, and idempotency
+result are atomic. Existing dossiers at cutover receive exactly one eager
+baseline; dossiers created afterward do not receive a fabricated baseline, and
+the system does not invent pre-cutover history. Historique is OWNER-only and
+returns the newest 50 entries, with no approved search, filter, pagination, or
+export.
+
+The retention baseline is employment plus five years after departure for this
+bounded F07 history. That value is approved Product behavior, not a statement of
+current French law or privacy compliance. Cleanup, anonymization, legal hold,
+backup propagation, production migration, and operational execution remain
+unimplemented and require current external legal/privacy review plus separate
+Product, security, and operations authority.
+
+### Current fact, history, document, and downstream boundaries
+
+| Kind                             | Meaning                                                                                      | Source of truth   | What must not be inferred                                                                 |
+| -------------------------------- | -------------------------------------------------------------------------------------------- | ----------------- | ----------------------------------------------------------------------------------------- |
+| Current Personnel fact           | The current structured employee/employment value used by the dossier                         | Personnel dossier | A signed artifact, legal conclusion, cloud identity, or clocking record                   |
+| Personnel history evidence       | The bounded prior/new F07 record created with an atomic current-fact mutation                | Personnel history | General event sourcing, document history, Register history, or pre-cutover reconstruction |
+| Signed artifact                  | Protected signed base contract or amendment                                                  | Documents         | That its text automatically overwrites Personnel facts or proves current legal compliance |
+| Formalités draft/source snapshot | Formalités-owned preparation and divergence evidence over seven source facts                 | Formalités        | Ownership of current Personnel facts or write-back permission                             |
+| Register record/history/PDF      | Explicit Register inscription, append-only correction evidence, and transient representation | Register          | A copy of the dossier, Personnel F07 history, or legal-compliance proof                   |
+| Pointage event                   | Raw work/attendance evidence and credential/session state                                    | Pointage          | Personnel identity/account authority or Personnel history                                 |
+
+### Product, implementation, schema, law/privacy, and readiness
+
+These dimensions remain independent:
+
+- Product authority approves the bounded dossier, current-fact ownership, F07,
+  and the explicit cross-module boundaries above. Open decisions remain open.
+- Code, schema, migrations, and tests evidence the implemented repository slice;
+  composite keys and foreign keys do not decide the future global-person model.
+- Page-pack and local QA evidence describes development behavior and does not
+  prove live deployment or production operation.
+- No repository evidence in this reconciliation is current legal advice,
+  legal-compliance evidence, privacy compliance, or security certification.
+- `PRODUCTION_READINESS.md` keeps `PERSONNEL` and `AI_PERSONNEL` not ready and
+  the Personnel legal, template, formality, retention, storage, scanning,
+  signature, audit, and Register gates blocked.
+- AI-assisted document analysis is a confirmed high-level Product direction for
+  a separately approved bounded workflow. Suggestions remain untrusted: a Human
+  must review, correct, and confirm them before the normal server mutation can
+  make a fact canonical. Silent canonical write is not allowed.
+- Current extraction evidence is local/synthetic or guarded fictional-document
+  development evidence. Real-personnel-file use with an external AI provider is
+  not authorized until the required legal, privacy, security, provider, and
+  operations gates are approved. No exact provider, model, prompt, storage,
+  document inventory, taxonomy, confidence model, or production architecture is
+  approved by this high-level direction.
+
+### Grouped decisions still required
+
+Each packet is one coherent authority decision; raw legacy questions are not
+counted separately.
+
+| ID     | Exact decision                                                                                                                                                                              | Current evidence and why unresolved                                                                                                                   | Required authority and non-inference                                                                                                                                      |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SAL-01 | Decide global person, employee-to-user, multi-establishment, transfer, merge, and account-lifecycle semantics.                                                                              | Current dossiers are establishment-owned and have no persisted user relation; schema shape does not decide the Product model.                         | Human Product plus identity/tenancy/security review. Do not equate employee, user, membership, role, email, or Pointage credential.                                       |
+| SAL-02 | Decide any expansion of canonical dossier fields and validation beyond the current executable set.                                                                                          | Birth, contact, address, national identifiers, status/category, and similar fields appear only in legacy/proposed material.                           | Human Product plus legal/privacy/security review. Do not add or expose fields from mockups or legacy lists.                                                               |
+| SAL-03 | Decide lifecycle behavior beyond entry, current views, dated departure, correction/cancellation, and reopening.                                                                             | No current authority defines suspension, archive, delete, restore, transfer, rehire, or anonymization as a state machine.                             | Human Product, legal/privacy, data, and operations authority. Do not invent transitions.                                                                                  |
+| SAL-04 | Decide broader roles, self-service, service actors, and field-level visibility.                                                                                                             | Current exact permissions are OWNER-only.                                                                                                             | Human Product and security/authorization review. Do not infer MANAGER, STAFF, employee-self, support, or service access.                                                  |
+| SAL-05 | Decide the exact salary/remuneration, probation, and monthly-hours V1: fields, units, optionality, validation, executable ownership, permissions, history, and payroll/downstream boundary. | Their high-level Personnel inclusion is confirmed, while current schema implements weekly-time facts only and no exact model.                         | Human Product plus legal/privacy/security and payroll-boundary review. Do not infer calculations, monthly derivation, visibility, history, or synchronization.            |
+| SAL-06 | Decide broader document families, per-family ownership/access, retention/rights, production storage, signature, and reconciliation with current facts.                                      | Only signed base contracts and amendments have current development implementation; F07 does not govern document history.                              | Human Product plus legal/privacy/security/operations review. Do not infer RIB, identity, residence, health, or other upload support.                                      |
+| SAL-07 | Decide the production Register dictionary, covered person types, legal presentation, retention/legal hold, permissions, and operations.                                                     | Register ownership and development implementation are resolved; legal/production suitability is not.                                                  | Human Product plus current external legal/privacy/security/operations review. Do not claim legal compliance.                                                              |
+| SAL-08 | Decide the exact trainee V1, relationship/domain model, fields, convention/documents, lifecycle, organization/establishment semantics, Register relation, and permissions.                  | `Stagiaire` inclusion in F11 is confirmed; no trainee-specific executable model or implementation exists.                                             | Human Product plus legal/privacy/security review. Do not reopen inclusion or reuse employee/CDI/CDD semantics automatically.                                              |
+| SAL-09 | Decide any real-data AI/OCR provider, model, prompt, document inventory/taxonomy, error/recovery behavior, storage/data handling, retention, and production controls.                       | Human-reviewed AI assistance is confirmed; current evidence is local/synthetic or fictional-document development use, while real-file use is blocked. | Human Product plus legal/privacy/security/provider/operations approval. Human review, correction, and confirmation remain mandatory; silent canonical write is forbidden. |
+| SAL-10 | Decide additional projections and write-back rules for Planning, payroll, absences, advances, benefits, Today, notifications, imports, and exports.                                         | Formalités and Pointage have only their own bounded current relationships; Planning remains undecided.                                                | Human Product, owning-module, tenancy, privacy, and authorization decisions. Do not migrate another module's Product Truth here.                                          |
+| SAL-11 | Decide cross-family retention, deletion/anonymization, data-subject rights, legal holds, audit access, backup propagation, and operational evidence.                                        | F07 has only its bounded Product baseline; other families and executable cleanup have no final policy.                                                | Current external legal/privacy review plus Human Product, security, and operations approval. Do not generalize the F07 five-year value.                                   |
+
+### Reconciliation accounting and historical safeguards
+
+The counting unit is one grouped material assertion, assigned exactly one
+primary disposition even when other lifecycle dimensions are also recorded.
+The 48 groups reconcile as follows: `CONFIRMED: 13`, `IMPLEMENTED: 12`,
+`DECIDED_NOT_IMPLEMENTED: 0`, `PROPOSED: 6`, `UNRESOLVED: 11`, `CONFLICT: 0`,
+and `OBSOLETE: 6`.
+
+The correction splits the former aggregate compensation-direction unit into
+three high-level Product inclusions: salary/remuneration, probation, and monthly
+hours. This adds two counting units. Those three inclusions, F11 `stagiaire`,
+and Human-confirmed AI document assistance are `CONFIRMED`; their exact models
+remain inside the same 11 unresolved decision packets. No implementation,
+legal/privacy, readiness, or downstream-integration disposition changes.
+
+The obsolete groups include the old claims that F07 lacked a normative source
+or remained future-only, that Documents supported only a base contract, that
+Register ownership/implementation was unknown, and stale pre-delivery route or
+page-pack observations. They remain historical evidence and must not override
+the current repository. Proposed material includes broader role, person,
+document, Planning, notification, and import/export ideas that lack sufficient
+current Human authority. Exact salary/probation/monthly-hours, trainee, and AI
+models are unresolved rather than evidence against their confirmed high-level
+Product inclusion.
+
+The obsolete Register-direction group also records that Excel/XLSX was an
+earlier output direction. The Human-superseding direction is structured Register
+persistence plus a transient PDF, one employee per PDF page, employee-entry
+order, and history-preserving corrections instead of overwrite. Excel/XLSX is
+not current Product behavior, and this provenance does not authorize an Excel
+export. Register remains the current owner; current behavior is governed by the
+Register Product Knowledge, page pack, implementation, and tests. Provenance:
+`SALARIES_PERSONNEL_DOSSIER_LEGACY_KNOWLEDGE_EXTRACT.md`, SHA-256
+`143c386af9a287c159703ae80fa675a29c67f5ca1420df99fc9a53fdf6e95ca2`.
+
+The apparent legacy tensions are not current conflicts: current repository
+authority separates account identity from Personnel, establishes a separate
+Register owner, keeps document support bounded, and treats establishment-scoped
+implementation as evidence rather than a decision about a global-person model.
+No genuine unresolved authority conflict remains in this migrated scope.
+
+### Discovery and fresh-agent acceptance
+
+A repository-only agent should follow:
+
+1. [`docs/README.md`](../../README.md);
+2. [`docs/PRODUCT_KNOWLEDGE.md`](../../PRODUCT_KNOWLEDGE.md);
+3. [`docs/MODULE_REGISTRY.md`](../../MODULE_REGISTRY.md);
+4. this Personnel Product Knowledge home and this reconciliation section;
+5. the [Salariés page pack](../../ui/pages/backoffice-equipe-salaries/README.md),
+   [Register page pack](../../ui/pages/backoffice-equipe-registre-personnel/README.md),
+   F07 normative specification, and the unchanged Formalités/Pointage homes;
+6. the current Personnel contracts, schema, repositories, server authorization,
+   routes, focused tests, and F07 reviews; and
+7. [`PRODUCTION_READINESS.md`](../../operations/PRODUCTION_READINESS.md).
+
+Without Page Chat history, the legacy extract, or the reconciliation,
+correction, and remediation reports, the fresh agent recovered the exact
+migrated scope, F01–F12 boundaries, current fields, identity/account separation,
+ownership and tenant scope, current OWNER-only authorization, F03 and F07
+behavior, fact/history/document distinctions,
+Register/Formalités/Pointage/Planning boundaries, readiness, all 11 decision
+packets, zero genuine conflicts, and the prohibition on legal/privacy or
+production inference. The accepted report records that result; the authority
+cutover above changes only the knowledge-routing role for this exact scope.
