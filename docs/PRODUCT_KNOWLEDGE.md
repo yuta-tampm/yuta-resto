@@ -339,6 +339,37 @@ employee-connected preparation draft, generated contract, legal-review
 evidence store or publication/qualification workflow. No Platform Admin
 runtime or production enablement follows.
 
+### Planning
+
+- Canonical repository entry point for the reconciled Planning scope:
+  `docs/features/planning/README.md`
+- The bounded reconciliation confirms high-level restaurant staffing needs,
+  multi-poste and weekly-hours inputs, availability and free-text constraints,
+  generation, infeasibility explanations and resolution proposals, manager
+  editing/duplication/reuse, a pre-generation change check, absence awareness,
+  multi-week planning, law-aware direction, and Human-controlled arbitration.
+- Exact current V1, domain entities, Personnel projection, Absence ownership,
+  authorization, timezone/overnight behavior, generation architecture,
+  warning/block rules, lifecycle, employee visibility, calculations,
+  notifications, history, and production enablement remain grouped in 14 open
+  decision packets.
+- Current implementation is only the authenticated `/equipe/planning`
+  placeholder. No Planning-specific operation, action, contract, schema,
+  repository, persistence, page pack, ADR, normative spec, or QA evidence exists.
+- Personnel remains the employee-fact owner; no Personnel-to-Planning projection
+  or Planning write-back is approved. Pointage remains the actual-work evidence
+  owner, and no planned/actual synchronization exists. Absence ownership remains
+  unresolved.
+- Planning is `NOT_ENABLED`, capability readiness is `NOT_ASSESSED`, Backoffice
+  remains `NOT_READY`, and production authorization is absent. Current legal,
+  privacy, and security review remains required.
+- Repository-only fresh-agent acceptance passed, and the Human-authorized
+  scope-bound authority cutover is complete. Repository knowledge is canonical
+  for this exact Planning scope, and the Planning Page Chat is legacy evidence
+  only for that scope. No related capability, open decision, implementation,
+  readiness state, production authorization, or other Page Chat authority
+  changed.
+
 ### Pointage authority, access and usable raw clocking
 
 - Canonical Pointage Product Knowledge home; fresh-agent migration PASS recorded:

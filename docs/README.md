@@ -73,6 +73,7 @@ sensitive details never belong in the repository.
 - [`features/establishment/README.md`](features/establishment/README.md)
 - [`features/establishment/general-information/README.md`](features/establishment/general-information/README.md)
 - [`features/personnel/README.md`](features/personnel/README.md)
+- [`features/planning/README.md`](features/planning/README.md)
 - [`features/pointage/README.md`](features/pointage/README.md)
 - [`features/today/README.md`](features/today/README.md)
 - [`features/public-website/README.md`](features/public-website/README.md)
