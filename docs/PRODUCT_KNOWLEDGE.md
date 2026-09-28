@@ -183,9 +183,16 @@ and do not approve those Product/provider boundaries.
 For the exact bounded Avis & commentaires scope recorded in the Reputation
 home, repository-only fresh-agent acceptance passed and the Human authorized
 the authority cutover. Repository knowledge is canonical for that scope, and
-the Avis & commentaires Page Chat is legacy evidence only. Satisfaction client,
-public feedback, Marketing, Visibility, other Reputation scopes, and all other
-Page Chats retain their existing authority.
+the shared Avis Page Chat is legacy evidence only for that migrated Avis scope.
+
+For the bounded Satisfaction client / Feedback direct scope recorded in the
+same Reputation home, repository-only fresh-agent acceptance also passed and
+the Human authorized the authority cutover. Repository knowledge is canonical
+for this scope. The shared Avis Page Chat is now `LEGACY EVIDENCE ONLY` for both
+known migrated Avis and Satisfaction scopes. The nine Satisfaction Human
+decision packets and two trusted-boundary conflicts remain open; hardening
+Apply is not authorized. Marketing, Visibility, other Reputation scopes, and
+all other Page Chats retain their existing authority.
 
 ### Restaurant Backoffice foundation
 

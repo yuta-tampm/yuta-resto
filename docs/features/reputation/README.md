@@ -118,15 +118,23 @@ generates them with AI.
 
 ### Direct public feedback
 
-The five-step mobile flow collects a required 1–5 rating plus optional topics,
+The five-stage mobile flow collects a required 1–5 rating plus optional topics,
 comment, and contact information. Contact data requires consent. The raw IP is
-not stored; a salted hash supports a five-submissions-per-15-minute database
-rate limit. A honeypot provides basic bot protection. Production fails closed
-without `PUBLIC_FEEDBACK_IP_HASH_SALT`.
+not stored. When a client address is available, a salted hash supports a
+five-submissions-per-15-minute database rate limit. A honeypot provides basic
+bot protection.
 
-Production requests resolve the establishment from a verified hostname and
-cross-check the configured public slug. Localhost slug lookup is development
-only. Customer email and phone are not sent to an AI provider.
+The approved production boundary requires a verified hostname, a matching
+configured public slug, mandatory security configuration, and a trusted client
+identity. The current implementation cross-checks active domain, organization,
+establishment, and slug state, but it does not check domain verification
+evidence. It also validates `PUBLIC_FEEDBACK_IP_HASH_SALT` only when a client
+address is present, so a missing address can bypass the database rate limit.
+These two divergences are tracked by the unfinished
+`feedback-public-trusted-boundary-hardening` change and remain unresolved; its
+Apply phase is blocked pending trusted production client-IP provenance.
+Localhost slug lookup remains development-only. Customer email and phone are
+not sent to an AI provider.
 
 ### Reputation-owned settings
 
@@ -377,3 +385,236 @@ This cutover does not delete or invalidate historical evidence, change another
 Page Chat's authority, close an unresolved item, authorize Product work or
 provider behavior, promote the pending-state PASS, or authorize environment,
 production-readiness, production, or deployment state.
+
+## 13. Satisfaction client / Feedback direct knowledge migration control
+
+The Human-supplied
+`SATISFACTION_CLIENT_FEEDBACK_DIRECT_LEGACY_KNOWLEDGE_EXTRACT.md` with SHA-256
+`8a1af102380f40082c3a96f287528013fc5d801acc162743926cc7d6a457781c`
+was used only as legacy evidence for the 2026-09-28 reconciliation. The complete
+extract was checked against current repository authority and implementation.
+Export markers were ignored, and the extract was not copied into the
+repository. It does not replace Product authority or authorize conflict
+resolution, implementation, production use, fresh-agent acceptance, or Page
+Chat retirement.
+
+### Scope and canonical boundary
+
+Satisfaction client / Feedback direct is the private direct-feedback capability
+inside Reputation. It is separate from external Avis/provider review ingestion,
+reply drafting, approval, publication, synchronization, and provider account
+operations. It may share the Reputation inbox, settings, contracts, persistence,
+and trusted tenancy foundation without acquiring provider behavior.
+
+| Dimension             | Canonical current state                                                                                                                                                                                                                                                                                 |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Product purpose       | Collect direct customer feedback for private restaurant processing. Public collection and the independent runtime boundary are `APPROVED`.                                                                                                                                                              |
+| Semantic owner        | Reputation owns direct-feedback meaning, settings, inbox processing, and the relationship to external review destinations.                                                                                                                                                                              |
+| Runtime owner         | `apps/feedback-web` owns the public customer experience and submission route. `apps/backoffice` owns authenticated restaurant processing.                                                                                                                                                               |
+| Data owner            | `packages/db-cloud` owns cloud persistence. Direct feedback is organization- and establishment-owned and must not enter POS or Display persistence.                                                                                                                                                     |
+| Public entry          | Restaurant-owned links and QR entry are accepted at the architectural level. Exact QR creation, management, printing, distribution, and source-attribution workflow is not implemented or release-approved.                                                                                             |
+| Trusted public scope  | Production authority must come from a verified server-resolved hostname and matching configured slug. Localhost slug lookup is development-only. The current missing `verifiedAt` enforcement is a preserved implementation conflict.                                                                   |
+| Submission            | The current public UI uses a five-stage journey with a required 1–5 rating, optional topics and comment, and optional contact data with consent. The shared contract accepts additional optional fields that the current UI does not expose; contract capacity does not approve a broader Product form. |
+| Persistence           | A successful real submission creates a `DIRECT` / `DIRECT_FEEDBACK` item plus direct-detail data in the same cloud transaction. The customer receives an acknowledgment and identifier response, not an authenticated history or readback surface.                                                      |
+| Visibility            | Submitted content is private by default. It is visible only through the authenticated, tenant-scoped Reputation inbox. There is no customer-facing publication, testimonial, or public feedback feed.                                                                                                   |
+| Restaurant processing | `/visibilite-reputation/satisfaction` fixes the source to `DIRECT` and supports the current tenant-scoped inbox, counters, search, filters, detail, status, assignment, and internal notes. It has no provider reply editor.                                                                            |
+| Customer follow-up    | Contact data and consent can be stored, but no customer-response channel, message delivery, case conversation, or approved follow-up workflow is implemented.                                                                                                                                           |
+| Review solicitation   | After a successful submission, safe configured Google, Facebook, or Instagram destinations may be shown independently of rating. They are optional outbound links owned by Reputation settings, not connectors, publication, score gating, or proof of an external review.                              |
+| External publication  | Direct feedback is not published to an external provider. Conversion into a testimonial or provider review, automated routing, and any rating-based gate require a separate Human Product decision and privacy/provider review.                                                                         |
+
+### Customer and restaurant flow
+
+| Stage                      | Current evidence                                                                                                                              | Classification and boundary                                                                                                                  |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Entry                      | Public `apps/feedback-web` routes `/` and `/{tenantSlug}`; restaurant-owned link/QR context is accepted by ADR-004.                           | `CONFIRMED`; operational QR management and production distribution remain unresolved.                                                        |
+| Tenant resolution          | Server hostname resolution plus slug cross-check; localhost slug fallback only outside production.                                            | Approved fail-closed direction; current missing domain-verification enforcement is `CONFLICT`.                                               |
+| Submission                 | Shared Zod contract validates the payload; the visible form exposes rating, topics, comment, first name, email, consent, and honeypot fields. | `IMPLEMENTED`; hidden contract-only fields are not automatically Product-approved UI requirements.                                           |
+| Persistence                | One transaction creates the feedback item and direct-detail row under trusted organization and establishment.                                 | `IMPLEMENTED`; no schema or migration is authorized by this reconciliation.                                                                  |
+| Acknowledgment             | The endpoint returns `received`; the UI shows a success state and can start another submission.                                               | `IMPLEMENTED`; no customer account, history, receipt delivery, or follow-up promise exists.                                                  |
+| Inbox                      | The direct-only Backoffice route reads persisted `DIRECT` items under trusted scope.                                                          | `IMPLEMENTED`; shared Reputation storage does not merge this Product scope with Avis providers.                                              |
+| Processing                 | Current list/detail, operational counters, search/filter/sort, status, assignment, and internal notes are available.                          | `IMPLEMENTED`; schema/UI status availability does not settle every lifecycle meaning or service policy.                                      |
+| Follow-up                  | Contact and consent evidence may be persisted.                                                                                                | `UNRESOLVED`; no approved outbound customer-contact channel, SLA, role policy, or delivery evidence exists.                                  |
+| Resolution                 | Status values include processing, resolved, archived, and spam states.                                                                        | Transport/schema and UI support are `IMPLEMENTED`; exact Product semantics, retention effects, and reopen/delete behavior remain unresolved. |
+| Public review solicitation | Safe configured external destinations may appear after success without rating-based branching.                                                | `IMPLEMENTED` under the accepted social-link specification; no provider call or outcome tracking occurs.                                     |
+| External publication       | No path publishes the submitted direct feedback or a reply to Google, Facebook, Instagram, or another public destination.                     | `NOT_IMPLEMENTED` and not approved by this migration.                                                                                        |
+
+### Capability and data model
+
+| Capability or data           | Product state                                                                                           | Implementation state                                                                                                                   | Validation and visibility                                         | Owner and scope                                               | Exclusions / unresolved                                                                                                                                         |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Direct public collection     | `APPROVED`                                                                                              | `IMPLEMENTED` with two trusted-boundary conflicts                                                                                      | Public form; shared schema; server-owned tenant context           | Reputation; `apps/feedback-web`; organization + establishment | No production authorization; no broad public-site ownership transfer                                                                                            |
+| Rating                       | Current public collection uses required integer `1..5`                                                  | Persisted on the feedback item                                                                                                         | Zod validation; private inbox visibility                          | Reputation; organization + establishment                      | Does not authorize rating-based routing or public solicitation gates                                                                                            |
+| Topics and comment           | Optional current form data                                                                              | Topics persist on direct detail; comment persists as feedback content                                                                  | Bounded enum and length validation                                | Reputation; organization + establishment                      | No AI processing approval and no public display                                                                                                                 |
+| Identity and contact         | Optional first name and email are exposed; contact requires consent                                     | Contract/schema also support phone; persistence stores supplied contact and consent timestamp                                          | Private restaurant access only; contact values are not sent to AI | Reputation; organization + establishment                      | Exact follow-up purpose, lawful basis, retention, rights handling, phone exposure, and marketing use are unresolved                                             |
+| Visit/order/source context   | No complete current Product requirement                                                                 | Contract/schema can hold order reference, visit date, service period, and source tag; current public form does not expose them         | Contract validation only when supplied                            | Reputation; organization + establishment                      | Schema capacity must not be promoted to approved collection                                                                                                     |
+| Derived operational fields   | No AI generation is approved                                                                            | Repository derives sentiment, urgency, and initial status deterministically from rating/topics; UI can display persisted values        | Server-side implementation                                        | Reputation; organization + establishment                      | Formulas are implementation evidence, not an approved analytics or AI product                                                                                   |
+| Abuse controls               | Fail-closed production protection is required                                                           | Honeypot and per-hash window exist; raw IP is not persisted; missing trusted client identity can currently bypass the per-client limit | Public generic error boundary                                     | `apps/feedback-web`; salted hash in `packages/db-cloud`       | Trusted client-IP provenance, atomicity, idempotency, duplicates, body limits, monitoring, and incident policy are unresolved or outside current implementation |
+| Inbox operations             | Direct-only private processing is in current scope                                                      | List/detail, counters, filters, status, assignment, and notes are implemented                                                          | Authenticated Backoffice only                                     | Reputation; trusted organization + active establishment       | No customer reply delivery and no external provider publication                                                                                                 |
+| Social/review links          | Three optional safe destinations are approved                                                           | OWNER settings and public safe projection are implemented                                                                              | Provider-purpose URL validation; public CTA only                  | Reputation settings; organization + establishment             | No connector, click tracking, score gate, publication confirmation, or provider ownership inference                                                             |
+| Notifications, analytics, AI | No current approval beyond operational counters and the separate provider-independent Avis AI direction | No Satisfaction notification, advanced analytics, or AI workflow is established                                                        | Not applicable                                                    | Undecided                                                     | Requires separate Product, privacy, security, and data-owner decisions                                                                                          |
+
+Environment remains `UNVERIFIED`, production readiness remains `BLOCKED`, and
+the external/release dependency remains `BLOCKED`. Local implementation and
+test evidence do not promote those lifecycle axes.
+
+### Authorization, tenancy, and privacy boundary
+
+- Public submission has no authenticated customer account. Tenant authority
+  comes only from trusted server context; route slug, form data, cookie, browser
+  organization, and browser establishment values cannot grant scope.
+- Backoffice access requires a database-backed session, active membership,
+  `reputation.enabled`, and `reputation.read`. Reads and writes remain scoped by
+  organization and active establishment.
+- `OWNER`, `MANAGER`, and `STAFF` can read under the current map; `STAFF` is
+  restricted to assigned items. `OWNER` and `MANAGER` have
+  `reputation.feedback.manage`; status/assignment mutations repeat server-side
+  authorization and audit real changes. Internal notes use
+  `reputation.note.create` under the existing role map.
+- Review/social-link settings require `reputation.settings.manage`, currently
+  `OWNER` only. Link settings do not grant connector, publication, customer
+  follow-up, or provider-account authority.
+- Direct feedback, contact data, consent evidence, hashed client identity, and
+  request metadata stay in cloud persistence. Raw client IP must not be stored.
+  Retention, erasure, access/export handling, legal basis, privacy notice,
+  incident response, and operational access review remain subject to Human and
+  privacy/security decisions; this repository reconciliation is not legal or
+  compliance evidence.
+
+### Preserved trusted-boundary conflicts
+
+The active, unfinished `feedback-public-trusted-boundary-hardening` change is
+planning evidence only and is not canonical Product authority. This
+reconciliation does not advance or apply it.
+
+1. **Domain verification conflict:** accepted authority requires an active,
+   verified hostname, but the current cloud domain adapter does not read
+   `verifiedAt`. Active organization, establishment, and domain status alone can
+   therefore produce trusted public context.
+2. **Production client-identity conflict:** the route validates the production
+   salt only after obtaining a client address. A request without one can persist
+   without a salted identity or per-client rate-limit check. The exact trusted
+   production client-IP source is also unevidenced.
+
+Both conflicts have an authority direction to fail closed, but implementation
+is outside this mission and remains blocked by the existing change workflow and
+its required security/environment evidence. No conflict was auto-resolved.
+
+### Human decisions still required for Satisfaction client
+
+| ID     | Exact decision                                                                                                                                                                   | Why it is still required                                                                                                      | Review required                                                |
+| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| SAT-01 | What exact V1 entry and distribution workflow is approved for links, QR codes, printed material, and source attribution?                                                         | ADR-004 accepts link/QR entry, while QR management, printing, ownership, and rollout are incomplete.                          | Product, operations, and release                               |
+| SAT-02 | Which current contract fields belong to the approved Product form, and which are required, optional, hidden, or prohibited?                                                      | The visible form and shared contract/schema expose different field sets; capacity is not Product approval.                    | Product, privacy, contracts, and data owner                    |
+| SAT-03 | What customer identity/contact purpose, consent wording, lawful basis, follow-up channel, role, SLA, and marketing exclusion apply?                                              | Data can be stored, but no approved customer-response workflow or compliance basis is recorded.                               | Product, privacy/legal, authorization, and operations          |
+| SAT-04 | What retention, erasure, anonymization, access/export, legal-hold, audit, and incident policy applies to feedback, contact data, consent, hashes, and metadata?                  | Persistence exists without a complete approved lifecycle policy.                                                              | Privacy/legal, security, data owner, and operations            |
+| SAT-05 | What do direct-feedback statuses mean, who may transition them, and what are the reopen, archive, spam, deletion, and resolution effects?                                        | Enums and mutations exist, but implementation does not settle the complete Product service lifecycle.                         | Product and authorization                                      |
+| SAT-06 | May direct feedback ever become a public testimonial or external provider review, and under what explicit customer choice and provider policy?                                   | Current feedback is private; outbound links are neutral destinations and do not authorize conversion, gating, or publication. | Product, privacy/legal, provider, and security                 |
+| SAT-07 | Which notifications, escalation rules, recipients, thresholds, and delivery providers are approved?                                                                              | Settings/schema/backlog evidence does not establish an operating notification product.                                        | Product, privacy, authorization, and operations                |
+| SAT-08 | Which analytics, metrics, benchmarks, aggregation scopes, exports, and retention are approved?                                                                                   | Operational counters exist; advanced Satisfaction analytics and cross-establishment reporting are not approved.               | Product, privacy, tenancy, and data owner                      |
+| SAT-09 | Is any AI or Restaurant Knowledge use approved for direct feedback, and what grounding, data-minimization, provider, persistence, Human-review, and automation contract applies? | The Avis AI direction must not be imported into Satisfaction; no direct-feedback AI contract exists.                          | Product, AI, privacy, security, and Restaurant Knowledge owner |
+
+The trusted hostname/client-identity implementation gaps additionally require
+the pre-existing security change's evidence and gate approvals. They are
+repository conflicts rather than new Product decisions and are not counted as
+additional SAT decision packets.
+
+### Reconciliation disposition
+
+Material legacy claims were assigned one primary disposition:
+
+- `CONFIRMED`: 13 claim groups covering the private direct-feedback purpose,
+  Reputation ownership, independent public runtime, direct/provider separation,
+  trusted organization/establishment scope, current entry context, private
+  inbox relationship, no public publication, and Page Chat governance boundary.
+- `IMPLEMENTED`: 17 claim groups covering public routes and form, validation,
+  persistence, acknowledgment, direct-only inbox, current mutations, role
+  enforcement, audit, settings links, abuse controls, and current data shapes.
+- `DECIDED_NOT_IMPLEMENTED`: 1 claim group covering the accepted QR/link entry
+  direction whose managed QR and printed operational workflow is incomplete.
+- `PROPOSED`: 5 claim groups covering future follow-up, notifications,
+  analytics, automation/AI, and expanded operational tooling.
+- `UNRESOLVED`: 9 claim groups, recorded as `SAT-01` through `SAT-09`.
+- `CONFLICT`: 2 claim groups covering verified-domain enforcement and
+  production trusted client identity/rate-limit fail-closed behavior.
+- `OBSOLETE`: 8 claim groups where legacy uncertainty was superseded by current
+  repository evidence for owner, runtime placement, routes, persistence,
+  tenancy, inbox availability, authorization foundation, and test locations.
+
+No `PROPOSED` claim was promoted, no implementation was inferred from Product
+intent, and no Human-classified legacy claim was accepted without repository
+reconciliation.
+
+### Discovery path and migration state
+
+Start with this README for Satisfaction client / Feedback direct semantics and
+boundaries, then use:
+
+- [Product Knowledge map](../../PRODUCT_KNOWLEDGE.md) and
+  [Module Registry](../../MODULE_REGISTRY.md) for discovery and lifecycle axes;
+- [ADR-004](../../decisions/ADR-004-independent-public-feedback-application.md)
+  for the independent public boundary;
+- [Satisfaction page pack](../../ui/pages/backoffice-visibilite-reputation-satisfaction/README.md)
+  for the approved Backoffice page scope and local QA evidence;
+- [Reputation status](STATUS.md) for non-authoritative implementation progress;
+- [review/social-link specification](../../../openspec/specs/reputation/review-social-links-configuration/spec.md)
+  for the current OWNER settings and safe public projection;
+- `apps/feedback-web`, the Backoffice Reputation routes,
+  `packages/contracts/src/reputation`, and `packages/db-cloud` for current
+  implementation evidence; and
+- the unfinished `feedback-public-trusted-boundary-hardening` change only for
+  its preserved conflict and workflow status, never as implemented or synced
+  authority.
+
+### Fresh-agent acceptance evidence
+
+The repository-only
+`SATISFACTION_CLIENT_FEEDBACK_DIRECT_FRESH_AGENT_ACCEPTANCE_REPORT.md` has
+SHA-256
+`895250659ab743cd0380713ea140ecf5bc9b39f805b734cef4c04dc9cec0dc32`.
+The fresh agent used no Page Chat history, legacy extract, reconciliation
+report, prior-agent memory, web research, or external legal/privacy research.
+It reported:
+
+```text
+REPOSITORY_MUTATED: NO
+PAGE_CHAT_HISTORY_USED: NO
+LEGACY_EXTRACT_USED: NO
+RECONCILIATION_REPORT_USED: NO
+EXTERNAL_RESEARCH_USED: NO
+MATERIAL_KNOWLEDGE_GAPS: 0
+GENUINE_CONFLICTS_IDENTIFIED: 2
+AVIS_PROVIDER_SCOPE_REOPENED: NO
+FRESH_AGENT_ACCEPTANCE: PASS
+READY_FOR_AUTHORITY_CUTOVER: YES
+```
+
+The report establishes repository discoverability for the exact Satisfaction
+client / Feedback direct scope only. It is acceptance evidence rather than new
+Product authority, privacy or legal advice, compliance evidence, hardening
+Apply authority, lifecycle promotion, production authorization, or conflict
+resolution.
+
+### Authority state after cutover
+
+Repository reconciliation, bounded canonicalization, fresh-agent acceptance,
+and the Human-authorized cutover are complete for the Satisfaction client /
+Feedback direct scope above. Under the
+[Authority Model](../../AUTHORITY_MODEL.md#scope-bound-legacy-page-chat-transition):
+
+- the repository is canonical knowledge for this exact migrated scope;
+- the shared Avis Page Chat is `LEGACY EVIDENCE ONLY` for the known migrated
+  Avis & commentaires and Satisfaction client / Feedback direct scopes;
+- the two trusted-boundary conflicts remain open and keep environment and
+  production readiness blocked;
+- the unfinished `feedback-public-trusted-boundary-hardening` change remains at
+  its existing review gate, with no Tasks, Apply, lifecycle, deployment, or
+  production authorization;
+- Control Tower retains Human-decision and conflict-routing authority for
+  `SAT-01` through `SAT-09` and the trusted-boundary review; and
+- Coding Agents use repository discovery and require separate authorization for
+  implementation or workflow progression.
+
+This cutover does not reopen Avis/provider scope, resolve a conflict, create a
+privacy or legal conclusion, change another Page Chat's authority, authorize
+hardening Apply, or alter Product, implementation, environment, readiness, or
+production state.
