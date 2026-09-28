@@ -387,9 +387,172 @@ does not authorize any excluded knowledge family, consumer or integration.
 | What lifecycle values apply?                | `docs/MODULE_REGISTRY.md` and `docs/LIFECYCLE_STATUS_MODEL.md`.                     |
 | How is trusted cloud scope enforced?        | `docs/architecture/TENANCY.md` and Identity / Access Product Knowledge.             |
 | What does the current profile UI implement? | `docs/ui/pages/establishment-general-information/README.md` and tracked code/tests. |
+| What Restaurant Knowledge behavior is normative? | `openspec/specs/authorization/restaurant-knowledge/` and the six current specifications under `openspec/specs/restaurant-knowledge/`. |
+| What Restaurant Knowledge shape is implemented? | `packages/db-cloud/src/schema/restaurant-knowledge.ts`, `packages/db-cloud/src/restaurant-knowledge-repository.ts`, the route-local loaders/actions/forms, and focused tests. |
+| What verification evidence exists?          | Current review packets under `docs/reviews/restaurant-knowledge-*`; historical failures remain provenance and do not override later PASS evidence. |
+| Is the capability production-ready?         | `docs/MODULE_REGISTRY.md` and `docs/operations/PRODUCTION_READINESS.md`; repository workflow completion does not establish deployment or readiness. |
 | How are conflicts handled?                  | `docs/AUTHORITY_MODEL.md`.                                                          |
 | What was reconciled before approval?        | `docs/INFORMATIONS_GENERALES_PAGE_KNOWLEDGE_INTEGRATION_REVIEW.md`.                 |
 
-## 11. Status
+## 11. Knowledge migration control
+
+### Reconciliation source and exact scope
+
+The Human-supplied
+`ETABLISSEMENT_RESTAURANT_KNOWLEDGE_LEGACY_EXTRACT.md` with SHA-256
+`b49222ad7fe2c199437e9c07c597605c616ca7133d29820facc446be3ab79afd`
+was used only as legacy evidence for the 2026-09-28 reconciliation. Its claims
+were checked against current question-specific repository authority; its prose
+and tenant examples were not copied into this home.
+
+The migrated candidate scope is limited to this composed page, the independent
+Establishment Profile and Restaurant Knowledge boundaries, Restaurant
+Knowledge authorization, the five descriptive slices and `Connaissances
+validées`, and the ownership, tenancy, implementation, verification,
+lifecycle and readiness evidence required to understand them.
+
+This reconciliation does not migrate or assign Product Truth for Carte &
+menus, Reservations, Personnel, Planning, Pointage, Stock, Suppliers, Today,
+Reputation, Marketing, Website, POS, Site Agent, Display, YUTA Assistant, AI,
+or document ingestion. Those capabilities may appear only as separate owners,
+excluded sources, possible future consumers, or unresolved contracts.
+
+### Reconciled cross-dimension model
+
+- **Current Product behavior:** the page composes two owners. Restaurant
+  Knowledge owns the five exact descriptive slices and the manual validated
+  item collection described above. Shared placement does not merge their data
+  or permissions.
+- **Current implementation:** the profile and all six Restaurant Knowledge
+  capabilities have tracked Backoffice loaders/actions/forms, dedicated cloud
+  persistence and focused tests. The broader Restaurant Knowledge capability
+  remains `PARTIAL` because no other family or excluded integration is thereby
+  implemented.
+- **Tenant data:** concrete names, stories, cuisine, addresses, hours, menus,
+  social URLs, media and example copy belong to a particular tenant or another
+  canonical owner. They do not define generic Product fields.
+- **Source and validation:** the five descriptive slices use manual human
+  entry, optional values, valid all-empty state, whole-slice explicit save and
+  no autosave. Validated items use manual MANAGE-gated acceptance and
+  item-scoped explicit save. `Validated` means authorized restaurant-human
+  acceptance; it is not factual, external, legal or regulatory certification.
+- **Provenance and candidates:** current V1 has no candidate lifecycle, source
+  enum, detailed provenance, revision/history, staleness or automatic learning
+  model. Non-manual sources cannot gain validated authority without a separate
+  Product change and Human review boundary.
+- **Visibility and publication:** Restaurant Knowledge is permission-gated on
+  the authenticated page. No per-slice or per-item `Public / Interne /
+  Administratif` field, public projection, publication right or synchronization
+  contract is approved. Establishment Profile visibility controls do not apply
+  to Restaurant Knowledge.
+- **Consumers:** repository search finds only the current Backoffice page as a
+  consumer of the Restaurant Knowledge repository. Reputation, Marketing,
+  Website, assistants, agents and local runtimes have no approved current read
+  projection merely because the knowledge exists.
+- **Environment and readiness:** the Registry records Restaurant Knowledge as
+  `NOT_ENABLED`, Production Readiness as `NOT_ASSESSED` and External Dependency
+  as `NOT_ASSESSED`. The broader Backoffice scope is `NOT_READY`. No production
+  deployment or production authorization is established by implementation,
+  verification, Browser QA, sync, archive or Knowledge Consolidation.
+
+### Confirmed high-level long-term direction
+
+Current authority confirms two high-level directions without making either a
+current requirement:
+
+1. YUTA may progressively enrich its understanding of a restaurant. Any future
+   system- or AI-suggested knowledge must remain non-canonical until an
+   authorized human explicitly reviews and accepts it.
+2. One canonical datum may serve multiple future consumers, including future
+   YUTA agents, only through separately approved minimized projections and
+   consumer authorization. No current consumer is approved by this direction.
+
+For both: `DISPOSITION: CONFIRMED`,
+`DIRECTION_TYPE: HIGH_LEVEL_LONG_TERM`, and `CURRENT_REQUIREMENT: NO`.
+Candidate sources, storage, workflows, AI behavior, provider use and consumer
+projections remain proposed or unresolved as recorded below.
+
+### Human decisions still required
+
+These eight decision packets remain open. They are not authorization to create
+an OpenSpec change or implementation.
+
+| ID | Decision required | An agent must not infer |
+| -- | ----------------- | ----------------------- |
+| `RK-01` | Which correction, review, document, usage, external or direct-entry sources may create candidate knowledge? | That any current module may feed Restaurant Knowledge automatically. |
+| `RK-02` | What candidate states, storage, review, promotion, rejection and failure behavior apply? | A candidate queue, automatic promotion or current implementation. |
+| `RK-03` | What provenance, attribution, revision, retention, deletion, stale-review and restore model applies? | A source enum, history table, expiry rule or audit UI. |
+| `RK-04` | What `Public / Interne / Administratif` classification, public projection and publication rights apply per family or item? | That current knowledge is public, uniformly internal or has a visibility field. |
+| `RK-05` | Which consumer may read which minimized projection, for what purpose and under which authorization? | Access for Reputation, Marketing, Website, assistants, agents or another module. |
+| `RK-06` | Whether AI is used and, if so, which provider, prompt/retrieval boundary, privacy/security controls and Human review contract apply? | Embeddings, vector storage, RAG, inference, document/review ingestion or AI-use permission. |
+| `RK-07` | Which additional families, fields, validation, governance operations or permission tiers enter a future scope? | Fields from tenant examples, mockups, future consumers or unapproved categories. |
+| `RK-08` | What evidence and accountable approvals establish environment enablement, consumer readiness, production readiness, deployment and production authorization? | Production status from repository completion, QA, archive or local runtime evidence. |
+
+### Historical evidence and authority state
+
+Current repository evidence supersedes earlier statements that validated
+knowledge was unimplemented, that the page had only five Restaurant Knowledge
+slices, that blank-item semantics were unresolved, or that the latest Browser
+QA remained environment-blocked. Historical remount and dirty-state defects
+remain implementation provenance only; they are not current Product behavior.
+
+No genuine current-authority conflict remains in the reconciled scope. The
+apparent conflicts about `validated`, visibility and future consumers resolve
+by keeping manual acceptance, publication/visibility and consumer authority as
+separate dimensions. The unresolved decisions above remain unresolved.
+
+Repository reconciliation and bounded canonicalization are `COMPLETE` on
+2026-09-28.
+
+### Fresh-agent acceptance evidence
+
+The repository-only
+`GENERAL_INFORMATION_RESTAURANT_KNOWLEDGE_FRESH_AGENT_ACCEPTANCE_REPORT.md` has
+SHA-256
+`9e22481b3e400f37d69757aa324601ffa8faccfc148eebe5b814f23dc9daf951`.
+The fresh agent used no Page Chat history, legacy extract, reconciliation
+report, agent memory, or external research. It reported:
+
+```text
+REPOSITORY_MUTATED: NO
+PAGE_CHAT_HISTORY_USED: NO
+LEGACY_EXTRACT_USED: NO
+RECONCILIATION_REPORT_USED: NO
+EXTERNAL_RESEARCH_USED: NO
+MATERIAL_KNOWLEDGE_GAPS: 0
+GENUINE_CONFLICTS_IDENTIFIED: 0
+FRESH_AGENT_ACCEPTANCE: PASS
+READY_FOR_AUTHORITY_CUTOVER: YES
+```
+
+The report establishes repository discoverability for the exact migrated scope
+defined above. It is acceptance evidence rather than Product authority, is not
+copied into this home, and does not add a field, family, visibility rule,
+consumer contract, AI behavior, environment state, readiness claim, production
+authorization, or resolution of `RK-01` through `RK-08`.
+
+### Authority state after cutover
+
+Repository reconciliation, bounded canonicalization, fresh-agent acceptance,
+and the Human-authorized cutover are `COMPLETE` for the exact migrated General
+Information / Restaurant Knowledge scope defined above. Under the
+[Authority Model](../../../AUTHORITY_MODEL.md#scope-bound-legacy-page-chat-transition):
+
+- the repository is canonical knowledge for this exact migrated scope;
+- the responsible General Information / Restaurant Knowledge Page Chat is
+  `LEGACY EVIDENCE ONLY` for this exact scope and remains available for
+  historical or forensic lookup;
+- Control Tower owns shaping, genuine conflict resolution, Human Decision
+  routing, cross-module reasoning, and governance coordination; and
+- Coding Agents use repository discovery for analysis and perform only
+  separately authorized execution and verification.
+
+This cutover does not migrate Establishment Profile beyond the composition and
+boundary knowledge recorded here, retire another Page Chat, change another
+module's authority, close an unresolved decision, or authorize Product work,
+public exposure, AI or downstream consumption, environment enablement,
+production readiness, deployment, or production use.
+
+## 12. Status
 
 Status: APPROVED

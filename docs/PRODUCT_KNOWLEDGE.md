@@ -225,7 +225,8 @@ from navigation visibility.
 - Booking-owned hours/services evidence:
   `docs/ui/pages/hours-services/README.md` and Public Booking knowledge
 - Implementation: `apps/backoffice/src/app/(authenticated)/etablissement`,
-  `packages/db-cloud/src/establishment-profile-repository.ts`, and Booking
+  `packages/db-cloud/src/establishment-profile-repository.ts`,
+  `packages/db-cloud/src/restaurant-knowledge-repository.ts`, and Booking
   administration repositories
 
 The general-information page composes the implemented Establishment Profile,
@@ -237,6 +238,16 @@ Restaurant Knowledge is their canonical owner, Organization is the
 tenancy/access envelope, and dedicated READ/MANAGE authorization remains
 independent from Establishment Profile. Remaining knowledge families and
 integrations must not be inferred from the existing route.
+
+The 2026-09-28 bounded repository reconciliation, repository-only fresh-agent
+acceptance, and Human-authorized authority cutover are complete for this
+composed page and current Restaurant Knowledge scope. The page-level home
+records the acceptance evidence, exact scope, cross-dimension model, confirmed
+long-term directions, and eight unresolved decision packets. Repository
+knowledge is canonical for that exact migrated scope, and the responsible
+General Information / Restaurant Knowledge Page Chat is legacy evidence only
+for that scope. Other Establishment capabilities and all other Page Chats
+retain their existing authority.
 
 ### Today
 
