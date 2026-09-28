@@ -251,6 +251,13 @@ integrations must not be inferred from the existing route.
 ### Personnel, Documents, register, and Formalités
 
 - Canonical Product Knowledge home: `docs/features/personnel/README.md`
+- The same home is the canonical repository entry point for the reconciled
+  Formalités capability, ownership, legal-status, and readiness model. The
+  2026-09-28 repository reconciliation, repository-only fresh-agent acceptance,
+  and scope-bound authority cutover are complete. Repository knowledge is
+  canonical for that exact migrated Formalités scope, and the Formalités Page
+  Chat is legacy evidence only for that scope. Other Personnel capabilities and
+  all other Page Chats retain their existing authority.
 - Normative F07 behavior:
   `openspec/specs/personnel/reconstructable-value-history/spec.md`
 - Current summary and production gates: `CURRENT_STATE.md` and
@@ -270,9 +277,21 @@ Treat the generic fictional in-memory Formalités prototype, the bounded
 employee-connected persistent CDI preparation draft, and the proposed future
 generation/signature lifecycle as separate scopes. The persistent foundation
 owns only its development-only draft, reconciliation, abandonment, and replay
-state. Generated versions, approved templates, private file storage, signature,
-Documents handoff, final retention policy, and production operation remain
-unimplemented or separately gated.
+state. F5-07 provides approved Product direction for a future generated unsigned
+version, but no generated artifact is implemented. Actual approved legal
+content, private file storage, signature, Documents handoff, final retention
+policy, external declarations/integrations, and production operation remain
+unimplemented, unresolved, or separately gated.
+
+The Human-approved high-level lifecycle (`Embauche -> Vie du contrat -> Départ
+-> Archives`) remains confirmed Product direction: Formalités is intended to
+assist with actions, documents, evidence, deadlines, current state, and next
+steps across the employee administrative journey. Restaurant-customized
+templates also remain confirmed high-level future direction. Neither direction
+defines the exact current V1, approves specific legal workflow rules, or proves
+implementation. The implemented first template foundation remains global and
+non-tenant; restaurant customization is outside that foundation, and its timing
+and exact model remain unresolved.
 
 The [Formalités template legal-review governance specification](../openspec/specs/formalites/template-legal-review-governance/spec.md)
 now defines the bounded documentary contract for external review and exact
