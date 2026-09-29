@@ -404,6 +404,41 @@ runtime or production enablement follows.
   legal/privacy/readiness state, completed migration, or other Page Chat
   authority changed.
 
+### Inventaire
+
+- Canonical repository entry point for the reconciled Inventaire scope:
+  `docs/features/inventory/README.md`
+- Ten bounded current Product directions are confirmed: products concerned by
+  menu activity; visible HT price, TTC price, available quantity, quantity to
+  buy, and supplier context; an almost-weekly practical workflow; a printable
+  supplier purchase list; price maintenance; and price contribution to Fiches
+  techniques. Each is `DECIDED_NOT_IMPLEMENTED` as a real restaurant capability.
+- Simplified online supplier ordering is a confirmed long-term direction.
+  METRO is an example only; no provider, API, cart, order, payment, receipt, or
+  invoice capability is approved.
+- Current implementation is the authenticated `/stock/inventaire`
+  fixture-backed prototype. It has route-local fictional data, local filtering
+  and selection, disabled operational actions, and focused prototype-model
+  tests. It has no cloud contract, schema, migration, repository, server action,
+  API, persistence, Inventaire permission, page pack, Browser QA, ADR, or
+  normative spec.
+- Exact V1, article/catalogue semantics, available-quantity source, physical
+  count/session, theoretical stock, movements, variance, purchase formula,
+  units, supplier ownership, HT/TTC basis, Fiches techniques projection,
+  ordering, POS relationship, tenancy, permissions, OCR, history, legal meaning,
+  and readiness remain grouped in 18 open decision packets.
+- Mouvements de stock, Fournisseurs, and Fiches techniques remain independent
+  unmigrated Page Chat scopes. The `Stock` navigation group creates no shared
+  Product authority. The restaurant-local POS catalogue remains separate and
+  does not support stock/inventory.
+- Reconciliation, bounded canonicalization, repository-only fresh-agent
+  acceptance, and the Human-authorized scope-bound authority cutover are
+  complete. Repository knowledge is canonical for this exact Inventaire scope,
+  and the Inventaire Page Chat is `LEGACY EVIDENCE ONLY`. No `INV` decision,
+  implementation, legal/accounting/HACCP/privacy/security or readiness state,
+  adjacent Stock migration, completed migration, or other Page Chat authority
+  changed.
+
 ### Pointage authority, access and usable raw clocking
 
 - Canonical Pointage Product Knowledge home; fresh-agent migration PASS recorded:
