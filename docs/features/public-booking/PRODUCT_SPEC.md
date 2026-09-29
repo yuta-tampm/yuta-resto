@@ -234,21 +234,27 @@ Changing one of these boundaries requires a scoped product decision and
 coherent contract, schema, UI, implementation, test, and readiness work where
 applicable.
 
-## 7. Future Product Intent
+## 7. Current V1 follow-up and Future Product Intent
 
-The capabilities in this section are future direction. They are not described
-as implemented, enabled, production-ready, or individually product-approved.
+This section combines Product-approved current-V1 outcomes that remain
+unimplemented with later Product direction. Each subsection labels that
+boundary. None of these outcomes may be described as implemented, enabled, or
+production-ready without the evidence recorded in `README.md` and `STATUS.md`.
 Each bounded capability still requires the authority, ownership, lifecycle,
 security, provider, and operational decisions appropriate to its scope.
 
 ### Phase 2 — Communication and conversion
 
-Future outcomes may include:
+The bounded current V1 approves confirmation email, reminder email, and secure
+guest modification and cancellation at the capability level. The implemented
+Phase 0/1 provides secure guest cancellation and transactional email outbox
+intents; it does not provide guest modification, a delivery worker/provider, or
+reminder scheduling.
 
-- email and SMS reminders;
+Later outcomes beyond that bounded V1 may include:
+
+- SMS reminders;
 - confirmation resend;
-- guest modification requests with explicit restaurant approval or an
-  separately approved self-service policy;
 - alternative time suggestions;
 - multilingual presentation;
 - optional email or phone verification;
@@ -258,9 +264,11 @@ Future outcomes may include:
 - conversion and source reporting; and
 - establishment-specific reminder schedules.
 
-A modification request is not permission to silently alter a confirmed
-reservation. Provider choice, delivery guarantees, consent, retention,
-templates, retries, observability, and operator ownership remain unresolved.
+The approved guest-modification direction does not permit silent alteration of
+a confirmed reservation. Editable fields, restaurant approval, availability
+revalidation, cutoffs, provider choice, delivery guarantees, consent,
+retention, templates, retries, observability, and operator ownership remain
+unresolved.
 
 ### Phase 3 — Waitlist and demand management
 
@@ -386,9 +394,10 @@ turn a committed reservation into a false creation failure.
 
 ### Public reservation management
 
-A secure public link may support viewing and cancellation today and later
-modification requests, resend, calendar access, or restaurant contact. A human-
-readable reference is never a public authorization credential.
+A secure public link supports viewing and cancellation today. Secure guest
+modification is an approved current-V1 direction that is not implemented.
+Resend and additional contact behavior remain future outcomes. A human-readable
+reference is never a public authorization credential.
 
 ### Accessibility and resilience
 

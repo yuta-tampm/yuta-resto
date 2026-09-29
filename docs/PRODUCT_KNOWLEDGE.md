@@ -149,15 +149,25 @@ and tests.
 
 ### Public booking
 
-- Implemented/current boundary: `docs/features/public-booking/README.md`
+- Canonical bounded Reservations Product Knowledge and reconciled current
+  implementation boundary: `docs/features/public-booking/README.md`
 - Durable broader intent: `docs/features/public-booking/PRODUCT_SPEC.md`
 - Remaining work/readiness: `docs/features/public-booking/STATUS.md`
 - Decision: ADR-002
 - Implementation: `apps/booking-web`, Backoffice reservation routes,
   `packages/booking`, contracts, and db-cloud booking persistence
 
-The master product specification contains future direction. Do not describe
-all of it as implemented.
+The Reservations home preserves the Human-fixed current V1, RD-01 through
+RD-18, eight excluded long-term directions, 13 unapproved proposal payloads,
+implementation evidence, and 22 unresolved decision packets. Repository-only
+fresh-agent acceptance passed on 2026-09-29, and the Human-authorized
+scope-bound authority cutover is complete. Repository knowledge is canonical
+for this exact migrated scope, and the Reservations Page Chat is legacy
+evidence only for it. Product approval and cutover do not establish
+implementation, legal qualification, provider readiness, target-environment
+evidence, or production authorization. The master product specification also
+contains broader future direction. Today, Planning, all other modules, and all
+other Page Chats retain their existing authority.
 
 ### Reputation and direct feedback
 
