@@ -439,6 +439,55 @@ runtime or production enablement follows.
   adjacent Stock migration, completed migration, or other Page Chat authority
   changed.
 
+### Fournisseurs
+
+- Canonical repository entry point for the reconciled Fournisseurs scope:
+  `docs/features/suppliers/README.md`
+- Twenty-two bounded current Product directions are confirmed. They cover a
+  dedicated capability with value beyond an address book; separate inventory
+  and purchase cadence; lead time; recalculation after new Inventaire context;
+  stable configuration versus dynamic needs; list preparation rather than
+  automatic ordering; PDF/Excel export and supplier grouping; minimum/target
+  stock direction; package-aware quantity suggestion; high-level need states;
+  pending-order suppression; simple local ordered/expected-delivery state;
+  supplier/invoice price sources; observed/paid/reference price separation;
+  price history and unit normalization; promotion safeguards; and supplier-side
+  price acquisition with bounded Inventaire projection. Each is
+  `DECIDED_NOT_IMPLEMENTED` as a real restaurant capability.
+- The bounded V1 direction includes supplier management, product-to-supplier
+  relationships, purchasing cadence/lead time, purchase-need preparation,
+  supplier-grouped lists, PDF/Excel/print/generic copy, simple local ordered and
+  expected-delivery state, and price acquisition/history. Exact workflow,
+  entities, formulas, fields, lifecycle, permissions, and cross-scope contracts
+  remain unresolved in 18 grouped Human decision packets.
+- Current implementation is the authenticated `/stock/fournisseurs`
+  fixture-backed prototype. It has seven fictional suppliers, local filters and
+  selection, hard-coded tabs/summaries, disabled operational actions, and
+  focused prototype-model tests. It has no cloud contract, schema, migration,
+  repository, server action, API, persistence, supplier permission, page pack,
+  Browser QA, ADR, or normative spec.
+- Fournisseurs is the semantic Product owner of bounded supplier information,
+  configuration, offers/pricing acquisition direction, and purchase
+  preparation. Exact supplier master, data owner, organization/establishment
+  scope, and mutation authority remain unresolved. Supplier article is not the
+  canonical YUTA article; recommendation/list/order/acknowledgment/delivery/
+  receipt/invoice/payment/movement remain distinct.
+- Online ordering and reliable provider integration are long-term directions.
+  METRO is an example only. Automated invoice processing remains long-term and
+  unresolved; cost-variation analysis and automatic recipe recalculation remain
+  proposed. No provider, credential, accounting valuation, recipe-cost truth,
+  automatic cross-write, or production capability is approved.
+- Inventaire and Mouvements de stock remain repository-canonical and unchanged.
+  Fiches techniques, purchasing/orders, receipts, invoices/OCR, and all other
+  Page Chat scopes remain separate and unmigrated.
+- Reconciliation, bounded canonicalization, repository-only fresh-agent
+  acceptance, and the Human-authorized scope-bound cutover are complete.
+  Repository knowledge is canonical for this exact Fournisseurs scope, and the
+  Fournisseurs Page Chat is `LEGACY EVIDENCE ONLY`. No `FOU` decision,
+  implementation, legal/accounting/commercial/privacy/security or readiness
+  state, adjacent migration, completed migration, or other Page Chat authority
+  changed.
+
 ### Mouvements de stock
 
 - Canonical repository entry point for the reconciled Mouvements de stock
