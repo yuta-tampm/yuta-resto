@@ -266,6 +266,37 @@ General Information / Restaurant Knowledge Page Chat is legacy evidence only
 for that scope. Other Establishment capabilities and all other Page Chats
 retain their existing authority.
 
+### Ressources internes
+
+- Canonical repository entry point for the migrated Ressources internes scope:
+  `docs/features/internal-resources/README.md`
+- Current route:
+  `apps/backoffice/src/app/(authenticated)/etablissement/ressources-internes/page.tsx`
+- Current implementation: authenticated shared planned placeholder and tested
+  navigation only; no Ressources-internes contract, schema, repository,
+  persistence, operation permission, page pack, provider integration, or
+  Browser QA exists.
+- Confirmed bounded directions: four conceptual content families—internal
+  announcements, internal documents, general procedures, and `fiches de
+poste`—plus practical/effective/easy use, simple organized team sharing, and
+  externally hosted restaurant-created video. The exact provider is not
+  selected.
+- Thirteen detailed proposal families remain `PROPOSED_NOT_APPROVED`, and
+  `RI-01` through `RI-20` keep exact V1, ownership, executable shape,
+  authorization, tenancy, storage, provider, cross-module, external-review,
+  UI, environment, and release decisions open.
+- Ressources internes remains distinct from Personnel, Tâches du jour, Today,
+  Formalités/Documents, Restaurant Knowledge, Conformité, Marketing/Website,
+  Identity / Access, and local products. No projection or write-back exists.
+- Reconciliation, proposal-payload remediation, repository-only fresh-agent
+  acceptance, and the Human-authorized authority cutover are complete. The
+  accepted report recovered all eight Human-current items, thirteen exact
+  proposal payloads, twenty `RI` packets, and the one obsolete claim with zero
+  material gaps and zero genuine conflicts. Repository knowledge is canonical
+  for this exact migrated scope, and the Ressources internes Page Chat is
+  `LEGACY EVIDENCE ONLY`. All `RI` decisions and lifecycle/readiness limits
+  remain unchanged.
+
 ### Carte & menus
 
 - Bounded Product Knowledge — migration PASS:
