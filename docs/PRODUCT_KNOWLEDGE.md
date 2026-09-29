@@ -303,6 +303,17 @@ retain their existing authority.
   Reputation, and the owning module for each approved future information family
 - Implementation: `apps/backoffice/src/app/(authenticated)/aujourdhui`
 
+The 2026-09-29 bounded Aujourd'hui reconciliation, repository-only fresh-agent
+acceptance, and Human-authorized authority cutover are complete. The Today home
+preserves HD-01 through HD-17, the current Reservations, booking-service, and
+Reputation implementation, source-owner and authorization boundaries, 15
+unapproved proposal payloads, both obsolete claims, and TODAY-01 through
+TODAY-17. The accepted report recorded zero material knowledge gaps and zero
+genuine authority conflicts. Repository knowledge is canonical for this exact
+migrated scope, and the Aujourd'hui Page Chat is `LEGACY EVIDENCE ONLY` for that
+scope. Exact V1, every `TODAY` packet, environment, readiness, and production
+authorization remain unchanged.
+
 ### Personnel, Documents, register, and Formalités
 
 - Canonical Product Knowledge home: `docs/features/personnel/README.md`
