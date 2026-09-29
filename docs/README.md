@@ -78,6 +78,7 @@ sensitive details never belong in the repository.
 - [`features/inventory/README.md`](features/inventory/README.md)
 - [`features/suppliers/README.md`](features/suppliers/README.md)
 - [`features/stock-movements/README.md`](features/stock-movements/README.md)
+- [`features/technical-sheets/README.md`](features/technical-sheets/README.md)
 - [`features/pointage/README.md`](features/pointage/README.md)
 - [`features/today/README.md`](features/today/README.md)
 - [`features/public-website/README.md`](features/public-website/README.md)

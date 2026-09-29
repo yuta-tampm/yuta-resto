@@ -428,9 +428,10 @@ runtime or production enablement follows.
   ordering, POS relationship, tenancy, permissions, OCR, history, legal meaning,
   and readiness remain grouped in 18 open decision packets.
 - Mouvements de stock, Fournisseurs, and Fiches techniques remain independent
-  unmigrated Page Chat scopes. The `Stock` navigation group creates no shared
-  Product authority. The restaurant-local POS catalogue remains separate and
-  does not support stock/inventory.
+  repository-canonical scopes. The Fiches techniques Page Chat is legacy
+  evidence only for its migrated scope. The `Stock` navigation group creates no
+  shared Product authority. The restaurant-local POS catalogue remains separate
+  and does not support stock/inventory.
 - Reconciliation, bounded canonicalization, repository-only fresh-agent
   acceptance, and the Human-authorized scope-bound authority cutover are
   complete. Repository knowledge is canonical for this exact Inventaire scope,
@@ -478,8 +479,10 @@ runtime or production enablement follows.
   proposed. No provider, credential, accounting valuation, recipe-cost truth,
   automatic cross-write, or production capability is approved.
 - Inventaire and Mouvements de stock remain repository-canonical and unchanged.
-  Fiches techniques, purchasing/orders, receipts, invoices/OCR, and all other
-  Page Chat scopes remain separate and unmigrated.
+  Fiches techniques is separately repository-canonical after fresh-agent PASS
+  and authority cutover; its Page Chat is legacy evidence only. Purchasing/
+  orders, receipts, invoices/OCR, and all other Page Chat scopes remain separate
+  and unmigrated.
 - Reconciliation, bounded canonicalization, repository-only fresh-agent
   acceptance, and the Human-authorized scope-bound cutover are complete.
   Repository knowledge is canonical for this exact Fournisseurs scope, and the
@@ -510,14 +513,53 @@ runtime or production enablement follows.
   time/sign/units, lifecycle/correction, consumption, anomalies, forecasting,
   transfers, adjacent ownership, permissions, history, legal meaning, and
   readiness remain grouped in 18 open decision packets.
-- Inventaire remains repository-canonical and unchanged. Fournisseurs and
-  Fiches techniques remain independent unmigrated scopes; POS and Production
-  provide no approved cloud movement source, and local POS stock synchronization
-  remains unsupported.
+- Inventaire and Fournisseurs remain repository-canonical and unchanged. Fiches
+  techniques is separately repository-canonical after fresh-agent PASS and
+  authority cutover; POS and Production provide no approved cloud movement
+  source, and local POS stock synchronization remains unsupported.
 - Reconciliation, bounded canonicalization, repository-only fresh-agent
   acceptance, and the Human-authorized scope-bound cutover are complete.
   Repository knowledge is canonical for this exact scope, and the Mouvements de
   stock Page Chat is `LEGACY EVIDENCE ONLY`. No `MDS` decision, implementation,
+  legal/privacy/readiness state, completed migration, or other Page Chat
+  authority changed.
+
+### Fiches techniques
+
+- Canonical repository destination for the reconciled Fiches techniques scope:
+  `docs/features/technical-sheets/README.md`
+- Seventeen bounded current Product directions and a fixed current V1 are
+  confirmed. They cover reference recipes and portions, derived scaling,
+  assisted paste with mandatory Human review and no silent invention,
+  Inventaire matching and price context, theoretical total/per-portion cost,
+  contextual selling price and ratio direction, manual entry, duplication,
+  simple conversions, intermediate preparations, price provenance/freshness,
+  Excel export, and an exception-oriented list. Each is
+  `DECIDED_NOT_IMPLEMENTED` as a real capability.
+- Advanced nutrition, advanced allergens, sophisticated cooking yield, labor
+  cost, and complete accounting-profitability calculation are outside the
+  current V1. These are exclusions, not permanent rejection or an approved
+  roadmap.
+- Current implementation is only authenticated `/stock/fiches-techniques`
+  route/navigation plus the shared planned placeholder and navigation tests. No
+  fiche/recipe contract, schema, migration, repository, action, API,
+  persistence, Fiches operation permission, costing logic, assisted-ingestion
+  adapter, export, page pack, Browser QA, ADR, or normative spec exists.
+- Fiche, reference recipe, dish/menu item, local POS item, recipe ingredient,
+  Inventaire article, supplier offer, intermediate preparation, production
+  batch, and stock movement remain distinct. Fiches owns future recipe
+  definition and theoretical cost presentation; it receives only future
+  approved projections from adjacent owners and has no cross-module write-back.
+- Exact executable V1/identity, dish mapping, ingredient mapping, units,
+  scaling, sub-recipes, source price/cost basis, live/snapshot/history,
+  calculations, ratio, assisted ingestion, lifecycle, freshness states, export,
+  adjacent integrations, authorization/tenancy, audit/retention, regulated
+  boundaries, UI, environment, and readiness remain grouped in 19 Human
+  decision packets (`FT-01` through `FT-19`).
+- Reconciliation, bounded canonicalization, repository-only fresh-agent
+  acceptance, and the Human-authorized authority cutover are complete.
+  Repository knowledge is canonical for this exact Fiches techniques scope, and
+  its Page Chat is `LEGACY EVIDENCE ONLY`. No `FT` decision, implementation,
   legal/privacy/readiness state, completed migration, or other Page Chat
   authority changed.
 
