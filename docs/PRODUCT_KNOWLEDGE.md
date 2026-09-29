@@ -256,6 +256,33 @@ General Information / Restaurant Knowledge Page Chat is legacy evidence only
 for that scope. Other Establishment capabilities and all other Page Chats
 retain their existing authority.
 
+### Carte & menus
+
+- Bounded Product Knowledge — migration PASS:
+  `docs/features/menu-catalog/README.md`
+- Current route:
+  `apps/backoffice/src/app/(authenticated)/etablissement/carte-menus/page.tsx`
+- Current UI implementation: authenticated shared planned placeholder only;
+  the canonical route and navigation are tested, but no Carte-specific page
+  pack, loader, action, contract, schema, repository, persistence, permission,
+  Browser QA, ADR, or normative OpenSpec spec exists.
+- Approved bounded directions: manage part of restaurant menu information
+  without owning order/payment/transaction behavior; remain broadly suitable
+  without an unnecessarily heavy model; support `menu` as a combo/composition
+  of multiple dishes.
+- Exact V1, terminology, data owner, item/category/combo models, selling-price
+  semantics, states, media, authorization, lifecycle, POS/channel contracts,
+  regulated content, environment and readiness remain in `CM-01` through
+  `CM-18`.
+- Local POS catalogue and combo behavior is separate restaurant-local Product
+  and runtime truth. Fiches techniques, Inventaire, Mouvements de stock,
+  Fournisseurs and Restaurant Knowledge retain their repository-canonical
+  ownership and non-write-back boundaries.
+- Bounded reconciliation and the repository-only fresh-agent acceptance PASS
+  are complete. Following Human-authorized cutover, repository knowledge is
+  canonical for this exact scope and Carte & menus Page Chat is legacy evidence
+  only for it. All other Page Chats retain their existing authority.
+
 ### Today
 
 - Approved Product Decision:
