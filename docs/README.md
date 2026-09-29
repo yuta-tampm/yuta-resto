@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-09-28
+Last updated: 2026-09-29
 
 ## Finding the right authority
 
@@ -74,6 +74,7 @@ sensitive details never belong in the repository.
 - [`features/establishment/general-information/README.md`](features/establishment/general-information/README.md)
 - [`features/personnel/README.md`](features/personnel/README.md)
 - [`features/planning/README.md`](features/planning/README.md)
+- [`features/daily-tasks/README.md`](features/daily-tasks/README.md)
 - [`features/pointage/README.md`](features/pointage/README.md)
 - [`features/today/README.md`](features/today/README.md)
 - [`features/public-website/README.md`](features/public-website/README.md)

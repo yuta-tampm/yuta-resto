@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last reviewed: 2026-09-28
+Last reviewed: 2026-09-29
 
 ## Purpose
 
@@ -369,6 +369,40 @@ runtime or production enablement follows.
   only for that scope. No related capability, open decision, implementation,
   readiness state, production authorization, or other Page Chat authority
   changed.
+
+### Tâches du jour
+
+- Canonical repository entry point for the reconciled Tâches du jour scope:
+  `docs/features/daily-tasks/README.md`
+- Six bounded current Product directions are confirmed: date/employee task
+  view, time and priority ordering, secondary non-mandatory tasks, date and
+  `poste` applicability, employee consultation, and print or digital checking.
+  Each is `DECIDED_NOT_IMPLEMENTED`; exact V1 and detailed semantics remain
+  unresolved.
+- Assisted fiche de poste composition from selectable task models plus custom
+  tasks is a confirmed long-term direction. Fiche ownership, task-library
+  ownership, template/routine/daily-instance architecture, and generation are
+  unresolved or proposed, not current requirements.
+- Current implementation is only the authenticated
+  `/equipe/taches-quotidiennes` shared placeholder and navigation link. No task
+  contract, schema, migration, repository, action, persistence, task-specific
+  authorization, focused behavior test, page pack, Browser QA, ADR, or normative
+  task spec exists. The legacy `/team/daily-tasks` route is not current.
+- ADR-005 assigns future task records and state to Tâches du jour while Today
+  remains a future aggregate consumer. There is no current Today integration.
+  Personnel owns employee facts, Planning owns planned work, and Pointage owns
+  actual-work evidence; no projection, generation, synchronization, or
+  cross-write is approved.
+- Fifteen grouped Human decision packets remain open. Legal, compliance,
+  privacy, security, environment, readiness, and production authorization are
+  independently unresolved or absent. The capability is `NOT_ENABLED`, its
+  readiness is `NOT_ASSESSED`, and Backoffice is `NOT_READY`.
+- Reconciliation, bounded canonicalization, repository-only fresh-agent
+  acceptance, and the Human-authorized authority cutover are complete. The
+  repository is canonical for this exact migrated Tâches du jour scope, and its
+  Page Chat is `LEGACY EVIDENCE ONLY`. No TJD decision, implementation,
+  legal/privacy/readiness state, completed migration, or other Page Chat
+  authority changed.
 
 ### Pointage authority, access and usable raw clocking
 
