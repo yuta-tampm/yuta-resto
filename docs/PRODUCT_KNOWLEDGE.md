@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last reviewed: 2026-09-29
+Last reviewed: 2026-09-30
 
 ## Purpose
 
@@ -296,6 +296,43 @@ poste`—plus practical/effective/easy use, simple organized team sharing, and
   for this exact migrated scope, and the Ressources internes Page Chat is
   `LEGACY EVIDENCE ONLY`. All `RI` decisions and lifecycle/readiness limits
   remain unchanged.
+
+### Veille & conformité
+
+- Canonical Product Knowledge — migration PASS:
+  `docs/features/compliance/README.md`
+- Current route:
+  `apps/backoffice/src/app/(authenticated)/conformite/veille/page.tsx`
+- Current implementation: authenticated fixture-backed prototype with local
+  tab/selection state, fictional actions/domains/dates/percentages, disabled
+  operations, generic trusted tenant context, and small model/navigation tests.
+  No compliance-specific contract, schema, migration, repository, persistence,
+  operation permission, file storage, upload/scan/OCR, source/provider service,
+  page pack, Browser QA, dated environment evidence, or production authorization
+  exists.
+- The fixed Product perimeter preserves twenty Human-current directions for a
+  digital administrative/compliance dossier and targeted restaurant regulatory
+  monitoring, six long-term directions, four principal sections, cautious
+  status presentation, no misleading global compliance score, Human-validated
+  AI assistance, visible source references, and strict legal/applicability/
+  evidence limits.
+- Six exact proposal families remain `PROPOSED_NOT_APPROVED`; seven compliance
+  domains are illustrative rather than exhaustive; eight external references
+  are `LEGACY_REFERENCE_ONLY` and require current qualified review.
+- `VC-01` through `VC-23` keep exact V1, source/jurisdiction/currentness,
+  applicability, requirement/control/evidence, dossier/files, time,
+  notifications, cross-module, authorization, history, UI, operations,
+  environment, and release decisions open. No projection or write-back exists.
+- Bounded reconciliation, `VC-PA-02` proposal-payload remediation,
+  repository-only fresh-agent acceptance, and the Human-authorized authority
+  cutover are complete. The accepted report recovered all twenty Human-current
+  directions, six long-term directions, six exact unapproved proposal
+  payloads, all 23 `VC` packets, `VC-HIST-01`, five tensions, seven illustrative
+  domains, and eight legacy-only references with zero material gaps and zero
+  genuine conflicts. Repository knowledge is canonical for this exact migrated
+  scope, and the Veille & conformité Page Chat is `LEGACY EVIDENCE ONLY`. All
+  Product, proposal, packet, legal/currentness, implementation, authorization,
+  environment, readiness, and production limits remain unchanged.
 
 ### Carte & menus
 
