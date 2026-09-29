@@ -439,6 +439,39 @@ runtime or production enablement follows.
   adjacent Stock migration, completed migration, or other Page Chat authority
   changed.
 
+### Mouvements de stock
+
+- Canonical repository entry point for the reconciled Mouvements de stock
+  scope: `docs/features/stock-movements/README.md`
+- Eight bounded current Product directions are confirmed: stock `+/-`;
+  Inventaire-originated change; purchase/invoice-originated change; manual
+  movement mainly for `gaspillage`; weekly consumption visibility;
+  consumption-coherence/problem detection; procurement forecasting support;
+  and reduction of waste, overstock, and insufficient stock. Each is
+  `DECIDED_NOT_IMPLEMENTED` as a real restaurant capability.
+- Current implementation is the authenticated `/stock/mouvements`
+  fixture-backed prototype. It has eight fictional rows, local filters and
+  selection, hard-coded summaries, disabled operational actions, and focused
+  prototype-model tests. It has no cloud contract, schema, migration,
+  repository, server action, API, persistence, movement permission, page pack,
+  Browser QA, ADR, or normative spec.
+- Movement, stock balance, physical count, and source-event truth remain
+  separate. Exact V1, movement identity/projection, balance application,
+  Inventaire trigger, purchase/invoice/receipt/OCR contract, manual causes,
+  time/sign/units, lifecycle/correction, consumption, anomalies, forecasting,
+  transfers, adjacent ownership, permissions, history, legal meaning, and
+  readiness remain grouped in 18 open decision packets.
+- Inventaire remains repository-canonical and unchanged. Fournisseurs and
+  Fiches techniques remain independent unmigrated scopes; POS and Production
+  provide no approved cloud movement source, and local POS stock synchronization
+  remains unsupported.
+- Reconciliation, bounded canonicalization, repository-only fresh-agent
+  acceptance, and the Human-authorized scope-bound cutover are complete.
+  Repository knowledge is canonical for this exact scope, and the Mouvements de
+  stock Page Chat is `LEGACY EVIDENCE ONLY`. No `MDS` decision, implementation,
+  legal/privacy/readiness state, completed migration, or other Page Chat
+  authority changed.
+
 ### Pointage authority, access and usable raw clocking
 
 - Canonical Pointage Product Knowledge home; fresh-agent migration PASS recorded:

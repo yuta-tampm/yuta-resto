@@ -76,6 +76,7 @@ sensitive details never belong in the repository.
 - [`features/planning/README.md`](features/planning/README.md)
 - [`features/daily-tasks/README.md`](features/daily-tasks/README.md)
 - [`features/inventory/README.md`](features/inventory/README.md)
+- [`features/stock-movements/README.md`](features/stock-movements/README.md)
 - [`features/pointage/README.md`](features/pointage/README.md)
 - [`features/today/README.md`](features/today/README.md)
 - [`features/public-website/README.md`](features/public-website/README.md)
