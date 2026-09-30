@@ -288,6 +288,40 @@ retain their existing authority.
 - Read the existing Establishment/General Information, Booking, Today and
   Reputation authorities through the home; their migrated scope is unchanged.
 
+### Salle & tables
+
+- Bounded reconciled knowledge and discovery home:
+  `docs/features/establishment/rooms-tables/README.md`.
+- Four high-level Human directions cover plan input with tables or empty,
+  practical operational usefulness, efficient assignment and restaurateur
+  filling preferences. Exact V1, physical structure/data owner and assignment
+  owner remain unresolved. The home preserves MEDIUM confidence for purpose
+  and preferences, 25 explicitly unapproved proposal payloads, seven design
+  tensions, nine capabilities/concepts, four unqualified historical references
+  and 25 open `ST` decisions. No confirmed legacy long-term or obsolete Human
+  decision is invented.
+- `/etablissement/salles-tables` is the current authenticated fixture viewer,
+  with local room/table selection, a prototype notice and small fixture/model
+  and navigation tests. No dedicated cloud import, room/table persistence,
+  assignment, geometry, permission, page pack, Browser QA or production
+  authorization is established. The proposed `/establishment/rooms-tables`
+  remains historical provenance only.
+- Establishment placement is discovery routing, not canonical data ownership.
+  Booking retains capacity/periods/exceptions and Reservations truth. Its
+  independently approved non-guaranteed space preference is unimplemented;
+  precise assignment/interactive plan remain excluded long-term directions.
+  POS still uses separate local order labels; no table mapping, QR contract,
+  projection or write-back is created.
+- Reconciliation and the Human-exception authority cutover are complete.
+  Repository knowledge is canonical for this exact scope; Salle & tables Page
+  Chat is `LEGACY_EVIDENCE_ONLY`. The home records the exact Human decision:
+  repository sufficiency PASS, zero material gaps and genuine conflicts,
+  strict fresh-agent execution `BLOCKED_BY_ENVIRONMENT`, formal fresh-agent
+  PASS NO, memory-index access YES, prohibited content used as evidence NO,
+  and no additional rerun required. The exception changes knowledge authority
+  only; all Product, implementation, authorization, qualification, readiness,
+  completed migrations and other Page Chat authority remain unchanged.
+
 ### Ressources internes
 
 - Canonical repository entry point for the migrated Ressources internes scope:
