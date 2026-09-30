@@ -145,8 +145,9 @@ is Human-accepted PASS with zero material gaps and bounded genuine conflicts.
 Strict fresh-agent execution remains `BLOCKED_BY_ENVIRONMENT`; automatic
 prohibited context was excluded from evidence, intentional memory/personal/
 prior-conversation access is recorded NO, formal fresh-agent PASS is NO and no
-additional rerun is required. `Créations visuelles v` remains ACTIVE,
-unreconciled and unmigrated. Satisfaction supplemental consolidation is not
+additional rerun is required. At that Content cutover, `Créations visuelles v`
+was ACTIVE, unreconciled and unmigrated; its subsequent transition is below.
+Satisfaction supplemental consolidation is not
 performed. The exception changes no Product, lifecycle or adjacent authority.
 
 | Capability / scope                                                            | Runtime / data owner and evidence                                                                                                                                                                                    | Product Decision                                    | Implementation                                              | Environment / readiness / external dependencies                                                                                      |
@@ -158,6 +159,49 @@ performed. The exception changes no Product, lifecycle or adjacent authority.
 Review marker: `NEEDS REVIEW` for executable V1, ownership, projections,
 permissions, lifecycle, AI/provider, regulated meaning, UI and release. All
 adjacent capability rows, protected migrations and Page Chat roles are unchanged.
+
+### Créations visuelles knowledge reconciliation
+
+The [bounded Visual home](features/visual-creation/README.md) reconciles the
+`Créations visuelles v` Page Chat and `Créations visuelles` menu scope.
+Navigation points to `/marketing/studio-creatif`; the existing Creative Studio
+surface is an `AUTHENTICATED_FIXTURE_PROTOTYPE`, not an approved executable V1
+or a separate general Marketing owner. Seven HIGH-confidence Human directions,
+fourteen unapproved proposals, all 25 raw questions, fifteen capabilities and
+thirteen concepts remain discoverable. There are no legacy long-term
+directions or tensions and no genuine current-authority conflict. Twenty-one
+Human-decision packets and one evidence-coverage packet remain open; physical
+Page Chat history exhaustiveness remains `UNVERIFIED`.
+
+- **Current UI surface:** runtime `apps/backoffice`; fixture data and local
+  presentation state only, with no Visual business persistence owner.
+  Implementation `PROTOTYPE`; exact real-data Product V1 `NOT_DECIDED`;
+  environment availability `UNVERIFIED`; readiness and external dependencies
+  `NOT_ASSESSED`. Navigation/model tests do not prove real visual operations.
+- **Bounded Human directions:** Product `APPROVED` at the recorded high level;
+  functional implementation `NOT_STARTED`, environment `NOT_ENABLED`, readiness
+  and external dependencies `NOT_ASSESSED`. Exact visual-identity, data, media,
+  storage, organization/establishment ownership and operation permissions
+  remain `NEEDS REVIEW`; no provider or production authorization follows.
+- **Detailed proposals and executable models:** Product `PROPOSED` or
+  `NOT_DECIDED`; functional implementation `NOT_STARTED`, environment
+  `NOT_ENABLED`, readiness and external dependencies `NOT_ASSESSED`. Fixture
+  templates, formats, preview, history and quota labels create no approved
+  entity, editor, export, billing, provider or publication contract.
+
+Review marker: `NEEDS REVIEW` for the open `VIS` decisions and evidence limits.
+The [Human-exception authority cutover](features/visual-creation/README.md#human-exception-authority-cutover)
+is complete: repository knowledge is canonical for this exact Visual scope,
+and its Page Chat is `LEGACY_EVIDENCE_ONLY`. Human-accepted repository-only
+recovery/sufficiency is PASS with zero material gaps and genuine Visual
+conflicts. Strict fresh-agent execution remains `BLOCKED_BY_ENVIRONMENT`;
+automatic prohibited-context exposure and intentional memory-index access are
+recorded YES, their results were excluded from evidence, formal fresh-agent
+PASS is NO and no additional rerun is required. All Product/lifecycle rows and
+open packets retain their states. Content remains independently canonical with
+its Page Chat `LEGACY_EVIDENCE_ONLY`. Satisfaction, its pending supplemental
+consolidation, all source owners, completed migrations and other Page Chat
+authorities are unchanged.
 
 ### Backoffice foundation and team capabilities
 

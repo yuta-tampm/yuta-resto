@@ -328,7 +328,7 @@ retain their existing authority.
   `docs/features/content-creation/README.md`.
 - `Création de contenus v` maps to the `Création de contenus` page;
   `Marketing & contenu` is navigation only. `Créations visuelles v` maps to the
-  separate `Créations visuelles` page and retains ACTIVE Page Chat authority;
+  separate `Créations visuelles` page; its subsequent cutover is recorded below;
   `Expérience client v` maps to Satisfaction client,
   outside this reconciliation and any later supplemental consolidation.
 - Twenty Human-current directions preserve restaurant-specific textual
@@ -357,10 +357,50 @@ retain their existing authority.
   `BLOCKED_BY_ENVIRONMENT`, automatic prohibited-context exposure YES,
   prohibited content used as evidence NO, intentional memory/personal/prior-
   conversation access NO, formal fresh-agent PASS NO and no additional rerun.
-  Visual remains ACTIVE, unreconciled and unmigrated; Satisfaction supplemental
-  consolidation is not performed. All completed migrations, source owners,
+  At that Content cutover, Visual was ACTIVE, unreconciled and unmigrated;
+  its subsequent authority transition is recorded below. Satisfaction
+  supplemental consolidation is not performed. All completed migrations, source owners,
   Satisfaction/Avis conflicts, separate scopes, environment and readiness remain
   unchanged. The exception changes knowledge authority only.
+
+### Créations visuelles
+
+- Canonical repository knowledge for the exact migrated Visual scope:
+  `docs/features/visual-creation/README.md`.
+- `Créations visuelles v` maps to the `Créations visuelles` menu page at
+  `/marketing/studio-creatif`; `Marketing & contenu` is navigation only.
+  Current Creative Studio code is the authenticated fixture prototype exposed
+  by that navigation, not approval of its fixture fields or a complete Visual
+  capability. Functional visual creation remains `NOT_STARTED`.
+- Seven HIGH-confidence Human directions cover practical restaurant visual
+  creation, supplied identity and respect for it, a usage limit depending on
+  forfait, flyer/affiche/photo-with-text examples, description and/or photo
+  input, and text rework/validation before creation. Exact executable V1,
+  visual identity/data/media owners, lifecycle, permissions, providers and
+  quota mechanics remain unresolved.
+- Fourteen full proposal families remain explicitly unapproved. The home
+  preserves all 25 raw questions in 22 open packets: 21 decision packets and
+  one evidence-coverage packet. Fifteen capabilities and thirteen concepts
+  are derived inventories; zero legacy long-term directions or tensions are
+  invented. Four historical URLs for three products remain unqualified.
+- Available extraction history was used, but physical Page Chat history
+  exhaustiveness remains `UNVERIFIED`. The Human's E2 approval covers the
+  general direction and explicit statements, not every E1 detail or later
+  E6/E7 proposals. No exact V1 follows from Assistant wording or current UI.
+- The [Human-exception authority cutover](features/visual-creation/README.md#human-exception-authority-cutover)
+  is complete: repository knowledge is canonical for this exact Visual scope,
+  and `Créations visuelles v` is `LEGACY_EVIDENCE_ONLY`. The Human accepted
+  repository-only recovery/sufficiency PASS with zero material gaps and genuine
+  Visual conflicts. Strict fresh-agent execution remains
+  `BLOCKED_BY_ENVIRONMENT`; automatic prohibited-context exposure and the
+  intentional memory-index query remain recorded YES, their results were not
+  evidence, formal fresh-agent PASS is NO and no additional rerun is required.
+  The home records the complete independent assessment/exception axes. Content
+  remains separately canonical with `Création de contenus v` as
+  `LEGACY_EVIDENCE_ONLY`. Satisfaction is not reopened; `Expérience client v`
+  supplemental consolidation is not performed. The exception changes knowledge
+  authority only; source ownership, operation grants, external qualification,
+  environment and readiness remain unchanged.
 
 ### Ressources internes
 

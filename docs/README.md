@@ -75,6 +75,7 @@ sensitive details never belong in the repository.
 - [`features/establishment/hours-services/README.md`](features/establishment/hours-services/README.md)
 - [`features/establishment/rooms-tables/README.md`](features/establishment/rooms-tables/README.md)
 - [`features/content-creation/README.md`](features/content-creation/README.md)
+- [`features/visual-creation/README.md`](features/visual-creation/README.md)
 - [`features/internal-resources/README.md`](features/internal-resources/README.md)
 - [`features/compliance/README.md`](features/compliance/README.md)
 - [`features/menu-catalog/README.md`](features/menu-catalog/README.md)
