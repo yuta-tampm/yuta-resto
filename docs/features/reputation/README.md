@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-09-28
+Last updated: 2026-09-30
 
 This is the canonical Product Knowledge home for the bounded Reputation domain:
 the Backoffice `Avis & commentaires` and `Satisfaction client` surfaces, public
@@ -418,7 +418,7 @@ and trusted tenancy foundation without acquiring provider behavior.
 | Persistence           | A successful real submission creates a `DIRECT` / `DIRECT_FEEDBACK` item plus direct-detail data in the same cloud transaction. The customer receives an acknowledgment and identifier response, not an authenticated history or readback surface.                                                      |
 | Visibility            | Submitted content is private by default. It is visible only through the authenticated, tenant-scoped Reputation inbox. There is no customer-facing publication, testimonial, or public feedback feed.                                                                                                   |
 | Restaurant processing | `/visibilite-reputation/satisfaction` fixes the source to `DIRECT` and supports the current tenant-scoped inbox, counters, search, filters, detail, status, assignment, and internal notes. It has no provider reply editor.                                                                            |
-| Customer follow-up    | Contact data and consent can be stored, but no customer-response channel, message delivery, case conversation, or approved follow-up workflow is implemented.                                                                                                                                           |
+| Customer follow-up    | Contact data and consent can be stored; the request-first direction below conflicts with ungated fields. No customer-response channel, message delivery, case conversation or approved exact follow-up workflow is implemented.                                                                         |
 | Review solicitation   | After a successful submission, safe configured Google, Facebook, or Instagram destinations may be shown independently of rating. They are optional outbound links owned by Reputation settings, not connectors, publication, score gating, or proof of an external review.                              |
 | External publication  | Direct feedback is not published to an external provider. Conversion into a testimonial or provider review, automated routing, and any rating-based gate require a separate Human Product decision and privacy/provider review.                                                                         |
 
@@ -440,18 +440,18 @@ and trusted tenancy foundation without acquiring provider behavior.
 
 ### Capability and data model
 
-| Capability or data           | Product state                                                                                           | Implementation state                                                                                                                   | Validation and visibility                                         | Owner and scope                                               | Exclusions / unresolved                                                                                                                                         |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Direct public collection     | `APPROVED`                                                                                              | `IMPLEMENTED` with two trusted-boundary conflicts                                                                                      | Public form; shared schema; server-owned tenant context           | Reputation; `apps/feedback-web`; organization + establishment | No production authorization; no broad public-site ownership transfer                                                                                            |
-| Rating                       | Current public collection uses required integer `1..5`                                                  | Persisted on the feedback item                                                                                                         | Zod validation; private inbox visibility                          | Reputation; organization + establishment                      | Does not authorize rating-based routing or public solicitation gates                                                                                            |
-| Topics and comment           | Optional current form data                                                                              | Topics persist on direct detail; comment persists as feedback content                                                                  | Bounded enum and length validation                                | Reputation; organization + establishment                      | No AI processing approval and no public display                                                                                                                 |
-| Identity and contact         | Optional first name and email are exposed; contact requires consent                                     | Contract/schema also support phone; persistence stores supplied contact and consent timestamp                                          | Private restaurant access only; contact values are not sent to AI | Reputation; organization + establishment                      | Exact follow-up purpose, lawful basis, retention, rights handling, phone exposure, and marketing use are unresolved                                             |
-| Visit/order/source context   | No complete current Product requirement                                                                 | Contract/schema can hold order reference, visit date, service period, and source tag; current public form does not expose them         | Contract validation only when supplied                            | Reputation; organization + establishment                      | Schema capacity must not be promoted to approved collection                                                                                                     |
-| Derived operational fields   | No AI generation is approved                                                                            | Repository derives sentiment, urgency, and initial status deterministically from rating/topics; UI can display persisted values        | Server-side implementation                                        | Reputation; organization + establishment                      | Formulas are implementation evidence, not an approved analytics or AI product                                                                                   |
-| Abuse controls               | Fail-closed production protection is required                                                           | Honeypot and per-hash window exist; raw IP is not persisted; missing trusted client identity can currently bypass the per-client limit | Public generic error boundary                                     | `apps/feedback-web`; salted hash in `packages/db-cloud`       | Trusted client-IP provenance, atomicity, idempotency, duplicates, body limits, monitoring, and incident policy are unresolved or outside current implementation |
-| Inbox operations             | Direct-only private processing is in current scope                                                      | List/detail, counters, filters, status, assignment, and notes are implemented                                                          | Authenticated Backoffice only                                     | Reputation; trusted organization + active establishment       | No customer reply delivery and no external provider publication                                                                                                 |
-| Social/review links          | Three optional safe destinations are approved                                                           | OWNER settings and public safe projection are implemented                                                                              | Provider-purpose URL validation; public CTA only                  | Reputation settings; organization + establishment             | No connector, click tracking, score gate, publication confirmation, or provider ownership inference                                                             |
-| Notifications, analytics, AI | No current approval beyond operational counters and the separate provider-independent Avis AI direction | No Satisfaction notification, advanced analytics, or AI workflow is established                                                        | Not applicable                                                    | Undecided                                                     | Requires separate Product, privacy, security, and data-owner decisions                                                                                          |
+| Capability or data           | Product state                                                                                                     | Implementation state                                                                                                                    | Validation and visibility                                         | Owner and scope                                               | Exclusions / unresolved                                                                                                                                         |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Direct public collection     | `APPROVED`                                                                                                        | `IMPLEMENTED` with two trusted-boundary conflicts                                                                                       | Public form; shared schema; server-owned tenant context           | Reputation; `apps/feedback-web`; organization + establishment | No production authorization; no broad public-site ownership transfer                                                                                            |
+| Rating                       | Current public collection uses required integer `1..5`                                                            | Persisted on the feedback item                                                                                                          | Zod validation; private inbox visibility                          | Reputation; organization + establishment                      | Does not authorize rating-based routing or public solicitation gates                                                                                            |
+| Topics and comment           | Optional current form data                                                                                        | Topics persist on direct detail; comment persists as feedback content                                                                   | Bounded enum and length validation                                | Reputation; organization + establishment                      | Assistive AI direction is reconciled below; no exact processing contract or public display                                                                      |
+| Identity and contact         | Request-first collection direction conflicts with current optional name/email fields; email/phone require consent | Contract/schema also support phone; persistence stores supplied contact and consent timestamp                                           | Private restaurant access only; contact values are not sent to AI | Reputation; organization + establishment                      | Exact follow-up purpose, lawful basis, retention, rights handling, phone exposure, and marketing use are unresolved                                             |
+| Visit/order/source context   | Reliable context direction is reconciled below; exact trusted source and fields remain open                       | Order reference, visit date and service period have no rendered input; allowlisted browser sourceTag is submitted as untrusted metadata | Contract validation only when supplied                            | Reputation; organization + establishment                      | Schema capacity must not be promoted to approved collection                                                                                                     |
+| Derived operational fields   | Assistive AI intent is reconciled below; no executable AI contract is approved                                    | Repository derives sentiment, urgency, and initial status deterministically from rating/topics; UI can display persisted values         | Server-side implementation                                        | Reputation; organization + establishment                      | Formulas are implementation evidence, not an approved analytics or AI product                                                                                   |
+| Abuse controls               | Fail-closed production protection is required                                                                     | Honeypot and per-hash window exist; raw IP is not persisted; missing trusted client identity can currently bypass the per-client limit  | Public generic error boundary                                     | `apps/feedback-web`; salted hash in `packages/db-cloud`       | Trusted client-IP provenance, atomicity, idempotency, duplicates, body limits, monitoring, and incident policy are unresolved or outside current implementation |
+| Inbox operations             | Direct-only private processing is in current scope                                                                | List/detail, counters, filters, status, assignment, and notes are implemented                                                           | Authenticated Backoffice only                                     | Reputation; trusted organization + active establishment       | No customer reply delivery and no external provider publication                                                                                                 |
+| Social/review links          | Three optional safe destinations are approved                                                                     | OWNER settings and public safe projection are implemented                                                                               | Provider-purpose URL validation; public CTA only                  | Reputation settings; organization + establishment             | No connector, click tracking, score gate, publication confirmation, or provider ownership inference                                                             |
+| Notifications, analytics, AI | Bounded attention, analytics and assistive AI direction is reconciled below; exact contracts remain unresolved    | No Satisfaction notification, advanced analytics, or AI workflow is established                                                         | Not applicable                                                    | Undecided                                                     | Requires separate Product, privacy, security, and data-owner decisions                                                                                          |
 
 Environment remains `UNVERIFIED`, production readiness remains `BLOCKED`, and
 the external/release dependency remains `BLOCKED`. Local implementation and
@@ -518,9 +518,13 @@ the pre-existing security change's evidence and gate approvals. They are
 repository conflicts rather than new Product decisions and are not counted as
 additional SAT decision packets.
 
-### Reconciliation disposition
+### Original reconciliation disposition — 2026-09-28 baseline
 
-Material legacy claims were assigned one primary disposition:
+The original legacy claims were assigned one primary disposition. These counts
+and the original acceptance/cutover below describe that baseline; the later
+[supplemental reconciliation](#14-satisfaction-supplemental-experience-client-reconciliation)
+has separate dispositions and a separately recorded Human-exception authority
+update; the original PASS and cutover are not extended or repeated:
 
 - `CONFIRMED`: 13 claim groups covering the private direct-feedback purpose,
   Reputation ownership, independent public runtime, direct/provider separation,
@@ -618,3 +622,362 @@ This cutover does not reopen Avis/provider scope, resolve a conflict, create a
 privacy or legal conclusion, change another Page Chat's authority, authorize
 hardening Apply, or alter Product, implementation, environment, readiness, or
 production state.
+
+## 14. Satisfaction supplemental Experience client reconciliation
+
+### Provenance, authority and naming
+
+On 2026-09-30, the complete Human-supplied
+`SATISFACTION_CLIENT_EXPERIENCE_CLIENT_SUPPLEMENTAL_KNOWLEDGE_EXTRACT.md`
+(SHA-256 `5ce212e4b90947ca5e48819dcacb29eb7165b2ca95272e388f36a372330e881c`;
+50,028 bytes; 2,213 logical lines; no final newline) was read and reconciled
+as supplemental legacy evidence. Its exact heading, 57 final control fields,
+record inventory and confidences were verified; no transport marker was found.
+Available Page Chat history was read by the extractor, but physical Page Chat
+history exhaustiveness remains `UNVERIFIED`. The source supplies no durable
+implementation evidence; that absence does not establish repository absence.
+
+The current Human mapping is `Expérience client v` -> `Satisfaction client`.
+The menu remains **Satisfaction client** and the route remains
+`/visibilite-reputation/satisfaction`. The historical rename in HD-02/HIST-01
+is provenance only, superseded by this mapping; no second page, route, owner
+or knowledge home is created. Reputation remains the semantic owner, with
+`apps/feedback-web` for public collection, `apps/backoffice` for restaurant
+processing and `packages/db-cloud` for organization/establishment persistence.
+
+The existing Satisfaction repository authority and original shared Avis Page
+Chat cutover remain intact. Supplemental reconciliation and the
+[Human-exception authority update](#supplemental-human-exception-authority-update)
+are complete. The repository is now also canonical for this exact supplemental
+delta; `Expérience client v` is **LEGACY_EVIDENCE_ONLY** for it, with historical
+and forensic access retained. The original PASS does not cover this delta;
+formal delta fresh-agent PASS remains **NO**. No other Page Chat authority,
+completed migration, Product code, OpenSpec artifact or readiness axis changes.
+
+### Supplemental Human-exception authority update
+
+On 2026-09-30, the Human explicitly accepted repository-only delta knowledge
+sufficiency as PASS with zero material knowledge gaps and authorized only the
+supplemental knowledge-authority update for `Expérience client v` ->
+`Satisfaction client`. The accepted recovery covers all 33 primary records,
+fourteen HIGH-confidence Human items, one MEDIUM-confidence future-only
+direction, four unapproved proposals, eight unresolved questions, ten
+capabilities, twelve concepts, unchanged SAT-01–09, unresolved SAT-10 and all
+three open conflicts. The assessment reported no repository mutation.
+
+The following axes record that Human-accepted delta assessment and exception,
+not a new acceptance run or the tool/context history of this maintenance task:
+
+```text
+DELTA_REPOSITORY_KNOWLEDGE_SUFFICIENCY: PASS
+MATERIAL_KNOWLEDGE_GAPS: 0
+STRICT_DELTA_FRESH_AGENT_STATUS: BLOCKED_BY_ENVIRONMENT
+AUTOMATIC_PROHIBITED_CONTEXT_ACCESS_DETECTED: YES
+PROHIBITED_CONTEXT_CONTENT_USED_AS_EVIDENCE: NO
+MEMORY_INDEX_INTENTIONALLY_USED: NO
+PERSONAL_CONTEXT_INTENTIONALLY_USED: NO
+PAGE_CHAT_HISTORY_USED: NO
+SUPPLEMENTAL_LEGACY_EXTRACT_USED: NO
+SUPPLEMENTAL_RECONCILIATION_REPORT_USED: NO
+ORIGINAL_SATISFACTION_MIGRATION_ARTIFACT_USED: NO
+PRIOR_AGENT_REPORT_USED: NO
+EXTERNAL_RESEARCH_USED: NO
+FORMAL_DELTA_FRESH_AGENT_PASS_RECORDED: NO
+HUMAN_EXCEPTION_GATE: APPROVED
+ADDITIONAL_DELTA_FRESH_AGENT_RERUN_REQUIRED: NO
+```
+
+The accepted assessment records that the environment automatically supplied
+prohibited memory context; its content was excluded from evidence, and no
+memory-index or personal-context access was intentionally performed in that
+assessment. Repository-only delta recovery independently passed, but strict
+execution remained BLOCKED_BY_ENVIRONMENT and formal delta fresh-agent PASS
+was not achieved. The Human explicitly requires no additional rerun. This
+authority update does not rerun acceptance or relabel the exception as formal
+acceptance.
+
+Before this update, the repository contained the reconciled supplemental
+candidate and `Expérience client v` remained ACTIVE for that exact scope.
+The authorized update is now performed and the supplemental consolidation
+workflow is complete. Original Satisfaction authority and its earlier cutover
+remain unchanged; Avis/provider and Restaurant Knowledge authority remain
+separate and unchanged. Control Tower retains Product shaping, conflict and
+Human Decision routing, and governance. Coding Agents use repository discovery
+and analysis; implementation requires separate authorization.
+
+This exception changes only where the bounded supplemental knowledge is
+authoritative. It does not delete historical evidence, certify physical Page
+Chat exhaustiveness, resolve SAT-01–10 or any of the three conflicts, advance
+hardening Gate 2b, approve a Product/executable contract or implementation,
+change authorization, qualify legal/privacy/security/provider status, enable
+an environment, promote readiness or authorize production. All reconciled
+records, inventories, implementation distinctions and boundaries below retain
+their meanings.
+
+### Reconciled Human direction and implementation
+
+All fourteen `EXP-SAT-HD-*` records retain source confidence **HIGH**, including
+the superseded naming record. One primary disposition applies to each source
+record; partial executable evidence is stated separately. `IMPLEMENTED` below
+means the bounded capability exists, not that every Product detail is settled.
+`DECIDED_NOT_IMPLEMENTED` includes directions with partial existing foundations.
+
+Evidence keys refer to current repository sources in the evidence map below.
+Every row is canonicalized here at its stated classification; rejected current
+effects remain discoverable as history, proposals or exclusions. All rows share
+the privacy, authorization and non-inference rules below; no row creates a
+legal conclusion or an executable contract.
+
+| Source record (confidence) | Reconciled claim and repository comparison                                                                                                                                                                                                                             | Primary disposition     | Secondary classification                                | Open SAT mapping and exact boundary                                                                                                                                                             |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| EXP-SAT-HD-01 (HIGH)       | Private feedback should help understand customer experience, find recurring operational problems, prioritize attention and follow improvement. Existing collection/private inbox already serve the core purpose (E1/E2/E3); broader outcomes remain bounded direction. | CONFIRMED               | ALREADY_CANONICAL + SUPPLEMENTAL_PRODUCT_DIRECTION      | SAT-05/07/08/09/10. No generic quality platform, CRM, autonomous incident management or employee scoring.                                                                                       |
+| EXP-SAT-HD-02 (HIGH)       | Historical page rename from Satisfaction client to Expérience client; current Human mapping and navigation (E3) retain Satisfaction client.                                                                                                                            | OBSOLETE                | Historical provenance + NAVIGATION_LIMITATION           | No SAT packet. No current rename, new owner or route; source confidence is not downgraded.                                                                                                      |
+| EXP-SAT-HD-03 (HIGH)       | Short, fast form: required 1–5 rating, quick reasons and optional free text. Existing five-stage form implements this bounded capture (E1/E2). Eight visible choices and fourteen transport topic values are implementation, not approval of the exact taxonomy.       | IMPLEMENTED             | ALREADY_CANONICAL + EXECUTABLE_SHAPE_ONLY               | SAT-02. No new field/enum or text-length Product decision.                                                                                                                                      |
+| EXP-SAT-HD-04 (HIGH)       | Anonymous by default; customer separately requests follow-up; details are requested only then. Current form always shows optional first name/email and a consent checkbox, with no separate request controlling collection (E1/E2).                                    | CONFLICT                | SUPPLEMENTAL_PRODUCT_DIRECTION + EXECUTABLE_SHAPE_ONLY  | SAT-03, with SAT-04 retention. Product/UI divergence remains open; consent is not a contact request, marketing consent or public attribution.                                                   |
+| EXP-SAT-HD-05 (HIGH)       | A neutral Google CTA may follow private feedback regardless of rating. Existing safe success links and normative specification agree (E1/E5).                                                                                                                          | IMPLEMENTED             | ALREADY_CANONICAL                                       | SAT-06. No satisfied-only gate, complaint suppression, testimonial consent, provider call, conversion, import, synchronization or publication.                                                  |
+| EXP-SAT-HD-06 (HIGH)       | QR entry and automatic date/time/service/zone context when reliable data exists. ADR-004 accepts QR/link entry; public routes exist, but managed QR and trusted contextual attachment are incomplete (E1/E2/E5).                                                       | DECIDED_NOT_IMPLEMENTED | SUPPLEMENTAL_PRODUCT_DIRECTION + EXECUTABLE_SHAPE_ONLY  | SAT-01. Browser source tag and stored timestamps do not prove visit context. No token, table/order/POS linkage, employee attribution or distribution contract.                                  |
+| EXP-SAT-HD-07 (HIGH)       | Simple feedback inbox with conceptual Nouveau / À suivre / Traité. Current direct inbox, status/assignment/notes and audit implement bounded processing (E2/E3).                                                                                                       | IMPLEMENTED             | ALREADY_CANONICAL + EXECUTABLE_SHAPE_ONLY               | SAT-05. The three labels are not an enum or full transition graph; reopen, archive, delete, spam, assignment and resolution meaning stay open.                                                  |
+| EXP-SAT-HD-08 (HIGH)       | Attention/alerts for low ratings or explicit customer contact requests. Existing counters and deterministic urgency provide partial attention; no delivered alert/contact-request workflow exists (E2/E3/E4).                                                          | DECIDED_NOT_IMPLEMENTED | SUPPLEMENTAL_PRODUCT_DIRECTION + DERIVED_IMPLEMENTATION | SAT-07, SAT-03 for contact. No selected threshold, email/push channel, recipient, reminder, escalation or SLA.                                                                                  |
+| EXP-SAT-HD-09 (HIGH)       | Assistive AI may classify comments, summarize recurring problems and surface attention. No Satisfaction AI service exists; stored shapes and deterministic fields do not supply one (E2/E3).                                                                           | DECIDED_NOT_IMPLEMENTED | SUPPLEMENTAL_PRODUCT_DIRECTION + DERIVED_IMPLEMENTATION | SAT-09. No provider/model/prompt, retrieval, RK use, persistence, confidence, correction, Human-review or retention contract; no autonomous contact, sanction, task, write-back or publication. |
+| EXP-SAT-HD-10 (HIGH)       | Recurring-problem analysis and trends by day, service and period. Operational counters and filters exist; that analysis is absent (E2/E3).                                                                                                                             | DECIDED_NOT_IMPLEMENTED | SUPPLEMENTAL_PRODUCT_DIRECTION + DERIVED_IMPLEMENTATION | SAT-08. No KPI, formula, bucket, benchmark, sample minimum, aggregation window, export or multi-establishment analytics approved.                                                               |
+| EXP-SAT-HD-11 (HIGH)       | Support a simple improvement action for a relevant/recurring problem and observe its later effect. No action capability or assigned canonical action owner exists (E3/E6).                                                                                             | DECIDED_NOT_IMPLEMENTED | SUPPLEMENTAL_PRODUCT_DIRECTION                          | SAT-10; related SAT-05/07/08/09. No project-management platform, action entity, assignee, lifecycle, task creation, source mutation or causal conclusion.                                       |
+| EXP-SAT-HD-12 (HIGH)       | Minimal configuration for questionnaire, contact, alerts, Google and QR. Only the OWNER social-link slice is currently implemented (E3/E5).                                                                                                                            | DECIDED_NOT_IMPLEMENTED | SUPPLEMENTAL_PRODUCT_DIRECTION + EXECUTABLE_SHAPE_ONLY  | SAT-01/02/03/06/07. No survey builder, arbitrary custom fields, conditional engine, settings schema or new role grant.                                                                          |
+| EXP-SAT-HD-13 (HIGH)       | Target information architecture: Vue d’ensemble / Retours / Analyse / Actions / Paramètres. Current page has header/counters, inbox/detail and OWNER links; the complete five-part organization is absent (E3/E5).                                                     | DECIDED_NOT_IMPLEMENTED | SUPPLEMENTAL_PRODUCT_DIRECTION + NAVIGATION_LIMITATION  | SAT-02/03/05/07/08/09/10 and settings mappings above. This is page organization, not AI, five routes/modules or an approved tab/navigation contract.                                            |
+| EXP-SAT-HD-14 (HIGH)       | V1 excludes complex surveys, advanced NPS, SMS/email satisfaction campaigns, multi-restaurant benchmarking, elaborate conditional questionnaires and employee scoring. No canonical requirement contradicts those exclusions (E3/E5/E6).                               | CONFIRMED               | SUPPLEMENTAL_PRODUCT_DIRECTION                          | SAT-02/03/07/08/09 boundaries. Exclusion is neither a permanent rejection nor a roadmap/release commitment.                                                                                     |
+
+#### Contact conflict and executable evidence limits
+
+HD-04 is a Product-versus-current-UI conflict, not a dispute between competing
+Human decisions. Empty contact defaults permit an anonymous submission, but
+the general comment step still requests optional first name and email without
+a separate request for follow-up. The checkbox permits contact if necessary;
+it does not express that separate request. The contract requires consent when
+email or phone is supplied, while a name alone does not trigger that condition.
+No repair or exact contact workflow is approved here; SAT-03 stays unresolved.
+This adds one recorded Product/UI conflict to the two unchanged security
+conflicts; it does not assert legal noncompliance.
+
+The contract also accepts phone, order reference, visit date and service period,
+which have no current rendered input. `sourceTag` is different: the form reads
+an allowlisted browser `?source=` value and persists it; this is untrusted
+collection metadata, not verified source attribution or tenant authority.
+There is no zone or distinct contact-request field. Creation time is not proof
+of visit time. Current `findFeedbackDetail` reads feedback items, replies and
+notes without joining direct-detail contact/consent/selected-topic/visit data;
+schema storage does not prove those values are displayed to the operator.
+
+Rating/topic-derived sentiment, urgency and initial status are deterministic
+implementation rules. They do not select Product alert thresholds or analytics
+formulas. The current detail loader returns `analysis: null` and empty incidents.
+Contract/read-model shapes for summary, suggestions or confidence prove no AI
+generation.
+Notification settings fields without an operating consumer prove no delivery.
+
+### Long-term direction, proposals, questions and history
+
+EXP-SAT-PROP-01 through EXP-SAT-PROP-04 retain source status
+`PROPOSED_NOT_APPROVED`; `PROPOSED` below is their primary reconciliation
+disposition. All eight EXP-SAT-UQ records remain `UNRESOLVED`.
+
+| Source record   | Preserved payload and current evidence                                                                                                                                                                               | Primary / secondary classification                                                         | Open SAT mapping and prohibited inference                                                                                              |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| EXP-SAT-LTD-01  | Complex surveys, advanced NPS, satisfaction campaigns, benchmarking and conditional questionnaires may be future directions. Source confidence MEDIUM; current bounded implementation does not deliver them (E1/E3). | CONFIRMED as future-only provenance / SUPPLEMENTAL_PRODUCT_DIRECTION + EVIDENCE_LIMITATION | SAT-02/03/07/08. No current requirement, roadmap, priority, date, commitment or implementation authorization; no extra packet.         |
+| EXP-SAT-PROP-01 | Illustrative reasons: food quality, waiting time, welcome/service, cleanliness, value for money, ordering/payment, other. Current UI/transport lists differ (E1/E2).                                                 | PROPOSED / EXECUTABLE_SHAPE_ONLY                                                           | SAT-02. Exact list remains unapproved; quick reasons are approved only at capability level. No topic enum or cloud payment capability. |
+| EXP-SAT-PROP-02 | Ask a preferred contact channel when the customer requests follow-up; no implemented request-first journey (E1/E2).                                                                                                  | PROPOSED / SUPPLEMENTAL_PRODUCT_DIRECTION                                                  | SAT-03. No channel, exact fields, recipient or workflow approved.                                                                      |
+| EXP-SAT-PROP-03 | Dashboard proportions for satisfied/mixed/dissatisfied feedback and trend visualization; current counters are narrower (E2/E3).                                                                                      | PROPOSED / DERIVED_IMPLEMENTATION                                                          | SAT-08. No selected bucket, threshold, formula or KPI contract.                                                                        |
+| EXP-SAT-PROP-04 | Explicitly separate any future marketing consent from feedback follow-up consent. No marketing flow exists in current Satisfaction evidence (E1/E2).                                                                 | PROPOSED / EVIDENCE_LIMITATION                                                             | SAT-03/04. Privacy design proposal requiring qualified review, not current legal advice or marketing authorization.                    |
+| EXP-SAT-UQ-01   | Exact quick-reason taxonomy; visible list and transport enum are implementation evidence (E1/E2).                                                                                                                    | UNRESOLVED / EXECUTABLE_SHAPE_ONLY                                                         | SAT-02; Human Product and contract review, no taxonomy selected.                                                                       |
+| EXP-SAT-UQ-02   | Exact allowed/required/optional follow-up contact fields; contract capacity does not settle purpose (E1/E2).                                                                                                         | UNRESOLVED / EXECUTABLE_SHAPE_ONLY                                                         | SAT-03, related SAT-04; Product/privacy/legal review, no contact-field contract.                                                       |
+| EXP-SAT-UQ-03   | Exact low-rating attention/alert threshold; current deterministic rules are not Product approval (E2).                                                                                                               | UNRESOLVED / DERIVED_IMPLEMENTATION                                                        | SAT-07; Human Product, no threshold chosen.                                                                                            |
+| EXP-SAT-UQ-04   | Alert channels and recipients; role grants/settings fields do not authorize delivery (E2/E3).                                                                                                                        | UNRESOLVED / SCHEMA_ONLY                                                                   | SAT-07; authorization/privacy/operations review, no channel or recipient contract.                                                     |
+| EXP-SAT-UQ-05   | Trusted date/service/zone source and retained attribution; browser tag cannot establish it (E1/E2/E4).                                                                                                               | UNRESOLVED / EXECUTABLE_SHAPE_ONLY                                                         | SAT-01; security/tenancy review, no trusted-context contract or POS linkage.                                                           |
+| EXP-SAT-UQ-06   | Analytics formulas, windows and minimum sample sizes; operational counters are insufficient (E2/E3).                                                                                                                 | UNRESOLVED / DERIVED_IMPLEMENTATION                                                        | SAT-08; Product/privacy/tenancy review, no analytic policy selected.                                                                   |
+| EXP-SAT-UQ-07   | Improvement-action owner, lifecycle, effect observation and possible Today/Tâches relationship; no existing packet owns the action question (E6).                                                                    | UNRESOLVED / SUPPLEMENTAL_PRODUCT_DIRECTION                                                | SAT-10; adjacent-owner review if a relationship is proposed, no action entity/integration/write-back.                                  |
+| EXP-SAT-UQ-08   | AI model/provider, persistence, confidence, Human review and derived-label behavior; no AI service exists (E2/E3/E7).                                                                                                | UNRESOLVED / EXECUTABLE_SHAPE_ONLY + EVIDENCE_LIMITATION                                   | SAT-09; AI/privacy/security review, no provider or autonomy selected.                                                                  |
+| EXP-SAT-HIST-01 | Historical Satisfaction client -> Expérience client rename; current Human mapping and menu restore/retain Satisfaction client (E3).                                                                                  | OBSOLETE / Historical provenance                                                           | No SAT packet. Preserve chronology, not a current menu change or competing owner.                                                      |
+| EXP-SAT-HIST-02 | Initial generic hotline/direction, name, phone and email idea was narrowed to anonymous default and details only on explicit follow-up request. Current ungated fields do not revive it (E1/E2).                     | OBSOLETE / Historical provenance                                                           | SAT-03. Never evidence that name, phone and email must all be required.                                                                |
+| EXP-SAT-OUT-01  | Public-review management, reputation and replies belong to Avis (sections 1–12).                                                                                                                                     | OUT_OF_SCOPE / ALREADY_CANONICAL                                                           | No Satisfaction packet; AVIS-01–09 unchanged. No authority transfer from shared storage/UI.                                            |
+| EXP-SAT-OUT-02  | Google provider synchronization/import/replies/connectors/automatic publication beyond a neutral CTA remain outside this scope (E5 and Avis home).                                                                   | OUT_OF_SCOPE / ALREADY_CANONICAL                                                           | SAT-06 boundary only; Avis/provider authority retained, no provider qualification.                                                     |
+| EXP-SAT-OUT-03  | Generic CRM/marketing automation and campaigns are outside Satisfaction; no customer-master ownership is established (E1/E6).                                                                                        | OUT_OF_SCOPE / EVIDENCE_LIMITATION                                                         | SAT-03/07 boundaries; future owner/authorization separate, no marketing reuse or profiling.                                            |
+| EXP-SAT-OUT-04  | Restaurant Knowledge Expérience client is separate descriptive establishment knowledge (E6), not feedback, complaint, rating, analytics, AI output or improvement actions.                                           | OUT_OF_SCOPE / ALREADY_CANONICAL                                                           | SAT-09 boundary only; no RK migration, consumption contract or automatic write-back.                                                   |
+
+No proposal payload is promoted by resemblance to executable code. Privacy,
+retention, contact purpose, free text, AI processing, recipients and source
+trust remain subject to the applicable SAT review; historical/naming items
+create no legal rule and excluded scopes receive no new authority.
+
+### SAT packet preservation and the bounded action question
+
+SAT-01 through SAT-09 above retain their exact wording, order and unresolved
+status. Their reference to undecided behavior concerns exact executable policy:
+HD-08/09/10 now establishes bounded attention, assistive AI and analysis intent,
+without resolving notification, AI/RK or analytics contracts. The original
+Satisfaction acceptance/counts remain historical baseline evidence.
+
+**SAT-10 — UNRESOLVED:** Who owns simple improvement actions, what lifecycle
+and effect-observation semantics apply, and what separately approved
+relationship, if any, exists with Today or Tâches du jour?
+
+This single added packet is necessary because HD-11 preserves approved
+high-level intent, while UQ-07 cannot be represented faithfully by SAT-05
+(feedback status), SAT-07 (notifications), SAT-08 (analytics) or SAT-09 (AI).
+No current canonical packet assigns the improvement-action owner or lifecycle;
+the adjacent Today/Tâches homes do not supply that missing contract. Those four
+packets are related cross-references, not substitutes. Required review is Human
+Product, operations, authorization/data owners and any affected adjacent owner.
+No entity, task integration, schema, operation, assignee, state machine,
+write-back or automatic causal interpretation is approved. No packet after
+SAT-10 is created and no packet is resolved.
+
+### Ten derived capabilities
+
+These are views over the primary records, not ten additional claims. All
+remain under Reputation/Satisfaction semantics, public `feedback-web` and
+authenticated Backoffice as applicable, cloud organization + establishment
+scope, and the authorization/privacy/readiness limits below. The broader
+direction does not grant roles beyond current executable operations.
+
+| Capability                           | Supplemental / canonical Product state                                  | Current implementation and shape                                                          | Actors and remaining authority                                                                            | SAT mapping             |
+| ------------------------------------ | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ----------------------- |
+| Direct feedback capture              | HD-03 confirmed bounded current direction; existing collection approved | Rating/topics/comment persist; exact contract and visible fields differ                   | Customer submits; restaurant reads privately; taxonomy/validation/privacy still reviewed                  | 02/04                   |
+| Customer contact request             | HD-04 approved request-first direction; open Product/UI conflict        | Optional name/email and consent exist, separate request and conditional collection absent | Customer choice; follow-up actor/channel not approved; purpose, retention and fields open                 | 03/04                   |
+| Neutral external review solicitation | HD-05 agrees with approved normative links                              | Safe configured success destinations; no provider effect                                  | Customer chooses outbound link; OWNER configures current slice; exact future wording/use needs review     | 06                      |
+| QR / feedback entry                  | HD-06 high-level direction; ADR-004 accepts entry                       | Routes exist; managed QR and trusted context incomplete; browser tag is metadata          | Customer/operator; distribution, source trust and release decisions open                                  | 01                      |
+| Feedback inbox                       | HD-07 agrees with private processing                                    | Direct-only list/detail/counters/status/assignment/notes; conceptual labels are not enums | Current read/manage/note grants below; complete service lifecycle open                                    | 05/04                   |
+| Negative/contact attention           | HD-08 approved high-level direction                                     | Derived urgency/counters only; no contact-request alert/delivery contract                 | Recipient unresolved; threshold/channel/escalation/privacy open                                           | 07/03                   |
+| AI feedback analysis                 | HD-09 approved assistive direction                                      | No AI runtime; deterministic fields and analysis shape only                               | Assistive system and Human user; model, review, confidence, persistence/data handling open                | 09                      |
+| Satisfaction analytics               | HD-10 approved high-level direction                                     | Counters exist; recurring-problem/day/service/period analysis absent                      | Restaurant user; formula, aggregation, sample, exports and tenancy open                                   | 08                      |
+| Improvement actions                  | HD-11 approved high-level direction                                     | No action entity, operation or integration                                                | Restaurant user at shaping level; canonical action owner, role, lifecycle and effect semantics unresolved | 10; related 05/07/08/09 |
+| Satisfaction configuration           | HD-12 approved minimal direction                                        | OWNER links implemented; questionnaire/contact/alert/QR configuration incomplete          | Current OWNER link grant only; exact settings, scope and roles open                                       | 01/02/03/06/07          |
+
+### Twelve derived concepts
+
+These are conceptual distinctions, not twelve entities or new persistence
+requirements. Retention is unresolved for every concept (SAT-04); no cross-scope
+write-back is authorized. Consumers below express bounded intent where their
+workflow is absent, not existing access grants or processing authorization.
+
+| Concept                      | Product meaning / current shape                                                     | Privacy, source and mutation boundary                                                            | Consumers and unresolved mapping                                             |
+| ---------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| Feedback submission          | Human-decided private raw submission; existing DIRECT item + detail                 | Customer submits through trusted public server context; no CRM/public conversion                 | Private inbox current; analytics/AI direction only; SAT-01/02/04/05/09       |
+| Direct rating                | Private raw required 1–5 value, currently persisted                                 | Customer supplies; not public/provider rating or review gate                                     | Inbox/current derivation; future analytics/attention; SAT-02/07/08           |
+| Feedback topic               | Quick reason approved conceptually; user-selected raw data persists                 | Exact taxonomy open; separate from an AI label; no approved employee score                       | Detail storage is not inbox exposure; analytics/AI future; SAT-02/09         |
+| Free-text comment            | Optional private raw text, currently persisted/displayed                            | Customer supplies; free-text privacy, moderation and retention unresolved                        | Human reader current, AI classification/summary future; SAT-02/04/09         |
+| Contact request              | Explicit raw customer choice approved at high level; no distinct field/workflow     | Separate from consent and identity; no CRM or marketing write-back                               | Authorized follow-up actor/channel/SLA unresolved; SAT-03/07                 |
+| Contact details              | Conditional private data direction; current name/email visible, phone contract-only | Customer supplies; exact fields, purpose, rights/export/deletion open; no AI contact payload     | Follow-up actor unresolved; storage does not prove detail display; SAT-03/04 |
+| Visit context                | Reliable attached/derived date/time/service/zone intent                             | Trusted source/mutation authority open; browser tag and createdAt do not establish visit context | Inbox/analytics/AI potential use only; SAT-01/08/09                          |
+| Processing status            | Internal operational state; current enum/mutations broader than three labels        | Current manager operation grants do not settle Product transition meaning                        | Inbox; no cross-module lifecycle effects; SAT-05                             |
+| Attention/alert signal       | Internal derived attention; current deterministic urgency/counters                  | Recipient and trigger policies unresolved; counter is not notification                           | Restaurant visibility current; delivery/reminder/escalation absent; SAT-07   |
+| AI classification            | Internal derived assistive concept; shape does not prove generation                 | Provider, confidence, correction, Human review/persistence open                                  | Human/analytics presentation direction; SAT-09                               |
+| AI recurring-problem summary | Internal assistive derived summary; runtime absent                                  | Validation, minimization, retention and persistence open                                         | Restaurant user direction only; no RK write-back; SAT-09                     |
+| Improvement action           | Simple Human operational action direction; canonical owner/model absent             | Internal; role/lifecycle/effect observation unresolved, no automatic task/projection             | Restaurant user direction only; SAT-10                                       |
+
+### Authorization, adjacent scopes and readiness
+
+Current executable reads require a database-backed session, active membership,
+`reputation.enabled` and `reputation.read`; OWNER/MANAGER/STAFF read, with STAFF
+restricted to assigned items. OWNER/MANAGER manage feedback status/assignment;
+notes use the current note grant; real changes audit. Only OWNER manages current
+social links. Those grants do not decide future follow-up, alerts, AI or action
+roles. Organization and active establishment remain server-derived on reads and
+writes; no resource-ID-only or browser-asserted scope is approved.
+
+The two original trusted-boundary conflicts remain unresolved: the domain
+adapter does not enforce `verifiedAt`, and absence of a client address skips
+production salt validation and per-client hash limiting. Trusted production IP
+provenance remains unevidenced. The existing hardening change remains at Gate 2b
+`AWAITING_HUMAN_REVIEW`, design `BLOCKED_BEFORE_APPLY`, with no Tasks/Apply
+authorization. This consolidation neither repairs nor waives either conflict.
+
+Today already has a bounded read-only Reputation attention projection which
+can include direct feedback. It owns no source records/lifecycles/mutations.
+This delta adds no Today item/projection and no Tâches du jour task generation,
+assignment or write-back. Future daily task records belong to the separately
+bounded Tâches scope; that does not assign Satisfaction improvement actions.
+Attention does not create a Notifications delivery/reminder/escalation contract.
+
+Avis/provider scope and AVIS-01–09 remain unchanged. Restaurant Knowledge
+Expérience client remains descriptive establishment knowledge; neither an
+RK-to-Satisfaction AI consumer nor feedback-to-RK enrichment is approved.
+Contact choice does not create customer-master records, CRM profiling,
+newsletters, marketing campaigns, cross-establishment identity, public
+attribution, testimonials or provider publication. Reservations, Content,
+Visual, Establishment, Personnel, POS, Display and all other owners/authority
+remain unchanged.
+
+No external research, current legal/privacy/security conclusion or provider
+qualification was performed. Purpose, lawful basis, consent language,
+retention/erasure/export, free-text and AI handling, recipients and operating
+follow-up require the applicable Product and qualified privacy/security/legal
+review. The OpenAI eligibility dossier is inquiry evidence only, not account,
+model, API, spend or production processing authority. Environment remains
+`UNVERIFIED`; Satisfaction readiness and external/release dependency remain
+`BLOCKED`; global cloud, Backoffice and public-feedback gates remain `NOT_READY`.
+Repository code, prior local QA and this documentation do not prove deployment
+or authorize production.
+
+### Evidence and discovery map
+
+- **E1 — Public journey:**
+  [`feedback-form.tsx`](../../../apps/feedback-web/src/app/[tenantSlug]/_components/feedback-form.tsx)
+  (topic choices, browser source tag, contact fields/consent, safe success links),
+  [`submission route`](../../../apps/feedback-web/src/app/api/public/feedback/[tenantSlug]/route.ts)
+  and public page/tenant resolution in `apps/feedback-web/src`.
+- **E2 — Shape/persistence:**
+  [`Reputation contracts`](../../../packages/contracts/src/reputation/index.ts),
+  [`schema`](../../../packages/db-cloud/src/schema/reputation.ts),
+  [`repository`](../../../packages/db-cloud/src/reputation-repository.ts).
+  Existing evidence includes [`contract tests`](../../../packages/contracts/test/contracts.test.ts),
+  [`shared repository tests`](../../../packages/db-cloud/test/reputation-repository.integration.test.ts),
+  Backoffice action/component tests and
+  [dated local CTA QA](../../reviews/reputation-review-social-links-configuration/qa/QA_REPORT.md).
+  Shared repository denial tests use a GOOGLE/PUBLIC_REVIEW fixture; the local
+  CTA run used synthetic submissions without contact data. Neither proves
+  conditional contact, supplemental workflows or production. No focused test
+  or Browser QA was rerun here; schema acceptance is not Product approval.
+- **E3 — Restaurant UI/auth:**
+  [`Satisfaction route`](<../../../apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/page.tsx>),
+  [`shared direct loader`](<../../../apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-loader.tsx>),
+  shared inbox/actions/components and `apps/backoffice/src/server/reputation`,
+  [`navigation`](../../../apps/backoffice/src/components/backoffice/backoffice-navigation.ts),
+  [Authentication](../../architecture/AUTHENTICATION.md).
+- **E4 — Security conflict:**
+  [`tenant adapter`](../../../packages/db-cloud/src/tenant-adapters.ts), E1 route,
+  [Gate 2b packet](../../reviews/feedback-public-trusted-boundary-hardening/02b-design-review.md)
+  and [unfinished design](../../../openspec/changes/feedback-public-trusted-boundary-hardening/design.md).
+  These planning artifacts are not synced or implemented authority.
+- **E5 — Normative/UI scope:**
+  [ADR-004](../../decisions/ADR-004-independent-public-feedback-application.md),
+  [social-link spec](../../../openspec/specs/reputation/review-social-links-configuration/spec.md),
+  [existing Satisfaction page pack](../../ui/pages/backoffice-visibilite-reputation-satisfaction/README.md).
+  Its as-built inbox/social-link scope does not deliver the five-part future
+  organization or supplement-specific capabilities.
+- **E6 — Adjacent ownership:**
+  [Today](../today/README.md), [Tâches du jour](../daily-tasks/README.md),
+  [Restaurant Knowledge home](../establishment/general-information/README.md),
+  [descriptive customer-experience spec](../../../openspec/specs/restaurant-knowledge/customer-experience/spec.md)
+  and [Reputation backlog](STATUS.md). Backlog incident/action wording does not
+  approve an improvement-action owner.
+- **E7 — Readiness:** [Current State](../../CURRENT_STATE.md),
+  [Production Readiness](../../operations/PRODUCTION_READINESS.md),
+  [Deployment](../../operations/DEPLOYMENT.md),
+  [OpenAI eligibility](../../operations/OPENAI_PROVIDER_ELIGIBILITY.md).
+
+Repository-only discovery starts at `docs/README.md` -> Authority Model ->
+Product Knowledge -> Module Registry -> this existing home -> this supplemental
+section -> unchanged SAT-01–09 and unresolved SAT-10 -> E1–E7. The
+Human-accepted delta sufficiency assessment recovered all 33 classified records,
+fourteen HIGH confidences,
+the future-only MEDIUM direction, four unapproved proposal payloads, eight
+mapped questions, naming/contact history, four exclusions, ten capabilities,
+twelve concepts, three open conflicts, exact hardening gate and all ownership,
+privacy, implementation and readiness non-inferences without external history.
+The separate exception record above preserves the strict execution limitation;
+formal delta fresh-agent PASS remains NO and no further rerun is required.
+
+Supplemental primary counts (33 records): `CONFIRMED: 3`, `IMPLEMENTED: 3`,
+`DECIDED_NOT_IMPLEMENTED: 7`, `PROPOSED: 4`, `UNRESOLVED: 8`, `CONFLICT: 1`,
+`OBSOLETE: 3`, `OUT_OF_SCOPE: 4`. The source has zero implementation, duplicate
+or possible-conflict records; repository findings are separate. The ten
+capabilities and twelve concepts are not counted again. No original migration
+is repeated and no SAT packet is resolved.

@@ -57,6 +57,23 @@ conflict/reload, no-op, audit, public safe projection, and fail-closed missing
 settings-row behavior. This page package documents those approved artifacts;
 it does not redefine them.
 
+### Supplemental Product direction versus as-built evidence
+
+The [Satisfaction supplemental reconciliation](../../../features/reputation/README.md#14-satisfaction-supplemental-experience-client-reconciliation)
+records broader high-level Product direction and open decisions in the existing
+Reputation home. This pack's implemented inbox and OWNER-only social-links
+settings remain the as-built scope; its status and QA evidence do not prove the
+supplemental contact direction, analysis, notifications or improvement actions
+are implemented. The contact Product/UI conflict remains open. The
+[Human-exception supplemental authority update](../../../features/reputation/README.md#supplemental-human-exception-authority-update)
+is complete: the repository is canonical for the exact delta, and
+`Expérience client v` is `LEGACY_EVIDENCE_ONLY`, with historical access retained.
+Human-accepted delta sufficiency is PASS with zero material gaps; strict delta
+execution remains `BLOCKED_BY_ENVIRONMENT`, formal delta fresh-agent PASS is NO
+and no rerun is required. The home records the independent assessment/context
+axes. This changes no page-pack implementation or QA status; the earlier
+Satisfaction cutover is unchanged.
+
 ## Authority
 
 Read in order:

@@ -195,14 +195,35 @@ home, repository-only fresh-agent acceptance passed and the Human authorized
 the authority cutover. Repository knowledge is canonical for that scope, and
 the shared Avis Page Chat is legacy evidence only for that migrated Avis scope.
 
-For the bounded Satisfaction client / Feedback direct scope recorded in the
-same Reputation home, repository-only fresh-agent acceptance also passed and
+For the original bounded Satisfaction client / Feedback direct scope recorded
+in the same Reputation home, repository-only fresh-agent acceptance passed and
 the Human authorized the authority cutover. Repository knowledge is canonical
 for this scope. The shared Avis Page Chat is now `LEGACY EVIDENCE ONLY` for both
 known migrated Avis and Satisfaction scopes. The nine Satisfaction Human
 decision packets and two trusted-boundary conflicts remain open; hardening
 Apply is not authorized. Marketing, Visibility, other Reputation scopes, and
 all other Page Chats retain their existing authority.
+
+The [Satisfaction supplemental reconciliation](features/reputation/README.md#14-satisfaction-supplemental-experience-client-reconciliation)
+now consolidates the separate `Expérience client v` evidence into that existing
+home. Current routing remains `Satisfaction client` at
+`/visibilite-reputation/satisfaction`; Restaurant Knowledge's descriptive
+`Expérience client` remains a separate owner. Supplemental Product directions
+do not extend the implemented inbox/settings or approve exact executable V1.
+`SAT-01` through `SAT-09` remain unchanged and open; new `SAT-10` keeps
+improvement-action ownership, lifecycle, effect observation and Today/task
+relationships unresolved. The contact Product/UI conflict is additional to the
+two existing trusted-boundary conflicts. The
+[Human-exception supplemental authority update](features/reputation/README.md#supplemental-human-exception-authority-update)
+is complete: repository knowledge is canonical for this exact supplemental
+delta and `Expérience client v` is `LEGACY_EVIDENCE_ONLY`, with historical access
+retained. The Human accepted delta repository sufficiency PASS with zero
+material gaps; strict execution remains `BLOCKED_BY_ENVIRONMENT`, formal delta
+fresh-agent PASS is NO, and no rerun is required. The home records automatic
+prohibited-context exposure and exclusion from evidence, with no intentional
+memory-index/personal-context use in that assessment. Original Satisfaction
+PASS/cutover, shared Avis Page Chat role, implementation and readiness remain
+unchanged.
 
 ### Restaurant Backoffice foundation
 
@@ -330,7 +351,8 @@ retain their existing authority.
   `Marketing & contenu` is navigation only. `Créations visuelles v` maps to the
   separate `Créations visuelles` page; its subsequent cutover is recorded below;
   `Expérience client v` maps to Satisfaction client,
-  outside this reconciliation and any later supplemental consolidation.
+  outside this Content reconciliation; its supplemental reconciliation is
+  recorded in the Reputation home above.
 - Twenty Human-current directions preserve restaurant-specific textual
   assistance from ideas/details/photos, suggested subjects, one principal
   proposal, conversational rewrite/manual edit, base/channel wording,
@@ -358,8 +380,9 @@ retain their existing authority.
   prohibited content used as evidence NO, intentional memory/personal/prior-
   conversation access NO, formal fresh-agent PASS NO and no additional rerun.
   At that Content cutover, Visual was ACTIVE, unreconciled and unmigrated;
-  its subsequent authority transition is recorded below. Satisfaction
-  supplemental consolidation is not performed. All completed migrations, source owners,
+  its subsequent authority transition is recorded below. At that Content
+  cutover, Satisfaction supplemental consolidation had not been performed; its
+  current record is in the Reputation home above. All completed migrations, source owners,
   Satisfaction/Avis conflicts, separate scopes, environment and readiness remain
   unchanged. The exception changes knowledge authority only.
 
@@ -397,8 +420,9 @@ retain their existing authority.
   evidence, formal fresh-agent PASS is NO and no additional rerun is required.
   The home records the complete independent assessment/exception axes. Content
   remains separately canonical with `Création de contenus v` as
-  `LEGACY_EVIDENCE_ONLY`. Satisfaction is not reopened; `Expérience client v`
-  supplemental consolidation is not performed. The exception changes knowledge
+  `LEGACY_EVIDENCE_ONLY`. At that Visual cutover, Satisfaction was not reopened
+  and `Expérience client v` supplemental consolidation had not been performed;
+  its current record is in the Reputation home above. The exception changes knowledge
   authority only; source ownership, operation grants, external qualification,
   environment and readiness remain unchanged.
 

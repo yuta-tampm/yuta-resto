@@ -79,6 +79,32 @@ scoped only to the exact capability stated in the row.
 | Backoffice        | Google connector | OAuth, encrypted credentials, account/location discovery, selection, refresh, and recovery foundation                                                  | [Reputation README](features/reputation/README.md), [reputation status](features/reputation/STATUS.md)                                                                                                                        | [`apps/backoffice/src/app/(authenticated)/parametres/integrations`](<../apps/backoffice/src/app/(authenticated)/parametres/integrations>), [`packages/db-cloud/src/schema/reputation.ts`](../packages/db-cloud/src/schema/reputation.ts)     | `apps/backoffice`   | `packages/db-cloud` | Google connector -> Reputation                                                                                                                | `NOT_DECIDED`    | `IMPLEMENTED`  | `UNVERIFIED` | `BLOCKED`            | `BLOCKED` — production Google project/API/OAuth configuration                            | `NEEDS REVIEW` — implementation foundation does not establish Product approval                                                                                                    |
 | Backoffice        | Google connector | End-to-end Google review import, scheduled synchronization, publication, retry, and reply reconciliation                                               | [Reputation README](features/reputation/README.md), [reputation status](features/reputation/STATUS.md)                                                                                                                        | Connector foundation above; import/publication/scheduling/retry/reconciliation are absent                                                                                                                                                    | `apps/backoffice`   | `packages/db-cloud` | Google synchronization -> Google connector / Reputation inbox                                                                                 | `NOT_DECIDED`    | `NOT_STARTED`  | `UNVERIFIED` | `BLOCKED`            | `BLOCKED` — Product/provider approval, Google API approval, and production configuration | `NEEDS REVIEW` — do not promote backlog or schema presence to approved behavior                                                                                                   |
 
+### Satisfaction supplemental knowledge reconciliation
+
+The [supplemental Satisfaction reconciliation](features/reputation/README.md#14-satisfaction-supplemental-experience-client-reconciliation)
+is consolidated in the existing Reputation home. `Expérience client v` maps to
+the unchanged `Satisfaction client` label and
+`/visibilite-reputation/satisfaction` route, separately from Restaurant
+Knowledge's descriptive customer-experience slice. The existing lifecycle
+cells above still describe their bounded implementation; supplemental Product
+direction does not implement AI analysis, analytics, attention notifications
+or improvement actions, or approve their exact executable contracts.
+
+The original Satisfaction PASS/cutover and shared Avis Page Chat role remain
+unchanged. The
+[Human-exception supplemental authority update](features/reputation/README.md#supplemental-human-exception-authority-update)
+is complete: repository-canonical supplemental delta; `Expérience client v`
+`LEGACY_EVIDENCE_ONLY`, with historical access retained. Human-accepted delta
+repository sufficiency is PASS with zero material gaps; strict execution remains
+`BLOCKED_BY_ENVIRONMENT`, formal delta fresh-agent PASS is NO and no rerun is
+required. The home preserves automatic prohibited-context exposure, its
+exclusion from evidence and no intentional memory-index/personal-context use in
+that assessment. `SAT-01` through `SAT-09` are unchanged and open; `SAT-10`
+keeps improvement-action ownership, lifecycle, effect observation and Today/task
+relationships unresolved. The contact Product/UI conflict remains open in
+addition to both existing trusted-boundary conflicts; hardening Apply remains
+unauthorized. No environment or readiness value is promoted.
+
 ### Horaires & services knowledge reconciliation
 
 The [bounded Horaires & services home](features/establishment/hours-services/README.md)
@@ -147,8 +173,9 @@ prohibited context was excluded from evidence, intentional memory/personal/
 prior-conversation access is recorded NO, formal fresh-agent PASS is NO and no
 additional rerun is required. At that Content cutover, `Créations visuelles v`
 was ACTIVE, unreconciled and unmigrated; its subsequent transition is below.
-Satisfaction supplemental consolidation is not
-performed. The exception changes no Product, lifecycle or adjacent authority.
+At that Content cutover, Satisfaction supplemental consolidation had not been
+performed; its current reconciliation is recorded above. The exception changes
+no Product, lifecycle or adjacent authority.
 
 | Capability / scope                                                            | Runtime / data owner and evidence                                                                                                                                                                                    | Product Decision                                    | Implementation                                              | Environment / readiness / external dependencies                                                                                      |
 | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
@@ -199,9 +226,10 @@ automatic prohibited-context exposure and intentional memory-index access are
 recorded YES, their results were excluded from evidence, formal fresh-agent
 PASS is NO and no additional rerun is required. All Product/lifecycle rows and
 open packets retain their states. Content remains independently canonical with
-its Page Chat `LEGACY_EVIDENCE_ONLY`. Satisfaction, its pending supplemental
-consolidation, all source owners, completed migrations and other Page Chat
-authorities are unchanged.
+its Page Chat `LEGACY_EVIDENCE_ONLY`. At that Visual cutover, Satisfaction
+supplemental consolidation was still pending; its current reconciliation is
+recorded above. That exception leaves all source owners, completed migrations
+and other Page Chat authorities unchanged.
 
 ### Backoffice foundation and team capabilities
 
