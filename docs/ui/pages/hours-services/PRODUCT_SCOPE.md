@@ -17,9 +17,13 @@ The existing route currently supports the established booking administration mod
 
 ### Weekly service periods
 
-This route reads the current periods for summaries, exception selection, and
-the persisted public preview. Their create/delete UI belongs to the general
-information page.
+This route reads, creates, and deletes the current Booking-owned weekly service
+periods. It uses them for summaries, exception selection, and the persisted
+public preview. Their editor is `/etablissement/horaires-services`; route
+placement does not transfer their semantic or persistence ownership.
+
+See the [weekly-schedule UI scope](UI_SPEC.md#weekly-schedule-ownership) and the
+[General Information page responsibility](../establishment-general-information/README.md).
 
 Current service periods contain:
 

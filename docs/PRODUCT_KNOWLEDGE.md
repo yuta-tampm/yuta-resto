@@ -266,6 +266,28 @@ General Information / Restaurant Knowledge Page Chat is legacy evidence only
 for that scope. Other Establishment capabilities and all other Page Chats
 retain their existing authority.
 
+### Horaires & services
+
+- Canonical knowledge for the exact migrated Horaires & services scope:
+  `docs/features/establishment/hours-services/README.md`.
+- Existing schedule administration remains Booking-owned under ADR-006;
+  `/etablissement/horaires-services` persists Booking periods and exceptions.
+- Four high-level Human directions, 17 unapproved proposals, one menu ambiguity,
+  six historical provider references and 20 open `HS` packets are preserved.
+  Exact public-hours/service/publication V1 remains unresolved. No distinct
+  public-hours model or provider-hours publication is implemented.
+- C1's stale period-edit-location wording was corrected against the later
+  specific page sources and current canonical owners; no genuine C1 conflict
+  remains. The Human-exception authority cutover is complete: repository
+  knowledge is canonical for this exact scope, and the Horaires Page Chat is
+  `LEGACY EVIDENCE ONLY`. The Human accepted repository sufficiency as `PASS`
+  with zero material gaps and genuine conflicts. Strict fresh-agent execution
+  remains `BLOCKED_BY_ENVIRONMENT`; formal fresh-agent PASS is not recorded,
+  and no further rerun is required. The home records the exact Human exception;
+  Product decisions, implementation and readiness remain unchanged.
+- Read the existing Establishment/General Information, Booking, Today and
+  Reputation authorities through the home; their migrated scope is unchanged.
+
 ### Ressources internes
 
 - Canonical repository entry point for the migrated Ressources internes scope:

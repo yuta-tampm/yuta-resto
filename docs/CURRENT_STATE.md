@@ -79,6 +79,24 @@ to production-ready or enabled by this bounded repository evidence.
 These summaries are bounded orientation, not a duplicated lifecycle table.
 Use the Module Registry for the five independent lifecycle dimensions.
 
+## Horaires & services reconciliation
+
+The [bounded Horaires & services home](features/establishment/hours-services/README.md)
+preserves four Human directions and all 17 unapproved proposals. The current
+route implements Booking-owned weekly periods/exceptions; distinct public
+opening hours, operational-service identity and channel propagation remain
+unresolved/unimplemented. Twenty `HS` packets remain open. C1 was resolved as a
+stale page-pack edit-location sentence; no genuine C1 conflict remains.
+The [Human-exception authority cutover](features/establishment/hours-services/README.md#human-exception-authority-cutover)
+is complete: repository knowledge is canonical for this exact scope, and its
+Page Chat is `LEGACY EVIDENCE ONLY`. The Human accepted repository sufficiency
+as `PASS` with zero material gaps and genuine conflicts. Strict fresh-agent
+execution remains `BLOCKED_BY_ENVIRONMENT`; formal fresh-agent PASS is not
+recorded and no further rerun is required. Booking, Establishment Profile,
+Restaurant Knowledge, Today and other migrated authority, implementation,
+authorization, environment and readiness remain unchanged. No provider,
+legal/security qualification or production claim is created.
+
 ## Backoffice maturity at a glance
 
 Navigation visibility does not prove product approval, implementation,
