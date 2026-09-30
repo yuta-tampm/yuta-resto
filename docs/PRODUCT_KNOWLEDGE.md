@@ -322,6 +322,46 @@ retain their existing authority.
   only; all Product, implementation, authorization, qualification, readiness,
   completed migrations and other Page Chat authority remain unchanged.
 
+### Création de contenus
+
+- Canonical repository knowledge for the exact migrated Content scope:
+  `docs/features/content-creation/README.md`.
+- `Création de contenus v` maps to the `Création de contenus` page;
+  `Marketing & contenu` is navigation only. `Créations visuelles v` maps to the
+  separate `Créations visuelles` page and retains ACTIVE Page Chat authority;
+  `Expérience client v` maps to Satisfaction client,
+  outside this reconciliation and any later supplemental consolidation.
+- Twenty Human-current directions preserve restaurant-specific textual
+  assistance from ideas/details/photos, suggested subjects, one principal
+  proposal, conversational rewrite/manual edit, base/channel wording,
+  save/history/reuse, separate Visual handoff and Human validation. Four legacy
+  confidence values remain MEDIUM. Exact executable V1, Content aggregate/data/
+  persistence/media owners, role grants, AI/provider and lifecycle remain open.
+- `/marketing/contenus` is only an authenticated shared planned placeholder;
+  functional capability is `NOT_STARTED`. The separate visual fixture
+  prototype is not Content implementation. No Content contract, schema,
+  repository, source projection/write-back, upload, AI generation, social
+  publication, operation policy, page pack or Browser QA evidence exists.
+- The home preserves three distinct long-term directions, four explicitly
+  unapproved proposal payloads, all 27 raw questions in 24 open `CDC` packets,
+  four non-conflicting design tensions, nine capabilities, eight concepts and
+  Instagram/Facebook/Google textual-adaptation provenance. Google meaning
+  remains unresolved; no provider, legal/privacy/copyright qualification is
+  created. Restaurant Knowledge already owns communication identity; Content
+  suggestions and generated copy create no canonical source mutation.
+- Reconciliation, exact-name remediation and the Human-exception authority
+  cutover are complete. Repository knowledge is canonical for this exact scope;
+  `Création de contenus v` Page Chat is `LEGACY_EVIDENCE_ONLY`. The home records
+  the exact Human decision: repository sufficiency PASS, zero material gaps
+  and bounded genuine conflicts, strict fresh-agent execution
+  `BLOCKED_BY_ENVIRONMENT`, automatic prohibited-context exposure YES,
+  prohibited content used as evidence NO, intentional memory/personal/prior-
+  conversation access NO, formal fresh-agent PASS NO and no additional rerun.
+  Visual remains ACTIVE, unreconciled and unmigrated; Satisfaction supplemental
+  consolidation is not performed. All completed migrations, source owners,
+  Satisfaction/Avis conflicts, separate scopes, environment and readiness remain
+  unchanged. The exception changes knowledge authority only.
+
 ### Ressources internes
 
 - Canonical repository entry point for the migrated Ressources internes scope:

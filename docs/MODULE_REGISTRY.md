@@ -127,6 +127,38 @@ Review marker: `NEEDS REVIEW` for exact V1, ownership, model, permissions,
 regulated meaning and release; evidence limits are explicit in the home.
 Booking, Horaires, Reservations, Today and local POS boundaries are unchanged.
 
+### Création de contenus knowledge reconciliation
+
+The [bounded Content home](features/content-creation/README.md) is a discovery
+destination, not an assigned data/persistence owner or general Marketing
+platform. Twenty reconciled high-level Human directions retain four MEDIUM
+confidence values; three long-term directions and four unapproved proposals
+remain distinct. All 27 legacy questions map to 24 open `CDC` packets; four
+tensions are not genuine authority conflicts. Nine capabilities, eight
+concepts and three unqualified textual targets remain recoverable. Exact V1
+and executable ownership/model remain unresolved. The `Marketing & contenu`
+group owns no Product data; Content and Visual retain separate authority.
+The [Human-exception cutover](features/content-creation/README.md#human-exception-authority-cutover)
+is complete: repository knowledge is canonical for this exact Content scope,
+and `Création de contenus v` is `LEGACY_EVIDENCE_ONLY`. Repository sufficiency
+is Human-accepted PASS with zero material gaps and bounded genuine conflicts.
+Strict fresh-agent execution remains `BLOCKED_BY_ENVIRONMENT`; automatic
+prohibited context was excluded from evidence, intentional memory/personal/
+prior-conversation access is recorded NO, formal fresh-agent PASS is NO and no
+additional rerun is required. `Créations visuelles v` remains ACTIVE,
+unreconciled and unmigrated. Satisfaction supplemental consolidation is not
+performed. The exception changes no Product, lifecycle or adjacent authority.
+
+| Capability / scope                                                            | Runtime / data owner and evidence                                                                                                                                                                                    | Product Decision                                    | Implementation                                              | Environment / readiness / external dependencies                                                                                      |
+| ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Current `/marketing/contenus` navigation and authenticated placeholder        | `apps/backoffice`; no business persistence. [Route/navigation/authentication evidence](features/content-creation/README.md#current-route-and-implementation-evidence).                                               | `NOT_DECIDED` for exact executable V1               | `NOT_STARTED` for functional Content; placeholder UI exists | `UNVERIFIED` placeholder availability / `NOT_ASSESSED` / `NOT_ASSESSED`; no production authorization.                                |
+| Nine bounded textual-assistance/history/reuse/handoff directions              | Future Content semantic/data/media/persistence owner `NEEDS REVIEW`; source/style owners remain separate; no operation grants. [Capability matrix](features/content-creation/README.md#capability-and-state-matrix). | `APPROVED` high-level directions only               | `NOT_STARTED`                                               | `NOT_ENABLED` functional capabilities / `NOT_ASSESSED` / `NOT_ASSESSED`; qualified reviews required before sensitive/production use. |
+| Four historical proposals and unresolved model/provider/publication decisions | Owner, organization/establishment scope and contracts `NEEDS REVIEW`; Visual fixtures and provider evaluation assign no Content owner.                                                                               | `PROPOSED` payloads / `NOT_DECIDED` detailed models | `NOT_STARTED`                                               | `NOT_ENABLED` / `NOT_ASSESSED` / `NOT_ASSESSED`; no provider or production qualification.                                            |
+
+Review marker: `NEEDS REVIEW` for executable V1, ownership, projections,
+permissions, lifecycle, AI/provider, regulated meaning, UI and release. All
+adjacent capability rows, protected migrations and Page Chat roles are unchanged.
+
 ### Backoffice foundation and team capabilities
 
 | Product / Runtime | Module                       | Capability / Scope                                                                                                                                                                                    | Primary Knowledge Source                                                                                                                                                                                                                                                                                 | Implementation Evidence                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Runtime Owner                                      | Data Owner                                                                                                                                                               | Related Modules                                                                                                                                                                        | Product Decision                                | Implementation | Environment        | Production Readiness | External Dependency                                                                                                                                                        | Review Marker                                                                                                                                                                                                                      |
