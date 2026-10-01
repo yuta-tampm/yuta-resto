@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-09-30
+Last updated: 2026-10-01
 
 ## Purpose and how to read this document
 
@@ -47,7 +47,36 @@ Local POS and Display products are first-class maintained components, not
 legacy. Their local operational capabilities are not public YUTA service
 claims.
 
+## Backoffice instance exposure
+
+[ADR-009](decisions/ADR-009-release-a-customer-exposure.md) records the accepted
+server-selected `internal` / `release-a` instance boundary. The A foundation
+exposes Today, scoped Google Avis, the basic Establishment Profile, OWNER Google
+Integrations and permitted Users & Access. Existing grants remain authoritative;
+other hosted product routes/APIs/actions and profile Knowledge are unavailable.
+Internal retains the broader modules and their existing limitations. Independent
+public applications and local products keep their current ownership.
+
+A Today reads only permitted Google records: new means local `NEW`; attention
+means `NEW`, `TO_PROCESS`, `DRAFTED` or `FOLLOW_UP`. Counters, preview and linked
+queue share source/status/actor scope, with uncapped counters and assigned-only
+STAFF access. A local `PUBLISHED` reply is not remote response evidence. A loads
+no Booking, DIRECT or AI projection; connector setup and stored rows establish
+neither importer execution nor publication. The importer/publisher remain absent.
+
+`BACKOFFICE_EXPOSURE_PROFILE` is a server-only deployment prerequisite:
+explicit `internal` or `release-a`, unset development/test defaults to internal,
+invalid values or unset production fail closed with safe `503` behavior. See
+[Deployment](operations/DEPLOYMENT.md#backoffice-instance-exposure) and
+[Local Development](operations/LOCAL_DEVELOPMENT.md#backoffice-instance-exposure).
+The current task builds/tests the foundation; it does not activate a deployed
+profile, promote lifecycle/readiness or complete all Release A capabilities.
+
 ## Current product snapshot
+
+The broader Backoffice compositions below describe `internal`; the bounded A
+exceptions are stated above. Independent public application behavior remains
+separate from Backoffice instance selection.
 
 | Product or module             | Bounded current state                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Read next                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

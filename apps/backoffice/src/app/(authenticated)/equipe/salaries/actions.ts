@@ -53,6 +53,7 @@ import { createHash } from 'node:crypto';
 import { z } from 'zod';
 import { requirePersonnelPermission } from '../../../../server/auth/permissions';
 import { requirePersonnelTenant } from '../../../../server/auth/session';
+import { requireBackofficePageAvailable } from '../../../../server/backoffice-exposure';
 import { cloudDatabase } from '../../../../server/cloud-database';
 import {
   getPersonnelDocumentRuntime,
@@ -206,6 +207,7 @@ const storedSyntheticProviderQaGate = new StoredSyntheticProviderQaGate();
 export async function loadPersonnelActionOverviewAction(
   query: PersonnelActionOverviewQuery,
 ): Promise<LoadPersonnelActionOverviewActionResult> {
+  requireBackofficePageAvailable('/equipe/salaries');
   if (!isPersonnelActionOverviewEnabled()) {
     return actionOverviewUnavailable();
   }
@@ -230,6 +232,7 @@ export async function resolvePersonnelActionTargetAction(
   employeeId: string,
   kind: PersonnelActionOverviewItemKind,
 ): Promise<ResolvePersonnelActionTargetActionResult> {
+  requireBackofficePageAvailable('/equipe/salaries');
   if (!isPersonnelActionOverviewEnabled()) {
     return actionOverviewUnavailable();
   }
@@ -302,6 +305,7 @@ export async function startContractExtractionAction(
   rawRequest: unknown,
   syntheticUpload?: FormData,
 ): Promise<StartContractExtractionActionResult> {
+  requireBackofficePageAvailable('/equipe/salaries');
   if (!isContractExtractionPrototypeEnabled()) {
     return extractionError(
       'unavailable',
@@ -545,6 +549,7 @@ export async function loadStoredSyntheticContractEligibilityAction(
   documentId: string,
   documentVersion: number,
 ): Promise<StoredSyntheticContractEligibilityActionResult> {
+  requireBackofficePageAvailable('/equipe/salaries');
   const unavailable: StoredSyntheticContractEligibilityActionResult = {
     status: 'unavailable',
     message:
@@ -577,6 +582,7 @@ export async function loadStoredSyntheticContractEligibilityAction(
 export async function applyContractExtractionAction(
   rawInput: unknown,
 ): Promise<ApplyContractExtractionActionResult> {
+  requireBackofficePageAvailable('/equipe/salaries');
   if (!isContractExtractionPrototypeEnabled()) {
     return {
       status: 'error',

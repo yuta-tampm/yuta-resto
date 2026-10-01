@@ -18,6 +18,12 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import { cloudDatabase } from '../cloud-database';
+import { safeBackofficeReturnTo } from '../../lib/backoffice-exposure';
+import {
+  getBackofficeExposureProfile,
+  isReleaseAExposure,
+  requireBackofficePageAvailable,
+} from '../backoffice-exposure';
 import { requireReputationPermission } from './permissions';
 import { requireBookingPermission } from './permissions';
 import { requirePersonnelPermission } from './permissions';
@@ -74,6 +80,9 @@ export async function requireAuthenticatedTenant(
   session: AuthenticatedSession;
   tenant: TenantContext;
 }> {
+  requireBackofficePageAvailable(
+    new URL(returnTo, 'https://backoffice.invalid').pathname,
+  );
   const session = await requireBackofficeSession(returnTo);
   const metadata = await findAuthenticatedTenantMetadata(cloudDatabase, {
     organizationId: session.organizationId,
@@ -109,8 +118,21 @@ export async function requireReputationTenant(
   tenant: TenantContext;
 }> {
   const context = await requireAuthenticatedTenant(returnTo);
-  requireEntitlement(context.tenant, 'reputation.enabled');
-  requireReputationPermission(context.tenant, 'reputation.read');
+  try {
+    requireEntitlement(context.tenant, 'reputation.enabled');
+    requireReputationPermission(context.tenant, 'reputation.read');
+    if (isReleaseAExposure() && returnTo === '/parametres/integrations') {
+      requireReputationPermission(
+        context.tenant,
+        'reputation.connector.manage',
+      );
+    }
+  } catch (error: unknown) {
+    if (isReleaseAExposure() && error instanceof TenantError) {
+      redirect('/aujourdhui?exposure=restricted');
+    }
+    throw error;
+  }
   return context;
 }
 
@@ -121,11 +143,19 @@ export async function requireUserManagementTenant(): Promise<{
   const context = await requireAuthenticatedTenant(
     '/parametres/utilisateurs-acces',
   );
-  requireRole(context.tenant, ['OWNER', 'MANAGER']);
+  try {
+    requireRole(context.tenant, ['OWNER', 'MANAGER']);
+  } catch (error: unknown) {
+    if (isReleaseAExposure() && error instanceof TenantError) {
+      redirect('/aujourdhui?exposure=restricted');
+    }
+    throw error;
+  }
   return context;
 }
 
 export async function requireBookingTenant(returnTo = '/reservations') {
+  requireBackofficePageAvailable('/reservations');
   const context = await requireAuthenticatedTenant(returnTo);
   requireEstablishment(context.tenant);
   requireEntitlement(context.tenant, 'booking.enabled');
@@ -136,6 +166,7 @@ export async function requireBookingTenant(returnTo = '/reservations') {
 }
 
 export async function requirePersonnelTenant(returnTo = '/equipe/salaries') {
+  requireBackofficePageAvailable('/equipe/salaries');
   const context = await requireAuthenticatedTenant(returnTo);
   requireEstablishment(context.tenant);
   requirePersonnelPermission(context.tenant, 'personnel.employee.read');
@@ -145,15 +176,7 @@ export async function requirePersonnelTenant(returnTo = '/equipe/salaries') {
 }
 
 export function safeReturnTo(value: string | null | undefined): string {
-  if (
-    !value ||
-    !value.startsWith('/') ||
-    value.startsWith('//') ||
-    value.includes('\\')
-  ) {
-    return '/aujourdhui';
-  }
-  return value;
+  return safeBackofficeReturnTo(getBackofficeExposureProfile(), value);
 }
 
 export { authRepository };

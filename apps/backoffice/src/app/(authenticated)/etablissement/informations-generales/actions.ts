@@ -22,6 +22,7 @@ import {
   requireRestaurantKnowledgePermission,
 } from '../../../../server/auth/permissions';
 import { requireAuthenticatedTenant } from '../../../../server/auth/session';
+import { requireBackofficeCapabilityAvailable } from '../../../../server/backoffice-exposure';
 import { cloudDatabase } from '../../../../server/cloud-database';
 
 export type GeneralInformationActionState = {
@@ -215,6 +216,7 @@ export async function saveConceptHistoryAction(
   _previousState: ConceptHistoryActionState,
   formData: FormData,
 ): Promise<ConceptHistoryActionState> {
+  requireBackofficeCapabilityAvailable('restaurant-knowledge');
   const { tenant } = await requireAuthenticatedTenant(
     '/etablissement/informations-generales',
   );
@@ -249,6 +251,7 @@ export async function saveCuisineKnowHowAction(
   _previousState: CuisineKnowHowActionState,
   formData: FormData,
 ): Promise<CuisineKnowHowActionState> {
+  requireBackofficeCapabilityAvailable('restaurant-knowledge');
   const { tenant } = await requireAuthenticatedTenant(
     '/etablissement/informations-generales',
   );
@@ -284,6 +287,7 @@ export async function saveCustomerExperienceAction(
   _previousState: CustomerExperienceActionState,
   formData: FormData,
 ): Promise<CustomerExperienceActionState> {
+  requireBackofficeCapabilityAvailable('restaurant-knowledge');
   const { tenant } = await requireAuthenticatedTenant(
     '/etablissement/informations-generales',
   );
@@ -326,6 +330,7 @@ export async function saveTeamCultureAction(
   _previousState: TeamCultureActionState,
   formData: FormData,
 ): Promise<TeamCultureActionState> {
+  requireBackofficeCapabilityAvailable('restaurant-knowledge');
   const { tenant } = await requireAuthenticatedTenant(
     '/etablissement/informations-generales',
   );
@@ -361,6 +366,7 @@ export async function saveCommunicationIdentityAction(
   previousState: CommunicationIdentityActionState,
   formData: FormData,
 ): Promise<CommunicationIdentityActionState> {
+  requireBackofficeCapabilityAvailable('restaurant-knowledge');
   const { tenant } = await requireAuthenticatedTenant(
     '/etablissement/informations-generales',
   );
@@ -408,6 +414,7 @@ export async function createValidatedKnowledgeAction(
   _previousState: ValidatedKnowledgeActionState,
   formData: FormData,
 ): Promise<ValidatedKnowledgeActionState> {
+  requireBackofficeCapabilityAvailable('restaurant-knowledge');
   const { tenant } = await requireAuthenticatedTenant(
     '/etablissement/informations-generales',
   );
@@ -449,6 +456,7 @@ export async function updateValidatedKnowledgeAction(
   _previousState: ValidatedKnowledgeActionState,
   formData: FormData,
 ): Promise<ValidatedKnowledgeActionState> {
+  requireBackofficeCapabilityAvailable('restaurant-knowledge');
   const { tenant } = await requireAuthenticatedTenant(
     '/etablissement/informations-generales',
   );
@@ -492,6 +500,7 @@ export async function removeValidatedKnowledgeAction(
   _previousState: ValidatedKnowledgeActionState,
   formData: FormData,
 ): Promise<ValidatedKnowledgeActionState> {
+  requireBackofficeCapabilityAvailable('restaurant-knowledge');
   const { tenant } = await requireAuthenticatedTenant(
     '/etablissement/informations-generales',
   );

@@ -52,13 +52,18 @@ export function ReviewsListPanel({
     <Card padding="none" className="overflow-hidden">
       <div
         className={cn(
-          'grid gap-2 border-b border-border-default p-4 sm:grid-cols-2',
-          directOnly
-            ? 'lg:grid-cols-[145px_135px_165px_minmax(180px,1fr)]'
-            : 'lg:grid-cols-[145px_145px_135px_165px_minmax(180px,1fr)]',
+          'grid gap-2 border-b border-border-default p-4',
+          data.releaseA
+            ? 'grid-cols-[repeat(auto-fit,minmax(min(100%,220px),1fr))]'
+            : cn(
+                'sm:grid-cols-2',
+                directOnly
+                  ? 'lg:grid-cols-[145px_135px_165px_minmax(180px,1fr)]'
+                  : 'lg:grid-cols-[145px_145px_135px_165px_minmax(180px,1fr)]',
+              ),
         )}
       >
-        {!directOnly && (
+        {!directOnly && !data.releaseA && (
           <Select
             value={data.query.source ?? 'ALL'}
             onValueChange={(value) => updateQuery({ source: value })}
@@ -74,14 +79,29 @@ export function ReviewsListPanel({
           </Select>
         )}
         <Select
-          value={data.query.status ?? 'ALL'}
-          onValueChange={(value) => updateQuery({ status: value })}
+          value={
+            data.query.status ??
+            (data.query.queue === 'attention' ? 'ATTENTION' : 'ALL')
+          }
+          onValueChange={(value) =>
+            updateQuery(
+              data.releaseA
+                ? {
+                    status: value === 'ATTENTION' ? null : value,
+                    queue: value === 'ATTENTION' ? 'attention' : null,
+                  }
+                : { status: value },
+            )
+          }
         >
           <SelectTrigger aria-label="Statut">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="ALL">Tous les statuts</SelectItem>
+            {data.releaseA && (
+              <SelectItem value="ATTENTION">À traiter dans YUTA</SelectItem>
+            )}
             {Object.entries(statusLabels).map(([value, label]) => (
               <SelectItem key={value} value={value}>
                 {label}
@@ -117,8 +137,12 @@ export function ReviewsListPanel({
             <SelectItem value="oldest">Plus anciens</SelectItem>
             <SelectItem value="rating_asc">Notes croissantes</SelectItem>
             <SelectItem value="rating_desc">Notes décroissantes</SelectItem>
-            <SelectItem value="urgency_desc">Urgence prioritaire</SelectItem>
-            <SelectItem value="unanswered">Sans réponse d'abord</SelectItem>
+            {!data.releaseA && (
+              <SelectItem value="urgency_desc">Urgence prioritaire</SelectItem>
+            )}
+            {!data.releaseA && (
+              <SelectItem value="unanswered">Sans réponse d'abord</SelectItem>
+            )}
           </SelectContent>
         </Select>
         <form onSubmit={submitSearch} className="relative">
@@ -127,6 +151,7 @@ export function ReviewsListPanel({
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Rechercher un avis…"
+            aria-label="Rechercher un avis"
             className="pl-10 pr-20"
           />
           <Button
@@ -181,7 +206,7 @@ export function ReviewsListPanel({
                   {item.content || 'Aucun commentaire.'}
                 </p>
                 <div className="mt-2 flex flex-wrap gap-1">
-                  {item.sentiment && (
+                  {!data.releaseA && item.sentiment && (
                     <Badge size="sm" tone={sentimentTones[item.sentiment]}>
                       {sentimentLabels[item.sentiment]}
                     </Badge>
@@ -191,7 +216,7 @@ export function ReviewsListPanel({
                       {userNames.get(item.assignedToUserId) ?? 'Assigné'}
                     </Badge>
                   )}
-                  {item.incidentId && (
+                  {!data.releaseA && item.incidentId && (
                     <Badge size="sm" tone="danger" variant="outline">
                       Incident
                     </Badge>

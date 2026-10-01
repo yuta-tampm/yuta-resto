@@ -6,22 +6,28 @@ import {
 
 export function GoogleConnectorPanel({
   connector,
+  releaseA = false,
 }: {
   connector: GoogleConnectorSummary | null;
+  releaseA?: boolean;
 }) {
   const presentation = getGoogleConnectorPresentation(connector);
 
   return (
     <Panel
       title="Google Business Profile"
-      description="Import des avis et publication des réponses."
+      description={
+        releaseA
+          ? 'Autorisation Google et sélection de votre établissement.'
+          : 'Import des avis et publication des réponses.'
+      }
       bodyClassName="gap-4 p-5"
     >
       <div className="flex flex-wrap items-center gap-3">
         <Badge tone={presentation.connected ? 'success' : 'neutral'}>
           {presentation.label}
         </Badge>
-        {connector?.tokenExpiresAt && (
+        {!releaseA && connector?.tokenExpiresAt && (
           <span className="text-sm text-secondary">
             Jeton valable jusqu’au{' '}
             {new Intl.DateTimeFormat('fr-FR', {
@@ -45,13 +51,15 @@ export function GoogleConnectorPanel({
         </div>
       ) : (
         <p className="text-sm text-secondary">
-          L’autorisation Google et la sélection d’un établissement sont
-          nécessaires avant la synchronisation.
+          {releaseA
+            ? 'Autorisez Google puis sélectionnez l’établissement correspondant à votre restaurant.'
+            : 'L’autorisation Google et la sélection d’un établissement sont nécessaires avant la synchronisation.'}
         </p>
       )}
       <p className="text-xs text-muted">
-        Les jetons OAuth sont chiffrés avant leur stockage et ne sont jamais
-        envoyés au navigateur.
+        {releaseA
+          ? 'Cette connexion prépare l’accès Google. La récupération des avis et la publication des réponses ne sont pas encore disponibles dans YUTA.'
+          : 'Les jetons OAuth sont chiffrés avant leur stockage et ne sont jamais envoyés au navigateur.'}
       </p>
     </Panel>
   );

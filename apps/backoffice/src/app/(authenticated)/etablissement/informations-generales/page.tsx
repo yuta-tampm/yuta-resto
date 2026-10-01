@@ -1,6 +1,8 @@
 import { getEstablishmentProfile } from '@yuta/db-cloud';
 import { requireEstablishment } from '@yuta/tenant';
 import { notFound } from 'next/navigation';
+import { Card, ErrorState } from '@yuta/ui';
+import { isReleaseAExposure } from '../../../../server/backoffice-exposure';
 import { BackofficePage } from '../../../../components/backoffice/backoffice-page';
 import {
   hasEstablishmentPermission,
@@ -30,6 +32,7 @@ export default async function GeneralInformationPage() {
   );
   requireEstablishment(tenant);
   requireEstablishmentPermission(tenant, 'establishment.profile.read');
+  const releaseA = isReleaseAExposure();
   const [
     profile,
     conceptHistorySection,
@@ -40,14 +43,26 @@ export default async function GeneralInformationPage() {
     validatedKnowledgeSection,
   ] = await Promise.all([
     getEstablishmentProfile(cloudDatabase, tenant),
-    loadConceptHistorySection(cloudDatabase, tenant),
-    loadCuisineKnowHowSection(cloudDatabase, tenant),
-    loadCustomerExperienceSection(cloudDatabase, tenant),
-    loadTeamCultureSection(cloudDatabase, tenant),
-    loadCommunicationIdentitySection(cloudDatabase, tenant),
-    loadValidatedKnowledgeSection(cloudDatabase, tenant),
+    releaseA ? null : loadConceptHistorySection(cloudDatabase, tenant),
+    releaseA ? null : loadCuisineKnowHowSection(cloudDatabase, tenant),
+    releaseA ? null : loadCustomerExperienceSection(cloudDatabase, tenant),
+    releaseA ? null : loadTeamCultureSection(cloudDatabase, tenant),
+    releaseA ? null : loadCommunicationIdentitySection(cloudDatabase, tenant),
+    releaseA ? null : loadValidatedKnowledgeSection(cloudDatabase, tenant),
   ]);
-  if (!profile) notFound();
+  if (!profile) {
+    if (!releaseA) notFound();
+    return (
+      <BackofficePage title="Informations générales">
+        <Card padding="none">
+          <ErrorState
+            title="Les informations de l’établissement sont indisponibles"
+            description="Contactez votre administrateur ou l’assistance YUTA pour rétablir le contexte de votre établissement."
+          />
+        </Card>
+      </BackofficePage>
+    );
+  }
   const canEditProfile = hasEstablishmentPermission(
     tenant,
     'establishment.profile.manage',

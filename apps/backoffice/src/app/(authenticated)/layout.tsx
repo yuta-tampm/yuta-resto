@@ -5,6 +5,7 @@ import {
 } from '../../server/auth/session';
 import type { ReactNode } from 'react';
 import { redirect } from 'next/navigation';
+import { getBackofficeExposureProfile } from '../../server/backoffice-exposure';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,6 +21,8 @@ export default async function AuthenticatedLayout({
   );
   return (
     <BackofficeFrame
+      exposureProfile={getBackofficeExposureProfile()}
+      canManageGoogleConnector={tenant.actor.role === 'OWNER'}
       currentUser={{
         name: session.userName,
         email: session.userEmail,

@@ -1,5 +1,14 @@
 # Today dashboard — Acceptance checklist
 
+## Exposure applicability
+
+Both profiles use the current route, trusted context, existing grants and
+shared UI. Booking and its dominant-column requirements below apply only to
+`internal`; the A checklist follows the accepted
+[Today projection](../../../features/today/README.md#accepted-release-a-projection).
+Unchecked items are verification obligations, not completed evidence. Historical
+internal screenshots/QA do not establish A results or customer-release readiness.
+
 ## Documentation and repository
 
 - [ ] Root, Backoffice, current feature, and current UI documents were read.
@@ -11,7 +20,7 @@
 ## Security and boundaries
 
 - [ ] Organization and establishment scope comes from trusted server context.
-- [ ] Booking entitlement and `booking.read` are enforced.
+- [ ] Internal Booking entitlement and `booking.read` are enforced.
 - [ ] Reputation entitlement and `reputation.read` are enforced when applicable.
 - [ ] `@yuta/db-cloud` remains server-side.
 - [ ] One tenant cannot access another tenant's dashboard data.
@@ -28,9 +37,9 @@
 ## Current data
 
 - [ ] The date uses establishment timezone and locale.
-- [ ] Reservations use the establishment-local date and current statuses.
-- [ ] Reservation counters reconcile with the scoped result.
-- [ ] Booking services use enabled persisted periods for the local weekday.
+- [ ] Internal reservations use the establishment-local date and current statuses.
+- [ ] Internal reservation counters reconcile with the scoped result.
+- [ ] Internal Booking services use enabled persisted periods for the local weekday.
 - [ ] Reviews appear only when entitled, permitted, and supported.
 - [ ] Independent section failures do not become misleading zeros.
 
@@ -38,11 +47,29 @@
 
 - [ ] Existing shell and tenant selector remain unchanged.
 - [ ] Supported summaries use real destinations.
-- [ ] Reservations remain the dominant task surface.
+- [ ] In internal, reservations remain the dominant task surface.
 - [ ] Add behavior exposes only real, permission-allowed actions.
 - [ ] Unsupported filter chips and empty overflow menus are absent.
 - [ ] Loading, empty, hidden/forbidden, unavailable, and recovery states are truthful.
 - [ ] `@yuta/ui`, semantic tokens, and `lucide-react` are reused.
+
+## Release A projection
+
+- [ ] No Booking/DIRECT/AI read, serialization, card, panel or CTA is exposed.
+- [ ] Google source and organization/establishment/actor predicates agree across
+      count, preview and linked list; STAFF remains assigned-only.
+- [ ] New means `NEW`; attention uses `NEW/TO_PROCESS/DRAFTED/FOLLOW_UP` and
+      counters are not capped by preview/page limits.
+- [ ] A local `PUBLISHED` reply neither excludes an active local queue row nor
+      claims a remote reply.
+- [ ] New/attention links narrow the Google scope; forged source/detail/filter
+      input cannot widen it.
+- [ ] Setup/empty/unavailable states provide permitted OWNER setup or operator
+      handoff without claiming import execution/success/publication.
+- [ ] Header, summaries, applicable setup/recovery and Google preview remain
+      readable in the A single-column composition at all approved widths.
+- [ ] Actual A Browser QA is attributable separately from internal regression
+      and preserves required role/context/loading/recovery/accessibility checks.
 
 ## Responsive and accessibility
 

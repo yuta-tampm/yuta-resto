@@ -66,6 +66,24 @@ environment, or production release.
 | HD-16 | Task, anomaly, information/alert, and action remain distinct concepts.                                                                               | A problem is not automatically a task, an alert a notification, information an action, or a card a source record.                                                     |
 | HD-17 | An unresolved situation may gain visibility from team to manager to restaurateur according to persistence or importance.                             | Exact owner, trigger, threshold, severity, notification, persistence, audit, and source-state relationship remain unresolved; no heavy escalation engine is approved. |
 
+### Accepted Release A projection
+
+The Human accepted [RR-03](../../PRODUCT_RELEASE_ROADMAP.md#bounded-foundation-and-release-a-decisions)
+for A only: Google records readable by the actor; `new` means local status
+`NEW`; attention means `NEW`, `TO_PROCESS`, `DRAFTED` or `FOLLOW_UP`.
+Count, preview and linked full list share this source/status/actor scope.
+Preview limits do not reduce the total; STAFF sees assigned records only.
+This is a local handling queue, not remote unanswered or provider response-rate
+truth. A local `PUBLISHED` reply does not establish a remote reply.
+
+Booking, Direct Feedback and AI projections are hidden in A. The current Human
+selected a server-chosen A profile for the customer Backoffice instance and a
+separate internal mode, build/test only; see the [task decision record](../../reviews/release-a-customer-exposure-foundation/01-analysis-review.md#request-and-delegation).
+Internal aggregation and source ownership remain. This accepted projection
+does not resolve broader TODAY questions or promote implementation/readiness.
+Missing setup/context must offer permitted OWNER/support recovery without
+inventing import outcomes.
+
 ## 3. Current implemented state
 
 The current tracked repository implements six grouped Today behaviors:

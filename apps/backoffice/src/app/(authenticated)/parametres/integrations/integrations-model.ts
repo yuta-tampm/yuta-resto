@@ -85,6 +85,36 @@ export const integrationResultMessages: Record<
   },
 };
 
+export const releaseAIntegrationResultMessages: Record<
+  string,
+  IntegrationResultMessage
+> = {
+  ...integrationResultMessages,
+  location_selected: {
+    tone: 'success',
+    title: 'Établissement Google associé',
+    description:
+      'L’établissement Google est sélectionné. La récupération des avis et la publication des réponses ne sont pas encore disponibles dans YUTA.',
+  },
+  invalid_state: {
+    tone: 'danger',
+    title: 'Connexion Google à relancer',
+    description: 'Relancez la connexion Google depuis cette page.',
+  },
+  exchange_error: {
+    tone: 'danger',
+    title: 'Connexion Google impossible',
+    description:
+      'Réessayez la connexion. Si le problème persiste, contactez le support YUTA.',
+  },
+  configuration_error: {
+    tone: 'danger',
+    title: 'Connexion Google indisponible',
+    description:
+      'Contactez le support YUTA pour préparer la connexion Google de votre établissement.',
+  },
+};
+
 export function filterIntegrationSearchParam(
   value: string | string[] | undefined,
 ): string | undefined {

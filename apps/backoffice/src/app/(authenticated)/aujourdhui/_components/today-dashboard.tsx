@@ -1,4 +1,4 @@
-import { Button } from '@yuta/ui';
+import { Alert, AlertTitle, AlertDescription, Button, cn } from '@yuta/ui';
 import { CalendarPlus } from 'lucide-react';
 import Link from 'next/link';
 import type { TodayDashboardData } from '../today-data';
@@ -37,9 +37,30 @@ export function TodayDashboard({ data }: { data: TodayDashboardData }) {
       </header>
 
       <TodaySummaryCards data={data} />
+      {data.setupSummary && (
+        <Alert tone="info">
+          <AlertTitle>{data.setupSummary.title}</AlertTitle>
+          <AlertDescription>
+            {data.setupSummary.description}
+            {data.setupSummary.setupHref && (
+              <Button asChild variant="secondary" size="sm" className="mt-3">
+                <Link href={data.setupSummary.setupHref}>
+                  Préparer la connexion Google
+                </Link>
+              </Button>
+            )}
+          </AlertDescription>
+        </Alert>
+      )}
 
-      <section className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.45fr)_minmax(19rem,0.75fr)]">
-        {data.bookingEnabled && (
+      <section
+        className={cn(
+          'grid items-start gap-5',
+          !data.releaseA &&
+            'xl:grid-cols-[minmax(0,1.45fr)_minmax(19rem,0.75fr)]',
+        )}
+      >
+        {!data.releaseA && data.bookingEnabled && (
           <TodayReservationsPanel
             section={data.reservations}
             localDate={data.localDate}
@@ -47,14 +68,17 @@ export function TodayDashboard({ data }: { data: TodayDashboardData }) {
         )}
 
         <aside className="grid gap-5">
-          {data.bookingEnabled && (
+          {!data.releaseA && data.bookingEnabled && (
             <TodayServicesPanel
               section={data.services}
               canManageSettings={data.canManageBookingSettings}
             />
           )}
           {data.reviews.state !== 'hidden' && (
-            <TodayReviewsPanel section={data.reviews} />
+            <TodayReviewsPanel
+              section={data.reviews}
+              releaseA={data.releaseA}
+            />
           )}
         </aside>
       </section>

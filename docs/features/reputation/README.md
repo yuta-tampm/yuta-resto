@@ -43,14 +43,41 @@ public links are a separate implemented settings capability, not connectors.
 Confirmed inclusion does not approve any provider-specific behavior or
 production enablement.
 
-Google belongs to the current implementation footprint, but its inclusion in a
-current Product V1 remains `UNRESOLVED`. Existing code, persisted Google rows,
+Outside the bounded Release A decision below, Google's inclusion in a current
+Product V1 remains `UNRESOLVED`. Existing code, persisted Google rows,
 OAuth/location support, UI labels, schemas, backlog language, and historical
 implementation work do not establish a Human-approved Google V1 decision.
 
 Public direct-feedback collection is separately approved by
 [ADR-004](../../decisions/ADR-004-independent-public-feedback-application.md)
 and implemented in `apps/feedback-web`.
+
+### Accepted Foundation / Release A exception
+
+The Human accepted [RR-01–RR-03](../../PRODUCT_RELEASE_ROADMAP.md#bounded-foundation-and-release-a-decisions)
+for Release A only. Google is the A provider: connect/discover/explicit bind,
+later import/update without duplicates, inbox/detail, manual drafts, manual
+refresh, explicit final-text approve/publish and failure/reconnect recovery.
+OWNER manages the connector; OWNER/MANAGER refresh and approve/publish; STAFF
+reads, notes and drafts assigned reviews only. An authorized author may approve
+their own reply through the separate publication action. Save is never approval
+or publication; changed text cannot inherit approval of an older draft.
+
+A excludes AI, batch approval/publication, scheduled synchronization and Direct
+Feedback customer exposure. Facebook/Instagram high-level inclusion and broader
+AVIS questions remain. Where matrices below say Google V1 or approval roles are
+unresolved, they describe the broader capability outside this accepted A-only
+exception. Implementation absence and provider/privacy prerequisites remain.
+
+For `release-a-customer-exposure-foundation`, the current Human separately chose
+a server-selected A profile for the whole customer Backoffice instance, with
+internal mode kept separately; build/test only, without staging/production
+activation. The [task decision record](../../reviews/release-a-customer-exposure-foundation/01-analysis-review.md#request-and-delegation)
+attributes that choice. Exposure must include page/API/action and Google resource
+scope, independently from authorization; internal mixed-source behavior remains.
+This decision does not implement import, refresh or publication. A bound
+connector and an empty persisted inbox do not prove a successful zero-review
+import, a failed import or remote reply state.
 
 ## 2. Provider-independent flow stages
 

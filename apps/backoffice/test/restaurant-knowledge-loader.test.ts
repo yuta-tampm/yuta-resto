@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type { TenantContext, TenantRole } from '@yuta/tenant';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
   getConceptHistory: vi.fn(),
@@ -12,6 +12,11 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock('server-only', () => ({}));
+vi.mock('next/navigation', () => ({
+  redirect: (destination: string): never => {
+    throw new Error(`REDIRECT:${destination}`);
+  },
+}));
 vi.mock('@yuta/db-cloud', () => ({
   getRestaurantKnowledgeConceptHistory: mocks.getConceptHistory,
   getRestaurantKnowledgeCommunicationIdentity: mocks.getCommunicationIdentity,
@@ -45,6 +50,48 @@ function context(role: TenantRole): TenantContext {
     entitlements: new Set(),
   };
 }
+
+beforeEach(() => {
+  vi.stubEnv('BACKOFFICE_EXPOSURE_PROFILE', 'internal');
+});
+
+afterEach(() => {
+  vi.unstubAllEnvs();
+});
+
+describe('Release A Restaurant Knowledge loader availability', () => {
+  const loaders = [
+    ['Concept and History', loadConceptHistorySection],
+    ['Cuisine and Know-how', loadCuisineKnowHowSection],
+    ['Customer Experience', loadCustomerExperienceSection],
+    ['Team Culture', loadTeamCultureSection],
+    ['Communication Identity', loadCommunicationIdentitySection],
+    ['Validated Knowledge', loadValidatedKnowledgeSection],
+  ] as const;
+
+  it.each(loaders)(
+    'denies %s before protected reads despite OWNER grants',
+    async (_name, load) => {
+      vi.clearAllMocks();
+      vi.stubEnv('BACKOFFICE_EXPOSURE_PROFILE', 'release-a');
+      await expect(load({} as never, context('OWNER'))).rejects.toThrow(
+        'REDIRECT:/aujourdhui?exposure=unavailable',
+      );
+      for (const read of Object.values(mocks))
+        expect(read).not.toHaveBeenCalled();
+    },
+  );
+
+  it('preserves availability denial for a caller without Knowledge grants', async () => {
+    vi.clearAllMocks();
+    vi.stubEnv('BACKOFFICE_EXPOSURE_PROFILE', 'release-a');
+    await expect(
+      loadConceptHistorySection({} as never, context('STAFF')),
+    ).rejects.toThrow('REDIRECT:/aujourdhui?exposure=unavailable');
+    for (const read of Object.values(mocks))
+      expect(read).not.toHaveBeenCalled();
+  });
+});
 
 describe('Restaurant Knowledge Concept and Histoire loader', () => {
   beforeEach(() => {

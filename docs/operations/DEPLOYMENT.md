@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering and operations
 
-Last updated: 2026-08-08
+Last updated: 2026-10-01
 
 ## Status and authority
 
@@ -176,15 +176,46 @@ commit them.
 CLOUD_DATABASE_URL=postgres://yuta_cloud:encoded_password@cloud-db:5432/yuta_cloud
 CLOUD_DATABASE_SSL=true
 AUTH_SECRET=...
-GOOGLE_CLIENT_ID=...
-GOOGLE_CLIENT_SECRET=...
-GOOGLE_TOKEN_ENCRYPTION_KEY=...
+GOOGLE_BUSINESS_PROFILE_CLIENT_ID=...
+GOOGLE_BUSINESS_PROFILE_CLIENT_SECRET=...
+GOOGLE_BUSINESS_PROFILE_REDIRECT_URI=https://app.yutapro.fr/api/reputation/google/oauth/callback
+REPUTATION_CREDENTIAL_ENCRYPTION_KEY=...
 PUBLIC_BOOKING_BASE_URL=https://reservation.yutapro.fr
 BOOKING_RATE_LIMIT_SECRET=...
 PUBLIC_FEEDBACK_IP_HASH_SALT=...
 ```
 
 Only cloud server processes receive these values.
+
+### Backoffice instance exposure
+
+For `apps/backoffice`, a separately authorized deployment must explicitly set
+the server-only `BACKOFFICE_EXPOSURE_PROFILE` to `release-a` for the accepted
+customer perimeter or `internal` for the authorized internal instance. These
+are the only valid values. The selection applies to the whole process, is not
+browser/tenant input, and must never use a `NEXT_PUBLIC_*` variable. It changes
+availability independently of existing permissions and entitlements.
+
+Unset development/test selection keeps internal behavior. An invalid value in
+any environment or unset production selection fails closed with safe no-store
+`503` behavior without exposing configuration details. Request-boundary
+validation is lazy: a successful build does not prove runtime selection or
+authorize activation. Profile selection requires no schema/data migration.
+
+[ADR-009](../decisions/ADR-009-release-a-customer-exposure.md) owns the durable
+boundary: A allows the five bounded surfaces and closes other hosted
+routes/APIs/actions, including Booking and profile Knowledge. Internal preserves
+existing module guards and development/readiness restrictions. Changing a live
+instance profile, including rollback, requires deployment authority and exact
+target evidence; do not automatically fall back to internal on failure. The
+exposure-foundation task changes no staging/production configuration or topology.
+
+Before authorized activation, verify the explicit intended profile and allowed
+role/context/source flows on that exact deployed artifact; verify deferred
+direct entries and invoked actions are denied. A local Google queue, bound
+connector or saved draft proves no provider import/publication. Provider/privacy,
+operator preparation and customer-release acceptance remain governed by the
+owning readiness sources.
 
 `BACKOFFICE_PERSONNEL_FORMALITES_READ_PROTOTYPE_ENABLED` is a local-development
 opt-in for the Phase 3 read-only Formalités prototype. It defaults to false and
@@ -470,6 +501,8 @@ access-control facilities. Do not copy POS operational data into cloud backups.
 Before a production release:
 
 - Confirm the process receives only its permitted database URL.
+- For Backoffice, verify the explicit authorized exposure profile and its
+  allowed/denied entry and data scope on the exact target artifact.
 - Run the correct one-shot migration service.
 - Verify the active schema originated from its own `0000_initial`.
 - Confirm browser bundles contain no database URL.

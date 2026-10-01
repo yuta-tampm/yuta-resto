@@ -1,0 +1,41 @@
+{
+  "reason": "Preserve original browser observation bytes and validate a formatter-compliant reading representation without changing repository formatter policy.",
+  "records": [
+    {
+      "originalRecordedPath": "docs/reviews/release-a-customer-exposure-foundation/qa/browser-results.json",
+      "immutableRawPath": "docs/reviews/release-a-customer-exposure-foundation/qa/browser-results.json.raw",
+      "rawSha256": "616828cd09b5848f69292d27231a4f1687a27c93af293d2426c8897232d7a7bd",
+      "formattedPath": "docs/reviews/release-a-customer-exposure-foundation/qa/browser-results.json",
+      "formattedSha256": "f6ffcca0b97054d0fce75e9a4368bb68e50f4b1df2b45f36d83480c0c7c32fe3",
+      "rawByteEquality": true,
+      "parsedDataEquality": true
+    },
+    {
+      "originalRecordedPath": "docs/reviews/release-a-customer-exposure-foundation/qa/browser-results-generation1.json",
+      "immutableRawPath": "docs/reviews/release-a-customer-exposure-foundation/qa/browser-results-generation1.json.raw",
+      "rawSha256": "616828cd09b5848f69292d27231a4f1687a27c93af293d2426c8897232d7a7bd",
+      "formattedPath": "docs/reviews/release-a-customer-exposure-foundation/qa/browser-results-generation1.json",
+      "formattedSha256": "f6ffcca0b97054d0fce75e9a4368bb68e50f4b1df2b45f36d83480c0c7c32fe3",
+      "rawByteEquality": true,
+      "parsedDataEquality": true
+    },
+    {
+      "originalRecordedPath": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/browser-results-generation2.json",
+      "immutableRawPath": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/browser-results-generation2.json.raw",
+      "rawSha256": "0a374820d76c31d337ac1cf18d6ef736c698df2cbaecd85b991072af71ef4035",
+      "formattedPath": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/browser-results-generation2.json",
+      "formattedSha256": "db94f3289b2d9b9f4860387f0523a763dcea40a216fa7f8546820bdf5d603588",
+      "rawByteEquality": true,
+      "parsedDataEquality": true
+    },
+    {
+      "originalRecordedPath": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/browser-results-generation3.json",
+      "immutableRawPath": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/browser-results-generation3.json.raw",
+      "rawSha256": "011c5e29318f5f37391f139c1c1a71c70404a201c446acaebce13b6288b7b398",
+      "formattedPath": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/browser-results-generation3.json",
+      "formattedSha256": "3d76981de5a053e53ef226caa4af266a8e1827e0bf0dd90365d508456f0a65c0",
+      "rawByteEquality": true,
+      "parsedDataEquality": true
+    }
+  ]
+}

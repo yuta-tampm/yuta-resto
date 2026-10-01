@@ -14,9 +14,11 @@ import type { ReviewDetailRecord } from '../reviews-model';
 export function ReviewReplyForm({
   review,
   canCreateReply,
+  releaseA = false,
 }: {
   review: ReviewDetailRecord;
   canCreateReply: boolean;
+  releaseA?: boolean;
 }) {
   const [state, action] = useActionState(
     saveReplyDraftAction,
@@ -29,7 +31,11 @@ export function ReviewReplyForm({
       <input type="hidden" name="feedbackId" value={review.id} />
       <div className="flex items-center justify-between gap-3">
         <h2 className="flex items-center gap-2 font-bold text-brand-800">
-          <Bot className="h-4 w-4" />
+          {releaseA ? (
+            <FilePenLine className="h-4 w-4" aria-hidden />
+          ) : (
+            <Bot className="h-4 w-4" />
+          )}
           Brouillon de réponse
         </h2>
         {review.latestReply && (
@@ -46,8 +52,9 @@ export function ReviewReplyForm({
         disabled={!canCreateReply}
       />
       <p className="mt-2 text-xs text-muted">
-        Le brouillon est enregistré dans YUTA. La publication Google sera
-        activée avec le connecteur.
+        {releaseA
+          ? 'Enregistrer conserve un brouillon dans YUTA, sans approbation ni publication. La publication sur Google n’est pas encore disponible, même avec une connexion configurée.'
+          : 'Le brouillon est enregistré dans YUTA. La publication Google sera activée avec le connecteur.'}
       </p>
       <ReviewActionMessage state={state} />
       <div className="mt-4 grid grid-cols-2 gap-3">

@@ -10,7 +10,7 @@ Prompt snapshot topology: GENERATED_SNAPSHOTS
 
 Prompt provenance: prompt-provenance.json
 
-Last updated: 2026-08-08
+Last updated: 2026-10-01
 
 Route: `/aujourdhui`
 
@@ -18,9 +18,10 @@ Application: `apps/backoffice`
 
 ## Current status
 
-The route is integrated inside the authenticated Backoffice shell. Its Server
-Component composes establishment-scoped reservations, booking service periods
-with dated exceptions, and entitled reputation feedback from current cloud
+The route is integrated inside the authenticated Backoffice shell. In the
+`internal` exposure profile, its Server Component composes establishment-scoped
+reservations, booking service periods with dated exceptions, and entitled
+reputation feedback from current cloud
 repositories. Each section has independent ready, empty, unavailable, and,
 where applicable, hidden states.
 
@@ -38,6 +39,25 @@ The current repository provides real, establishment-scoped sources for:
 Daily tasks, team planning, content approval, and generic email workflows still
 do not have current dashboard-ready domain implementations and are intentionally
 absent from the route.
+
+## Exposure applicability
+
+The Booking-dominant composition, implementation plan and visual reference in
+this package describe `internal`. The same route also supports the accepted
+`release-a` composition: local date/context, Google-only new/attention summaries,
+scoped review preview/list links and truthful OWNER setup or operator handoff.
+It loads/serializes no Booking, DIRECT or AI projection and exposes no Booking
+CTA. Attention uses local `NEW`, `TO_PROCESS`, `DRAFTED`, `FOLLOW_UP`; new is
+`NEW`. Totals share source/status/actor scope with the preview and linked list
+and are not capped by preview size. Existing Reputation grants and STAFF
+assigned-only access still apply.
+
+The [Today Product home](../../../features/today/README.md#accepted-release-a-projection)
+owns the accepted A projection; [ADR-009](../../../decisions/ADR-009-release-a-customer-exposure.md)
+owns instance availability. Local queue and connector state prove no provider
+import/publication or Release A readiness. Current scope/UI/data/checklist
+qualifications below do not refresh sealed prompt snapshots, provenance or
+reference assets, and earlier evidence does not establish A Browser QA.
 
 ## Authority
 

@@ -16,6 +16,7 @@ import { revalidatePath } from 'next/cache';
 import { randomUUID } from 'node:crypto';
 import { requirePersonnelPermission } from '../../../../server/auth/permissions';
 import { requirePersonnelTenant } from '../../../../server/auth/session';
+import { requireBackofficePageAvailable } from '../../../../server/backoffice-exposure';
 import { cloudDatabase } from '../../../../server/cloud-database';
 import { isPersonnelRegisterEnabled } from './_lib/personnel-register-runtime';
 
@@ -32,6 +33,7 @@ export type LoadPersonnelRegisterPageResult =
 export async function loadPersonnelRegisterPageAction(
   cursor: string | null,
 ): Promise<LoadPersonnelRegisterPageResult> {
+  requireBackofficePageAvailable('/equipe/registre-personnel');
   if (!isPersonnelRegisterEnabled()) {
     return {
       status: 'error',
@@ -86,6 +88,7 @@ async function mutateRegister(
   mode: 'inscribe' | 'correct',
   formData: FormData,
 ): Promise<PersonnelRegisterActionState> {
+  requireBackofficePageAvailable('/equipe/registre-personnel');
   if (!isPersonnelRegisterEnabled()) {
     return failure('Le registre réel est désactivé dans cet environnement.');
   }

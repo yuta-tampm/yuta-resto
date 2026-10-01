@@ -36,6 +36,13 @@ import {
 
 type DbClient = CloudDatabaseClient;
 
+export type FeedbackScopeOptions = {
+  requiredSource?: 'GOOGLE';
+  statuses?: readonly FeedbackStatus[];
+  scopedCounters?: boolean;
+  attentionStatuses?: readonly FeedbackStatus[];
+};
+
 export type ReputationRepositoryErrorCode =
   | 'FEEDBACK_NOT_FOUND'
   | 'ASSIGNEE_INVALID'
@@ -276,18 +283,35 @@ function feedbackVisibilityCondition(context: TenantContext) {
     : undefined;
 }
 
+function feedbackScopeCondition(
+  context: TenantContext,
+  establishmentId: string,
+  requiredSource?: 'GOOGLE',
+) {
+  return and(
+    eq(feedbackItems.organizationId, context.organizationId),
+    eq(feedbackItems.establishmentId, establishmentId),
+    feedbackVisibilityCondition(context),
+    requiredSource ? eq(feedbackItems.source, requiredSource) : undefined,
+  );
+}
+
 export async function listFeedback(
   repositoryDb: DbClient,
   context: TenantContext,
   query: FeedbackListQuery,
+  options: FeedbackScopeOptions = {},
 ) {
   const establishmentId = requireAdminEstablishment(context);
   const offset = (query.page - 1) * query.pageSize;
   const filters = [
-    eq(feedbackItems.organizationId, context.organizationId),
-    eq(feedbackItems.establishmentId, establishmentId),
-    feedbackVisibilityCondition(context),
-    query.source ? eq(feedbackItems.source, query.source) : undefined,
+    feedbackScopeCondition(context, establishmentId, options.requiredSource),
+    !options.requiredSource && query.source
+      ? eq(feedbackItems.source, query.source)
+      : undefined,
+    options.statuses
+      ? inArray(feedbackItems.status, [...options.statuses])
+      : undefined,
     query.status ? eq(feedbackItems.status, query.status) : undefined,
     query.rating ? eq(feedbackItems.rating, query.rating) : undefined,
     query.sentiment ? eq(feedbackItems.sentiment, query.sentiment) : undefined,
@@ -322,6 +346,7 @@ export async function listFeedback(
               ? sql`case when not exists (
                   select 1 from ${feedbackReplies}
                   where "feedback_replies"."feedback_item_id" = "feedback_items"."id"
+                  and "feedback_replies"."organization_id" = "feedback_items"."organization_id"
                   and "feedback_replies"."status" = 'PUBLISHED'
                 ) then 0 else 1 end asc, ${feedbackItems.receivedAt} desc`
               : desc(feedbackItems.receivedAt);
@@ -346,6 +371,7 @@ export async function listFeedback(
         select ${feedbackReplies.id}
         from ${feedbackReplies}
         where "feedback_replies"."feedback_item_id" = "feedback_items"."id"
+        and "feedback_replies"."organization_id" = "feedback_items"."organization_id"
         and "feedback_replies"."status" <> 'DELETED'
         order by ${feedbackReplies.createdAt} desc
         limit 1
@@ -354,6 +380,7 @@ export async function listFeedback(
         select ${feedbackReplies.status}::text
         from ${feedbackReplies}
         where "feedback_replies"."feedback_item_id" = "feedback_items"."id"
+        and "feedback_replies"."organization_id" = "feedback_items"."organization_id"
         and "feedback_replies"."status" <> 'DELETED'
         order by ${feedbackReplies.createdAt} desc
         limit 1
@@ -378,6 +405,7 @@ export async function listFeedback(
         where not exists (
           select 1 from ${feedbackReplies}
           where "feedback_replies"."feedback_item_id" = "feedback_items"."id"
+          and "feedback_replies"."organization_id" = "feedback_items"."organization_id"
           and "feedback_replies"."status" = 'PUBLISHED'
         )
       )`,
@@ -386,17 +414,36 @@ export async function listFeedback(
     })
     .from(feedbackItems)
     .where(
-      and(
-        eq(feedbackItems.organizationId, context.organizationId),
-        eq(feedbackItems.establishmentId, establishmentId),
-        feedbackVisibilityCondition(context),
-        query.source ? eq(feedbackItems.source, query.source) : undefined,
-      ),
+      options.scopedCounters
+        ? where
+        : and(
+            feedbackScopeCondition(
+              context,
+              establishmentId,
+              options.requiredSource,
+            ),
+            !options.requiredSource && query.source
+              ? eq(feedbackItems.source, query.source)
+              : undefined,
+          ),
     );
+
+  const [attentionResult] = options.attentionStatuses?.length
+    ? await repositoryDb
+        .select({ value: count() })
+        .from(feedbackItems)
+        .where(
+          and(
+            where,
+            inArray(feedbackItems.status, [...options.attentionStatuses]),
+          ),
+        )
+    : [];
 
   const totalItems = totalResult?.value ?? 0;
   return {
     items: rows,
+    attentionCount: attentionResult?.value ?? 0,
     pagination: {
       page: query.page,
       pageSize: query.pageSize,
@@ -417,6 +464,7 @@ export async function findFeedbackDetail(
   repositoryDb: DbClient,
   context: TenantContext,
   feedbackId: string,
+  options: FeedbackScopeOptions = {},
 ) {
   const establishmentId = requireAdminEstablishment(context);
   const [feedback] = await repositoryDb
@@ -425,9 +473,11 @@ export async function findFeedbackDetail(
     .where(
       and(
         eq(feedbackItems.id, feedbackId),
-        eq(feedbackItems.organizationId, context.organizationId),
-        eq(feedbackItems.establishmentId, establishmentId),
-        feedbackVisibilityCondition(context),
+        feedbackScopeCondition(
+          context,
+          establishmentId,
+          options.requiredSource,
+        ),
       ),
     )
     .limit(1);
@@ -437,12 +487,22 @@ export async function findFeedbackDetail(
     repositoryDb
       .select()
       .from(feedbackReplies)
-      .where(eq(feedbackReplies.feedbackItemId, feedback.id))
+      .where(
+        and(
+          eq(feedbackReplies.organizationId, context.organizationId),
+          eq(feedbackReplies.feedbackItemId, feedback.id),
+        ),
+      )
       .orderBy(desc(feedbackReplies.createdAt)),
     repositoryDb
       .select()
       .from(feedbackInternalNotes)
-      .where(eq(feedbackInternalNotes.feedbackItemId, feedback.id))
+      .where(
+        and(
+          eq(feedbackInternalNotes.organizationId, context.organizationId),
+          eq(feedbackInternalNotes.feedbackItemId, feedback.id),
+        ),
+      )
       .orderBy(desc(feedbackInternalNotes.createdAt)),
   ]);
 
@@ -698,6 +758,7 @@ export async function updateFeedback(
     assignedToUserId?: string | null;
     actorUserId: string;
   },
+  options: FeedbackScopeOptions = {},
 ) {
   const establishmentId = requireAdminEstablishment(context);
   return repositoryDb.transaction(async (transaction) => {
@@ -707,12 +768,15 @@ export async function updateFeedback(
       .where(
         and(
           eq(feedbackItems.id, input.feedbackId),
-          eq(feedbackItems.organizationId, context.organizationId),
-          eq(feedbackItems.establishmentId, establishmentId),
-          feedbackVisibilityCondition(context),
+          feedbackScopeCondition(
+            context,
+            establishmentId,
+            options.requiredSource,
+          ),
         ),
       )
-      .limit(1);
+      .limit(1)
+      .for('update');
     if (!feedback) {
       throw new ReputationRepositoryError(
         'Feedback not found.',
@@ -751,8 +815,23 @@ export async function updateFeedback(
           ? { assignedToUserId: input.assignedToUserId }
           : {}),
       })
-      .where(eq(feedbackItems.id, feedback.id))
+      .where(
+        and(
+          eq(feedbackItems.id, feedback.id),
+          feedbackScopeCondition(
+            context,
+            establishmentId,
+            options.requiredSource,
+          ),
+        ),
+      )
       .returning();
+    if (!updated) {
+      throw new ReputationRepositoryError(
+        'Feedback not found.',
+        'FEEDBACK_NOT_FOUND',
+      );
+    }
 
     await transaction.insert(reputationAuditEvents).values({
       id: uuidv7(),
@@ -781,6 +860,7 @@ export async function saveFeedbackReplyDraft(
     content: string;
     actorUserId: string;
   },
+  options: FeedbackScopeOptions = {},
 ) {
   const establishmentId = requireAdminEstablishment(context);
   return repositoryDb.transaction(async (transaction) => {
@@ -790,12 +870,15 @@ export async function saveFeedbackReplyDraft(
       .where(
         and(
           eq(feedbackItems.id, input.feedbackId),
-          eq(feedbackItems.organizationId, context.organizationId),
-          eq(feedbackItems.establishmentId, establishmentId),
-          feedbackVisibilityCondition(context),
+          feedbackScopeCondition(
+            context,
+            establishmentId,
+            options.requiredSource,
+          ),
         ),
       )
-      .limit(1);
+      .limit(1)
+      .for('update');
     if (!feedback) {
       throw new ReputationRepositoryError(
         'Feedback not found.',
@@ -814,6 +897,7 @@ export async function saveFeedbackReplyDraft(
       .from(feedbackReplies)
       .where(
         and(
+          eq(feedbackReplies.organizationId, context.organizationId),
           eq(feedbackReplies.feedbackItemId, feedback.id),
           inArray(feedbackReplies.status, ['DRAFT', 'READY', 'FAILED']),
         ),
@@ -831,7 +915,13 @@ export async function saveFeedbackReplyDraft(
             errorCode: null,
             errorMessage: null,
           })
-          .where(eq(feedbackReplies.id, existingDraft.id))
+          .where(
+            and(
+              eq(feedbackReplies.id, existingDraft.id),
+              eq(feedbackReplies.organizationId, context.organizationId),
+              eq(feedbackReplies.feedbackItemId, feedback.id),
+            ),
+          )
           .returning()
       : await transaction
           .insert(feedbackReplies)
@@ -847,10 +937,32 @@ export async function saveFeedbackReplyDraft(
           })
           .returning();
 
-    await transaction
+    if (!reply) {
+      throw new ReputationRepositoryError(
+        'Feedback not found.',
+        'FEEDBACK_NOT_FOUND',
+      );
+    }
+    const [updated] = await transaction
       .update(feedbackItems)
       .set({ status: 'DRAFTED' })
-      .where(eq(feedbackItems.id, feedback.id));
+      .where(
+        and(
+          eq(feedbackItems.id, feedback.id),
+          feedbackScopeCondition(
+            context,
+            establishmentId,
+            options.requiredSource,
+          ),
+        ),
+      )
+      .returning({ id: feedbackItems.id });
+    if (!updated) {
+      throw new ReputationRepositoryError(
+        'Feedback not found.',
+        'FEEDBACK_NOT_FOUND',
+      );
+    }
     await transaction.insert(reputationAuditEvents).values({
       id: uuidv7(),
       organizationId: context.organizationId,
@@ -876,6 +988,7 @@ export async function createFeedbackInternalNote(
     content: string;
     actorUserId: string;
   },
+  options: FeedbackScopeOptions = {},
 ) {
   const establishmentId = requireAdminEstablishment(context);
   return repositoryDb.transaction(async (transaction) => {
@@ -885,12 +998,15 @@ export async function createFeedbackInternalNote(
       .where(
         and(
           eq(feedbackItems.id, input.feedbackId),
-          eq(feedbackItems.organizationId, context.organizationId),
-          eq(feedbackItems.establishmentId, establishmentId),
-          feedbackVisibilityCondition(context),
+          feedbackScopeCondition(
+            context,
+            establishmentId,
+            options.requiredSource,
+          ),
         ),
       )
-      .limit(1);
+      .limit(1)
+      .for('update');
     if (!feedback) {
       throw new ReputationRepositoryError(
         'Feedback not found.',

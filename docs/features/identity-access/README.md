@@ -149,6 +149,27 @@ The password-reset foundation does not include automated email delivery.
 Likewise, creating a Backoffice user does not send an automated invitation;
 initial credentials use an approved operational channel.
 
+### Accepted Foundation / Release A access boundary
+
+[RR-03](../../PRODUCT_RELEASE_ROADMAP.md#bounded-foundation-and-release-a-decisions)
+retains operator-assisted creation/attachment and recovery, existing
+OWNER/MANAGER target constraints, trusted active membership/session validation
+and secure reset primitives. It adds no signup, wizard, organization
+self-service or automated invitation/reset email promise. A named operator,
+verified support contact, credential delivery channel and secure reset exercise
+remain operational prerequisites before customer use.
+
+The current Human chose one server-selected A profile for the customer
+Backoffice instance and separate internal mode, build/test only; see the
+[task decision record](../../reviews/release-a-customer-exposure-foundation/01-analysis-review.md#request-and-delegation).
+Release availability is an additional entry condition, independent of grants,
+entitlements and Product Release metadata. It cannot grant tenant/resource
+access, bypass existing denials or automatically promote readiness. Allowed deep
+links survive supported context recovery; out-of-release entry needs safe
+recovery without a loop. The historical Users & Access mobile
+[QA FAIL](../../reviews/preserve-establishment-owner-invariant/qa/QA_REPORT.md)
+remains evidence; current candidate QA is required and has not run here.
+
 ## 5. Product Intent versus implementation
 
 ### Approved / durable boundaries

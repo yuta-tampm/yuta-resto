@@ -35,7 +35,11 @@ export function TodaySummaryCards({ data }: { data: TodayDashboardData }) {
   return (
     <section
       aria-label="Points d’attention"
-      className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3"
+      className={
+        data.releaseA
+          ? 'grid gap-4 sm:grid-cols-2'
+          : 'grid gap-4 sm:grid-cols-2 xl:grid-cols-3'
+      }
     >
       {summaries.map((summary) => (
         <SummaryCard key={summary.label} {...summary} />
@@ -46,7 +50,7 @@ export function TodaySummaryCards({ data }: { data: TodayDashboardData }) {
 
 function buildSummaries(data: TodayDashboardData): TodaySummary[] {
   const summaries: TodaySummary[] = [];
-  if (data.bookingEnabled) {
+  if (!data.releaseA && data.bookingEnabled) {
     summaries.push({
       label: 'Réservations aujourd’hui',
       value:
@@ -87,6 +91,25 @@ function buildSummaries(data: TodayDashboardData): TodaySummary[] {
     });
   }
   if (data.reviews.state !== 'hidden') {
+    if (data.releaseA) {
+      summaries.push({
+        label: 'Nouveaux avis Google',
+        value:
+          data.reviews.state === 'ready'
+            ? String(data.reviews.data.newCount ?? 0)
+            : data.reviews.state === 'empty'
+              ? '0'
+              : '—',
+        helper:
+          data.reviews.state === 'ready'
+            ? 'Statut Nouveau dans YUTA'
+            : stateHelper(data.reviews.state, 'Aucun nouvel avis enregistré'),
+        href: '/visibilite-reputation/avis?status=NEW',
+        linkLabel: 'Voir les nouveaux avis',
+        icon: MessageSquareText,
+        tone: 'info',
+      });
+    }
     summaries.push({
       label: 'Avis à traiter',
       value:
@@ -97,9 +120,13 @@ function buildSummaries(data: TodayDashboardData): TodaySummary[] {
             : '—',
       helper:
         data.reviews.state === 'ready'
-          ? 'Sans réponse publiée'
+          ? data.releaseA
+            ? 'Nouveau, à traiter, brouillon ou à suivre'
+            : 'Sans réponse publiée'
           : stateHelper(data.reviews.state, 'Aucun avis à traiter'),
-      href: '/visibilite-reputation/avis?sort=unanswered',
+      href: data.releaseA
+        ? '/visibilite-reputation/avis?queue=attention'
+        : '/visibilite-reputation/avis?sort=unanswered',
       linkLabel: 'Voir les avis',
       icon: MessageSquareText,
       tone: 'warning',

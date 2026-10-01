@@ -6,10 +6,12 @@ export function IntegrationStatusAlerts({
   resultMessage,
   configured,
   discoveryError,
+  releaseA = false,
 }: {
   resultMessage: IntegrationResultMessage | undefined;
   configured: boolean;
   discoveryError: boolean;
+  releaseA?: boolean;
 }) {
   return (
     <>
@@ -22,10 +24,15 @@ export function IntegrationStatusAlerts({
 
       {!configured && (
         <Alert tone="warning" icon={<KeyRound className="h-5 w-5" />}>
-          <AlertTitle>Configuration serveur requise</AlertTitle>
+          <AlertTitle>
+            {releaseA
+              ? 'Connexion Google à préparer'
+              : 'Configuration serveur requise'}
+          </AlertTitle>
           <AlertDescription>
-            Ajoutez les identifiants Google Business Profile, l’URI de
-            redirection et une clé de chiffrement avant de connecter un compte.
+            {releaseA
+              ? 'Contactez le support YUTA pour préparer la connexion Google de votre établissement.'
+              : 'Ajoutez les identifiants Google Business Profile, l’URI de redirection et une clé de chiffrement avant de connecter un compte.'}
           </AlertDescription>
         </Alert>
       )}
@@ -34,8 +41,9 @@ export function IntegrationStatusAlerts({
         <Alert tone="warning" icon={<TriangleAlert className="h-5 w-5" />}>
           <AlertTitle>Accès Google indisponible</AlertTitle>
           <AlertDescription>
-            Reconnectez Google. Si le problème persiste, vérifiez que les API
-            Business Profile sont activées pour le projet Google Cloud.
+            {releaseA
+              ? 'Reconnectez Google. Si le problème persiste, contactez le support YUTA.'
+              : 'Reconnectez Google. Si le problème persiste, vérifiez que les API Business Profile sont activées pour le projet Google Cloud.'}
           </AlertDescription>
         </Alert>
       )}

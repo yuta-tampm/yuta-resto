@@ -6,20 +6,33 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-08-06
+Last updated: 2026-10-01
+
+## Exposure applicability
+
+The Booking scope below applies to the `internal` instance profile. In
+`release-a`, Today uses the same authenticated route, trusted local date and
+context but only the accepted Google projection in the
+[Today Product home](../../../features/today/README.md#accepted-release-a-projection).
+It omits Booking reads/data/cards/CTAs, DIRECT and AI. New is local `NEW`;
+attention is `NEW`, `TO_PROCESS`, `DRAFTED`, `FOLLOW_UP`, with uncapped totals,
+matching preview/list scope and assigned-only STAFF access under current grants.
+Permitted OWNER setup or operator handoff remains truthful about missing import
+evidence; no importer or publisher is implemented. Internal source ownership
+and behavior remain intact; A availability does not establish launch readiness.
 
 ## User goal
 
-An authenticated restaurant user quickly understands the establishment's
-booking activity and supported customer-attention items for the current local
-day, then navigates to the relevant Backoffice workflow.
+In internal, an authenticated restaurant user quickly understands the
+establishment's booking activity and supported customer-attention items for the
+current local day, then navigates to the relevant Backoffice workflow.
 
 The page is an operational summary, not an analytics dashboard and not a local
 POS control surface.
 
 ## Current approved capabilities
 
-The first integrated scope may present only current repository capabilities:
+The internal integrated scope may present only current repository capabilities:
 
 - a greeting using the authenticated user's display name;
 - the current date in the establishment timezone and locale;
@@ -36,12 +49,14 @@ The first integrated scope may present only current repository capabilities:
 ## Current data boundaries
 
 - Every query uses server-derived organization and establishment context.
-- Booking sections require the booking entitlement and current booking
+- Internal Booking sections require the booking entitlement and current booking
   permissions.
 - Reputation sections require the reputation entitlement and current
   reputation permissions.
 - Dates and service times use the establishment timezone.
 - The dashboard returns only fields it renders.
+- The server selects instance exposure; browser input cannot widen the A
+  source/status/actor scope or re-enable a deferred section.
 
 ## Deferred capabilities
 

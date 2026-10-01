@@ -5,6 +5,7 @@ import type {
   FeedbackStatus,
   FeedbackUrgency,
 } from '@yuta/contracts/reputation';
+import type { ReleaseASetupSummary } from '../../../../server/reputation/release-a-setup';
 
 export type ReviewListRecord = {
   id: string;
@@ -44,8 +45,12 @@ export type ReviewDetailRecord = ReviewListRecord & {
 
 export type ReviewsPageData = {
   state: 'ready' | 'unavailable';
+  releaseA: boolean;
+  setupSummary: ReleaseASetupSummary | null;
+  attentionCount: number;
   items: ReviewListRecord[];
   detail: ReviewDetailRecord | null;
+  selectedUnavailable?: boolean;
   assignableUsers: AssignableReputationUser[];
   query: {
     source: FeedbackSource | null;
@@ -59,6 +64,7 @@ export type ReviewsPageData = {
       | 'rating_desc'
       | 'urgency_desc'
       | 'unanswered';
+    queue: 'attention' | null;
   };
   pagination: {
     page: number;
@@ -69,9 +75,9 @@ export type ReviewsPageData = {
   counters: {
     total: number;
     new: number;
-    unanswered: number;
-    negative: number;
-    withIncident: number;
+    unanswered?: number;
+    negative?: number;
+    withIncident?: number;
   };
   permissions: {
     canManageFeedback: boolean;

@@ -11,11 +11,13 @@ import {
 } from '@yuta/db-cloud';
 import type { TenantContext } from '@yuta/tenant';
 import { hasRestaurantKnowledgePermission } from '../../../../server/auth/permissions';
+import { requireBackofficeCapabilityAvailable } from '../../../../server/backoffice-exposure';
 
 export async function loadConceptHistorySection(
   db: CloudDatabaseClient,
   tenant: TenantContext,
 ) {
+  requireBackofficeCapabilityAvailable('restaurant-knowledge');
   if (!hasRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.read')) {
     return null;
   }
@@ -33,6 +35,7 @@ export async function loadCuisineKnowHowSection(
   db: CloudDatabaseClient,
   tenant: TenantContext,
 ) {
+  requireBackofficeCapabilityAvailable('restaurant-knowledge');
   if (!hasRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.read')) {
     return null;
   }
@@ -50,6 +53,7 @@ export async function loadCustomerExperienceSection(
   db: CloudDatabaseClient,
   tenant: TenantContext,
 ) {
+  requireBackofficeCapabilityAvailable('restaurant-knowledge');
   if (!hasRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.read')) {
     return null;
   }
@@ -70,6 +74,7 @@ export async function loadTeamCultureSection(
   db: CloudDatabaseClient,
   tenant: TenantContext,
 ) {
+  requireBackofficeCapabilityAvailable('restaurant-knowledge');
   if (!hasRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.read')) {
     return null;
   }
@@ -87,6 +92,7 @@ export async function loadCommunicationIdentitySection(
   db: CloudDatabaseClient,
   tenant: TenantContext,
 ) {
+  requireBackofficeCapabilityAvailable('restaurant-knowledge');
   if (!hasRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.read')) {
     return null;
   }
@@ -107,6 +113,7 @@ export async function loadValidatedKnowledgeSection(
   db: CloudDatabaseClient,
   tenant: TenantContext,
 ) {
+  requireBackofficeCapabilityAvailable('restaurant-knowledge');
   if (!hasRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.read')) {
     return null;
   }

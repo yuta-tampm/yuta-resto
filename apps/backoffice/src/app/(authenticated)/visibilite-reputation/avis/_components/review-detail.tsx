@@ -19,10 +19,12 @@ export function ReviewDetail({
   review,
   assignableUsers,
   permissions,
+  releaseA = false,
 }: {
   review: ReviewDetailRecord;
   assignableUsers: AssignableReputationUser[];
   permissions: ReviewsPageData['permissions'];
+  releaseA?: boolean;
 }) {
   return (
     <Card padding="none" className="overflow-hidden xl:sticky xl:top-0">
@@ -75,11 +77,12 @@ export function ReviewDetail({
         assignableUsers={assignableUsers}
         canManageFeedback={permissions.canManageFeedback}
       />
-      <ReviewAnalysisSection review={review} />
+      {!releaseA && <ReviewAnalysisSection review={review} />}
       {review.source === 'GOOGLE' && (
         <ReviewReplyForm
           review={review}
           canCreateReply={permissions.canCreateReply}
+          releaseA={releaseA}
         />
       )}
       <ReviewNotesSection

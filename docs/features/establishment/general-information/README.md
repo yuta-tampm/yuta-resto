@@ -49,6 +49,25 @@ Page composition therefore does not:
 - copy data from another module into either capability; or
 - prove that an approved capability is implemented or enabled.
 
+### Accepted Release A exposure
+
+[RR-03](../../../PRODUCT_RELEASE_ROADMAP.md#bounded-foundation-and-release-a-decisions)
+exposes the existing basic Establishment Profile for A. Restaurant Knowledge
+sections, reads/serialization and operations are outside A exposure, including
+direct Server Action calls sharing this route. ADR-007 ownership and independent
+Knowledge grants remain; internal composition remains available under its
+existing authorization.
+
+Minimum operator preparation is valid trusted context/membership, restaurant
+name, valid locale/timezone and current permissions/entitlements. Address,
+images, Knowledge and a completion percentage are not A entry requirements.
+Slug, locale/timezone and missing-profile/context recovery remain with their
+current owners; no new field, persisted setup state or onboarding gate is added.
+The current Human chose a server-selected customer-instance A profile and
+separate internal mode, build/test only without activation; see the
+[task decision record](../../../reviews/release-a-customer-exposure-foundation/01-analysis-review.md#request-and-delegation).
+This is Product intent, not implementation or production readiness.
+
 ## 3. Establishment Profile
 
 ### Current approved boundary

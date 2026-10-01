@@ -1,5 +1,9 @@
 import type { LucideIcon } from 'lucide-react';
 import {
+  isBackofficePathAvailable,
+  type BackofficeExposureProfile,
+} from '../../lib/backoffice-exposure';
+import {
   Archive,
   ArrowLeftRight,
   BookOpen,
@@ -27,6 +31,8 @@ import {
 } from 'lucide-react';
 
 export type NavigationCapabilities = {
+  exposureProfile?: BackofficeExposureProfile;
+  canManageGoogleConnector?: boolean;
   bookingEnabled: boolean;
   reputationEnabled: boolean;
   canManageBookingSettings: boolean;
@@ -207,14 +213,31 @@ export const backofficeNavigationSections: readonly BackofficeNavigationSection[
 export function getVisibleNavigationSections(
   capabilities: NavigationCapabilities,
 ): BackofficeNavigationSection[] {
-  return backofficeNavigationSections.flatMap((section) => {
+  const profile = capabilities.exposureProfile ?? 'internal';
+  const sections = backofficeNavigationSections.flatMap((section) => {
     const items = section.items.filter(
       (item) =>
-        !item.requires ||
-        item.requires.every((capability) => capabilities[capability]),
+        isBackofficePathAvailable(profile, item.href) &&
+        (!item.requires ||
+          item.requires.every((capability) => capabilities[capability])),
     );
     return items.length > 0 ? [{ ...section, items }] : [];
   });
+  if (
+    profile === 'release-a' &&
+    capabilities.reputationEnabled &&
+    capabilities.canManageGoogleConnector
+  ) {
+    const integrationItem = {
+      label: 'Intégrations Google',
+      icon: Settings2,
+      href: '/parametres/integrations',
+    };
+    const settings = sections.find((section) => section.title === 'Paramètres');
+    if (settings) settings.items = [integrationItem, ...settings.items];
+    else sections.push({ title: 'Paramètres', items: [integrationItem] });
+  }
+  return sections;
 }
 
 export function getActiveNavigationHref(

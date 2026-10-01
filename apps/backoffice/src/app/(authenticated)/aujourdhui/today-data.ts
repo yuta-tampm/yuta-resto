@@ -13,6 +13,15 @@ import { requireReputationPermission } from '../../../server/auth/permissions';
 import { requireAuthenticatedTenant } from '../../../server/auth/session';
 import { cloudDatabase } from '../../../server/cloud-database';
 import {
+  getReputationFeedbackScope,
+  isReleaseAExposure,
+} from '../../../server/backoffice-exposure';
+import { releaseAAttentionStatuses } from '../../../lib/backoffice-exposure';
+import {
+  loadReleaseASetupSummary,
+  type ReleaseASetupSummary,
+} from '../../../server/reputation/release-a-setup';
+import {
   formatRelativeTime,
   formatTimeRange,
   getLocalDateTimeParts,
@@ -62,23 +71,37 @@ export type TodayDashboardData = {
   locale: string;
   timezone: string;
   displayName: string;
-  bookingEnabled: boolean;
   reputationEnabled: boolean;
-  canManageBookingSettings: boolean;
-  reservations: TodaySection<{
-    count: number;
-    confirmedCount: number;
-    pendingCount: number;
-    items: TodayReservationItem[];
-  }>;
-  services: TodaySection<{
-    count: number;
-    items: TodayServiceItem[];
-  }>;
+  setupSummary: ReleaseASetupSummary | null;
   reviews:
-    | TodaySection<{ attentionCount: number; items: TodayReviewItem[] }>
+    | TodaySection<{
+        attentionCount: number;
+        newCount?: number;
+        items: TodayReviewItem[];
+      }>
     | { state: 'hidden' };
-};
+} & (
+  | {
+      releaseA: true;
+      bookingEnabled: false;
+      canManageBookingSettings: false;
+    }
+  | {
+      releaseA: false;
+      bookingEnabled: boolean;
+      canManageBookingSettings: boolean;
+      reservations: TodaySection<{
+        count: number;
+        confirmedCount: number;
+        pendingCount: number;
+        items: TodayReservationItem[];
+      }>;
+      services: TodaySection<{
+        count: number;
+        items: TodayServiceItem[];
+      }>;
+    }
+);
 
 export async function loadTodayDashboard(): Promise<TodayDashboardData> {
   const { session, tenant } = await requireAuthenticatedTenant('/aujourdhui');
@@ -86,13 +109,15 @@ export async function loadTodayDashboard(): Promise<TodayDashboardData> {
     redirect('/resolution-etablissement?returnTo=%2Faujourdhui');
   }
   requireEstablishment(tenant);
+  const releaseA = isReleaseAExposure();
 
   const now = new Date();
   const { localDate, localTime, dayOfWeek } = getLocalDateTimeParts(
     tenant.timezone,
     now,
   );
-  const bookingEnabled = tenant.entitlements.has('booking.enabled');
+  const bookingEnabled =
+    !releaseA && tenant.entitlements.has('booking.enabled');
   const reputationEnabled = tenant.entitlements.has('reputation.enabled');
   const canManageBookingSettings =
     tenant.actor.type === 'user' &&
@@ -105,7 +130,7 @@ export async function loadTodayDashboard(): Promise<TodayDashboardData> {
     requireReputationPermission(tenant, 'reputation.read');
   }
 
-  const [reservations, services, reviews] = await Promise.all([
+  const [reservations, services, reviews, setupSummary] = await Promise.all([
     bookingEnabled
       ? loadSection('today reservations', async () => {
           const rows = await listReservations(
@@ -189,16 +214,24 @@ export async function loadTodayDashboard(): Promise<TodayDashboardData> {
             cloudDatabase,
             tenant,
             feedbackListQuerySchema.parse({
-              sort: 'unanswered',
+              ...(releaseA ? { source: 'GOOGLE' } : {}),
+              sort: releaseA ? 'newest' : 'unanswered',
               page: 1,
-              pageSize: 6,
+              pageSize: releaseA ? 3 : 6,
             }),
+            releaseA
+              ? {
+                  ...getReputationFeedbackScope(),
+                  statuses: releaseAAttentionStatuses,
+                }
+              : undefined,
           );
           const items = result.items
             .filter(
               (item) =>
-                item.replyStatus !== 'PUBLISHED' &&
-                !['RESOLVED', 'ARCHIVED', 'SPAM'].includes(item.status),
+                releaseA ||
+                (item.replyStatus !== 'PUBLISHED' &&
+                  !['RESOLVED', 'ARCHIVED', 'SPAM'].includes(item.status)),
             )
             .slice(0, 3)
             .map((item) => ({
@@ -213,32 +246,49 @@ export async function loadTodayDashboard(): Promise<TodayDashboardData> {
                 tenant.locale,
               ),
             }));
-          if (result.counters.unanswered === 0) {
+          const attentionCount = releaseA
+            ? (result.attentionCount ?? result.pagination.totalItems)
+            : result.counters.unanswered;
+          if (attentionCount === 0) {
             return { state: 'empty' as const };
           }
           return {
             state: 'ready' as const,
             data: {
-              attentionCount: result.counters.unanswered,
+              attentionCount,
+              ...(releaseA ? { newCount: result.counters.new } : {}),
               items,
             },
           };
         })
       : Promise.resolve({ state: 'hidden' as const }),
+    releaseA && reputationEnabled ? loadReleaseASetupSummary(tenant) : null,
   ]);
 
-  return {
+  const common = {
     localDate,
     locale: tenant.locale,
     timezone: tenant.timezone,
     displayName: session.userName,
-    bookingEnabled,
     reputationEnabled,
-    canManageBookingSettings,
-    reservations,
-    services,
     reviews,
+    setupSummary,
   };
+  return releaseA
+    ? {
+        ...common,
+        releaseA: true,
+        bookingEnabled: false,
+        canManageBookingSettings: false,
+      }
+    : {
+        ...common,
+        releaseA: false,
+        bookingEnabled,
+        canManageBookingSettings,
+        reservations,
+        services,
+      };
 }
 
 async function loadSection<T>(

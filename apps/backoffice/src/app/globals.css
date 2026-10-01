@@ -5,3 +5,20 @@
     font-family: var(--font-geist-sans), Inter, sans-serif;
   }
 }
+
+@layer utilities {
+  [data-backoffice-exposure='release-a']
+    :is(
+      .text-primary\/40,
+      .text-primary\/45,
+      .text-primary\/50,
+      .text-primary\/55,
+      .text-primary\/60
+    ) {
+    color: var(--color-secondary);
+  }
+
+  [data-backoffice-exposure='release-a'] [role='status'] .opacity-80 {
+    opacity: 1;
+  }
+}

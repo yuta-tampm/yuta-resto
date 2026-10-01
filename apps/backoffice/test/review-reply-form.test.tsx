@@ -128,4 +128,16 @@ describe('ReviewReplyForm pending draft save', () => {
     expect(error).toContain('role="alert"');
     expect(error).toContain('Échec de l’enregistrement.');
   });
+
+  it('shows manual-only Release A wording and keeps publication disabled', () => {
+    const markup = renderToStaticMarkup(
+      <ReviewReplyForm review={review} canCreateReply releaseA />,
+    );
+    expect(markup).toContain('sans approbation ni publication');
+    expect(markup).toContain('même avec une connexion configurée');
+    expect(markup).not.toContain('lucide-bot');
+    expect(markup).not.toContain('activée avec le connecteur');
+    const publishTag = markup.match(/<button\b[^>]*type="button"[^>]*>/)?.[0];
+    expect(publishTag).toContain('disabled=""');
+  });
 });

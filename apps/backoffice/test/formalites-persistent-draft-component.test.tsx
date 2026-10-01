@@ -11,6 +11,10 @@ import {
   CdiDraftWorkspace,
   workspaceFeedbackForOutcome,
 } from '../src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-workspace';
+import {
+  getActiveNavigationHref,
+  getVisibleNavigationSections,
+} from '../src/components/backoffice/backoffice-navigation';
 
 describe('Formalités persistent draft workspace rendering', () => {
   it('renders eligible no-draft with an explicit Create and no autosave fields', () => {
@@ -168,17 +172,200 @@ describe('Formalités persistent route and protected prototype boundaries', () =
       'src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-readiness-prototype.tsx',
       '89cdfceaa840a0ce2f939aef5f4f77ff1ef8d27b8cb79e5269d3f64e96ea52c1',
     ],
-    [
-      'src/components/backoffice/backoffice-navigation.ts',
-      '6deaa75874a35b114248d349433ab1c71b8e4e788411908786c5e89d6c4d0a97',
-    ],
-  ])(
-    'keeps protected prototype/gate/navigation bytes unchanged: %s',
-    (path, hash) => {
-      expect(sha256(path)).toBe(hash);
-    },
-  );
+  ])('keeps protected prototype/gate bytes unchanged: %s', (path, hash) => {
+    expect(sha256(path)).toBe(hash);
+  });
+
+  // The original protected navigation SHA-256 was
+  // 6deaa75874a35b114248d349433ab1c71b8e4e788411908786c5e89d6c4d0a97.
+  // The approved release-a-customer-exposure-foundation deltas qualify hosted
+  // navigation by availability. This checks preserved internal behavior and
+  // the approved A exclusion; it does not claim those historical bytes match.
+  it('preserves original internal navigation inventory and Formalités access prerequisites', () => {
+    const capabilities = {
+      bookingEnabled: true,
+      reputationEnabled: true,
+      canManageBookingSettings: true,
+      canManageUsers: true,
+      canReadPersonnel: true,
+      canManageGoogleConnector: true,
+    };
+    const internal = getVisibleNavigationSections({
+      ...capabilities,
+      exposureProfile: 'internal',
+    });
+    expect(getVisibleNavigationSections(capabilities)).toEqual(internal);
+    expect(
+      internal.map((section) => ({
+        title: section.title,
+        items: section.items.map(({ label, href, requires }) => ({
+          label,
+          href,
+          ...(requires ? { requires } : {}),
+        })),
+      })),
+    ).toEqual(originalInternalNavigation);
+
+    const withoutPersonnel = getVisibleNavigationSections({
+      ...capabilities,
+      exposureProfile: 'internal',
+      canReadPersonnel: false,
+    });
+    expect(
+      withoutPersonnel.flatMap((section) =>
+        section.items.map((item) => item.href),
+      ),
+    ).toEqual(
+      internal
+        .flatMap((section) => section.items.map((item) => item.href))
+        .filter(
+          (href) =>
+            href !== '/equipe/salaries' &&
+            href !== '/equipe/formalites-personnel',
+        ),
+    );
+    expect(
+      getActiveNavigationHref(
+        '/equipe/formalites-personnel/employee',
+        internal,
+      ),
+    ).toBe('/equipe/formalites-personnel');
+    expect(
+      getActiveNavigationHref('/equipe/registre-personnel/employee', internal),
+    ).toBe('/equipe/salaries');
+  });
+
+  it('excludes generic and connected Formalités navigation in A despite valid existing prerequisites', () => {
+    const sections = getVisibleNavigationSections({
+      exposureProfile: 'release-a',
+      bookingEnabled: true,
+      reputationEnabled: true,
+      canManageBookingSettings: true,
+      canManageUsers: true,
+      canReadPersonnel: true,
+      canManageGoogleConnector: true,
+    });
+    expect(
+      sections.flatMap((section) => section.items.map((item) => item.href)),
+    ).not.toContain('/equipe/formalites-personnel');
+    for (const path of [
+      '/equipe/formalites-personnel',
+      '/equipe/formalites-personnel/employee',
+    ]) {
+      expect(getActiveNavigationHref(path, sections)).toBeUndefined();
+    }
+  });
 });
+
+const originalInternalNavigation = [
+  {
+    title: 'Accueil',
+    items: [{ label: 'Aujourd’hui', href: '/aujourdhui' }],
+  },
+  {
+    title: 'Réservations',
+    items: [
+      {
+        label: 'Réservations',
+        href: '/reservations',
+        requires: ['bookingEnabled'],
+      },
+      {
+        label: 'Paramètres de réservation',
+        href: '/reservations/parametres',
+        requires: ['bookingEnabled', 'canManageBookingSettings'],
+      },
+    ],
+  },
+  {
+    title: 'Établissement',
+    items: [
+      {
+        label: 'Informations générales',
+        href: '/etablissement/informations-generales',
+      },
+      {
+        label: 'Horaires & services',
+        href: '/etablissement/horaires-services',
+        requires: ['bookingEnabled', 'canManageBookingSettings'],
+      },
+      {
+        label: 'Salle & tables',
+        href: '/etablissement/salles-tables',
+        requires: ['bookingEnabled'],
+      },
+      { label: 'Carte & menus', href: '/etablissement/carte-menus' },
+      {
+        label: 'Ressources internes',
+        href: '/etablissement/ressources-internes',
+      },
+    ],
+  },
+  {
+    title: 'Stock',
+    items: [
+      { label: 'Inventaire', href: '/stock/inventaire' },
+      { label: 'Mouvements de stock', href: '/stock/mouvements' },
+      { label: 'Fiches techniques', href: '/stock/fiches-techniques' },
+      { label: 'Fournisseurs', href: '/stock/fournisseurs' },
+    ],
+  },
+  {
+    title: 'Gestion de l’équipe',
+    items: [
+      {
+        label: 'Salariés',
+        href: '/equipe/salaries',
+        requires: ['canReadPersonnel'],
+      },
+      { label: 'Planning', href: '/equipe/planning' },
+      { label: 'Pointage', href: '/equipe/pointage' },
+      { label: 'Tâches du jour', href: '/equipe/taches-quotidiennes' },
+      {
+        label: 'Formalités du personnel',
+        href: '/equipe/formalites-personnel',
+        requires: ['canReadPersonnel'],
+      },
+    ],
+  },
+  {
+    title: 'Conformité',
+    items: [{ label: 'Veille & conformité', href: '/conformite/veille' }],
+  },
+  {
+    title: 'Visibilité & réputation',
+    items: [
+      {
+        label: 'Satisfaction client',
+        href: '/visibilite-reputation/satisfaction',
+        requires: ['reputationEnabled'],
+      },
+      {
+        label: 'Avis & commentaires',
+        href: '/visibilite-reputation/avis',
+        requires: ['reputationEnabled'],
+      },
+    ],
+  },
+  {
+    title: 'Marketing & contenu',
+    items: [
+      { label: 'Créations visuelles', href: '/marketing/studio-creatif' },
+      { label: 'Création de contenus', href: '/marketing/contenus' },
+    ],
+  },
+  {
+    title: 'Paramètres',
+    items: [
+      { label: 'Modules & abonnement', href: '/parametres/abonnement' },
+      {
+        label: 'Utilisateurs & accès',
+        href: '/parametres/utilisateurs-acces',
+        requires: ['canManageUsers'],
+      },
+    ],
+  },
+];
 
 function renderWorkspace(model: FormalitesPersonnelDraftReadModel): string {
   return renderToStaticMarkup(

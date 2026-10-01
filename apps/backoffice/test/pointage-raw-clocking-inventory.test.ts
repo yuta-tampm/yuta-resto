@@ -8,6 +8,7 @@ import {
   afterAll,
   afterEach,
   beforeAll,
+  beforeEach,
   describe,
   expect,
   it,
@@ -39,7 +40,7 @@ const matching = [
     'end',
   ].map((operation) => `/api/pointage/synthetic-establishment/${operation}`),
 ];
-const unrelated = [
+const nonPointagePaths = [
   '/',
   '/aujourdhui',
   '/equipe/pointage',
@@ -75,6 +76,7 @@ describe.skipIf(process.env.YUTA_POINTAGE_SYNTHETIC_TEST_MODE !== 'true')(
 
     beforeAll(async () => {
       const environment = pointageChildEnvironment(process.env);
+      environment.BACKOFFICE_EXPOSURE_PROFILE = 'internal';
       const probe = createServer();
       await new Promise<void>((done, reject) => {
         probe.once('error', reject);
@@ -275,7 +277,11 @@ function nonce(response: Response) {
 }
 
 describe('U3 isolated header implementation evidence, not PAGE/RSC or Browser QA', () => {
-  it('PAGE is explicitly dynamic/revalidate zero and only composes neutral presentation', () => {
+  beforeEach(() => {
+    vi.stubEnv('BACKOFFICE_EXPOSURE_PROFILE', 'internal');
+  });
+
+  it('PAGE is dynamic/revalidate zero and guards availability before neutral presentation', () => {
     const source = readFileSync(
       resolve(__dirname, '../src/app/pointage/[establishmentSlug]/page.tsx'),
       'utf8',
@@ -284,7 +290,13 @@ describe('U3 isolated header implementation evidence, not PAGE/RSC or Browser QA
     expect(source).toContain('export const revalidate = 0');
     expect(
       [...source.matchAll(/from '([^']+)'/g)].map((match) => match[1]),
-    ).toEqual(['./_components/pointage-employee']);
+    ).toEqual([
+      './_components/pointage-employee',
+      '../../../server/backoffice-exposure',
+    ]);
+    expect(source).toMatch(
+      /function PointagePage\(\)\s*\{\s*requireBackofficeCapabilityAvailable\('pointage'\);\s*return <PointageEmployee \/>;/,
+    );
     expect(source).not.toMatch(
       /fetch\(|params|searchParams|cookies\(|headers\(|unstable_cache|process\.env/,
     );
@@ -319,15 +331,59 @@ describe('U3 isolated header implementation evidence, not PAGE/RSC or Browser QA
     },
   );
 
-  it.each(unrelated)('does not match or modify unrelated route %s', (path) => {
-    expect(unstable_doesMiddlewareMatch({ config, url: origin + path })).toBe(
-      false,
-    );
-    const response = proxy(new NextRequest(origin + path));
-    expect([...response.headers]).toEqual([...NextResponse.next().headers]);
-    for (const header of policyHeaders)
-      expect(response.headers.has(header)).toBe(false);
+  // U3 originally matched Pointage only. The approved exposure foundation
+  // admits all paths through a closed server-selected policy while keeping
+  // Pointage-specific headers isolated and internal admission unchanged.
+  it.each(nonPointagePaths)(
+    'general matcher preserves internal admission without Pointage policy for %s',
+    (path) => {
+      expect(unstable_doesMiddlewareMatch({ config, url: origin + path })).toBe(
+        true,
+      );
+      const response = proxy(new NextRequest(origin + path));
+      expect([...response.headers]).toEqual([...NextResponse.next().headers]);
+      for (const header of policyHeaders)
+        expect(response.headers.has(header)).toBe(false);
+    },
+  );
+
+  it.each([
+    '/_next/static/chunks/app.js',
+    '/_next/image',
+    '/favicon.ico',
+    '/site.webmanifest',
+    '/images/yuta-logo-padding-giam-square-transparent.png',
+    '/images/web-app-manifest-512x512.png',
+    '/images/web-app-manifest-192x192.png',
+    '/images/logo-slogan.png',
+    '/images/favicon-96x96.png',
+    '/images/apple-touch-icon.png',
+  ])('keeps the exact presentation exemption for %s', (path) => {
+    for (const profile of ['release-a', 'invalid']) {
+      vi.stubEnv('BACKOFFICE_EXPOSURE_PROFILE', profile);
+      const response = proxy(new NextRequest(origin + path));
+      expect([...response.headers]).toEqual([...NextResponse.next().headers]);
+      expect(response.body).toBeNull();
+    }
   });
+
+  it.each(['/images/logo.svg', '/future-module.json', '/api/pointage-other'])(
+    'does not treat unknown static-looking or Pointage-like path %s as exempt',
+    async (path) => {
+      vi.stubEnv('BACKOFFICE_EXPOSURE_PROFILE', 'release-a');
+      const response = proxy(
+        new NextRequest(origin + path, { method: 'POST' }),
+      );
+      expect(response.status).toBe(403);
+      expect(await response.json()).toEqual({
+        code: 'BACKOFFICE_FEATURE_UNAVAILABLE',
+      });
+      expect(response.headers.get('cache-control')).toBe(
+        'private, no-store, max-age=0',
+      );
+      expect(response.headers.has('content-security-policy')).toBe(false);
+    },
+  );
 
   it('generates a fresh server-side nonce for each response, ignoring supplied nonce/CSP', () => {
     const values = new Set<string>();
@@ -444,14 +500,23 @@ describe('U3 isolated header implementation evidence, not PAGE/RSC or Browser QA
     );
   });
 
-  it('contains only the approved transport dependency and has no persistent or personal-data operations', () => {
+  it('contains only approved transport/availability dependencies and has no persistent or personal-data operations', () => {
     const source = readFileSync(resolve(__dirname, '../src/proxy.ts'), 'utf8');
     expect(
       [...source.matchAll(/from '([^']+)'/g)].map((match) => match[1]),
-    ).toEqual(['node:crypto', 'next/server']);
+    ).toEqual([
+      'node:crypto',
+      'next/server',
+      './lib/backoffice-exposure',
+      './server/backoffice-exposure-config',
+    ]);
     expect(source).toContain('randomBytes(16)');
     expect(source).not.toMatch(
-      /request\.(headers|cookies|body|json|text|url)|searchParams|console\.|fetch\(|localStorage|sessionStorage|indexedDB|serviceWorker|@yuta\/(auth|db-cloud)|writeFile|new Headers/,
+      /request\.(headers|cookies|body|json|text|arrayBuffer|formData)|searchParams|console\.|fetch\(|localStorage|sessionStorage|indexedDB|serviceWorker|@yuta\/(auth|db-cloud)|writeFile|new Headers/,
     );
+    // Only the approved unavailable redirect constructs a URL. The internal
+    // Pointage path still proves above that no incoming URL/query is read.
+    expect([...source.matchAll(/request\.url/g)]).toHaveLength(1);
+    expect(source).toContain('const destination = new URL(request.url);');
   });
 });

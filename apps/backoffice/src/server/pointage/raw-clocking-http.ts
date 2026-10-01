@@ -14,6 +14,7 @@ import {
 } from '@yuta/contracts';
 import { getPointageRawClockingConsumer } from './raw-clocking-bootstrap';
 import type { PointageRawFailureCode } from './raw-clocking-service';
+import { getBackofficeExposureProfile } from '../backoffice-exposure-config';
 
 type Operation =
   | 'context'
@@ -80,6 +81,13 @@ export async function handlePointageRawClockingRequest(
   establishmentSlug: string,
   operation: Operation,
 ): Promise<Response> {
+  try {
+    if (getBackofficeExposureProfile() === 'release-a') {
+      return failure('POINTAGE_ACCESS_DENIED');
+    }
+  } catch {
+    return failure('POINTAGE_UNAVAILABLE');
+  }
   if (
     request.method !== (operation === 'context' ? 'GET' : 'POST') ||
     new URL(request.url).search

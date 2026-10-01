@@ -33,6 +33,7 @@ import {
 } from './backoffice-navigation';
 import { TenantSwitcher } from './tenant-switcher';
 import { LogoutSubmitButton } from './logout-submit-button';
+import type { BackofficeExposureProfile } from '../../lib/backoffice-exposure';
 
 export function BackofficeFrame({
   children,
@@ -43,6 +44,8 @@ export function BackofficeFrame({
   canManageBookingSettings,
   bookingEnabled,
   reputationEnabled,
+  exposureProfile = 'internal',
+  canManageGoogleConnector = false,
 }: {
   children: ReactNode;
   currentUser: { name: string; email: string };
@@ -55,6 +58,8 @@ export function BackofficeFrame({
   canManageBookingSettings: boolean;
   bookingEnabled: boolean;
   reputationEnabled: boolean;
+  exposureProfile?: BackofficeExposureProfile;
+  canManageGoogleConnector?: boolean;
 }) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -76,6 +81,7 @@ export function BackofficeFrame({
 
   return (
     <AppShell
+      data-backoffice-exposure={exposureProfile}
       sidebar={
         <AppSidebar
           header={
@@ -84,22 +90,26 @@ export function BackofficeFrame({
             </AppSidebarHeader>
           }
           footer={
-            <AppSidebarFooter>
-              <Button
-                variant="ghost"
-                size="sm"
-                fullWidth
-                className="justify-start text-primary/50"
-              >
-                <ChevronLeft className="h-4 w-4" />
-                Reduire le menu
-              </Button>
-            </AppSidebarFooter>
+            exposureProfile === 'internal' ? (
+              <AppSidebarFooter>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  fullWidth
+                  className="justify-start text-primary/50"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Reduire le menu
+                </Button>
+              </AppSidebarFooter>
+            ) : undefined
           }
         >
           <BackofficeNavigation
             pathname={pathname}
             capabilities={{
+              exposureProfile,
+              canManageGoogleConnector,
               bookingEnabled,
               reputationEnabled,
               canManageBookingSettings,
@@ -124,15 +134,17 @@ export function BackofficeFrame({
               >
                 <Menu className="h-5 w-5" />
               </IconButton>
-              <div className="relative min-w-0 max-w-md flex-1">
-                <SearchInput
-                  placeholder="Rechercher (ex : commande, produit, employe...)"
-                  className="pr-14"
-                />
-                <span className="pointer-events-none absolute right-3 top-1/2 hidden -translate-y-1/2 rounded-md border border-border-default bg-white px-1.5 py-0.5 text-[11px] font-semibold text-primary/40 sm:block">
-                  &#8984; K
-                </span>
-              </div>
+              {exposureProfile === 'internal' && (
+                <div className="relative min-w-0 max-w-md flex-1">
+                  <SearchInput
+                    placeholder="Rechercher (ex : commande, produit, employe...)"
+                    className="pr-14"
+                  />
+                  <span className="pointer-events-none absolute right-3 top-1/2 hidden -translate-y-1/2 rounded-md border border-border-default bg-white px-1.5 py-0.5 text-[11px] font-semibold text-primary/40 sm:block">
+                    &#8984; K
+                  </span>
+                </div>
+              )}
             </>
           }
           actions={
@@ -142,15 +154,17 @@ export function BackofficeFrame({
                 currentMembershipId={tenantSwitcher.currentMembershipId}
                 className="hidden w-56 md:flex"
               />
-              <IconButton
-                className="relative text-primary/60"
-                aria-label="Notifications"
-              >
-                <Bell className="h-5 w-5" />
-                <span className="absolute right-1.5 top-1.5 grid h-4 w-4 place-items-center rounded-full bg-action-danger text-[10px] font-black text-white">
-                  3
-                </span>
-              </IconButton>
+              {exposureProfile === 'internal' && (
+                <IconButton
+                  className="relative text-primary/60"
+                  aria-label="Notifications"
+                >
+                  <Bell className="h-5 w-5" />
+                  <span className="absolute right-1.5 top-1.5 grid h-4 w-4 place-items-center rounded-full bg-action-danger text-[10px] font-black text-white">
+                    3
+                  </span>
+                </IconButton>
+              )}
               <div className="hidden text-right lg:block">
                 <p className="text-xs font-bold text-primary">
                   {currentUser.name}
@@ -181,6 +195,8 @@ export function BackofficeFrame({
       </div>
 
       <MobileMenuDrawer
+        exposureProfile={exposureProfile}
+        canManageGoogleConnector={canManageGoogleConnector}
         open={mobileMenuOpen}
         pathname={pathname}
         tenantSwitcher={tenantSwitcher}
@@ -257,6 +273,8 @@ function MobileMenuDrawer({
   canManageBookingSettings,
   bookingEnabled,
   reputationEnabled,
+  exposureProfile,
+  canManageGoogleConnector,
   onClose,
 }: {
   open: boolean;
@@ -270,6 +288,8 @@ function MobileMenuDrawer({
   canManageBookingSettings: boolean;
   bookingEnabled: boolean;
   reputationEnabled: boolean;
+  exposureProfile: BackofficeExposureProfile;
+  canManageGoogleConnector: boolean;
   onClose: () => void;
 }) {
   return (
@@ -279,6 +299,7 @@ function MobileMenuDrawer({
         open ? 'pointer-events-auto' : 'pointer-events-none',
       )}
       aria-hidden={!open}
+      inert={exposureProfile === 'release-a' && !open}
     >
       <button
         type="button"
@@ -325,6 +346,8 @@ function MobileMenuDrawer({
           <BackofficeNavigation
             pathname={pathname}
             capabilities={{
+              exposureProfile,
+              canManageGoogleConnector,
               bookingEnabled,
               reputationEnabled,
               canManageBookingSettings,

@@ -9,6 +9,11 @@ import { loadGoogleIntegrationPageData } from './google-integration-loader';
 import { GoogleLocationSelectorPanel } from './_components/google-location-selector-panel';
 import { IntegrationStatusAlerts } from './_components/integration-status-alerts';
 import type { IntegrationSearchParams } from './integrations-model';
+import {
+  filterIntegrationSearchParam,
+  releaseAIntegrationResultMessages,
+} from './integrations-model';
+import { isReleaseAExposure } from '../../../../server/backoffice-exposure';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,11 +26,16 @@ export default async function SettingsIntegrationsPage({
   const { tenant } = await requireReputationTenant('/parametres/integrations');
   requireReputationPermission(tenant, 'reputation.connector.manage');
   const data = await loadGoogleIntegrationPageData(tenant, params);
+  const releaseA = isReleaseAExposure();
 
   return (
     <BackofficePage
       title="Intégrations"
-      description="Connectez les services externes utilisés par votre établissement."
+      description={
+        releaseA
+          ? 'Préparez la connexion Google de votre établissement.'
+          : 'Connectez les services externes utilisés par votre établissement.'
+      }
       actions={
         data.configured ? (
           <Button asChild variant={data.connector ? 'outline' : 'primary'}>
@@ -42,13 +52,20 @@ export default async function SettingsIntegrationsPage({
       }
     >
       <IntegrationStatusAlerts
-        resultMessage={data.resultMessage}
+        resultMessage={
+          releaseA
+            ? releaseAIntegrationResultMessages[
+                filterIntegrationSearchParam(params.google) ?? ''
+              ]
+            : data.resultMessage
+        }
         configured={data.configured}
         discoveryError={data.discoveryError}
+        releaseA={releaseA}
       />
 
       <div className="grid gap-5 xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
-        <GoogleConnectorPanel connector={data.connector} />
+        <GoogleConnectorPanel connector={data.connector} releaseA={releaseA} />
         <GoogleLocationSelectorPanel
           accounts={data.accounts}
           locations={data.locations}

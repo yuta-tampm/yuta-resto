@@ -63,8 +63,11 @@ sensitive details never belong in the repository.
   release-planning home; bounded Foundation/A decisions RR-01–RR-03 accepted
   by the Human. Remaining scope, runtime delivery and readiness stay separate.
 - [`release-roadmap-foundation` discovery handoff](reviews/release-roadmap-foundation/discovery-handoff.md)
-  — evidence, attributable Human decisions and bounded next request; no active
-  OpenSpec change has been created.
+  — evidence, attributable Human decisions and bounded next request;
+  implementation remains separately scoped.
+- [ADR-009: Backoffice instance exposure](decisions/ADR-009-release-a-customer-exposure.md)
+  — server-selected customer A/internal boundary; no release activation or
+  customer-readiness approval.
 
 ### Architecture
 
@@ -186,6 +189,7 @@ They are provenance, not current workflow instructions.
 - [`decisions/ADR-006-cloud-establishment-profile-context.md`](decisions/ADR-006-cloud-establishment-profile-context.md)
 - [`decisions/ADR-007-composed-general-information-and-restaurant-knowledge.md`](decisions/ADR-007-composed-general-information-and-restaurant-knowledge.md)
 - [`decisions/ADR-008-task-collaboration-and-delegated-review.md`](decisions/ADR-008-task-collaboration-and-delegated-review.md)
+- [`decisions/ADR-009-release-a-customer-exposure.md`](decisions/ADR-009-release-a-customer-exposure.md)
 
 Completed task specifications are removed after durable behavior is reflected
 in current feature documentation and remaining work is captured in `STATUS.md`.

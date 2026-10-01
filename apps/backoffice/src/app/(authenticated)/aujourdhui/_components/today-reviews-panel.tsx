@@ -6,18 +6,26 @@ import { TodaySectionUnavailable } from './today-section-unavailable';
 
 export function TodayReviewsPanel({
   section,
+  releaseA = false,
 }: {
   section: TodaySection<{
     attentionCount: number;
     items: TodayReviewItem[];
   }>;
+  releaseA?: boolean;
 }) {
   return (
     <Panel
       title="Avis à traiter"
       action={
         <Button asChild variant="secondary" size="sm">
-          <Link href="/visibilite-reputation/avis?sort=unanswered">
+          <Link
+            href={
+              releaseA
+                ? '/visibilite-reputation/avis?queue=attention'
+                : '/visibilite-reputation/avis?sort=unanswered'
+            }
+          >
             Voir tout
           </Link>
         </Button>
@@ -33,7 +41,11 @@ export function TodayReviewsPanel({
       {section.state === 'ready' && section.data.items.length === 0 && (
         <EmptyState
           title="Avis à ouvrir dans la boîte de réception"
-          description="Le compteur indique des avis sans réponse, mais aucun aperçu n’est disponible."
+          description={
+            releaseA
+              ? 'Des avis nécessitent un traitement dans YUTA. Ouvrez la liste complète.'
+              : 'Le compteur indique des avis sans réponse, mais aucun aperçu n’est disponible.'
+          }
           className="min-h-48"
         />
       )}
@@ -41,7 +53,11 @@ export function TodayReviewsPanel({
         <EmptyState
           icon={<MessageSquareText className="mx-auto h-8 w-8" aria-hidden />}
           title="Aucun avis à traiter"
-          description="Les nouveaux avis apparaîtront ici."
+          description={
+            releaseA
+              ? 'Aucun avis enregistré ne correspond aux statuts à traiter dans YUTA.'
+              : 'Les nouveaux avis apparaîtront ici.'
+          }
           className="min-h-48"
         />
       )}

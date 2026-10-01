@@ -6,13 +6,14 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-08-06
+Last updated: 2026-10-01
 
 ## Authority and route maturity
 
-`/aujourdhui` is an authenticated, establishment-scoped Server Component integrated
-with current booking and reputation sources. It preserves the shared shell,
-tenant selection, and server authentication.
+`/aujourdhui` is an authenticated, establishment-scoped Server Component. The
+`internal` profile integrates current Booking and Reputation sources;
+`release-a` integrates only the accepted Google projection. Both preserve the
+shared shell, tenant selection, and server authentication.
 
 The written scope and current repository behavior take precedence over
 `references/today-dashboard-approved.png`. The reference controls visual
@@ -29,18 +30,24 @@ Show:
 - an `Ajouter` action only when at least one supported, permission-allowed
   destination exists.
 
-The first supported add destination is reservation creation. Do not render a
-menu for one item when a direct link is clearer, and do not add placeholder
+In internal, the first supported add destination is reservation creation. A
+shows no Booking add action. Do not render a menu for one item when a direct
+link is clearer, and do not add placeholder
 actions.
 
 ## Attention summaries
 
-Use a balanced responsive grid. Available cards are derived from enabled and
+Use a balanced responsive grid. Internal cards are derived from enabled and
 authorized current modules:
 
 - `Réservations aujourd’hui`;
 - `Avis à traiter` when reputation is available;
 - `Services aujourd’hui` when booking administration data is available.
+
+In A, the permitted cards are `Nouveaux avis Google` and `Avis à traiter`,
+using local `NEW` and `NEW/TO_PROCESS/DRAFTED/FOLLOW_UP` respectively. Their
+links open the scoped Google new/attention lists. They promise no remote
+unanswered count or provider reply state.
 
 Each card contains an icon, label, value or explicit state, one supporting
 label, and a real destination. Do not render email, content, task, or team
@@ -49,6 +56,8 @@ cards. Do not turn unavailable capabilities into misleading zero counts.
 ## Main content
 
 ### Reservations today
+
+This section applies to `internal` only.
 
 This is the dominant task surface. Show a limited chronological list containing
 only fields returned by the current reservation source:
@@ -64,6 +73,8 @@ when their semantics and interaction are implemented and tested.
 
 ### Booking services today
 
+This section applies to `internal` only.
+
 Derive service tiles from today's enabled persisted booking service periods.
 Show service name, local time range, capacity when appropriate, and a textual
 current/upcoming/completed state when deterministically derived.
@@ -78,23 +89,35 @@ source, author, rating when present, a safely truncated excerpt, received time,
 and a real link to the reviews workflow. Do not fabricate source metadata or
 reply state.
 
+In A, render only scoped Google rows in the single-column content area. Place
+the existing token-free setup/recovery summary before the review panel when
+applicable: OWNER gets the permitted setup link; other roles get an operator
+handoff. An empty bound inbox establishes no import outcome; stored rows and
+local replies establish no provider provenance/publication. The
+[Today Product home](../../../features/today/README.md#accepted-release-a-projection)
+owns the queue semantics.
+
 ## Layout
 
-At wide desktop widths:
+In internal, at wide desktop widths:
 
 - the summary row appears below the header;
 - reservations occupy the dominant column;
 - booking services and reviews form secondary cards;
 - the grid uses `minmax(0, 1fr)` and current spacing tokens.
 
-At tablet widths, cards form a balanced one- or two-column layout. At mobile
-widths, use this order:
+In internal, at tablet widths, cards form a balanced one- or two-column layout.
+At mobile widths, use this order:
 
 1. header and supported add action;
 2. attention summaries;
 3. reservations;
 4. booking services;
 5. reviews.
+
+In A, use responsive summary cards above a single-column Google content area
+at every width. Order: header, new/attention summaries, applicable setup/recovery,
+review preview. No Booking panel or link occupies an empty placeholder column.
 
 No breakpoint may introduce horizontal page scrolling.
 
@@ -136,3 +159,5 @@ One section failure must not be represented as a successful zero value.
 - Reservations do not show unsupported table or phone fields.
 - Booking services omit cut-off and last-arrival information.
 - The number of summary and content cards is lower and capability-dependent.
+- A omits the internal reference's Booking hierarchy and uses the approved
+  Google-only composition without changing the shared visual system.

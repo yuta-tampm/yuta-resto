@@ -16,6 +16,7 @@ import { revalidatePath } from 'next/cache';
 import { cloudDatabase as db } from '../../../../server/cloud-database';
 import { requireReputationTenant } from '../../../../server/auth/session';
 import { requireReputationPermission } from '../../../../server/auth/permissions';
+import { getReputationFeedbackScope } from '../../../../server/backoffice-exposure';
 
 export type ReputationActionState = {
   error: string | null;
@@ -41,11 +42,16 @@ export async function updateFeedbackAction(
   }
 
   try {
-    await updateFeedback(db, tenant, {
-      feedbackId: feedbackId.data,
-      actorUserId: session.userId,
-      ...update.data,
-    });
+    await updateFeedback(
+      db,
+      tenant,
+      {
+        feedbackId: feedbackId.data,
+        actorUserId: session.userId,
+        ...update.data,
+      },
+      getReputationFeedbackScope(),
+    );
     revalidateReviews();
     return { error: null, success: 'Avis mis à jour.' };
   } catch (error: unknown) {
@@ -70,11 +76,16 @@ export async function saveReplyDraftAction(
   }
 
   try {
-    await saveFeedbackReplyDraft(db, tenant, {
-      feedbackId: feedbackId.data,
-      content: draft.data.content,
-      actorUserId: session.userId,
-    });
+    await saveFeedbackReplyDraft(
+      db,
+      tenant,
+      {
+        feedbackId: feedbackId.data,
+        content: draft.data.content,
+        actorUserId: session.userId,
+      },
+      getReputationFeedbackScope(),
+    );
     revalidateReviews();
     return { error: null, success: 'Brouillon enregistré.' };
   } catch (error: unknown) {
@@ -101,11 +112,16 @@ export async function createInternalNoteAction(
   }
 
   try {
-    await createFeedbackInternalNote(db, tenant, {
-      feedbackId: feedbackId.data,
-      content: note.data.content,
-      actorUserId: session.userId,
-    });
+    await createFeedbackInternalNote(
+      db,
+      tenant,
+      {
+        feedbackId: feedbackId.data,
+        content: note.data.content,
+        actorUserId: session.userId,
+      },
+      getReputationFeedbackScope(),
+    );
     revalidateReviews();
     return { error: null, success: 'Note interne ajoutée.' };
   } catch (error: unknown) {

@@ -128,6 +128,43 @@ When `POS_PRINTER_DEVICE` is unset, kitchen ticket jobs remain in the local
 queue for manual inspection. When set, the path must already be a character
 device (`test -c /dev/rfcomm1`) accessible to the `site-agent` process.
 
+## Backoffice instance exposure
+
+`apps/backoffice` reads server-only `BACKOFFICE_EXPOSURE_PROFILE` at request
+boundaries. Valid values are `internal` and `release-a`; unset development/test
+selection retains the broader internal modules with their existing guards.
+Invalid values in any environment and unset production selection fail closed
+with safe `503` behavior. Building the application does not select or activate
+a deployed profile. See [ADR-009](../decisions/ADR-009-release-a-customer-exposure.md)
+and [Deployment](DEPLOYMENT.md#backoffice-instance-exposure).
+
+For an already prepared, authorized local cloud target, select A only for the
+process started from the current terminal; no environment file edit is needed:
+
+```powershell
+$env:BACKOFFICE_EXPOSURE_PROFILE = 'release-a'
+pnpm dev:backoffice
+# After stopping the owned development server:
+Remove-Item Env:BACKOFFICE_EXPOSURE_PROFILE
+```
+
+Use `internal` instead to exercise the broader internal composition. Restart the
+owned process when changing its selection; browser queries, cookies and forms
+cannot override it. A exposes Today, Google Avis, the basic Establishment Profile,
+OWNER Google Integrations and permitted Users & Access under current grants.
+Deferred hosted routes/actions/APIs, including Booking, Knowledge and Pointage,
+are denied. This selection alone grants no Pointage runtime admission or other
+development opt-in.
+
+A Today/Avis attention uses local `NEW`, `TO_PROCESS`, `DRAFTED`, `FOLLOW_UP`:
+counts are not capped by preview/pagination and STAFF remains assigned-only.
+Google fixtures and local `PUBLISHED` rows are not import or remote-publication
+evidence. No importer/publisher is implemented by this foundation. Exposure
+verification uses a separately verified, task-owned disposable cloud target and
+process-only credentials/provider overrides; do not repoint guarded tests to
+the persistent development databases. No provider call or customer activation
+follows from this local selection.
+
 ## Schema workflow
 
 Use schema push only for disposable design databases:
