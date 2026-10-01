@@ -145,3 +145,11 @@ LF/CRLF limitation described in the QA report, despite its diagnostic exact-LF
 PASS; no formatter/Git settings were changed. This QA closeout does not supply
 Gate3 or overall task approval, waive that technical/format limitation, commit,
 sync/archive, Product acceptance, lifecycle promotion or deployment authority.
+
+## Current final-review preparation after exact-byte restoration
+
+Actual current user approved prerequisite LF restoration and review continuation (steps1+2). Temporary CRLF invalidation is retained in Tasks; original Gate1/2/2b packet bytes were recovered with all21frozen references and Gate2b packet identity exact. Each gate requires its own fresh independent revalidation, recorded in Tasks. The restored source inventory matches61/61original raw file hashes, and all8raw observations preserve their recorded original identities. Current BrowserQA remains PASS on the unchanged build; there is no new QA execution or budget.
+
+Current checks: pnpm docs:check exit0/36documents; pnpm architecture:check exit0; pnpm -r --if-present typecheck exit0; pnpm format:check exit0 with67exact preserved paths and global Prettier PASS; openspec validate release-a-customer-exposure-foundation --strict --json exit0/validtrue/issues[]. These resolve the historical checkout-EOL formatter limitation. Product tests/build were not repeated because exact implementation/test bytes match the already evaluated candidate. No migration, provider, local-product test/build or deployment action was performed.
+
+Completeness:23/23implementation tasks,10exposure requirements/29scenarios and11compatibility deltas accounted for. Correctness and coherence retain the approved contract mapping above, with no substantive defect in the independent bounded preparation audit. Phase4 implementation/VERIFY/QA evidence is complete; independent Gate3 remains pending. Final approval must cover the exact cumulative implementation diff, current evidence and all restored planning identities; no sync/archive authorization is supplied by this preparation.

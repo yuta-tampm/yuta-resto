@@ -649,3 +649,11 @@ original LF hashes exactly. Recorded archive-creation equality is historical;
 it is not a claim that today's checked-out CRLF bytes have the original LF
 hashes. The representation record preserves this distinction and no original
 observation or failure is overwritten.
+
+## Current prerequisite-byte restoration before final review
+
+The current user approved the bounded LF restoration and review continuation.91task-owned files were restored from their exact Git originals, including the three approved packet byte streams. The temporary CRLF invalidation event remains in Tasks; fresh independent gate revalidation is separately recorded there. No original failed candidate or raw observation was rewritten.
+
+Current exact-byte checks match all21frozen Gate2b references plus its own packet,61implementation inventory files, and8original raw archives. The formatted reading copies retain their recorded hashes and parsed equality. The earlier checkout-byte differences above are historical; the later verification is in observation-representations.json. Supplemental restoration.json.raw preserves its original CRLF bytes, while ordinary task files recover their original LF convention.
+
+Current documentation consistency, architecture, full workspace typecheck, full format preservation/Prettier and strict change validation pass. The source, tests and built candidate are unchanged from their previously recorded identities; no product test/build or BrowserQA was repeated for this byte-restoration correction. FullQA3/3 and supplement1/1 remain exhausted; consolidated QA PASS and every historical FAIL remain. Repository Git/formatter settings were not changed. Gate3, sync/archive, lifecycle and deployment approval are separate.
