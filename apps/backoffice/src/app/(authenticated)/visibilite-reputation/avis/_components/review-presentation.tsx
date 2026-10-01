@@ -1,6 +1,26 @@
 import type { FeedbackSource } from '@yuta/contracts/reputation';
 import { cn } from '@yuta/ui';
 import { Star } from 'lucide-react';
+import type { ReviewListRecord } from '../reviews-model';
+
+export function isGoogleContentUnavailable(review: ReviewListRecord): boolean {
+  return (
+    review.source === 'GOOGLE' &&
+    review.googleContentAvailability === 'unavailable'
+  );
+}
+
+export function reviewAuthorLabel(review: ReviewListRecord): string {
+  return isGoogleContentUnavailable(review)
+    ? 'Contenu Google indisponible'
+    : (review.authorName ?? 'Client anonyme');
+}
+
+export function reviewContentLabel(review: ReviewListRecord): string {
+  return isGoogleContentUnavailable(review)
+    ? 'Votre travail dans YUTA est conservé.'
+    : review.content || 'Aucun commentaire.';
+}
 
 export function ReviewSourceMark({ source }: { source: FeedbackSource }) {
   return (

@@ -2,6 +2,7 @@ import { z } from 'zod';
 import {
   establishmentIdSchema,
   identifierSchema,
+  isoDateTimeSchema,
   organizationIdSchema,
 } from '../common';
 
@@ -188,6 +189,95 @@ export const saveReplySchema = z.object({
 export const createInternalNoteSchema = z.object({
   content: z.string().trim().min(1).max(4_000),
 });
+
+export const googleReviewContentAvailabilitySchema = z.enum([
+  'available',
+  'unavailable',
+  'legacy',
+  'not_applicable',
+]);
+export type GoogleReviewContentAvailability = z.infer<
+  typeof googleReviewContentAvailabilitySchema
+>;
+
+export const googleReviewRetrievalInputSchema = z.discriminatedUnion('kind', [
+  z
+    .object({ kind: z.literal('recent'), trigger: z.enum(['visit', 'manual']) })
+    .strict(),
+  z
+    .object({
+      kind: z.literal('history'),
+      continuationHandle: identifierSchema,
+    })
+    .strict(),
+  z
+    .object({ kind: z.literal('detail'), feedbackId: identifierSchema })
+    .strict(),
+]);
+export type GoogleReviewRetrievalInput = z.infer<
+  typeof googleReviewRetrievalInputSchema
+>;
+
+export const googleReviewRetrievalErrorSchema = z.enum([
+  'AUTH_REQUIRED',
+  'FORBIDDEN',
+  'NOT_FOUND',
+  'PROVIDER_UNAVAILABLE',
+  'INVALID_RESPONSE',
+  'IDENTITY_CONFLICT',
+  'STALE_AUTHORITY',
+  'CONFIGURATION_UNAVAILABLE',
+]);
+export type GoogleReviewRetrievalError = z.infer<
+  typeof googleReviewRetrievalErrorSchema
+>;
+
+export const googleReviewRetrievalSummarySchema = z
+  .object({
+    state: z.enum([
+      'never',
+      'pending',
+      'failed',
+      'completed_empty',
+      'completed_content',
+      'unavailable',
+    ]),
+    bound: z.boolean(),
+    enabled: z.boolean(),
+    lastAttemptKind: z.enum(['recent', 'history', 'detail']).nullable(),
+    lastAttemptAt: isoDateTimeSchema.nullable(),
+    lastSuccessfulAt: isoDateTimeSchema.nullable(),
+    lastRecentSuccessAt: isoDateTimeSchema.nullable(),
+    lastError: googleReviewRetrievalErrorSchema.nullable(),
+    coverage: z.enum(['none', 'partial', 'end']),
+    continuationHandle: identifierSchema.nullable(),
+    lastBatchCount: z.number().int().min(0).max(50).nullable(),
+    currentContentAvailable: z.boolean(),
+  })
+  .strict();
+export type GoogleReviewRetrievalSummary = z.infer<
+  typeof googleReviewRetrievalSummarySchema
+>;
+
+export const googleReviewRetrievalOutcomeSchema = z
+  .object({
+    kind: z.enum([
+      'completed',
+      'pending',
+      'fresh',
+      'unavailable',
+      'invalid_continuation',
+      'no_reference',
+      'failed',
+    ]),
+    summary: googleReviewRetrievalSummarySchema,
+    addedCount: z.number().int().min(0).max(50).nullable(),
+    changedCount: z.number().int().min(0).max(50).nullable(),
+  })
+  .strict();
+export type GoogleReviewRetrievalOutcome = z.infer<
+  typeof googleReviewRetrievalOutcomeSchema
+>;
 
 export const incidentPriorityValues = [
   'LOW',

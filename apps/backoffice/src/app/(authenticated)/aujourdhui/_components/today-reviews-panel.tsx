@@ -85,6 +85,13 @@ function ReviewRow({ review }: { review: TodayReviewItem }) {
           {review.receivedLabel}
         </span>
       </div>
+      {review.googleContentAvailability === 'unavailable' && (
+        <div className="mt-2">
+          <Badge tone="warning" size="sm">
+            Contenu indisponible
+          </Badge>
+        </div>
+      )}
       {review.rating !== null && (
         <span
           className="mt-2 inline-flex items-center gap-1 text-xs font-bold"

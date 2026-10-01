@@ -84,31 +84,31 @@ import, a failed import or remote reply state.
 Each stage has its own state. No aggregate “review management” label promotes
 one stage from another.
 
-| Stage                             | Product status                                                                                      | Current implementation                                                                                                                    |
-| --------------------------------- | --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Receive/import interaction        | Direct-feedback collection is approved. Provider-specific social/Google import scope is unresolved. | Direct submissions persist. Google import is absent. No Facebook or Instagram connector exists.                                           |
-| Display in YUTA                   | A centralized view of recent interactions is confirmed.                                             | `/visibilite-reputation/avis` displays persisted Google and direct items; `/visibilite-reputation/satisfaction` forces direct-only scope. |
-| Identify items needing a response | Recent and unanswered visibility is confirmed.                                                      | Server-backed counters, status filters, newest ordering, and `unanswered` sorting exist.                                                  |
-| Generate an AI reply draft        | Human-supported direction; exact AI and grounding contract unresolved.                              | Not implemented. Stored/displayed analysis fields and AI-ready schema do not constitute an AI service.                                    |
-| Manually edit a draft             | Confirmed.                                                                                          | A persisted manual draft form exists only for persisted Google items. It does not generate an AI draft.                                   |
-| Human review/approval             | Required before any external publication. Exact approval state and role remain unresolved.          | No distinct approval workflow is implemented.                                                                                             |
-| Publish to provider               | Provider-specific current scope is unresolved.                                                      | Not implemented. The Google publication button is disabled.                                                                               |
-| Synchronize publication state     | Unresolved.                                                                                         | Not implemented.                                                                                                                          |
-| Provider error/retry              | Unresolved.                                                                                         | Connector setup has bounded recovery states; review import/publication retry does not exist.                                              |
-| Automation/auto-reply             | Not approved.                                                                                       | Not implemented.                                                                                                                          |
-| Analytics/reputation insights     | Proposed or unresolved beyond existing operational counters.                                        | No approved analytics capability is implemented; inbox counters are operational presentation only.                                        |
+| Stage                             | Product status                                                                                       | Current implementation                                                                                                                    |
+| --------------------------------- | ---------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Receive/import interaction        | Direct collection and bounded A Google retrieval are accepted; broader provider scope is unresolved. | Direct submissions persist. A default-disabled Google retrieval source path exists. No Facebook/Instagram connector exists.               |
+| Display in YUTA                   | A centralized view of recent interactions is confirmed.                                              | `/visibilite-reputation/avis` displays persisted Google and direct items; `/visibilite-reputation/satisfaction` forces direct-only scope. |
+| Identify items needing a response | Recent and unanswered visibility is confirmed.                                                       | Server-backed counters, status filters, newest ordering, and `unanswered` sorting exist.                                                  |
+| Generate an AI reply draft        | Human-supported direction; exact AI and grounding contract unresolved.                               | Not implemented. Stored/displayed analysis fields and AI-ready schema do not constitute an AI service.                                    |
+| Manually edit a draft             | Confirmed.                                                                                           | A persisted manual draft form exists only for persisted Google items. It does not generate an AI draft.                                   |
+| Human review/approval             | Required before any external publication. Exact approval state and role remain unresolved.           | No distinct approval workflow is implemented.                                                                                             |
+| Publish to provider               | Provider-specific current scope is unresolved.                                                       | Not implemented. The Google publication button is disabled.                                                                               |
+| Synchronize publication state     | Unresolved.                                                                                          | Not implemented.                                                                                                                          |
+| Provider error/retry              | Bounded A retrieval recovery is accepted; broader provider recovery is unresolved.                   | Connector recovery and explicit OWNER/MANAGER retrieval retry exist; publication retry does not.                                          |
+| Automation/auto-reply             | Not approved.                                                                                        | Not implemented.                                                                                                                          |
+| Analytics/reputation insights     | Proposed or unresolved beyond existing operational counters.                                         | No approved analytics capability is implemented; inbox counters are operational presentation only.                                        |
 
 ## 3. Provider and flow matrix
 
 `UNKNOWN` and `UNRESOLVED` indicate that repository evidence cannot safely fill
 the cell.
 
-| Provider/source | Product status                                                 | Read/import                                                             | Display                                                               | AI draft        | Manual edit                                        | Human approval                   | Publish                                             | Sync            | Retry                                             | Automation   | Unresolved boundary                                                          |
-| --------------- | -------------------------------------------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------- | --------------- | -------------------------------------------------- | -------------------------------- | --------------------------------------------------- | --------------- | ------------------------------------------------- | ------------ | ---------------------------------------------------------------------------- |
-| Direct feedback | Approved collection and private Backoffice processing          | Implemented through `apps/feedback-web` submission                      | Implemented; direct-only Satisfaction view also exists                | Not implemented | No provider-reply editor                           | No external publication workflow | Not applicable to the current private-feedback flow | Not applicable  | Submission and UI recovery are bounded separately | Not approved | Whether a future customer-response channel exists                            |
-| Google          | Current Product V1 `UNRESOLVED`; implementation footprint only | Not implemented; OAuth/account/location foundation is not review import | Implemented for persisted Google rows, including development evidence | Not implemented | Implemented persisted manual draft for Google rows | No distinct approval workflow    | Not implemented; UI control disabled                | Not implemented | Review import/publication retry absent            | Not approved | V1 inclusion, import, publish, reconciliation, provider operations           |
-| Facebook        | High-level inclusion `CONFIRMED`; current V1 `UNRESOLVED`      | Not implemented                                                         | Not implemented                                                       | Not implemented | Not implemented                                    | Unresolved                       | Not implemented                                     | Not implemented | Not implemented                                   | Not approved | Recommendations/reviews, post/reel comments, auth and all provider contracts |
-| Instagram       | High-level inclusion `CONFIRMED`; current V1 `UNRESOLVED`      | Not implemented                                                         | Not implemented                                                       | Not implemented | Not implemented                                    | Unresolved                       | Not implemented                                     | Not implemented | Not implemented                                   | Not approved | Comments, mentions, other interaction types, auth and all provider contracts |
+| Provider/source | Product status                                            | Read/import                                                                                                  | Display                                                               | AI draft        | Manual edit                                        | Human approval                   | Publish                                             | Sync                                                               | Retry                                                           | Automation   | Unresolved boundary                                                          |
+| --------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------- | --------------- | -------------------------------------------------- | -------------------------------- | --------------------------------------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------- | ------------ | ---------------------------------------------------------------------------- |
+| Direct feedback | Approved collection and private Backoffice processing     | Implemented through `apps/feedback-web` submission                                                           | Implemented; direct-only Satisfaction view also exists                | Not implemented | No provider-reply editor                           | No external publication workflow | Not applicable to the current private-feedback flow | Not applicable                                                     | Submission and UI recovery are bounded separately               | Not approved | Whether a future customer-response channel exists                            |
+| Google          | Bounded A accepted; broader Product V1 `UNRESOLVED`       | Default-disabled recent, explicit history and scoped detail retrieval source; binding alone is not retrieval | Implemented for persisted Google rows, including development evidence | Not implemented | Implemented persisted manual draft for Google rows | No distinct approval workflow    | Not implemented; UI control disabled                | No scheduled synchronization; A visit/manual retrieval is separate | Bounded explicit A retrieval recovery; publication retry absent | Not approved | Broader V1, publish, reconciliation and actual provider/use conditions       |
+| Facebook        | High-level inclusion `CONFIRMED`; current V1 `UNRESOLVED` | Not implemented                                                                                              | Not implemented                                                       | Not implemented | Not implemented                                    | Unresolved                       | Not implemented                                     | Not implemented                                                    | Not implemented                                                 | Not approved | Recommendations/reviews, post/reel comments, auth and all provider contracts |
+| Instagram       | High-level inclusion `CONFIRMED`; current V1 `UNRESOLVED` | Not implemented                                                                                              | Not implemented                                                       | Not implemented | Not implemented                                    | Unresolved                       | Not implemented                                     | Not implemented                                                    | Not implemented                                                 | Not approved | Comments, mentions, other interaction types, auth and all provider contracts |
 
 The OWNER-managed `googleReviewUrl`, `facebookReviewUrl`, and `instagramUrl`
 fields are safe public destinations shown after direct-feedback submission.
@@ -177,9 +177,59 @@ request and provisions no missing settings row.
 
 OAuth start/callback, AES-256-GCM credential storage, account and location
 discovery, server-verified selection, token refresh, and recovery UI are
-implemented. Review import, scheduled synchronization, reply publication, and
-remote/local reply reconciliation are not implemented. This implementation
-foundation does not decide Google Product V1 scope or production readiness.
+implemented. Binding and OWNER confirmation to continue to Avis perform no
+review fetch and establish no retrieval receipt. The bounded source path below
+adds review retrieval separately; scheduled synchronization, reply publication
+and remote/local reply reconciliation remain absent. Connector support does
+not decide broader Google Product V1 scope or production readiness.
+
+### Bounded Release A Google review retrieval
+
+The repository contains a server-only, default-disabled A retrieval path for
+the active establishment's verified Google account/location. OWNER and MANAGER
+use `reputation.google.retrieve`; captured session authority and connector
+generation are checked before credential access and again before persistence.
+The browser sends only a local review UUID or an opaque continuation handle.
+
+A mounted Avis visit may retrieve one page of up to 50 recently updated reviews
+when the current batch is stale (15 minutes) or content is unavailable.
+Loaders, prefetch, Today, filters and local Save do not retrieve reviews.
+Actualiser, Voir plus and eligible individual recovery are explicit operations;
+history is never paged automatically. A successful batch, including an empty
+batch, has its own persisted receipt. Binding, older local rows and a failed
+attempt cannot establish success or a complete Google history.
+
+Imported Google content is a temporary cache separate from local workflow,
+assignment, saved user-input drafts, notes and history. Content becomes
+unreadable at its 29-day deadline; maintenance clears expired provider fields.
+A separate trusted reference expires at most 30 days after its actual fetch;
+reads reject an expired mapping and maintenance removes it. Only successful
+actual retrieval renews fetched copies. User edits, failed calls, omitted pages
+and restoration do not extend deadlines. Obsolete bindings are immediately
+unavailable. Cursors and provider coverage/counts expire after 15 minutes. A
+fetched remote reply is temporary provider content, never a local `PUBLISHED`
+reply.
+
+Provider refresh and cleanup do not write into or expire saved user-input
+draft/note bodies or delete local work. Missing content/reference is explicit:
+work remains available with OWNER/MANAGER recovery or a STAFF handoff; STAFF
+stays assigned-only, cannot retrieve, and receives no establishment-wide
+retrieval summary, batch counts, cursor or provider coverage. Writing forms and
+selection retain their local UUID; retrieval does not automatically reorder
+the working list. New results are inspected explicitly. Unlinked historical
+work is preserved without guessing identity or promising permanent deduplication.
+
+Existing unmanaged/legacy rows and DIRECT behavior are unchanged; this path
+does not adopt or purge their historical fields. Freeform user input retains
+its existing Save contract; this application boundary grants no blanket
+authorship, rights or retention exemption for arbitrary pasted content.
+
+See [local retrieval and maintenance configuration](../../operations/LOCAL_DEVELOPMENT.md#google-review-retrieval-and-cache-maintenance)
+and [real-use admission prerequisites](../../operations/DEPLOYMENT.md#google-review-retrieval-admission-and-cache-disposal).
+Source delivery configures no unattended scheduler and proves no backup or
+restoration disposal. Actual provider/use and staging/production prerequisites
+remain unverified. This path adds no publication, AI, scheduled synchronization
+or broader V1/lifecycle/readiness promotion.
 
 ## 5. Authorization and trusted scope
 
@@ -192,6 +242,7 @@ Current authorization and implementation evidence establish:
 
 - `reputation.read`: `OWNER`, `MANAGER`, and `STAFF`;
 - `reputation.feedback.manage`: `OWNER` and `MANAGER`;
+- `reputation.google.retrieve`: `OWNER` and `MANAGER`;
 - `reputation.reply.create`: `OWNER`, `MANAGER`, and `STAFF`;
 - `reputation.note.create`: `OWNER`, `MANAGER`, and `STAFF`;
 - `reputation.settings.manage`: `OWNER` only; and
@@ -270,8 +321,9 @@ Product direction. It does not approve:
 
 - Facebook or Instagram current V1/release inclusion, connectors, or exact
   interaction types;
-- Google as a current Product V1 requirement;
-- provider publication, publication-state synchronization, or review retry;
+- Google as a broader current Product V1 requirement outside the accepted A scope;
+- provider behavior outside the bounded A decisions, including publication-state
+  synchronization;
 - batch approval or batch publication;
 - automatic triage, autonomous replies, or automatic publication;
 - DMs, WhatsApp, broad social listening, or social scheduling;
@@ -320,6 +372,7 @@ Product direction. It does not approve:
 - [`apps/feedback-web/src/app`](../../../apps/feedback-web/src/app)
 - [`packages/contracts/src/reputation`](../../../packages/contracts/src/reputation)
 - [`packages/db-cloud/src/reputation-repository.ts`](../../../packages/db-cloud/src/reputation-repository.ts)
+- [`packages/db-cloud/src/google-review-retrieval-repository.ts`](../../../packages/db-cloud/src/google-review-retrieval-repository.ts)
 - [`packages/db-cloud/src/schema/reputation.ts`](../../../packages/db-cloud/src/schema/reputation.ts)
 - [`apps/backoffice/test`](../../../apps/backoffice/test),
   [`packages/contracts/test/reputation.test.ts`](../../../packages/contracts/test/reputation.test.ts),

@@ -1,3 +1,50 @@
+import type { GoogleReviewContentAvailability } from '@yuta/contracts/reputation';
+
+export type TodayReviewPreview = {
+  id: string;
+  source: 'GOOGLE' | 'DIRECT';
+  authorName: string;
+  rating: number | null;
+  excerpt: string;
+  receivedLabel: string;
+  googleContentAvailability: GoogleReviewContentAvailability;
+};
+
+export function projectTodayReviewPreview(
+  item: {
+    id: string;
+    source: 'GOOGLE' | 'DIRECT';
+    authorName: string | null;
+    rating: number | null;
+    content: string | null;
+    receivedAt: Date;
+    googleContentAvailability?: GoogleReviewContentAvailability;
+  },
+  now: Date,
+  locale: string,
+): TodayReviewPreview {
+  const availability =
+    item.source === 'GOOGLE'
+      ? (item.googleContentAvailability ?? 'legacy')
+      : 'not_applicable';
+  const unavailable = availability === 'unavailable';
+  return {
+    id: item.id,
+    source: item.source,
+    authorName: unavailable
+      ? 'Avis Google'
+      : (item.authorName ?? 'Client anonyme'),
+    rating: unavailable ? null : item.rating,
+    excerpt: unavailable
+      ? 'Le contenu Google n’est pas disponible. Votre travail dans YUTA est conservé.'
+      : item.content || 'Aucun commentaire.',
+    receivedLabel: unavailable
+      ? 'Travail YUTA conservé'
+      : formatRelativeTime(item.receivedAt, now, locale),
+    googleContentAvailability: availability,
+  };
+}
+
 export const activeReservationStatuses = [
   'PENDING',
   'CONFIRMED',

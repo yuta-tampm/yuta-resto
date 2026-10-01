@@ -1,6 +1,9 @@
 'use server';
 
-import { selectGoogleReputationLocation } from '@yuta/db-cloud';
+import {
+  findGoogleReputationConnector,
+  selectGoogleReputationLocation,
+} from '@yuta/db-cloud';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
@@ -17,6 +20,29 @@ const googleLocationSelectionSchema = z.object({
   accountName: z.string().regex(/^accounts\/[^/]+$/),
   locationName: z.string().regex(/^locations\/[^/]+$/),
 });
+
+export async function continueGoogleReviewsAction(): Promise<never> {
+  const { tenant } = await requireReputationTenant('/parametres/integrations');
+  requireReputationPermission(tenant, 'reputation.connector.manage');
+  let ready = false;
+  try {
+    const connector = await findGoogleReputationConnector(db, tenant);
+    ready =
+      connector?.status === 'CONNECTED' &&
+      googleLocationSelectionSchema.safeParse({
+        accountName: connector.externalAccountId,
+        locationName: connector.externalLocationId,
+      }).success;
+  } catch (error: unknown) {
+    console.error('Unable to verify Google continuation.', {
+      errorName: error instanceof Error ? error.name : 'UnknownError',
+    });
+  }
+  if (!ready)
+    redirect('/parametres/integrations?google=continuation_unavailable');
+  // Association is separate from retrieval. Avis validates its own retrieval operation.
+  redirect('/visibilite-reputation/avis');
+}
 
 export async function selectGoogleLocationAction(
   formData: FormData,

@@ -1,0 +1,131 @@
+{
+  "checks": [
+    {
+      "name": "MAINTENANCE_UNAUTHORIZED_DENIED",
+      "status": "PASS",
+      "statusCode": 403,
+      "noStore": true
+    },
+    {
+      "name": "MAINTENANCE_UNAUTHORIZED_DENIED",
+      "status": "PASS",
+      "statusCode": 403,
+      "noStore": true
+    },
+    {
+      "name": "MAINTENANCE_AUTHORIZED_ACTUAL_COUNTS",
+      "status": "PASS",
+      "statusCode": 200,
+      "counts": {
+        "scopesProcessed": 1,
+        "contentCleared": 1,
+        "referencesRemoved": 0,
+        "continuationsCleared": 0
+      },
+      "retrievalProfile": "internal-disabled"
+    },
+    {
+      "name": "MAINTENANCE_NO_PROVIDER_REQUESTS",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "name": "MAINTENANCE_DESKTOP_PAGE_NO_PROVIDER_FETCH",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "name": "MAINTENANCE_DESKTOP_LAYOUT",
+      "status": "PASS",
+      "horizontalOverflow": false
+    },
+    {
+      "name": "MAINTENANCE_MOBILE_PAGE_NO_PROVIDER_FETCH",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "name": "MAINTENANCE_MOBILE_LAYOUT",
+      "status": "PASS",
+      "horizontalOverflow": false
+    }
+  ],
+  "screenshots": [
+    {
+      "path": ".tmp-google-review-import-test/extra-browser-qa-maintenance-2026-10-01T20-14-22-664Z/owner-desktop-maintenance-retained-work.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "Authenticated maintenance cleared temporary content while disabled retrieval and local work remain",
+      "sha256": "3a7015eade817f79eb484b1cdbd341d206e67c6f3b36f1adb8c56ca98b200e4c",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/extra-browser-qa-maintenance-2026-10-01T20-14-22-664Z/owner-mobile-maintenance-retained-work.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "Authenticated maintenance cleared temporary content while disabled retrieval and local work remain",
+      "sha256": "b95384981394c0da0311a76ea91c6b5c38246cd0a61a0d0d9727729035fc4154",
+      "visualReview": "REQUIRED"
+    }
+  ],
+  "limitations": [
+    "Scripted assertions and actual viewport screenshots need visual review. No screen-reader output, production eligibility or Google access proof is inferred.",
+    "Run maintenance immediately after prime-404 and before the404 scenario clears the same content. Expected one content cleanup and no reference removal; changed setup is a failure, not an inferred PASS.",
+    "Unauthorized HTTP response proves actual admission behavior; proving no DB module access needs the separate technical module-spy test evidence. No scheduler, backup or production-retention proof is created."
+  ],
+  "browserErrors": 0,
+  "blockedBrowserRequests": 0,
+  "sourceManifestSha256": "7792ee8d7e68e08d4934aca32df691cb3773570a5f1d9f6e9c12d4db7b59ffa7",
+  "buildBindingSha256": "0790286763c815172c837f04132bbc3dabd2b8f4747f42d5c8f5a6facde40578",
+  "driverSha256": "41db519ceb4c8c5cfab4246640df1ed6b834a28e5800d59759e3404a41849908",
+  "providerFixtureSha256": "9c611fbcae5d21cc6290dc969b5330adbc4469468ce48ba891882a78bccdf8ed",
+  "run": "maintenance",
+  "startedAt": "2026-10-01T20:14:22.666Z",
+  "maintenanceResponses": [
+    {
+      "purpose": "missing-authorization",
+      "statusCode": 403,
+      "contentType": "application/json"
+    },
+    {
+      "purpose": "invalid-authorization",
+      "statusCode": 403,
+      "contentType": "application/json"
+    },
+    {
+      "purpose": "authorized",
+      "statusCode": 200,
+      "contentType": "application/json"
+    }
+  ],
+  "scriptedStatus": "PASS",
+  "completedAt": "2026-10-01T20:14:25.394Z",
+  "qaStatus": "REVIEW_REQUIRED"
+}

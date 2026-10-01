@@ -14,8 +14,10 @@ import {
 import { MessageCircle, RefreshCw, Settings } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { useState } from 'react';
 import { ReviewDetail } from './review-detail';
 import { ReviewsListPanel } from './reviews-list-panel';
+import { GoogleReviewRetrievalPanel } from './google-review-retrieval-panel';
 import type {
   ReviewsPageData,
   ReviewsPageMode,
@@ -33,8 +35,67 @@ export function ReviewsPage({
   const pathname = usePathname();
   const currentSearchParams = useSearchParams();
   const directOnly = mode === 'direct';
-  const updateQuery: UpdateReviewsQuery = (updates, options) => {
+  const [selectionIntent, setSelectionIntent] = useState(
+    data.detail?.id ?? null,
+  );
+  const [heldView, setHeldView] = useState<Pick<
+    ReviewsPageData,
+    'items' | 'detail' | 'pagination' | 'counters' | 'attentionCount'
+  > | null>(null);
+  const viewData: ReviewsPageData =
+    heldView && data.permissions.canRetrieveGoogle
+      ? {
+          ...data,
+          ...heldView,
+          items: heldView.items.flatMap((item) => {
+            const latest = data.items.find((current) => current.id === item.id);
+            // Keep order, but always honor current scoped/expiry projections and local changes.
+            return latest ? [latest] : [];
+          }),
+          detail: data.detail,
+        }
+      : data;
+
+  function holdWorkingView() {
+    setHeldView(
+      (current) =>
+        current ?? {
+          items: data.items,
+          detail: data.detail,
+          pagination: data.pagination,
+          counters: data.counters,
+          attentionCount: data.attentionCount,
+        },
+    );
+    // Pin the local work identity before any later local Save revalidates this route.
+    const workingIds = (heldView?.items ?? data.items)
+      .map((item) => item.id)
+      .join(',');
+    if (
+      (data.detail && currentSearchParams.get('selected') !== data.detail.id) ||
+      (workingIds && currentSearchParams.get('working') !== workingIds)
+    ) {
+      const params = new URLSearchParams(currentSearchParams.toString());
+      if (data.detail) params.set('selected', data.detail.id);
+      if (workingIds) params.set('working', workingIds);
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    }
+  }
+
+  function inspectUpdatedList() {
+    setHeldView(null);
     const params = new URLSearchParams(currentSearchParams.toString());
+    if (params.has('working')) {
+      params.delete('working');
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    } else router.refresh();
+  }
+
+  const updateQuery: UpdateReviewsQuery = (updates, options) => {
+    setHeldView(null);
+    if (!Object.hasOwn(updates, 'selected')) setSelectionIntent(null);
+    const params = new URLSearchParams(currentSearchParams.toString());
+    params.delete('working');
     for (const [key, value] of Object.entries(updates)) {
       if (value === null || value === '' || value === 'ALL') {
         params.delete(key);
@@ -97,7 +158,19 @@ export function ReviewsPage({
 
       {data.state === 'ready' && (
         <>
-          <ReviewsMetrics data={data} directOnly={directOnly} />
+          <ReviewsMetrics data={viewData} directOnly={directOnly} />
+          {!directOnly && data.permissions.canRetrieveGoogle && (
+            <GoogleReviewRetrievalPanel
+              summary={data.retrievalSummary ?? null}
+              review={viewData.detail}
+              selectionIntent={selectionIntent}
+              onBeforeRetrieval={holdWorkingView}
+              onInspect={inspectUpdatedList}
+              hasHeldView={Boolean(
+                heldView || currentSearchParams.has('working'),
+              )}
+            />
+          )}
           {data.setupSummary && (
             <Alert tone="info">
               <AlertTitle>{data.setupSummary.title}</AlertTitle>
@@ -121,18 +194,22 @@ export function ReviewsPage({
 
           <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(420px,0.85fr)]">
             <ReviewsListPanel
-              data={data}
+              data={viewData}
               directOnly={directOnly}
               updateQuery={updateQuery}
+              onOpenReview={setSelectionIntent}
             />
 
-            {data.detail ? (
+            {viewData.detail ? (
               <ReviewDetail
-                key={data.detail.id}
-                review={data.detail}
+                key={viewData.detail.id}
+                review={viewData.detail}
                 assignableUsers={data.assignableUsers}
                 permissions={data.permissions}
                 releaseA={data.releaseA}
+                googleRetrievalAvailable={Boolean(
+                  data.retrievalSummary?.enabled && data.retrievalSummary.bound,
+                )}
               />
             ) : (
               <Card padding="none">

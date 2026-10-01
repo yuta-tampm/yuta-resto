@@ -1,0 +1,1354 @@
+{
+  "schemaVersion": 1,
+  "change": "release-a-google-review-import",
+  "baseline": "936da4723ceafc2f5ff5bcfddbeaa15a92a69b57",
+  "branch": "main",
+  "stagedPaths": [],
+  "implementationPaths": [
+    "apps/backoffice/.env.example",
+    "apps/backoffice/src/app/(authenticated)/aujourdhui/_components/today-reviews-panel.tsx",
+    "apps/backoffice/src/app/(authenticated)/aujourdhui/today-data.ts",
+    "apps/backoffice/src/app/(authenticated)/aujourdhui/today-view-model.ts",
+    "apps/backoffice/src/app/(authenticated)/parametres/integrations/_components/google-connector-panel.tsx",
+    "apps/backoffice/src/app/(authenticated)/parametres/integrations/_components/google-location-selector-panel.tsx",
+    "apps/backoffice/src/app/(authenticated)/parametres/integrations/actions.ts",
+    "apps/backoffice/src/app/(authenticated)/parametres/integrations/integrations-model.ts",
+    "apps/backoffice/src/app/(authenticated)/parametres/integrations/page.tsx",
+    "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/google-review-retrieval-panel.tsx",
+    "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-detail.tsx",
+    "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-presentation.tsx",
+    "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-list-panel.tsx",
+    "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-loader.tsx",
+    "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-page.tsx",
+    "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/actions.ts",
+    "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/reviews-model.ts",
+    "apps/backoffice/src/app/api/internal/reputation/google-cache-maintenance/route.ts",
+    "apps/backoffice/src/lib/backoffice-exposure.ts",
+    "apps/backoffice/src/server/auth/permissions.ts",
+    "apps/backoffice/src/server/reputation/google-business-profile-client.ts",
+    "apps/backoffice/src/server/reputation/google-connector-access.ts",
+    "apps/backoffice/src/server/reputation/google-review-lifecycle.ts",
+    "apps/backoffice/src/server/reputation/google-review-retrieval-config.ts",
+    "apps/backoffice/src/server/reputation/google-review-retrieval.ts",
+    "apps/backoffice/src/server/reputation/release-a-setup.ts",
+    "apps/backoffice/test/backoffice-exposure.test.ts",
+    "apps/backoffice/test/google-review-maintenance.test.ts",
+    "apps/backoffice/test/google-review-provider.test.ts",
+    "apps/backoffice/test/google-review-retrieval-panel.test.tsx",
+    "apps/backoffice/test/google-review-retrieval.test.ts",
+    "apps/backoffice/test/release-a-integration-copy.test.tsx",
+    "apps/backoffice/test/release-a-reputation-actions.test.ts",
+    "apps/backoffice/test/release-a-reputation-loaders.test.tsx",
+    "apps/backoffice/test/today-view-model.test.ts",
+    "packages/contracts/src/reputation/index.ts",
+    "packages/contracts/test/reputation.test.ts",
+    "packages/db-cloud/drizzle/0021_release_a_google_review_import.sql",
+    "packages/db-cloud/drizzle/meta/0021_snapshot.json",
+    "packages/db-cloud/drizzle/meta/_journal.json",
+    "packages/db-cloud/src/google-review-retrieval-repository.ts",
+    "packages/db-cloud/src/index.ts",
+    "packages/db-cloud/src/reputation-repository.ts",
+    "packages/db-cloud/src/schema/reputation.ts",
+    "packages/db-cloud/test/google-review-retrieval.integration.test.ts",
+    "packages/db-cloud/test/pointage-raw-clocking-schema.test.ts"
+  ],
+  "trackedImplementationPaths": [
+    "apps/backoffice/.env.example",
+    "apps/backoffice/src/app/(authenticated)/aujourdhui/_components/today-reviews-panel.tsx",
+    "apps/backoffice/src/app/(authenticated)/aujourdhui/today-data.ts",
+    "apps/backoffice/src/app/(authenticated)/aujourdhui/today-view-model.ts",
+    "apps/backoffice/src/app/(authenticated)/parametres/integrations/_components/google-connector-panel.tsx",
+    "apps/backoffice/src/app/(authenticated)/parametres/integrations/_components/google-location-selector-panel.tsx",
+    "apps/backoffice/src/app/(authenticated)/parametres/integrations/actions.ts",
+    "apps/backoffice/src/app/(authenticated)/parametres/integrations/integrations-model.ts",
+    "apps/backoffice/src/app/(authenticated)/parametres/integrations/page.tsx",
+    "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-detail.tsx",
+    "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-presentation.tsx",
+    "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-list-panel.tsx",
+    "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-loader.tsx",
+    "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-page.tsx",
+    "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/actions.ts",
+    "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/reviews-model.ts",
+    "apps/backoffice/src/lib/backoffice-exposure.ts",
+    "apps/backoffice/src/server/auth/permissions.ts",
+    "apps/backoffice/src/server/reputation/google-business-profile-client.ts",
+    "apps/backoffice/src/server/reputation/google-connector-access.ts",
+    "apps/backoffice/src/server/reputation/release-a-setup.ts",
+    "apps/backoffice/test/backoffice-exposure.test.ts",
+    "apps/backoffice/test/release-a-integration-copy.test.tsx",
+    "apps/backoffice/test/release-a-reputation-actions.test.ts",
+    "apps/backoffice/test/release-a-reputation-loaders.test.tsx",
+    "apps/backoffice/test/today-view-model.test.ts",
+    "packages/contracts/src/reputation/index.ts",
+    "packages/contracts/test/reputation.test.ts",
+    "packages/db-cloud/drizzle/meta/_journal.json",
+    "packages/db-cloud/src/index.ts",
+    "packages/db-cloud/src/reputation-repository.ts",
+    "packages/db-cloud/src/schema/reputation.ts",
+    "packages/db-cloud/test/pointage-raw-clocking-schema.test.ts"
+  ],
+  "untrackedImplementationPaths": [
+    "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/google-review-retrieval-panel.tsx",
+    "apps/backoffice/src/app/api/internal/reputation/google-cache-maintenance/route.ts",
+    "apps/backoffice/src/server/reputation/google-review-lifecycle.ts",
+    "apps/backoffice/src/server/reputation/google-review-retrieval-config.ts",
+    "apps/backoffice/src/server/reputation/google-review-retrieval.ts",
+    "apps/backoffice/test/google-review-maintenance.test.ts",
+    "apps/backoffice/test/google-review-provider.test.ts",
+    "apps/backoffice/test/google-review-retrieval-panel.test.tsx",
+    "apps/backoffice/test/google-review-retrieval.test.ts",
+    "packages/db-cloud/drizzle/0021_release_a_google_review_import.sql",
+    "packages/db-cloud/drizzle/meta/0021_snapshot.json",
+    "packages/db-cloud/src/google-review-retrieval-repository.ts",
+    "packages/db-cloud/test/google-review-retrieval.integration.test.ts"
+  ],
+  "planningPaths": [
+    "openspec/changes/release-a-google-review-import/.openspec.yaml",
+    "openspec/changes/release-a-google-review-import/analysis.md",
+    "openspec/changes/release-a-google-review-import/design.md",
+    "openspec/changes/release-a-google-review-import/proposal.md",
+    "openspec/changes/release-a-google-review-import/specs/backoffice/release-a-customer-exposure/spec.md",
+    "openspec/changes/release-a-google-review-import/specs/reputation/google-review-retrieval/spec.md",
+    "openspec/changes/release-a-google-review-import/tasks.md"
+  ],
+  "evidencePaths": [
+    "docs/reviews/release-a-google-review-import/01-analysis-review.md",
+    "docs/reviews/release-a-google-review-import/02-specs-review.md",
+    "docs/reviews/release-a-google-review-import/02b-design-review.md",
+    "docs/reviews/release-a-google-review-import/03-implementation-before-oauth-navigation.diff",
+    "docs/reviews/release-a-google-review-import/03-implementation.diff",
+    "docs/reviews/release-a-google-review-import/VERIFY.md",
+    "docs/reviews/release-a-google-review-import/qa/QA_REPORT.md",
+    "docs/reviews/release-a-google-review-import/qa/build-candidate-binding.before-oauth-navigation.json",
+    "docs/reviews/release-a-google-review-import/qa/build-candidate-binding.json",
+    "docs/reviews/release-a-google-review-import/qa/core-manager-desktop-pending.png",
+    "docs/reviews/release-a-google-review-import/qa/core-manager-mobile-pending.png",
+    "docs/reviews/release-a-google-review-import/qa/core-manager-mobile-today.png",
+    "docs/reviews/release-a-google-review-import/qa/core-owner-desktop-empty-recent.png",
+    "docs/reviews/release-a-google-review-import/qa/core-owner-desktop-error.png",
+    "docs/reviews/release-a-google-review-import/qa/core-owner-desktop-history-end.png",
+    "docs/reviews/release-a-google-review-import/qa/core-owner-desktop-internal-disabled.png",
+    "docs/reviews/release-a-google-review-import/qa/core-owner-desktop-pending.png",
+    "docs/reviews/release-a-google-review-import/qa/core-owner-desktop-today.png",
+    "docs/reviews/release-a-google-review-import/qa/core-owner-mobile-internal-disabled.png",
+    "docs/reviews/release-a-google-review-import/qa/core-owner-mobile-pending.png",
+    "docs/reviews/release-a-google-review-import/qa/core-results.json",
+    "docs/reviews/release-a-google-review-import/qa/core-staff-desktop-assigned.png",
+    "docs/reviews/release-a-google-review-import/qa/core-staff-desktop-today.png",
+    "docs/reviews/release-a-google-review-import/qa/core-staff-mobile-today.png",
+    "docs/reviews/release-a-google-review-import/qa/first-extra-owner-desktop-bound-continue.png",
+    "docs/reviews/release-a-google-review-import/qa/first-extra-owner-desktop-first-content.png",
+    "docs/reviews/release-a-google-review-import/qa/first-extra-owner-desktop-first-empty.png",
+    "docs/reviews/release-a-google-review-import/qa/first-extra-owner-mobile-bound-continue.png",
+    "docs/reviews/release-a-google-review-import/qa/first-extra-owner-mobile-first-content.png",
+    "docs/reviews/release-a-google-review-import/qa/first-extra-owner-mobile-first-empty.png",
+    "docs/reviews/release-a-google-review-import/qa/first-results.json",
+    "docs/reviews/release-a-google-review-import/qa/maintenance-owner-desktop-maintenance-retained-work.png",
+    "docs/reviews/release-a-google-review-import/qa/maintenance-owner-mobile-maintenance-retained-work.png",
+    "docs/reviews/release-a-google-review-import/qa/maintenance-results.json",
+    "docs/reviews/release-a-google-review-import/qa/not-found-owner-desktop-live-reference-404.png",
+    "docs/reviews/release-a-google-review-import/qa/not-found-owner-desktop-no-reference-handoff.png",
+    "docs/reviews/release-a-google-review-import/qa/not-found-owner-desktop-unavailable-new-draft.png",
+    "docs/reviews/release-a-google-review-import/qa/not-found-owner-desktop-unavailable-new-note.png",
+    "docs/reviews/release-a-google-review-import/qa/not-found-owner-mobile-live-reference-404.png",
+    "docs/reviews/release-a-google-review-import/qa/not-found-owner-mobile-unavailable-new-draft.png",
+    "docs/reviews/release-a-google-review-import/qa/not-found-owner-mobile-unavailable-new-note.png",
+    "docs/reviews/release-a-google-review-import/qa/not-found-results.json",
+    "docs/reviews/release-a-google-review-import/qa/oauth-navigation-source-attribution.json",
+    "docs/reviews/release-a-google-review-import/qa/oauth-prefetch-before-fix-diagnostic.json",
+    "docs/reviews/release-a-google-review-import/qa/recovery-owner-desktop-provider-edit-detail-target.png",
+    "docs/reviews/release-a-google-review-import/qa/recovery-owner-desktop-recovered-content-target.png",
+    "docs/reviews/release-a-google-review-import/qa/recovery-owner-desktop-successful-detail-pending-target.png",
+    "docs/reviews/release-a-google-review-import/qa/recovery-owner-mobile-provider-edit-detail-target.png",
+    "docs/reviews/release-a-google-review-import/qa/recovery-owner-mobile-recovered-content-target.png",
+    "docs/reviews/release-a-google-review-import/qa/recovery-results.json",
+    "docs/reviews/release-a-google-review-import/qa/responsive-before-oauth-fix-results.json",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-avis-list-detail.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-integrations-keyboard-focus.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-integrations.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-internal-disabled.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-manual-draft.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-no-reference-handoff.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-no-reference-saved-draft.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-pending-editor.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-remote-reply.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-retrieval-error.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-retrieval-pending.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-retrieval-retry.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-retrieval-success.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-today-reviews.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-avis-list-detail.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-integrations-keyboard-focus.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-integrations.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-internal-disabled.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-manual-draft.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-no-reference-handoff.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-no-reference-saved-draft.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-pending-editor.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-remote-reply.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-retrieval-error.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-retrieval-pending.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-retrieval-success.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-today-reviews.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-avis-list-detail.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-integrations-keyboard-focus.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-integrations.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-internal-disabled.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-manual-draft.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-no-reference-handoff.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-no-reference-saved-draft.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-pending-editor.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-remote-reply.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-retrieval-error.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-retrieval-pending.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-retrieval-retry.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-retrieval-success.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-today-reviews.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-avis-list-detail.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-integrations-keyboard-focus.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-integrations.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-internal-disabled.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-manual-draft.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-no-reference-handoff.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-no-reference-saved-draft.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-pending-editor.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-remote-reply.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-retrieval-error.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-retrieval-pending.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-retrieval-success.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-today-reviews.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-results.json",
+    "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1024-assigned-editor.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1024-assigned-keyboard-focus.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1024-denied-foreign.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1024-today-reviews.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1024-unavailable.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1440-assigned-editor.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1440-assigned-keyboard-focus.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1440-denied-foreign.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1440-today-reviews.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1440-unavailable.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-staff-w390-assigned-editor.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-staff-w390-assigned-keyboard-focus.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-staff-w390-denied-foreign.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-staff-w390-today-reviews.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-staff-w390-unavailable.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-staff-w768-assigned-editor.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-staff-w768-assigned-keyboard-focus.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-staff-w768-denied-foreign.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-staff-w768-today-reviews.png",
+    "docs/reviews/release-a-google-review-import/qa/responsive-staff-w768-unavailable.png",
+    "docs/reviews/release-a-google-review-import/qa/run-evidence-manifest.json",
+    "docs/reviews/release-a-google-review-import/qa/screenshot-manifest.json",
+    "docs/reviews/release-a-google-review-import/qa/screenshot-manifest.md",
+    "docs/reviews/release-a-google-review-import/qa/source-candidate-manifest.before-oauth-navigation.json",
+    "docs/reviews/release-a-google-review-import/qa/source-candidate-manifest.json",
+    "docs/reviews/release-a-google-review-import/qa/stale-owner-desktop-recent-pending.png",
+    "docs/reviews/release-a-google-review-import/qa/stale-results.json",
+    "docs/reviews/release-a-google-review-import/qa/targets-owner-desktop-remote-reply-target.png",
+    "docs/reviews/release-a-google-review-import/qa/targets-owner-desktop-status-completed-target.png",
+    "docs/reviews/release-a-google-review-import/qa/targets-owner-desktop-status-pending-target.png",
+    "docs/reviews/release-a-google-review-import/qa/targets-owner-desktop-unavailable-detail-target.png",
+    "docs/reviews/release-a-google-review-import/qa/targets-owner-mobile-remote-reply-target.png",
+    "docs/reviews/release-a-google-review-import/qa/targets-owner-mobile-status-completed-target.png",
+    "docs/reviews/release-a-google-review-import/qa/targets-owner-mobile-status-pending-target.png",
+    "docs/reviews/release-a-google-review-import/qa/targets-owner-mobile-unavailable-detail-target.png",
+    "docs/reviews/release-a-google-review-import/qa/targets-results.json",
+    "docs/reviews/release-a-google-review-import/qa/targets-staff-mobile-assigned-detail-target.png",
+    "docs/reviews/release-a-google-review-import/qa/targets-staff-mobile-unavailable-detail-target.png",
+    "docs/reviews/release-a-google-review-import/qa/unavailable-work-after.json",
+    "docs/reviews/release-a-google-review-import/qa/unavailable-work-before.json",
+    "docs/reviews/release-a-google-review-import/qa/unavailable-work-body-reconciliation.json",
+    "docs/reviews/release-a-google-review-import/qa/unbound-extra-owner-desktop-unbound.png",
+    "docs/reviews/release-a-google-review-import/qa/unbound-extra-owner-mobile-unbound.png",
+    "docs/reviews/release-a-google-review-import/qa/unbound-results.json"
+  ],
+  "files": [
+    {
+      "path": "apps/backoffice/.env.example",
+      "sha256": "9086ec22cf3a5d237fb28bf834b65875c95f6a4281bcba58280c8312603dd39e",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/_components/today-reviews-panel.tsx",
+      "sha256": "83d9cd69d0fb6bc9e0e518a2e509a730888e0d9118b46b38b2ff726bd3529334",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/today-data.ts",
+      "sha256": "512794a3a1e536ed1e9ea91a7d7317bfff5f05e030e0fc43ef8d81fb43e59ea8",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/today-view-model.ts",
+      "sha256": "dac0715f1054583c656c0801294fcdc4274d223e6f325584bf888e7eaa61ddeb",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/_components/google-connector-panel.tsx",
+      "sha256": "599f4f424ab2369c7c4b2beaf77ee9a6b09d0a712bc5b9ee2e3107c525602507",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/_components/google-location-selector-panel.tsx",
+      "sha256": "588d3579c7da5e9f67d657522cfef9315ffc8d931acea2dcfcbfa732f1a7b710",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/actions.ts",
+      "sha256": "4c57b60dc4a7e3ffb6b50a059b33bfca342c639e05a5d332336ec30cd549e97f",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/integrations-model.ts",
+      "sha256": "2e66e189589999a9761591562e4fb7a0e665dbdbfb84640617ddb4779cc140b7",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/page.tsx",
+      "sha256": "9142daf9a07cf7cfa4ccccafc34e0f6dafab943c7448b7602fb57f767ac9510e",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/google-review-retrieval-panel.tsx",
+      "sha256": "a5e07a1a1ce64f2671f932a8131e4a306856c1f2cdf210f2b8bf979486cc7ae8",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-detail.tsx",
+      "sha256": "bf491415d93a37d40e250d4b82252c7a894eaed789fa825b1a9f13cf88bbfbbe",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-presentation.tsx",
+      "sha256": "e1cc75421cf8e7c9b376e22e7f8c5813fae0de90e1aa852331dd3fe92d3ba4ce",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-list-panel.tsx",
+      "sha256": "9e9e3cf75dd21031bc79474f78633a63f858df8d046e8ab77b6c8b87006d686e",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-loader.tsx",
+      "sha256": "4757c1d0159d41bf1ee7b3513c75d752160ee21561593c1ea0e63dc442456092",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-page.tsx",
+      "sha256": "993dde5e4c0ea0d464517e8d8888758c6b74d845c193aebeb70ab90ea492c516",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/actions.ts",
+      "sha256": "a6ff4ef146b5a81db94e0c18351123c65848756e976f1af142a56ab7e77b79b0",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/reviews-model.ts",
+      "sha256": "2b7d7f60a77ab76e552971655d67ff207770d33c8fe79593e487cd7bb383921a",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/app/api/internal/reputation/google-cache-maintenance/route.ts",
+      "sha256": "f3a83e1961b2bcf4e9e9927a63cd3c78e8af82b740efb7f2ddd0790b8ef16513",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/lib/backoffice-exposure.ts",
+      "sha256": "09756597b423d24e72cdd628f4ae6c0c451aa0c5af0c9bbb91dedc0fe62f6c2a",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/server/auth/permissions.ts",
+      "sha256": "701d3b3343d3a9d610ac538eba968fcbdc7113b92ae7391d18cb57b85fb1b14a",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/server/reputation/google-business-profile-client.ts",
+      "sha256": "375f3186233cf47ae9f271bd25bfeced6f9751d1839262496656484079c66b49",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/server/reputation/google-connector-access.ts",
+      "sha256": "8241a514cf8ce1c71c851b11f2e3990936d05cca1f887b9b2befe7bc23e9539b",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/server/reputation/google-review-lifecycle.ts",
+      "sha256": "6ec97b696014859924b96245073db97961896ee31350018537c8c10024e8677d",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/server/reputation/google-review-retrieval-config.ts",
+      "sha256": "ef33960568d5005d71b60c8a9d15f6bbc2997618b4a9efd93a98889c3629de73",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/server/reputation/google-review-retrieval.ts",
+      "sha256": "d210ab17718da75fc280b0f43e9c1826847d82f0ef4dc06ce6c9f02a563e6fec",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/src/server/reputation/release-a-setup.ts",
+      "sha256": "740a4f8e8db1921aea0cb1eef1764db5f6655916c91c55b8a142ce2eb9b8ff0a",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/test/backoffice-exposure.test.ts",
+      "sha256": "64fbd408f66957bf46be03eb2be30c1152586f73cd708dc6826dfa1468c4f6a9",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/test/google-review-maintenance.test.ts",
+      "sha256": "6fb2a73d5b753acd64c3436931886a9cf6352f7014249049863677a366c89bd7",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/test/google-review-provider.test.ts",
+      "sha256": "7dd688f61b84edb59e2d113467d157fa98028b2e9d8561f22c38e83106860a8a",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/test/google-review-retrieval-panel.test.tsx",
+      "sha256": "eb8f05e4b5d00a1e40c573eb9d5bf88942437ce1651417ac647e7f14527198ea",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/test/google-review-retrieval.test.ts",
+      "sha256": "fddd37267ce1532525bd4aa70e08e2b8d47508d42b74f5f1161b9e82750da55c",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/test/release-a-integration-copy.test.tsx",
+      "sha256": "481b653cc47c3d9b38ba0950bfa4cbb3ea6431a9a82ff110e43b2234533a6903",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/test/release-a-reputation-actions.test.ts",
+      "sha256": "397909b97db870efbf1a40abd505133d87cb7689319a20f8709a093003d7a3a7",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/test/release-a-reputation-loaders.test.tsx",
+      "sha256": "72eb53ae31f96e374fa1c48ba02645d148b3ec334cb42fabc4b11a40655fbe20",
+      "group": "implementation"
+    },
+    {
+      "path": "apps/backoffice/test/today-view-model.test.ts",
+      "sha256": "9b7f5c6b5d503b2e8d14b625a187ebc7527b554c1603d9c1218f9524f7da3003",
+      "group": "implementation"
+    },
+    {
+      "path": "docs/CURRENT_STATE.md",
+      "sha256": "40c472d8f5a98c4d225d9a3e90d7112c9dd0668173c8f8c91f907faafdb25f8a",
+      "group": "unchanged_context"
+    },
+    {
+      "path": "docs/PRODUCT_RELEASE_ROADMAP.md",
+      "sha256": "8ebdc933ad5ae363b0c438193e8a029686186bee82a8d0961d3f5c62034279ee",
+      "group": "unchanged_context"
+    },
+    {
+      "path": "docs/features/reputation/README.md",
+      "sha256": "2e2d14e33698bb667d1ea6f140930c1a593d65ee927ce7c4470b7187cd6f303c",
+      "group": "unchanged_context"
+    },
+    {
+      "path": "docs/features/reputation/STATUS.md",
+      "sha256": "56de3993bffa8ae6fc0deb3bb57a60af22d4afed70979a3ff6ec742e66f2bb1b",
+      "group": "unchanged_context"
+    },
+    {
+      "path": "docs/features/today/README.md",
+      "sha256": "666315bc75371625bee357f94fc9a4fc5eb35af30e57b735615c79f88d4f8cd3",
+      "group": "unchanged_context"
+    },
+    {
+      "path": "docs/operations/DEPLOYMENT.md",
+      "sha256": "c438d49bdbfcda5a48987aa172df94328f9f1011594ea7e40485cae52fdca7b0",
+      "group": "unchanged_context"
+    },
+    {
+      "path": "docs/operations/LOCAL_DEVELOPMENT.md",
+      "sha256": "eb28b14272eaca96e13f542f88a73d4a79fd710b6195de72e0129928ec0ebd0c",
+      "group": "unchanged_context"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/01-analysis-review.md",
+      "sha256": "44567dd42a690644a3225aa3c4afd228e654a44c777075d1ce85788e2b26a6e7",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/02-specs-review.md",
+      "sha256": "6ab727218433203ed3f80ad6cfc791c58a98c3ed9aedd423acb34e44da1fb1d5",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/02b-design-review.md",
+      "sha256": "875ec2b196e10febcf43aba7c9dabd2f9f46b5dadd8e6bcb1c83393857b0a49f",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/03-implementation-before-oauth-navigation.diff",
+      "sha256": "15887ae1b4bdf715c916752347c9ece29a684e90cc30c585fc0a7de41fd5304f",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/03-implementation.diff",
+      "sha256": "54eea680312bc5c668820526dfdff9ad752763ec46e87a593f024850bc6b0cf6",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/VERIFY.md",
+      "sha256": "298cdcf28815566a29401c8cd33aa475f989563978991f5a31adf81e4e93372d",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/QA_REPORT.md",
+      "sha256": "f8c31594002f2eb2156353131e6132c8faeeebce68421d1842be402524145f8b",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/build-candidate-binding.before-oauth-navigation.json",
+      "sha256": "0790286763c815172c837f04132bbc3dabd2b8f4747f42d5c8f5a6facde40578",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/build-candidate-binding.json",
+      "sha256": "bc07dd470b0a5683129c77e1e4c24e54af08505b68b86d47987f67da766816d0",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-manager-desktop-pending.png",
+      "sha256": "5ca7995dd9581cd26349b35584033a8aeaa82dc240f5b378ae5dec286eb6420a",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-manager-mobile-pending.png",
+      "sha256": "b6a246e6ece8c06d8a6d884cb4bf4d8dcb392b8e7d597ee3f09d304f173f2d38",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-manager-mobile-today.png",
+      "sha256": "4af8eb40221e402c0129bbf27687c12dd3a1aae3c82b22c943fc9cc07b5195e3",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-owner-desktop-empty-recent.png",
+      "sha256": "7d257ab176b6064a26c1138ba5ec14cd602ecf1d7d5e6b81bcfd4c53a1efec00",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-owner-desktop-error.png",
+      "sha256": "11acb1b68543737c08dcd0d2ece9bc802a1bfb45821aa049ad365f00724b3255",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-owner-desktop-history-end.png",
+      "sha256": "9a3a2f58d721a9d0ae19b2420b3652029e8867fc1d8ee27ba3c53c4966e38e3d",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-owner-desktop-internal-disabled.png",
+      "sha256": "723ec510886ce261a693fd747671b679432815a750f5f5633beb234bc0f5adf5",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-owner-desktop-pending.png",
+      "sha256": "b0f884ed4bf8cf3539f618d901a24ba60a0a3340026826c35571a626a1964a76",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-owner-desktop-today.png",
+      "sha256": "5af4d0568c66b0abb269edb893557986d32b9f16883d93851a141d58cb6ca9c8",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-owner-mobile-internal-disabled.png",
+      "sha256": "4a58b2bbf3c157ae2d32123eed516e841acc1c2d277e39b05f92031c678b04f7",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-owner-mobile-pending.png",
+      "sha256": "5c6dbbcb1e92ed9585016d49f985444e938c2adf1feb55de4fe269bea2f19789",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-results.json",
+      "sha256": "85ae96cd30c56a532f09caa4e92051f7b79c6ff8fcada32bbb6e05de90709b85",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-staff-desktop-assigned.png",
+      "sha256": "21697515112eda88c53ab43963ada10ef9dfc10fd6798731a5029ad92909c643",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-staff-desktop-today.png",
+      "sha256": "6611e447c4ac4774228dc5aa8f6e08005e820118f61b447625d0acce21119f74",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-staff-mobile-today.png",
+      "sha256": "2c0277ff1b1aec6bc2aaf76ccd3808cedac97533eedcfb27c2bf0c61b6bbf267",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/first-extra-owner-desktop-bound-continue.png",
+      "sha256": "e930e95503945ef6b48e330a1e208090e07d10eb9e8b25f5c0f3293b1623a77b",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/first-extra-owner-desktop-first-content.png",
+      "sha256": "dacd0aca21bc266c55c628aac138cc2590711d5752d560a738eb0c3e7a7bcec8",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/first-extra-owner-desktop-first-empty.png",
+      "sha256": "6e867c1ab0a882f6a48268479fdf59ade2d551158c85574be4b85df07f529c9d",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/first-extra-owner-mobile-bound-continue.png",
+      "sha256": "3d64a783a70733a3ac5bb0167fc5a98ad2b13c75fd43a3bbedd899d4bbfb47e4",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/first-extra-owner-mobile-first-content.png",
+      "sha256": "738437634ded3ddcf3d8e007b831d67c8331cb9ae4527996d6f882c0f9005ebd",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/first-extra-owner-mobile-first-empty.png",
+      "sha256": "54a10d296c39a001de3cd9a13ff56c6135e75aa1a20a499cc64c8eb684c6f7e3",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/first-results.json",
+      "sha256": "ac5ee9007f10691d02290553e99fc2eba455189a00976982dda62b7120a70410",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/maintenance-owner-desktop-maintenance-retained-work.png",
+      "sha256": "3a7015eade817f79eb484b1cdbd341d206e67c6f3b36f1adb8c56ca98b200e4c",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/maintenance-owner-mobile-maintenance-retained-work.png",
+      "sha256": "b95384981394c0da0311a76ea91c6b5c38246cd0a61a0d0d9727729035fc4154",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/maintenance-results.json",
+      "sha256": "60770264aa781f4575ae1aaa0df9050eb22cea2163af3b9d2dbe2e3b401e1973",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/not-found-owner-desktop-live-reference-404.png",
+      "sha256": "94bc8fd041e35db7227c15ff36bce1e31d29d17e4f55718820b294058d940f6b",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/not-found-owner-desktop-no-reference-handoff.png",
+      "sha256": "c8c34d89e5cc313217d07badff4625a34cf7c55e954d8874a33f8fafcf023bc0",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/not-found-owner-desktop-unavailable-new-draft.png",
+      "sha256": "f823b1beddc451d6cea59dd35995d7fe19bb235cf82352aa36e76747e6fdb75e",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/not-found-owner-desktop-unavailable-new-note.png",
+      "sha256": "7226c1be623b05da9730e1cc40ce37a531897701ea0107228da6efb91eaa0e96",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/not-found-owner-mobile-live-reference-404.png",
+      "sha256": "e7ca16ada085e7b84bf5e3928171b2038e98c2f69c29cddd0d1b165d93152996",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/not-found-owner-mobile-unavailable-new-draft.png",
+      "sha256": "ef613122b40e893e03d1b38e076175d6ccbe2c6fd7ce66505a49faaa826d0fa2",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/not-found-owner-mobile-unavailable-new-note.png",
+      "sha256": "cd976b3599f27d39bc1040dfe8fb10aa78054b0d7d0f50f4677be3d826d53bc2",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/not-found-results.json",
+      "sha256": "3ce3a8dba08a7c9200a26cecd6a780ec8c1079151f0b66dbb2fefebe26dcf95f",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/oauth-navigation-source-attribution.json",
+      "sha256": "3e391920ea57454a28a7e00dda06a3c8ce8ed86d098730df3c7d9e07e720029c",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/oauth-prefetch-before-fix-diagnostic.json",
+      "sha256": "89b068f8a4b853ceb61a1cb0594c100ffad89725548a6823f09cab58dba3efef",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/recovery-owner-desktop-provider-edit-detail-target.png",
+      "sha256": "c98f45ecb49041d7749ff47fb71e887d942bbab148acc333a5d1d8dc556021ae",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/recovery-owner-desktop-recovered-content-target.png",
+      "sha256": "2c0c5fda7ddc1019c93919431a8e3072f78b9418eac9bb5dec35ee1f2eba4a8b",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/recovery-owner-desktop-successful-detail-pending-target.png",
+      "sha256": "ff9665fd5e42685949832d42fbb623c8cbd39081c0624ed42fbf5daf763d5920",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/recovery-owner-mobile-provider-edit-detail-target.png",
+      "sha256": "ea5130c7570b0e1ce3de82b62304584bb95153bcc266e080a1a3c11b8da094ff",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/recovery-owner-mobile-recovered-content-target.png",
+      "sha256": "e3d5147ce9871f73bb67ab0bb6d43a5d9684d6058d0b35d8ebda032abb763106",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/recovery-results.json",
+      "sha256": "193bb381a1945383017d1dfca0af612d4ae9d3fdad7fd1aaa44ce45630c82b49",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-before-oauth-fix-results.json",
+      "sha256": "e13c5843a472f33ec8ea4642c8d0df94255df36040a29d2a5e1e94229ba189e0",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-avis-list-detail.png",
+      "sha256": "cfa0d4a2f6cfeaa31c7e497ed2b059a2cbaa5b6fee63cf22a0b8ac0e6323ca32",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-integrations-keyboard-focus.png",
+      "sha256": "7ff3a8f3094de2b7d811e9a90af71cb415a8915fd1b6ef1bcde354de97488bf7",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-integrations.png",
+      "sha256": "e721a3f314f9291401fdf52356113578a2ff76b16e9e944b9d83e2c1c5f8dc03",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-internal-disabled.png",
+      "sha256": "24cf0feb1f0f03acaf2503272ad3436b0a9b1a0250d9bf6abb39608f186922d4",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-manual-draft.png",
+      "sha256": "a33b443d687bb73868aad353accc8cefe4f472270d5ee73952336657823726c8",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-no-reference-handoff.png",
+      "sha256": "8db65107dd63429d64f5c75c8c041e7191de3b19532b07bbb603b32cd1735282",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-no-reference-saved-draft.png",
+      "sha256": "6a39c2313ccd999a8948d86d3b503e69e0eb76b790d14db32cc65e97523abe87",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-pending-editor.png",
+      "sha256": "62b671a18d86449a1a8c7b48a89bc282092ca7a88fd9c95f4d48fdc7b163d27e",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-remote-reply.png",
+      "sha256": "20102c1ec4f45010c185e59b60e7adf58cbef69499d9b4d51d522d97a4639053",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-retrieval-error.png",
+      "sha256": "f1c2f244ab7712e0aba471a4e90c9282ee46f3db8444773e089295bf7ff86f4a",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-retrieval-pending.png",
+      "sha256": "5f8ffd641ca00e5ca4f506773a33f718db4e43fb093403959f20b64975e032e5",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-retrieval-retry.png",
+      "sha256": "b7ec05a958699210f037d947ec882e08eefe10edb99bd83b0fee2b8127d96efb",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-retrieval-success.png",
+      "sha256": "5d1017524edd6f9f1dcdf2f29611c79ccd881db47c26d4e7e76a772e1bc0e814",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-today-reviews.png",
+      "sha256": "b661e48e39c8774d4f73dd3dba9d54b4f28c86b920c3c8dc6f27b2a1132591b7",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-avis-list-detail.png",
+      "sha256": "7961547f7484ad1b93db2009d5c3cf0417e8fed6bcf5cbebf59e5dc4a1035619",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-integrations-keyboard-focus.png",
+      "sha256": "78d5acb3ccff95f1dc4aab89c74af1723c3666f89d9feb18339bffb8d4c098cf",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-integrations.png",
+      "sha256": "831027b128751fb9bb764b6b0484fd96071eb485f30b3ad20c6d211aa33d08a3",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-internal-disabled.png",
+      "sha256": "b885e66675f68aba1b135440c11c239f2b58ce639d7bfbdb973b6b52d2e77b44",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-manual-draft.png",
+      "sha256": "8c94f58ecf1ccf6cb032026757a08549551ebcf44443c339ede677c041270806",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-no-reference-handoff.png",
+      "sha256": "8a4bc53d72575752bb72c949a5c6847da747596b42377e17ddb955465adba7a0",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-no-reference-saved-draft.png",
+      "sha256": "1ba0e53a4ddb507f1b3b123b25dc9b5eb274608f11e1a8ebf095fab44eb56ef2",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-pending-editor.png",
+      "sha256": "ed6c0dd4b63e0e1733e1cdd33d8690eebdb9319dc25896c926ed35f402cdcf78",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-remote-reply.png",
+      "sha256": "16bd1e021a0a95971242a47d3dd7ecb7fa8a3a82e4d3b303082edeec2c8a3270",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-retrieval-error.png",
+      "sha256": "de48d59eee07140ca3e80983c074056d7999b0b2996d99ffedfe0be7efaa5246",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-retrieval-pending.png",
+      "sha256": "26b6435b130fb7e7c776752c02c6e93c1f21b3a08a1a4fd6e5e3d56d1b967b1e",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-retrieval-success.png",
+      "sha256": "ccff7668d3c3907ab9e3e54580517147e0aeba7a17b143e4b3667e6ac874b78d",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-today-reviews.png",
+      "sha256": "32d6f810218cd79b9e2208ae7a9e301f79ea169f5ab1108e433973cdabac4e5e",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-avis-list-detail.png",
+      "sha256": "02311c17970494a88939c430fcf37372f7827e1f697c4c04b97381864b723498",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-integrations-keyboard-focus.png",
+      "sha256": "f5305513222beadbfbe691582251d86d2e91cc52d2832be8433a899231836b60",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-integrations.png",
+      "sha256": "073bd3b0e3b651cddf2d7a5f15bc22ca7e8882b7fa8ed17fd56e66d7da149ff1",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-internal-disabled.png",
+      "sha256": "7a72acc5c1671ee3c76b55bb6c3330610f0dfc128d3cdc1ad4c0cc1980708100",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-manual-draft.png",
+      "sha256": "442bbcd78dc07a887da46221db99178046dbe85b84b06ff96dad49c07a74b936",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-no-reference-handoff.png",
+      "sha256": "a2364774850ad239acebf5bc789c12bb1c335d8b7c6633eaddbb54beed4bc120",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-no-reference-saved-draft.png",
+      "sha256": "7a24d7251f48333fb22a4838d099cbb29c2aaef902c4b1e69df724b73e1bb223",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-pending-editor.png",
+      "sha256": "0cb8b8dcb14e8796a25963ba09edce63fd86daed60e168f9d9a157cfc7e1814f",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-remote-reply.png",
+      "sha256": "f3a0cea993fb38d07418f025091656b6e1d7244ee232a5c15acb0fe1941a56fd",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-retrieval-error.png",
+      "sha256": "651ac6391928bb8edf4d5537b0fcc17f1c1d847fe02c4315a33c0f909460c4c3",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-retrieval-pending.png",
+      "sha256": "924bbec83e804593494a535ff89392e75975d685367fbfa74b3ad638b2fe6ace",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-retrieval-retry.png",
+      "sha256": "284f513f095addb4b6377c04a8b192e3f950d8ab9fdd941db0f56a3c910664ce",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-retrieval-success.png",
+      "sha256": "bc9c6361522f2eadd6ffa1c35ec69de147d868522ba00f9424945f8f88c1541d",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-today-reviews.png",
+      "sha256": "593d6fac2129bfcee92eac03dc348874e4cd815e25c1b6e571ca372f57397b02",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-avis-list-detail.png",
+      "sha256": "f1b08c4f33cb9a9bc299e25e6fd50485917d5a17295150f5931eeeaa12e37119",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-integrations-keyboard-focus.png",
+      "sha256": "3414906abf72dec6b4f1d818a89aae1ddf65e28f90d10ed5cafa849f8aba348f",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-integrations.png",
+      "sha256": "2f983f53ced16b556a5aad3579ab08162ce9a4ffa896c9bab14e4e50949da578",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-internal-disabled.png",
+      "sha256": "0a175e2ba0425343973aecaa2677a4645b000abcbfae7926312c4be741111aa1",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-manual-draft.png",
+      "sha256": "6f23b464cea7c1222b09326936d14ab239f454e77c2a4cf2c0a5b5c4ddd88092",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-no-reference-handoff.png",
+      "sha256": "e4484d4367f1b8a628d6f227980acaf724b6c8e1cc8ae959062505eb20c90165",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-no-reference-saved-draft.png",
+      "sha256": "a540e0d0a89bada950d9da813df663dc53cbdf7ef14042d5eaae68d41b6b6a9a",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-pending-editor.png",
+      "sha256": "a00b514231d048ad5886613b76118c6c5650089b685f1138b26936bf7e02b4e9",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-remote-reply.png",
+      "sha256": "151de12c3aafcfdcd7410a7688aa618b1681297c7ca031adf95fea84ae68222c",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-retrieval-error.png",
+      "sha256": "89642dac9384c6d9cfcc2542e603fb65c81bc4917b56bfada81156de2d468b4d",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-retrieval-pending.png",
+      "sha256": "8ebec6c89d9865af8909fe7191dc6990153d942ce332e9d95230a41148c2de84",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-retrieval-success.png",
+      "sha256": "07f06d742341f39086535e6ad196c590b3640a6da1b052fb29192cbc1552cd96",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-today-reviews.png",
+      "sha256": "a2687dcbf36dadf8f65cb9c0542844f5ffd258bc7068ba516f5a8acb8e5a8813",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-results.json",
+      "sha256": "6a04688e411b37b9c2cbb174f9e540c9f426fc2eabb5502e91717d6d538488a4",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1024-assigned-editor.png",
+      "sha256": "b3367d988ab3787f0f6522dcc7d2f1e37ef84c5f1d38d982576f82fa5a844292",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1024-assigned-keyboard-focus.png",
+      "sha256": "4713cd4b75a7255d0eddde9055535439855c9cf28c80295de30bc24d63dd6219",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1024-denied-foreign.png",
+      "sha256": "8544a3e16e053f0949fd38d2fe2cc2aa11b289f1c903e1f8ebec691f4e039d05",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1024-today-reviews.png",
+      "sha256": "ca6bea4b203d383cf6221221d7addff7627c79544b28bae484aa485c0361d3a7",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1024-unavailable.png",
+      "sha256": "13434fb68149348d73108c412e1908547e132393d41b3a1ed19f4ef8dfc83387",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1440-assigned-editor.png",
+      "sha256": "10072dbfb0dde8a47039c8fd39c785b7a02eb237a487da6d43deb4ce9b68b4b6",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1440-assigned-keyboard-focus.png",
+      "sha256": "8ae836d4c3c25aff0eadadbd64e997dc11e33758d710dbe7dfa46b94fff32910",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1440-denied-foreign.png",
+      "sha256": "b65698adf00f67a890d717656979f9912d1ae57ea1e1441c33e464cb6d5e578b",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1440-today-reviews.png",
+      "sha256": "9cfb94cbd1a3cedb4ee94b2ccd178306833a5670d71282da958a0551f877f597",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1440-unavailable.png",
+      "sha256": "7cae89a87a8de9e0fc370b54055aacaa426c207cbaecf30cbc939ba85f1b5a91",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w390-assigned-editor.png",
+      "sha256": "95a838c8614695b5b97605c558c4c6cb16d854a54614866caab98b0170d14106",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w390-assigned-keyboard-focus.png",
+      "sha256": "187b6d48fe38b0c91a71e10be511828c2e1370e02a928207d50dd16bec700bac",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w390-denied-foreign.png",
+      "sha256": "a023605e5fdb5dd9bbacb0c037eb6c0db00746bd60544227b53600dae33ace21",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w390-today-reviews.png",
+      "sha256": "b42d2db3b2a79875a489cb4fc0d060d82c8cd6ba779e5aa92f3440ab4440434e",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w390-unavailable.png",
+      "sha256": "b0447443f246f0eaa30e58fbb83fbcb898500385df6cd0f8d57c34dda2446bb1",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w768-assigned-editor.png",
+      "sha256": "801f4905767fdb9fbc3a7c14f9ac62cc2d42694cf8f510e0fae9cb70fcefb74b",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w768-assigned-keyboard-focus.png",
+      "sha256": "a203ad8f90db9bf98a0f11076af61ea99806a96963d8b244887b9ab78ff94348",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w768-denied-foreign.png",
+      "sha256": "00a6cbfd57d4df4992dd12ee0487e72f989dc4f7f2e6fe53e76c499346651982",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w768-today-reviews.png",
+      "sha256": "77792a03d2cc6b196220a1db8501f8a6f638bcf3a67a1a5f1443fcc831017891",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w768-unavailable.png",
+      "sha256": "e3b54802632b8d54bfcc6640e3e94bda1769bff439be076896c77ddc6f052790",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/run-evidence-manifest.json",
+      "sha256": "d2d00e85d25fba22691ca7f4c12ab98073fb89a3563acdfc88d6a585b631eb9a",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/screenshot-manifest.json",
+      "sha256": "7dca7b21451fc10e786bae849b0d2555d1674f2a688079e1365d76ed0a40267d",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/screenshot-manifest.md",
+      "sha256": "a3c5f32393a81b62cd27dc7d4877d6c433b497bad298a7b29373fab60229d4f8",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/source-candidate-manifest.before-oauth-navigation.json",
+      "sha256": "7792ee8d7e68e08d4934aca32df691cb3773570a5f1d9f6e9c12d4db7b59ffa7",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/source-candidate-manifest.json",
+      "sha256": "708102a4e03e5f4b71c76dcbd04a0d445f4bf384a2f78e87cc1b2eb42381e88c",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/stale-owner-desktop-recent-pending.png",
+      "sha256": "7b594aac8cdf5a7e4296a47bf8e56eff71ff443f49fe02015d8a0f4b3e4dc8d2",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/stale-results.json",
+      "sha256": "f557277fd7e3b6bb4e4fe8808e69c6167711c75c27f854fc33315dd114303025",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/targets-owner-desktop-remote-reply-target.png",
+      "sha256": "be9615476a86067cc7ce91f7f3d958e86b55cc63038749f0e75fce20d1e715a3",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/targets-owner-desktop-status-completed-target.png",
+      "sha256": "5a09fb4a46fb3f87c899ed54b904153e1859a7f64e025c9116e3225d59f7b642",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/targets-owner-desktop-status-pending-target.png",
+      "sha256": "d36c1df2dabea27e31eccf02b2080f85497d75fd79a4e6d1283d2c5bddcc1ed5",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/targets-owner-desktop-unavailable-detail-target.png",
+      "sha256": "6faf9555e177cbf7809892d6fa36076f5859104403f30418f9f2eb6de8a1e45e",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/targets-owner-mobile-remote-reply-target.png",
+      "sha256": "d9fe6d78e17e8978b1c159fc55bc9806755d759c162a929e0d1b58b941dd61bd",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/targets-owner-mobile-status-completed-target.png",
+      "sha256": "545195a21381187c384dce5d67a878430df84387c3e3bf848bd0a596d629ca75",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/targets-owner-mobile-status-pending-target.png",
+      "sha256": "95e5493d4fc974bf0b5a1eff4fa1c0b6c1133c9182e8ae2ad8db208e3402d043",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/targets-owner-mobile-unavailable-detail-target.png",
+      "sha256": "b38b7005be4573fecee432e8d29393ca3153e3c9e3c26b6c77fdf64568de5df2",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/targets-results.json",
+      "sha256": "7a81091097617454f279bcbbb1ef625aa80a7a3995b94a4b0e4e20c82701d471",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/targets-staff-mobile-assigned-detail-target.png",
+      "sha256": "1e24a0ebdcdc3f6156234fd2d00bfee396ecf4a8e45736306bf1d6ecde58c8c7",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/targets-staff-mobile-unavailable-detail-target.png",
+      "sha256": "516462c78889646d52d89892eb887fe8e80307ae14fc436cf81173cb41f6956c",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/unavailable-work-after.json",
+      "sha256": "7811bd1ce0b4786b74379dbfb171bf9fff3fbf761514af0a6106ffb8fedc6e88",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/unavailable-work-before.json",
+      "sha256": "8d872f253def89aa5f7dfb9b0ac92091bd8324d711517b96cb567c5194cbccfa",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/unavailable-work-body-reconciliation.json",
+      "sha256": "bd41225bda6f79ff446698e9d5f0162b6f52ae38c95c5a8951673e8415287357",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/unbound-extra-owner-desktop-unbound.png",
+      "sha256": "f78c80a991488b77dcd215861ba3bfe8a23969def4e7e6ad470c51c223a87ee0",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/unbound-extra-owner-mobile-unbound.png",
+      "sha256": "aa37028c62f47412726b662ba32c40fd6e2bbc2f2a2b35f2a82fec0ec2fadc9d",
+      "group": "review_evidence"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/unbound-results.json",
+      "sha256": "20e32039e696690e15c63ba1f3eabcca21f3cabd2c9ca45cb456f56ecdd22c7e",
+      "group": "review_evidence"
+    },
+    {
+      "path": "openspec/changes/release-a-google-review-import/.openspec.yaml",
+      "sha256": "edbcd0b0cb2d4619b326f4293e56c1d31f5ce6be37dda83923ff58267b46f1ab",
+      "group": "planning"
+    },
+    {
+      "path": "openspec/changes/release-a-google-review-import/analysis.md",
+      "sha256": "99ce35d5324ef36d96706158940e2d33a36d42442e8914fffaa7080c8100aaa9",
+      "group": "planning"
+    },
+    {
+      "path": "openspec/changes/release-a-google-review-import/design.md",
+      "sha256": "acb5dcb44f897997863004c5199a7eeaf0ed54523f358c8dee9069c608e2d19d",
+      "group": "planning"
+    },
+    {
+      "path": "openspec/changes/release-a-google-review-import/proposal.md",
+      "sha256": "5ecaaf8176c0812c99e18bfb8a20b1b3057f8c6c634a3ca8cd51f46c4b96fa2f",
+      "group": "planning"
+    },
+    {
+      "path": "openspec/changes/release-a-google-review-import/specs/backoffice/release-a-customer-exposure/spec.md",
+      "sha256": "5af09c087c4dc567e70320d20f952240094573a69a92e6a0894f734e2521fab8",
+      "group": "planning"
+    },
+    {
+      "path": "openspec/changes/release-a-google-review-import/specs/reputation/google-review-retrieval/spec.md",
+      "sha256": "c23135db729e2cc0819cd4e2fea597c4c197299a8efad89e47d00aaabd25b16c",
+      "group": "planning"
+    },
+    {
+      "path": "openspec/changes/release-a-google-review-import/tasks.md",
+      "sha256": "b73342411fed7e1f2194bb5b53a57a706e508ec2d763bc07bc1b96ebb017aa1b",
+      "group": "planning"
+    },
+    {
+      "path": "openspec/specs/backoffice/release-a-customer-exposure/spec.md",
+      "sha256": "b3e726a1f6102e399b8a319a72570610898028b21074ff7e1472afae53c379db",
+      "group": "unchanged_context"
+    },
+    {
+      "path": "openspec/specs/reputation/reply-draft-pending-feedback/spec.md",
+      "sha256": "252430fecf4732ca55de0fd5c564870d7ddd43ad6fe3a37a502b36acefff36d6",
+      "group": "unchanged_context"
+    },
+    {
+      "path": "packages/contracts/src/reputation/index.ts",
+      "sha256": "b4ba9f05be0023690f02431f6e317f48e8262c0b15964e3084a38fa76cebf81c",
+      "group": "implementation"
+    },
+    {
+      "path": "packages/contracts/test/reputation.test.ts",
+      "sha256": "f02258a77f07610920029505eb74c6d637ee9eb2d70450c86c967becfb15206f",
+      "group": "implementation"
+    },
+    {
+      "path": "packages/db-cloud/drizzle/0021_release_a_google_review_import.sql",
+      "sha256": "db57eb12ee3d41f37f86af77310471069cf9a25284e55f300e3a6c2be379a8b4",
+      "group": "implementation"
+    },
+    {
+      "path": "packages/db-cloud/drizzle/meta/0021_snapshot.json",
+      "sha256": "7369d683b0316c220f14d5226af387c1ecfa3f6bbe808aa24e05e9c133c8d2ee",
+      "group": "implementation"
+    },
+    {
+      "path": "packages/db-cloud/drizzle/meta/_journal.json",
+      "sha256": "ecb431b247c8ef97b34f71b3399e039aaf9f90becb78173950fe9cd0fdafa56d",
+      "group": "implementation"
+    },
+    {
+      "path": "packages/db-cloud/src/google-review-retrieval-repository.ts",
+      "sha256": "30eb3ea08fc24c5547a385883ea8163bdff0a26abe4643d5571ec92e8862c833",
+      "group": "implementation"
+    },
+    {
+      "path": "packages/db-cloud/src/index.ts",
+      "sha256": "4032079412d20b012a7713253926d55c01975921160319b166f2f9b47c0b6f7e",
+      "group": "implementation"
+    },
+    {
+      "path": "packages/db-cloud/src/reputation-repository.ts",
+      "sha256": "180ed0eada89a6b25e783f29488098f192d1dae414615995da4b33c2995af7fa",
+      "group": "implementation"
+    },
+    {
+      "path": "packages/db-cloud/src/schema/reputation.ts",
+      "sha256": "04bac27af7283bb28528901196b2fe1732e7f1a5bcc35afb96072253776354e2",
+      "group": "implementation"
+    },
+    {
+      "path": "packages/db-cloud/test/google-review-retrieval.integration.test.ts",
+      "sha256": "32b6e6baf3ef2b59baeea054d9293dc40e680a8692b34e3d07e142d65fb54f3b",
+      "group": "implementation"
+    },
+    {
+      "path": "packages/db-cloud/test/pointage-raw-clocking-schema.test.ts",
+      "sha256": "3dd59cce6cb9375d09f1d8577c9ede997645339f7e589af60f3811f13b15a3bb",
+      "group": "implementation"
+    }
+  ],
+  "implementationDiff": {
+    "path": "docs/reviews/release-a-google-review-import/03-implementation.diff",
+    "sha256": "54eea680312bc5c668820526dfdff9ad752763ec46e87a593f024850bc6b0cf6",
+    "algorithm": "Git baseline-to-current scoped tracked diff plus sorted Git no-index NUL-to-file patches for each untracked implementation path; core.autocrlf=false/core.quotepath=false; binary/full-index/no-ext-diff/no-textconv"
+  },
+  "knowledgePreparation": {
+    "markdown": ".tmp-google-review-import-test/knowledge-proposal.md",
+    "markdownSha256": "5e1d2549db734bb0026e3a503269471b4a2a680691d73ec52b218b6abd6eea2a",
+    "json": ".tmp-google-review-import-test/knowledge-proposal.json",
+    "jsonSha256": "258e84d502d20aec084cb7a06708bf30e3755e36f5b91f663573c9740e5f9c5e",
+    "diffSha256": "13c21a72c39153cb67cd01a648b75d80f54126c88f2dca46f19b2f976a36b3bf",
+    "targetIds": [
+      "docs/features/reputation/README.md",
+      "docs/features/reputation/STATUS.md",
+      "docs/features/today/README.md",
+      "docs/operations/LOCAL_DEVELOPMENT.md",
+      "docs/operations/DEPLOYMENT.md",
+      "docs/CURRENT_STATE.md"
+    ],
+    "approval": "NOT_APPROVED"
+  },
+  "omitted": [
+    "self/status-bearing final packet to avoid recursive hashes",
+    "ignored runtime secrets",
+    "unrelated/shared runtimes and old QA databases"
+  ]
+}

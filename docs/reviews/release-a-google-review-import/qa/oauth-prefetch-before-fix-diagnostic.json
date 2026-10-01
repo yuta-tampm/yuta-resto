@@ -1,0 +1,183 @@
+{
+  "checks": [
+    {
+      "scenario": "diagnostic-owner-w1440-integrations-no-oauth-click",
+      "name": "OWNER_INTEGRATIONS_OBSERVED_WITHOUT_OAUTH_CLICK",
+      "status": "PASS",
+      "clickedOAuth": false
+    },
+    {
+      "scenario": "diagnostic-owner-w1024-integrations-no-oauth-click",
+      "name": "OWNER_INTEGRATIONS_OBSERVED_WITHOUT_OAUTH_CLICK",
+      "status": "PASS",
+      "clickedOAuth": false
+    },
+    {
+      "scenario": "diagnostic-owner-w768-integrations-no-oauth-click",
+      "name": "OWNER_INTEGRATIONS_OBSERVED_WITHOUT_OAUTH_CLICK",
+      "status": "PASS",
+      "clickedOAuth": false
+    }
+  ],
+  "screenshots": [],
+  "limitations": [
+    "Narrow diagnostic reproduction only: OWNER Integrations rendering without OAuth clicks at 1440/1024/768. No console exclusion or QA/gate approval. Original responsive failure and its 109 checks/60 screenshots remain untouched.",
+    "Console text is exported only as class/status/SHA-256; native errors, credentials, sessions, headers, request bodies, origins, queries and arbitrary paths are never exported. Known same-origin failed response paths/statuses provide bounded attribution.",
+    "Uses unchanged exact496/source7792/build/runtime54339/3311/3312 guards and existing Edge/Playwright. No SQL, bootstrap, app/source changes, Save or real provider. Original owned fixture state bytes restore in finally."
+  ],
+  "browserErrors": 0,
+  "blockedBrowserRequests": 0,
+  "consoleErrors": 6,
+  "diagnosticBaseDriverSha256": "5c41895919ccffdfe08869ca7a3bf171fbb30bdf39afe928d3c0b20fde1738a1",
+  "driverSha256": "bbf0e094dea1cf2cdd1613d63ac45e14487adea85ca3160f80b70af01c4cc33e",
+  "candidateManifestSha256": "7792ee8d7e68e08d4934aca32df691cb3773570a5f1d9f6e9c12d4db7b59ffa7",
+  "buildBindingSha256": "0790286763c815172c837f04132bbc3dabd2b8f4747f42d5c8f5a6facde40578",
+  "providerFixtureSha256": "9c611fbcae5d21cc6290dc969b5330adbc4469468ce48ba891882a78bccdf8ed",
+  "establishedDriverSha256": "3f0f4023149a023761d28adf38e4a9c609fb934da9ace710dec11b41f924a653",
+  "sourceFileCount": 496,
+  "dataProvenance": "SYNTHETIC_FIXTURE_NOT_GOOGLE_ACCESS_OR_RETRIEVAL_EVIDENCE",
+  "viewports": {
+    "w1440": {
+      "width": 1440,
+      "height": 900
+    },
+    "w1024": {
+      "width": 1024,
+      "height": 768
+    },
+    "w768": {
+      "width": 768,
+      "height": 1024
+    }
+  },
+  "consoleDiagnostics": [
+    {
+      "scenario": "diagnostic-owner-w1440-integrations-no-oauth-click",
+      "role": "OWNER",
+      "viewport": "w1440",
+      "event": "consoleerror",
+      "class": "OTHER_CONSOLE_ERROR",
+      "status": null,
+      "textSha256": "d91713f5ee8c352809e06c1e8c871310a9c90942f212c375230ada2d8f7c48eb",
+      "cors": true,
+      "googleOAuthTarget": true,
+      "ownOAuthStartMentioned": true,
+      "csp": false,
+      "networkFailed": false,
+      "sameOrigin": true,
+      "profile": "release-a",
+      "path": "/parametres/integrations",
+      "pathSha256": "c73d469a9ed8179528526b954824414d8dc4153b2d05cf6f13075984b2d21ef4",
+      "queryExported": false
+    },
+    {
+      "scenario": "diagnostic-owner-w1440-integrations-no-oauth-click",
+      "role": "OWNER",
+      "viewport": "w1440",
+      "event": "consoleerror",
+      "class": "BROWSER_RESOURCE_ERROR",
+      "status": null,
+      "textSha256": "671347410306fc0394cb8f6827190ca57a4110d96970db247eed606fe9175c13",
+      "cors": false,
+      "googleOAuthTarget": false,
+      "ownOAuthStartMentioned": false,
+      "csp": false,
+      "networkFailed": true,
+      "sameOrigin": false,
+      "profile": "OTHER",
+      "path": null,
+      "pathSha256": null,
+      "queryExported": false
+    },
+    {
+      "scenario": "diagnostic-owner-w1024-integrations-no-oauth-click",
+      "role": "OWNER",
+      "viewport": "w1024",
+      "event": "consoleerror",
+      "class": "OTHER_CONSOLE_ERROR",
+      "status": null,
+      "textSha256": "8fcf2f8eafe58177da4faf2df62f772902f1e37f895f4748b0bb687033c97260",
+      "cors": true,
+      "googleOAuthTarget": true,
+      "ownOAuthStartMentioned": true,
+      "csp": false,
+      "networkFailed": false,
+      "sameOrigin": true,
+      "profile": "release-a",
+      "path": "/parametres/integrations",
+      "pathSha256": "c73d469a9ed8179528526b954824414d8dc4153b2d05cf6f13075984b2d21ef4",
+      "queryExported": false
+    },
+    {
+      "scenario": "diagnostic-owner-w1024-integrations-no-oauth-click",
+      "role": "OWNER",
+      "viewport": "w1024",
+      "event": "consoleerror",
+      "class": "BROWSER_RESOURCE_ERROR",
+      "status": null,
+      "textSha256": "671347410306fc0394cb8f6827190ca57a4110d96970db247eed606fe9175c13",
+      "cors": false,
+      "googleOAuthTarget": false,
+      "ownOAuthStartMentioned": false,
+      "csp": false,
+      "networkFailed": true,
+      "sameOrigin": false,
+      "profile": "OTHER",
+      "path": null,
+      "pathSha256": null,
+      "queryExported": false
+    },
+    {
+      "scenario": "diagnostic-owner-w768-integrations-no-oauth-click",
+      "role": "OWNER",
+      "viewport": "w768",
+      "event": "consoleerror",
+      "class": "OTHER_CONSOLE_ERROR",
+      "status": null,
+      "textSha256": "e06acf4b5a41f2a60fad99f9da17203b929d839022a4e898a6663a01b16aa12e",
+      "cors": true,
+      "googleOAuthTarget": true,
+      "ownOAuthStartMentioned": true,
+      "csp": false,
+      "networkFailed": false,
+      "sameOrigin": true,
+      "profile": "release-a",
+      "path": "/parametres/integrations",
+      "pathSha256": "c73d469a9ed8179528526b954824414d8dc4153b2d05cf6f13075984b2d21ef4",
+      "queryExported": false
+    },
+    {
+      "scenario": "diagnostic-owner-w768-integrations-no-oauth-click",
+      "role": "OWNER",
+      "viewport": "w768",
+      "event": "consoleerror",
+      "class": "BROWSER_RESOURCE_ERROR",
+      "status": null,
+      "textSha256": "671347410306fc0394cb8f6827190ca57a4110d96970db247eed606fe9175c13",
+      "cors": false,
+      "googleOAuthTarget": false,
+      "ownOAuthStartMentioned": false,
+      "csp": false,
+      "networkFailed": true,
+      "sameOrigin": false,
+      "profile": "OTHER",
+      "path": null,
+      "pathSha256": null,
+      "queryExported": false
+    }
+  ],
+  "failedResponses": [],
+  "startedAt": "2026-10-01T20:56:11.886Z",
+  "providerCalls": {
+    "recent": 0,
+    "history": 0,
+    "detail": 0,
+    "accounts": 3,
+    "locations": 3,
+    "blocked": 0
+  },
+  "diagnosticCaptureStatus": "CAPTURED_ATTRIBUTION_REQUIRED",
+  "originalFixtureStateRestored": true,
+  "completedAt": "2026-10-01T20:56:24.750Z",
+  "qaStatus": "REVIEW_REQUIRED"
+}

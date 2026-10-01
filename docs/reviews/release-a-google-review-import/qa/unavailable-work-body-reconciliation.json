@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "scope": "Existing HTML textarea FormData CRLF serialization; browser values normalize to LF",
+  "checks": {
+    "browserDraftLF": true,
+    "browserNoteLF": true,
+    "persistedDraftCRLF": true,
+    "persistedNoteCRLF": true
+  },
+  "sourceResult": "extra-browser-qa-404-2026-10-01T20-14-37-743Z/results.json",
+  "sourceAfter": "unavailable-work-after.json",
+  "databaseEffects": false,
+  "sourceEffects": false
+}

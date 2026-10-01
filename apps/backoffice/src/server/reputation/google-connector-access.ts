@@ -2,10 +2,16 @@ import 'server-only';
 
 import {
   findGoogleReputationConnectorCredentials,
+  findCapturedGoogleConnectorCredentials,
+  GoogleReviewRetrievalRepositoryError,
+  type GoogleReviewBinding,
+  updateCapturedGoogleConnectorAccessToken,
   updateGoogleReputationConnectorAccessToken,
 } from '@yuta/db-cloud';
 import type { TenantContext } from '@yuta/tenant';
-import { cloudDatabase as db } from '../cloud-database';
+import { requireEntitlement } from '@yuta/tenant';
+import { requireReputationPermission } from '../auth/permissions';
+import { isGoogleReviewRetrievalEnabled } from './google-review-retrieval-config';
 import { decryptCredential, encryptCredential } from './credential-crypto';
 import {
   GoogleBusinessProfileApiError,
@@ -15,8 +21,21 @@ import { getGoogleConnectorConfiguration } from './google-connector-config';
 
 export async function getGoogleConnectorAccessToken(
   tenant: TenantContext,
+  binding?: GoogleReviewBinding,
 ): Promise<string | null> {
-  const connector = await findGoogleReputationConnectorCredentials(db, tenant);
+  if (binding) {
+    requireEntitlement(tenant, 'reputation.enabled');
+    requireReputationPermission(tenant, 'reputation.read');
+    requireReputationPermission(tenant, 'reputation.google.retrieve');
+    if (!isGoogleReviewRetrievalEnabled()) return null;
+  }
+  const { cloudDatabase: db } = await import('../cloud-database');
+  const connector = binding
+    ? await findCapturedGoogleConnectorCredentials(db, tenant, binding)
+    : await findGoogleReputationConnectorCredentials(db, tenant);
+  if (binding && !connector) {
+    throw new GoogleReviewRetrievalRepositoryError('STALE_AUTHORITY');
+  }
   if (!connector?.encryptedAccessToken) return null;
   const configuration = getGoogleConnectorConfiguration();
   if (
@@ -35,14 +54,28 @@ export async function getGoogleConnectorAccessToken(
       configuration.encryptionKey,
     );
     const tokens = await refreshGoogleAccessToken(configuration, refreshToken);
-    await updateGoogleReputationConnectorAccessToken(db, tenant, {
+    const update = {
       encryptedAccessToken: encryptCredential(
         tokens.accessToken,
         configuration.encryptionKey,
       ),
       tokenExpiresAt: tokens.expiresAt,
       grantedScopes: tokens.scopes,
-    });
+    };
+    if (binding) {
+      if (
+        !(await updateCapturedGoogleConnectorAccessToken(
+          db,
+          tenant,
+          binding,
+          update,
+        ))
+      ) {
+        throw new GoogleReviewRetrievalRepositoryError('STALE_AUTHORITY');
+      }
+    } else {
+      await updateGoogleReputationConnectorAccessToken(db, tenant, update);
+    }
     return tokens.accessToken;
   } catch (error: unknown) {
     if (

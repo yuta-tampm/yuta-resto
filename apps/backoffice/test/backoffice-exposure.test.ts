@@ -58,6 +58,7 @@ describe('closed paths and return destinations', () => {
     '/resolution-etablissement',
     '/api/reputation/google/oauth/start',
     '/api/reputation/google/oauth/callback',
+    '/api/internal/reputation/google-cache-maintenance',
     '/_next/static/chunk.js',
     '/favicon.ico',
   ])('admits %s in A', (path) => {
@@ -80,6 +81,8 @@ describe('closed paths and return destinations', () => {
     '/future-module.json',
     '/parametres/integrations/future',
     '/visibilite-reputation/avis/id/future',
+    '/api/internal/reputation/google-cache-maintenance/future',
+    '/api/internal/reputation/google-cache-maintenance-other',
   ])('closes %s in A and preserves internal availability', (path) => {
     expect(isBackofficePathAvailable('release-a', path)).toBe(false);
     expect(isBackofficePathAvailable('internal', path)).toBe(true);
@@ -94,6 +97,7 @@ describe('closed paths and return destinations', () => {
       '//example.test',
       '/\\example.test',
       '/aujourdhui\n',
+      '/api/internal/reputation/google-cache-maintenance',
     ]) {
       expect(safeBackofficeReturnTo('release-a', destination)).toBe(
         '/aujourdhui',

@@ -1,0 +1,171 @@
+{
+  "checks": [
+    {
+      "name": "LIVE_REFERENCE_404_DESKTOP_ONE_GET",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 1,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "name": "UNAVAILABLE_FREEFORM_DESKTOP_SAVE_RELOAD_ZERO_PROVIDER_CALLS",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "name": "404_AND_UNAVAILABLE_DESKTOP_LAYOUT",
+      "status": "PASS",
+      "horizontalOverflow": false
+    },
+    {
+      "name": "LIVE_REFERENCE_404_MOBILE_ONE_GET",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 1,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "name": "UNAVAILABLE_FREEFORM_MOBILE_SAVE_RELOAD_ZERO_PROVIDER_CALLS",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "name": "404_AND_UNAVAILABLE_MOBILE_LAYOUT",
+      "status": "PASS",
+      "horizontalOverflow": false
+    }
+  ],
+  "screenshots": [
+    {
+      "path": ".tmp-google-review-import-test/extra-browser-qa-404-2026-10-01T20-14-37-743Z/owner-desktop-live-reference-404.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "Actual sanitized provider404 with retained work and valid retry reference",
+      "sha256": "94bc8fd041e35db7227c15ff36bce1e31d29d17e4f55718820b294058d940f6b",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/extra-browser-qa-404-2026-10-01T20-14-37-743Z/owner-desktop-unavailable-new-draft.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "New freeform draft persisted while Google content remains unavailable",
+      "sha256": "f823b1beddc451d6cea59dd35995d7fe19bb235cf82352aa36e76747e6fdb75e",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/extra-browser-qa-404-2026-10-01T20-14-37-743Z/owner-desktop-unavailable-new-note.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "New freeform note persisted with no recovery reference",
+      "sha256": "7226c1be623b05da9730e1cc40ce37a531897701ea0107228da6efb91eaa0e96",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/extra-browser-qa-404-2026-10-01T20-14-37-743Z/owner-desktop-no-reference-handoff.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "No-reference handoff without provider request",
+      "sha256": "c8c34d89e5cc313217d07badff4625a34cf7c55e954d8874a33f8fafcf023bc0",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/extra-browser-qa-404-2026-10-01T20-14-37-743Z/owner-mobile-live-reference-404.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "Actual sanitized provider404 with retained work and valid retry reference",
+      "sha256": "e7ca16ada085e7b84bf5e3928171b2038e98c2f69c29cddd0d1b165d93152996",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/extra-browser-qa-404-2026-10-01T20-14-37-743Z/owner-mobile-unavailable-new-draft.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "New freeform draft persisted while Google content remains unavailable",
+      "sha256": "ef613122b40e893e03d1b38e076175d6ccbe2c6fd7ce66505a49faaa826d0fa2",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/extra-browser-qa-404-2026-10-01T20-14-37-743Z/owner-mobile-unavailable-new-note.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "New freeform note persisted with no recovery reference",
+      "sha256": "cd976b3599f27d39bc1040dfe8fb10aa78054b0d7d0f50f4677be3d826d53bc2",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/extra-browser-qa-404-2026-10-01T20-14-37-743Z/owner-mobile-no-reference-handoff.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "No-reference handoff without provider request",
+      "sha256": "b38b7005be4573fecee432e8d29393ca3153e3c9e3c26b6c77fdf64568de5df2",
+      "visualReview": "REQUIRED"
+    }
+  ],
+  "limitations": [
+    "Scripted assertions and actual viewport screenshots need visual review. No screen-reader output, production eligibility or Google access proof is inferred."
+  ],
+  "browserErrors": 0,
+  "blockedBrowserRequests": 0,
+  "sourceManifestSha256": "7792ee8d7e68e08d4934aca32df691cb3773570a5f1d9f6e9c12d4db7b59ffa7",
+  "buildBindingSha256": "0790286763c815172c837f04132bbc3dabd2b8f4747f42d5c8f5a6facde40578",
+  "driverSha256": "41db519ceb4c8c5cfab4246640df1ed6b834a28e5800d59759e3404a41849908",
+  "providerFixtureSha256": "9c611fbcae5d21cc6290dc969b5330adbc4469468ce48ba891882a78bccdf8ed",
+  "run": "404",
+  "startedAt": "2026-10-01T20:14:37.744Z",
+  "unavailableSaveProof": {
+    "feedbackId": "01a0f8f9-0b3e-7086-9fdc-66b975ff0941",
+    "draftSha256": "eb633b9bc11957c88b072232aa88c9fe4dae96645316c2fa76a2c27e6e70f10b",
+    "noteSha256": "fe256d112234b40acc2435a31673f4325ec3634bbed7dbbb640146c6b8907a3c"
+  },
+  "scriptedStatus": "PASS",
+  "completedAt": "2026-10-01T20:14:42.067Z",
+  "qaStatus": "REVIEW_REQUIRED"
+}

@@ -4,6 +4,8 @@ import type {
   FeedbackSource,
   FeedbackStatus,
   FeedbackUrgency,
+  GoogleReviewContentAvailability,
+  GoogleReviewRetrievalSummary,
 } from '@yuta/contracts/reputation';
 import type { ReleaseASetupSummary } from '../../../../server/reputation/release-a-setup';
 
@@ -21,9 +23,17 @@ export type ReviewListRecord = {
   receivedAt: string;
   incidentId: string | null;
   replyStatus: string | null;
+  googleContentAvailability?: GoogleReviewContentAvailability;
+  googleReviewChanged?: boolean;
+  canRecoverReference?: boolean;
 };
 
 export type ReviewDetailRecord = ReviewListRecord & {
+  remoteReply?: {
+    content: string;
+    updatedAt: string | null;
+    status: string | null;
+  } | null;
   externalUrl: string | null;
   analysis: {
     summary: string;
@@ -47,6 +57,7 @@ export type ReviewsPageData = {
   state: 'ready' | 'unavailable';
   releaseA: boolean;
   setupSummary: ReleaseASetupSummary | null;
+  retrievalSummary?: GoogleReviewRetrievalSummary | null;
   attentionCount: number;
   items: ReviewListRecord[];
   detail: ReviewDetailRecord | null;
@@ -83,6 +94,7 @@ export type ReviewsPageData = {
     canManageFeedback: boolean;
     canCreateReply: boolean;
     canCreateNote: boolean;
+    canRetrieveGoogle?: boolean;
   };
 };
 

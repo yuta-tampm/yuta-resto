@@ -3,6 +3,7 @@ import 'server-only';
 import { findGoogleReputationConnector } from '@yuta/db-cloud';
 import type { TenantContext } from '@yuta/tenant';
 import { cloudDatabase } from '../cloud-database';
+import { isGoogleReviewRetrievalEnabled } from './google-review-retrieval-config';
 
 export type ReleaseASetupSummary = {
   title: string;
@@ -25,10 +26,15 @@ export async function loadReleaseASetupSummary(
       Boolean(connector.externalAccountId) &&
       Boolean(connector.externalLocationId);
     if (bound) {
+      const staff =
+        tenant.actor.type === 'user' && tenant.actor.role === 'STAFF';
       return {
         title: 'Établissement Google associé',
-        description:
-          'La récupération des avis Google n’est pas encore disponible. Les avis déjà enregistrés restent consultables ; aucun résultat d’import n’est confirmé.',
+        description: staff
+          ? 'Vos avis attribués et votre travail dans YUTA restent accessibles. Pour récupérer du contenu Google, contactez un propriétaire ou un responsable.'
+          : isGoogleReviewRetrievalEnabled()
+            ? 'Une visite dans Avis peut récupérer les avis Google si nécessaire. Votre travail dans YUTA reste accessible ; l’association seule ne confirme aucun résultat de récupération.'
+            : 'La récupération Google est indisponible. Votre travail dans YUTA reste accessible ; l’association seule ne confirme aucun résultat de récupération.',
         setupHref: null,
       };
     }
@@ -42,7 +48,9 @@ export async function loadReleaseASetupSummary(
       setupHref: canManage ? '/parametres/integrations' : null,
     };
   } catch (error: unknown) {
-    console.error('Unable to load Google setup summary.', error);
+    console.error('Unable to load Google setup summary.', {
+      errorName: error instanceof Error ? error.name : 'UnknownError',
+    });
     return {
       title: 'État de la connexion indisponible',
       description:

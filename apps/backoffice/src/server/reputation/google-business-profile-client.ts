@@ -1,6 +1,10 @@
 import 'server-only';
 
 import { z } from 'zod';
+import type {
+  GoogleReviewBinding,
+  GoogleReviewImportRecord,
+} from '@yuta/db-cloud';
 import type { GoogleConnectorConfiguration } from './google-connector-config';
 
 export const GOOGLE_BUSINESS_PROFILE_SCOPE =
@@ -61,10 +65,186 @@ export class GoogleBusinessProfileApiError extends Error {
   constructor(
     message: string,
     public readonly status: number,
+    public readonly category:
+      | 'INVALID_RESPONSE'
+      | 'PROVIDER_UNAVAILABLE' = 'PROVIDER_UNAVAILABLE',
   ) {
     super(message);
     this.name = 'GoogleBusinessProfileApiError';
   }
+}
+
+const providerIdentifierSchema = z
+  .string()
+  .min(1)
+  .max(255)
+  .regex(/^[^/\\?#\s\u0000-\u001f\u007f]+$/u)
+  .refine((value) => value !== '.' && value !== '..');
+const providerDateSchema = z
+  .string()
+  .datetime({ offset: true })
+  .transform((value) => new Date(value))
+  .refine((value) => Number.isFinite(value.getTime()));
+const providerReviewSchema = z.object({
+  name: z.string().min(1).max(1024),
+  reviewId: providerIdentifierSchema,
+  reviewer: z
+    .object({ displayName: z.string().max(255).optional() })
+    .optional(),
+  starRating: z.enum(['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE']),
+  comment: z.string().max(65_536).optional(),
+  createTime: providerDateSchema,
+  updateTime: providerDateSchema,
+  reviewReply: z
+    .object({
+      comment: z.string().max(4096),
+      updateTime: providerDateSchema,
+      reviewReplyState: z.string().min(1).max(100).optional(),
+    })
+    .optional(),
+});
+const providerReviewPageSchema = z.object({
+  reviews: z.array(providerReviewSchema).max(50).optional().default([]),
+  totalReviewCount: z.number().int().nonnegative().optional(),
+  nextPageToken: z.string().min(1).max(8192).optional(),
+});
+
+export type GoogleBusinessReviewPage = {
+  reviews: GoogleReviewImportRecord[];
+  totalReviewCount: number | null;
+  nextPageToken: string | null;
+};
+
+function reviewParent(binding: GoogleReviewBinding): string {
+  const account = /^accounts\/([^/]+)$/u.exec(binding.externalAccountId)?.[1];
+  const location = /^locations\/([^/]+)$/u.exec(
+    binding.externalLocationId,
+  )?.[1];
+  if (
+    !providerIdentifierSchema.safeParse(account).success ||
+    !providerIdentifierSchema.safeParse(location).success
+  ) {
+    throw new GoogleBusinessProfileApiError(
+      'Google review resource is invalid.',
+      502,
+      'INVALID_RESPONSE',
+    );
+  }
+  return `${binding.externalAccountId}/${binding.externalLocationId}`;
+}
+
+function projectProviderReview(
+  review: z.infer<typeof providerReviewSchema>,
+  parent: string,
+): GoogleReviewImportRecord {
+  if (review.name !== `${parent}/reviews/${review.reviewId}`) {
+    throw new GoogleBusinessProfileApiError(
+      'Google review resource is invalid.',
+      502,
+      'INVALID_RESPONSE',
+    );
+  }
+  const ratings = { ONE: 1, TWO: 2, THREE: 3, FOUR: 4, FIVE: 5 } as const;
+  return {
+    reviewName: review.name,
+    reviewId: review.reviewId,
+    authorName: review.reviewer?.displayName ?? null,
+    rating: ratings[review.starRating],
+    content: review.comment ?? null,
+    providerCreatedAt: review.createTime,
+    providerUpdatedAt: review.updateTime,
+    remoteReply: review.reviewReply
+      ? {
+          content: review.reviewReply.comment,
+          updatedAt: review.reviewReply.updateTime,
+          status: review.reviewReply.reviewReplyState ?? null,
+        }
+      : null,
+  };
+}
+
+export async function listGoogleBusinessReviews(
+  accessToken: string,
+  binding: GoogleReviewBinding,
+  pageToken?: string | null,
+): Promise<GoogleBusinessReviewPage> {
+  const parent = reviewParent(binding);
+  if (
+    pageToken !== undefined &&
+    pageToken !== null &&
+    !z.string().min(1).max(8192).safeParse(pageToken).success
+  ) {
+    throw new GoogleBusinessProfileApiError(
+      'Google review continuation is invalid.',
+      502,
+      'INVALID_RESPONSE',
+    );
+  }
+  const url = new URL(
+    `https://mybusiness.googleapis.com/v4/${parent.split('/').map(encodeURIComponent).join('/')}/reviews`,
+  );
+  url.searchParams.set('pageSize', '50');
+  url.searchParams.set('orderBy', 'updateTime desc');
+  if (pageToken) url.searchParams.set('pageToken', pageToken);
+  const page = await googleApiRequest(
+    url,
+    accessToken,
+    providerReviewPageSchema,
+  );
+  const unique = new Map<string, GoogleReviewImportRecord>();
+  for (const raw of page.reviews) {
+    const review = projectProviderReview(raw, parent);
+    const prior = unique.get(review.reviewName);
+    if (prior && JSON.stringify(prior) !== JSON.stringify(review)) {
+      throw new GoogleBusinessProfileApiError(
+        'Google reviews are inconsistent.',
+        502,
+        'INVALID_RESPONSE',
+      );
+    }
+    unique.set(review.reviewName, review);
+  }
+  return {
+    reviews: [...unique.values()],
+    totalReviewCount: page.totalReviewCount ?? null,
+    nextPageToken: page.nextPageToken ?? null,
+  };
+}
+
+export async function getGoogleBusinessReview(
+  accessToken: string,
+  binding: GoogleReviewBinding,
+  reviewName: string,
+): Promise<GoogleReviewImportRecord> {
+  const parent = reviewParent(binding);
+  const reviewId = reviewName.startsWith(`${parent}/reviews/`)
+    ? reviewName.slice(`${parent}/reviews/`.length)
+    : '';
+  if (
+    reviewName.length > 1024 ||
+    !providerIdentifierSchema.safeParse(reviewId).success
+  ) {
+    throw new GoogleBusinessProfileApiError(
+      'Google review resource is invalid.',
+      502,
+      'INVALID_RESPONSE',
+    );
+  }
+  const url = new URL(
+    `https://mybusiness.googleapis.com/v4/${reviewName.split('/').map(encodeURIComponent).join('/')}`,
+  );
+  const review = projectProviderReview(
+    await googleApiRequest(url, accessToken, providerReviewSchema),
+    parent,
+  );
+  if (review.reviewName !== reviewName) {
+    throw new GoogleBusinessProfileApiError(
+      'Google review resource is invalid.',
+      502,
+      'INVALID_RESPONSE',
+    );
+  }
+  return review;
 }
 
 export function createGoogleAuthorizationUrl(
@@ -200,7 +380,7 @@ async function requestTokens(
 async function googleApiRequest<T>(
   url: URL,
   accessToken: string,
-  schema: z.ZodType<T>,
+  schema: z.ZodType<T, z.ZodTypeDef, unknown>,
 ): Promise<T> {
   const response = await fetch(url, {
     headers: { authorization: `Bearer ${accessToken}` },
@@ -212,11 +392,22 @@ async function googleApiRequest<T>(
       response.status,
     );
   }
-  const parsed = schema.safeParse(await response.json());
+  let payload: unknown;
+  try {
+    payload = await response.json();
+  } catch {
+    throw new GoogleBusinessProfileApiError(
+      'Google Business Profile returned an invalid response.',
+      502,
+      'INVALID_RESPONSE',
+    );
+  }
+  const parsed = schema.safeParse(payload);
   if (!parsed.success) {
     throw new GoogleBusinessProfileApiError(
       'Google Business Profile returned an invalid response.',
       502,
+      'INVALID_RESPONSE',
     );
   }
   return parsed.data;

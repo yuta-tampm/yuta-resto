@@ -4,7 +4,13 @@ import { ExternalLink, UserRound } from 'lucide-react';
 import { ReviewAnalysisSection } from './review-analysis-section';
 import { ReviewManagementForm } from './review-management-form';
 import { ReviewNotesSection } from './review-notes-section';
-import { ReviewRating, ReviewSourceMark } from './review-presentation';
+import {
+  ReviewRating,
+  ReviewSourceMark,
+  isGoogleContentUnavailable,
+  reviewAuthorLabel,
+  reviewContentLabel,
+} from './review-presentation';
 import { ReviewReplyForm } from './review-reply-form';
 import {
   formatRelativeDate,
@@ -20,11 +26,13 @@ export function ReviewDetail({
   assignableUsers,
   permissions,
   releaseA = false,
+  googleRetrievalAvailable = false,
 }: {
   review: ReviewDetailRecord;
   assignableUsers: AssignableReputationUser[];
   permissions: ReviewsPageData['permissions'];
   releaseA?: boolean;
+  googleRetrievalAvailable?: boolean;
 }) {
   return (
     <Card padding="none" className="overflow-hidden xl:sticky xl:top-0">
@@ -57,20 +65,49 @@ export function ReviewDetail({
               src={review.authorAvatarUrl}
             />
             <div className="flex-1">
-              <p className="font-bold">
-                {review.authorName ?? 'Client anonyme'}
-              </p>
+              <p className="font-bold">{reviewAuthorLabel(review)}</p>
               {review.rating && <ReviewRating value={review.rating} />}
             </div>
             <Badge tone={statusTones[review.status]}>
               {statusLabels[review.status]}
             </Badge>
           </div>
-          <p className="mt-4 text-sm leading-6">
-            {review.content || 'Aucun commentaire.'}
-          </p>
+          <p className="mt-4 text-sm leading-6">{reviewContentLabel(review)}</p>
+          {review.googleReviewChanged && (
+            <Badge className="mt-3" tone="warning">
+              Avis modifié — à vérifier
+            </Badge>
+          )}
+          {isGoogleContentUnavailable(review) && (
+            <p className="mt-3 text-sm text-secondary">
+              {permissions.canRetrieveGoogle &&
+              review.canRecoverReference &&
+              googleRetrievalAvailable
+                ? 'La récupération de cet avis peut être réessayée depuis les commandes Google.'
+                : permissions.canRetrieveGoogle && review.canRecoverReference
+                  ? 'La récupération Google est actuellement indisponible. Contactez le propriétaire ou le support YUTA ; votre travail reste accessible.'
+                  : permissions.canRetrieveGoogle
+                    ? 'Le lien de récupération n’est plus disponible. Contactez le propriétaire ou le support YUTA pour examiner la situation.'
+                    : 'Demandez au propriétaire ou à un responsable de vérifier cet avis. Vous pouvez continuer votre travail dans YUTA.'}
+            </p>
+          )}
         </div>
       </section>
+
+      {review.remoteReply && (
+        <section className="border-t border-border-default p-4">
+          <h2 className="font-bold">
+            Réponse actuellement récupérée sur Google
+          </h2>
+          <p className="mt-2 whitespace-pre-wrap text-sm leading-6">
+            {review.remoteReply.content}
+          </p>
+          <p className="mt-2 text-xs text-muted">
+            Copie temporaire distincte de votre brouillon YUTA. Elle ne confirme
+            aucune publication depuis YUTA.
+          </p>
+        </section>
+      )}
 
       <ReviewManagementForm
         review={review}

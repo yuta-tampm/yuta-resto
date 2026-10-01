@@ -49,6 +49,7 @@ export type ReputationPermission =
   | 'reputation.analytics.read'
   | 'reputation.note.create'
   | 'reputation.settings.manage'
+  | 'reputation.google.retrieve'
   | 'reputation.connector.manage';
 
 export type BookingPermission =
@@ -83,6 +84,7 @@ const permissionRoles: Record<ReputationPermission, readonly TenantRole[]> = {
   'reputation.analytics.read': ['OWNER', 'MANAGER'],
   'reputation.note.create': ['OWNER', 'MANAGER', 'STAFF'],
   'reputation.settings.manage': ['OWNER'],
+  'reputation.google.retrieve': ['OWNER', 'MANAGER'],
   'reputation.connector.manage': ['OWNER'],
 };
 

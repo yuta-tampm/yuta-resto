@@ -1,6 +1,5 @@
 import { Button } from '@yuta/ui';
 import { ExternalLink, RefreshCw } from 'lucide-react';
-import Link from 'next/link';
 import { BackofficePage } from '../../../../components/backoffice/backoffice-page';
 import { requireReputationPermission } from '../../../../server/auth/permissions';
 import { requireReputationTenant } from '../../../../server/auth/session';
@@ -14,6 +13,7 @@ import {
   releaseAIntegrationResultMessages,
 } from './integrations-model';
 import { isReleaseAExposure } from '../../../../server/backoffice-exposure';
+import { isGoogleReviewRetrievalEnabled } from '../../../../server/reputation/google-review-retrieval-config';
 
 export const dynamic = 'force-dynamic';
 
@@ -39,14 +39,14 @@ export default async function SettingsIntegrationsPage({
       actions={
         data.configured ? (
           <Button asChild variant={data.connector ? 'outline' : 'primary'}>
-            <Link href="/api/reputation/google/oauth/start">
+            <a href="/api/reputation/google/oauth/start">
               {data.connector ? (
                 <RefreshCw className="h-4 w-4" />
               ) : (
                 <ExternalLink className="h-4 w-4" />
               )}
               {data.connector ? 'Reconnecter Google' : 'Connecter Google'}
-            </Link>
+            </a>
           </Button>
         ) : undefined
       }
@@ -65,7 +65,11 @@ export default async function SettingsIntegrationsPage({
       />
 
       <div className="grid gap-5 xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
-        <GoogleConnectorPanel connector={data.connector} releaseA={releaseA} />
+        <GoogleConnectorPanel
+          connector={data.connector}
+          releaseA={releaseA}
+          retrievalEnabled={isGoogleReviewRetrievalEnabled()}
+        />
         <GoogleLocationSelectorPanel
           accounts={data.accounts}
           locations={data.locations}

@@ -17,7 +17,12 @@ import {
 } from '@yuta/ui';
 import { Inbox, Search } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
-import { ReviewRating, ReviewSourceMark } from './review-presentation';
+import {
+  ReviewRating,
+  ReviewSourceMark,
+  reviewAuthorLabel,
+  reviewContentLabel,
+} from './review-presentation';
 import {
   formatRelativeDate,
   getInitials,
@@ -33,10 +38,12 @@ export function ReviewsListPanel({
   data,
   directOnly,
   updateQuery,
+  onOpenReview,
 }: {
   data: ReviewsPageData;
   directOnly: boolean;
   updateQuery: UpdateReviewsQuery;
+  onOpenReview?: (id: string) => void;
 }) {
   const [search, setSearch] = useState(data.query.search);
   const userNames = new Map(
@@ -179,9 +186,10 @@ export function ReviewsListPanel({
             <button
               key={item.id}
               type="button"
-              onClick={() =>
-                updateQuery({ selected: item.id }, { keepSelected: true })
-              }
+              onClick={() => {
+                onOpenReview?.(item.id);
+                updateQuery({ selected: item.id }, { keepSelected: true });
+              }}
               className={cn(
                 'grid w-full gap-3 p-4 text-left transition-colors hover:bg-surface-muted sm:grid-cols-[auto_minmax(0,1fr)_auto]',
                 data.detail?.id === item.id && 'bg-surface-selected',
@@ -197,15 +205,18 @@ export function ReviewsListPanel({
               </div>
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
-                  <p className="font-bold">
-                    {item.authorName ?? 'Client anonyme'}
-                  </p>
+                  <p className="font-bold">{reviewAuthorLabel(item)}</p>
                   {item.rating && <ReviewRating value={item.rating} />}
                 </div>
                 <p className="mt-1 line-clamp-2 text-sm leading-5 text-secondary">
-                  {item.content || 'Aucun commentaire.'}
+                  {reviewContentLabel(item)}
                 </p>
                 <div className="mt-2 flex flex-wrap gap-1">
+                  {item.googleReviewChanged && (
+                    <Badge size="sm" tone="warning">
+                      Avis modifié — à vérifier
+                    </Badge>
+                  )}
                   {!data.releaseA && item.sentiment && (
                     <Badge size="sm" tone={sentimentTones[item.sentiment]}>
                       {sentimentLabels[item.sentiment]}

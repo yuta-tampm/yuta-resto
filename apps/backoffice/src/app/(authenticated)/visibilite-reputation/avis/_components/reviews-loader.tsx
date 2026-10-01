@@ -1,4 +1,5 @@
 import { identifierSchema } from '@yuta/contracts/common';
+import { z } from 'zod';
 import { feedbackListQuerySchema } from '@yuta/contracts/reputation';
 import {
   findFeedbackDetail,
@@ -13,6 +14,10 @@ import {
 } from '../../../../../server/backoffice-exposure';
 import { releaseAAttentionStatuses } from '../../../../../lib/backoffice-exposure';
 import { loadReleaseASetupSummary } from '../../../../../server/reputation/release-a-setup';
+import {
+  canRetrieveGoogleReviews,
+  loadGoogleReviewRetrievalSummary,
+} from '../../../../../server/reputation/google-review-retrieval';
 import { ReviewsPage } from './reviews-page';
 import type {
   ReviewDetailRecord,
@@ -32,6 +37,13 @@ export async function loadReviewsPage(
       : '/visibilite-reputation/avis';
   const { tenant } = await requireReputationTenant(returnTo);
   const releaseA = isReleaseAExposure();
+  const canRetrieveGoogle =
+    mode !== 'direct' && canRetrieveGoogleReviews(tenant);
+  const workingIds = z
+    .array(identifierSchema)
+    .min(1)
+    .max(25)
+    .safeParse(filterValue(rawSearchParams.working)?.split(','));
   const attentionQueue =
     releaseA && filterValue(rawSearchParams.queue) === 'attention';
   const requestedSort = filterValue(rawSearchParams.sort);
@@ -72,7 +84,19 @@ export async function loadReviewsPage(
       );
 
   try {
-    const result = await listFeedback(db, tenant, query, scope);
+    const result =
+      canRetrieveGoogle && workingIds.success
+        ? await listFeedback(
+            db,
+            tenant,
+            feedbackListQuerySchema.parse({
+              source: query.source,
+              page: 1,
+              pageSize: 25,
+            }),
+            { ...getReputationFeedbackScope(), workIds: workingIds.data },
+          )
+        : await listFeedback(db, tenant, query, scope);
     const requestedId = filterValue(rawSearchParams.selected);
     const parsedRequestedId = identifierSchema.safeParse(requestedId);
     const selectedId =
@@ -81,18 +105,22 @@ export async function loadReviewsPage(
         result.items.some((item) => item.id === parsedRequestedId.data))
         ? parsedRequestedId.data
         : result.items[0]?.id;
-    const [detail, assignableUsers, setupSummary] = await Promise.all([
-      selectedId
-        ? findFeedbackDetail(
-            db,
-            tenant,
-            selectedId,
-            getReputationFeedbackScope(),
-          )
-        : null,
-      listAssignableReputationUsers(db, tenant),
-      releaseA ? loadReleaseASetupSummary(tenant) : null,
-    ]);
+    const [detail, assignableUsers, setupSummary, retrievalSummary] =
+      await Promise.all([
+        selectedId
+          ? findFeedbackDetail(
+              db,
+              tenant,
+              selectedId,
+              getReputationFeedbackScope(),
+            )
+          : null,
+        listAssignableReputationUsers(db, tenant),
+        releaseA ? loadReleaseASetupSummary(tenant) : null,
+        canRetrieveGoogle
+          ? loadGoogleReviewRetrievalSummary(tenant).catch(() => null)
+          : null,
+      ]);
     const userNames = new Map(
       assignableUsers.map((user) => [user.id, user.name]),
     );
@@ -101,6 +129,7 @@ export async function loadReviewsPage(
       state: 'ready',
       releaseA,
       setupSummary,
+      retrievalSummary,
       attentionCount: result.attentionCount ?? 0,
       items: result.items.map((item) => ({
         id: item.id,
@@ -116,6 +145,9 @@ export async function loadReviewsPage(
         receivedAt: item.receivedAt.toISOString(),
         incidentId: releaseA ? null : item.incidentId,
         replyStatus: item.replyStatus,
+        googleContentAvailability: item.googleContentAvailability,
+        googleReviewChanged: item.googleReviewChanged,
+        canRecoverReference: item.canRecoverReference,
       })),
       detail: detail ? serializeDetail(detail, userNames, releaseA) : null,
       selectedUnavailable: releaseA && parsedRequestedId.success && !detail,
@@ -142,6 +174,7 @@ export async function loadReviewsPage(
         canCreateNote:
           tenant.actor.type === 'user' &&
           ['OWNER', 'MANAGER', 'STAFF'].includes(tenant.actor.role),
+        canRetrieveGoogle,
       },
     };
     return <ReviewsPage data={data} mode={mode} />;
@@ -173,6 +206,16 @@ function serializeDetail(
     receivedAt: detail.receivedAt.toISOString(),
     incidentId: releaseA ? null : (detail.incidents[0]?.id ?? null),
     replyStatus: latestReply?.status ?? null,
+    googleContentAvailability: detail.googleContentAvailability,
+    googleReviewChanged: detail.googleReviewChanged,
+    canRecoverReference: detail.canRecoverReference,
+    remoteReply: detail.remoteReply
+      ? {
+          content: detail.remoteReply.content,
+          updatedAt: detail.remoteReply.updatedAt?.toISOString() ?? null,
+          status: detail.remoteReply.status,
+        }
+      : null,
     externalUrl: detail.externalUrl,
     analysis:
       !releaseA && detail.analysis

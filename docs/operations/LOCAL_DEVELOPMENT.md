@@ -158,12 +158,40 @@ development opt-in.
 
 A Today/Avis attention uses local `NEW`, `TO_PROCESS`, `DRAFTED`, `FOLLOW_UP`:
 counts are not capped by preview/pagination and STAFF remains assigned-only.
-Google fixtures and local `PUBLISHED` rows are not import or remote-publication
-evidence. No importer/publisher is implemented by this foundation. Exposure
+Google fixtures and local `PUBLISHED` rows are not actual-provider retrieval or
+remote-publication evidence. The bounded retrieval source path below is
+separate from exposure selection; no publication path is added. Exposure
 verification uses a separately verified, task-owned disposable cloud target and
 process-only credentials/provider overrides; do not repoint guarded tests to
 the persistent development databases. No provider call or customer activation
 follows from this local selection.
+
+## Google review retrieval and cache maintenance
+
+Backoffice uses server-only `GOOGLE_REVIEW_RETRIEVAL_ENABLED`. Only exact `true`
+admits new review retrieval; missing, false or invalid values keep it disabled
+before credential/token/provider access. Existing OAuth and verified binding
+remain separate. The flag is no substitute for the [actual-provider admission
+prerequisites](DEPLOYMENT.md#google-review-retrieval-admission-and-cache-disposal).
+This source delivery supplies no actual project credentials or environment
+activation. Use isolated process-only synthetic fixtures with strict external
+call denial; they are not evidence of Google project eligibility.
+
+`POST /api/internal/reputation/google-cache-maintenance` authenticates a
+dedicated `REPUTATION_CACHE_MAINTENANCE_SECRET` bearer credential before loading
+the database runtime. Configure at least 32 characters with no whitespace;
+missing/invalid configuration or authorization fails closed with no-store
+responses. This exact machine path may pass exposure availability, which
+grants no authorization. It processes at most 25 due trusted organization/
+establishment scope pairs per request, up to 500 cache rows plus a separate
+500-row retrieval-state batch per scope, and returns only own cleanup counts.
+It makes no provider request and preserves local workflow, drafts, notes and
+history. Cleanup remains independent of the retrieval flag.
+
+[Reputation](../features/reputation/README.md#bounded-release-a-google-review-retrieval)
+owns the 29-day content and at-most-30-day reference deadlines. Read denial and
+the bounded purge mechanism do not prove timely physical disposal: this source
+delivery installs no scheduler and verifies no backup/restoration handling.
 
 ## Schema workflow
 

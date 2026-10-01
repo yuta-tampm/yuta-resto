@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
   projectPublicReputationReviewSocialLinks,
+  createInternalNoteSchema,
+  saveReplySchema,
+  googleReviewRetrievalInputSchema,
+  googleReviewRetrievalOutcomeSchema,
   reputationFacebookReviewUrlSchema,
   reputationGoogleReviewUrlSchema,
   reputationInstagramUrlSchema,
@@ -17,6 +21,77 @@ const nullValues = {
   instagramUrl: null,
 };
 const stateToken = 'a'.repeat(64);
+
+describe('Google retrieval transport and freeform work boundary', () => {
+  it('accepts only operation-specific opaque identifiers, never browser scope or provider resources', () => {
+    expect(
+      googleReviewRetrievalInputSchema.parse({
+        kind: 'recent',
+        trigger: 'visit',
+      }),
+    ).toEqual({ kind: 'recent', trigger: 'visit' });
+    for (const input of [
+      { kind: 'recent', trigger: 'visit', organizationId: 'forged' },
+      { kind: 'recent', trigger: 'manual', role: 'OWNER' },
+      { kind: 'history', continuationHandle: 'provider-page-token' },
+      { kind: 'detail', feedbackId: 'accounts/a/locations/b/reviews/c' },
+      {
+        kind: 'detail',
+        feedbackId: '00000000-0000-4000-8000-000000000001',
+        reviewName: 'forged',
+      },
+    ])
+      expect(googleReviewRetrievalInputSchema.safeParse(input).success).toBe(
+        false,
+      );
+  });
+
+  it('serializes truthful unavailable outcomes without credentials, provider IDs or fabricated zero counts', () => {
+    const outcome = {
+      kind: 'unavailable',
+      addedCount: null,
+      changedCount: null,
+      summary: {
+        state: 'never',
+        bound: true,
+        enabled: false,
+        lastAttemptKind: null,
+        lastAttemptAt: null,
+        lastSuccessfulAt: null,
+        lastRecentSuccessAt: null,
+        lastError: null,
+        coverage: 'none',
+        continuationHandle: null,
+        lastBatchCount: null,
+        currentContentAvailable: false,
+      },
+    };
+    expect(googleReviewRetrievalOutcomeSchema.parse(outcome)).toEqual(outcome);
+    expect(
+      googleReviewRetrievalOutcomeSchema.safeParse({
+        ...outcome,
+        accessToken: 'secret',
+      }).success,
+    ).toBe(false);
+    expect(
+      googleReviewRetrievalOutcomeSchema.safeParse({
+        ...outcome,
+        summary: { ...outcome.summary, reviewName: 'provider-id' },
+      }).success,
+    ).toBe(false);
+  });
+
+  it('preserves existing validation for freeform pasted or mixed notes/drafts', () => {
+    const content =
+      'Google: repas délicieux. Ma note interne : rappeler le client.';
+    expect(createInternalNoteSchema.parse({ content })).toEqual({ content });
+    expect(saveReplySchema.parse({ content })).toEqual({ content });
+    expect(saveReplySchema.safeParse({ content: '' }).success).toBe(false);
+    expect(
+      createInternalNoteSchema.safeParse({ content: 'x'.repeat(4001) }).success,
+    ).toBe(false);
+  });
+});
 
 describe('Reputation review and social-link URL policy', () => {
   it.each([

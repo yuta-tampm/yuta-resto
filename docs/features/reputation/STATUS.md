@@ -18,10 +18,20 @@ confirmed Human-decided high-level inclusion, while each provider's
 
 ## Current bounded status
 
-No provider implementation is authorized by this tracker. The Google
-implementation sequence below records an incomplete technical track: review
-import, manual or scheduled synchronization, publication, reconciliation, and
-retry remain absent.
+No provider implementation is authorized by this tracker. The accepted A scope
+now has a bounded, default-disabled Google retrieval source path: one recent
+page after an eligible mounted Avis visit, explicit refresh/history/detail
+recovery, temporary provider cache and authenticated maintenance. Its own
+receipt is separate from OAuth/binding and retained local work. See the
+[durable retrieval boundary](README.md#bounded-release-a-google-review-retrieval).
+
+The broader Google technical track remains incomplete: scheduled
+synchronization, publication and remote/local reconciliation are absent.
+Actual Google project credentials, eligibility, cache/use conditions,
+unattended disposal and backup/restoration proof remain operator prerequisites.
+Source presence does not close runtime qualification or promote broader Google
+V1, environment, lifecycle or production readiness. No completion checkbox or
+technical/QA verdict is added by this source-state update.
 
 ## Completed foundation
 
@@ -71,11 +81,14 @@ Google reviews.
 
 Acceptance result: a manager can process feedback, assign it, save a manual
 Google reply draft, add an internal note, reload the page, and see every change
-persisted. Publishing remains disabled until the Google connector is complete.
+persisted. Publishing remains disabled and requires its own approved implementation
+and provider/operational prerequisites; connector completion alone does not enable it.
 
 ## Incomplete Google implementation track
 
-Implement the connector in this order:
+The historical sequence below remains open for its broader completion and
+operator qualification. The bounded A source path above does not claim those
+external prerequisites are complete:
 
 - [ ] Configure Google Cloud and enable the Business Profile APIs.
 - [x] Implement tenant-bound OAuth start and callback routes.
@@ -84,8 +97,8 @@ Implement the connector in this order:
       available.
 - [x] List accessible Google accounts and locations.
 - [x] Save a server-verified location to the tenant connector.
-- [ ] Import and update reviews without duplicates.
-- [ ] Add manual synchronization.
+- [ ] Qualify the bounded A review import/update path for actual provider use.
+- [ ] Qualify bounded A visit/manual retrieval for the target environment.
 - [ ] Add scheduled synchronization and retry behavior.
 - [x] Display connector status, configuration errors, OAuth errors, and expired
       authorization recovery.

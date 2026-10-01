@@ -223,6 +223,40 @@ must not be added to a production environment. Runtime code also rejects it
 outside `development`, so the full-dossier entry and integrated route remain
 fail-closed in production.
 
+### Google review retrieval admission and cache disposal
+
+Server-only `GOOGLE_REVIEW_RETRIEVAL_ENABLED` defaults to disabled. Only exact
+`true` admits the new OWNER/MANAGER retrieval path; actor, establishment,
+session and connector-generation guards still apply. Existing OAuth/binding
+are separate, and a bound connector or a synthetic receipt does not prove
+actual Google access or a successful real-provider retrieval.
+
+Before enabling retrieval in an actual staging or production environment,
+verify its Google project/API access, OAuth credentials and redirect settings,
+credential encryption, permitted cache quantity/use, identifier and copied-
+content treatment, unattended cleanup, and backup/restoration disposal.
+Verify the exact deployed artifact and obtain separate operational authority.
+These conditions remain unverified by this source delivery; no actual project
+credentials, scheduler, environment activation or backup changes are supplied.
+The flag itself is admission control, never proof that these conditions passed.
+
+Provide a dedicated server-only `REPUTATION_CACHE_MAINTENANCE_SECRET` with at
+least 32 whitespace-free characters for authenticated POST requests to
+`/api/internal/reputation/google-cache-maintenance`. Authenticate before
+database access; exposure availability of this exact machine path does not
+authorize a browser or tenant operation. Each request processes at most 25
+due scopes, up to 500 cache rows plus a separate 500-state-row batch per scope,
+returns only cleanup counts, and makes no provider request. Maintenance must
+continue when new retrieval is disabled. Its bounded route configures no
+unattended caller and proves no disposal schedule.
+
+The [Reputation content/reference separation](../features/reputation/README.md#bounded-release-a-google-review-retrieval)
+denies expired managed content and preserves independent local work. Generic
+managed-cloud backup/PITR facilities alone do not establish disposal of these
+copies or safe restoration: verify expired-copy and mapping handling for the
+actual backup and restoration regime before real use. Publication, AI, broader
+V1/lifecycle status, deployment topology and production readiness are unchanged.
+
 ### POS local server
 
 ```env

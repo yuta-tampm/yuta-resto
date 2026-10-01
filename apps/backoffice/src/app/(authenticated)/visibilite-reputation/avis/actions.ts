@@ -5,6 +5,9 @@ import {
   createInternalNoteSchema,
   saveReplySchema,
   updateFeedbackSchema,
+  googleReviewRetrievalInputSchema,
+  type GoogleReviewRetrievalInput,
+  type GoogleReviewRetrievalOutcome,
 } from '@yuta/contracts/reputation';
 import {
   createFeedbackInternalNote,
@@ -17,6 +20,41 @@ import { cloudDatabase as db } from '../../../../server/cloud-database';
 import { requireReputationTenant } from '../../../../server/auth/session';
 import { requireReputationPermission } from '../../../../server/auth/permissions';
 import { getReputationFeedbackScope } from '../../../../server/backoffice-exposure';
+import { retrieveGoogleReviews } from '../../../../server/reputation/google-review-retrieval';
+
+export type GoogleReviewActionResult = {
+  outcome: GoogleReviewRetrievalOutcome | null;
+  error: string | null;
+};
+
+export async function retrieveGoogleReviewsAction(
+  input: GoogleReviewRetrievalInput,
+): Promise<GoogleReviewActionResult> {
+  const { session, tenant } = await requireReputationTenant();
+  requireReputationPermission(tenant, 'reputation.google.retrieve');
+  const parsed = googleReviewRetrievalInputSchema.safeParse(input);
+  if (!parsed.success) {
+    return {
+      outcome: null,
+      error: 'La récupération demandée n’est pas valide.',
+    };
+  }
+  try {
+    const outcome = await retrieveGoogleReviews(
+      tenant,
+      session.id,
+      parsed.data,
+    );
+    // Inspection is explicit: revalidation here would replace the active list while writing.
+    return { outcome, error: null };
+  } catch {
+    return {
+      outcome: null,
+      error:
+        'La récupération est indisponible. Votre travail dans YUTA est conservé. Réessayez ou contactez votre responsable.',
+    };
+  }
+}
 
 export type ReputationActionState = {
   error: string | null;

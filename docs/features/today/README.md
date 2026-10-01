@@ -84,6 +84,15 @@ does not resolve broader TODAY questions or promote implementation/readiness.
 Missing setup/context must offer permitted OWNER/support recovery without
 inventing import outcomes.
 
+Today remains a read projection and never retrieves Google reviews or loads
+the provider retrieval summary. For importer-managed rows, unavailable Google
+content is explicit while permitted local work remains visible; it is not
+rendered as an anonymous review with an empty comment or invented rating.
+STAFF retains assigned-only work and an OWNER/MANAGER handoff, without global
+retrieval counts, cursors or provider coverage. Temporary content/reference
+deadlines belong to [Reputation](../reputation/README.md#bounded-release-a-google-review-retrieval).
+Existing legacy, DIRECT and internal aggregation semantics remain unchanged.
+
 ## 3. Current implemented state
 
 The current tracked repository implements six grouped Today behaviors:

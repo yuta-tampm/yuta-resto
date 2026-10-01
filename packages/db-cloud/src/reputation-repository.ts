@@ -13,8 +13,11 @@ import {
   desc,
   eq,
   gte,
+  getTableColumns,
+  gt,
   ilike,
   inArray,
+  isNull,
   or,
   sql,
 } from 'drizzle-orm';
@@ -26,6 +29,7 @@ import {
   feedbackInternalNotes,
   feedbackItems,
   feedbackReplies,
+  googleReviewCache,
   reputationAuditEvents,
   reputationConnectors,
   reputationSettings,
@@ -41,6 +45,8 @@ export type FeedbackScopeOptions = {
   statuses?: readonly FeedbackStatus[];
   scopedCounters?: boolean;
   attentionStatuses?: readonly FeedbackStatus[];
+  now?: Date;
+  workIds?: readonly string[];
 };
 
 export type ReputationRepositoryErrorCode =
@@ -296,6 +302,100 @@ function feedbackScopeCondition(
   );
 }
 
+function googleConnectorJoinCondition() {
+  return and(
+    eq(reputationConnectors.organizationId, feedbackItems.organizationId),
+    eq(reputationConnectors.establishmentId, feedbackItems.establishmentId),
+    eq(reputationConnectors.provider, 'GOOGLE'),
+    eq(reputationConnectors.status, 'CONNECTED'),
+  );
+}
+function googleCacheJoinCondition(now: Date) {
+  return and(
+    eq(feedbackItems.googleImporterOwned, true),
+    eq(googleReviewCache.organizationId, feedbackItems.organizationId),
+    eq(googleReviewCache.establishmentId, feedbackItems.establishmentId),
+    eq(googleReviewCache.feedbackItemId, feedbackItems.id),
+    eq(googleReviewCache.connectorId, reputationConnectors.id),
+    eq(
+      googleReviewCache.bindingGeneration,
+      reputationConnectors.bindingGeneration,
+    ),
+    eq(
+      googleReviewCache.externalLocationId,
+      reputationConnectors.externalLocationId,
+    ),
+    gt(googleReviewCache.referenceExpiresAt, now),
+  );
+}
+function googleFeedbackProjection(now: Date) {
+  const contentEligible = and(
+    gt(googleReviewCache.expiresAt, now),
+    isNull(googleReviewCache.contentClearedAt),
+  );
+  return {
+    authorName: sql<
+      string | null
+    >`case when ${feedbackItems.googleImporterOwned} then case when ${contentEligible} then ${googleReviewCache.authorName} else null end else ${feedbackItems.authorName} end`,
+    authorAvatarUrl: sql<
+      string | null
+    >`case when ${feedbackItems.googleImporterOwned} then null else ${feedbackItems.authorAvatarUrl} end`,
+    rating: sql<
+      number | null
+    >`case when ${feedbackItems.googleImporterOwned} then case when ${contentEligible} then ${googleReviewCache.rating} else null end else ${feedbackItems.rating} end`,
+    content: sql<
+      string | null
+    >`case when ${feedbackItems.googleImporterOwned} then case when ${contentEligible} then ${googleReviewCache.content} else null end else ${feedbackItems.content} end`,
+    publishedAt:
+      sql<Date | null>`case when ${feedbackItems.googleImporterOwned} then case when ${contentEligible} then ${googleReviewCache.providerCreatedAt} else null end else ${feedbackItems.publishedAt} end`.mapWith(
+        feedbackItems.publishedAt,
+      ),
+    externalUrl: sql<
+      string | null
+    >`case when ${feedbackItems.googleImporterOwned} then null else ${feedbackItems.externalUrl} end`,
+    googleContentAvailability: sql<
+      'available' | 'unavailable' | 'legacy' | 'not_applicable'
+    >`case when ${feedbackItems.source} <> 'GOOGLE' then 'not_applicable' when not ${feedbackItems.googleImporterOwned} then 'legacy' when ${contentEligible} then 'available' else 'unavailable' end`,
+    googleReviewChanged: sql<boolean>`case when ${feedbackItems.googleImporterOwned} and ${contentEligible} then ${googleReviewCache.needsReview} else false end`,
+    canRecoverReference: sql<boolean>`${feedbackItems.googleImporterOwned} and ${googleReviewCache.id} is not null`,
+    remoteReplyContent: sql<
+      string | null
+    >`case when ${feedbackItems.googleImporterOwned} and ${contentEligible} then ${googleReviewCache.remoteReplyContent} else null end`,
+    remoteReplyUpdatedAt:
+      sql<Date | null>`case when ${feedbackItems.googleImporterOwned} and ${contentEligible} then ${googleReviewCache.remoteReplyUpdatedAt} else null end`.mapWith(
+        googleReviewCache.remoteReplyUpdatedAt,
+      ),
+    remoteReplyStatus: sql<
+      string | null
+    >`case when ${feedbackItems.googleImporterOwned} and ${contentEligible} then ${googleReviewCache.remoteReplyStatus} else null end`,
+  };
+}
+function withRemoteReply<
+  T extends {
+    remoteReplyContent: string | null;
+    remoteReplyUpdatedAt: Date | null;
+    remoteReplyStatus: string | null;
+  },
+>(row: T) {
+  const {
+    remoteReplyContent,
+    remoteReplyUpdatedAt,
+    remoteReplyStatus,
+    ...record
+  } = row;
+  return {
+    ...record,
+    remoteReply:
+      remoteReplyContent === null
+        ? null
+        : {
+            content: remoteReplyContent,
+            updatedAt: remoteReplyUpdatedAt,
+            status: remoteReplyStatus,
+          },
+  };
+}
+
 export async function listFeedback(
   repositoryDb: DbClient,
   context: TenantContext,
@@ -303,9 +403,14 @@ export async function listFeedback(
   options: FeedbackScopeOptions = {},
 ) {
   const establishmentId = requireAdminEstablishment(context);
+  const now = options.now ?? new Date();
+  const projection = googleFeedbackProjection(now);
   const offset = (query.page - 1) * query.pageSize;
   const filters = [
     feedbackScopeCondition(context, establishmentId, options.requiredSource),
+    options.workIds
+      ? inArray(feedbackItems.id, [...options.workIds])
+      : undefined,
     !options.requiredSource && query.source
       ? eq(feedbackItems.source, query.source)
       : undefined,
@@ -313,7 +418,7 @@ export async function listFeedback(
       ? inArray(feedbackItems.status, [...options.statuses])
       : undefined,
     query.status ? eq(feedbackItems.status, query.status) : undefined,
-    query.rating ? eq(feedbackItems.rating, query.rating) : undefined,
+    query.rating ? eq(projection.rating, query.rating) : undefined,
     query.sentiment ? eq(feedbackItems.sentiment, query.sentiment) : undefined,
     query.urgency ? eq(feedbackItems.urgency, query.urgency) : undefined,
     query.assignedTo
@@ -321,8 +426,8 @@ export async function listFeedback(
       : undefined,
     query.search
       ? or(
-          ilike(feedbackItems.authorName, `%${query.search}%`),
-          ilike(feedbackItems.content, `%${query.search}%`),
+          ilike(projection.authorName, `%${query.search}%`),
+          ilike(projection.content, `%${query.search}%`),
         )
       : undefined,
     query.hasIncident === true ? sql`false` : undefined,
@@ -332,9 +437,9 @@ export async function listFeedback(
     query.sort === 'oldest'
       ? asc(feedbackItems.receivedAt)
       : query.sort === 'rating_asc'
-        ? asc(feedbackItems.rating)
+        ? asc(projection.rating)
         : query.sort === 'rating_desc'
-          ? desc(feedbackItems.rating)
+          ? desc(projection.rating)
           : query.sort === 'urgency_desc'
             ? sql`case ${feedbackItems.urgency}
                 when 'CRITICAL' then 4
@@ -356,15 +461,11 @@ export async function listFeedback(
       id: feedbackItems.id,
       source: feedbackItems.source,
       type: feedbackItems.type,
-      authorName: feedbackItems.authorName,
-      authorAvatarUrl: feedbackItems.authorAvatarUrl,
-      rating: feedbackItems.rating,
-      content: feedbackItems.content,
+      ...projection,
       sentiment: feedbackItems.sentiment,
       urgency: feedbackItems.urgency,
       status: feedbackItems.status,
       assignedToUserId: feedbackItems.assignedToUserId,
-      publishedAt: feedbackItems.publishedAt,
       receivedAt: feedbackItems.receivedAt,
       incidentId: sql<string | null>`null`,
       replyId: sql<string | null>`(
@@ -387,6 +488,8 @@ export async function listFeedback(
       )`,
     })
     .from(feedbackItems)
+    .leftJoin(reputationConnectors, googleConnectorJoinCondition())
+    .leftJoin(googleReviewCache, googleCacheJoinCondition(now))
     .where(where)
     .orderBy(orderBy)
     .limit(query.pageSize)
@@ -395,6 +498,8 @@ export async function listFeedback(
   const [totalResult] = await repositoryDb
     .select({ value: count() })
     .from(feedbackItems)
+    .leftJoin(reputationConnectors, googleConnectorJoinCondition())
+    .leftJoin(googleReviewCache, googleCacheJoinCondition(now))
     .where(where);
 
   const [counters] = await repositoryDb
@@ -413,6 +518,8 @@ export async function listFeedback(
       withIncident: sql<number>`0`,
     })
     .from(feedbackItems)
+    .leftJoin(reputationConnectors, googleConnectorJoinCondition())
+    .leftJoin(googleReviewCache, googleCacheJoinCondition(now))
     .where(
       options.scopedCounters
         ? where
@@ -432,6 +539,8 @@ export async function listFeedback(
     ? await repositoryDb
         .select({ value: count() })
         .from(feedbackItems)
+        .leftJoin(reputationConnectors, googleConnectorJoinCondition())
+        .leftJoin(googleReviewCache, googleCacheJoinCondition(now))
         .where(
           and(
             where,
@@ -442,7 +551,7 @@ export async function listFeedback(
 
   const totalItems = totalResult?.value ?? 0;
   return {
-    items: rows,
+    items: rows.map(withRemoteReply),
     attentionCount: attentionResult?.value ?? 0,
     pagination: {
       page: query.page,
@@ -467,9 +576,15 @@ export async function findFeedbackDetail(
   options: FeedbackScopeOptions = {},
 ) {
   const establishmentId = requireAdminEstablishment(context);
+  const now = options.now ?? new Date();
   const [feedback] = await repositoryDb
-    .select()
+    .select({
+      ...getTableColumns(feedbackItems),
+      ...googleFeedbackProjection(now),
+    })
     .from(feedbackItems)
+    .leftJoin(reputationConnectors, googleConnectorJoinCondition())
+    .leftJoin(googleReviewCache, googleCacheJoinCondition(now))
     .where(
       and(
         eq(feedbackItems.id, feedbackId),
@@ -507,7 +622,7 @@ export async function findFeedbackDetail(
   ]);
 
   return {
-    ...feedback,
+    ...withRemoteReply(feedback),
     analysis: null as {
       summary: string;
       topics: string[];
@@ -623,6 +738,7 @@ export async function upsertGoogleReputationConnectorCredentials(
         externalAccountId: '',
         externalLocationId: '',
         status: 'CONNECTING',
+        bindingGeneration: 1,
         encryptedAccessToken: input.encryptedAccessToken,
         encryptedRefreshToken: input.encryptedRefreshToken ?? null,
         tokenExpiresAt: input.tokenExpiresAt,
@@ -637,6 +753,7 @@ export async function upsertGoogleReputationConnectorCredentials(
         ],
         set: {
           status: 'CONNECTING',
+          bindingGeneration: sql`${reputationConnectors.bindingGeneration} + 1`,
           encryptedAccessToken: input.encryptedAccessToken,
           ...(input.encryptedRefreshToken
             ? { encryptedRefreshToken: input.encryptedRefreshToken }
@@ -716,6 +833,7 @@ export async function selectGoogleReputationLocation(
         externalAccountId: input.externalAccountId,
         externalLocationId: input.externalLocationId,
         status: 'CONNECTED',
+        bindingGeneration: sql`${reputationConnectors.bindingGeneration} + 1`,
         lastSyncError: null,
       })
       .where(

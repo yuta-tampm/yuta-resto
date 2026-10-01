@@ -26,6 +26,7 @@ const supportPaths = new Set([
   '/acces/aucun-etablissement',
   '/api/reputation/google/oauth/start',
   '/api/reputation/google/oauth/callback',
+  '/api/internal/reputation/google-cache-maintenance',
 ]);
 
 const presentationPaths = new Set([

@@ -33,7 +33,13 @@ export const integrationResultMessages: Record<
     tone: 'success',
     title: 'Établissement Google connecté',
     description:
-      'La connexion est prête. La synchronisation des avis sera ajoutée à la prochaine étape.',
+      'L’établissement Google est associé. Confirmez la continuation vers Avis ; cette association ne confirme aucune récupération.',
+  },
+  continuation_unavailable: {
+    tone: 'warning',
+    title: 'Association Google à vérifier',
+    description:
+      'Vérifiez la connexion et l’établissement associé, puis réessayez. Si le problème persiste, contactez le support YUTA.',
   },
   denied: {
     tone: 'warning',
@@ -94,7 +100,7 @@ export const releaseAIntegrationResultMessages: Record<
     tone: 'success',
     title: 'Établissement Google associé',
     description:
-      'L’établissement Google est sélectionné. La récupération des avis et la publication des réponses ne sont pas encore disponibles dans YUTA.',
+      'L’établissement Google est sélectionné. Confirmez la continuation vers Avis ; cette association ne récupère aucun avis et ne publie aucune réponse.',
   },
   invalid_state: {
     tone: 'danger',

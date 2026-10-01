@@ -13,9 +13,18 @@ const mocks = vi.hoisted(() => ({
   findGoogleReputationConnector: vi.fn(),
   requireBookingPermission: vi.fn(),
   requireReputationPermission: vi.fn(),
+  loadGoogleReviewRetrievalSummary: vi.fn(),
+  retrieveGoogleReviews: vi.fn(),
 }));
 
 vi.mock('server-only', () => ({}));
+vi.mock('../src/server/reputation/google-review-retrieval', () => ({
+  canRetrieveGoogleReviews: (tenant: TenantContext) =>
+    tenant.actor.type === 'user' &&
+    ['OWNER', 'MANAGER'].includes(tenant.actor.role),
+  loadGoogleReviewRetrievalSummary: mocks.loadGoogleReviewRetrievalSummary,
+  retrieveGoogleReviews: mocks.retrieveGoogleReviews,
+}));
 vi.mock('@yuta/db-cloud', () => ({
   listFeedback: mocks.listFeedback,
   findFeedbackDetail: mocks.findFeedbackDetail,
@@ -120,6 +129,20 @@ beforeEach(() => {
     periods: [],
   });
   mocks.findGoogleReputationConnector.mockResolvedValue(null);
+  mocks.loadGoogleReviewRetrievalSummary.mockResolvedValue({
+    state: 'never',
+    enabled: false,
+    bound: false,
+    lastAttemptKind: null,
+    lastAttemptAt: null,
+    lastSuccessfulAt: null,
+    lastRecentSuccessAt: null,
+    lastError: null,
+    coverage: 'none',
+    continuationHandle: null,
+    lastBatchCount: null,
+    currentContentAvailable: false,
+  });
 });
 
 describe('Release A Today projection', () => {
@@ -179,6 +202,136 @@ describe('Release A Today projection', () => {
 });
 
 describe('Release A Avis reads', () => {
+  it('reprojects bounded held work identities instead of trusting a displaced current page', async () => {
+    await loadReviewsPage(
+      {
+        working: `${googleId},${directId}`,
+        rating: '5',
+        page: '3',
+        queue: 'attention',
+        selected: googleId,
+      },
+      'all',
+    );
+    expect(mocks.listFeedback).toHaveBeenCalledWith(
+      { test: true },
+      mocks.tenant,
+      expect.objectContaining({ source: 'GOOGLE', page: 1, pageSize: 25 }),
+      expect.objectContaining({
+        requiredSource: 'GOOGLE',
+        workIds: [googleId, directId],
+      }),
+    );
+    expect(mocks.listFeedback.mock.calls[0]?.[2]).not.toHaveProperty('rating');
+    expect(mocks.listFeedback.mock.calls[0]?.[3]).not.toHaveProperty(
+      'statuses',
+    );
+    expect(mocks.retrieveGoogleReviews).not.toHaveBeenCalled();
+  });
+
+  it('rejects malformed or oversized held UUID filters and ignores the mechanism for STAFF', async () => {
+    await loadReviewsPage(
+      { working: 'accounts/foreign/reviews/private' },
+      'all',
+    );
+    expect(mocks.listFeedback.mock.calls[0]?.[3]).not.toHaveProperty('workIds');
+    mocks.listFeedback.mockClear();
+    await loadReviewsPage(
+      { working: Array.from({ length: 26 }, () => googleId).join(',') },
+      'all',
+    );
+    expect(mocks.listFeedback.mock.calls[0]?.[3]).not.toHaveProperty('workIds');
+    mocks.listFeedback.mockClear();
+    mocks.tenant = {
+      ...mocks.tenant!,
+      actor: {
+        type: 'user',
+        userId: googleId,
+        membershipId: directId,
+        role: 'STAFF',
+      },
+    };
+    await loadReviewsPage({ working: googleId }, 'all');
+    expect(mocks.listFeedback.mock.calls[0]?.[3]).not.toHaveProperty('workIds');
+    expect(mocks.retrieveGoogleReviews).not.toHaveBeenCalled();
+  });
+  it('reads a minimized receipt without retrieving from loaders or Today', async () => {
+    const page = await loadReviewsPage({}, 'all');
+    expect(
+      (page.props as { data: ReviewsPageData }).data.retrievalSummary?.state,
+    ).toBe('never');
+    expect(mocks.loadGoogleReviewRetrievalSummary).toHaveBeenCalledOnce();
+    await loadTodayDashboard();
+    expect(mocks.loadGoogleReviewRetrievalSummary).toHaveBeenCalledOnce();
+    expect(mocks.retrieveGoogleReviews).not.toHaveBeenCalled();
+  });
+
+  it('does not disclose establishment receipts to STAFF or Direct Feedback', async () => {
+    mocks.tenant = {
+      ...mocks.tenant!,
+      actor: {
+        type: 'user',
+        userId: googleId,
+        membershipId: directId,
+        role: 'STAFF',
+      },
+    };
+    const page = await loadReviewsPage({}, 'all');
+    const data = (page.props as { data: ReviewsPageData }).data;
+    expect(data.retrievalSummary).toBeNull();
+    expect(data.permissions.canRetrieveGoogle).toBe(false);
+    mocks.tenant = {
+      ...mocks.tenant!,
+      actor: {
+        type: 'user',
+        userId: googleId,
+        membershipId: directId,
+        role: 'OWNER',
+      },
+    };
+    await loadReviewsPage({}, 'direct');
+    expect(mocks.loadGoogleReviewRetrievalSummary).not.toHaveBeenCalled();
+    expect(mocks.retrieveGoogleReviews).not.toHaveBeenCalled();
+  });
+
+  it('keeps readable work when retrieval status alone is unavailable', async () => {
+    mocks.loadGoogleReviewRetrievalSummary.mockRejectedValue(
+      new Error('Receipt read failed'),
+    );
+    const page = await loadReviewsPage({}, 'all');
+    const data = (page.props as { data: ReviewsPageData }).data;
+    expect(data.state).toBe('ready');
+    expect(data.items[0]?.id).toBe(googleId);
+    expect(data.retrievalSummary).toBeNull();
+  });
+
+  it('serializes only masked provider presentation and separate remote reply', async () => {
+    mocks.findFeedbackDetail.mockResolvedValue({
+      ...google,
+      externalUrl: null,
+      googleContentAvailability: 'unavailable',
+      googleReviewChanged: false,
+      canRecoverReference: true,
+      authorName: null,
+      rating: null,
+      content: null,
+      remoteReply: null,
+      replies: [{ id: googleId, content: 'Saved user draft', status: 'DRAFT' }],
+      notes: [],
+      incidents: [],
+      analysis: null,
+    });
+    const page = await loadReviewsPage({}, 'all');
+    expect((page.props as { data: ReviewsPageData }).data.detail).toMatchObject(
+      {
+        googleContentAvailability: 'unavailable',
+        canRecoverReference: true,
+        content: null,
+        remoteReply: null,
+        latestReply: { content: 'Saved user draft' },
+      },
+    );
+  });
   it.each([
     { source: 'DIRECT' },
     { source: 'ALL', rating: 'malformed', page: '-1' },
@@ -318,7 +471,7 @@ describe('Token-free Google setup summary', () => {
     });
     const summary = await loadReleaseASetupSummary(mocks.tenant!);
     expect(summary.description).toContain(
-      'aucun résultat d’import n’est confirmé',
+      'l’association seule ne confirme aucun résultat de récupération',
     );
     expect(summary.setupHref).toBeNull();
     expect(JSON.stringify(summary)).not.toMatch(/private|token|lastSync/u);

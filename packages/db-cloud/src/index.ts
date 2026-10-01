@@ -24,6 +24,7 @@ export * from './personnel-document-repository';
 export * from './personnel-contract-amendment-repository';
 export * from './reputation-review-social-links';
 export * from './reputation-repository';
+export * from './google-review-retrieval-repository';
 export * from './restaurant-knowledge-repository';
 export * from './schema';
 export * from './tenant-adapters';

@@ -1,4 +1,5 @@
-import { Badge, Panel } from '@yuta/ui';
+import { Badge, Button, Panel } from '@yuta/ui';
+import { continueGoogleReviewsAction } from '../actions';
 import {
   getGoogleConnectorPresentation,
   type GoogleConnectorSummary,
@@ -7,9 +8,11 @@ import {
 export function GoogleConnectorPanel({
   connector,
   releaseA = false,
+  retrievalEnabled = false,
 }: {
   connector: GoogleConnectorSummary | null;
   releaseA?: boolean;
+  retrievalEnabled?: boolean;
 }) {
   const presentation = getGoogleConnectorPresentation(connector);
 
@@ -19,7 +22,7 @@ export function GoogleConnectorPanel({
       description={
         releaseA
           ? 'Autorisation Google et sélection de votre établissement.'
-          : 'Import des avis et publication des réponses.'
+          : 'Connexion Google et préparation de la récupération des avis.'
       }
       bodyClassName="gap-4 p-5"
     >
@@ -56,9 +59,21 @@ export function GoogleConnectorPanel({
             : 'L’autorisation Google et la sélection d’un établissement sont nécessaires avant la synchronisation.'}
         </p>
       )}
+      {presentation.connected && (
+        <div className="space-y-3">
+          <p className="text-sm text-secondary">
+            {retrievalEnabled
+              ? 'Une visite dans Avis peut récupérer les avis Google si nécessaire. L’association seule ne confirme aucun avis récupéré.'
+              : 'La récupération Google est indisponible. Votre travail dans YUTA reste accessible dans Avis.'}
+          </p>
+          <form action={continueGoogleReviewsAction}>
+            <Button type="submit">Confirmer et continuer vers Avis</Button>
+          </form>
+        </div>
+      )}
       <p className="text-xs text-muted">
         {releaseA
-          ? 'Cette connexion prépare l’accès Google. La récupération des avis et la publication des réponses ne sont pas encore disponibles dans YUTA.'
+          ? 'L’association ne récupère aucun avis. La publication des réponses depuis YUTA n’est pas disponible.'
           : 'Les jetons OAuth sont chiffrés avant leur stockage et ne sont jamais envoyés au navigateur.'}
       </p>
     </Panel>

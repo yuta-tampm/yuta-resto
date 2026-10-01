@@ -148,6 +148,13 @@
       "when": 1788853104815,
       "tag": "0020_formalites_legal_template_foundation",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1790882459549,
+      "tag": "0021_release_a_google_review_import",
+      "breakpoints": true
     }
   ]
 }

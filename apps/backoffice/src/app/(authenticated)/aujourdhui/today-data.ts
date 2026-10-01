@@ -22,7 +22,6 @@ import {
   type ReleaseASetupSummary,
 } from '../../../server/reputation/release-a-setup';
 import {
-  formatRelativeTime,
   formatTimeRange,
   getLocalDateTimeParts,
   getServiceState,
@@ -30,6 +29,8 @@ import {
   reservationStatusPresentation,
   resolveServicePeriodForToday,
   serviceStateLabel,
+  projectTodayReviewPreview,
+  type TodayReviewPreview,
   type TodayReservationTone,
   type TodayServiceState,
 } from './today-view-model';
@@ -57,14 +58,7 @@ export type TodayServiceItem = {
   stateLabel: string;
 };
 
-export type TodayReviewItem = {
-  id: string;
-  source: 'GOOGLE' | 'DIRECT';
-  authorName: string;
-  rating: number | null;
-  excerpt: string;
-  receivedLabel: string;
-};
+export type TodayReviewItem = TodayReviewPreview;
 
 export type TodayDashboardData = {
   localDate: string;
@@ -234,18 +228,7 @@ export async function loadTodayDashboard(): Promise<TodayDashboardData> {
                   !['RESOLVED', 'ARCHIVED', 'SPAM'].includes(item.status)),
             )
             .slice(0, 3)
-            .map((item) => ({
-              id: item.id,
-              source: item.source,
-              authorName: item.authorName ?? 'Client anonyme',
-              rating: item.rating,
-              excerpt: item.content || 'Aucun commentaire.',
-              receivedLabel: formatRelativeTime(
-                item.receivedAt,
-                now,
-                tenant.locale,
-              ),
-            }));
+            .map((item) => projectTodayReviewPreview(item, now, tenant.locale));
           const attentionCount = releaseA
             ? (result.attentionCount ?? result.pagination.totalItems)
             : result.counters.unanswered;

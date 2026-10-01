@@ -24,7 +24,7 @@ describe('Pointage raw clocking F2 schema', () => {
         new URL('../drizzle/meta/_journal.json', import.meta.url),
         'utf8',
       ),
-    ) as { entries: { tag: string }[] };
+    ) as { entries: { idx: number; tag: string }[] };
     const extension = JSON.parse(
       readFileSync(
         new URL(
@@ -47,8 +47,11 @@ describe('Pointage raw clocking F2 schema', () => {
 
     expect(config).toContain("schema: './src/schema/cloud.ts'");
     expect(cloudSchema).not.toContain('pointage-raw-clocking');
-    expect(canonicalJournal.entries).toHaveLength(21);
-    expect(canonicalJournal.entries.at(-1)?.tag).toBe(
+    expect(canonicalJournal.entries.length).toBeGreaterThanOrEqual(21);
+    expect(canonicalJournal.entries.slice(0, 21).map(({ idx }) => idx)).toEqual(
+      Array.from({ length: 21 }, (_, idx) => idx),
+    );
+    expect(canonicalJournal.entries[20]?.tag).toBe(
       '0020_formalites_legal_template_foundation',
     );
     expect(

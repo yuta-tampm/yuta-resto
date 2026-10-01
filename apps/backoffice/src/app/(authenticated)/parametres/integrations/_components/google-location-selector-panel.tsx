@@ -16,6 +16,7 @@ import Link from 'next/link';
 import { selectGoogleLocationAction } from '../actions';
 import {
   formatGoogleLocationAddress,
+  getGoogleConnectorPresentation,
   type GoogleConnectorSummary,
 } from '../integrations-model';
 import { GoogleLocationSubmitButton } from './google-location-submit-button';
@@ -38,7 +39,9 @@ export function GoogleLocationSelectorPanel({
       bodyClassName="gap-5 p-5"
     >
       {accounts.length === 0 ? (
-        <GoogleAccountsEmptyState />
+        <GoogleAccountsEmptyState
+          bound={getGoogleConnectorPresentation(connector).connected}
+        />
       ) : (
         <>
           <div className="flex flex-wrap gap-2">
@@ -86,7 +89,7 @@ export function GoogleLocationSelectorPanel({
   );
 }
 
-function GoogleAccountsEmptyState() {
+function GoogleAccountsEmptyState({ bound }: { bound: boolean }) {
   return (
     <div className="py-8 text-center">
       <Building2 className="mx-auto h-8 w-8 text-muted" />
@@ -94,8 +97,9 @@ function GoogleAccountsEmptyState() {
         Aucun compte Google chargé
       </p>
       <p className="mt-1 text-sm text-secondary">
-        Connectez Google pour afficher les comptes et établissements
-        accessibles.
+        {bound
+          ? 'Votre établissement associé reste disponible. Vous pouvez confirmer la continuation vers Avis dans le panneau Google Business Profile.'
+          : 'Connectez Google pour afficher les comptes et établissements accessibles.'}
       </p>
     </div>
   );
