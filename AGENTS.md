@@ -145,6 +145,21 @@ Public YUTA websites and the restaurant back-office use Geist Sans with
 Code, identifiers, comments, logs, commits, and technical documentation are
 English. User-facing language follows the nearest application instructions.
 
+### Import paths
+
+- Use the owning application's configured `@/` source alias instead of relative
+  imports that climb three or more directory levels, such as
+  `../../../../server/auth/session`. For example, use `@/server/auth/session`
+  when `@/*` maps to that application's `src/*`.
+- Keep short relative imports for nearby files in the same route or ownership
+  folder, such as `./model` or `../_components/status`.
+- Keep alias resolution consistent across TypeScript, build tooling, and test
+  runners before using or introducing an alias. Use only aliases configured in
+  the owning application.
+- Import shared packages through their public `@yuta/*` exports. Application
+  aliases must stay inside their owning application and must not bypass package
+  or server/client boundaries.
+
 ### Next.js component placement
 
 For Next.js applications, keep `src/app` focused on routing, layouts, actions,
