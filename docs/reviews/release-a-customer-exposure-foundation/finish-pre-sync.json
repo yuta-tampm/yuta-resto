@@ -1,0 +1,784 @@
+{
+  "change": "release-a-customer-exposure-foundation",
+  "schema": "yuta-spec-driven",
+  "headAtPreparation": "aff29fa9740fbb3f600d7ea72eabccd19ae244d3",
+  "preparedAt": "2026-10-01T15:16:15.466Z",
+  "planningRoot": "D:\\working\\yuta\\yuta-resto",
+  "changeRoot": "D:\\working\\yuta\\yuta-resto\\openspec\\changes\\release-a-customer-exposure-foundation",
+  "specsRuleSnapshot": {
+    "command": "pnpm exec openspec instructions specs --change release-a-customer-exposure-foundation --json",
+    "outcome": "Exit 0, valid artifact-instruction JSON; rules field omitted. Reused once-fetched snapshot."
+  },
+  "targets": [
+    {
+      "capability": "authorization/formalites",
+      "deltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/authorization/formalites/spec.md",
+      "deltaSha256": "5a914d88ce8ea35fa8356af1725b8e76ba389683f063c0216aca2bd712ad8412",
+      "mainPath": "openspec/specs/authorization/formalites/spec.md",
+      "existed": true,
+      "beforeSha256": "1815f4dcdd4236d08176b45377e08e9e72a7d187de89172458d7e796a6a05616",
+      "candidatePath": ".tmp-release-a-qa/finish/proposed/authorization/formalites/spec.md",
+      "candidateSha256": "0ed1f8e2cd5f286daaca9bc017597efc392b255f8c4fb7fe9a71757e7d04910b",
+      "backupPath": ".tmp-release-a-qa/finish/pre-sync/authorization/formalites/spec.md",
+      "existingRequirements": 8,
+      "resultingRequirements": 9,
+      "operations": [
+        {
+          "operation": "ADDED",
+          "requirement": "Hosted Formalités access có availability prerequisite độc lập với authorization",
+          "scenarios": 4
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Existing Formalités prototype không đổi",
+          "addedScenarios": []
+        }
+      ]
+    },
+    {
+      "capability": "authorization/pointage",
+      "deltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/authorization/pointage/spec.md",
+      "deltaSha256": "301a901252af8e80116dbc2805d33e7ea71964692154bdb53fa81bd8582dad67",
+      "mainPath": "openspec/specs/authorization/pointage/spec.md",
+      "existed": true,
+      "beforeSha256": "e1a0e2414cfbb59168370edb9ef691c6ce93023662283b2b7a863a7d9dc1a6fc",
+      "candidatePath": ".tmp-release-a-qa/finish/proposed/authorization/pointage/spec.md",
+      "candidateSha256": "930ddb211a76fc81aa7f60a0e138e6325db05969ddc81bee2c06b9ad451b9d2c",
+      "backupPath": ".tmp-release-a-qa/finish/pre-sync/authorization/pointage/spec.md",
+      "existingRequirements": 16,
+      "resultingRequirements": 17,
+      "operations": [
+        {
+          "operation": "ADDED",
+          "requirement": "Hosted Pointage consumer có availability prerequisite độc lập với authority",
+          "scenarios": 4
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Employee credential chỉ có self-only Pointage authority",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Usable consumer dùng dedicated short-lived Pointage continuation",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Committed replay không bypass current authorization",
+          "addedScenarios": []
+        }
+      ]
+    },
+    {
+      "capability": "backoffice/release-a-customer-exposure",
+      "deltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/backoffice/release-a-customer-exposure/spec.md",
+      "deltaSha256": "deefad70fd9b787c63f60d8569f617027510b5f3a415e03185b667124ebb8f9c",
+      "mainPath": "openspec/specs/backoffice/release-a-customer-exposure/spec.md",
+      "existed": false,
+      "beforeSha256": null,
+      "candidatePath": ".tmp-release-a-qa/finish/proposed/backoffice/release-a-customer-exposure/spec.md",
+      "candidateSha256": "b3e726a1f6102e399b8a319a72570610898028b21074ff7e1472afae53c379db",
+      "backupPath": null,
+      "existingRequirements": 0,
+      "resultingRequirements": 10,
+      "operations": [
+        {
+          "operation": "ADDED",
+          "requirement": "Instance exposure profile có trusted server authority",
+          "scenarios": 3
+        },
+        {
+          "operation": "ADDED",
+          "requirement": "A có đúng các permitted slices đã chốt",
+          "scenarios": 3
+        },
+        {
+          "operation": "ADDED",
+          "requirement": "Deferred hosted entry bị chặn cả direct call và action replay",
+          "scenarios": 3
+        },
+        {
+          "operation": "ADDED",
+          "requirement": "A entry và recovery giữ permitted destination",
+          "scenarios": 3
+        },
+        {
+          "operation": "ADDED",
+          "requirement": "A Avis read scope luôn Google và actor-scoped",
+          "scenarios": 3
+        },
+        {
+          "operation": "ADDED",
+          "requirement": "A mutations giữ Google source trong persistence boundary",
+          "scenarios": 3
+        },
+        {
+          "operation": "ADDED",
+          "requirement": "Today A dùng cùng Google local handling queue",
+          "scenarios": 3
+        },
+        {
+          "operation": "ADDED",
+          "requirement": "A profile chỉ đọc và expose basic information",
+          "scenarios": 3
+        },
+        {
+          "operation": "ADDED",
+          "requirement": "Setup và empty states không bịa import evidence",
+          "scenarios": 3
+        },
+        {
+          "operation": "ADDED",
+          "requirement": "Internal và independent apps giữ boundary hiện hành",
+          "scenarios": 2
+        }
+      ]
+    },
+    {
+      "capability": "formalites/persistent-draft-foundation",
+      "deltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/formalites/persistent-draft-foundation/spec.md",
+      "deltaSha256": "3e087148d39ab4b15f80f6133c1f60fbd83d7e4a6703d30874dc2bbe2563c97e",
+      "mainPath": "openspec/specs/formalites/persistent-draft-foundation/spec.md",
+      "existed": true,
+      "beforeSha256": "b4c8077df69c7da638627836255b0a64a3b9b342751964bebe6860183c1b768e",
+      "candidatePath": ".tmp-release-a-qa/finish/proposed/formalites/persistent-draft-foundation/spec.md",
+      "candidateSha256": "138758295c0b3c07d14e92a5b39783b36bb627481f948e78607933f9a46ff28b",
+      "backupPath": ".tmp-release-a-qa/finish/pre-sync/formalites/persistent-draft-foundation/spec.md",
+      "existingRequirements": 22,
+      "resultingRequirements": 23,
+      "operations": [
+        {
+          "operation": "ADDED",
+          "requirement": "Backoffice availability giới hạn cả persistent draft và fictional prototype entry",
+          "scenarios": 7
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Eligibility tạo draft dựa trên Personnel hiện tại và trusted scope",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Formalités authorization và Personnel source authorization độc lập",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Draft lifecycle sử dụng explicit persistence",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Abandonment yêu cầu reason và giữ record",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Có thể tạo draft mới sau abandonment",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Tối đa một active draft trong business scope",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "probationChoice có ba trạng thái chuẩn bị đã duyệt",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Reopen phát hiện relevant Personnel divergence theo source facts",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Reconciliation là explicit và per divergent fact",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Reconciliation thành công giải quyết đúng source state đã đối chiếu",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Reconciliation stale phải fail visibly",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Current Personnel eligibility độc lập với reconciliation choice",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "CDI eligibility phục hồi không bỏ qua reconciliation",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Save failure giữ nguyên authoritative saved state",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Concurrent và stale mutations không dùng silent last-write-wins",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Employee-connected capability được mở rộng mà không phá prototype hiện tại",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Workflow giữ draft mà không hứa retention vô hạn",
+          "addedScenarios": []
+        }
+      ]
+    },
+    {
+      "capability": "pointage/raw-clocking",
+      "deltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/pointage/raw-clocking/spec.md",
+      "deltaSha256": "a012b2650f87b8159d8a184ec1b639089a6a68e7460b65dbb32a7f445c71600b",
+      "mainPath": "openspec/specs/pointage/raw-clocking/spec.md",
+      "existed": true,
+      "beforeSha256": "ac0fea1564d2b8c949d751b4f87d8b5b59a6c46b783de5889e39f5ee7e6a396d",
+      "candidatePath": ".tmp-release-a-qa/finish/proposed/pointage/raw-clocking/spec.md",
+      "candidateSha256": "47f2b007d2840545b2a4a67591790f50eec810aef971d9f963a8a39c46bc68e9",
+      "backupPath": ".tmp-release-a-qa/finish/pre-sync/pointage/raw-clocking/spec.md",
+      "existingRequirements": 13,
+      "resultingRequirements": 14,
+      "operations": [
+        {
+          "operation": "ADDED",
+          "requirement": "Availability áp dụng cho toàn bộ Pointage entry do Backoffice host",
+          "scenarios": 6
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Raw clocking sử dụng trusted cloud scope và online acceptance",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Stable request identity bảo toàn committed receipt và replay",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Employee chỉ thấy own minimal current state và receipt",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Manager read chỉ server-side và establishment-scoped",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Shared-device UI bảo toàn isolation và trung thực về operation state",
+          "addedScenarios": []
+        }
+      ]
+    },
+    {
+      "capability": "reputation/review-social-links-configuration",
+      "deltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/reputation/review-social-links-configuration/spec.md",
+      "deltaSha256": "8c585770d2b83cdf9450f4acc9c167474661dadc6ed48da96eb8331f52159d8f",
+      "mainPath": "openspec/specs/reputation/review-social-links-configuration/spec.md",
+      "existed": true,
+      "beforeSha256": "80a228f2fad6431d817218e9fde147159f583fab4f6bfd495e73d9d9e0d2c756",
+      "candidatePath": ".tmp-release-a-qa/finish/proposed/reputation/review-social-links-configuration/spec.md",
+      "candidateSha256": "84b1ccffd167d5b189f91b6c8664dc627daeb4c0e8e8aca0354f5ac3426503bb",
+      "backupPath": ".tmp-release-a-qa/finish/pre-sync/reputation/review-social-links-configuration/spec.md",
+      "existingRequirements": 15,
+      "resultingRequirements": 16,
+      "operations": [
+        {
+          "operation": "ADDED",
+          "requirement": "Availability đóng Backoffice social-link settings nhưng giữ public feedback-web consumer",
+          "scenarios": 5
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Reputation sở hữu cấu hình theo trusted organization và active establishment",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Settings dùng authority Reputation hiện hành và chỉ OWNER được truy cập",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Capability chỉ quản lý đúng ba giá trị nullable",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Thay đổi chỉ xảy ra qua một explicit Save",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Save nhiều field là all-or-nothing",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Normalized no-op không ghi và success trả authoritative state",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Stale conflict và response-loss replay phải recoverable",
+          "addedScenarios": []
+        }
+      ]
+    },
+    {
+      "capability": "restaurant-knowledge/communication-identity",
+      "deltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/communication-identity/spec.md",
+      "deltaSha256": "d2d90b1908da0385c1bf020c873e0711f97dd7904abc5037fe82a334e49da50c",
+      "mainPath": "openspec/specs/restaurant-knowledge/communication-identity/spec.md",
+      "existed": true,
+      "beforeSha256": "156e0e05aa4a3b72145ffad5c3dc38ae5a73213a1744d679777850ace4cd7323",
+      "candidatePath": ".tmp-release-a-qa/finish/proposed/restaurant-knowledge/communication-identity/spec.md",
+      "candidateSha256": "92ad85fd9bea1014e1343d011820cf88ed0a2dfa31b17c0704d00f66f315ca70",
+      "backupPath": ".tmp-release-a-qa/finish/pre-sync/restaurant-knowledge/communication-identity/spec.md",
+      "existingRequirements": 16,
+      "resultingRequirements": 17,
+      "operations": [
+        {
+          "operation": "ADDED",
+          "requirement": "Backoffice availability là tiền điều kiện riêng cho Identité de communication",
+          "scenarios": 3
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Identité de communication thuộc Restaurant Knowledge của establishment hiện tại",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Slice chứa đúng ba descriptive knowledge values",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "View sử dụng Restaurant Knowledge READ",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Edit và explicit save sử dụng Restaurant Knowledge MANAGE",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Ba value Identité de communication là optional và độc lập",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Người dùng nhập và sửa ba value thủ công",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Một explicit save lưu toàn bộ slice Identité de communication",
+          "addedScenarios": []
+        }
+      ]
+    },
+    {
+      "capability": "restaurant-knowledge/concept-history",
+      "deltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/concept-history/spec.md",
+      "deltaSha256": "4f08f3518efb351edca4c9dc5ac0db919315f9c93c15fc787bd170113a028aab",
+      "mainPath": "openspec/specs/restaurant-knowledge/concept-history/spec.md",
+      "existed": true,
+      "beforeSha256": "93ece2037955b7b208f506cf7581a9adf45ffe9570783828e159a5fef2fc25c1",
+      "candidatePath": ".tmp-release-a-qa/finish/proposed/restaurant-knowledge/concept-history/spec.md",
+      "candidateSha256": "7399a1e7f7423bc3bf4c3abcabae686f2cae44a45a44fc3660d467c5c6df906b",
+      "backupPath": ".tmp-release-a-qa/finish/pre-sync/restaurant-knowledge/concept-history/spec.md",
+      "existingRequirements": 7,
+      "resultingRequirements": 8,
+      "operations": [
+        {
+          "operation": "ADDED",
+          "requirement": "Backoffice availability là tiền điều kiện riêng cho Concept & histoire",
+          "scenarios": 3
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Concept và Histoire thuộc Restaurant Knowledge của establishment hiện tại",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "View sử dụng Restaurant Knowledge READ",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Edit và explicit save sử dụng Restaurant Knowledge MANAGE",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Concept và Histoire là hai giá trị optional độc lập",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Người dùng nhập và sửa Concept và Histoire thủ công",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Một explicit save lưu toàn bộ slice Concept và Histoire",
+          "addedScenarios": []
+        }
+      ]
+    },
+    {
+      "capability": "restaurant-knowledge/cuisine-know-how",
+      "deltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/cuisine-know-how/spec.md",
+      "deltaSha256": "588c90bf5f6eaa3b61d38c21ecf00f1f2e8601710942ede0c419aa1655d24645",
+      "mainPath": "openspec/specs/restaurant-knowledge/cuisine-know-how/spec.md",
+      "existed": true,
+      "beforeSha256": "b46146861e0674a97a443ec14a093bdafbf6de38cfa321c05fdaed94a383f1b9",
+      "candidatePath": ".tmp-release-a-qa/finish/proposed/restaurant-knowledge/cuisine-know-how/spec.md",
+      "candidateSha256": "5b89829f22c9b4d8c2f4037f5444f769e8447933e44815da62ff2b59a9501c6b",
+      "backupPath": ".tmp-release-a-qa/finish/pre-sync/restaurant-knowledge/cuisine-know-how/spec.md",
+      "existingRequirements": 9,
+      "resultingRequirements": 10,
+      "operations": [
+        {
+          "operation": "ADDED",
+          "requirement": "Backoffice availability là tiền điều kiện riêng cho Cuisine & savoir-faire",
+          "scenarios": 3
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Cuisine & savoir-faire thuộc Restaurant Knowledge của establishment hiện tại",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "View sử dụng Restaurant Knowledge READ",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Edit và explicit save sử dụng Restaurant Knowledge MANAGE",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Ba giá trị Cuisine & savoir-faire là optional và độc lập",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Người dùng nhập và sửa ba giá trị thủ công",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Một explicit save lưu toàn bộ slice Cuisine & savoir-faire",
+          "addedScenarios": []
+        }
+      ]
+    },
+    {
+      "capability": "restaurant-knowledge/customer-experience",
+      "deltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/customer-experience/spec.md",
+      "deltaSha256": "68f358ac24a13ca649ffc10fce8678c2bc620ba8c4fe06cefedecdd3fcbd9f23",
+      "mainPath": "openspec/specs/restaurant-knowledge/customer-experience/spec.md",
+      "existed": true,
+      "beforeSha256": "1fd47662b8122bde0b2a5029af246f39bf78efad6796b9712f2cff6dc6a254f8",
+      "candidatePath": ".tmp-release-a-qa/finish/proposed/restaurant-knowledge/customer-experience/spec.md",
+      "candidateSha256": "7ddcc69ccf7dbd7a9e60a66c60e7cb96051753599e1dd67afc668925f2154056",
+      "backupPath": ".tmp-release-a-qa/finish/pre-sync/restaurant-knowledge/customer-experience/spec.md",
+      "existingRequirements": 11,
+      "resultingRequirements": 12,
+      "operations": [
+        {
+          "operation": "ADDED",
+          "requirement": "Backoffice availability là tiền điều kiện riêng cho Expérience client",
+          "scenarios": 3
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Expérience client thuộc Restaurant Knowledge của establishment hiện tại",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Slice chứa đúng ba descriptive knowledge values",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "View sử dụng Restaurant Knowledge READ",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Edit và explicit save sử dụng Restaurant Knowledge MANAGE",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Ba value Expérience client là optional và độc lập",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Người dùng nhập và sửa ba value thủ công",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Một explicit save lưu toàn bộ slice Expérience client",
+          "addedScenarios": []
+        }
+      ]
+    },
+    {
+      "capability": "restaurant-knowledge/team-culture",
+      "deltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/team-culture/spec.md",
+      "deltaSha256": "38727fcc87e815bf9247146860d0ac9b8777c9bffc6e567f206827f218921da3",
+      "mainPath": "openspec/specs/restaurant-knowledge/team-culture/spec.md",
+      "existed": true,
+      "beforeSha256": "e4af63e50baed2262a18868fd8072ea050d494ce168cc1d0860322651f4d3166",
+      "candidatePath": ".tmp-release-a-qa/finish/proposed/restaurant-knowledge/team-culture/spec.md",
+      "candidateSha256": "eb095b2dc59da982b94b7c0a9b368a0b8a0b84e4b6537a93d677132a74b6c0e8",
+      "backupPath": ".tmp-release-a-qa/finish/pre-sync/restaurant-knowledge/team-culture/spec.md",
+      "existingRequirements": 14,
+      "resultingRequirements": 15,
+      "operations": [
+        {
+          "operation": "ADDED",
+          "requirement": "Backoffice availability là tiền điều kiện riêng cho Équipe & culture",
+          "scenarios": 3
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Équipe & culture thuộc Restaurant Knowledge của establishment hiện tại",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Slice chứa đúng ba descriptive knowledge values",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "View sử dụng Restaurant Knowledge READ",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Edit và explicit save sử dụng Restaurant Knowledge MANAGE",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Ba value Équipe & culture là optional và độc lập",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Người dùng nhập và sửa ba value thủ công",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Một explicit save lưu toàn bộ slice Équipe & culture",
+          "addedScenarios": []
+        }
+      ]
+    },
+    {
+      "capability": "restaurant-knowledge/validated-knowledge",
+      "deltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/validated-knowledge/spec.md",
+      "deltaSha256": "7b69f767f367145a7f2e41692437f572600371b977ebd890c4793bba98275e40",
+      "mainPath": "openspec/specs/restaurant-knowledge/validated-knowledge/spec.md",
+      "existed": true,
+      "beforeSha256": "072939ec712b02be2091b5411338bcfb3cd4f1df012977123ba5648e7a24e200",
+      "candidatePath": ".tmp-release-a-qa/finish/proposed/restaurant-knowledge/validated-knowledge/spec.md",
+      "candidateSha256": "9a13cd4a9abef92853627f6ae650561cc64ce67e05d352b5cfdcae176e0001ec",
+      "backupPath": ".tmp-release-a-qa/finish/pre-sync/restaurant-knowledge/validated-knowledge/spec.md",
+      "existingRequirements": 13,
+      "resultingRequirements": 14,
+      "operations": [
+        {
+          "operation": "ADDED",
+          "requirement": "Backoffice availability là tiền điều kiện riêng cho Connaissances validées",
+          "scenarios": 3
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "READ và MANAGE là các operation độc lập",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Current active list hỗ trợ trạng thái không có item",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Saved statement phải chứa nội dung non-whitespace",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Manual create chỉ trở thành canonical sau explicit save",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Manual edit chỉ thay đổi canonical value sau explicit save",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Remove chỉ có hiệu lực sau explicit save",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Explicit save là persistence boundary duy nhất",
+          "addedScenarios": []
+        },
+        {
+          "operation": "MODIFIED",
+          "requirement": "Hỗ trợ nhiều item độc lập mà không tự động xử lý semantic duplicates",
+          "addedScenarios": []
+        }
+      ]
+    }
+  ],
+  "authorization": {
+    "taskMode": "CODEX_ONLY",
+    "source": "Actual current-user instruction: làm bước tiếp; referring to the previously described step 3, approved-spec sync, archive and task closeout for this named change.",
+    "syncAuthorization": "AUTHORIZED_BY_USER_DELEGATION",
+    "scope": "Exact twelve approved deltas to corresponding main specs; archive; required Knowledge Consolidation; optional task-local commit under sticky YES. No runtime/provider/deploy/push or lifecycle action."
+  },
+  "approvedGate3BeforeFinishSha256": "2af4199b048b28e3ba9627a7116b2d3e5607f2dc6d354716db227a5b0b739608",
+  "approvedManifestSha256": "6a4004350082c3a1a3783d1c0b243e3ea068c73c11da6437bd49303fb68a22d8",
+  "integrityRecheck": {
+    "timestamp": "2026-10-01T15:18:29.181Z",
+    "identities": 294,
+    "independentReviewer": "/root/release_a_gate3_review",
+    "independentRecheckAt": "2026-10-01T15:15:42.2947581Z",
+    "result": "PASS; no runtime/evidence drift; aff29fa contains only approved review closeout."
+  },
+  "archiveSource": "openspec/changes/release-a-customer-exposure-foundation",
+  "archiveTarget": "openspec/changes/archive/2026-10-01-release-a-customer-exposure-foundation",
+  "rollback": {
+    "baselineHead": "aff29fa9740fbb3f600d7ea72eabccd19ae244d3",
+    "note": "Eleven exact local pre-sync snapshots exist in the ignored task directory. All eleven original working bytes equal baseline Git blobs; a failed sync can restore each exact recorded blob and verify its before SHA-256. The new capability was absent."
+  },
+  "gitBaseline": {
+    "head": "aff29fa9740fbb3f600d7ea72eabccd19ae244d3",
+    "branch": "main",
+    "stagedPaths": [],
+    "modifiedPaths": [],
+    "untrackedDeliveryPaths": []
+  },
+  "originalArchiveInventory": [
+    {
+      "path": ".openspec.yaml",
+      "sha256": "edbcd0b0cb2d4619b326f4293e56c1d31f5ce6be37dda83923ff58267b46f1ab",
+      "bytes": 45
+    },
+    {
+      "path": "analysis.md",
+      "sha256": "8876b435196b052652467bbe8d51404d55fd9a0c5b39f4ff335939e0dc219403",
+      "bytes": 20201
+    },
+    {
+      "path": "design.md",
+      "sha256": "c1eadd9d79dca73d8a6d365c53b7fe29665e4042ee0144f9725cda20fd5ee8c4",
+      "bytes": 22836
+    },
+    {
+      "path": "proposal.md",
+      "sha256": "bd29ab84194077951f25e1e672bccc805229bf4f2379d14b3572b0ace57f3541",
+      "bytes": 4894
+    },
+    {
+      "path": "specs/authorization/formalites/spec.md",
+      "sha256": "5a914d88ce8ea35fa8356af1725b8e76ba389683f063c0216aca2bd712ad8412",
+      "bytes": 4980
+    },
+    {
+      "path": "specs/authorization/pointage/spec.md",
+      "sha256": "301a901252af8e80116dbc2805d33e7ea71964692154bdb53fa81bd8582dad67",
+      "bytes": 11176
+    },
+    {
+      "path": "specs/backoffice/release-a-customer-exposure/spec.md",
+      "sha256": "deefad70fd9b787c63f60d8569f617027510b5f3a415e03185b667124ebb8f9c",
+      "bytes": 15193
+    },
+    {
+      "path": "specs/formalites/persistent-draft-foundation/spec.md",
+      "sha256": "3e087148d39ab4b15f80f6133c1f60fbd83d7e4a6703d30874dc2bbe2563c97e",
+      "bytes": 47354
+    },
+    {
+      "path": "specs/pointage/raw-clocking/spec.md",
+      "sha256": "a012b2650f87b8159d8a184ec1b639089a6a68e7460b65dbb32a7f445c71600b",
+      "bytes": 19877
+    },
+    {
+      "path": "specs/reputation/review-social-links-configuration/spec.md",
+      "sha256": "8c585770d2b83cdf9450f4acc9c167474661dadc6ed48da96eb8331f52159d8f",
+      "bytes": 22967
+    },
+    {
+      "path": "specs/restaurant-knowledge/communication-identity/spec.md",
+      "sha256": "d2d90b1908da0385c1bf020c873e0711f97dd7904abc5037fe82a334e49da50c",
+      "bytes": 19982
+    },
+    {
+      "path": "specs/restaurant-knowledge/concept-history/spec.md",
+      "sha256": "4f08f3518efb351edca4c9dc5ac0db919315f9c93c15fc787bd170113a028aab",
+      "bytes": 13702
+    },
+    {
+      "path": "specs/restaurant-knowledge/cuisine-know-how/spec.md",
+      "sha256": "588c90bf5f6eaa3b61d38c21ecf00f1f2e8601710942ede0c419aa1655d24645",
+      "bytes": 14361
+    },
+    {
+      "path": "specs/restaurant-knowledge/customer-experience/spec.md",
+      "sha256": "68f358ac24a13ca649ffc10fce8678c2bc620ba8c4fe06cefedecdd3fcbd9f23",
+      "bytes": 16364
+    },
+    {
+      "path": "specs/restaurant-knowledge/team-culture/spec.md",
+      "sha256": "38727fcc87e815bf9247146860d0ac9b8777c9bffc6e567f206827f218921da3",
+      "bytes": 18516
+    },
+    {
+      "path": "specs/restaurant-knowledge/validated-knowledge/spec.md",
+      "sha256": "7b69f767f367145a7f2e41692437f572600371b977ebd890c4793bba98275e40",
+      "bytes": 20169
+    },
+    {
+      "path": "tasks.md",
+      "sha256": "26563a1a82e89099b38882d4fae266fdf7af9a9d98af536f8ddfa09a05bf2ffe",
+      "bytes": 41353
+    }
+  ]
+}

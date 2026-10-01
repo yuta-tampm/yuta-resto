@@ -11,7 +11,7 @@ Decision owners: YUTA product and engineering
 Decision source: The current user chose "Chốt profile A cho instance khách
 hàng; giữ chế độ nội bộ riêng" for
 `release-a-customer-exposure-foundation`, with build/test scope and no
-staging/production activation. The [Proposal requirement baseline](../../openspec/changes/release-a-customer-exposure-foundation/proposal.md#requirement_baseline)
+staging/production activation. The [Proposal requirement baseline](../../openspec/changes/archive/2026-10-01-release-a-customer-exposure-foundation/proposal.md#requirement_baseline)
 and [Gate 1 decision record](../reviews/release-a-customer-exposure-foundation/01-analysis-review.md#current-candidate-3-and-delegation)
 attribute that choice. [RR-01–RR-03](../PRODUCT_RELEASE_ROADMAP.md#bounded-foundation-and-release-a-decisions)
 provide the accepted release-specific Product baseline. The

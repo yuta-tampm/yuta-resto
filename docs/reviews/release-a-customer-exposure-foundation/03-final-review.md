@@ -13,8 +13,12 @@ Sensitive change: YES
 Task mode: CODEX_ONLY
 Mode selection source: actual current-user CODEX_ONLY for this named task
 Current review scope: explicitly approved prerequisite LF restoration and final review only (steps 1 and 2)
-COMMIT_AFTER_TASK: YES; prior QA closeout commit completed; no additional commit in this phase
-Sync authorization: PENDING
+COMMIT_AFTER_TASK: YES; prior QA closeout completed; finalization commit waits for applicable Knowledge obligations
+Sync authorization: AUTHORIZED_BY_USER_DELEGATION
+Finish outcome: COMPLETED
+Archive location: openspec/changes/archive/2026-10-01-release-a-customer-exposure-foundation
+Knowledge consolidation: UPDATE_REQUIRED
+Workflow status: DONE
 TECHNICAL IMPLEMENTATION COMPLIANCE: PASS
 VERIFY: PASS
 QA: PASS
@@ -662,3 +666,37 @@ The 1328-test result, 13/13 guarded persistence result, production build and act
 Approval source: `USER_DELEGATION_WITH_INDEPENDENT_REVIEW`. Approval recorded by: Codex workflow. Approved: `2026-10-01T15:08:59Z`.
 
 `Sync authorization: PENDING`. This approval completes bounded engineering review in steps 1 and 2 only. Sync/archive, additional commit, lifecycle/readiness promotion, activation and deployment require their separately authorized scope.
+
+## Step 3 finalization authorization and pre-sync record
+
+Recorded: 2026-10-01T15:18:29.181Z. The current user's instruction “làm bước tiếp” refers to the previously described step 3 for this named change: approved-spec synchronization, archive and task closeout. The task retains CODEX_ONLY. This is the actual bounded full-completion delegation, extending the completed steps 1–2 scope recorded above; it does not alter the independent Gate 3 engineering verdict. Sync authorization: AUTHORIZED_BY_USER_DELEGATION. Finish outcome: PENDING.
+
+The existing independent Gate 3 reviewer rechecked all 294 identities, original implementation and raw evidence at 2026-10-01T15:15:42.2947581Z. Author recheck before promotion passed at 2026-10-01T15:18:29.181Z. Clean main HEAD aff29fa9740fbb3f600d7ea72eabccd19ae244d3 records the nine already-reviewed final-review paths; reviewed source, evidence, diff and canonical VERIFY block remain exact. The previously pending sync fields in the candidate/approval narrative are historical phase records.
+
+Exact selected delta/main paths, both pre/post candidate hashes and original archive inventory are in [finish-pre-sync.json](finish-pre-sync.json). The twelve paths come exclusively from the current CLI status; specs instructions were fetched once successfully and reused, with no rules field configured. The merge adds 21 requirements and modifies 74, preserving every existing named scenario and unmentioned requirement. All eleven existing main-spec preimages match the recorded baseline Git blobs; the new Backoffice exposure capability was absent. No incomplete artifact/task warning or Design omission applies.
+
+The synchronous archive target is openspec/changes/archive/2026-10-01-release-a-customer-exposure-foundation. No archive exists at that target. Normative promotion must validate before archive. Sticky local commit preference YES is retained for task closeout only after applicable completion and Knowledge obligations; no push, deployment, provider action or lifecycle promotion is included.
+
+## Successful sync/archive and post-archive Knowledge Review
+
+Finished archive at 2026-10-01T15:23:01.345Z; Finish outcome: COMPLETED. Exact archive location: openspec/changes/archive/2026-10-01-release-a-customer-exposure-foundation. All 17 planning/metadata file bytes are preserved; all 294 reviewed identities match using only the active-to-archive path mapping. Original manifests and earlier pending statements remain pre-finish history.
+
+Main validation: pnpm exec openspec validate --specs --strict --json; exit 0, 21/21 PASS, 136 INFO long-text notices, zero warnings/errors. All 95 delta blocks match exactly, 70 unmentioned requirements and existing Purpose prefixes remain exact; independent mechanical recheck by /root/release_a_gate3_review at 2026-10-01T15:20:02.986961Z. No incomplete artifact/task warning, rollback or lifecycle promotion. The full twelve-file sync diff includes the new untracked-at-sync capability explicitly. Exact before/after hashes, source paths, full diff, validation and archive evidence are in [finish-result.json](finish-result.json).
+
+Knowledge consolidation: UPDATE_REQUIRED for exactly one ADR-009 Proposal link relocation. Sources inspected and target/proposed-diff hashes are recorded in [04-knowledge-consolidation-review.md](04-knowledge-consolidation-review.md). No canonical Knowledge bytes have been changed. Workflow status: AWAITING_KNOWLEDGE_REVIEW. Finish/archive is complete, but full repository closeout and its local commit wait for this separate bounded review/application.
+
+RELEASE_FOLLOW_UP: REQUIRED if the foundation is to be enabled for a customer instance: Backoffice staging/production activation has its separate explicit profile, deployment/readiness and post-deploy verification lane, with provider/privacy/importer/publication prerequisites unchanged. No deployment or lifecycle value was automatically promoted.
+
+## Independent Knowledge approval and application
+
+Separate fresh reviewer /root/release_a_knowledge_review approved the exact Knowledge diff at 2026-10-01T15:25:50Z. Approval source: USER_DELEGATION_WITH_INDEPENDENT_REVIEW. Branch B exact target/diff/path-set recheck and application passed at 2026-10-01T15:26:50.539Z; only the ADR-009 Proposal link moved to the verified archive/anchor. Approved target postimage ff5d7e77b0313ae4d9633045cdb6cd68c0f2d1c6c002737859847b633fa1e13c matched. Full source/hash/verdict/apply evidence is in [04-knowledge-consolidation-review.md](04-knowledge-consolidation-review.md). Post-apply documentation/architecture/format checks remain pending before workflow DONE and the local task commit. No Product/lifecycle/readiness value changed.
+
+## Repository workflow completion
+
+Workflow status: DONE. Completed: 2026-10-01T15:27:48.489Z. Knowledge consolidation UPDATE_REQUIRED was resolved by the independently approved exact ADR-009 link repair. Post-apply pnpm docs:check passed (36 current documents), pnpm architecture:check passed and targeted Prettier passed. Full repository pnpm format:check passed with 67 exact preserved artifacts; full workspace typecheck passed. Archive link and REQUIREMENT_BASELINE anchor resolve, and approved ADR postimage remains exact. No rollback or lifecycle value was automatically promoted.
+
+RELEASE_FOLLOW_UP: REQUIRED for a separately requested customer Backoffice activation, with its explicit staging/production profile, deployment/readiness and post-deploy verification authority. Import/publication, provider/privacy and operational limits remain unchanged; no deployment performed. Retained tests/build/Browser QA remain exact historical evaluated evidence; no new runtime/DB/provider QA was executed in this documentation/spec-only closeout.
+
+Task-local commit preference YES is carried from the current user's direct commit request and this step-3 closeout. Safely stage only attributed finalization changes on main after the completed obligations; report the created commit SHA in chat, without editing committed evidence to insert its own identity. No push, PR or branch change.
+
+Git delivery qualification: default git diff --cached --check returns 2 for 548 single-space blank-context prefixes in the exact finish-spec-sync.diff patch artifact. Every diagnosed line was verified as exactly the required patch context prefix, preserving its recorded bytes/hash. The scoped staged whitespace check excluding only that patch artifact passes (exit 0); source and metadata formatting pass. No persistent Git/formatter policy changed.
