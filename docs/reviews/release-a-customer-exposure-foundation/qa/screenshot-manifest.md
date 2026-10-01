@@ -1,6 +1,6 @@
 # Release A customer exposure foundation — screenshot manifest
 
-Status: Generations 1–3 retained evidence; current QA FAIL
+Status: Current consolidated QA PASS; generations 1–3 FAIL evidence retained
 
 Visibility: Engineering
 
@@ -8,15 +8,18 @@ Owner: YUTA engineering
 
 Change: `release-a-customer-exposure-foundation`
 
-This manifest retains 174 exact PNGs across three actual executions: 46 initial,
-49 generation 2 and 79 generation 3. Current QA remains FAIL; current visual
-review/targeted evidence is incomplete. Hash verification is distinct from
+This manifest retains 185 exact PNGs: 46 initial, 49 generation 2, 79 generation 3
+and 11 from the single Human-authorized supplement. All original FAIL results
+remain. The supplement received independent PASS with all eleven PNGs visually
+reviewed; independent consolidated QA review is approved. Hash verification is distinct from
 visual inspection.
 
 Original execution-byte authority is the `.json.raw` archive for each result.
 [observation-representations.json](observation-representations.json) records all
-four byte-identical original copies and their formatted reading paths; every
-record has `rawByteEquality: true` and `parsedDataEquality: true`. The existing
+original copies and their formatted reading paths; archive-creation records
+have `rawByteEquality: true` and `parsedDataEquality: true`. Current historical
+CRLF checkout bytes differ from the recorded LF hashes; the normalized bytes
+and original committed Git blobs both match exactly. The existing
 `.json` files are formatter-derived reading copies. No original failed result
 or PNG was lost, and formatting created no new QA execution or approval.
 
@@ -261,3 +264,25 @@ drawer; Users 11 does not show the lower member controls, mobile Avis search
 and some empty-state lower CTAs need current visual evidence. See the report
 for exact limitations and the pending separately authorized targeted observation.
 No future supplement outcome or screenshot is inferred.
+
+## Human-authorized supplement 1
+
+Actual execution `2026-10-01T14:05:10.742Z` to `2026-10-01T14:05:32.107Z`; unchanged build `dpcEq5-sJWwIz7A8Zi3FU`. Seven authorized behavior cases plus two verified setup transitions and one exact restoration passed. Independent reviewer `qa_supplement_evidence_review` inspected all eleven images and verified every hash/dimension. Four setup navigations and settled menu/scrolled Avis/Users coverage resolve the named evidence gaps; no full harness or provider operation was repeated.
+
+| Repository-relative PNG path                                                                                                                                                                                | Viewport | Role  | State                                                                            | Scenario                                                | SHA-256                                                            |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ----- | -------------------------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------ |
+| [docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/01-supplement1-owner-desktop-today-setup-before.png](supplement1/01-supplement1-owner-desktop-today-setup-before.png)                   | 1366x768 | OWNER | actual missing binding OWNER setup guidance before navigation                    | `supplement1-owner-desktop-today-setup-before`          | `0e82efd3abac3b36c18b9fce0e4f8562fde40d57b07b1b0cc4ae1b409810c213` |
+| [docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/02-supplement1-owner-desktop-today-setup-after.png](supplement1/02-supplement1-owner-desktop-today-setup-after.png)                     | 1366x768 | OWNER | actual missing binding Integrations after completed CTA navigation               | `supplement1-owner-desktop-today-setup-after`           | `bacb904b547470c7ee274a4054258509e6e77a99bc5e31bcf79c94dc9a7518a0` |
+| [docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/03-supplement1-owner-desktop-reviews-setup-before.png](supplement1/03-supplement1-owner-desktop-reviews-setup-before.png)               | 1366x768 | OWNER | actual missing binding OWNER setup guidance before navigation                    | `supplement1-owner-desktop-reviews-setup-before`        | `de550eeae4e34bd0bc8309afd963b0d4ded1d9857ae67bc9b4a90c8f6de3ca31` |
+| [docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/04-supplement1-owner-desktop-reviews-setup-after.png](supplement1/04-supplement1-owner-desktop-reviews-setup-after.png)                 | 1366x768 | OWNER | actual missing binding Integrations after completed CTA navigation               | `supplement1-owner-desktop-reviews-setup-after`         | `3eda53082da0537c818a2ac25aa81ae71b039191971599be83e35d5b05882dc8` |
+| [docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/05-supplement1-owner-mobile-today-setup-before.png](supplement1/05-supplement1-owner-mobile-today-setup-before.png)                     | 390x844  | OWNER | actual missing binding OWNER setup guidance before navigation                    | `supplement1-owner-mobile-today-setup-before`           | `26b56246b6f484191d280e98b75fe0f47c9cda5dc1cc376db15b5c875a3f69b2` |
+| [docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/06-supplement1-owner-mobile-today-setup-after.png](supplement1/06-supplement1-owner-mobile-today-setup-after.png)                       | 390x844  | OWNER | actual missing binding Integrations after completed CTA navigation               | `supplement1-owner-mobile-today-setup-after`            | `b2e971bde6be8fb5355251d7c280ca7d59469952e4f1b7389fb67ed43ccda877` |
+| [docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/07-supplement1-owner-mobile-reviews-setup-before.png](supplement1/07-supplement1-owner-mobile-reviews-setup-before.png)                 | 390x844  | OWNER | actual missing binding OWNER setup guidance before navigation                    | `supplement1-owner-mobile-reviews-setup-before`         | `089fef51912190d3624f0fe8dd0689e38202ebf976beaff940637f65d52f96a4` |
+| [docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/08-supplement1-owner-mobile-reviews-setup-after.png](supplement1/08-supplement1-owner-mobile-reviews-setup-after.png)                   | 390x844  | OWNER | actual missing binding Integrations after completed CTA navigation               | `supplement1-owner-mobile-reviews-setup-after`          | `cf64794e22f1cf463d840704a4f11114e43277df62e20304975b3f88c499ed0f` |
+| [docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/09-supplement1-owner-mobile-today-menu-fully-open.png](supplement1/09-supplement1-owner-mobile-today-menu-fully-open.png)               | 390x844  | OWNER | actual menu after completed CSS translate motion; drawer left zero and width 320 | `supplement1-owner-mobile-today-menu-fully-open`        | `2fa393c8091d2ee9e2f21c91caf7b63254d663bcd617fa6e151928d605ab67c2` |
+| [docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/10-supplement1-owner-mobile-avis-search-scrolled-focused.png](supplement1/10-supplement1-owner-mobile-avis-search-scrolled-focused.png) | 390x844  | OWNER | actual populated Avis search form scrolled into view with keyboard focus         | `supplement1-owner-mobile-avis-search-scrolled-focused` | `67b182e254230b1af0bfae4897296320bf9d636fe325127a37ac27bb2a9acce2` |
+| [docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/11-supplement1-owner-mobile-users-lower-role-status-save.png](supplement1/11-supplement1-owner-mobile-users-lower-role-status-save.png) | 390x844  | OWNER | actual last persisted membership form scrolled into view; no data submitted      | `supplement1-owner-mobile-users-lower-role-status-save` | `17f4c44eb528ca53947d69f172eb0921e0ff3fe2bddd8f76384b009e663f3664` |
+
+Additional independent inspection by `qa_consolidation_review` covers generation 3 images 37–42, 44, 46 and 49–51, completing all 79 generation 3 images together with the earlier 68-image review. Inherited internal toolbar clipping appears in generation 2 PNG49 and generation 3 PNG51; the internal baseline tracks are preserved and this task grants no internal UI repair authority.
+
+Original raw report SHA-256: `b9ed12095917c79f3add4801a1da68435960b106f0ffdda07919689b4e70f682`. Supplemental metadata has original `.json.raw` copies and parsed-equal formatted reading representations. Mobile Today before PNG does not show the below-viewport CTA; the actual click and completed destination assertions confirm that interaction. Axe incomplete rules and historical failures remain in the QA report. No Gate 3 or readiness approval is supplied.

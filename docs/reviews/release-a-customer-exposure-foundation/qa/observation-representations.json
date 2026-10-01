@@ -36,6 +36,85 @@
       "formattedSha256": "3d76981de5a053e53ef226caa4af266a8e1827e0bf0dd90365d508456f0a65c0",
       "rawByteEquality": true,
       "parsedDataEquality": true
+    },
+    {
+      "originalRecordedPath": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/browser-results-supplement1.json",
+      "immutableRawPath": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/browser-results-supplement1.json.raw",
+      "rawSha256": "b9ed12095917c79f3add4801a1da68435960b106f0ffdda07919689b4e70f682",
+      "formattedPath": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/browser-results-supplement1.json",
+      "formattedSha256": "bd982865cfbdcdd07d82ef989329e597bf9b3147762429932c1c5862706f5bed",
+      "rawByteEquality": true,
+      "rawByteEqualityScope": "Verified exact copy before formatter derived the reading representation",
+      "parsedDataEquality": true
+    },
+    {
+      "originalRecordedPath": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/preflight.json",
+      "immutableRawPath": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/preflight.json.raw",
+      "rawSha256": "1bb8fd80824105f25e7d9985db6a7c7e2c32e9ff78114d987162c67834fba137",
+      "formattedPath": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/preflight.json",
+      "formattedSha256": "7598b335ef367c82e5e0b0d7e6349378a2940d79abf02eba1a898803f3942a9d",
+      "rawByteEquality": true,
+      "rawByteEqualityScope": "Verified exact copy before formatter derived the reading representation",
+      "parsedDataEquality": true
+    },
+    {
+      "originalRecordedPath": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/restoration.json",
+      "immutableRawPath": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/restoration.json.raw",
+      "rawSha256": "828b29ed705d7492039fa1c41b241394abbc18cd013fb6588fcc82fe2820c508",
+      "formattedPath": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/restoration.json",
+      "formattedSha256": "4c435758a04bdbf8322b1954d2d7823e01a05f5f166b73c2b77eabe8c7d7fab1",
+      "rawByteEquality": true,
+      "rawByteEqualityScope": "Verified exact copy before formatter derived the reading representation",
+      "parsedDataEquality": true
+    },
+    {
+      "originalRecordedPath": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/screenshot-manifest.json",
+      "immutableRawPath": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/screenshot-manifest.json.raw",
+      "rawSha256": "43504642d9889835d913775a804efe4f917cde50704216af258f5bc7294d900b",
+      "formattedPath": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/screenshot-manifest.json",
+      "formattedSha256": "43504642d9889835d913775a804efe4f917cde50704216af258f5bc7294d900b",
+      "rawByteEquality": true,
+      "rawByteEqualityScope": "Verified exact copy before formatter derived the reading representation",
+      "parsedDataEquality": true
+    }
+  ],
+  "historicalRawByteEqualityMeaning": "Archive-creation comparison is retained historically. Current checkout verification below distinguishes CRLF working bytes from original LF Git blobs.",
+  "currentHistoricalCheckoutVerification": [
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/browser-results.json.raw",
+      "currentCheckoutSha256": "ef74fc3633e00c3f02545fe39f46be27a4a786d2b793ac4479340e68a4e0209e",
+      "recordedOriginalLfSha256": "616828cd09b5848f69292d27231a4f1687a27c93af293d2426c8897232d7a7bd",
+      "currentCheckoutByteEquality": false,
+      "lfNormalizedByteEquality": true,
+      "committedGitBlobOriginalByteEquality": true,
+      "parsedDataEquality": true
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/browser-results-generation1.json.raw",
+      "currentCheckoutSha256": "ef74fc3633e00c3f02545fe39f46be27a4a786d2b793ac4479340e68a4e0209e",
+      "recordedOriginalLfSha256": "616828cd09b5848f69292d27231a4f1687a27c93af293d2426c8897232d7a7bd",
+      "currentCheckoutByteEquality": false,
+      "lfNormalizedByteEquality": true,
+      "committedGitBlobOriginalByteEquality": true,
+      "parsedDataEquality": true
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/browser-results-generation2.json.raw",
+      "currentCheckoutSha256": "52f4782ef1438d8f3dbec67885e17b74a4173aa2cb73734956027c92ac35e96d",
+      "recordedOriginalLfSha256": "0a374820d76c31d337ac1cf18d6ef736c698df2cbaecd85b991072af71ef4035",
+      "currentCheckoutByteEquality": false,
+      "lfNormalizedByteEquality": true,
+      "committedGitBlobOriginalByteEquality": true,
+      "parsedDataEquality": true
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/browser-results-generation3.json.raw",
+      "currentCheckoutSha256": "c9c65d0397488475b3c2d99b5d86548d0e224528796f2c0bf4b16dbfbbf7326b",
+      "recordedOriginalLfSha256": "011c5e29318f5f37391f139c1c1a71c70404a201c446acaebce13b6288b7b398",
+      "currentCheckoutByteEquality": false,
+      "lfNormalizedByteEquality": true,
+      "committedGitBlobOriginalByteEquality": true,
+      "parsedDataEquality": true
     }
   ]
 }

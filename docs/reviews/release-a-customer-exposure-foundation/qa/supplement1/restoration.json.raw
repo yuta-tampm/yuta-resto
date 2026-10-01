@@ -1,0 +1,17 @@
+{
+  "VerifiedOwnedDatabase": true,
+  "SupplementalFixtureRestoredBeforeAfterEqual": true,
+  "OriginalManualStateRestoredBeforeAfterEqual": true,
+  "ComparedGroups": [
+    "feedback_items",
+    "reputation_connectors",
+    "feedback_replies",
+    "feedback_internal_notes",
+    "reputation_audit_events",
+    "tenant_memberships"
+  ],
+  "ProductFormsSubmitted": false,
+  "ProviderOperationsAttempted": false,
+  "QaBrowserContextsClosed": true,
+  "ManualRuntimeKeptAvailable": true
+}

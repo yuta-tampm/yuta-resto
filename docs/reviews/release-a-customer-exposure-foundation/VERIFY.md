@@ -1,6 +1,6 @@
 # Release A customer exposure foundation — technical verification
 
-Status: Technical verification PASS; Browser QA completion pending
+Status: Technical contract verification PASS; Browser QA PASS; final review pending
 
 Visibility: Engineering
 
@@ -12,15 +12,18 @@ TECHNICAL IMPLEMENTATION COMPLIANCE: PASS
 
 VERIFY: PASS
 
-QA: FAIL, separately recorded in [QA_REPORT.md](qa/QA_REPORT.md)
+QA: PASS after independent consolidation, separately recorded in [QA_REPORT.md](qa/QA_REPORT.md)
 
 ## Scope and attribution
 
 CODEX_ONLY, actual current-user selection. Customer-instance A and separate
 internal profile are approved; build and local verification only. Current-user
 bounded accessibility FIX covers A contrast tokens and closed-mobile-menu inert
-without changing grants or business behavior. COMMIT_AFTER_TASK NOT_SELECTED.
-No activation, provider operation, commit, push, main-spec sync or archive.
+without changing grants or business behavior. COMMIT_AFTER_TASK: YES, from the
+current user's explicit request to locally commit the completed QA closeout on
+`main`; the unanswered intake choice remains historical. This commit covers only
+the QA evidence and its mutable task/verification context. Gate 3 remains pending.
+No activation, provider operation, push, main-spec sync or archive is authorized.
 
 Baseline HEAD `2dd5a02ba076a65928e2a80afe0b36d0d10284fd`, branch
 `codex/release-a-customer-exposure-foundation`; no staged paths. The exact
@@ -102,3 +105,43 @@ No Gate3 approval or readiness is recorded. See current Tasks iteration ledger
 and QA report for bounded decisions and screenshot coverage limits.
 
 Final observation: owner-helper verified exact6ee4... container identity before removal; servers21332/13752 stopped, 54329/3101/3102 no longer listen. Persistent containers cloud84e666169d19/POS0d243ec9556b/Display57842b202f19 remain unchanged. Globalformat:checkexit0; final scoped evidence Markdown formatting checked separately. QA budget remains pending, no supplemental execution or Gate3 approval.
+
+## Current authorized supplemental QA closeout
+
+The preceding runtime/QA pending statements describe the generation 3 stop.
+The current user subsequently approved exactly one targeted QA observation.
+On unchanged main `ad97a0f2df5dcce2adc7f8bf48e44a30226d3f61` and the same
+build, it executed `2026-10-01T14:05:10.742Z` to
+`2026-10-01T14:05:32.107Z`: **10 PASS / 0 FAIL / 0 NOT_RUN**, including seven
+behavior cases, two verified setup transitions and exact restoration.
+The original result SHA-256 is
+`b9ed12095917c79f3add4801a1da68435960b106f0ffdda07919689b4e70f682`.
+The four actual OWNER navigation observations resolve the three generation 3
+FAIL findings; settled mobile-menu/scrolled Avis/Users images close the visual
+gaps. Historical results are not rewritten.
+
+Fresh read-only `qa_supplement_evidence_review` inspected all11new PNGs;
+`qa_consolidation_review` approved current Browser QA only after the exact
+manifest closeout and inspected the remaining11generation3images. All185PNG
+hashes, original committed historical LF bytes and parsed reading-copy
+equality were verified. Current **QA: PASS**, task4.4 complete; fullQA3/3 and
+extra1/1 remain consumed. Inherited internal toolbar clipping, incomplete
+Axe rules, OWNER-only supplemental scope and checkout-EOL byte distinctions
+remain explicit. No provider, replay or pending-Save rerun is inferred.
+
+The exact new temporary target and unchanged47runtime-source attribution are
+in `qa/supplement1/preflight.json`. Supplemental populated-fixture restoration
+and the original manual pre-run snapshot comparison across feedback,
+connectors, replies, notes, audits and memberships both passed; safe facts are
+in `qa/supplement1/restoration.json`. QA browser contexts closed, while the
+existing manual local runtime remains available as requested. No secret or
+private snapshot is in retained evidence.
+
+Documentation consistency, architecture and changed-evidence formatting pass;
+full workspace typecheck passed during evaluator preparation on unchanged
+runtime source. Product tests/build were not repeated for the evaluator and
+evidence-only correction. Current global formatting retains the checkout
+LF/CRLF limitation described in the QA report, despite its diagnostic exact-LF
+PASS; no formatter/Git settings were changed. This QA closeout does not supply
+Gate3 or overall task approval, waive that technical/format limitation, commit,
+sync/archive, Product acceptance, lifecycle promotion or deployment authority.

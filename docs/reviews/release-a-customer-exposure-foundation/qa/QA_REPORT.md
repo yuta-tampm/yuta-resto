@@ -1,6 +1,6 @@
 # Release A customer exposure foundation — Browser QA
 
-Status: Current generation 3 FAIL; generations 1–2 failure history retained
+Status: Current consolidated QA PASS; generations 1–3 FAIL retained
 
 Visibility: Engineering
 
@@ -12,29 +12,49 @@ UI_AFFECTING: YES
 
 BROWSER_QA_REQUIRED: YES
 
-QA status: FAIL
+QA status: PASS
 
 Task mode: CODEX_ONLY
 
-COMMIT_AFTER_TASK: NOT_SELECTED
+COMMIT_AFTER_TASK: YES — current user's explicit local QA closeout commit request
 
-HUMAN_PRODUCT_VALIDATION: NOT_REQUESTED
+Commit scope: QA evidence and mutable task/verification context on `main`;
+initial unanswered intake remains historical. Gate 3 is pending; this authority
+does not finalize the whole change or authorize push, sync, archive or deployment.
+
+HUMAN_PRODUCT_VALIDATION: Manual navigation feedback received; no acceptance verdict
 
 ## Current result and retained executions
 
-Current rebuilt-runtime **QA: FAIL**. Generation 3 completed all 103 scenarios
+Current **QA: PASS** is supported by generation 3's unchanged passing
+observations and the single authorized resolving supplement. Fresh independent
+reviewer `qa_consolidation_review` approved Browser QA consolidation after the
+exact manifest closeout; task 4.4 is complete. This approval is specific to the
+approved local exposure behavior and evidence, with the limitations below.
+It does not approve technical/format compliance, Gate 3, Product acceptance,
+provider operations, lifecycle promotion or deployment.
+
+Historical rebuilt-runtime generation 3 **QA: FAIL** completed all 103 scenarios
 with **100 PASS, 3 FAIL and 0 NOT_RUN**. Three OWNER missing-binding guidance
-navigation assertions failed. Current visual evidence also needs the bounded
+navigation assertions failed. At that point, visual evidence also needed the bounded
 targeted observation described below. Passing accessibility/replay facts do not
 override those executed failures or independently approve Gate 3.
 
-| Execution    | Actual result                          | PNGs | Build                                                                                      |
-| ------------ | -------------------------------------- | ---: | ------------------------------------------------------------------------------------------ |
-| Generation 1 | 50 PASS / 14 FAIL / 3 NOT_RUN; QA FAIL |   46 | `Ua4NAe8wBHfuSW6lCYqSp`                                                                    |
-| Generation 2 | 53 PASS / 11 FAIL / 3 NOT_RUN; QA FAIL |   49 | `Ua4NAe8wBHfuSW6lCYqSp`, unchanged pre-fix runtime                                         |
-| Generation 3 | 100 PASS / 3 FAIL / 0 NOT_RUN; QA FAIL |   79 | `dpcEq5-sJWwIz7A8Zi3FU`, bounded A accessibility/toolbar and forwarding-marker corrections |
+The current user subsequently authorized exactly one targeted supplemental
+observation. It completed **10 PASS / 0 FAIL / 0 NOT_RUN** on the unchanged
+build, resolving the three navigation findings and the named mobile visual
+gaps; all 11 new PNGs received independent visual review. Its supplemental
+verdict is **PASS**. Independent consolidation is approved; no historical result,
+Gate 3 approval, Product acceptance or readiness is replaced by that verdict.
 
-All 174 retained PNGs match the screenshot hashes in their original observation
+| Execution               | Actual result                                   | PNGs | Build                                                                                      |
+| ----------------------- | ----------------------------------------------- | ---: | ------------------------------------------------------------------------------------------ |
+| Generation 1            | 50 PASS / 14 FAIL / 3 NOT_RUN; QA FAIL          |   46 | `Ua4NAe8wBHfuSW6lCYqSp`                                                                    |
+| Generation 2            | 53 PASS / 11 FAIL / 3 NOT_RUN; QA FAIL          |   49 | `Ua4NAe8wBHfuSW6lCYqSp`, unchanged pre-fix runtime                                         |
+| Generation 3            | 100 PASS / 3 FAIL / 0 NOT_RUN; QA FAIL          |   79 | `dpcEq5-sJWwIz7A8Zi3FU`, bounded A accessibility/toolbar and forwarding-marker corrections |
+| Authorized supplement 1 | 10 PASS / 0 FAIL / 0 NOT_RUN; supplemental PASS |   11 | `dpcEq5-sJWwIz7A8Zi3FU`, unchanged candidate; seven bounded behavior cases                 |
+
+All 185 retained PNGs match the screenshot hashes in their original observation
 records. Original observation bytes are preserved in immutable `.json.raw`
 copies; the `.json` reading paths were subsequently formatted. The historical
 Users & Access mobile FAIL remains preserved.
@@ -48,15 +68,15 @@ reading representations under the unchanged repository format policy. The
 immutable raw copies are authoritative for original execution bytes and the
 historical hashes below; existing `.json` paths no longer have those raw hashes.
 
-| Original-byte archive                                                                                | Original SHA-256                                                   | Formatted reading copy                                                                       | Current reading SHA-256                                            |
+| Original-byte archive                                                                                | Original LF SHA-256                                                | Formatted reading copy                                                                       | Recorded formatted LF SHA-256                                      |
 | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
 | [browser-results.json.raw](browser-results.json.raw)                                                 | `616828cd09b5848f69292d27231a4f1687a27c93af293d2426c8897232d7a7bd` | [browser-results.json](browser-results.json)                                                 | `f6ffcca0b97054d0fce75e9a4368bb68e50f4b1df2b45f36d83480c0c7c32fe3` |
 | [browser-results-generation1.json.raw](browser-results-generation1.json.raw)                         | `616828cd09b5848f69292d27231a4f1687a27c93af293d2426c8897232d7a7bd` | [browser-results-generation1.json](browser-results-generation1.json)                         | `f6ffcca0b97054d0fce75e9a4368bb68e50f4b1df2b45f36d83480c0c7c32fe3` |
 | [generation2/browser-results-generation2.json.raw](generation2/browser-results-generation2.json.raw) | `0a374820d76c31d337ac1cf18d6ef736c698df2cbaecd85b991072af71ef4035` | [generation2/browser-results-generation2.json](generation2/browser-results-generation2.json) | `db94f3289b2d9b9f4860387f0523a763dcea40a216fa7f8546820bdf5d603588` |
 | [generation3/browser-results-generation3.json.raw](generation3/browser-results-generation3.json.raw) | `011c5e29318f5f37391f139c1c1a71c70404a201c446acaebce13b6288b7b398` | [generation3/browser-results-generation3.json](generation3/browser-results-generation3.json) | `3d76981de5a053e53ef226caa4af266a8e1827e0bf0dd90365d508456f0a65c0` |
 
-All four records report `rawByteEquality: true` and `parsedDataEquality: true`.
-This evidence author rehashed all eight files and independently confirmed
+At original archive creation, all four records reported `rawByteEquality: true` and `parsedDataEquality: true`.
+The evidence author then rehashed all eight files and independently confirmed
 parsed data equality. No original FAIL bytes, scenario outcome or screenshot
 was lost. Formatting is a derived reading representation; it creates no new
 QA execution, outcome, budget, approval or gate decision. Frozen planning
@@ -343,7 +363,11 @@ Its screenshots are retained under `generation2/`; no original observation
 byte or generation 1 PNG was lost. Original JSON bytes are now in the raw
 archives; formatted reading copies are identified above. Historical Users & Access mobile FAIL remains preserved.
 
-## Generation 3 — current rebuilt candidate
+## Generation 3 — retained failed execution on the current build
+
+This section records the generation 3 execution and stop. Its FAIL and pending
+assessments remain historical; subsequent preparation, authorization and actual
+supplemental observations are recorded below without changing these results.
 
 Source: [generation3/browser-results-generation3.json.raw](generation3/browser-results-generation3.json.raw),
 SHA-256 `011c5e29318f5f37391f139c1c1a71c70404a201c446acaebce13b6288b7b398`.
@@ -492,3 +516,136 @@ Required provider/readiness/activation decisions and fresh independent Gate 3
 review remain separate. No commit, sync, archive or gate approval is supplied.
 Historical Users & Access mobile FAIL remains preserved even though the current
 geometry and Axe observations pass.
+
+### Historical preparation of the navigation evaluator correction
+
+The following preparation record predates the Human budget exception and
+supplement execution. Its pending statements describe that point in time.
+
+The current user reported that they could reach `/parametres/integrations`
+during the manual handoff. This is Human feedback about that attempt, not an
+automated rerun or confirmation of all three viewport/source scenarios.
+
+The ignored local `setup-cases.mjs` now registers a ten-second wait for the
+exact localhost A origin and `/parametres/integrations` before clicking the
+OWNER setup link. Previously, it clicked, settled the currently rendered page
+and immediately compared the URL. Destination headings, missing-binding
+recovery content, unavailable provider actions and all existing assertions
+remain required. No fixed delay or weakened assertion was introduced.
+
+The prepared `targeted-cases.mjs` uses the same paired navigation wait. It also
+stops subsequent cases when the parent scenario recorder returns a failed
+result; its existing `finally` blocks still require exact fixture restoration
+and viewport cleanup. The existing supplement covers four OWNER setup
+navigations, a settled mobile menu, scrolled Avis search and lower Users
+controls. It does not run the full harness or submit product forms.
+
+| Ignored local evaluator | Before SHA-256                                                     | Prepared SHA-256                                                   |
+| ----------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| `setup-cases.mjs`       | `49b2f5a2c6785bae70b219d6829ae01e69e7f937ce5c6bb68b178534a0db4ab3` | `16b97ad4f10febc040d29d5f67e7c889b353b52a15be14fffb8007bcbf5bfbbf` |
+| `targeted-cases.mjs`    | `45183fb6f407d79b81516608d51bdab9664935275d819c421d3aca66178cf842` | `c8acdaa997f936a310bbf57ab7103cfa24f8aaccf1e1bef23c5324df8d2d7bdd` |
+
+Both prepared modules passed `node --check`; this is syntax validation only.
+No browser, scenario or supplement evidence was executed or created by that
+check. Main remains at `ad97a0f2df5dcce2adc7f8bf48e44a30226d3f61`, with
+unchanged product source and built candidate. Fresh read-only reviewer
+`qa_wait_correction_review` approved preparation only against the exact hashes
+above; the parent rechecked both identities after that verdict. This is not
+runtime preflight, QA or Gate 3 approval. The current-Human exception for exactly
+one supplemental observation remains pending. Before an authorized run, the disposable fixture controller
+must be rebound to the new exact owned target and the populated baseline
+verified; its historical container constants must never be reused. Historical
+FAIL evidence, the exhausted counters and current **QA: FAIL** remain intact.
+
+Preparation validation: documentation consistency and architecture checks
+passed; full workspace typecheck passed. The initial full format check failed
+on 89 files after Windows checkout converted committed LF into CRLF. The
+parent temporarily restored 94 task-commit paths only where normalizing CRLF
+was exactly equal to the committed blob, verified exact byte equality and
+observed a successful full format check in that LF representation. Git status
+then reported representation-only modifications, despite an empty source
+diff, so the original checkout representation was restored through Git's
+existing filters. Main now has only the two intended evidence-document
+modifications. No canonical source content or Git settings were changed.
+Current global formatting retains that checkout-EOL limitation; the two
+changed documents pass the scoped format check. Product tests and build were
+not repeated for this evaluator/documentation-only correction; their prior
+evidence remains separate from any new browser claim.
+
+### Executed Human-authorized supplement 1
+
+Authority: actual current-user reply `đồng ý 1 lượt QA` to the concrete request
+for exactly one observation of four OWNER Today/Avis desktop/mobile setup
+navigations plus the three missing mobile visual cases, stopping subsequent
+cases on the first FAIL and always restoring the verified fixture. Original
+full-execution budget remains 3/3; supplemental exception is now **1/1 used**.
+No automatic retry or full generation 4 is authorized.
+
+Actual execution: `2026-10-01T14:05:10.742Z` to
+`2026-10-01T14:05:32.107Z`, Chrome headless, same build
+`dpcEq5-sJWwIz7A8Zi3FU`, main HEAD
+`ad97a0f2df5dcce2adc7f8bf48e44a30226d3f61`. The exact new disposable target
+and unchanged source attribution are recorded in `supplement1/preflight.json`.
+This run performed seven behavior cases, two verified synthetic setup
+transitions and one exact fixture restoration: **10 PASS, 0 FAIL, 0 NOT_RUN**,
+11 new screenshots. Original raw result SHA-256 is
+`b9ed12095917c79f3add4801a1da68435960b106f0ffdda07919689b4e70f682`.
+
+| Current observed case          | Result / evidence                                                                                                      |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| OWNER desktop Today setup link | PASS; exact-origin/path navigation wait completed, actual Integrations/support recovery, before/after PNGs 01–02       |
+| OWNER desktop Avis setup link  | PASS; same destination/content checks, before/after PNGs 03–04                                                         |
+| OWNER mobile Today setup link  | PASS; same actual interaction/destination checks, PNGs 05–06; source CTA is below the before PNG viewport              |
+| OWNER mobile Avis setup link   | PASS; same destination/content checks, before/after PNGs 07–08                                                         |
+| Mobile Today menu              | PASS; drawer left0/width320, five unclipped links, Enter/Escape/inert and twelve closed-menu Tab checks; settled PNG09 |
+| Mobile Avis search             | PASS; focused search input and Chercher wholly visible, no submission; PNG10                                           |
+| Mobile Users lower controls    | PASS; last persisted member's Rôle/Statut/Enregistrer wholly visible, no submission; PNG11                             |
+
+All eleven accessibility observations have no reported violations. Populated
+Avis retains incomplete `aria-prohibited-attr`; this is not a WCAG certification.
+All eleven recorded geometry observations have no horizontal overflow.
+The A OWNER session recorded no console errors/warnings, page errors,
+hydration errors or attempted external requests. This OWNER-only supplement
+did not repeat MANAGER/STAFF coverage, internal action replay, pending Saves
+or the full harness. Shared raw-report replay/pending boilerplate describes
+the general harness and must not be read as fresh observations of those cases.
+Some lower empty-state content is outside these images; actual setup-link
+interaction and destination assertions passed.
+
+The supplement verified exact populated-fixture restoration. The root then
+restored the original manual zero-Google/missing-binding state and compared
+byte-identical canonical scoped snapshots for feedback, connectors, replies,
+internal notes, Reputation audits and memberships. Both comparisons passed;
+no product form or provider operation was submitted. QA browser contexts were
+closed, while the existing manual local runtime remains available as requested.
+Safe restoration evidence is `supplement1/restoration.json`; private synthetic
+snapshots and credentials are not stored in this report.
+
+Fresh independent reviewer `qa_supplement_evidence_review` inspected all 11 PNGs,
+verified their hashes/dimensions and the exact raw result, and returned
+**Supplemental QA: PASS** for the seven authorized behavior cases. The parent
+rechecked evidence identities before recording this result. Generation 3's
+three FAIL entries remain intact and now have separate resolving observations;
+historical Users & Access FAIL also remains. Fresh independent
+`qa_consolidation_review` approved current Browser QA consolidation after the
+manifest closeout. No Gate 3 decision or lifecycle promotion is supplied.
+
+Consolidation reviewer `qa_consolidation_review` additionally inspected the
+eleven generation 3 PNGs omitted from the earlier 68-image review:
+37–42, 44, 46 and 49–51. Thus all 79 generation 3 images now have recorded
+independent inspection, alongside all eleven supplemental images. Internal
+toolbar clipping visible in generation 2 PNG49 and generation 3 PNG51 is an
+inherited internal limitation: the baseline/current Git comparison preserves
+the internal grid tracks. It is not an A regression or authority to repair
+the internal UI in this task. No additional mandatory A observation gap was
+identified. The Markdown manifest now explicitly records every supplemental
+repository-relative path, viewport, OWNER role, observed state, scenario and
+SHA-256, matching the exact JSON manifest. Original raw evidence identities
+were rechecked before recording current QA PASS.
+
+Historical execution-byte qualification: the current Windows checkout has
+CRLF in the old raw files. Removing only CR from CRLF reproduces their recorded
+original LF hashes exactly. Recorded archive-creation equality is historical;
+it is not a claim that today's checked-out CRLF bytes have the original LF
+hashes. The representation record preserves this distinction and no original
+observation or failure is overwritten.
