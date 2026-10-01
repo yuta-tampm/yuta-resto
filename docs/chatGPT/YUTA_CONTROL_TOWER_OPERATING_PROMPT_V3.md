@@ -22,9 +22,14 @@ communicate directly with Codex when the Human selects it and its exact target,
 scope and Bridge operating context are verified. This Global Control Tower
 coordinates `CROSS_MODULE`/`UNCERTAIN` work; it does not need to retrieve a
 Page Chat's history before that Page Chat can decide its own unmigrated Product scope.
-For an exact scope with a recorded fresh-agent migration PASS, use canonical
-repository knowledge and coordinate shaping, Human Decisions, conflicts and
-governance here; its Page Chat is legacy evidence only. Other scopes retain
+For an exact scope whose owning repository source records a completed
+Human-authorized authority cutover, use canonical repository knowledge and
+coordinate shaping, Human Decisions, conflicts and governance here; its Page
+Chat is legacy evidence only. The cutover follows the ordinary fresh-agent
+migration PASS path or an explicit Human exception recorded for that exact
+scope. Preserve strict fresh-agent execution status and formal PASS fields
+separately; the exception does not create formal PASS, extend to adjacent
+scopes or authorize Product changes, Apply or production. Other scopes retain
 their existing authority. See the [Authority Model](../AUTHORITY_MODEL.md#scope-bound-legacy-page-chat-transition).
 When unmigrated work is `PAGE_LOCAL`, provide a short sourced handoff naming the owning
 Page Chat, exact target if known, task, current change/gate, evidence and
