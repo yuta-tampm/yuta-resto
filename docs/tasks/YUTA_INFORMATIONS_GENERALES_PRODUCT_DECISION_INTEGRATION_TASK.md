@@ -121,6 +121,7 @@ Chưa design workflow chi tiết.
 Không promote các phần sau thành current approved behavior:
 
 ### Company/legal data
+
 - raison sociale
 - forme juridique
 - SIREN/SIRET
@@ -133,7 +134,9 @@ Ownership giữa Organization / Establishment / employer/legal configuration /
 Formalités vẫn `NEEDS REVIEW`.
 
 ### Automatic knowledge detection from other modules
+
 Ví dụ:
+
 - reviews
 - comments
 - corrections
@@ -142,21 +145,27 @@ Ví dụ:
 Để future phase / separate Product Decision.
 
 ### History / provenance lifecycle
+
 Chưa approve detailed history, retention, source metadata hoặc audit model.
 
 ### Marketing / Facebook / Instagram consumption
+
 Future integration, chưa approve contract/owner.
 
 ### Social-profile links ownership
+
 Vẫn `NEEDS REVIEW`.
 
 ### AI/provider implementation
+
 Không approve provider, prompt, embeddings, vector DB, storage, jobs, model, API.
 
 ### Detailed permissions
+
 Chưa approve roles/permission matrix cho Restaurant Knowledge.
 
 ### Detailed data model / fields
+
 Chưa approve schema, required fields, enums, limits, validations.
 
 ---
@@ -210,6 +219,7 @@ Update tối thiểu khi cần:
 - `docs/MODULE_REGISTRY.md`
 
 Mục tiêu:
+
 - route tới page home;
 - add Restaurant Knowledge capability row nếu registry convention yêu cầu;
 - lifecycle phải phản ánh đúng evidence.
@@ -270,6 +280,7 @@ Không bắt đầu implementation spec cho Restaurant Knowledge cho đến khi 
 ### Pilot recommendation
 
 Sau integration, đánh giá lại xem pilot nên:
+
 - dùng một bounded enhancement của existing Establishment Profile; hoặc
 - chờ resolve Restaurant Knowledge blockers rồi pilot capability mới.
 
@@ -282,6 +293,7 @@ Không tạo OpenSpec change trong task này.
 Product-discussion source không được trở thành canonical authority bằng vị trí file.
 
 Sau integration:
+
 - giữ nó như source/provenance nếu repository policy cho phép;
 - hoặc archive theo documentation policy;
 - không delete nếu chưa có safe-delete authority.

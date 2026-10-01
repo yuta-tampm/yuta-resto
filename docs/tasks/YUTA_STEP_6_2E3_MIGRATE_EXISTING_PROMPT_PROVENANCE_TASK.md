@@ -97,11 +97,13 @@ Mỗi prompt phải dùng một trong:
 Chỉ dùng khi source/revision được chứng minh rõ.
 
 Ví dụ:
+
 - generator history/commit chứng minh prompt copy từ canonical template revision X;
 - Git history chứng minh exact historical canonical body;
 - source path/revision/hash xác minh được.
 
 Yêu cầu:
+
 - template source path hợp lệ;
 - template revision cụ thể;
 - template SHA-256 cụ thể;
@@ -110,6 +112,7 @@ Yêu cầu:
 ## `PARTIAL`
 
 Dùng khi:
+
 - biết historical source/cohort tương đối rõ;
 - nhưng thiếu một phần evidence như exact commit/revision;
 - hoặc source path historical đã thay đổi nhưng lineage đủ mạnh.
@@ -119,6 +122,7 @@ Không đoán missing data.
 ## `NEEDS_REVIEW`
 
 Dùng khi:
+
 - không chứng minh được source;
 - divergent prompt không rõ intentional hay stale;
 - exact historical template/revision không xác định được;
@@ -168,6 +172,7 @@ Không dùng `PRE_SEAL` chỉ vì prompt khác canonical hiện tại.
 Phải có evidence.
 
 Nếu khác nhưng không rõ vì sao:
+
 - `NEEDS_REVIEW`;
 - không giả định modification state.
 
@@ -255,11 +260,12 @@ Report phải gồm:
 ## Per-pack table
 
 | Pack | Root template revision | PROVEN | PARTIAL | NEEDS_REVIEW | Notes |
-|---|---|---:|---:|---:|---|
+| ---- | ---------------------- | -----: | ------: | -----------: | ----- |
 
 ## Unresolved provenance
 
 Liệt kê rõ:
+
 - pack;
 - phase;
 - snapshot hash;
@@ -269,6 +275,7 @@ Liệt kê rõ:
 ## Integrity confirmation
 
 Xác nhận:
+
 - 108 prompt bodies unchanged;
 - no prompt regenerated;
 - no snapshot auto-repaired.
@@ -284,10 +291,12 @@ Cuối file:
 19 byte-identical copies vẫn giữ nguyên.
 
 Sau migration:
+
 - proven snapshots sẽ được reclassify ở E4;
 - unresolved copies vẫn giữ `NEEDS REVIEW`.
 
 Không:
+
 - merge;
 - delete;
 - replace with reference;

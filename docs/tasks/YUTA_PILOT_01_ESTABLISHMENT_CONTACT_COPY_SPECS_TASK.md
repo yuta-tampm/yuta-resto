@@ -36,6 +36,7 @@ Xác nhận analysis conclusion vẫn là:
 `READY_FOR_SPECS`
 
 Nếu không:
+
 - dừng;
 - không tạo specs.
 
@@ -125,6 +126,7 @@ Tối thiểu có scenarios cho:
 8. Read-only user cannot trigger mutating copy behavior
 
 Nếu một scenario không thể viết chính xác từ approved behavior/current authority:
+
 - ghi blocker;
 - dừng trước khi inventing.
 
@@ -144,9 +146,11 @@ Mỗi requirement:
 
 ```md
 ### Requirement: ...
+
 The system SHALL ...
 
 #### Scenario: ...
+
 - **WHEN** ...
 - **THEN** ...
 ```
@@ -154,6 +158,7 @@ The system SHALL ...
 Giữ requirement observable/testable.
 
 Không đưa vào spec:
+
 - React implementation
 - component names
 - state-hook details
@@ -175,10 +180,12 @@ openspec validate establishment-copy-primary-contact-to-public --strict
 hoặc local 1.11.0 equivalent nếu exact syntax khác.
 
 Ngoài ra chạy:
+
 - targeted formatting
 - docs/spec checks nếu relevant
 
 Nếu validation fail:
+
 - sửa spec;
 - không đi tiếp design.
 
@@ -210,6 +217,7 @@ Cuối file:
 ## 8. Không được làm
 
 Không:
+
 - tạo `design.md`
 - tạo `tasks.md`
 - apply code

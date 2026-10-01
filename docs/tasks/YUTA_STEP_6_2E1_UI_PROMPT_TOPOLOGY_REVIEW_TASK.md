@@ -31,10 +31,11 @@ Không sửa OpenSpec.
 8. `scripts/ui-pack-tooling.mjs`
 9. tests của UI pack tooling nếu có
 10. một số page pack đại diện có prompt duplicate:
-   - Formalités
-   - Registre du personnel
-   - POS Printing
-   - POS Catalog
+
+- Formalités
+- Registre du personnel
+- POS Printing
+- POS Catalog
 
 Dùng kết quả exact-duplicate groups từ Cleanup Audit để đối chiếu.
 
@@ -53,6 +54,7 @@ Không sửa file nào khác.
 Mỗi page pack tiếp tục giữ đủ 6 prompt riêng.
 
 Đánh giá:
+
 - provenance;
 - reproducibility;
 - duplication;
@@ -67,6 +69,7 @@ Page pack không giữ prompt copy; chỉ reference tới:
 `docs/ui/templates/page/prompts/`
 
 Đánh giá:
+
 - giảm duplication;
 - nguy cơ mất historical snapshot;
 - template đổi về sau có làm khó hiểu pack cũ không;
@@ -75,12 +78,14 @@ Page pack không giữ prompt copy; chỉ reference tới:
 ## Option C — Generated immutable snapshots
 
 Canonical template là nguồn để tạo pack mới, nhưng khi tạo pack:
+
 - tooling copy/generate snapshot vào pack;
 - snapshot được coi là immutable historical input;
 - duplicate là intentional;
 - tooling có thể ghi template version/hash.
 
 Đánh giá:
+
 - provenance;
 - reproducibility;
 - duplication;
@@ -94,6 +99,7 @@ Page pack reference canonical template,
 chỉ lưu local override/delta khi cần.
 
 Đánh giá:
+
 - complexity;
 - readability;
 - provenance;
@@ -105,6 +111,7 @@ chỉ lưu local override/delta khi cần.
 ## 1. Executive summary
 
 Trả lời:
+
 - current topology đang hoạt động thế nào;
 - duplicate prompts có phải lỗi hay intentional structure;
 - recommendation chính:
@@ -117,6 +124,7 @@ Trả lời:
 ## 2. Current tooling contract
 
 Tóm tắt chính xác:
+
 - page pack hiện phải có bao nhiêu prompt;
 - filenames nào bắt buộc;
 - tooling validate gì;
@@ -134,6 +142,7 @@ Bảng:
 |---|---:|---|---|---|
 
 Phân biệt:
+
 - byte-identical nhưng intentional;
 - stale divergent copy;
 - accidental duplicate.
@@ -145,6 +154,7 @@ Bảng:
 |---|---|---|---|---|
 
 Tối thiểu:
+
 - provenance
 - historical reproducibility
 - agent readability
@@ -158,6 +168,7 @@ Tối thiểu:
 ## 5. Recommended model
 
 Chọn một mô hình và giải thích:
+
 - canonical source nằm ở đâu;
 - page pack giữ gì;
 - historical prompt version bảo toàn thế nào;
@@ -171,9 +182,10 @@ Chọn một mô hình và giải thích:
 Nếu recommendation cần đổi topology:
 
 | Area | Required change | Risk |
-|---|---|---|
+| ---- | --------------- | ---- |
 
 Tối thiểu:
+
 - `PAGE_PACK_PROTOCOL.md`
 - `UI_PACK_TOOLING_SPEC.md`
 - `scripts/ui-pack-tooling.mjs`
@@ -187,6 +199,7 @@ Không thực thi.
 ## 7. Existing page-pack treatment
 
 Đề xuất cách xử lý 19 duplicate prompt copies:
+
 - KEEP
 - MARK AS SNAPSHOT
 - REGENERATE
@@ -203,6 +216,7 @@ nói rõ các file duplicate hiện tại có thể trở thành intentional his
 ## 8. Version / provenance strategy
 
 Nếu recommendation dùng snapshot/template versioning, đề xuất metadata tối thiểu:
+
 - template source path
 - template version
 - template hash
@@ -214,6 +228,7 @@ Không thiết kế schema phức tạp nếu không cần.
 ## 9. Execution plan proposal
 
 Đề xuất các bước tiếp theo dựa trên recommendation, ví dụ:
+
 - Step E2: update protocol/spec/tooling
 - Step E3: migrate existing packs
 - Step E4: validate and cleanup duplicates
@@ -234,6 +249,7 @@ Cuối file:
 6. Run targeted Markdown formatting/checks nếu phù hợp.
 
 Report:
+
 - recommendation;
 - current tooling contract;
 - duplicate interpretation;

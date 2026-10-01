@@ -53,6 +53,7 @@ Không sửa file nào khác.
 # 1. `docs/README.md`
 
 Mục tiêu:
+
 - bỏ hoặc sửa universal authority order (thứ tự ưu tiên nguồn duy nhất) nếu còn tồn tại;
 - route người đọc tới `docs/AUTHORITY_MODEL.md` để xác định authority theo loại câu hỏi;
 - route tới `docs/PRODUCT_KNOWLEDGE.md` và `docs/MODULE_REGISTRY.md` như entry points hiện hành;
@@ -68,6 +69,7 @@ README chỉ nên chỉ đường.
 # 2. `docs/PRODUCT_KNOWLEDGE.md`
 
 Mục tiêu:
+
 - bỏ các wording kiểu `Proposed canonical` đối với các Product Knowledge Homes đã APPROVED;
 - bỏ cảnh báo nói repo chưa có Authority Model/Lifecycle/Registry nếu chúng đã được approve;
 - cập nhật routing tới:
@@ -79,6 +81,7 @@ Mục tiêu:
 - nếu header/status của file vẫn là proposed nhưng nội dung hiện đã đủ để trở thành current routing layer, chỉ đổi status khi evidence và repo convention cho phép.
 
 Nếu chưa đủ authority để tự đổi status:
+
 - giữ status hiện tại;
 - report `NEEDS REVIEW`.
 
@@ -89,6 +92,7 @@ Không tự invent Product Decision.
 # 3. `docs/ui/pages/README.md`
 
 Mục tiêu:
+
 - sửa chỉ các stale current summaries / backlog wording đã được Cleanup Audit chỉ ra;
 - đảm bảo Formalités, POS Printing, POS Catalog/Combos summary phản ánh current individual page-pack state;
 - không nâng page-pack evidence thành Product Intent authority;
@@ -104,6 +108,7 @@ Giữ vai trò của file là UI page-pack index/routing layer.
 # Không được làm
 
 Không:
+
 - sửa `CURRENT_STATE.md`;
 - sửa `KNOWLEDGE_AUDIT.md`;
 - archive task files;
@@ -139,6 +144,7 @@ Sau khi sửa:
 # Báo cáo cuối
 
 Report:
+
 - 3 file đã sửa;
 - wording cũ -> wording mới;
 - routing changes;

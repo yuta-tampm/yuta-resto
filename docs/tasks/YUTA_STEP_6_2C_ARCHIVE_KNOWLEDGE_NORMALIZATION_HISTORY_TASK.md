@@ -9,6 +9,7 @@ khi cần.
 Đây là cleanup có kiểm soát, KHÔNG phải delete.
 
 Chiến lược:
+
 - dùng archive trong repository;
 - archive không phải current authority;
 - current agents không đọc archive mặc định;
@@ -48,6 +49,7 @@ và:
 `docs/archive/knowledge-normalization/`
 
 Mục tiêu:
+
 - giữ lịch sử Knowledge Normalization 2026-08;
 - không làm archive thành source of truth mới.
 
@@ -90,6 +92,7 @@ Expected completed task files include:
 Use actual filenames present in the repository.
 
 Do NOT archive:
+
 - `docs/tasks/TASK_TEMPLATE.md`
 - the currently active Step 6 task(s)
 - any unfinished/review-pending task
@@ -108,6 +111,7 @@ The README must clearly state:
 Archive content is historical/provenance only.
 
 It is NOT:
+
 - current Product Knowledge;
 - current architecture authority;
 - current lifecycle authority;
@@ -127,6 +131,7 @@ Agents should normally start from:
 ### Reading rule
 
 Archive content should be opened only when:
+
 - investigating historical decisions/process;
 - tracing provenance;
 - comparing old and current behavior;
@@ -182,6 +187,7 @@ Rules:
 - do not add archive links everywhere.
 
 Likely files to inspect:
+
 - `docs/README.md`
 - `docs/PRODUCT_KNOWLEDGE.md`
 - `docs/DOCUMENTATION_CLEANUP_AUDIT.md`
@@ -195,6 +201,7 @@ Do not rewrite unrelated content.
 ## 4. `docs/tasks/` after cleanup
 
 After moving completed normalization tasks, `docs/tasks/` should retain only:
+
 - reusable/current task template;
 - active/incomplete Step 6 tasks;
 - other genuinely active task instructions.
@@ -242,11 +249,12 @@ After the move:
 8. Confirm no code changed.
 9. Confirm no OpenSpec file changed.
 10. Run:
-   - `pnpm docs:check`
-   - `pnpm architecture:check`
-   - targeted Prettier
-   - Markdown link check
-   - `git diff --check`
+
+- `pnpm docs:check`
+- `pnpm architecture:check`
+- targeted Prettier
+- Markdown link check
+- `git diff --check`
 
 ---
 
@@ -262,6 +270,7 @@ Report:
 - validation results.
 
 Do not:
+
 - delete archived history;
 - slim anything else;
 - modify Product Specs;

@@ -30,6 +30,7 @@ Không sửa OpenSpec.
 8. `docs/CURRENT_STATE.md`
 
 Sau đó đọc các Product Knowledge Homes đã APPROVED:
+
 - `docs/features/personnel/README.md`
 - `docs/features/today/README.md`
 - `docs/features/establishment/README.md`
@@ -38,6 +39,7 @@ Sau đó đọc các Product Knowledge Homes đã APPROVED:
 - `docs/products/display/README.md`
 
 Đọc thêm khi cần:
+
 - public booking feature docs
 - reputation feature docs
 - POS product docs
@@ -59,9 +61,11 @@ Không sửa bất kỳ file nào khác.
 Không đề xuất archive/delete toàn file.
 
 Vai trò sau slimming:
+
 > Repository-wide current-state summary + routing layer.
 
 Nó KHÔNG phải:
+
 - Product Knowledge Home;
 - architecture authority;
 - lifecycle registry;
@@ -74,6 +78,7 @@ Nó KHÔNG phải:
 Mỗi section/khối nội dung trong CURRENT_STATE hiện tại phải được phân loại.
 
 Nếu nội dung bị bỏ khỏi CURRENT_STATE sau này, plan phải chỉ rõ:
+
 - nội dung đó đã tồn tại ở source nào khác;
 - hoặc sẽ được giữ ở đâu;
 - hoặc là chronology có thể phục hồi bằng Git history;
@@ -84,6 +89,7 @@ Không được chỉ ghi “remove because old”.
 ### 3. Không dùng Product Knowledge Home để xóa bằng chứng lịch sử
 
 Product Knowledge Home thay vai trò **entry point hiện hành**, không tự động thay thế:
+
 - accepted decision;
 - page-pack implementation evidence;
 - QA evidence;
@@ -93,6 +99,7 @@ Product Knowledge Home thay vai trò **entry point hiện hành**, không tự �
 ### 4. Không đổi lifecycle trong bước này
 
 Không tự thay:
+
 - Product Decision;
 - Implementation;
 - Environment;
@@ -100,6 +107,7 @@ Không tự thay:
 - External Dependency.
 
 Nếu CURRENT_STATE có status khác Module Registry:
+
 - ghi `REPLACE WITH ROUTING TO MODULE_REGISTRY`
 - hoặc `NEEDS REVIEW`
 - không tự sửa status ở plan.
@@ -111,6 +119,7 @@ Nếu CURRENT_STATE có status khác Module Registry:
 Mô tả vai trò mong muốn của CURRENT_STATE sau slimming.
 
 Nên hướng tới:
+
 - ngắn;
 - cross-product;
 - current;
@@ -134,6 +143,7 @@ Bảng:
 |---|---|---|---|---|---|
 
 Allowed actions:
+
 - `KEEP`
 - `ROUTE`
 - `CONDENSE`
@@ -155,6 +165,7 @@ Bảng:
 |---|---|---|
 
 Tối thiểu:
+
 - Personnel
 - Today
 - Establishment
@@ -168,6 +179,7 @@ Tối thiểu:
 ### 6. UI chronology map
 
 Tìm các phần:
+
 - Phase
 - Wave
 - F03–F08
@@ -179,16 +191,19 @@ Bảng:
 |---|---|---|---|
 
 Nếu chronology đã có trong page pack:
+
 - đề xuất `HISTORICAL` khỏi CURRENT_STATE;
 - route tới page-pack README.
 
 Nếu có unique info:
+
 - `NEEDS REVIEW`;
 - không loại bỏ.
 
 ### 7. Production/readiness map
 
 Tìm statements về:
+
 - production-ready;
 - blocked;
 - provider;
@@ -198,6 +213,7 @@ Tìm statements về:
 - external approvals.
 
 Phân loại:
+
 - giữ summary nếu cross-product;
 - route chi tiết tới `PRODUCTION_READINESS.md`;
 - không giữ status duplicated nếu Module Registry/Readiness đã là authority.
@@ -205,6 +221,7 @@ Phân loại:
 ### 8. Planned / prototype surface map
 
 Liệt kê các module currently:
+
 - planned;
 - placeholder;
 - fixture prototype;
@@ -213,6 +230,7 @@ Liệt kê các module currently:
 Đối chiếu với Module Registry.
 
 Plan phải chỉ rõ cách CURRENT_STATE sau slimming nên mô tả chúng mà không:
+
 - gọi prototype là implemented;
 - gọi planned là Product Decision;
 - duplicate lifecycle table.
@@ -220,6 +238,7 @@ Plan phải chỉ rõ cách CURRENT_STATE sau slimming nên mô tả chúng mà 
 ### 9. Historical destination strategy for CURRENT_STATE-only chronology
 
 Nếu có chronology unique mà không có source khác, đề xuất một trong:
+
 - preserve selected milestone in slim summary;
 - move later to `docs/archive/current-state-history/...`;
 - rely on Git history ONLY if Documentation Cleanup archive policy later approves.
@@ -233,6 +252,7 @@ Bảng:
 |---|---|---|
 
 Tối thiểu xem xét:
+
 - mất unique decision;
 - mất implementation provenance;
 - làm sai lifecycle;
@@ -245,12 +265,15 @@ Tối thiểu xem xét:
 Liệt kê chính xác:
 
 #### Files allowed to modify
+
 Khuyến nghị chỉ:
+
 - `docs/CURRENT_STATE.md`
 
 Nếu plan thật sự cần update một index/link khác, ghi riêng và giải thích.
 
 #### Files explicitly protected
+
 - Product Knowledge Homes
 - MODULE_REGISTRY
 - AUTHORITY_MODEL
@@ -263,6 +286,7 @@ Nếu plan thật sự cần update một index/link khác, ghi riêng và giả
 - OpenSpec
 
 #### Expected validation
+
 - docs check
 - link check
 - targeted format
@@ -279,12 +303,15 @@ Cuối file:
 Status: READY | READY WITH REVIEW | NOT READY
 
 ### Safe sections to slim
+
 - ...
 
 ### Sections requiring review
+
 - ...
 
 ### Blocking questions
+
 - ...
 ```
 
@@ -308,6 +335,7 @@ Sau khi tạo plan:
 7. Run targeted Markdown formatting nếu phù hợp.
 
 Report:
+
 - plan file created;
 - major sections to KEEP/ROUTE/CONDENSE/HISTORICAL;
 - unique-information risks;

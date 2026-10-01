@@ -19,6 +19,7 @@ Không verify/sync/archive.
 ## 1. Đọc trước
 
 Đọc:
+
 - `proposal.md`
 - `analysis.md`
 - `specs/establishment-profile/spec.md`
@@ -41,6 +42,7 @@ explicit save hiện tại
 ```
 
 Phải giữ:
+
 - draft-only copy;
 - non-empty source mới overwrite destination;
 - empty/null source giữ destination hiện tại;
@@ -53,32 +55,40 @@ Phải giữ:
 ## 3. Các quyết định design cần chốt
 
 ### UI placement
+
 Chọn vị trí hợp lý trong contact/public-contact area dựa trên current page structure.
 Không redesign cả page.
 
 ### Form-state update
+
 Xác định nơi phù hợp nhất để thực hiện one-time draft copy.
 Ưu tiên reuse current form state/update pattern.
 Không đưa logic này xuống persistence/server nếu không cần.
 
 ### Empty/null handling
+
 Implement đúng spec:
 `source non-empty → copy`
 `source empty/null → preserve destination`
 
 ### Dirty state
+
 Xác định copy action tương tác thế nào với existing dirty-state calculation.
 Không tạo mechanism mới nếu comparison logic hiện tại đã đủ.
 
 ### Read-only behavior
+
 Dựa trên current editable/read-only structure.
 Không tạo permission mới.
 
 ### Accessibility
+
 Control phải có accessible name và keyboard/touch interaction phù hợp.
 
 ### Tests
+
 Xác định test layers tối thiểu:
+
 - form/model logic nếu phù hợp;
 - component/UI behavior nếu repo convention hỗ trợ;
 - permission/read-only coverage;
@@ -89,6 +99,7 @@ Không chọn test framework mới.
 ## 4. Không được làm
 
 Không:
+
 - sửa specs
 - đổi Product behavior
 - tạo API mới nếu không cần
@@ -100,6 +111,7 @@ Không:
 - code implementation
 
 Nếu technical discovery cho thấy spec sai hoặc không khả thi:
+
 - dừng;
 - report blocker;
 - quay lại analysis/specs;
@@ -116,6 +128,7 @@ Và report:
 `docs/PILOT_01_ESTABLISHMENT_CONTACT_COPY_DESIGN_REPORT.md`
 
 Report gồm:
+
 1. chosen implementation approach
 2. UI placement decision
 3. form-state strategy

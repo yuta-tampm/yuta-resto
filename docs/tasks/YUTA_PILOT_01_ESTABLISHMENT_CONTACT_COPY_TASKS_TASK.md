@@ -38,6 +38,7 @@ Tasks phải đủ nhỏ để Codex apply tuần tự và verify được.
 Tối thiểu phải cover:
 
 ### A. Pure copy helper
+
 - thêm pure helper trong general-information model;
 - non-empty phone -> publicPhone;
 - empty/null phone -> preserve publicPhone;
@@ -46,12 +47,14 @@ Tối thiểu phải cover:
 - preserve unrelated fields.
 
 ### B. Form integration
+
 - `GeneralInformationForm` sở hữu callback one-time copy;
 - dùng functional draft update;
 - truyền callback xuống `PublicInformationSection`;
 - không gọi persistence/server action.
 
 ### C. UI control
+
 - thêm shared `Button`;
 - `type="button"`;
 - visible accessible French label;
@@ -60,6 +63,7 @@ Tối thiểu phải cover:
 - không redesign page.
 
 ### D. Tests
+
 - mở rộng model tests cho full copy matrix;
 - test overwrite/preserve/no-op/unrelated fields;
 - test no ongoing linkage;
@@ -68,7 +72,9 @@ Tối thiểu phải cover:
 - giữ existing permission tests làm regression.
 
 ### E. Verification
+
 Task cuối phải chạy các targeted checks phù hợp:
+
 - relevant Vitest tests;
 - typecheck;
 - formatting;
@@ -91,6 +97,7 @@ Dùng checkbox format chuẩn OpenSpec, ví dụ:
 Group task theo implementation order hợp lý.
 
 Mỗi task phải:
+
 - có outcome rõ;
 - tránh trùng lặp;
 - đủ cụ thể để apply;
@@ -115,6 +122,7 @@ Tasks không được:
 - update Product Knowledge.
 
 Nếu design không đủ để chia task mà không đoán:
+
 - dừng;
 - report blocker;
 - không invent task.
@@ -152,6 +160,7 @@ Cuối report:
 ## 6. Không được làm
 
 Không:
+
 - modify product code
 - mark tasks complete
 - run apply

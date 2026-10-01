@@ -73,7 +73,7 @@
     "ui:pack:new": "node ./scripts/create-ui-pack.mjs",
     "ui:pack:check": "node ./scripts/check-ui-pack.mjs",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "node scripts/check-format-preservation.mjs && prettier --check ."
   },
   "devDependencies": {
     "prettier": "^3.8.4",

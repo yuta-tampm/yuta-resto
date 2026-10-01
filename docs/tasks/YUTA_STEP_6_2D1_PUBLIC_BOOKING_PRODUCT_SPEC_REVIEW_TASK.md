@@ -48,18 +48,23 @@ Không sửa file nào khác.
 Phân loại nội dung của `PRODUCT_SPEC.md` thành:
 
 ### `KEEP_CURRENT_INTENT`
+
 Vẫn là Product Intent hiện hành và unique.
 
 ### `ROUTE_TO_CURRENT_SOURCE`
+
 Nội dung vẫn đúng nhưng đã có source current/cụ thể hơn.
 
 ### `SUPERSEDED_ARCHITECTURE`
+
 Chi tiết kỹ thuật/architecture đã bị accepted ADR/current architecture thay thế.
 
 ### `HISTORICAL_CONTEXT`
+
 Không còn current authority nhưng có giá trị lịch sử/provenance.
 
 ### `NEEDS_REVIEW`
+
 Chưa đủ authority để quyết định.
 
 Không dùng `DELETE` trong review này.
@@ -69,6 +74,7 @@ Không dùng `DELETE` trong review này.
 ## Nội dung bắt buộc của review
 
 ### 1. Executive summary
+
 - vai trò hiện tại của PRODUCT_SPEC;
 - có còn unique Product Intent không;
 - mức độ architecture superseded;
@@ -79,7 +85,7 @@ Không dùng `DELETE` trong review này.
 Bảng:
 
 | PRODUCT_SPEC section | Current role | Classification | Current source / destination | Confidence |
-|---|---|---|---|---|
+| -------------------- | ------------ | -------------- | ---------------------------- | ---------- |
 
 ### 3. Unique Product Intent map
 
@@ -88,7 +94,7 @@ Liệt kê requirement/product intent vẫn unique trong PRODUCT_SPEC.
 Bảng:
 
 | Intent / requirement group | Still current? | Already represented elsewhere? | Recommended home |
-|---|---|---|---|
+| -------------------------- | -------------- | ------------------------------ | ---------------- |
 
 Không copy dài nội dung spec.
 
@@ -97,9 +103,10 @@ Không copy dài nội dung spec.
 Bảng:
 
 | Technical/architecture topic | Why superseded | Current authority |
-|---|---|---|
+| ---------------------------- | -------------- | ----------------- |
 
 Ưu tiên:
+
 - runtime ownership
 - public booking app boundary
 - persistence ownership
@@ -110,6 +117,7 @@ Bảng:
 ### 5. Current-vs-future separation
 
 Chỉ ra phần nào:
+
 - implemented bounded scope;
 - approved future intent;
 - proposed/unresolved;
@@ -122,20 +130,26 @@ Không tự đổi lifecycle status.
 Chọn một recommendation:
 
 #### Option A — UPDATE IN PLACE
+
 Giữ PRODUCT_SPEC nhưng:
+
 - bỏ/simplify superseded architecture;
 - giữ durable Product Intent;
 - thêm routing tới current architecture/spec sources.
 
 #### Option B — SPLIT
+
 Tách:
+
 - current/durable Product Intent;
 - historical architecture/provenance.
 
 #### Option C — KEEP AS-IS
+
 Chỉ khi file đã rõ ràng và không gây agent confusion.
 
 #### Option D — NEEDS REVIEW
+
 Nếu chưa đủ authority.
 
 Phải giải thích.
@@ -143,6 +157,7 @@ Phải giải thích.
 ### 7. OpenSpec future role
 
 Ghi ngắn:
+
 - khi OpenSpec normative, behavioral requirements cụ thể nên chuyển sang approved specs;
 - PRODUCT_SPEC có thể giữ broader product intent/non-goals/context;
 - OpenSpec không tự supersede accepted decisions.
@@ -150,6 +165,7 @@ Ghi ngắn:
 ### 8. Proposed execution scope
 
 Nếu recommendation là UPDATE/SPLIT:
+
 - file nào được sửa ở bước sau;
 - phần nào protected;
 - link nào phải update;

@@ -75,13 +75,16 @@ Tạo `proposal.md` theo schema instruction.
 Proposal phải giữ scope hẹp:
 
 ### Why
+
 Giảm việc nhập lặp lại khi public phone/email giống primary phone/email.
 
 ### What Changes
+
 Thêm một explicit UI action để copy current primary contact values sang các
 public contact fields tương ứng trong form.
 
 ### Capability
+
 Chỉ capability hiện có:
 
 `Establishment Profile`
@@ -89,12 +92,15 @@ Chỉ capability hiện có:
 Không tạo capability Restaurant Knowledge mới.
 
 ### Impact
+
 Chỉ ghi high-level impact sau khi đọc code hiện tại:
+
 - page/form contact section;
 - validation/form state;
 - tests nếu relevant.
 
 ### Non-goals
+
 Proposal phải ghi rõ:
 
 - không tạo DB field mới;
@@ -117,13 +123,16 @@ Tạo `analysis.md` theo custom YUTA analysis template.
 Bắt buộc kiểm tra:
 
 ### Product / authority
+
 - feature có nằm hoàn toàn trong approved Establishment Profile boundary không;
 - primary/public contact ownership hiện tại;
 - current permissions;
 - relevant ADR boundaries.
 
 ### Current implementation
+
 Xác minh:
+
 - exact current primary phone/email fields;
 - exact current public phone/email fields;
 - current edit/save behavior;
@@ -135,17 +144,22 @@ Xác minh:
 Không suy từ screenshot nếu code/contracts có authority cao hơn cho Implemented State.
 
 ### Runtime / data / security
+
 Xác nhận:
+
 - không cần ownership mới;
 - không cần persistence shape mới nếu evidence support;
 - existing server-derived tenant/permission boundary giữ nguyên;
 - action không bypass permission/save validation.
 
 ### UI applicability
+
 Route tới current page pack và UI governance.
 
 ### Conflicts / unknowns
+
 Nếu phát hiện:
+
 - equivalent behavior đã tồn tại;
 - field semantics khác proposal;
 - public contacts không editable như proposal giả định;
@@ -161,19 +175,24 @@ thì ghi `CONFLICT` hoặc `NEEDS REVIEW`.
 Chỉ dùng một trong:
 
 ### `READY_FOR_SPECS`
+
 Nếu behavior proposal hợp lệ và có thể viết precise specs không cần đoán.
 
 ### `BLOCKED_NEEDS_REVIEW`
+
 Nếu có Product/authority/field-semantics blocker.
 
 ### `NO_SPEC_BEHAVIOR_CHANGE`
+
 Nếu current implementation đã có behavior tương đương đầy đủ.
 
 Nếu kết luận không phải `READY_FOR_SPECS`:
+
 - dừng;
 - không tạo specs/design/tasks.
 
 Nếu `READY_FOR_SPECS`:
+
 - vẫn dừng ở review gate;
 - chưa tạo specs.
 

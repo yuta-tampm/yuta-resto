@@ -198,5 +198,3 @@ section khác.
   external-provider data hoặc nội dung từ section khác tồn tại
 - **THEN** hệ thống SHALL NOT tự động dùng nguồn đó để tạo hoặc thay đổi canonical
   « Cuisine & savoir-faire » values
-
-

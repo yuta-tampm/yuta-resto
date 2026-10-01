@@ -337,32 +337,32 @@ La conversation a nommé les champs / informations suivants.
 
 ### 6.1. Informations d’établissement discutées
 
-| Champ / information | Signification | Required / Optional | Editable / Read-only | Public / Internal / Administrative | Validation / règle |
-|---|---|---|---|---|---|
-| Nom commercial | Nom utilisé commercialement | NEEDS REVIEW | NEEDS REVIEW | NEEDS REVIEW | NEEDS REVIEW |
-| Nom de l’établissement | Identification de l’établissement | NEEDS REVIEW | NEEDS REVIEW | NEEDS REVIEW | NEEDS REVIEW |
-| Logo | Identité visuelle de l’établissement | NEEDS REVIEW | NEEDS REVIEW | Public envisagé | NEEDS REVIEW |
-| Adresse | Adresse de l’établissement | NEEDS REVIEW | NEEDS REVIEW | NEEDS REVIEW | NEEDS REVIEW |
-| Téléphone | Coordonnée du restaurant | NEEDS REVIEW | NEEDS REVIEW | Public possible | NEEDS REVIEW |
-| Email | Coordonnée du restaurant | NEEDS REVIEW | NEEDS REVIEW | Public possible | NEEDS REVIEW |
-| Site internet | Site du restaurant | NEEDS REVIEW | NEEDS REVIEW | Public possible | NEEDS REVIEW |
-| Réseaux sociaux principaux | Liens / présence sociale | NEEDS REVIEW | NEEDS REVIEW | Public possible | NEEDS REVIEW |
-| Description du restaurant | Présentation générale | NEEDS REVIEW | Editable envisagé | Public possible | NEEDS REVIEW |
-| Langue(s) utilisée(s) | Langue(s) du restaurant / communication | NEEDS REVIEW | NEEDS REVIEW | NEEDS REVIEW | NEEDS REVIEW |
-| Informations de contact public | Coordonnées destinées au public | NEEDS REVIEW | NEEDS REVIEW | Public | NEEDS REVIEW |
-| Type de service | Type de fonctionnement / service | NEEDS REVIEW | NEEDS REVIEW | NEEDS REVIEW | **NEEDS REVIEW** : ownership non confirmé dans le périmètre final |
+| Champ / information            | Signification                           | Required / Optional | Editable / Read-only | Public / Internal / Administrative | Validation / règle                                                |
+| ------------------------------ | --------------------------------------- | ------------------- | -------------------- | ---------------------------------- | ----------------------------------------------------------------- |
+| Nom commercial                 | Nom utilisé commercialement             | NEEDS REVIEW        | NEEDS REVIEW         | NEEDS REVIEW                       | NEEDS REVIEW                                                      |
+| Nom de l’établissement         | Identification de l’établissement       | NEEDS REVIEW        | NEEDS REVIEW         | NEEDS REVIEW                       | NEEDS REVIEW                                                      |
+| Logo                           | Identité visuelle de l’établissement    | NEEDS REVIEW        | NEEDS REVIEW         | Public envisagé                    | NEEDS REVIEW                                                      |
+| Adresse                        | Adresse de l’établissement              | NEEDS REVIEW        | NEEDS REVIEW         | NEEDS REVIEW                       | NEEDS REVIEW                                                      |
+| Téléphone                      | Coordonnée du restaurant                | NEEDS REVIEW        | NEEDS REVIEW         | Public possible                    | NEEDS REVIEW                                                      |
+| Email                          | Coordonnée du restaurant                | NEEDS REVIEW        | NEEDS REVIEW         | Public possible                    | NEEDS REVIEW                                                      |
+| Site internet                  | Site du restaurant                      | NEEDS REVIEW        | NEEDS REVIEW         | Public possible                    | NEEDS REVIEW                                                      |
+| Réseaux sociaux principaux     | Liens / présence sociale                | NEEDS REVIEW        | NEEDS REVIEW         | Public possible                    | NEEDS REVIEW                                                      |
+| Description du restaurant      | Présentation générale                   | NEEDS REVIEW        | Editable envisagé    | Public possible                    | NEEDS REVIEW                                                      |
+| Langue(s) utilisée(s)          | Langue(s) du restaurant / communication | NEEDS REVIEW        | NEEDS REVIEW         | NEEDS REVIEW                       | NEEDS REVIEW                                                      |
+| Informations de contact public | Coordonnées destinées au public         | NEEDS REVIEW        | NEEDS REVIEW         | Public                             | NEEDS REVIEW                                                      |
+| Type de service                | Type de fonctionnement / service        | NEEDS REVIEW        | NEEDS REVIEW         | NEEDS REVIEW                       | **NEEDS REVIEW** : ownership non confirmé dans le périmètre final |
 
 ### 6.2. Informations d’entreprise discutées
 
-| Champ / information | Signification | Required / Optional | Editable / Read-only | Public / Internal / Administrative | Validation / règle |
-|---|---|---|---|---|---|
-| Raison sociale | Identité légale de l’entreprise | NEEDS REVIEW | NEEDS REVIEW | Administrative | NEEDS REVIEW |
-| Forme juridique | Forme légale de l’entreprise | NEEDS REVIEW | NEEDS REVIEW | Administrative | NEEDS REVIEW |
-| SIREN / SIRET | Identifiants de l’entreprise / établissement | NEEDS REVIEW | NEEDS REVIEW | Administrative | NEEDS REVIEW |
-| TVA intracommunautaire | Identifiant TVA | NEEDS REVIEW | NEEDS REVIEW | Administrative | NEEDS REVIEW |
-| Adresse du siège | Adresse légale de l’entreprise | NEEDS REVIEW | NEEDS REVIEW | Administrative | NEEDS REVIEW |
-| Représentant légal | Personne représentant légalement l’entreprise | NEEDS REVIEW | NEEDS REVIEW | Administrative | NEEDS REVIEW |
-| Coordonnées administratives | Coordonnées servant à l’administration | NEEDS REVIEW | NEEDS REVIEW | Administrative | NEEDS REVIEW |
+| Champ / information         | Signification                                 | Required / Optional | Editable / Read-only | Public / Internal / Administrative | Validation / règle |
+| --------------------------- | --------------------------------------------- | ------------------- | -------------------- | ---------------------------------- | ------------------ |
+| Raison sociale              | Identité légale de l’entreprise               | NEEDS REVIEW        | NEEDS REVIEW         | Administrative                     | NEEDS REVIEW       |
+| Forme juridique             | Forme légale de l’entreprise                  | NEEDS REVIEW        | NEEDS REVIEW         | Administrative                     | NEEDS REVIEW       |
+| SIREN / SIRET               | Identifiants de l’entreprise / établissement  | NEEDS REVIEW        | NEEDS REVIEW         | Administrative                     | NEEDS REVIEW       |
+| TVA intracommunautaire      | Identifiant TVA                               | NEEDS REVIEW        | NEEDS REVIEW         | Administrative                     | NEEDS REVIEW       |
+| Adresse du siège            | Adresse légale de l’entreprise                | NEEDS REVIEW        | NEEDS REVIEW         | Administrative                     | NEEDS REVIEW       |
+| Représentant légal          | Personne représentant légalement l’entreprise | NEEDS REVIEW        | NEEDS REVIEW         | Administrative                     | NEEDS REVIEW       |
+| Coordonnées administratives | Coordonnées servant à l’administration        | NEEDS REVIEW        | NEEDS REVIEW         | Administrative                     | NEEDS REVIEW       |
 
 ### 6.3. Informations de connaissance discutées
 

@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-09-04
+Last updated: 2026-10-01
 
 1. Read root and nearest nested `AGENTS.md`.
 2. Read `docs/README.md`, `docs/CURRENT_STATE.md`, and relevant current docs.
@@ -128,6 +128,24 @@ links, Booking architecture aliases, and instruction-file consistency.
 `format:check` covers Prettier-managed repository files; generated Next.js
 declarations, Drizzle metadata, the generated POS service worker, and the pnpm
 lockfile are excluded through `.prettierignore`.
+
+The current user's 2026-10-01 decision authorizes a bounded quick formatting
+gate: `scripts/check-format-preservation.mjs` verifies 67 explicitly listed
+snapshot paths before Prettier runs. The same exact paths are excluded from
+Prettier writes and checks. These include generated skills, historical review
+and archive records, two active planning artifacts, canonical decision JSON,
+and the Pointage generated snapshot. The guard accepts only their recorded raw
+Git-object or checkout hashes and the reviewed exclusion policy; missing or
+changed artifacts and changed exclusions fail. The registration is scoped to
+these snapshots, not permanent immutability inferred from incidental hash
+references. An intentional revision requires separate owner review and an
+explicit update to the corresponding preservation binding.
+
+This formatter-plus-preservation gate is separate from acceptance of
+`repository-format-policy-and-baseline-remediation`. It does not certify
+generated reproducibility, V-LOCK, or the full alternate-validation contract.
+That change and its blocked work remain blocked; historical failures, approvals,
+and parent task states are preserved.
 
 Dependabot currently monitors GitHub Actions only. npm/pnpm version updates stay
 manual until GitHub Dependabot supports the repository's pnpm 11 lockfile.

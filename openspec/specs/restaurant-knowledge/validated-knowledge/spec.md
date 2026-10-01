@@ -243,4 +243,3 @@ Capability SHALL NOT tạo shared contract, downstream consumer, publishing, aut
 
 - **WHEN** capability vận hành trong Cloud/Backoffice scope ban đầu
 - **THEN** POS, Site Agent và Display SHALL không phải là dependency, persistence owner, synchronization target hoặc consumer bắt buộc
-

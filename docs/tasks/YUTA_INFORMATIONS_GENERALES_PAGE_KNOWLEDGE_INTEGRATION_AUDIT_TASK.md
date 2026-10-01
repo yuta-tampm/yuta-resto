@@ -84,6 +84,7 @@ Kiểm tra Booking, Reputation / Direct Feedback, Personnel, Today, Public Websi
 ### G. AI knowledge suggestions
 
 Đánh giá:
+
 - learn something to YUTA
 - infer potential knowledge from replies/corrections
 - human validation
@@ -110,7 +111,7 @@ Một trong:
 ### Reconciliation matrix
 
 | Source section / claim | Classification | Current authority/evidence | Recommended treatment |
-|---|---|---|---|
+| ---------------------- | -------------- | -------------------------- | --------------------- |
 
 ### Confirmed current page context
 

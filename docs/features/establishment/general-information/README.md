@@ -275,9 +275,9 @@ capability. It must not duplicate:
 
 The two capability rows are intentionally independent.
 
-| Capability            | Product Decision | Implementation | Environment   | Production Readiness | External Dependency | Review Marker                                                                                                                                                                                                           |
-| --------------------- | ---------------- | -------------- | ------------- | -------------------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Establishment Profile | `APPROVED`       | `IMPLEMENTED`  | `UNVERIFIED`  | `NOT_READY`          | `NOT_ASSESSED`      | `OK`                                                                                                                                                                                                                    |
+| Capability            | Product Decision | Implementation | Environment   | Production Readiness | External Dependency | Review Marker                                                                                                                                                                                                                                         |
+| --------------------- | ---------------- | -------------- | ------------- | -------------------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Establishment Profile | `APPROVED`       | `IMPLEMENTED`  | `UNVERIFIED`  | `NOT_READY`          | `NOT_ASSESSED`      | `OK`                                                                                                                                                                                                                                                  |
 | Restaurant Knowledge  | `APPROVED`       | `PARTIAL`      | `NOT_ENABLED` | `NOT_ASSESSED`       | `NOT_ASSESSED`      | `OK` for the implemented Concept/Histoire, Cuisine/savoir-faire, Expérience client, Équipe & culture, Identité de communication and Connaissances validées capabilities; other knowledge families and every excluded integration remain unimplemented |
 
 Approval of Restaurant Knowledge does not prove implementation, environment
@@ -380,19 +380,19 @@ does not authorize any excluded knowledge family, consumer or integration.
 
 ## 10. Source map
 
-| Question                                    | Read this source                                                                    |
-| ------------------------------------------- | ----------------------------------------------------------------------------------- |
-| What makes the page composed?               | ADR-007 and this page home.                                                         |
-| What owns the existing profile?             | ADR-006 and the Establishment Product Knowledge home.                               |
-| What lifecycle values apply?                | `docs/MODULE_REGISTRY.md` and `docs/LIFECYCLE_STATUS_MODEL.md`.                     |
-| How is trusted cloud scope enforced?        | `docs/architecture/TENANCY.md` and Identity / Access Product Knowledge.             |
-| What does the current profile UI implement? | `docs/ui/pages/establishment-general-information/README.md` and tracked code/tests. |
-| What Restaurant Knowledge behavior is normative? | `openspec/specs/authorization/restaurant-knowledge/` and the six current specifications under `openspec/specs/restaurant-knowledge/`. |
-| What Restaurant Knowledge shape is implemented? | `packages/db-cloud/src/schema/restaurant-knowledge.ts`, `packages/db-cloud/src/restaurant-knowledge-repository.ts`, the route-local loaders/actions/forms, and focused tests. |
-| What verification evidence exists?          | Current review packets under `docs/reviews/restaurant-knowledge-*`; historical failures remain provenance and do not override later PASS evidence. |
-| Is the capability production-ready?         | `docs/MODULE_REGISTRY.md` and `docs/operations/PRODUCTION_READINESS.md`; repository workflow completion does not establish deployment or readiness. |
-| How are conflicts handled?                  | `docs/AUTHORITY_MODEL.md`.                                                          |
-| What was reconciled before approval?        | `docs/INFORMATIONS_GENERALES_PAGE_KNOWLEDGE_INTEGRATION_REVIEW.md`.                 |
+| Question                                         | Read this source                                                                                                                                                              |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| What makes the page composed?                    | ADR-007 and this page home.                                                                                                                                                   |
+| What owns the existing profile?                  | ADR-006 and the Establishment Product Knowledge home.                                                                                                                         |
+| What lifecycle values apply?                     | `docs/MODULE_REGISTRY.md` and `docs/LIFECYCLE_STATUS_MODEL.md`.                                                                                                               |
+| How is trusted cloud scope enforced?             | `docs/architecture/TENANCY.md` and Identity / Access Product Knowledge.                                                                                                       |
+| What does the current profile UI implement?      | `docs/ui/pages/establishment-general-information/README.md` and tracked code/tests.                                                                                           |
+| What Restaurant Knowledge behavior is normative? | `openspec/specs/authorization/restaurant-knowledge/` and the six current specifications under `openspec/specs/restaurant-knowledge/`.                                         |
+| What Restaurant Knowledge shape is implemented?  | `packages/db-cloud/src/schema/restaurant-knowledge.ts`, `packages/db-cloud/src/restaurant-knowledge-repository.ts`, the route-local loaders/actions/forms, and focused tests. |
+| What verification evidence exists?               | Current review packets under `docs/reviews/restaurant-knowledge-*`; historical failures remain provenance and do not override later PASS evidence.                            |
+| Is the capability production-ready?              | `docs/MODULE_REGISTRY.md` and `docs/operations/PRODUCTION_READINESS.md`; repository workflow completion does not establish deployment or readiness.                           |
+| How are conflicts handled?                       | `docs/AUTHORITY_MODEL.md`.                                                                                                                                                    |
+| What was reconciled before approval?             | `docs/INFORMATIONS_GENERALES_PAGE_KNOWLEDGE_INTEGRATION_REVIEW.md`.                                                                                                           |
 
 ## 11. Knowledge migration control
 
@@ -442,7 +442,7 @@ excluded sources, possible future consumers, or unresolved contracts.
   Product change and Human review boundary.
 - **Visibility and publication:** Restaurant Knowledge is permission-gated on
   the authenticated page. No per-slice or per-item `Public / Interne /
-  Administratif` field, public projection, publication right or synchronization
+Administratif` field, public projection, publication right or synchronization
   contract is approved. Establishment Profile visibility controls do not apply
   to Restaurant Knowledge.
 - **Consumers:** repository search finds only the current Backoffice page as a
@@ -477,16 +477,16 @@ projections remain proposed or unresolved as recorded below.
 These eight decision packets remain open. They are not authorization to create
 an OpenSpec change or implementation.
 
-| ID | Decision required | An agent must not infer |
-| -- | ----------------- | ----------------------- |
-| `RK-01` | Which correction, review, document, usage, external or direct-entry sources may create candidate knowledge? | That any current module may feed Restaurant Knowledge automatically. |
-| `RK-02` | What candidate states, storage, review, promotion, rejection and failure behavior apply? | A candidate queue, automatic promotion or current implementation. |
-| `RK-03` | What provenance, attribution, revision, retention, deletion, stale-review and restore model applies? | A source enum, history table, expiry rule or audit UI. |
-| `RK-04` | What `Public / Interne / Administratif` classification, public projection and publication rights apply per family or item? | That current knowledge is public, uniformly internal or has a visibility field. |
-| `RK-05` | Which consumer may read which minimized projection, for what purpose and under which authorization? | Access for Reputation, Marketing, Website, assistants, agents or another module. |
-| `RK-06` | Whether AI is used and, if so, which provider, prompt/retrieval boundary, privacy/security controls and Human review contract apply? | Embeddings, vector storage, RAG, inference, document/review ingestion or AI-use permission. |
-| `RK-07` | Which additional families, fields, validation, governance operations or permission tiers enter a future scope? | Fields from tenant examples, mockups, future consumers or unapproved categories. |
-| `RK-08` | What evidence and accountable approvals establish environment enablement, consumer readiness, production readiness, deployment and production authorization? | Production status from repository completion, QA, archive or local runtime evidence. |
+| ID      | Decision required                                                                                                                                            | An agent must not infer                                                                     |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| `RK-01` | Which correction, review, document, usage, external or direct-entry sources may create candidate knowledge?                                                  | That any current module may feed Restaurant Knowledge automatically.                        |
+| `RK-02` | What candidate states, storage, review, promotion, rejection and failure behavior apply?                                                                     | A candidate queue, automatic promotion or current implementation.                           |
+| `RK-03` | What provenance, attribution, revision, retention, deletion, stale-review and restore model applies?                                                         | A source enum, history table, expiry rule or audit UI.                                      |
+| `RK-04` | What `Public / Interne / Administratif` classification, public projection and publication rights apply per family or item?                                   | That current knowledge is public, uniformly internal or has a visibility field.             |
+| `RK-05` | Which consumer may read which minimized projection, for what purpose and under which authorization?                                                          | Access for Reputation, Marketing, Website, assistants, agents or another module.            |
+| `RK-06` | Whether AI is used and, if so, which provider, prompt/retrieval boundary, privacy/security controls and Human review contract apply?                         | Embeddings, vector storage, RAG, inference, document/review ingestion or AI-use permission. |
+| `RK-07` | Which additional families, fields, validation, governance operations or permission tiers enter a future scope?                                               | Fields from tenant examples, mockups, future consumers or unapproved categories.            |
+| `RK-08` | What evidence and accountable approvals establish environment enablement, consumer readiness, production readiness, deployment and production authorization? | Production status from repository completion, QA, archive or local runtime evidence.        |
 
 ### Historical evidence and authority state
 

@@ -75,7 +75,7 @@ Xác nhận current entry points:
 Tạo bảng:
 
 | Question type | Current entry point | Deeper authority |
-|---|---|---|
+| ------------- | ------------------- | ---------------- |
 
 Không invent authority mới.
 
@@ -115,6 +115,7 @@ Search current non-archive docs cho:
 Không tự sửa.
 
 Mọi finding phải phân loại:
+
 - `NONE`
 - `UPDATE NEEDED`
 - `NEEDS REVIEW`
@@ -134,7 +135,7 @@ Xác nhận:
 Tạo bảng:
 
 | Area | Result | Notes |
-|---|---|---|
+| ---- | ------ | ----- |
 
 ---
 
@@ -159,6 +160,7 @@ report, không sửa.
 ## Public Booking
 
 Xác nhận:
+
 - broader Product Intent được giữ;
 - future phases không bị hiểu là individually approved/implemented;
 - technical authority route sang ADR/schema/contracts/code;
@@ -167,6 +169,7 @@ Xác nhận:
 ## POS
 
 Xác nhận:
+
 - local-first != browser-offline;
 - cloud/POS data boundary rõ;
 - non-fiscal boundary rõ;
@@ -196,9 +199,10 @@ Xác nhận policy hiện hành:
 Đọc `DOCUMENTATION_CLEANUP_AUDIT.md` hiện tại và tạo final counts:
 
 | Classification | Count | Notes |
-|---|---:|---|
+| -------------- | ----: | ----- |
 
 Xác nhận:
+
 - có còn `DELETE` candidate không;
 - có còn `MERGE` candidate không;
 - `NEEDS REVIEW` còn là gì;
@@ -213,7 +217,7 @@ Không re-audit toàn repo nếu không cần; dùng current audit + spot verifi
 Tạo một bảng tập trung:
 
 | Area | Why unresolved | Current source | Next decision/reviewer | Blocks OpenSpec setup? |
-|---|---|---|---|---|
+| ---- | -------------- | -------------- | ---------------------- | ---------------------- |
 
 Tối thiểu kiểm tra:
 
@@ -236,6 +240,7 @@ Tối thiểu kiểm tra:
 không phải mọi `NEEDS REVIEW` đều block OpenSpec.
 
 Phân biệt:
+
 - `BLOCKS OPENSPEC CUSTOMIZATION`
 - `DOES NOT BLOCK`
 - `BLOCKS ONLY RELATED FEATURE`
