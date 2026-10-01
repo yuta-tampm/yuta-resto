@@ -16,6 +16,13 @@ QA validates user-facing and runtime behavior after technical VERIFY. It does
 not replace Specs/Design verification, Product authority, deployment evidence,
 or Production Readiness.
 
+Task collaboration follows
+[the canonical mode/delegation policy](YUTA_AUTOMATED_CHANGE_WORKFLOW.md#task-collaboration-and-delegated-review).
+Optional Human participation changes who reviews routine gates, not required
+QA, Browser QA or observation criteria. `HUMAN_PRODUCT_VALIDATION:
+NOT_REQUESTED` records optional participation only; it is never a QA status,
+PASS, or a waiver of required Human/provider/legal evidence.
+
 ```text
 VERIFY: repository implementation matches approved Specs/Design
 QA: applicable behavior works in the target user/runtime context

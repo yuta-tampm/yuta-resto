@@ -10,9 +10,20 @@ This document is the repository representation of operating instructions for **e
 
 ## Mode, role, scope, and authority
 
+This protocol applies only when a task selects `CT_BRIDGE` or `HUMAN_CT_BRIDGE` and separately
+selects federation under its existing exact authority contract. It is not a
+mandatory task coordinator. Codex owns repository discovery, shaping and
+coordination in every collaboration mode; its executor role below describes
+the federation transaction only. Routine project gates follow
+[the collaboration/delegated-review policy](../YUTA_AUTOMATED_CHANGE_WORKFLOW.md#task-collaboration-and-delegated-review),
+not CT approval. Live selection, transfer, recovery and activation still require
+their existing actual Human authority chain and live evidence. This policy
+update changes no recorded activation, T18/T19 result, pending Q01–Q35 QA,
+runtime helper or authority proof.
+
 An execution context begins in `BRIDGE_V1`. `FEDERATED` requires an explicit current-user or reviewed workflow selection tied to one `EXECUTION_CONTEXT_ID`, one Windows host, one canonical local NTFS checkout, and an approved scope. The context ID is a unique uppercase token, not a `RUN_ID`.
 
-`CONTROL_TOWER_ROLE` is `PAGE_CONTROL_TOWER` or `GLOBAL_CONTROL_TOWER`. A Page tower is scoped to one owning Page Chat and `PAGE_LOCAL`; that Page Chat continues to own Product/shaping intent. A Global tower coordinates `CROSS_MODULE`, `UNCERTAIN`, cross-page, shared, and foundation work under YUTA Workflow v3. Neither tower role grants Product decisions, Human Gate approval, new side-effect authority, or a recovery-budget reset. Codex is the executor and evidence collector only.
+`CONTROL_TOWER_ROLE` is `PAGE_CONTROL_TOWER` or `GLOBAL_CONTROL_TOWER`. A Page tower is scoped to one owning Page Chat and `PAGE_LOCAL`; that Page Chat continues to own Product/shaping intent. A Global tower coordinates `CROSS_MODULE`, `UNCERTAIN`, cross-page, shared, and foundation work under YUTA Workflow v3. Neither tower role grants Product decisions, Human Gate approval, new side-effect authority, or a recovery-budget reset. Within the federation transaction Codex executes and collects evidence; it remains the project coordinator under the selected collaboration mode.
 
 The logical `TOWER_ID` is the structured tuple `(CONTROL_TOWER_ROLE, CONTROL_TOWER_SCOPE, OWNING_PAGE_CHAT_ID | NONE)`. `CONTROL_TOWER_INSTANCE` is an exact ChatGPT conversation ID within the selected Project. The runtime tower identity adds exact Project and instance IDs to the logical tuple. A title is checked before sending but cannot identify or authorize a tower by itself. Exact visible title, Project ID, URL, and conversation ID must match before **every** future browser send. Wrong or uncertain identity means no send.
 
@@ -58,7 +69,7 @@ The existing Bridge v1 `YUTA_BRIDGE_HANDSHAKE`, `YUTA_CODEX_COMMAND`, and `YUTA_
 
 `PAGE_CONTEXT_INTAKE` records `AVAILABLE`, `PARTIAL`, `UNKNOWN`, or `NOT_APPLICABLE` with the owning Page Chat ID, source, question scope, completeness, and gaps. Direct cross-chat retrieval is optional and cannot be assumed reliable. A Human-authorized read-only handoff may carry Page Product/shaping context; it does not transfer Page authority or authorize implementation. `UNKNOWN` does not prove that no prior requirement exists. Repository evidence is authoritative for current implemented state; discrepancies with Page Product intent are reported, not resolved by assumption.
 
-Human selects exact tower conversations and decides all applicable Human Gates on reviewed artifact bytes/scope. A live-context update and one fresh read-only protocol round are needed per target before its live mode can be called verified. A role label, handoff, activation record, or protocol result never self-approves a gate. The Phase 2 local foundation did not itself activate a tower; the later Human-authorized Global tower selection and live round are recorded in `04m`.
+Human selects exact tower conversations and decides all actual Human Gates on reviewed artifact bytes/scope. Routine delegated project gates use the canonical independent-review procedure; it grants no federation activation authority. A live-context update and one fresh read-only protocol round are needed per target before its live mode can be called verified. A role label, handoff, activation record, or protocol result never self-approves a gate. The Phase 2 local foundation did not itself activate a tower; the later Human-authorized Global tower selection and live round are recorded in `04m`.
 
 ## Privacy, limits, and future acceptance
 

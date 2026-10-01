@@ -30,7 +30,7 @@ the owning feature/product home -> relevant decisions, normative specs and UI
 knowledge -> code, schemas and tests. Product Intent and Implemented State remain
 separate. The [scope-bound Page Chat transition](AUTHORITY_MODEL.md#scope-bound-legacy-page-chat-transition)
 does not retire an unmigrated Page Chat; [Workflow v3](YUTA_WORKFLOW_V3.md#legacy-page-knowledge-migration--separate-governance-maintenance)
-defines the fresh-agent PASS cutover.
+defines fresh-agent PASS and exact recorded Human-exception cutovers.
 
 Completed plans, audits, migration checkpoints, implementation reports, and
 task history are not current product or architecture authority.
@@ -61,7 +61,7 @@ sensitive details never belong in the repository.
 
 - [`PRODUCT_RELEASE_ROADMAP.md`](PRODUCT_RELEASE_ROADMAP.md) — proposed single
   owner for release sequence, customer journey and exposure policy; awaiting
-  Human / Control Tower review, with no release or runtime authorization.
+  owning Human review, with optional CT advice and no release or runtime authorization.
 - [`release-roadmap-foundation` discovery handoff](reviews/release-roadmap-foundation/discovery-handoff.md)
   — evidence, unresolved decisions and exact next review step; no active
   OpenSpec change has been created.
@@ -185,6 +185,7 @@ They are provenance, not current workflow instructions.
 - [`decisions/ADR-005-today-operational-steering.md`](decisions/ADR-005-today-operational-steering.md)
 - [`decisions/ADR-006-cloud-establishment-profile-context.md`](decisions/ADR-006-cloud-establishment-profile-context.md)
 - [`decisions/ADR-007-composed-general-information-and-restaurant-knowledge.md`](decisions/ADR-007-composed-general-information-and-restaurant-knowledge.md)
+- [`decisions/ADR-008-task-collaboration-and-delegated-review.md`](decisions/ADR-008-task-collaboration-and-delegated-review.md)
 
 Completed task specifications are removed after durable behavior is reflected
 in current feature documentation and remaining work is captured in `STATUS.md`.

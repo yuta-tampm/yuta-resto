@@ -308,10 +308,13 @@ and Human-authorized cutover are complete for the exact scope above. Under the
 - the repository is canonical knowledge for this migrated Pointage scope;
 - the Pointage Page Chat is `LEGACY EVIDENCE ONLY` for this scope and remains
   available for historical or forensic lookup;
-- Control Tower owns shaping, Human Decision routing, genuine conflicts,
-  cross-module reasoning, and governance coordination; and
-- Coding Agents use repository discovery for analysis and perform only
-  separately authorized execution and verification.
+- Codex owns repository discovery, shaping, cross-module reasoning and
+  governance coordination under
+  [task collaboration](../../YUTA_AUTOMATED_CHANGE_WORKFLOW.md#task-collaboration-and-delegated-review).
+  CT advice is optional in `CT_BRIDGE` or `HUMAN_CT_BRIDGE`; unresolved
+  Product/authority decisions still require the owning Human.
+- Coding Agents execute and verify only the selected task's authorized scope;
+  routine gates use the mode-defined review mechanism.
 
 This cutover does not delete or invalidate historical evidence, grant Product
 or implementation authority, close any unresolved item, authorize production or

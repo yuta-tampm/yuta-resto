@@ -1,11 +1,52 @@
 ---
 name: yuta-run-change
-description: Run or resume a YUTA OpenSpec change through the next human review gate, including phased implementation, technical verification, and required QA. Never sync or archive normative specs.
+description: Run or resume a YUTA OpenSpec change through mode-defined review gates, including phased implementation, technical verification, and required QA. Never sync or archive normative specs.
 ---
 
 # YUTA Run Change
 
-Run one YUTA change as a resumable, approval-gated state machine. Automate work between gates, but never infer or manufacture human approval.
+Run one YUTA change as a resumable, approval-gated state machine. Use the selected
+collaboration mode and actual approval source; never manufacture Human approval
+or let the author self-approve.
+
+## Task collaboration
+
+Before a new task/change, follow the root `AGENTS.md` mode-selection rule.
+Keep the selected mode and commit preference/source sticky for the same task;
+a child reviewer does not ask
+again. Read
+`docs/YUTA_AUTOMATED_CHANGE_WORKFLOW.md#task-collaboration-and-delegated-review`
+for the canonical scope, delegation, reviewer and evidence requirements.
+
+In `HUMAN_COLLABORATION` or `HUMAN_CT_BRIDGE`, stop at each applicable gate for the actual current-user
+decision. In `CODEX_ONLY` or `CT_BRIDGE`, a routine gate within the recorded
+delegation uses `AWAITING_INDEPENDENT_REVIEW`: prepare the complete packet, spawn
+a separate read-only reviewer with fresh context, wait for its verdict, and
+recheck exact hashes before recording approval. Then continue to the next
+authorized state. The Human-wait examples below apply to Human mode/history;
+they do not require routine Human approval in a delegated mode. Stop dependent
+work until review passes. A reviewer failure permits only in-scope corrections
+and a fresh review; missing independent review is a blocker.
+
+The selected mode alone grants no broader phase, repair or finalization scope.
+Preserve adopted artifacts unless edits are actually authorized. Adoption or
+mode selection alone grants no repair permission. A delegated task explicitly
+covering completion/correction may authorize in-scope artifact corrections
+after independent findings, with fresh hashes and review; read-only adoption
+may not. The explicit-user-direction rules below retain that scope protection.
+Ask the user
+for unresolved Product/authority decisions, material scope/permission changes,
+budget exceptions or separately confirmed actions. CT advice is optional,
+available only through a verified selected Bridge in `CT_BRIDGE` or
+`HUMAN_CT_BRIDGE`, and cannot
+approve a gate. Existing changes require explicit opt-in to this policy; do not
+rewrite historical approvals.
+
+Carry `COMMIT_AFTER_TASK` and `COMMIT_SELECTION_SOURCE` into existing task
+context/artifacts. The task orchestrator follows the canonical optional
+post-task local-commit procedure only after requested completion obligations
+are met. A pending gate needed for that completion is not bypassed to commit.
+Commit preference grants no spec sync/archive or remote Git authority.
 
 ## Non-negotiable boundaries
 
@@ -31,7 +72,8 @@ cross-module uncertainty prevents a safe bounded request.
   redesign, or an unfamiliar runtime/data boundary.
 - Discovery / Shaping is pre-change reasoning, not a mandatory OpenSpec
   artifact. Inspect current authorities and implementation read-only, then
-  either ask the user / Control Tower for the missing decision, produce a
+  either ask the user for the missing decision (with optional CT advice in
+  `CT_BRIDGE` or `HUMAN_CT_BRIDGE`), produce a
   bounded request, or stop without creating a change.
 - Skip Discovery / Shaping for a small request that current Product Knowledge
   and durable boundaries already bound clearly.
@@ -62,7 +104,12 @@ $yuta-run-change <change-name>
 Specs review approved. Continue.
 ```
 
-Approval must be a current-user instruction bounded to the selected change and current gate. “Continue,” a passing test, `Status: PASS`, an OpenSpec status, file existence, a commit, a PR approval, prior assistant text, or an earlier unrelated approval is not approval.
+In Human mode, approval must be a current-user instruction bounded to the
+selected change and current gate. In delegated modes, require the recorded
+current-user delegation and actual independent review for this exact gate.
+“Continue,” a passing test, `Status: PASS`, an OpenSpec status, file existence,
+a commit, a PR approval, prior assistant text, or an earlier unrelated approval
+is not a gate decision.
 
 ### Adopt an existing in-flight change
 
@@ -128,6 +175,7 @@ Sensitive change:
 Allowed review statuses are:
 
 - `AWAITING_HUMAN_REVIEW`
+- `AWAITING_INDEPENDENT_REVIEW`
 - `APPROVED`
 - `CHANGES_REQUESTED`
 - `INVALIDATED_BY_ARTIFACT_CHANGE`
@@ -139,14 +187,22 @@ At every resume and before any later gate:
 1. Recompute every hash in the current packet and all earlier approved packets.
 2. Require exact path-set and hash equality.
 3. If any path is added, removed, renamed, or changed, do not accept approval. Set the affected packet to `INVALIDATED_BY_ARTIFACT_CHANGE`, record expected versus current hashes, and stop for re-review.
-4. If the user requests changes, set the packet to `CHANGES_REQUESTED`; revise only with authorization, then produce a fresh `AWAITING_HUMAN_REVIEW` packet and stop again.
-5. When approval is valid, change the packet to `APPROVED` and record:
+4. If the Human or independent reviewer requests changes, set the packet to
+   `CHANGES_REQUESTED`; revise only within actual authorization, then produce
+   a fresh packet awaiting the mode-defined reviewer. Do not reuse the old verdict.
+5. In Human mode, when approval is valid, change the packet to `APPROVED` and record:
 
 ```text
 Approval source: explicit current-user instruction
 Approval recorded by: Codex workflow
 Approved: <ISO-8601 timestamp>
 ```
+
+For a delegated gate, use the canonical approval fields instead, including
+`Approval source: USER_DELEGATION_WITH_INDEPENDENT_REVIEW`, the actual
+mode-selection instruction/scope, reviewer identity, verdict/evidence and
+reviewed path/hash references. Rehash after review; mismatch invalidates the
+affected approval. A packet's presence or its pending status grants no approval.
 
 Do not invent an approver name, role, or universal authority.
 
@@ -183,14 +239,15 @@ For a new change, or a change genuinely missing Gate 1 artifacts:
    approved history on adoption.
 2. Apply YUTA authority routing. Use code/tests only for Implemented State, not as Product approval.
 3. Read the analysis conclusion exactly. The only valid YUTA analysis conclusions are `READY_FOR_SPECS`, `BLOCKED_NEEDS_REVIEW`, and `NO_SPEC_BEHAVIOR_CHANGE`.
-4. Create `01-analysis-review.md`, then stop before specs.
+4. Create `01-analysis-review.md`, then obtain the mode-defined review before specs.
 
 If proposal and analysis already exist but `01-analysis-review.md` does not:
 
 1. Read and validate the existing files without changing them.
 2. Hash their exact bytes.
 3. Create Gate 1 from their current content and findings.
-4. Stop, even when specs, design, tasks, or implementation already exist.
+4. Obtain the mode-defined Gate 1 review before proceeding, even when specs,
+   design, tasks, or implementation already exist.
 
 `CONFLICT` is not an analysis conclusion. Record each conflict in the analysis conflict section and Gate 1 packet. When a conflict affects requirement readiness, require the analysis conclusion `BLOCKED_NEEDS_REVIEW`. If an adopted analysis uses `CONFLICT` as its conclusion or otherwise lacks one of the three valid conclusions, report that as a Gate 1 blocker without rewriting the artifact.
 
@@ -221,7 +278,8 @@ After valid Gate 1 approval on a behavior-changing path:
 2. Use status/instructions to create only the required delta specs, preserving capability paths declared by the proposal.
 3. Run strict change validation using the current CLI syntax.
 4. Automatically correct formatting or internal spec consistency errors only when semantics do not change. If a correction requires a Product, authority, security, ownership, or compatibility decision, stop and return to Gate 1.
-5. Create `02-specs-review.md`, then stop before design, tasks, or apply.
+5. Create `02-specs-review.md`, then obtain the mode-defined review before
+   design, tasks, or apply.
 
 If delta specs already exist but `02-specs-review.md` does not after Gate 1 approval:
 
@@ -229,7 +287,8 @@ If delta specs already exist but `02-specs-review.md` does not after Gate 1 appr
 2. Strict-validate their current bytes.
 3. Hash every exact delta spec separately.
 4. Create Gate 2 with the exact content and validation result.
-5. Stop, even when design, tasks, or implementation already exist.
+5. Obtain the mode-defined Gate 2 review before proceeding, even when design,
+   tasks, or implementation already exist.
 
 Do not auto-fix an adopted spec merely because strict validation fails. Record the failure and blocker in Gate 2; change the spec only after explicit user review direction.
 
@@ -242,7 +301,7 @@ Gate 2 packet includes:
 - changed assumptions since analysis;
 - remaining ambiguity and recommendation.
 
-On the no-spec branch, do not create Gate 2. Confirm OpenSpec reports specs skipped, record the approved Gate 1 reference, and continue to State 3 only when the user explicitly approved Gate 1.
+On the no-spec branch, do not create Gate 2. Confirm OpenSpec reports specs skipped, record the approved Gate 1 reference, and continue to State 3 only after valid mode-defined Gate 1 approval.
 
 ### State 3 — Design decision and optional sensitive gate
 
@@ -261,7 +320,12 @@ After valid Gate 2 approval, or valid Gate 1 approval on a no-spec path:
    - irreversible/destructive operation;
    - cross-module durable boundary.
 
-For a sensitive change, create `02b-design-review.md` and stop before tasks/apply. Include exact design, design hash, spec hashes, security/data/runtime implications, migration/rollback, unresolved choices, and recommendation. Resume only after explicit design approval and intact hashes.
+For a sensitive change, create `02b-design-review.md` and obtain the mode-defined
+review before tasks/apply. Include exact design, design hash, spec hashes,
+security/data/runtime implications, migration/rollback, unresolved choices and
+recommendation. Resume only after valid Design approval and intact hashes.
+Independent review may validate implementation inside accepted boundaries;
+a proposal to change those boundaries still requires the owning Human decision.
 
 For a normal change, proceed directly to State 4 without a separate design gate.
 
@@ -418,14 +482,17 @@ replace a recorded decision with an inferred one.
    command/runtime, route/entry, safe data, test identity or credential
    reference without secrets, basic flow, reset/retry and known dev limits.
    An applicable `PENDING` or `NO` keeps this Apply work open.
-4. For interactive UI, and for a non-UI Product/operator flow requiring human
-   judgement, record
-   `HUMAN_PRODUCT_VALIDATION` for the exact candidate/scope and handoff.
-   `AWAITING_RESPONSE` means a request is pending; stop for the actual human
-   response. Record source/time and feedback for only an actual `ACCEPTED`,
-   `CHANGES_REQUESTED` or `BLOCKED` verdict. `BLOCKED` stops the affected
-   flow. A changed affected flow needs a fresh human look; retain the old
-   verdict as history rather than carrying it forward as acceptance.
+4. For an interactive flow, record `HUMAN_PRODUCT_VALIDATION` for the exact
+   candidate/scope and handoff. Request actual Human feedback in
+   `HUMAN_COLLABORATION` or `HUMAN_CT_BRIDGE`, when the user requests it, or when approved acceptance
+   requires Human observation. In delegated modes, optional feedback not
+   requested is `NOT_REQUESTED`, with mode, candidate and reason; it is
+   unassessed participation, never `ACCEPTED`, QA PASS or a waiver.
+   `AWAITING_RESPONSE` means a real request is pending; stop for that response.
+   Record source/time and feedback only for an actual `ACCEPTED`,
+   `CHANGES_REQUESTED` or `BLOCKED` verdict. Required missing observation or
+   `BLOCKED` stops the affected flow. When actual feedback applies, a changed
+   affected flow needs a fresh Human look; retain the old verdict as history.
 5. For `CHANGES_REQUESTED`, classify feedback against approved
    Proposal/Analysis, Specs when present, Design, Tasks/TIC and the owning
    Product/authority source. `LOCAL_CORRECTION` is limited to implementation
@@ -447,8 +514,9 @@ Deploy or Production Readiness; those retain their operations authority.
 
 #### Iteration accounting and stop control
 
-Use the existing Control Tower anti-loop/evidence-stop owner and the counting
-rules in `docs/YUTA_AUTOMATED_CHANGE_WORKFLOW.md`; this skill executes them
+Use the canonical anti-loop/evidence-stop owner and counting rules in
+`docs/YUTA_AUTOMATED_CHANGE_WORKFLOW.md#anti-loop-and-iteration-stop-control`;
+this skill executes them
 without creating a parallel policy. For an adopted change, keep
 `ITERATION_STOP_CONTROL` in the same Tasks section when a blocker/retry exists,
 or `NONE` with reason otherwise. Before an equivalent retry, inspect its
@@ -512,9 +580,10 @@ VERIFY is technical verification and answers whether repository implementation
 matches the approved Specs and Design. Keep it distinct from QA.
 
 For a `REQUIRED` or `OPTED_IN` change, enter this state only after the
-applicable current post-Apply assertions and human Product validation are
-resolved. Grandfathered changes keep their existing path. Do not treat a
-Product verdict as technical evidence.
+applicable current post-Apply assertions and required Human Product validation
+are resolved. Optional feedback may be `NOT_REQUESTED` with the mode/candidate
+reason above; required Human observation cannot use that marker. Grandfathered
+changes keep their existing path. Do not treat a Product verdict as technical evidence.
 
 1. Run the current generated `openspec-verify-change` workflow plus applicable
    repository checks.
@@ -622,7 +691,8 @@ Create `03-final-review.md` containing:
   visual/accessibility issues;
 - relevant/full diff for a reasonably small change, or key hunks plus an explicit note that the reviewer may request the exact full diff for a large change;
 - the exact field `Sync authorization: PENDING`;
-- recommendation and `Review status: AWAITING_HUMAN_REVIEW`.
+- recommendation and the selected mode's pending review status:
+  `AWAITING_HUMAN_REVIEW` or `AWAITING_INDEPENDENT_REVIEW`.
 
 Build the implementation diff from only the files attributed to this change. Record the exact deterministic command and hash the exact bytes of the diff included or attached to the packet. Include untracked implementation files explicitly; do not let `git diff` omission hide them. If a clean, reproducible scoped diff cannot be produced because of overlapping pre-existing changes, stop instead of issuing Gate 3.
 
@@ -642,14 +712,21 @@ APPROVE_GATE_3_WITH_EXPLICIT_SYNC_AUTHORIZATION_IF_READY
 ```
 
 This recommendation does not itself approve Gate 3 or authorize sync/archive.
-Those remain explicit current-user decisions.
+Require the actual mode-defined Gate 3 approval. Full repository completion
+within a recorded delegation may authorize exact reviewed sync/archive under
+the canonical policy; a phase-only or review-only request may not. Record the
+bounded authorization and hand the approved exact candidate to
+`$yuta-finish-change` through the orchestrator. This skill never performs sync
+or archive.
 
 ## Stop conditions
 
 Stop at the first applicable condition:
 
-- a packet is awaiting review, changed-requested, or invalidated;
-- explicit gate approval is missing or ambiguous;
+- a packet is awaiting Human review or has an unresolved review blocker;
+- a delegated packet awaits independent review: stop dependent work, obtain
+  that review, and continue only after valid approval;
+- mode-defined gate approval is missing or ambiguous;
 - artifact hashes do not match;
 - authority or requirement decisions remain unresolved;
 - sensitive design lacks approval;
@@ -661,6 +738,9 @@ Stop at the first applicable condition:
 - VERIFY is not `PASS`;
 - required QA is `FAIL` or `BLOCKED_BY_ENVIRONMENT`;
 - UI-affecting QA lacks responsive Browser QA or hashed screenshot evidence;
-- Gate 3 has been created.
+- Gate 3 is ready for Human review, or delegated Gate 3 review has finished;
+  finalization belongs to the finish-change orchestrator within authorized scope.
 
-End with the current change, schema, gate, packet path, status, and the exact approval needed next. Do not suggest or execute sync/archive from this skill.
+End with the current change, schema, mode, gate, packet path, actual approval
+source/status and next authorized action. Do not execute sync/archive from this
+skill; only the orchestrator may invoke finish-change with its valid exact inputs.

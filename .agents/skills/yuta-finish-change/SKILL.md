@@ -10,43 +10,79 @@ is the sole project workflow authorized to promote reviewed delta specs,
 archive the completed change, and close any required post-archive Knowledge
 Consolidation review. Release/deploy remains a separate operational lane.
 
-## Operating modes
+## Collaboration and approval source
 
-Resolve exactly one mode before mutating anything:
+Inherit the existing task's selected mode and bounded authorization; this
+finalization/resume is not a new task and does not ask for mode again. Follow
+`docs/YUTA_AUTOMATED_CHANGE_WORKFLOW.md#task-collaboration-and-delegated-review`.
+The Human approval examples below apply to `HUMAN_COLLABORATION`,
+`HUMAN_CT_BRIDGE` and historical
+records. In `CODEX_ONLY` or `CT_BRIDGE`, routine Gate 3 and Knowledge Review use
+actual separate read-only reviewers with fresh context and exact hashes.
+The author cannot self-approve; CT cannot approve. Missing independent review
+blocks dependent work.
+
+Delegated finalization requires the exact named change, a recorded current-user
+choice/delegation and full repository completion scope, a valid independent
+Gate 3 verdict, exact delta/main-spec targets or approved no-spec path, and
+`Sync authorization: AUTHORIZED_BY_USER_DELEGATION`. A phase-only, read-only or
+review-only scope cannot acquire this permission from the selected mode.
+Knowledge edits require a fresh independent verdict on the exact proposed
+diff and current target hashes; earlier Gate 3 approval is not that verdict.
+Scope/authority changes and separately confirmed actions still require the
+current user. Preserve existing changes' mode and history unless explicitly
+opted in; never relabel a Human approval as delegated.
+
+Inherit `COMMIT_AFTER_TASK` and its actual selection source too. Once the
+requested task's finish/Knowledge obligations are complete, the orchestrator
+may perform the canonical optional post-task local commit for explicit `YES`.
+`NO` or `NOT_SELECTED` leaves changes uncommitted. Commit choice does not
+authorize a gate, sync/archive, push, PR, merge or deployment; it adds no finish
+stage and does not reopen completed lifecycle records.
+
+## Operating branches
+
+Resolve exactly one finalization branch before mutating anything; this is
+distinct from the task's four collaboration modes:
 
 1. **Active-change finalization:** the active change exists, Gate 3 is
    `AWAITING_HUMAN_REVIEW`, and the current user explicitly approves Gate 3 and
-   authorizes sync and archive.
+   authorizes sync and archive; or it has a valid independently approved Gate 3
+   and the bounded delegated finalization authorization above.
 2. **Archived knowledge-review resume:** Gate 3 is already `APPROVED`, the
    successful finish/archive and `AWAITING_KNOWLEDGE_REVIEW` outcome are
    recorded, the active change no longer exists, the recorded archive exists,
    and `04-knowledge-consolidation-review.md` is
    `AWAITING_HUMAN_REVIEW`. Require a current-user instruction equivalent to
-   `Knowledge consolidation review approved. Apply and close.`
+   `Knowledge consolidation review approved. Apply and close.` In a delegated
+   mode, require `AWAITING_INDEPENDENT_REVIEW` and obtain its actual independent
+   approval, or validate an already independently approved exact packet.
 
 Never recreate or copy an archived change back into the active changes tree.
-Never apply one mode's preconditions or integrity checks to the other mode.
+Never apply one branch's preconditions or integrity checks to the other branch.
 
 ## Required input
 
-For active-change finalization, require an exact change name and a current-user
-instruction that explicitly includes both final review approval and
-authorization to sync and archive, for example:
+For active-change finalization in Human mode, require an exact change name and
+a current-user instruction that explicitly includes both final review approval
+and authorization to sync and archive, for example:
 
 ```text
 $yuta-finish-change <change-name>
 Final review approved. I authorize spec sync and archive.
 ```
 
-Approval without sync authorization, sync authorization without final approval,
+In every mode, approval without sync authorization, sync authorization without final approval,
 “continue,” a passing verify/QA result, a packet status, a commit, a PR approval,
 or prior assistant text is insufficient. Ask for the missing authorization and
-make no mutation.
+make no mutation. In delegated modes, validate the actual delegation and
+independent review evidence above instead of requesting a routine Human gate.
 
 For archived knowledge-review resume, the earlier Gate 3 and sync/archive
 authorization remain historical evidence; do not request or reuse them as
 authorization for a documentation edit. Require the separate current-user
-Knowledge Review approval for the exact packet and proposed diff.
+Knowledge Review approval for the exact packet and proposed diff in Human mode,
+or a fresh independent approval within the recorded full-completion delegation.
 
 ## Branch A — Active-change finalization
 
@@ -59,12 +95,13 @@ archive. Do not enter it for an already archived change.
 2. Start with `git status --short` and preserve unrelated work.
 3. Resolve the active change through `openspec status --change "<name>" --json`; use returned roots and paths. Require the expected YUTA schema or report the mismatch.
 4. Find `docs/reviews/<change-name>/03-final-review.md`.
-5. Require Gate 3 `Review status: AWAITING_HUMAN_REVIEW`. An already
-   `APPROVED` Gate 3 does not satisfy this branch; inspect the recorded outcome
-   and route to the archived-resume branch only when all of that branch's
-   preconditions hold.
-6. Require the current-user instruction to contain both explicit final Gate 3
-   approval and explicit sync/archive authorization.
+5. In Human mode, require Gate 3 `Review status: AWAITING_HUMAN_REVIEW`;
+   an already `APPROVED` Human packet does not satisfy this branch. In a
+   delegated mode, require an `APPROVED` Gate 3 with actual independent review
+   evidence and intact exact candidate hashes. Inspect the recorded outcome:
+   an archived change belongs only to Branch B, not this branch.
+6. Require explicit current-user final Gate 3 and sync/archive authorization
+   in Human mode, or the valid bounded delegated finalization record above.
 7. Require all earlier applicable gate packets to be `APPROVED` with bounded approval records. A no-spec path has no Gate 2; a non-sensitive change has no Design Gate.
 8. Require Gate 3 to record `TECHNICAL IMPLEMENTATION COMPLIANCE: PASS`,
    `VERIFY: PASS`, and a QA state permitted by Workflow v3. Confirm every
@@ -75,6 +112,15 @@ archive. Do not enter it for an already archived change.
    or `BLOCKED_BY_ENVIRONMENT` state is never finalization-ready.
 
 ### Active-change integrity check before approval
+
+Inspect any recorded `Finish outcome` and pending sync/archive operation first.
+An independently approved Gate 3 does not authorize replaying an uncertain
+transaction. For failed, pending or interrupted finalization, establish the
+actual outcome and original pre-sync snapshot; never overwrite that rollback
+baseline with partial main specs. Use only an attributable safe recovery within
+existing task authorization and iteration limits. Unresolved partial state or
+uncertain effects block further mutation; preserve evidence and report the
+specific recovery/decision needed.
 
 Recompute, using the exact recorded algorithms and path sets:
 
@@ -126,7 +172,7 @@ and QA requirements pass. Do not claim a native OpenSpec Design-skip state.
 
 ### Record final approval
 
-Only after every integrity check passes, update Gate 3 with:
+Only after every integrity check passes, update Gate 3 in Human mode with:
 
 ```text
 Review status: APPROVED
@@ -136,6 +182,12 @@ Approved: <ISO-8601 timestamp>
 Sync authorization: AUTHORIZED_BY_CURRENT_USER
 Finish outcome: PENDING
 ```
+
+In a delegated mode, retain the exact independently reviewed approval source,
+reviewer/verdict/evidence and timestamp. Recheck its integrity and record
+`Sync authorization: AUTHORIZED_BY_USER_DELEGATION` with the named change,
+actual full-completion delegation and exact sync/archive targets, then set
+`Finish outcome: PENDING`. Do not replace it with a fictional Human instruction.
 
 Do not invent a person, title, team, or universal approver. Approval is bounded to this change, gate, reviewed hashes, capability paths, and current instruction.
 
@@ -227,13 +279,16 @@ Do not edit canonical knowledge yet. Create
 - authority classification for each edit;
 - confirmation that no unapproved Product Decision, lifecycle, ownership,
   permission, durable-boundary, readiness, or normative-spec change occurs;
-- `Review status: AWAITING_HUMAN_REVIEW`;
+- `Review status: AWAITING_HUMAN_REVIEW` in Human mode, or
+  `AWAITING_INDEPENDENT_REVIEW` in a delegated mode;
 - SHA-256 hashes of every current target file and of the exact proposed-diff
   bytes.
 
-Record the archive location and `Workflow status:
-AWAITING_KNOWLEDGE_REVIEW` in Gate 3, then stop. The archive is successful, but
-the repository workflow is not `DONE`.
+Record `Finish outcome: COMPLETED`, the exact archive location and
+`Workflow status: AWAITING_KNOWLEDGE_REVIEW` in Gate 3. Stop for Human review in Human mode;
+in a delegated mode, obtain independent review of the exact proposed diff and
+target hashes, then continue through Branch B after its checks pass. The archive
+is successful, but the repository workflow is not `DONE` while review is pending.
 
 ## Branch B — Archived knowledge-review resume
 
@@ -253,9 +308,11 @@ Before mutating anything, require all of the following:
 5. The exact recorded archive location exists and retains the completed change
    evidence.
 6. `docs/reviews/<change-name>/04-knowledge-consolidation-review.md` exists with
-   `Review status: AWAITING_HUMAN_REVIEW`.
+   the mode-defined pending status, or a valid independently `APPROVED` packet
+   in a delegated mode.
 7. The current user explicitly approves that exact Knowledge Review packet and
-   proposed documentation diff.
+   proposed documentation diff in Human mode, or an actual fresh independent
+   verdict approves it inside the recorded full-completion delegation.
 
 Gate 3 must not be `AWAITING_HUMAN_REVIEW` in this branch. Do not request fresh
 Gate 3 approval or sync/archive authorization, and do not reinterpret their
@@ -270,8 +327,8 @@ Validate only the Knowledge Review approval boundary recorded in
 - the SHA-256 hash of every target's current bytes; and
 - the SHA-256 hash of the exact proposed-diff bytes.
 
-Require exact path-set and hash equality plus the explicit current-user
-Knowledge Review approval. Do not recompute or gate this branch on active-change
+Require exact path-set and hash equality plus valid mode-defined Knowledge
+Review approval. Do not recompute or gate this branch on active-change
 planning artifacts, implementation diffs, VERIFY evidence, Technical
 Compliance evidence, earlier gate packets, normative spec hashes, or active
 change status.

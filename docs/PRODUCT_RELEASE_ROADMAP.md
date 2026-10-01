@@ -1,10 +1,10 @@
 # YUTA Product Release Roadmap
 
-Status: PROPOSED — awaiting cross-module Human / Control Tower review
+Status: PROPOSED — awaiting cross-module Human review; CT advice optional
 
 Visibility: Engineering
 
-Owner: Proposed YUTA product and engineering; Control Tower ownership decision pending
+Owner: Proposed YUTA product and engineering; owning Human decision pending
 
 Last updated: 2026-10-01
 
@@ -16,7 +16,10 @@ not approved Product policy, a customer-facing roadmap, a normative spec, a
 release record or authorization to implement or deploy. Repository discovery
 found Product Release identity documentation and capability-specific plans, but
 no existing cross-product release-roadmap owner. Keep the identity home as its
-own authority; confirm this destination through Control Tower before adoption.
+own authority; confirm this destination through the owning Human before adoption.
+Coordination and optional CT advice follow
+[task collaboration](YUTA_AUTOMATED_CHANGE_WORKFLOW.md#task-collaboration-and-delegated-review);
+this does not approve any pending roadmap decision or start a change.
 
 The supplied direction is Foundation -> A: Reputation Core -> B: Direct
 Feedback -> C: AI Reputation. Every future scope and exposure target below is
@@ -351,7 +354,7 @@ under current workflow. This documentation diff is `UI_AFFECTING: NO`,
 
 | Decision / finding                       | Evidence / concrete approval choice needed                                                                                                                                                                                                                                                                                                                                           |
 | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| RR-01: owner and cross-module routing    | Accept this single proposed Engineering destination and Product/engineering ownership through Control Tower, or name an existing controlling owner. Decide readiness and a documentation-only OpenSpec strategy; do not bypass Discovery.                                                                                                                                            |
+| RR-01: owner and cross-module routing    | The owning Human accepts this proposed Engineering destination and Product/engineering ownership, or names an existing controlling owner; CT advice is optional. Decide readiness and a documentation-only OpenSpec strategy; do not bypass Discovery.                                                                                                                               |
 | RR-02: A Google scope                    | Supplied A direction proposes Google; AVIS-01 still says V1 unresolved. Explicitly approve the A-only Google sequence or revise it. This proposal is not a silent replacement for current capability authority. Facebook/Instagram deferral must preserve confirmed high-level inclusion and unresolved AVIS-02/03.                                                                  |
 | RR-03: exact journey and exposure        | Approve Today landing, minimum profile and permitted settings; specify required setup, operator-assisted access/recovery, A-only source/metric scope, Human publish approval and deep-link recovery. Approve the policy as a roadmap decision; any implementation remains separately bounded.                                                                                        |
 | RR-04: B boundaries                      | Follow Satisfaction SAT-01–10 and supplemental Expérience client directions. Reconcile request-first contact conflict and trusted domain/client-address conflicts; decide bounded follow-up/actions. No unified provider/private inbox or summary is approved by this roadmap. Restaurant Knowledge Expérience client remains descriptive Knowledge, separate from private feedback. |
@@ -360,11 +363,13 @@ under current workflow. This documentation diff is `UI_AFFECTING: NO`,
 | Potential provider constraint            | Official Google storage/content restrictions require provider/privacy interpretation for intended persistence, continued read access, summaries and AI. No compliance claim or technical storage design chosen.                                                                                                                                                                      |
 | Unavailable evidence                     | Live Page Chats/selected Control Tower, private provider console/approval, production credentials/quotas, deployed candidate, customer cohort, live monitoring, restore and rollback exercises were not inspected. Preserve their unknown status.                                                                                                                                    |
 
-Current stage: **Discovery / Shaping — awaiting Human / Control Tower
+Current stage: **Discovery / Shaping — awaiting owning Human
 ownership, Product reconciliation and OpenSpec-readiness decision**. Suggested
 bounded name: `release-roadmap-foundation`, currently unused. This is not a
-Gate 1 approval packet. Control Tower first decides owner, conflicts, strategy
-and readiness; a later change must use CLI-resolved `yuta-spec-driven`
+Gate 1 approval packet. Codex coordinates owner/conflict/strategy/readiness
+analysis from the repository; the owning Human resolves the pending Product
+and authority decisions. CT may advise if selected through Bridge. A later
+change must use CLI-resolved `yuta-spec-driven`
 instructions, then exact Proposal/Analysis Gate 1 review before dependent work.
 Whether a no-spec documentation path is valid must be decided from the eventual
 bounded request; no `skip_specs` value, later artifact or approval is invented.

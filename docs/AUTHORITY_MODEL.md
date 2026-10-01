@@ -198,17 +198,39 @@ decisions, unresolved questions, specs, implementation, tests, and boundaries.
 Record the exact migrated scope and PASS evidence in its owning knowledge source
 and link it from the Module Registry. Only then does that Page Chat become legacy
 evidence rather than Product/shaping authority for that exact scope. Creating a
-home, copying text, or completing extraction does not retire authority. Other
-unmigrated scopes retain their existing Page Chat authority.
+home, copying text, or completing extraction does not retire authority. A
+completed Human-authorized exception recorded in the owning repository source
+may instead cut over only its exact named scope. Preserve formal fresh-agent
+PASS and strict execution status separately: an exception does not manufacture
+PASS or extend to adjacent scopes. Other unmigrated scopes retain their
+existing Page Chat authority.
 
 The transition changes where approved knowledge is remembered, not the matrix
 above: chats may discuss, propose, and relay Human decisions, while accepted
 ADRs, current Product Knowledge, normative specs, code/tests, and dated runtime
 evidence keep their question-specific roles. Legacy chat material remains
 available as provenance, but does not override canonical repository knowledge
-after a scope passes. Conflicts remain `CONFLICT` / `NEEDS REVIEW`; code alone
-never creates a Product decision. See [Workflow v3](YUTA_WORKFLOW_V3.md) for the
+after its recorded completed cutover. Conflicts remain `CONFLICT` / `NEEDS REVIEW`;
+code alone never creates a Product decision. See [Workflow v3](YUTA_WORKFLOW_V3.md) for the
 bounded migration and routing rules.
+
+### Collaboration does not change knowledge authority
+
+Codex owns discovery, shaping and coordination from the repository in all
+four task modes. CT and routine Human participation are optional under
+[the collaboration policy](YUTA_AUTOMATED_CHANGE_WORKFLOW.md#task-collaboration-and-delegated-review).
+`PAGE_LOCAL`, `CROSS_MODULE` and `UNCERTAIN` classify impact; they do not force
+a chat handoff. Use CT only when the user selects `CT_BRIDGE` or
+`HUMAN_CT_BRIDGE` and verifies its
+target. An unmigrated knowledge gap still requires the owning Human decision
+before dependent work; it does not authorize contacting a Page Chat by default.
+
+In delegated modes, a separate reviewer may approve routine gates within an
+actual current-user delegation and accepted boundaries. Record that source
+and exact evidence instead of claiming Human approval. This changes the
+review mechanism, not the authority matrix, scope-bound knowledge cutovers,
+required observations or readiness rules. Preserve historical authority and
+approvals; missing evidence or a real authority conflict remains blocking.
 
 ## 7. Examples
 

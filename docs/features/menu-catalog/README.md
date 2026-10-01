@@ -76,10 +76,13 @@ or other completed migration was changed.
 - The repository is canonical knowledge for the exact migrated Carte & menus
   scope in this home.
 - Carte & menus Page Chat is `LEGACY EVIDENCE ONLY` for that scope.
-- Control Tower owns shaping, genuine-conflict resolution, Human Decision
-  routing, cross-module reasoning, and governance coordination.
-- Coding Agent owns repository discovery, analysis, and separately authorized
-  execution and verification.
+- Codex owns repository discovery, shaping, cross-module reasoning and
+  governance coordination under
+  [task collaboration](../../YUTA_AUTOMATED_CHANGE_WORKFLOW.md#task-collaboration-and-delegated-review).
+  CT advice is optional in `CT_BRIDGE` or `HUMAN_CT_BRIDGE`; unresolved
+  Product/authority decisions still require the owning Human.
+- Coding Agents execute and verify only the selected task's authorized scope;
+  routine gates use the mode-defined review mechanism.
 
 ## Approved directions and current disposition
 

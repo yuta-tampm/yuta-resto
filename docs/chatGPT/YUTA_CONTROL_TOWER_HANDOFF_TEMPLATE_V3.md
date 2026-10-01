@@ -3,19 +3,24 @@
 Operating notice:
 This is an operational handoff template, not normative workflow authority.
 Fields and existing reminders below only transport current evidence; the
-canonical Workflow, Automated Workflow and Control Tower prompt own decisions.
+canonical Workflow and Automated Workflow own rules and review mechanisms.
+Use this optional relay only inside a user-selected `CT_BRIDGE` or
+`HUMAN_CT_BRIDGE` task. Codex
+coordinates from repository sources in every mode; the handoff and CT advice
+cannot grant gate approval, permission or additional scope.
 
 Canonical workflow authority:
 [`YUTA_WORKFLOW_V3.md`](../YUTA_WORKFLOW_V3.md)
 
 ## Manual Global to owning Page Chat
 
-For unmigrated work classified `PAGE_LOCAL`, Global gives Human this short, sourced relay
+When a selected Global CT proposes another endpoint for unmigrated `PAGE_LOCAL`
+work, it gives Human this short, sourced relay
 and stops dependent work. Human chooses the exact owning Page Chat. Codex then
 verifies that selected chat and its Bridge Mode before a fresh run. This relay
 does not move runtime authority, approve a gate or authorize Apply; the chats
-do not communicate automatically. A scope with recorded migration PASS uses
-repository knowledge and Control Tower coordination under
+do not communicate automatically. A scope with a recorded completed authority cutover uses
+repository knowledge and Codex coordination under
 [Workflow v3](../YUTA_WORKFLOW_V3.md#legacy-page-knowledge-migration--separate-governance-maintenance);
 this Page Chat handoff does not restore its retired Product/shaping authority.
 
@@ -37,8 +42,9 @@ Use this template when a Page Chat classifies a request as:
 - `CROSS_MODULE`
 - `UNCERTAIN`
 
-Do not create or continue an OpenSpec change until Control Tower explicitly decides
-that the change is ready to enter OpenSpec.
+The handoff is advice/context. Codex establishes readiness from repository
+sources and actual user scope; CT cannot approve a change or a gate. Unresolved
+Product or durable-boundary decisions require the owning Human before dependent work.
 
 ---
 
@@ -46,6 +52,9 @@ that the change is ready to enter OpenSpec.
 CROSS-MODULE CHANGE HANDOFF
 
 Origin page:
+Collaboration mode and actual user-selection/delegation source:
+Commit after task (YES / NO / NOT_SELECTED) and actual selection source:
+Bounded task/phase scope:
 Feature / request:
 Requirement baseline and source (including hard constraints/out-of-scope):
 
@@ -122,7 +131,7 @@ Iteration facts (copy existing lineage/occurrences; do not recalculate here):
 - ITERATION_STOP_CONTROL state and trigger, if any:
 - Product defect proven / implementation defect proven / evidence limitation:
 - Historical FAIL/BLOCKED and remaining mandatory criterion:
-- Requested human decision and exact Control Tower decision reference, if any:
+- Required Human decision/source and optional Control Tower advice reference, if any:
 
 CONFLICT:
 - None / ...
@@ -140,10 +149,10 @@ Known blockers:
 -
 
 Recommended next action:
-Move to YUTA Control Tower for ownership, boundary, workflow-state and
-OpenSpec-readiness decisions.
+Codex assesses ownership, boundaries, workflow state and OpenSpec readiness
+from the repository and actual task authorization; the selected CT may advise.
 
-Control Tower must decide:
+Assessment / optional CT advice:
 
 1. owning capability;
 2. authority / data / runtime boundaries;
@@ -159,8 +168,8 @@ Control Tower must decide:
 
 ANTI-LOOP RULE:
 
-The Control Tower Operating Prompt owns this rule and any human stop decision;
-the lines below are carry-through reminders, not a second policy source.
+The Automated Workflow anti-loop/iteration-stop section owns this rule;
+the lines below carry existing facts, not a second policy or Human decision source.
 
 Do not open repeated
 attribution → correction → revalidation
@@ -191,19 +200,20 @@ Do not:
 - infer Product / permission / schema / API authority from UI or mockups;
 - create a new change merely to make workflow tooling green.
 
-If lifecycle history is missing, Control Tower must explicitly authorize any
-present-day reconciliation path.
+If lifecycle history is missing, the owning Human must explicitly authorize
+any present-day reconciliation path; CT may advise.
 Its archive must not impersonate original implementation history.
 Do not create a change merely because a new chat lacks context.
 
 FINISH / CLOSURE:
 
-Gate 3 → Human Approval → $yuta-finish-change
+Gate 3 → Mode-defined Approval → $yuta-finish-change
 → Sync or valid no-spec finalization
 → Validate Main Specs when applicable → Archive
 → Knowledge Consolidation → DONE
 
-Require explicit sync/archive authorization and branch-specific prerequisites.
+Require actual mode-defined approval/sync/archive authorization and branch-specific prerequisites.
+Delegated completion needs exact independent Gate 3 and Knowledge diff review.
 Missing original lifecycle inputs: FINISH_CHANGE_BLOCKED /
 LIFECYCLE_RECONCILIATION_REQUIRED; escalate even for PAGE_LOCAL work.
 No stage is added or removed. Release/Deploy remains separate.

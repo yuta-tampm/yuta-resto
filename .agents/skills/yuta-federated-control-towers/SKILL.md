@@ -9,8 +9,15 @@ Phase 1 supplied static preflight; Phase 2 supplied the local lock, journal, bud
 
 ## Authority and mode
 
+Use this optional lane only inside a selected `CT_BRIDGE` or `HUMAN_CT_BRIDGE` task with separately
+authorized federation. Follow the current collaboration/delegated-review policy
+in `docs/YUTA_AUTOMATED_CHANGE_WORKFLOW.md`. Codex coordinates the project task;
+its executor role below is limited to federation actions. Independent routine
+gate review does not replace the actual Human proof required for live tower
+selection, transfer, recovery or activation, and changes no recorded QA status.
+
 - The existing [Bridge v1 skill](../yuta-control-tower-bridge/SKILL.md) remains the independent single-gateway baseline. Do not modify its wire grammar, owner files, or paused QA evidence. Federation is a separate explicit mode; a context starts in `BRIDGE_V1` and may select `FEDERATED` only through a current-user decision or reviewed workflow binding the execution context, host, checkout, and scope.
-- YUTA Workflow v3 remains authoritative. For `PAGE_LOCAL`, the owning Page Chat retains Product and shaping authority. A `PAGE_CONTROL_TOWER` is an execution transport role for that page, not a new Product or Human Gate authority. For `CROSS_MODULE`, `UNCERTAIN`, and shared/foundation work, the `GLOBAL_CONTROL_TOWER` coordinates under Workflow v3 without inventing missing Page Product decisions. Codex remains the executor and evidence collector.
+- YUTA Workflow v3 remains authoritative. For `PAGE_LOCAL`, the owning Page Chat retains Product and shaping authority. A `PAGE_CONTROL_TOWER` is an execution transport role for that page, not a new Product or Human Gate authority. For `CROSS_MODULE`, `UNCERTAIN`, and shared/foundation work, the `GLOBAL_CONTROL_TOWER` coordinates under Workflow v3 without inventing missing Page Product decisions. Within federation actions Codex executes and collects evidence; project coordination remains with Codex under the selected collaboration mode.
 - A role, activation record, handoff, handshake, chat message, or matching title does not authorize Apply, Product decisions, Human Gates, side effects, commit, push, PR, merge, deploy, release, sync, or archive. Recheck the exact current-user decision, artifact hashes, and scope for each gated action. Machine protocol and diagnostics use English; Human-facing updates use Vietnamese.
 
 ## Static identity contract

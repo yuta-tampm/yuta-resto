@@ -174,6 +174,55 @@ permission beyond the user's approved scope.
 
 ## Task workflow
 
+### Choose collaboration for each new task
+
+Before starting a new project task or OpenSpec change, ask the current user to
+choose exactly one mode, unless their request already selects it explicitly:
+
+1. Codex alone (`CODEX_ONLY`).
+2. Codex with the user (`HUMAN_COLLABORATION`).
+3. Codex with a selected Control Tower through Bridge (`CT_BRIDGE`).
+4. Codex with the user and a selected Control Tower through Bridge
+   (`HUMAN_CT_BRIDGE`).
+
+Also ask whether to commit after completing this task: `COMMIT_AFTER_TASK: YES`
+or `NO`, unless the user already specified it. Ask both intake choices together
+in Vietnamese. An unanswered commit choice is `NOT_SELECTED`, never permission
+to stage or commit; authorized task work may continue while it is pending.
+
+Ask in Vietnamese. Do not infer a choice from silence, a focused browser tab,
+or a previous unrelated task. A follow-up, gate transition or resume of the
+same task keeps its selected mode; do not ask again. Record the user's choice
+and bounded scope in the existing task context, then carry them into existing
+planning/review artifacts when a change exists. Keep the commit choice/source
+sticky for this task too. Do not create an extra task,
+artifact or gate merely to store the mode.
+
+Codex owns repository discovery, shaping, impact classification and
+coordination in every mode. Repository knowledge is canonical; CT participation
+is optional and does not approve Product or grant permission. Use the browser
+Bridge only in `CT_BRIDGE` or `HUMAN_CT_BRIDGE` after verifying the exact
+user-selected target. `HUMAN_COLLABORATION` and `HUMAN_CT_BRIDGE` retain actual
+Human approval at applicable gates; CT advice grants no approval.
+
+In `CODEX_ONLY` and `CT_BRIDGE`, routine gates within the user's bounded task
+use delegated independent review under
+`docs/YUTA_AUTOMATED_CHANGE_WORKFLOW.md#task-collaboration-and-delegated-review`.
+For each such gate, spawn a separate read-only reviewer agent with fresh context
+(`fork_turns: "none"`), the task
+scope, canonical sources and exact candidate, without the author's reasoning
+history. The author cannot self-approve. If independent review is unavailable,
+stop and report it; do not manufacture approval. Ask the user for a material
+scope/authority change or an action requiring separate confirmation. Preserve
+mandatory evidence, operational authorization and historical approvals.
+
+An explicit `COMMIT_AFTER_TASK: YES` authorizes staging the safely isolated
+task changes and creating a local commit once the requested scope and its
+completion obligations are satisfied. Follow the canonical workflow's
+post-task commit procedure; do not ask for the same authorization again.
+`NO` or `NOT_SELECTED` leaves task changes uncommitted. Commit choice does not
+authorize push, PR, merge, deployment, history rewriting or unrelated changes.
+
 For meaningful work:
 
 1. Define goal, scope, affected runtime/data boundaries, and risks.

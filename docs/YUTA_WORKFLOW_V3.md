@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-09-27
+Last updated: 2026-10-01
 
 ## 1. Workflow này là gì
 
@@ -42,17 +42,18 @@ Release, deploy và Production Readiness không nằm trong định nghĩa repos
 
 ## 2. Vai trò và trách nhiệm
 
-| Vai trò / lớp authority             | Trách nhiệm chính                                                                                                                                                                       | Không được tự suy ra                                                                                                                      |
-| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| **Page Chat / Local Control Tower** | Giữ Product/shaping authority của scope chưa migration PASS; sau PASS chỉ còn legacy evidence cho đúng scope đó. Có thể làm việc trực tiếp với Codex khi Human chọn và xác minh bridge. | Không khởi tạo change page-local khi kết quả là `CROSS_MODULE` hoặc `UNCERTAIN`; không giữ Product authority của scope đã migration PASS. |
-| **Global Control Tower**            | Điều phối cross-page/module/runtime và shaping của scope đã migration PASS; làm rõ owner, authority, shared contract và review routing.                                                 | Không thay Product context của Page Chat ở scope chưa migration PASS hoặc tự chuyển chat/quyền thực thi.                                  |
-| **Codex**                           | Đọc authority, tạo/tiếp tục artifact, implement, kiểm tra, tập hợp evidence và dừng đúng gate.                                                                                          | Không phải Product approver; không tự tạo approval, permission, owner hoặc durable boundary.                                              |
-| **OpenSpec**                        | Giữ proposal, analysis, delta specs, design và tasks của một change có cấu trúc.                                                                                                        | Change trong `openspec/changes/**` không phải normative authority.                                                                        |
-| **Product Knowledge**               | Giải thích WHY, broader WHAT, mục đích module, quan hệ, scope và non-goals.                                                                                                             | Không tự chứng minh code hiện tại, deployment hoặc readiness.                                                                             |
-| **Normative main specs**            | Sau approved sync, định nghĩa yêu cầu hành vi chính xác trong durable boundaries đã chấp nhận.                                                                                          | Không thay thế ADR, security/runtime/data authority, code hoặc bằng chứng production.                                                     |
-| **Code/tests**                      | Chứng minh repository Implemented State và mức độ test coverage.                                                                                                                        | Không tự tạo Product approval hoặc chứng minh bản nào đang chạy production.                                                               |
-| **QA evidence**                     | Chứng minh hành vi người dùng/runtime, responsive, accessibility và visual khi áp dụng.                                                                                                 | Screenshot không định nghĩa business rule, permission, schema, owner hoặc lifecycle.                                                      |
-| **Human reviewer / current user**   | Ra quyết định tại đúng gate trên đúng artifact/hashes; cấp authorization rõ ràng khi cần.                                                                                               | Một approval không tự mở rộng sang gate, change, path hoặc phiên bản artifact khác.                                                       |
+| Vai trò / lớp authority             | Trách nhiệm chính                                                                                                                                                     | Không được tự suy ra                                                                      |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| **Page Chat / Local Control Tower** | Optional trong `CT_BRIDGE` hoặc `HUMAN_CT_BRIDGE` cho owning unmigrated `PAGE_LOCAL` scope; sau completed recorded cutover chỉ là legacy evidence cho exact scope đó. | Không thay repo canonical, tự approve gate, đổi scope hoặc tự chuyển chat/quyền.          |
+| **Global Control Tower**            | Optional trong `CT_BRIDGE` hoặc `HUMAN_CT_BRIDGE`; góp ý owner, authority, shared contracts và review routing từ nguồn repo.                                          | Không bắt buộc trong cross-module work, thay Codex coordinator hoặc approve gate.         |
+| **Codex author / coordinator**      | Discovery, shaping, impact, artifacts, implementation, checks và evidence trong mọi mode; tiến qua review đúng mode và scope.                                         | Không self-approve, tự tạo Product authority, permission, owner hoặc durable boundary.    |
+| **Independent reviewer**            | Reviewer read-only riêng với fresh context, actual verdict và exact hashes cho routine gate trong delegated mode.                                                     | Không viết source, mở rộng scope, thay owning Human decision hoặc giả Human approval.     |
+| **OpenSpec**                        | Giữ proposal, analysis, delta specs, design và tasks của một change có cấu trúc.                                                                                      | Change trong `openspec/changes/**` không phải normative authority.                        |
+| **Product Knowledge**               | Giải thích WHY, broader WHAT, mục đích module, quan hệ, scope và non-goals.                                                                                           | Không tự chứng minh code hiện tại, deployment hoặc readiness.                             |
+| **Normative main specs**            | Sau approved sync, định nghĩa yêu cầu hành vi chính xác trong durable boundaries đã chấp nhận.                                                                        | Không thay thế ADR, security/runtime/data authority, code hoặc bằng chứng production.     |
+| **Code/tests**                      | Chứng minh repository Implemented State và mức độ test coverage.                                                                                                      | Không tự tạo Product approval hoặc chứng minh bản nào đang chạy production.               |
+| **QA evidence**                     | Chứng minh hành vi người dùng/runtime, responsive, accessibility và visual khi áp dụng.                                                                               | Screenshot không định nghĩa business rule, permission, schema, owner hoặc lifecycle.      |
+| **Human reviewer / current user**   | Chọn mode/scope; tham gia khi đã chọn mode 2/4; quyết định actual scope/authority exceptions và hành động cần xác nhận trong mọi mode.                                | Một approval hoặc delegation không tự mở rộng sang task, path, phase hoặc candidate khác. |
 
 Các lớp này bổ sung cho nhau. Khi chúng mâu thuẫn, dùng
 [`AUTHORITY_MODEL.md`](AUTHORITY_MODEL.md) để phân loại câu hỏi, ghi `CONFLICT`
@@ -76,7 +77,7 @@ IDEA
 → Verify
 → QA
 → Gate 3
-→ Human Approval
+→ Mode-defined Approval
 → $yuta-finish-change
 → Sync or valid no-spec finalization
 → Validate Main Specs when applicable
@@ -102,72 +103,106 @@ Chỉ đi tiếp khi các prerequisite/gate khác đã thỏa mãn; raw planning
 báo incomplete. Sensitive Design Gate được đánh giá độc lập theo tiêu chí nhạy
 cảm, không tự phát sinh chỉ vì có Design. `skip_specs: true` không tự bỏ Design.
 
-## 4. Routing cross-module trước một change
+## 4. Chọn cách cộng tác và điều phối một task
 
-Trước feature/change mới thuộc scope chưa migration PASS, owning Page Chat thực
-hiện `CROSS-MODULE IMPACT CHECK` theo
-[`YUTA_PAGE_CHAT_OPERATING_PROMPT_V3.md`](chatGPT/YUTA_PAGE_CHAT_OPERATING_PROMPT_V3.md)
-và chọn đúng một kết quả:
+Trước mỗi task/change mới, Codex hỏi Human chọn đúng một cách, trừ khi request
+đã chọn rõ:
 
-| Kết quả        | Cách xử lý                                                                                                                                |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `PAGE_LOCAL`   | Ở lại owning Page Chat. Xác nhận capability, lý do page-local, nhu cầu Discovery/Shaping và OpenSpec readiness.                           |
-| `CROSS_MODULE` | Không tạo/tiếp tục local change. Lập handoff theo [Control Tower Handoff Template v3](chatGPT/YUTA_CONTROL_TOWER_HANDOFF_TEMPLATE_V3.md). |
-| `UNCERTAIN`    | Xử lý như `CROSS_MODULE` cho đến khi ownership và scope được làm rõ.                                                                      |
+1. **Mình Codex làm** — `CODEX_ONLY`.
+2. **Codex cùng Human** — `HUMAN_COLLABORATION`.
+3. **Codex cùng CT qua Bridge** — `CT_BRIDGE`.
+4. **Bạn + Codex + CT qua Bridge** — `HUMAN_CT_BRIDGE`.
 
-### Human chọn Control Tower theo phạm vi công việc
+Trong cùng lượt intake, hỏi thêm: **Có commit sau khi hoàn tất task không?**
+Chọn `COMMIT_AFTER_TASK: YES` hoặc `NO`, trừ khi request đã nói rõ. Nếu chưa
+trả lời, ghi `NOT_SELECTED`; không suy quyền stage/commit từ im lặng.
 
-Với `PAGE_LOCAL` chưa migration PASS, owning Page Chat giữ Product/shaping
-authority và có thể là Local Control Tower giao việc trực tiếp cho Codex trong
-phạm vi page đó. Với scope đã PASS, agent lấy Product Knowledge từ repository;
-Control Tower làm shaping, Human Decision, giải quyết conflict và điều phối
-governance. Page Chat cũ chỉ còn legacy evidence cho đúng scope đã PASS, không
-là Product/shaping gate. Phân loại impact và các gate của Product Change vẫn
-áp dụng; không dùng migration PASS làm Apply authorization. Với scope chưa PASS,
-khi cần chuyển từ Global Control Tower sang Local Control Tower, dừng phần việc
-phụ thuộc và nêu rõ Page Chat đích, mục tiêu, change/gate, bằng chứng và blocker.
-Human tự chọn và chuyển sang đúng chat; Global Control Tower không cần truy
-xuất lịch sử Page Chat để Local Control Tower ra quyết định.
-Để khởi động một chat mới, Human dán **toàn bộ một file** tương ứng: [Page Chat
-Operating Prompt](chatGPT/YUTA_PAGE_CHAT_OPERATING_PROMPT_V3.md) cho Local
-Control Tower hoặc [Control Tower Operating
-Prompt](chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT_V3.md) cho Global Control
-Tower. Mỗi file tự chứa Bridge Mode v1; không cần dán thêm prompt thứ hai.
-Mỗi chat phải được xác minh bằng một vòng bridge chỉ đọc mới trước việc phụ
-thuộc; prompt trong repository không tự đồng bộ sang chat đang mở.
+Không tự chọn theo silence, tab đang mở hoặc mode của task khác. Follow-up,
+chuyển gate và resume cùng task giữ mode đã chọn; không hỏi lại. Ghi mode,
+nguồn lựa chọn và scope/phase trong context hiện có, rồi carry vào
+Proposal/Analysis, Tasks và review packet khi các artifact đó được tạo bình
+thường. Không thêm artifact hoặc gate chỉ để giữ mode.
 
-Codex chỉ nhận lệnh từ chat Control Tower mà Human đã chọn và Codex đã xác minh
-đúng title, URL/conversation ID, role và scope cho run hiện tại. Local Control
-Tower có thể tiếp tục cùng Codex qua browser bridge sau khi operating context
-và protocol ở chính chat đó được xác minh. Không lấy lệnh từ hai chat cùng lúc,
-không coi việc đổi tab là approval hoặc tự động chuyển executable authority,
-không tái dùng command đã thực thi hay bỏ qua Human Gate/Apply authorization.
-Nếu target, quyền thực thi hoặc lịch sử chưa rõ, dừng trước khi gửi hay thực thi.
-Giữ nguyên causal lineage, budget, evidence, VERIFY/QA và các giới hạn chống
-replay. Bàn giao thủ công không biến QA federation còn thiếu thành `PASS`.
-Luồng chọn chat thủ công dùng browser bridge đã xác minh của từng chat; nó
-không phụ thuộc việc hoàn tất cơ chế chuyển quyền tự động của change
-`federated-control-towers-foundation`. Change đó giữ nguyên tiêu chí và trạng
-thái QA riêng cho đến khi được xử lý qua gate của chính nó.
+Codex làm repository discovery, shaping, impact classification và coordination
+trong cả bốn mode. Repository là nguồn knowledge canonical cho các scope đã
+cutover được ghi nhận; Page Chat cũ là legacy evidence. Không suy cutover của
+scope khác hoặc tự giải quyết knowledge/authority gap bằng lịch sử chat.
+Nếu repo chưa đủ để bound request, nêu decision cụ thể cho Human.
 
-Với `CROSS_MODULE` hoặc `UNCERTAIN`, Local Control Tower dừng phần việc phụ
-thuộc và lập handoff có nguồn; Human chọn Global Control Tower để điều phối.
-Codex xác minh lại target và authorization trước khi tiếp tục. Hai chat không
-tự giao tiếp với nhau, và Global Control Tower không thay Page Chat quyết định
-Product cho `PAGE_LOCAL` thuộc scope chưa migration PASS.
+### Impact classification
 
-Một thay đổi cần Control Tower khi nó đọc/ghi data của nhiều owner, thay đổi
-shared permission/security/tenancy, đi qua nhiều runtime, cần provider/legal/
-privacy review, chạm durable boundary, hoặc cần contract và QA phối hợp giữa
-nhiều module. Control Tower dùng
-[`YUTA_CONTROL_TOWER_OPERATING_PROMPT_V3.md`](chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT_V3.md)
-để chọn một cross-module change, parent coordination với nhiều bounded changes,
-hoặc trả lại Page Chat nếu thực tế là page-local.
+Codex dùng source hiện tại để phân loại trước một change:
 
-Phân loại `PAGE_LOCAL` không phải miễn trừ kiểm tra sau đó. OpenSpec `analysis`
-là lớp bảo vệ thứ hai: nếu Codex phát hiện cross-module ownership, `CONFLICT`
-hoặc requirement-level `NEEDS REVIEW`, workflow dừng và chuyển coordination
-sang Control Tower.
+| Kết quả        | Cách xử lý                                                                                                                                                  |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PAGE_LOCAL`   | Xác định capability/owner, scope, Discovery/Shaping khi cần và OpenSpec readiness.                                                                          |
+| `CROSS_MODULE` | Map owners/consumers, contracts, runtime/data boundaries và review/QA dependencies; chọn coordinated change hoặc nhiều bounded changes trong scope đã giao. |
+| `UNCERTAIN`    | Discovery chỉ đọc; dừng phần việc phụ thuộc cho đến khi ownership, scope và authority được làm rõ.                                                          |
+
+Cross-module impact, security/tenancy, provider/legal/privacy hoặc durable
+boundary cần analysis và review phù hợp; không tự bắt buộc một CT chat.
+Second-Line Protection trong OpenSpec Analysis vẫn giữ nguyên: phát hiện
+`CONFLICT` hoặc requirement-level `NEEDS REVIEW` thì dừng conclusion và hỏi
+Human decision cần thiết, không tự đổi Product/owner/permission.
+
+### Approval theo mode
+
+`CODEX_ONLY` và `CT_BRIDGE` dùng delegated independent review cho các gate
+thường trong bounded task. Mỗi gate giữ exact packet, paths/hashes, criteria,
+VERIFY/QA và integrity checks; một reviewer agent đọc độc lập với context mới
+phải approve trước khi Codex tiếp tục. Agent tạo artifact/implementation không
+tự approve. Approval ghi nguồn user delegation và actual reviewer, không giả
+Human verdict. Reviewer không có thì dừng và báo blocker.
+
+`HUMAN_COLLABORATION` và `HUMAN_CT_BRIDGE` giữ Human tham gia shaping và explicit approval tại các
+gate applicable. Trong mọi mode, đổi scope/quyền/owner/durable boundary hoặc
+hành động cần xác nhận riêng vẫn quay lại Human. Request chỉ đọc, planning-only
+hoặc phase-bounded không mở rộng vì mode selection. Routine sync/archive và
+Knowledge Consolidation chỉ nằm trong delegation khi task yêu cầu complete
+repository delivery; Release/Deploy/Production luôn có authority riêng.
+
+Các hướng dẫn “dừng chờ Human review” bên dưới mô tả Human mode và historical
+records. Ở delegated modes, đó là cùng review boundary với reviewer độc lập;
+không bỏ gate hoặc giảm evidence. Quy tắc vận hành chi tiết nằm tại
+[Task collaboration and delegated review](YUTA_AUTOMATED_CHANGE_WORKFLOW.md#task-collaboration-and-delegated-review).
+
+### CT và Bridge là tùy chọn
+
+Chỉ `CT_BRIDGE` và `HUMAN_CT_BRIDGE` liên hệ CT mà Human chọn. CT hỗ trợ shaping/coordination;
+advice, command hoặc status của CT không là gate approval hay permission.
+Human chọn Local/Page hoặc Global target phù hợp scope; Codex không tự mở,
+đổi hoặc liên hệ Page Chats. Handoff là context, không chuyển authority.
+Dùng [handoff template](chatGPT/YUTA_CONTROL_TOWER_HANDOFF_TEMPLATE_V3.md) khi
+cần relay có nguồn; các task ở hai mode còn lại không cần Bridge startup.
+
+Khi khởi động CT được chọn, dán toàn bộ một
+[Page Chat prompt](chatGPT/YUTA_PAGE_CHAT_OPERATING_PROMPT_V3.md) hoặc
+[Global CT prompt](chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT_V3.md).
+Mỗi file tự chứa Bridge Mode v1; không cần prompt thứ hai. Xác minh exact
+title, URL/conversation ID, role, scope và một fresh read-only round trước việc
+phụ thuộc. Repository edit không tự cập nhật live chat. Giữ at-most-once,
+command/result identity, delivery certainty và causal history; chỉ một CT
+endpoint cho mỗi run. Manual switching không tạo approval, replay permission
+hoặc federation QA PASS. `federated-control-towers-foundation` giữ nguyên
+criteria và trạng thái QA riêng.
+
+### Commit preference sau task
+
+Commit là lựa chọn Git delivery riêng, không là gate hay lifecycle stage.
+Giữ lựa chọn và actual source cùng mode trong task context/artifacts hiện có;
+không hỏi lại qua từng gate hoặc resume. Task cũ chưa chọn không tự có quyền commit.
+
+`YES` cho phép stage phần thay đổi quy thuộc đúng task và tạo local commit sau
+khi scope được giao cùng completion/review/evidence obligations applicable đã
+hoàn tất; không hỏi lại quyền này. Full repository delivery đợi finalization và
+Knowledge Consolidation hoàn tất; task chỉ một phase chỉ commit phase đó.
+Recheck baseline, index và exact staged diff; giữ evidence/hashes tái lập được,
+bảo toàn unrelated work và dừng commit nếu không thể tách an toàn. Ghi SHA thật
+trong chat sau commit, không sửa lại file chỉ để chèn SHA.
+
+`NO` hoặc `NOT_SELECTED` giữ thay đổi chưa commit. Lựa chọn này không cấp quyền
+push/PR/merge/deploy hay sửa lịch sử Git. Chi tiết nằm trong
+[Optional post-task local commit](YUTA_AUTOMATED_CHANGE_WORKFLOW.md#optional-post-task-local-commit).
 
 ## 5. Hướng dẫn vận hành từng bước
 
@@ -281,15 +316,17 @@ bằng chứng/hash chi tiết vẫn nằm trong review packet.
 | **Gate 3 — Final Independent Review**   | Exact implementation/evidence có đủ để approve finalization và cho phép sync/archive không?                 | `03-final-review.md`    |
 
 `PASS`, test xanh, file tồn tại, commit/PR approval hoặc recommendation của
-Codex không thay thế human decision. Mỗi approval bị ràng buộc bởi exact path
+Codex không thay thế actual mode-defined review. Mỗi approval bị ràng buộc bởi exact path
 set và SHA-256 của bytes đã review. Khi thêm, xóa, đổi tên hoặc thay bytes của
 artifact/evidence, packet liên quan trở thành
 `INVALIDATED_BY_ARTIFACT_CHANGE` và phải được review lại.
 
-Các trạng thái review packet là `AWAITING_HUMAN_REVIEW`, `APPROVED`,
-`CHANGES_REQUESTED`, và `INVALIDATED_BY_ARTIFACT_CHANGE`. Approval phải đến từ
-current user, ghi rõ change/gate đang duyệt; Gate 3 còn cần authorization rõ
-ràng cho sync và archive.
+Các trạng thái review packet là `AWAITING_HUMAN_REVIEW`,
+`AWAITING_INDEPENDENT_REVIEW`, `APPROVED`, `CHANGES_REQUESTED` và
+`INVALIDATED_BY_ARTIFACT_CHANGE`. Human mode dùng current-user decision cho
+đúng change/gate; mode 1/3 dùng actual user delegation và reviewer độc lập như
+mục 4, không tự duyệt hoặc ghi Human approval giả. Gate 3 còn cần authorization
+đúng scope cho sync/archive; phase-only hoặc review-only không có quyền này.
 
 ## 8. Tasks, phased implementation và Technical Implementation Contract
 
@@ -375,7 +412,13 @@ Một assertion còn `pending` hoặc `NO` khi applicable giữ post-Apply work 
 không đi tiếp bằng cách gán `NOT_APPLICABLE` giả. Lý do N/A hợp lệ phải được
 ghi cho từng assertion trước khi tiếp tục.
 
-Với interactive Product flow áp dụng, chờ human feedback cho đúng candidate:
+Human feedback được yêu cầu trong modes 2/4 hoặc khi acceptance
+bắt buộc Human observation. Trong modes 1/3, feedback tùy chọn chưa
+được yêu cầu ghi `HUMAN_PRODUCT_VALIDATION: NOT_REQUESTED`, cùng mode,
+candidate và lý do; đây không là ACCEPTED, QA PASS hoặc waiver. Hai development
+assertions và required VERIFY/QA vẫn phải hoàn tất.
+
+Khi Human feedback áp dụng, chờ feedback cho đúng candidate:
 `HUMAN_PRODUCT_VALIDATION = ACCEPTED | CHANGES_REQUESTED | BLOCKED`; trước
 human decision là awaiting response. `ACCEPTED` không là VERIFY PASS, QA PASS,
 Gate 3 approval hay Production Readiness. `CHANGES_REQUESTED` chỉ dùng vòng
@@ -398,7 +441,7 @@ vẫn độc lập; `DEV_USABLE = YES` có thể cùng tồn tại với product
 ### Dừng vòng lặp tại gate hiện có
 
 `ITERATION_STOP_CONTROL` là conditional stop/handoff trong anti-loop/evidence-stop
-rule hiện có của [Control Tower](chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT_V3.md),
+rule tại [Automated Workflow](YUTA_AUTOMATED_CHANGE_WORKFLOW.md#anti-loop-and-iteration-stop-control),
 không là Gate 4, stage hoặc QA status. Blocker lineage dựa trên affected claim,
 blocker class và evidenced causal root cause; stage/evaluator purpose chỉ là
 context của occurrence. Đổi câu chữ hoặc chuyển stage không xoá history. Mặc
@@ -416,7 +459,7 @@ defer/close không giả completion. `ACCEPT_LIMITATION` chỉ disposition cho
 không đổi FAIL/BLOCKED, không waive mandatory Browser QA/security/legal/payment/
 fiscal evidence, không sửa history hoặc làm yếu criteria. Thiếu evidence bắt
 buộc vẫn giữ gate blocked. Accounting và handoff record cụ thể nằm trong
-Automated Workflow và Control Tower owner, không tạo rule cạnh tranh tại đây.
+Automated Workflow, không tạo rule cạnh tranh tại đây hoặc CT prompt.
 
 ### Adoption theo finalization
 
@@ -602,7 +645,7 @@ Với non-UI change, applicable non-browser QA phải `PASS`; `QA: NOT_APPLICABL
 chỉ hợp lệ khi thật sự không có user/runtime QA dimension. `FAIL`,
 `BLOCKED_BY_ENVIRONMENT`, thiếu role/state, responsive coverage hoặc evidence
 bắt buộc đều ngăn ready Gate 3. Dùng phạm vi QA và evidence ở mục 9; readiness
-không thay thế human approval hoặc sync/archive authorization ở mục 7.
+không thay thế mode-defined approval hoặc sync/archive authorization ở mục 7.
 
 ## 11. Normative specs và sync
 
@@ -654,7 +697,9 @@ sớm nhất cần review và không tự “sửa cho đẹp” artifact đã t
 
 ## 13. `$yuta-finish-change`
 
-Hai mode có precondition và integrity scope riêng, không được trộn.
+Hai branch có precondition và integrity scope riêng, không được trộn. Cả hai
+giữ collaboration mode của task. Ví dụ Human approval bên dưới thuộc mode 2/4;
+mode 1/3 cần actual independent verdict, delegation và exact hashes ở mục 4.
 
 ### Branch A — Active finalization
 
@@ -719,7 +764,7 @@ NO_UPDATE_REQUIRED
 
 UPDATE_REQUIRED
 → docs/reviews/<change>/04-knowledge-consolidation-review.md
-→ human review
+→ mode-defined review of the exact proposed diff and current target hashes
 → recheck exact hashes
 → apply approved docs diff
 → validate
@@ -751,8 +796,12 @@ Sau đó cho fresh agent chỉ dùng repository và không có Page Chat history
 đúng bounded knowledge. Ghi exact scope, evidence và PASS trong owning source,
 link từ Module Registry. Chỉ sau PASS mới retire Product/shaping authority của
 Page Chat cho scope đó; Page Chat vẫn là legacy evidence. Scope khác chưa PASS
-giữ authority cũ. Nếu fresh agent cần Page Chat để thiết lập canonical knowledge,
-chưa đạt PASS và chưa cutover. Việc đã lấy extract cho phép tiếp tục công việc
+giữ authority cũ. Một Human exception đã được authorize và ghi completed trong
+owning repo source có thể cutover exact named scope riêng; giữ formal PASS và
+strict execution status độc lập, không suy PASS hoặc retire scope lân cận.
+Nếu fresh agent cần Page Chat để thiết lập canonical knowledge, chưa đạt
+formal PASS; không suy cutover khi chưa có PASS hoặc exact completed Human
+exception. Việc đã lấy extract cho phép tiếp tục công việc
 đối soát mà không phải liên tục quay lại Page Chat, nhưng không tự retire authority.
 
 ## 15. No-spec path
@@ -767,7 +816,7 @@ Gate 1 approved
 → no normative spec promotion
 → continue applicable Design/Tasks/Apply/Verify/QA
 → Gate 3
-→ Human Approval
+→ Mode-defined Approval
 → $yuta-finish-change
 → valid no-spec finalization
 → Archive
@@ -775,7 +824,7 @@ Gate 1 approved
 → DONE
 ```
 
-Gate 3 vẫn cần human approval và explicit finalization authorization; mọi
+Gate 3 vẫn cần mode-defined approval và bounded finalization authorization; mọi
 Technical Compliance, VERIFY và applicable QA rule vẫn áp dụng. Nếu delta specs
 tồn tại trên một claimed no-spec path, đó là conflict và workflow phải dừng.
 
@@ -796,9 +845,10 @@ dùng QA repository để tuyên bố production enabled.
 
 ### Example A — small page-local UI change
 
-Với scope chưa migration PASS, Page Chat xác nhận `PAGE_LOCAL`; nếu scope đã rõ
-thì bỏ Discovery/Shaping. Với scope đã PASS, dùng repository knowledge và
-Control Tower/Human routing theo mục 4.
+Codex lấy mode đã chọn, đọc repository và xác định `PAGE_LOCAL`; scope rõ thì
+bỏ Discovery/Shaping. Chỉ dùng CT/Page Chat nếu mode 3/4 chọn đúng
+target đã verified. Thiếu Product authority phải hỏi owning Human trước phần
+việc phụ thuộc, không tự tìm một chat để thay nguồn repo.
 Change đi qua Proposal → Analysis → Gate 1 → Specs → Gate 2; Design chỉ tạo khi
 applicable và không có Sensitive Design Gate nếu không chạm boundary nhạy cảm.
 Tasks chọn `UI / Components`, `Interaction / States` và regression cần thiết.
@@ -817,13 +867,13 @@ dimension. Gate 3 vẫn review exact technical evidence và diff.
 
 ### Example C — cross-module feature
 
-Với scope chưa migration PASS, Page Chat thực hiện impact check và trả
-`CROSS_MODULE` hoặc `UNCERTAIN`, lập handoff rồi dừng local change. Với scope đã
-PASS, Control Tower dựa vào repository để phân loại impact. Control Tower map
-owning/consumer capabilities, data owners, authority, shared contract và quyết định một coordinated change
-hay nhiều bounded changes. Chỉ sau khi Product/durable blockers được giải quyết,
-Control Tower mới cấp bounded `$yuta-run-change` request và routing cho các
-gate/QA liên quan.
+Codex thực hiện impact check từ repository, map owning/consumer capabilities,
+data owners, authority và shared contracts, rồi đề xuất một coordinated change
+hoặc nhiều bounded changes trong yêu cầu đã giao. `CROSS_MODULE` không bắt buộc
+CT; `UNCERTAIN` yêu cầu đọc rõ thêm và dừng phần phụ thuộc nếu còn thiếu quyết
+định. CT được tham gia qua Bridge khi đã chọn mode 3 hoặc 4. Giải quyết Product/durable
+blockers bằng đúng owning Human decision; các gate thường dùng reviewer theo
+mode đã chọn và giữ nguyên criteria, hashes, VERIFY/QA.
 
 ## 18. Quick reference
 
@@ -834,7 +884,7 @@ IDEA → [Discovery] → Proposal → Analysis → Gate 1
 → Design [when applicable]
 → Sensitive Design Gate [conditional]
 → Tasks → Apply → Verify → QA
-→ Gate 3 → Human Approval → $yuta-finish-change
+→ Gate 3 → Mode-defined Approval → $yuta-finish-change
 → Sync or valid no-spec finalization
 → Validate Main Specs when applicable → Archive
 → Knowledge Consolidation → DONE
@@ -849,14 +899,18 @@ qa/screenshot-manifest.md       required for UI-affecting
 04-knowledge-consolidation-review.md   conditional after archive
 
 COMMANDS
-$yuta-run-change     = start/resume/adopt; stop at next human gate
+$yuta-run-change     = start/resume/adopt; use mode-defined gate review
 $yuta-finish-change  = authorized finalization OR archived knowledge resume
 
-ESCALATION
-PAGE_LOCAL chưa migration PASS → owning Page Chat / Local Control Tower → Codex
-Scope đã migration PASS → repository knowledge + Global Control Tower → Codex
-CROSS_MODULE / UNCERTAIN → Global Control Tower → Codex
-Human chọn chat đích; hai chat không tự giao tiếp hoặc tự chuyển quyền
+COLLABORATION
+New task → ask: CODEX_ONLY / HUMAN_COLLABORATION / CT_BRIDGE / HUMAN_CT_BRIDGE
+Also ask: COMMIT_AFTER_TASK = YES / NO; unanswered = NOT_SELECTED
+Same task → retain selected mode and bounded scope
+Codex → repository discovery/shaping/impact/coordination in every mode
+CODEX_ONLY / CT_BRIDGE → actual independent routine gate review
+HUMAN_COLLABORATION / HUMAN_CT_BRIDGE → actual Human gate decisions
+CT_BRIDGE / HUMAN_CT_BRIDGE → user-selected verified target; no automatic chat/authority transfer
+Scope/permission change or separately confirmed action → current user
 Codex finding CONFLICT / requirement-level NEEDS REVIEW → stop and route
 
 QA
@@ -865,6 +919,10 @@ Backend/data-only → technical correctness in VERIFY; no meaningless Browser QA
 
 KNOWLEDGE
 Archive → scan → NO_UPDATE_REQUIRED or reviewed exact knowledge diff → DONE
+
+COMMIT
+Completed task + explicit YES → local commit of safely isolated task changes
+NO / NOT_SELECTED → leave task changes uncommitted; no push/PR/deploy permission
 ```
 
 Các bất đẳng thức phải giữ nguyên:

@@ -15,9 +15,9 @@ detailed supporting automation/workflow protocol.
 Workflow v3 automates bounded discovery, OpenSpec planning, phased
 implementation, technical verification, QA evidence, review-packet assembly,
 approved normative promotion, archive, and post-archive knowledge
-consolidation. Human approval remains mandatory at Product/authority,
-requirements, sensitive-design, final-review, and conditional knowledge-review
-boundaries.
+consolidation. Approval remains mandatory at Product/authority, requirements,
+sensitive-design, final-review, and conditional knowledge-review boundaries.
+Its source follows the selected task collaboration mode below.
 
 It does not merge release, deployment, environment enablement, or Production
 Readiness into repository implementation closure.
@@ -39,7 +39,7 @@ IDEA
   -> VERIFY
   -> QA
   -> GATE 3 — FINAL INDEPENDENT REVIEW
-  -> HUMAN APPROVAL + EXPLICIT SYNC/ARCHIVE AUTHORIZATION
+  -> MODE-DEFINED APPROVAL + BOUNDED SYNC/ARCHIVE AUTHORIZATION
   -> $yuta-finish-change                             existing orchestrator
   -> SYNC NORMATIVE SPECS OR VALID NO-SPEC FINALIZATION
   -> VALIDATE MAIN SPECS                             when applicable
@@ -58,19 +58,156 @@ sensitive change adds `02b-design-review.md` before Tasks/Apply.
 
 ## Workflow responsibilities
 
-`$yuta-run-change` starts or resumes an active change and runs only through the
-next review stop. It owns conditional Discovery/Shaping, planning artifacts,
+`$yuta-run-change` starts or resumes an active change and reaches each review
+boundary in order. It owns conditional Discovery/Shaping, planning artifacts,
 Gates 1 and 2, the conditional Design Gate, phased Tasks/Apply, VERIFY, QA, and
 Gate 3. It never syncs or archives normative specs.
 
-`$yuta-finish-change` requires explicit Gate 3 approval plus explicit sync and
-archive authorization. It rechecks reviewed hashes, syncs selected deltas,
+`$yuta-finish-change` requires exact Gate 3 approval plus bounded sync and
+archive authorization under the selected mode. It rechecks reviewed hashes, syncs selected deltas,
 validates main specs, archives synchronously, and performs Knowledge
 Consolidation. It also resumes an approved Knowledge Review for an already
 archived change without recreating an active change.
 
-Reviewers remain independent. Automation cannot approve Product Intent, resolve
-authority conflicts, infer permission, or promote lifecycle/readiness.
+Reviewers remain independent. Delegated review cannot invent Product Intent,
+resolve authority conflicts by assumption, infer permission, or promote
+lifecycle/readiness.
+
+## Task collaboration and delegated review
+
+This section implements [ADR-008](decisions/ADR-008-task-collaboration-and-delegated-review.md)
+as the canonical operating policy for the current user's
+2026-10-01 decision: each new task asks for Codex alone, Codex with the user,
+Codex with an optional CT through Bridge, or Codex with both the user and CT.
+The user also requested a separate per-task choice to commit after completion.
+The user explicitly delegated
+routine gate progression in the assigned scope to Codex with independent review,
+asking for Human input only for scope/authority changes or actions requiring
+separate confirmation. This delegation changes review routing, not gate order,
+acceptance criteria, evidence, protected boundaries or historical truth.
+
+Before task execution, ask for exactly one mode unless the request already
+selects it. No timeout or preselected UI option is a submitted choice. Bounded
+read-only intake may prepare the choice; do not create a change, mutate sources,
+run an evaluator or contact CT before the choice. A clarification, continuation,
+new stage or resume of the same task retains its mode. A new independent goal
+asks again. A change of mode requires an explicit current-user instruction.
+
+| Choice                                    | Recorded mode         | Coordination and review                                                                                                                                                           |
+| ----------------------------------------- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Codex alone                               | `CODEX_ONLY`          | Codex coordinates and progresses routine gates after separate independent review; no CT contact or routine Human review request.                                                  |
+| Codex with the user                       | `HUMAN_COLLABORATION` | Codex coordinates; the user participates in shaping and explicitly approves the applicable gates.                                                                                 |
+| Codex with CT through Bridge              | `CT_BRIDGE`           | Codex coordinates with the exact user-selected CT; routine gate review uses the same delegation as Codex alone. CT advice and bridge commands are not approvals.                  |
+| Codex with the user and CT through Bridge | `HUMAN_CT_BRIDGE`     | Codex coordinates with the user and exact selected CT; the user participates in shaping and explicitly approves applicable gates. CT provides advice through the verified Bridge. |
+
+Human collaboration modes are `HUMAN_COLLABORATION` and `HUMAN_CT_BRIDGE`;
+CT-enabled modes are `CT_BRIDGE` and `HUMAN_CT_BRIDGE`. The delegated modes
+remain only `CODEX_ONLY` and `CT_BRIDGE`; adding Human and CT together does not
+delegate the Human's gate decision to CT or the author.
+
+Ask the separate commit question in the same intake: commit after this task
+(`YES`) or leave its changes uncommitted (`NO`), unless already explicitly
+answered. Record `COMMIT_AFTER_TASK: YES | NO | NOT_SELECTED` and the actual
+`COMMIT_SELECTION_SOURCE`. Silence or a preselected option remains
+`NOT_SELECTED`; it grants no Git mutation. Authorized task work may proceed
+while this independent preference is pending, but staging/commit may not.
+
+Record `COLLABORATION_MODE`, the actual `MODE_SELECTION_SOURCE`, task goal,
+bounded scope/phase, hard constraints and exclusions in the existing task
+context. Carry that record into Proposal/Analysis, Tasks and review packets
+as they are normally created; do not add a mandatory artifact. Child/reviewer
+work inherits this task selection and does not ask the mode question again.
+Commit choice and its source also persist across follow-ups, gates and resume;
+child/reviewer work inherits them without another question. A change to either
+choice requires an explicit current-user instruction. Existing tasks do not
+gain commit authorization from adoption of this policy.
+Mode selection delegates decisions only needed for the requested outcome:
+a read-only, planning-only or phase-bounded request stays so bounded. Normal
+spec sync, archive and Knowledge Consolidation are included only when the
+user's task requests complete repository delivery of the named change.
+
+Codex reads canonical repository sources, maps owners/consumers and runtime/data
+boundaries, classifies `PAGE_LOCAL | CROSS_MODULE | UNCERTAIN`, and proposes one
+coordinated change or bounded dependent changes. Cross-module impact requires
+this analysis, not a mandatory CT chat. Unresolved Product direction, missing
+authority, conflicts, a material scope/permission/ownership/durable-boundary
+change, a budget exception, or a separately confirmed action still requires the
+current user's decision. Do not create a speculative answer or broaden scope
+because a mode was selected. Local commit requires its separately selected
+`COMMIT_AFTER_TASK: YES` and the procedure below. Push/PR/merge, deployment/release,
+production enablement, destructive operations and live Project settings remain
+outside routine repository delegation and need their own authorization.
+
+### Independent gate approval
+
+For `CODEX_ONLY` or `CT_BRIDGE`, prepare the same exact review packet, hashes,
+criteria and evidence that the applicable gate requires. Use
+`Review status: AWAITING_INDEPENDENT_REVIEW`, then request a separate read-only
+reviewer agent with a fresh context (`fork_turns: "none"` when using
+`spawn_agent`) containing the sourced requirement,
+delegation/scope, canonical authorities, exact candidate paths/hashes and
+evidence. Do not supply the author's reasoning as the review conclusion. The
+reviewer must inspect the candidate independently and return `APPROVED`,
+`CHANGES_REQUESTED` or `BLOCKED`, with findings and exact reviewed identities.
+Review is not implementation or permission to write. The author may never
+replace a missing reviewer with self-review. If the reviewer is unavailable,
+report the blocker and ask for a bounded alternative.
+
+After an `APPROVED` verdict, recheck every reviewed path/hash before recording:
+
+```text
+Review status: APPROVED
+Approval source: USER_DELEGATION_WITH_INDEPENDENT_REVIEW
+Mode selection source: <actual current-user instruction and bounded task>
+Independent reviewer: <actual agent/context identity>
+Independent review evidence: <verdict, findings and exact path/hash references>
+Approval recorded by: Codex workflow
+Approved: <actual timestamp>
+```
+
+This is delegated approval, never a fabricated Human verdict. Human-only
+examples and stop/resume instructions in the supporting workflows apply to
+`HUMAN_COLLABORATION`, `HUMAN_CT_BRIDGE` and preserved historical records. In delegated modes,
+the corresponding routine gate awaits independent review instead of a Human
+reply, then continues only after the procedure above. Required evidence and
+earlier-gate/hash checks remain unchanged. A changed candidate invalidates its
+review and needs a fresh independent verdict; an unresolved authority decision
+cannot be bypassed by reviewer approval. Reviewer-requested corrections inside
+scope may be implemented and re-reviewed under the existing iteration limits.
+
+Gate 3 needs an independent verdict on the exact completed candidate. When
+full repository completion is within the recorded task scope, it must also
+identify the exact deltas/main-spec paths or valid no-spec branch and record
+`Sync authorization: AUTHORIZED_BY_USER_DELEGATION`. Only then may the
+orchestrator call `$yuta-finish-change`; run-change itself still performs no
+sync/archive. Knowledge Review separately needs its exact proposed diff,
+target hashes and an independent verdict under that same bounded task. Prior
+Gate 3 approval alone never authorizes an unrelated knowledge update.
+
+`HUMAN_COLLABORATION` and `HUMAN_CT_BRIDGE` retain explicit current-user approvals and the existing
+`AWAITING_HUMAN_REVIEW`/`AUTHORIZED_BY_CURRENT_USER` records. In every mode,
+actual Human/Product/external decisions remain attributable to their real
+source. CT cannot approve on the user's behalf.
+
+### Manual Product feedback and adoption
+
+`DEV_USABLE` and `MANUAL_TEST_READY` remain applicable evidence assertions in
+every mode. In `CODEX_ONLY` and `CT_BRIDGE`, optional manual Product feedback
+is recorded `HUMAN_PRODUCT_VALIDATION: NOT_REQUESTED` with mode, candidate and
+reason unless the user requests it or approved acceptance requires a Human
+observation. `NOT_REQUESTED` is an unassessed participation marker, not an
+`ACCEPTED` verdict, QA status, PASS or waiver. A mandatory Human/provider/legal
+observation still blocks until obtained. Both Human collaboration modes retain the
+candidate-bound manual feedback path. Any actual Human feedback in any mode
+follows the existing local-correction/scope-change and retest rules.
+
+This policy applies prospectively to new tasks after the authorized policy
+edit is applied and verified. Preserve existing task mode, approvals, FAIL/
+BLOCKED, counters and archived evidence. An active pre-transition change needs
+an explicit current-user mode selection/opt-in before delegated progression;
+do not rewrite earlier Human approvals or retroactively manufacture reviews.
+The current governance-edit conversation continues its already authorized
+Human collaboration; this edit does not start or approve another change.
 
 ## Conditional Discovery / Shaping
 
@@ -147,12 +284,12 @@ architecture/cross-cutting impact, data/runtime ownership, security/authorizatio
 migration/destructive data, significant dependency/provider,
 significant performance/operational complexity, and unresolved technical
 decisions. If applicable, create/use meaningful Design normally. Sensitive
-Design Gate applicability is a separate human-review classification; omission
+Design Gate applicability is a separate mode-defined review classification; omission
 must never bypass a required sensitive gate. Preserve pre-existing Design.
 
 When none apply, the approved YUTA controlled adapter exception permits Tasks
 only when Design is the sole deliberately omitted dependency and every other
-prerequisite and earlier human gate is satisfied. Retrieve current Tasks
+prerequisite and earlier mode-defined gate is satisfied. Retrieve current Tasks
 instructions even if raw status is blocked. Do not use Continue as an implicit
 bypass, run Propose across unapproved gates, or create a placeholder Design.
 
@@ -318,11 +455,16 @@ from `UI_AFFECTING` alone:
 | Docs/governance only without an interactable runtime flow | Both may be `NOT_APPLICABLE` with distinct reasons.                                             | Not applicable; semantic review/VERIFY remain.                   |
 | Infrastructure only                                       | Assess actual local/dev setup or probe: applicable when human-operable, otherwise reasoned N/A. | Applies only for interactive Product/operator behavior.          |
 
+The table identifies flows that can receive Human feedback, not a requirement
+to involve the user in every mode. Apply the selected mode's manual-feedback
+rule above: delegated optional feedback may be `NOT_REQUESTED` with mode,
+candidate and reason; mandatory Human observation remains blocking.
+
 The two assertion results may differ; record independent scope/reason for each.
 Missing provider, environment, data or permission cannot convert an existing
 flow into N/A. Reassess applicability if approved scope materially changes.
 
-For an applicable interactive Product flow, record
+When Human feedback is requested or required for an interactive Product flow, record
 `HUMAN_PRODUCT_VALIDATION` with candidate/scope, handoff reference, actual human
 decision source/time, feedback, disposition and whether another human look is
 required. Before human action use `AWAITING_RESPONSE`, not a fourth verdict.
@@ -353,13 +495,17 @@ production remains blocked. Release, Deploy, legal/staging and Production
 Readiness stay with their existing operations authority; no
 `PRODUCTION_READY` development stage or lifecycle value is introduced.
 
-### Iteration accounting and stop handoff
+### Anti-loop and iteration stop control
 
-The existing [Control Tower anti-loop/evidence-stop rule](chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT_V3.md)
-owns the decision. This section defines the workflow record and counting
-mechanics; Page Chat/handoff carry facts, and the run skill will execute them
-after adoption. `ITERATION_STOP_CONTROL` is conditional inside the affected
-gate, not Gate 4, a stage, QA status or a parallel anti-loop authority.
+This workflow owns the anti-loop/evidence-stop rule and its accounting in every
+collaboration mode. CT/Page Chat/handoffs carry facts and reference this owner;
+they define no separate budget or decision authority. Bound attribution,
+correction and revalidation to the approved question, evidence obligation and
+stop condition. Established failure may justify authorized correction; without
+established failure, retain an evidence limitation only when approved criteria
+permit it. Do not build generic evidence infrastructure to manufacture PASS.
+`ITERATION_STOP_CONTROL` is conditional inside the affected gate, not Gate 4,
+a stage, QA status or a parallel anti-loop authority.
 
 Keep an `ITERATION_STOP_CONTROL` ledger in the same Tasks section when a
 blocker/retry exists; otherwise record `NONE` with reason. One stable lineage
@@ -424,6 +570,23 @@ QA/security/legal/payment/fiscal evidence, rewrite history or weaken criteria.
 When current gate criteria still require missing evidence, that gate remains
 blocked. Formal QA vocabulary, Technical Compliance, VERIFY and Gate 3
 readiness remain independent.
+
+Carry a bounded stop packet in the existing Tasks/review context:
+
+```text
+Current gate/stage and evaluator purpose: <exact context>
+Affected claim and criterion: <exact obligation>
+Lineage ID, blocker class, evidenced cause/confidence: <facts or provisional>
+Recovery attempts used/max: <count / 2, or Human-authorized bound>
+Execution generations used/max: <bucket and count / 3, or authorized bound>
+Actions, executions and last material outcome: <chronological evidence>
+Product defect proven / implementation defect proven: YES | NO, with evidence
+Evidence/environment limitation and historical FAIL/BLOCKED: <unchanged facts>
+Remaining mandatory evidence and safe options: <exact obligations/options>
+Recommended bounded context: <reason, not approval>
+Human decision: PENDING -> FIX | ACCEPT_LIMITATION | SPLIT_CHANGE | DEFER_OR_CLOSE
+Decision source, scope and effect on current gate: <actual instruction>
+```
 
 ## VERIFY
 
@@ -529,7 +692,7 @@ source/hash and phase-contract completion.
 Any reviewed addition, removal, rename, or byte change sets the affected packet
 to `INVALIDATED_BY_ARTIFACT_CHANGE` and stops for re-review. Passing commands,
 Git/PR state, packet existence, or prior assistant text never substitutes for
-current-user approval.
+actual mode-defined approval evidence.
 
 ## Sync, validation, and archive
 
@@ -552,17 +715,20 @@ promotes lifecycle, deployment, environment, provider, or readiness state.
 Active-change finalization and archived Knowledge Review resume are distinct
 branches with non-interchangeable preconditions and integrity checks.
 
-- **Active-change finalization** requires an existing active change, Gate 3
-  `AWAITING_HUMAN_REVIEW`, and explicit current-user final approval plus
-  sync/archive authorization. It recomputes reviewed planning-artifact,
+- **Active-change finalization** requires an existing active change. In Human
+  mode, require Gate 3 `AWAITING_HUMAN_REVIEW` and explicit current-user final
+  approval plus sync/archive authorization. In a delegated mode, require valid
+  independently `APPROVED` Gate 3 and bounded full-completion sync/archive
+  authorization under the collaboration policy. It recomputes reviewed planning-artifact,
   implementation-diff, VERIFY-evidence, Technical Compliance, and applicable
   earlier-gate hashes before sync, validation, and archive.
 - **Archived Knowledge Review resume** requires Gate 3 already `APPROVED`, a
   successfully recorded finish/archive and `Workflow status:
 AWAITING_KNOWLEDGE_REVIEW`, no active change, the recorded archive, and an
-  `AWAITING_HUMAN_REVIEW` Knowledge Review packet. It validates only the
-  packet's target path set, target hashes, proposed-diff hash, and explicit
-  current-user Knowledge Review approval before applying that exact
+  mode-defined pending Knowledge Review packet (or independently `APPROVED`
+  exact packet in a delegated mode). It validates only the
+  packet's target path set, target hashes, proposed-diff hash, and actual
+  mode-defined Knowledge Review approval before applying that exact
   documentation diff and closing `DONE`.
 
 The archived-resume branch never requires Gate 3 to be awaiting review, never
@@ -578,15 +744,48 @@ After archive, follow
   follow-up, and close `DONE`.
 - `UPDATE_REQUIRED`: create
   `docs/reviews/<change>/04-knowledge-consolidation-review.md` with exact
-  proposed diff and target/diff hashes, then stop without editing canonical
-  knowledge.
-- After explicit Knowledge Review approval, recheck hashes, apply only the
+  proposed diff and target/diff hashes; obtain the mode-defined review before
+  editing canonical knowledge.
+- After valid Knowledge Review approval, recheck hashes, apply only the
   approved documentation diff, run documentation/architecture validation, and
   close `DONE`.
 
 Knowledge Consolidation cannot approve Product Decisions, change durable
 boundaries, ownership or permissions, promote lifecycle/readiness, rewrite
 normative specs, or resolve `NEEDS REVIEW` by assumption.
+
+## Optional post-task local commit
+
+This is a Git delivery preference, not a workflow stage, gate, approval source
+or lifecycle promotion. `COMMIT_AFTER_TASK: YES` from the actual current user
+authorizes safely staging and locally committing this task's attributed changes
+after its requested scope and applicable completion/review/evidence obligations
+are satisfied. Do not ask for that same permission again. For full repository
+delivery, finish applicable finalization and Knowledge Consolidation first;
+a phase-bounded task commits only its completed authorized phase and does not
+finalize the whole change. Preserve any review still pending outside task scope.
+
+Before staging, recheck the branch/HEAD, index, working-tree and untracked state
+against the task's captured baseline. Inspect the exact candidate paths and
+hunks, exclude secrets and unrelated work, and ensure the commit preserves
+reviewed bytes and reproducible evidence. If evidence uses a Git diff, retain
+its recorded base and attribution so committing cannot silently erase or
+invalidate that comparison. Inspect the staged diff before committing. When
+mixed changes or unrelated staged work cannot be isolated safely, stop the
+commit and report the specific blocker; keep the completed task work intact.
+Do not use blanket staging, amend/rewrite history, reset unrelated changes or
+include them to make a commit possible.
+
+Create a local commit with an English message, verify its actual paths/content
+and the remaining worktree/index, then report its SHA in chat/task context.
+Do not edit committed files merely to insert that SHA and create another commit
+loop. `NO` or `NOT_SELECTED` means no staging/commit; report the choice and
+remaining changes. An already recorded successful commit is not repeated on
+resume. Uncertain commit outcome requires read-only inspection, not a replay.
+
+This choice grants no push, PR, merge, deployment, release, destructive operation
+or live Project permission. It does not approve a gate, waive checks, replace
+sync/archive authorization or change the selected collaboration mode.
 
 ## Release/deploy lane
 

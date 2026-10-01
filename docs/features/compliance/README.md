@@ -90,10 +90,13 @@ Model](../../AUTHORITY_MODEL.md#scope-bound-legacy-page-chat-transition):
 - the repository is canonical knowledge for this exact migrated scope;
 - the Veille & conformité Page Chat is `LEGACY EVIDENCE ONLY` for this exact
   scope;
-- Control Tower owns shaping, genuine-conflict resolution, Human Decision
-  routing, cross-module reasoning, and governance coordination; and
-- Coding Agents use repository discovery for analysis and perform only
-  separately authorized execution and verification.
+- Codex owns repository discovery, shaping, cross-module reasoning and
+  governance coordination under
+  [task collaboration](../../YUTA_AUTOMATED_CHANGE_WORKFLOW.md#task-collaboration-and-delegated-review).
+  CT advice is optional in `CT_BRIDGE` or `HUMAN_CT_BRIDGE`; unresolved
+  Product/authority decisions still require the owning Human.
+- Coding Agents execute and verify only the selected task's authorized scope;
+  routine gates use the mode-defined review mechanism.
 
 This cutover changes knowledge authority only. It does not close the exact V1,
 promote a proposal, resolve `VC-01` through `VC-23`, qualify a current source,

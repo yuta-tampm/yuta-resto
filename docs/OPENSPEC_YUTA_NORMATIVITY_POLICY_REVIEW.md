@@ -149,9 +149,21 @@ Required authority follows the change scope:
   applicable external-dependency review; and
 - a cross-cutting change may require more than one accountable reviewer.
 
-Codex may assemble evidence and execute an explicitly authorized sync. It may
-not approve Product Intent, resolve a conflict by assumption, or infer approval
-from workflow status.
+Codex may assemble evidence and execute an authorized sync. The author may
+not self-approve Product Intent, resolve a conflict by assumption, or infer
+approval from workflow status.
+
+For prospectively selected `CODEX_ONLY` or `CT_BRIDGE` tasks, the actual
+current-user delegation under
+[the collaboration policy](YUTA_AUTOMATED_CHANGE_WORKFLOW.md#task-collaboration-and-delegated-review)
+permits a separate read-only reviewer with fresh context to approve routine
+gates within the sourced requirement baseline and accepted boundaries.
+Record the delegation, reviewer identity, verdict, exact reviewed hashes and
+bounded sync authorization; do not invent a Human decision. Unresolved Product
+direction, conflicting authorities, protected-boundary changes or required
+external/legal/provider decisions still need their owning authority. Human
+mode and historical approvals retain their explicit Human gate rules. The
+selected mode, a reviewer opinion or a technical PASS alone grants no sync.
 
 ## 6. Sync Semantics
 
@@ -168,7 +180,8 @@ After normativity is explicitly activated, main-spec content is normative only
 when all of these are true:
 
 1. the exact delta passed the approval gate;
-2. the accountable reviewer explicitly authorized sync;
+2. sync was explicitly authorized by the accountable Human reviewer or by a
+   valid bounded user delegation with independent review;
 3. sync completed without partial or unexpected changes; and
 4. the resulting main specs passed validation and diff review.
 

@@ -85,6 +85,16 @@ Then classify `RELEASE_FOLLOW_UP` as `NOT_REQUIRED`, `REQUIRED`, or `UNKNOWN`.
 
 ## Update-required path
 
+Inherit the task's collaboration mode and bounded completion scope under
+[the delegated-review policy](YUTA_AUTOMATED_CHANGE_WORKFLOW.md#task-collaboration-and-delegated-review).
+Both Human collaboration modes (`HUMAN_COLLABORATION` and `HUMAN_CT_BRIDGE`)
+require the actual current-user Knowledge Review decision.
+`CODEX_ONLY` and `CT_BRIDGE` require a fresh, separate read-only reviewer with
+the exact proposed diff and target hashes. Neither the author, CT advice nor
+the earlier Gate 3 verdict may approve this new diff. Independent review may
+reconcile completed evidence only within the recorded full-completion scope;
+it cannot approve new Product Intent or change a protected boundary.
+
 Do not edit canonical knowledge. Create:
 
 ```text
@@ -100,15 +110,19 @@ The packet includes:
 - SHA-256 hashes of current target files and exact proposed-diff bytes;
 - confirmation that no unapproved Product Decision, durable boundary,
   ownership/permission, lifecycle/readiness, or normative-spec change occurs;
-- `Review status: AWAITING_HUMAN_REVIEW`.
+- `Review status: AWAITING_HUMAN_REVIEW` in Human mode, or
+  `AWAITING_INDEPENDENT_REVIEW` in a delegated mode.
 
-Record `Workflow status: AWAITING_KNOWLEDGE_REVIEW` in Gate 3 and stop.
+Record the successful finish/archive outcome and archive location plus
+`Workflow status: AWAITING_KNOWLEDGE_REVIEW` in Gate 3. Stop for Human review
+in Human mode; obtain independent review in a delegated mode. While the exact
+review is pending or blocked, the repository workflow is not `DONE`.
 
 ## Approved knowledge update
 
 Resume `$yuta-finish-change` against the archive location recorded by Gate 3;
-never recreate an active change. Require explicit current-user Knowledge Review
-approval for the exact packet.
+never recreate an active change. Require valid mode-defined Knowledge Review
+approval for the exact packet, diff and current target hashes.
 
 This is Branch B — archived Knowledge Review resume. Before applying, require
 all of the following:
@@ -119,13 +133,14 @@ all of the following:
 - Gate 3 records `Workflow status: AWAITING_KNOWLEDGE_REVIEW`.
 - No active change exists at the resolved active-change path.
 - The recorded archive exists and retains the completed-change evidence.
-- `04-knowledge-consolidation-review.md` exists with
-  `Review status: AWAITING_HUMAN_REVIEW`.
+- `04-knowledge-consolidation-review.md` exists with the mode-defined pending
+  status, or a valid independently `APPROVED` packet in a delegated mode.
 - The current user explicitly approves the exact Knowledge Review packet and
-  proposed documentation diff.
+  proposed documentation diff in Human mode, or a fresh independent verdict
+  approves it within the actual recorded full-completion delegation.
 
 Branch B checks only the Knowledge Review target path set, target hashes,
-proposed-diff hash, and current explicit approval. It does not reopen or rerun
+proposed-diff hash, and actual mode-defined approval evidence. It does not reopen or rerun
 Gate 3 approval, active-change integrity checks, sync, or archive; historical
 Gate 3 and sync/archive authorization do not authorize the documentation edit.
 
