@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-09-29
+Last updated: 2026-10-01
 
 ## Finding the right authority
 
@@ -56,6 +56,15 @@ sensitive details never belong in the repository.
 - [`MODULE_REGISTRY.md`](MODULE_REGISTRY.md)
 - [`CURRENT_STATE.md`](CURRENT_STATE.md)
 - [`REPOSITORY_MAP.md`](REPOSITORY_MAP.md)
+
+### Release planning proposal
+
+- [`PRODUCT_RELEASE_ROADMAP.md`](PRODUCT_RELEASE_ROADMAP.md) — proposed single
+  owner for release sequence, customer journey and exposure policy; awaiting
+  Human / Control Tower review, with no release or runtime authorization.
+- [`release-roadmap-foundation` discovery handoff](reviews/release-roadmap-foundation/discovery-handoff.md)
+  — evidence, unresolved decisions and exact next review step; no active
+  OpenSpec change has been created.
 
 ### Architecture
 

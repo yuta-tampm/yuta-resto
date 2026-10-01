@@ -1,10 +1,14 @@
 Change: pointage-manual-test-environment
 Gate: 2b — SENSITIVE DESIGN REVIEW
-Review status: AWAITING_HUMAN_REVIEW
+Review status: APPROVED
 Created: 2026-09-27T15:12:20Z
 Schema: yuta-spec-driven
 Analysis conclusion: NO_SPEC_BEHAVIOR_CHANGE
 Sensitive change: YES — synthetic credential, disposable database, environment isolation, trusted-address test provider, runtime admission, and cleanup
+Approval source: explicit current-user instruction — “phê duyệt Design”
+Approval recorded by: Codex workflow
+Approved: 2026-09-30T21:57:58Z
+Approval scope: exact Design; Tasks / Implementation Planning only
 
 # Review decision requested
 
@@ -129,4 +133,4 @@ Strict OpenSpec validation: PASS for this exact Design before packet generation.
 Recommendation: APPROVE_FOR_TASKS_AND_IMPLEMENTATION_PLANNING only if this exact Design and its bounded risks are accepted. Otherwise request precise changes. Do not Apply, start a database/container, open Browser QA, or enable Pointage.
 
 SENSITIVE DESIGN GATE
-Review status: AWAITING_HUMAN_REVIEW
+Review status: APPROVED

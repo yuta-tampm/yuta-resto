@@ -1,6 +1,6 @@
 import { fork, spawn, type ChildProcess } from 'node:child_process';
 import { randomBytes, randomUUID } from 'node:crypto';
-import { watch } from 'node:fs';
+import { watch, type FSWatcher } from 'node:fs';
 import { createServer } from 'node:net';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -232,8 +232,85 @@ export function createPointageReconsumerReceiptCollector(
   };
 }
 
+export const pointageManualShadowValues = Object.freeze({
+  AUTH_SECRET: '!pointage-deny!',
+  CLOUD_DATABASE_SSL: 'false',
+  CLOUD_DATABASE_URL:
+    'postgresql://pointage_denied:deny@127.0.0.1:65431/yuta_pointage_manual_denied',
+  GOOGLE_BUSINESS_PROFILE_CLIENT_ID: '!pointage-deny!',
+  GOOGLE_BUSINESS_PROFILE_CLIENT_SECRET: '!pointage-deny!',
+  GOOGLE_BUSINESS_PROFILE_REDIRECT_URI: '!pointage-deny!',
+  NEXT_PUBLIC_APP_URL: origin,
+  REPUTATION_CREDENTIAL_ENCRYPTION_KEY: '!pointage-deny!',
+  YUTA_OPENAI_EVALUATION_API_KEY: '!pointage-deny!',
+  GOOGLE_CLIENT_ID: '!pointage-deny!',
+  GOOGLE_CLIENT_SECRET: '!pointage-deny!',
+  GOOGLE_TOKEN_ENCRYPTION_KEY: '!pointage-deny!',
+  YUTA_PERSONNEL_CONTRACT_EXTRACTION_MODE: 'deterministic-synthetic',
+} as const);
+
+const manualShadowProfileSchema = z
+  .object({
+    AUTH_SECRET: z.literal(pointageManualShadowValues.AUTH_SECRET),
+    CLOUD_DATABASE_SSL: z.literal(
+      pointageManualShadowValues.CLOUD_DATABASE_SSL,
+    ),
+    CLOUD_DATABASE_URL: z.literal(
+      pointageManualShadowValues.CLOUD_DATABASE_URL,
+    ),
+    GOOGLE_BUSINESS_PROFILE_CLIENT_ID: z.literal(
+      pointageManualShadowValues.GOOGLE_BUSINESS_PROFILE_CLIENT_ID,
+    ),
+    GOOGLE_BUSINESS_PROFILE_CLIENT_SECRET: z.literal(
+      pointageManualShadowValues.GOOGLE_BUSINESS_PROFILE_CLIENT_SECRET,
+    ),
+    GOOGLE_BUSINESS_PROFILE_REDIRECT_URI: z.literal(
+      pointageManualShadowValues.GOOGLE_BUSINESS_PROFILE_REDIRECT_URI,
+    ),
+    NEXT_PUBLIC_APP_URL: z.literal(
+      pointageManualShadowValues.NEXT_PUBLIC_APP_URL,
+    ),
+    REPUTATION_CREDENTIAL_ENCRYPTION_KEY: z.literal(
+      pointageManualShadowValues.REPUTATION_CREDENTIAL_ENCRYPTION_KEY,
+    ),
+    YUTA_OPENAI_EVALUATION_API_KEY: z.literal(
+      pointageManualShadowValues.YUTA_OPENAI_EVALUATION_API_KEY,
+    ),
+    GOOGLE_CLIENT_ID: z.literal(pointageManualShadowValues.GOOGLE_CLIENT_ID),
+    GOOGLE_CLIENT_SECRET: z.literal(
+      pointageManualShadowValues.GOOGLE_CLIENT_SECRET,
+    ),
+    GOOGLE_TOKEN_ENCRYPTION_KEY: z.literal(
+      pointageManualShadowValues.GOOGLE_TOKEN_ENCRYPTION_KEY,
+    ),
+    YUTA_PERSONNEL_CONTRACT_EXTRACTION_MODE: z.literal(
+      pointageManualShadowValues.YUTA_PERSONNEL_CONTRACT_EXTRACTION_MODE,
+    ),
+  })
+  .strict();
+declare const manualShadowProfileBrand: unique symbol;
+export type PointageManualShadowProfile = Readonly<
+  typeof pointageManualShadowValues
+> & {
+  readonly [manualShadowProfileBrand]: true;
+};
+const manualShadowProfiles = new WeakSet<object>();
+
+// Only these reviewed nonempty denial values can reach Next through this path.
+export function createPointageManualShadowProfile(
+  input: unknown,
+): PointageManualShadowProfile {
+  const parsed = manualShadowProfileSchema.safeParse(input);
+  if (!parsed.success)
+    throw new Error('Pointage manual shadow profile refused.');
+  const profile = Object.freeze(parsed.data);
+  manualShadowProfiles.add(profile);
+  return profile as PointageManualShadowProfile;
+}
+
 export function pointageChildEnvironment(
   environment: NodeJS.ProcessEnv,
+  manualProfile?: PointageManualShadowProfile,
 ): NodeJS.ProcessEnv {
   // Validate before sanitizing; never erase VERCEL to manufacture eligibility.
   if (
@@ -241,6 +318,12 @@ export function pointageChildEnvironment(
     environment.VERCEL !== undefined
   )
     throw new Error('Pointage test launch refused.');
+  if (
+    manualProfile !== undefined &&
+    (!manualShadowProfiles.has(manualProfile) ||
+      !Object.isFrozen(manualProfile))
+  )
+    throw new Error('Pointage manual shadow profile refused.');
   const result: NodeJS.ProcessEnv = { NODE_ENV: 'development' };
   for (const key of [
     'SystemRoot',
@@ -259,6 +342,7 @@ export function pointageChildEnvironment(
   }
   return {
     ...result,
+    ...manualProfile,
     NODE_ENV: 'development',
     YUTA_POINTAGE_SYNTHETIC_TEST_MODE: 'true',
     POINTAGE_TEST_ORIGIN: origin,
@@ -269,6 +353,7 @@ export function pointageChildEnvironment(
 export function spawnPointageNextChild(
   environment: NodeJS.ProcessEnv,
   mode?: '--serve-listener-loss-proof' | '--serve-provider-unavailable-proof',
+  manualProfile?: PointageManualShadowProfile,
 ) {
   if (
     mode !== undefined &&
@@ -281,7 +366,7 @@ export function spawnPointageNextChild(
     mode === undefined ? [] : [mode],
     {
       cwd: join(root, 'apps/backoffice'),
-      env: pointageChildEnvironment(environment),
+      env: pointageChildEnvironment(environment, manualProfile),
       execArgv: [
         '--import',
         pathToFileURL(
@@ -329,10 +414,14 @@ export function launchPointageNextChild(
   input: Omit<PointageTestInit, 'parentPid' | 'childPid'>,
   environment: NodeJS.ProcessEnv = process.env,
   mode?: '--serve-listener-loss-proof' | '--serve-provider-unavailable-proof',
+  manualProfile?: PointageManualShadowProfile,
 ) {
   const before = pointageSourceInventory();
-  const child = spawnPointageNextChild(environment, mode);
-  if (!child.pid) throw new Error('Pointage test launch refused.');
+  const child = spawnPointageNextChild(environment, mode, manualProfile);
+  if (!child.pid) {
+    if (manualProfile) child.once('error', () => undefined);
+    throw new Error('Pointage test launch refused.');
+  }
   const statuses: PointageTestStatus[] = [];
   const admissionTrace = createPointageAdmissionTraceCollector(
     input.runId,
@@ -343,6 +432,9 @@ export function launchPointageNextChild(
     child.pid,
   );
   let invalidMessage = false;
+  let stopPromise: Promise<void> | undefined;
+  const stop = () =>
+    (stopPromise ??= stopPointageNextChild(child, input.runId));
   child.on('message', (message) => {
     if (
       typeof message === 'object' &&
@@ -367,7 +459,7 @@ export function launchPointageNextChild(
         proof.accept(message);
       } catch {
         invalidMessage = true;
-        void stopPointageNextChild(child, input.runId);
+        void stop();
       }
       return;
     }
@@ -378,7 +470,7 @@ export function launchPointageNextChild(
       parsed.data.runId !== input.runId
     ) {
       invalidMessage = true;
-      void stopPointageNextChild(child, input.runId);
+      void stop();
       return;
     }
     if (parsed.data.stage === 'READY') {
@@ -390,30 +482,40 @@ export function launchPointageNextChild(
     }
     statuses.push(parsed.data);
   });
-  const watcher = watch(root, { recursive: true }, (_event, file) => {
-    const path = file?.toString().replaceAll('\\', '/');
-    if (
-      path &&
-      !/^(?:apps\/backoffice\/(?:src\/|test\/helpers\/pointage-raw-clocking-|next\.config\.ts$|tsconfig\.json$|package\.json$)|packages\/(?:auth|contracts|db-cloud|tenant)\/(?:src\/|test\/helpers\/pointage-raw-clocking-test-database\.ts$|package\.json$|tsconfig\.json$)|package\.json$|pnpm-lock\.yaml$)/u.test(
-        path,
+  let watcher: FSWatcher | undefined;
+  try {
+    watcher = watch(root, { recursive: true }, (_event, file) => {
+      const path = file?.toString().replaceAll('\\', '/');
+      if (
+        path &&
+        !/^(?:apps\/backoffice\/(?:src\/|test\/helpers\/pointage-raw-clocking-|next\.config\.ts$|tsconfig\.json$|package\.json$)|packages\/(?:auth|contracts|db-cloud|tenant)\/(?:src\/|test\/helpers\/pointage-raw-clocking-test-database\.ts$|package\.json$|tsconfig\.json$)|package\.json$|pnpm-lock\.yaml$)/u.test(
+          path,
+        )
       )
-    )
-      return;
-    try {
-      if (pointageSourceInventory() === before) return;
-    } catch {
-      /* Fail closed. */
-    }
-    void stopPointageNextChild(child, input.runId);
-  });
-  watcher.on('error', () => {
-    void stopPointageNextChild(child, input.runId);
-  });
-  child.once('exit', () => watcher.close());
-  child.send(
-    { ...input, parentPid: process.pid, childPid: child.pid },
-    () => undefined,
-  );
+        return;
+      try {
+        if (pointageSourceInventory() === before) return;
+      } catch {
+        /* Fail closed. */
+      }
+      void stop();
+    });
+    watcher.on('error', () => {
+      void stop();
+    });
+    child.once('exit', () => watcher?.close());
+    child.send(
+      { ...input, parentPid: process.pid, childPid: child.pid },
+      () => undefined,
+    );
+  } catch (error) {
+    if (!manualProfile) throw error;
+    // Preserve ownership for the manual caller even if setup fails after fork.
+    // Its cleanup awaits this exact stop promise before verifying port release.
+    invalidMessage = true;
+    watcher?.close();
+    void stop().catch(() => undefined);
+  }
   return {
     child,
     statuses,
@@ -428,7 +530,7 @@ export function launchPointageNextChild(
         throw new Error('Pointage re-consumer evidence refused.');
       proof.requireComplete();
     },
-    stop: () => stopPointageNextChild(child, input.runId),
+    stop,
   };
 }
 
@@ -437,12 +539,14 @@ function quietCommand(
   args: string[],
   environment: NodeJS.ProcessEnv,
   cwd = root,
+  timeoutMs?: number,
 ): Promise<string> {
   return new Promise((done, reject) => {
     const child = spawn(command, args, {
       cwd,
       env: environment,
       windowsHide: true,
+      ...(timeoutMs === undefined ? {} : { timeout: timeoutMs }),
       stdio: ['ignore', 'pipe', 'pipe'],
     });
     const chunks: Buffer[] = [];
@@ -459,20 +563,75 @@ function quietCommand(
   });
 }
 
+export type PointageNextFixtureIdentity = Readonly<{
+  runId: string;
+  databaseName: string;
+  containerName: string;
+  generationLabel: string;
+}>;
+export type PointageNextFixtureResource = PointageNextFixtureIdentity &
+  Readonly<{ containerId: string }>;
+export type PointageNextFixtureOptions = Readonly<{
+  runId?: string;
+  onGeneration?: (identity: PointageNextFixtureIdentity) => void;
+  onContainer?: (resource: PointageNextFixtureResource) => void;
+}>;
+const fixtureOptionsSchema = z
+  .object({
+    runId: z
+      .string()
+      .uuid()
+      .regex(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/u,
+      )
+      .optional(),
+    onGeneration: z
+      .custom<
+        NonNullable<PointageNextFixtureOptions['onGeneration']>
+      >((value) => typeof value === 'function')
+      .optional(),
+    onContainer: z
+      .custom<
+        NonNullable<PointageNextFixtureOptions['onContainer']>
+      >((value) => typeof value === 'function')
+      .optional(),
+  })
+  .strict();
+
 // Parent-only synthetic infrastructure. No shared DB, dotenv fallback, cleanup,
 // production provider or independently generated stateGuard key exists here.
 export async function provisionPointageNextFixture(
   environment: NodeJS.ProcessEnv = process.env,
+  options?: PointageNextFixtureOptions,
 ) {
+  const parsedOptions = fixtureOptionsSchema.safeParse(
+    options === undefined ? {} : options,
+  );
+  if (!parsedOptions.success)
+    throw new Error('Pointage disposable setup options refused.');
+  const settings = parsedOptions.data;
+  const commandTimeoutMs = options === undefined ? undefined : 60_000;
   const safe = pointageChildEnvironment(environment);
+  // Manual parent Docker calls need the current Windows context directory;
+  // preserve this OS path only, without changing existing caller defaults or
+  // Next's environment allowlist.
+  if (options !== undefined && environment.USERPROFILE !== undefined)
+    safe.USERPROFILE = environment.USERPROFILE;
   await new Promise<void>((done, reject) => {
     const probe = createServer();
     probe.once('error', reject);
     probe.listen(3001, '127.0.0.1', () => probe.close(() => done()));
   });
-  const runId = randomUUID();
+  const runId = settings.runId ?? randomUUID();
   const suffix = runId.replaceAll('-', '').slice(0, 24);
   const name = `yuta_pointage_raw_clocking_test_${suffix}`;
+  const identity: PointageNextFixtureIdentity = Object.freeze({
+    runId,
+    databaseName: name,
+    containerName: `yuta-pointage-next-${suffix}`,
+    generationLabel: suffix,
+  });
+  settings.onGeneration?.(identity);
   const password = randomBytes(32).toString('hex');
   const target = new URL(
     `postgres://pointage_bootstrap_20260908a:${password}@127.0.0.1:5432/${name}`,
@@ -503,7 +662,13 @@ export async function provisionPointageNextFixture(
   )
     throw new Error('Pointage disposable setup unavailable.');
   const context = JSON.parse(
-    await quietCommand('docker', ['context', 'inspect'], safe),
+    await quietCommand(
+      'docker',
+      ['context', 'inspect'],
+      safe,
+      root,
+      commandTimeoutMs,
+    ),
   ) as unknown;
   const endpoint = z
     .array(
@@ -526,7 +691,7 @@ export async function provisionPointageNextFixture(
       'run',
       '-d',
       '--name',
-      `yuta-pointage-next-${suffix}`,
+      identity.containerName,
       '--label',
       'yuta.change=pointage-usable-raw-clocking',
       '--label',
@@ -549,13 +714,18 @@ export async function provisionPointageNextFixture(
       POSTGRES_PASSWORD: password,
       POSTGRES_DB: name,
     },
+    root,
+    commandTimeoutMs,
   );
   if (!/^[a-f0-9]{64}$/u.test(containerId))
     throw new Error('Pointage disposable setup unavailable.');
+  settings.onContainer?.(Object.freeze({ ...identity, containerId }));
   const portText = await quietCommand(
     'docker',
     ['port', containerId, '5432/tcp'],
     safe,
+    root,
+    commandTimeoutMs,
   );
   const port = /^127\.0\.0\.1:(\d+)$/u.exec(portText)?.[1];
   if (!port || port !== target.port)
@@ -654,6 +824,7 @@ export async function provisionPointageNextFixture(
       scope,
       slug,
       credential,
+      managerUserId: userId,
       containerId,
       name,
       admin,

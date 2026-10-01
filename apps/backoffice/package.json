@@ -6,6 +6,7 @@
     "dev": "next dev -p 3001",
     "build": "next build",
     "start": "next start -p 3001",
+    "pointage:manual:test": "node --import tsx scripts/pointage-manual-test.ts",
     "test": "vitest run",
     "test:openai:synthetic": "vitest run test/personnel-contract-openai-smoke.test.ts",
     "typecheck": "tsc --noEmit"
@@ -32,6 +33,7 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "tailwindcss": "^4.3.1",
+    "tsx": "^4.20.6",
     "typescript": "^6.0.3",
     "vitest": "^4.0.15"
   }

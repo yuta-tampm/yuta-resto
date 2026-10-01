@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-08
+Last updated: 2026-10-01
 
 ## Status
 
@@ -165,6 +165,120 @@ tables live under the guarded test fixture and are not consumed by
 test roles or append that extension. The Pointage harness first proves the
 canonical journal migrates without those roles, then applies the extension only
 inside its verified loopback `tmpfs` test cluster.
+
+## Disposable Pointage manual test
+
+Use an interactive local terminal with repository dependencies installed and
+Docker Desktop running its local Linux engine. Ports `3001` (Backoffice) and
+`65431` (a deny sink that must remain closed) must be free. Stop any development
+server you own through its terminal before starting; the command never stops
+an existing port occupant. Run from the repository root:
+
+```powershell
+pnpm --filter @yuta/backoffice pointage:manual:test
+```
+
+The command provisions a new loopback PostgreSQL container with disposable
+`tmpfs` data, applies the existing canonical migrations and guarded Pointage
+test extension there, and starts the existing Backoffice employee route. It
+does not require editing `.env` files, running the shared development seed or
+reset, or supplying a database URL. Use only the two generated synthetic
+employees; real employees and real attendance are not authorized.
+
+Preflight refuses a non-development/test `NODE_ENV`, any `VERCEL` or CI
+indicator, a remote Docker override/context, an unavailable local Docker
+Desktop Linux engine, occupied ports, or noninteractive output. An unset
+`NODE_ENV` is accepted by this explicitly invoked local command. Unknown
+application environment keys or relevant source/environment drift also stop
+the session. Resolve the reported local prerequisite and rerun; do not remove
+guards or introduce real credentials. The child receives a fixed in-memory
+profile with nonempty invalid provider values and a denied cloud database URL.
+
+Wait for the terminal handoff. It appears only after context and admission
+readiness pass, and contains the local URL, generation ID, two synthetic names,
+their different eight-digit PINs, each initial `NOT_CLOCKED_IN` state, and the
+stop instruction. PINs appear once in that terminal. Keep the terminal open;
+do not pipe or save its output, copy PINs into evidence, or include them in
+screenshots. Scrollback cannot be erased by the command. Lost PINs are replaced
+by stopping and starting a new generation, not recovered from storage.
+
+### Microsoft Edge checklist
+
+1. Open the exact printed URL in Edge. Identify the first synthetic employee
+   with their printed PIN and check the displayed name and `Non pointé` state.
+2. Select `Enregistrer mon arrivée`, check the arrival receipt, then `Terminer`.
+   Identify that employee again, check `Pointé`, record their departure and
+   check the departure receipt.
+3. Select `Terminer` and identify the second employee with their own PIN. They
+   must still be `Non pointé`. Repeat their arrival/departure flow. After each
+   `Terminer`, the previous name, state, receipt and PIN must disappear before
+   another employee uses the shared device.
+4. To exercise a stale-state conflict, identify the same synthetic employee in
+   two visible Edge windows before recording one arrival. Record the arrival
+   in one window, then try the stale arrival in the other. On a conflict use
+   `Actualiser ma situation` and check the current state before acting again.
+   If a request instead reports an unknown result, use `Vérifier le résultat`
+   to retry that result check; do not assume the first request failed to commit.
+5. Press Ctrl+C in the owning terminal and wait for cleanup. Refresh the old
+   URL: no admitted Pointage owner remains, so the old session must not serve
+   attendance. Successful cleanup releases port `3001`; a later ordinary
+   Backoffice server does not restore this generation's admission.
+
+This checklist is a manual operational observation, not formal VERIFY or
+Browser QA evidence. Reset by stopping, waiting for cleanup, and rerunning the
+same command. Each run creates a new generation, URL, employees and PINs; the
+previous disposable data is removed.
+
+On Windows, the package runner may display `Terminate batch job (Y/N)?` after
+Ctrl+C. Wait for the CLI's resource-cleanup confirmation, then answer `N` to
+any remaining runner prompt. The interrupted wrapper may return a nonzero
+status even after successful cleanup; verify the cleanup confirmation and
+released port rather than treating the wrapper status alone as proof. Do not
+close the terminal while cleanup is still pending.
+
+### Stop failures and exact-resource recovery
+
+Ctrl+C, SIGTERM and handled failures trigger cleanup of the owned child,
+database clients and verified container. A startup or cleanup failure exits
+nonzero and reports sanitized stage/resource identity. Power loss, an OS
+crash or an uncatchable force-kill can leave resources behind. Do not reuse
+that fixture or issue a broad process/container removal command.
+
+For a leftover container, use the generation ID from that run's terminal
+handoff or failure report. Its UUID without hyphens, truncated to 24 characters,
+is both the container suffix and the `yuta.disposable-run` label value. Inspect
+only that exact candidate; the following output excludes container environment
+values:
+
+```powershell
+$pointageGeneration = '<exact generation UUID>'
+$pointageSuffix = ([guid]$pointageGeneration).ToString('N').Substring(0, 24)
+$pointageContainerName = 'yuta-pointage-next-' + $pointageSuffix
+docker container inspect --format '{{.Id}} {{.Name}} {{json .Config.Labels}}' $pointageContainerName
+```
+
+Verify the exact name and matching `yuta.disposable-run` value, then record the
+full returned container ID (also match the failure report's ID if available).
+Only then remove that verified ID with
+`docker container rm --force <verified-exact-container-id>`, and confirm that
+`docker container inspect --format '{{.Id}}' <verified-exact-container-id>`
+reports no such container. Never remove all containers sharing a label. If the generation or
+ownership cannot be established, stop recovery and request inspection.
+
+On Windows, inspect an occupied port without stopping its owner:
+
+```powershell
+Get-NetTCPConnection -LocalPort 3001 -State Listen -ErrorAction SilentlyContinue |
+  Select-Object LocalAddress, LocalPort, OwningProcess
+Get-CimInstance Win32_Process -Filter 'ProcessId = <observed-pid>' |
+  Select-Object ProcessId, ParentProcessId, ExecutablePath
+```
+
+Return to the owning terminal for a normal stop. If it is gone, establish that
+the exact PID and parent belong to the failed generation before any targeted
+termination; a port number or `node` process name alone is not ownership proof.
+Do not kill another developer's server. Confirm port `3001` is released before
+starting a new run; port `65431` must also remain closed.
 
 ## Root scripts
 
