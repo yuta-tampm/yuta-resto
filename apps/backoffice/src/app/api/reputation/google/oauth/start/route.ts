@@ -13,6 +13,7 @@ export const dynamic = 'force-dynamic';
 export async function GET(request: Request) {
   const { session, tenant } = await requireReputationTenant(
     '/parametres/integrations',
+    { requires: 'reputation.connector.manage' },
   );
   requireReputationPermission(tenant, 'reputation.connector.manage');
   if (!tenant.establishmentId) {

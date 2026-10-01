@@ -112,7 +112,9 @@ describe('explicit OWNER Google OAuth document navigation', () => {
     const page: unknown = await SettingsIntegrationsPage({
       searchParams: Promise.resolve({}),
     });
-    expect(mocks.session).toHaveBeenCalledWith('/parametres/integrations');
+    expect(mocks.session).toHaveBeenCalledWith('/parametres/integrations', {
+      requires: 'reputation.connector.manage',
+    });
     expect(mocks.pageData).toHaveBeenCalledWith(tenant(), {});
     if (!isValidElement<{ actions?: ReactNode }>(page)) {
       throw new Error('Expected the actual Integrations page.');
@@ -265,7 +267,9 @@ describe('trusted OWNER Google continuation', () => {
     await expect(action()).rejects.toThrow(
       'REDIRECT:/visibilite-reputation/avis',
     );
-    expect(mocks.session).toHaveBeenCalledWith('/parametres/integrations');
+    expect(mocks.session).toHaveBeenCalledWith('/parametres/integrations', {
+      requires: 'reputation.connector.manage',
+    });
     expect(mocks.connector).toHaveBeenCalledWith({ synthetic: true }, tenant());
     expect(mocks.token).not.toHaveBeenCalled();
     expect(mocks.accounts).not.toHaveBeenCalled();

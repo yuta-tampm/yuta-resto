@@ -501,6 +501,48 @@ describe('actual common auth helpers preserve grants and safe A denial', () => {
     expect(infrastructure.loadIntegration).not.toHaveBeenCalled();
   });
 
+  it.each(['MANAGER', 'STAFF'] as const)(
+    'redirects A %s from an explicit connector requirement to restricted recovery',
+    async (role) => {
+      infrastructure.membership.mockResolvedValue(membership({ role }));
+      await expect(
+        requireReputationTenant('/parametres/integrations', {
+          requires: 'reputation.connector.manage',
+        }),
+      ).rejects.toThrow('REDIRECT:/aujourdhui?exposure=restricted');
+    },
+  );
+
+  it('throws the permission error for an explicit connector requirement in internal', async () => {
+    vi.stubEnv('BACKOFFICE_EXPOSURE_PROFILE', 'internal');
+    infrastructure.membership.mockResolvedValue(
+      membership({ role: 'MANAGER' }),
+    );
+    await expect(
+      requireReputationTenant('/parametres/integrations', {
+        requires: 'reputation.connector.manage',
+      }),
+    ).rejects.toThrow(TenantError);
+  });
+
+  it('allows an A OWNER through an explicit connector requirement', async () => {
+    const { tenant } = await requireReputationTenant(
+      '/parametres/integrations',
+      { requires: 'reputation.connector.manage' },
+    );
+    expect(tenant.actor).toMatchObject({ role: 'OWNER' });
+  });
+
+  it('does not derive a connector requirement from the return path alone', async () => {
+    infrastructure.membership.mockResolvedValue(
+      membership({ role: 'MANAGER' }),
+    );
+    const { tenant } = await requireReputationTenant(
+      '/parametres/integrations',
+    );
+    expect(tenant.actor).toMatchObject({ role: 'MANAGER' });
+  });
+
   it('keeps internal STAFF Users & Access denial as the existing permission error', async () => {
     vi.stubEnv('BACKOFFICE_EXPOSURE_PROFILE', 'internal');
     infrastructure.membership.mockResolvedValue(membership({ role: 'STAFF' }));

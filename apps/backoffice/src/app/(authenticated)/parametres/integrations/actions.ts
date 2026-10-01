@@ -22,7 +22,9 @@ const googleLocationSelectionSchema = z.object({
 });
 
 export async function continueGoogleReviewsAction(): Promise<never> {
-  const { tenant } = await requireReputationTenant('/parametres/integrations');
+  const { tenant } = await requireReputationTenant('/parametres/integrations', {
+    requires: 'reputation.connector.manage',
+  });
   requireReputationPermission(tenant, 'reputation.connector.manage');
   let ready = false;
   try {
@@ -49,6 +51,7 @@ export async function selectGoogleLocationAction(
 ): Promise<never> {
   const { session, tenant } = await requireReputationTenant(
     '/parametres/integrations',
+    { requires: 'reputation.connector.manage' },
   );
   requireReputationPermission(tenant, 'reputation.connector.manage');
   const selection = googleLocationSelectionSchema.safeParse({

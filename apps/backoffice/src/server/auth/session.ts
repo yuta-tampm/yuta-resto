@@ -28,6 +28,7 @@ import {
   requireBookingPermission,
   requirePersonnelPermission,
   requireReputationPermission,
+  type ReputationPermission,
 } from './permissions';
 
 export const BACKOFFICE_SESSION_COOKIE = 'yuta_backoffice_session';
@@ -75,6 +76,43 @@ export async function requireBackofficeSession(
   return session;
 }
 
+type TenantResolution =
+  | { status: 'resolved'; tenant: TenantContext }
+  | { status: 'scope-recovery' };
+
+// React `cache` memoizes only while a server render is active and never across
+// requests, so a layout, the page it wraps and any streamed Server Component
+// share one metadata and membership lookup per render. Keyed by primitive
+// session scope only: caller-specific values such as `returnTo` stay outside
+// the cache. Authorization correctness must not depend on memoization.
+const resolveSessionTenant = cache(
+  async (
+    userId: string,
+    organizationId: string,
+    establishmentId: string,
+  ): Promise<TenantResolution> => {
+    const metadata = await findAuthenticatedTenantMetadata(cloudDatabase, {
+      organizationId,
+      establishmentId,
+    });
+    if (!metadata) return { status: 'scope-recovery' };
+
+    try {
+      const tenant = await resolveAuthenticatedTenant({
+        userId,
+        organizationId,
+        establishmentId,
+        membershipLookup: createMembershipLookup(cloudDatabase),
+        tenantMetadata: metadata,
+      });
+      return { status: 'resolved', tenant };
+    } catch (error: unknown) {
+      if (error instanceof TenantError) return { status: 'scope-recovery' };
+      throw error;
+    }
+  },
+);
+
 export async function requireAuthenticatedTenant(
   returnTo = '/aujourdhui',
 ): Promise<{
@@ -85,25 +123,13 @@ export async function requireAuthenticatedTenant(
     new URL(returnTo, 'https://backoffice.invalid').pathname,
   );
   const session = await requireBackofficeSession(returnTo);
-  const metadata = await findAuthenticatedTenantMetadata(cloudDatabase, {
-    organizationId: session.organizationId,
-    establishmentId: session.establishmentId,
-  });
-  if (!metadata) redirectToScopeRecovery(returnTo);
-
-  try {
-    const tenant = await resolveAuthenticatedTenant({
-      userId: session.userId,
-      organizationId: session.organizationId,
-      establishmentId: session.establishmentId,
-      membershipLookup: createMembershipLookup(cloudDatabase),
-      tenantMetadata: metadata,
-    });
-    return { session, tenant };
-  } catch (error: unknown) {
-    if (error instanceof TenantError) redirectToScopeRecovery(returnTo);
-    throw error;
-  }
+  const resolution = await resolveSessionTenant(
+    session.userId,
+    session.organizationId,
+    session.establishmentId,
+  );
+  if (resolution.status === 'scope-recovery') redirectToScopeRecovery(returnTo);
+  return { session, tenant: resolution.tenant };
 }
 
 function redirectToScopeRecovery(returnTo: string): never {
@@ -114,6 +140,7 @@ function redirectToScopeRecovery(returnTo: string): never {
 
 export async function requireReputationTenant(
   returnTo = '/visibilite-reputation/avis',
+  options: { requires?: ReputationPermission } = {},
 ): Promise<{
   session: AuthenticatedSession;
   tenant: TenantContext;
@@ -122,11 +149,8 @@ export async function requireReputationTenant(
   try {
     requireEntitlement(context.tenant, 'reputation.enabled');
     requireReputationPermission(context.tenant, 'reputation.read');
-    if (isReleaseAExposure() && returnTo === '/parametres/integrations') {
-      requireReputationPermission(
-        context.tenant,
-        'reputation.connector.manage',
-      );
+    if (options.requires) {
+      requireReputationPermission(context.tenant, options.requires);
     }
   } catch (error: unknown) {
     if (isReleaseAExposure() && error instanceof TenantError) {

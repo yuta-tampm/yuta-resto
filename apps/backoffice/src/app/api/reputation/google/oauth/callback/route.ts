@@ -33,6 +33,7 @@ export async function GET(request: NextRequest) {
 
   const { session, tenant } = await requireReputationTenant(
     '/parametres/integrations',
+    { requires: 'reputation.connector.manage' },
   );
   requireReputationPermission(tenant, 'reputation.connector.manage');
   const state = verifyGoogleOAuthState(

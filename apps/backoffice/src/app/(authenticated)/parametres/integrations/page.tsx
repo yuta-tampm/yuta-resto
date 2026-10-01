@@ -23,7 +23,9 @@ export default async function SettingsIntegrationsPage({
   searchParams: Promise<IntegrationSearchParams>;
 }) {
   const params = await searchParams;
-  const { tenant } = await requireReputationTenant('/parametres/integrations');
+  const { tenant } = await requireReputationTenant('/parametres/integrations', {
+    requires: 'reputation.connector.manage',
+  });
   requireReputationPermission(tenant, 'reputation.connector.manage');
   const data = await loadGoogleIntegrationPageData(tenant, params);
   const releaseA = isReleaseAExposure();

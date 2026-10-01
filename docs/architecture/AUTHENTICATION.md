@@ -35,7 +35,10 @@ roles, PIN sessions, and audit records through `site-agent`/`db-pos`.
 8. The session organization and establishment are checked against an active
    `tenant_memberships` record.
 9. `resolveAuthenticatedTenant` produces the trusted tenant context used by
-   repositories and permission checks.
+   repositories and permission checks. Every page, action and route handler
+   still resolves it through the server helpers; during one server render the
+   lookup is memoized by session scope so a layout and its page share it, and
+   nothing is retained across requests.
 
 Users without an active restaurant membership are redirected to
 `/acces/aucun-etablissement`. Users with several memberships select one at
