@@ -1,5 +1,5 @@
 import { Card, Skeleton } from '@yuta/ui';
-import { isReleaseAExposure } from '../../../server/backoffice-exposure';
+import { isReleaseAExposure } from '@/server/backoffice-exposure';
 
 export default function TodayLoading() {
   const releaseA = isReleaseAExposure();

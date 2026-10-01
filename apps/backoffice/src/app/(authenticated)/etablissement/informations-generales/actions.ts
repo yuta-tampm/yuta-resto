@@ -20,10 +20,10 @@ import { z } from 'zod';
 import {
   requireEstablishmentPermission,
   requireRestaurantKnowledgePermission,
-} from '../../../../server/auth/permissions';
-import { requireAuthenticatedTenant } from '../../../../server/auth/session';
-import { requireBackofficeCapabilityAvailable } from '../../../../server/backoffice-exposure';
-import { cloudDatabase } from '../../../../server/cloud-database';
+} from '@/server/auth/permissions';
+import { requireAuthenticatedTenant } from '@/server/auth/session';
+import { requireBackofficeCapabilityAvailable } from '@/server/backoffice-exposure';
+import { cloudDatabase } from '@/server/cloud-database';
 
 export type GeneralInformationActionState = {
   status: 'idle' | 'success' | 'error';

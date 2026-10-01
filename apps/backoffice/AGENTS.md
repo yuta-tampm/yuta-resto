@@ -17,6 +17,10 @@ subordinate to current repository architecture, behavior, and authorization.
 - Do not put platform-wide YUTA administration or local POS operations here.
 - Prefer Server Components and reuse `@yuta/ui`; implement loading, empty,
   error, forbidden, validation, and persisted-success states as applicable.
+- Import from `src` with the `@/` alias (for example `@/server/auth/session`)
+  instead of relative paths that climb three or more directory levels; keep
+  short relative imports for nearby files. Tests mirror this alias through
+  `vitest.config.ts`.
 
 Normally validate with:
 

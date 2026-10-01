@@ -6,18 +6,18 @@ import {
   listAssignableReputationUsers,
   listFeedback,
 } from '@yuta/db-cloud';
-import { requireReputationTenant } from '../../../../../server/auth/session';
-import { cloudDatabase as db } from '../../../../../server/cloud-database';
+import { requireReputationTenant } from '@/server/auth/session';
+import { cloudDatabase as db } from '@/server/cloud-database';
 import {
   getReputationFeedbackScope,
   isReleaseAExposure,
-} from '../../../../../server/backoffice-exposure';
-import { releaseAAttentionStatuses } from '../../../../../lib/backoffice-exposure';
-import { loadReleaseASetupSummary } from '../../../../../server/reputation/release-a-setup';
+} from '@/server/backoffice-exposure';
+import { releaseAAttentionStatuses } from '@/lib/backoffice-exposure';
+import { loadReleaseASetupSummary } from '@/server/reputation/release-a-setup';
 import {
   canRetrieveGoogleReviews,
   loadGoogleReviewRetrievalSummary,
-} from '../../../../../server/reputation/google-review-retrieval';
+} from '@/server/reputation/google-review-retrieval';
 import { ReviewsPage } from './reviews-page';
 import type {
   ReviewDetailRecord,

@@ -8,19 +8,19 @@ import {
 } from '@yuta/db-cloud';
 import { requireEstablishment } from '@yuta/tenant';
 import { redirect } from 'next/navigation';
-import { requireBookingPermission } from '../../../server/auth/permissions';
-import { requireReputationPermission } from '../../../server/auth/permissions';
-import { requireAuthenticatedTenant } from '../../../server/auth/session';
-import { cloudDatabase } from '../../../server/cloud-database';
+import { requireBookingPermission } from '@/server/auth/permissions';
+import { requireReputationPermission } from '@/server/auth/permissions';
+import { requireAuthenticatedTenant } from '@/server/auth/session';
+import { cloudDatabase } from '@/server/cloud-database';
 import {
   getReputationFeedbackScope,
   isReleaseAExposure,
-} from '../../../server/backoffice-exposure';
-import { releaseAAttentionStatuses } from '../../../lib/backoffice-exposure';
+} from '@/server/backoffice-exposure';
+import { releaseAAttentionStatuses } from '@/lib/backoffice-exposure';
 import {
   loadReleaseASetupSummary,
   type ReleaseASetupSummary,
-} from '../../../server/reputation/release-a-setup';
+} from '@/server/reputation/release-a-setup';
 import {
   formatTimeRange,
   getLocalDateTimeParts,

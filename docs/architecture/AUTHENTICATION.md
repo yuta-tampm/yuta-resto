@@ -89,8 +89,10 @@ Failed login attempts are stored against an HMAC-derived key containing the
 normalized email and client address. Five failed attempts in 15 minutes block
 additional attempts for that key. Raw client addresses are not stored.
 
-`AUTH_SECRET` must contain at least 32 characters in production. It is used to
-derive privacy-preserving hashes for rate limiting and client-address metadata.
+`AUTH_SECRET` must contain at least 32 characters in every environment; there
+is no development fallback. `pnpm dev:env:sync` generates a random local value.
+It is used to derive privacy-preserving hashes for rate limiting and
+client-address metadata.
 
 Expired sessions, reset tokens, and login attempts can be removed through the
 auth repository cleanup operation. Production scheduling should invoke this

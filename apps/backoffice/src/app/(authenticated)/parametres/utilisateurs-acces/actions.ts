@@ -5,8 +5,8 @@ import { createTenantUserRepository, TenantUserError } from '@yuta/db-cloud';
 import { tenantRoleSchema, type TenantContext } from '@yuta/tenant';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { requireUserManagementTenant } from '../../../../server/auth/session';
-import { cloudDatabase } from '../../../../server/cloud-database';
+import { requireUserManagementTenant } from '@/server/auth/session';
+import { cloudDatabase } from '@/server/cloud-database';
 
 const manageableRoleSchema = tenantRoleSchema;
 const membershipStatusSchema = z.enum(['active', 'suspended']);

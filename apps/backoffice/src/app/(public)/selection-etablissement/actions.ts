@@ -8,7 +8,7 @@ import {
   BACKOFFICE_SESSION_COOKIE,
   authRepository,
   safeReturnTo,
-} from '../../../server/auth/session';
+} from '@/server/auth/session';
 
 export type EstablishmentSelectionActionState = {
   error: string | null;

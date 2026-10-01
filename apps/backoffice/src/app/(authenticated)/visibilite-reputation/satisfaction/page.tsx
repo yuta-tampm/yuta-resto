@@ -1,8 +1,8 @@
 import { readReputationReviewSocialLinks } from '@yuta/db-cloud';
 import { Suspense } from 'react';
-import { requireReputationPermission } from '../../../../server/auth/permissions';
-import { requireReputationTenant } from '../../../../server/auth/session';
-import { cloudDatabase as db } from '../../../../server/cloud-database';
+import { requireReputationPermission } from '@/server/auth/permissions';
+import { requireReputationTenant } from '@/server/auth/session';
+import { cloudDatabase as db } from '@/server/cloud-database';
 import { loadReviewsPage } from '../avis/_components/reviews-loader';
 import { saveReviewSocialLinksAction } from './actions';
 import {

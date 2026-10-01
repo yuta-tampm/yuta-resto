@@ -2,7 +2,7 @@
 
 import { AuthError, resetPasswordInputSchema } from '@yuta/auth';
 import { redirect } from 'next/navigation';
-import { authRepository } from '../../../server/auth/session';
+import { authRepository } from '@/server/auth/session';
 
 export type ResetPasswordState = { error: string | null };
 

@@ -6,9 +6,9 @@ import { Alert, AlertDescription, AlertTitle, Card } from '@yuta/ui';
 import { requireEstablishment } from '@yuta/tenant';
 import { ShieldX } from 'lucide-react';
 import { randomUUID } from 'node:crypto';
-import { hasPersonnelPermission } from '../../../../server/auth/permissions';
-import { requireAuthenticatedTenant } from '../../../../server/auth/session';
-import { cloudDatabase } from '../../../../server/cloud-database';
+import { hasPersonnelPermission } from '@/server/auth/permissions';
+import { requireAuthenticatedTenant } from '@/server/auth/session';
+import { cloudDatabase } from '@/server/cloud-database';
 import { PersonnelRegisterPage } from './_components/personnel-register-page';
 import { isPersonnelRegisterEnabled } from './_lib/personnel-register-runtime';
 

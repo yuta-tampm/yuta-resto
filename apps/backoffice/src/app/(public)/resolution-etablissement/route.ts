@@ -5,7 +5,7 @@ import {
   BACKOFFICE_SESSION_COOKIE,
   authRepository,
   safeReturnTo,
-} from '../../../server/auth/session';
+} from '@/server/auth/session';
 
 export async function GET(request: NextRequest) {
   const returnTo = safeReturnTo(request.nextUrl.searchParams.get('returnTo'));

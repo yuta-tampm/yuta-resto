@@ -15,9 +15,9 @@ import {
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
-import { requireBookingPermission } from '../../../server/auth/permissions';
-import { requireBookingTenant } from '../../../server/auth/session';
-import { cloudDatabase } from '../../../server/cloud-database';
+import { requireBookingPermission } from '@/server/auth/permissions';
+import { requireBookingTenant } from '@/server/auth/session';
+import { cloudDatabase } from '@/server/cloud-database';
 import {
   reservationActionError,
   reservationActionFailure,

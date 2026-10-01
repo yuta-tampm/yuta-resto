@@ -16,11 +16,11 @@ import {
   updateFeedback,
 } from '@yuta/db-cloud';
 import { revalidatePath } from 'next/cache';
-import { cloudDatabase as db } from '../../../../server/cloud-database';
-import { requireReputationTenant } from '../../../../server/auth/session';
-import { requireReputationPermission } from '../../../../server/auth/permissions';
-import { getReputationFeedbackScope } from '../../../../server/backoffice-exposure';
-import { retrieveGoogleReviews } from '../../../../server/reputation/google-review-retrieval';
+import { cloudDatabase as db } from '@/server/cloud-database';
+import { requireReputationTenant } from '@/server/auth/session';
+import { requireReputationPermission } from '@/server/auth/permissions';
+import { getReputationFeedbackScope } from '@/server/backoffice-exposure';
+import { retrieveGoogleReviews } from '@/server/reputation/google-review-retrieval';
 
 export type GoogleReviewActionResult = {
   outcome: GoogleReviewRetrievalOutcome | null;

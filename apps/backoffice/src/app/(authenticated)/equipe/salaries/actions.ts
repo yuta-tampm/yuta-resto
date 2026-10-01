@@ -51,32 +51,32 @@ import {
 import { revalidatePath } from 'next/cache';
 import { createHash } from 'node:crypto';
 import { z } from 'zod';
-import { requirePersonnelPermission } from '../../../../server/auth/permissions';
-import { requirePersonnelTenant } from '../../../../server/auth/session';
-import { requireBackofficePageAvailable } from '../../../../server/backoffice-exposure';
-import { cloudDatabase } from '../../../../server/cloud-database';
+import { requirePersonnelPermission } from '@/server/auth/permissions';
+import { requirePersonnelTenant } from '@/server/auth/session';
+import { requireBackofficePageAvailable } from '@/server/backoffice-exposure';
+import { cloudDatabase } from '@/server/cloud-database';
 import {
   getPersonnelDocumentRuntime,
   PersonnelDocumentScannerError,
-} from '../../../../server/personnel-documents/runtime';
+} from '@/server/personnel-documents/runtime';
 import { getBusinessDate } from './salaries-model';
 import {
   ContractExtractionServiceError,
   DevelopmentExtractionRateLimiter,
   runSyntheticContractExtraction,
   SyntheticContractPdfPreparer,
-} from '../../../../server/personnel-contract-extraction/service';
-import { createDevelopmentContractExtractionAdapter } from '../../../../server/personnel-contract-extraction/runtime';
-import type { OpenAiExtractionObservation } from '../../../../server/personnel-contract-extraction/openai-adapter';
-import { developmentContractExtractionReviewStore } from '../../../../server/personnel-contract-extraction/review-store';
-import { createDevelopmentSyntheticPdfLoader } from '../../../../server/personnel-contract-extraction/synthetic-upload';
+} from '@/server/personnel-contract-extraction/service';
+import { createDevelopmentContractExtractionAdapter } from '@/server/personnel-contract-extraction/runtime';
+import type { OpenAiExtractionObservation } from '@/server/personnel-contract-extraction/openai-adapter';
+import { developmentContractExtractionReviewStore } from '@/server/personnel-contract-extraction/review-store';
+import { createDevelopmentSyntheticPdfLoader } from '@/server/personnel-contract-extraction/synthetic-upload';
 import {
   createStoredSyntheticDocumentLoader,
   identifyApprovedStoredSyntheticFixture,
   StoredSyntheticFixtureExtractionAdapter,
   StoredSyntheticProviderQaExtractionAdapter,
   StoredSyntheticProviderQaGate,
-} from '../../../../server/personnel-contract-extraction/stored-synthetic-document';
+} from '@/server/personnel-contract-extraction/stored-synthetic-document';
 import { isContractExtractionPrototypeEnabled } from './_lib/contract-extraction-prototype-runtime';
 import { isPersonnelActionOverviewEnabled } from './_lib/personnel-action-overview-runtime';
 import { mapPersonnelHistoryMetadataError } from './_lib/employee-history-action-errors';

@@ -1,8 +1,8 @@
 import { Button } from '@yuta/ui';
 import { ExternalLink, RefreshCw } from 'lucide-react';
-import { BackofficePage } from '../../../../components/backoffice/backoffice-page';
-import { requireReputationPermission } from '../../../../server/auth/permissions';
-import { requireReputationTenant } from '../../../../server/auth/session';
+import { BackofficePage } from '@/components/backoffice/backoffice-page';
+import { requireReputationPermission } from '@/server/auth/permissions';
+import { requireReputationTenant } from '@/server/auth/session';
 import { GoogleConnectorPanel } from './_components/google-connector-panel';
 import { loadGoogleIntegrationPageData } from './google-integration-loader';
 import { GoogleLocationSelectorPanel } from './_components/google-location-selector-panel';
@@ -12,8 +12,8 @@ import {
   filterIntegrationSearchParam,
   releaseAIntegrationResultMessages,
 } from './integrations-model';
-import { isReleaseAExposure } from '../../../../server/backoffice-exposure';
-import { isGoogleReviewRetrievalEnabled } from '../../../../server/reputation/google-review-retrieval-config';
+import { isReleaseAExposure } from '@/server/backoffice-exposure';
+import { isGoogleReviewRetrievalEnabled } from '@/server/reputation/google-review-retrieval-config';
 
 export const dynamic = 'force-dynamic';
 

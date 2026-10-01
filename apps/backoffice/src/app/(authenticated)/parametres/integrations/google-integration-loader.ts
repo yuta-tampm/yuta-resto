@@ -2,15 +2,15 @@ import 'server-only';
 
 import { findGoogleReputationConnector } from '@yuta/db-cloud';
 import type { TenantContext } from '@yuta/tenant';
-import { cloudDatabase as db } from '../../../../server/cloud-database';
-import { getGoogleConnectorAccessToken } from '../../../../server/reputation/google-connector-access';
+import { cloudDatabase as db } from '@/server/cloud-database';
+import { getGoogleConnectorAccessToken } from '@/server/reputation/google-connector-access';
 import {
   listGoogleBusinessAccounts,
   listGoogleBusinessLocations,
   type GoogleBusinessAccount,
   type GoogleBusinessLocation,
-} from '../../../../server/reputation/google-business-profile-client';
-import { isGoogleConnectorConfigured } from '../../../../server/reputation/google-connector-config';
+} from '@/server/reputation/google-business-profile-client';
+import { isGoogleConnectorConfigured } from '@/server/reputation/google-connector-config';
 import {
   filterIntegrationSearchParam,
   integrationResultMessages,

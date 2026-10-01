@@ -83,6 +83,7 @@ import PersonnelPage from '../src/app/(authenticated)/equipe/salaries/page';
 let token: string;
 beforeEach(() => {
   vi.clearAllMocks();
+  vi.stubEnv('AUTH_SECRET', 'synthetic-test-auth-secret-0123456789');
   token = generatePointageContinuation();
   infrastructure.findSession.mockResolvedValue(null);
   infrastructure.cookieGet.mockImplementation((name: string) =>

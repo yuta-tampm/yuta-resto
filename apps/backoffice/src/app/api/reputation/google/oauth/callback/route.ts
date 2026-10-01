@@ -1,19 +1,16 @@
 import { upsertGoogleReputationConnectorCredentials } from '@yuta/db-cloud';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { cloudDatabase as db } from '../../../../../../server/cloud-database';
-import { requireReputationPermission } from '../../../../../../server/auth/permissions';
-import {
-  getAuthSecret,
-  requireReputationTenant,
-} from '../../../../../../server/auth/session';
-import { encryptCredential } from '../../../../../../server/reputation/credential-crypto';
+import { cloudDatabase as db } from '@/server/cloud-database';
+import { requireReputationPermission } from '@/server/auth/permissions';
+import { getAuthSecret, requireReputationTenant } from '@/server/auth/session';
+import { encryptCredential } from '@/server/reputation/credential-crypto';
 import {
   exchangeGoogleAuthorizationCode,
   GOOGLE_BUSINESS_PROFILE_SCOPE,
-} from '../../../../../../server/reputation/google-business-profile-client';
-import { getGoogleConnectorConfiguration } from '../../../../../../server/reputation/google-connector-config';
-import { verifyGoogleOAuthState } from '../../../../../../server/reputation/google-oauth-state';
+} from '@/server/reputation/google-business-profile-client';
+import { getGoogleConnectorConfiguration } from '@/server/reputation/google-connector-config';
+import { verifyGoogleOAuthState } from '@/server/reputation/google-oauth-state';
 
 export const dynamic = 'force-dynamic';
 

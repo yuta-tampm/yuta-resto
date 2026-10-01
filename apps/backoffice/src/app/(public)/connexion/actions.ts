@@ -10,7 +10,7 @@ import {
   createLoginRateLimitKey,
   hashClientAddress,
   safeReturnTo,
-} from '../../../server/auth/session';
+} from '@/server/auth/session';
 
 export type LoginActionState = {
   error: string | null;

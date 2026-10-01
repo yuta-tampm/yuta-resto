@@ -1,7 +1,7 @@
 import type {
   GoogleBusinessAccount,
   GoogleBusinessLocation,
-} from '../../../../../server/reputation/google-business-profile-client';
+} from '@/server/reputation/google-business-profile-client';
 import {
   Alert,
   AlertDescription,

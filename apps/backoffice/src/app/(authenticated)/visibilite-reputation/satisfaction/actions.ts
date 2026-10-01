@@ -6,9 +6,9 @@ import type {
 } from '@yuta/contracts/reputation';
 import { saveReputationReviewSocialLinks } from '@yuta/db-cloud';
 import { revalidatePath } from 'next/cache';
-import { requireReputationPermission } from '../../../../server/auth/permissions';
-import { requireReputationTenant } from '../../../../server/auth/session';
-import { cloudDatabase as db } from '../../../../server/cloud-database';
+import { requireReputationPermission } from '@/server/auth/permissions';
+import { requireReputationTenant } from '@/server/auth/session';
+import { cloudDatabase as db } from '@/server/cloud-database';
 
 const SATISFACTION_PATH = '/visibilite-reputation/satisfaction';
 

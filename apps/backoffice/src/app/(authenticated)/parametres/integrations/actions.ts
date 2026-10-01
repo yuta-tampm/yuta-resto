@@ -7,14 +7,14 @@ import {
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
-import { requireReputationPermission } from '../../../../server/auth/permissions';
-import { requireReputationTenant } from '../../../../server/auth/session';
-import { cloudDatabase as db } from '../../../../server/cloud-database';
-import { getGoogleConnectorAccessToken } from '../../../../server/reputation/google-connector-access';
+import { requireReputationPermission } from '@/server/auth/permissions';
+import { requireReputationTenant } from '@/server/auth/session';
+import { cloudDatabase as db } from '@/server/cloud-database';
+import { getGoogleConnectorAccessToken } from '@/server/reputation/google-connector-access';
 import {
   listGoogleBusinessAccounts,
   listGoogleBusinessLocations,
-} from '../../../../server/reputation/google-business-profile-client';
+} from '@/server/reputation/google-business-profile-client';
 
 const googleLocationSelectionSchema = z.object({
   accountName: z.string().regex(/^accounts\/[^/]+$/),

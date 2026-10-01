@@ -1,10 +1,10 @@
 import { readFormalitesPersonnelDraft } from '@yuta/db-cloud';
 import { notFound } from 'next/navigation';
 import { z } from 'zod';
-import { BackofficePage } from '../../../../../components/backoffice/backoffice-page';
-import { requireFormalitesTenant } from '../../../../../server/auth/formalites';
-import { requirePersonnelPermission } from '../../../../../server/auth/permissions';
-import { cloudDatabase } from '../../../../../server/cloud-database';
+import { BackofficePage } from '@/components/backoffice/backoffice-page';
+import { requireFormalitesTenant } from '@/server/auth/formalites';
+import { requirePersonnelPermission } from '@/server/auth/permissions';
+import { cloudDatabase } from '@/server/cloud-database';
 import { CdiDraftConnectedReadPrototype } from '../_components/cdi-draft-connected-read-prototype';
 import { createCdiDraftConnectedReadModel } from '../_lib/cdi-draft-connected-read-model';
 import { isFormalitesReadPrototypeEnabled } from '../_lib/formalites-read-prototype-runtime';

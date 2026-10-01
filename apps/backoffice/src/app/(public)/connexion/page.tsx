@@ -1,4 +1,4 @@
-import { getCurrentSession, safeReturnTo } from '../../../server/auth/session';
+import { getCurrentSession, safeReturnTo } from '@/server/auth/session';
 import { redirect } from 'next/navigation';
 import { LoginForm } from './_components/login-form';
 

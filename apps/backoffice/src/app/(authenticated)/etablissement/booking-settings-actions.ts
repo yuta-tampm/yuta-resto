@@ -3,9 +3,9 @@
 import { bookingSettingsInputSchema } from '@yuta/contracts/reservations';
 import { saveBookingSettings } from '@yuta/db-cloud';
 import { revalidatePath } from 'next/cache';
-import { requireBookingPermission } from '../../../server/auth/permissions';
-import { requireBookingTenant } from '../../../server/auth/session';
-import { cloudDatabase } from '../../../server/cloud-database';
+import { requireBookingPermission } from '@/server/auth/permissions';
+import { requireBookingTenant } from '@/server/auth/session';
+import { cloudDatabase } from '@/server/cloud-database';
 import {
   bookingAdministrationError,
   type BookingAdministrationActionState,

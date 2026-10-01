@@ -4,14 +4,14 @@ import {
   recordPersonnelRegisterExport,
 } from '@yuta/db-cloud';
 import { randomUUID } from 'node:crypto';
-import { requirePersonnelPermission } from '../../../../../server/auth/permissions';
-import { requirePersonnelTenant } from '../../../../../server/auth/session';
-import { cloudDatabase } from '../../../../../server/cloud-database';
+import { requirePersonnelPermission } from '@/server/auth/permissions';
+import { requirePersonnelTenant } from '@/server/auth/session';
+import { cloudDatabase } from '@/server/cloud-database';
 import {
   buildPersonnelRegisterPdf,
   PersonnelRegisterPdfError,
-} from '../../../../../server/personnel-register/pdf';
-import { isPersonnelRegisterEnabled } from '../../../../(authenticated)/equipe/registre-personnel/_lib/personnel-register-runtime';
+} from '@/server/personnel-register/pdf';
+import { isPersonnelRegisterEnabled } from '@/app/(authenticated)/equipe/registre-personnel/_lib/personnel-register-runtime';
 
 export const dynamic = 'force-dynamic';
 

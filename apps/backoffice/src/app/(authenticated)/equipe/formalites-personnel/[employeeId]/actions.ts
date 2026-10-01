@@ -18,9 +18,9 @@ import {
   saveFormalitesPersonnelDraft,
 } from '@yuta/db-cloud';
 import { z } from 'zod';
-import { requireFormalitesTenant } from '../../../../../server/auth/formalites';
-import { requirePersonnelPermission } from '../../../../../server/auth/permissions';
-import { cloudDatabase } from '../../../../../server/cloud-database';
+import { requireFormalitesTenant } from '@/server/auth/formalites';
+import { requirePersonnelPermission } from '@/server/auth/permissions';
+import { cloudDatabase } from '@/server/cloud-database';
 
 const returnTo = '/equipe/formalites-personnel';
 const employeeIdSchema = z.string().uuid();

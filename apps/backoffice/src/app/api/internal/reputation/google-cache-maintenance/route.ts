@@ -1,4 +1,4 @@
-import { authenticateGoogleCacheMaintenance } from '../../../../../server/reputation/google-review-retrieval-config';
+import { authenticateGoogleCacheMaintenance } from '@/server/reputation/google-review-retrieval-config';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,7 +20,7 @@ export async function POST(request: Request): Promise<Response> {
   }
   try {
     const { maintainGoogleReviewCache } =
-      await import('../../../../../server/reputation/google-review-lifecycle');
+      await import('@/server/reputation/google-review-lifecycle');
     return Response.json(await maintainGoogleReviewCache(), { headers });
   } catch {
     return Response.json(

@@ -10,8 +10,8 @@ import {
   type CloudDatabaseClient,
 } from '@yuta/db-cloud';
 import type { TenantContext } from '@yuta/tenant';
-import { hasRestaurantKnowledgePermission } from '../../../../server/auth/permissions';
-import { requireBackofficeCapabilityAvailable } from '../../../../server/backoffice-exposure';
+import { hasRestaurantKnowledgePermission } from '@/server/auth/permissions';
+import { requireBackofficeCapabilityAvailable } from '@/server/backoffice-exposure';
 
 export async function loadConceptHistorySection(
   db: CloudDatabaseClient,

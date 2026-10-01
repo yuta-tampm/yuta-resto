@@ -1,5 +1,5 @@
 import { TablesPage } from './_components/tables-page';
-import { requireBookingTenant } from '../../../../server/auth/session';
+import { requireBookingTenant } from '@/server/auth/session';
 
 export default async function Page() {
   await requireBookingTenant('/etablissement/salles-tables');

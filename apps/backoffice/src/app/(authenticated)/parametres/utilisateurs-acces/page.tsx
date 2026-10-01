@@ -1,7 +1,7 @@
 import { createTenantUserRepository } from '@yuta/db-cloud';
 import { Suspense } from 'react';
-import { requireUserManagementTenant } from '../../../../server/auth/session';
-import { cloudDatabase } from '../../../../server/cloud-database';
+import { requireUserManagementTenant } from '@/server/auth/session';
+import { cloudDatabase } from '@/server/cloud-database';
 import { AccessAuditHistory } from './_components/access-audit-history';
 import { AccessAuditLoading } from './_components/access-audit-loading';
 import {

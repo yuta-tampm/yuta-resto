@@ -2,10 +2,10 @@ import { getBookingAdministration } from '@yuta/db-cloud';
 import { Button, Card, EmptyState } from '@yuta/ui';
 import { LockKeyhole } from 'lucide-react';
 import Link from 'next/link';
-import { BackofficePage } from '../../../../components/backoffice/backoffice-page';
-import { hasBookingPermission } from '../../../../server/auth/permissions';
-import { requireBookingTenant } from '../../../../server/auth/session';
-import { cloudDatabase } from '../../../../server/cloud-database';
+import { BackofficePage } from '@/components/backoffice/backoffice-page';
+import { hasBookingPermission } from '@/server/auth/permissions';
+import { requireBookingTenant } from '@/server/auth/session';
+import { cloudDatabase } from '@/server/cloud-database';
 import { BookingRules } from '../../etablissement/_components/booking-rules-form';
 
 export default async function Page() {

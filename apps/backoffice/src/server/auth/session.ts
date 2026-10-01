@@ -24,9 +24,11 @@ import {
   isReleaseAExposure,
   requireBackofficePageAvailable,
 } from '../backoffice-exposure';
-import { requireReputationPermission } from './permissions';
-import { requireBookingPermission } from './permissions';
-import { requirePersonnelPermission } from './permissions';
+import {
+  requireBookingPermission,
+  requirePersonnelPermission,
+  requireReputationPermission,
+} from './permissions';
 
 export const BACKOFFICE_SESSION_COOKIE = 'yuta_backoffice_session';
 export const BACKOFFICE_SELECTION_COOKIE = 'yuta_backoffice_selection';
@@ -36,10 +38,9 @@ const authRepository = createAuthRepository(cloudDatabase);
 export function getAuthSecret(): string {
   const secret = process.env.AUTH_SECRET;
   if (secret && secret.length >= 32) return secret;
-  if (process.env.NODE_ENV !== 'production') {
-    return 'local-development-auth-secret-change-me';
-  }
-  throw new Error('AUTH_SECRET must contain at least 32 characters.');
+  throw new Error(
+    'AUTH_SECRET must contain at least 32 characters. For local development, run `pnpm dev:env:sync` to generate one.',
+  );
 }
 
 export function createLoginRateLimitKey(

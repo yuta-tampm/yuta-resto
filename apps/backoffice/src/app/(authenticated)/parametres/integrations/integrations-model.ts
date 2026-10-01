@@ -2,7 +2,7 @@ import type { findGoogleReputationConnector } from '@yuta/db-cloud';
 import type {
   GoogleBusinessAccount,
   GoogleBusinessLocation,
-} from '../../../../server/reputation/google-business-profile-client';
+} from '@/server/reputation/google-business-profile-client';
 
 export type IntegrationSearchParams = Record<
   string,

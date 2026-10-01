@@ -1,7 +1,7 @@
 import { findBookingEstablishmentSlug, listReservations } from '@yuta/db-cloud';
-import { BackofficePage } from '../../../components/backoffice/backoffice-page';
-import { requireBookingTenant } from '../../../server/auth/session';
-import { cloudDatabase } from '../../../server/cloud-database';
+import { BackofficePage } from '@/components/backoffice/backoffice-page';
+import { requireBookingTenant } from '@/server/auth/session';
+import { cloudDatabase } from '@/server/cloud-database';
 import { ManualReservationForm } from './_components/manual-reservation-form';
 import { ReservationsFeedback } from './_components/reservations-feedback';
 import {

@@ -1,4 +1,4 @@
-import { handlePointageRawClockingRequest } from '../../../../../server/pointage/raw-clocking-http';
+import { handlePointageRawClockingRequest } from '@/server/pointage/raw-clocking-http';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';

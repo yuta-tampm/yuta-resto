@@ -1,9 +1,9 @@
 import { grantPersonnelContractAmendmentContentAccess } from '@yuta/db-cloud';
 import { randomUUID } from 'node:crypto';
-import { requirePersonnelPermission } from '../../../../../../server/auth/permissions';
-import { requirePersonnelTenant } from '../../../../../../server/auth/session';
-import { cloudDatabase } from '../../../../../../server/cloud-database';
-import { getPersonnelDocumentRuntime } from '../../../../../../server/personnel-documents/runtime';
+import { requirePersonnelPermission } from '@/server/auth/permissions';
+import { requirePersonnelTenant } from '@/server/auth/session';
+import { cloudDatabase } from '@/server/cloud-database';
+import { getPersonnelDocumentRuntime } from '@/server/personnel-documents/runtime';
 
 export const dynamic = 'force-dynamic';
 

@@ -6,9 +6,9 @@ import {
 import { Alert, AlertDescription, AlertTitle, Card } from '@yuta/ui';
 import { requireEstablishment } from '@yuta/tenant';
 import { ShieldX } from 'lucide-react';
-import { hasPersonnelPermission } from '../../../../server/auth/permissions';
-import { requireAuthenticatedTenant } from '../../../../server/auth/session';
-import { cloudDatabase } from '../../../../server/cloud-database';
+import { hasPersonnelPermission } from '@/server/auth/permissions';
+import { requireAuthenticatedTenant } from '@/server/auth/session';
+import { cloudDatabase } from '@/server/cloud-database';
 import { getBusinessDate } from './salaries-model';
 import { SalariesPage } from './_components/salaries-page';
 import { isContractExtractionPrototypeEnabled } from './_lib/contract-extraction-prototype-runtime';

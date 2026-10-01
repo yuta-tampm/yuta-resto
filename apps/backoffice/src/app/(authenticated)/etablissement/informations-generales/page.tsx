@@ -2,14 +2,14 @@ import { getEstablishmentProfile } from '@yuta/db-cloud';
 import { requireEstablishment } from '@yuta/tenant';
 import { notFound } from 'next/navigation';
 import { Card, ErrorState } from '@yuta/ui';
-import { isReleaseAExposure } from '../../../../server/backoffice-exposure';
-import { BackofficePage } from '../../../../components/backoffice/backoffice-page';
+import { isReleaseAExposure } from '@/server/backoffice-exposure';
+import { BackofficePage } from '@/components/backoffice/backoffice-page';
 import {
   hasEstablishmentPermission,
   requireEstablishmentPermission,
-} from '../../../../server/auth/permissions';
-import { requireAuthenticatedTenant } from '../../../../server/auth/session';
-import { cloudDatabase } from '../../../../server/cloud-database';
+} from '@/server/auth/permissions';
+import { requireAuthenticatedTenant } from '@/server/auth/session';
+import { cloudDatabase } from '@/server/cloud-database';
 import { GeneralInformationForm } from './_components/general-information-form';
 import { ConceptHistoryForm } from './_components/concept-history-form';
 import { CuisineKnowHowForm } from './_components/cuisine-know-how-form';

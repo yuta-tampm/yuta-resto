@@ -7,7 +7,7 @@ import {
   BACKOFFICE_SELECTION_COOKIE,
   authRepository,
   safeReturnTo,
-} from '../../../server/auth/session';
+} from '@/server/auth/session';
 import { EstablishmentSelectionForm } from './_components/establishment-selection-form';
 
 export const dynamic = 'force-dynamic';

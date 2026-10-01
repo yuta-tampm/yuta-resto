@@ -7,7 +7,7 @@ import type {
   GoogleReviewContentAvailability,
   GoogleReviewRetrievalSummary,
 } from '@yuta/contracts/reputation';
-import type { ReleaseASetupSummary } from '../../../../server/reputation/release-a-setup';
+import type { ReleaseASetupSummary } from '@/server/reputation/release-a-setup';
 
 export type ReviewListRecord = {
   id: string;
