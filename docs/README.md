@@ -57,13 +57,13 @@ sensitive details never belong in the repository.
 - [`CURRENT_STATE.md`](CURRENT_STATE.md)
 - [`REPOSITORY_MAP.md`](REPOSITORY_MAP.md)
 
-### Release planning proposal
+### Release planning
 
-- [`PRODUCT_RELEASE_ROADMAP.md`](PRODUCT_RELEASE_ROADMAP.md) — proposed single
-  owner for release sequence, customer journey and exposure policy; awaiting
-  owning Human review, with optional CT advice and no release or runtime authorization.
+- [`PRODUCT_RELEASE_ROADMAP.md`](PRODUCT_RELEASE_ROADMAP.md) — single Engineering
+  release-planning home; bounded Foundation/A decisions RR-01–RR-03 accepted
+  by the Human. Remaining scope, runtime delivery and readiness stay separate.
 - [`release-roadmap-foundation` discovery handoff](reviews/release-roadmap-foundation/discovery-handoff.md)
-  — evidence, unresolved decisions and exact next review step; no active
+  — evidence, attributable Human decisions and bounded next request; no active
   OpenSpec change has been created.
 
 ### Architecture

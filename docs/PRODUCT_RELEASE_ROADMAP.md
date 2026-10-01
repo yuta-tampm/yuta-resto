@@ -1,30 +1,34 @@
 # YUTA Product Release Roadmap
 
-Status: PROPOSED — awaiting cross-module Human review; CT advice optional
+Status: Foundation/A planning decisions RR-01–RR-03 APPROVED; remaining scope and runtime delivery PROPOSED
 
 Visibility: Engineering
 
-Owner: Proposed YUTA product and engineering; owning Human decision pending
+Owner: YUTA product and engineering; Codex coordinates release planning
 
 Last updated: 2026-10-01
 
 ## 1. Purpose, ownership and authority
 
-This is the single proposed repository destination for release sequencing,
-customer journey and capability exposure planning. It is a reviewable draft,
-not approved Product policy, a customer-facing roadmap, a normative spec, a
-release record or authorization to implement or deploy. Repository discovery
-found Product Release identity documentation and capability-specific plans, but
-no existing cross-product release-roadmap owner. Keep the identity home as its
-own authority; confirm this destination through the owning Human before adoption.
+This is the single repository destination for release sequencing, customer
+journey and capability exposure planning. The current Human approved the
+bounded Foundation/A planning decisions RR-01–RR-03 on 2026-10-01, including
+this planning owner and the Foundation -> A -> B -> C sequence. Remaining
+capability details and runtime delivery are proposals, not a customer-facing
+roadmap, normative spec, release record or authorization to implement or
+deploy. Repository discovery found Product Release identity documentation and
+capability-specific plans but no earlier cross-product release-roadmap owner.
+The identity, capability and operations homes retain their distinct authority.
 Coordination and optional CT advice follow
 [task collaboration](YUTA_AUTOMATED_CHANGE_WORKFLOW.md#task-collaboration-and-delegated-review);
 this does not approve any pending roadmap decision or start a change.
 
-The supplied direction is Foundation -> A: Reputation Core -> B: Direct
-Feedback -> C: AI Reputation. Every future scope and exposure target below is
-`PROPOSED`. The user authorized repository analysis, proposal preparation and
-necessary index links only. Existing approved obligations are preserved.
+The accepted planning sequence is Foundation -> A: Reputation Core -> B:
+Direct Feedback -> C: AI Reputation. Section 11 records the exact accepted
+Foundation/A intent and its limits; B/C scope, actual implementation and release
+readiness remain separately decided. The current shaping task authorizes
+document preparation, recording the Human decisions and a local commit after
+completion. Existing approved obligations are preserved.
 
 Use these classifications throughout:
 
@@ -52,7 +56,7 @@ authority. No live Page Chat or Human-selected Control Tower context was supplie
 or consulted; missing chat context does not mean missing requirements. Conflicts
 and scope decisions go through the [Control Tower handoff](chatGPT/YUTA_CONTROL_TOWER_HANDOFF_TEMPLATE_V3.md).
 
-The current review and exact next decision are recorded in
+The current Human decisions and bounded next request are recorded in
 [the discovery handoff](reviews/release-roadmap-foundation/discovery-handoff.md).
 No active `release-roadmap-foundation` OpenSpec change has been created.
 
@@ -95,7 +99,7 @@ historical VERIFY FAIL and global-format failures remain preserved alongside
 the later scoped reassessment. The foundation's deployment follow-up is still
 separate; no live release identity was verified by this audit.
 
-## 3. Proposed sequence and calendar policy
+## 3. Release sequence and calendar policy
 
 | Milestone           | Supplied scope / proposed outcome                                                                                                                                                                        | Maturity treatment                                                           | Exit dependency                                                                                                       |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
@@ -124,6 +128,9 @@ This is a dated planning snapshot. Lifecycle cells reproduce bounded owning
 records; `no dedicated row` means no status is invented for that finer slice.
 `UNVERIFIED` environment does not mean a failed deployment. Test sources below
 were inspected; no runtime tests or Browser QA were executed for this draft.
+The audit predates the bounded RR-01–RR-03 decisions in section 11; those
+decisions supersede only their planning questions, not lifecycle or execution
+evidence in these rows.
 
 | Capability / canonical owner                                     | Release      | Current lifecycle evidence                                                                                                | Implementation / data / provider evidence                                                                                                                                  | Exposure target                                     | Prerequisite / blocker or decision                                                                                                      | Acceptance proposed for release                                                                                           |
 | ---------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
@@ -352,6 +359,10 @@ under current workflow. This documentation diff is `UI_AFFECTING: NO`,
 
 ## 11. Decisions, conflicts and next workflow step
 
+The following inventory preserves the initial discovery questions. The bounded
+Human decisions below now settle RR-01–RR-03 for Foundation/A planning only;
+unanswered broader questions and conflicts remain open.
+
 | Decision / finding                       | Evidence / concrete approval choice needed                                                                                                                                                                                                                                                                                                                                           |
 | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | RR-01: owner and cross-module routing    | The owning Human accepts this proposed Engineering destination and Product/engineering ownership, or names an existing controlling owner; CT advice is optional. Decide readiness and a documentation-only OpenSpec strategy; do not bypass Discovery.                                                                                                                               |
@@ -363,16 +374,119 @@ under current workflow. This documentation diff is `UI_AFFECTING: NO`,
 | Potential provider constraint            | Official Google storage/content restrictions require provider/privacy interpretation for intended persistence, continued read access, summaries and AI. No compliance claim or technical storage design chosen.                                                                                                                                                                      |
 | Unavailable evidence                     | Live Page Chats/selected Control Tower, private provider console/approval, production credentials/quotas, deployed candidate, customer cohort, live monitoring, restore and rollback exercises were not inspected. Preserve their unknown status.                                                                                                                                    |
 
-Current stage: **Discovery / Shaping — awaiting owning Human
-ownership, Product reconciliation and OpenSpec-readiness decision**. Suggested
-bounded name: `release-roadmap-foundation`, currently unused. This is not a
-Gate 1 approval packet. Codex coordinates owner/conflict/strategy/readiness
-analysis from the repository; the owning Human resolves the pending Product
-and authority decisions. CT may advise if selected through Bridge. A later
-change must use CLI-resolved `yuta-spec-driven`
-instructions, then exact Proposal/Analysis Gate 1 review before dependent work.
-Whether a no-spec documentation path is valid must be decided from the eventual
-bounded request; no `skip_specs` value, later artifact or approval is invented.
+### Bounded Foundation and Release A decisions
+
+Decision status: `APPROVED` for RR-01–RR-03 planning intent only. The current
+Human separately answered "Chốt RR-01 theo đề xuất", "Chốt RR-02 theo đề xuất"
+and "Chốt RR-03 theo đề xuất" at `2026-10-01T13:04:54+02:00` (recorded on
+receipt). The task uses `HUMAN_COLLABORATION` and `COMMIT_AFTER_TASK: YES`.
+The [decision record](reviews/release-roadmap-foundation/discovery-handoff.md#current-foundationa-shaping-continuation--2026-10-01)
+attributes these answers and the bounded scope. The following accepted intent
+resolves the earlier questions for this release only. It is not an
+implementation plan or approval of the whole Avis, Today, Access or
+Establishment capability.
+
+**RR-01 — planning owner and sequence.** Adopt this file as the single
+Engineering release-planning home, owned by YUTA Product/engineering and
+coordinated by Codex. CT advice remains optional under the selected mode.
+Sequence Foundation -> A Reputation Core -> B Direct Feedback -> C AI
+Reputation. Commit no delivery dates and do not change the current Core
+maturity/version or independently assigned lifecycle/readiness values. Exact
+B/C decisions remain deferred in their owning homes.
+
+**RR-02 — Google-only Release A and Human publication.** Include Google
+connect/discover/explicit bind, import and update without duplicates, scoped
+inbox/detail, manual drafts, manual refresh, explicit approve/publish and
+failure/reconnect recovery. Exclude AI, batch approval/publication and
+scheduled synchronization from A. Facebook/Instagram remain deferred for A
+without deleting their confirmed high-level Product direction.
+
+Accepted release-specific roles, subject to existing trusted context and
+record-level access:
+
+- OWNER manages the Google connection and verifies/binds the intended
+  provider account/location for the active establishment. Being a YUTA OWNER
+  does not establish Google resource authority; the server must verify it.
+- OWNER/MANAGER may request manual refresh and explicitly approve/publish a
+  reply. This is accepted Product intent for a later operation contract; the
+  existing publish grant is not proof of implementation or provider eligibility.
+- STAFF may read, add notes and prepare manual drafts only for assigned
+  reviews. STAFF does not approve/publish or manage the connector.
+- The author may approve their own reply if they have the required role.
+  Publication requires a separate explicit action confirming the final text;
+  saving a draft never means approval. A changed draft cannot inherit approval
+  of older text. Technical version binding and uncertain-result recovery must
+  be specified in the later bounded publication change.
+
+The Human selected OWNER/MANAGER approve/publish. The offered OWNER-only
+alternative was not selected.
+Provider/privacy review, permitted data storage/use, credential operations and
+actual Google approval/access remain separate prerequisites, not approvals
+created by this Product choice.
+
+**RR-03 — entry, minimum setup, exposure and Today.** Use the existing five
+surfaces in section 8: Aujourd'hui, Avis & commentaires, minimum Informations
+generales profile, OWNER Google Integrations and permitted Users & Access.
+Profile exposure covers the basic profile only; Restaurant Knowledge sections
+are outside the default A dependency set. Continue operator-assisted account
+creation/attachment and recovery. Do not add public signup, an onboarding
+wizard, organization self-service or an automated-email promise.
+
+Minimum preparation is valid active organization/establishment/user/membership
+context, a restaurant name, valid locale/timezone, and the existing applicable
+permissions/entitlements. Address, images, descriptive Knowledge and a profile
+completion percentage are not new A entry requirements. Slug, locale/timezone
+and missing profile/context recovery stay with their current owners; approved
+operator preparation must make them usable before cohort entry. This choice
+creates no persisted setup enum or automatic onboarding gate. A named operator,
+verified support contact, initial-credential delivery channel and secure reset
+issuance/delivery exercise remain operational prerequisites before customer use.
+
+For the A Today projection, include only Google records readable by the actor:
+`new` means status `NEW`, not "since last visit"; `requiring attention` means
+status in `NEW`, `TO_PROCESS`, `DRAFTED` or `FOLLOW_UP`. The attention count,
+preview and linked full list share this source/status/actor scope; the preview
+may be bounded without reducing the total count. STAFF sees assigned records
+only. This is a local handling queue, not a remote unanswered count, provider
+reply status or response-rate metric. Do not infer a remote reply from a local
+`PUBLISHED` row. Hide Booking, Direct Feedback and AI projections for A.
+
+Missing Google connection provides an authorized OWNER setup step; other roles
+receive an appropriate handoff. Missing trusted context/profile provides an
+approved support/recovery step. Distinguish not connected, import not performed,
+import failure, successful import with zero reviews and usable reviews. Outside
+A, navigation/subsections/links and direct page/API/action access require a
+separately implemented availability policy and bounded recovery, independent
+of authorization.
+
+Observable acceptance for later bounded changes: invited users enter the
+correct establishment, unauthorized/stale/revoked access fails safely, the five
+surfaces expose only permitted A slices, direct out-of-release entry is denied
+with recovery, Today count/list scope agrees, Google empty/error/setup states
+are truthful, and no external publication follows from draft Save. The
+[OWNER-preservation QA report](reviews/preserve-establishment-owner-invariant/qa/QA_REPORT.md)
+records a mobile Users & Access failure; its disposition and required current
+candidate QA are a Foundation dependency, not a failed repository invariant or
+an authorization to repair that UI here.
+
+The Human decisions are recorded in the existing discovery handoff.
+Keep the broader AVIS-01/04/05/07/08/09 questions open outside this A-only
+decision. Before dependent feature planning, reconcile the bounded decision
+with owning Product homes and determine the exact next authorized request.
+This shaping task does not create an OpenSpec change or authorize the proposed
+`release-a-customer-exposure-foundation` implementation.
+
+Current stage: **Foundation/A shaping completed; RR-01–RR-03 recorded and scoped
+document validation passed, with the existing global-format failure preserved**.
+The existing `release-roadmap-foundation` task
+remains pre-change; its suggested OpenSpec name is unused. This is not a Gate 1
+approval packet. Next, reconcile the A-only decisions with the owning feature
+homes and bound the separately requested exposure change. Codex coordinates
+owner/conflict/strategy/readiness analysis from the repository; any remaining
+material Product/authority decision still belongs to the Human. CT may advise
+if selected through Bridge. A later change must use CLI-resolved
+`yuta-spec-driven` instructions and exact Proposal/Analysis Gate 1 review before
+dependent work. No `skip_specs` value, later artifact or approval is invented.
 
 ## 12. Maintenance and verification boundaries
 

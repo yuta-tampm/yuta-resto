@@ -4,7 +4,19 @@ Change candidate: `release-roadmap-foundation` — not created
 
 Gate: Discovery / Shaping; OpenSpec Gate 1 not reached
 
-Review status: AWAITING_HUMAN_REVIEW
+Review status: APPROVED
+
+Approval scope: current bounded RR-01–RR-03 Foundation/A planning decisions only;
+initial broader discovery candidate and remaining questions are not approved
+by implication. This is not an OpenSpec Gate 1 decision.
+
+Approval source: explicit current-user answers to the three RR decision questions
+
+Approval recorded by: Codex workflow
+
+Approved: 2026-10-01T13:04:54+02:00 (recorded on receipt)
+
+Historical initial review status: AWAITING_HUMAN_REVIEW
 
 Created: 2026-10-01
 
@@ -317,9 +329,205 @@ Unrelated dirty-file preservation baseline (pre-edit and post-check identical):
 - No provider request, account change, credential readout, email/Slack/Control
   Tower transmission, production probe, commit, push or deployment performed.
 
-Current workflow status: DISCOVERY_SHAPING_AWAITING_HUMAN_CONTROL_TOWER_DECISION.
+Historical discovery status at initial authoring:
+`DISCOVERY_SHAPING_AWAITING_HUMAN_CONTROL_TOWER_DECISION`. The original evidence
+and stop above are preserved; current collaboration routing uses the approved
+2026-10-01 policy and the task selection below. CT is optional, not a mandatory
+authority or approver.
 
-Exact next approval: accept/revise the proposed documentation owner and roadmap
-direction, explicitly reconcile the named release-specific Product decisions,
-and record Global Control Tower OpenSpec strategy/readiness. This is not Gate 1,
-runtime Apply, Product stage, version bump, release or deployment approval.
+## Current Foundation/A shaping continuation — 2026-10-01
+
+- `COLLABORATION_MODE: HUMAN_COLLABORATION`.
+- `MODE_SELECTION_SOURCE`: actual current-user answer, "HUMAN_COLLABORATION —
+  Codex chuẩn bị, bạn chốt quyết định Product".
+- `COMMIT_AFTER_TASK: YES`.
+- `COMMIT_SELECTION_SOURCE`: actual current-user answer, "YES — commit local
+  khi task hoàn tất". No push, PR, merge or deployment is authorized.
+- Task source: "chọn task đầu tiên như bạn đề xuất", selecting the recommended
+  bounded Foundation/Release A Discovery/Shaping task. This is not acceptance
+  of unresolved Product options.
+- Goal: make RR-01–RR-03 concrete, obtain attributable Human decisions and
+  retain a bounded next request with separately owned prerequisites.
+- Impact: `CROSS_MODULE`; Product/engineering planning owner accepted, Codex
+  coordinates in the selected mode. No CT was selected or contacted.
+- Authorized edit allowlist: `docs/PRODUCT_RELEASE_ROADMAP.md`, `docs/README.md`
+  and this existing handoff. The existing index summary is updated to reflect
+  the accepted planning owner/decisions. Existing capability homes, normative
+  specs, review histories and runtime/source/schema/configuration files remain
+  outside the edit scope.
+- Phase: Discovery/Shaping only. OpenSpec entry, Gate 1 and all subsequent
+  artifacts, implementation, sync/archive, release identity/lifecycle changes,
+  provider calls/configuration and production operations are not authorized.
+- Baseline: branch `main`, HEAD
+  `26934c1e1780f66bdabf83de943c4b2db47ca8bf`; tracked/index/untracked state clean
+  before edits. Captured at `2026-10-01T13:03:31+02:00`.
+
+| Baseline path                                                  | SHA-256 before continuation                                        |
+| -------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `docs/PRODUCT_RELEASE_ROADMAP.md`                              | `027d28b0ba812cbf1af9f1ade572ec54976f5ae709dc3f1c135dae207c06594d` |
+| `docs/README.md`                                               | `2eb2f80ea4111ca0f30080c896affc7138ee4db6240329a606c2ead54f19a2f7` |
+| `docs/reviews/release-roadmap-foundation/discovery-handoff.md` | `841295daaac6b17d318b596ddfe4da9b311a08957c94d6f0e867d62987c23684` |
+
+### Exact Product decisions recorded
+
+The reviewable accepted planning text is the roadmap's
+[bounded Foundation/A decisions](../../PRODUCT_RELEASE_ROADMAP.md#bounded-foundation-and-release-a-decisions).
+Earlier section 11 identified unanswered RR-01–RR-03 without selecting owner,
+publish roles, exact minimum preparation or Today attention semantics. The
+record now supplies the explicit Human choices; it does not silently replace
+unresolved owning Product authority outside their bounded A-only scope.
+
+| Decision | Proposed outcome                                                                                                                                                                                                                                                                            | Human status/source                                         |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| RR-01    | This Engineering planning home; Product/engineering ownership; Codex coordination; Foundation -> A -> B -> C; no dates or maturity change.                                                                                                                                                  | `APPROVED`; actual Human answer: "Chốt RR-01 theo đề xuất". |
+| RR-02    | Google-only A; OWNER connector; OWNER/MANAGER refresh and explicit final-text approve/publish; STAFF assigned read/note/draft; self-approval allowed for authorized author; no AI, batch or scheduled sync. OWNER-only alternative was not selected.                                        | `APPROVED`; actual Human answer: "Chốt RR-02 theo đề xuất". |
+| RR-03    | Five existing surfaces, basic profile, operator-assisted access/recovery, valid context/name/locale/timezone/permissions/entitlements; Google-only Today NEW and local handling attention statuses with matching count/list scope; setup/support recovery and separate server availability. | `APPROVED`; actual Human answer: "Chốt RR-03 theo đề xuất". |
+
+All three answers were explicit current-user submissions, separately received
+after the task/mode/commit intake. Record time: `2026-10-01T13:04:54+02:00`.
+The RR-02 question explicitly offered OWNER/MANAGER publication and author
+self-approval with separate final-text confirmation; the Human selected it,
+not the OWNER-only alternative. The RR-03 question explicitly defined attention
+as `NEW`/`TO_PROCESS`/`DRAFTED`/`FOLLOW_UP`, matching count/list source and STAFF
+assignment scope. These local queue definitions do not decide remote reply
+truth or advanced analytics. B/C details, global AVIS policy, operational
+credentials/support and provider qualification remain separately unresolved.
+
+### Residual prerequisites and bounded next work
+
+- Owning feature reconciliation remains necessary before dependent feature
+  planning; an A-only decision does not answer generic provider, role, metric,
+  retention or recovery questions beyond its recorded scope.
+- Google access/approval, permitted content storage/use and privacy/security
+  review remain prerequisites for import/publication. No provider console,
+  credential value, external request or compliance qualification was inspected.
+- Operator/support ownership, private credential delivery and reset exercises,
+  exact cohort/environment/candidate and existing cloud readiness gates remain
+  separate. No customer rollout or live readiness evidence is created.
+- The existing OWNER-preservation technical record reports VERIFY PASS and
+  subsequent mobile QA FAIL. Keep those historical axes; a bounded Users &
+  Access UI disposition/current QA is required before Foundation acceptance.
+  This task neither repeats the repository repair nor authorizes its UI fix.
+- Proposed first dependent code task:
+  `release-a-customer-exposure-foundation`, separately bounded to approved
+  navigation/subsections, Today projection and direct page/API/action
+  availability/recovery while retaining trusted tenant authorization. Follow
+  with Google import/manual refresh, then publication/recovery, each with its
+  own contracts, approvals and acceptance. No dependent task is started here.
+- B/C implementation and their SAT/AI/provider/Knowledge decisions remain
+  deferred. Existing Pointage/operator feedback and tooling work are not part
+  of this A scope unless an evidenced dependency is separately authorized.
+
+### Current evidence and stop
+
+Current continuation checks, executed on the documented candidate:
+
+| Command / check                                                                                                                          | Result and limit                                                                                                                                                                                                             |
+| ---------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm docs:check`                                                                                                                        | PASS, exit 0; 36 current documents checked. The fixed checker list does not include this roadmap/handoff, so the scoped check below supplements it.                                                                          |
+| `pnpm architecture:check`                                                                                                                | PASS, exit 0; runtime imports, database URLs, client boundaries and migration baselines valid. No source/runtime files changed after this run.                                                                               |
+| `pnpm -r --if-present typecheck`                                                                                                         | PASS, exit 0; workspace typecheck completed. No TypeScript, manifest or generated source edits belong to this task.                                                                                                          |
+| `pnpm format:check`                                                                                                                      | FAIL, exit 1; 93 pre-existing files outside the three attributed paths. The clean baseline and exact changed-path set attribute none of those failures to this task. No global format repair or acceptance waiver performed. |
+| `pnpm exec prettier --check docs/PRODUCT_RELEASE_ROADMAP.md docs/README.md docs/reviews/release-roadmap-foundation/discovery-handoff.md` | PASS, exit 0; all three task files use Prettier style.                                                                                                                                                                       |
+| `git -c core.safecrlf=false diff --check`                                                                                                | PASS, exit 0; no whitespace errors in the scoped tracked diff.                                                                                                                                                               |
+| Scoped Node check below, piped from a single-quoted PowerShell here-string to `node --input-type=module`                                 | PASS, exit 0; 148 local links/anchors checked, zero failures; accepted scope/mode/commit markers present and no active roadmap change created.                                                                               |
+
+Source for the scoped check (read-only file/heading/decision assertions):
+
+```javascript
+import { readFileSync, existsSync } from 'node:fs';
+import path from 'node:path';
+const files = [
+  'docs/PRODUCT_RELEASE_ROADMAP.md',
+  'docs/README.md',
+  'docs/reviews/release-roadmap-foundation/discovery-handoff.md',
+];
+const failures = [];
+let checked = 0;
+for (const file of files) {
+  const source = readFileSync(file, 'utf8');
+  for (const match of source.matchAll(
+    /\[[^\]]*\]\(\s*(<[^>]+>|[^\s)]+)\s*\)/g,
+  )) {
+    const destination = match[1].replace(/^<|>$/g, '');
+    if (/^(https?:|mailto:|#)/.test(destination)) continue;
+    const [local, anchor] = destination.split('#');
+    const resolved = path.resolve(path.dirname(file), local);
+    if (!existsSync(resolved)) {
+      failures.push(`${file}: missing ${destination}`);
+    } else if (anchor && /\.md$/i.test(local)) {
+      const headings = [
+        ...readFileSync(resolved, 'utf8').matchAll(/^#{1,6}\s+(.+)$/gm),
+      ].map((heading) =>
+        heading[1]
+          .toLowerCase()
+          .replace(/[^\p{L}\p{N}\s_-]/gu, '')
+          .replace(/ /g, '-'),
+      );
+      if (!headings.includes(anchor)) {
+        failures.push(`${file}: missing anchor ${destination}`);
+      }
+    }
+    checked++;
+  }
+}
+const roadmap = readFileSync(files[0], 'utf8');
+const handoff = readFileSync(files[2], 'utf8');
+for (const marker of [
+  'RR-01–RR-03 APPROVED',
+  'Owner: YUTA product and engineering',
+  '`TO_PROCESS`, `DRAFTED` or `FOLLOW_UP`',
+  'saving a draft never means approval',
+  'No active `release-roadmap-foundation` OpenSpec change has been created.',
+]) {
+  if (!roadmap.includes(marker)) failures.push(`roadmap missing ${marker}`);
+}
+for (const marker of [
+  'COLLABORATION_MODE: HUMAN_COLLABORATION',
+  'COMMIT_AFTER_TASK: YES',
+  'Chốt RR-01 theo đề xuất',
+  'Chốt RR-02 theo đề xuất',
+  'Chốt RR-03 theo đề xuất',
+]) {
+  if (!handoff.includes(marker)) failures.push(`handoff missing ${marker}`);
+}
+if (existsSync('openspec/changes/release-roadmap-foundation')) {
+  failures.push('unexpected active change');
+}
+console.log(
+  JSON.stringify({ files, localLinksChecked: checked, failures }, null, 2),
+);
+if (failures.length) process.exitCode = 1;
+```
+
+Attribution: exactly three documentation paths above changed against base
+`26934c1e1780f66bdabf83de943c4b2db47ca8bf`. The original discovery body,
+historical command outcomes, dirty-file baseline and provider/readiness
+limitations remain recoverable in this same packet. Changed current fields
+explicitly distinguish the new bounded Human decision from the initial broader
+review. No source, schema, API, permission, provider, main spec or lifecycle
+mutation belongs to this diff. Final roadmap/index SHA-256 values are recorded
+below; this packet does not hash itself.
+
+| Current attributed artifact       | SHA-256 after shaping                                              |
+| --------------------------------- | ------------------------------------------------------------------ |
+| `docs/PRODUCT_RELEASE_ROADMAP.md` | `8ebdc933ad5ae363b0c438193e8a029686186bee82a8d0961d3f5c62034279ee` |
+| `docs/README.md`                  | `ae688b14dc0da7749f01839cff447a9a324ee501bcf76f9fc05a8663abb572b8` |
+
+Skipped for this documentation-only shaping task: `pnpm test:cloud`,
+`pnpm test:local`, `pnpm build:cloud`, package tests/builds and DB/provider
+integration execution. Runtime/Browser QA is NOT_APPLICABLE to this diff; the
+existing OWNER QA FAIL and Google provider QA block remain historical open
+dependencies. Technical VERIFY, Gate 1 and later OpenSpec gates are NOT_REACHED,
+not PASS. No provider or production execution was performed.
+
+Current workflow status: `FOUNDATION_A_SHAPING_COMPLETE`; RR-01–RR-03 are
+Human-approved, scoped documentation checks pass and the unrelated global
+format FAIL remains recorded. Local commit is authorized by the current
+`COMMIT_AFTER_TASK: YES`; its actual SHA is reported in chat after creation,
+without editing this packet again to insert it.
+
+The separately requested next feature task must first reconcile the A-only
+decisions with owning homes and bound its exposure scope. OpenSpec entry,
+runtime Apply, stage/version, release and deployment remain separate; this
+Human decision does not start them.
