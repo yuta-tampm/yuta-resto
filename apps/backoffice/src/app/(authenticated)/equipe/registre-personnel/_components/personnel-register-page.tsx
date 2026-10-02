@@ -69,7 +69,6 @@ export function PersonnelRegisterPage({
   candidates: PersonnelRegisterCandidate[];
   locale: string;
 }) {
-  const router = useRouter();
   const [displayData, setDisplayData] = useState(data);
   const [currentCursor, setCurrentCursor] = useState<string | null>(null);
   const [previousCursors, setPreviousCursors] = useState<(string | null)[]>([]);
