@@ -2,7 +2,10 @@ import { config } from 'dotenv';
 import { eq, getTableColumns } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { v7 as uuidv7 } from 'uuid';
-import { createCloudDatabaseClient } from '../src/client';
+import {
+  createCloudDatabaseClient,
+  type CloudDatabaseClient,
+} from '../src/client';
 import {
   establishments,
   formalitesPersonnelDraftCommandReceipts,
@@ -79,7 +82,7 @@ const integrationTest =
     : describe.skip;
 
 integrationTest('Formalités Personnel draft PostgreSQL constraints', () => {
-  const db = createCloudDatabaseClient(process.env);
+  let db: CloudDatabaseClient;
   const organizationId = uuidv7();
   const otherOrganizationId = uuidv7();
   const establishmentId = uuidv7();
@@ -122,6 +125,7 @@ integrationTest('Formalités Personnel draft PostgreSQL constraints', () => {
   });
 
   beforeAll(async () => {
+    db = createCloudDatabaseClient(process.env);
     await db.transaction(async (transaction) => {
       await transaction.insert(organizations).values([
         {

@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-10-01
+Last updated: 2026-10-02
 
 ## Finding the right authority
 
@@ -190,6 +190,8 @@ They are provenance, not current workflow instructions.
 - [`decisions/ADR-007-composed-general-information-and-restaurant-knowledge.md`](decisions/ADR-007-composed-general-information-and-restaurant-knowledge.md)
 - [`decisions/ADR-008-task-collaboration-and-delegated-review.md`](decisions/ADR-008-task-collaboration-and-delegated-review.md)
 - [`decisions/ADR-009-release-a-customer-exposure.md`](decisions/ADR-009-release-a-customer-exposure.md)
+- [`decisions/ADR-010-claude-code-implementation-delegation.md`](decisions/ADR-010-claude-code-implementation-delegation.md)
+  — Bounded Claude Code implementation under Codex coordination.
 
 Completed task specifications are removed after durable behavior is reflected
 in current feature documentation and remaining work is captured in `STATUS.md`.

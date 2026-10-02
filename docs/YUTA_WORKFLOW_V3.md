@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last updated: 2026-10-01
+Last updated: 2026-10-02
 
 ## 1. Workflow này là gì
 
@@ -47,6 +47,7 @@ Release, deploy và Production Readiness không nằm trong định nghĩa repos
 | **Page Chat / Local Control Tower** | Optional trong `CT_BRIDGE` hoặc `HUMAN_CT_BRIDGE` cho owning unmigrated `PAGE_LOCAL` scope; sau completed recorded cutover chỉ là legacy evidence cho exact scope đó. | Không thay repo canonical, tự approve gate, đổi scope hoặc tự chuyển chat/quyền.          |
 | **Global Control Tower**            | Optional trong `CT_BRIDGE` hoặc `HUMAN_CT_BRIDGE`; góp ý owner, authority, shared contracts và review routing từ nguồn repo.                                          | Không bắt buộc trong cross-module work, thay Codex coordinator hoặc approve gate.         |
 | **Codex author / coordinator**      | Discovery, shaping, impact, artifacts, implementation, checks và evidence trong mọi mode; tiến qua review đúng mode và scope.                                         | Không self-approve, tự tạo Product authority, permission, owner hoặc durable boundary.    |
+| **Claude Code author**              | Implements Codex-assigned code/documentation and tests in its designated checkout, runs assigned checks and fixes in-scope findings.                                  | Not a mode, approval source or Codex replacement; no self-approval or scope expansion.    |
 | **Independent reviewer**            | Reviewer read-only riêng với fresh context, actual verdict và exact hashes cho routine gate trong delegated mode.                                                     | Không viết source, mở rộng scope, thay owning Human decision hoặc giả Human approval.     |
 | **OpenSpec**                        | Giữ proposal, analysis, delta specs, design và tasks của một change có cấu trúc.                                                                                      | Change trong `openspec/changes/**` không phải normative authority.                        |
 | **Product Knowledge**               | Giải thích WHY, broader WHAT, mục đích module, quan hệ, scope và non-goals.                                                                                           | Không tự chứng minh code hiện tại, deployment hoặc readiness.                             |
@@ -165,6 +166,20 @@ Các hướng dẫn “dừng chờ Human review” bên dưới mô tả Human 
 records. Ở delegated modes, đó là cùng review boundary với reviewer độc lập;
 không bỏ gate hoặc giảm evidence. Quy tắc vận hành chi tiết nằm tại
 [Task collaboration and delegated review](YUTA_AUTOMATED_CHANGE_WORKFLOW.md#task-collaboration-and-delegated-review).
+
+### Claude Code implementation delegation
+
+In any mode, Codex may assign bounded implementation to Claude Code through a
+handoff that inherits the same task's mode, commit choice and their actual
+sources. Codex keeps orchestration, integration review and integration.
+`CODEX_ONLY` and `CT_BRIDGE` still require the verdict of an uninvolved
+independent gate reviewer; `HUMAN_COLLABORATION` and `HUMAN_CT_BRIDGE` retain
+actual Human gate decisions. Codex's planning or integration review does not
+substitute for the required verdict. Handoff fields, return evidence, attribution and
+exclusions are defined in
+[Claude Code implementation delegation](YUTA_AUTOMATED_CHANGE_WORKFLOW.md#claude-code-implementation-delegation);
+worktree and shared-resource rules are in
+[Parallel tasks and worktrees](DEVELOPMENT_WORKFLOW.md#parallel-tasks-and-worktrees).
 
 ### CT và Bridge là tùy chọn
 
@@ -907,6 +922,7 @@ New task → ask: CODEX_ONLY / HUMAN_COLLABORATION / CT_BRIDGE / HUMAN_CT_BRIDGE
 Also ask: COMMIT_AFTER_TASK = YES / NO; unanswered = NOT_SELECTED
 Same task → retain selected mode and bounded scope
 Codex → repository discovery/shaping/impact/coordination in every mode
+Claude Code → Codex-assigned implementation only; not a mode or approval source
 CODEX_ONLY / CT_BRIDGE → actual independent routine gate review
 HUMAN_COLLABORATION / HUMAN_CT_BRIDGE → actual Human gate decisions
 CT_BRIDGE / HUMAN_CT_BRIDGE → user-selected verified target; no automatic chat/authority transfer

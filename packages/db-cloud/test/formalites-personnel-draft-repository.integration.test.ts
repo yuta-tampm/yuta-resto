@@ -3,7 +3,10 @@ import { and, eq, sql } from 'drizzle-orm';
 import { createHash } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { v7 as uuidv7 } from 'uuid';
-import { createCloudDatabaseClient } from '../src/client';
+import {
+  createCloudDatabaseClient,
+  type CloudDatabaseClient,
+} from '../src/client';
 import {
   abandonFormalitesPersonnelDraft,
   createFormalitesPersonnelDraft,
@@ -38,7 +41,7 @@ const integrationTest =
     : describe.skip;
 
 integrationTest('Formalités Personnel draft repository', () => {
-  const db = createCloudDatabaseClient(process.env);
+  let db: CloudDatabaseClient;
   const organizationId = uuidv7();
   const establishmentId = uuidv7();
   const otherOrganizationId = uuidv7();
@@ -54,6 +57,7 @@ integrationTest('Formalités Personnel draft repository', () => {
   );
 
   beforeAll(async () => {
+    db = createCloudDatabaseClient(process.env);
     await db.insert(organizations).values([
       {
         id: organizationId,
