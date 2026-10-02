@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": ["Read", "Grep", "Glob", "Bash(git status)", "Bash(git diff)"],
+    "deny": [
+      "Read(//**/.env)",
+      "Read(//**/.env.*)",
+      "Read(//**/.private/**)",
+      "Read(//**/.credentials.json)",
+      "Read(//**/.claude/settings.local.json)",
+      "Read(~/.claude/.credentials.json)",
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.config/gh/**)",
+      "Edit(./.git/**)",
+      "Edit(./.agents/**)",
+      "Edit(./openspec/**)",
+      "Edit(./docs/reviews/**)",
+      "Edit(./docs/archive/**)"
+    ]
+  }
+}

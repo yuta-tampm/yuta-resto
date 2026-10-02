@@ -96,6 +96,99 @@ Agents read a needed skill directly from its exact
 `.agents/skills/<skill-name>/SKILL.md`. Direct reading does not register a
 command, invoke a skill or grant tool rights.
 
+### Claude task runner
+
+`CLAUDE.md` imports `AGENTS.md` and adds Claude startup caveats.
+`.claude/settings.json` preapproves routine inspection, denies reads of private
+environment files and credentials, and denies edits to Git internals,
+`.agents/`, `openspec/`, `docs/reviews/` and `docs/archive/`. Public
+`.env.example` templates can be supplied through hash-bound approved-reference
+snapshots in the handoff. Direct Read/Grep/Glob access to `.env` and all `.env.*`
+names is blocked, including templates, to avoid gaps for private variants such
+as `.env.staging` and `.env.backup`. Personal `.claude/settings.local.json`
+is ignored by Git. The `yuta-readonly-reviewer` agent has only Read, Grep and
+Glob.
+
+`scripts/claude-task.mjs` implements the
+[Claude Code implementation delegation](YUTA_AUTOMATED_CHANGE_WORKFLOW.md#claude-code-implementation-delegation)
+handoff for Codex. A handoff records authorization; it does not create it, and
+Codex verifies every source before use. Start from
+`scripts/claude-task/example-handoff.json`. That example is a template: its
+`REPLACE_WITH_` placeholders make it fail validation until the placeholders are
+replaced with actual sourced values.
+
+```bash
+pnpm claude-task validate --handoff <file>
+pnpm claude-task prepare --handoff <file>
+pnpm claude-task run --task <id> [--claude <executable>]
+pnpm claude-task review --task <id> [--claude <executable>]
+pnpm claude-task status --task <id>
+pnpm claude-task cleanup --task <id>
+pnpm test:claude-task
+```
+
+- `validate` checks the strict versioned handoff without mutation. Write paths
+  must be exact repository-relative files. Ordinary spaces, route groups such
+  as `(authenticated)` and dynamic segments such as `[id]` are valid. Traversal,
+  absolute paths, wildcards, control characters, `:` stream separators,
+  reserved device names, protected areas, private env files and raw-byte
+  bindings in `scripts/check-format-preservation.mjs` are rejected. Each
+  authorized command is one exact command without quoting or chaining. Direct
+  Git/GitHub commands stay with Codex, including forms with global Git options;
+  every required check must also be an authorized command. Private environment
+  or credential paths cannot become approved-reference or reading inputs.
+- `prepare` verifies the base commit and approved reference hashes. It
+  snapshots those references, creates an unused branch and one clean owned
+  worktree at `exports/claude-tasks/<id>/checkout` with per-command
+  `core.autocrlf=false`, and keeps evidence in
+  `exports/claude-tasks/<id>/evidence`. It runs
+  `pnpm install --frozen-lockfile` only when the handoff authorizes dependency
+  preparation. It rejects linked parent directories before creating evidence
+  or the checkout and never generates or copies private env files.
+- `run` dispatches the implementation author and `review` dispatches a fresh
+  read-only reviewer. Both use project-only setting sources, no MCP servers,
+  no Chrome integration, no slash commands, no session persistence and
+  `dontAsk` permissions without bypass. Worker sessions receive Read, Grep,
+  Glob, Edit, Write and Bash. A runner-written, read-only, hash-pinned guard
+  file sits outside the checkout and backs a PreToolUse hook (`hook`
+  subcommand). The hook allows only exact authorized commands and exact
+  allowlisted write paths, denies background commands, links and every other
+  tool, and fails closed on invalid input. Reviewer sessions receive only Read,
+  Grep and Glob, with hooks disabled.
+- Each run first acquires atomic task, port, database and shared-resource
+  locks. It then re-verifies the frozen handoff, reference hashes and checkout
+  identity, and retains the prompt, sanitized version and subscription status,
+  arguments, stream output, tool uses, hook decisions, raw-byte before and
+  after snapshots, the binary diff and the bytes of every new file. Writes
+  outside the allowlist, unexpected tools, executed unauthorized commands,
+  unobserved guard hooks, HEAD changes and timeouts are recorded as failures.
+  Changes are never reverted. Exit code zero without a successful Claude
+  result is not a success. Candidate drift blocks another worker run; a review
+  records it.
+- `status` reports state, integrity, locks and checkout entries without
+  mutation. `cleanup` removes only the recorded owned worktree, with native Git
+  and without force. It refuses held locks, dirty or untracked candidates and
+  ignored files other than dependency, build or cache output. The branch and
+  evidence are always retained.
+
+Claude discovery uses `--claude`, `CLAUDE_TASK_EXECUTABLE`, `PATH`, or on
+Windows the newest Desktop runtime under
+`%LOCALAPPDATA%\Packages\Claude_*\LocalCache\Roaming\Claude\claude-code\<version>\<hash>\claude.exe`.
+API-key or third-party provider overrides are rejected for this subscription
+flow. Only sanitized login, method, provider and subscription fields are kept.
+
+Limits: permission rules and the guard hook are Claude runtime controls, not
+an OS sandbox. An authorized command, such as a test or formatter, can write
+caches, generated output or other effects of its own; post-run byte snapshots
+attribute checkout bytes and staging state. Runner locks use the shared Git
+common directory, so clients from separate worktrees of this repository share
+the same port/database/resource namespace. They coordinate runner clients only.
+Serialize external QA servers, shared ports and databases explicitly, and make
+authorized commands stop the servers they start. Stale locks from a crashed
+runner stay in place until Codex confirms their owner has stopped. Runner
+output is evidence for Codex, never a gate approval or commit. Re-verify tool
+restrictions after Claude Code version changes.
+
 ### External design-intelligence controls
 
 Read [External Design Intelligence](ui/EXTERNAL_DESIGN_INTELLIGENCE.md) before
