@@ -81,8 +81,10 @@ production.
 ## Quality and documentation
 
 ```bash
+pnpm docs:check
 pnpm architecture:check
 pnpm typegen:next && pnpm -r --if-present typecheck
+pnpm format:check
 ```
 
 `typegen:next` runs the installed Next.js type generator for Backoffice, Web,
