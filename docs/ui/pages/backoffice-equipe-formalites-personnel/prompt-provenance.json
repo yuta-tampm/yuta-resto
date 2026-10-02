@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "topology": "GENERATED_SNAPSHOTS",
+  "sealed": true,
+  "templateRevision": "prompt-template-git-0e8058df0bdb6c2544eb710d41f16c522c2ab322",
+  "generation": {
+    "commit": "0e8058df0bdb6c2544eb710d41f16c522c2ab322"
+  },
+  "prompts": [
+    {
+      "filename": "00_REPOSITORY_ANALYSIS.md",
+      "templateSource": "docs/ui/templates/page/prompts/00_REPOSITORY_ANALYSIS.md",
+      "templateRevision": "prompt-template-git-0e8058df0bdb6c2544eb710d41f16c522c2ab322",
+      "templateSha256": "7ecab8ffd6d97de28f463d521172be6de8f66b7e3074e5e90e88f53f41ea394c",
+      "snapshotSha256": "7ecab8ffd6d97de28f463d521172be6de8f66b7e3074e5e90e88f53f41ea394c",
+      "localModificationState": "NONE",
+      "provenanceStatus": "PROVEN"
+    },
+    {
+      "filename": "01_VISUAL_BASELINE.md",
+      "templateSource": "docs/ui/templates/page/prompts/01_VISUAL_BASELINE.md",
+      "templateRevision": "prompt-template-git-0e8058df0bdb6c2544eb710d41f16c522c2ab322",
+      "templateSha256": "d3075806ae38d0f9f6a945b3b42d1f3b8d7e2bd9eafa712a73587744c9f46119",
+      "snapshotSha256": "d3075806ae38d0f9f6a945b3b42d1f3b8d7e2bd9eafa712a73587744c9f46119",
+      "localModificationState": "NONE",
+      "provenanceStatus": "PROVEN"
+    },
+    {
+      "filename": "02_COMPONENT_REFACTOR.md",
+      "templateSource": "docs/ui/templates/page/prompts/02_COMPONENT_REFACTOR.md",
+      "templateRevision": "prompt-template-git-0e8058df0bdb6c2544eb710d41f16c522c2ab322",
+      "templateSha256": "8b134cd4b462562416fb5c2e57c23eb4675a26eff7ea75fdfae44727b74648ac",
+      "snapshotSha256": "8b134cd4b462562416fb5c2e57c23eb4675a26eff7ea75fdfae44727b74648ac",
+      "localModificationState": "NONE",
+      "provenanceStatus": "PROVEN"
+    },
+    {
+      "filename": "03_INTERACTIONS.md",
+      "templateSource": "docs/ui/templates/page/prompts/03_INTERACTIONS.md",
+      "templateRevision": "prompt-template-git-0e8058df0bdb6c2544eb710d41f16c522c2ab322",
+      "templateSha256": "e27c12d152d9270229eed6951898ab6f5e477d7d12ff9c170f4522ed45f00388",
+      "snapshotSha256": "e27c12d152d9270229eed6951898ab6f5e477d7d12ff9c170f4522ed45f00388",
+      "localModificationState": "NONE",
+      "provenanceStatus": "PROVEN"
+    },
+    {
+      "filename": "04_DATA_INTEGRATION.md",
+      "templateSource": "docs/ui/templates/page/prompts/04_DATA_INTEGRATION.md",
+      "templateRevision": "prompt-template-git-0e8058df0bdb6c2544eb710d41f16c522c2ab322",
+      "templateSha256": "f878f959d3afee428e67620c74f4c75231d2c7816f23cbf7fc6c701067538e79",
+      "snapshotSha256": "f878f959d3afee428e67620c74f4c75231d2c7816f23cbf7fc6c701067538e79",
+      "localModificationState": "NONE",
+      "provenanceStatus": "PROVEN"
+    },
+    {
+      "filename": "05_VISUAL_QA.md",
+      "templateSource": "docs/ui/templates/page/prompts/05_VISUAL_QA.md",
+      "templateRevision": "prompt-template-git-0e8058df0bdb6c2544eb710d41f16c522c2ab322",
+      "templateSha256": "5f31ec1c2a2bcfd3129643931e188365f9608958f1f8bd697ae7854e292eaad0",
+      "snapshotSha256": "5f31ec1c2a2bcfd3129643931e188365f9608958f1f8bd697ae7854e292eaad0",
+      "localModificationState": "NONE",
+      "provenanceStatus": "PROVEN"
+    }
+  ]
+}

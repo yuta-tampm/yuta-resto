@@ -1,0 +1,1188 @@
+{
+  "change": "next-generated-types-bootstrap",
+  "phase": 3,
+  "status": "STOPPED",
+  "technicalImplementationCompliance": "FAIL",
+  "verify": "FAIL",
+  "qa": "FAIL",
+  "gate3Prepared": false,
+  "snapshot": {
+    "probe": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+    "sourceHead": "07d9d6d88e07f6a819c7894ef2e35f79d1eb32fa",
+    "indexTree": "b585894735486aeb1febb8a9196fcf80cdafeb13",
+    "tree": "1933c4105ac3b49751dda20c096d4d1147d31beb",
+    "snapshot": "865cbf67a33acd02bd6e2f9c1d09bafe1839a886",
+    "temporaryIndex": "C:\\Users\\Tam\\AppData\\Local\\Temp\\yuta-revalidation-af906bb5-85e9-41ff-9b9b-498fa7b6b6bd.index",
+    "indexBefore": "cb06e0450599f335de1d95e90b075824c9043cd15db6cab4a354b4fc77b17d8a",
+    "indexAfter": "cb06e0450599f335de1d95e90b075824c9043cd15db6cab4a354b4fc77b17d8a",
+    "node": "v24.17.0",
+    "pnpm": "11.8.0"
+  },
+  "preflight": {
+    "head": "07d9d6d88e07f6a819c7894ef2e35f79d1eb32fa",
+    "indexSha256": "1bce302534e1599828e476e37313eee5cb4708abe6351948eecc93143df82da6",
+    "staged": [
+      "D\tapps/backoffice/next-env.d.ts",
+      "D\tapps/booking-web/next-env.d.ts",
+      "D\tapps/feedback-web/next-env.d.ts",
+      "D\tapps/web/next-env.d.ts",
+      "D\tapps/yuta-display/next-env.d.ts",
+      "D\tapps/yuta-pos/next-env.d.ts"
+    ],
+    "status": [
+      " M .agents/skills/yuta-finish-change/SKILL.md",
+      " M .agents/skills/yuta-run-change/SKILL.md",
+      " M .github/workflows/ci.yml",
+      " M .gitignore",
+      " M README.md",
+      "D  apps/backoffice/next-env.d.ts",
+      " M apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/employee-edit-dialog.tsx",
+      " M apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/salaries-page.tsx",
+      " M apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-edit-flow.test.ts",
+      " M apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-edit-flow.ts",
+      " M apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-history-refresh.test.ts",
+      " M apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-history-refresh.ts",
+      " M apps/backoffice/src/app/(authenticated)/equipe/salaries/actions.ts",
+      " M apps/backoffice/src/server/auth/permissions.ts",
+      "D  apps/booking-web/next-env.d.ts",
+      "D  apps/feedback-web/next-env.d.ts",
+      "D  apps/web/next-env.d.ts",
+      "D  apps/yuta-display/next-env.d.ts",
+      "D  apps/yuta-pos/next-env.d.ts",
+      " M docs/AUTHORITY_MODEL.md",
+      " M docs/DEVELOPMENT_WORKFLOW.md",
+      " M docs/MODULE_REGISTRY.md",
+      " D docs/OPENSPEC_BASELINE_AUDIT.md",
+      " M docs/OPENSPEC_YUTA_ACTIVATION_POLICY_REVIEW.md",
+      " D docs/OPENSPEC_YUTA_ACTIVATION_REPORT.md",
+      " M docs/OPENSPEC_YUTA_NORMATIVITY_POLICY_REVIEW.md",
+      " D docs/OPENSPEC_YUTA_SCHEMA_HARDENING_IMPLEMENTATION_REPORT.md",
+      " D docs/OPENSPEC_YUTA_SCHEMA_HARDENING_REVIEW.md",
+      " D docs/OPENSPEC_YUTA_SCHEMA_REVIEW.md",
+      " D docs/OPENSPEC_YUTA_SCHEMA_SMOKE_TEST_REPORT.md",
+      " M docs/PRODUCT_KNOWLEDGE.md",
+      " M docs/README.md",
+      " M docs/YUTA_AUTOMATED_CHANGE_WORKFLOW.md",
+      " D docs/YUTA_AUTOMATED_CHANGE_WORKFLOW_SETUP_REPORT.md",
+      " M docs/YUTA_KNOWLEDGE_CONSOLIDATION_PROTOCOL.md",
+      " M docs/YUTA_QA_PROTOCOL.md",
+      " D docs/YUTA_WORKFLOW_V3_UPDATE_REPORT.md",
+      " M docs/archive/README.md",
+      " D docs/chatGPT/YUTA_CONTROL_TOWER_HANDOFF_TEMPLATE.md",
+      " M docs/chatGPT/YUTA_CONTROL_TOWER_HANDOFF_TEMPLATE_V3.md",
+      " D docs/chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT.md",
+      " M docs/chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT_V3.md",
+      " D docs/chatGPT/YUTA_PAGE_CHAT_OPERATING_PROMPT.md",
+      " M docs/chatGPT/YUTA_PAGE_CHAT_OPERATING_PROMPT_V3.md",
+      " D docs/chatGPT/YuTa_Workflow_v2.pdf",
+      " D docs/chatGPT/YuTa_Workflow_v3.pdf",
+      " M docs/features/personnel/README.md",
+      " M docs/reviews/README.md",
+      " D docs/tasks/YUTA_AUTOMATED_OPEN_SPEC_REVIEW_WORKFLOW_SETUP_TASK.md",
+      " D docs/tasks/YUTA_STEP_7_0B_OPENSPEC_1_11_DELTA_REAUDIT_TASK.md",
+      " D docs/tasks/YUTA_STEP_7_0_OPENSPEC_LOCAL_BASELINE_AUDIT_TASK.md",
+      " D docs/tasks/YUTA_STEP_7_1_FORK_AND_DESIGN_YUTA_SCHEMA_TASK.md",
+      " D docs/tasks/YUTA_STEP_7_2_ISOLATED_OPENSPEC_SCHEMA_SMOKE_TEST_TASK.md",
+      " D docs/tasks/YUTA_STEP_7_3A_OPENSPEC_SCHEMA_HARDENING_ANALYSIS_TASK.md",
+      " D docs/tasks/YUTA_STEP_7_3B_MINIMAL_SCHEMA_HARDENING_TASK.md",
+      " D docs/tasks/YUTA_STEP_7_4_OPENSPEC_ACTIVATION_POLICY_REVIEW_TASK.md",
+      " D docs/tasks/YUTA_STEP_7_5_ACTIVATE_YUTA_SPEC_DRIVEN_TASK.md",
+      " D docs/tasks/YUTA_STEP_7_6A_OPENSPEC_NORMATIVITY_POLICY_REVIEW_TASK.md",
+      " D docs/tasks/YUTA_STEP_7_6B_ENABLE_NORMATIVE_SPECS_TASK.md",
+      " D docs/tasks/YUTA_WORKFLOW_V3_AUTOMATION_UPDATE_TASK.md",
+      " M docs/ui/pages/backoffice-equipe-salaries/README.md",
+      " M package.json",
+      " M packages/contracts/src/personnel/index.ts",
+      " M packages/contracts/test/personnel.test.ts",
+      " M packages/db-cloud/drizzle/meta/_journal.json",
+      " M packages/db-cloud/src/index.ts",
+      " M packages/db-cloud/src/personnel-repository.ts",
+      " M packages/db-cloud/src/schema/personnel.ts",
+      " M packages/db-cloud/test/personnel-repository.integration.test.ts",
+      " M packages/db-cloud/test/schema.test.ts",
+      " M scripts/test-pos-offline.mjs",
+      "?? apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/employee-history-metadata-fields.tsx",
+      "?? apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/employee-history.tsx",
+      "?? apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-history-action-errors.ts",
+      "?? apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-history-presentation.ts",
+      "?? apps/backoffice/src/server/auth/formalites.ts",
+      "?? apps/backoffice/test/formalites-authorization-context.test.ts",
+      "?? apps/backoffice/test/formalites-permissions.test.ts",
+      "?? apps/backoffice/test/personnel-history-action.test.ts",
+      "?? apps/backoffice/test/personnel-reconstructable-history-ui.test.tsx",
+      "?? docs/YUTA_WORKFLOW_V3.md",
+      "?? docs/YUTA_WORKFLOW_V3_APPLY_VERIFY_QA_CLARIFICATION_REVIEW.md",
+      "?? docs/YUTA_WORKFLOW_V3_DOCUMENTATION_AUDIT.md",
+      "?? docs/YUTA_WORKFLOW_V3_HISTORY_CLEANUP_REVIEW.md",
+      "?? docs/YUTA_WORKFLOW_V3_LEGACY_CLEANUP_REVIEW.md",
+      "?? docs/YUTA_WORKFLOW_V3_PDF_B_REVIEW.md",
+      "?? docs/archive/yuta-workflow/",
+      "?? docs/reference/",
+      "?? docs/reviews/formalites-authorization/",
+      "?? docs/reviews/next-generated-types-bootstrap/",
+      "?? docs/reviews/personnel-reconstructable-value-history/",
+      "?? openspec/changes/archive/2026-09-03-personnel-reconstructable-value-history/",
+      "?? openspec/changes/formalites-authorization/",
+      "?? openspec/changes/next-generated-types-bootstrap/",
+      "?? openspec/specs/personnel/",
+      "?? packages/db-cloud/drizzle/0017_whole_warbound.sql",
+      "?? packages/db-cloud/drizzle/meta/0017_snapshot.json",
+      "?? packages/db-cloud/src/personnel-history-cutover.ts",
+      "?? packages/db-cloud/src/personnel-history-domain.ts",
+      "?? packages/db-cloud/test/personnel-history-cutover.integration.test.ts",
+      "?? packages/db-cloud/test/personnel-history-cutover.test.ts",
+      "?? packages/db-cloud/test/personnel-history-domain.test.ts",
+      "?? scripts/next-generated-types-bootstrap.test.mjs"
+    ],
+    "at": "2026-09-04T14:03:48.4218173+02:00"
+  },
+  "snapshotCreation": [
+    {
+      "key": "p3snapshotRun",
+      "chunk_id": "379510",
+      "wall_time_seconds": 1.3691005,
+      "exit_code": 1,
+      "original_token_count": 50,
+      "output": "Exception: \r\nLine |\r\n  23 |  if($beforeIndex -ne $afterIndex){throw 'Original index changed'}\r\n     |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n     | Original index changed\r\n"
+    },
+    {
+      "key": "p3snapshotRetry",
+      "chunk_id": "f2ff2e",
+      "wall_time_seconds": 4.6588163,
+      "exit_code": 0,
+      "original_token_count": 285,
+      "output": "Preparing worktree (detached HEAD 865cbf6)\nUpdating files:  91% (2019/2200)\rUpdating files:  92% (2024/2200)\rUpdating files:  93% (2046/2200)\rUpdating files:  94% (2068/2200)\rUpdating files:  95% (2090/2200)\rUpdating files:  96% (2112/2200)\rUpdating files:  97% (2134/2200)\rUpdating files:  98% (2156/2200)\rUpdating files:  99% (2178/2200)\rUpdating files: 100% (2200/2200)\rUpdating files: 100% (2200/2200), done.\nHEAD is now at 865cbf6 Disposable post-transition candidate for Phase 3 verification\n{\r\n  \"probe\": \"D:/working/yuta/.tmp-bootstrap-phase3-20260904\",\r\n  \"sourceHead\": \"07d9d6d88e07f6a819c7894ef2e35f79d1eb32fa\",\r\n  \"indexTree\": \"b585894735486aeb1febb8a9196fcf80cdafeb13\",\r\n  \"tree\": \"1933c4105ac3b49751dda20c096d4d1147d31beb\",\r\n  \"snapshot\": \"865cbf67a33acd02bd6e2f9c1d09bafe1839a886\",\r\n  \"temporaryIndex\": \"C:\\\\Users\\\\Tam\\\\AppData\\\\Local\\\\Temp\\\\yuta-revalidation-af906bb5-85e9-41ff-9b9b-498fa7b6b6bd.index\",\r\n  \"indexBefore\": \"cb06e0450599f335de1d95e90b075824c9043cd15db6cab4a354b4fc77b17d8a\",\r\n  \"indexAfter\": \"cb06e0450599f335de1d95e90b075824c9043cd15db6cab4a354b4fc77b17d8a\",\r\n  \"node\": \"v24.17.0\",\r\n  \"pnpm\": \"11.8.0\"\r\n}\r\n"
+    }
+  ],
+  "cleanProof": [
+    {
+      "key": "p3faithfulEnd",
+      "chunk_id": "0ff53f",
+      "wall_time_seconds": 0.0000026,
+      "exit_code": 0,
+      "original_token_count": 213,
+      "output": "{\r\n  \"pathMatch\": true,\r\n  \"byteMatch\": true,\r\n  \"count\": 2200,\r\n  \"forbiddenCacheEnvCount\": 0,\r\n  \"nodeModulesAbsent\": true,\r\n  \"status\": [],\r\n  \"apps\": [\r\n    {\r\n      \"nextEnvInitiallyPresent\": false,\r\n      \"nextStateAbsent\": true,\r\n      \"app\": \"backoffice\"\r\n    },\r\n    {\r\n      \"nextEnvInitiallyPresent\": false,\r\n      \"nextStateAbsent\": true,\r\n      \"app\": \"web\"\r\n    },\r\n    {\r\n      \"nextEnvInitiallyPresent\": false,\r\n      \"nextStateAbsent\": true,\r\n      \"app\": \"booking-web\"\r\n    },\r\n    {\r\n      \"nextEnvInitiallyPresent\": false,\r\n      \"nextStateAbsent\": true,\r\n      \"app\": \"feedback-web\"\r\n    },\r\n    {\r\n      \"nextEnvInitiallyPresent\": false,\r\n      \"nextStateAbsent\": true,\r\n      \"app\": \"yuta-pos\"\r\n    },\r\n    {\r\n      \"nextEnvInitiallyPresent\": false,\r\n      \"nextStateAbsent\": true,\r\n      \"app\": \"yuta-display\"\r\n    }\r\n  ]\r\n}\r\n"
+    },
+    {
+      "key": "p3absent",
+      "chunk_id": "6c117a",
+      "wall_time_seconds": 0.3229699,
+      "exit_code": 0,
+      "original_token_count": 185,
+      "output": "[\r\n  {\r\n    \"app\": \"backoffice\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"incrementalCount\": 0\r\n  },\r\n  {\r\n    \"app\": \"web\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"incrementalCount\": 0\r\n  },\r\n  {\r\n    \"app\": \"booking-web\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"incrementalCount\": 0\r\n  },\r\n  {\r\n    \"app\": \"feedback-web\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"incrementalCount\": 0\r\n  },\r\n  {\r\n    \"app\": \"yuta-pos\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"incrementalCount\": 0\r\n  },\r\n  {\r\n    \"app\": \"yuta-display\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"incrementalCount\": 0\r\n  }\r\n]\r\nAll six next-env files untracked\r\n"
+    },
+    {
+      "key": "p3beforeGen",
+      "chunk_id": "ae1a07",
+      "wall_time_seconds": 0.3050421,
+      "exit_code": 0,
+      "original_token_count": 176,
+      "output": "[\r\n  {\r\n    \"app\": \"backoffice\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"incrementalCount\": 0\r\n  },\r\n  {\r\n    \"app\": \"web\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"incrementalCount\": 0\r\n  },\r\n  {\r\n    \"app\": \"booking-web\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"incrementalCount\": 0\r\n  },\r\n  {\r\n    \"app\": \"feedback-web\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"incrementalCount\": 0\r\n  },\r\n  {\r\n    \"app\": \"yuta-pos\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"incrementalCount\": 0\r\n  },\r\n  {\r\n    \"app\": \"yuta-display\",\r\n    \"nextEnvAbsent\": true,\r\n    \"nextAbsent\": true,\r\n    \"incrementalCount\": 0\r\n  }\r\n]\r\n"
+    },
+    {
+      "key": "p3cleanIntegrity",
+      "chunk_id": "d8521a",
+      "wall_time_seconds": 1.2474872,
+      "exit_code": 0,
+      "original_token_count": 122,
+      "output": "2200/2200 tracked files byte-identical; Git clean\r\n.gitignore:3:/apps/backoffice/next-env.d.ts\tapps/backoffice/next-env.d.ts\n.gitignore:4:/apps/web/next-env.d.ts\tapps/web/next-env.d.ts\n.gitignore:5:/apps/booking-web/next-env.d.ts\tapps/booking-web/next-env.d.ts\n.gitignore:6:/apps/feedback-web/next-env.d.ts\tapps/feedback-web/next-env.d.ts\n.gitignore:7:/apps/yuta-pos/next-env.d.ts\tapps/yuta-pos/next-env.d.ts\n.gitignore:8:/apps/yuta-display/next-env.d.ts\tapps/yuta-display/next-env.d.ts\n"
+    }
+  ],
+  "commands": [
+    {
+      "cmd": "pnpm install --frozen-lockfile",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "exit_code": 0,
+      "chunks": [
+        {
+          "key": "p3installStart",
+          "chunk_id": "4482a7",
+          "wall_time_seconds": 10.0012103,
+          "session_id": 49836,
+          "original_token_count": 298,
+          "output": "Scope: all 16 workspace projects\n✓ Lockfile passes supply-chain policies (verified 17d ago)\nLockfile is up to date, resolution step is skipped\nProgress: resolved 1, reused 0, downloaded 0, added 0\nPackages: +220\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n   ╭──────────────────────────────────────────╮\n   │                                          │\n   │   Update available! 11.8.0 → 11.25.0.    │\n   │   Changelog: https://pnpm.io/v/11.25.0   │\n   │     To update, run: pnpm self-update     │\n   │                                          │\n   ╰──────────────────────────────────────────╯\n\nProgress: resolved 220, reused 219, downloaded 0, added 33\nProgress: resolved 220, reused 220, downloaded 0, added 117\nProgress: resolved 220, reused 220, downloaded 0, added 215\nProgress: resolved 220, reused 220, downloaded 0, added 216\nProgress: resolved 220, reused 220, downloaded 0, added 217\nProgress: resolved 220, reused 220, downloaded 0, added 219\n"
+        },
+        {
+          "key": "p3installEnd",
+          "chunk_id": "6b4ba1",
+          "wall_time_seconds": 0.0000019,
+          "exit_code": 0,
+          "original_token_count": 49,
+          "output": "Progress: resolved 220, reused 220, downloaded 0, added 220\nProgress: resolved 220, reused 220, downloaded 0, added 220, done\n\ndevDependencies:\n+ prettier 3.8.4\n\nDone in 10.7s using pnpm v11.8.0\n"
+        }
+      ]
+    },
+    {
+      "cmd": "pnpm typegen:next",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "exit_code": 0,
+      "chunks": [
+        {
+          "key": "p3typegenStart",
+          "chunk_id": "f356c0",
+          "wall_time_seconds": 10.0016612,
+          "session_id": 61289,
+          "original_token_count": 177,
+          "output": "$ pnpm --filter @yuta/backoffice --fail-if-no-match exec next typegen && pnpm --filter @yuta/web --fail-if-no-match exec next typegen && pnpm --filter @yuta/booking-web --fail-if-no-match exec next typegen && pnpm --filter @yuta/feedback-web --fail-if-no-match exec next typegen && pnpm --filter @yuta/pos --fail-if-no-match exec next typegen && pnpm --filter @yuta/display --fail-if-no-match exec next typegen\nGenerating route types...\n✓ Types generated successfully\nGenerating route types...\n✓ Types generated successfully\nGenerating route types...\n✓ Types generated successfully\nGenerating route types...\n✓ Types generated successfully\nGenerating route types...\n✓ Types generated successfully\n"
+        },
+        {
+          "key": "p3typegenEnd",
+          "chunk_id": "d77bc9",
+          "wall_time_seconds": 0.0000018,
+          "exit_code": 0,
+          "original_token_count": 15,
+          "output": "Generating route types...\n✓ Types generated successfully\n"
+        }
+      ]
+    },
+    {
+      "cmd": "pnpm --filter @yuta/backoffice typecheck",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "exit_code": 0,
+      "output": "$ tsc --noEmit\n"
+    },
+    {
+      "cmd": "pnpm --filter @yuta/web typecheck",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "exit_code": 0,
+      "output": "$ tsc --noEmit\n"
+    },
+    {
+      "cmd": "pnpm --filter @yuta/booking-web typecheck",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "exit_code": 0,
+      "output": "$ tsc --noEmit\n"
+    },
+    {
+      "cmd": "pnpm --filter @yuta/feedback-web typecheck",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "exit_code": 0,
+      "output": "$ tsc --noEmit\n"
+    },
+    {
+      "cmd": "pnpm --filter @yuta/pos typecheck",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "exit_code": 0,
+      "output": "$ tsc --noEmit\n"
+    },
+    {
+      "cmd": "pnpm --filter @yuta/display typecheck",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "exit_code": 0,
+      "output": "$ tsc --noEmit\n"
+    },
+    {
+      "cmd": "pnpm typegen:next && pnpm -r --if-present typecheck",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "exit_code": 0,
+      "chunks": [
+        {
+          "key": "p3flowStart",
+          "cmd": "pnpm typegen:next && pnpm -r --if-present typecheck",
+          "chunk_id": "e41a43",
+          "wall_time_seconds": 10.0014007,
+          "session_id": 28766,
+          "original_token_count": 256,
+          "output": "$ pnpm --filter @yuta/backoffice --fail-if-no-match exec next typegen && pnpm --filter @yuta/web --fail-if-no-match exec next typegen && pnpm --filter @yuta/booking-web --fail-if-no-match exec next typegen && pnpm --filter @yuta/feedback-web --fail-if-no-match exec next typegen && pnpm --filter @yuta/pos --fail-if-no-match exec next typegen && pnpm --filter @yuta/display --fail-if-no-match exec next typegen\nGenerating route types...\n✓ Types generated successfully\nGenerating route types...\n✓ Types generated successfully\nGenerating route types...\n✓ Types generated successfully\nGenerating route types...\n✓ Types generated successfully\nGenerating route types...\n✓ Types generated successfully\nGenerating route types...\n✓ Types generated successfully\nScope: 15 of 16 workspace projects\npackages/contracts typecheck$ tsc --noEmit\npackages/db-pos typecheck$ tsc --noEmit\npackages/core typecheck$ tsc --noEmit\npackages/tenant typecheck$ tsc --noEmit\npackages/tenant typecheck: Done\npackages/core typecheck: Done\n"
+        },
+        {
+          "key": "p3flowEnd",
+          "chunk_id": "234517",
+          "wall_time_seconds": 0.0000024,
+          "exit_code": 0,
+          "original_token_count": 196,
+          "output": "packages/db-pos typecheck: Done\npackages/contracts typecheck: Done\napps/site-agent typecheck$ tsc --noEmit\napps/yuta-pos typecheck$ tsc --noEmit\napps/yuta-display typecheck$ tsc --noEmit\npackages/auth typecheck$ tsc --noEmit\npackages/auth typecheck: Done\npackages/booking typecheck$ tsc --noEmit\npackages/booking typecheck: Done\napps/yuta-pos typecheck: Done\napps/yuta-display typecheck: Done\napps/site-agent typecheck: Done\npackages/db-cloud typecheck$ tsc --noEmit\npackages/db-cloud typecheck: Done\napps/backoffice typecheck$ tsc --noEmit\napps/booking-web typecheck$ tsc --noEmit\napps/web typecheck$ tsc --noEmit\napps/feedback-web typecheck$ tsc --noEmit\napps/feedback-web typecheck: Done\napps/web typecheck: Done\napps/booking-web typecheck: Done\napps/backoffice typecheck: Done\n"
+        }
+      ]
+    },
+    {
+      "cmd": "pnpm --filter @yuta/backoffice build",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "environment": "$env:CI='true'\n$env:CLOUD_DATABASE_URL='postgres://yuta_ci:yuta_ci@127.0.0.1:5432/yuta_ci'\n$env:CLOUD_DATABASE_SSL='false'\n$env:AUTH_SECRET='ci-only-auth-secret-with-at-least-32-characters'\n$env:BOOKING_RATE_LIMIT_SECRET='ci-only-booking-rate-limit-secret-32-characters'\n$env:PUBLIC_FEEDBACK_IP_HASH_SALT='ci-only-feedback-salt-with-at-least-32-characters'\n$env:NEXT_PUBLIC_APP_URL='http://localhost:3001'\n$env:NEXT_PUBLIC_BACKOFFICE_URL='http://localhost:3001'\n$env:PUBLIC_BOOKING_BASE_URL='http://localhost:3005'\n",
+      "exit_code": 0,
+      "chunks": [
+        {
+          "key": "p3buildBackofficeStart",
+          "chunk_id": "8818f0",
+          "wall_time_seconds": 10.0020047,
+          "session_id": 43417,
+          "original_token_count": 185,
+          "output": "Scope: all 16 workspace projects\n✓ Lockfile passes supply-chain policies (verified 17d ago)\nLockfile is up to date, resolution step is skipped\nAlready up to date\n\nDone in 1.5s using pnpm v11.8.0\n$ next build\n⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache\nAttention: Next.js now collects completely anonymous telemetry regarding usage.\nThis information is used to shape Next.js' roadmap and prioritize features.\nYou can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:\nhttps://nextjs.org/telemetry\n\n▲ Next.js 16.2.9 (Turbopack)\n\n  Creating an optimized production build ...\n"
+        },
+        {
+          "key": "p3buildBackofficeEnd",
+          "chunk_id": "0e39a4",
+          "wall_time_seconds": 0.0000018,
+          "exit_code": 0,
+          "original_token_count": 511,
+          "output": "✓ Compiled successfully in 22.8s\n  Running TypeScript ...\n  Finished TypeScript in 12.3s ...\n  Collecting page data using 7 workers ...\n  Generating static pages using 7 workers (0/7) ...\n  Generating static pages using 7 workers (1/7) \r\n  Generating static pages using 7 workers (3/7) \r\n  Generating static pages using 7 workers (5/7) \r\n✓ Generating static pages using 7 workers (7/7) in 249ms\n  Finalizing page optimization ...\n\nRoute (app)\n┌ ○ /\n├ ○ /_not-found\n├ ○ /acces/aucun-etablissement\n├ ƒ /api/personnel/amendments/[employeeId]/[amendmentId]\n├ ƒ /api/personnel/documents/[employeeId]/[documentId]\n├ ƒ /api/personnel/register/export\n├ ƒ /api/reputation/google/oauth/callback\n├ ƒ /api/reputation/google/oauth/start\n├ ƒ /aujourdhui\n├ ƒ /conformite/veille\n├ ƒ /connexion\n├ ƒ /equipe/formalites-personnel\n├ ƒ /equipe/formalites-personnel/[employeeId]\n├ ƒ /equipe/planning\n├ ƒ /equipe/pointage\n├ ƒ /equipe/registre-personnel\n├ ƒ /equipe/salaries\n├ ƒ /equipe/salaries/[employeeId]\n├ ƒ /equipe/taches-quotidiennes\n├ ƒ /etablissement/carte-menus\n├ ƒ /etablissement/horaires-services\n├ ƒ /etablissement/informations-generales\n├ ƒ /etablissement/ressources-internes\n├ ƒ /etablissement/salles-tables\n├ ƒ /marketing/contenus\n├ ƒ /marketing/studio-creatif\n├ ○ /mot-de-passe-oublie\n├ ƒ /parametres/abonnement\n├ ƒ /parametres/integrations\n├ ƒ /parametres/restaurant\n├ ƒ /parametres/utilisateurs-acces\n├ ƒ /reinitialiser-mot-de-passe\n├ ƒ /reservations\n├ ƒ /reservations/[reservationId]\n├ ƒ /reservations/calendrier\n├ ƒ /reservations/parametres\n├ ƒ /resolution-etablissement\n├ ƒ /selection-etablissement\n├ ƒ /stock/fiches-techniques\n├ ƒ /stock/fournisseurs\n├ ƒ /stock/inventaire\n├ ƒ /stock/mouvements\n├ ƒ /visibilite-reputation/avis\n├ ƒ /visibilite-reputation/avis/[reviewId]\n└ ƒ /visibilite-reputation/satisfaction\n\n\n○  (Static)   prerendered as static content\nƒ  (Dynamic)  server-rendered on demand\n\n"
+        }
+      ]
+    },
+    {
+      "cmd": "pnpm --filter @yuta/web build",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "environment": "$env:CI='true'\n$env:CLOUD_DATABASE_URL='postgres://yuta_ci:yuta_ci@127.0.0.1:5432/yuta_ci'\n$env:CLOUD_DATABASE_SSL='false'\n$env:AUTH_SECRET='ci-only-auth-secret-with-at-least-32-characters'\n$env:BOOKING_RATE_LIMIT_SECRET='ci-only-booking-rate-limit-secret-32-characters'\n$env:PUBLIC_FEEDBACK_IP_HASH_SALT='ci-only-feedback-salt-with-at-least-32-characters'\n$env:NEXT_PUBLIC_APP_URL='http://localhost:3001'\n$env:NEXT_PUBLIC_BACKOFFICE_URL='http://localhost:3001'\n$env:PUBLIC_BOOKING_BASE_URL='http://localhost:3005'\n",
+      "exit_code": 0,
+      "chunks": [
+        {
+          "key": "p3buildWebStart",
+          "chunk_id": "3b1d65",
+          "wall_time_seconds": 10.0015889,
+          "session_id": 31125,
+          "original_token_count": 151,
+          "output": "$ next build\n⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache\nAttention: Next.js now collects completely anonymous telemetry regarding usage.\nThis information is used to shape Next.js' roadmap and prioritize features.\nYou can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:\nhttps://nextjs.org/telemetry\n\n▲ Next.js 16.2.9 (Turbopack)\n\n  Creating an optimized production build ...\n✓ Compiled successfully in 4.2s\n  Running TypeScript ...\n"
+        },
+        {
+          "key": "p3buildWebEnd",
+          "chunk_id": "9ee977",
+          "wall_time_seconds": 0.0000028,
+          "exit_code": 0,
+          "original_token_count": 233,
+          "output": "  Finished TypeScript in 8.1s ...\n  Collecting page data using 7 workers ...\n  Generating static pages using 7 workers (0/17) ...\n  Generating static pages using 7 workers (4/17) \r\n  Generating static pages using 7 workers (8/17) \r\n  Generating static pages using 7 workers (12/17) \r\n✓ Generating static pages using 7 workers (17/17) in 1004ms\n  Finalizing page optimization ...\n\nRoute (app)\n┌ ○ /\n├ ○ /_not-found\n├ ○ /a-propos\n├ ƒ /api/public/tenant\n├ ○ /conditions-utilisation\n├ ○ /confidentialite\n├ ○ /contact\n├ ○ /gestion-des-donnees\n├ ○ /integrations/google-business-profile\n├ ○ /mentions-legales\n├ ○ /opengraph-image\n├ ƒ /outils/[slug]\n├ ○ /pour-les-restaurateurs\n├ ○ /robots.txt\n├ ○ /sitemap.xml\n├ ○ /solutions\n├ ○ /solutions/avis-commentaires\n└ ○ /twitter-image\n\n\n○  (Static)   prerendered as static content\nƒ  (Dynamic)  server-rendered on demand\n\n"
+        }
+      ]
+    },
+    {
+      "cmd": "pnpm --filter @yuta/booking-web build",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "environment": "$env:CI='true'\n$env:CLOUD_DATABASE_URL='postgres://yuta_ci:yuta_ci@127.0.0.1:5432/yuta_ci'\n$env:CLOUD_DATABASE_SSL='false'\n$env:AUTH_SECRET='ci-only-auth-secret-with-at-least-32-characters'\n$env:BOOKING_RATE_LIMIT_SECRET='ci-only-booking-rate-limit-secret-32-characters'\n$env:PUBLIC_FEEDBACK_IP_HASH_SALT='ci-only-feedback-salt-with-at-least-32-characters'\n$env:NEXT_PUBLIC_APP_URL='http://localhost:3001'\n$env:NEXT_PUBLIC_BACKOFFICE_URL='http://localhost:3001'\n$env:PUBLIC_BOOKING_BASE_URL='http://localhost:3005'\n",
+      "exit_code": 0,
+      "chunks": [
+        {
+          "key": "p3buildBookingStart",
+          "chunk_id": "0993fd",
+          "wall_time_seconds": 10.0020532,
+          "session_id": 43039,
+          "original_token_count": 151,
+          "output": "$ next build\n⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache\nAttention: Next.js now collects completely anonymous telemetry regarding usage.\nThis information is used to shape Next.js' roadmap and prioritize features.\nYou can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:\nhttps://nextjs.org/telemetry\n\n▲ Next.js 16.2.9 (Turbopack)\n\n  Creating an optimized production build ...\n✓ Compiled successfully in 3.9s\n  Running TypeScript ...\n"
+        },
+        {
+          "key": "p3buildBookingEnd",
+          "chunk_id": "2db087",
+          "wall_time_seconds": 0.0000017,
+          "exit_code": 0,
+          "original_token_count": 240,
+          "output": "  Finished TypeScript in 8.0s ...\n  Collecting page data using 7 workers ...\n  Generating static pages using 7 workers (0/4) ...\n  Generating static pages using 7 workers (1/4) \r\n  Generating static pages using 7 workers (2/4) \r\n  Generating static pages using 7 workers (3/4) \r\n✓ Generating static pages using 7 workers (4/4) in 229ms\n  Finalizing page optimization ...\n\nRoute (app)\n┌ ○ /\n├ ○ /_not-found\n├ ƒ /[establishmentSlug]\n├ ƒ /[establishmentSlug]/reservation/[publicToken]\n├ ƒ /api/health\n├ ƒ /api/public/booking/establishments/[establishmentSlug]/availability\n├ ƒ /api/public/booking/establishments/[establishmentSlug]/reservations\n├ ƒ /api/public/booking/establishments/[establishmentSlug]/reservations/[publicToken]\n├ ƒ /api/public/booking/establishments/[establishmentSlug]/reservations/[publicToken]/cancel\n└ ƒ /api/ready\n\n\n○  (Static)   prerendered as static content\nƒ  (Dynamic)  server-rendered on demand\n\n"
+        }
+      ]
+    },
+    {
+      "cmd": "pnpm --filter @yuta/feedback-web build",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "environment": "$env:CI='true'\n$env:CLOUD_DATABASE_URL='postgres://yuta_ci:yuta_ci@127.0.0.1:5432/yuta_ci'\n$env:CLOUD_DATABASE_SSL='false'\n$env:AUTH_SECRET='ci-only-auth-secret-with-at-least-32-characters'\n$env:BOOKING_RATE_LIMIT_SECRET='ci-only-booking-rate-limit-secret-32-characters'\n$env:PUBLIC_FEEDBACK_IP_HASH_SALT='ci-only-feedback-salt-with-at-least-32-characters'\n$env:NEXT_PUBLIC_APP_URL='http://localhost:3001'\n$env:NEXT_PUBLIC_BACKOFFICE_URL='http://localhost:3001'\n$env:PUBLIC_BOOKING_BASE_URL='http://localhost:3005'\n",
+      "exit_code": 0,
+      "chunks": [
+        {
+          "key": "p3buildFeedbackStart",
+          "chunk_id": "d82379",
+          "wall_time_seconds": 10.0019488,
+          "session_id": 47582,
+          "original_token_count": 151,
+          "output": "$ next build\n⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache\nAttention: Next.js now collects completely anonymous telemetry regarding usage.\nThis information is used to shape Next.js' roadmap and prioritize features.\nYou can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:\nhttps://nextjs.org/telemetry\n\n▲ Next.js 16.2.9 (Turbopack)\n\n  Creating an optimized production build ...\n✓ Compiled successfully in 3.6s\n  Running TypeScript ...\n"
+        },
+        {
+          "key": "p3buildFeedbackEnd",
+          "chunk_id": "a9f72c",
+          "wall_time_seconds": 0.0000027,
+          "exit_code": 0,
+          "original_token_count": 147,
+          "output": "  Finished TypeScript in 7.6s ...\n  Collecting page data using 7 workers ...\n  Generating static pages using 7 workers (0/4) ...\n  Generating static pages using 7 workers (1/4) \r\n  Generating static pages using 7 workers (2/4) \r\n  Generating static pages using 7 workers (3/4) \r\n✓ Generating static pages using 7 workers (4/4) in 586ms\n  Finalizing page optimization ...\n\nRoute (app)\n┌ ○ /\n├ ○ /_not-found\n├ ƒ /[tenantSlug]\n├ ƒ /api/health\n└ ƒ /api/public/feedback/[tenantSlug]\n\n\n○  (Static)   prerendered as static content\nƒ  (Dynamic)  server-rendered on demand\n\n"
+        }
+      ]
+    },
+    {
+      "cmd": "pnpm --filter @yuta/pos build",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "environment": "CI=true; no database configuration",
+      "exit_code": 0,
+      "chunks": [
+        {
+          "key": "p3buildPosStart",
+          "chunk_id": "0aa72a",
+          "wall_time_seconds": 10.0020335,
+          "session_id": 50695,
+          "original_token_count": 200,
+          "output": "Scope: all 16 workspace projects\n✓ Lockfile passes supply-chain policies (verified 17d ago)\nLockfile is up to date, resolution step is skipped\nAlready up to date\n\nDone in 1.5s using pnpm v11.8.0\n$ next build\n⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache\nAttention: Next.js now collects completely anonymous telemetry regarding usage.\nThis information is used to shape Next.js' roadmap and prioritize features.\nYou can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:\nhttps://nextjs.org/telemetry\n\n▲ Next.js 16.2.9 (Turbopack)\n\n  Creating an optimized production build ...\n✓ Compiled successfully in 5.0s\n  Running TypeScript ...\n"
+        },
+        {
+          "key": "p3buildPosEnd",
+          "chunk_id": "4a76c9",
+          "wall_time_seconds": 0.0000035,
+          "exit_code": 0,
+          "original_token_count": 235,
+          "output": "  Finished TypeScript in 7.6s ...\n  Collecting page data using 7 workers ...\n  Generating static pages using 7 workers (0/13) ...\n  Generating static pages using 7 workers (3/13) \r\n  Generating static pages using 7 workers (6/13) \r\n  Generating static pages using 7 workers (9/13) \r\n✓ Generating static pages using 7 workers (13/13) in 403ms\n  Finalizing page optimization ...\n\nRoute (app)\n┌ ƒ /\n├ ○ /_not-found\n├ ƒ /api/health\n├ ƒ /api/kitchen-events\n├ ƒ /kitchen\n├ ƒ /management\n├ ƒ /management/catalog\n├ ƒ /management/combos\n├ ƒ /management/establishment\n├ ƒ /management/login\n├ ƒ /management/printing\n├ ƒ /management/reports\n├ ƒ /management/users\n├ ○ /orders\n├ ƒ /orders/[orderId]\n├ ƒ /orders/[orderId]/items\n├ ƒ /orders/[orderId]/payment\n├ ƒ /orders/[orderId]/payment/items\n└ ƒ /pos\n\n\n○  (Static)   prerendered as static content\nƒ  (Dynamic)  server-rendered on demand\n\n"
+        }
+      ]
+    },
+    {
+      "cmd": "pnpm --filter @yuta/display build",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "environment": "CI=true; no database configuration",
+      "exit_code": 0,
+      "chunks": [
+        {
+          "key": "p3buildDisplayStart",
+          "chunk_id": "3c8562",
+          "wall_time_seconds": 10.0016631,
+          "session_id": 94588,
+          "original_token_count": 405,
+          "output": "Scope: all 16 workspace projects\n✓ Lockfile passes supply-chain policies (verified 17d ago)\nLockfile is up to date, resolution step is skipped\nAlready up to date\n\nDone in 1.3s using pnpm v11.8.0\n$ next build\n⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache\nAttention: Next.js now collects completely anonymous telemetry regarding usage.\nThis information is used to shape Next.js' roadmap and prioritize features.\nYou can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:\nhttps://nextjs.org/telemetry\n\n▲ Next.js 16.2.9 (Turbopack)\n\n  Creating an optimized production build ...\nTurbopack build encountered 1 warnings:\n./apps/yuta-display/next.config.ts\nEncountered unexpected file in NFT list\nA file was traced that indicates that the whole project was traced unintentionally. Somewhere in the import trace below, there are:\n- filesystem operations (like path.join, path.resolve or fs.readFile), or\n- very dynamic requires (like require('./' + foo)).\nTo resolve this, you can\n- remove them if possible, or\n- only use them in development, or\n- make sure they are statically scoped to some subfolder: path.join(process.cwd(), 'data', bar), or\n- add ignore comments: path.join(/*turbopackIgnore: true*/ process.cwd(), bar)\n\nImport trace:\n  App Route:\n    ./apps/yuta-display/next.config.ts\n    ./apps/yuta-display/src/utils/file.ts\n    ./apps/yuta-display/src/app/uploads/display/[filename]/route.ts\n\n\n✓ Compiled successfully in 3.5s\n  Running TypeScript ...\n"
+        },
+        {
+          "key": "p3buildDisplayEnd",
+          "chunk_id": "96c7f9",
+          "wall_time_seconds": 0.0000018,
+          "exit_code": 0,
+          "original_token_count": 164,
+          "output": "  Finished TypeScript in 5.0s ...\n  Collecting page data using 7 workers ...\n  Generating static pages using 7 workers (0/6) ...\n  Generating static pages using 7 workers (1/6) \r\n  Generating static pages using 7 workers (2/6) \r\n  Generating static pages using 7 workers (4/6) \r\n✓ Generating static pages using 7 workers (6/6) in 201ms\n  Finalizing page optimization ...\n\nRoute (app)\n┌ ○ /\n├ ○ /_not-found\n├ ƒ /admin\n├ ƒ /api/display-media\n├ ƒ /api/display-media/[id]\n├ ƒ /api/upload/display\n├ ○ /display\n└ ƒ /uploads/display/[filename]\n\n\n○  (Static)   prerendered as static content\nƒ  (Dynamic)  server-rendered on demand\n\n"
+        }
+      ]
+    },
+    {
+      "cmd": "node --test scripts/next-generated-types-bootstrap.test.mjs",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "chunk_id": "bc63c8",
+      "wall_time_seconds": 2.1218025,
+      "exit_code": 0,
+      "original_token_count": 306,
+      "output": "✔ root bootstrap targets exactly the six Next apps in approved order (2.4099ms)\n✔ existing root aliases keep their bounded meanings (0.2076ms)\n✔ CI gates recursive typecheck in its own job with no failure bypass (0.3112ms)\n✔ both development guides document the same explicit prerequisite (0.6684ms)\n✔ Next declarations have only the six exact root-anchored ignore rules (0.9567ms)\n✔ POS offline acceptance no longer captures or restores generated declarations (0.4551ms)\n✔ conjunction reaches recursive check only after six successful children (423.428ms)\n✔ child failure at @yuta/backoffice stops later children and recursive check (79.3251ms)\n✔ child failure at @yuta/web stops later children and recursive check (137.4701ms)\n✔ child failure at @yuta/booking-web stops later children and recursive check (223.3121ms)\n✔ child failure at @yuta/feedback-web stops later children and recursive check (259.8172ms)\n✔ child failure at @yuta/pos stops later children and recursive check (307.976ms)\n✔ child failure at @yuta/display stops later children and recursive check (365.0203ms)\nℹ tests 13\nℹ suites 0\nℹ pass 13\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 1910.5738\n"
+    },
+    {
+      "cmd": "node --check scripts/test-pos-offline.mjs",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "chunk_id": "c01760",
+      "wall_time_seconds": 0.2873351,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "cmd": "pnpm docs:check",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "chunk_id": "653d13",
+      "wall_time_seconds": 2.7291364,
+      "exit_code": 0,
+      "original_token_count": 79,
+      "output": "Scope: all 16 workspace projects\n✓ Lockfile passes supply-chain policies (verified 17d ago)\nLockfile is up to date, resolution step is skipped\nAlready up to date\n\nDone in 1.4s using pnpm v11.8.0\n$ node ./scripts/check-documentation-consistency.mjs\nDocumentation consistency check passed (36 current documents).\n"
+    },
+    {
+      "cmd": "pnpm architecture:check",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "chunk_id": "ac050e",
+      "wall_time_seconds": 1.6772114,
+      "exit_code": 0,
+      "original_token_count": 40,
+      "output": "$ node ./scripts/check-import-boundaries.mjs\nArchitecture check passed: runtime imports, database URLs, client boundaries, and migration baselines are valid.\n"
+    },
+    {
+      "cmd": "openspec validate next-generated-types-bootstrap --strict",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "chunk_id": "f42fb0",
+      "wall_time_seconds": 1.3227928,
+      "exit_code": 0,
+      "original_token_count": 13,
+      "output": "Change 'next-generated-types-bootstrap' is valid\n"
+    },
+    {
+      "cmd": "pnpm format:check",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "exit_code": 1,
+      "chunks": [
+        {
+          "key": "p3formatStart",
+          "chunk_id": "fd2eb4",
+          "wall_time_seconds": 10.001966,
+          "session_id": 73357,
+          "original_token_count": 178,
+          "output": "Scope: all 16 workspace projects\n✓ Lockfile passes supply-chain policies (verified 17d ago)\nLockfile is up to date, resolution step is skipped\nAlready up to date\n\nDone in 2.3s using pnpm v11.8.0\n$ prettier --check .\nChecking formatting...\n[warn] .agents/skills/openspec-apply-change/SKILL.md\n[warn] .agents/skills/openspec-archive-change/SKILL.md\n[warn] .agents/skills/openspec-continue-change/SKILL.md\n[warn] .agents/skills/openspec-explore/SKILL.md\n[warn] .agents/skills/openspec-new-change/SKILL.md\n[warn] .agents/skills/openspec-propose/SKILL.md\n[warn] .agents/skills/openspec-sync-specs/SKILL.md\n[warn] .agents/skills/openspec-update-change/SKILL.md\n[warn] .agents/skills/openspec-verify-change/SKILL.md\n"
+        },
+        {
+          "key": "p3formatEnd",
+          "chunk_id": "e91890",
+          "wall_time_seconds": 5.0029308,
+          "session_id": 73357,
+          "original_token_count": 1004,
+          "output": "[warn] docs/archive/knowledge-normalization/tasks/YUTA_KNOWLEDGE_AUDIT_TASK.md\n[warn] docs/archive/knowledge-normalization/tasks/YUTA_STEP_1_AUTHORITY_MODEL_TASK.md\n[warn] docs/archive/knowledge-normalization/tasks/YUTA_STEP_2_LIFECYCLE_STATUS_MODEL_TASK.md\n[warn] docs/archive/knowledge-normalization/tasks/YUTA_STEP_3_MODULE_REGISTRY_TASK.md\n[warn] docs/archive/knowledge-normalization/tasks/YUTA_STEP_5_1_PERSONNEL_PRODUCT_KNOWLEDGE_HOME_TASK.md\n[warn] docs/archive/knowledge-normalization/tasks/YUTA_STEP_5_2_TODAY_PRODUCT_KNOWLEDGE_HOME_TASK.md\n[warn] docs/archive/knowledge-normalization/tasks/YUTA_STEP_5_3_ESTABLISHMENT_PRODUCT_KNOWLEDGE_HOME_TASK.md\n[warn] docs/archive/knowledge-normalization/tasks/YUTA_STEP_5_4_IDENTITY_ACCESS_PRODUCT_KNOWLEDGE_HOME_TASK.md\n[warn] docs/archive/knowledge-normalization/tasks/YUTA_STEP_5_5_SITE_AGENT_PRODUCT_KNOWLEDGE_HOME_TASK.md\n[warn] docs/archive/knowledge-normalization/tasks/YUTA_STEP_5_6_DISPLAY_PRODUCT_KNOWLEDGE_HOME_TASK.md\n[warn] docs/archive/yuta-workflow/tasks/YUTA_AUTOMATED_OPEN_SPEC_REVIEW_WORKFLOW_SETUP_TASK.md\n[warn] docs/archive/yuta-workflow/tasks/YUTA_STEP_7_0_OPENSPEC_LOCAL_BASELINE_AUDIT_TASK.md\n[warn] docs/archive/yuta-workflow/tasks/YUTA_STEP_7_0B_OPENSPEC_1_11_DELTA_REAUDIT_TASK.md\n[warn] docs/archive/yuta-workflow/tasks/YUTA_STEP_7_1_FORK_AND_DESIGN_YUTA_SCHEMA_TASK.md\n[warn] docs/archive/yuta-workflow/tasks/YUTA_STEP_7_2_ISOLATED_OPENSPEC_SCHEMA_SMOKE_TEST_TASK.md\n[warn] docs/archive/yuta-workflow/tasks/YUTA_STEP_7_3A_OPENSPEC_SCHEMA_HARDENING_ANALYSIS_TASK.md\n[warn] docs/archive/yuta-workflow/tasks/YUTA_STEP_7_3B_MINIMAL_SCHEMA_HARDENING_TASK.md\n[warn] docs/archive/yuta-workflow/tasks/YUTA_STEP_7_4_OPENSPEC_ACTIVATION_POLICY_REVIEW_TASK.md\n[warn] docs/archive/yuta-workflow/tasks/YUTA_STEP_7_5_ACTIVATE_YUTA_SPEC_DRIVEN_TASK.md\n[warn] docs/archive/yuta-workflow/tasks/YUTA_STEP_7_6A_OPENSPEC_NORMATIVITY_POLICY_REVIEW_TASK.md\n[warn] docs/archive/yuta-workflow/tasks/YUTA_STEP_7_6B_ENABLE_NORMATIVE_SPECS_TASK.md\n[warn] docs/archive/yuta-workflow/tasks/YUTA_WORKFLOW_V3_AUTOMATION_UPDATE_TASK.md\n[warn] docs/features/establishment/general-information/README.md\n[warn] docs/features/establishment/README.md\n[warn] docs/reviews/personnel-reconstructable-value-history/04-knowledge-consolidation-review.md\n[warn] docs/reviews/restaurant-knowledge-communication-identity/04-knowledge-consolidation-review.md\n[warn] docs/reviews/restaurant-knowledge-team-culture/04-knowledge-consolidation-review.md\n[warn] docs/reviews/restaurant-knowledge-validated-knowledge/02-specs-review.md\n[warn] docs/reviews/restaurant-knowledge-validated-knowledge/02b-design-review.md\n[warn] docs/reviews/restaurant-knowledge-validated-knowledge/04-knowledge-consolidation-review.md\n[warn] docs/tasks/INFORMATIONS_GENERALES_PAGE_PRODUCT_KNOWLEDGE.md\n[warn] docs/tasks/YUTA_INFORMATIONS_GENERALES_PAGE_KNOWLEDGE_INTEGRATION_AUDIT_TASK.md\n[warn] docs/tasks/YUTA_INFORMATIONS_GENERALES_PRODUCT_DECISION_INTEGRATION_TASK.md\n[warn] docs/tasks/YUTA_PILOT_01_ESTABLISHMENT_CONTACT_COPY_DESIGN_TASK.md\n[warn] docs/tasks/YUTA_PILOT_01_ESTABLISHMENT_CONTACT_COPY_PROPOSAL_ANALYSIS_TASK.md\n[warn] docs/tasks/YUTA_PILOT_01_ESTABLISHMENT_CONTACT_COPY_SPECS_TASK.md\n[warn] docs/tasks/YUTA_PILOT_01_ESTABLISHMENT_CONTACT_COPY_TASKS_TASK.md\n[warn] docs/tasks/YUTA_STEP_6_1_DOCUMENTATION_CLEANUP_AUDIT_TASK.md\n[warn] docs/tasks/YUTA_STEP_6_2A_INDEX_TRUTHFULNESS_CLEANUP_TASK.md\n[warn] docs/tasks/YUTA_STEP_6_2B1_CURRENT_STATE_SLIM_PLAN_TASK.md\n[warn] docs/tasks/YUTA_STEP_6_2C_ARCHIVE_KNOWLEDGE_NORMALIZATION_HISTORY_TASK.md\n[warn] docs/tasks/YUTA_STEP_6_2D1_PUBLIC_BOOKING_PRODUCT_SPEC_REVIEW_TASK.md\n[warn] docs/tasks/YUTA_STEP_6_2D3_POS_PRODUCT_SPEC_REVIEW_TASK.md\n[warn] docs/tasks/YUTA_STEP_6_2E1_UI_PROMPT_TOPOLOGY_REVIEW_TASK.md\n[warn] docs/tasks/YUTA_STEP_6_2E2_IMPLEMENT_GENERATED_SNAPSHOT_TOPOLOGY_TASK.md\n[warn] docs/tasks/YUTA_STEP_6_2E3_MIGRATE_EXISTING_PROMPT_PROVENANCE_TASK.md\n[warn] docs/tasks/YUTA_STEP_6_2F_FINAL_DOCUMENTATION_CLEANUP_VALIDATION_TASK.md\n"
+        },
+        {
+          "key": "p3formatFinal",
+          "chunk_id": "98057e",
+          "wall_time_seconds": 0.0000021,
+          "exit_code": 1,
+          "original_token_count": 137,
+          "output": "[warn] openspec/changes/archive/2026-08-30-establishment-copy-primary-contact-to-public/analysis.md\n[warn] openspec/schemas/yuta-spec-driven/templates/design.md\n[warn] openspec/schemas/yuta-spec-driven/templates/proposal.md\n[warn] openspec/schemas/yuta-spec-driven/templates/spec.md\n[warn] openspec/specs/restaurant-knowledge/cuisine-know-how/spec.md\n[warn] openspec/specs/restaurant-knowledge/validated-knowledge/spec.md\n[warn] Code style issues found in 62 files. Run Prettier with --write to fix.\n[ELIFECYCLE] Command failed with exit code 1.\n"
+        }
+      ],
+      "classification": "62 pre-existing non-attributable formatting failures; not repaired"
+    },
+    {
+      "cmd": "pnpm exec prettier --check package.json .github/workflows/ci.yml README.md docs/DEVELOPMENT_WORKFLOW.md scripts/next-generated-types-bootstrap.test.mjs scripts/test-pos-offline.mjs",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "chunk_id": "44d9b1",
+      "wall_time_seconds": 1.7628678,
+      "exit_code": 0,
+      "original_token_count": 17,
+      "output": "Checking formatting...\nAll matched files use Prettier code style!\n"
+    },
+    {
+      "cmd": "pnpm install --frozen-lockfile",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-failure-1-20260904",
+      "exit_code": 0,
+      "chunks": [
+        {
+          "key": "p3fixture1InstallStart",
+          "chunk_id": "44983a",
+          "wall_time_seconds": 10.001637,
+          "session_id": 68836,
+          "original_token_count": 179,
+          "output": "Scope: all 16 workspace projects\n✓ Lockfile passes supply-chain policies (verified 17d ago)\nLockfile is up to date, resolution step is skipped\nProgress: resolved 1, reused 0, downloaded 0, added 0\nPackages: +220\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nProgress: resolved 220, reused 218, downloaded 0, added 11\nProgress: resolved 220, reused 220, downloaded 0, added 113\nProgress: resolved 220, reused 220, downloaded 0, added 215\nProgress: resolved 220, reused 220, downloaded 0, added 216\nProgress: resolved 220, reused 220, downloaded 0, added 217\nProgress: resolved 220, reused 220, downloaded 0, added 218\nProgress: resolved 220, reused 220, downloaded 0, added 219\n"
+        },
+        {
+          "key": "p3fixture1InstallEnd",
+          "chunk_id": "9c6c46",
+          "wall_time_seconds": 0.0000025,
+          "exit_code": 0,
+          "original_token_count": 49,
+          "output": "Progress: resolved 220, reused 220, downloaded 0, added 220\nProgress: resolved 220, reused 220, downloaded 0, added 220, done\n\ndevDependencies:\n+ prettier 3.8.4\n\nDone in 12.2s using pnpm v11.8.0\n"
+        }
+      ]
+    },
+    {
+      "cmd": "pnpm typegen:next && pnpm -r --if-present typecheck",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-failure-1-20260904",
+      "environment": "NODE_OPTIONS=--require D:/working/yuta/.tmp-bootstrap-failure-1-20260904/.tmp-bootstrap-observer.cjs",
+      "exit_code": 1,
+      "chunks": [
+        {
+          "key": "p3failure1Start",
+          "chunk_id": "88067f",
+          "wall_time_seconds": 10.0010239,
+          "session_id": 68790,
+          "original_token_count": 1733,
+          "output": "BOOTSTRAP_PROCESS {\"pid\":17860,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"C:\\\\Users\\\\Tam\\\\AppData\\\\Local\\\\pnpm\\\\.tools\\\\pnpm\\\\10.11.0\\\\node_modules\\\\.pnpm\\\\pnpm@10.11.0\\\\node_modules\\\\pnpm\\\\bin\\\\pnpm.cjs\",\"typegen:next\"]}\nBOOTSTRAP_PROCESS {\"pid\":9612,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"C:\\\\Users\\\\Tam\\\\AppData\\\\Local\\\\pnpm\\\\.tools\\\\pnpm\\\\11.8.0\\\\node_modules\\\\pnpm\\\\bin\\\\pnpm.mjs\",\"typegen:next\"]}\n$ pnpm --filter @yuta/backoffice --fail-if-no-match exec next typegen && pnpm --filter @yuta/web --fail-if-no-match exec next typegen && pnpm --filter @yuta/booking-web --fail-if-no-match exec next typegen && pnpm --filter @yuta/feedback-web --fail-if-no-match exec next typegen && pnpm --filter @yuta/pos --fail-if-no-match exec next typegen && pnpm --filter @yuta/display --fail-if-no-match exec next typegen\nBOOTSTRAP_PROCESS {\"pid\":13372,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"C:\\\\Users\\\\Tam\\\\AppData\\\\Local\\\\pnpm\\\\.tools\\\\pnpm\\\\11.8.0\\\\node_modules\\\\pnpm\\\\bin\\\\pnpm.mjs\",\"--filter\",\"@yuta/backoffice\",\"--fail-if-no-match\",\"exec\",\"next\",\"typegen\"]}\nBOOTSTRAP_PROCESS {\"pid\":15088,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\backoffice\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\backoffice\\\\node_modules\\\\next\\\\dist\\\\bin\\\\next\",\"typegen\"]}\nUnhandled Rejection: Error: SYNTHETIC_TYPEGEN_FAILURE_1_backoffice\n    at Object.<anonymous> (D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904\\apps\\backoffice\\next.config.compiled.js:11:7)\nBOOTSTRAP_PROCESS {\"pid\":4284,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"C:\\\\Users\\\\Tam\\\\AppData\\\\Local\\\\pnpm\\\\.tools\\\\pnpm\\\\11.8.0\\\\node_modules\\\\pnpm\\\\bin\\\\pnpm.mjs\",\"--filter\",\"@yuta/web\",\"--fail-if-no-match\",\"exec\",\"next\",\"typegen\"]}\nBOOTSTRAP_PROCESS {\"pid\":11148,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\web\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\web\\\\node_modules\\\\next\\\\dist\\\\bin\\\\next\",\"typegen\"]}\nGenerating route types...\n✓ Types generated successfully\nBOOTSTRAP_PROCESS {\"pid\":5352,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"C:\\\\Users\\\\Tam\\\\AppData\\\\Local\\\\pnpm\\\\.tools\\\\pnpm\\\\11.8.0\\\\node_modules\\\\pnpm\\\\bin\\\\pnpm.mjs\",\"--filter\",\"@yuta/booking-web\",\"--fail-if-no-match\",\"exec\",\"next\",\"typegen\"]}\nBOOTSTRAP_PROCESS {\"pid\":11228,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\booking-web\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\booking-web\\\\node_modules\\\\next\\\\dist\\\\bin\\\\next\",\"typegen\"]}\nGenerating route types...\n✓ Types generated successfully\nBOOTSTRAP_PROCESS {\"pid\":13480,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"C:\\\\Users\\\\Tam\\\\AppData\\\\Local\\\\pnpm\\\\.tools\\\\pnpm\\\\11.8.0\\\\node_modules\\\\pnpm\\\\bin\\\\pnpm.mjs\",\"--filter\",\"@yuta/feedback-web\",\"--fail-if-no-match\",\"exec\",\"next\",\"typegen\"]}\nBOOTSTRAP_PROCESS {\"pid\":14068,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\feedback-web\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\feedback-web\\\\node_modules\\\\next\\\\dist\\\\bin\\\\next\",\"typegen\"]}\nGenerating route types...\n✓ Types generated successfully\nBOOTSTRAP_PROCESS {\"pid\":4904,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"C:\\\\Users\\\\Tam\\\\AppData\\\\Local\\\\pnpm\\\\.tools\\\\pnpm\\\\11.8.0\\\\node_modules\\\\pnpm\\\\bin\\\\pnpm.mjs\",\"--filter\",\"@yuta/pos\",\"--fail-if-no-match\",\"exec\",\"next\",\"typegen\"]}\nBOOTSTRAP_PROCESS {\"pid\":13508,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\yuta-pos\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\yuta-pos\\\\node_modules\\\\next\\\\dist\\\\bin\\\\next\",\"typegen\"]}\nGenerating route types...\n✓ Types generated successfully\nBOOTSTRAP_PROCESS {\"pid\":23916,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"C:\\\\Users\\\\Tam\\\\AppData\\\\Local\\\\pnpm\\\\.tools\\\\pnpm\\\\11.8.0\\\\node_modules\\\\pnpm\\\\bin\\\\pnpm.mjs\",\"--filter\",\"@yuta/display\",\"--fail-if-no-match\",\"exec\",\"next\",\"typegen\"]}\nBOOTSTRAP_PROCESS {\"pid\":4588,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\yuta-display\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\yuta-display\\\\node_modules\\\\next\\\\dist\\\\bin\\\\next\",\"typegen\"]}\nGenerating route types...\n✓ Types generated successfully\nBOOTSTRAP_PROCESS {\"pid\":11464,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"C:\\\\Users\\\\Tam\\\\AppData\\\\Local\\\\pnpm\\\\.tools\\\\pnpm\\\\10.11.0\\\\node_modules\\\\.pnpm\\\\pnpm@10.11.0\\\\node_modules\\\\pnpm\\\\bin\\\\pnpm.cjs\",\"-r\",\"--if-present\",\"typecheck\"]}\nBOOTSTRAP_PROCESS {\"pid\":18324,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"C:\\\\Users\\\\Tam\\\\AppData\\\\Local\\\\pnpm\\\\.tools\\\\pnpm\\\\11.8.0\\\\node_modules\\\\pnpm\\\\bin\\\\pnpm.mjs\",\"-r\",\"--if-present\",\"typecheck\"]}\nScope: 15 of 16 workspace projects\npackages/db-pos typecheck$ tsc --noEmit\npackages/contracts typecheck$ tsc --noEmit\npackages/core typecheck$ tsc --noEmit\npackages/tenant typecheck$ tsc --noEmit\npackages/contracts typecheck: BOOTSTRAP_PROCESS {\"pid\":24752,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\packages\\\\contracts\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\packages\\\\contracts\\\\node_modules\\\\typescript\\\\bin\\\\tsc\",\"--noEmit\"]}\npackages/core typecheck: BOOTSTRAP_PROCESS {\"pid\":2196,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\packages\\\\core\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\packages\\\\core\\\\node_modules\\\\typescript\\\\bin\\\\tsc\",\"--noEmit\"]}\npackages/db-pos typecheck: BOOTSTRAP_PROCESS {\"pid\":7524,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\packages\\\\db-pos\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\packages\\\\db-pos\\\\node_modules\\\\typescript\\\\bin\\\\tsc\",\"--noEmit\"]}\npackages/tenant typecheck: BOOTSTRAP_PROCESS {\"pid\":10364,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\packages\\\\tenant\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\packages\\\\tenant\\\\node_modules\\\\typescript\\\\bin\\\\tsc\",\"--noEmit\"]}\n"
+        },
+        {
+          "key": "p3failure1End",
+          "chunk_id": "4b5876",
+          "wall_time_seconds": 5.0008689,
+          "session_id": 68790,
+          "original_token_count": 591,
+          "output": "packages/tenant typecheck: Done\npackages/core typecheck: Done\npackages/db-pos typecheck: Done\npackages/contracts typecheck: Done\napps/site-agent typecheck$ tsc --noEmit\napps/yuta-display typecheck$ tsc --noEmit\napps/yuta-pos typecheck$ tsc --noEmit\npackages/auth typecheck$ tsc --noEmit\napps/site-agent typecheck: BOOTSTRAP_PROCESS {\"pid\":19604,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\site-agent\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\site-agent\\\\node_modules\\\\typescript\\\\bin\\\\tsc\",\"--noEmit\"]}\npackages/auth typecheck: BOOTSTRAP_PROCESS {\"pid\":12436,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\packages\\\\auth\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\packages\\\\auth\\\\node_modules\\\\typescript\\\\bin\\\\tsc\",\"--noEmit\"]}\napps/yuta-pos typecheck: BOOTSTRAP_PROCESS {\"pid\":23076,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\yuta-pos\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\yuta-pos\\\\node_modules\\\\typescript\\\\bin\\\\tsc\",\"--noEmit\"]}\napps/yuta-display typecheck: BOOTSTRAP_PROCESS {\"pid\":16444,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\yuta-display\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\yuta-display\\\\node_modules\\\\typescript\\\\bin\\\\tsc\",\"--noEmit\"]}\npackages/auth typecheck: Done\npackages/booking typecheck$ tsc --noEmit\npackages/booking typecheck: BOOTSTRAP_PROCESS {\"pid\":11568,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\packages\\\\booking\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\packages\\\\booking\\\\node_modules\\\\typescript\\\\bin\\\\tsc\",\"--noEmit\"]}\npackages/booking typecheck: Done\napps/site-agent typecheck: Done\napps/yuta-display typecheck: Done\napps/yuta-pos typecheck: Done\npackages/db-cloud typecheck$ tsc --noEmit\npackages/db-cloud typecheck: BOOTSTRAP_PROCESS {\"pid\":18772,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\packages\\\\db-cloud\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\packages\\\\db-cloud\\\\node_modules\\\\typescript\\\\bin\\\\tsc\",\"--noEmit\"]}\n"
+        },
+        {
+          "key": "p3failure1Final",
+          "chunk_id": "65ec4c",
+          "wall_time_seconds": 5.0009098,
+          "session_id": 68790,
+          "original_token_count": 349,
+          "output": "packages/db-cloud typecheck: Done\napps/feedback-web typecheck$ tsc --noEmit\napps/booking-web typecheck$ tsc --noEmit\napps/backoffice typecheck$ tsc --noEmit\napps/web typecheck$ tsc --noEmit\napps/booking-web typecheck: BOOTSTRAP_PROCESS {\"pid\":25352,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\booking-web\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\booking-web\\\\node_modules\\\\typescript\\\\bin\\\\tsc\",\"--noEmit\"]}\napps/feedback-web typecheck: BOOTSTRAP_PROCESS {\"pid\":7584,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\feedback-web\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\feedback-web\\\\node_modules\\\\typescript\\\\bin\\\\tsc\",\"--noEmit\"]}\napps/web typecheck: BOOTSTRAP_PROCESS {\"pid\":18148,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\web\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\web\\\\node_modules\\\\typescript\\\\bin\\\\tsc\",\"--noEmit\"]}\napps/backoffice typecheck: BOOTSTRAP_PROCESS {\"pid\":2908,\"cwd\":\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\backoffice\",\"argv\":[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"D:\\\\working\\\\yuta\\\\.tmp-bootstrap-failure-1-20260904\\\\apps\\\\backoffice\\\\node_modules\\\\typescript\\\\bin\\\\tsc\",\"--noEmit\"]}\n"
+        },
+        {
+          "key": "p3failure1Completion",
+          "chunk_id": "25aa9c",
+          "wall_time_seconds": 1.587235,
+          "exit_code": 1,
+          "original_token_count": 116,
+          "output": "apps/feedback-web typecheck: Done\napps/web typecheck: Done\napps/booking-web typecheck: Done\napps/backoffice typecheck: ../../packages/ui/src/yuta-brand.tsx(2,27): error TS2307: Cannot find module './assets/yuta-logo.svg' or its corresponding type declarations.\napps/backoffice typecheck: Failed\nD:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904\\apps\\backoffice:\r\n[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @yuta/backoffice@0.1.0 typecheck: `tsc --noEmit`\nExit status 2\n"
+        }
+      ],
+      "classification": "FAIL: later five generators and recursive typecheck executed despite first config error; fixture additionally invalid as exact-byte acceptance evidence"
+    }
+  ],
+  "integrityCommand": "$ErrorActionPreference='Stop'\n$b=Get-Content D:/working/yuta/yuta-resto/docs/reviews/next-generated-types-bootstrap/03-phase3-baseline.json -Raw | ConvertFrom-Json\n$paths=@(git ls-files)\nif(@(Compare-Object $paths $b.files.path).Count){throw 'Tracked path set changed'}\nforeach($f in $b.files){if((Get-FileHash -LiteralPath $f.path -Algorithm SHA256).Hash.ToLower() -ne $f.sha256){throw \"Unexpected tracked byte change: $($f.path)\"}}\nif(@(git status --short).Count){throw 'Unexpected candidate Git drift'}\n'2200/2200 tracked files byte-identical; Git clean'\ngit ls-files -- 'apps/*/next-env.d.ts'\ngit check-ignore -v -- apps/backoffice/next-env.d.ts apps/web/next-env.d.ts apps/booking-web/next-env.d.ts apps/feedback-web/next-env.d.ts apps/yuta-pos/next-env.d.ts apps/yuta-display/next-env.d.ts\nif($LASTEXITCODE -ne 0){throw 'Ignore resolution failed'}\n",
+  "generatedStateChecks": [
+    {
+      "key": "p3afterBackofficeIntegrity",
+      "chunk_id": "1f3186",
+      "wall_time_seconds": 1.2119134,
+      "exit_code": 0,
+      "original_token_count": 122,
+      "output": "2200/2200 tracked files byte-identical; Git clean\r\n.gitignore:3:/apps/backoffice/next-env.d.ts\tapps/backoffice/next-env.d.ts\n.gitignore:4:/apps/web/next-env.d.ts\tapps/web/next-env.d.ts\n.gitignore:5:/apps/booking-web/next-env.d.ts\tapps/booking-web/next-env.d.ts\n.gitignore:6:/apps/feedback-web/next-env.d.ts\tapps/feedback-web/next-env.d.ts\n.gitignore:7:/apps/yuta-pos/next-env.d.ts\tapps/yuta-pos/next-env.d.ts\n.gitignore:8:/apps/yuta-display/next-env.d.ts\tapps/yuta-display/next-env.d.ts\n"
+    },
+    {
+      "key": "p3afterWebIntegrity",
+      "chunk_id": "5e1024",
+      "wall_time_seconds": 1.5791654,
+      "exit_code": 0,
+      "original_token_count": 122,
+      "output": "2200/2200 tracked files byte-identical; Git clean\r\n.gitignore:3:/apps/backoffice/next-env.d.ts\tapps/backoffice/next-env.d.ts\n.gitignore:4:/apps/web/next-env.d.ts\tapps/web/next-env.d.ts\n.gitignore:5:/apps/booking-web/next-env.d.ts\tapps/booking-web/next-env.d.ts\n.gitignore:6:/apps/feedback-web/next-env.d.ts\tapps/feedback-web/next-env.d.ts\n.gitignore:7:/apps/yuta-pos/next-env.d.ts\tapps/yuta-pos/next-env.d.ts\n.gitignore:8:/apps/yuta-display/next-env.d.ts\tapps/yuta-display/next-env.d.ts\n"
+    },
+    {
+      "key": "p3afterBookingIntegrity",
+      "chunk_id": "72bd9c",
+      "wall_time_seconds": 1.3295601000000001,
+      "exit_code": 0,
+      "original_token_count": 122,
+      "output": "2200/2200 tracked files byte-identical; Git clean\r\n.gitignore:3:/apps/backoffice/next-env.d.ts\tapps/backoffice/next-env.d.ts\n.gitignore:4:/apps/web/next-env.d.ts\tapps/web/next-env.d.ts\n.gitignore:5:/apps/booking-web/next-env.d.ts\tapps/booking-web/next-env.d.ts\n.gitignore:6:/apps/feedback-web/next-env.d.ts\tapps/feedback-web/next-env.d.ts\n.gitignore:7:/apps/yuta-pos/next-env.d.ts\tapps/yuta-pos/next-env.d.ts\n.gitignore:8:/apps/yuta-display/next-env.d.ts\tapps/yuta-display/next-env.d.ts\n"
+    },
+    {
+      "key": "p3afterFeedbackIntegrity",
+      "chunk_id": "63cddf",
+      "wall_time_seconds": 1.1841394,
+      "exit_code": 0,
+      "original_token_count": 122,
+      "output": "2200/2200 tracked files byte-identical; Git clean\r\n.gitignore:3:/apps/backoffice/next-env.d.ts\tapps/backoffice/next-env.d.ts\n.gitignore:4:/apps/web/next-env.d.ts\tapps/web/next-env.d.ts\n.gitignore:5:/apps/booking-web/next-env.d.ts\tapps/booking-web/next-env.d.ts\n.gitignore:6:/apps/feedback-web/next-env.d.ts\tapps/feedback-web/next-env.d.ts\n.gitignore:7:/apps/yuta-pos/next-env.d.ts\tapps/yuta-pos/next-env.d.ts\n.gitignore:8:/apps/yuta-display/next-env.d.ts\tapps/yuta-display/next-env.d.ts\n"
+    },
+    {
+      "key": "p3afterPosIntegrity",
+      "chunk_id": "934d77",
+      "wall_time_seconds": 1.250281,
+      "exit_code": 0,
+      "original_token_count": 122,
+      "output": "2200/2200 tracked files byte-identical; Git clean\r\n.gitignore:3:/apps/backoffice/next-env.d.ts\tapps/backoffice/next-env.d.ts\n.gitignore:4:/apps/web/next-env.d.ts\tapps/web/next-env.d.ts\n.gitignore:5:/apps/booking-web/next-env.d.ts\tapps/booking-web/next-env.d.ts\n.gitignore:6:/apps/feedback-web/next-env.d.ts\tapps/feedback-web/next-env.d.ts\n.gitignore:7:/apps/yuta-pos/next-env.d.ts\tapps/yuta-pos/next-env.d.ts\n.gitignore:8:/apps/yuta-display/next-env.d.ts\tapps/yuta-display/next-env.d.ts\n"
+    },
+    {
+      "key": "p3afterBuildsIntegrity",
+      "chunk_id": "6c3c37",
+      "wall_time_seconds": 1.334529,
+      "exit_code": 0,
+      "original_token_count": 122,
+      "output": "2200/2200 tracked files byte-identical; Git clean\r\n.gitignore:3:/apps/backoffice/next-env.d.ts\tapps/backoffice/next-env.d.ts\n.gitignore:4:/apps/web/next-env.d.ts\tapps/web/next-env.d.ts\n.gitignore:5:/apps/booking-web/next-env.d.ts\tapps/booking-web/next-env.d.ts\n.gitignore:6:/apps/feedback-web/next-env.d.ts\tapps/feedback-web/next-env.d.ts\n.gitignore:7:/apps/yuta-pos/next-env.d.ts\tapps/yuta-pos/next-env.d.ts\n.gitignore:8:/apps/yuta-display/next-env.d.ts\tapps/yuta-display/next-env.d.ts\n"
+    }
+  ],
+  "formalitesProtectionCommand": "$ErrorActionPreference='Stop'\n$e=Get-Content docs/reviews/next-generated-types-bootstrap/phase-1-revalidation.json -Raw | ConvertFrom-Json\n$m=Get-Content docs/reviews/formalites-authorization/03-integrity.json -Raw | ConvertFrom-Json\nforeach($f in $m.files){if((Get-FileHash -LiteralPath $f.path -Algorithm SHA256).Hash.ToLower() -ne $f.sha256){throw \"Formalites mismatch: $($f.path)\"}}\nforeach($r in $e.protectionAfter.protectedHashes | Where-Object {$_.path -like '*formalites-authorization*' -or $_.path -like 'apps/backoffice/*formalites*' -or $_.path -eq 'apps/backoffice/src/server/auth/permissions.ts'}){if((Get-FileHash -LiteralPath $r.path -Algorithm SHA256).Hash.ToLower() -ne $r.sha256){throw \"Protected mismatch: $($r.path)\"}}\n$supp=@(git ls-files --cached --others --exclude-standard -- docs/reviews/formalites-authorization openspec/changes/formalites-authorization | Sort-Object -Unique)\nif(@(Compare-Object $supp $e.protectionAfter.supplemental).Count){throw 'Formalites path mismatch'}\nif($m.files.Count -ne 18 -or $supp.Count -ne 17){throw 'Formalites count mismatch'}\n'Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH'\n",
+  "formalitesCheckpoints": [
+    {
+      "stage": "preflight",
+      "chunk_id": "6e6466",
+      "wall_time_seconds": 0.6483759,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "before clean snapshot",
+      "chunk_id": "eb887d",
+      "wall_time_seconds": 0.3162616,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after install / before typegen",
+      "cwd": "D:/working/yuta/yuta-resto",
+      "chunk_id": "ec9177",
+      "wall_time_seconds": 0.3360506,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after install / before typegen",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "chunk_id": "2def34",
+      "wall_time_seconds": 0.3196774,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after generation / before direct typechecks",
+      "cwd": "D:/working/yuta/yuta-resto",
+      "chunk_id": "1c7934",
+      "wall_time_seconds": 0.329195,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after generation / before direct typechecks",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "chunk_id": "404f8f",
+      "wall_time_seconds": 0.3046899,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after direct typechecks / before recursive flow",
+      "cwd": "D:/working/yuta/yuta-resto",
+      "chunk_id": "887d0b",
+      "wall_time_seconds": 0.338082,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after direct typechecks / before recursive flow",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "chunk_id": "268c33",
+      "wall_time_seconds": 0.3308278,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after recursive flow / before builds",
+      "cwd": "D:/working/yuta/yuta-resto",
+      "chunk_id": "6f64de",
+      "wall_time_seconds": 0.5242534,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after recursive flow / before builds",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "chunk_id": "822631",
+      "wall_time_seconds": 0.322033,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after-backoffice-build",
+      "cwd": "D:/working/yuta/yuta-resto",
+      "chunk_id": "01e637",
+      "wall_time_seconds": 0.3736731,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after-backoffice-build",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "chunk_id": "405e35",
+      "wall_time_seconds": 0.3806464,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after-web-build",
+      "cwd": "D:/working/yuta/yuta-resto",
+      "chunk_id": "934009",
+      "wall_time_seconds": 0.3839824,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after-web-build",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "chunk_id": "92a8dc",
+      "wall_time_seconds": 0.3950254,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after-booking-build",
+      "cwd": "D:/working/yuta/yuta-resto",
+      "chunk_id": "26660a",
+      "wall_time_seconds": 0.3579536,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after-booking-build",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "chunk_id": "6514c2",
+      "wall_time_seconds": 0.3724989,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after-feedback-build-and-focused-checks",
+      "cwd": "D:/working/yuta/yuta-resto",
+      "chunk_id": "2ee945",
+      "wall_time_seconds": 0.3579765,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after-feedback-build-and-focused-checks",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "chunk_id": "480c03",
+      "wall_time_seconds": 0.3522992,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after-pos-build",
+      "cwd": "D:/working/yuta/yuta-resto",
+      "chunk_id": "31055e",
+      "wall_time_seconds": 0.4787104,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after-pos-build",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "chunk_id": "56fe8d",
+      "wall_time_seconds": 0.4368862,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after-all-builds-and-format",
+      "cwd": "D:/working/yuta/yuta-resto",
+      "chunk_id": "f78894",
+      "wall_time_seconds": 0.3870825,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after-all-builds-and-format",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "chunk_id": "87b37b",
+      "wall_time_seconds": 0.3390827,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after-task-3.2",
+      "cwd": "D:/working/yuta/yuta-resto",
+      "chunk_id": "b26f95",
+      "wall_time_seconds": 0.3615504,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after-failure-propagation-stop",
+      "cwd": "D:/working/yuta/yuta-resto",
+      "chunk_id": "c5b632",
+      "wall_time_seconds": 0.5887367,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after-failure-propagation-stop",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+      "chunk_id": "66ce2f",
+      "wall_time_seconds": 0.5335571,
+      "exit_code": 0,
+      "original_token_count": 20,
+      "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+    },
+    {
+      "stage": "after-failure-propagation-stop",
+      "cwd": "D:/working/yuta/.tmp-bootstrap-failure-1-20260904",
+      "chunk_id": "4103d7",
+      "wall_time_seconds": 0.7476835,
+      "exit_code": 1,
+      "original_token_count": 65,
+      "output": "Exception: \r\nLine |\r\n   5 |  … sh.ToLower() -ne $f.sha256){throw \"Formalites mismatch: $($f.path)\"}}\r\n     |                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n     | Formalites mismatch: apps/backoffice/src/server/auth/formalites.ts\r\n"
+    }
+  ],
+  "negativeCase": {
+    "creation": {
+      "chunk_id": "cf7b16",
+      "wall_time_seconds": 2.0706798,
+      "exit_code": 0,
+      "original_token_count": 348,
+      "output": "Preparing worktree (detached HEAD 865cbf6)\nUpdating files:  64% (1409/2200)\rUpdating files:  65% (1430/2200)\rUpdating files:  66% (1452/2200)\rUpdating files:  67% (1474/2200)\rUpdating files:  68% (1496/2200)\rUpdating files:  69% (1518/2200)\rUpdating files:  70% (1540/2200)\rUpdating files:  71% (1562/2200)\rUpdating files:  72% (1584/2200)\rUpdating files:  73% (1606/2200)\rUpdating files:  74% (1628/2200)\rUpdating files:  75% (1650/2200)\rUpdating files:  76% (1672/2200)\rUpdating files:  77% (1694/2200)\rUpdating files:  78% (1716/2200)\rUpdating files:  79% (1738/2200)\rUpdating files:  80% (1760/2200)\rUpdating files:  81% (1782/2200)\rUpdating files:  82% (1804/2200)\rUpdating files:  83% (1826/2200)\rUpdating files:  84% (1848/2200)\rUpdating files:  85% (1870/2200)\rUpdating files:  86% (1892/2200)\rUpdating files:  87% (1914/2200)\rUpdating files:  88% (1936/2200)\rUpdating files:  89% (1958/2200)\rUpdating files:  90% (1980/2200)\rUpdating files:  91% (2002/2200)\rUpdating files:  92% (2024/2200)\rUpdating files:  93% (2046/2200)\rUpdating files:  94% (2068/2200)\rUpdating files:  95% (2090/2200)\rUpdating files:  96% (2112/2200)\rUpdating files:  97% (2134/2200)\rUpdating files:  98% (2156/2200)\rUpdating files:  99% (2178/2200)\rUpdating files: 100% (2200/2200)\rUpdating files: 100% (2200/2200), done.\nHEAD is now at 865cbf6 Disposable post-transition candidate for Phase 3 verification\n"
+    },
+    "observerSource": "process.stdout.write('BOOTSTRAP_PROCESS ' + JSON.stringify({ pid: process.pid, cwd: process.cwd(), argv: process.argv }) + '\\n');\n",
+    "configInjection": "throw new Error('SYNTHETIC_TYPEGEN_FAILURE_1_backoffice');",
+    "traces": [
+      {
+        "pid": 17860,
+        "cwd": "D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904",
+        "argv": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:\\Users\\Tam\\AppData\\Local\\pnpm\\.tools\\pnpm\\10.11.0\\node_modules\\.pnpm\\pnpm@10.11.0\\node_modules\\pnpm\\bin\\pnpm.cjs",
+          "typegen:next"
+        ]
+      },
+      {
+        "pid": 9612,
+        "cwd": "D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904",
+        "argv": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:\\Users\\Tam\\AppData\\Local\\pnpm\\.tools\\pnpm\\11.8.0\\node_modules\\pnpm\\bin\\pnpm.mjs",
+          "typegen:next"
+        ]
+      },
+      {
+        "pid": 13372,
+        "cwd": "D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904",
+        "argv": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:\\Users\\Tam\\AppData\\Local\\pnpm\\.tools\\pnpm\\11.8.0\\node_modules\\pnpm\\bin\\pnpm.mjs",
+          "--filter",
+          "@yuta/backoffice",
+          "--fail-if-no-match",
+          "exec",
+          "next",
+          "typegen"
+        ]
+      },
+      {
+        "pid": 15088,
+        "cwd": "D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904\\apps\\backoffice",
+        "argv": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904\\apps\\backoffice\\node_modules\\next\\dist\\bin\\next",
+          "typegen"
+        ]
+      },
+      {
+        "pid": 4284,
+        "cwd": "D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904",
+        "argv": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:\\Users\\Tam\\AppData\\Local\\pnpm\\.tools\\pnpm\\11.8.0\\node_modules\\pnpm\\bin\\pnpm.mjs",
+          "--filter",
+          "@yuta/web",
+          "--fail-if-no-match",
+          "exec",
+          "next",
+          "typegen"
+        ]
+      },
+      {
+        "pid": 11148,
+        "cwd": "D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904\\apps\\web",
+        "argv": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904\\apps\\web\\node_modules\\next\\dist\\bin\\next",
+          "typegen"
+        ]
+      },
+      {
+        "pid": 5352,
+        "cwd": "D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904",
+        "argv": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:\\Users\\Tam\\AppData\\Local\\pnpm\\.tools\\pnpm\\11.8.0\\node_modules\\pnpm\\bin\\pnpm.mjs",
+          "--filter",
+          "@yuta/booking-web",
+          "--fail-if-no-match",
+          "exec",
+          "next",
+          "typegen"
+        ]
+      },
+      {
+        "pid": 11228,
+        "cwd": "D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904\\apps\\booking-web",
+        "argv": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904\\apps\\booking-web\\node_modules\\next\\dist\\bin\\next",
+          "typegen"
+        ]
+      },
+      {
+        "pid": 13480,
+        "cwd": "D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904",
+        "argv": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:\\Users\\Tam\\AppData\\Local\\pnpm\\.tools\\pnpm\\11.8.0\\node_modules\\pnpm\\bin\\pnpm.mjs",
+          "--filter",
+          "@yuta/feedback-web",
+          "--fail-if-no-match",
+          "exec",
+          "next",
+          "typegen"
+        ]
+      },
+      {
+        "pid": 14068,
+        "cwd": "D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904\\apps\\feedback-web",
+        "argv": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904\\apps\\feedback-web\\node_modules\\next\\dist\\bin\\next",
+          "typegen"
+        ]
+      },
+      {
+        "pid": 4904,
+        "cwd": "D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904",
+        "argv": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:\\Users\\Tam\\AppData\\Local\\pnpm\\.tools\\pnpm\\11.8.0\\node_modules\\pnpm\\bin\\pnpm.mjs",
+          "--filter",
+          "@yuta/pos",
+          "--fail-if-no-match",
+          "exec",
+          "next",
+          "typegen"
+        ]
+      },
+      {
+        "pid": 13508,
+        "cwd": "D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904\\apps\\yuta-pos",
+        "argv": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904\\apps\\yuta-pos\\node_modules\\next\\dist\\bin\\next",
+          "typegen"
+        ]
+      },
+      {
+        "pid": 23916,
+        "cwd": "D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904",
+        "argv": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:\\Users\\Tam\\AppData\\Local\\pnpm\\.tools\\pnpm\\11.8.0\\node_modules\\pnpm\\bin\\pnpm.mjs",
+          "--filter",
+          "@yuta/display",
+          "--fail-if-no-match",
+          "exec",
+          "next",
+          "typegen"
+        ]
+      },
+      {
+        "pid": 4588,
+        "cwd": "D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904\\apps\\yuta-display",
+        "argv": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904\\apps\\yuta-display\\node_modules\\next\\dist\\bin\\next",
+          "typegen"
+        ]
+      },
+      {
+        "pid": 11464,
+        "cwd": "D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904",
+        "argv": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:\\Users\\Tam\\AppData\\Local\\pnpm\\.tools\\pnpm\\10.11.0\\node_modules\\.pnpm\\pnpm@10.11.0\\node_modules\\pnpm\\bin\\pnpm.cjs",
+          "-r",
+          "--if-present",
+          "typecheck"
+        ]
+      },
+      {
+        "pid": 18324,
+        "cwd": "D:\\working\\yuta\\.tmp-bootstrap-failure-1-20260904",
+        "argv": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:\\Users\\Tam\\AppData\\Local\\pnpm\\.tools\\pnpm\\11.8.0\\node_modules\\pnpm\\bin\\pnpm.mjs",
+          "-r",
+          "--if-present",
+          "typecheck"
+        ]
+      }
+    ],
+    "fixtureDriftDiagnostic": {
+      "chunk_id": "6dd3b0",
+      "wall_time_seconds": 0.9292885,
+      "exit_code": 1,
+      "original_token_count": 193,
+      "output": "\r\nAlgorithm       Hash                                                                   Path\r\n---------       ----                                                                   ----\r\nSHA256          60B1C5369EF3B28AF7377C6E8920707E8643F13269A82D192125C009B9333626       D:\\working\\yuta\\yuta-resto\\apps…\r\nSHA256          23B163AD3C03FD3044A82F81A008FB06787508CA7A1EB2727974BB0F4E9825EB       D:\\working\\yuta\\.tmp-bootstrap-…\r\n\r\nLfNormalizedIdentical : True\r\nOriginalCRLF          : 0\r\nFixtureCRLF           : 20\r\n\r\ntrue\nrg: apps/backoffice/node_modules/next/dist/server/node-environment*: IO error for operation on apps/backoffice/node_modules/next/dist/server/node-environment*: The filename, directory name, or volume label syntax is incorrect. (os error 123)\n\r\n"
+    },
+    "installedNextInspection": {
+      "chunk_id": "aa42e4",
+      "wall_time_seconds": 0.2795101,
+      "exit_code": 0,
+      "original_token_count": 743,
+      "output": "            case 'private-cache':\r\n            case 'unstable-cache':\r\n            case 'generate-static-params':\r\n                break;\r\n            default:\r\n                workUnitStore;\r\n        }\r\n    }\r\n    // Not from an aborted prerender, delegate to original handlers\r\n    if (capturedListenerMetadata.length === 0) {\r\n        // We need to log something because the default behavior when there is\r\n        // no event handler installed is to trigger an Unhandled Exception.\r\n        // We don't do that here b/c we don't want to rely on this implicit default\r\n        // to kill the process since it can be disabled by installing a userland listener\r\n        // and you may also choose to run Next.js with args such that unhandled rejections\r\n        // do not automatically terminate the process.\r\n        console.error('Unhandled Rejection:', reason);\r\n    } else {\r\n        handlingRejection = true;\r\n        try {\r\n            for (const meta of capturedListenerMetadata){\r\n                if (meta.once) {\r\n                    // This is a once listener. we remove it from our set before we call it\r\n                    const index = listenerMetadata.indexOf(meta);\r\n                    if (index !== -1) {\r\n    'disable',\r\n    'enable',\r\n    'status'\r\n])).addHelpText('after', `\\nLearn more: ${(0, _picocolors.cyan)('https://nextjs.org/telemetry')}`).addOption(new _commander.Option('--enable', `Enables Next.js' telemetry collection.`).conflicts('disable')).option('--disable', `Disables Next.js' telemetry collection.`).action((arg, options)=>import('../cli/next-telemetry.js').then((mod)=>mod.nextTelemetry(options, arg)));\r\nprogram.command('typegen').description('Generate TypeScript definitions for routes, pages, and layouts without running a full build.').argument('[directory]', `A directory on which to generate types. ${(0, _picocolors.italic)('If no directory is provided, the current directory will be used.')}`).action((directory, options)=>// ensure process exits after typegen completes so open handles/connections\r\n    // don't cause process to hang\r\n    import('../cli/next-typegen.js').then((mod)=>mod.nextTypegen(options, directory).then(()=>process.exit(0)))).usage('[directory] [options]');\r\nconst nextVersion = \"16.2.9\" || 'unknown';\r\nprogram.command('upgrade').description('Upgrade Next.js apps to desired versions with a single command.').argument('[directory]', `A Next.js project directory to upgrade. ${(0, _picocolors.italic)('If no directory is provided, the current directory will be used.')}`).usage('[directory] [options]').option('--revision <revision>', 'Specify the target Next.js version using an NPM dist tag (e.g. \"latest\", \"canary\", \"rc\", \"beta\") or an exact version number (e.g. \"15.0.0\").', nextVersion.includes('-canary.') ? 'canary' : nextVersion.includes('-rc.') ? 'rc' : nextVersion.includes('-beta.') ? 'beta' : 'latest').option('--verbose', 'Verbose output', false).action(async (directory, options)=>{\r\n"
+    },
+    "backofficeNextEnvAbsent": true,
+    "acceptedAsExactByteFixture": false
+  },
+  "notExecuted": [
+    "failure cases 2-6",
+    "missing-package negative",
+    "six dev smoke checks",
+    "README source-integrity negative",
+    "POS offline initial absent",
+    "POS offline already generated"
+  ],
+  "deviations": [
+    "First snapshot preparation guard stopped on original Git index cache-byte refresh; staged entry set remained exactly six expected deletions. Retried capture only after validating unchanged entries.",
+    "Negative fixture created using default core.autocrlf=true; raw-byte protection checked too late, after attempted negative test. Formalites first-file SHA mismatch in disposable fixture only. Not repaired or accepted. Canonical and main clean snapshot protection PASS."
+  ],
+  "nextAction": "Human review; D2/V5 and Phase1 bootstrap assumption need owning Design/Tasks review before prerequisite implementation edits. No Phase3 scope expansion.",
+  "productionOperations": false,
+  "closeoutChecks": [
+    {
+      "cmd": "pnpm docs:check",
+      "cwd": "D:/working/yuta/yuta-resto",
+      "chunk_id": "e155e9",
+      "wall_time_seconds": 0.9946671,
+      "exit_code": 0,
+      "original_token_count": 29,
+      "output": "$ node ./scripts/check-documentation-consistency.mjs\nDocumentation consistency check passed (36 current documents).\n"
+    },
+    {
+      "cmd": "pnpm architecture:check",
+      "cwd": "D:/working/yuta/yuta-resto",
+      "chunk_id": "2fae59",
+      "wall_time_seconds": 1.4413448,
+      "exit_code": 0,
+      "original_token_count": 40,
+      "output": "$ node ./scripts/check-import-boundaries.mjs\nArchitecture check passed: runtime imports, database URLs, client boundaries, and migration baselines are valid.\n"
+    },
+    {
+      "cmd": "openspec validate next-generated-types-bootstrap --strict",
+      "cwd": "D:/working/yuta/yuta-resto",
+      "chunk_id": "87b174",
+      "wall_time_seconds": 1.3197320000000001,
+      "exit_code": 0,
+      "original_token_count": 13,
+      "output": "Change 'next-generated-types-bootstrap' is valid\n"
+    },
+    {
+      "cmd": "pnpm exec prettier --check docs/reviews/next-generated-types-bootstrap/03-phase3-baseline.json docs/reviews/next-generated-types-bootstrap/03-phase3-evidence.json docs/reviews/next-generated-types-bootstrap/03-phase3-review.md docs/reviews/next-generated-types-bootstrap/03-verify.md docs/reviews/next-generated-types-bootstrap/qa/QA_REPORT.md docs/reviews/next-generated-types-bootstrap/phase-2-review.md openspec/changes/next-generated-types-bootstrap/tasks.md",
+      "cwd": "D:/working/yuta/yuta-resto",
+      "chunk_id": "3a82bc",
+      "wall_time_seconds": 1.4044206,
+      "exit_code": 0,
+      "original_token_count": 17,
+      "output": "Checking formatting...\nAll matched files use Prettier code style!\n"
+    }
+  ],
+  "closeoutCanonicalProtection": {
+    "chunk_id": "c853c2",
+    "wall_time_seconds": 0.3430431,
+    "exit_code": 0,
+    "original_token_count": 20,
+    "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+  },
+  "reviewArtifactHashes": [
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/03-phase3-baseline.json",
+      "sha256": "eef4c0c58f9bb68803cbc5cf47f4e731d670544d96164d803b7b4cbba9b2f45b"
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/03-phase3-review.md",
+      "sha256": "425df8be0684e1a75efd3aa328ed2e71d0c7ee7c11f55b9bf153b1e3a68ee21f"
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/03-verify.md",
+      "sha256": "bf540bc74783e7745f7d8862f2a189d2d346ac374dc3fe7a59a220acc8dcebb9"
+    },
+    {
+      "path": "docs/reviews/next-generated-types-bootstrap/qa/QA_REPORT.md",
+      "sha256": "4f50019c24efa7a9b31e287ce776379bb69651a77ff2f7ca32e095852d17c718"
+    },
+    {
+      "path": "openspec/changes/next-generated-types-bootstrap/.openspec.yaml",
+      "sha256": "3994c732a35b66600bfde953f28a4169ca9138804c634a11e1775a1bd1594896"
+    },
+    {
+      "path": "openspec/changes/next-generated-types-bootstrap/analysis.md",
+      "sha256": "322846fe2553a9579b64d8afce607388b7f92f1d55787b32c8491ca9599cc59a"
+    },
+    {
+      "path": "openspec/changes/next-generated-types-bootstrap/design.md",
+      "sha256": "0526ad7cb18000d76d27588bda469e6a5522ef7744268b491b1236baff5c2dc9"
+    },
+    {
+      "path": "openspec/changes/next-generated-types-bootstrap/proposal.md",
+      "sha256": "036e03c7e588d8970dc7255d364ab489612952edcf74f7633ba65e472817b18f"
+    },
+    {
+      "path": "openspec/changes/next-generated-types-bootstrap/tasks.md",
+      "sha256": "43c03daecb6afe706f33966a5adc7c1cbf0a46c35549754837176877e5bfe339"
+    }
+  ],
+  "hashMethod": "PowerShell Get-FileHash -Algorithm SHA256 over exact bytes; evidence JSON does not hash itself",
+  "retainedDisposableWorktrees": [
+    "D:/working/yuta/.tmp-bootstrap-phase3-20260904",
+    "D:/working/yuta/.tmp-bootstrap-failure-1-20260904"
+  ]
+}

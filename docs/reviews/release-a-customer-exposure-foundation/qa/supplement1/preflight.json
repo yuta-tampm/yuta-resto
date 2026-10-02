@@ -1,0 +1,39 @@
+{
+  "observedAt": "2026-10-01T14:03:44.696Z",
+  "humanAuthorization": {
+    "source": "Current-user reply: đồng ý 1 lượt QA",
+    "extraCount": 1,
+    "purpose": "Four OWNER setup navigations and three missing mobile visual observations",
+    "stopCondition": "Stop later behavior cases at first FAIL; always restore the verified fixture and close QA browser contexts"
+  },
+  "previousFullQaGenerations": 3,
+  "branch": "main",
+  "head": "ad97a0f2df5dcce2adc7f8bf48e44a30226d3f61",
+  "buildId": "dpcEq5-sJWwIz7A8Zi3FU",
+  "sourceFilesVerified": 47,
+  "normalizedSourceHashesMatchPriorImplementationManifest": true,
+  "sourceComparison": "CRLF-normalized working text exactly equals committed source and prior source hashes; no source write",
+  "reviewedSetupHash": "16b97ad4f10febc040d29d5f67e7c889b353b52a15be14fffb8007bcbf5bfbbf",
+  "reviewedTargetHash": "c8acdaa997f936a310bbf57ab7103cfa24f8aaccf1e1bef23c5324df8d2d7bdd",
+  "container": {
+    "id": "b975af5ddabfe70154439ae722cd6d7653251b628d9860ffb555064e18dc3c30",
+    "name": "yuta-release-a-16df0488",
+    "image": "sha256:7958605b474b3d264a969cb3a123d6aa00ad1e1fe9da8a69984dabb704d93317",
+    "taskLabel": "release-a-customer-exposure-foundation",
+    "temporaryStorage": "tmpfs",
+    "loopbackPort": "127.0.0.1:54329",
+    "ownedIdentityVerified": true
+  },
+  "databaseIdentity": {
+    "database": "yuta_release_a_exposure_test",
+    "currentUser": "yuta_release_a_exposure_test",
+    "sessionUser": "yuta_release_a_exposure_test",
+    "version": "170010"
+  },
+  "providersIntentionallyUnavailable": true,
+  "runtime": {
+    "A": "http://localhost:3101",
+    "internal": "http://localhost:3102",
+    "serverPids": [23880, 14900]
+  }
+}

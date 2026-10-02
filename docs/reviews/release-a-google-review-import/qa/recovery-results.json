@@ -1,0 +1,176 @@
+{
+  "checks": [
+    {
+      "scenario": "owner-desktop-recovery-targets",
+      "name": "EDIT_TARGET_ONE_RECENT_WITH_WRITING_PRESERVED",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 1,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-desktop-recovery-targets",
+      "name": "RECOVERY_TARGET_ONE_GET_NO_EXTRA_RECENT",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 1,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-desktop-recovery-targets",
+      "name": "DESKTOP_RECOVERY_TARGET_LAYOUT",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "keyboardFocusObserved": true
+    },
+    {
+      "scenario": "owner-mobile-recovery-targets",
+      "name": "MOBILE_EDIT_TARGET_FROM_ELIGIBLE_CACHE",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-mobile-recovery-targets",
+      "name": "MOBILE_RECOVERED_DETAIL_CACHE_NO_EXTRA_GET",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-mobile-recovery-targets",
+      "name": "MOBILE_RECOVERY_TARGET_LAYOUT",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "keyboardFocusObserved": true
+    }
+  ],
+  "screenshots": [
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-19-00-514Z/owner-desktop-provider-edit-detail-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Completed edited Google detail flagged for review; local handling state retained",
+      "scenario": "owner-desktop-recovery-targets",
+      "sha256": "c98f45ecb49041d7749ff47fb71e887d942bbab148acc333a5d1d8dc556021ae",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-19-00-514Z/owner-desktop-successful-detail-pending-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Conditional detail recovery pending with a live temporary reference",
+      "scenario": "owner-desktop-recovery-targets",
+      "sha256": "ff9665fd5e42685949832d42fbb623c8cbd39081c0624ed42fbf5daf763d5920",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-19-00-514Z/owner-desktop-recovered-content-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Recovered Google content separate from retained YUTA work",
+      "scenario": "owner-desktop-recovery-targets",
+      "sha256": "2c0c5fda7ddc1019c93919431a8e3072f78b9418eac9bb5dec35ee1f2eba4a8b",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-19-00-514Z/owner-desktop-recovered-unsaved-draft-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Unsaved manual draft unchanged through successful recovery",
+      "scenario": "owner-desktop-recovery-targets",
+      "sha256": "2c0c5fda7ddc1019c93919431a8e3072f78b9418eac9bb5dec35ee1f2eba4a8b",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-19-00-514Z/owner-mobile-provider-edit-detail-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Completed edited Google detail flagged for review; local handling state retained",
+      "scenario": "owner-mobile-recovery-targets",
+      "sha256": "ea5130c7570b0e1ce3de82b62304584bb95153bcc266e080a1a3c11b8da094ff",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-19-00-514Z/owner-mobile-recovered-content-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Recovered Google content separate from retained YUTA work",
+      "scenario": "owner-mobile-recovery-targets",
+      "sha256": "e3d5147ce9871f73bb67ab0bb6d43a5d9684d6058d0b35d8ebda032abb763106",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-19-00-514Z/owner-mobile-recovered-unsaved-draft-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Unsaved manual draft unchanged through successful recovery",
+      "scenario": "owner-mobile-recovery-targets",
+      "sha256": "e3d5147ce9871f73bb67ab0bb6d43a5d9684d6058d0b35d8ebda032abb763106",
+      "visualReview": "REQUIRED"
+    }
+  ],
+  "limitations": [
+    "First retrieval from never/unbound, provider 404 with a still-live reference, independent binding/revocation races and physically scheduled cleanup require separate fixtures or technical integration evidence; this driver does not manufacture them.",
+    "The script checks live-status semantics, keyboard focus and horizontal overflow. Actual screen-reader output and visual screenshot review remain required human/agent review, not scripted PASS.",
+    "A run changes only its own synthetic provider state file and normal app-authenticated local work/retrieval state. It never resets SQL, starts apps, persists sessions or touches real Google.",
+    "A smoke-only or role-only subset is not full lifecycle coverage. Formal QA requires the lifecycle and desktop/mobile role/disabled runs plus screenshot review. The roles subset expects recent content already fresh from the lifecycle run."
+  ],
+  "browserErrors": 0,
+  "blockedBrowserRequests": 0,
+  "candidateManifestSha256": "7792ee8d7e68e08d4934aca32df691cb3773570a5f1d9f6e9c12d4db7b59ffa7",
+  "providerFixtureSha256": "9c611fbcae5d21cc6290dc969b5330adbc4469468ce48ba891882a78bccdf8ed",
+  "driverSha256": "3f0f4023149a023761d28adf38e4a9c609fb934da9ace710dec11b41f924a653",
+  "dataProvenance": "SYNTHETIC_FIXTURE_NOT_GOOGLE_ACCESS_OR_RETRIEVAL_EVIDENCE",
+  "startedAt": "2026-10-01T20:19:00.525Z",
+  "run": {
+    "run": "recovery",
+    "expectedVisit": "stale"
+  },
+  "scriptedStatus": "PASS",
+  "qaStatus": "REVIEW_REQUIRED",
+  "completedAt": "2026-10-01T20:19:18.479Z"
+}

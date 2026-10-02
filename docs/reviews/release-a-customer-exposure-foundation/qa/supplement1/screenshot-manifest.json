@@ -1,0 +1,130 @@
+{
+  "change": "release-a-customer-exposure-foundation",
+  "purpose": "human-authorized-targeted-supplement1",
+  "rawReportPath": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/browser-results-supplement1.json.raw",
+  "rawReportSha256": "b9ed12095917c79f3add4801a1da68435960b106f0ffdda07919689b4e70f682",
+  "screenshotCount": 11,
+  "screenshots": [
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/01-supplement1-owner-desktop-today-setup-before.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual missing binding OWNER setup guidance before navigation",
+      "scenario": "supplement1-owner-desktop-today-setup-before",
+      "sha256": "0e82efd3abac3b36c18b9fce0e4f8562fde40d57b07b1b0cc4ae1b409810c213"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/02-supplement1-owner-desktop-today-setup-after.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual missing binding Integrations after completed CTA navigation",
+      "scenario": "supplement1-owner-desktop-today-setup-after",
+      "sha256": "bacb904b547470c7ee274a4054258509e6e77a99bc5e31bcf79c94dc9a7518a0"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/03-supplement1-owner-desktop-reviews-setup-before.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual missing binding OWNER setup guidance before navigation",
+      "scenario": "supplement1-owner-desktop-reviews-setup-before",
+      "sha256": "de550eeae4e34bd0bc8309afd963b0d4ded1d9857ae67bc9b4a90c8f6de3ca31"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/04-supplement1-owner-desktop-reviews-setup-after.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual missing binding Integrations after completed CTA navigation",
+      "scenario": "supplement1-owner-desktop-reviews-setup-after",
+      "sha256": "3eda53082da0537c818a2ac25aa81ae71b039191971599be83e35d5b05882dc8"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/05-supplement1-owner-mobile-today-setup-before.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual missing binding OWNER setup guidance before navigation",
+      "scenario": "supplement1-owner-mobile-today-setup-before",
+      "sha256": "26b56246b6f484191d280e98b75fe0f47c9cda5dc1cc376db15b5c875a3f69b2"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/06-supplement1-owner-mobile-today-setup-after.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual missing binding Integrations after completed CTA navigation",
+      "scenario": "supplement1-owner-mobile-today-setup-after",
+      "sha256": "b2e971bde6be8fb5355251d7c280ca7d59469952e4f1b7389fb67ed43ccda877"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/07-supplement1-owner-mobile-reviews-setup-before.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual missing binding OWNER setup guidance before navigation",
+      "scenario": "supplement1-owner-mobile-reviews-setup-before",
+      "sha256": "089fef51912190d3624f0fe8dd0689e38202ebf976beaff940637f65d52f96a4"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/08-supplement1-owner-mobile-reviews-setup-after.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual missing binding Integrations after completed CTA navigation",
+      "scenario": "supplement1-owner-mobile-reviews-setup-after",
+      "sha256": "cf64794e22f1cf463d840704a4f11114e43277df62e20304975b3f88c499ed0f"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/09-supplement1-owner-mobile-today-menu-fully-open.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual menu after completed CSS translate motion; drawer left zero and width 320",
+      "scenario": "supplement1-owner-mobile-today-menu-fully-open",
+      "sha256": "2fa393c8091d2ee9e2f21c91caf7b63254d663bcd617fa6e151928d605ab67c2"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/10-supplement1-owner-mobile-avis-search-scrolled-focused.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual populated Avis search form scrolled into view with keyboard focus",
+      "scenario": "supplement1-owner-mobile-avis-search-scrolled-focused",
+      "sha256": "67b182e254230b1af0bfae4897296320bf9d636fe325127a37ac27bb2a9acce2"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/11-supplement1-owner-mobile-users-lower-role-status-save.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual last persisted membership form scrolled into view; no data submitted",
+      "scenario": "supplement1-owner-mobile-users-lower-role-status-save",
+      "sha256": "17f4c44eb528ca53947d69f172eb0921e0ff3fe2bddd8f76384b009e663f3664"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process';
 import { randomInt, randomUUID } from 'node:crypto';
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { createServer } from 'node:net';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -10,15 +10,8 @@ const containerName = `yuta-pos-offline-acceptance-${randomUUID().slice(0, 8)}`;
 const pnpmEntrypoint = process.env.npm_execpath;
 const siteAgentPort = readPort('YUTA_OFFLINE_SITE_AGENT_PORT', 3004);
 const posPort = readPort('YUTA_OFFLINE_POS_PORT', 3003);
-const posNextEnvPath = join(
-  repositoryRoot,
-  'apps',
-  'yuta-pos',
-  'next-env.d.ts',
-);
 const childProcesses = [];
 let containerStarted = false;
-let originalPosNextEnv;
 
 function readPort(name, fallback) {
   const value = Number(process.env[name] ?? fallback);
@@ -177,10 +170,6 @@ async function stopChild(child) {
 async function cleanup() {
   await Promise.allSettled(childProcesses.reverse().map(stopChild));
 
-  if (originalPosNextEnv !== undefined) {
-    writeFileSync(posNextEnvPath, originalPosNextEnv);
-  }
-
   if (containerStarted) {
     await runCommand('docker', ['rm', '--force', containerName], {
       quiet: true,
@@ -283,6 +272,7 @@ async function main() {
     SITE_AGENT_PORT: String(siteAgentPort),
     SITE_AGENT_ALLOWED_ORIGIN: `http://localhost:${posPort}`,
     SITE_AGENT_URL: `http://127.0.0.1:${siteAgentPort}`,
+    TZ: 'Europe/Paris',
     POS_INTERNET_CHECK_URL: 'http://127.0.0.1:1/offline',
     YUTA_POS_SEED_ADMIN_PIN: String(randomInt(100_000, 1_000_000)),
     YUTA_POS_SEED_STAFF_PIN: String(randomInt(100_000, 1_000_000)),
@@ -299,10 +289,25 @@ async function main() {
     env: runtimeEnv,
   });
 
+  console.log('Testing reports against the disposable POS database...');
+  await runPnpm(
+    [
+      '--filter',
+      '@yuta/site-agent',
+      'exec',
+      'vitest',
+      'run',
+      'test/management-reports.integration.test.ts',
+    ],
+    {
+      env: {
+        ...runtimeEnv,
+        YUTA_ALLOW_DATABASE_INTEGRATION_TESTS: 'true',
+      },
+    },
+  );
+
   console.log('Building the POS production bundle...');
-  if (existsSync(posNextEnvPath)) {
-    originalPosNextEnv = readFileSync(posNextEnvPath);
-  }
   await runPnpm(['--filter', '@yuta/pos', 'build'], {
     env: runtimeEnv,
   });
@@ -335,8 +340,18 @@ async function main() {
   const seededCatalogItem = catalog.categories
     .flatMap((category) => category.items)
     .at(0);
+  const configuredCatalogItem = catalog.categories
+    .flatMap((category) => category.items)
+    .find(
+      (item) =>
+        item.requiredVariantQuantity > 0 && item.variantOptions.length > 0,
+    );
 
-  if (users.users.length === 0 || !seededCatalogItem) {
+  if (
+    users.users.length === 0 ||
+    !seededCatalogItem ||
+    !configuredCatalogItem
+  ) {
     throw new Error('The disposable POS seed did not create usable data.');
   }
 
@@ -784,6 +799,61 @@ async function main() {
   if (!orderItemResponse.ok) {
     throw new Error(
       `The offline order item could not be created: ${await orderItemResponse.text()}`,
+    );
+  }
+
+  const incompleteConfiguredItemResponse = await fetch(
+    `http://127.0.0.1:${siteAgentPort}/api/v1/orders/${createdOrder.order.id}/items`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        menuItemId: configuredCatalogItem.id,
+        quantity: 1,
+      }),
+      signal: AbortSignal.timeout(5_000),
+    },
+  );
+  if (incompleteConfiguredItemResponse.status !== 422) {
+    throw new Error(
+      `A configured item without required options returned HTTP ${incompleteConfiguredItemResponse.status}.`,
+    );
+  }
+
+  const selectedVariants = [
+    {
+      code: configuredCatalogItem.variantOptions[0].code,
+      quantity: configuredCatalogItem.requiredVariantQuantity,
+    },
+  ];
+  const configuredItemResponse = await fetch(
+    `http://127.0.0.1:${siteAgentPort}/api/v1/orders/${createdOrder.order.id}/items`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        menuItemId: configuredCatalogItem.id,
+        quantity: 1,
+        selectedVariants,
+      }),
+      signal: AbortSignal.timeout(5_000),
+    },
+  );
+  if (!configuredItemResponse.ok) {
+    throw new Error(
+      `The configured offline order item could not be created: ${await configuredItemResponse.text()}`,
+    );
+  }
+  const configuredOrderItem = await configuredItemResponse.json();
+  if (
+    configuredOrderItem.item.selectedVariants.length !== 1 ||
+    configuredOrderItem.item.selectedVariants[0].code !==
+      selectedVariants[0].code ||
+    configuredOrderItem.item.selectedVariants[0].quantity !==
+      selectedVariants[0].quantity
+  ) {
+    throw new Error(
+      'The configured order item did not preserve its selected option snapshot.',
     );
   }
 

@@ -1,0 +1,169 @@
+# YUTA Knowledge Consolidation Protocol
+
+Status: APPROVED
+
+Visibility: Engineering
+
+Owner: YUTA product and engineering
+
+Workflow routing: Start with [`YUTA_WORKFLOW_V3.md`](YUTA_WORKFLOW_V3.md), the
+canonical human-readable YUTA Workflow v3 operating guide. This document is the
+detailed supporting post-archive Knowledge Consolidation protocol.
+
+## Purpose
+
+Knowledge Consolidation runs after a successfully validated OpenSpec change is
+archived. It reconciles current repository knowledge with completed evidence
+without treating every change as a documentation rewrite.
+
+The separate, scope-bound legacy Page Chat knowledge migration in
+[Workflow v3](YUTA_WORKFLOW_V3.md#legacy-page-knowledge-migration--separate-governance-maintenance)
+does not invoke this post-archive protocol or alter its approval, sync, archive,
+knowledge-review, or lifecycle rules for normal Product Changes.
+
+```text
+ARCHIVE
+  -> KNOWLEDGE SCAN
+     -> NO_UPDATE_REQUIRED -> DONE
+     -> UPDATE_REQUIRED
+        -> KNOWLEDGE REVIEW
+        -> APPLY APPROVED KNOWLEDGE UPDATE
+        -> DONE
+```
+
+Release/deploy remains a separate operational lane after repository `DONE`.
+
+## Knowledge scan
+
+Inspect only sources that may materially need reconciliation:
+
+- page Product Knowledge and page-pack/as-built evidence;
+- owning Module Product Knowledge;
+- `docs/PRODUCT_KNOWLEDGE.md` routing;
+- `docs/MODULE_REGISTRY.md`;
+- lifecycle/current-state documents;
+- ADRs and durable decisions;
+- `docs/CURRENT_STATE.md` when its broad summary materially changed;
+- `NEEDS REVIEW` items actually resolved by the completed change;
+- new limitations or future work discovered during implementation/QA.
+
+Classify exactly:
+
+```text
+NO_UPDATE_REQUIRED
+UPDATE_REQUIRED
+```
+
+Do not infer an update merely because code, specs, or an archive exists.
+
+## Authority and lifecycle safeguards
+
+Knowledge Consolidation never automatically:
+
+- approves a Product Decision;
+- changes a durable architecture/security/runtime/data boundary;
+- changes ownership, roles, permissions, contracts, or APIs;
+- promotes Implementation, Environment, Production Readiness, External
+  Dependency, or another lifecycle value;
+- rewrites normative specs;
+- resolves `NEEDS REVIEW` by assumption.
+
+Any such need returns to its own authority/review process.
+
+## No-update path
+
+For `NO_UPDATE_REQUIRED`, record in Gate 3:
+
+```text
+Knowledge consolidation: NO_UPDATE_REQUIRED
+Reason:
+Sources inspected:
+Workflow status: DONE
+```
+
+Then classify `RELEASE_FOLLOW_UP` as `NOT_REQUIRED`, `REQUIRED`, or `UNKNOWN`.
+
+## Update-required path
+
+Inherit the task's collaboration mode and bounded completion scope under
+[the delegated-review policy](YUTA_AUTOMATED_CHANGE_WORKFLOW.md#task-collaboration-and-delegated-review).
+Both Human collaboration modes (`HUMAN_COLLABORATION` and `HUMAN_CT_BRIDGE`)
+require the actual current-user Knowledge Review decision.
+`CODEX_ONLY` and `CT_BRIDGE` require a fresh, separate read-only reviewer with
+the exact proposed diff and target hashes. Neither the author, CT advice nor
+the earlier Gate 3 verdict may approve this new diff. Independent review may
+reconcile completed evidence only within the recorded full-completion scope;
+it cannot approve new Product Intent or change a protected boundary.
+
+Do not edit canonical knowledge. Create:
+
+```text
+docs/reviews/<change-name>/04-knowledge-consolidation-review.md
+```
+
+The packet includes:
+
+- exact completed-change evidence and reason for updating knowledge;
+- exact target files;
+- authority classification for every proposed edit;
+- exact proposed diff or replacement text;
+- SHA-256 hashes of current target files and exact proposed-diff bytes;
+- confirmation that no unapproved Product Decision, durable boundary,
+  ownership/permission, lifecycle/readiness, or normative-spec change occurs;
+- `Review status: AWAITING_HUMAN_REVIEW` in Human mode, or
+  `AWAITING_INDEPENDENT_REVIEW` in a delegated mode.
+
+Record the successful finish/archive outcome and archive location plus
+`Workflow status: AWAITING_KNOWLEDGE_REVIEW` in Gate 3. Stop for Human review
+in Human mode; obtain independent review in a delegated mode. While the exact
+review is pending or blocked, the repository workflow is not `DONE`.
+
+## Approved knowledge update
+
+Resume `$yuta-finish-change` against the archive location recorded by Gate 3;
+never recreate an active change. Require valid mode-defined Knowledge Review
+approval for the exact packet, diff and current target hashes.
+
+This is Branch B — archived Knowledge Review resume. Before applying, require
+all of the following:
+
+- Gate 3 records `Review status: APPROVED`.
+- Gate 3 records successful finish/archive with `Finish outcome: COMPLETED`
+  and the exact archive location.
+- Gate 3 records `Workflow status: AWAITING_KNOWLEDGE_REVIEW`.
+- No active change exists at the resolved active-change path.
+- The recorded archive exists and retains the completed-change evidence.
+- `04-knowledge-consolidation-review.md` exists with the mode-defined pending
+  status, or a valid independently `APPROVED` packet in a delegated mode.
+- The current user explicitly approves the exact Knowledge Review packet and
+  proposed documentation diff in Human mode, or a fresh independent verdict
+  approves it within the actual recorded full-completion delegation.
+
+Branch B checks only the Knowledge Review target path set, target hashes,
+proposed-diff hash, and actual mode-defined approval evidence. It does not reopen or rerun
+Gate 3 approval, active-change integrity checks, sync, or archive; historical
+Gate 3 and sync/archive authorization do not authorize the documentation edit.
+
+Recompute the complete target path set, target-file hashes,
+and proposed-diff hash. Any drift changes the packet to
+`INVALIDATED_BY_ARTIFACT_CHANGE` and stops without editing.
+
+Apply only the approved diff. Run targeted formatting, `pnpm docs:check`, and
+`pnpm architecture:check`; add checks only when the approved edit makes them
+applicable. Record applied paths, post-apply hashes, commands/results, and
+completion time in the packet and Gate 3, then set `Workflow status: DONE`.
+
+## Operational separation
+
+After `DONE`, report any separate release need:
+
+```text
+RELEASE_FOLLOW_UP: NOT_REQUIRED | REQUIRED | UNKNOWN
+```
+
+When required, identify runtime/environment, deployment/readiness evidence, and
+post-deploy verification. Knowledge Consolidation never deploys:
+
+```text
+IMPLEMENTED != PRODUCTION_ENABLED
+```

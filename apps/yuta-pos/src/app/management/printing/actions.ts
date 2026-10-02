@@ -2,6 +2,7 @@
 
 import {
   printJobCommandSchema,
+  updateLocalPrintSettingsInputSchema,
   type PrintJobCommand,
 } from '@yuta/contracts/local-pos';
 import { revalidatePath } from 'next/cache';
@@ -14,6 +15,7 @@ import { requireLocalManagementCredentials } from '../../../server/local-managem
 export type PrintingActionState = {
   error: string | null;
   success: string | null;
+  recovery?: 'refresh';
 };
 
 export async function runPrintJobCommandAction(
@@ -63,10 +65,53 @@ export async function failPrintJobAction(
   }
 }
 
+export async function savePrintSettingsAction(
+  _previousState: PrintingActionState,
+  formData: FormData,
+): Promise<PrintingActionState> {
+  const input = updateLocalPrintSettingsInputSchema.safeParse({
+    kitchenEnabled: formData.get('kitchenEnabled'),
+    counterEnabled: formData.get('counterEnabled'),
+    kitchenCopies: formData.get('kitchenCopies'),
+    counterCopies: formData.get('counterCopies'),
+    fontSizePreset: formData.get('fontSizePreset'),
+    topPaddingLines: formData.get('topPaddingLines'),
+    leftPaddingChars: formData.get('leftPaddingChars'),
+    bottomPaddingLines: formData.get('bottomPaddingLines'),
+  });
+  if (!input.success) return validationError();
+
+  try {
+    const { token } = await requireLocalManagementCredentials();
+    await siteAgentClient.updatePrintSettings(token, input.data);
+    revalidatePath('/management/printing');
+    return { error: null, success: 'Paramètres d’impression enregistrés.' };
+  } catch (error: unknown) {
+    return toActionError(error);
+  }
+}
+
+export async function createTestPrintJobAction(
+  _previousState: PrintingActionState,
+): Promise<PrintingActionState> {
+  try {
+    const { token } = await requireLocalManagementCredentials();
+    await siteAgentClient.createTestPrintJob(token);
+    revalidatePath('/management/printing');
+    return {
+      error: null,
+      success: 'Tests Cuisine et BAR ajoutés à la file d’impression.',
+    };
+  } catch (error: unknown) {
+    return toActionError(error);
+  }
+}
+
 function successMessage(action: PrintJobCommand['action']): string {
   if (action === 'mark_printing') return 'Impression démarrée.';
   if (action === 'mark_printed') return 'Ticket marqué comme imprimé.';
   if (action === 'retry') return 'Ticket remis en attente.';
+  if (action === 'reprint') return 'Ticket remis en attente pour réimpression.';
   return 'État d’impression mis à jour.';
 }
 
@@ -83,10 +128,15 @@ function toActionError(error: unknown): PrintingActionState {
       return {
         error: 'Ce ticket a déjà changé d’état. Rechargez la page.',
         success: null,
+        recovery: 'refresh',
       };
     }
     if (error.code === 'PRINT_JOB_NOT_FOUND') {
-      return { error: 'Ce ticket n’existe plus.', success: null };
+      return {
+        error: 'Ce ticket n’existe plus.',
+        success: null,
+        recovery: 'refresh',
+      };
     }
     return { error: error.message, success: null };
   }

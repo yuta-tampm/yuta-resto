@@ -12,6 +12,10 @@ export const kitchenStationEnum = pgEnum('kitchen_station', [
   'dessert',
   'none',
 ]);
+export const itemOrderingPolicyEnum = pgEnum('item_ordering_policy', [
+  'merge',
+  'separate',
+]);
 export const orderTypeEnum = pgEnum('order_type', [
   'dine_in',
   'takeaway',

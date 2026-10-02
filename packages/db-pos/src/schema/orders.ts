@@ -35,6 +35,11 @@ export type ItemVariantSnapshot = {
   quantity: number;
 };
 
+export type AllergenSnapshot = {
+  code: string;
+  labelSnapshot: string;
+};
+
 const createdAt = () =>
   timestamp('created_at', { withTimezone: true }).defaultNow().notNull();
 const updatedAt = () =>
@@ -77,6 +82,7 @@ export const orders = pgTable(
   (table) => [
     uniqueIndex('orders_order_number_unique_idx').on(table.orderNumber),
     index('orders_status_idx').on(table.status),
+    index('orders_status_paid_at_idx').on(table.status, table.paidAt),
     index('orders_created_at_idx').on(table.createdAt),
     index('orders_created_by_idx').on(table.createdBy),
     check(
@@ -118,6 +124,10 @@ export const orderItems = pgTable(
     hasAllergy: boolean('has_allergy').default(false).notNull(),
     allergenCodes: jsonb('allergen_codes')
       .$type<string[]>()
+      .default([])
+      .notNull(),
+    selectedAllergens: jsonb('selected_allergens')
+      .$type<AllergenSnapshot[]>()
       .default([])
       .notNull(),
     allergySeverity: allergySeverityEnum('allergy_severity'),

@@ -3,6 +3,7 @@ import type {
   FeedbackStatus,
   PublicFeedbackSubmission,
 } from '@yuta/contracts/reputation';
+import { projectPublicReputationReviewSocialLinks } from '@yuta/contracts/reputation';
 import type { AssignableReputationUser } from '@yuta/contracts/cloud-admin';
 import type { PublicTenantContext, TenantContext } from '@yuta/tenant';
 import {
@@ -12,8 +13,11 @@ import {
   desc,
   eq,
   gte,
+  getTableColumns,
+  gt,
   ilike,
   inArray,
+  isNull,
   or,
   sql,
 } from 'drizzle-orm';
@@ -25,6 +29,7 @@ import {
   feedbackInternalNotes,
   feedbackItems,
   feedbackReplies,
+  googleReviewCache,
   reputationAuditEvents,
   reputationConnectors,
   reputationSettings,
@@ -34,6 +39,15 @@ import {
 } from './schema';
 
 type DbClient = CloudDatabaseClient;
+
+export type FeedbackScopeOptions = {
+  requiredSource?: 'GOOGLE';
+  statuses?: readonly FeedbackStatus[];
+  scopedCounters?: boolean;
+  attentionStatuses?: readonly FeedbackStatus[];
+  now?: Date;
+  workIds?: readonly string[];
+};
 
 export type ReputationRepositoryErrorCode =
   | 'FEEDBACK_NOT_FOUND'
@@ -153,15 +167,19 @@ export async function findPublicFeedbackConfiguration(
     .limit(1);
   if (!establishment) return null;
 
+  const safeLinks = projectPublicReputationReviewSocialLinks({
+    googleReviewUrl: result.googleReviewUrl,
+    facebookReviewUrl: result.facebookReviewUrl,
+    instagramUrl: result.instagramUrl,
+  });
+
   return {
     organizationId: result.organizationId,
     establishmentId: result.establishmentId,
     establishmentName: establishment.name,
     slug: result.publicFeedbackSlug,
     enabled: result.publicFeedbackEnabled,
-    googleReviewUrl: result.googleReviewUrl,
-    facebookReviewUrl: result.facebookReviewUrl,
-    instagramUrl: result.instagramUrl,
+    ...safeLinks,
   };
 }
 
@@ -271,20 +289,136 @@ function feedbackVisibilityCondition(context: TenantContext) {
     : undefined;
 }
 
+function feedbackScopeCondition(
+  context: TenantContext,
+  establishmentId: string,
+  requiredSource?: 'GOOGLE',
+) {
+  return and(
+    eq(feedbackItems.organizationId, context.organizationId),
+    eq(feedbackItems.establishmentId, establishmentId),
+    feedbackVisibilityCondition(context),
+    requiredSource ? eq(feedbackItems.source, requiredSource) : undefined,
+  );
+}
+
+function googleConnectorJoinCondition() {
+  return and(
+    eq(reputationConnectors.organizationId, feedbackItems.organizationId),
+    eq(reputationConnectors.establishmentId, feedbackItems.establishmentId),
+    eq(reputationConnectors.provider, 'GOOGLE'),
+    eq(reputationConnectors.status, 'CONNECTED'),
+  );
+}
+function googleCacheJoinCondition(now: Date) {
+  return and(
+    eq(feedbackItems.googleImporterOwned, true),
+    eq(googleReviewCache.organizationId, feedbackItems.organizationId),
+    eq(googleReviewCache.establishmentId, feedbackItems.establishmentId),
+    eq(googleReviewCache.feedbackItemId, feedbackItems.id),
+    eq(googleReviewCache.connectorId, reputationConnectors.id),
+    eq(
+      googleReviewCache.bindingGeneration,
+      reputationConnectors.bindingGeneration,
+    ),
+    eq(
+      googleReviewCache.externalLocationId,
+      reputationConnectors.externalLocationId,
+    ),
+    gt(googleReviewCache.referenceExpiresAt, now),
+  );
+}
+function googleFeedbackProjection(now: Date) {
+  const contentEligible = and(
+    gt(googleReviewCache.expiresAt, now),
+    isNull(googleReviewCache.contentClearedAt),
+  );
+  return {
+    authorName: sql<
+      string | null
+    >`case when ${feedbackItems.googleImporterOwned} then case when ${contentEligible} then ${googleReviewCache.authorName} else null end else ${feedbackItems.authorName} end`,
+    authorAvatarUrl: sql<
+      string | null
+    >`case when ${feedbackItems.googleImporterOwned} then null else ${feedbackItems.authorAvatarUrl} end`,
+    rating: sql<
+      number | null
+    >`case when ${feedbackItems.googleImporterOwned} then case when ${contentEligible} then ${googleReviewCache.rating} else null end else ${feedbackItems.rating} end`,
+    content: sql<
+      string | null
+    >`case when ${feedbackItems.googleImporterOwned} then case when ${contentEligible} then ${googleReviewCache.content} else null end else ${feedbackItems.content} end`,
+    publishedAt:
+      sql<Date | null>`case when ${feedbackItems.googleImporterOwned} then case when ${contentEligible} then ${googleReviewCache.providerCreatedAt} else null end else ${feedbackItems.publishedAt} end`.mapWith(
+        feedbackItems.publishedAt,
+      ),
+    externalUrl: sql<
+      string | null
+    >`case when ${feedbackItems.googleImporterOwned} then null else ${feedbackItems.externalUrl} end`,
+    googleContentAvailability: sql<
+      'available' | 'unavailable' | 'legacy' | 'not_applicable'
+    >`case when ${feedbackItems.source} <> 'GOOGLE' then 'not_applicable' when not ${feedbackItems.googleImporterOwned} then 'legacy' when ${contentEligible} then 'available' else 'unavailable' end`,
+    googleReviewChanged: sql<boolean>`case when ${feedbackItems.googleImporterOwned} and ${contentEligible} then ${googleReviewCache.needsReview} else false end`,
+    canRecoverReference: sql<boolean>`${feedbackItems.googleImporterOwned} and ${googleReviewCache.id} is not null`,
+    remoteReplyContent: sql<
+      string | null
+    >`case when ${feedbackItems.googleImporterOwned} and ${contentEligible} then ${googleReviewCache.remoteReplyContent} else null end`,
+    remoteReplyUpdatedAt:
+      sql<Date | null>`case when ${feedbackItems.googleImporterOwned} and ${contentEligible} then ${googleReviewCache.remoteReplyUpdatedAt} else null end`.mapWith(
+        googleReviewCache.remoteReplyUpdatedAt,
+      ),
+    remoteReplyStatus: sql<
+      string | null
+    >`case when ${feedbackItems.googleImporterOwned} and ${contentEligible} then ${googleReviewCache.remoteReplyStatus} else null end`,
+  };
+}
+function withRemoteReply<
+  T extends {
+    remoteReplyContent: string | null;
+    remoteReplyUpdatedAt: Date | null;
+    remoteReplyStatus: string | null;
+  },
+>(row: T) {
+  const {
+    remoteReplyContent,
+    remoteReplyUpdatedAt,
+    remoteReplyStatus,
+    ...record
+  } = row;
+  return {
+    ...record,
+    remoteReply:
+      remoteReplyContent === null
+        ? null
+        : {
+            content: remoteReplyContent,
+            updatedAt: remoteReplyUpdatedAt,
+            status: remoteReplyStatus,
+          },
+  };
+}
+
 export async function listFeedback(
   repositoryDb: DbClient,
   context: TenantContext,
   query: FeedbackListQuery,
+  options: FeedbackScopeOptions = {},
 ) {
   const establishmentId = requireAdminEstablishment(context);
+  const now = options.now ?? new Date();
+  const projection = googleFeedbackProjection(now);
   const offset = (query.page - 1) * query.pageSize;
   const filters = [
-    eq(feedbackItems.organizationId, context.organizationId),
-    eq(feedbackItems.establishmentId, establishmentId),
-    feedbackVisibilityCondition(context),
-    query.source ? eq(feedbackItems.source, query.source) : undefined,
+    feedbackScopeCondition(context, establishmentId, options.requiredSource),
+    options.workIds
+      ? inArray(feedbackItems.id, [...options.workIds])
+      : undefined,
+    !options.requiredSource && query.source
+      ? eq(feedbackItems.source, query.source)
+      : undefined,
+    options.statuses
+      ? inArray(feedbackItems.status, [...options.statuses])
+      : undefined,
     query.status ? eq(feedbackItems.status, query.status) : undefined,
-    query.rating ? eq(feedbackItems.rating, query.rating) : undefined,
+    query.rating ? eq(projection.rating, query.rating) : undefined,
     query.sentiment ? eq(feedbackItems.sentiment, query.sentiment) : undefined,
     query.urgency ? eq(feedbackItems.urgency, query.urgency) : undefined,
     query.assignedTo
@@ -292,8 +426,8 @@ export async function listFeedback(
       : undefined,
     query.search
       ? or(
-          ilike(feedbackItems.authorName, `%${query.search}%`),
-          ilike(feedbackItems.content, `%${query.search}%`),
+          ilike(projection.authorName, `%${query.search}%`),
+          ilike(projection.content, `%${query.search}%`),
         )
       : undefined,
     query.hasIncident === true ? sql`false` : undefined,
@@ -303,9 +437,9 @@ export async function listFeedback(
     query.sort === 'oldest'
       ? asc(feedbackItems.receivedAt)
       : query.sort === 'rating_asc'
-        ? asc(feedbackItems.rating)
+        ? asc(projection.rating)
         : query.sort === 'rating_desc'
-          ? desc(feedbackItems.rating)
+          ? desc(projection.rating)
           : query.sort === 'urgency_desc'
             ? sql`case ${feedbackItems.urgency}
                 when 'CRITICAL' then 4
@@ -317,6 +451,7 @@ export async function listFeedback(
               ? sql`case when not exists (
                   select 1 from ${feedbackReplies}
                   where "feedback_replies"."feedback_item_id" = "feedback_items"."id"
+                  and "feedback_replies"."organization_id" = "feedback_items"."organization_id"
                   and "feedback_replies"."status" = 'PUBLISHED'
                 ) then 0 else 1 end asc, ${feedbackItems.receivedAt} desc`
               : desc(feedbackItems.receivedAt);
@@ -326,21 +461,18 @@ export async function listFeedback(
       id: feedbackItems.id,
       source: feedbackItems.source,
       type: feedbackItems.type,
-      authorName: feedbackItems.authorName,
-      authorAvatarUrl: feedbackItems.authorAvatarUrl,
-      rating: feedbackItems.rating,
-      content: feedbackItems.content,
+      ...projection,
       sentiment: feedbackItems.sentiment,
       urgency: feedbackItems.urgency,
       status: feedbackItems.status,
       assignedToUserId: feedbackItems.assignedToUserId,
-      publishedAt: feedbackItems.publishedAt,
       receivedAt: feedbackItems.receivedAt,
       incidentId: sql<string | null>`null`,
       replyId: sql<string | null>`(
         select ${feedbackReplies.id}
         from ${feedbackReplies}
         where "feedback_replies"."feedback_item_id" = "feedback_items"."id"
+        and "feedback_replies"."organization_id" = "feedback_items"."organization_id"
         and "feedback_replies"."status" <> 'DELETED'
         order by ${feedbackReplies.createdAt} desc
         limit 1
@@ -349,12 +481,15 @@ export async function listFeedback(
         select ${feedbackReplies.status}::text
         from ${feedbackReplies}
         where "feedback_replies"."feedback_item_id" = "feedback_items"."id"
+        and "feedback_replies"."organization_id" = "feedback_items"."organization_id"
         and "feedback_replies"."status" <> 'DELETED'
         order by ${feedbackReplies.createdAt} desc
         limit 1
       )`,
     })
     .from(feedbackItems)
+    .leftJoin(reputationConnectors, googleConnectorJoinCondition())
+    .leftJoin(googleReviewCache, googleCacheJoinCondition(now))
     .where(where)
     .orderBy(orderBy)
     .limit(query.pageSize)
@@ -363,6 +498,8 @@ export async function listFeedback(
   const [totalResult] = await repositoryDb
     .select({ value: count() })
     .from(feedbackItems)
+    .leftJoin(reputationConnectors, googleConnectorJoinCondition())
+    .leftJoin(googleReviewCache, googleCacheJoinCondition(now))
     .where(where);
 
   const [counters] = await repositoryDb
@@ -373,6 +510,7 @@ export async function listFeedback(
         where not exists (
           select 1 from ${feedbackReplies}
           where "feedback_replies"."feedback_item_id" = "feedback_items"."id"
+          and "feedback_replies"."organization_id" = "feedback_items"."organization_id"
           and "feedback_replies"."status" = 'PUBLISHED'
         )
       )`,
@@ -380,17 +518,41 @@ export async function listFeedback(
       withIncident: sql<number>`0`,
     })
     .from(feedbackItems)
+    .leftJoin(reputationConnectors, googleConnectorJoinCondition())
+    .leftJoin(googleReviewCache, googleCacheJoinCondition(now))
     .where(
-      and(
-        eq(feedbackItems.organizationId, context.organizationId),
-        eq(feedbackItems.establishmentId, establishmentId),
-        feedbackVisibilityCondition(context),
-      ),
+      options.scopedCounters
+        ? where
+        : and(
+            feedbackScopeCondition(
+              context,
+              establishmentId,
+              options.requiredSource,
+            ),
+            !options.requiredSource && query.source
+              ? eq(feedbackItems.source, query.source)
+              : undefined,
+          ),
     );
+
+  const [attentionResult] = options.attentionStatuses?.length
+    ? await repositoryDb
+        .select({ value: count() })
+        .from(feedbackItems)
+        .leftJoin(reputationConnectors, googleConnectorJoinCondition())
+        .leftJoin(googleReviewCache, googleCacheJoinCondition(now))
+        .where(
+          and(
+            where,
+            inArray(feedbackItems.status, [...options.attentionStatuses]),
+          ),
+        )
+    : [];
 
   const totalItems = totalResult?.value ?? 0;
   return {
-    items: rows,
+    items: rows.map(withRemoteReply),
+    attentionCount: attentionResult?.value ?? 0,
     pagination: {
       page: query.page,
       pageSize: query.pageSize,
@@ -411,17 +573,26 @@ export async function findFeedbackDetail(
   repositoryDb: DbClient,
   context: TenantContext,
   feedbackId: string,
+  options: FeedbackScopeOptions = {},
 ) {
   const establishmentId = requireAdminEstablishment(context);
+  const now = options.now ?? new Date();
   const [feedback] = await repositoryDb
-    .select()
+    .select({
+      ...getTableColumns(feedbackItems),
+      ...googleFeedbackProjection(now),
+    })
     .from(feedbackItems)
+    .leftJoin(reputationConnectors, googleConnectorJoinCondition())
+    .leftJoin(googleReviewCache, googleCacheJoinCondition(now))
     .where(
       and(
         eq(feedbackItems.id, feedbackId),
-        eq(feedbackItems.organizationId, context.organizationId),
-        eq(feedbackItems.establishmentId, establishmentId),
-        feedbackVisibilityCondition(context),
+        feedbackScopeCondition(
+          context,
+          establishmentId,
+          options.requiredSource,
+        ),
       ),
     )
     .limit(1);
@@ -431,17 +602,27 @@ export async function findFeedbackDetail(
     repositoryDb
       .select()
       .from(feedbackReplies)
-      .where(eq(feedbackReplies.feedbackItemId, feedback.id))
+      .where(
+        and(
+          eq(feedbackReplies.organizationId, context.organizationId),
+          eq(feedbackReplies.feedbackItemId, feedback.id),
+        ),
+      )
       .orderBy(desc(feedbackReplies.createdAt)),
     repositoryDb
       .select()
       .from(feedbackInternalNotes)
-      .where(eq(feedbackInternalNotes.feedbackItemId, feedback.id))
+      .where(
+        and(
+          eq(feedbackInternalNotes.organizationId, context.organizationId),
+          eq(feedbackInternalNotes.feedbackItemId, feedback.id),
+        ),
+      )
       .orderBy(desc(feedbackInternalNotes.createdAt)),
   ]);
 
   return {
-    ...feedback,
+    ...withRemoteReply(feedback),
     analysis: null as {
       summary: string;
       topics: string[];
@@ -557,6 +738,7 @@ export async function upsertGoogleReputationConnectorCredentials(
         externalAccountId: '',
         externalLocationId: '',
         status: 'CONNECTING',
+        bindingGeneration: 1,
         encryptedAccessToken: input.encryptedAccessToken,
         encryptedRefreshToken: input.encryptedRefreshToken ?? null,
         tokenExpiresAt: input.tokenExpiresAt,
@@ -571,6 +753,7 @@ export async function upsertGoogleReputationConnectorCredentials(
         ],
         set: {
           status: 'CONNECTING',
+          bindingGeneration: sql`${reputationConnectors.bindingGeneration} + 1`,
           encryptedAccessToken: input.encryptedAccessToken,
           ...(input.encryptedRefreshToken
             ? { encryptedRefreshToken: input.encryptedRefreshToken }
@@ -650,6 +833,7 @@ export async function selectGoogleReputationLocation(
         externalAccountId: input.externalAccountId,
         externalLocationId: input.externalLocationId,
         status: 'CONNECTED',
+        bindingGeneration: sql`${reputationConnectors.bindingGeneration} + 1`,
         lastSyncError: null,
       })
       .where(
@@ -692,6 +876,7 @@ export async function updateFeedback(
     assignedToUserId?: string | null;
     actorUserId: string;
   },
+  options: FeedbackScopeOptions = {},
 ) {
   const establishmentId = requireAdminEstablishment(context);
   return repositoryDb.transaction(async (transaction) => {
@@ -701,12 +886,15 @@ export async function updateFeedback(
       .where(
         and(
           eq(feedbackItems.id, input.feedbackId),
-          eq(feedbackItems.organizationId, context.organizationId),
-          eq(feedbackItems.establishmentId, establishmentId),
-          feedbackVisibilityCondition(context),
+          feedbackScopeCondition(
+            context,
+            establishmentId,
+            options.requiredSource,
+          ),
         ),
       )
-      .limit(1);
+      .limit(1)
+      .for('update');
     if (!feedback) {
       throw new ReputationRepositoryError(
         'Feedback not found.',
@@ -745,8 +933,23 @@ export async function updateFeedback(
           ? { assignedToUserId: input.assignedToUserId }
           : {}),
       })
-      .where(eq(feedbackItems.id, feedback.id))
+      .where(
+        and(
+          eq(feedbackItems.id, feedback.id),
+          feedbackScopeCondition(
+            context,
+            establishmentId,
+            options.requiredSource,
+          ),
+        ),
+      )
       .returning();
+    if (!updated) {
+      throw new ReputationRepositoryError(
+        'Feedback not found.',
+        'FEEDBACK_NOT_FOUND',
+      );
+    }
 
     await transaction.insert(reputationAuditEvents).values({
       id: uuidv7(),
@@ -775,6 +978,7 @@ export async function saveFeedbackReplyDraft(
     content: string;
     actorUserId: string;
   },
+  options: FeedbackScopeOptions = {},
 ) {
   const establishmentId = requireAdminEstablishment(context);
   return repositoryDb.transaction(async (transaction) => {
@@ -784,12 +988,15 @@ export async function saveFeedbackReplyDraft(
       .where(
         and(
           eq(feedbackItems.id, input.feedbackId),
-          eq(feedbackItems.organizationId, context.organizationId),
-          eq(feedbackItems.establishmentId, establishmentId),
-          feedbackVisibilityCondition(context),
+          feedbackScopeCondition(
+            context,
+            establishmentId,
+            options.requiredSource,
+          ),
         ),
       )
-      .limit(1);
+      .limit(1)
+      .for('update');
     if (!feedback) {
       throw new ReputationRepositoryError(
         'Feedback not found.',
@@ -808,6 +1015,7 @@ export async function saveFeedbackReplyDraft(
       .from(feedbackReplies)
       .where(
         and(
+          eq(feedbackReplies.organizationId, context.organizationId),
           eq(feedbackReplies.feedbackItemId, feedback.id),
           inArray(feedbackReplies.status, ['DRAFT', 'READY', 'FAILED']),
         ),
@@ -825,7 +1033,13 @@ export async function saveFeedbackReplyDraft(
             errorCode: null,
             errorMessage: null,
           })
-          .where(eq(feedbackReplies.id, existingDraft.id))
+          .where(
+            and(
+              eq(feedbackReplies.id, existingDraft.id),
+              eq(feedbackReplies.organizationId, context.organizationId),
+              eq(feedbackReplies.feedbackItemId, feedback.id),
+            ),
+          )
           .returning()
       : await transaction
           .insert(feedbackReplies)
@@ -841,10 +1055,32 @@ export async function saveFeedbackReplyDraft(
           })
           .returning();
 
-    await transaction
+    if (!reply) {
+      throw new ReputationRepositoryError(
+        'Feedback not found.',
+        'FEEDBACK_NOT_FOUND',
+      );
+    }
+    const [updated] = await transaction
       .update(feedbackItems)
       .set({ status: 'DRAFTED' })
-      .where(eq(feedbackItems.id, feedback.id));
+      .where(
+        and(
+          eq(feedbackItems.id, feedback.id),
+          feedbackScopeCondition(
+            context,
+            establishmentId,
+            options.requiredSource,
+          ),
+        ),
+      )
+      .returning({ id: feedbackItems.id });
+    if (!updated) {
+      throw new ReputationRepositoryError(
+        'Feedback not found.',
+        'FEEDBACK_NOT_FOUND',
+      );
+    }
     await transaction.insert(reputationAuditEvents).values({
       id: uuidv7(),
       organizationId: context.organizationId,
@@ -870,6 +1106,7 @@ export async function createFeedbackInternalNote(
     content: string;
     actorUserId: string;
   },
+  options: FeedbackScopeOptions = {},
 ) {
   const establishmentId = requireAdminEstablishment(context);
   return repositoryDb.transaction(async (transaction) => {
@@ -879,12 +1116,15 @@ export async function createFeedbackInternalNote(
       .where(
         and(
           eq(feedbackItems.id, input.feedbackId),
-          eq(feedbackItems.organizationId, context.organizationId),
-          eq(feedbackItems.establishmentId, establishmentId),
-          feedbackVisibilityCondition(context),
+          feedbackScopeCondition(
+            context,
+            establishmentId,
+            options.requiredSource,
+          ),
         ),
       )
-      .limit(1);
+      .limit(1)
+      .for('update');
     if (!feedback) {
       throw new ReputationRepositoryError(
         'Feedback not found.',

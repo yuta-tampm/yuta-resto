@@ -1,0 +1,592 @@
+{
+  "change": "formalites-persistent-draft-foundation",
+  "schema": "yuta-spec-driven",
+  "created": "2026-09-05T14:12:38.4271602+02:00",
+  "reviewStatus": "APPROVED",
+  "approvalSource": "explicit current-user instruction",
+  "approvalRecordedBy": "Codex workflow",
+  "approved": "2026-09-05T14:27:34.3530756+02:00",
+  "syncAuthorization": "AUTHORIZED_BY_CURRENT_USER",
+  "finishOutcome": "COMPLETED",
+  "productionAuthorization": "NOT_AUTHORIZED",
+  "head": "07d9d6d88e07f6a819c7894ef2e35f79d1eb32fa",
+  "verdicts": {
+    "technicalImplementationCompliance": "PASS",
+    "verify": "PASS",
+    "qa": "PASS",
+    "uiAffecting": true,
+    "browserQaRequired": true,
+    "tasks": "31/31",
+    "gate3SubstantiveAssessment": "PRESERVED",
+    "attributionIntegrityRevalidation": "PASS",
+    "substantiveEvidenceRerun": false
+  },
+  "aggregateSource": "docs/reviews/formalites-persistent-draft-foundation/03-implementation.diff",
+  "aggregateSha256": "73688e1e1ca8d02669bf71b07c23401e1fb344b9d1ab3280242350818aaedf9f",
+  "aggregateBytes": 497444,
+  "aggregateSections": 28,
+  "aggregateDefinition": "SHA-256 of one exact deterministic zero-context full attributed implementation/page-pack diff generated in a disposable Git repository. Its baseline commit contains exact proven pre-change bytes for 12 tracked paths; 16 new paths are intent-to-add. Current bytes are overlaid byte-for-byte, paths are sorted, and git diff --binary --unified=0 --no-ext-diff is used. Review and QA evidence are excluded.",
+  "implementationPaths": [
+    "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/[employeeId]/actions.ts",
+    "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/[employeeId]/page.tsx",
+    "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-connected-read-prototype.tsx",
+    "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-workspace.tsx",
+    "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_lib/cdi-draft-connected-read-model.ts",
+    "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_lib/cdi-draft-workspace-state.ts",
+    "apps/backoffice/test/formalites-persistent-draft-actions.test.ts",
+    "apps/backoffice/test/formalites-persistent-draft-component.test.tsx",
+    "apps/backoffice/test/formalites-persistent-draft-state.test.ts",
+    "docs/ui/pages/backoffice-equipe-formalites-personnel/ACCEPTANCE_CHECKLIST.md",
+    "docs/ui/pages/backoffice-equipe-formalites-personnel/DATA_AND_INTERACTION_SPEC.md",
+    "docs/ui/pages/backoffice-equipe-formalites-personnel/PRODUCT_SCOPE.md",
+    "docs/ui/pages/backoffice-equipe-formalites-personnel/README.md",
+    "docs/ui/pages/backoffice-equipe-formalites-personnel/UI_SPEC.md",
+    "packages/contracts/src/formalites/index.ts",
+    "packages/contracts/src/index.ts",
+    "packages/contracts/test/formalites.test.ts",
+    "packages/db-cloud/drizzle/0018_elite_hardball.sql",
+    "packages/db-cloud/drizzle/meta/0018_snapshot.json",
+    "packages/db-cloud/drizzle/meta/_journal.json",
+    "packages/db-cloud/src/formalites-personnel-draft-domain.ts",
+    "packages/db-cloud/src/formalites-personnel-draft-repository.ts",
+    "packages/db-cloud/src/index.ts",
+    "packages/db-cloud/src/schema/formalites.ts",
+    "packages/db-cloud/src/schema/index.ts",
+    "packages/db-cloud/test/formalites-personnel-draft-domain.test.ts",
+    "packages/db-cloud/test/formalites-personnel-draft-repository.integration.test.ts",
+    "packages/db-cloud/test/formalites-personnel-draft-schema.integration.test.ts"
+  ],
+  "implementationFiles": [
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/[employeeId]/actions.ts",
+      "sha256": "41d0ed0dbf7bb71e8c0d111e154a1daefc8c86ceb96b744b8bd0282694644b76",
+      "bytes": 4686
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/[employeeId]/page.tsx",
+      "sha256": "f79f9cc3c86cca0dafaaa2bd79f0fb2fad9c28a7d3c7f3e8012940fa50fb8c72",
+      "bytes": 2428
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-connected-read-prototype.tsx",
+      "sha256": "4a7a9272d145e8f887c1a72a4dda0a43773b2713ee7721a7c268f16b21d5e406",
+      "bytes": 1659
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-workspace.tsx",
+      "sha256": "213ed3ea2206a687f6be5264e4e726396d12f5041899930230070ec8d5e4ca28",
+      "bytes": 31959
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_lib/cdi-draft-connected-read-model.ts",
+      "sha256": "bb2679be6919f0af8bd9a9b3a925387cd5031edfa63005a8eddaf5cdee5ddf31",
+      "bytes": 2277
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_lib/cdi-draft-workspace-state.ts",
+      "sha256": "49d62b72661ff2282cd880a0c055db093084e1756ce773102b9089163a504ded",
+      "bytes": 4208
+    },
+    {
+      "path": "apps/backoffice/test/formalites-persistent-draft-actions.test.ts",
+      "sha256": "8702fa3de1821fc6929454a5a5f6bd33dde1f726def74c984b68dac33166c9d9",
+      "bytes": 13566
+    },
+    {
+      "path": "apps/backoffice/test/formalites-persistent-draft-component.test.tsx",
+      "sha256": "92f776df45c52c19d7bdaa190ba9f42e63e87fba2380aab22c925162437f2cc2",
+      "bytes": 10394
+    },
+    {
+      "path": "apps/backoffice/test/formalites-persistent-draft-state.test.ts",
+      "sha256": "3a149cc792cf6295e44b84f26ca00a20a969e583e84cf4d5df0812f2be1ca4ec",
+      "bytes": 6930
+    },
+    {
+      "path": "docs/ui/pages/backoffice-equipe-formalites-personnel/ACCEPTANCE_CHECKLIST.md",
+      "sha256": "8dfe06c11a3c1db078eb58d0261016c6815d8188bceb688c4fd3dc778937b1d6",
+      "bytes": 11062
+    },
+    {
+      "path": "docs/ui/pages/backoffice-equipe-formalites-personnel/DATA_AND_INTERACTION_SPEC.md",
+      "sha256": "3952dc1ad05e8303da133e5ef3f7e2a71452eed780bcdccfe02b62c6dc52e8d1",
+      "bytes": 29565
+    },
+    {
+      "path": "docs/ui/pages/backoffice-equipe-formalites-personnel/PRODUCT_SCOPE.md",
+      "sha256": "c338d12c183bb8f813818f8a98a7df50d98bcffaeeb20db4243827e5aced4023",
+      "bytes": 14398
+    },
+    {
+      "path": "docs/ui/pages/backoffice-equipe-formalites-personnel/README.md",
+      "sha256": "cb1391626ee478bb2ddb6ff31c5d7e38e825c89c875f9a8c835d0b42c53e3a92",
+      "bytes": 19048
+    },
+    {
+      "path": "docs/ui/pages/backoffice-equipe-formalites-personnel/UI_SPEC.md",
+      "sha256": "abb907107354f94caa6b9de8958257c243cde4dc0b08aad54a1697eb0fa610d3",
+      "bytes": 8856
+    },
+    {
+      "path": "packages/contracts/src/formalites/index.ts",
+      "sha256": "cd09c92e05c5e12e74a9c6d7746cf698911c4359c7c8a3ef25521b02bf91cd04",
+      "bytes": 8970
+    },
+    {
+      "path": "packages/contracts/src/index.ts",
+      "sha256": "ce44e688cea68cee2291db00a89207b5ae95086c3ef9de2df649858aa7378a44",
+      "bytes": 338
+    },
+    {
+      "path": "packages/contracts/test/formalites.test.ts",
+      "sha256": "6e27637c05e7c04d9a68d0e621f608267c2aca66d2177f421bfad177a113c772",
+      "bytes": 5453
+    },
+    {
+      "path": "packages/db-cloud/drizzle/0018_elite_hardball.sql",
+      "sha256": "98ab37e9c9b13ebea5503b30f7ace60cc25fd14758cddeb6ef144844ef10cf75",
+      "bytes": 7703
+    },
+    {
+      "path": "packages/db-cloud/drizzle/meta/0018_snapshot.json",
+      "sha256": "07ede7f42b4f1f744e700d5603b6dbfd69d867aefc86d498295251628035e0ee",
+      "bytes": 259922
+    },
+    {
+      "path": "packages/db-cloud/drizzle/meta/_journal.json",
+      "sha256": "04a7ddfe1c91d0acf54eee402d6e2e762780c9a13433c25d37dcc2534ee3e765",
+      "bytes": 2928
+    },
+    {
+      "path": "packages/db-cloud/src/formalites-personnel-draft-domain.ts",
+      "sha256": "117d22ae1f3a5ff92a926a615dd6fae75989e61d0f1d9ef88365b4aba09e1043",
+      "bytes": 4427
+    },
+    {
+      "path": "packages/db-cloud/src/formalites-personnel-draft-repository.ts",
+      "sha256": "d3c371c6e3b22ba4ffa3bccc4cf77f83493ca58bebe8e2a48974ff6b9d054418",
+      "bytes": 30254
+    },
+    {
+      "path": "packages/db-cloud/src/index.ts",
+      "sha256": "4a48127a97360420e60cda9f96fd685ed6634d432308952ca07aa20440d75904",
+      "bytes": 1137
+    },
+    {
+      "path": "packages/db-cloud/src/schema/formalites.ts",
+      "sha256": "bf7be60d7c9957683e84ad990c513e91e023ae1ab8096d8c7e5d50eb8ea694c8",
+      "bytes": 8227
+    },
+    {
+      "path": "packages/db-cloud/src/schema/index.ts",
+      "sha256": "c701826c9712e62958acab13e1a2827951e1cb37f8080f64631d66a0d76e4359",
+      "bytes": 261
+    },
+    {
+      "path": "packages/db-cloud/test/formalites-personnel-draft-domain.test.ts",
+      "sha256": "6d7c6118b47749363fe72be1ffc2f94418a954558f445443b20717c3419cbafd",
+      "bytes": 4598
+    },
+    {
+      "path": "packages/db-cloud/test/formalites-personnel-draft-repository.integration.test.ts",
+      "sha256": "726b6fc077e09cbe679be150f7bdbfdeeccd7ddad48034727f2268b5e11d9861",
+      "bytes": 33247
+    },
+    {
+      "path": "packages/db-cloud/test/formalites-personnel-draft-schema.integration.test.ts",
+      "sha256": "4ae58e5991069b06f6ef81e8e65df2b554506352147cca2bd0afa54f3992cebc",
+      "bytes": 11931
+    }
+  ],
+  "authorityFiles": [
+    {
+      "path": "openspec/changes/archive/2026-09-05-formalites-persistent-draft-foundation/proposal.md",
+      "sha256": "2166d890b0449b63c925c798724e9e66432a8bff5debbccab238851ade73db18",
+      "bytes": 6399
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-05-formalites-persistent-draft-foundation/analysis.md",
+      "sha256": "11f11ee989b339dad2286fd6e2bc34e3119514a55dd4717123bea529a28ad693",
+      "bytes": 58237
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-05-formalites-persistent-draft-foundation/specs/formalites/persistent-draft-foundation/spec.md",
+      "sha256": "c83da9a062dbe6b0e6308f0f9e391dc38e3a6335e9c56560063b4d6742eb0850",
+      "bytes": 32223
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-05-formalites-persistent-draft-foundation/design.md",
+      "sha256": "83585641dc2be89282ad5e810c97e23724572ae6aaebe655637b705bf78d5610",
+      "bytes": 36200
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-05-formalites-persistent-draft-foundation/tasks.md",
+      "sha256": "3088d958c101ae3184638451d3e2cefe1d2c53d7fe2d9c35fe3cac42beca1d35",
+      "bytes": 29206
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/01-analysis-review.md",
+      "sha256": "17bf41fa36705e6ec96c93b08d9a0419aff1c88fb9e1ba84178f9c96f7462815",
+      "bytes": 85064
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/02-specs-review.md",
+      "sha256": "12c341f511e0cbd79e4ee567002bfa0d814fa238c63386c97ea17a06ceaa61b5",
+      "bytes": 65355
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/02b-design-review.md",
+      "sha256": "5f0e6e5f214de8fe322f4f8c952c92f223a205682bcb8bab1553db5fe422d996",
+      "bytes": 26776
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/02c-tasks-review.md",
+      "sha256": "a0dc009f48e8d043098336a0aae49f92d9a4d82bf96d6a01cc1cdf1b3f101316",
+      "bytes": 38915
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/phase-1-review.md",
+      "sha256": "351032cd5ad5bb644ff1f0386b119a2e0ee6e42dff69d63aec4cc46d831151c3",
+      "bytes": 17542
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/phase-2-review.md",
+      "sha256": "f2b9c014b2ffdcd1744275e2a14613707a16127efa6cbcdc7cd1bf1d1676b571",
+      "bytes": 18187
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/phase-3-review.md",
+      "sha256": "fb9047e1f98ed8aedf757d657661585c2d894fe4b69aea6266e69cc80b5f9ccc",
+      "bytes": 20967
+    }
+  ],
+  "evidenceFiles": [
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/03-final-review.md",
+      "sha256": "fb1d21051119c95fb1f7d366418a290a2acc0c4eaadb31ea871a32ecfe6f7333",
+      "bytes": 25449
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/03-technical-compliance-matrix.md",
+      "sha256": "9f3512ac11c1aedee365f50ff4863d752ff922bd607d847c4a31338af22d9520",
+      "bytes": 12517
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/03-implementation.diff",
+      "sha256": "73688e1e1ca8d02669bf71b07c23401e1fb344b9d1ab3280242350818aaedf9f",
+      "bytes": 497444
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/QA_REPORT.md",
+      "sha256": "f23db03ea8090f595eb545936c9047e0acce57a3916821ef1f77cd1c9b20895e",
+      "bytes": 7655
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/screenshot-manifest.md",
+      "sha256": "faa661c8dc75d1f6267f53bf29115f78c02e2408246067e3059b50b2c84e9c21",
+      "bytes": 2939
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/browser-qa.mjs",
+      "sha256": "fc9b69acbfd3dffd5e29982203dc97398f78d9e301d74424df427d1f16791d39",
+      "bytes": 20019
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/browser-qa-results.json",
+      "sha256": "b6794aa5b1273aea32d56092ad3887536052e51978f3e3bf0e6aa6f8f148126d",
+      "bytes": 8437
+    }
+  ],
+  "protectedFiles": [
+    {
+      "path": "apps/backoffice/src/server/auth/formalites.ts",
+      "sha256": "60b1c5369ef3b28af7377c6e8920707e8643f13269a82d192125c009b9333626",
+      "bytes": 630
+    },
+    {
+      "path": "apps/backoffice/src/server/auth/permissions.ts",
+      "sha256": "e3a21cf5b8456a859762d8603500669ead764e3bd43a8ba06a2ad17620014353",
+      "bytes": 6208
+    },
+    {
+      "path": "apps/backoffice/test/formalites-authorization-context.test.ts",
+      "sha256": "af3a2bd48565cec5afb559602626b16c563f21ca3ec660b7943e4e49327f4537",
+      "bytes": 11905
+    },
+    {
+      "path": "apps/backoffice/test/formalites-permissions.test.ts",
+      "sha256": "9e9888461c4154df90802f3d9021956dba3731cd34a9d27aa110d08ba9bc42e6",
+      "bytes": 4258
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/page.tsx",
+      "sha256": "dca3e2bd45570847b95117ffe9c3acc7a332d08dd0a3383f2974d65f34326fe4",
+      "bytes": 1503
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_lib/formalites-read-prototype-runtime.ts",
+      "sha256": "8e68816d2e69b7ef373806a10bc313dd12650b7f651b2a1ff8e7be3b3f99eb50",
+      "bytes": 314
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_lib/cdi-draft-prototype.ts",
+      "sha256": "c186e16f54a16d0447a727583166123df1498f83193efda9b97e258603c574cb",
+      "bytes": 3989
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-readiness-prototype.tsx",
+      "sha256": "89cdfceaa840a0ce2f939aef5f4f77ff1ef8d27b8cb79e5269d3f64e96ea52c1",
+      "bytes": 20600
+    },
+    {
+      "path": "apps/backoffice/src/components/backoffice/backoffice-navigation.ts",
+      "sha256": "6deaa75874a35b114248d349433ab1c71b8e4e788411908786c5e89d6c4d0a97",
+      "bytes": 5907
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/[employeeId]/page.tsx",
+      "sha256": "a4d3aafc557f428d1d40b8d9e3ba6d100f3212154043ac81b4d50fe688630471",
+      "bytes": 2449
+    },
+    {
+      "path": "packages/ui/src/index.ts",
+      "sha256": "ba8a9a3f0b41736294396036dd9fbca4684e3dc7f1123fe10d93245c36ee8f6d",
+      "bytes": 1360
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/01-owner-eligible-no-draft-1440.png",
+      "viewport": "1440x900",
+      "role": "OWNER",
+      "state": "eligible_no_draft",
+      "sha256": "7608b1840c9cef6d7655a0745266df6c4f3c202957950413de85ec33b9c03db2"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/02-created-editable-1024.png",
+      "viewport": "1024x850",
+      "role": "OWNER",
+      "state": "editable_created",
+      "sha256": "c15130afed991f83c3ff434842f1c3aaec86ff05f0a36779f4c71799a9585acb"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/03-reconciliation-required-768.png",
+      "viewport": "768x1024",
+      "role": "OWNER",
+      "state": "reconciliation_required",
+      "sha256": "d007274a39db0c05cb4bc635dd2a3ea93118067cf317aed18c97f4c14e56ea88"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/04-reconciliation-validation-390.png",
+      "viewport": "390x844",
+      "role": "OWNER",
+      "state": "reconciliation_validation_error",
+      "sha256": "83b62f87216f93b03c1d7db19db83ca68c4b2039e660b0b6d2d2ba3b9b894058"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/05-stale-personnel-source-768.png",
+      "viewport": "768x1024",
+      "role": "OWNER",
+      "state": "stale_personnel_source",
+      "sha256": "e0528746fe96f4424bebb7a070d557b8ce69d03fa3aba8c67ee776ef5434f7bc"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/06-stale-draft-1024.png",
+      "viewport": "1024x850",
+      "role": "OWNER",
+      "state": "stale_draft",
+      "sha256": "fe15904521d4f9c6b51476b2585df3510e6d52f91846479a68cc049f42bcc0e0"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/07-recoverable-server-error-1024.png",
+      "viewport": "1024x850",
+      "role": "OWNER",
+      "state": "server_error_recoverable",
+      "sha256": "5a10850d07ff40f5381a75e339602681dad1dec08a6f764f0382bb2999045280"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/08-non-cdi-recovery-390.png",
+      "viewport": "390x844",
+      "role": "OWNER",
+      "state": "ineligible_recovery",
+      "sha256": "5130e1e2f0382ea738a4c52594656c91695a1f1e98ab0941a8c097421c898d82"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/09-abandon-dialog-390.png",
+      "viewport": "390x844",
+      "role": "OWNER",
+      "state": "abandon_dialog_valid_reason",
+      "sha256": "14a5a53fdc918792b2f5ea8651810e43fafb8ab433b0ccd7ae045219ce5af4a9"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/10-abandoned-read-only-768.png",
+      "viewport": "768x1024",
+      "role": "OWNER",
+      "state": "abandoned_read_only",
+      "sha256": "87bc37cc1324c16b0f43328ef6b7093839dc6f1d82b5015a59b8bd3ac59ef689"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/11-replay-conflict-1024.png",
+      "viewport": "1024x850",
+      "role": "OWNER",
+      "state": "replay_conflict",
+      "sha256": "d832ae41de08b72c36574089495cb9cb4db0c46a7a13782882cce3486e45c1a0"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/12-manager-denied-1024.png",
+      "viewport": "1024x850",
+      "role": "MANAGER",
+      "state": "permission_denied",
+      "sha256": "dd500bf6e96d2323038846c25ee1092cd2b01adec2388eeafbf7b321667fe71d"
+    },
+    {
+      "path": "docs/reviews/formalites-persistent-draft-foundation/qa/13-login-recovery-390.png",
+      "viewport": "390x844",
+      "role": "ANONYMOUS",
+      "state": "login_recovery",
+      "sha256": "1698f8551d90520ddadccebafa283a4c380d9af93203e17e405aac1ad5195467"
+    }
+  ],
+  "migration": {
+    "path": "packages/db-cloud/drizzle/0018_elite_hardball.sql",
+    "sha256": "98ab37e9c9b13ebea5503b30f7ace60cc25fd14758cddeb6ef144844ef10cf75",
+    "additiveOnly": true,
+    "olderMigrationModified": false,
+    "productionApplied": false
+  },
+  "formatting": {
+    "scoped": "PASS",
+    "repositoryWide": "FAIL",
+    "preExistingUnrelatedFiles": 62
+  },
+  "boundaries": {
+    "mainSpecSynced": true,
+    "archived": true,
+    "deployed": false,
+    "productionMigration": false,
+    "productionRouteEnabled": false,
+    "cleanupEnabled": false
+  },
+  "finish": {
+    "specs": "synced and validated — formalites/persistent-draft-foundation",
+    "mainSpecPath": "openspec/specs/formalites/persistent-draft-foundation/spec.md",
+    "mainSpecSha256": "b4c8077df69c7da638627836255b0a64a3b9b342751964bebe6860183c1b768e",
+    "mainSpecValidation": "PASS — 11 passed, 0 failed",
+    "archiveLocation": "openspec/changes/archive/2026-09-05-formalites-persistent-draft-foundation",
+    "archivedValidation": "PASS — 12 passed, 0 failed",
+    "allCurrentValidation": "PASS — 12 passed, 0 failed",
+    "completed": "2026-09-05T14:35:22.4536670+02:00",
+    "knowledgeConsolidation": "UPDATE_REQUIRED",
+    "knowledgeReview": "docs/reviews/formalites-persistent-draft-foundation/04-knowledge-consolidation-review.md",
+    "knowledgeReviewStatus": "AWAITING_HUMAN_REVIEW",
+    "knowledgePatch": "docs/reviews/formalites-persistent-draft-foundation/04-proposed-knowledge.patch",
+    "knowledgePatchSha256": "2cafb3ef49d6255d0ba94936cdbe640c95884842c2d929f214b0979717759a40",
+    "workflowStatus": "AWAITING_KNOWLEDGE_REVIEW",
+    "releaseFollowUp": "NOT_REQUIRED"
+  },
+  "aggregateTrackedPaths": 12,
+  "aggregateUntrackedNewPaths": 16,
+  "attributionAudit": {
+    "method": "Exact owning-phase baseline comparison; HEAD only where phase evidence proves the path was clean. Zero-context diff prevents unchanged neighboring content from appearing as an attributed hunk.",
+    "reverseApplyCheck": "PASS",
+    "unrelatedPreExistingAttributed": false,
+    "trackedPaths": [
+      {
+        "path": "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/[employeeId]/page.tsx",
+        "preimageSha256": "2b6df3845dc9061793132939b40200dc7b272861bb764c11f37528ee676606e9",
+        "finalSha256": "f79f9cc3c86cca0dafaaa2bd79f0fb2fad9c28a7d3c7f3e8012940fa50fb8c72",
+        "classification": "CLEAN_AT_HEAD_BEFORE_CHANGE",
+        "source": "owning-phase pre-Apply status plus recorded preimage matching exact HEAD bytes",
+        "hunkScope": "all current delta from exact clean owning-phase baseline"
+      },
+      {
+        "path": "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-connected-read-prototype.tsx",
+        "preimageSha256": "a24be129f95e6e85fcd6ad9324f50163fe76fee2b0cb53cafd0e32f7785e6f95",
+        "finalSha256": "4a7a9272d145e8f887c1a72a4dda0a43773b2713ee7721a7c268f16b21d5e406",
+        "classification": "CLEAN_AT_HEAD_BEFORE_CHANGE",
+        "source": "owning-phase pre-Apply status plus recorded preimage matching exact HEAD bytes",
+        "hunkScope": "all current delta from exact clean owning-phase baseline"
+      },
+      {
+        "path": "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_lib/cdi-draft-connected-read-model.ts",
+        "preimageSha256": "e2037a3bb38432733076231253e20ea3e3bb62ab85c30a7bae4bbb943c994bb4",
+        "finalSha256": "bb2679be6919f0af8bd9a9b3a925387cd5031edfa63005a8eddaf5cdee5ddf31",
+        "classification": "CLEAN_AT_HEAD_BEFORE_CHANGE",
+        "source": "owning-phase pre-Apply status plus recorded preimage matching exact HEAD bytes",
+        "hunkScope": "all current delta from exact clean owning-phase baseline"
+      },
+      {
+        "path": "docs/ui/pages/backoffice-equipe-formalites-personnel/ACCEPTANCE_CHECKLIST.md",
+        "preimageSha256": "98de28642152b564f05614849a149e28d4cb8586b101fcb715d24e9f3236f0fb",
+        "finalSha256": "8dfe06c11a3c1db078eb58d0261016c6815d8188bceb688c4fd3dc778937b1d6",
+        "classification": "CLEAN_AT_HEAD_BEFORE_CHANGE",
+        "source": "owning-phase pre-Apply status plus recorded preimage matching exact HEAD bytes",
+        "hunkScope": "all current delta from exact clean owning-phase baseline"
+      },
+      {
+        "path": "docs/ui/pages/backoffice-equipe-formalites-personnel/DATA_AND_INTERACTION_SPEC.md",
+        "preimageSha256": "6af07dacd06fb931d39893ab43295a0e3257c9f74eb0eed44093b8ab2923ef03",
+        "finalSha256": "3952dc1ad05e8303da133e5ef3f7e2a71452eed780bcdccfe02b62c6dc52e8d1",
+        "classification": "CLEAN_AT_HEAD_BEFORE_CHANGE",
+        "source": "owning-phase pre-Apply status plus recorded preimage matching exact HEAD bytes",
+        "hunkScope": "all current delta from exact clean owning-phase baseline"
+      },
+      {
+        "path": "docs/ui/pages/backoffice-equipe-formalites-personnel/PRODUCT_SCOPE.md",
+        "preimageSha256": "1d34906c0da8a4ec77e969e4f949bc77062600c0d703f4217a3f47e05e694ee7",
+        "finalSha256": "c338d12c183bb8f813818f8a98a7df50d98bcffaeeb20db4243827e5aced4023",
+        "classification": "CLEAN_AT_HEAD_BEFORE_CHANGE",
+        "source": "owning-phase pre-Apply status plus recorded preimage matching exact HEAD bytes",
+        "hunkScope": "all current delta from exact clean owning-phase baseline"
+      },
+      {
+        "path": "docs/ui/pages/backoffice-equipe-formalites-personnel/README.md",
+        "preimageSha256": "f2fbc3b4ad57aa27a3e16f1bae8e90186f374597dd6296b29137e45fd5d0dd1f",
+        "finalSha256": "cb1391626ee478bb2ddb6ff31c5d7e38e825c89c875f9a8c835d0b42c53e3a92",
+        "classification": "CLEAN_AT_HEAD_BEFORE_CHANGE",
+        "source": "owning-phase pre-Apply status plus recorded preimage matching exact HEAD bytes",
+        "hunkScope": "all current delta from exact clean owning-phase baseline"
+      },
+      {
+        "path": "docs/ui/pages/backoffice-equipe-formalites-personnel/UI_SPEC.md",
+        "preimageSha256": "edf9e4b8cce5cebed8c861198141b9d48073f398299acdba529f1c3c77ecd84b",
+        "finalSha256": "abb907107354f94caa6b9de8958257c243cde4dc0b08aad54a1697eb0fa610d3",
+        "classification": "CLEAN_AT_HEAD_BEFORE_CHANGE",
+        "source": "owning-phase pre-Apply status plus recorded preimage matching exact HEAD bytes",
+        "hunkScope": "all current delta from exact clean owning-phase baseline"
+      },
+      {
+        "path": "packages/contracts/src/index.ts",
+        "preimageSha256": "199bb5c1e86df3182fffed26c803e0e7567c91a6664ed05e119fe46ca0791072",
+        "finalSha256": "ce44e688cea68cee2291db00a89207b5ae95086c3ef9de2df649858aa7378a44",
+        "classification": "CLEAN_AT_HEAD_BEFORE_CHANGE",
+        "source": "owning-phase pre-Apply status plus recorded preimage matching exact HEAD bytes",
+        "hunkScope": "all current delta from exact clean owning-phase baseline"
+      },
+      {
+        "path": "packages/db-cloud/drizzle/meta/_journal.json",
+        "preimageSha256": "a6e2f8c10bae551d8ac91bdf9aa85eaaea103e3a265b606d51e402da31c290f5",
+        "finalSha256": "04a7ddfe1c91d0acf54eee402d6e2e762780c9a13433c25d37dcc2534ee3e765",
+        "classification": "PREEXISTING_DIRTY_OVERLAP",
+        "source": "phase-1-review.md exact preimage; inverse of the sole approved 0018 journal append",
+        "hunkScope": "append only journal idx/tag 18/0018_elite_hardball"
+      },
+      {
+        "path": "packages/db-cloud/src/index.ts",
+        "preimageSha256": "3e69703fa7194abc660c0fde7972636900febe280938280201e2801a44a6bc0b",
+        "finalSha256": "4a48127a97360420e60cda9f96fd685ed6634d432308952ca07aa20440d75904",
+        "classification": "PREEXISTING_DIRTY_OVERLAP",
+        "source": "phase-2-review.md exact preimage; inverse of the sole approved Formalites repository export",
+        "hunkScope": "add only export * from './formalites-personnel-draft-repository'"
+      },
+      {
+        "path": "packages/db-cloud/src/schema/index.ts",
+        "preimageSha256": "f5c1c8189ab69a77fe0aee3784585e311745bb8271b242b47ad1eb448c72fb42",
+        "finalSha256": "c701826c9712e62958acab13e1a2827951e1cb37f8080f64631d66a0d76e4359",
+        "classification": "CLEAN_AT_HEAD_BEFORE_CHANGE",
+        "source": "owning-phase pre-Apply status plus recorded preimage matching exact HEAD bytes",
+        "hunkScope": "all current delta from exact clean owning-phase baseline"
+      }
+    ]
+  }
+}

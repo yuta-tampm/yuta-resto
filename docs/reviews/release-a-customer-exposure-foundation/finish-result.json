@@ -1,0 +1,398 @@
+{
+  "change": "release-a-customer-exposure-foundation",
+  "schema": "yuta-spec-driven",
+  "recordedAt": "2026-10-01T15:23:01.345Z",
+  "finishOutcome": "COMPLETED",
+  "archivePath": "openspec/changes/archive/2026-10-01-release-a-customer-exposure-foundation",
+  "archiveMethod": "Synchronous native Move-Item after resolved absolute source/target verification inside openspec/changes; target absent before move.",
+  "artifactCompletion": "All five artifacts done; 23/23 tasks complete; no Design omission or incomplete-work warning.",
+  "originalArchiveInventory": [
+    {
+      "path": ".openspec.yaml",
+      "sha256": "edbcd0b0cb2d4619b326f4293e56c1d31f5ce6be37dda83923ff58267b46f1ab",
+      "bytes": 45
+    },
+    {
+      "path": "analysis.md",
+      "sha256": "8876b435196b052652467bbe8d51404d55fd9a0c5b39f4ff335939e0dc219403",
+      "bytes": 20201
+    },
+    {
+      "path": "design.md",
+      "sha256": "c1eadd9d79dca73d8a6d365c53b7fe29665e4042ee0144f9725cda20fd5ee8c4",
+      "bytes": 22836
+    },
+    {
+      "path": "proposal.md",
+      "sha256": "bd29ab84194077951f25e1e672bccc805229bf4f2379d14b3572b0ace57f3541",
+      "bytes": 4894
+    },
+    {
+      "path": "specs/authorization/formalites/spec.md",
+      "sha256": "5a914d88ce8ea35fa8356af1725b8e76ba389683f063c0216aca2bd712ad8412",
+      "bytes": 4980
+    },
+    {
+      "path": "specs/authorization/pointage/spec.md",
+      "sha256": "301a901252af8e80116dbc2805d33e7ea71964692154bdb53fa81bd8582dad67",
+      "bytes": 11176
+    },
+    {
+      "path": "specs/backoffice/release-a-customer-exposure/spec.md",
+      "sha256": "deefad70fd9b787c63f60d8569f617027510b5f3a415e03185b667124ebb8f9c",
+      "bytes": 15193
+    },
+    {
+      "path": "specs/formalites/persistent-draft-foundation/spec.md",
+      "sha256": "3e087148d39ab4b15f80f6133c1f60fbd83d7e4a6703d30874dc2bbe2563c97e",
+      "bytes": 47354
+    },
+    {
+      "path": "specs/pointage/raw-clocking/spec.md",
+      "sha256": "a012b2650f87b8159d8a184ec1b639089a6a68e7460b65dbb32a7f445c71600b",
+      "bytes": 19877
+    },
+    {
+      "path": "specs/reputation/review-social-links-configuration/spec.md",
+      "sha256": "8c585770d2b83cdf9450f4acc9c167474661dadc6ed48da96eb8331f52159d8f",
+      "bytes": 22967
+    },
+    {
+      "path": "specs/restaurant-knowledge/communication-identity/spec.md",
+      "sha256": "d2d90b1908da0385c1bf020c873e0711f97dd7904abc5037fe82a334e49da50c",
+      "bytes": 19982
+    },
+    {
+      "path": "specs/restaurant-knowledge/concept-history/spec.md",
+      "sha256": "4f08f3518efb351edca4c9dc5ac0db919315f9c93c15fc787bd170113a028aab",
+      "bytes": 13702
+    },
+    {
+      "path": "specs/restaurant-knowledge/cuisine-know-how/spec.md",
+      "sha256": "588c90bf5f6eaa3b61d38c21ecf00f1f2e8601710942ede0c419aa1655d24645",
+      "bytes": 14361
+    },
+    {
+      "path": "specs/restaurant-knowledge/customer-experience/spec.md",
+      "sha256": "68f358ac24a13ca649ffc10fce8678c2bc620ba8c4fe06cefedecdd3fcbd9f23",
+      "bytes": 16364
+    },
+    {
+      "path": "specs/restaurant-knowledge/team-culture/spec.md",
+      "sha256": "38727fcc87e815bf9247146860d0ac9b8777c9bffc6e567f206827f218921da3",
+      "bytes": 18516
+    },
+    {
+      "path": "specs/restaurant-knowledge/validated-knowledge/spec.md",
+      "sha256": "7b69f767f367145a7f2e41692437f572600371b977ebd890c4793bba98275e40",
+      "bytes": 20169
+    },
+    {
+      "path": "tasks.md",
+      "sha256": "26563a1a82e89099b38882d4fae266fdf7af9a9d98af536f8ddfa09a05bf2ffe",
+      "bytes": 41353
+    }
+  ],
+  "archivedEvidenceIntact": true,
+  "preservedReviewedIdentities": 294,
+  "sync": {
+    "selectedTargets": [
+      {
+        "capability": "authorization/formalites",
+        "archivedDeltaPath": "openspec/changes/archive/2026-10-01-release-a-customer-exposure-foundation/specs/authorization/formalites/spec.md",
+        "originalDeltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/authorization/formalites/spec.md",
+        "deltaSha256": "5a914d88ce8ea35fa8356af1725b8e76ba389683f063c0216aca2bd712ad8412",
+        "mainPath": "openspec/specs/authorization/formalites/spec.md",
+        "beforeSha256": "1815f4dcdd4236d08176b45377e08e9e72a7d187de89172458d7e796a6a05616",
+        "afterSha256": "0ed1f8e2cd5f286daaca9bc017597efc392b255f8c4fb7fe9a71757e7d04910b"
+      },
+      {
+        "capability": "authorization/pointage",
+        "archivedDeltaPath": "openspec/changes/archive/2026-10-01-release-a-customer-exposure-foundation/specs/authorization/pointage/spec.md",
+        "originalDeltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/authorization/pointage/spec.md",
+        "deltaSha256": "301a901252af8e80116dbc2805d33e7ea71964692154bdb53fa81bd8582dad67",
+        "mainPath": "openspec/specs/authorization/pointage/spec.md",
+        "beforeSha256": "e1a0e2414cfbb59168370edb9ef691c6ce93023662283b2b7a863a7d9dc1a6fc",
+        "afterSha256": "930ddb211a76fc81aa7f60a0e138e6325db05969ddc81bee2c06b9ad451b9d2c"
+      },
+      {
+        "capability": "backoffice/release-a-customer-exposure",
+        "archivedDeltaPath": "openspec/changes/archive/2026-10-01-release-a-customer-exposure-foundation/specs/backoffice/release-a-customer-exposure/spec.md",
+        "originalDeltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/backoffice/release-a-customer-exposure/spec.md",
+        "deltaSha256": "deefad70fd9b787c63f60d8569f617027510b5f3a415e03185b667124ebb8f9c",
+        "mainPath": "openspec/specs/backoffice/release-a-customer-exposure/spec.md",
+        "beforeSha256": null,
+        "afterSha256": "b3e726a1f6102e399b8a319a72570610898028b21074ff7e1472afae53c379db"
+      },
+      {
+        "capability": "formalites/persistent-draft-foundation",
+        "archivedDeltaPath": "openspec/changes/archive/2026-10-01-release-a-customer-exposure-foundation/specs/formalites/persistent-draft-foundation/spec.md",
+        "originalDeltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/formalites/persistent-draft-foundation/spec.md",
+        "deltaSha256": "3e087148d39ab4b15f80f6133c1f60fbd83d7e4a6703d30874dc2bbe2563c97e",
+        "mainPath": "openspec/specs/formalites/persistent-draft-foundation/spec.md",
+        "beforeSha256": "b4c8077df69c7da638627836255b0a64a3b9b342751964bebe6860183c1b768e",
+        "afterSha256": "138758295c0b3c07d14e92a5b39783b36bb627481f948e78607933f9a46ff28b"
+      },
+      {
+        "capability": "pointage/raw-clocking",
+        "archivedDeltaPath": "openspec/changes/archive/2026-10-01-release-a-customer-exposure-foundation/specs/pointage/raw-clocking/spec.md",
+        "originalDeltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/pointage/raw-clocking/spec.md",
+        "deltaSha256": "a012b2650f87b8159d8a184ec1b639089a6a68e7460b65dbb32a7f445c71600b",
+        "mainPath": "openspec/specs/pointage/raw-clocking/spec.md",
+        "beforeSha256": "ac0fea1564d2b8c949d751b4f87d8b5b59a6c46b783de5889e39f5ee7e6a396d",
+        "afterSha256": "47f2b007d2840545b2a4a67591790f50eec810aef971d9f963a8a39c46bc68e9"
+      },
+      {
+        "capability": "reputation/review-social-links-configuration",
+        "archivedDeltaPath": "openspec/changes/archive/2026-10-01-release-a-customer-exposure-foundation/specs/reputation/review-social-links-configuration/spec.md",
+        "originalDeltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/reputation/review-social-links-configuration/spec.md",
+        "deltaSha256": "8c585770d2b83cdf9450f4acc9c167474661dadc6ed48da96eb8331f52159d8f",
+        "mainPath": "openspec/specs/reputation/review-social-links-configuration/spec.md",
+        "beforeSha256": "80a228f2fad6431d817218e9fde147159f583fab4f6bfd495e73d9d9e0d2c756",
+        "afterSha256": "84b1ccffd167d5b189f91b6c8664dc627daeb4c0e8e8aca0354f5ac3426503bb"
+      },
+      {
+        "capability": "restaurant-knowledge/communication-identity",
+        "archivedDeltaPath": "openspec/changes/archive/2026-10-01-release-a-customer-exposure-foundation/specs/restaurant-knowledge/communication-identity/spec.md",
+        "originalDeltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/communication-identity/spec.md",
+        "deltaSha256": "d2d90b1908da0385c1bf020c873e0711f97dd7904abc5037fe82a334e49da50c",
+        "mainPath": "openspec/specs/restaurant-knowledge/communication-identity/spec.md",
+        "beforeSha256": "156e0e05aa4a3b72145ffad5c3dc38ae5a73213a1744d679777850ace4cd7323",
+        "afterSha256": "92ad85fd9bea1014e1343d011820cf88ed0a2dfa31b17c0704d00f66f315ca70"
+      },
+      {
+        "capability": "restaurant-knowledge/concept-history",
+        "archivedDeltaPath": "openspec/changes/archive/2026-10-01-release-a-customer-exposure-foundation/specs/restaurant-knowledge/concept-history/spec.md",
+        "originalDeltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/concept-history/spec.md",
+        "deltaSha256": "4f08f3518efb351edca4c9dc5ac0db919315f9c93c15fc787bd170113a028aab",
+        "mainPath": "openspec/specs/restaurant-knowledge/concept-history/spec.md",
+        "beforeSha256": "93ece2037955b7b208f506cf7581a9adf45ffe9570783828e159a5fef2fc25c1",
+        "afterSha256": "7399a1e7f7423bc3bf4c3abcabae686f2cae44a45a44fc3660d467c5c6df906b"
+      },
+      {
+        "capability": "restaurant-knowledge/cuisine-know-how",
+        "archivedDeltaPath": "openspec/changes/archive/2026-10-01-release-a-customer-exposure-foundation/specs/restaurant-knowledge/cuisine-know-how/spec.md",
+        "originalDeltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/cuisine-know-how/spec.md",
+        "deltaSha256": "588c90bf5f6eaa3b61d38c21ecf00f1f2e8601710942ede0c419aa1655d24645",
+        "mainPath": "openspec/specs/restaurant-knowledge/cuisine-know-how/spec.md",
+        "beforeSha256": "b46146861e0674a97a443ec14a093bdafbf6de38cfa321c05fdaed94a383f1b9",
+        "afterSha256": "5b89829f22c9b4d8c2f4037f5444f769e8447933e44815da62ff2b59a9501c6b"
+      },
+      {
+        "capability": "restaurant-knowledge/customer-experience",
+        "archivedDeltaPath": "openspec/changes/archive/2026-10-01-release-a-customer-exposure-foundation/specs/restaurant-knowledge/customer-experience/spec.md",
+        "originalDeltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/customer-experience/spec.md",
+        "deltaSha256": "68f358ac24a13ca649ffc10fce8678c2bc620ba8c4fe06cefedecdd3fcbd9f23",
+        "mainPath": "openspec/specs/restaurant-knowledge/customer-experience/spec.md",
+        "beforeSha256": "1fd47662b8122bde0b2a5029af246f39bf78efad6796b9712f2cff6dc6a254f8",
+        "afterSha256": "7ddcc69ccf7dbd7a9e60a66c60e7cb96051753599e1dd67afc668925f2154056"
+      },
+      {
+        "capability": "restaurant-knowledge/team-culture",
+        "archivedDeltaPath": "openspec/changes/archive/2026-10-01-release-a-customer-exposure-foundation/specs/restaurant-knowledge/team-culture/spec.md",
+        "originalDeltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/team-culture/spec.md",
+        "deltaSha256": "38727fcc87e815bf9247146860d0ac9b8777c9bffc6e567f206827f218921da3",
+        "mainPath": "openspec/specs/restaurant-knowledge/team-culture/spec.md",
+        "beforeSha256": "e4af63e50baed2262a18868fd8072ea050d494ce168cc1d0860322651f4d3166",
+        "afterSha256": "eb095b2dc59da982b94b7c0a9b368a0b8a0b84e4b6537a93d677132a74b6c0e8"
+      },
+      {
+        "capability": "restaurant-knowledge/validated-knowledge",
+        "archivedDeltaPath": "openspec/changes/archive/2026-10-01-release-a-customer-exposure-foundation/specs/restaurant-knowledge/validated-knowledge/spec.md",
+        "originalDeltaPath": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/validated-knowledge/spec.md",
+        "deltaSha256": "7b69f767f367145a7f2e41692437f572600371b977ebd890c4793bba98275e40",
+        "mainPath": "openspec/specs/restaurant-knowledge/validated-knowledge/spec.md",
+        "beforeSha256": "072939ec712b02be2091b5411338bcfb3cd4f1df012977123ba5648e7a24e200",
+        "afterSha256": "9a13cd4a9abef92853627f6ae650561cc64ce67e05d352b5cfdcae176e0001ec"
+      }
+    ],
+    "addedRequirements": 21,
+    "modifiedRequirements": 74,
+    "independentMechanicalVerifier": "/root/release_a_gate3_review",
+    "independentRecheckAt": "2026-10-01T15:20:02.986961Z",
+    "verification": "All 95 selected requirement blocks match exactly; 70 unmentioned requirements and Purpose prefixes preserved; all 12 target hashes match.",
+    "fullDiffPath": "docs/reviews/release-a-customer-exposure-foundation/finish-spec-sync.diff",
+    "fullDiffSha256": "c1219e30cfcaafeb74959f01be2cfbf6f405839d49b841e9210c71a344d74420",
+    "fullDiffBytes": 238545
+  },
+  "checks": {
+    "strictMainSpecs": {
+      "command": "pnpm exec openspec validate --specs --strict --json",
+      "exitCode": 0,
+      "passed": 21,
+      "failed": 0,
+      "info": 136,
+      "warnings": 0,
+      "errors": 0,
+      "readingCopyPath": "docs/reviews/release-a-customer-exposure-foundation/finish-main-spec-validation.json",
+      "sha256": "804756040739649e534e5622c5761f1cdc2ad0d4efed1f5e06a9473ab43bcac1",
+      "representation": "Structured CLI stdout retained as a formatted JSON reading copy; validation outcome and all issue records unchanged."
+    },
+    "docs": {
+      "command": "pnpm docs:check",
+      "exitCode": 0
+    },
+    "architecture": {
+      "command": "pnpm architecture:check",
+      "exitCode": 0
+    },
+    "workspaceTypecheck": {
+      "command": "pnpm -r --if-present typecheck",
+      "exitCode": 0
+    },
+    "scopedPrettier": {
+      "result": "Exit 0; all twelve main specs and current finish packet/pre-sync record passed."
+    },
+    "retainedTestsBuildQA": "Unchanged evaluated source/test/build and QA identities. No test/build/browser/provider/database operation rerun.",
+    "skipped": "pnpm test:cloud, pnpm test:local, pnpm build:cloud and independent public/local builds omitted for documentation/spec-only finalization; retained scoped validation/QA and historical guarded skips remain explicit."
+  },
+  "rollbackPerformed": false,
+  "lifecyclePromoted": false,
+  "knowledge": {
+    "classification": "UPDATE_REQUIRED",
+    "reason": "ADR009 Proposal link points to the now-archived active change path; repair only that reference.",
+    "sourcesInspected": [
+      {
+        "path": "docs/PRODUCT_KNOWLEDGE.md",
+        "sha256": "e564cdd51c11215cfa945a3a83373226244c938e6c92c9f0f38957d034c3a4cf"
+      },
+      {
+        "path": "docs/MODULE_REGISTRY.md",
+        "sha256": "5f8587b66bff2a20fc5838f33e6a656330603ba4752f2834579244dc261fe7dc"
+      },
+      {
+        "path": "docs/LIFECYCLE_STATUS_MODEL.md",
+        "sha256": "8f9f45a918f37a538d211e1981f7109fbbed6543d0e28b6eff91d89d9a8e0b1f"
+      },
+      {
+        "path": "docs/CURRENT_STATE.md",
+        "sha256": "40c472d8f5a98c4d225d9a3e90d7112c9dd0668173c8f8c91f907faafdb25f8a"
+      },
+      {
+        "path": "docs/PRODUCT_RELEASE_ROADMAP.md",
+        "sha256": "8ebdc933ad5ae363b0c438193e8a029686186bee82a8d0961d3f5c62034279ee"
+      },
+      {
+        "path": "docs/features/today/README.md",
+        "sha256": "666315bc75371625bee357f94fc9a4fc5eb35af30e57b735615c79f88d4f8cd3"
+      },
+      {
+        "path": "docs/features/reputation/README.md",
+        "sha256": "2e2d14e33698bb667d1ea6f140930c1a593d65ee927ce7c4470b7187cd6f303c"
+      },
+      {
+        "path": "docs/features/reputation/STATUS.md",
+        "sha256": "56de3993bffa8ae6fc0deb3bb57a60af22d4afed70979a3ff6ec742e66f2bb1b"
+      },
+      {
+        "path": "docs/features/identity-access/README.md",
+        "sha256": "5d519e120cead785ea27f89d2990c5db5ae50398127eba3db730c6aa9265772e"
+      },
+      {
+        "path": "docs/features/establishment/general-information/README.md",
+        "sha256": "518abd83927e7ec7dd61bde5675268646ca92de96ee5c14f7e794a50cbefc01d"
+      },
+      {
+        "path": "docs/decisions/ADR-009-release-a-customer-exposure.md",
+        "sha256": "e8ab1be4f677e6eeaf649c9349c131c10a53c230eec968d30e05254054a1991e"
+      },
+      {
+        "path": "docs/ui/pages/today/README.md",
+        "sha256": "967b7058f9df1aa5da8ecba5e4358898672def1b48fd5e1140f681b57bd300d9"
+      },
+      {
+        "path": "docs/ui/pages/today/PRODUCT_SCOPE.md",
+        "sha256": "0b8b9408ab4438a44e0dd2fd29499a4a95665acc3e68612cd5392603d5afa6c7"
+      },
+      {
+        "path": "docs/ui/pages/today/UI_SPEC.md",
+        "sha256": "c837208a83df9fa245c8e72cd4ae92e271e580d4f96c4ee7564dda16469a0bee"
+      },
+      {
+        "path": "docs/ui/pages/today/DATA_AND_INTERACTION_SPEC.md",
+        "sha256": "c00948f53a6593f97765f12beedcd2b5bb6b67b70e56bf42e873f1bd1a6d5049"
+      },
+      {
+        "path": "docs/ui/pages/today/ACCEPTANCE_CHECKLIST.md",
+        "sha256": "95025e7f1dd91142699a96396b9d7f3ee0de633aba1a8fe885e2e926a4ab2238"
+      },
+      {
+        "path": "docs/operations/DEPLOYMENT.md",
+        "sha256": "c438d49bdbfcda5a48987aa172df94328f9f1011594ea7e40485cae52fdca7b0"
+      },
+      {
+        "path": "docs/operations/PRODUCTION_READINESS.md",
+        "sha256": "8e24615545a5246c353fe8eac7786e1d20a4d9d901012d119efe850ab5c73223"
+      }
+    ],
+    "reviewPacket": "docs/reviews/release-a-customer-exposure-foundation/04-knowledge-consolidation-review.md",
+    "target": "docs/decisions/ADR-009-release-a-customer-exposure.md",
+    "targetSha256": "e8ab1be4f677e6eeaf649c9349c131c10a53c230eec968d30e05254054a1991e",
+    "proposedSha256": "ff5d7e77b0313ae4d9633045cdb6cd68c0f2d1c6c002737859847b633fa1e13c",
+    "proposedDiffPath": "docs/reviews/release-a-customer-exposure-foundation/04-knowledge-consolidation.diff",
+    "proposedDiffSha256": "80d53355b04fa3cf4b6042b08fa4e020dcf7310d1ccdea38c78884c58133f41d",
+    "status": "APPROVED",
+    "applied": true,
+    "independentScan": {
+      "reviewer": "/root/qa_consolidation_review",
+      "conclusion": "UPDATE_REQUIRED for the sole ADR009 archive-link repair; no other material Knowledge gap; no approval of new diff."
+    },
+    "appliedAt": "2026-10-01T15:26:50.539Z",
+    "approvalSource": "USER_DELEGATION_WITH_INDEPENDENT_REVIEW",
+    "independentReviewer": "/root/release_a_knowledge_review",
+    "independentReviewedAt": "2026-10-01T15:25:50Z",
+    "reviewedPacketSha256": "b993a9cf93015066b450a197c2867105c3ad913374e314f9dcbe7d13139ad4e6",
+    "actualPostimageSha256": "ff5d7e77b0313ae4d9633045cdb6cd68c0f2d1c6c002737859847b633fa1e13c",
+    "postApplyChecks": {
+      "docs": {
+        "command": "pnpm docs:check",
+        "exitCode": 0,
+        "currentDocuments": 36
+      },
+      "architecture": {
+        "command": "pnpm architecture:check",
+        "exitCode": 0
+      },
+      "format": {
+        "command": "pnpm exec prettier --check <ADR009 and current review/result files>",
+        "exitCode": 0
+      },
+      "archiveLinkAndAnchor": "PASS",
+      "fullRepositoryFormat": {
+        "command": "pnpm format:check",
+        "exitCode": 0,
+        "preservedArtifacts": 67
+      }
+    },
+    "reviewedSourcesWerePreApplySnapshot": true
+  },
+  "releaseFollowUp": {
+    "classification": "REQUIRED",
+    "runtime": "apps/backoffice",
+    "scope": "A customer-instance activation, when separately requested; intended staging/production environment not selected.",
+    "evidence": "Separate deployment/readiness authorization, explicit BACKOFFICE_EXPOSURE_PROFILE and provider/privacy/operations evidence; post-deploy auth/deep-link/action denial and role/scoped-queue/setup checks. Local foundation completion does not complete importer/publication or launch.",
+    "deploymentPerformed": false
+  },
+  "workflowStatus": "DONE",
+  "completedAt": "2026-10-01T15:27:48.489Z",
+  "localCommitPreference": {
+    "value": "YES",
+    "source": "Actual current user's prior direct local-commit request for this task, carried into the requested step-3 finalization; main only after completion obligations.",
+    "record": "Pre-commit completion evidence. Actual commit identity is reported in chat after creation; no self-referential commit loop."
+  },
+  "gitDeliveryChecks": {
+    "defaultStagedWhitespaceCheck": {
+      "command": "git diff --cached --check",
+      "exitCode": 2,
+      "findings": 548,
+      "path": "docs/reviews/release-a-customer-exposure-foundation/finish-spec-sync.diff",
+      "classification": "All diagnostics are the single-space prefix of required blank context lines inside an exact Git patch artifact; no source/metadata trailing whitespace."
+    },
+    "scopedSourceWhitespaceCheck": {
+      "command": "git diff --cached --check -- . :(exclude)docs/reviews/release-a-customer-exposure-foundation/finish-spec-sync.diff",
+      "exitCode": 0
+    },
+    "artifactContextVerification": "548/548 diagnosed lines equal exactly one space, preserving the reproducible patch bytes and recorded SHA-256.",
+    "persistentGitSettingsChanged": false
+  }
+}

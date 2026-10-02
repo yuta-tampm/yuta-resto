@@ -1,0 +1,641 @@
+diff --git a/apps/backoffice/src/server/auth/permissions.ts b/apps/backoffice/src/server/auth/permissions.ts
+index 7fe0810..7d48127 100644
+--- a/apps/backoffice/src/server/auth/permissions.ts
++++ b/apps/backoffice/src/server/auth/permissions.ts
+@@ -23,6 +23,10 @@ export type EstablishmentPermission =
+   | 'establishment.profile.read'
+   | 'establishment.profile.manage';
+ 
++export type RestaurantKnowledgePermission =
++  | 'restaurant-knowledge.read'
++  | 'restaurant-knowledge.manage';
++
+ export type PersonnelPermission =
+   | 'personnel.employee.read'
+   | 'personnel.employee.manage'
+@@ -60,6 +64,14 @@ const establishmentPermissionRoles: Record<
+   'establishment.profile.manage': ['OWNER', 'MANAGER'],
+ };
+ 
++const restaurantKnowledgePermissionRoles: Record<
++  RestaurantKnowledgePermission,
++  readonly TenantRole[]
++> = {
++  'restaurant-knowledge.read': ['OWNER', 'MANAGER'],
++  'restaurant-knowledge.manage': ['OWNER', 'MANAGER'],
++};
++
+ const personnelPermissionRoles: Record<
+   PersonnelPermission,
+   readonly TenantRole[]
+@@ -135,6 +147,29 @@ export function requireEstablishmentPermission(
+   }
+ }
+ 
++export function hasRestaurantKnowledgePermission(
++  context: TenantContext,
++  permission: RestaurantKnowledgePermission,
++): boolean {
++  return (
++    context.actor.type === 'user' &&
++    restaurantKnowledgePermissionRoles[permission].includes(context.actor.role)
++  );
++}
++
++export function requireRestaurantKnowledgePermission(
++  context: TenantContext,
++  permission: RestaurantKnowledgePermission,
++): void {
++  if (!hasRestaurantKnowledgePermission(context, permission)) {
++    throw new TenantError(
++      'Permission denied.',
++      'CROSS_TENANT_ACCESS_DENIED',
++      403,
++    );
++  }
++}
++
+ export function hasPersonnelPermission(
+   context: TenantContext,
+   permission: PersonnelPermission,
+diff --git a/docs/INFORMATIONS_GENERALES_PRODUCT_DECISION_INTEGRATION_REPORT.md b/docs/INFORMATIONS_GENERALES_PRODUCT_DECISION_INTEGRATION_REPORT.md
+index fc0d36e..ffd096f 100644
+--- a/docs/INFORMATIONS_GENERALES_PRODUCT_DECISION_INTEGRATION_REPORT.md
++++ b/docs/INFORMATIONS_GENERALES_PRODUCT_DECISION_INTEGRATION_REPORT.md
+@@ -77,10 +77,10 @@ or evaluated; `NOT_APPLICABLE` is not supported by current evidence.
+ 
+ ## 6. Remaining NEEDS REVIEW
+ 
+-- canonical Restaurant Knowledge data owner and persistence boundary;
+-- operation-level permissions, including read, add, edit, validate, reject,
+-  classify, and administrative access;
+-- initial data shape and behavior scope;
++- concrete Restaurant Knowledge schema, repository/table choice, API, field
++  validation, and storage implementation;
++- operation-level permissions beyond the approved READ and MANAGE operations,
++  including validate, reject, classify, and administrative access;
+ - company/legal data ownership across Organization, Establishment, a possible
+   employer/legal configuration, and Formalites;
+ - social-profile link ownership;
+@@ -98,23 +98,28 @@ analysis must read the Establishment module home, the page home, the relevant
+ Module Registry row, accepted decisions, and implementation evidence when
+ needed.
+ 
+-Restaurant Knowledge is not ready for an implementation specification. Its
+-data owner/boundary, operation-level permissions, and initial data
+-shape/behavior scope must first be resolved sufficiently to write requirements
+-without guessing.
++Subsequent Control Tower decisions establish Restaurant Knowledge as the
++canonical owner of Concept and Histoire and their persistence/domain boundary.
++The data is semantically establishment-scoped, with Organization as the
++tenancy/access envelope; Establishment Profile owns neither datum. Concept and
++Histoire are independently optional, an empty initial state is valid, and the
++initial behavior permits manual input, view, and edit followed by one explicit
++save for the complete slice, with no autosave. Dedicated READ and MANAGE
++authorization is defined separately.
++
++A resumed bounded implementation specification may select concrete schema,
++repository/table, API, field validation, and storage implementation without
++changing those Product decisions or inventing additional behavior.
+ 
+ No OpenSpec change, main spec, schema, configuration, or skill was created or
+ modified.
+ 
+ ## 8. Recommended first pilot candidate
+ 
+-Do not start a Restaurant Knowledge pilot yet. The safer first candidate is a
+-separately approved, genuinely bounded enhancement of the existing
+-Establishment Profile that reuses its current owner, permissions, and runtime
+-boundary.
+-
+-If the intended pilot specifically targets Restaurant Knowledge, wait until
+-the three minimum blockers are resolved: canonical data owner/boundary,
+-operation-level permissions, and initial data shape/behavior scope.
++The approved Concept & histoire slice must remain a Restaurant Knowledge
++capability and must not be implemented as an Establishment Profile
++enhancement. It may proceed only through its separately reviewed change after
++the authorization prerequisite is accepted. This report update does not resume
++or implement that dependent change.
+ 
+ Status: APPROVED
+diff --git a/docs/MODULE_REGISTRY.md b/docs/MODULE_REGISTRY.md
+index 2be8893..5010619 100644
+--- a/docs/MODULE_REGISTRY.md
++++ b/docs/MODULE_REGISTRY.md
+@@ -74,22 +74,22 @@ scoped only to the exact capability stated in the row.
+ 
+ ### Backoffice foundation and team capabilities
+ 
+-| Product / Runtime | Module                     | Capability / Scope                                                                                                                                                    | Primary Knowledge Source                                                                                                                                                                                                                   | Implementation Evidence                                                                                                                                                                                                                                                                          | Runtime Owner                                      | Data Owner                                           | Related Modules                                                                                        | Product Decision | Implementation | Environment        | Production Readiness | External Dependency                                                           | Review Marker                                                                                                        |
+-| ----------------- | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ---------------- | -------------- | ------------------ | -------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+-| Backoffice        | Authentication             | Password sign-in, scoped server sessions, tenant selection/switching, logout, and reset-token foundation                                                              | [Identity / Access Product Knowledge](features/identity-access/README.md), [Authentication](architecture/AUTHENTICATION.md), [identity and membership](architecture/IDENTITY_AND_MEMBERSHIP.md)                                            | [`apps/backoffice/src/server/auth`](../apps/backoffice/src/server/auth), [`packages/db-cloud/src/auth-repository.ts`](../packages/db-cloud/src/auth-repository.ts)                                                                                                                               | `apps/backoffice`                                  | `packages/db-cloud`                                  | Authentication -> Tenancy / Access                                                                     | `—`              | `IMPLEMENTED`  | `UNVERIFIED`       | `NOT_READY`          | `NOT_ASSESSED` — no required delivery provider has been selected or evaluated | `NEEDS REVIEW` — architecture is current but bounded product approval is not explicit                                |
+-| Backoffice        | Tenancy                    | Trusted organization/establishment context and fail-closed server authorization                                                                                       | [Identity / Access Product Knowledge](features/identity-access/README.md), [Tenancy](architecture/TENANCY.md), [ADR-003](decisions/ADR-003-database-ownership-boundaries.md)                                                               | [`packages/tenant`](../packages/tenant), tenant-scoped repositories in [`packages/db-cloud`](../packages/db-cloud)                                                                                                                                                                               | `apps/backoffice` and public cloud server runtimes | `packages/db-cloud`                                  | Tenancy -> Authentication / every tenant-owned cloud module                                            | `APPROVED`       | `IMPLEMENTED`  | `UNVERIFIED`       | `NOT_READY`          | `NOT_ASSESSED`                                                                | `OK`                                                                                                                 |
+-| Backoffice        | Access / membership        | Tenant user and membership administration plus bounded access history                                                                                                 | [Identity / Access Product Knowledge](features/identity-access/README.md), [Authentication](architecture/AUTHENTICATION.md), [identity and membership](architecture/IDENTITY_AND_MEMBERSHIP.md)                                            | [`apps/backoffice/src/app/(authenticated)/parametres/utilisateurs-acces`](<../apps/backoffice/src/app/(authenticated)/parametres/utilisateurs-acces>), [`packages/db-cloud/src/auth-repository.ts`](../packages/db-cloud/src/auth-repository.ts)                                                 | `apps/backoffice`                                  | `packages/db-cloud`                                  | Access -> Authentication / Tenancy                                                                     | `—`              | `IMPLEMENTED`  | `UNVERIFIED`       | `NOT_READY`          | `NOT_ASSESSED`                                                                | `NEEDS REVIEW` — explicit Product Decision evidence is weak                                                          |
+-| Backoffice        | Establishment profile      | General identity, address, contact, media, language, service-mode, and visibility editing                                                                             | [ADR-006](decisions/ADR-006-cloud-establishment-profile-context.md), [Establishment Product Knowledge](features/establishment/README.md), [page pack](ui/pages/establishment-general-information/README.md)                                | [`apps/backoffice/src/app/(authenticated)/etablissement/informations-generales`](<../apps/backoffice/src/app/(authenticated)/etablissement/informations-generales>), [`packages/db-cloud/src/establishment-profile-repository.ts`](../packages/db-cloud/src/establishment-profile-repository.ts) | `apps/backoffice`                                  | `packages/db-cloud`                                  | Public booking / Today -> Establishment profile                                                        | `APPROVED`       | `IMPLEMENTED`  | `UNVERIFIED`       | `NOT_READY`          | `NOT_ASSESSED`                                                                | `OK`                                                                                                                 |
+-| Backoffice        | Restaurant Knowledge       | Concept/history, cuisine/know-how, customer experience, team/culture, communication identity, and validated restaurant knowledge                                      | [ADR-007](decisions/ADR-007-composed-general-information-and-restaurant-knowledge.md), [page Product Knowledge](features/establishment/general-information/README.md), [Establishment Product Knowledge](features/establishment/README.md) | No implementation; the existing general-information route implements only the separate Establishment Profile capability                                                                                                                                                                          | `NEEDS REVIEW` before implementation               | `NEEDS REVIEW` — separate from Establishment Profile | Composed beside Establishment Profile; source modules retain canonical ownership                       | `APPROVED`       | `NOT_STARTED`  | `NOT_ENABLED`      | `NOT_ASSESSED`       | `NOT_ASSESSED`                                                                | `NEEDS REVIEW` — data owner/boundary, operation-level permissions, and initial data shape/behavior remain unresolved |
+-| Backoffice        | Today                      | Establishment dashboard over reservations, service periods/exceptions, and entitled reputation feedback                                                               | [ADR-005](decisions/ADR-005-today-operational-steering.md), [Today Product Knowledge](features/today/README.md), [page pack](ui/pages/today/README.md)                                                                                     | [`apps/backoffice/src/app/(authenticated)/aujourdhui/page.tsx`](<../apps/backoffice/src/app/(authenticated)/aujourdhui/page.tsx>)                                                                                                                                                                | `apps/backoffice`                                  | `packages/db-cloud`                                  | Today -> Reservations / service periods / Reputation                                                   | `APPROVED`       | `IMPLEMENTED`  | `UNVERIFIED`       | `NOT_READY`          | `NOT_ASSESSED`                                                                | `OK`                                                                                                                 |
+-| Backoffice        | Today — future aggregation | Approved future aggregation of Tâches du jour, service handover, Pointage anomalies, Stock / Inventaire, Fournisseurs, internal operational knowledge, and Compliance | [ADR-005](decisions/ADR-005-today-operational-steering.md), [Today Product Knowledge](features/today/README.md)                                                                                                                            | No implementation; current placeholder and prototype source surfaces are not Today integrations                                                                                                                                                                                                  | `apps/backoffice`                                  | Source modules retain canonical ownership            | Today <- Tâches du jour / handover / Pointage / Stock / Fournisseurs / internal knowledge / Compliance | `APPROVED`       | `NOT_STARTED`  | `NOT_ENABLED`      | `NOT_ASSESSED`       | `NOT_ASSESSED`                                                                | `OK` — approved category intent only; detailed behavior remains future work                                          |
+-| Backoffice        | Personnel                  | OWNER-only minimum employee dossier read/create/edit/departure/history scope                                                                                          | [Personnel Product Knowledge](features/personnel/README.md), [Salariés page pack](ui/pages/backoffice-equipe-salaries/README.md)                                                                                                           | [`apps/backoffice/src/app/(authenticated)/equipe/salaries`](<../apps/backoffice/src/app/(authenticated)/equipe/salaries>), [`packages/db-cloud/src/personnel-repository.ts`](../packages/db-cloud/src/personnel-repository.ts)                                                                   | `apps/backoffice`                                  | `packages/db-cloud`                                  | Personnel -> Documents / Register / Formalités / Planning / Pointage                                   | `APPROVED`       | `IMPLEMENTED`  | `UNVERIFIED`       | `BLOCKED`            | `BLOCKED` — personnel legal/privacy/retention/operations gates                | `OK` for bounded repository scope; live environment is unverified                                                    |
+-| Backoffice        | Registre du personnel      | Development-only real-data register read/export slice                                                                                                                 | [Personnel Product Knowledge](features/personnel/README.md), [Register page pack](ui/pages/backoffice-equipe-registre-personnel/README.md)                                                                                                 | [`apps/backoffice/src/app/(authenticated)/equipe/registre-personnel/page.tsx`](<../apps/backoffice/src/app/(authenticated)/equipe/registre-personnel/page.tsx>), [`packages/db-cloud/src/personnel-register-repository.ts`](../packages/db-cloud/src/personnel-register-repository.ts)           | `apps/backoffice`                                  | `packages/db-cloud`                                  | Register -> Personnel                                                                                  | `APPROVED`       | `IMPLEMENTED`  | `DEVELOPMENT_ONLY` | `BLOCKED`            | `BLOCKED` — legal register dictionary, retention, and operations              | `OK`                                                                                                                 |
+-| Backoffice        | Formalités du personnel    | Employee-connected, in-memory development prototype only                                                                                                              | [Personnel Product Knowledge](features/personnel/README.md), [Formalités page pack](ui/pages/backoffice-equipe-formalites-personnel/README.md)                                                                                             | [`apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel`](<../apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel>)                                                                                                                                                | `apps/backoffice`                                  | `N/A` — prototype has no durable Formalités data     | Formalités prototype -> Personnel read projection                                                      | `APPROVED`       | `PROTOTYPE`    | `DEVELOPMENT_ONLY` | `BLOCKED`            | `BLOCKED` — legal templates, privacy, storage, signature, and operations      | `OK`                                                                                                                 |
+-| Backoffice        | Formalités du personnel    | Durable draft/generation/signature lifecycle                                                                                                                          | [Personnel Product Knowledge](features/personnel/README.md), [Formalités page pack](ui/pages/backoffice-equipe-formalites-personnel/README.md)                                                                                             | No durable Formalités schema, persistence, generated file, signature, or production path                                                                                                                                                                                                         | `apps/backoffice` (proposed)                       | `NEEDS REVIEW`                                       | Durable Formalités -> Personnel / Documents / external signature                                       | `PROPOSED`       | `NOT_STARTED`  | `NOT_ENABLED`      | `BLOCKED`            | `BLOCKED` — legal/template/privacy/storage/signature gates                    | `OK` — not merged with the connected prototype status                                                                |
+-| Backoffice        | Planning                   | Planned planning capability behind a shared planned-page state                                                                                                        | [Current State](CURRENT_STATE.md)                                                                                                                                                                                                          | [`apps/backoffice/src/app/(authenticated)/equipe/planning/page.tsx`](<../apps/backoffice/src/app/(authenticated)/equipe/planning/page.tsx>) is a placeholder, not capability implementation                                                                                                      | `apps/backoffice`                                  | `N/A`                                                | Planning <-> Personnel                                                                                 | `—`              | `NOT_STARTED`  | `NOT_ENABLED`      | `NOT_ASSESSED`       | `NOT_ASSESSED`                                                                | `NEEDS REVIEW` — planned wording does not resolve the Product Decision status                                        |
+-| Backoffice        | Pointage                   | Planned time-tracking capability behind a shared planned-page state                                                                                                   | [Current State](CURRENT_STATE.md)                                                                                                                                                                                                          | [`apps/backoffice/src/app/(authenticated)/equipe/pointage/page.tsx`](<../apps/backoffice/src/app/(authenticated)/equipe/pointage/page.tsx>) is a placeholder, not capability implementation                                                                                                      | `apps/backoffice`                                  | `N/A`                                                | Pointage <-> Personnel / Today                                                                         | `—`              | `NOT_STARTED`  | `NOT_ENABLED`      | `NOT_ASSESSED`       | `NOT_ASSESSED`                                                                | `NEEDS REVIEW` — planned wording does not resolve the Product Decision status                                        |
+-| Backoffice        | Tâches du jour             | Planned daily-task capability behind a shared planned-page state                                                                                                      | [Current State](CURRENT_STATE.md)                                                                                                                                                                                                          | [`apps/backoffice/src/app/(authenticated)/equipe/taches-quotidiennes/page.tsx`](<../apps/backoffice/src/app/(authenticated)/equipe/taches-quotidiennes/page.tsx>) is a placeholder, not capability implementation                                                                                | `apps/backoffice`                                  | `N/A`                                                | Tâches du jour <-> Today / Personnel                                                                   | `—`              | `NOT_STARTED`  | `NOT_ENABLED`      | `NOT_ASSESSED`       | `NOT_ASSESSED`                                                                | `NEEDS REVIEW` — planned wording does not resolve the Product Decision status                                        |
++| Product / Runtime | Module                     | Capability / Scope                                                                                                                                                    | Primary Knowledge Source                                                                                                                                                                                                                   | Implementation Evidence                                                                                                                                                                                                                                                                          | Runtime Owner                                      | Data Owner                                                                                                    | Related Modules                                                                                                                          | Product Decision | Implementation | Environment        | Production Readiness | External Dependency                                                           | Review Marker                                                                                                                                    |
++| ----------------- | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ---------------- | -------------- | ------------------ | -------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
++| Backoffice        | Authentication             | Password sign-in, scoped server sessions, tenant selection/switching, logout, and reset-token foundation                                                              | [Identity / Access Product Knowledge](features/identity-access/README.md), [Authentication](architecture/AUTHENTICATION.md), [identity and membership](architecture/IDENTITY_AND_MEMBERSHIP.md)                                            | [`apps/backoffice/src/server/auth`](../apps/backoffice/src/server/auth), [`packages/db-cloud/src/auth-repository.ts`](../packages/db-cloud/src/auth-repository.ts)                                                                                                                               | `apps/backoffice`                                  | `packages/db-cloud`                                                                                           | Authentication -> Tenancy / Access                                                                                                       | `—`              | `IMPLEMENTED`  | `UNVERIFIED`       | `NOT_READY`          | `NOT_ASSESSED` — no required delivery provider has been selected or evaluated | `NEEDS REVIEW` — architecture is current but bounded product approval is not explicit                                                            |
++| Backoffice        | Tenancy                    | Trusted organization/establishment context and fail-closed server authorization                                                                                       | [Identity / Access Product Knowledge](features/identity-access/README.md), [Tenancy](architecture/TENANCY.md), [ADR-003](decisions/ADR-003-database-ownership-boundaries.md)                                                               | [`packages/tenant`](../packages/tenant), tenant-scoped repositories in [`packages/db-cloud`](../packages/db-cloud)                                                                                                                                                                               | `apps/backoffice` and public cloud server runtimes | `packages/db-cloud`                                                                                           | Tenancy -> Authentication / every tenant-owned cloud module                                                                              | `APPROVED`       | `IMPLEMENTED`  | `UNVERIFIED`       | `NOT_READY`          | `NOT_ASSESSED`                                                                | `OK`                                                                                                                                             |
++| Backoffice        | Access / membership        | Tenant user and membership administration plus bounded access history                                                                                                 | [Identity / Access Product Knowledge](features/identity-access/README.md), [Authentication](architecture/AUTHENTICATION.md), [identity and membership](architecture/IDENTITY_AND_MEMBERSHIP.md)                                            | [`apps/backoffice/src/app/(authenticated)/parametres/utilisateurs-acces`](<../apps/backoffice/src/app/(authenticated)/parametres/utilisateurs-acces>), [`packages/db-cloud/src/auth-repository.ts`](../packages/db-cloud/src/auth-repository.ts)                                                 | `apps/backoffice`                                  | `packages/db-cloud`                                                                                           | Access -> Authentication / Tenancy                                                                                                       | `—`              | `IMPLEMENTED`  | `UNVERIFIED`       | `NOT_READY`          | `NOT_ASSESSED`                                                                | `NEEDS REVIEW` — explicit Product Decision evidence is weak                                                                                      |
++| Backoffice        | Establishment profile      | General identity, address, contact, media, language, service-mode, and visibility editing                                                                             | [ADR-006](decisions/ADR-006-cloud-establishment-profile-context.md), [Establishment Product Knowledge](features/establishment/README.md), [page pack](ui/pages/establishment-general-information/README.md)                                | [`apps/backoffice/src/app/(authenticated)/etablissement/informations-generales`](<../apps/backoffice/src/app/(authenticated)/etablissement/informations-generales>), [`packages/db-cloud/src/establishment-profile-repository.ts`](../packages/db-cloud/src/establishment-profile-repository.ts) | `apps/backoffice`                                  | `packages/db-cloud`                                                                                           | Public booking / Today -> Establishment profile                                                                                          | `APPROVED`       | `IMPLEMENTED`  | `UNVERIFIED`       | `NOT_READY`          | `NOT_ASSESSED`                                                                | `OK`                                                                                                                                             |
++| Backoffice        | Restaurant Knowledge       | Concept/history, cuisine/know-how, customer experience, team/culture, communication identity, and validated restaurant knowledge                                      | [ADR-007](decisions/ADR-007-composed-general-information-and-restaurant-knowledge.md), [page Product Knowledge](features/establishment/general-information/README.md), [Establishment Product Knowledge](features/establishment/README.md) | Dedicated READ/MANAGE grants and guards in [`apps/backoffice/src/server/auth/permissions.ts`](../apps/backoffice/src/server/auth/permissions.ts); no Restaurant Knowledge content implementation                                                                                                 | `NEEDS REVIEW` before content implementation       | Restaurant Knowledge — establishment-scoped persistence/domain owner; technical storage choice `NEEDS REVIEW` | Composed beside Establishment Profile; Organization is the tenancy/access envelope; Identity / Access integrates dedicated authorization | `APPROVED`       | `NOT_STARTED`  | `NOT_ENABLED`      | `NOT_ASSESSED`       | `NOT_ASSESSED`                                                                | `NEEDS REVIEW` — Concept/Histoire ownership and initial behavior are approved; technical schema/repository/API/storage details remain unresolved |
++| Backoffice        | Today                      | Establishment dashboard over reservations, service periods/exceptions, and entitled reputation feedback                                                               | [ADR-005](decisions/ADR-005-today-operational-steering.md), [Today Product Knowledge](features/today/README.md), [page pack](ui/pages/today/README.md)                                                                                     | [`apps/backoffice/src/app/(authenticated)/aujourdhui/page.tsx`](<../apps/backoffice/src/app/(authenticated)/aujourdhui/page.tsx>)                                                                                                                                                                | `apps/backoffice`                                  | `packages/db-cloud`                                                                                           | Today -> Reservations / service periods / Reputation                                                                                     | `APPROVED`       | `IMPLEMENTED`  | `UNVERIFIED`       | `NOT_READY`          | `NOT_ASSESSED`                                                                | `OK`                                                                                                                                             |
++| Backoffice        | Today — future aggregation | Approved future aggregation of Tâches du jour, service handover, Pointage anomalies, Stock / Inventaire, Fournisseurs, internal operational knowledge, and Compliance | [ADR-005](decisions/ADR-005-today-operational-steering.md), [Today Product Knowledge](features/today/README.md)                                                                                                                            | No implementation; current placeholder and prototype source surfaces are not Today integrations                                                                                                                                                                                                  | `apps/backoffice`                                  | Source modules retain canonical ownership                                                                     | Today <- Tâches du jour / handover / Pointage / Stock / Fournisseurs / internal knowledge / Compliance                                   | `APPROVED`       | `NOT_STARTED`  | `NOT_ENABLED`      | `NOT_ASSESSED`       | `NOT_ASSESSED`                                                                | `OK` — approved category intent only; detailed behavior remains future work                                                                      |
++| Backoffice        | Personnel                  | OWNER-only minimum employee dossier read/create/edit/departure/history scope                                                                                          | [Personnel Product Knowledge](features/personnel/README.md), [Salariés page pack](ui/pages/backoffice-equipe-salaries/README.md)                                                                                                           | [`apps/backoffice/src/app/(authenticated)/equipe/salaries`](<../apps/backoffice/src/app/(authenticated)/equipe/salaries>), [`packages/db-cloud/src/personnel-repository.ts`](../packages/db-cloud/src/personnel-repository.ts)                                                                   | `apps/backoffice`                                  | `packages/db-cloud`                                                                                           | Personnel -> Documents / Register / Formalités / Planning / Pointage                                                                     | `APPROVED`       | `IMPLEMENTED`  | `UNVERIFIED`       | `BLOCKED`            | `BLOCKED` — personnel legal/privacy/retention/operations gates                | `OK` for bounded repository scope; live environment is unverified                                                                                |
++| Backoffice        | Registre du personnel      | Development-only real-data register read/export slice                                                                                                                 | [Personnel Product Knowledge](features/personnel/README.md), [Register page pack](ui/pages/backoffice-equipe-registre-personnel/README.md)                                                                                                 | [`apps/backoffice/src/app/(authenticated)/equipe/registre-personnel/page.tsx`](<../apps/backoffice/src/app/(authenticated)/equipe/registre-personnel/page.tsx>), [`packages/db-cloud/src/personnel-register-repository.ts`](../packages/db-cloud/src/personnel-register-repository.ts)           | `apps/backoffice`                                  | `packages/db-cloud`                                                                                           | Register -> Personnel                                                                                                                    | `APPROVED`       | `IMPLEMENTED`  | `DEVELOPMENT_ONLY` | `BLOCKED`            | `BLOCKED` — legal register dictionary, retention, and operations              | `OK`                                                                                                                                             |
++| Backoffice        | Formalités du personnel    | Employee-connected, in-memory development prototype only                                                                                                              | [Personnel Product Knowledge](features/personnel/README.md), [Formalités page pack](ui/pages/backoffice-equipe-formalites-personnel/README.md)                                                                                             | [`apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel`](<../apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel>)                                                                                                                                                | `apps/backoffice`                                  | `N/A` — prototype has no durable Formalités data                                                              | Formalités prototype -> Personnel read projection                                                                                        | `APPROVED`       | `PROTOTYPE`    | `DEVELOPMENT_ONLY` | `BLOCKED`            | `BLOCKED` — legal templates, privacy, storage, signature, and operations      | `OK`                                                                                                                                             |
++| Backoffice        | Formalités du personnel    | Durable draft/generation/signature lifecycle                                                                                                                          | [Personnel Product Knowledge](features/personnel/README.md), [Formalités page pack](ui/pages/backoffice-equipe-formalites-personnel/README.md)                                                                                             | No durable Formalités schema, persistence, generated file, signature, or production path                                                                                                                                                                                                         | `apps/backoffice` (proposed)                       | `NEEDS REVIEW`                                                                                                | Durable Formalités -> Personnel / Documents / external signature                                                                         | `PROPOSED`       | `NOT_STARTED`  | `NOT_ENABLED`      | `BLOCKED`            | `BLOCKED` — legal/template/privacy/storage/signature gates                    | `OK` — not merged with the connected prototype status                                                                                            |
++| Backoffice        | Planning                   | Planned planning capability behind a shared planned-page state                                                                                                        | [Current State](CURRENT_STATE.md)                                                                                                                                                                                                          | [`apps/backoffice/src/app/(authenticated)/equipe/planning/page.tsx`](<../apps/backoffice/src/app/(authenticated)/equipe/planning/page.tsx>) is a placeholder, not capability implementation                                                                                                      | `apps/backoffice`                                  | `N/A`                                                                                                         | Planning <-> Personnel                                                                                                                   | `—`              | `NOT_STARTED`  | `NOT_ENABLED`      | `NOT_ASSESSED`       | `NOT_ASSESSED`                                                                | `NEEDS REVIEW` — planned wording does not resolve the Product Decision status                                                                    |
++| Backoffice        | Pointage                   | Planned time-tracking capability behind a shared planned-page state                                                                                                   | [Current State](CURRENT_STATE.md)                                                                                                                                                                                                          | [`apps/backoffice/src/app/(authenticated)/equipe/pointage/page.tsx`](<../apps/backoffice/src/app/(authenticated)/equipe/pointage/page.tsx>) is a placeholder, not capability implementation                                                                                                      | `apps/backoffice`                                  | `N/A`                                                                                                         | Pointage <-> Personnel / Today                                                                                                           | `—`              | `NOT_STARTED`  | `NOT_ENABLED`      | `NOT_ASSESSED`       | `NOT_ASSESSED`                                                                | `NEEDS REVIEW` — planned wording does not resolve the Product Decision status                                                                    |
++| Backoffice        | Tâches du jour             | Planned daily-task capability behind a shared planned-page state                                                                                                      | [Current State](CURRENT_STATE.md)                                                                                                                                                                                                          | [`apps/backoffice/src/app/(authenticated)/equipe/taches-quotidiennes/page.tsx`](<../apps/backoffice/src/app/(authenticated)/equipe/taches-quotidiennes/page.tsx>) is a placeholder, not capability implementation                                                                                | `apps/backoffice`                                  | `N/A`                                                                                                         | Tâches du jour <-> Today / Personnel                                                                                                     | `—`              | `NOT_STARTED`  | `NOT_ENABLED`      | `NOT_ASSESSED`       | `NOT_ASSESSED`                                                                | `NEEDS REVIEW` — planned wording does not resolve the Product Decision status                                                                    |
+ 
+ ### Stock capabilities
+ 
+diff --git a/docs/features/establishment/README.md b/docs/features/establishment/README.md
+index 41f6e44..292c702 100644
+--- a/docs/features/establishment/README.md
++++ b/docs/features/establishment/README.md
+@@ -108,9 +108,21 @@ Route grouping does not change these ownership boundaries.
+ 
+ ### Future, not-started, or proposed scope
+ 
+-Restaurant Knowledge is approved by ADR-007 but not started. Its canonical
+-data owner/boundary, operation-level permissions, and initial data
+-shape/behavior remain `NEEDS REVIEW` before implementation specifications.
++Restaurant Knowledge is approved by ADR-007 but its content implementation is
++not started. Its initial authorization prerequisite is implemented through
++distinct `restaurant-knowledge.read` and `restaurant-knowledge.manage`
++operations, both granted to `OWNER` and `MANAGER` and denied to `STAFF` by
++default. Restaurant Knowledge is the canonical owner of `Concept` and
++`Histoire`, including their persistence/domain boundary; Establishment Profile
++does not own either datum. This knowledge is semantically scoped to an
++establishment, while Organization remains its tenancy and access envelope.
++
++The approved initial `Concept & histoire` behavior allows viewing and manual
++input/editing of each independently optional value, including a valid empty
++initial state, followed by one explicit save for the whole slice; it does not
++autosave. The concrete schema, repository/table choice, API, field validation,
++and storage implementation remain `NEEDS REVIEW` and are not selected by this
++Product Knowledge.
+ 
+ Media upload/storage, image processing, address verification/geocoding, an
+ external public profile route, expanded service-mode values, external profile
+@@ -124,16 +136,16 @@ classify that capability. Its detailed ownership and maturity remain
+ 
+ ## 4. Capability map
+ 
+-| Capability / scope                      | Current boundary                                                                                                                                                      | Owner                                                                                                         |
+-| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+-| General establishment profile           | Implemented read/edit scope for supported identity, address, contact, media-reference, language, service-mode, and visibility fields.                                 | Establishment in `packages/db-cloud`.                                                                         |
+-| Restaurant Knowledge                    | Approved not-started capability for concept/history, cuisine/know-how, customer experience, team/culture, communication identity, and validated restaurant knowledge. | Establishment domain at product/navigation level; canonical data owner and permissions remain `NEEDS REVIEW`. |
+-| Establishment context                   | Identity, locale, timezone, active scope, and entitlements are resolved into trusted server context.                                                                  | Establishment records plus Tenancy/Auth resolution.                                                           |
+-| Hours / service periods                 | Implemented Booking administration shown under the Establishment UI area.                                                                                             | Booking.                                                                                                      |
+-| Dated exceptions                        | Implemented Booking exception records and mutations.                                                                                                                  | Booking.                                                                                                      |
+-| Public-facing establishment information | Supported profile fields are filtered by visibility rules for approved public consumers; no general public-profile route is claimed.                                  | Establishment profile; each public flow owns its presentation and eligibility.                                |
+-| Service modes / visibility              | Implemented profile arrays and visibility flags exposed by the general-information editor.                                                                            | Establishment.                                                                                                |
+-| Logo and cover references               | Implemented validated HTTP(S) references; upload, storage, deletion, and cleanup lifecycles are not approved.                                                         | Establishment owns references; no media-storage owner is selected.                                            |
++| Capability / scope                      | Current boundary                                                                                                                                                                                   | Owner                                                                                                                                                                                                          |
++| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
++| General establishment profile           | Implemented read/edit scope for supported identity, address, contact, media-reference, language, service-mode, and visibility fields.                                                              | Establishment in `packages/db-cloud`.                                                                                                                                                                          |
++| Restaurant Knowledge                    | Approved not-started content capability. Its first slice supports independent optional Concept and Histoire values, manual input/view/edit, valid empty state, one explicit save, and no autosave. | Restaurant Knowledge canonically owns Concept/Histoire and their establishment-scoped persistence/domain boundary; Organization is the tenancy/access envelope. Identity / Access owns permission integration. |
++| Establishment context                   | Identity, locale, timezone, active scope, and entitlements are resolved into trusted server context.                                                                                               | Establishment records plus Tenancy/Auth resolution.                                                                                                                                                            |
++| Hours / service periods                 | Implemented Booking administration shown under the Establishment UI area.                                                                                                                          | Booking.                                                                                                                                                                                                       |
++| Dated exceptions                        | Implemented Booking exception records and mutations.                                                                                                                                               | Booking.                                                                                                                                                                                                       |
++| Public-facing establishment information | Supported profile fields are filtered by visibility rules for approved public consumers; no general public-profile route is claimed.                                                               | Establishment profile; each public flow owns its presentation and eligibility.                                                                                                                                 |
++| Service modes / visibility              | Implemented profile arrays and visibility flags exposed by the general-information editor.                                                                                                         | Establishment.                                                                                                                                                                                                 |
++| Logo and cover references               | Implemented validated HTTP(S) references; upload, storage, deletion, and cleanup lifecycles are not approved.                                                                                      | Establishment owns references; no media-storage owner is selected.                                                                                                                                             |
+ 
+ ## 5. Lifecycle summary
+ 
+@@ -142,27 +154,27 @@ implementation evidence. The existing Establishment Profile lifecycle remains
+ unchanged. Booking-owned capabilities retain their separate Booking lifecycle
+ assignments.
+ 
+-| Capability / Scope                    | Product Decision | Implementation | Environment   | Production Readiness | External Dependency | Review Marker                                                                                        |
+-| ------------------------------------- | ---------------- | -------------- | ------------- | -------------------- | ------------------- | ---------------------------------------------------------------------------------------------------- |
+-| Current general Establishment profile | `APPROVED`       | `IMPLEMENTED`  | `UNVERIFIED`  | `NOT_READY`          | `NOT_ASSESSED`      | `OK`                                                                                                 |
+-| Restaurant Knowledge                  | `APPROVED`       | `NOT_STARTED`  | `NOT_ENABLED` | `NOT_ASSESSED`       | `NOT_ASSESSED`      | `NEEDS REVIEW` — data owner/boundary, permissions, and initial data shape/behavior remain unresolved |
++| Capability / Scope                    | Product Decision | Implementation | Environment   | Production Readiness | External Dependency | Review Marker                                                                                                                                   |
++| ------------------------------------- | ---------------- | -------------- | ------------- | -------------------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
++| Current general Establishment profile | `APPROVED`       | `IMPLEMENTED`  | `UNVERIFIED`  | `NOT_READY`          | `NOT_ASSESSED`      | `OK`                                                                                                                                            |
++| Restaurant Knowledge                  | `APPROVED`       | `NOT_STARTED`  | `NOT_ENABLED` | `NOT_ASSESSED`       | `NOT_ASSESSED`      | `NEEDS REVIEW` — ownership, initial behavior, and authorization are approved; technical schema/repository/API/storage details remain unresolved |
+ 
+ ## 6. Source-of-truth boundaries
+ 
+-| Data / concern                              | Owning module/source                                                                                                                                                | Establishment relationship                                                                                                                                                                       |
+-| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+-| Organization identity                       | `organizations` and Tenancy architecture                                                                                                                            | An Establishment belongs to one Organization; it does not replace or duplicate the organization record.                                                                                          |
+-| Establishment identity and profile          | `establishments` through the Establishment profile repository                                                                                                       | Canonical cloud owner for the bounded restaurant/site profile. Reads and writes use both organization and establishment scope.                                                                   |
+-| Restaurant Knowledge                        | `NEEDS REVIEW`; ADR-007 requires a boundary separate from the Establishment Profile                                                                                 | Approved Product Intent in the Establishment domain at product/navigation level; no schema, repository, permission mapping, or implementation is approved.                                       |
+-| Locale and timezone                         | `establishments`, projected into trusted tenant context                                                                                                             | Establishment-owned context consumed by date/time presentation and source modules; not currently editable in the general-information form.                                                       |
+-| Booking service periods                     | `booking_service_periods` and Booking repository/actions                                                                                                            | Establishment-scoped relation only; Booking owns period records and behavior.                                                                                                                    |
+-| Booking exceptions                          | `booking_exceptions` and Booking repository/actions                                                                                                                 | Establishment-scoped relation only; Booking owns exception records and behavior.                                                                                                                 |
+-| Reservation settings                        | `booking_settings` and Booking administration                                                                                                                       | Booking owns availability and policy. It does not own profile address, contacts, logo, cover, languages, or service modes.                                                                       |
+-| Public booking tenant resolution            | Public Booking repository resolves the globally unique establishment slug and verifies active organization/establishment, entitlement, and enabled Booking settings | Establishment supplies bounded identity/profile context; Booking owns eligibility, availability, and reservation behavior. Browser-supplied organization or establishment IDs are not authority. |
+-| Reputation / Direct Feedback tenant context | Tenancy hostname resolution and Reputation sources                                                                                                                  | Verified server-side hostname context identifies organization and establishment. Reputation owns settings, feedback, replies, and connector behavior.                                            |
+-| Access and membership                       | Authentication, `tenant_memberships`, sessions, permissions, and entitlements                                                                                       | Membership grants scoped access to an Establishment; the Establishment profile does not own users, roles, or membership lifecycle.                                                               |
+-| Today context                               | Trusted authenticated tenant context and canonical Establishment profile                                                                                            | Today consumes locale, timezone, identity, and scope without becoming another profile owner.                                                                                                     |
+-| Public website tenant context               | Verified hostname resolution and the bounded public tenant API where used                                                                                           | Current code can expose bounded identity context; this does not establish a general public Establishment profile or transfer profile ownership to Marketing.                                     |
++| Data / concern                              | Owning module/source                                                                                                                                                         | Establishment relationship                                                                                                                                                                       |
++| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
++| Organization identity                       | `organizations` and Tenancy architecture                                                                                                                                     | An Establishment belongs to one Organization; it does not replace or duplicate the organization record.                                                                                          |
++| Establishment identity and profile          | `establishments` through the Establishment profile repository                                                                                                                | Canonical cloud owner for the bounded restaurant/site profile. Reads and writes use both organization and establishment scope.                                                                   |
++| Restaurant Knowledge                        | Restaurant Knowledge owns its establishment-scoped persistence/domain boundary; concrete schema, repository/table, API, validation, and storage design remain `NEEDS REVIEW` | Canonical owner of Concept and Histoire. Organization is the tenancy/access envelope; Establishment Profile is not the data owner. No content implementation exists yet.                         |
++| Locale and timezone                         | `establishments`, projected into trusted tenant context                                                                                                                      | Establishment-owned context consumed by date/time presentation and source modules; not currently editable in the general-information form.                                                       |
++| Booking service periods                     | `booking_service_periods` and Booking repository/actions                                                                                                                     | Establishment-scoped relation only; Booking owns period records and behavior.                                                                                                                    |
++| Booking exceptions                          | `booking_exceptions` and Booking repository/actions                                                                                                                          | Establishment-scoped relation only; Booking owns exception records and behavior.                                                                                                                 |
++| Reservation settings                        | `booking_settings` and Booking administration                                                                                                                                | Booking owns availability and policy. It does not own profile address, contacts, logo, cover, languages, or service modes.                                                                       |
++| Public booking tenant resolution            | Public Booking repository resolves the globally unique establishment slug and verifies active organization/establishment, entitlement, and enabled Booking settings          | Establishment supplies bounded identity/profile context; Booking owns eligibility, availability, and reservation behavior. Browser-supplied organization or establishment IDs are not authority. |
++| Reputation / Direct Feedback tenant context | Tenancy hostname resolution and Reputation sources                                                                                                                           | Verified server-side hostname context identifies organization and establishment. Reputation owns settings, feedback, replies, and connector behavior.                                            |
++| Access and membership                       | Authentication, `tenant_memberships`, sessions, permissions, and entitlements                                                                                                | Membership grants scoped access to an Establishment; the Establishment profile does not own users, roles, or membership lifecycle.                                                               |
++| Today context                               | Trusted authenticated tenant context and canonical Establishment profile                                                                                                     | Today consumes locale, timezone, identity, and scope without becoming another profile owner.                                                                                                     |
++| Public website tenant context               | Verified hostname resolution and the bounded public tenant API where used                                                                                                    | Current code can expose bounded identity context; this does not establish a general public Establishment profile or transfer profile ownership to Marketing.                                     |
+ 
+ ## 7. Cloud Establishment versus restaurant-local POS establishment
+ 
+@@ -238,8 +250,11 @@ profile repository, or `establishment.profile.*` permissions.
+ - Repository implementation and tests describe repository Implemented State;
+   they do not prove which version is deployed or that Backoffice is
+   production-ready.
+-- Restaurant Knowledge has no approved data owner, operation-level permission
+-  matrix, detailed data shape, provider, or implementation. Company/legal data,
++- Restaurant Knowledge owns the approved persistence/domain boundary for
++  Concept and Histoire, but no concrete schema, repository/table, API, field
++  validation, storage implementation, provider, or content implementation has
++  been selected. Its approved READ/MANAGE matrix is implemented independently
++  of Establishment Profile permissions. Company/legal data,
+   automatic cross-module inference, detailed history/provenance, Marketing or
+   social-content consumption, and social-profile link ownership remain outside
+   its initial approved scope or `NEEDS REVIEW`.
+@@ -280,8 +295,11 @@ profile repository, or `establishment.profile.*` permissions.
+    implementation.
+ 9. When sources conflict or authority is insufficient, apply the Authority
+    Model and retain `NEEDS REVIEW` rather than choosing silently.
+-10. Do not infer Restaurant Knowledge data ownership or permissions from its
+-    Establishment product/navigation placement or from current profile code.
++10. Treat Restaurant Knowledge as the canonical owner of Concept and Histoire
++    and their persistence/domain boundary. Keep them semantically
++    establishment-scoped with Organization as the tenancy/access envelope;
++    never move them into Establishment Profile or infer access from profile
++    code.
+ 11. OpenSpec is not currently normative for Establishment.
+ 
+ ## 13. OpenSpec position
+@@ -291,10 +309,14 @@ today. This home retains broader Product Knowledge context and ownership
+ boundaries. After YUTA explicitly approves OpenSpec specifications as
+ normative, approved Establishment specs may define specific behavioral
+ requirements inside accepted product, architecture, and security boundaries.
+-Restaurant Knowledge is not ready for an implementation specification until
+-its data owner/boundary, operation-level permissions, and initial data
+-shape/behavior scope are resolved. No OpenSpec artifact is created or modified
+-by this step.
++The bounded `Concept & histoire` Product decisions establish canonical
++ownership, establishment scope, independently optional values, valid empty
++state, manual view/edit, and one explicit save. A future resumed change may
++specify implementation within those decisions after its authorization
++prerequisite is accepted. It must select technical schema, repository/table,
++API, validation, and storage details without changing approved ownership or
++inventing new Product behavior. This authorization change does not implement
++Restaurant Knowledge content.
+ 
+ ## 14. Status
+ 
+diff --git a/docs/features/establishment/general-information/README.md b/docs/features/establishment/general-information/README.md
+index fd9c354..05f056a 100644
+--- a/docs/features/establishment/general-information/README.md
++++ b/docs/features/establishment/general-information/README.md
+@@ -104,14 +104,38 @@ required before promotion to validated knowledge.
+ 
+ Restaurant Knowledge must have its own:
+ 
+-- canonical data owner and persistence boundary;
+-- operation-level permissions;
++- canonical data owner and persistence/domain boundary;
++- operation-level permissions independent from Establishment Profile;
+ - approved initial data shape and behavior scope; and
+ - lifecycle and evidence independent from the Establishment Profile.
+ 
+-These details remain `NEEDS REVIEW`. Page placement does not assign them, and
+-Restaurant Knowledge does not inherit the profile repository, schema, or
+-permissions.
++The initial permission boundary is resolved through distinct
++`restaurant-knowledge.read` and `restaurant-knowledge.manage` operations. Both
++currently grant `OWNER` and `MANAGER`; `STAFF` is denied by default. Restaurant
++Knowledge owns their semantic meaning, while Identity / Access owns their
++representation, grant mapping, and enforcement integration. They do not
++inherit Establishment Profile permissions, and `YUTA_ADMIN` or `YUTA_SUPPORT`
++does not bypass active tenant membership or these grants.
++
++Restaurant Knowledge is the canonical owner of `Concept` and `Histoire` and of
++their persistence/domain boundary. Establishment Profile owns neither datum.
++This knowledge is semantically scoped to an establishment; Organization is the
++tenancy/access envelope rather than the semantic owner. Page placement does
++not change these decisions, and Restaurant Knowledge does not inherit the
++profile repository or schema.
++
++### Approved initial Concept & histoire behavior
++
++- view Concept;
++- manually input and edit Concept;
++- view Histoire;
++- manually input and edit Histoire; and
++- explicitly save the complete `Concept & histoire` slice once.
++
++Concept and Histoire are independent and optional. An empty initial state is
++valid, and the initial behavior does not autosave. These decisions do not
++select a schema, repository/table, API, field validation, or storage
++implementation; those technical details remain `NEEDS REVIEW`.
+ 
+ ### Ownership invariant
+ 
+@@ -133,10 +157,10 @@ capability. It must not duplicate:
+ 
+ The two capability rows are intentionally independent.
+ 
+-| Capability            | Product Decision | Implementation | Environment   | Production Readiness | External Dependency | Review Marker                                                                                        |
+-| --------------------- | ---------------- | -------------- | ------------- | -------------------- | ------------------- | ---------------------------------------------------------------------------------------------------- |
+-| Establishment Profile | `APPROVED`       | `IMPLEMENTED`  | `UNVERIFIED`  | `NOT_READY`          | `NOT_ASSESSED`      | `OK`                                                                                                 |
+-| Restaurant Knowledge  | `APPROVED`       | `NOT_STARTED`  | `NOT_ENABLED` | `NOT_ASSESSED`       | `NOT_ASSESSED`      | `NEEDS REVIEW` — data owner/boundary, permissions, and initial data shape/behavior remain unresolved |
++| Capability            | Product Decision | Implementation | Environment   | Production Readiness | External Dependency | Review Marker                                                                                                                                   |
++| --------------------- | ---------------- | -------------- | ------------- | -------------------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
++| Establishment Profile | `APPROVED`       | `IMPLEMENTED`  | `UNVERIFIED`  | `NOT_READY`          | `NOT_ASSESSED`      | `OK`                                                                                                                                            |
++| Restaurant Knowledge  | `APPROVED`       | `NOT_STARTED`  | `NOT_ENABLED` | `NOT_ASSESSED`       | `NOT_ASSESSED`      | `NEEDS REVIEW` — ownership, initial behavior, and authorization are approved; technical schema/repository/API/storage details remain unresolved |
+ 
+ Approval of Restaurant Knowledge does not prove implementation, environment
+ availability, production readiness, or provider selection.
+@@ -155,7 +179,6 @@ The following are not approved current behavior:
+ - ownership of social-profile links;
+ - AI/provider, prompt, embedding, vector database, storage, job, model, or API
+   implementation;
+-- a detailed Restaurant Knowledge role/permission matrix; and
+ - detailed fields, schema, requiredness, enums, limits, or validation rules.
+ 
+ Company/legal ownership across Organization, Establishment, a possible
+@@ -179,8 +202,10 @@ the canonical owner. Consumption does not transfer ownership.
+ ## 8. Roles, security, and runtime boundaries
+ 
+ Current Establishment Profile permissions apply only to that capability.
+-Restaurant Knowledge read, add, edit, validate, reject, classify, and
+-administrative operations remain `NEEDS REVIEW` and must be defined separately.
++Restaurant Knowledge READ and MANAGE are separately implemented for `OWNER`
++and `MANAGER`, with `STAFF` denied. Additional validate, reject, classify, or
++administrative operations remain `NEEDS REVIEW` and require separate Product
++decisions.
+ 
+ Any future cloud implementation must preserve trusted server-derived
+ organization-and-establishment scope and fail closed. Browser-provided
+@@ -188,8 +213,9 @@ organization, establishment, membership, role, permission, entitlement, or
+ tenant values are not authority.
+ 
+ Cloud, restaurant-local POS, and Display persistence remain separate under
+-ADR-003. This page-level decision does not select a Restaurant Knowledge
+-database, schema, provider, storage system, or runtime adapter.
++ADR-003. Restaurant Knowledge owns the Concept/Histoire persistence/domain
++boundary, but this page-level decision does not select its database, schema,
++repository/table, API, provider, storage implementation, or runtime adapter.
+ 
+ ## 9. OpenSpec readiness
+ 
+@@ -204,27 +230,25 @@ An OpenSpec analysis for a change on this page must read, in order:
+ 5. current implementation evidence when the question concerns Implemented
+    State.
+ 
+-### Restaurant Knowledge blocker
++### Restaurant Knowledge readiness
+ 
+-Restaurant Knowledge is not ready for an implementation specification. At
+-minimum, Product, architecture, and security review must resolve:
++The Control Tower-approved Product decisions resolve the bounded Concept &
++histoire owner, semantic scope, optionality, empty state, manual view/edit, and
++explicit-save behavior. The separate authorization prerequisite resolves the
++initial READ/MANAGE permission mapping.
+ 
+-- the canonical data owner and boundary;
+-- operation-level permissions; and
+-- the initial knowledge data shape and behavior scope.
+-
+-The resolution must be sufficient to write requirements without inventing a
+-schema, permission, workflow, provider, or storage design.
++Detailed technical persistence and transport design remains intentionally
++open. A resumed implementation change must select schema, repository/table,
++API, field validation, and storage implementation without changing canonical
++ownership, tenant scope, or approved behavior.
+ 
+ ### Pilot recommendation
+ 
+-A first pilot may use a genuinely bounded enhancement of the existing
+-Establishment Profile only if separately approved and if its current owner and
+-permissions remain intact. A Restaurant Knowledge pilot should wait until the
+-three blockers above are resolved.
+-
+-No OpenSpec change or specification is created by this Product Knowledge
+-integration.
++The bounded Concept & histoire slice must be implemented as Restaurant
++Knowledge, not as an enhancement of Establishment Profile. It may proceed only
++through its separately reviewed change after the authorization prerequisite is
++accepted. This documentation correction does not resume or implement that
++dependent change.
+ 
+ ## 10. Source map
+ 
+diff --git a/docs/features/identity-access/README.md b/docs/features/identity-access/README.md
+index e41b323..1f50cf4 100644
+--- a/docs/features/identity-access/README.md
++++ b/docs/features/identity-access/README.md
+@@ -70,6 +70,21 @@ by the browser are untrusted and cannot establish access.
+ bypass restaurant membership checks. No current Platform Admin product
+ behavior is established by their schema presence.
+ 
++### Restaurant Knowledge authorization
++
++Restaurant Knowledge owns the semantic meaning of two separate operations:
++`restaurant-knowledge.read` and `restaurant-knowledge.manage`. Identity /
++Access owns their representation, grant mapping, and integration with the
++existing tenant mechanism. Both operations currently grant `OWNER` and
++`MANAGER`; `STAFF` has no Restaurant Knowledge access by default. The two
++operations remain distinct even though their initial grant sets are identical.
++
++These grants do not inherit `establishment.profile.read` or
++`establishment.profile.manage`. They are evaluated only after the existing
++server-derived active user, organization, establishment, and membership scope
++has been established. `YUTA_ADMIN` and `YUTA_SUPPORT` do not bypass that scope
++or the Restaurant Knowledge grant mapping.
++
+ ## 4. Current bounded scope
+ 
+ Verified repository implementation includes:
+@@ -115,9 +130,10 @@ every Authentication or Access product workflow.
+ 
+ The repository implements the bounded session, membership selection,
+ membership administration, access-audit, tenant-context, entitlement, and
+-capability-guard behavior described above. Code and tests are evidence of
+-repository Implemented State; they do not prove which version is deployed or
+-that a production environment is ready.
++capability-guard behavior described above, including the distinct Restaurant
++Knowledge READ and MANAGE mapping. Code and tests are evidence of repository
++Implemented State; they do not prove which version is deployed or that a
++production environment is ready.
+ 
+ ### Future / incomplete
+ 
+@@ -206,16 +222,17 @@ equivalent without a separately accepted decision.
+ 
+ ## 10. Related modules
+ 
+-| Related module            | Current relationship                                                                                                        | Source of truth / direction                                                         |
+-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+-| Establishment             | Active membership selects establishment scope; profile data and establishment identity remain Establishment-owned.          | Establishment Product Knowledge, Tenancy, and `establishments`.                     |
+-| Personnel                 | A cloud account is not an employee dossier; current employee identity and employment facts remain Personnel-owned.          | Personnel Product Knowledge and personnel repositories.                             |
+-| Today                     | Today requires authenticated tenant context and source-module permissions; it owns no identity or access data.              | Today Product Knowledge and Backoffice server guards.                               |
+-| Reservations / Booking    | Backoffice operations require active tenant scope, `booking.enabled`, and Booking permissions.                              | Public Booking knowledge, Booking repositories, and Booking permission guards.      |
+-| Reputation                | Backoffice operations require active tenant scope, `reputation.enabled`, and Reputation permissions.                        | Reputation knowledge, repositories, and permission guards.                          |
+-| POS / Site Agent          | Uses an independent local user and session model; no cloud identity synchronization exists.                                 | POS Product Knowledge, Site Agent, and `packages/db-pos`.                           |
+-| Public Booking / Feedback | Anonymous visitors have no Backoffice membership; server-side public resolution establishes bounded tenant context.         | Public Booking/Reputation knowledge, ADR-002/ADR-004, and public tenant resolution. |
+-| Platform Admin            | `apps/platform-admin` is reserved and not implemented; global system-role schema values do not create its product behavior. | Repository model, Authentication architecture, and current implementation evidence. |
++| Related module            | Current relationship                                                                                                                        | Source of truth / direction                                                         |
++| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
++| Establishment             | Active membership selects establishment scope; profile data and establishment identity remain Establishment-owned.                          | Establishment Product Knowledge, Tenancy, and `establishments`.                     |
++| Personnel                 | A cloud account is not an employee dossier; current employee identity and employment facts remain Personnel-owned.                          | Personnel Product Knowledge and personnel repositories.                             |
++| Today                     | Today requires authenticated tenant context and source-module permissions; it owns no identity or access data.                              | Today Product Knowledge and Backoffice server guards.                               |
++| Reservations / Booking    | Backoffice operations require active tenant scope, `booking.enabled`, and Booking permissions.                                              | Public Booking knowledge, Booking repositories, and Booking permission guards.      |
++| Reputation                | Backoffice operations require active tenant scope, `reputation.enabled`, and Reputation permissions.                                        | Reputation knowledge, repositories, and permission guards.                          |
++| Restaurant Knowledge      | READ and MANAGE require active tenant scope and their dedicated capability permissions; Establishment Profile grants do not authorize them. | Restaurant Knowledge semantics and Identity / Access permission guards.             |
++| POS / Site Agent          | Uses an independent local user and session model; no cloud identity synchronization exists.                                                 | POS Product Knowledge, Site Agent, and `packages/db-pos`.                           |
++| Public Booking / Feedback | Anonymous visitors have no Backoffice membership; server-side public resolution establishes bounded tenant context.                         | Public Booking/Reputation knowledge, ADR-002/ADR-004, and public tenant resolution. |
++| Platform Admin            | `apps/platform-admin` is reserved and not implemented; global system-role schema values do not create its product behavior.                 | Repository model, Authentication architecture, and current implementation evidence. |
+ 
+ ## 11. Current limitations and non-goals
+ 
+diff --git a/apps/backoffice/test/restaurant-knowledge-permissions.test.ts b/apps/backoffice/test/restaurant-knowledge-permissions.test.ts
+new file mode 100644
+index 0000000..d7d7a5c
+--- /dev/null
++++ b/apps/backoffice/test/restaurant-knowledge-permissions.test.ts
+@@ -0,0 +1,117 @@
++import { randomUUID } from 'node:crypto';
++import type { TenantActor, TenantContext, TenantRole } from '@yuta/tenant';
++import { describe, expect, it, vi } from 'vitest';
++
++vi.mock('server-only', () => ({}));
++
++import {
++  hasEstablishmentPermission,
++  hasRestaurantKnowledgePermission,
++  requireRestaurantKnowledgePermission,
++  type RestaurantKnowledgePermission,
++} from '../src/server/auth/permissions';
++
++const permissions = [
++  'restaurant-knowledge.read',
++  'restaurant-knowledge.manage',
++] as const satisfies readonly RestaurantKnowledgePermission[];
++
++function context(role: TenantRole): TenantContext {
++  return {
++    organizationId: randomUUID(),
++    establishmentId: randomUUID(),
++    actor: {
++      type: 'user',
++      userId: randomUUID(),
++      membershipId: randomUUID(),
++      role,
++    },
++    locale: 'fr-FR',
++    timezone: 'Europe/Paris',
++    entitlements: new Set(),
++  };
++}
++
++function actorContext(actor: TenantActor): TenantContext {
++  return { ...context('OWNER'), actor };
++}
++
++describe('restaurant knowledge permissions', () => {
++  it.each(['OWNER', 'MANAGER'] as const)(
++    'grants READ and MANAGE independently to %s',
++    (role) => {
++      for (const permission of permissions) {
++        expect(
++          hasRestaurantKnowledgePermission(context(role), permission),
++        ).toBe(true);
++        expect(() =>
++          requireRestaurantKnowledgePermission(context(role), permission),
++        ).not.toThrow();
++      }
++    },
++  );
++
++  it('keeps READ and MANAGE as separate typed operations', () => {
++    expect(permissions).toEqual([
++      'restaurant-knowledge.read',
++      'restaurant-knowledge.manage',
++    ]);
++    expect(permissions[0]).not.toBe(permissions[1]);
++  });
++
++  it('denies STAFF for both operations without inheriting profile read access', () => {
++    const staffContext = context('STAFF');
++
++    expect(
++      hasEstablishmentPermission(staffContext, 'establishment.profile.read'),
++    ).toBe(true);
++
++    for (const permission of permissions) {
++      expect(hasRestaurantKnowledgePermission(staffContext, permission)).toBe(
++        false,
++      );
++      expect(() =>
++        requireRestaurantKnowledgePermission(staffContext, permission),
++      ).toThrow('Permission denied.');
++    }
++  });
++
++  it.each([
++    { type: 'public' as const },
++    { type: 'service' as const, serviceName: 'test-service' },
++  ])('denies the $type actor for both operations', (actor) => {
++    for (const permission of permissions) {
++      expect(
++        hasRestaurantKnowledgePermission(actorContext(actor), permission),
++      ).toBe(false);
++      expect(() =>
++        requireRestaurantKnowledgePermission(actorContext(actor), permission),
++      ).toThrow('Permission denied.');
++    }
++  });
++
++  it.each(['YUTA_ADMIN', 'YUTA_SUPPORT'] as const)(
++    'does not let %s bypass the active membership role',
++    (systemRole) => {
++      const systemActorWithStaffMembership = {
++        ...context('STAFF'),
++        systemRole,
++      };
++
++      for (const permission of permissions) {
++        expect(
++          hasRestaurantKnowledgePermission(
++            systemActorWithStaffMembership,
++            permission,
++          ),
++        ).toBe(false);
++        expect(() =>
++          requireRestaurantKnowledgePermission(
++            systemActorWithStaffMembership,
++            permission,
++          ),
++        ).toThrow('Permission denied.');
++      }
++    },
++  );
++});

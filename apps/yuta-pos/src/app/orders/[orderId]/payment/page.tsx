@@ -1,4 +1,4 @@
-import { allergySummary, formatEuros } from '@yuta/core';
+import { formatEuros } from '@yuta/core';
 import { Badge, Button, Card, Separator } from '@yuta/ui';
 import { Tags, TriangleAlert } from 'lucide-react';
 import { v7 as uuidv7 } from 'uuid';
@@ -9,12 +9,13 @@ import {
   payFullOrderAction,
   splitOrderEquallyAction,
 } from '../../../actions';
-import { PosPageShell } from '../../../components/PosPageShell';
-import { AllergyAlert } from '../../../components/AllergyAlert';
-import { EqualSplitDialogContent } from './EqualSplitDialogContent';
-import { ItemSplitDialogContent } from './ItemSplitDialogContent';
-import { PaymentCaptureForm } from './PaymentCaptureForm';
-import { PaymentChoiceDialogs } from './PaymentChoiceDialogs';
+import { PosPageShell } from '../../../../components/pos/PosPageShell';
+import { allergySummaryFromSnapshots } from '../../../_pos-helpers';
+import { AllergyAlert } from '../../../../components/orders/AllergyAlert';
+import { EqualSplitDialogContent } from './_components/EqualSplitDialogContent';
+import { ItemSplitDialogContent } from './_components/ItemSplitDialogContent';
+import { PaymentCaptureForm } from './_components/PaymentCaptureForm';
+import { PaymentChoiceDialogs } from './_components/PaymentChoiceDialogs';
 import { posApi } from '../../../../lib/pos-api';
 
 type PaymentPageProps = {
@@ -159,8 +160,6 @@ export default async function PaymentPage({
 
   return (
     <PosPageShell
-      backHref={`/orders/${order.id}`}
-      backLabel="Retour commande"
       title={`Paiement - ${order.tableLabel}`}
       description={order.orderNumber}
       actions={
@@ -229,7 +228,7 @@ export default async function PaymentPage({
                   )}
                   {item.selectedVariants.length > 0 && (
                     <p className="mt-1 text-xs font-black text-primary/65">
-                      Parfums:{' '}
+                      Options:{' '}
                       {item.selectedVariants
                         .map(
                           (variant) =>
@@ -241,8 +240,8 @@ export default async function PaymentPage({
                   {item.hasAllergy && (
                     <p className="mt-1 inline-flex items-start gap-1 rounded-md bg-status-danger-soft px-2 py-1 text-xs font-black text-status-danger">
                       <TriangleAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-                      {allergySummary(
-                        item.allergenCodes,
+                      {allergySummaryFromSnapshots(
+                        item.selectedAllergens,
                         item.allergySeverity,
                         item.allergyNote,
                       )}

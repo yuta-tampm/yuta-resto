@@ -1,5 +1,17 @@
 import type { AddressInfo } from 'node:net';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { PgDialect } from 'drizzle-orm/pg-core';
+import type { SQL } from 'drizzle-orm';
+import type { PosDatabaseClient } from '@yuta/db-pos/client';
+import { hashLocalSessionToken } from '@yuta/db-pos/local-auth-crypto';
+import { createLocalAuthService } from '../src/services/local-auth-service';
+import type {
+  LocalKitchenEvent,
+  LocalKitchenQueueQuery,
+  LocalManagementReportsQuery,
+  LocalOrdersHomeQuery,
+  ReceiptJobCommandInput,
+} from '@yuta/contracts/local-pos';
 import { createSiteAgentServer } from '../src/server';
 import type { SiteAgentService } from '../src/services/site-agent-service';
 
@@ -8,6 +20,10 @@ const orderId = '22222222-2222-4222-8222-222222222222';
 const sessionId = '33333333-3333-4333-8333-333333333333';
 const checkedAt = '2026-07-27T12:00:00.000Z';
 const sessionToken = 'local-session-token-with-more-than-thirty-two-characters';
+const managerSessionToken =
+  'local-manager-session-token-with-more-than-thirty-two-characters';
+const staffSessionToken =
+  'local-staff-session-token-with-more-than-thirty-two-characters';
 const localSession = {
   id: sessionId,
   user: {
@@ -27,7 +43,7 @@ const printJobSnapshot = {
   type: 'kitchen_ticket' as const,
   source: 'pos' as const,
   status: 'pending' as const,
-  printerName: 'mock-kitchen',
+  printerName: 'tm-m30-internal',
   summary: {
     orderNumber: 'POS-TEST',
     tableLabel: 'Terrasse 5',
@@ -41,8 +57,20 @@ const printJobSnapshot = {
 describe('site-agent HTTP boundary', () => {
   let server: ReturnType<typeof createSiteAgentServer>;
   let baseUrl: string;
+  let revokedSessionTokens: string[];
+  let ordersHomeQueries: LocalOrdersHomeQuery[];
+  let kitchenQueueQueries: LocalKitchenQueueQuery[];
+  let managementReportQueries: LocalManagementReportsQuery[];
+  let kitchenEventListeners: Array<(event: LocalKitchenEvent) => void>;
+  let receiptCommands: ReceiptJobCommandInput[];
 
   beforeEach(async () => {
+    revokedSessionTokens = [];
+    ordersHomeQueries = [];
+    kitchenQueueQueries = [];
+    managementReportQueries = [];
+    kitchenEventListeners = [];
+    receiptCommands = [];
     server = createSiteAgentServer({
       env: {
         NODE_ENV: 'test',
@@ -50,8 +78,59 @@ describe('site-agent HTTP boundary', () => {
         SITE_AGENT_HOST: '127.0.0.1',
         SITE_AGENT_PORT: 3004,
         SITE_AGENT_ALLOWED_ORIGIN: 'http://localhost:3003',
+        TZ: 'Europe/Paris',
+        POS_PRINT_POLL_INTERVAL_MS: 1_000,
       },
-      service: createMockService(),
+      service: {
+        ...createMockService(),
+        subscribeKitchenEvents: (listener) => {
+          kitchenEventListeners.push(listener);
+          return () => {
+            kitchenEventListeners = kitchenEventListeners.filter(
+              (candidate) => candidate !== listener,
+            );
+          };
+        },
+        listOrdersHome: async (query) => {
+          ordersHomeQueries.push(query);
+          return {
+            serviceDay: {
+              start: '2026-07-27T03:00:00.000Z',
+              end: '2026-07-28T03:00:00.000Z',
+            },
+            view: query.view,
+            query: query.q,
+            orders: [],
+            counts: { open: 2, paidToday: 1, allToday: 3 },
+            pagination: {
+              page: query.page,
+              pageSize: query.limit,
+              totalItems: 1,
+              totalPages: 1,
+            },
+          };
+        },
+        listKitchenQueue: async (query) => {
+          kitchenQueueQueries.push(query);
+          return kitchenQueueSnapshot(query);
+        },
+        getManagementReport: async (query) => {
+          managementReportQueries.push(query);
+          return managementReportSnapshot(query);
+        },
+        revokeSession: async (token) => {
+          revokedSessionTokens.push(token);
+        },
+        getReceiptView: async () => receiptViewSnapshot(),
+        executeReceiptCommand: async (_orderId, command) => {
+          receiptCommands.push(command);
+          return receiptCommandSnapshot(false);
+        },
+        getReceiptJobStatus: async () => ({
+          printJob: receiptPrintJobSnapshot(),
+          printer: printerStatusSnapshot(),
+        }),
+      },
     });
     await new Promise<void>((resolve, reject) => {
       server.once('error', reject);
@@ -84,6 +163,142 @@ describe('site-agent HTTP boundary', () => {
       database: 'ready',
       service: 'site-agent',
       apiVersion: 'v1',
+      checkedAt,
+    });
+  });
+
+  it('validates and serves the paginated POS Home read model', async () => {
+    const response = await fetch(
+      `${baseUrl}/api/v1/orders/home?view=paid_today&q=POS&page=2&limit=25`,
+    );
+
+    expect(response.status).toBe(200);
+    expect(ordersHomeQueries).toEqual([
+      { view: 'paid_today', q: 'POS', page: 2, limit: 25 },
+    ]);
+    expect(await response.json()).toMatchObject({
+      view: 'paid_today',
+      query: 'POS',
+      counts: { open: 2, paidToday: 1, allToday: 3 },
+      pagination: { page: 2, pageSize: 25 },
+    });
+  });
+
+  it('validates and serves the bounded Kitchen read model', async () => {
+    const response = await fetch(
+      `${baseUrl}/api/v1/kitchen?screen=counter&queue=ready&limit=25`,
+    );
+
+    expect(response.status).toBe(200);
+    expect(kitchenQueueQueries).toEqual([
+      { screen: 'counter', queue: 'ready', limit: 25 },
+    ]);
+    expect(await response.json()).toMatchObject({
+      screen: 'counter',
+      queue: 'ready',
+      tickets: [],
+      counts: {
+        stations: { kitchen: 0, bar: 0, dessert: 0 },
+        queues: { active: 0, ready: 0 },
+      },
+    });
+  });
+
+  it('protects and validates the local Management report read model', async () => {
+    const unauthorized = await fetch(
+      `${baseUrl}/api/v1/management/reports?page=1&limit=25`,
+    );
+    expect(unauthorized.status).toBe(401);
+    const unauthorizedBody = await unauthorized.json();
+    expect(unauthorizedBody).toMatchObject({
+      error: { code: 'LOCAL_SESSION_REQUIRED' },
+    });
+    expect(unauthorizedBody).not.toHaveProperty('summary');
+
+    const forbidden = await fetch(
+      `${baseUrl}/api/v1/management/reports?page=1&limit=25`,
+      { headers: { Authorization: `Bearer ${staffSessionToken}` } },
+    );
+    expect(forbidden.status).toBe(403);
+    const forbiddenBody = await forbidden.json();
+    expect(forbiddenBody).toMatchObject({
+      error: { code: 'LOCAL_MANAGEMENT_FORBIDDEN' },
+    });
+    expect(forbiddenBody).not.toHaveProperty('summary');
+
+    const managerResponse = await fetch(
+      `${baseUrl}/api/v1/management/reports?page=1&limit=25`,
+      { headers: { Authorization: `Bearer ${managerSessionToken}` } },
+    );
+    expect(managerResponse.status).toBe(200);
+    expect(await managerResponse.json()).toEqual(
+      managementReportSnapshot({ page: 1, limit: 25 }),
+    );
+
+    const response = await fetch(
+      `${baseUrl}/api/v1/management/reports?page=2&limit=25`,
+      { headers: { Authorization: `Bearer ${sessionToken}` } },
+    );
+    expect(response.status).toBe(200);
+    expect(managementReportQueries).toEqual([
+      { page: 1, limit: 25 },
+      { page: 2, limit: 25 },
+    ]);
+    expect(await response.json()).toEqual(
+      managementReportSnapshot({ page: 2, limit: 25 }),
+    );
+
+    const invalid = await fetch(
+      `${baseUrl}/api/v1/management/reports?page=0&limit=101`,
+      { headers: { Authorization: `Bearer ${sessionToken}` } },
+    );
+    expect(invalid.status).toBe(400);
+  });
+
+  it('serves a cache-free Kitchen event stream and cleans up clients', async () => {
+    const response = await fetch(`${baseUrl}/api/v1/kitchen/events`);
+    const reader = response.body?.getReader();
+    const firstChunk = await reader?.read();
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('content-type')).toContain('text/event-stream');
+    expect(response.headers.get('cache-control')).toBe(
+      'no-cache, no-transform',
+    );
+    expect(new TextDecoder().decode(firstChunk?.value)).toContain(
+      'retry: 3000',
+    );
+    kitchenEventListeners[0]?.({
+      type: 'kitchen_changed',
+      revision: 'test-boot:1',
+      screen: 'counter',
+      reason: 'ticket_created',
+      occurredAt: checkedAt,
+    });
+    const eventChunk = await reader?.read();
+    expect(new TextDecoder().decode(eventChunk?.value)).toContain(
+      'event: kitchen_changed',
+    );
+    expect(new TextDecoder().decode(eventChunk?.value)).toContain(
+      '"screen":"counter"',
+    );
+    expect(new TextDecoder().decode(eventChunk?.value)).toContain(
+      '"reason":"ticket_created"',
+    );
+    await reader?.cancel();
+  });
+
+  it('serves safe printer status without exposing the device path', async () => {
+    const response = await fetch(`${baseUrl}/api/v1/printer-status`);
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({
+      status: 'ready',
+      worker: 'running',
+      device: 'ready',
+      queue: { pending: 0, printing: 0, failed: 0 },
+      lastPrintedAt: null,
+      lastFailureAt: null,
       checkedAt,
     });
   });
@@ -150,6 +365,28 @@ describe('site-agent HTTP boundary', () => {
     expect(await response.json()).toMatchObject({
       error: { code: 'LOCAL_SESSION_REQUIRED' },
     });
+  });
+
+  it('revokes bearer sessions and keeps logout idempotent without a token', async () => {
+    const authenticatedResponse = await fetch(
+      `${baseUrl}/api/v1/auth/session`,
+      {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${sessionToken}` },
+      },
+    );
+
+    expect(authenticatedResponse.status).toBe(200);
+    expect(await authenticatedResponse.json()).toEqual({ success: true });
+    expect(revokedSessionTokens).toEqual([sessionToken]);
+
+    const anonymousResponse = await fetch(`${baseUrl}/api/v1/auth/session`, {
+      method: 'DELETE',
+    });
+
+    expect(anonymousResponse.status).toBe(200);
+    expect(await anonymousResponse.json()).toEqual({ success: true });
+    expect(revokedSessionTokens).toEqual([sessionToken]);
   });
 
   it('protects local-user mutations with a management session', async () => {
@@ -282,7 +519,24 @@ describe('site-agent HTTP boundary', () => {
         name: 'Lunch combo',
         pricingMode: 'fixed',
         isActive: false,
+        isSuggestionEnabled: true,
       },
+    });
+
+    const updated = await fetch(
+      `${baseUrl}/api/v1/catalog/combo-rules/${userId}`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${sessionToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ isSuggestionEnabled: false }),
+      },
+    );
+    expect(updated.status).toBe(200);
+    expect(await updated.json()).toMatchObject({
+      comboRule: { isSuggestionEnabled: false },
     });
 
     const invalidGroup = await fetch(`${baseUrl}/api/v1/catalog/combo-groups`, {
@@ -301,6 +555,38 @@ describe('site-agent HTTP boundary', () => {
     expect(invalidGroup.status).toBe(400);
   });
 
+  it('protects and validates local instruction settings', async () => {
+    const input = {
+      quickInstructionOptions: [
+        { code: 'SANS_ALCOOL', label: 'Sans alcool', conflictsWith: [] },
+      ],
+      allergenOptions: [{ code: 'ARACHIDES', label: 'Arachides' }],
+    };
+    const unauthorized = await fetch(
+      `${baseUrl}/api/v1/catalog/instruction-settings`,
+      {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(input),
+      },
+    );
+    expect(unauthorized.status).toBe(401);
+
+    const updated = await fetch(
+      `${baseUrl}/api/v1/catalog/instruction-settings`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${sessionToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(input),
+      },
+    );
+    expect(updated.status).toBe(200);
+    expect(await updated.json()).toEqual(input);
+  });
+
   it('protects print queue reads and commands', async () => {
     const unauthorizedList = await fetch(`${baseUrl}/api/v1/print-jobs`);
     expect(unauthorizedList.status).toBe(401);
@@ -309,7 +595,28 @@ describe('site-agent HTTP boundary', () => {
       headers: { Authorization: `Bearer ${sessionToken}` },
     });
     expect(list.status).toBe(200);
-    expect(await list.json()).toEqual({ printJobs: [printJobSnapshot] });
+    expect(await list.json()).toEqual({
+      printJobs: [printJobSnapshot],
+      summary: { pending: 1, printing: 0, printed: 0, failed: 0 },
+      pagination: {
+        page: 1,
+        pageSize: 25,
+        totalItems: 1,
+        totalPages: 1,
+      },
+    });
+
+    const unauthorizedTest = await fetch(`${baseUrl}/api/v1/print-jobs/test`, {
+      method: 'POST',
+    });
+    expect(unauthorizedTest.status).toBe(401);
+
+    const testPrint = await fetch(`${baseUrl}/api/v1/print-jobs/test`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${sessionToken}` },
+    });
+    expect(testPrint.status).toBe(201);
+    expect(await testPrint.json()).toEqual(printJobSnapshot);
 
     const unauthorizedCommand = await fetch(
       `${baseUrl}/api/v1/print-jobs/${sessionId}/commands`,
@@ -334,6 +641,133 @@ describe('site-agent HTTP boundary', () => {
     );
     expect(command.status).toBe(200);
     expect(await command.json()).toEqual(printJobSnapshot);
+  });
+
+  it('protects and validates local print settings', async () => {
+    const unauthorized = await fetch(`${baseUrl}/api/v1/print-settings`);
+    expect(unauthorized.status).toBe(401);
+
+    const current = await fetch(`${baseUrl}/api/v1/print-settings`, {
+      headers: { Authorization: `Bearer ${sessionToken}` },
+    });
+    expect(current.status).toBe(200);
+    expect(await current.json()).toEqual({
+      kitchenEnabled: true,
+      counterEnabled: true,
+      kitchenCopies: 1,
+      counterCopies: 1,
+      fontSizePreset: 'standard',
+      topPaddingLines: 1,
+      leftPaddingChars: 2,
+      bottomPaddingLines: 3,
+    });
+
+    const updated = await fetch(`${baseUrl}/api/v1/print-settings`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        kitchenEnabled: false,
+        counterEnabled: true,
+        kitchenCopies: 2,
+        counterCopies: 1,
+        fontSizePreset: 'large',
+        topPaddingLines: 2,
+        leftPaddingChars: 4,
+        bottomPaddingLines: 5,
+      }),
+    });
+    expect(updated.status).toBe(200);
+    expect(await updated.json()).toEqual({
+      kitchenEnabled: false,
+      counterEnabled: true,
+      kitchenCopies: 2,
+      counterCopies: 1,
+      fontSizePreset: 'large',
+      topPaddingLines: 2,
+      leftPaddingChars: 4,
+      bottomPaddingLines: 5,
+    });
+
+    const invalid = await fetch(`${baseUrl}/api/v1/print-settings`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        kitchenEnabled: true,
+        counterEnabled: true,
+        kitchenCopies: 4,
+        counterCopies: 1,
+        fontSizePreset: 'standard',
+        topPaddingLines: 1,
+        leftPaddingChars: 2,
+        bottomPaddingLines: 3,
+      }),
+    });
+    expect(invalid.status).toBe(400);
+
+    const noDestination = await fetch(`${baseUrl}/api/v1/print-settings`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        kitchenEnabled: false,
+        counterEnabled: false,
+        kitchenCopies: 1,
+        counterCopies: 1,
+        fontSizePreset: 'standard',
+        topPaddingLines: 1,
+        leftPaddingChars: 2,
+        bottomPaddingLines: 3,
+      }),
+    });
+    expect(noDestination.status).toBe(400);
+  });
+
+  it('protects and validates the local establishment profile', async () => {
+    const unauthorized = await fetch(`${baseUrl}/api/v1/establishment-profile`);
+    expect(unauthorized.status).toBe(401);
+
+    const current = await fetch(`${baseUrl}/api/v1/establishment-profile`, {
+      headers: { Authorization: `Bearer ${sessionToken}` },
+    });
+    expect(current.status).toBe(200);
+    expect(await current.json()).toEqual({
+      displayName: null,
+      revision: 0,
+      updatedAt: null,
+    });
+
+    const updated = await fetch(`${baseUrl}/api/v1/establishment-profile`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ displayName: '  Le Jardin  ', revision: 0 }),
+    });
+    expect(updated.status).toBe(200);
+    expect(await updated.json()).toEqual({
+      displayName: 'Le Jardin',
+      revision: 1,
+      updatedAt: checkedAt,
+    });
+
+    const invalid = await fetch(`${baseUrl}/api/v1/establishment-profile`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ displayName: 'Ligne 1\nLigne 2', revision: 1 }),
+    });
+    expect(invalid.status).toBe(400);
   });
 
   it('requires UUIDv7 idempotency keys for kitchen commands', async () => {
@@ -382,10 +816,104 @@ describe('site-agent HTTP boundary', () => {
       error: { code: 'VALIDATION_ERROR' },
     });
   });
+
+  it('serves order-scoped receipt commands without management auth', async () => {
+    const operationId = '019c9b83-7c2d-70e5-8000-000000000006';
+    const view = await fetch(`${baseUrl}/api/v1/orders/${orderId}/receipts`, {
+      headers: { Origin: 'http://localhost:3003' },
+    });
+    expect(view.status).toBe(200);
+    expect(await view.json()).toEqual(receiptViewSnapshot());
+
+    const command = await fetch(
+      `${baseUrl}/api/v1/orders/${orderId}/receipts`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Origin: 'http://localhost:3003',
+        },
+        body: JSON.stringify({
+          operationId,
+          target: { kind: 'order' },
+          intent: 'print',
+        }),
+      },
+    );
+    expect(command.status).toBe(201);
+    expect(await command.json()).toEqual(receiptCommandSnapshot(false));
+    expect(receiptCommands).toEqual([
+      {
+        operationId,
+        target: { kind: 'order' },
+        intent: 'print',
+      },
+    ]);
+
+    const status = await fetch(
+      `${baseUrl}/api/v1/orders/${orderId}/receipts/${sessionId}`,
+      { headers: { Origin: 'http://localhost:3003' } },
+    );
+    expect(status.status).toBe(200);
+    expect(await status.json()).toEqual({
+      printJob: receiptPrintJobSnapshot(),
+      printer: printerStatusSnapshot(),
+    });
+  });
 });
+
+function printerStatusSnapshot() {
+  return {
+    status: 'ready' as const,
+    worker: 'running' as const,
+    device: 'ready' as const,
+    queue: { pending: 1, printing: 0, failed: 0 },
+    lastPrintedAt: null,
+    lastFailureAt: null,
+    checkedAt,
+  };
+}
+
+function receiptPrintJobSnapshot() {
+  return {
+    ...printJobSnapshot,
+    type: 'customer_receipt' as const,
+    printerName: 'tm-m30-receipt',
+  };
+}
+
+function receiptViewSnapshot() {
+  return {
+    orderId,
+    paymentMode: 'single' as const,
+    targets: [
+      {
+        kind: 'order' as const,
+        id: orderId,
+        label: 'Commande complète',
+        amountCents: 1400,
+        availability: 'available' as const,
+        splitMode: 'single' as const,
+        latestJob: null,
+      },
+    ],
+    printer: printerStatusSnapshot(),
+  };
+}
+
+function receiptCommandSnapshot(replayed: boolean) {
+  const printJob = receiptPrintJobSnapshot();
+  return {
+    target: { ...receiptViewSnapshot().targets[0], latestJob: printJob },
+    printJob,
+    replayed,
+    printer: printerStatusSnapshot(),
+  };
+}
 
 function createMockService(): SiteAgentService {
   return {
+    subscribeKitchenEvents: () => () => undefined,
     getHealth: async () => ({
       status: 'ok',
       database: 'ready',
@@ -393,9 +921,32 @@ function createMockService(): SiteAgentService {
       apiVersion: 'v1',
       checkedAt,
     }),
+    getPrinterStatus: async () => ({
+      status: 'ready',
+      worker: 'running',
+      device: 'ready',
+      queue: { pending: 0, printing: 0, failed: 0 },
+      lastPrintedAt: null,
+      lastFailureAt: null,
+      checkedAt,
+    }),
     signIn: async () => ({ token: sessionToken, session: localSession }),
-    findSession: async (token) =>
-      token === sessionToken ? localSession : null,
+    findSession: async (token) => {
+      if (token === sessionToken) return localSession;
+      if (token === managerSessionToken) {
+        return {
+          ...localSession,
+          user: { ...localSession.user, role: 'manager' as const },
+        };
+      }
+      if (token === staffSessionToken) {
+        return {
+          ...localSession,
+          user: { ...localSession.user, role: 'staff' as const },
+        };
+      }
+      return null;
+    },
     revokeSession: async () => undefined,
     listLocalUsers: async () => ({ users: [] }),
     createLocalUser: async (_session, input) => ({
@@ -414,13 +965,23 @@ function createMockService(): SiteAgentService {
       },
     }),
     resetLocalUserPin: async () => ({ user: localSession.user }),
-    getCatalog: async () => ({ categories: [], comboRules: [] }),
+    getCatalog: async () => ({
+      categories: [],
+      comboRules: [],
+      instructionSettings: {
+        quickInstructionOptions: [],
+        allergenOptions: [],
+      },
+    }),
+    updateInstructionSettings: async (input) => input,
     createCatalogCategory: async (input) => ({
       category: {
         id: userId,
         name: input.name,
         sortOrder: input.sortOrder,
         isActive: true,
+        defaultInstructionCodes: input.defaultInstructionCodes,
+        additionalInstructionCodes: input.additionalInstructionCodes,
         items: [],
       },
     }),
@@ -430,6 +991,8 @@ function createMockService(): SiteAgentService {
         name: input.name ?? 'Category',
         sortOrder: input.sortOrder ?? 0,
         isActive: input.isActive ?? true,
+        defaultInstructionCodes: input.defaultInstructionCodes ?? [],
+        additionalInstructionCodes: input.additionalInstructionCodes ?? [],
         items: [],
       },
     }),
@@ -437,6 +1000,10 @@ function createMockService(): SiteAgentService {
       item: {
         id: orderId,
         ...input,
+        instructionConfig: {
+          defaultOptions: [],
+          additionalOptions: [],
+        },
       },
     }),
     updateCatalogItem: async (_itemId, input) => ({
@@ -447,12 +1014,26 @@ function createMockService(): SiteAgentService {
         description: input.description ?? null,
         priceCents: input.priceCents ?? 1000,
         kitchenStation: input.kitchenStation ?? 'kitchen',
+        orderingPolicy: input.orderingPolicy ?? 'merge',
+        variantOptions: input.variantOptions ?? [],
+        requiredVariantQuantity: input.requiredVariantQuantity ?? 0,
+        defaultInstructionCodes: input.defaultInstructionCodes ?? null,
+        additionalInstructionCodes: input.additionalInstructionCodes ?? null,
+        instructionConfig: {
+          defaultOptions: [],
+          additionalOptions: [],
+        },
         isAvailable: input.isAvailable ?? true,
         sortOrder: input.sortOrder ?? 0,
       },
     }),
     createComboRule: async (input) => ({
-      comboRule: { id: userId, ...input, groups: [] },
+      comboRule: {
+        id: userId,
+        ...input,
+        isSuggestionEnabled: input.isSuggestionEnabled ?? true,
+        groups: [],
+      },
     }),
     updateComboRule: async (_ruleId, input) => ({
       comboRule: {
@@ -465,6 +1046,7 @@ function createMockService(): SiteAgentService {
         priority: input.priority ?? 0,
         maxApplications: input.maxApplications ?? null,
         isActive: input.isActive ?? false,
+        isSuggestionEnabled: input.isSuggestionEnabled ?? true,
         groups: [],
       },
     }),
@@ -501,6 +1083,24 @@ function createMockService(): SiteAgentService {
     }),
     deleteComboGroupItem: async () => ({ success: true as const }),
     listOrders: async () => ({ orders: [] }),
+    listOrdersHome: async (query) => ({
+      serviceDay: {
+        start: '2026-07-27T03:00:00.000Z',
+        end: '2026-07-28T03:00:00.000Z',
+      },
+      view: query.view,
+      query: query.q,
+      orders: [],
+      counts: { open: 0, paidToday: 0, allToday: 0 },
+      pagination: {
+        page: query.page,
+        pageSize: query.limit,
+        totalItems: 0,
+        totalPages: 1,
+      },
+    }),
+    getManagementReport: async (query) => managementReportSnapshot(query),
+    listKitchenQueue: async (query) => kitchenQueueSnapshot(query),
     createOrder: async (input) => ({
       order: {
         id: orderId,
@@ -558,7 +1158,235 @@ function createMockService(): SiteAgentService {
     getPaymentSummary: async () => {
       throw new Error('Not called by this test.');
     },
-    listPrintJobs: async () => ({ printJobs: [printJobSnapshot] }),
+    getReceiptView: async () => {
+      throw new Error('Not called by this test.');
+    },
+    executeReceiptCommand: async () => {
+      throw new Error('Not called by this test.');
+    },
+    getReceiptJobStatus: async () => {
+      throw new Error('Not called by this test.');
+    },
+    listPrintJobs: async (query) => ({
+      printJobs: [printJobSnapshot],
+      summary: { pending: 1, printing: 0, printed: 0, failed: 0 },
+      pagination: {
+        page: query.page,
+        pageSize: query.limit,
+        totalItems: 1,
+        totalPages: 1,
+      },
+    }),
+    createTestPrintJob: async () => printJobSnapshot,
     executePrintJobCommand: async () => printJobSnapshot,
+    getPrintSettings: async () => ({
+      kitchenEnabled: true,
+      counterEnabled: true,
+      kitchenCopies: 1,
+      counterCopies: 1,
+      fontSizePreset: 'standard',
+      topPaddingLines: 1,
+      leftPaddingChars: 2,
+      bottomPaddingLines: 3,
+    }),
+    updatePrintSettings: async (input) => input,
+    getEstablishmentProfile: async () => ({
+      displayName: null,
+      revision: 0,
+      updatedAt: null,
+    }),
+    updateEstablishmentProfile: async (input) => ({
+      displayName: input.displayName,
+      revision: input.revision + 1,
+      updatedAt: checkedAt,
+    }),
   };
 }
+
+function kitchenQueueSnapshot(query: LocalKitchenQueueQuery) {
+  return {
+    serviceDay: {
+      start: '2026-07-27T03:00:00.000Z',
+      end: '2026-07-28T03:00:00.000Z',
+    },
+    screen: query.screen,
+    queue: query.queue,
+    tickets: [],
+    counts: {
+      stations: { kitchen: 0, bar: 0, dessert: 0 },
+      queues: { active: 0, ready: 0 },
+    },
+  };
+}
+
+function managementReportSnapshot(query: LocalManagementReportsQuery) {
+  return {
+    serviceDay: {
+      start: '2026-07-27T03:00:00.000Z',
+      end: '2026-07-28T03:00:00.000Z',
+    },
+    generatedAt: checkedAt,
+    summary: {
+      paidRevenueCents: 12_450,
+      paidOrderCount: 4,
+      openOrderCount: 2,
+    },
+    orders: [],
+    pagination: {
+      page: query.page,
+      pageSize: query.limit,
+      totalItems: 0,
+      totalPages: 1,
+    },
+  };
+}
+
+function localLookupFixture() {
+  const token = 'local-positive-token-with-at-least-thirty-two-characters';
+  const row = {
+    session: {
+      id: '33333333-3333-4333-8333-333333333333',
+      authVersion: 1,
+      lastSeenAt: new Date(),
+      expiresAt: new Date(Date.now() + 60000),
+    },
+    user: {
+      id: '11111111-1111-4111-8111-111111111111',
+      name: 'Synthetic',
+      email: null,
+      role: 'admin',
+      isActive: true,
+      authVersion: 1,
+    },
+  };
+  let parameters: unknown[] = [];
+  const limit = vi.fn(async () =>
+    parameters.includes(hashLocalSessionToken(token)) ? [row] : [],
+  );
+  const where = vi.fn((condition: SQL) => {
+    const query = new PgDialect().sqlToQuery(condition);
+    expect(query.sql).toContain('"local_auth_sessions"."token_hash"');
+    expect(query.sql).toContain('"local_auth_sessions"."revoked_at" is null');
+    expect(query.sql).toContain('"local_auth_sessions"."expires_at" >');
+    parameters = query.params;
+    return { limit };
+  });
+  const innerJoin = vi.fn(() => ({ where }));
+  const from = vi.fn(() => ({ innerJoin }));
+  const select = vi.fn(() => ({ from }));
+  const insert = vi.fn(),
+    update = vi.fn();
+  const db = { select, insert, update } as unknown as PosDatabaseClient;
+  const service = createLocalAuthService(db);
+  const findSession = vi.fn(service.findSession);
+  return {
+    token,
+    row,
+    findSession,
+    select,
+    from,
+    innerJoin,
+    where,
+    limit,
+    insert,
+    update,
+    parameters: () => parameters,
+  };
+}
+describe('A1.2 POS HTTP and actual local service composition', () => {
+  const wrong = 'ptc1_' + 'A'.repeat(43);
+  let server: ReturnType<typeof createSiteAgentServer>;
+  let base: string;
+  let f: ReturnType<typeof localLookupFixture>;
+  const report = vi.fn(),
+    signIn = vi.fn();
+  beforeEach(async () => {
+    f = localLookupFixture();
+    report.mockReset();
+    signIn.mockReset();
+    server = createSiteAgentServer({
+      env: {
+        NODE_ENV: 'test',
+        POS_DATABASE_URL: 'postgres://test:test@localhost:5432/yuta_pos_test',
+        SITE_AGENT_HOST: '127.0.0.1',
+        SITE_AGENT_PORT: 3004,
+        SITE_AGENT_ALLOWED_ORIGIN: 'http://localhost:3003',
+        TZ: 'Europe/Paris',
+        POS_PRINT_POLL_INTERVAL_MS: 1000,
+      },
+      service: {
+        ...createMockService(),
+        findSession: f.findSession,
+        getManagementReport: report,
+        signIn,
+      },
+    });
+    await new Promise<void>((done, reject) => {
+      server.once('error', reject);
+      server.listen(0, '127.0.0.1', done);
+    });
+    base = 'http://127.0.0.1:' + (server.address() as AddressInfo).port;
+  });
+  afterEach(async () => {
+    if (server)
+      await new Promise<void>((done, reject) =>
+        server.close((e) => (e ? reject(e) : done())),
+      );
+  });
+  it.each(['/api/v1/auth/session', '/api/v1/management/reports'])(
+    'rejects Pointage scheme at %s before lookup',
+    async (path) => {
+      const response = await fetch(base + path, {
+        headers: { Authorization: 'Pointage ' + wrong },
+      });
+      expect(response.status).toBe(401);
+      expect(await response.json()).toMatchObject({
+        error: { code: 'LOCAL_SESSION_REQUIRED' },
+      });
+      expect(f.findSession).not.toHaveBeenCalled();
+      expect(report).not.toHaveBeenCalled();
+      expect(f.insert).not.toHaveBeenCalled();
+      expect(f.update).not.toHaveBeenCalled();
+    },
+  );
+  it.each(['/api/v1/auth/session', '/api/v1/management/reports'])(
+    'rejects Bearer continuation at %s after real lookup',
+    async (path) => {
+      const response = await fetch(base + path, {
+        headers: { Authorization: 'Bearer ' + wrong },
+      });
+      expect(response.status).toBe(401);
+      expect(await response.json()).toMatchObject({
+        error: { code: 'LOCAL_SESSION_INVALID' },
+      });
+      expect(f.findSession).toHaveBeenCalledExactlyOnceWith(wrong);
+      expect(f.parameters()[0]).toBe(hashLocalSessionToken(wrong));
+      expect(report).not.toHaveBeenCalled();
+      expect(f.insert).not.toHaveBeenCalled();
+      expect(f.update).not.toHaveBeenCalled();
+    },
+  );
+  it('retains a legitimate local-session HTTP positive control', async () => {
+    const response = await fetch(base + '/api/v1/auth/session', {
+      headers: { Authorization: 'Bearer ' + f.token },
+    });
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({
+      session: { id: f.row.session.id, user: { role: 'admin' } },
+    });
+  });
+  it('rejects a Pointage-shaped local PIN before signIn', async () => {
+    const response = await fetch(base + '/api/v1/auth/login', {
+      method: 'POST',
+      headers: {
+        Origin: 'http://localhost:3003',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId, pin: wrong }),
+    });
+    expect(response.status).toBe(400);
+    expect(signIn).not.toHaveBeenCalled();
+    expect(f.insert).not.toHaveBeenCalled();
+    expect(f.update).not.toHaveBeenCalled();
+  });
+});

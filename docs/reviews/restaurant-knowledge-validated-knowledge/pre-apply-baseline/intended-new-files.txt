@@ -1,0 +1,7 @@
+MISSING  apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/validated-knowledge-section.tsx
+MISSING  apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/validated-knowledge-model.ts
+MISSING  apps/backoffice/test/validated-knowledge-action.test.ts
+MISSING  apps/backoffice/test/validated-knowledge-model.test.ts
+MISSING  apps/backoffice/test/validated-knowledge-section.test.tsx
+MISSING  packages/db-cloud/drizzle/0016_restaurant_knowledge_validated_items.sql
+MISSING  packages/db-cloud/drizzle/meta/0016_snapshot.json

@@ -1,0 +1,29 @@
+.contentGrid {
+  display: grid;
+}
+
+.progressPanel {
+  order: 2;
+}
+
+.totalsPanel {
+  order: 1;
+}
+
+.infoPanel {
+  order: 3;
+}
+
+@media (min-width: 64rem) {
+  .contentGrid {
+    grid-template-columns: minmax(0, 2fr) minmax(18.75rem, 1fr);
+  }
+
+  .progressPanel {
+    order: 1;
+  }
+
+  .totalsPanel {
+    order: 2;
+  }
+}

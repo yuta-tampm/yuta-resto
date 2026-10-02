@@ -39,6 +39,18 @@ const currentDocuments = [
   'docs/features/public-booking/STATUS.md',
   'docs/features/reputation/README.md',
   'docs/features/reputation/STATUS.md',
+  'docs/ui/README.md',
+  'docs/ui/DESIGN_TO_CODE_WORKFLOW.md',
+  'docs/ui/DELIVERY_WORKFLOW_MODES.md',
+  'docs/ui/YUTA_FRONTEND_RULES.md',
+  'docs/ui/BACKOFFICE_FRONTEND_RULES.md',
+  'docs/ui/POS_FRONTEND_RULES.md',
+  'docs/ui/PAGE_PACK_PROTOCOL.md',
+  'docs/ui/UI_PACK_TOOLING_SPEC.md',
+  'docs/ui/UI_WORKFLOW_DELIVERY_CHECKLIST.md',
+  'docs/ui/pages/hours-services/README.md',
+  'docs/ui/pages/establishment-general-information/README.md',
+  'docs/ui/pages/today/README.md',
   'docs/products/pos/README.md',
   'docs/products/pos/USER_GUIDE.md',
   'docs/products/pos/OFFLINE_STRATEGY.md',
@@ -54,6 +66,23 @@ const requiredMetadata = [
   /^Owner:\s*\S+/m,
   /^Last updated:\s*\d{4}-\d{2}-\d{2}/m,
 ];
+
+const requiredUiReferences = [
+  'docs/ui/pages/hours-services/references/desktop.png',
+  'docs/ui/pages/establishment-general-information/references/establishment-general-information-desktop-reference.png',
+  'docs/ui/pages/today/references/today-dashboard-approved.png',
+  'docs/ui/references/yuta-shell-brand-reference.png',
+];
+
+for (const file of requiredUiReferences) {
+  if (!existsSync(join(repositoryRoot, file))) {
+    addFailure(
+      'missing-ui-reference',
+      file,
+      'current UI documentation references this visual asset',
+    );
+  }
+}
 
 for (const file of currentDocuments) {
   const absolutePath = join(repositoryRoot, file);
@@ -264,6 +293,49 @@ for (const file of currentDocuments) {
       );
     }
   }
+}
+
+const bridgePromptSections = [
+  {
+    file: 'docs/chatGPT/YUTA_PAGE_CHAT_OPERATING_PROMPT_V3.md',
+    nextHeading: '## Existing change / workflow state / evidence state',
+  },
+  {
+    file: 'docs/chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT_V3.md',
+    nextHeading: '## Existing-state intake',
+  },
+];
+
+const bridgeModeSections = bridgePromptSections.map(({ file, nextHeading }) => {
+  if (!existsSync(join(repositoryRoot, file))) {
+    addFailure('missing-bridge-prompt', file, 'copy-paste prompt is missing');
+    return null;
+  }
+
+  const content = read(file).replace(/\r\n/g, '\n');
+  const start = content.indexOf('## Browser Bridge Mode v1\n');
+  const end = content.indexOf(nextHeading, start);
+  if (start < 0 || end < 0) {
+    addFailure(
+      'missing-bridge-mode',
+      file,
+      'complete Bridge Mode section is missing',
+    );
+    return null;
+  }
+
+  return content.slice(start, end).trimEnd();
+});
+
+if (
+  bridgeModeSections.every((section) => section !== null) &&
+  bridgeModeSections[0] !== bridgeModeSections[1]
+) {
+  addFailure(
+    'bridge-mode-drift',
+    bridgePromptSections[0].file,
+    'Page and Global copy-paste prompts must contain identical Bridge Mode v1 sections',
+  );
 }
 
 if (failures.length > 0) {

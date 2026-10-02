@@ -1,0 +1,50 @@
+# Runtime Authority Identity Model — approved targeted Tasks/TIC decision
+
+Current targeted Tasks/TIC status: `APPROVED` for the pre-approval packet SHA-256 `fd07df0b49433466345e9bcb925e4030bbfaf6f2192d7d57dead85de9899273b` only.  
+Approval source: exact current-user `APPROVE RUNTIME AUTHORITY IDENTITY TASKS TIC`, relayed in YUTA Control Tower result `BRIDGE-ARCH-20260925-F9R2:96` as `APPROVE_RUNTIME_AUTHORITY_IDENTITY_TASKS_TIC`.  
+Bound revised Design SHA-256: `42f71996db47a2e0e5e88bc4b8f8648658ada9951711e7a389c98ffc04922b5a`.  
+Bound Sensitive Design approval-review SHA-256: `94ec3e15c4fb86a5dec9474996e39ba1a91bde61b3a32ae8607e4ef730c2a17d`.  
+The approved pre-approval packet follows byte-for-byte below this separator. Its historical `AWAITING_HUMAN_REVIEW` status describes the state before this Human decision. This Human-readable approval is review evidence only, never runtime machine authority. Fresh helper correction and Phase 3 remain separate Human gates.
+
+---
+
+# Runtime Authority Identity Model — targeted Tasks/TIC candidate
+
+Change: `federated-control-towers-foundation`  
+Status: `AWAITING_HUMAN_REVIEW` after separate revised Design and Sensitive Design approvals; not approved by this packet.  
+Updated Tasks/TIC: `openspec/changes/federated-control-towers-foundation/tasks.md` SHA-256 `2c362394e4caeb98d7cfef7daf610c11200282b85109f8ae5282abfb1bb25d55`.  
+Pre-planning Tasks SHA-256: `5eec6002d1c24d0cd34c5c98c0a3e1d1c91d256db9497df7f49b65e47cf3247c`.  
+Revised Design SHA-256: `42f71996db47a2e0e5e88bc4b8f8648658ada9951711e7a389c98ffc04922b5a`.  
+Revised Design approval: exact current-user `APPROVE RUNTIME AUTHORITY IDENTITY DESIGN` in Bridge result `BRIDGE-ARCH-20260925-F9R2:92`; approved Design review `03b-runtime-authority-identity-design-review.md` SHA-256 `3363f3132ef910db17bb59af4829788d9243b222ade6c78276404f5141026cb6`.  
+Targeted Sensitive Design approval: exact current-user `APPROVE RUNTIME AUTHORITY IDENTITY SENSITIVE DESIGN` in Bridge result `BRIDGE-ARCH-20260925-F9R2:94`; approved Sensitive Design review `03c-runtime-authority-identity-sensitive-design-review.md` SHA-256 `94ec3e15c4fb86a5dec9474996e39ba1a91bde61b3a32ae8607e4ef730c2a17d`; preserved pre-approval packet SHA-256 `6fcfe184239dfc1139bbf7dbcbc4fcfd4703d110819fae246e4d94d4fcab1924`.  
+Current helper baseline: `.agents/skills/yuta-federated-control-towers/scripts/state-helper.ps1` SHA-256 `1693d2c18418d52d49d3d64f77efd3a4b55b843e06fe7b405f104462f74c44e4` (unchanged; correction not authorized by this packet).  
+Prior approved Tasks/TIC `02y` SHA-256: `2a6e6d6628389847589c7f052f2dc7ddafac9a75309d79a160b5c10cac766b17` (historical).  
+Approved Spec SHA-256: `a7596e0cc7286afcad959a951e3250fd649d850949721cd565e8542ec90301c0` (unchanged).
+
+## Targeted implementation contract
+
+The original 24 tasks and six phase boundaries remain. T01–T09 stay checked; T10–T24 remain unchecked. Under a **new separate Human helper-correction authorization**, the sole implementation owner may converge on the exact version-one approval-token map, freeze scope/payload/ID aliases, eight-field consumed proof/hash, activation and handoff proof arrays, existing-envelope `AUTHORITY_CONSUMED` journal-first transaction, crash reconciliation, replay protection and private synthetic SelfTest fixtures. The prior round-86 helper authorization and `02z` packet are superseded for future correction; their historical evidence and `03a` blocker are retained. This planning packet authorizes no implementation.
+
+`CANONICAL_JSON_V1` requires UTF-8 without BOM, comments, insignificant whitespace or trailing newline; recursively ordinal-sorted object keys; semantic array order; standard JSON escaping; shortest base-10 integer form; lowercase `true`/`false` and schema-permitted `null`; and rejection of duplicate keys or unknown fields in exact schemas. `APPROVAL_TOKEN_MAPPING_VERSION=1` contains exactly `EVALUATOR_BUCKET_CLASSIFICATION -> APPROVE_EVALUATOR_BUCKET_CLASSIFICATION`, `BUDGET_MAXIMUM_EXCEPTION -> APPROVE_BUDGET_MAXIMUM_EXCEPTION`, and `BUDGET_EXECUTION_FREEZE_TRANSITION -> APPROVE_BUDGET_EXECUTION_FREEZE_TRANSITION`. Verification requires exact token equality. Missing, unknown, stale, generic, mismatched, negative, prose-derived, normalized, aliased, fuzzy, prefix, suffix or substring matches fail closed.
+
+Freeze `DECISION_SCOPE` contains exactly `BUCKET_KEY`, `BUDGET_TYPE`, `CAUSAL_LINEAGE_ID`, and `EXECUTION_CONTEXT_ID`; recovery uses `BUCKET_KEY=null`, while evaluator scope uses the authoritative exact bucket key. Freeze `PROPOSED_DECISION_PAYLOAD` contains exactly `EXPECTED_ACTIVE_FREEZE_ID`, `PURPOSE`, `STOP_CONDITION`, and `TRANSITION`. Freeze `DECISION_ID` is lowercase SHA-256 of `CANONICAL_JSON_V1({DECISION_SCOPE,DECISION_TYPE="BUDGET_EXECUTION_FREEZE_TRANSITION",PROPOSED_DECISION_PAYLOAD})`; no second freeze or transition hash formula exists. `APPLY` requires a null target and no active freeze, with `TRANSITION_ID=FREEZE_ID=DECISION_ID`. `LIFT` requires the exact active target and sets `TRANSITION_ID=DECISION_ID` without a new freeze ID. `SUPERSEDE` requires the exact active target, atomically inactivates it, and sets replacement `FREEZE_ID=TRANSITION_ID=DECISION_ID`. One active freeze per exact budget scope is permitted.
+
+`CONSUMED_AUTHORITY_PROOF_V1` contains exactly `APPROVAL_RECORD_ID`, `APPROVAL_RECORD_SHA256`, `DECISION_ID`, `DECISION_ITEM_ID`, `DECISION_TYPE`, `RECORD_VERSION=1`, `RESULT_HASH`, and `SEMANTIC_DECISION_RECORD_SHA256`. Its proof SHA-256 is lowercase SHA-256 of its exact `CANONICAL_JSON_V1` object. The activation snapshot's top-level `CONSUMED_AUTHORITY_PROOFS` contains complete proof-plus-hash entries sorted by `DECISION_ID`. The existing Phase-2 journal event discriminator uses `EVENT_KIND=AUTHORITY_CONSUMED`, with the exact entry, complete intended `POST_STATE`, and existing revision, epoch and integrity metadata. Under the exclusive state lock, verify the whole authority chain and replay state, compute `POST_STATE`, append and durably flush the journal, atomically replace and flush/read back the snapshot, then allow dependent execution. Partial journal, journal/snapshot disagreement, missing proof for consumed authority, or conflicting `DECISION_ID`, `APPROVAL_RECORD_ID`, `DECISION_ITEM_ID`, or `RESULT_HASH` fails closed. The proofs survive restart, fresh run, same-role rotation and Page-to-Global handoff. Historical missing proof arrays normalize to empty only if zero new-model semantic authorities can be proven consumed; no prose/hash/partial-evidence backfill is allowed.
+
+SelfTest uses private per-run temporary fixtures outside the repository, non-sensitive synthetic data and the same internal runtime verifier functions. Fixtures cannot reach canonical live authority paths, set a direct approved flag, bypass production checks or expose an alternate authority root. The one-way `PRE_DECISION_DESCRIPTOR -> accepted HUMAN_GATE_RESULT -> ACCEPTED_GATE_RESULT_RECORD -> APPROVAL_RECORD -> SEMANTIC_DECISION_RECORD -> CONSUMED_AUTHORITY_PROOF_V1` chain remains authoritative. `ACCEPTED_GATE_RESULT_RECORD` alone sources `RESULT_HASH`; `APPROVAL_RECORD_ID` remains distinct; `APPLICATION_ID` stays removed; `EXCEPTION_ID=DECISION_ID` for a budget maximum exception. Strict-positive maximum exceptions, SAME/DISTINCT classification, independent freeze, pending-command at-most-once, `EXECUTION_UNCERTAIN`, `EVIDENCE_STOP`, privacy rules and Bridge v1 isolation remain unchanged. Semantic consumed proofs do not replace the command ledger.
+
+## Required focused revalidation after new helper authorization
+
+1. Positive exact approval token for all three supported `DECISION_TYPE` values; reject missing mapping, unknown type, generic `APPROVE`, wrong-type or stale token, `REQUEST`/`DEFER`/`REJECT`, and fuzzy/case/punctuation normalization.
+2. Positive canonical freeze `DECISION_ID`; reject wrong scope, lineage or bucket, malformed payload and unknown fields.
+3. `APPLY`: reject non-null target or already active freeze; accept exact aliases. `LIFT`: reject null, stale, wrong or inactive target; accept exact aliases. `SUPERSEDE`: reject null, stale or wrong target; accept exact aliases. Reject reused freeze `DECISION_ID` and multiple active freezes.
+4. Positive consumed-proof schema/hash; reject missing or unknown fields, duplicate JSON keys, unsupported version, corrupt hash, and conflicting reuse of `DECISION_ID`, `APPROVAL_RECORD_ID`, `DECISION_ITEM_ID` or `RESULT_HASH`.
+5. Positive `AUTHORITY_CONSUMED` journal-first commit; test crash after journal flush before snapshot replacement, crash after snapshot replacement before success return, partial journal rejection, journal/snapshot disagreement, and dependent execution blocked until durable read-back.
+6. Prove proof continuity and no duplicate semantic effect after restart, fresh `RUN_ID`, Page rotation, Global rotation and Page-to-Global handoff.
+7. Historical zero-consumption proof-array normalization to `[]`; missing proof in historical implied-consumption state yields `NEEDS_REVIEW`; no prose, hash or partial-evidence backfill.
+8. Positive isolated SelfTest authority chain through the same verifier; synthetic fixtures cannot authorize live state; reject an alternate trust root or bypass.
+9. Regress Exact Accepted Result chain, maximum exception and monotonic counters/maximum, SAME/DISTINCT classification, freeze behavior, pending-command identity, `EXECUTION_UNCERTAIN`, at-most-once, `EVIDENCE_STOP` and privacy-field rejection.
+
+Prior Phase 1/2, round-30 and round-87 evidence remains historical. No fresh helper tests have run for this delta. Helper convergence is `PARTIAL_NEEDS_REVIEW`; Phase 3 is `NOT_AUTHORIZED`. After separate Design, Sensitive Design and Tasks/TIC approvals, a fresh helper-correction Human Gate remains mandatory. Helper convergence does not automatically authorize Phase 3.
+
+Human decision for this exact packet: `APPROVE RUNTIME AUTHORITY IDENTITY TASKS TIC` | `REQUEST RUNTIME AUTHORITY IDENTITY TASKS TIC CHANGES` | `DEFER RUNTIME AUTHORITY IDENTITY TASKS TIC`.

@@ -1,0 +1,6 @@
+interface:
+  display_name: 'YUTA Slice Tasks'
+  short_description: 'Plan bounded tasks without authorizing execution'
+
+policy:
+  allow_implicit_invocation: false

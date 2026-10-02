@@ -6,32 +6,62 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-05
+Last updated: 2026-09-28
 
 This file is the operational implementation tracker for
 the reputation feature. Durable behavior belongs in the adjacent `README.md`.
 
-## Current objective
+This tracker records implementation state and historical sequencing. It is not
+Product approval. Google V1 remains `UNRESOLVED`. Facebook and Instagram have
+confirmed Human-decided high-level inclusion, while each provider's
+`CURRENT_V1_STATUS` and all provider-specific behavior remain `UNRESOLVED`.
 
-Implement idempotent Google review import and a manual synchronization action.
+## Current bounded status
+
+No provider implementation is authorized by this tracker. The accepted A scope
+now has a bounded, default-disabled Google retrieval source path: one recent
+page after an eligible mounted Avis visit, explicit refresh/history/detail
+recovery, temporary provider cache and authenticated maintenance. Its own
+receipt is separate from OAuth/binding and retained local work. See the
+[durable retrieval boundary](README.md#bounded-release-a-google-review-retrieval).
+
+The broader Google technical track remains incomplete: scheduled
+synchronization, publication and remote/local reconciliation are absent.
+Actual Google project credentials, eligibility, cache/use conditions,
+unattended disposal and backup/restoration proof remain operator prerequisites.
+Source presence does not close runtime qualification or promote broader Google
+V1, environment, lifecycle or production readiness. No completion checkbox or
+technical/QA verdict is added by this source-state update.
 
 ## Completed foundation
 
 - Shared reputation enums, Zod contracts, database schema, indexes, repository
-  reads, permissions, and LUNA seed data.
+  reads, permissions, LUNA seed data, and the independent `feedback-web` app.
 - Unified inbox list and feedback detail reads.
 - Public direct-feedback page with validation, consent handling, external review
   links, tenant resolution, and abuse rate limiting.
+- OWNER-only configuration of the active establishment's Google review,
+  Facebook, and Instagram destinations through one explicit atomic Save.
+- Shared fail-closed URL policy for private validation and public safe projection;
+  missing Reputation settings remain unavailable and are not provisioned by this
+  capability.
 - Database-backed back-office authentication with HttpOnly sessions.
 - Tenant and establishment selector with server-side membership validation and
   session rotation.
-- `/settings/users` membership administration for owners and administrators.
+- `/parametres/utilisateurs-acces` membership administration for owners and administrators.
 - Multi-tenant and multi-location persistence model.
 - Authentication and membership audit events.
+- Canonical `/visibilite-reputation` Backoffice routes with permanent redirects
+  from the former `/clients/*` route group.
 
 ## Completed operational inbox
 
-`/customers/reviews` is now a persistent, tenant-scoped operational inbox:
+`/visibilite-reputation/avis` is now a persistent, tenant-scoped operational inbox:
+
+`/visibilite-reputation/satisfaction` reuses the same tenant-scoped inbox and mutation
+boundary while forcing the source to direct feedback submitted through the
+public feedback website. Browser query parameters cannot broaden that page to
+Google reviews.
 
 - [x] Add repository mutations for feedback status.
 - [x] Add repository mutations for assignment to a tenant user.
@@ -51,11 +81,14 @@ Implement idempotent Google review import and a manual synchronization action.
 
 Acceptance result: a manager can process feedback, assign it, save a manual
 Google reply draft, add an internal note, reload the page, and see every change
-persisted. Publishing remains disabled until the Google connector is complete.
+persisted. Publishing remains disabled and requires its own approved implementation
+and provider/operational prerequisites; connector completion alone does not enable it.
 
-## Next task: Google connector
+## Incomplete Google implementation track
 
-Implement the connector in this order:
+The historical sequence below remains open for its broader completion and
+operator qualification. The bounded A source path above does not claim those
+external prerequisites are complete:
 
 - [ ] Configure Google Cloud and enable the Business Profile APIs.
 - [x] Implement tenant-bound OAuth start and callback routes.
@@ -64,8 +97,8 @@ Implement the connector in this order:
       available.
 - [x] List accessible Google accounts and locations.
 - [x] Save a server-verified location to the tenant connector.
-- [ ] Import and update reviews without duplicates.
-- [ ] Add manual synchronization.
+- [ ] Qualify the bounded A review import/update path for actual provider use.
+- [ ] Qualify bounded A visit/manual retrieval for the target environment.
 - [ ] Add scheduled synchronization and retry behavior.
 - [x] Display connector status, configuration errors, OAuth errors, and expired
       authorization recovery.
@@ -108,6 +141,10 @@ Required external configuration:
 
 - Selected AI provider and API credentials.
 - Approved model and production usage limits.
+- Organization/project eligibility, EU processing, retention, and contractual
+  questions are prepared in
+  [`OPENAI_PROVIDER_ELIGIBILITY.md`](../../operations/OPENAI_PROVIDER_ELIGIBILITY.md).
+  The dossier is not submitted and no provider is selected or connected.
 
 ### Google reply publication
 
@@ -148,9 +185,11 @@ Required external configuration:
 - [ ] End-to-end tests for the eight required Phase 1 scenarios.
 - [ ] Desktop, tablet, and mobile acceptance verification.
 
-## Deferred beyond Phase 1
+## Outside the current implemented scope
 
-- Facebook and Instagram connectors.
+- Facebook and Instagram connectors. Their high-level Product inclusion is
+  confirmed, but their current V1/release status, exact interaction types, and
+  provider contracts remain unresolved.
 - Private social messages.
 - Automatic AI publication.
 - Advanced approval workflows.

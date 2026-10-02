@@ -15,6 +15,76 @@
       "when": 1785275807004,
       "tag": "0001_local_auth",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1786215084075,
+      "tag": "0002_print_settings",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1786221572711,
+      "tag": "0003_print_ticket_spacing",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1786230156713,
+      "tag": "0004_far_kat_farrell",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1786260756581,
+      "tag": "0005_child_menu_nem_choice",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1786261117801,
+      "tag": "0006_exclude_mix_luna_from_formulas",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1786261815851,
+      "tag": "0007_local_instruction_settings",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1786880679917,
+      "tag": "0008_goofy_dark_beast",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1787157867511,
+      "tag": "0009_fearless_blonde_phantom",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1787239358307,
+      "tag": "0010_chubby_proemial_gods",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1787469784194,
+      "tag": "0011_clever_groot",
+      "breakpoints": true
     }
   ]
 }

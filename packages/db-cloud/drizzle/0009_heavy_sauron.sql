@@ -1,0 +1,5 @@
+CREATE TYPE "public"."personnel_fixed_term_reason_code" AS ENUM('employee_replacement', 'temporary_activity_increase', 'seasonal_employment', 'customary_use_employment');--> statement-breakpoint
+ALTER TABLE "personnel_employee_dossiers" ADD COLUMN "fixed_term_reason_code" "personnel_fixed_term_reason_code";--> statement-breakpoint
+ALTER TABLE "personnel_employee_dossiers" ADD COLUMN "contract_weekly_minutes" integer;--> statement-breakpoint
+ALTER TABLE "personnel_employee_dossiers" ADD CONSTRAINT "personnel_employee_dossiers_fixed_term_reason_check" CHECK (("personnel_employee_dossiers"."employment_term_type" = 'indefinite' and "personnel_employee_dossiers"."fixed_term_reason_code" is null) or "personnel_employee_dossiers"."employment_term_type" = 'fixed_term');--> statement-breakpoint
+ALTER TABLE "personnel_employee_dossiers" ADD CONSTRAINT "personnel_employee_dossiers_contract_weekly_minutes_check" CHECK ("personnel_employee_dossiers"."contract_weekly_minutes" is null or ("personnel_employee_dossiers"."contract_weekly_minutes" >= 1 and "personnel_employee_dossiers"."contract_weekly_minutes" <= 2880));

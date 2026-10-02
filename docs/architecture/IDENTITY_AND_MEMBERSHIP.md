@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-05
+Last updated: 2026-08-06
 
 Authority: `docs/architecture/TENANCY.md` and
 `docs/architecture/AUTHENTICATION.md`
@@ -41,6 +41,16 @@ retain one active owner.
 only the internal `SessionUser`. Missing identities are unauthenticated;
 disabled internal users are denied; system roles are checked explicitly.
 
+The portable auth service also exposes the bounded GLOBAL YUTA Formalités
+template authority foundation. It accepts only the five approved closed
+operations, grants each explicitly to `YUTA_ADMIN`, grants none to
+`YUTA_SUPPORT`, and returns a minimized system context only for a trusted active
+internal user. This system-only path does not construct or consume
+`TenantContext`, does not authorize tenant resources, and has no application,
+persistence, template-lifecycle, or production side effect. The normative
+behavior is in the
+[Platform Admin Formalités template authorization specification](../../openspec/specs/authorization/platform-admin-formalites-template-administration/spec.md).
+
 The current back-office password flow continues to use opaque, hashed,
 database-backed sessions. A future external provider implements `AuthAdapter`
 and uses `createInternalUserLookup` from `@yuta/db-cloud`.
@@ -63,9 +73,9 @@ The session's organization and establishment columns remain non-null.
 The restaurant back-office uses these selection routes:
 
 ```text
-/access/no-establishment
-/select-establishment
-/resolve-establishment
+/acces/aucun-etablissement
+/selection-etablissement
+/resolution-etablissement
 ```
 
 The recovery route revokes an invalid existing scope and reruns the zero/one/many

@@ -1,0 +1,77 @@
+# Federated Control Towers — T18 Technical Implementation Compliance
+
+Change: `federated-control-towers-foundation`  
+Scope: Phase 5 / T18; YUTA Bridge command `BRIDGE-ARCH-20260925-F9R2:124`  
+Result: **FAIL**  
+Federated Browser QA: `NOT_RUN`; Gate 3: `NOT_READY`
+
+## Candidate and authority
+
+The current user explicitly authorized Phase 5 in Bridge round 123. The preapproval `03q-phase5-compliance-verify-authorization-gate.md` is SHA-256 `61c54fd8b85e5fd43d634dfeaacad740c4048261139a8ec607f1d03f64446e8a`; the prepended approval metadata preserves those original bytes. T18 precedes T19. This is a repository implementation assessment, not live activation or a Human authority proof.
+
+| Source                              | SHA-256                                                            |
+| ----------------------------------- | ------------------------------------------------------------------ |
+| Approved Spec                       | `a7596e0cc7286afcad959a951e3250fd649d850949721cd565e8542ec90301c0` |
+| Approved Design                     | `a95090df877f582f35c8743913ae0569144c6e7589676c573e97909bcf8c7c77` |
+| Tasks/TIC before Phase 5            | `f64382b3d0c844f9430b9f5b89f3be3b100af56a8ede6307cb01a2311458b3f8` |
+| Federated skill                     | `38c3e5d4e3f292b4892037882ccce8fbeea0836ff091b5741caa86684fb617d5` |
+| State helper                        | `c8a9086991bb4dd9e43be006bb80c3a1a27e1af5679d340e317272bb63c12719` |
+| Tracked operating protocol          | `e1b01038052e359653a919ec6dc98fef92cde7e38739fed181bf40d9d9b16f66` |
+| Bridge v1 skill, isolation baseline | `149e48785980fd16affbade76e7c50957b6ae5f0e7e5f71954f19f4d8031aa3e` |
+| Phase 3 evidence `03m`              | `82581353840e04c3a6f26822d6a95f45f2e0b0ade9df30211f00b78f0b8763ca` |
+| Phase 4 handoff `03o`               | `7e7a28afcab60b1a23ef707ef66ce9af76057a92674d47a7d4b35b68ac324ae1` |
+| Accepted Phase 4 evidence `03p`     | `dade3c84a51363af6ecd651715a7844e981e80d556f825e39e84e60034e21514` |
+
+## Blocking implementation findings
+
+**TC-01 — No live executable federation path.** The approved Spec requires an activated Page or Global tower to be able to issue executable commands within its exact scope. The federated skill explicitly declares itself non-executable for live federation. `state-helper.ps1` restricts persistent actions to `FED-QA-*` (`Assert-ApprovedFixtureContext`, around line 709), `DescribeSchemas` reports `LiveExecutableAuthority=false` (around line 2205), and every fixture action returns `ExecutableAuthority=false`. There is no approved live activation/command dispatch action. A valid real target cannot reach executable `ACTIVE` through this implementation. This is missing implementation, not merely an unrun Browser QA observation. It affects F1/F3–F6/F8/F10 and D1/D5/D6 positive paths.
+
+**TC-02 — Lock lifetime does not cover a live browser transaction.** D2 and phase-2 TIC require the exclusive FileStream handle to remain held throughout browser observation and durable outcome. `Invoke-ExclusiveLocalLock` (around line 738) holds it for one helper scriptblock, then disposes it; the only long hold action is `LockHold`, which sleeps and grants no executable authority. Browser interaction is outside that transaction. No current owner integrates exact UI observation and command dispatch under the held handle. Synthetic lock contention proves the local primitive, not the required live lifetime. This is an implementation gap, not a claim that two live towers currently execute: all current fixture paths remain non-executable.
+
+**TC-03 — The probe is a caller-supplied synthetic trace.** `RecordFixtureProbe` hashes supplied metadata and can commit a synthetic `ACTIVE` projection. The skill and `03m` explicitly state that it does not observe or send to ChatGPT. It therefore cannot be substituted for the fresh live handshake → command → result → evaluation required before executable activation. Exact browser target and live protocol behavior remain unproved; the actual live implementation path is also absent under TC-01.
+
+No material anti-loop A/B/C defect is established by these findings: current code grants no live executable authority, the local ledger and proof checks fail closed in tested fixtures, and there is no observed dual executable tower. The findings are ordinary incomplete implementation/compliance results. They must not be converted to PASS or silently repaired in this Phase-5 read-only-owner scope.
+
+## Technical Compliance Matrix
+
+Legend: `H` = state helper, `S` = federated skill, `P` = tracked protocol, `E3` = Phase-3 evidence `03m`, `E4` = Phase-4 evidence `03p`. A PASS below is bounded to implemented repository/local behavior; live observations explicitly remain Phase 6. A requirement row with a missing positive implementation is FAIL even if its defensive subpaths pass.
+
+| Contract               | Expected technical behavior                                        | Implementation and check/evidence                                                             | Status         | Limit / delegated evidence                                       |
+| ---------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------- | -------------- | ---------------------------------------------------------------- |
+| F1                     | Explicit opt-in, Bridge v1 intact, usable federated mode           | S/P preserve separate mode; H has only synthetic mode (TC-01); E3                             | FAIL           | Real opt-in and live route absent; Q01/Q33 later                 |
+| F2                     | Role/scope/instance binding without Product authority              | S/P role tuple; H target/run schema and owner validation; E3                                  | PASS           | Live Page identity and Product context require Q02/Q07/Q32       |
+| F3                     | Direct Page transport and Global escalation                        | S/P policy; H synthetic target/handoff; no live dispatch (TC-01)                              | FAIL           | Q07/Q08 later cannot cure missing implementation                 |
+| F4                     | One executable active tower per context                            | H lock, epoch and non-executing reconciliation; no executable activation (TC-01/02)           | FAIL           | Local exclusion passes; Q01–Q04/Q21 later                        |
+| F5                     | Exact target, verified activation and old-tower fence              | H synthetic probe/fence; caller metadata only (TC-01/03)                                      | FAIL           | Actual UI target and send require Q01/Q03/Q27                    |
+| F6                     | Page→Global stop, lineage and budgets                              | H synthetic transfer and exact carry; no live escalation (TC-01)                              | FAIL           | Q08/Q25 later                                                    |
+| F7                     | Durable bounded handoff, no independent authorization              | H immutable handoff/hash/once-only consumption; E3                                            | PASS           | Actual Page/Global handoff remains Q23/Q24                       |
+| F8                     | Fresh run, same causal lineage on new instance                     | H run reservation/carry and replay guards; only synthetic (TC-01)                             | FAIL           | Live new-instance handshake remains Q09/Q10/Q25                  |
+| F9                     | Protocol identity, ledger, uncertain delivery and at-most-once     | Bridge v1 unchanged; H synthetic acceptance/outcome and uncertainty guards; E3                | PASS           | Real transport uncertainty and lost result remain Q28/Q29        |
+| F10                    | Page/Global rotation and restart without title authority           | H synthetic rotations/reconciliation; no live rotation (TC-01)                                | FAIL           | Q09/Q10/Q11–Q19 later                                            |
+| F11                    | Canonical local state rather than chat history                     | H journal/snapshot/handoff hashes and read-only reconciliation; E3/E4                         | PASS           | Real interrupted process windows remain Q11–Q22                  |
+| F12                    | Page context provenance and four intake states                     | H `Get-PageContextProvenance`; S/P preserve Page authority; E3                                | PASS           | Real Page source/completeness remains Q30/Q31                    |
+| F13                    | Workflow/Human/side-effect/language boundaries                     | S/P explicit authority and Vietnamese/English policy; H proof chain and no executable fixture | PASS           | Live gate and routing remain Q26/Q32                             |
+| F14                    | Separate live verification and Federated Browser QA                | S/P and E3/E4 state no live proof; Q01–Q35 remain NOT_RUN                                     | PASS           | Live acceptance itself is delegated to Phase 6; Gate 3 NOT_READY |
+| D1                     | Exact target identity before executable send                       | S/P prescribe check; H compares caller-supplied synthetic observation                         | FAIL           | No actual UI-bound sender; TC-01/03                              |
+| D2                     | One Windows/NTFS checkout; lock over entire browser transaction    | H preflight and FileShare.None; handle not integrated with browser                            | FAIL           | TC-02; local primitive passes only                               |
+| D3                     | Exact activation, epoch, budgets, authority proofs/freeze          | H strict schemas/transition checks; 83-case SelfTest and E3                                   | PASS           | Synthetic state only; live commit absent under TC-01             |
+| D4                     | Immutable handoff and one-time consumption                         | H immutable file and journal binding; E3/E4                                                   | PASS           | Real target receipt later Q23/Q24                                |
+| D5                     | Bridge v1 wire unchanged; durable real command intent/outcome      | H synthetic ledger; no integrated live dispatch (TC-01/02)                                    | FAIL           | Q28/Q29 later                                                    |
+| D6                     | Ordered live transfer, rotation and crash recovery                 | H synthetic ordering and fail-closed reconciliation; no live path (TC-01)                     | FAIL           | Real crash windows Q11–Q19 later                                 |
+| D7                     | Page context, Product authority and privacy minimum                | S/P and H bounded labels/record allowlist; E3                                                 | PASS           | Real Page source and privacy inspection later Q30–Q35            |
+| D8                     | Human Gate, distinct live acceptance and QA                        | S/P explicit stop and 35-case plan; no live claim                                             | PASS           | Q01–Q35 all NOT_RUN                                              |
+| Phase 1 TIC            | Three owners, static preflight/schema, negative validation         | Three owner paths only; H parser, preflight, SelfTest; prior `02d`                            | PASS           | No extra implementation owner                                    |
+| Phase 2 TIC            | Lock, journal/snapshot, ledger, handoff, restart                   | H/E3 locally prove state primitives; full browser-held lock absent                            | FAIL           | TC-02; real crash Q11–Q22 later                                  |
+| Budget / authority TIC | Monotonic budgets, SAME/DISTINCT, one-way proof, freeze and replay | H schema/proof/transaction functions; 83-case SelfTest; `03k`                                 | PASS           | Synthetic only; no current accepted real gate artifact consumed  |
+| Phase 3 TIC            | Exact target, live probe, transfer and recovery                    | S/P policy and H synthetic fixtures; no live sender (TC-01/03)                                | FAIL           | Q01–Q35 cannot substitute implementation                         |
+| Phase 4 TIC            | Candidate-specific DEV_USABLE and MANUAL_TEST_READY                | E4, handoff `03o`; synthetic verdicts only                                                    | PASS           | Human Product Validation correctly NOT_APPLICABLE                |
+| Phase 5 TIC            | Independent, truthful matrix and VERIFY                            | This assessment records FAIL and separates later QA                                           | PASS           | This row describes audit process, not product compliance         |
+| Phase 6 TIC            | Real browser QA, independent of Bridge v1                          | Q01–Q35 are separately planned                                                                | NOT_APPLICABLE | Phase 6 not authorized or executed                               |
+
+Cross-cutting inspection: implementation owner allowlist **PASS** (only S/H/P are owners); Windows/NTFS/checkout guard **PASS** locally; journal-first hash/revision and atomic snapshot **PASS** locally; command ledger and no replay **PASS** locally; budget maxima/counters, frozen scopes and consumed proofs **PASS** locally; bounded Page context/privacy schema **PASS** locally; Bridge v1 skill hash unchanged **PASS**; Workflow v3 and Page Chat owners untouched **PASS**. All browser-bound positive paths above remain FAIL or delegated as indicated. Unsupported multi-host/distributed coordination is explicitly rejected, not claimed as coverage.
+
+## Checks, provenance and remaining work
+
+Executed in Phase 5: PowerShell parser PASS; helper `SelfTest` PASS (`83/83`, temporary synthetic state and lock removed, no canonical runtime state or live tower); `pnpm exec openspec validate federated-control-towers-foundation --strict` PASS; `pnpm docs:check` PASS (36 current documents); `pnpm architecture:check` PASS; `pnpm -r --if-present typecheck` PASS (15 of 16 workspace projects); scoped Prettier PASS. The first SelfTest output adapter incorrectly attempted JSON parsing of a PowerShell object; the helper process completed, and a subsequent native-object reading established `Passed=True`, `Count=83`. Historical E3/E4 synthetic fixtures were read as historical evidence, not upgraded into live QA. No live browser/tower operation, Page Chat access, production data, full repository format check, build or Federated Browser QA was run.
+
+**T18 terminal result: FAIL.** The formal assessment has been performed; checkbox completion records that the audit ran, not that its result passed. Under current Tasks/Workflow, T19 may independently audit this exact candidate after this terminal result and must preserve the FAIL. Phase 6 cannot become eligible for normal QA of a verified implementation while TC-01/02 remain unresolved. No implementation owner is repaired in Phase 5. Historical FAIL/BLOCKED records remain historical.

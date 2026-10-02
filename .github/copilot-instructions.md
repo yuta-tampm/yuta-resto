@@ -20,5 +20,9 @@ Use `@yuta/ui`, semantic tokens, and `lucide-react`. Inspect
 `packages/ui/src/index.ts` for the authoritative public export list; do not
 duplicate that catalog here.
 
+Follow the import-path rules in `/AGENTS.md`: use configured app-local `@/`
+aliases for deep imports, keep nearby imports relative, and use public
+`@yuta/*` exports across package boundaries.
+
 Before completion, run relevant validation commands, update current
 documentation, and report any command not run.

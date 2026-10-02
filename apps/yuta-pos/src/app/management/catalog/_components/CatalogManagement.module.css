@@ -1,0 +1,9 @@
+@media (min-width: 64rem) {
+  .categoryGrid {
+    grid-template-columns: minmax(15rem, 1fr) 7rem 6rem 7rem auto;
+  }
+
+  .itemGrid {
+    grid-template-columns: minmax(14rem, 1.5fr) 8rem 11rem 7rem 9rem auto;
+  }
+}

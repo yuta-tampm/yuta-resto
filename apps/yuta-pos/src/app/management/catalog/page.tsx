@@ -3,14 +3,15 @@ import { ArrowLeft, Utensils } from 'lucide-react';
 import Link from 'next/link';
 import { siteAgentClient } from '../../../lib/site-agent-client';
 import { requireLocalManagementSession } from '../../../server/local-management-session';
-import { CatalogManagement } from './CatalogManagement';
+import { ManagementHeader } from '../_components/ManagementHeader';
+import { CatalogManagement } from './_components/CatalogManagement';
 
 export default async function LocalCatalogManagementPage() {
-  await requireLocalManagementSession();
+  const session = await requireLocalManagementSession();
 
-  let categories;
+  let catalog;
   try {
-    categories = (await siteAgentClient.getCatalog()).categories;
+    catalog = await siteAgentClient.getCatalog();
   } catch {
     return (
       <main className="grid min-h-dvh place-items-center bg-canvas p-4">
@@ -18,9 +19,14 @@ export default async function LocalCatalogManagementPage() {
           title="Site-agent indisponible"
           description="Impossible de charger le catalogue POS local."
           action={
-            <Button asChild variant="secondary">
-              <Link href="/management">Retour à la gestion</Link>
-            </Button>
+            <div className="flex flex-wrap justify-center gap-2">
+              <Button asChild>
+                <Link href="/management/catalog">Réessayer</Link>
+              </Button>
+              <Button asChild variant="secondary">
+                <Link href="/management">Retour à la gestion</Link>
+              </Button>
+            </div>
           }
         />
       </main>
@@ -29,9 +35,19 @@ export default async function LocalCatalogManagementPage() {
 
   return (
     <main className="min-h-dvh bg-canvas text-primary">
-      <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-6 md:px-8">
+      <ManagementHeader
+        userName={session.user.name}
+        userRole={session.user.role}
+      />
+      <div className="grid w-full gap-3 px-4 py-4 md:px-6">
+        <Link
+          href="/management"
+          className="inline-flex min-h-11 w-fit items-center gap-2 text-sm font-semibold text-status-success hover:underline focus:outline-none focus:ring-2 focus:ring-focus-ring focus:ring-offset-2"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Retour à la gestion
+        </Link>
         <PageHeader
-          eyebrow="Gestion locale"
           title="Menu et catégories"
           description="Gérez les prix, la disponibilité, l’ordre d’affichage et les postes de préparation."
           media={
@@ -39,16 +55,11 @@ export default async function LocalCatalogManagementPage() {
               <Utensils className="h-5 w-5" />
             </IconTile>
           }
-          actions={
-            <Button asChild variant="secondary">
-              <Link href="/management">
-                <ArrowLeft className="h-4 w-4" />
-                Retour
-              </Link>
-            </Button>
-          }
         />
-        <CatalogManagement categories={categories} />
+        <CatalogManagement
+          categories={catalog.categories}
+          instructionSettings={catalog.instructionSettings}
+        />
       </div>
     </main>
   );

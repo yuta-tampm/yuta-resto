@@ -12,7 +12,7 @@ const cliEnv = z
   .parse(process.env);
 
 export default defineConfig({
-  schema: './src/schema/index.ts',
+  schema: './src/schema/cloud.ts',
   out: './drizzle',
   dialect: 'postgresql',
   dbCredentials: {

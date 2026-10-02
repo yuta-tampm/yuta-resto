@@ -1,0 +1,2018 @@
+{
+  "checks": [
+    {
+      "scenario": "owner-w1440-today-integrations",
+      "name": "TODAY_AND_PREFETCH_NO_PROVIDER_FETCH",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w1440-today-integrations",
+      "name": "owner-w1440-today-reviews_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1440
+    },
+    {
+      "scenario": "owner-w1440-today-integrations",
+      "name": "OWNER_TODAY_NO_PROVIDER_CALLS",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w1440-today-integrations",
+      "name": "OWNER_INTEGRATIONS_DISCOVERY_ONLY_NO_RETRIEVAL",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 1,
+        "locations": 1,
+        "blocked": 0
+      },
+      "discoveryCountsRecordedSeparately": true
+    },
+    {
+      "scenario": "owner-w1440-today-integrations",
+      "name": "owner-w1440-integrations_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1440
+    },
+    {
+      "scenario": "owner-w1440-today-integrations",
+      "name": "owner-w1440-integrations_KEYBOARD_FOCUS",
+      "status": "PASS",
+      "focus": {
+        "tag": "A",
+        "focusVisible": true,
+        "visible": true,
+        "outlineWidth": "1px",
+        "outlineStyle": "none",
+        "ringOrShadowPresent": true
+      },
+      "visibleFocusPixels": "REVIEW_REQUIRED"
+    },
+    {
+      "scenario": "owner-w1440-today-integrations",
+      "name": "owner-w1440-integrations-keyboard-focus_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1440
+    },
+    {
+      "scenario": "owner-w1440-available-list-detail",
+      "name": "OWNER_INITIAL_VISIT_TRUTHFUL_FRESH_OR_STALE_COUNTS",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      },
+      "initialFreshness": "FRESH_NO_RECENT_CALL",
+      "noAssumedZeroInitialFetch": true
+    },
+    {
+      "scenario": "owner-w1440-available-list-detail",
+      "name": "owner-w1440-avis-list-detail_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1440
+    },
+    {
+      "scenario": "owner-w1440-manual-delay",
+      "name": "owner-w1440-retrieval-pending_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1440
+    },
+    {
+      "scenario": "owner-w1440-manual-delay",
+      "name": "owner-w1440-pending-editor_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1440
+    },
+    {
+      "scenario": "owner-w1440-manual-delay",
+      "name": "MANUAL_DELAY_ONE_RECENT_WORK_FOCUS_UUID_ROWS_RETAINED",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 1,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w1440-manual-delay",
+      "name": "owner-w1440-retrieval-success_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1440
+    },
+    {
+      "scenario": "owner-w1440-manual-error",
+      "name": "MANUAL_ERROR_ONE_RECENT_WORK_FOCUS_UUID_ROWS_RETAINED",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 1,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w1440-manual-error",
+      "name": "owner-w1440-retrieval-error_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1440
+    },
+    {
+      "scenario": "owner-w1440-manual-normal",
+      "name": "MANUAL_NORMAL_ONE_RECENT_WORK_FOCUS_UUID_ROWS_RETAINED",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 1,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w1440-manual-normal",
+      "name": "owner-w1440-retrieval-retry_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1440
+    },
+    {
+      "scenario": "owner-w1440-manual-normal",
+      "name": "EXPLICIT_INSPECTION_PRESERVES_UNSAVED_WORK_WITHOUT_PROVIDER",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w1440-manual-normal",
+      "name": "owner-w1440-manual-draft_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1440
+    },
+    {
+      "scenario": "owner-w1440-remote-reply",
+      "name": "AVAILABLE_REMOTE_REPLY_DETAIL_NO_PROVIDER_CALL",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w1440-remote-reply",
+      "name": "owner-w1440-remote-reply_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1440
+    },
+    {
+      "scenario": "owner-w1440-no-reference-saved-work",
+      "name": "owner-w1440-no-reference-handoff_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1440
+    },
+    {
+      "scenario": "owner-w1440-no-reference-saved-work",
+      "name": "owner-w1440-no-reference-saved-draft_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1440
+    },
+    {
+      "scenario": "owner-w1440-no-reference-saved-work",
+      "name": "NO_REFERENCE_CURRENT_WORK_PRESERVED",
+      "status": "PASS",
+      "draftCharacters": 90,
+      "draftDisplaySha256": "eb633b9bc11957c88b072232aa88c9fe4dae96645316c2fa76a2c27e6e70f10b",
+      "savedTextNodeCount": 0,
+      "comparedAgainstActualInitialDOM": true,
+      "noSaveAttempted": true
+    },
+    {
+      "scenario": "owner-w1440-no-reference-saved-work",
+      "name": "NO_REFERENCE_VISIT_AND_CAPTURE_NO_PROVIDER_CALL",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "staff-w1440-assigned-and-denied",
+      "name": "TODAY_AND_PREFETCH_NO_PROVIDER_FETCH",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "staff-w1440-assigned-and-denied",
+      "name": "staff-w1440-today-reviews_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1440
+    },
+    {
+      "scenario": "staff-w1440-assigned-and-denied",
+      "name": "staff-w1440-assigned-editor_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1440
+    },
+    {
+      "scenario": "staff-w1440-assigned-and-denied",
+      "name": "staff-w1440-assigned_KEYBOARD_FOCUS",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "focusVisible": true,
+        "visible": true,
+        "outlineWidth": "1px",
+        "outlineStyle": "none",
+        "ringOrShadowPresent": true
+      },
+      "visibleFocusPixels": "REVIEW_REQUIRED"
+    },
+    {
+      "scenario": "staff-w1440-assigned-and-denied",
+      "name": "staff-w1440-assigned-keyboard-focus_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1440
+    },
+    {
+      "scenario": "staff-w1440-assigned-and-denied",
+      "name": "staff-w1440-denied-foreign_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1440
+    },
+    {
+      "scenario": "staff-w1440-assigned-and-denied",
+      "name": "staff-w1440-denied-direct_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1440
+    },
+    {
+      "scenario": "staff-w1440-assigned-and-denied",
+      "name": "staff-w1440-unavailable_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1440
+    },
+    {
+      "scenario": "staff-w1440-assigned-and-denied",
+      "name": "STAFF_TODAY_ASSIGNED_DENIED_AND_UNAVAILABLE_NO_PROVIDER_CALL",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w1440-internal-disabled",
+      "name": "owner-w1440-internal-disabled_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1440
+    },
+    {
+      "scenario": "owner-w1440-internal-disabled",
+      "name": "INTERNAL_DISABLED_SIGNIN_AND_AVIS_NO_PROVIDER_CALL",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w1024-today-integrations",
+      "name": "TODAY_AND_PREFETCH_NO_PROVIDER_FETCH",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w1024-today-integrations",
+      "name": "owner-w1024-today-reviews_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1024
+    },
+    {
+      "scenario": "owner-w1024-today-integrations",
+      "name": "OWNER_TODAY_NO_PROVIDER_CALLS",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w1024-today-integrations",
+      "name": "OWNER_INTEGRATIONS_DISCOVERY_ONLY_NO_RETRIEVAL",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 1,
+        "locations": 1,
+        "blocked": 0
+      },
+      "discoveryCountsRecordedSeparately": true
+    },
+    {
+      "scenario": "owner-w1024-today-integrations",
+      "name": "owner-w1024-integrations_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1024
+    },
+    {
+      "scenario": "owner-w1024-today-integrations",
+      "name": "owner-w1024-integrations_KEYBOARD_FOCUS",
+      "status": "PASS",
+      "focus": {
+        "tag": "A",
+        "focusVisible": true,
+        "visible": true,
+        "outlineWidth": "1px",
+        "outlineStyle": "none",
+        "ringOrShadowPresent": true
+      },
+      "visibleFocusPixels": "REVIEW_REQUIRED"
+    },
+    {
+      "scenario": "owner-w1024-today-integrations",
+      "name": "owner-w1024-integrations-keyboard-focus_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1024
+    },
+    {
+      "scenario": "owner-w1024-available-list-detail",
+      "name": "OWNER_INITIAL_VISIT_TRUTHFUL_FRESH_OR_STALE_COUNTS",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      },
+      "initialFreshness": "FRESH_NO_RECENT_CALL",
+      "noAssumedZeroInitialFetch": true
+    },
+    {
+      "scenario": "owner-w1024-available-list-detail",
+      "name": "owner-w1024-avis-list-detail_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1024
+    },
+    {
+      "scenario": "owner-w1024-manual-delay",
+      "name": "owner-w1024-retrieval-pending_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1024
+    },
+    {
+      "scenario": "owner-w1024-manual-delay",
+      "name": "owner-w1024-pending-editor_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1024
+    },
+    {
+      "scenario": "owner-w1024-manual-delay",
+      "name": "MANUAL_DELAY_ONE_RECENT_WORK_FOCUS_UUID_ROWS_RETAINED",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 1,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w1024-manual-delay",
+      "name": "owner-w1024-retrieval-success_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1024
+    },
+    {
+      "scenario": "owner-w1024-manual-error",
+      "name": "MANUAL_ERROR_ONE_RECENT_WORK_FOCUS_UUID_ROWS_RETAINED",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 1,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w1024-manual-error",
+      "name": "owner-w1024-retrieval-error_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1024
+    },
+    {
+      "scenario": "owner-w1024-manual-normal",
+      "name": "MANUAL_NORMAL_ONE_RECENT_WORK_FOCUS_UUID_ROWS_RETAINED",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 1,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w1024-manual-normal",
+      "name": "owner-w1024-retrieval-retry_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1024
+    },
+    {
+      "scenario": "owner-w1024-manual-normal",
+      "name": "EXPLICIT_INSPECTION_PRESERVES_UNSAVED_WORK_WITHOUT_PROVIDER",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w1024-manual-normal",
+      "name": "owner-w1024-manual-draft_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1024
+    },
+    {
+      "scenario": "owner-w1024-remote-reply",
+      "name": "AVAILABLE_REMOTE_REPLY_DETAIL_NO_PROVIDER_CALL",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w1024-remote-reply",
+      "name": "owner-w1024-remote-reply_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1024
+    },
+    {
+      "scenario": "owner-w1024-no-reference-saved-work",
+      "name": "owner-w1024-no-reference-handoff_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1024
+    },
+    {
+      "scenario": "owner-w1024-no-reference-saved-work",
+      "name": "owner-w1024-no-reference-saved-draft_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1024
+    },
+    {
+      "scenario": "owner-w1024-no-reference-saved-work",
+      "name": "NO_REFERENCE_CURRENT_WORK_PRESERVED",
+      "status": "PASS",
+      "draftCharacters": 90,
+      "draftDisplaySha256": "eb633b9bc11957c88b072232aa88c9fe4dae96645316c2fa76a2c27e6e70f10b",
+      "savedTextNodeCount": 0,
+      "comparedAgainstActualInitialDOM": true,
+      "noSaveAttempted": true
+    },
+    {
+      "scenario": "owner-w1024-no-reference-saved-work",
+      "name": "NO_REFERENCE_VISIT_AND_CAPTURE_NO_PROVIDER_CALL",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "staff-w1024-assigned-and-denied",
+      "name": "TODAY_AND_PREFETCH_NO_PROVIDER_FETCH",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "staff-w1024-assigned-and-denied",
+      "name": "staff-w1024-today-reviews_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1024
+    },
+    {
+      "scenario": "staff-w1024-assigned-and-denied",
+      "name": "staff-w1024-assigned-editor_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1024
+    },
+    {
+      "scenario": "staff-w1024-assigned-and-denied",
+      "name": "staff-w1024-assigned_KEYBOARD_FOCUS",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "focusVisible": true,
+        "visible": true,
+        "outlineWidth": "1px",
+        "outlineStyle": "none",
+        "ringOrShadowPresent": true
+      },
+      "visibleFocusPixels": "REVIEW_REQUIRED"
+    },
+    {
+      "scenario": "staff-w1024-assigned-and-denied",
+      "name": "staff-w1024-assigned-keyboard-focus_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1024
+    },
+    {
+      "scenario": "staff-w1024-assigned-and-denied",
+      "name": "staff-w1024-denied-foreign_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1024
+    },
+    {
+      "scenario": "staff-w1024-assigned-and-denied",
+      "name": "staff-w1024-denied-direct_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1024
+    },
+    {
+      "scenario": "staff-w1024-assigned-and-denied",
+      "name": "staff-w1024-unavailable_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1024
+    },
+    {
+      "scenario": "staff-w1024-assigned-and-denied",
+      "name": "STAFF_TODAY_ASSIGNED_DENIED_AND_UNAVAILABLE_NO_PROVIDER_CALL",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w1024-internal-disabled",
+      "name": "owner-w1024-internal-disabled_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 1024
+    },
+    {
+      "scenario": "owner-w1024-internal-disabled",
+      "name": "INTERNAL_DISABLED_SIGNIN_AND_AVIS_NO_PROVIDER_CALL",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w768-today-integrations",
+      "name": "TODAY_AND_PREFETCH_NO_PROVIDER_FETCH",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w768-today-integrations",
+      "name": "owner-w768-today-reviews_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 768
+    },
+    {
+      "scenario": "owner-w768-today-integrations",
+      "name": "OWNER_TODAY_NO_PROVIDER_CALLS",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w768-today-integrations",
+      "name": "OWNER_INTEGRATIONS_DISCOVERY_ONLY_NO_RETRIEVAL",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 1,
+        "locations": 1,
+        "blocked": 0
+      },
+      "discoveryCountsRecordedSeparately": true
+    },
+    {
+      "scenario": "owner-w768-today-integrations",
+      "name": "owner-w768-integrations_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 768
+    },
+    {
+      "scenario": "owner-w768-today-integrations",
+      "name": "owner-w768-integrations_KEYBOARD_FOCUS",
+      "status": "PASS",
+      "focus": {
+        "tag": "A",
+        "focusVisible": true,
+        "visible": true,
+        "outlineWidth": "1px",
+        "outlineStyle": "none",
+        "ringOrShadowPresent": true
+      },
+      "visibleFocusPixels": "REVIEW_REQUIRED"
+    },
+    {
+      "scenario": "owner-w768-today-integrations",
+      "name": "owner-w768-integrations-keyboard-focus_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 768
+    },
+    {
+      "scenario": "owner-w768-available-list-detail",
+      "name": "OWNER_INITIAL_VISIT_TRUTHFUL_FRESH_OR_STALE_COUNTS",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      },
+      "initialFreshness": "FRESH_NO_RECENT_CALL",
+      "noAssumedZeroInitialFetch": true
+    },
+    {
+      "scenario": "owner-w768-available-list-detail",
+      "name": "owner-w768-avis-list-detail_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 768
+    },
+    {
+      "scenario": "owner-w768-manual-delay",
+      "name": "owner-w768-retrieval-pending_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 768
+    },
+    {
+      "scenario": "owner-w768-manual-delay",
+      "name": "owner-w768-pending-editor_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 768
+    },
+    {
+      "scenario": "owner-w768-manual-delay",
+      "name": "MANUAL_DELAY_ONE_RECENT_WORK_FOCUS_UUID_ROWS_RETAINED",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 1,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w768-manual-delay",
+      "name": "owner-w768-retrieval-success_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 768
+    },
+    {
+      "scenario": "owner-w768-manual-error",
+      "name": "MANUAL_ERROR_ONE_RECENT_WORK_FOCUS_UUID_ROWS_RETAINED",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 1,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w768-manual-error",
+      "name": "owner-w768-retrieval-error_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 768
+    },
+    {
+      "scenario": "owner-w768-manual-normal",
+      "name": "MANUAL_NORMAL_ONE_RECENT_WORK_FOCUS_UUID_ROWS_RETAINED",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 1,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w768-manual-normal",
+      "name": "owner-w768-retrieval-retry_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 768
+    },
+    {
+      "scenario": "owner-w768-manual-normal",
+      "name": "EXPLICIT_INSPECTION_PRESERVES_UNSAVED_WORK_WITHOUT_PROVIDER",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w768-manual-normal",
+      "name": "owner-w768-manual-draft_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 768
+    },
+    {
+      "scenario": "owner-w768-remote-reply",
+      "name": "AVAILABLE_REMOTE_REPLY_DETAIL_NO_PROVIDER_CALL",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w768-remote-reply",
+      "name": "owner-w768-remote-reply_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 768
+    },
+    {
+      "scenario": "owner-w768-no-reference-saved-work",
+      "name": "owner-w768-no-reference-handoff_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 768
+    },
+    {
+      "scenario": "owner-w768-no-reference-saved-work",
+      "name": "owner-w768-no-reference-saved-draft_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 768
+    },
+    {
+      "scenario": "owner-w768-no-reference-saved-work",
+      "name": "NO_REFERENCE_CURRENT_WORK_PRESERVED",
+      "status": "PASS",
+      "draftCharacters": 90,
+      "draftDisplaySha256": "eb633b9bc11957c88b072232aa88c9fe4dae96645316c2fa76a2c27e6e70f10b",
+      "savedTextNodeCount": 0,
+      "comparedAgainstActualInitialDOM": true,
+      "noSaveAttempted": true
+    },
+    {
+      "scenario": "owner-w768-no-reference-saved-work",
+      "name": "NO_REFERENCE_VISIT_AND_CAPTURE_NO_PROVIDER_CALL",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "staff-w768-assigned-and-denied",
+      "name": "TODAY_AND_PREFETCH_NO_PROVIDER_FETCH",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "staff-w768-assigned-and-denied",
+      "name": "staff-w768-today-reviews_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 768
+    },
+    {
+      "scenario": "staff-w768-assigned-and-denied",
+      "name": "staff-w768-assigned-editor_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 768
+    },
+    {
+      "scenario": "staff-w768-assigned-and-denied",
+      "name": "staff-w768-assigned_KEYBOARD_FOCUS",
+      "status": "PASS",
+      "focus": {
+        "tag": "BUTTON",
+        "focusVisible": true,
+        "visible": true,
+        "outlineWidth": "1px",
+        "outlineStyle": "none",
+        "ringOrShadowPresent": true
+      },
+      "visibleFocusPixels": "REVIEW_REQUIRED"
+    },
+    {
+      "scenario": "staff-w768-assigned-and-denied",
+      "name": "staff-w768-assigned-keyboard-focus_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 768
+    },
+    {
+      "scenario": "staff-w768-assigned-and-denied",
+      "name": "staff-w768-denied-foreign_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 768
+    },
+    {
+      "scenario": "staff-w768-assigned-and-denied",
+      "name": "staff-w768-denied-direct_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 768
+    },
+    {
+      "scenario": "staff-w768-assigned-and-denied",
+      "name": "staff-w768-unavailable_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 768
+    },
+    {
+      "scenario": "staff-w768-assigned-and-denied",
+      "name": "STAFF_TODAY_ASSIGNED_DENIED_AND_UNAVAILABLE_NO_PROVIDER_CALL",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w768-internal-disabled",
+      "name": "owner-w768-internal-disabled_NO_HORIZONTAL_OVERFLOW",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "viewportWidth": 768
+    },
+    {
+      "scenario": "owner-w768-internal-disabled",
+      "name": "INTERNAL_DISABLED_SIGNIN_AND_AVIS_NO_PROVIDER_CALL",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-w768-internal-disabled",
+      "name": "BROWSER_CONSOLE_HYDRATION_OR_OUTBOUND_ERRORS_OBSERVED",
+      "status": "FAIL",
+      "errorType": "Error"
+    }
+  ],
+  "screenshots": [
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1440-today-reviews.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Today scoped stored-work preview; no provider retrieval",
+      "scenario": "owner-w1440-today-integrations",
+      "sha256": "7c66c21357cfb7175e0814f109c3f064b6ccd1ca361c693ac3ca865d7bb03046",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1440-integrations.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Bound OWNER confirmation is separate from retrieval; continuation not clicked",
+      "scenario": "owner-w1440-today-integrations",
+      "sha256": "7a40eaca8b349bc5f52c6105fea29ce114f2a252bd0305a4967e19a4baf488e6",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1440-integrations-keyboard-focus.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Keyboard Tab focus; visible indication requires pixel review",
+      "scenario": "owner-w1440-today-integrations",
+      "sha256": "581d665b51ce59c7a1387af84771ca8b7877aa1b1da6e65983f46dfd17bdb47e",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1440-avis-list-detail.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Available Google list and selected local detail before manual refresh",
+      "scenario": "owner-w1440-available-list-detail",
+      "sha256": "6b123cabc8f1beeb5801d88adc2baee4f4258b40c8e24724605bb7a59c3096a6",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1440-retrieval-pending.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Actual manual request pending; saved and unsaved local work remains usable",
+      "scenario": "owner-w1440-manual-delay",
+      "sha256": "903edeaf291dc294afc6f6bbf69600f8539d4d9d035487f26a2dc3e1fd9826d4",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1440-pending-editor.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Unsaved note and keyboard focus retained during pending retrieval",
+      "scenario": "owner-w1440-manual-delay",
+      "sha256": "ed6c0dd4b63e0e1733e1cdd33d8690eebdb9319dc25896c926ed35f402cdcf78",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1440-retrieval-success.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Completed one-page retrieval; held list and selected local UUID remain unchanged",
+      "scenario": "owner-w1440-manual-delay",
+      "sha256": "81f146d8367e438c19342b4de843d82d6d0d60f5d234ba86a9f014cda8ce8f26",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1440-retrieval-error.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Sanitized failed refresh; explicit retry remains available and local writing retained",
+      "scenario": "owner-w1440-manual-error",
+      "sha256": "97807ac095702cefd899915610dcc8f1a19c2b6c77df7e447d2a8614e70c37aa",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1440-retrieval-retry.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Actual explicit retry completed; inspect remains a separate action",
+      "scenario": "owner-w1440-manual-normal",
+      "sha256": "81f146d8367e438c19342b4de843d82d6d0d60f5d234ba86a9f014cda8ce8f26",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1440-manual-draft.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Unsaved manual draft survives explicit inspection; no Save or publication attempted",
+      "scenario": "owner-w1440-manual-normal",
+      "sha256": "6c6920e8d6a3c75d9f5d40a23ae14244bad935f6d8b3283d6b1bf8e67887c644",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1440-remote-reply.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Temporary remote reply is separate from the manual editor; publication unavailable",
+      "scenario": "owner-w1440-remote-reply",
+      "sha256": "5fbf5d8be174d5a949d7a93bac49c255db14fc25608e3300f6c8cba027fdee65",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1440-no-reference-handoff.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Unavailable managed Google copy with no-reference handoff; current saved local work retained",
+      "scenario": "owner-w1440-no-reference-saved-work",
+      "sha256": "e85794b0bccf11b2b65b170e13c66b6121c8a37e47e4ca98d42bb6db62b887f8",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1440-no-reference-saved-draft.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Actual current persisted draft on unavailable work; no Save in this run",
+      "scenario": "owner-w1440-no-reference-saved-work",
+      "sha256": "abe16b0cf7b8690f85e649f0ff8610b7fbd82135fc0e5a1922e52b65d98d5cb6",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/staff-w1440-today-reviews.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "STAFF assigned-work Today preview; no establishment retrieval receipt",
+      "scenario": "staff-w1440-assigned-and-denied",
+      "sha256": "9cfb94cbd1a3cedb4ee94b2ccd178306833a5670d71282da958a0551f877f597",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/staff-w1440-assigned-editor.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Assigned local draft and notes; provider controls absent",
+      "scenario": "staff-w1440-assigned-and-denied",
+      "sha256": "10072dbfb0dde8a47039c8fd39c785b7a02eb237a487da6d43deb4ce9b68b4b6",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/staff-w1440-assigned-keyboard-focus.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Keyboard Tab focus; visible indication requires pixel review",
+      "scenario": "staff-w1440-assigned-and-denied",
+      "sha256": "8ae836d4c3c25aff0eadadbd64e997dc11e33758d710dbe7dfa46b94fff32910",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/staff-w1440-denied-foreign.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Safe unavailable selection for denied foreign scope; no edit or provider control",
+      "scenario": "staff-w1440-assigned-and-denied",
+      "sha256": "b65698adf00f67a890d717656979f9912d1ae57ea1e1441c33e464cb6d5e578b",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/staff-w1440-denied-direct.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Safe unavailable selection for denied direct scope; no edit or provider control",
+      "scenario": "staff-w1440-assigned-and-denied",
+      "sha256": "b65698adf00f67a890d717656979f9912d1ae57ea1e1441c33e464cb6d5e578b",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/staff-w1440-unavailable.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Assigned unavailable managed content, truthful handoff and actual current saved work",
+      "scenario": "staff-w1440-assigned-and-denied",
+      "sha256": "7cae89a87a8de9e0fc370b54055aacaa426c207cbaecf30cbc939ba85f1b5a91",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1440-internal-disabled.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Internal normal profile: retrieval explicitly disabled, current local work accessible",
+      "scenario": "owner-w1440-internal-disabled",
+      "sha256": "39e671d10e48152d664b01e66c0083f68d017036e44b9b210befe539d28b059b",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1024-today-reviews.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Today scoped stored-work preview; no provider retrieval",
+      "scenario": "owner-w1024-today-integrations",
+      "sha256": "e3e4e378539b7860c519a7f9fc8aa30084be02779f6e2f56a365e192a0ac2156",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1024-integrations.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Bound OWNER confirmation is separate from retrieval; continuation not clicked",
+      "scenario": "owner-w1024-today-integrations",
+      "sha256": "e721a3f314f9291401fdf52356113578a2ff76b16e9e944b9d83e2c1c5f8dc03",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1024-integrations-keyboard-focus.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Keyboard Tab focus; visible indication requires pixel review",
+      "scenario": "owner-w1024-today-integrations",
+      "sha256": "bb27dc44d07ef2a45019afdc9e795cd75c1e888cbbd041cea74c5ccfd0bba8c3",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1024-avis-list-detail.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Available Google list and selected local detail before manual refresh",
+      "scenario": "owner-w1024-available-list-detail",
+      "sha256": "8438255f671405b583d2db5ac91a17920accfb189c3dee610beea61fbc6cf159",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1024-retrieval-pending.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Actual manual request pending; saved and unsaved local work remains usable",
+      "scenario": "owner-w1024-manual-delay",
+      "sha256": "4c1943f66c28a99931b0d78e245a17fd5bb4567e381b086f157c969dac041ffa",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1024-pending-editor.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Unsaved note and keyboard focus retained during pending retrieval",
+      "scenario": "owner-w1024-manual-delay",
+      "sha256": "ec8f4b8557892c3fb8617ea257a619b01a3f7f63752f31385dd4886b618b8616",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1024-retrieval-success.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Completed one-page retrieval; held list and selected local UUID remain unchanged",
+      "scenario": "owner-w1024-manual-delay",
+      "sha256": "5fb7e17367eb25906eab18c608c2106c65df33cd395f0cd483fd92daf4fa18bf",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1024-retrieval-error.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Sanitized failed refresh; explicit retry remains available and local writing retained",
+      "scenario": "owner-w1024-manual-error",
+      "sha256": "50a721420bdf7285f46016b011b4930af92033511562dd74543f58bbcc2f7214",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1024-retrieval-retry.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Actual explicit retry completed; inspect remains a separate action",
+      "scenario": "owner-w1024-manual-normal",
+      "sha256": "b1cb48c105c6d7ee2237c0593265b2a20ae917cc79ba9319d06765c55c611ebb",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1024-manual-draft.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Unsaved manual draft survives explicit inspection; no Save or publication attempted",
+      "scenario": "owner-w1024-manual-normal",
+      "sha256": "a33b443d687bb73868aad353accc8cefe4f472270d5ee73952336657823726c8",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1024-remote-reply.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Temporary remote reply is separate from the manual editor; publication unavailable",
+      "scenario": "owner-w1024-remote-reply",
+      "sha256": "6502e35fd7d64386784c25ecd695bc8249b6bd4ea22d817aa21a7519ad9d3041",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1024-no-reference-handoff.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Unavailable managed Google copy with no-reference handoff; current saved local work retained",
+      "scenario": "owner-w1024-no-reference-saved-work",
+      "sha256": "8db65107dd63429d64f5c75c8c041e7191de3b19532b07bbb603b32cd1735282",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1024-no-reference-saved-draft.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Actual current persisted draft on unavailable work; no Save in this run",
+      "scenario": "owner-w1024-no-reference-saved-work",
+      "sha256": "6a39c2313ccd999a8948d86d3b503e69e0eb76b790d14db32cc65e97523abe87",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/staff-w1024-today-reviews.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "STAFF assigned-work Today preview; no establishment retrieval receipt",
+      "scenario": "staff-w1024-assigned-and-denied",
+      "sha256": "ca6bea4b203d383cf6221221d7addff7627c79544b28bae484aa485c0361d3a7",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/staff-w1024-assigned-editor.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Assigned local draft and notes; provider controls absent",
+      "scenario": "staff-w1024-assigned-and-denied",
+      "sha256": "b3367d988ab3787f0f6522dcc7d2f1e37ef84c5f1d38d982576f82fa5a844292",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/staff-w1024-assigned-keyboard-focus.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Keyboard Tab focus; visible indication requires pixel review",
+      "scenario": "staff-w1024-assigned-and-denied",
+      "sha256": "4713cd4b75a7255d0eddde9055535439855c9cf28c80295de30bc24d63dd6219",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/staff-w1024-denied-foreign.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Safe unavailable selection for denied foreign scope; no edit or provider control",
+      "scenario": "staff-w1024-assigned-and-denied",
+      "sha256": "8544a3e16e053f0949fd38d2fe2cc2aa11b289f1c903e1f8ebec691f4e039d05",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/staff-w1024-denied-direct.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Safe unavailable selection for denied direct scope; no edit or provider control",
+      "scenario": "staff-w1024-assigned-and-denied",
+      "sha256": "8544a3e16e053f0949fd38d2fe2cc2aa11b289f1c903e1f8ebec691f4e039d05",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/staff-w1024-unavailable.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Assigned unavailable managed content, truthful handoff and actual current saved work",
+      "scenario": "staff-w1024-assigned-and-denied",
+      "sha256": "13434fb68149348d73108c412e1908547e132393d41b3a1ed19f4ef8dfc83387",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w1024-internal-disabled.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Internal normal profile: retrieval explicitly disabled, current local work accessible",
+      "scenario": "owner-w1024-internal-disabled",
+      "sha256": "fd6b71461e3d0cf2dbf7dd6d27a7928423036a353c55763480acad1cd0173e4e",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w768-today-reviews.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Today scoped stored-work preview; no provider retrieval",
+      "scenario": "owner-w768-today-integrations",
+      "sha256": "f73f3b41b5b97f696564fa52ff5f878c4714eef1c6d8696c346c24bde44cb3d8",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w768-integrations.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Bound OWNER confirmation is separate from retrieval; continuation not clicked",
+      "scenario": "owner-w768-today-integrations",
+      "sha256": "980574a24d643df9608a3626e3b8d729f00f99c6319d68a1101617dd56933769",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w768-integrations-keyboard-focus.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Keyboard Tab focus; visible indication requires pixel review",
+      "scenario": "owner-w768-today-integrations",
+      "sha256": "bfa6f753bf9c1f7a00f308fda22fd410137140c6c566863f19a992461d32a4f9",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w768-avis-list-detail.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Available Google list and selected local detail before manual refresh",
+      "scenario": "owner-w768-available-list-detail",
+      "sha256": "dab30c3c87ba938953448e41bbfef45d900ebdd88a722afbbd6c6e9f87503d9f",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w768-retrieval-pending.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Actual manual request pending; saved and unsaved local work remains usable",
+      "scenario": "owner-w768-manual-delay",
+      "sha256": "8e2e4155df3616beec2005a633a9907422d031fa578a1f38645b73706c803667",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w768-pending-editor.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Unsaved note and keyboard focus retained during pending retrieval",
+      "scenario": "owner-w768-manual-delay",
+      "sha256": "a00b514231d048ad5886613b76118c6c5650089b685f1138b26936bf7e02b4e9",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w768-retrieval-success.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Completed one-page retrieval; held list and selected local UUID remain unchanged",
+      "scenario": "owner-w768-manual-delay",
+      "sha256": "b3f21f8c614430ec832b31da3aa1c568bad8194cfdc073a4836ed810e30bcb54",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w768-retrieval-error.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Sanitized failed refresh; explicit retry remains available and local writing retained",
+      "scenario": "owner-w768-manual-error",
+      "sha256": "ce591c3d813b10881b9daa8fe04351d3462be2f130c48c6e00f3913a098fe0d0",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w768-retrieval-retry.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Actual explicit retry completed; inspect remains a separate action",
+      "scenario": "owner-w768-manual-normal",
+      "sha256": "b3f21f8c614430ec832b31da3aa1c568bad8194cfdc073a4836ed810e30bcb54",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w768-manual-draft.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Unsaved manual draft survives explicit inspection; no Save or publication attempted",
+      "scenario": "owner-w768-manual-normal",
+      "sha256": "6f23b464cea7c1222b09326936d14ab239f454e77c2a4cf2c0a5b5c4ddd88092",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w768-remote-reply.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Temporary remote reply is separate from the manual editor; publication unavailable",
+      "scenario": "owner-w768-remote-reply",
+      "sha256": "97bacf1fc01f6c07ddce16afb203041cf6692b984ddfdaec02d0d30c035dd61a",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w768-no-reference-handoff.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Unavailable managed Google copy with no-reference handoff; current saved local work retained",
+      "scenario": "owner-w768-no-reference-saved-work",
+      "sha256": "e4484d4367f1b8a628d6f227980acaf724b6c8e1cc8ae959062505eb20c90165",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w768-no-reference-saved-draft.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Actual current persisted draft on unavailable work; no Save in this run",
+      "scenario": "owner-w768-no-reference-saved-work",
+      "sha256": "a540e0d0a89bada950d9da813df663dc53cbdf7ef14042d5eaae68d41b6b6a9a",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/staff-w768-today-reviews.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "STAFF assigned-work Today preview; no establishment retrieval receipt",
+      "scenario": "staff-w768-assigned-and-denied",
+      "sha256": "77792a03d2cc6b196220a1db8501f8a6f638bcf3a67a1a5f1443fcc831017891",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/staff-w768-assigned-editor.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Assigned local draft and notes; provider controls absent",
+      "scenario": "staff-w768-assigned-and-denied",
+      "sha256": "801f4905767fdb9fbc3a7c14f9ac62cc2d42694cf8f510e0fae9cb70fcefb74b",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/staff-w768-assigned-keyboard-focus.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Keyboard Tab focus; visible indication requires pixel review",
+      "scenario": "staff-w768-assigned-and-denied",
+      "sha256": "a203ad8f90db9bf98a0f11076af61ea99806a96963d8b244887b9ab78ff94348",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/staff-w768-denied-foreign.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Safe unavailable selection for denied foreign scope; no edit or provider control",
+      "scenario": "staff-w768-assigned-and-denied",
+      "sha256": "00a6cbfd57d4df4992dd12ee0487e72f989dc4f7f2e6fe53e76c499346651982",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/staff-w768-denied-direct.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Safe unavailable selection for denied direct scope; no edit or provider control",
+      "scenario": "staff-w768-assigned-and-denied",
+      "sha256": "00a6cbfd57d4df4992dd12ee0487e72f989dc4f7f2e6fe53e76c499346651982",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/staff-w768-unavailable.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Assigned unavailable managed content, truthful handoff and actual current saved work",
+      "scenario": "staff-w768-assigned-and-denied",
+      "sha256": "e3b54802632b8d54bfcc6640e3e94bda1769bff439be076896c77ddc6f052790",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T20-53-42-715Z/owner-w768-internal-disabled.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Internal normal profile: retrieval explicitly disabled, current local work accessible",
+      "scenario": "owner-w768-internal-disabled",
+      "sha256": "06cefba64afe0dbf08751c46c2d4bcb5fc73974913def239a32c1979e2ec4084",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED"
+    }
+  ],
+  "limitations": [
+    "Additional widths 1440/1024/768 only. Historical 1366/390 first, empty, detail-recovery and machine-maintenance evidence remains separate and untouched. No SQL, reset, bootstrap, migration, Save, app restart, browser storage/session export or real provider configuration.",
+    "Initial OWNER visit may actually retrieve one stale recent page. Its exact counts are recorded; fresh zero is never assumed. Each explicit manual pending/success, failure and retry is one recent page.",
+    "Full relevant viewport exports are actual browser pixels after meaningful target scrolling. DOM text/focus/selection continuity complements pixels; actual visual and screen-reader review is not scripted PASS.",
+    "Uses only existing loopback 3311/3312 apps and existing bundled Playwright/Edge. Run exclusively while the owned fixture state is controlled by this driver; original bytes restore in finally. Actual provider access, scheduling, backup retention and production qualification remain unverified."
+  ],
+  "browserErrors": 0,
+  "blockedBrowserRequests": 0,
+  "consoleErrors": 6,
+  "consoleDiagnostics": [
+    {
+      "scenario": "owner-w1440-today-integrations",
+      "role": "OWNER",
+      "viewport": "w1440",
+      "kind": "OTHER_CONSOLE_ERROR",
+      "status": null,
+      "textSha256": "428f280bfaefbd1cc5198793ebcdc951ca394e993081262701ec27b20f9984b0",
+      "sameOrigin": true,
+      "profile": "release-a",
+      "path": "/parametres/integrations",
+      "pathSha256": "c73d469a9ed8179528526b954824414d8dc4153b2d05cf6f13075984b2d21ef4",
+      "queryExported": false
+    },
+    {
+      "scenario": "owner-w1440-today-integrations",
+      "role": "OWNER",
+      "viewport": "w1440",
+      "kind": "BROWSER_RESOURCE_ERROR",
+      "status": null,
+      "textSha256": "671347410306fc0394cb8f6827190ca57a4110d96970db247eed606fe9175c13",
+      "sameOrigin": false,
+      "profile": "OTHER",
+      "path": null,
+      "pathSha256": null,
+      "queryExported": false
+    },
+    {
+      "scenario": "owner-w1024-today-integrations",
+      "role": "OWNER",
+      "viewport": "w1024",
+      "kind": "OTHER_CONSOLE_ERROR",
+      "status": null,
+      "textSha256": "706ccb57b45c66a1ae4ded34cbb621a51d8c8dec80a09f19cf2fcec841922341",
+      "sameOrigin": true,
+      "profile": "release-a",
+      "path": "/parametres/integrations",
+      "pathSha256": "c73d469a9ed8179528526b954824414d8dc4153b2d05cf6f13075984b2d21ef4",
+      "queryExported": false
+    },
+    {
+      "scenario": "owner-w1024-today-integrations",
+      "role": "OWNER",
+      "viewport": "w1024",
+      "kind": "BROWSER_RESOURCE_ERROR",
+      "status": null,
+      "textSha256": "671347410306fc0394cb8f6827190ca57a4110d96970db247eed606fe9175c13",
+      "sameOrigin": false,
+      "profile": "OTHER",
+      "path": null,
+      "pathSha256": null,
+      "queryExported": false
+    },
+    {
+      "scenario": "owner-w768-today-integrations",
+      "role": "OWNER",
+      "viewport": "w768",
+      "kind": "OTHER_CONSOLE_ERROR",
+      "status": null,
+      "textSha256": "894d38068e0ac0138a6566d1bb6755526d0919fba3698a28bc830b544c5071e3",
+      "sameOrigin": true,
+      "profile": "release-a",
+      "path": "/parametres/integrations",
+      "pathSha256": "c73d469a9ed8179528526b954824414d8dc4153b2d05cf6f13075984b2d21ef4",
+      "queryExported": false
+    },
+    {
+      "scenario": "owner-w768-today-integrations",
+      "role": "OWNER",
+      "viewport": "w768",
+      "kind": "BROWSER_RESOURCE_ERROR",
+      "status": null,
+      "textSha256": "671347410306fc0394cb8f6827190ca57a4110d96970db247eed606fe9175c13",
+      "sameOrigin": false,
+      "profile": "OTHER",
+      "path": null,
+      "pathSha256": null,
+      "queryExported": false
+    }
+  ],
+  "failedResponses": [],
+  "driverSha256": "5c41895919ccffdfe08869ca7a3bf171fbb30bdf39afe928d3c0b20fde1738a1",
+  "candidateManifestSha256": "7792ee8d7e68e08d4934aca32df691cb3773570a5f1d9f6e9c12d4db7b59ffa7",
+  "buildBindingSha256": "0790286763c815172c837f04132bbc3dabd2b8f4747f42d5c8f5a6facde40578",
+  "providerFixtureSha256": "9c611fbcae5d21cc6290dc969b5330adbc4469468ce48ba891882a78bccdf8ed",
+  "establishedDriverSha256": "3f0f4023149a023761d28adf38e4a9c609fb934da9ace710dec11b41f924a653",
+  "sourceFileCount": 496,
+  "dataProvenance": "SYNTHETIC_FIXTURE_NOT_GOOGLE_ACCESS_OR_RETRIEVAL_EVIDENCE",
+  "viewports": {
+    "w1440": {
+      "width": 1440,
+      "height": 900
+    },
+    "w1024": {
+      "width": 1024,
+      "height": 768
+    },
+    "w768": {
+      "width": 768,
+      "height": 1024
+    }
+  },
+  "startedAt": "2026-10-01T20:53:42.716Z",
+  "scriptedStatus": "FAIL",
+  "originalFixtureStateRestored": true,
+  "completedAt": "2026-10-01T20:54:35.726Z",
+  "qaStatus": "REVIEW_REQUIRED"
+}

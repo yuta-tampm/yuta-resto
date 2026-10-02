@@ -20,8 +20,10 @@ import {
   orderItems,
   orders,
   payments,
+  posEstablishmentProfiles,
   printJobs,
 } from '@yuta/db-pos/schema';
+import { createLocalPrinterWorker } from '../src/services/local-printer-worker';
 import { createSiteAgentService } from '../src/services/site-agent-service';
 
 config({ path: '.env.test' });
@@ -45,7 +47,10 @@ integrationTest('site-agent financial transaction integration', () => {
   const orderId = uuidv7();
   const mainOrderItemId = uuidv7();
   const drinkOrderItemId = uuidv7();
+  const kitchenSendKey = uuidv7();
   const paymentKey = uuidv7();
+  const receiptPrintKey = uuidv7();
+  const receiptReprintKey = uuidv7();
 
   beforeAll(async () => {
     db = createPosDatabaseClient(process.env);
@@ -169,6 +174,9 @@ integrationTest('site-agent financial transaction integration', () => {
       await db.delete(checkItems).where(inArray(checkItems.checkId, checkIds));
     }
     await db.delete(printJobs).where(eq(printJobs.orderId, orderId));
+    await db
+      .delete(posEstablishmentProfiles)
+      .where(eq(posEstablishmentProfiles.id, 'default'));
     await db.delete(payments).where(eq(payments.orderId, orderId));
     await db.delete(checks).where(eq(checks.orderId, orderId));
     await db.delete(orderItems).where(eq(orderItems.orderId, orderId));
@@ -193,7 +201,7 @@ integrationTest('site-agent financial transaction integration', () => {
     await db.$client.end({ timeout: 5 });
   });
 
-  it('allocates a check combo, captures payment, prints once, and replays', async () => {
+  it('prints an internal ticket, captures payment once, and replays', async () => {
     const service = createSiteAgentService(db);
     const catalog = await service.getCatalog();
     expect(
@@ -208,6 +216,130 @@ integrationTest('site-agent financial transaction integration', () => {
         items: [expect.objectContaining({ menuItemId: drinkItemId })],
       }),
     ]);
+
+    await service.executeOrderCommand(orderId, {
+      action: 'send_to_kitchen',
+      staffUserId: userId,
+      idempotencyKey: kitchenSendKey,
+      allergyAcknowledged: false,
+    });
+    await service.executeOrderCommand(orderId, {
+      action: 'mark_station_preparing',
+      station: 'kitchen',
+    });
+    await service.executeOrderCommand(orderId, {
+      action: 'mark_station_preparing',
+      station: 'kitchen',
+    });
+    const preparedItems = await db
+      .select({
+        station: orderItems.kitchenStationSnapshot,
+        status: orderItems.status,
+      })
+      .from(orderItems)
+      .where(eq(orderItems.orderId, orderId));
+    expect(preparedItems).toEqual(
+      expect.arrayContaining([
+        { station: 'kitchen', status: 'preparing' },
+        { station: 'bar', status: 'sent' },
+      ]),
+    );
+    await service.executeOrderCommand(orderId, {
+      action: 'mark_station_sent',
+      station: 'kitchen',
+    });
+    await service.executeOrderCommand(orderId, {
+      action: 'mark_station_sent',
+      station: 'kitchen',
+    });
+    const revertedItems = await db
+      .select({
+        station: orderItems.kitchenStationSnapshot,
+        status: orderItems.status,
+      })
+      .from(orderItems)
+      .where(eq(orderItems.orderId, orderId));
+    expect(revertedItems).toEqual(
+      expect.arrayContaining([
+        { station: 'kitchen', status: 'sent' },
+        { station: 'bar', status: 'sent' },
+      ]),
+    );
+    await service.executeOrderCommand(orderId, {
+      action: 'mark_station_preparing',
+      station: 'counter',
+    });
+    await service.executeOrderCommand(orderId, {
+      action: 'mark_station_preparing',
+      station: 'counter',
+    });
+    const counterPreparedItems = await db
+      .select({
+        station: orderItems.kitchenStationSnapshot,
+        status: orderItems.status,
+      })
+      .from(orderItems)
+      .where(eq(orderItems.orderId, orderId));
+    expect(counterPreparedItems).toEqual(
+      expect.arrayContaining([
+        { station: 'kitchen', status: 'sent' },
+        { station: 'bar', status: 'preparing' },
+      ]),
+    );
+    await service.executeOrderCommand(orderId, {
+      action: 'mark_station_sent',
+      station: 'counter',
+    });
+    await service.executeOrderCommand(orderId, {
+      action: 'mark_station_sent',
+      station: 'counter',
+    });
+    const kitchenJob = await db.query.printJobs.findFirst({
+      where: eq(printJobs.idempotencyKey, kitchenSendKey),
+    });
+    expect(kitchenJob?.printerName).toBe('tm-m30-cuisine');
+    if (!kitchenJob) throw new Error('Expected kitchen print job.');
+    const productionJobs = await db
+      .select()
+      .from(printJobs)
+      .where(eq(printJobs.orderId, orderId));
+    expect(productionJobs.map((job) => job.printerName).sort()).toEqual([
+      'tm-m30-bar-desserts',
+      'tm-m30-cuisine',
+    ]);
+
+    const output: Buffer[] = [];
+    const worker = createLocalPrinterWorker({
+      db,
+      devicePath: '/dev/rfcomm-test',
+      pollIntervalMs: 1_000,
+      write: async (_devicePath, data) => {
+        output.push(data);
+      },
+      interTicketDelayMs: 0,
+      orderIdScope: orderId,
+    });
+    expect(await worker.processNext()).toBe(true);
+    expect(await worker.processNext()).toBe(true);
+    expect(output).toHaveLength(2);
+    expect(output[0]?.toString('ascii')).toContain('CUISINE');
+    expect(output[0]?.toString('ascii')).not.toContain('BOISSONS');
+    expect(output[1]?.toString('ascii')).toContain('BOISSONS');
+    expect(output[1]?.toString('ascii')).toContain('BAR');
+    expect(output[1]?.toString('ascii')).toContain('INTEGRATION MAIN');
+    const [printedJob] = await db
+      .select({ status: printJobs.status })
+      .from(printJobs)
+      .where(eq(printJobs.id, kitchenJob.id));
+    expect(printedJob?.status).toBe('printed');
+    const requeuedJob = await service.executePrintJobCommand(kitchenJob.id, {
+      action: 'reprint',
+    });
+    expect(requeuedJob.status).toBe('pending');
+    expect(requeuedJob.printedAt).toBeNull();
+    expect(await worker.processNext()).toBe(true);
+    expect(output).toHaveLength(3);
+    expect(output[2]?.toString('ascii')).toContain('CUISINE');
     const singleSummary = await service.getPaymentSummary(orderId);
     expect(singleSummary.order.totalCents).toBe(1400);
     const discountedDetail = await service.getOrderDetail(orderId);
@@ -278,12 +410,12 @@ integrationTest('site-agent financial transaction integration', () => {
     };
     const captured = await service.payCheck(orderId, input);
     expect(captured.replayed).toBe(false);
-    expect(captured.printJob?.type).toBe('customer_receipt');
+    expect(captured.printJob).toBeNull();
 
     const replayed = await service.payCheck(orderId, input);
     expect(replayed.replayed).toBe(true);
     expect(replayed.payment.id).toBe(captured.payment.id);
-    expect(replayed.printJob?.id).toBe(captured.printJob?.id);
+    expect(replayed.printJob).toBeNull();
 
     const paymentCount = await db
       .select({ id: payments.id })
@@ -295,5 +427,86 @@ integrationTest('site-agent financial transaction integration', () => {
         ),
       );
     expect(paymentCount).toHaveLength(1);
+
+    const receiptJobs = await db
+      .select({ id: printJobs.id })
+      .from(printJobs)
+      .where(
+        and(
+          eq(printJobs.orderId, orderId),
+          eq(printJobs.jobType, 'customer_receipt'),
+        ),
+      );
+    expect(receiptJobs).toHaveLength(0);
+
+    const receiptView = await service.getReceiptView(orderId);
+    expect(receiptView.targets).toEqual([
+      expect.objectContaining({
+        kind: 'check',
+        id: split.checks[0].id,
+        availability: 'available',
+      }),
+    ]);
+    const receiptCommand = {
+      operationId: receiptPrintKey,
+      target: { kind: 'check' as const, checkId: split.checks[0].id },
+      intent: 'print' as const,
+    };
+    await db.insert(posEstablishmentProfiles).values({
+      id: 'default',
+      displayName: 'Le Jardin Integration',
+    });
+    const queuedReceipt = await service.executeReceiptCommand(
+      orderId,
+      receiptCommand,
+    );
+    expect(queuedReceipt.replayed).toBe(false);
+    expect(queuedReceipt.printJob).toMatchObject({
+      type: 'customer_receipt',
+      status: 'pending',
+    });
+    const replayedReceipt = await service.executeReceiptCommand(
+      orderId,
+      receiptCommand,
+    );
+    expect(replayedReceipt.replayed).toBe(true);
+    expect(replayedReceipt.printJob.id).toBe(queuedReceipt.printJob.id);
+
+    expect(await worker.processNext()).toBe(true);
+    expect(output).toHaveLength(4);
+    expect(output[3]?.toString('ascii')).toContain('RECU DE PAIEMENT');
+    expect(output[3]?.toString('ascii')).toContain('Le Jardin Integration');
+    expect(output[3]?.toString('ascii')).toContain('Integration Main');
+    const printedReceipt = await service.getReceiptJobStatus(
+      orderId,
+      queuedReceipt.printJob.id,
+    );
+    expect(printedReceipt.printJob.status).toBe('printed');
+
+    await db
+      .update(orderItems)
+      .set({ itemNameSnapshot: 'Changed after receipt snapshot' })
+      .where(eq(orderItems.id, mainOrderItemId));
+    await db
+      .update(posEstablishmentProfiles)
+      .set({ displayName: 'Renamed after receipt snapshot', revision: 2 })
+      .where(eq(posEstablishmentProfiles.id, 'default'));
+    const reprint = await service.executeReceiptCommand(orderId, {
+      operationId: receiptReprintKey,
+      target: { kind: 'check', checkId: split.checks[0].id },
+      intent: 'reprint',
+      jobId: queuedReceipt.printJob.id,
+    });
+    expect(reprint.replayed).toBe(false);
+    expect(await worker.processNext()).toBe(true);
+    expect(output).toHaveLength(5);
+    expect(output[4]?.toString('ascii')).toContain('Integration Main');
+    expect(output[4]?.toString('ascii')).toContain('Le Jardin Integration');
+    expect(output[4]?.toString('ascii')).not.toContain(
+      'Renamed after receipt snapshot',
+    );
+    expect(output[4]?.toString('ascii')).not.toContain(
+      'Changed after receipt snapshot',
+    );
   });
 });

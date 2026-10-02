@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-05
+Last updated: 2026-09-07
 
 The YUTA restaurant back-office uses server-side, database-backed sessions. Authentication is
 implemented by `@yuta/auth`, the cloud database boundary, and the server
@@ -22,7 +22,7 @@ roles, PIN sessions, and audit records through `site-agent`/`db-pos`.
 
 ## Sign-in flow
 
-1. `/login` validates the submitted email and password on the server.
+1. `/connexion` validates the submitted email and password on the server.
 2. Passwords are verified with Node.js scrypt. Plaintext passwords are never
    stored.
 3. Active establishment memberships are resolved using zero/one/many rules.
@@ -35,11 +35,14 @@ roles, PIN sessions, and audit records through `site-agent`/`db-pos`.
 8. The session organization and establishment are checked against an active
    `tenant_memberships` record.
 9. `resolveAuthenticatedTenant` produces the trusted tenant context used by
-   repositories and permission checks.
+   repositories and permission checks. Every page, action and route handler
+   still resolves it through the server helpers; during one server render the
+   lookup is memoized by session scope so a layout and its page share it, and
+   nothing is retained across requests.
 
 Users without an active restaurant membership are redirected to
-`/access/no-establishment`. Users with several memberships select one at
-`/select-establishment` before a scoped session is created. The selection
+`/acces/aucun-etablissement`. Users with several memberships select one at
+`/selection-etablissement` before a scoped session is created. The selection
 ticket has no tenant scope and cannot authorize protected back-office routes.
 
 Browser input, query parameters, and cookies are never trusted as sources for a
@@ -89,8 +92,12 @@ Failed login attempts are stored against an HMAC-derived key containing the
 normalized email and client address. Five failed attempts in 15 minutes block
 additional attempts for that key. Raw client addresses are not stored.
 
-`AUTH_SECRET` must contain at least 32 characters in production. It is used to
-derive privacy-preserving hashes for rate limiting and client-address metadata.
+`AUTH_SECRET` must contain at least 32 characters in every environment; there
+is no development fallback, and the publicly known `.env.example` placeholder
+(any value starting with `replace-with-`) is rejected. `pnpm dev:env:sync`
+generates a random local value.
+It is used to derive privacy-preserving hashes for rate limiting and
+client-address metadata.
 
 Expired sessions, reset tokens, and login attempts can be removed through the
 auth repository cleanup operation. Production scheduling should invoke this
@@ -114,18 +121,70 @@ Reputation permissions are enforced server-side:
 Client-side button visibility is only a usability aid and must not replace the
 server permission check.
 
+## Pointage authority and raw-clocking consumer
+
+The Backoffice cloud runtime contains the server-only Pointage authentication
+and authorization foundation plus the implemented employee raw-clocking
+consumer at `/pointage/[establishmentSlug]`. The implementation, formal VERIFY
+and Browser QA cover strict employee transport, a Pointage-specific
+continuation, immutable raw-event/receipt behavior, derived current state, the
+shared-device UI, and the bounded server-only manager read. Browser QA passed
+with the accepted residual evidence limitations for hidden/background
+lifecycle, BFCache triggering and independently observable absolute expiry.
+This is implemented but not production-enabled: real employee attendance is
+not authorized, and no production trusted-client-address provider exists.
+
+Pointage employee credentials are independent from Backoffice user sessions,
+Personnel permissions, POS users, and local PINs. A credential contains exactly
+eight ASCII digits, is generated with Node cryptographic randomness, and is
+persisted only through a scoped HMAC lookup digest plus a salted, peppered
+`scrypt` verifier. Versioned HKDF labels separate lookup, verifier, limiter, and
+dummy-verification keys. Plaintext is available only in the successful issue or
+reset command result after its database transaction commits; it cannot be read
+back from the repository.
+
+Every employee credential request must resolve an active organization and
+establishment from the public establishment slug on the server. Credential
+validation also requires an injected `TrustedPointageClientAddressProvider`.
+There is deliberately no production provider, forwarded-header reader,
+unknown-client bucket, or candidate-only fallback in this foundation. A missing
+secret or missing/untrusted address provenance fails closed before usable
+credential processing. Production enablement remains blocked until exact
+deployment provenance is reviewed separately.
+
+Cryptographic validation creates only a `VerifiedPointageCredential`. It does
+not create employee authority. The three employee operations—identify, own-state
+read, and own-operation creation—each require a separately checked, scoped
+Personnel employment period using the establishment timezone; entry and valid
+departure days are inclusive. Manager Pointage grants are separate and limited
+to active scoped OWNER or MANAGER contexts for establishment read, credential
+issue, and credential reset. STAFF has no Pointage grant, and there is no
+standalone revoke, suspend, or invalidate operation.
+
+Canonical production cloud migrations remain limited to credential versions,
+distributed candidate/client limiter state, and minimized write-only security
+attribution. Raw events, idempotency receipts, and continuations are exercised
+only through the guarded disposable test extension; no production database is
+enabled for raw attendance. Raw events are the sole attendance source, while
+receipts, continuations, sessions, and current state cannot become competing
+attendance sources. There is no offline/sync state.
+
+Exact retention, deletion/anonymization, legal hold, backup-retention
+interaction, employee notice, detailed audit visibility, and trusted production
+client-address provenance are still unresolved production gates.
+
 ## User and membership administration
 
-`/settings/users` is the tenant-aware access management surface:
+`/parametres/utilisateurs-acces` is the tenant-aware access management surface:
 
-- The "Utilisateurs & accès" navigation item is shown only to owners and
-  managers.
+- The "Utilisateurs & accès" navigation item appears under the settings section
+  only for owners and managers.
 - Owners can manage active establishments across their current organization.
 - Managers can manage staff only in the currently selected establishment.
 - Managers cannot assign or modify owner or manager roles.
 - The membership used by the current session cannot modify or suspend itself.
-- The last active owner membership in an organization cannot be downgraded or
-  suspended.
+- The last active owner membership in each organization/establishment scope
+  cannot be downgraded or suspended through edit or existing-user attachment.
 - Suspending a membership immediately revokes active sessions for that user,
   organization, and establishment.
 
@@ -135,9 +194,36 @@ attaches the existing identity and preserves its current password. Automated
 invitation email is not active yet, so the initial password must be delivered
 through an approved operational channel for newly created identities.
 
+Membership edits and creation/attachment transactions acquire `FOR NO KEY
+UPDATE` locks on their existing active establishment rows in canonical UUID
+order before mutation writes. Both paths use explicit `READ COMMITTED` and
+fresh post-lock membership and active-owner reads. Membership writes, scoped
+session revocation, and success audit share that transaction; a rejected target
+or later failure rolls back the entire batch and its effects. The owner count
+uses active memberships in the exact organization/establishment scope, not
+global account usability.
+
 Membership creation, attachment, role changes, and suspension are recorded in
 `auth_audit_events`. Audit metadata contains identifiers, roles, and statuses;
 it never stores plaintext passwords or session tokens.
+
+The same route exposes an owner-only access history read from those persisted
+events. The server derives the organization, actor role, and currently
+manageable active establishments from the authenticated session. The audit
+query is constrained by both organization and that establishment allowlist;
+user, establishment, and action values received from the browser are display
+filters only. Managers and staff cannot read the history.
+
+The history supports the existing `tenant.user.created`,
+`tenant.user.attached`, and `tenant.membership.updated` events with stable
+`created_at` plus event-ID cursor pagination. Its response projects only the
+event timestamp, actor and subject display identity, action, allowed
+establishment names, and previous/next role and membership status. Raw audit
+metadata, password hashes, tokens, IP hashes, user-agent values, and unrelated
+metadata are never returned to the page. No historical seed backfill is
+created, so an organization without persisted events receives the truthful
+empty state. Login, logout, and session auditing remain outside this access
+management history.
 
 ## Local development
 
@@ -163,6 +249,15 @@ system role and no restaurant membership, so it cannot use the restaurant
 back-office. Never deploy development seed identities or credentials.
 
 ## Password recovery
+
+Reset tokens are atomically single-use. After hashing the new password, the
+repository conditionally claims an unconsumed, unexpired token with an update
+that returns its user ID. The claim, password update, authentication-version
+increment, session revocation, and selection-ticket deletion share one
+transaction. A later failure rolls back the claim as well as the other writes.
+Unknown, expired, consumed, and concurrently claimed tokens all produce the
+same invalid-token result. Concurrent use of one token can complete at most one
+password reset.
 
 The reset-token storage and password reset page are implemented. Automated
 delivery is intentionally not active because the repository does not yet have a
