@@ -209,6 +209,109 @@ do not rewrite earlier Human approvals or retroactively manufacture reviews.
 The current governance-edit conversation continues its already authorized
 Human collaboration; this edit does not start or approve another change.
 
+### Claude Code implementation delegation
+
+This subsection is the canonical procedure for
+[ADR-010](decisions/ADR-010-claude-code-implementation-delegation.md). Within a
+task's selected mode, Codex may assign bounded implementation to Claude Code.
+Claude is an implementation role, not a fifth collaboration mode, an approval
+source or a global replacement for Codex identity, runtime or skill markers.
+
+| Actor                               | Responsibility                                                                                                                                                                |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Codex (task orchestrator)           | Discovers the repository, defines requirements and approved planning, prepares handoffs, coordinates workers, reviews integration, verifies findings and integrates the task. |
+| Claude Code (implementation author) | Implements the assigned code/documentation and accompanying tests in its designated checkout, runs the assigned checks and fixes in-scope findings.                           |
+| Independent reviewer                | An uninvolved reviewer with fresh context inspects the exact candidate and returns an actual verdict under [Independent gate approval](#independent-gate-approval).           |
+| Current user / Human approver       | Keeps the existing mode-defined approvals; `HUMAN_COLLABORATION` and `HUMAN_CT_BRIDGE` gate approvals remain actual Human approvals.                                          |
+
+Codex's planning or integration review, and Claude's self-check, never replace
+the mode-defined gate decision: the independent reviewer's verdict in
+`CODEX_ONLY` and `CT_BRIDGE`, or the actual Human decision in
+`HUMAN_COLLABORATION` and `HUMAN_CT_BRIDGE`. The four existing modes, their
+genuine selection sources and their Human/CT approval rules keep their meanings.
+
+A handoff for the same task inherits its recorded mode, commit choice and their
+actual sources; Claude does not ask the intake questions again. A new
+independent task requires its own intake. `COMMIT_AFTER_TASK: YES` does not
+authorize push, merge, deployment, lifecycle promotion or unrelated changes,
+and it authorizes Claude to stage or commit only when the handoff explicitly
+assigns commit delivery to Claude.
+
+Codex writes each handoff in the existing task context or change artifacts,
+not in a new governance document. Every handoff states:
+
+```text
+Task / change and phase: <task goal; change name or NONE; assigned phase>
+Approved references and TIC: <exact approved artifacts/paths/hashes; phase contract>
+Scope and exclusions: <bounded outcome; excluded writes and actions>
+Write allowlist: <exact paths>
+Protected paths: <paths whose exact bytes must be preserved>
+COLLABORATION_MODE / MODE_SELECTION_SOURCE: <inherited actual value and source>
+COMMIT_AFTER_TASK / COMMIT_SELECTION_SOURCE: <inherited actual value and source>
+Actors: <orchestrator; implementation author; integration reviewer;
+  independent reviewer or NOT_ASSIGNED; commit executor or NONE>
+Checkout: <absolute worktree path; branch; base commit; dirty-state baseline>
+Required reading: <AGENTS chain, owning sources, exact SKILL.md paths if needed>
+Required checks: <exact commands, order and prerequisites>
+QA environment: <local/dev environment and env files used, or NONE>
+Authorized preparation/env/runtime/QA commands: <exact commands or NONE>
+QA authority: <target app or NONE; ports or NONE; DB or NONE;
+  test-data create/delete rights or NONE; other runtime/data effects>
+Shared-resource conflicts: <ports, databases, locks, env files or NONE>
+Return requirements: <evidence below; optional log path under ignored exports/>
+```
+
+QA rights are task-specific: Claude may prepare dependencies or env files,
+start runtimes, use ports, touch databases or create/delete test data only
+through the exact authorized commands and with the effects the handoff records.
+Listing a required check does not authorize preparation, env or runtime
+commands. An empty or `NONE` field grants nothing. Checkout preparation and shared-resource rules follow
+[Development Workflow](DEVELOPMENT_WORKFLOW.md#parallel-tasks-and-worktrees).
+
+Claude returns evidence to Codex, not an approval:
+
+- the exact candidate: branch, base commit and changed paths;
+- the complete tracked diff and the full content and SHA-256 of every new file;
+- commands actually run, with exit codes and results, including skipped or
+  blocked commands and their reasons;
+- requirement-to-source mapping, deviations, pre-existing failures and
+  unverified limitations;
+- a commit SHA only when commit delivery was explicitly assigned to Claude.
+
+A reviewer inspects without writing sources or artifacts by default. A handoff
+that lets a reviewer rerun checks lists the bounded commands and their effects;
+caches and generated files make that different from strictly read-only
+inspection. These boundaries are instructions, not a claim of enforced tool
+restriction.
+
+Claude uses the direct skill reading described in the Development Workflow. Do
+not map `$skill` markers to `/skill` commands without actual registration,
+globally replace Codex markers or treat `allowed-tools` metadata as an enforced
+restriction. Preserve the bytes of protected skills.
+
+Codex retains assigned `$yuta-finish-change`/lifecycle orchestration and its
+existing Bridge, live federation, app-server evidence and activation
+responsibilities. Record evidence under its actual executor; do not relabel
+Claude evidence as Codex evidence. Actor metadata distinguishes executors,
+reviewers and approval recorders, for example:
+
+```text
+Implemented by: Claude Code (<actual session/run reference>)
+Integration review: Codex (<reference>); not an independent gate verdict
+Independent reviewer: <actual separate agent/context identity>
+Approval recorded by: Codex workflow
+```
+
+`Approval recorded by: Codex workflow` is accurate only when Codex actually
+records a valid approval; a sample or template is not an approval.
+
+Ordinary implementation delegation does not broaden runtime, tenant, security,
+Product, deployment or operational authority. Claude configuration files,
+installation, login/billing, reviewer configuration, runners and capability
+probes are separately scoped tasks; no Claude tool capability is asserted here.
+This procedure applies prospectively to handoffs after its adoption and
+preserves historical approvals, failures and blockers.
+
 ## Conditional Discovery / Shaping
 
 Before a new change, classify whether current Product Knowledge can safely bound

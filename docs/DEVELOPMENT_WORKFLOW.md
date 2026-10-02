@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-10-01
+Last updated: 2026-10-02
 
 1. Read root and nearest nested `AGENTS.md`.
 2. Read `docs/README.md`, `docs/CURRENT_STATE.md`, and relevant current docs.
@@ -72,6 +72,29 @@ after resolving the cause, rerun `pnpm typegen:next` from the beginning, then
 typecheck only on success. The 120-second per-child timeout terminates and waits
 for the owned generator before releasing its lock. Changed Next versions or
 output layouts require review rather than silently skipping validation.
+
+### Parallel tasks and worktrees
+
+Each simultaneous task has one primary writer, its own branch and its own Git
+worktree. Branches alone do not isolate writers who share one directory. Create
+the worktree from a clear base commit; uncommitted changes in the main checkout
+do not transfer automatically. Other actors inspect rather than edit
+concurrently. Delegated implementation handoffs follow the
+[Claude Code implementation delegation](YUTA_AUTOMATED_CHANGE_WORKFLOW.md#claude-code-implementation-delegation)
+procedure.
+
+Each worktree needs its own dependency installation, for example
+`pnpm install --frozen-lockfile`, and the ignored environment files its assigned
+checks require. `pnpm dev:env:sync` writes ignored `.env.local` files and does
+not seed a database. Inspect its targets before using it because it selects
+shared local development database URLs. Give parallel runtime work separate
+ports and disposable data, or serialize conflicting runs on shared ports,
+databases and locks. Code work may proceed in parallel when write ownership is
+isolated.
+
+Agents read a needed skill directly from its exact
+`.agents/skills/<skill-name>/SKILL.md`. Direct reading does not register a
+command, invoke a skill or grant tool rights.
 
 ### External design-intelligence controls
 
