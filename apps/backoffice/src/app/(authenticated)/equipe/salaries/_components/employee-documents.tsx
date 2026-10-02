@@ -32,7 +32,7 @@ import {
   loadEmployeeDocumentsAction,
   saveEmployeeDocumentAction,
   type SaveEmployeeDocumentActionState,
-} from '../actions';
+} from '../document-actions';
 import {
   formatDocumentSize,
   getDocumentFileSelectionLabel,

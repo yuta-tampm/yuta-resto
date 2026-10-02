@@ -123,7 +123,10 @@ import * as reservationActions from '../src/app/(authenticated)/reservations/res
 import * as bookingSettingsActions from '../src/app/(authenticated)/etablissement/booking-settings-actions';
 import * as servicePeriodActions from '../src/app/(authenticated)/etablissement/booking-service-period-actions';
 import * as bookingExceptionActions from '../src/app/(authenticated)/etablissement/booking-exception-actions';
-import * as personnelActions from '../src/app/(authenticated)/equipe/salaries/actions';
+import * as personnelEmployeeActions from '../src/app/(authenticated)/equipe/salaries/actions';
+import * as personnelActionOverviewActions from '../src/app/(authenticated)/equipe/salaries/action-overview-actions';
+import * as personnelContractExtractionActions from '../src/app/(authenticated)/equipe/salaries/contract-extraction-actions';
+import * as personnelDocumentActions from '../src/app/(authenticated)/equipe/salaries/document-actions';
 import * as registerActions from '../src/app/(authenticated)/equipe/registre-personnel/actions';
 import * as formalitesActions from '../src/app/(authenticated)/equipe/formalites-personnel/[employeeId]/actions';
 import * as satisfactionActions from '../src/app/(authenticated)/visibilite-reputation/satisfaction/actions';
@@ -134,6 +137,13 @@ import {
 } from '../src/server/auth/session';
 import { requireFormalitesTenant } from '../src/server/auth/formalites';
 import * as permissions from '../src/server/auth/permissions';
+
+const personnelActions = {
+  ...personnelEmployeeActions,
+  ...personnelActionOverviewActions,
+  ...personnelContractExtractionActions,
+  ...personnelDocumentActions,
+};
 
 const employeeId = '019930d3-2f5d-7d5a-9f96-8f2e25e7c40a';
 const draftId = '019930d3-41ea-7282-81e4-2bddc527035d';
