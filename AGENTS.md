@@ -238,6 +238,17 @@ post-task commit procedure; do not ask for the same authorization again.
 `NO` or `NOT_SELECTED` leaves task changes uncommitted. Commit choice does not
 authorize push, PR, merge, deployment, history rewriting or unrelated changes.
 
+### Claude Code implementation delegation
+
+Codex may assign bounded implementation to Claude Code under Codex
+coordination. Claude is an implementation author, not a collaboration mode,
+approval source or replacement for Codex identity. A same-task handoff inherits
+the recorded mode, commit choice and their sources; Claude follows the
+handoff's scope, write paths, checkout, checks and QA rights and returns
+evidence to Codex. Codex keeps integration review and integration, and gate
+approval still needs the mode-defined independent or Human decision. Follow
+`docs/YUTA_AUTOMATED_CHANGE_WORKFLOW.md#claude-code-implementation-delegation`.
+
 For meaningful work:
 
 1. Define goal, scope, affected runtime/data boundaries, and risks.
