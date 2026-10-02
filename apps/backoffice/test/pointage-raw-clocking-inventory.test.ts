@@ -292,7 +292,7 @@ describe('U3 isolated header implementation evidence, not PAGE/RSC or Browser QA
       [...source.matchAll(/from '([^']+)'/g)].map((match) => match[1]),
     ).toEqual([
       './_components/pointage-employee',
-      '../../../server/backoffice-exposure',
+      '@/server/backoffice-exposure',
     ]);
     expect(source).toMatch(
       /function PointagePage\(\)\s*\{\s*requireBackofficeCapabilityAvailable\('pointage'\);\s*return <PointageEmployee \/>;/,

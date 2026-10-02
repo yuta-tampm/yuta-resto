@@ -1,5 +1,5 @@
 import { PointageEmployee } from './_components/pointage-employee';
-import { requireBackofficeCapabilityAvailable } from '../../../server/backoffice-exposure';
+import { requireBackofficeCapabilityAvailable } from '@/server/backoffice-exposure';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
