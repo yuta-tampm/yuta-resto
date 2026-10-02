@@ -2,6 +2,7 @@ import type { LocalPrinterStatus } from '@yuta/contracts/local-pos';
 import { Alert, AlertDescription, Badge, Card } from '@yuta/ui';
 import { Printer, TriangleAlert } from 'lucide-react';
 import type { ReactNode } from 'react';
+import { posTimeZone } from '../../../../lib/pos-time-zone';
 
 export function PrinterStatusCard({ status }: { status: LocalPrinterStatus }) {
   const presentation = printerStatusPresentation(status.status);
@@ -136,5 +137,6 @@ function formatDateTime(value: string): string {
   return new Intl.DateTimeFormat('fr-FR', {
     dateStyle: 'short',
     timeStyle: 'short',
+    timeZone: posTimeZone,
   }).format(new Date(value));
 }

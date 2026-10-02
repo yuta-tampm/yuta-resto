@@ -157,7 +157,8 @@ export function ItemSplitDialogContent({
             type="button"
             variant="primary"
             size="sm"
-            className="ml-auto rounded-full"
+            className="ml-auto min-h-11 min-w-11 rounded-full"
+            aria-label="Ajouter un client"
             disabled={clientCount >= maxClientCount}
             onClick={() => {
               const nextClientCount = Math.min(maxClientCount, clientCount + 1);
@@ -189,7 +190,7 @@ export function ItemSplitDialogContent({
                 return (
                   <div
                     key={item.id}
-                    className="grid grid-cols-[minmax(0,1fr)_7.5rem] items-center gap-3"
+                    className="grid grid-cols-[minmax(0,1fr)_8.25rem] items-center gap-3"
                   >
                     <div>
                       <p className="font-black">
@@ -199,8 +200,9 @@ export function ItemSplitDialogContent({
                         Reste {Math.max(0, item.quantity - assignedQuantity)}
                       </p>
                     </div>
-                    <div className="grid grid-cols-3 overflow-hidden rounded-lg border border-border-default bg-white">
+                    <div className="grid grid-cols-[2.75rem_minmax(0,1fr)_2.75rem] overflow-hidden rounded-lg border border-border-default bg-white">
                       <QuantityButton
+                        label={`Retirer ${item.name} du client ${activeClient}`}
                         disabled={disabled || selectedQuantity <= 0}
                         onClick={() => updateQuantity(activeClient, item, -1)}
                       >
@@ -210,6 +212,7 @@ export function ItemSplitDialogContent({
                         {selectedQuantity}
                       </div>
                       <QuantityButton
+                        label={`Ajouter ${item.name} au client ${activeClient}`}
                         disabled={disabled || isFullyAssigned}
                         onClick={() => updateQuantity(activeClient, item, 1)}
                       >
@@ -281,10 +284,12 @@ export function ItemSplitDialogContent({
 }
 
 function QuantityButton({
+  label,
   disabled,
   onClick,
   children,
 }: {
+  label: string;
   disabled: boolean;
   onClick: () => void;
   children: ReactNode;
@@ -292,8 +297,9 @@ function QuantityButton({
   return (
     <button
       type="button"
+      aria-label={label}
       className={cn(
-        'grid h-9 place-items-center bg-white text-primary transition-colors hover:bg-surface-muted',
+        'grid h-11 place-items-center bg-white text-primary transition-colors hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus-ring',
         disabled && 'cursor-not-allowed text-primary/25 hover:bg-white',
       )}
       disabled={disabled}
@@ -343,6 +349,8 @@ function errorMessage(error: string): string {
     empty: 'Sélectionnez au moins un article pour créer les tickets.',
     quantity:
       'La quantité répartie dépasse la quantité disponible pour au moins un article.',
+    failed:
+      'Le POS local n’a pas pu créer les tickets. Rechargez la page puis réessayez.',
   };
 
   return (

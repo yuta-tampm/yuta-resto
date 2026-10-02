@@ -35,12 +35,13 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { FormEvent, ReactNode } from 'react';
-import { useActionState, useEffect, useState } from 'react';
+import { useActionState, useEffect, useId, useState } from 'react';
 import {
   failPrintJobAction,
   runPrintJobCommandAction,
   type PrintingActionState,
 } from '../actions';
+import { posTimeZone } from '../../../../lib/pos-time-zone';
 
 const initialState: PrintingActionState = { error: null, success: null };
 
@@ -304,6 +305,7 @@ function CommandButton({
 }
 
 function FailDialog({ job }: { job: LocalPrintJob }) {
+  const fieldId = useId();
   const [open, setOpen] = useState(false);
   const [failureReason, setFailureReason] = useState('');
   const [failureReasonError, setFailureReasonError] = useState<string | null>(
@@ -367,8 +369,9 @@ function FailDialog({ job }: { job: LocalPrintJob }) {
           noValidate
           onSubmit={validateFailureReason}
         >
-          <FormField label="Motif">
+          <FormField label={<label htmlFor={`${fieldId}-motif`}>Motif</label>}>
             <Input
+              id={`${fieldId}-motif`}
               name="errorMessage"
               placeholder="Papier absent, imprimante hors ligne…"
               maxLength={2000}
@@ -488,5 +491,6 @@ function formatDateTime(value: string): string {
   return new Intl.DateTimeFormat('fr-FR', {
     dateStyle: 'short',
     timeStyle: 'short',
+    timeZone: posTimeZone,
   }).format(new Date(value));
 }

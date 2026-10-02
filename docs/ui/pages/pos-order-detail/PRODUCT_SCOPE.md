@@ -151,8 +151,8 @@ merchant data, automatic payment printing, new authorization, or cloud data.
 
 - Removing loader combo optimization or reducing its three local requests is a
   separate performance/data proposal.
-- Cancellation confirmation, reason editing, or recovery redesign requires
-  product/behavior approval.
+- Cancellation reason editing or recovery redesign requires product/behavior
+  approval. The confirmation dialog before cancelling was approved by the product owner on 2026-10-02.
 - Resolved creator identity and real station/printer assignment need proven
   data/contract support; otherwise remove the placeholders.
 - A true audit history requires an authoritative event source; the current

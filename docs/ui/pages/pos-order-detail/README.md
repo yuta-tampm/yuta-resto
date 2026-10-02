@@ -109,7 +109,7 @@ PostgreSQL`. Browser UI owns neither persistence nor transactions; no POS
    owns UUIDv7 idempotency, active-staff validation, allergies, exact-batch
    locks/transitions, and durable station print jobs. Errors redirect to item
    entry. Cancellation is disabled for final/partially-paid orders; otherwise it
-   posts a fixed reason with no current confirmation dialog.
+   opens a confirmation dialog and, once confirmed, posts a fixed reason.
 10. **Navigation:** logo -> `/`; three-line menu: Commandes -> `/`, Cuisine ->
     `/kitchen`, Gestion -> `/management`. This route does not receive Home's
     direct `Nouvelle commande`; the shared header has no leading back arrow.
@@ -563,9 +563,10 @@ responsibility:
   existing item-entry navigation.
 - `_components/OrderTotalsPanel.tsx`, `_components/OrderProgressPanel.tsx`, and
   `_components/OrderInfoPanel.tsx` own the three right-rail responsibilities.
-- `_components/OrderDetailActions.tsx` keeps current send/payment/cancellation
-  adapters together while preserving the existing server actions and the
+- `_components/OrderDetailActions.tsx` keeps current send/payment adapters
+  together while preserving the existing server actions and the
   already-established kitchen-send client boundary.
+  `_components/OrderCancelForm.tsx` owns the cancel confirmation dialog.
 - `_lib/order-detail-presentation.ts` owns only serialization-safe page types
   and deterministic labels/progression derivation. It performs no I/O.
 

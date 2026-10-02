@@ -207,8 +207,8 @@ function optionalText(value: FormDataEntryValue | null): string | null {
 async function execute(
   operation: (token: string) => Promise<string>,
 ): Promise<ComboActionState> {
+  const { token } = await requireLocalManagementCredentials();
   try {
-    const { token } = await requireLocalManagementCredentials();
     const success = await operation(token);
     revalidatePath('/management/combos');
     revalidatePath('/orders', 'layout');

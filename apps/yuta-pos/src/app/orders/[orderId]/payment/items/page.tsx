@@ -192,7 +192,9 @@ function errorMessage(error: string): string {
   const messages: Record<string, string> = {
     empty: 'Sélectionnez au moins un article pour créer les tickets.',
     quantity:
-      'La quantite repartie depasse la quantite disponible pour au moins un article.',
+      'La quantité répartie dépasse la quantité disponible pour au moins un article.',
+    failed:
+      'Le POS local n’a pas pu créer les tickets. Rechargez la page puis réessayez.',
   };
 
   return (

@@ -54,7 +54,17 @@ export async function signInManagementAction(
         error: 'Trop de tentatives. Réessayez dans quelques minutes.',
       };
     }
-    return { error: 'Utilisateur ou PIN incorrect.' };
+    if (error instanceof SiteAgentClientError) {
+      return {
+        error:
+          error.code === 'LOCAL_INVALID_CREDENTIALS'
+            ? 'Utilisateur ou PIN incorrect.'
+            : 'Connexion impossible pour le moment. Réessayez.',
+      };
+    }
+    return {
+      error: 'Le service local est indisponible. Réessayez plus tard.',
+    };
   }
 
   redirect('/management');

@@ -20,6 +20,7 @@ import {
 import Link from 'next/link';
 import { PosMobileFab, PosPageShell } from '../components/pos/PosPageShell';
 import { posApi, type PosOrderHomeRow } from '../lib/pos-api';
+import { posTimeZone } from '../lib/pos-time-zone';
 
 type OrdersHomePageProps = {
   searchParams: Promise<{
@@ -562,5 +563,6 @@ function formatTime(date: Date): string {
   return new Intl.DateTimeFormat('fr-FR', {
     hour: '2-digit',
     minute: '2-digit',
+    timeZone: posTimeZone,
   }).format(date);
 }

@@ -1,4 +1,5 @@
 import type { PosOrderDetail } from '../../../../lib/pos-api';
+import { posTimeZone } from '../../../../lib/pos-time-zone';
 
 export type OrderDetail = PosOrderDetail['order'] & {
   items: PosOrderDetail['items'];
@@ -132,6 +133,7 @@ export function formatOrderTime(date: Date): string {
   return new Intl.DateTimeFormat('fr-FR', {
     hour: '2-digit',
     minute: '2-digit',
+    timeZone: posTimeZone,
   }).format(date);
 }
 

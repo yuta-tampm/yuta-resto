@@ -1,5 +1,5 @@
 import { Badge, Card } from '@yuta/ui';
-import { ChefHat, Wifi } from 'lucide-react';
+import { ChefHat } from 'lucide-react';
 import { PosPageShell } from '../../components/pos/PosPageShell';
 import { KitchenAutoRefresh } from './_components/KitchenAutoRefresh';
 import { KitchenFilters } from './_components/KitchenFilters';
@@ -10,6 +10,7 @@ import {
   parseKitchenScreen,
 } from './_lib/kitchen-view';
 import { posApi } from '../../lib/pos-api';
+import { posTimeZone } from '../../lib/pos-time-zone';
 
 type KitchenPageProps = {
   searchParams: Promise<{
@@ -79,10 +80,6 @@ export default async function KitchenPage({ searchParams }: KitchenPageProps) {
 
         <footer className="flex shrink-0 flex-wrap items-center justify-between gap-3 rounded-lg border border-border-default bg-white px-4 py-2 text-xs font-bold text-primary/55">
           <span>Dernière mise à jour : {formatTime(new Date())}</span>
-          <span className="inline-flex items-center gap-1 text-primary">
-            <Wifi className="h-3.5 w-3.5 text-status-success" />
-            Connecté
-          </span>
         </footer>
       </div>
     </PosPageShell>
@@ -94,5 +91,6 @@ function formatTime(date: Date): string {
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
+    timeZone: posTimeZone,
   }).format(date);
 }

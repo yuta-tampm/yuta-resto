@@ -7,6 +7,7 @@ import {
   type PayLocalCheckInput,
   type PayLocalOrderInput,
 } from '@yuta/contracts/local-pos';
+import { splitCents } from '@yuta/core';
 import type { PosDatabaseExecutor } from '@yuta/db-pos/client';
 import {
   checkDiscountItems,
@@ -589,15 +590,6 @@ function assertPaymentReplay(
       'Idempotency key was reused with different payment input.',
     );
   }
-}
-
-export function splitCents(total: number, parts: number): number[] {
-  const base = Math.floor(total / parts);
-  const remainder = total % parts;
-  return Array.from(
-    { length: parts },
-    (_, index) => base + (index < remainder ? 1 : 0),
-  );
 }
 
 function toCheck(

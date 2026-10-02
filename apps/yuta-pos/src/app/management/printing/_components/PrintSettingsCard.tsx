@@ -26,7 +26,7 @@ import {
   Settings2,
   TriangleAlert,
 } from 'lucide-react';
-import { useActionState, useState } from 'react';
+import { useActionState, useId, useState } from 'react';
 import {
   createTestPrintJobAction,
   savePrintSettingsAction,
@@ -41,6 +41,7 @@ export function PrintSettingsCard({
 }: {
   settings: LocalPrintSettings;
 }) {
+  const fieldId = useId();
   const [settingsExpanded, setSettingsExpanded] = useState(false);
   const [kitchenEnabled, setKitchenEnabled] = useState(settings.kitchenEnabled);
   const [counterEnabled, setCounterEnabled] = useState(settings.counterEnabled);
@@ -149,9 +150,18 @@ export function PrintSettingsCard({
           </div>
 
           <div className="grid items-end gap-3 md:grid-cols-3 xl:grid-cols-3">
-            <FormField label="Copies Cuisine">
+            <FormField
+              label={
+                <label htmlFor={`${fieldId}-copies-cuisine`}>
+                  Copies Cuisine
+                </label>
+              }
+            >
               <Select value={kitchenCopies} onValueChange={setKitchenCopies}>
-                <SelectTrigger className="min-h-11 xl:min-h-10">
+                <SelectTrigger
+                  id={`${fieldId}-copies-cuisine`}
+                  className="min-h-11 xl:min-h-10"
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -161,9 +171,18 @@ export function PrintSettingsCard({
                 </SelectContent>
               </Select>
             </FormField>
-            <FormField label="Copies BAR (commande complète)">
+            <FormField
+              label={
+                <label htmlFor={`${fieldId}-copies-bar-commande-complete`}>
+                  Copies BAR (commande complète)
+                </label>
+              }
+            >
               <Select value={counterCopies} onValueChange={setCounterCopies}>
-                <SelectTrigger className="min-h-11 xl:min-h-10">
+                <SelectTrigger
+                  id={`${fieldId}-copies-bar-commande-complete`}
+                  className="min-h-11 xl:min-h-10"
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -173,14 +192,23 @@ export function PrintSettingsCard({
                 </SelectContent>
               </Select>
             </FormField>
-            <FormField label="Taille du texte">
+            <FormField
+              label={
+                <label htmlFor={`${fieldId}-taille-du-texte`}>
+                  Taille du texte
+                </label>
+              }
+            >
               <Select
                 value={fontSizePreset}
                 onValueChange={(value) =>
                   setFontSizePreset(value as PrintFontSizePreset)
                 }
               >
-                <SelectTrigger className="min-h-11 xl:min-h-10">
+                <SelectTrigger
+                  id={`${fieldId}-taille-du-texte`}
+                  className="min-h-11 xl:min-h-10"
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -364,10 +392,12 @@ function PaddingSelect({
   value: string;
   onValueChange: (value: string) => void;
 }) {
+  const fieldId = useId();
+
   return (
-    <FormField label={label}>
+    <FormField label={<label htmlFor={fieldId}>{label}</label>}>
       <Select value={value} onValueChange={onValueChange}>
-        <SelectTrigger className="min-h-11 xl:min-h-10">
+        <SelectTrigger id={fieldId} className="min-h-11 xl:min-h-10">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>

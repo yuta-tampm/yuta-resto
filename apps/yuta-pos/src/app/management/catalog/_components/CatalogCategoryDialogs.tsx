@@ -13,7 +13,7 @@ import {
   Textarea,
 } from '@yuta/ui';
 import { Pencil, Plus, SlidersHorizontal } from 'lucide-react';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import {
   createCatalogCategoryAction,
   setCatalogCategoryActiveAction,
@@ -73,6 +73,7 @@ export function InstructionSettingsDialog({
 }: {
   settings: InstructionSettings;
 }) {
+  const fieldId = useId();
   const [open, setOpen] = useState(false);
   const { state, submit, pending } = useCatalogEditorAction(
     updateInstructionSettingsAction,
@@ -99,10 +100,15 @@ export function InstructionSettingsDialog({
           </DialogHeader>
           <form onSubmit={submit} className="grid gap-4">
             <FormField
-              label="Suggestions rapides"
+              label={
+                <label htmlFor={`${fieldId}-suggestions-rapides`}>
+                  Suggestions rapides
+                </label>
+              }
               hint="Une ligne : CODE = Libellé | CONFLIT_1, CONFLIT_2. La partie conflit est facultative."
             >
               <Textarea
+                id={`${fieldId}-suggestions-rapides`}
                 name="quickInstructionOptions"
                 defaultValue={settings.quickInstructionOptions
                   .map(
@@ -117,8 +123,14 @@ export function InstructionSettingsDialog({
                 rows={14}
               />
             </FormField>
-            <FormField label="Allergènes" hint="Une ligne : CODE = Libellé.">
+            <FormField
+              label={
+                <label htmlFor={`${fieldId}-allergenes`}>Allergènes</label>
+              }
+              hint="Une ligne : CODE = Libellé."
+            >
               <Textarea
+                id={`${fieldId}-allergenes`}
                 name="allergenOptions"
                 defaultValue={settings.allergenOptions
                   .map(({ code, label }) => `${code} = ${label}`)
@@ -200,18 +212,27 @@ export function ToggleCategoryDialog({ category }: { category: Category }) {
 }
 
 function CategoryFields({ category }: { category?: Category }) {
+  const fieldId = useId();
   return (
     <>
-      <FormField label="Nom">
+      <FormField label={<label htmlFor={`${fieldId}-nom`}>Nom</label>}>
         <Input
+          id={`${fieldId}-nom`}
           name="name"
           defaultValue={category?.name}
           maxLength={255}
           required
         />
       </FormField>
-      <FormField label="Ordre d’affichage">
+      <FormField
+        label={
+          <label htmlFor={`${fieldId}-ordre-d-affichage`}>
+            Ordre d’affichage
+          </label>
+        }
+      >
         <Input
+          id={`${fieldId}-ordre-d-affichage`}
           name="sortOrder"
           type="number"
           defaultValue={category?.sortOrder ?? 0}
@@ -221,10 +242,15 @@ function CategoryFields({ category }: { category?: Category }) {
         />
       </FormField>
       <FormField
-        label="Suggestions principales"
+        label={
+          <label htmlFor={`${fieldId}-suggestions-principales`}>
+            Suggestions principales
+          </label>
+        }
         hint="Codes séparés par des espaces, virgules ou retours à la ligne."
       >
         <Textarea
+          id={`${fieldId}-suggestions-principales`}
           name="defaultInstructionCodes"
           defaultValue={category?.defaultInstructionCodes.join('\n')}
           rows={5}
@@ -232,10 +258,15 @@ function CategoryFields({ category }: { category?: Category }) {
         />
       </FormField>
       <FormField
-        label="Suggestions supplémentaires"
+        label={
+          <label htmlFor={`${fieldId}-suggestions-supplementaires`}>
+            Suggestions supplémentaires
+          </label>
+        }
         hint="Affichées sous Autres."
       >
         <Textarea
+          id={`${fieldId}-suggestions-supplementaires`}
           name="additionalInstructionCodes"
           defaultValue={category?.additionalInstructionCodes.join('\n')}
           rows={4}
