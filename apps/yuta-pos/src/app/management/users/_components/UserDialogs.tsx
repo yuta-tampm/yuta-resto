@@ -13,13 +13,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  FormField,
-  Input,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
 } from '@yuta/ui';
 import {
   KeyRound,
@@ -28,23 +21,22 @@ import {
   ShieldAlert,
   UserCheck,
   UserX,
-  CheckCircle2,
-  RefreshCw,
-  X,
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useActionState, useEffect, useId, useState } from 'react';
+import { useActionState, useState } from 'react';
 import {
   createLocalUserAction,
   resetLocalUserPinAction,
   setLocalUserActiveAction,
   updateLocalUserAction,
 } from '../actions';
-import { manageableRoles, roleLabel } from '../users-model';
+import { manageableRoles } from '../users-model';
+import { initialLocalUserActionState } from '../users-action-state';
 import {
-  initialLocalUserActionState,
-  type LocalUserActionState,
-} from '../users-action-state';
+  ActionFeedback,
+  LocalUserActionSuccess,
+  useCloseOnSuccess,
+} from './UserActionFeedback';
+import { PinInputField, UserFields } from './UserFormFields';
 
 const dialogContentClassName =
   '[&>button:last-child]:inline-flex [&>button:last-child]:min-h-11 [&>button:last-child]:min-w-11 [&>button:last-child]:items-center [&>button:last-child]:justify-center';
@@ -327,205 +319,4 @@ export function ActivationDialog({
       <LocalUserActionSuccess state={state} />
     </>
   );
-}
-
-function UserFields({
-  roles,
-  user,
-  includeStatus = false,
-  protectActiveAdmin = false,
-}: {
-  roles: LocalUser['role'][];
-  user?: LocalUser;
-  includeStatus?: boolean;
-  protectActiveAdmin?: boolean;
-}) {
-  const nameId = useId();
-  const emailId = useId();
-  const roleId = useId();
-  const statusId = useId();
-  const [name, setName] = useState(user?.name ?? '');
-  const [email, setEmail] = useState(user?.email ?? '');
-  const [role, setRole] = useState<LocalUser['role']>(
-    user?.role ?? roles[0] ?? 'staff',
-  );
-  const [isActive, setIsActive] = useState(user?.isActive ?? true);
-
-  return (
-    <>
-      <FormField label={<label htmlFor={nameId}>Nom</label>}>
-        <Input
-          id={nameId}
-          name="name"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          maxLength={255}
-          required
-        />
-      </FormField>
-      <FormField
-        label={<label htmlFor={emailId}>E-mail</label>}
-        hint="Facultatif, uniquement local."
-      >
-        <Input
-          id={emailId}
-          name="email"
-          type="email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          maxLength={320}
-        />
-      </FormField>
-      <FormField label={<label htmlFor={roleId}>Rôle</label>}>
-        <input type="hidden" name="role" value={role} />
-        <Select
-          value={role}
-          onValueChange={(value) => setRole(value as LocalUser['role'])}
-        >
-          <SelectTrigger id={roleId} className="min-h-11">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {roles.map((value) => (
-              <SelectItem
-                key={value}
-                value={value}
-                disabled={protectActiveAdmin && value !== 'admin'}
-              >
-                {roleLabel(value)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </FormField>
-      {includeStatus && (
-        <FormField label={<label htmlFor={statusId}>État</label>}>
-          <input
-            type="hidden"
-            name="isActive"
-            value={isActive ? 'true' : 'false'}
-          />
-          <Select
-            value={isActive ? 'active' : 'inactive'}
-            onValueChange={(value) => setIsActive(value === 'active')}
-          >
-            <SelectTrigger id={statusId} className="min-h-11">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="active">Actif</SelectItem>
-              <SelectItem value="inactive" disabled={protectActiveAdmin}>
-                Inactif
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </FormField>
-      )}
-    </>
-  );
-}
-
-function PinInputField({
-  name,
-  label,
-  hint,
-}: {
-  name: 'pin' | 'pinConfirmation';
-  label: string;
-  hint?: string;
-}) {
-  const id = useId();
-  const [value, setValue] = useState('');
-
-  return (
-    <FormField label={<label htmlFor={id}>{label}</label>} hint={hint}>
-      <Input
-        id={id}
-        name={name}
-        type="password"
-        inputMode="numeric"
-        pattern="[0-9]{4,8}"
-        minLength={4}
-        maxLength={8}
-        value={value}
-        onChange={(event) => setValue(event.target.value)}
-        required
-      />
-    </FormField>
-  );
-}
-
-function ActionFeedback({ state }: { state: LocalUserActionState }) {
-  if (!state.error) return null;
-  return (
-    <Alert tone="danger" role="alert">
-      <AlertTitle>Impossible d’enregistrer</AlertTitle>
-      <AlertDescription>{state.error}</AlertDescription>
-      {state.recovery === 'refresh' && <RefreshRecoveryButton />}
-    </Alert>
-  );
-}
-
-function RefreshRecoveryButton() {
-  const router = useRouter();
-
-  return (
-    <Button
-      type="button"
-      variant="secondary"
-      size="sm"
-      className="mt-3 min-h-11"
-      onClick={() => router.refresh()}
-    >
-      <RefreshCw className="h-4 w-4" />
-      Actualiser
-    </Button>
-  );
-}
-
-function LocalUserActionSuccess({ state }: { state: LocalUserActionState }) {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    if (!state.success) {
-      setVisible(false);
-      return;
-    }
-
-    setVisible(true);
-    const timeoutId = window.setTimeout(() => setVisible(false), 5_000);
-    return () => window.clearTimeout(timeoutId);
-  }, [state]);
-
-  if (!state.success || !visible) return null;
-
-  return (
-    <Alert
-      tone="success"
-      icon={<CheckCircle2 className="h-5 w-5" />}
-      className="fixed right-4 top-4 z-[70] w-[calc(100%-2rem)] max-w-sm pr-12 shadow-lg"
-      role="status"
-      aria-live="polite"
-    >
-      <AlertTitle>Modification enregistrée</AlertTitle>
-      <AlertDescription>{state.success}</AlertDescription>
-      <button
-        type="button"
-        className="absolute right-1 top-1 inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg focus:outline-none focus:ring-2 focus:ring-focus-ring"
-        aria-label="Fermer la confirmation"
-        onClick={() => setVisible(false)}
-      >
-        <X className="h-4 w-4" />
-      </button>
-    </Alert>
-  );
-}
-
-function useCloseOnSuccess(
-  state: LocalUserActionState,
-  setOpen: (open: boolean) => void,
-) {
-  useEffect(() => {
-    if (state.success) setOpen(false);
-  }, [state.success, setOpen]);
 }
