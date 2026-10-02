@@ -1,6 +1,10 @@
 import { Badge, Button, Card, IconButton, Switch } from '@yuta/ui';
 import { PackagePlus, Pencil, X } from 'lucide-react';
 import {
+  StockDetailRows,
+  StockDetailSection,
+} from '../../_components/stock-detail-section';
+import {
   formatInventoryCurrency,
   formatInventoryStock,
   type InventoryItem,
@@ -58,8 +62,8 @@ export function InventoryDetails({
         </button>
       </div>
       <div className="divide-y divide-border-default px-4">
-        <DetailSection title="Stock et emplacements">
-          <DetailRows
+        <StockDetailSection title="Stock et emplacements">
+          <StockDetailRows
             rows={[
               ['Stock actuel', formatInventoryStock(item.stock, item.unit)],
               ['Stock minimum', formatInventoryStock(item.minimum, item.unit)],
@@ -68,7 +72,7 @@ export function InventoryDetails({
             ]}
           />
           <h4 className="mb-2 mt-4 text-xs font-bold">Par emplacement</h4>
-          <DetailRows
+          <StockDetailRows
             rows={[
               [
                 item.location,
@@ -80,9 +84,9 @@ export function InventoryDetails({
               ],
             ]}
           />
-        </DetailSection>
-        <DetailSection title="Informations d'achat">
-          <DetailRows
+        </StockDetailSection>
+        <StockDetailSection title="Informations d'achat">
+          <StockDetailRows
             rows={[
               ['Fournisseur principal', item.supplier],
               ['Conditionnement', item.packaging],
@@ -91,13 +95,13 @@ export function InventoryDetails({
               ['Délai de livraison', '2 jours'],
             ]}
           />
-        </DetailSection>
-        <DetailSection title="Statut et paramètres">
+        </StockDetailSection>
+        <StockDetailSection title="Statut et paramètres">
           <div className="mb-3 flex items-center justify-between text-xs">
             <span className="text-muted">Suivi du stock</span>
             <Switch defaultChecked disabled aria-label="Suivi du stock" />
           </div>
-          <DetailRows
+          <StockDetailRows
             rows={[
               ['Périssable', 'Oui'],
               ['Unité de stock', item.unit],
@@ -105,7 +109,7 @@ export function InventoryDetails({
               ['Code barre', item.barcode],
             ]}
           />
-        </DetailSection>
+        </StockDetailSection>
       </div>
       <div className="grid grid-cols-2 gap-2 border-t border-border-default p-4">
         <Button variant="secondary" disabled>
@@ -118,33 +122,5 @@ export function InventoryDetails({
         </Button>
       </div>
     </Card>
-  );
-}
-
-function DetailSection({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="py-4">
-      <h3 className="mb-3 text-sm font-bold">{title}</h3>
-      {children}
-    </section>
-  );
-}
-
-function DetailRows({ rows }: { rows: Array<[string, string]> }) {
-  return (
-    <dl className="grid grid-cols-2 gap-y-2 text-xs">
-      {rows.map(([label, value]) => (
-        <div key={label} className="contents">
-          <dt className="text-muted">{label}</dt>
-          <dd className="truncate text-right font-medium">{value}</dd>
-        </div>
-      ))}
-    </dl>
   );
 }

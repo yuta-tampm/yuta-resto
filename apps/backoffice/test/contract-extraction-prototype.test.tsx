@@ -1,11 +1,14 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 
-vi.mock('../src/app/(authenticated)/equipe/salaries/actions', () => ({
-  startContractExtractionAction: vi.fn(),
-  applyContractExtractionAction: vi.fn(),
-  loadStoredSyntheticContractEligibilityAction: vi.fn(),
-}));
+vi.mock(
+  '../src/app/(authenticated)/equipe/salaries/contract-extraction-actions',
+  () => ({
+    startContractExtractionAction: vi.fn(),
+    applyContractExtractionAction: vi.fn(),
+    loadStoredSyntheticContractEligibilityAction: vi.fn(),
+  }),
+);
 
 import { ContractExtractionPrototype } from '../src/app/(authenticated)/equipe/salaries/_components/contract-extraction-prototype';
 

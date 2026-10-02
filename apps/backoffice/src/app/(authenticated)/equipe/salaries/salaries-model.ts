@@ -75,17 +75,6 @@ export function formatEmployeeDate(value: string, locale = 'fr-FR'): string {
   }).format(new Date(`${value}T12:00:00Z`));
 }
 
-export function getBusinessDate(timezone: string, date = new Date()): string {
-  const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: timezone,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).formatToParts(date);
-  const values = new Map(parts.map((part) => [part.type, part.value]));
-  return `${values.get('year')}-${values.get('month')}-${values.get('day')}`;
-}
-
 function differenceInCalendarDays(laterDate: string, earlierDate: string) {
   return Math.round(
     (Date.parse(`${laterDate}T00:00:00Z`) -

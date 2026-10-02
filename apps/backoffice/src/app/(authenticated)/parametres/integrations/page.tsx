@@ -2,16 +2,14 @@ import { Button } from '@yuta/ui';
 import { ExternalLink, RefreshCw } from 'lucide-react';
 import { BackofficePage } from '@/components/backoffice/backoffice-page';
 import { requireReputationPermission } from '@/server/auth/permissions';
+import { firstSearchParam } from '@/lib/search-params';
 import { requireReputationTenant } from '@/server/auth/session';
 import { GoogleConnectorPanel } from './_components/google-connector-panel';
 import { loadGoogleIntegrationPageData } from './google-integration-loader';
 import { GoogleLocationSelectorPanel } from './_components/google-location-selector-panel';
 import { IntegrationStatusAlerts } from './_components/integration-status-alerts';
 import type { IntegrationSearchParams } from './integrations-model';
-import {
-  filterIntegrationSearchParam,
-  releaseAIntegrationResultMessages,
-} from './integrations-model';
+import { releaseAIntegrationResultMessages } from './integrations-model';
 import { isReleaseAExposure } from '@/server/backoffice-exposure';
 import { isGoogleReviewRetrievalEnabled } from '@/server/reputation/google-review-retrieval-config';
 
@@ -57,7 +55,7 @@ export default async function SettingsIntegrationsPage({
         resultMessage={
           releaseA
             ? releaseAIntegrationResultMessages[
-                filterIntegrationSearchParam(params.google) ?? ''
+                firstSearchParam(params.google) ?? ''
               ]
             : data.resultMessage
         }

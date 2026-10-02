@@ -33,7 +33,7 @@ import {
 } from './backoffice-navigation';
 import { TenantSwitcher } from './tenant-switcher';
 import { LogoutSubmitButton } from './logout-submit-button';
-import type { BackofficeExposureProfile } from '../../lib/backoffice-exposure';
+import type { BackofficeExposureProfile } from '@/lib/backoffice-exposure';
 
 export function BackofficeFrame({
   children,
@@ -140,7 +140,7 @@ export function BackofficeFrame({
                     placeholder="Rechercher (ex : commande, produit, employe...)"
                     className="pr-14"
                   />
-                  <span className="pointer-events-none absolute right-3 top-1/2 hidden -translate-y-1/2 rounded-md border border-border-default bg-white px-1.5 py-0.5 text-[11px] font-semibold text-primary/40 sm:block">
+                  <span className="pointer-events-none absolute right-3 top-1/2 hidden -translate-y-1/2 rounded-md border border-border-default bg-surface px-1.5 py-0.5 text-[11px] font-semibold text-primary/40 sm:block">
                     &#8984; K
                   </span>
                 </div>
@@ -160,7 +160,7 @@ export function BackofficeFrame({
                   aria-label="Notifications"
                 >
                   <Bell className="h-5 w-5" />
-                  <span className="absolute right-1.5 top-1.5 grid h-4 w-4 place-items-center rounded-full bg-action-danger text-[10px] font-black text-white">
+                  <span className="absolute right-1.5 top-1.5 grid h-4 w-4 place-items-center rounded-full bg-action-danger text-[10px] font-black text-inverse">
                     3
                   </span>
                 </IconButton>
@@ -176,7 +176,7 @@ export function BackofficeFrame({
               <Avatar
                 fallback={currentUser.name}
                 size="sm"
-                className="bg-primary text-white"
+                className="bg-primary text-inverse"
               />
               <form action={logoutAction}>
                 <LogoutSubmitButton />
@@ -316,7 +316,7 @@ function MobileMenuDrawer({
         aria-modal="true"
         aria-labelledby="mobile-backoffice-menu-title"
         className={cn(
-          'relative flex h-dvh w-80 max-w-[85vw] min-h-0 flex-col border-r border-border-default bg-white shadow-md transition-transform duration-200 ease-out will-change-transform motion-reduce:transition-none',
+          'relative flex h-dvh w-80 max-w-[85vw] min-h-0 flex-col border-r border-border-default bg-surface shadow-md transition-transform duration-200 ease-out will-change-transform motion-reduce:transition-none',
           open ? 'translate-x-0' : '-translate-x-full',
         )}
       >

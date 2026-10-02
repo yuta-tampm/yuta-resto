@@ -2,7 +2,7 @@ import type { LucideIcon } from 'lucide-react';
 import {
   isBackofficePathAvailable,
   type BackofficeExposureProfile,
-} from '../../lib/backoffice-exposure';
+} from '@/lib/backoffice-exposure';
 import {
   Archive,
   ArrowLeftRight,

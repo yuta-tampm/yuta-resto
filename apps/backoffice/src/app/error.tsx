@@ -15,7 +15,7 @@ export default function Error({
       <p className="text-sm text-primary/50">{error.message}</p>
       <button
         onClick={reset}
-        className="rounded-lg bg-action-primary px-4 py-2 text-sm font-medium text-white hover:bg-action-primary-hover"
+        className="rounded-lg bg-action-primary px-4 py-2 text-sm font-medium text-inverse hover:bg-action-primary-hover"
       >
         Réessayer
       </button>

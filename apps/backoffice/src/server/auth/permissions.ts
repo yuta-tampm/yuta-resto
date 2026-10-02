@@ -76,7 +76,10 @@ export type PersonnelPermission =
 
 export type UserManagementPermission = 'users.access.manage';
 
-const permissionRoles: Record<ReputationPermission, readonly TenantRole[]> = {
+const reputationPermissionRoles: Record<
+  ReputationPermission,
+  readonly TenantRole[]
+> = {
   'reputation.read': ['OWNER', 'MANAGER', 'STAFF'],
   'reputation.feedback.manage': ['OWNER', 'MANAGER'],
   'reputation.reply.create': ['OWNER', 'MANAGER', 'STAFF'],
@@ -137,78 +140,52 @@ export function hasReputationPermission(
   context: TenantContext,
   permission: ReputationPermission,
 ): boolean {
-  return (
-    context.actor.type === 'user' &&
-    permissionRoles[permission].includes(context.actor.role)
-  );
+  return hasRolePermission(reputationPermissionRoles, context, permission);
 }
 
 export function requireReputationPermission(
   context: TenantContext,
   permission: ReputationPermission,
 ): void {
-  if (!hasReputationPermission(context, permission)) {
-    throw new TenantError(
-      'Permission denied.',
-      'CROSS_TENANT_ACCESS_DENIED',
-      403,
-    );
-  }
-}
-
-export function requireBookingPermission(
-  context: TenantContext,
-  permission: BookingPermission,
-): void {
-  if (!hasBookingPermission(context, permission)) {
-    throw new TenantError(
-      'Permission denied.',
-      'CROSS_TENANT_ACCESS_DENIED',
-      403,
-    );
-  }
+  if (!hasReputationPermission(context, permission)) denyPermission();
 }
 
 export function hasBookingPermission(
   context: TenantContext,
   permission: BookingPermission,
 ): boolean {
-  return (
-    context.actor.type === 'user' &&
-    bookingPermissionRoles[permission].includes(context.actor.role)
-  );
+  return hasRolePermission(bookingPermissionRoles, context, permission);
+}
+
+export function requireBookingPermission(
+  context: TenantContext,
+  permission: BookingPermission,
+): void {
+  if (!hasBookingPermission(context, permission)) denyPermission();
 }
 
 export function hasEstablishmentPermission(
   context: TenantContext,
   permission: EstablishmentPermission,
 ): boolean {
-  return (
-    context.actor.type === 'user' &&
-    establishmentPermissionRoles[permission].includes(context.actor.role)
-  );
+  return hasRolePermission(establishmentPermissionRoles, context, permission);
 }
 
 export function requireEstablishmentPermission(
   context: TenantContext,
   permission: EstablishmentPermission,
 ): void {
-  if (!hasEstablishmentPermission(context, permission)) {
-    throw new TenantError(
-      'Permission denied.',
-      'CROSS_TENANT_ACCESS_DENIED',
-      403,
-    );
-  }
+  if (!hasEstablishmentPermission(context, permission)) denyPermission();
 }
 
 export function hasRestaurantKnowledgePermission(
   context: TenantContext,
   permission: RestaurantKnowledgePermission,
 ): boolean {
-  return (
-    context.actor.type === 'user' &&
-    restaurantKnowledgePermissionRoles[permission].includes(context.actor.role)
+  return hasRolePermission(
+    restaurantKnowledgePermissionRoles,
+    context,
+    permission,
   );
 }
 
@@ -216,57 +193,52 @@ export function requireRestaurantKnowledgePermission(
   context: TenantContext,
   permission: RestaurantKnowledgePermission,
 ): void {
-  if (!hasRestaurantKnowledgePermission(context, permission)) {
-    throw new TenantError(
-      'Permission denied.',
-      'CROSS_TENANT_ACCESS_DENIED',
-      403,
-    );
-  }
+  if (!hasRestaurantKnowledgePermission(context, permission)) denyPermission();
 }
 
 export function hasPersonnelPermission(
   context: TenantContext,
   permission: PersonnelPermission,
 ): boolean {
-  return (
-    context.actor.type === 'user' &&
-    personnelPermissionRoles[permission].includes(context.actor.role)
-  );
+  return hasRolePermission(personnelPermissionRoles, context, permission);
 }
 
 export function requirePersonnelPermission(
   context: TenantContext,
   permission: PersonnelPermission,
 ): void {
-  if (!hasPersonnelPermission(context, permission)) {
-    throw new TenantError(
-      'Permission denied.',
-      'CROSS_TENANT_ACCESS_DENIED',
-      403,
-    );
-  }
+  if (!hasPersonnelPermission(context, permission)) denyPermission();
 }
 
 export function hasUserManagementPermission(
   context: TenantContext,
   permission: UserManagementPermission,
 ): boolean {
-  return (
-    context.actor.type === 'user' &&
-    userManagementPermissionRoles[permission].includes(context.actor.role)
-  );
+  return hasRolePermission(userManagementPermissionRoles, context, permission);
 }
 
 export function requireUserManagementPermission(
   context: TenantContext,
   permission: UserManagementPermission,
 ): void {
-  if (!hasUserManagementPermission(context, permission)) {
-    throw new TenantError(
-      'Permission denied.',
-      'CROSS_TENANT_ACCESS_DENIED',
-      403,
-    );
-  }
+  if (!hasUserManagementPermission(context, permission)) denyPermission();
+}
+
+function hasRolePermission<Permission extends string>(
+  roles: Record<Permission, readonly TenantRole[]>,
+  context: TenantContext,
+  permission: Permission,
+): boolean {
+  return (
+    context.actor.type === 'user' &&
+    roles[permission].includes(context.actor.role)
+  );
+}
+
+function denyPermission(): never {
+  throw new TenantError(
+    'Permission denied.',
+    'CROSS_TENANT_ACCESS_DENIED',
+    403,
+  );
 }

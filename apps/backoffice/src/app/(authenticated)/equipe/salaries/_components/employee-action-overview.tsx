@@ -21,7 +21,7 @@ import { useEffect, useState, useTransition } from 'react';
 import {
   loadPersonnelActionOverviewAction,
   resolvePersonnelActionTargetAction,
-} from '../actions';
+} from '../action-overview-actions';
 import { getActionPresentation } from '../employee-action-overview-model';
 
 export type PersonnelActionOverviewState =

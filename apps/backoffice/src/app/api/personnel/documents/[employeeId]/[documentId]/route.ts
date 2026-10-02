@@ -4,6 +4,7 @@ import { requirePersonnelPermission } from '@/server/auth/permissions';
 import { requirePersonnelTenant } from '@/server/auth/session';
 import { cloudDatabase } from '@/server/cloud-database';
 import { getPersonnelDocumentRuntime } from '@/server/personnel-documents/runtime';
+import { contentDisposition } from '@/app/api/personnel/_lib/content-disposition';
 
 export const dynamic = 'force-dynamic';
 
@@ -50,15 +51,4 @@ export async function GET(
       { status: 404, headers: { 'Cache-Control': 'no-store' } },
     );
   }
-}
-
-function contentDisposition(
-  disposition: 'inline' | 'attachment',
-  filename: string,
-): string {
-  const asciiFilename = filename
-    .normalize('NFKD')
-    .replace(/[^a-zA-Z0-9._-]/gu, '_')
-    .slice(0, 180);
-  return `${disposition}; filename="${asciiFilename}"; filename*=UTF-8''${encodeURIComponent(filename)}`;
 }

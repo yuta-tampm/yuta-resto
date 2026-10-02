@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { BackofficeExposureProfile } from '../lib/backoffice-exposure';
+import type { BackofficeExposureProfile } from '@/lib/backoffice-exposure';
 
 const exposureProfileSchema = z.enum(['internal', 'release-a']);
 

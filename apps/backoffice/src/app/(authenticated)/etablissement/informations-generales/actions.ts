@@ -134,13 +134,72 @@ const validatedKnowledgeValidationFailure = (
   removedItemId: null,
 });
 
+const informationPagePath = '/etablissement/informations-generales';
+
+async function requireRestaurantKnowledgeManager() {
+  requireBackofficeCapabilityAvailable('restaurant-knowledge');
+  const { tenant } = await requireAuthenticatedTenant(informationPagePath);
+  requireEstablishment(tenant);
+  requireRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.manage');
+  return tenant;
+}
+
+type RestaurantKnowledgeTenant = Awaited<
+  ReturnType<typeof requireRestaurantKnowledgeManager>
+>;
+
+function readFormFields(
+  formData: FormData,
+  fields: readonly string[],
+): Record<string, FormDataEntryValue | null> {
+  return Object.fromEntries(
+    fields.map((field) => [field, formData.get(field)]),
+  );
+}
+
+function logKnowledgeSaveFailure(error: unknown, label: string): void {
+  if (error instanceof z.ZodError) return;
+  console.error(`Failed to save Restaurant Knowledge ${label}.`, {
+    errorName: error instanceof Error ? error.name : 'UnknownError',
+  });
+}
+
+async function saveKnowledgeTextSection<Input>(
+  formData: FormData,
+  section: {
+    fields: readonly string[];
+    schema: z.ZodType<Input, z.ZodTypeDef, unknown>;
+    save: (
+      database: typeof cloudDatabase,
+      tenant: RestaurantKnowledgeTenant,
+      input: Input,
+    ) => Promise<unknown>;
+    successMessage: string;
+    failureLabel: string;
+  },
+): Promise<ConceptHistoryActionState> {
+  const tenant = await requireRestaurantKnowledgeManager();
+  try {
+    const input = section.schema.parse(
+      readFormFields(formData, section.fields),
+    );
+    await section.save(cloudDatabase, tenant, input);
+    revalidatePath(informationPagePath);
+    return { status: 'success', message: section.successMessage };
+  } catch (error: unknown) {
+    logKnowledgeSaveFailure(error, section.failureLabel);
+    return {
+      status: 'error',
+      message: 'Une erreur est survenue. Réessayez.',
+    };
+  }
+}
+
 export async function saveGeneralInformationAction(
   _previousState: GeneralInformationActionState,
   formData: FormData,
 ): Promise<GeneralInformationActionState> {
-  const { tenant } = await requireAuthenticatedTenant(
-    '/etablissement/informations-generales',
-  );
+  const { tenant } = await requireAuthenticatedTenant(informationPagePath);
   requireEstablishment(tenant);
   requireEstablishmentPermission(tenant, 'establishment.profile.manage');
   const nullable = (key: string) =>
@@ -184,7 +243,7 @@ export async function saveGeneralInformationAction(
         fieldErrors: {},
       };
     }
-    revalidatePath('/etablissement/informations-generales');
+    revalidatePath(informationPagePath);
     return {
       status: 'success',
       message: 'Informations générales enregistrées.',
@@ -216,192 +275,86 @@ export async function saveConceptHistoryAction(
   _previousState: ConceptHistoryActionState,
   formData: FormData,
 ): Promise<ConceptHistoryActionState> {
-  requireBackofficeCapabilityAvailable('restaurant-knowledge');
-  const { tenant } = await requireAuthenticatedTenant(
-    '/etablissement/informations-generales',
-  );
-  requireEstablishment(tenant);
-  requireRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.manage');
-
-  try {
-    const input = conceptHistoryInputSchema.parse({
-      concept: formData.get('concept'),
-      history: formData.get('history'),
-    });
-    await saveRestaurantKnowledgeConceptHistory(cloudDatabase, tenant, input);
-    revalidatePath('/etablissement/informations-generales');
-    return {
-      status: 'success',
-      message: 'Concept et histoire enregistrés.',
-    };
-  } catch (error: unknown) {
-    if (!(error instanceof z.ZodError)) {
-      console.error('Failed to save Restaurant Knowledge Concept/History.', {
-        errorName: error instanceof Error ? error.name : 'UnknownError',
-      });
-    }
-    return {
-      status: 'error',
-      message: 'Une erreur est survenue. Réessayez.',
-    };
-  }
+  return saveKnowledgeTextSection(formData, {
+    fields: ['concept', 'history'],
+    schema: conceptHistoryInputSchema,
+    save: saveRestaurantKnowledgeConceptHistory,
+    successMessage: 'Concept et histoire enregistrés.',
+    failureLabel: 'Concept/History',
+  });
 }
 
 export async function saveCuisineKnowHowAction(
   _previousState: CuisineKnowHowActionState,
   formData: FormData,
 ): Promise<CuisineKnowHowActionState> {
-  requireBackofficeCapabilityAvailable('restaurant-knowledge');
-  const { tenant } = await requireAuthenticatedTenant(
-    '/etablissement/informations-generales',
-  );
-  requireEstablishment(tenant);
-  requireRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.manage');
-
-  try {
-    const input = cuisineKnowHowInputSchema.parse({
-      cuisineDescription: formData.get('cuisineDescription'),
-      knowHowParticularities: formData.get('knowHowParticularities'),
-      homemade: formData.get('homemade'),
-    });
-    await saveRestaurantKnowledgeCuisineKnowHow(cloudDatabase, tenant, input);
-    revalidatePath('/etablissement/informations-generales');
-    return {
-      status: 'success',
-      message: 'Cuisine et savoir-faire enregistrés.',
-    };
-  } catch (error: unknown) {
-    if (!(error instanceof z.ZodError)) {
-      console.error('Failed to save Restaurant Knowledge Cuisine/Know-how.', {
-        errorName: error instanceof Error ? error.name : 'UnknownError',
-      });
-    }
-    return {
-      status: 'error',
-      message: 'Une erreur est survenue. Réessayez.',
-    };
-  }
+  return saveKnowledgeTextSection(formData, {
+    fields: ['cuisineDescription', 'knowHowParticularities', 'homemade'],
+    schema: cuisineKnowHowInputSchema,
+    save: saveRestaurantKnowledgeCuisineKnowHow,
+    successMessage: 'Cuisine et savoir-faire enregistrés.',
+    failureLabel: 'Cuisine/Know-how',
+  });
 }
 
 export async function saveCustomerExperienceAction(
   _previousState: CustomerExperienceActionState,
   formData: FormData,
 ): Promise<CustomerExperienceActionState> {
-  requireBackofficeCapabilityAvailable('restaurant-knowledge');
-  const { tenant } = await requireAuthenticatedTenant(
-    '/etablissement/informations-generales',
-  );
-  requireEstablishment(tenant);
-  requireRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.manage');
-
-  try {
-    const input = customerExperienceInputSchema.parse({
-      desiredExperience: formData.get('desiredExperience'),
-      welcomeAndService: formData.get('welcomeAndService'),
-      customerAttention: formData.get('customerAttention'),
-    });
-    await saveRestaurantKnowledgeCustomerExperience(
-      cloudDatabase,
-      tenant,
-      input,
-    );
-    revalidatePath('/etablissement/informations-generales');
-    return {
-      status: 'success',
-      message: 'Expérience client enregistrée.',
-    };
-  } catch (error: unknown) {
-    if (!(error instanceof z.ZodError)) {
-      console.error(
-        'Failed to save Restaurant Knowledge Customer Experience.',
-        {
-          errorName: error instanceof Error ? error.name : 'UnknownError',
-        },
-      );
-    }
-    return {
-      status: 'error',
-      message: 'Une erreur est survenue. Réessayez.',
-    };
-  }
+  return saveKnowledgeTextSection(formData, {
+    fields: ['desiredExperience', 'welcomeAndService', 'customerAttention'],
+    schema: customerExperienceInputSchema,
+    save: saveRestaurantKnowledgeCustomerExperience,
+    successMessage: 'Expérience client enregistrée.',
+    failureLabel: 'Customer Experience',
+  });
 }
 
 export async function saveTeamCultureAction(
   _previousState: TeamCultureActionState,
   formData: FormData,
 ): Promise<TeamCultureActionState> {
-  requireBackofficeCapabilityAvailable('restaurant-knowledge');
-  const { tenant } = await requireAuthenticatedTenant(
-    '/etablissement/informations-generales',
-  );
-  requireEstablishment(tenant);
-  requireRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.manage');
-
-  try {
-    const input = teamCultureInputSchema.parse({
-      valuesAndMindset: formData.get('valuesAndMindset'),
-      workingTogether: formData.get('workingTogether'),
-      transmissionAndIntegration: formData.get('transmissionAndIntegration'),
-    });
-    await saveRestaurantKnowledgeTeamCulture(cloudDatabase, tenant, input);
-    revalidatePath('/etablissement/informations-generales');
-    return {
-      status: 'success',
-      message: 'Équipe et culture enregistrées.',
-    };
-  } catch (error: unknown) {
-    if (!(error instanceof z.ZodError)) {
-      console.error('Failed to save Restaurant Knowledge Team Culture.', {
-        errorName: error instanceof Error ? error.name : 'UnknownError',
-      });
-    }
-    return {
-      status: 'error',
-      message: 'Une erreur est survenue. Réessayez.',
-    };
-  }
+  return saveKnowledgeTextSection(formData, {
+    fields: [
+      'valuesAndMindset',
+      'workingTogether',
+      'transmissionAndIntegration',
+    ],
+    schema: teamCultureInputSchema,
+    save: saveRestaurantKnowledgeTeamCulture,
+    successMessage: 'Équipe et culture enregistrées.',
+    failureLabel: 'Team Culture',
+  });
 }
 
 export async function saveCommunicationIdentityAction(
   previousState: CommunicationIdentityActionState,
   formData: FormData,
 ): Promise<CommunicationIdentityActionState> {
-  requireBackofficeCapabilityAvailable('restaurant-knowledge');
-  const { tenant } = await requireAuthenticatedTenant(
-    '/etablissement/informations-generales',
-  );
-  requireEstablishment(tenant);
-  requireRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.manage');
+  const tenant = await requireRestaurantKnowledgeManager();
 
   try {
-    const input = communicationIdentityInputSchema.parse({
-      toneAndCommunicationStyle: formData.get('toneAndCommunicationStyle'),
-      customerAddressing: formData.get('customerAddressing'),
-      languageElementsAndThingsToAvoid: formData.get(
+    const input = communicationIdentityInputSchema.parse(
+      readFormFields(formData, [
+        'toneAndCommunicationStyle',
+        'customerAddressing',
         'languageElementsAndThingsToAvoid',
-      ),
-    });
+      ]),
+    );
     const savedCommunicationIdentity =
       await saveRestaurantKnowledgeCommunicationIdentity(
         cloudDatabase,
         tenant,
         input,
       );
-    revalidatePath('/etablissement/informations-generales');
+    revalidatePath(informationPagePath);
     return {
       status: 'success',
       message: 'Identité de communication enregistrée.',
       savedCommunicationIdentity,
     };
   } catch (error: unknown) {
-    if (!(error instanceof z.ZodError)) {
-      console.error(
-        'Failed to save Restaurant Knowledge Communication Identity.',
-        {
-          errorName: error instanceof Error ? error.name : 'UnknownError',
-        },
-      );
-    }
+    logKnowledgeSaveFailure(error, 'Communication Identity');
     return {
       status: 'error',
       message: 'Une erreur est survenue. Réessayez.',
@@ -414,12 +367,7 @@ export async function createValidatedKnowledgeAction(
   _previousState: ValidatedKnowledgeActionState,
   formData: FormData,
 ): Promise<ValidatedKnowledgeActionState> {
-  requireBackofficeCapabilityAvailable('restaurant-knowledge');
-  const { tenant } = await requireAuthenticatedTenant(
-    '/etablissement/informations-generales',
-  );
-  requireEstablishment(tenant);
-  requireRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.manage');
+  const tenant = await requireRestaurantKnowledgeManager();
 
   try {
     const input = validatedKnowledgeCreateSchema.parse({
@@ -433,7 +381,7 @@ export async function createValidatedKnowledgeAction(
     if (!item) {
       return validatedKnowledgeError('Établissement introuvable.');
     }
-    revalidatePath('/etablissement/informations-generales');
+    revalidatePath(informationPagePath);
     return {
       status: 'success',
       message: 'Connaissance validée ajoutée.',
@@ -456,12 +404,7 @@ export async function updateValidatedKnowledgeAction(
   _previousState: ValidatedKnowledgeActionState,
   formData: FormData,
 ): Promise<ValidatedKnowledgeActionState> {
-  requireBackofficeCapabilityAvailable('restaurant-knowledge');
-  const { tenant } = await requireAuthenticatedTenant(
-    '/etablissement/informations-generales',
-  );
-  requireEstablishment(tenant);
-  requireRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.manage');
+  const tenant = await requireRestaurantKnowledgeManager();
 
   try {
     const input = validatedKnowledgeUpdateSchema.parse({
@@ -477,7 +420,7 @@ export async function updateValidatedKnowledgeAction(
     if (!item) {
       return validatedKnowledgeError('Cette connaissance n’existe plus.');
     }
-    revalidatePath('/etablissement/informations-generales');
+    revalidatePath(informationPagePath);
     return {
       status: 'success',
       message: 'Connaissance validée enregistrée.',
@@ -500,12 +443,7 @@ export async function removeValidatedKnowledgeAction(
   _previousState: ValidatedKnowledgeActionState,
   formData: FormData,
 ): Promise<ValidatedKnowledgeActionState> {
-  requireBackofficeCapabilityAvailable('restaurant-knowledge');
-  const { tenant } = await requireAuthenticatedTenant(
-    '/etablissement/informations-generales',
-  );
-  requireEstablishment(tenant);
-  requireRestaurantKnowledgePermission(tenant, 'restaurant-knowledge.manage');
+  const tenant = await requireRestaurantKnowledgeManager();
 
   try {
     const input = validatedKnowledgeRemoveSchema.parse({
@@ -519,7 +457,7 @@ export async function removeValidatedKnowledgeAction(
     if (!removed) {
       return validatedKnowledgeError('Cette connaissance n’existe plus.');
     }
-    revalidatePath('/etablissement/informations-generales');
+    revalidatePath(informationPagePath);
     return {
       status: 'success',
       message: 'Connaissance validée retirée.',

@@ -7,6 +7,7 @@ import {
   BACKOFFICE_SELECTION_COOKIE,
   BACKOFFICE_SESSION_COOKIE,
   authRepository,
+  backofficeAuthCookieOptions,
   safeReturnTo,
 } from '@/server/auth/session';
 
@@ -54,13 +55,10 @@ export async function selectEstablishmentAction(
   }
 
   cookieStore.delete(BACKOFFICE_SELECTION_COOKIE);
-  cookieStore.set(BACKOFFICE_SESSION_COOKIE, result.token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    expires: result.session.expiresAt,
-    priority: 'high',
-  });
+  cookieStore.set(
+    BACKOFFICE_SESSION_COOKIE,
+    result.token,
+    backofficeAuthCookieOptions(result.session.expiresAt),
+  );
   redirect(safeReturnTo(parsed.data.returnTo));
 }

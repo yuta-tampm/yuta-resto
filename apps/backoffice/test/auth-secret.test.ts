@@ -16,7 +16,10 @@ vi.mock('@yuta/db-cloud', async (importOriginal) => ({
   createAuthRepository: () => ({ findSession: vi.fn() }),
 }));
 
-import { getAuthSecret } from '../src/server/auth/session';
+import {
+  backofficeAuthCookieOptions,
+  getAuthSecret,
+} from '../src/server/auth/session';
 
 describe('getAuthSecret', () => {
   afterEach(() => {
@@ -76,4 +79,30 @@ describe('getAuthSecret', () => {
       );
     },
   );
+});
+
+describe('backofficeAuthCookieOptions', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('keeps session cookies http-only, lax, site-wide and high priority', () => {
+    const expires = new Date('2026-10-02T12:00:00.000Z');
+    vi.stubEnv('NODE_ENV', 'development');
+    expect(backofficeAuthCookieOptions(expires)).toEqual({
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
+      path: '/',
+      expires,
+      priority: 'high',
+    });
+  });
+
+  it('marks session cookies secure in production', () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    expect(
+      backofficeAuthCookieOptions(new Date('2026-10-02T12:00:00.000Z')).secure,
+    ).toBe(true);
+  });
 });

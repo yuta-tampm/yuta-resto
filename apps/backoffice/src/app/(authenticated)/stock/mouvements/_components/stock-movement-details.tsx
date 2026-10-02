@@ -1,5 +1,6 @@
 import { Badge, Button, Card, IconButton } from '@yuta/ui';
 import { Printer, X } from 'lucide-react';
+import { StockDetailSection } from '../../_components/stock-detail-section';
 import { movementTypePresentation } from '../stock-movement-presentation';
 import {
   formatStockCurrency,
@@ -33,7 +34,7 @@ export function StockMovementDetails({
         <span className="text-xs font-semibold">{movement.reference}</span>
       </div>
       <div className="divide-y divide-border-default px-4">
-        <DetailSection title="Informations générales">
+        <StockDetailSection title="Informations générales">
           <DetailRows
             rows={[
               ['Date / heure', `${movement.date} ${movement.time}`],
@@ -44,8 +45,8 @@ export function StockMovementDetails({
               ['Note', movement.note],
             ]}
           />
-        </DetailSection>
-        <DetailSection title="Article">
+        </StockDetailSection>
+        <StockDetailSection title="Article">
           <div className="mb-3 flex items-center gap-3">
             <span className="grid h-11 w-11 place-items-center rounded-lg bg-surface-muted text-2xl">
               {movement.emoji}
@@ -58,8 +59,8 @@ export function StockMovementDetails({
             </div>
           </div>
           <DetailRows rows={[['Unité de stock', movement.unit]]} />
-        </DetailSection>
-        <DetailSection title="Quantité & valeur">
+        </StockDetailSection>
+        <StockDetailSection title="Quantité & valeur">
           <DetailRows
             rows={[
               [
@@ -70,8 +71,8 @@ export function StockMovementDetails({
               ['Valeur totale', formatStockCurrency(movement.value)],
             ]}
           />
-        </DetailSection>
-        <DetailSection title="Emplacement">
+        </StockDetailSection>
+        <StockDetailSection title="Emplacement">
           <DetailRows
             rows={[
               ['Zone', movement.zone],
@@ -81,16 +82,16 @@ export function StockMovementDetails({
               ],
             ]}
           />
-        </DetailSection>
+        </StockDetailSection>
         {movement.supplier && (
-          <DetailSection title="Fournisseur">
+          <StockDetailSection title="Fournisseur">
             <DetailRows
               rows={[
                 ['Fournisseur', movement.supplier],
                 ['Bon de livraison', movement.deliveryNote ?? '—'],
               ]}
             />
-          </DetailSection>
+          </StockDetailSection>
         )}
       </div>
       <div className="grid grid-cols-2 gap-2 border-t border-border-default p-4">
@@ -101,21 +102,6 @@ export function StockMovementDetails({
         <Button disabled>Annuler le mouvement</Button>
       </div>
     </Card>
-  );
-}
-
-function DetailSection({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="py-4">
-      <h3 className="mb-3 text-sm font-bold">{title}</h3>
-      {children}
-    </section>
   );
 }
 

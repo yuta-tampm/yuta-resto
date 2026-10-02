@@ -9,6 +9,7 @@ import {
 import { hasReputationPermission } from '@/server/auth/permissions';
 import { requireReputationTenant } from '@/server/auth/session';
 import { cloudDatabase as db } from '@/server/cloud-database';
+import { firstSearchParam } from '@/lib/search-params';
 import {
   getReputationExposureScope,
   getReputationFeedbackScope,
@@ -280,7 +281,7 @@ function serializeDetail(
 }
 
 function filterValue(value: string | string[] | undefined): string | undefined {
-  const first = Array.isArray(value) ? value[0] : value;
+  const first = firstSearchParam(value);
   return !first || first === 'ALL' ? undefined : first;
 }
 

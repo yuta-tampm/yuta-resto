@@ -7,8 +7,9 @@ import { revalidatePath } from 'next/cache';
 import {
   BACKOFFICE_SESSION_COOKIE,
   authRepository,
+  backofficeAuthCookieOptions,
   safeReturnTo,
-} from '../../server/auth/session';
+} from '@/server/auth/session';
 
 export type TenantSwitchActionState = {
   error: string | null;
@@ -53,14 +54,11 @@ export async function switchTenantAction(
     };
   }
 
-  cookieStore.set(BACKOFFICE_SESSION_COOKIE, result.token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    expires: result.session.expiresAt,
-    priority: 'high',
-  });
+  cookieStore.set(
+    BACKOFFICE_SESSION_COOKIE,
+    result.token,
+    backofficeAuthCookieOptions(result.session.expiresAt),
+  );
   revalidatePath('/', 'layout');
   redirect(safeReturnTo(parsed.data.returnTo));
 }

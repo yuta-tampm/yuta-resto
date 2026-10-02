@@ -91,7 +91,7 @@ export function CreativeGeneratorPanel({
                   aria-label="Palette de couleurs"
                 >
                   {[
-                    'bg-neutral-950',
+                    'bg-primary',
                     'bg-brand-200',
                     'bg-status-danger',
                     'bg-status-warning',

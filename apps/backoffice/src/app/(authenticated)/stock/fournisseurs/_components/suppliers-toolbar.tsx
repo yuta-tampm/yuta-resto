@@ -1,16 +1,8 @@
 'use client';
 
-import {
-  Button,
-  Input,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  cn,
-} from '@yuta/ui';
+import { Button, Input, cn } from '@yuta/ui';
 import { Filter, Search } from 'lucide-react';
+import { StockFilterSelect } from '../../_components/stock-filter-select';
 import {
   supplierTabs,
   type SupplierFilters,
@@ -65,24 +57,24 @@ export function SuppliersToolbar({
             className="pl-10"
           />
         </div>
-        <FilterSelect
+        <StockFilterSelect
           value={filters.category}
           onValueChange={(category) =>
             onFiltersChange({ ...filters, category })
           }
-          label="Toutes catégories"
+          allLabel="Toutes catégories"
           values={['Épicerie', 'Viandes', 'Boissons', 'Emballages']}
         />
-        <FilterSelect
+        <StockFilterSelect
           value={filters.status}
           onValueChange={(status) => onFiltersChange({ ...filters, status })}
-          label="Tous statuts"
+          allLabel="Tous statuts"
           values={['Actif', 'Inactif']}
         />
-        <FilterSelect
+        <StockFilterSelect
           value={filters.zone}
           onValueChange={(zone) => onFiltersChange({ ...filters, zone })}
-          label="Toutes zones"
+          allLabel="Toutes zones"
           values={['Poitiers', 'Vienne']}
         />
         <Button variant="secondary" onClick={onReset}>
@@ -91,33 +83,5 @@ export function SuppliersToolbar({
         </Button>
       </div>
     </>
-  );
-}
-
-function FilterSelect({
-  value,
-  onValueChange,
-  label,
-  values,
-}: {
-  value: string;
-  onValueChange(value: string): void;
-  label: string;
-  values: readonly string[];
-}) {
-  return (
-    <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger>
-        <SelectValue />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="all">{label}</SelectItem>
-        {values.map((item) => (
-          <SelectItem key={item} value={item}>
-            {item}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
   );
 }

@@ -11,8 +11,8 @@ import {
   type GoogleBusinessLocation,
 } from '@/server/reputation/google-business-profile-client';
 import { isGoogleConnectorConfigured } from '@/server/reputation/google-connector-config';
+import { firstSearchParam } from '@/lib/search-params';
 import {
-  filterIntegrationSearchParam,
   integrationResultMessages,
   resolveSelectedGoogleAccount,
   type IntegrationResultMessage,
@@ -35,8 +35,8 @@ export async function loadGoogleIntegrationPageData(
 ): Promise<GoogleIntegrationPageData> {
   const configured = isGoogleConnectorConfigured();
   const connector = await findGoogleReputationConnector(db, tenant);
-  const requestedAccount = filterIntegrationSearchParam(params.googleAccount);
-  const result = filterIntegrationSearchParam(params.google);
+  const requestedAccount = firstSearchParam(params.googleAccount);
+  const result = firstSearchParam(params.google);
   let accounts: GoogleBusinessAccount[] = [];
   let locations: GoogleBusinessLocation[] = [];
   let selectedAccount: string | null = null;

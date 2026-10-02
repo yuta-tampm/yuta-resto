@@ -4,7 +4,6 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { TodayReviewsPanel } from '../src/app/(authenticated)/aujourdhui/_components/today-reviews-panel';
 import {
   BOOKING_SCHEDULE_HREF,
-  formatTimeRange,
   getLocalDateTimeParts,
   getServiceState,
   isActiveTodayReservation,
@@ -12,6 +11,7 @@ import {
   resolveServicePeriodForToday,
   projectTodayReviewPreview,
 } from '../src/app/(authenticated)/aujourdhui/today-view-model';
+import { formatTimeRange } from '../src/lib/local-time';
 
 describe('today view model', () => {
   it('links booking schedule management to its canonical owner', () => {

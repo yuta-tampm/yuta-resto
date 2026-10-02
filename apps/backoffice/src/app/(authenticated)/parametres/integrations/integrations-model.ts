@@ -121,12 +121,6 @@ export const releaseAIntegrationResultMessages: Record<
   },
 };
 
-export function filterIntegrationSearchParam(
-  value: string | string[] | undefined,
-): string | undefined {
-  return Array.isArray(value) ? value[0] : value;
-}
-
 export function resolveSelectedGoogleAccount(
   accounts: readonly GoogleBusinessAccount[],
   requestedAccount: string | undefined,

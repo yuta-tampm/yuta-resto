@@ -30,7 +30,7 @@ import {
   applyContractExtractionAction,
   loadStoredSyntheticContractEligibilityAction,
   startContractExtractionAction,
-} from '../actions';
+} from '../contract-extraction-actions';
 import {
   getContractExtractionConfidenceLabel,
   type ContractExtractionPrototypeChoices,

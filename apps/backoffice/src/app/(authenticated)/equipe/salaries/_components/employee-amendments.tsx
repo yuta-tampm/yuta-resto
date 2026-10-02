@@ -31,7 +31,7 @@ import {
   loadEmployeeAmendmentsAction,
   saveEmployeeAmendmentAction,
   type SaveEmployeeAmendmentActionState,
-} from '../actions';
+} from '../document-actions';
 import {
   formatDocumentSize,
   getDocumentFileSelectionLabel,

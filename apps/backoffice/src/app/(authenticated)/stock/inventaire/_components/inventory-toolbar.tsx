@@ -1,16 +1,8 @@
 'use client';
 
-import {
-  Button,
-  Input,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  cn,
-} from '@yuta/ui';
+import { Button, Input, cn } from '@yuta/ui';
 import { Filter, Search } from 'lucide-react';
+import { StockFilterSelect } from '../../_components/stock-filter-select';
 import {
   inventoryTabs,
   type InventoryFilters,
@@ -61,24 +53,24 @@ export function InventoryToolbar({
         ))}
       </nav>
       <div className="grid gap-3 border-b border-border-default p-4 sm:grid-cols-2 lg:grid-cols-[180px_180px_180px_minmax(240px,1fr)_auto]">
-        <FilterSelect
+        <StockFilterSelect
           value={filters.category}
           onValueChange={(category) =>
             onFiltersChange({ ...filters, category })
           }
-          placeholder="Toutes les catégories"
+          allLabel="Toutes les catégories"
           values={categories}
         />
-        <FilterSelect
+        <StockFilterSelect
           value={filters.zone}
           onValueChange={(zone) => onFiltersChange({ ...filters, zone })}
-          placeholder="Toutes les zones"
+          allLabel="Toutes les zones"
           values={zones}
         />
-        <FilterSelect
+        <StockFilterSelect
           value={filters.status}
           onValueChange={(status) => onFiltersChange({ ...filters, status })}
-          placeholder="Tous les statuts"
+          allLabel="Tous les statuts"
           values={Object.keys(inventoryStatusTones)}
         />
         <div className="relative">
@@ -98,33 +90,5 @@ export function InventoryToolbar({
         </Button>
       </div>
     </>
-  );
-}
-
-function FilterSelect({
-  value,
-  onValueChange,
-  placeholder,
-  values,
-}: {
-  value: string;
-  onValueChange(value: string): void;
-  placeholder: string;
-  values: readonly string[];
-}) {
-  return (
-    <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger>
-        <SelectValue />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="all">{placeholder}</SelectItem>
-        {values.map((item) => (
-          <SelectItem key={item} value={item}>
-            {item}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
   );
 }
