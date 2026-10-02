@@ -48,21 +48,14 @@ vi.mock('../src/server/auth/permissions', async (importOriginal) => ({
   requireBookingPermission: mocks.requireBookingPermission,
   requireReputationPermission: mocks.requireReputationPermission,
 }));
-vi.mock('../src/server/backoffice-exposure', async () => {
-  const { releaseAAttentionStatuses } =
-    await import('../src/lib/backoffice-exposure');
-  return {
-    isReleaseAExposure: () => mocks.releaseA,
-    getReputationFeedbackScope: () =>
-      mocks.releaseA
-        ? {
-            requiredSource: 'GOOGLE',
-            scopedCounters: true,
-            attentionStatuses: releaseAAttentionStatuses,
-          }
-        : undefined,
-  };
-});
+// Select the profile only; availability and scope come from the real policy.
+vi.mock('../src/server/backoffice-exposure-config', async (importOriginal) => ({
+  ...(await importOriginal<
+    typeof import('../src/server/backoffice-exposure-config')
+  >()),
+  getBackofficeExposureProfile: () =>
+    mocks.releaseA ? ('release-a' as const) : ('internal' as const),
+}));
 vi.mock(
   '../src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-page',
   () => ({ ReviewsPage: () => null }),
@@ -381,6 +374,21 @@ describe('Release A Avis reads', () => {
         requiredSource: 'GOOGLE',
         scopedCounters: true,
       });
+    },
+  );
+
+  it.each(['unanswered', 'urgency_desc'])(
+    'replaces the %s ordering in Release A only',
+    async (sort) => {
+      await loadReviewsPage({ sort }, 'all');
+      expect(mocks.listFeedback.mock.calls[0]?.[2]).toMatchObject({
+        sort: 'newest',
+      });
+
+      mocks.listFeedback.mockClear();
+      mocks.releaseA = false;
+      await loadReviewsPage({ sort }, 'all');
+      expect(mocks.listFeedback.mock.calls[0]?.[2]).toMatchObject({ sort });
     },
   );
 
