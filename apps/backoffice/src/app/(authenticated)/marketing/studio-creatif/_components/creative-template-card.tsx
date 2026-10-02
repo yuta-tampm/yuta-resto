@@ -23,7 +23,7 @@ export function CreativeTemplateCard({
       <span
         className={cn(
           'absolute inset-0',
-          template.dark ? 'bg-neutral-950/35' : 'bg-white/10',
+          template.dark ? 'bg-primary/35' : 'bg-surface/10',
         )}
       />
       <span

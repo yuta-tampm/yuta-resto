@@ -10,7 +10,7 @@ export default function NotFound() {
       </p>
       <Link
         href="/aujourdhui"
-        className="rounded-lg bg-action-primary px-4 py-2 text-sm font-medium text-white hover:bg-action-primary-hover"
+        className="rounded-lg bg-action-primary px-4 py-2 text-sm font-medium text-inverse hover:bg-action-primary-hover"
       >
         Retour au tableau de bord
       </Link>
