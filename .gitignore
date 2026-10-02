@@ -1,5 +1,11 @@
 node_modules
 .next
+/apps/backoffice/next-env.d.ts
+/apps/web/next-env.d.ts
+/apps/booking-web/next-env.d.ts
+/apps/feedback-web/next-env.d.ts
+/apps/yuta-pos/next-env.d.ts
+/apps/yuta-display/next-env.d.ts
 .turbo
 dist
 coverage
@@ -8,11 +14,25 @@ test-results
 *.tsbuildinfo
 *.log
 .tmp-*
+.private
 pnpm-debug.log*
 .env
 .env.local
+.env.*.local
 .env.production
 vendor
+
+# Personal Claude Code settings; shared project settings are tracked.
+/.claude/settings.local.json
 apps/yuta-pos/.tmp/prints/*
 !apps/yuta-pos/.tmp/prints/.gitkeep
 apps/yuta-pos/.tmp/*.log
+
+# Local artifact workspace and externally shareable handoff files.
+/tmp/
+/exports/*
+!/exports/README.md
+
+# Reviewed local external design tooling; never vendored.
+/.agents/skills/ui-ux-pro-max/
+/.yuta-tooling/ui-ux-pro-max/

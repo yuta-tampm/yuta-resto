@@ -1,0 +1,2093 @@
+{
+  "head": "07d9d6d88e07f6a819c7894ef2e35f79d1eb32fa",
+  "timestamp": "2026-09-03T22:50:21.4336104+02:00",
+  "gateIntegrity": "12 hash references MATCH",
+  "status": [
+    " M .agents/skills/yuta-finish-change/SKILL.md",
+    " M .agents/skills/yuta-run-change/SKILL.md",
+    " M apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/employee-edit-dialog.tsx",
+    " M apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/salaries-page.tsx",
+    " M apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-edit-flow.test.ts",
+    " M apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-edit-flow.ts",
+    " M apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-history-refresh.test.ts",
+    " M apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-history-refresh.ts",
+    " M apps/backoffice/src/app/(authenticated)/equipe/salaries/actions.ts",
+    " M docs/AUTHORITY_MODEL.md",
+    " M docs/MODULE_REGISTRY.md",
+    " D docs/OPENSPEC_BASELINE_AUDIT.md",
+    " M docs/OPENSPEC_YUTA_ACTIVATION_POLICY_REVIEW.md",
+    " D docs/OPENSPEC_YUTA_ACTIVATION_REPORT.md",
+    " M docs/OPENSPEC_YUTA_NORMATIVITY_POLICY_REVIEW.md",
+    " D docs/OPENSPEC_YUTA_SCHEMA_HARDENING_IMPLEMENTATION_REPORT.md",
+    " D docs/OPENSPEC_YUTA_SCHEMA_HARDENING_REVIEW.md",
+    " D docs/OPENSPEC_YUTA_SCHEMA_REVIEW.md",
+    " D docs/OPENSPEC_YUTA_SCHEMA_SMOKE_TEST_REPORT.md",
+    " M docs/PRODUCT_KNOWLEDGE.md",
+    " M docs/README.md",
+    " M docs/YUTA_AUTOMATED_CHANGE_WORKFLOW.md",
+    " D docs/YUTA_AUTOMATED_CHANGE_WORKFLOW_SETUP_REPORT.md",
+    " M docs/YUTA_KNOWLEDGE_CONSOLIDATION_PROTOCOL.md",
+    " M docs/YUTA_QA_PROTOCOL.md",
+    " D docs/YUTA_WORKFLOW_V3_UPDATE_REPORT.md",
+    " M docs/archive/README.md",
+    " D docs/chatGPT/YUTA_CONTROL_TOWER_HANDOFF_TEMPLATE.md",
+    " M docs/chatGPT/YUTA_CONTROL_TOWER_HANDOFF_TEMPLATE_V3.md",
+    " D docs/chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT.md",
+    " M docs/chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT_V3.md",
+    " D docs/chatGPT/YUTA_PAGE_CHAT_OPERATING_PROMPT.md",
+    " M docs/chatGPT/YUTA_PAGE_CHAT_OPERATING_PROMPT_V3.md",
+    " D docs/chatGPT/YuTa_Workflow_v2.pdf",
+    " D docs/chatGPT/YuTa_Workflow_v3.pdf",
+    " M docs/features/personnel/README.md",
+    " M docs/reviews/README.md",
+    " D docs/tasks/YUTA_AUTOMATED_OPEN_SPEC_REVIEW_WORKFLOW_SETUP_TASK.md",
+    " D docs/tasks/YUTA_STEP_7_0B_OPENSPEC_1_11_DELTA_REAUDIT_TASK.md",
+    " D docs/tasks/YUTA_STEP_7_0_OPENSPEC_LOCAL_BASELINE_AUDIT_TASK.md",
+    " D docs/tasks/YUTA_STEP_7_1_FORK_AND_DESIGN_YUTA_SCHEMA_TASK.md",
+    " D docs/tasks/YUTA_STEP_7_2_ISOLATED_OPENSPEC_SCHEMA_SMOKE_TEST_TASK.md",
+    " D docs/tasks/YUTA_STEP_7_3A_OPENSPEC_SCHEMA_HARDENING_ANALYSIS_TASK.md",
+    " D docs/tasks/YUTA_STEP_7_3B_MINIMAL_SCHEMA_HARDENING_TASK.md",
+    " D docs/tasks/YUTA_STEP_7_4_OPENSPEC_ACTIVATION_POLICY_REVIEW_TASK.md",
+    " D docs/tasks/YUTA_STEP_7_5_ACTIVATE_YUTA_SPEC_DRIVEN_TASK.md",
+    " D docs/tasks/YUTA_STEP_7_6A_OPENSPEC_NORMATIVITY_POLICY_REVIEW_TASK.md",
+    " D docs/tasks/YUTA_STEP_7_6B_ENABLE_NORMATIVE_SPECS_TASK.md",
+    " D docs/tasks/YUTA_WORKFLOW_V3_AUTOMATION_UPDATE_TASK.md",
+    " M docs/ui/pages/backoffice-equipe-salaries/README.md",
+    " M packages/contracts/src/personnel/index.ts",
+    " M packages/contracts/test/personnel.test.ts",
+    " M packages/db-cloud/drizzle/meta/_journal.json",
+    " M packages/db-cloud/src/index.ts",
+    " M packages/db-cloud/src/personnel-repository.ts",
+    " M packages/db-cloud/src/schema/personnel.ts",
+    " M packages/db-cloud/test/personnel-repository.integration.test.ts",
+    " M packages/db-cloud/test/schema.test.ts",
+    "?? apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/employee-history-metadata-fields.tsx",
+    "?? apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/employee-history.tsx",
+    "?? apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-history-action-errors.ts",
+    "?? apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-history-presentation.ts",
+    "?? apps/backoffice/test/personnel-history-action.test.ts",
+    "?? apps/backoffice/test/personnel-reconstructable-history-ui.test.tsx",
+    "?? docs/YUTA_WORKFLOW_V3.md",
+    "?? docs/YUTA_WORKFLOW_V3_DOCUMENTATION_AUDIT.md",
+    "?? docs/YUTA_WORKFLOW_V3_HISTORY_CLEANUP_REVIEW.md",
+    "?? docs/YUTA_WORKFLOW_V3_LEGACY_CLEANUP_REVIEW.md",
+    "?? docs/archive/yuta-workflow/",
+    "?? docs/reviews/formalites-authorization/",
+    "?? docs/reviews/personnel-reconstructable-value-history/",
+    "?? openspec/changes/archive/2026-09-03-personnel-reconstructable-value-history/",
+    "?? openspec/changes/formalites-authorization/",
+    "?? openspec/specs/personnel/",
+    "?? packages/db-cloud/drizzle/0017_whole_warbound.sql",
+    "?? packages/db-cloud/drizzle/meta/0017_snapshot.json",
+    "?? packages/db-cloud/src/personnel-history-cutover.ts",
+    "?? packages/db-cloud/src/personnel-history-domain.ts",
+    "?? packages/db-cloud/test/personnel-history-cutover.integration.test.ts",
+    "?? packages/db-cloud/test/personnel-history-cutover.test.ts",
+    "?? packages/db-cloud/test/personnel-history-domain.test.ts"
+  ],
+  "scopedStatus": [],
+  "files": [
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/actions.ts",
+      "sha256": "0ec6d714705bcaf259b3dee82c5dfcd79367e539ade63e681f0e72b91b1dcb59"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/_components/today-dashboard.tsx",
+      "sha256": "2069802318757f0d5b7831acb365f1902587e00c9df78a2865ba6dc4f91cc386"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/_components/today-reservations-panel.tsx",
+      "sha256": "2c58272bc61a87b29c30ad460e0d190bfbf40a4c49bb57bcb446e81cb79d2223"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/_components/today-reviews-panel.tsx",
+      "sha256": "26dfcda4411757bda39a50a04e971063dc2ba1517f6d9b1f7fe5787e113e6ba2"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/_components/today-section-unavailable.tsx",
+      "sha256": "2cb7681ac9294f5136bb297ce02cbafdba4df5d9a04d795af1ee1c342b57a070"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/_components/today-services-panel.tsx",
+      "sha256": "8662da6387fe2ce80c2e268bcffd396ccc9be5dbf3e219b238897f3ff6ddee49"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/_components/today-summary-cards.tsx",
+      "sha256": "6be74cb347610d79924dfc0d9e888573303f9deeb5613fe1480fe1873e1ffc50"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/error.tsx",
+      "sha256": "170784e44ddef18f685abdd66fa671148b6ede18b0edb91c9753006cc75b054a"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/loading.tsx",
+      "sha256": "d0e2d8350b7c15928849f149f0224c40e49d676f5dfe7a2c4a4f9e75ad91dec9"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/page.tsx",
+      "sha256": "e5979359777537888c7fecaf679fa225180545d452836d907b24580350c3234b"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/today-data.ts",
+      "sha256": "11c7d7eb2a0c4fc1a7e085d335049f0e96c013c077542c1110d20cb2b7965ee9"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/today-view-model.ts",
+      "sha256": "5d0ae679c4f703a2aca9857eb1af7932222f7f87851be8623d3d2a136b26d7ba"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/conformite/veille/_components/compliance-content.tsx",
+      "sha256": "c3e49f1c8d670f997e539b62a9d8f2359e0436d73fa67c8af3b9aa5ecaec44ad"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/conformite/veille/_components/compliance-details.tsx",
+      "sha256": "deb841ed05d2d17bf3840ae2950f97ae7bf7f19a5fd25d831a93241d6695d176"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/conformite/veille/_components/compliance-header.tsx",
+      "sha256": "5ce577b13c061b6d10ab49ebe121697a918264a2af2ee8e1528e48042425e532"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/conformite/veille/_components/compliance-overview.tsx",
+      "sha256": "3bf1a54dbd830903f34a893b06776565c5f9ad9cf0e14bb53f13ecc4ce8a2bb3"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/conformite/veille/_components/compliance-page.tsx",
+      "sha256": "b1817fd66893c1975e30bf3d415abb498c9f6b82e84dd2f5aca511adc2381a56"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/conformite/veille/_components/compliance-summary.tsx",
+      "sha256": "f8b01cb5a258a9e6a5fdd1533220e3696ac6a7809ec8b81d303dd7d4b66e802b"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/conformite/veille/compliance-fixtures.ts",
+      "sha256": "bb5c1f478733c7ebbf04d80f856e73191d7da0ca632372792f394aacdf1db6bf"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/conformite/veille/compliance-model.ts",
+      "sha256": "4e0ca965e09bbb66bb1da1bc0d51103ef8232ffd8bdf2c6f2fa784295b42f3f1"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/conformite/veille/page.tsx",
+      "sha256": "d3edcc3855187f4ef7c7d6bc25efb8eff5c5452504fb58f29b96e3ff465b063e"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/[employeeId]/page.tsx",
+      "sha256": "2b6df3845dc9061793132939b40200dc7b272861bb764c11f37528ee676606e9"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-connected-read-prototype.tsx",
+      "sha256": "a24be129f95e6e85fcd6ad9324f50163fe76fee2b0cb53cafd0e32f7785e6f95"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-readiness-prototype.tsx",
+      "sha256": "89cdfceaa840a0ce2f939aef5f4f77ff1ef8d27b8cb79e5269d3f64e96ea52c1"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_lib/cdi-draft-connected-read-model.ts",
+      "sha256": "e2037a3bb38432733076231253e20ea3e3bb62ab85c30a7bae4bbb943c994bb4"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_lib/cdi-draft-prototype.ts",
+      "sha256": "c186e16f54a16d0447a727583166123df1498f83193efda9b97e258603c574cb"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_lib/formalites-read-prototype-runtime.test.ts",
+      "sha256": "47cef2ab0dff23c210e89f1ce9898d4ebe21555b0d149c54de283d3a6bd5c438"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/_lib/formalites-read-prototype-runtime.ts",
+      "sha256": "8e68816d2e69b7ef373806a10bc313dd12650b7f651b2a1ff8e7be3b3f99eb50"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/formalites-personnel/page.tsx",
+      "sha256": "dca3e2bd45570847b95117ffe9c3acc7a332d08dd0a3383f2974d65f34326fe4"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/layout.tsx",
+      "sha256": "37708f81b888d17299b9bb5f0f25547c7d0b290632dd0f82d90bd31ab24690e9"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/planning/page.tsx",
+      "sha256": "368a201ee13a48de2ae2ceff70d932bf7a89f3d899a967ab060caa43c1620023"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/pointage/page.tsx",
+      "sha256": "f2fe5f9ccf167aaf4be6233046ce3765b385c3d452e2b8cd6e1314108fb85307"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/registre-personnel/_components/personnel-register-page.tsx",
+      "sha256": "e2f60ce33d186e820473353503088bfac86dd7703465862935c96d696733f116"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/registre-personnel/_lib/personnel-register-runtime.ts",
+      "sha256": "a4d1fdc1131dc6108656c6dab7370822fad01f46edaf9155b75e980b0571f52b"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/registre-personnel/actions.ts",
+      "sha256": "beaa33e1847c6a3fb8ff70c85cda8b5bcc5a5fa88edc325a7e684992e56fb974"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/registre-personnel/error.tsx",
+      "sha256": "b5209c4f259bd523ba72de1e7b5dcf9b49427f21cdb475fd63709f2467c0792e"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/registre-personnel/loading.tsx",
+      "sha256": "b7dbe8d313da7ac7a859c693bf4134fd6022b37d10a68b20da40972b82d57b7e"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/registre-personnel/page.tsx",
+      "sha256": "4141a634876d03bf7d3085f146a6e1467fa0e9fe21fe90c5dfcdd952bb755359"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/[employeeId]/page.tsx",
+      "sha256": "a4d3aafc557f428d1d40b8d9e3ba6d100f3212154043ac81b4d50fe688630471"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/contract-extraction-prototype.tsx",
+      "sha256": "df3e9df8c409aa1e759e5a6a32e1160f2fea1676b7e8edb9369b94ee60005eff"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/employee-action-overview.test.ts",
+      "sha256": "e1d0fb4e4739bab99f82ed1c4a38acf652729fbce8195594666069a3eb141724"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/employee-action-overview.tsx",
+      "sha256": "bc0efc776abd4fc6b626f317ce075d344aa61b2fecd912715d2a56276a189977"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/employee-amendments.tsx",
+      "sha256": "b2e66908d8db6afc1736d7e89261f835b3626342f5c753a4f2a34da4733adf16"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/employee-create-dialog.tsx",
+      "sha256": "1c436e0ce02c6c37207c202778a84a31fb9a955a27940225c6d858d58dbeeec2"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/employee-departure-dialog.tsx",
+      "sha256": "d7b0eeb3600c66f2f01eb4a44d73bfeb2901cc930fcebdab68e24a822e83b1bb"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/employee-documents.tsx",
+      "sha256": "d72805f6c6ddfcc0089f63be1cfce4de493cb4973b9d2e078a6604d604bf476d"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/employee-edit-dialog.tsx",
+      "sha256": "2d9f00c5cfd3c5ff82aea290e297cdda50b41d871ce46159eddf84f976b9a8e5"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/employee-employment-details.test.tsx",
+      "sha256": "b2f057e14e44c70417496819a14f73f33d513bf674637f21b53ce098f6b7409f"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/employee-employment-details.tsx",
+      "sha256": "78458acf125b63039ca6acdce83e8f1c5548c853492ff110e28aaa3632257fae"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/salaries-page.tsx",
+      "sha256": "75dd06e0e53681c452e0e877dcaa3f657b6a622b0a8c2437529e101aff6f6d6c"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/contract-extraction-prototype-runtime.test.ts",
+      "sha256": "3b0c49d858a11dd80d93edca33544d0e7e3f9f80970ce9448e409dbd5aad006a"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/contract-extraction-prototype-runtime.ts",
+      "sha256": "9ebd410c3fdf8ab50def1a7f8f5f60bffbb229993cefe568c17fc13f25b34133"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-amendments.test.ts",
+      "sha256": "90ca89054b953816ad4d06ed0d9d6d9f0b61590ff0052cdd7ca471554af0146b"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-amendments.ts",
+      "sha256": "08fa334106353eef9f87d65304d2e9721f1deabaea47e99f4abb8ce5158e29f5"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-create-flow.test.ts",
+      "sha256": "f9715b3960fee1ce1404bf3d7f76f100e6693c30e429d84651cc090a33281c41"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-create-flow.ts",
+      "sha256": "fa06c35d36e2c3f84ba54c6a8f8166af706d2500ffa767264e972c73e8f1af86"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-edit-flow.test.ts",
+      "sha256": "d7516ae5ed1bd52f41ff16ba7f6c3260faa098bb9d216fcaf5349c929287ad7b"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-edit-flow.ts",
+      "sha256": "84e9b4c827bfbb23cc880e3681918d577a159a1021e11f850cb55aabd75bee5b"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-employment.test.ts",
+      "sha256": "0e8860a77cb9a0f9dad075a235a10f77a65a42f59fbee8ac046c4bf0114cf5c7"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-employment.ts",
+      "sha256": "46f866a55ec4357c78a6fbf1578818f29600ce1cfdcf1cbc221f7c372c9509d4"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-history-refresh.test.ts",
+      "sha256": "6d91d38d1b2352291f8fdd9ef700a92370d29328fc753196aa9b3265fbb02efc"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-history-refresh.ts",
+      "sha256": "eaf639c4b14c6871b27955585d0e21bd2638444989e8f45c7c4b00e2e040e616"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/personnel-action-overview-runtime.test.ts",
+      "sha256": "affe85ba3db96dcee5a1836fc52f0541f549d4241e46706d10130dfd558b2987"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/personnel-action-overview-runtime.ts",
+      "sha256": "951b6cc04e652d93e514a58b54ae0c81ae050769de79bdc384110919da4b436d"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/actions.ts",
+      "sha256": "21a48e154ad23ec84c4cf0e0b828f6cb3741b3e8b0a92bc33e7c65388e99c240"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/contract-extraction-prototype-model.test.ts",
+      "sha256": "9b8d9e8b3431316a9ed778bf2cdf31841e4933dbbdf1bc772bf0d365a3e7c1dc"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/contract-extraction-prototype-model.ts",
+      "sha256": "fe88b92e7aca3b954bc2a496e71170f223899bcfbd65e8b9b42e1b12a4af0f0a"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/employee-action-overview-model.ts",
+      "sha256": "d70923e44a98db6ee29910386c13bd751c7bd7989e9f0c135f76686134d413a7"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/employee-documents-model.ts",
+      "sha256": "e31ad8622fee9d265c48d45e2e4ab2f10efc4a8563d4c8f807d0a770e90e60eb"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/employee-documents.test.ts",
+      "sha256": "b617f28d5499a466824c587fd5a86ae6ae5bfa66124ff9970a3121a57fec1c2f"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/error.tsx",
+      "sha256": "31708bef2564c7dc3b4fa224c13d007dde4fe11f633879b8dbc2a6fee2591a5d"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/loading.tsx",
+      "sha256": "8a2766c2cb4a8ca772748ae230532c33ff058f2b148ed63ee8929a857e3a3bc8"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/page.tsx",
+      "sha256": "c452ac950819b2b4703c94efd653ddbc88482dd4b49c978d1bf8fb9800ce60fb"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/salaries-model.test.ts",
+      "sha256": "5ead2d757e4b759c947b74ff978df84f4e4a94788ee89fc58475229794066942"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/salaries-model.ts",
+      "sha256": "f6709bf6bcd2774b7d7af9f8c3ec4e11c91c3bc4c9937f02cf80f2ac2c9261b2"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/taches-quotidiennes/page.tsx",
+      "sha256": "40f3ba55379b6315072496def723cd1ba16e5bde6c9816acca65c4f8179497e5"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/_components/booking-administration-action-feedback.tsx",
+      "sha256": "aa93379e543247cd020408679653064123e360eddca3ac6ed33d916f4d689ce8"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/_components/booking-administration-delete-button.tsx",
+      "sha256": "d41d23f64ed05dd3462f75d53b973f6fe0bc18cf659eb6aa4f6f857de98bc342"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/_components/booking-exception-fields.tsx",
+      "sha256": "4c11533f9075c5a3cb6145c7de7c62f924a458070d9dd179a51d09a3e3d510cb"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/_components/booking-exception-form.tsx",
+      "sha256": "a4e061bd0704c2437e206a5dc7fcc0ac98f4370850b40d84335c2782b4268358"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/_components/booking-exception-list.tsx",
+      "sha256": "26771c192a0fe2e965f37d9f7e3998cc4a973db84e7f60ddee5604929df76dff"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/_components/booking-exceptions-panel.tsx",
+      "sha256": "4316c2691abba195615306c4ddfb9303ab5dc141877ec8e140c265b7a1c153a2"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/_components/booking-public-information-fields.tsx",
+      "sha256": "f6430a2045a8dc45f9a20372694deea71d287cbf0df0eef5ab158a7d08cd6605"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/_components/booking-rule-fields.tsx",
+      "sha256": "576f0bfe909e5aa592f5334f402858aa5e252862ef8226247765bd6a686527ba"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/_components/booking-rules-form.tsx",
+      "sha256": "c0f75380e4de4502f1f269de578e9a278bd400a9e43c3fe8d9ccab65b409753d"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/_components/booking-service-period-forms.tsx",
+      "sha256": "be6394990d5c39dda89f08ba32fba91658b68d3538a2011eec1a0e11db7a882a"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/booking-administration-action-state.ts",
+      "sha256": "5d35d93968b36dd36fba4c62ac37b86fd8108780d4738399c463a0e3680c9f04"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/booking-administration-model.ts",
+      "sha256": "c0b3facd04abb0dcc76f31a1cd4c600d595928bb7898d5521294851c0aefd3f3"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/booking-exception-actions.ts",
+      "sha256": "6341710c066501d90f199651e06dbb64aa86f3c3666a23f2faf7664694139374"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/booking-schedule-view-model.ts",
+      "sha256": "2b88c003405b67553777af83453a6c84017f396d08622b01d9bcc5e5ae029391"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/booking-service-period-actions.ts",
+      "sha256": "1f9814e80d59413727d4255dca3412dfb4594bb88d25823bfee1b9cf6a148daf"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/booking-settings-actions.ts",
+      "sha256": "5f400f13de94e2c65a82148d46db0d0b1a2062ce2e8ed54df881facc9120b315"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/carte-menus/page.tsx",
+      "sha256": "1d4c3b2700f7a37d83e46327c02e8c851259ddd1a11f58e51a2918e73fef665b"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/horaires-services/_components/weekly-schedule-section.tsx",
+      "sha256": "4e834a4db942b8f28b16248ab8799b264215a8679285bd155fdc0f5f9347b2ea"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/horaires-services/error.tsx",
+      "sha256": "9f12ed391d677033bd9e0d88f2f5f897255564bcffa6d2858ca707b2bd7c7c46"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/horaires-services/loading.tsx",
+      "sha256": "4ce36038c405d2c059d94f0e2c0de089d9e6852249e341ee9637dd8f181f5517"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/horaires-services/page.tsx",
+      "sha256": "bd6f9d714e03efa4cf0de9d3dcc88f097a60af4765c9777fa260f93a612ef48c"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/communication-identity-fields.tsx",
+      "sha256": "b59d7365f380e90cbc4fe52c0c117e85a87e4532635b8602450dd1db148dc595"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/communication-identity-form.tsx",
+      "sha256": "f0b71356c8fb9b1394409edcfd8c4ebd091e233af2fe0e92b2b3e977345500aa"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/concept-history-fields.tsx",
+      "sha256": "2141ac8c80f18abd684148d6d538771182994bf8eae849c27b0f6ec5ba75f2fa"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/concept-history-form.tsx",
+      "sha256": "212ef12981998ede17a06382385934713d65bcedf22f6ee64275fea85d7cd0ab"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/coordinates-section.tsx",
+      "sha256": "170bf19969b9a4f44a43a237876c4da600a4154b48ec04047fe51186ba0c28bd"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/cuisine-know-how-fields.tsx",
+      "sha256": "ed8f349c60adcb71e5217cf7b3779c01a1e779d439efba5bc78998054923c383"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/cuisine-know-how-form.tsx",
+      "sha256": "6fa66ae6c24e0ba7cda4c961a51fb0d90f213df7bc08ccb6b4a68ece079735c8"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/customer-experience-fields.tsx",
+      "sha256": "29be3e627fb8601f7433e8205664e2df45542083ace79f24eeeb36039ddc2b08"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/customer-experience-form.tsx",
+      "sha256": "8ac9ec5547379d7da8faa58839ffab73e19ea7dcd4a4e4f9018466b75ab16999"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/general-information-fields.tsx",
+      "sha256": "15c06f0c480e9e6ff6135f98fc500758cdfc0188ee405eaaa76b8336688d3f5f"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/general-information-form.tsx",
+      "sha256": "92e799f7799c40ec9885b49980571ecff164be1bc3273b5a236cd66eaa810795"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/general-information-preview.tsx",
+      "sha256": "90f4dc312557ffddb3ffbe5e1ad2729248b8b3d0732a2f35fab0f341c1de6141"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/identity-section.tsx",
+      "sha256": "3a3f480a24db95886c784995aaf1375d450c7091cf3ca8c1489aabef8188f2f2"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/languages-service-modes-section.tsx",
+      "sha256": "35323aff9798c86d0aee556894a4545991c644252eb9889d183a9be36e0d9fbc"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/public-information-section.tsx",
+      "sha256": "0737400a56c35020ecc089db6dd5bbd4182c8ea4929ee995e3f6f0a0cc5f757e"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/team-culture-fields.tsx",
+      "sha256": "e38dd94dd1bce060b91c3a9c884178c5a6d67739f388867a4f7c5b6d5eed1970"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/team-culture-form.tsx",
+      "sha256": "05b4e974bd677478e3259aed5873026ab859983f7785a2fafdb08861f895e3fd"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/_components/validated-knowledge-section.tsx",
+      "sha256": "ff765cc4c2c9953fc4889bb883bd58c47a41ed96dcedf7121daa29c684185250"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/actions.ts",
+      "sha256": "db918f65ab196a18daf1ff1549f9f4597cd111b55a1949364a246f649f952037"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/communication-identity-model.ts",
+      "sha256": "0e081898947966e8a40c9592f2ac01b9393c9f3606dab40d809535f2ad99e2c5"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/concept-history-model.ts",
+      "sha256": "96c54561fb193c9b9b199c7eb5450221bf98acc828f8b0f9657e6c06ca8d56d0"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/cuisine-know-how-model.ts",
+      "sha256": "10492214fbe33d260de58fc89aaa742b9840c8dc4c1b26146e47ae417a2084d8"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/customer-experience-model.ts",
+      "sha256": "dd9ef900ce8329f8ce0880f3662a02833b23e4b00ef671899101b90ba2f529ad"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/error.tsx",
+      "sha256": "c8c18899eb9112aaf17f988f9a426271aa867d91468768e9bc0386e4bda1d35d"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/general-information-model.ts",
+      "sha256": "86334b89388f5c8f735e8895542696f24955d18d68d487e0430b97c5bf0b5495"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/loading.tsx",
+      "sha256": "b5068ab20ba0933a8a749a7a95c7195f85d7d9c3b460ad7c59adeeb4baa1b746"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/page.tsx",
+      "sha256": "749252744e1b08bb630c245f44e05d495fee5637ad823dbb57a818229b25675f"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/restaurant-knowledge-loader.ts",
+      "sha256": "dd6743bccd39296779a4f37809da962c9a77b76bf11d5be975e518cf133da4ef"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/team-culture-model.ts",
+      "sha256": "5e64d13f70af82c2d9fd6eeb2fd8b33636a662eff4ff8762481cecbfe37e9817"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/validated-knowledge-model.ts",
+      "sha256": "649f16ab6698777db929f03f891bf07767dbc06c023974df2c21ee580383ffbd"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/ressources-internes/page.tsx",
+      "sha256": "4a8169e29f9cec07b51e2e37a6e717640a3a0008fe72a8a3d941f6e121477abb"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/salles-tables/_components/table-details.tsx",
+      "sha256": "e5583e9d5b55b956c5c034140b235906b83c91a97382a84446ce99501c4c4043"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/salles-tables/_components/table-map.tsx",
+      "sha256": "b5c7ad5ece08c013b5fe1a1749db329dc3323e2e08307036f2f1fe4d8ff58d2c"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/salles-tables/_components/table-room-selector.tsx",
+      "sha256": "63e8f7a94c1168654ee4352b86f49241a7f4e932772db82f8130d2ec0e0c4896"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/salles-tables/_components/tables-page.tsx",
+      "sha256": "ce7cd1637dc543415f964c5fcf411f4eaa94a641d948d05e20e0b4cd1258d1de"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/salles-tables/page.tsx",
+      "sha256": "8c5ce51a9d62d0517359bcbdeb9438d17908760b8e6a32406956ff82759e68d5"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/salles-tables/tables-fixtures.ts",
+      "sha256": "55e6d6ec008e2cb2c72cdda11ac127e4c5f5414ee2e7373bb045bda7c41c1987"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/salles-tables/tables-model.ts",
+      "sha256": "aa80a08c06a9d78db1322a8e581d4285c09e00b2a3bcd6389357822835fbf98a"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/salles-tables/tables-presentation.ts",
+      "sha256": "0c4c79d1a95d54d5ca7a4429a52a3b78d32c8c59e91dc63e5fd74981da5c4832"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/layout.tsx",
+      "sha256": "b5e88b1864a21132b880ee1c945efc98c4e41e14bcdbba635190d6e9e23a47f6"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/marketing/contenus/page.tsx",
+      "sha256": "521806eb9ca341841f87ea85f2c8b01a938f66174e6548e965d551491cbe1e53"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/marketing/layout.tsx",
+      "sha256": "37708f81b888d17299b9bb5f0f25547c7d0b290632dd0f82d90bd31ab24690e9"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/marketing/studio-creatif/_components/creative-generator-panel.tsx",
+      "sha256": "8c09a559f577623e0d39b9246fc41adbdc369deb2b9faaa05dcd2f9678ff37aa"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/marketing/studio-creatif/_components/creative-inspiration-card.tsx",
+      "sha256": "a002249677399a042412d0723262ea1f2f62a3c69465e248dde0dc42efc787da"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/marketing/studio-creatif/_components/creative-studio-content.tsx",
+      "sha256": "ceab7de002d4c95c812cd6d1e3a62d7903dfacd3b2b0d42bd7e278e100952df2"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/marketing/studio-creatif/_components/creative-studio-header.tsx",
+      "sha256": "04e3a0e77d2134dcc8aa7a149f69d7ebe9837723943d43ea0e284e1a75e44778"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/marketing/studio-creatif/_components/creative-studio-home.tsx",
+      "sha256": "aff0184cb73bad5b7543a21b0fb8dea9863daf4630aba70f6210a73ab0b5f54c"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/marketing/studio-creatif/_components/creative-studio-page.tsx",
+      "sha256": "2e64d1d062ea06bbdc9d0bee9ea7adabba4497d75a4b3b82998db77bc6934a80"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/marketing/studio-creatif/_components/creative-template-card.tsx",
+      "sha256": "d6589d7ff46b3bc2bc27641048315ef5807dadd64ea1ac8ae88da21e14b26879"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/marketing/studio-creatif/_components/recent-creation-card.tsx",
+      "sha256": "d1600bcd6359c1e6a90416a24e736881a2b8feef9a33269950dee96d94474708"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/marketing/studio-creatif/creative-studio-fixtures.ts",
+      "sha256": "59977016e7285169a049fc3d7cd72445f872f19ef3bcf07e3374613e53d5a3b2"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/marketing/studio-creatif/creative-studio-model.ts",
+      "sha256": "2138877e1e0ed5189ee4dacaf23a28b8f45dba8f13112f86a460a720498e063e"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/marketing/studio-creatif/page.tsx",
+      "sha256": "96f42b558130ba6fd478a9e6dc3ebe350705b021e113345f43e499c8d1a2bf73"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/abonnement/page.tsx",
+      "sha256": "69b18fcfa54b6263916f78f6a21b74065007d51fc97a0fb3f7792311b1df83c2"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/_components/google-connector-panel.tsx",
+      "sha256": "734c4d2793922991f3375ff0f2835800eae9d720fd160f66205e4608b3a374d6"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/_components/google-location-selector-panel.tsx",
+      "sha256": "d2414164e3fb5d086d40dc22262375e97456093aa30a4c40c9607efeb6fd232c"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/_components/integration-status-alerts.tsx",
+      "sha256": "5c98933beea13267a19622b00cee50b672b7490400284a95db9ea91bb4369de7"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/actions.ts",
+      "sha256": "c45d23577186e2e2dfda6e2c52bc430f21a9dd35a5ab70aa2624a43df06ddca4"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/google-integration-loader.ts",
+      "sha256": "ff703704883264785a8e1b9f87f2ce26a266f4686345d85c69e4e5eb3da22d94"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/integrations-model.ts",
+      "sha256": "8f7cd2d10badb3b0bf901132bc929368285cb37a43ca62eb50f0d1a9532dbee9"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/page.tsx",
+      "sha256": "67812d4bc1660906a4656a1ac857d50807efb10065c0bf1c5767b6e67624347c"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/layout.tsx",
+      "sha256": "37708f81b888d17299b9bb5f0f25547c7d0b290632dd0f82d90bd31ab24690e9"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/restaurant/page.tsx",
+      "sha256": "3e33f8dc0fc3bce199fc7adb1e0dbbda11e3c14f60d05732bc2db56cb19c3d01"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/utilisateurs-acces/_components/access-audit-history.tsx",
+      "sha256": "da26dc6a7cd70379d8b0248ac69bf01c9f3d14f26036752c356f4fb137cfac15"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/utilisateurs-acces/_components/access-audit-loading.tsx",
+      "sha256": "28dcf3da060da8d5f504bb992990df6fe7cc9361411eec86b631c2f38492ae7e"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/utilisateurs-acces/_components/access-audit-retry-button.tsx",
+      "sha256": "bc32067b2d555b36de0a8500223c0417348ec05eca2a59fd25ac8110ce8ca4a8"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/utilisateurs-acces/_components/create-user-dialog.tsx",
+      "sha256": "b42a4ee26b43370f84427f0da4e1bf69b1cee1a2620460bc567fb3bd3f9cc3a9"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/utilisateurs-acces/_components/membership-editor-form.tsx",
+      "sha256": "61f94ffde956aae258eb49b9b19490e202bd70137451f40005e283f8d0749b0b"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/utilisateurs-acces/_components/user-access-card.tsx",
+      "sha256": "839bf9a06d8b1ab905b4659eb10a0588736c57f22bc5ee9a302dea11ae560b09"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/utilisateurs-acces/_components/user-access-summary.tsx",
+      "sha256": "c2cfd90945631b8d724ddf6fa89862fe398b04ba7e6a85807afb165473818f60"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/utilisateurs-acces/_components/users-access-list.tsx",
+      "sha256": "38f9a9640b55bde0beda5f6efe137c1be49172a091c39fcf95051abfbd289a94"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/utilisateurs-acces/_components/users-page.tsx",
+      "sha256": "92a0f4c5875260a06f9d4415257d5ab87675f2ac136aa97fcb1c3a0c9e083c0d"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/utilisateurs-acces/access-audit-loader.ts",
+      "sha256": "28db775b56628980cddb659d2f666751f047b52d2ffa0411dc5a8b0a11cd73ed"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/utilisateurs-acces/access-audit-model.ts",
+      "sha256": "5a2305bda045769657f4f25cc80c883def503e2514a36e3d8159978755cf0edb"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/utilisateurs-acces/actions.ts",
+      "sha256": "18974d11ce7a3d199ab66f1f12a62462370877957c9ebc34da2f7933bb532767"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/utilisateurs-acces/error.tsx",
+      "sha256": "65a6c7fae75ac03239760b141e7da1b08453d5c490ba54471694f1b7890eb25c"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/utilisateurs-acces/page.tsx",
+      "sha256": "69625ed65bc30eba68b8aad519eb78fe43f5350c3dfbcf8140e5c2b1f699f487"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/utilisateurs-acces/user-access-model.ts",
+      "sha256": "3b7048843607394ac379e3ec3ea496c560288c0315da2aa9f269af1ff815ab4b"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/[reservationId]/_components/reservation-edit-form.tsx",
+      "sha256": "0fe04fd877899913c57248d5dbf55f592addb8627980c99426012d2b2e98e993"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/[reservationId]/_components/reservation-history.tsx",
+      "sha256": "b679f71b9adb7e56d91d66e2c040ea5a354404b08f59c61dfcdbae908458c97c"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/[reservationId]/_components/reservation-notes.tsx",
+      "sha256": "4ebfa7ca6bb05df2fc4700e80db0714763e704063444d27880aad865b49a7644"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/[reservationId]/_components/reservation-overview.tsx",
+      "sha256": "7c74bc6010240e06d388af058fa45c6ccb3dbd0dc00063280e6097022886381f"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/[reservationId]/_components/reservation-status-actions.tsx",
+      "sha256": "38122f73e4984bf374428881102c8908d54bb70e75d67f7c66ae84fb85eb9509"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/[reservationId]/not-found.tsx",
+      "sha256": "da477fdc1898481cf929da8fee0dfd283ffaf418caa88e28bc05eb7df8a1b30e"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/[reservationId]/page.tsx",
+      "sha256": "1ba6ef97b741c310581c72e270dfc04a9f3110a69c745042044463463dbdbea8"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/[reservationId]/reservation-detail-model.ts",
+      "sha256": "116df9fc243a5cdcc34f804bd385bece1bffab83ad844db863a103f726be7dac"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/_components/manual-reservation-form.tsx",
+      "sha256": "a95e5d93eceb663d019183eb7113815e4af0c7ea88a8daeda547c6473e320d8f"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/_components/reservation-action-feedback.tsx",
+      "sha256": "dc5b1567cc6c956fd3730d2fa80207d348bb64e2d3001152f318d37c6e287f0e"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/_components/reservation-field-accessibility.tsx",
+      "sha256": "5ee779fbf798f4c429d4dee43f0f3cd3c009c6209ec643f7d3e8f7b3cdf5d3ac"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/_components/reservation-status-action-form.tsx",
+      "sha256": "46f1318cf001b06b62a062894117b7ae2831b86611d56bf83e29fe5d0b624e8d"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/_components/reservations-feedback.tsx",
+      "sha256": "391e567693b8548517773140e0ab89f757eb7563ac34eb3449dcf3e21a5e0125"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/_components/reservations-table.tsx",
+      "sha256": "4c4fb5c7519254088864afd3fb2cdcb935cbc7c791f005a62655ceacad07705e"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/_components/reservations-toolbar.tsx",
+      "sha256": "b7239a5d7063105c1ba85a433b9dfb75a24231e8da6770e4ee29bdcb73d0e606"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/calendrier/page.tsx",
+      "sha256": "87afbfc59f54f1489ad3f56ee1a4d420178c47bc92bbcc63df4d57ba86778c02"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/error.tsx",
+      "sha256": "5d0a9285e929aac1ad1f8ab8f6dac8e60ba2da317e3d87b0eee53479290f5706"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/loading.tsx",
+      "sha256": "6c6075591bcfb4210bfb322bfd5c3963d27947d080c993351a7e530bb736a6b7"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/page.tsx",
+      "sha256": "f4294487298cf5975d4c45f4651a6b72b191073d493deb0b820a5011c8b3ad17"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/parametres/loading.tsx",
+      "sha256": "3f28361159ceac8e4a4a2503a806d0f62711eafb6da8288696b5076dcd257f7d"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/parametres/page.tsx",
+      "sha256": "74e642c7bc0ec3412b32441ca7be24132dfbae809dfc2ac6e090b8a5dd85784c"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/reservation-action-error.ts",
+      "sha256": "6a62ac1fd901f0dd53d0ce4e5ef4ff4954a8dc324bd216a34bc15fbd8ed5764c"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/reservation-action-state.ts",
+      "sha256": "02871a058562fda5b5a43595d593476d8c13ef432f92ff39bbc18d83008fff49"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/reservation-actions.ts",
+      "sha256": "6af4a7227680468b6eb165cbfe4d69cdbd6a52cbbe653692ef94cdef88420772"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/reservation-status-model.ts",
+      "sha256": "4aacb4a1cf0e109e814efbc2c311335ac568a13368dd0c2695fbc0a54677b89f"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/reservations/reservations-list-model.ts",
+      "sha256": "1052712419fd4f2a0d4c1164d8de9bf9c77b6f813e0b7d5a849816fb79c6a1b5"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/_components/stock-prototype-table-footer.tsx",
+      "sha256": "0c7989e665db1443d47bdb4dea5a94a78909b0bc8f9f6310b0309e4ac8f5ebbd"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/fiches-techniques/page.tsx",
+      "sha256": "d0e6e4a34bc21f57b2b3004c1134ff7ebea6243fd3f47fa12646b8b6f6a0c0af"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/fournisseurs/_components/supplier-details.tsx",
+      "sha256": "44454d9fc582117f17e6c7cd4f6321a2744231840665fea2cf6081ac9aff8ca8"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/fournisseurs/_components/supplier-logo.tsx",
+      "sha256": "c9b7cfca9a838bf4c0c1e9c18965f78bc524c258ca976eab84ae7960a7decc3f"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/fournisseurs/_components/suppliers-header.tsx",
+      "sha256": "ef2351ee21485af67ad781af8382dbd9508449e8de459c9ffe8ba68c1d991a06"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/fournisseurs/_components/suppliers-page.tsx",
+      "sha256": "c081d6060f9132e661a7804b091cebe62f1e42acd78ce84c3fa66f5850e56fd0"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/fournisseurs/_components/suppliers-summary.tsx",
+      "sha256": "9cf562592cd4eccf98f10c11b9a5dbbede7f972e35374cfe99f47bd970a93c33"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/fournisseurs/_components/suppliers-table.tsx",
+      "sha256": "5db7d57af5495e8bebfc71811c441fafd0fc4bc0f58a97f843514a76134eff32"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/fournisseurs/_components/suppliers-toolbar.tsx",
+      "sha256": "62db69fb4061849374fe6784888b2cf687d132e923ed9e3118c3a3a0eac685fb"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/fournisseurs/page.tsx",
+      "sha256": "c4aa18e8b42eb69a93d11813735e8dd1e83d350efc9b8a1419cf666d93e38cfe"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/fournisseurs/suppliers-fixtures.ts",
+      "sha256": "3616664e2c69e40b2a0236eacfdd7ae25ae8c7d998bcddf2485f9b49550cdead"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/fournisseurs/suppliers-model.ts",
+      "sha256": "73984a1c3e6a4f48d754fd837a6601923d4f56a2c3149c94bad82a2939285275"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/inventaire/_components/inventory-details.tsx",
+      "sha256": "ba2c0f38285b2a4ae07411b33ae75d8344e5a4d46e2ac7620c3b5f55c4bdac16"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/inventaire/_components/inventory-header.tsx",
+      "sha256": "afcebd15858d465f9385ba07335bf0904da674db35c41db5c66073c650d46c94"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/inventaire/_components/inventory-page.tsx",
+      "sha256": "827422e59273a6f41a969294fbdb083ca7ef773924e2c8106e1643f59488ef75"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/inventaire/_components/inventory-summary.tsx",
+      "sha256": "6145645f913d87386fd6071046005b59d6fc5a02dd7d24bd7a1b529dc07d3200"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/inventaire/_components/inventory-table.tsx",
+      "sha256": "106bfdc4cab6ac87c5ecea17de257b61e11a749c68e4c17f2b3fd21d025b0ebe"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/inventaire/_components/inventory-toolbar.tsx",
+      "sha256": "bf7eac7214aac6f3857293b8621685fa2d19e8b79e05ae79bc83c3cf2757eb49"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/inventaire/inventory-fixtures.ts",
+      "sha256": "c6971fad20d5c97434871fb84a7795af94dbd5148d1a983b012651eed838af5a"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/inventaire/inventory-model.ts",
+      "sha256": "531cfebc30cfd1bcca2f811a16e1fc303d5a654de0fe4e9e24695c575d8eb4aa"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/inventaire/inventory-presentation.ts",
+      "sha256": "365ae2b97d21cd0df1956b27456781546a99d326455e29bd38d76947fb92bcd0"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/inventaire/page.tsx",
+      "sha256": "b7bc1fa419046480ef2d38372f376a1a0a633723ccda43f2aff7d63c9eb88e1d"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/layout.tsx",
+      "sha256": "37708f81b888d17299b9bb5f0f25547c7d0b290632dd0f82d90bd31ab24690e9"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/mouvements/_components/stock-movement-details.tsx",
+      "sha256": "0b173002a68f80b13577a17d4176fae5e37da376b66e5edf112c2e0902de4e0d"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/mouvements/_components/stock-movements-filters.tsx",
+      "sha256": "e8ce69f950238c8b093d94585c9b95a7c7f11181fe21d06deed993aa26d27b52"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/mouvements/_components/stock-movements-header.tsx",
+      "sha256": "d31598e3cd826c07a9c4b257762d6945f2acc60a3ebea7af6133a7b503c0115d"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/mouvements/_components/stock-movements-page.tsx",
+      "sha256": "9d61e4e071db232533ce127aa66e128880e55ef2be31fad80aa4154d8b50f042"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/mouvements/_components/stock-movements-summary.tsx",
+      "sha256": "705f4e5b8feed0d4d3ca84f0f3b283f807cac2b18d9bd6131fce6c7dbe16665f"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/mouvements/_components/stock-movements-table.tsx",
+      "sha256": "0fbf8ac1b1f6d4c1c5fa91862cad4172beba4ac2a11661267128ba381d26bd19"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/mouvements/page.tsx",
+      "sha256": "8472278a4d6fbc46ddd70d334ca121c975860678d68f37d3ef2970554d4bfda9"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/mouvements/stock-movement-presentation.ts",
+      "sha256": "a7bf1af7c3c505a8aef59dd68bf9f1826493e436bacd566229b553f7fef3a60d"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/mouvements/stock-movements-fixtures.ts",
+      "sha256": "047785eade700c441b9b1aca48f019f432aeaf90353514716524790f8039cb30"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/stock/mouvements/stock-movements-model.ts",
+      "sha256": "4df450d25f343936f8feab935341e4c92dad35417e4a833cdcfeae9d0378a240"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/[reviewId]/page.tsx",
+      "sha256": "c391929a7a773e3bcda48412e416196ab9bb8030468b318f15ef1c802828b886"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-action-feedback.tsx",
+      "sha256": "77e72629af4f4ac8759bbdd5b247a34d34370b15bd3290f77974f0def084a1d5"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-analysis-section.tsx",
+      "sha256": "5b15f0e5d319621f2af66db934feca12b7bbe6890e83d5ac6bfe968dd9bd2f0a"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-detail.tsx",
+      "sha256": "bccbf6e67195ee33fa32046ea8ee4dbc581f4c972cbc01fcbd42b0cdf2559237"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-management-form.tsx",
+      "sha256": "a3335296992a06efb914561c9f7a9c5995b3324db2b48525e914801af1569f4e"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-notes-section.tsx",
+      "sha256": "65a5fb13dc1ff78723103bfa56aa103d7ea7ae996810815b5f60c40e3fd87883"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-presentation.tsx",
+      "sha256": "977da06e877dff893b56d1cadba7c26e56926f879002e781e5d82908967b086e"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-reply-form.tsx",
+      "sha256": "5e40e7cb8f7d18c0a4e8b883dddd0781b2f618bbbd5050fbe975a16d4e95c1f2"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-list-panel.tsx",
+      "sha256": "30af97d260d776f12aba3f5b73f55f268d47ee969ddce5fb9690d00c207c6ddf"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-loader.tsx",
+      "sha256": "c50945ada4049b5176b073882a8bdc28375d476935a3521bf250a505e5ce4510"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-page.tsx",
+      "sha256": "f95ab1f277e414cf1f3293de10c39baa1e4d88b00faf8c7d5b3e31d3465abbfd"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/actions.ts",
+      "sha256": "b5e2797e9e064b4cd4913aeaf14fb0b19f71ca63a072fa7302103c2bf494345c"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/page.tsx",
+      "sha256": "ed773b3907bb68cc947c9651b1d610a2d542f1f4c09c606f8eb365f1cc559d2c"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/reviews-model.ts",
+      "sha256": "020a077b826d17f0257e5416a9fc8964f07f7ed00d921992d6b24e07b6f2ed27"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/layout.tsx",
+      "sha256": "37708f81b888d17299b9bb5f0f25547c7d0b290632dd0f82d90bd31ab24690e9"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/page.tsx",
+      "sha256": "dac74155282b1e9fdbf98e5bca129ce5944a5f779944b0229b325feef6c1cf60"
+    },
+    {
+      "path": "apps/backoffice/src/app/(public)/acces/aucun-etablissement/page.tsx",
+      "sha256": "6f648dc08e58b706026b6b152c1b57fe8a86e427d4c45835aef53b0650e38cd9"
+    },
+    {
+      "path": "apps/backoffice/src/app/(public)/connexion/_components/login-form.tsx",
+      "sha256": "2308704af00974871bef41ab7a3db414a6ef64a6c78c97964b6e79777d807cfa"
+    },
+    {
+      "path": "apps/backoffice/src/app/(public)/connexion/actions.ts",
+      "sha256": "5ea157af6db9c7810b96274db46d6eb07991551178f2d25d91d721821b3177d6"
+    },
+    {
+      "path": "apps/backoffice/src/app/(public)/connexion/page.tsx",
+      "sha256": "7b505503f3c69d59dac4c909f10c1ff553f9b5200872c26aadc4772af333d240"
+    },
+    {
+      "path": "apps/backoffice/src/app/(public)/layout.tsx",
+      "sha256": "216a4c76aea455b9c4d0b93fecade74fd94046bb416fa1cd22fdb98c53680eaf"
+    },
+    {
+      "path": "apps/backoffice/src/app/(public)/mot-de-passe-oublie/page.tsx",
+      "sha256": "1f1a11ed2587e7305b72c1aaea2afa43bc24669a5c80dcae4dbdb064616d9aa7"
+    },
+    {
+      "path": "apps/backoffice/src/app/(public)/reinitialiser-mot-de-passe/_components/reset-password-form.tsx",
+      "sha256": "3ea6d85e6522a6294df9dbd631bdf3fe8c5189c440c7a2a9ba04782ab8dad4e7"
+    },
+    {
+      "path": "apps/backoffice/src/app/(public)/reinitialiser-mot-de-passe/actions.ts",
+      "sha256": "c016b2bcceb1ca137b97b3e1cadb0577ad2268e300e453d37f255849723c0e4f"
+    },
+    {
+      "path": "apps/backoffice/src/app/(public)/reinitialiser-mot-de-passe/page.tsx",
+      "sha256": "a9ef380a4ff2be646eaf2c1f0e6e32be7488b59796aae1b86e8970b7edbc12f5"
+    },
+    {
+      "path": "apps/backoffice/src/app/(public)/resolution-etablissement/route.ts",
+      "sha256": "aa829966bf04f368563152361367ab8c33a14bdbd784ec8b3f47773ae36937b6"
+    },
+    {
+      "path": "apps/backoffice/src/app/(public)/selection-etablissement/_components/establishment-selection-form.tsx",
+      "sha256": "571204cd3438942d3fd03a31c620f6ac193be93e60ec58b018a589acae5af491"
+    },
+    {
+      "path": "apps/backoffice/src/app/(public)/selection-etablissement/actions.ts",
+      "sha256": "dcbae3c892e258637bb8345195921a76c50aa782e0473f5ea6acb217b0d8d69b"
+    },
+    {
+      "path": "apps/backoffice/src/app/(public)/selection-etablissement/page.tsx",
+      "sha256": "6bc86b0a48812cda65f1f19aa115ba1830dfaa800f6988454b91c3dc5315f170"
+    },
+    {
+      "path": "apps/backoffice/src/app/api/personnel/amendments/[employeeId]/[amendmentId]/route.ts",
+      "sha256": "3a03761d7770bc77adc03e0b285fd0b455b2395a48edc80c5bc074163fee5fe2"
+    },
+    {
+      "path": "apps/backoffice/src/app/api/personnel/documents/[employeeId]/[documentId]/route.ts",
+      "sha256": "eff4f62af83ba4eab61b3ea42505151607c4e457041398a3ad376b9abb2882c8"
+    },
+    {
+      "path": "apps/backoffice/src/app/api/personnel/register/export/route.ts",
+      "sha256": "f1ee05c924742e87aafcf2ab21bd2190e384fe5b44a2ae7b62394aa9d069bb04"
+    },
+    {
+      "path": "apps/backoffice/src/app/api/reputation/google/oauth/callback/route.ts",
+      "sha256": "d4ac7e6f60c5690535556878d1b6703dcf3246e65526e64bb308d5f153d98306"
+    },
+    {
+      "path": "apps/backoffice/src/app/api/reputation/google/oauth/start/route.ts",
+      "sha256": "f9e8caaf9ffbe3384e5d6a04157a9875e4fd196b0be7f31e5c16e6e1ad8ec39b"
+    },
+    {
+      "path": "apps/backoffice/src/app/error.tsx",
+      "sha256": "b43c30db429eb59187725b8691060064649561b25a01c2765d73d4b98f02491a"
+    },
+    {
+      "path": "apps/backoffice/src/app/global-error.tsx",
+      "sha256": "4c9a1687d999eb8248ddc880b8d1c73dbcd3e1695de49dfefb3eb74e418eeca1"
+    },
+    {
+      "path": "apps/backoffice/src/app/globals.css",
+      "sha256": "3a2ac100fea524650a8edaadf49fbdbd9c0ebc7be156acdd88a69aad1badad88"
+    },
+    {
+      "path": "apps/backoffice/src/app/layout.tsx",
+      "sha256": "e77005907bbae9ceb02c40317dd3b9f8f362df5da2e1cd244afa10af12310f9e"
+    },
+    {
+      "path": "apps/backoffice/src/app/not-found.tsx",
+      "sha256": "3e8e707080731f7dcca8e2cccbfa04d756648f33d61d968db012ad116423d6cb"
+    },
+    {
+      "path": "apps/backoffice/src/app/page.tsx",
+      "sha256": "3298ceb438eaa3be42f66ca3771f39f248f6eb4eb4063347531315df01ee8eac"
+    },
+    {
+      "path": "apps/backoffice/src/components/backoffice/backoffice-frame.tsx",
+      "sha256": "b3a8a7b5530648412db5fd850c07027fc4917849c0dcac8a86bcfb380f1a57c8"
+    },
+    {
+      "path": "apps/backoffice/src/components/backoffice/backoffice-navigation.ts",
+      "sha256": "6deaa75874a35b114248d349433ab1c71b8e4e788411908786c5e89d6c4d0a97"
+    },
+    {
+      "path": "apps/backoffice/src/components/backoffice/backoffice-page.tsx",
+      "sha256": "fea75d3697307486f095b45e75013bc69346d043f1481667a437658f394b4720"
+    },
+    {
+      "path": "apps/backoffice/src/components/backoffice/backoffice-theme-provider.tsx",
+      "sha256": "4616492ea28b5e48449cbc41e4f413906b055de556c2a03d3ac5f5f7f56e8be5"
+    },
+    {
+      "path": "apps/backoffice/src/components/backoffice/emotion-registry.tsx",
+      "sha256": "782380caef20b04720b15b4ab9a3d0dd05f34b001acaad54918c4e63ae3cc6d6"
+    },
+    {
+      "path": "apps/backoffice/src/components/backoffice/planned-backoffice-page.tsx",
+      "sha256": "04e3da9092d3cfd2b36e300be748b07cca5e5ac6b31433e563babecae231a99c"
+    },
+    {
+      "path": "apps/backoffice/src/components/backoffice/prototype-backoffice-notice.tsx",
+      "sha256": "4ff4277a2c3913ceccea81056a235c74bbe105f30234392c9525933f6721ef65"
+    },
+    {
+      "path": "apps/backoffice/src/components/backoffice/tenant-switcher.tsx",
+      "sha256": "9a54e9752f325b379c597961abc9ccbd8c11b4322e7a433c0c792f9a23476a62"
+    },
+    {
+      "path": "apps/backoffice/src/server/auth/access-audit-permissions.ts",
+      "sha256": "e9a6f260ea80edea302d2c9cc5b521db9df3d1b9e75f28a7dd316db28f04e1ed"
+    },
+    {
+      "path": "apps/backoffice/src/server/auth/permissions.ts",
+      "sha256": "f69cae1709219579dcdc911d9a0e4f1d77ef60561a68c7eca99f5313008d4499"
+    },
+    {
+      "path": "apps/backoffice/src/server/auth/session.ts",
+      "sha256": "7231fb2507efa111e1674f2bf1b393955f90ff24249c91f2bbc24ec6ce932f98"
+    },
+    {
+      "path": "apps/backoffice/src/server/cloud-database.ts",
+      "sha256": "a3365d2ee887a805e6d8b21ed7e9194cb287c2404523010c55681cdc34fba76f"
+    },
+    {
+      "path": "apps/backoffice/src/server/personnel-contract-extraction/evaluation.ts",
+      "sha256": "c260676cfcdc5fb5e946f96dcf35a553963e4436a815b0ca21a1652aecce9722"
+    },
+    {
+      "path": "apps/backoffice/src/server/personnel-contract-extraction/openai-adapter.ts",
+      "sha256": "d3bcdb5448e5f632d80e9177af73207d5a42e86274e78749dfd996bacf2439f6"
+    },
+    {
+      "path": "apps/backoffice/src/server/personnel-contract-extraction/review-store.ts",
+      "sha256": "793d13c39a9977880b84530764672b870b1228f1332c980dbc91b16b31ca5c56"
+    },
+    {
+      "path": "apps/backoffice/src/server/personnel-contract-extraction/runtime.ts",
+      "sha256": "e393b0389b85da9feab6bfc804fa6387059104b8f0e1c69b0725c486392097ef"
+    },
+    {
+      "path": "apps/backoffice/src/server/personnel-contract-extraction/service.ts",
+      "sha256": "63315529ac50479728b0dbdfa54972f5851a70e6252d19bb87abb53d16477d9c"
+    },
+    {
+      "path": "apps/backoffice/src/server/personnel-contract-extraction/stored-synthetic-document.ts",
+      "sha256": "0a95537a0eb12462dc77a6e925037ed5b6f55654f2d78b13a53a642e9ac8570d"
+    },
+    {
+      "path": "apps/backoffice/src/server/personnel-contract-extraction/synthetic-upload.ts",
+      "sha256": "6590743924c69d3f3cb5e601a228a39fa38a540873a3292d406ef93c36a0ffb6"
+    },
+    {
+      "path": "apps/backoffice/src/server/personnel-documents/runtime.ts",
+      "sha256": "7c05674376a6c776a47cb6ea58969771f8a916d4f3da1c9cb15312eae0d41f05"
+    },
+    {
+      "path": "apps/backoffice/src/server/personnel-register/pdf.ts",
+      "sha256": "0e5ea41ee76f13025d5ff0e9db201b98406ff0ac48e8cab5c2adad2238e0a042"
+    },
+    {
+      "path": "apps/backoffice/src/server/reputation/credential-crypto.ts",
+      "sha256": "f0c648fb660242b2f9eed5e73350103d95df31c7d9b1c647beba5a8f2d9c3a44"
+    },
+    {
+      "path": "apps/backoffice/src/server/reputation/google-business-profile-client.ts",
+      "sha256": "a4e921a71080de8a8b26fdb6e00a08fabc20cc3e838c64136409b5dcac1e76d9"
+    },
+    {
+      "path": "apps/backoffice/src/server/reputation/google-connector-access.ts",
+      "sha256": "f22f6af88fb79c94b80bf9f909ccc514f7a3c4ae5dba479d8b97721842addbbf"
+    },
+    {
+      "path": "apps/backoffice/src/server/reputation/google-connector-config.ts",
+      "sha256": "e32d4ffe4bb7874188de1fd1eb8fe25c72d4e68908c918d877c735d08b5eed8a"
+    },
+    {
+      "path": "apps/backoffice/src/server/reputation/google-oauth-state.ts",
+      "sha256": "ad8c6a769a2340c985858bd1d3a0ca1913a02ef3bf5399ab74dbd1eaadd8f910"
+    },
+    {
+      "path": "apps/backoffice/test/access-audit-model.test.ts",
+      "sha256": "733b5af99668f533333afb0cac9fc170f4eb7508c2a7e42f2e769486acc702b1"
+    },
+    {
+      "path": "apps/backoffice/test/access-audit-permissions.test.ts",
+      "sha256": "d42d5bc2a0e2d099afb03a3fbe82628c5f3814c927473192dc4e07fc6c31c915"
+    },
+    {
+      "path": "apps/backoffice/test/backoffice-navigation.test.ts",
+      "sha256": "e76c5457a123384e53b9a245f3fd66895bdacc0f9bdf94d524dd477545a45946"
+    },
+    {
+      "path": "apps/backoffice/test/booking-administration-action-state.test.ts",
+      "sha256": "a83d2d5df27f45e4790d05f924cb15f121e084479594d7c3acf362dcd8b0f045"
+    },
+    {
+      "path": "apps/backoffice/test/booking-administration-model.test.ts",
+      "sha256": "5e0f5b3ce601e9bedf7318b44d56fd5dc26e962a0f27c06b7c5e7a76b1b880b5"
+    },
+    {
+      "path": "apps/backoffice/test/communication-identity-action.test.ts",
+      "sha256": "d67496ae230cd1327e4355bde979996322c2db51f3b4bd62574873ad888d62bd"
+    },
+    {
+      "path": "apps/backoffice/test/communication-identity-fields.test.tsx",
+      "sha256": "66a1d2fd9a65e7d92108d8f2f4e9e00a8c5329f2cbb60487e8e4252b79fbcfd0"
+    },
+    {
+      "path": "apps/backoffice/test/communication-identity-form.test.tsx",
+      "sha256": "0691d1a27236aa479fe97deab4737c18f23d50f8c977d10e6d5a0bbc17abac14"
+    },
+    {
+      "path": "apps/backoffice/test/communication-identity-model.test.ts",
+      "sha256": "040b938e2913931e70751deecd0c303efad5b8dc809d38055b0bcd69cf365452"
+    },
+    {
+      "path": "apps/backoffice/test/compliance-model.test.ts",
+      "sha256": "71e014eb3fa60bd5ce2b193efcb700101b589edd5740a4e29b69c441615a6447"
+    },
+    {
+      "path": "apps/backoffice/test/concept-history-action.test.ts",
+      "sha256": "3686cd909d85a6997e652a8b59e301db66473bbe4b28b1f1a58dcf356bb2fab3"
+    },
+    {
+      "path": "apps/backoffice/test/concept-history-fields.test.tsx",
+      "sha256": "e49fe63b7d39c802e5e29f998228b2747070ea6dac241c9c6d377ab1f5e2016f"
+    },
+    {
+      "path": "apps/backoffice/test/concept-history-form.test.tsx",
+      "sha256": "502d8c807815cd1df85b78a4bd8107d68d0009cedcbffc6ddafbfb7a90192637"
+    },
+    {
+      "path": "apps/backoffice/test/concept-history-model.test.ts",
+      "sha256": "65a2e7aa09a92371aca3374adc0f3293f280b534f9f1328e0d72391f9233f777"
+    },
+    {
+      "path": "apps/backoffice/test/contract-extraction-prototype.test.tsx",
+      "sha256": "cc4e88231833251bec04a3c51873436959c3cbf5e560531106d8fbef1f859e39"
+    },
+    {
+      "path": "apps/backoffice/test/creative-studio-model.test.ts",
+      "sha256": "fea8279fe58e7912094b2255b0b37acd9853e17cb39e8e0493e83ea541331917"
+    },
+    {
+      "path": "apps/backoffice/test/cuisine-know-how-action.test.ts",
+      "sha256": "52c8a14c4a438cdc2cf14c025d89ca09d1201635cab069d3078d4401b671c770"
+    },
+    {
+      "path": "apps/backoffice/test/cuisine-know-how-fields.test.tsx",
+      "sha256": "e2cbad535a7a281bf99eaf372d5c4cbb763ecf2a21853c9f8995922a9bdae5c1"
+    },
+    {
+      "path": "apps/backoffice/test/cuisine-know-how-form.test.tsx",
+      "sha256": "17084e7669934ff5c35a5f90fb7ce1b09f90c288f8233df6c344e3832df33259"
+    },
+    {
+      "path": "apps/backoffice/test/cuisine-know-how-model.test.ts",
+      "sha256": "f105de782ffae4c24344d678cf09a4dd955aab6c5c5eae4b82c4381a6fc54916"
+    },
+    {
+      "path": "apps/backoffice/test/customer-experience-action.test.ts",
+      "sha256": "fea352df9a155e6c95c383151ed75800b9a9eb5a1a613b24d3724b62fe9e01e6"
+    },
+    {
+      "path": "apps/backoffice/test/customer-experience-fields.test.tsx",
+      "sha256": "8c0c0a71ad192b7e47e063dfc7b55948affaf6e7c33905a1de50ac815aa8cb1f"
+    },
+    {
+      "path": "apps/backoffice/test/customer-experience-form.test.tsx",
+      "sha256": "978754381379ae30ec97049f505f80b9ecc22b3ae27fe9d49903aee2d1aa2346"
+    },
+    {
+      "path": "apps/backoffice/test/customer-experience-model.test.ts",
+      "sha256": "6a4da9267d558d582d7e903778cc55eacb3f7070d42b05478f05c75c6332a916"
+    },
+    {
+      "path": "apps/backoffice/test/establishment-profile-permissions.test.ts",
+      "sha256": "cdc43e575eb81f21a8aba99a2890b4906519bf2fd180e4b343884074352e51cf"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/README.md",
+      "sha256": "532bd9278f1fc08959c4e536170d67536666d18c26de10dd928fd227bbe1fb6c"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/manifest.json",
+      "sha256": "8e43f64cb32fae3776636e8d74661fecb88d2f137847fe7e67c368a6624274b2"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-adversarial-04.pdf",
+      "sha256": "71d9e701d15a4d3363240cc5d8a7e5b7788d6fc822d8cf7924d3dcd6325d3589"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-adversarial-05.pdf",
+      "sha256": "e51cd699387c5162e9453485612d59eec4367e34b9c18ced8e7b6028c8cbb05b"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-adversarial-06.pdf",
+      "sha256": "14f038a1b8961b11bab04e831b86a47cc9f4c6233aba7dcb2ac6400d213e0f79"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-adversarial-07.pdf",
+      "sha256": "4aba032683dc87f00f3720581c90c323ccfb7d4a2fab75edc5fbf1e067780b13"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-adversarial-08.pdf",
+      "sha256": "251571520a484294fe9d6dab648aeb4fd341a48488d60de950b4815253b73d27"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-adversarial-09.pdf",
+      "sha256": "f82022e3bfc7195dc33ec5d161a7686c00062bb289616a071d7d33ee2ce836bc"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-adversarial-10.pdf",
+      "sha256": "57fc059bb1ab26a5182aa3fc88c0d7230bca23736da128d767a71c208ab31375"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-adversarial-instruction.pdf",
+      "sha256": "79c781476477dc2fc143437104bca8a64506b60fea7440945a4517ac40bb30ee"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-adversarial-missing.pdf",
+      "sha256": "d85ab36bdfca12ad9abc5a88c001b7e9794f8d5a718812cbb444db591dd73ae5"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-adversarial-term-conflict.pdf",
+      "sha256": "12b7a7fb0ef53143bf542ac568d245666f6acca347751d7f34a6889141afc884"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-digital-04.pdf",
+      "sha256": "c1f2b5d0bfdfb2577e37775655d302136aac82579e736a4a727666d9a8fd95cb"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-digital-05.pdf",
+      "sha256": "60ba3565333b863cda6579d580df4f12ddc6f845a040551f0704586c4315144d"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-digital-06.pdf",
+      "sha256": "1bdeb0c6561c3bc4b8f0ba2644bd24d6e1646230247c1a3fd63f4c65aaa41a74"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-digital-07.pdf",
+      "sha256": "5e63c4a8ded8006790a8962a2a273b2aed86c81a58684cf1f3c1479f72e528ed"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-digital-08.pdf",
+      "sha256": "98fae02d2cb582e3be206275e12ced5c466877f27f4e6a4a8c2891a7efa09349"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-digital-09.pdf",
+      "sha256": "e955c1cc1cea5c6cc52ef38257174b6a6987ef727be49948c6cd2ce5a9d38a0e"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-digital-10.pdf",
+      "sha256": "793fbd053f4406be2617f6919cf13445f5c11ab8489b26b3fc9910a2517f276d"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-digital-11.pdf",
+      "sha256": "6b5778bee4093d74cbb249bbd8bb3d47ee8a5285ec7de069b26084e386bf9556"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-digital-12.pdf",
+      "sha256": "4d8a56e2d6eaeacd5720e96402b35df104630f02b143ab162dd2a94a0b13a819"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-digital-13.pdf",
+      "sha256": "db06b86df0c4e9f08cf47b7fd4731781014a229b46392b1fa029027e7d00b5f9"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-digital-14.pdf",
+      "sha256": "6a73d75202fd86959200e3c8546fc1ae174c6df10f90f39891f4ae5cbfbb4d70"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-digital-15.pdf",
+      "sha256": "86c48b30a3326830c3bef815cc00b6931c28ed41182e19a27613059e0a15d40a"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-digital-16.pdf",
+      "sha256": "5d1c4fccddac22abdce8e677d88d2bcd7b5bb729188141e55baac28fb0d373d1"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-digital-17.pdf",
+      "sha256": "a595cbd8c4105f7348e100a8578637043f0155e018e9267577c527c1752ac233"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-digital-18.pdf",
+      "sha256": "4f86619b12c16dc88097a8381cfcf62973940a1f6d8ffc228e2887facfa8545a"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-digital-19.pdf",
+      "sha256": "3c5c39dd72144ac470678cc8123009587bf049ee065e3ad876dd63e0c30bb4e4"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-digital-20.pdf",
+      "sha256": "bd6897011743a06b5b43c1f3dd6dd9493573b8aeac99df8461c8a78408718b9c"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-digital-cdd-35h.pdf",
+      "sha256": "5b4fd463bc96874262109d279a1189a3b765ea17cb7214913bdfbbc39bec3a27"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-digital-cdi-24h.pdf",
+      "sha256": "8d2817226d909ff5100fdda76ea0cb71f1710b89b48a30ac81122acd0b034291"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-digital-cdi-39h.pdf",
+      "sha256": "d233cc55333029ab0306bc4e613b7a2d5b989c8089730252c3b74ff6216a3fb7"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-clear-03.pdf",
+      "sha256": "e8f3869b78b0dcfd8d4d7a2de47613f156eb8c8683887f1290296a83de5161f7"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-clear-04.pdf",
+      "sha256": "b7e83850e87bc86144b5f663602113e0dd18abebd971d33d7633e0fe4bdc461c"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-clear-05.pdf",
+      "sha256": "5627d8f58556d420905f322c7534799d73fa70deb4de0220474759325fe57ca7"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-clear-06.pdf",
+      "sha256": "be2ad574a890fb148174b8fda3b9ce3fb8ac74f9de87aa9a30e2afea648f74f6"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-clear-07.pdf",
+      "sha256": "a5f8f037e18c2595df4b403e42cdf46e6ec8b7d4bfcf5a381337d5b0e5e27085"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-clear-08.pdf",
+      "sha256": "21a1780196f1b78fdaab389be65fa8146c4563de97d8080e7fed417d550b3adc"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-clear-09.pdf",
+      "sha256": "67ad3aca4f4becfdb437c965431054995b60c24be672494a72af5cb5c741327c"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-clear-10.pdf",
+      "sha256": "4673c6983bb2581a275584259f2a6bcd63fae29227f93d41e5f02ffc0a815543"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-clear-11.pdf",
+      "sha256": "f565fb7452181eeea8956d670f9da59947cb5a9e7016157da1fcef62a3ffc67a"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-clear-12.pdf",
+      "sha256": "81047daa9293f2f111dfecbd02f12b5eab93c8222af98fef836ccf7bf5acd951"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-clear-13.pdf",
+      "sha256": "863de722f20f9044c9f9fcacf8a316fb4bec874739d39ed4eaab2c4f24b78f22"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-clear-14.pdf",
+      "sha256": "6510042ae504784805b00b079da821a5406e0359d4f734b01b950bfee39b81e1"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-clear-15.pdf",
+      "sha256": "b35c527da9c495503ebe7ae6744d0c18a833858acaa91cfea8379c995c5bd93f"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-clear-cdd.pdf",
+      "sha256": "0ba96525c6bc010500e312aa258afa6725f0e0d7336cd39b0bdaf1bee875578e"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-clear-cdi.pdf",
+      "sha256": "d34d31125e770d03b468d11bcfe8fb70434bc85bb82808a5e34da082104be985"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-degraded-03.pdf",
+      "sha256": "e5cca88cd37b0b73812d089c055857be88056d1d2ca0d13ff4f8bdce22c79c84"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-degraded-04.pdf",
+      "sha256": "e3e7c5fe8d727a18a8c46d60ab37ba5559a2a19a659f19808866811a4fc9131d"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-degraded-05.pdf",
+      "sha256": "22d8cd2e0885c45a7acabd24cbd8f0d12ab65361f89f6bca90081df9df97bd20"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-degraded-06.pdf",
+      "sha256": "8a7725fddb7d51ba072e82384e6b9280cbe24c6afe9f68c1de6f2f291434d344"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-degraded-07.pdf",
+      "sha256": "9047f4b3340366698d2f7773e653e49ae0be1aee956fdaf91d9f272c9b9ce6fa"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-degraded-08.pdf",
+      "sha256": "e96c494def4ec381e93fcc226449caa203446a5bbcd915bf90e317feddcbed15"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-degraded-09.pdf",
+      "sha256": "50095910c4cfc2920f7d76f12713842e9873aeeababba92d8d7ad7e37ff1f3a1"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-degraded-10.pdf",
+      "sha256": "6c72b2f27b5c44d63e8335572113f18485207fca210a62b9d279c90570daf3f4"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-degraded-11.pdf",
+      "sha256": "f9d3705eff21fd1b9bb02dd2016d93948d89998df3f3b022f1d7d2235e05777c"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-degraded-12.pdf",
+      "sha256": "412722ff7996a8f8ca9fd10f091dfce2640e8f1c41bbc1fe2d4300338e796f9e"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-degraded-13.pdf",
+      "sha256": "4a981e47ad05e5f163fab6465a05efd1ecddef7978efd593214d0f23bbee099f"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-degraded-14.pdf",
+      "sha256": "8a751e3eed669002f28aea2116f81b2963edbac18af1ad591c1b2ae69bef30ab"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-degraded-15.pdf",
+      "sha256": "d8a75e7a507c46deaddbcd04b1f6b15649bf9440f9a4a48e3db951e5fe756d5b"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-degraded-contradictory.pdf",
+      "sha256": "c235f4367cbc1586dabfeff83a3461b676ed0a93ff8b07801546804245dbcb5a"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/wg2-scan-degraded-partial.pdf",
+      "sha256": "1680e08a171fc0bc62d7de41efebac30e87800ca4dc05d2e658d416559ecd2a4"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/manifest.json",
+      "sha256": "e76e0cfe39cafedcf25564e6dae079fadfc709fd8179da5000f7b7a4ff2879f0"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-adversarial-04.pdf",
+      "sha256": "71d9e701d15a4d3363240cc5d8a7e5b7788d6fc822d8cf7924d3dcd6325d3589"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-adversarial-05.pdf",
+      "sha256": "0eea5ec94bdaa835c1818180c85409c927bbd89c3aea0eb84a4ea8a9ce0fb1aa"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-adversarial-06.pdf",
+      "sha256": "14f038a1b8961b11bab04e831b86a47cc9f4c6233aba7dcb2ac6400d213e0f79"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-adversarial-07.pdf",
+      "sha256": "4aba032683dc87f00f3720581c90c323ccfb7d4a2fab75edc5fbf1e067780b13"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-adversarial-08.pdf",
+      "sha256": "251571520a484294fe9d6dab648aeb4fd341a48488d60de950b4815253b73d27"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-adversarial-09.pdf",
+      "sha256": "6055eb15968f521981c7b531a55abb9b5d35ee5f8c58910ec21fd4ac709a614a"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-adversarial-10.pdf",
+      "sha256": "57fc059bb1ab26a5182aa3fc88c0d7230bca23736da128d767a71c208ab31375"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-adversarial-instruction.pdf",
+      "sha256": "79c781476477dc2fc143437104bca8a64506b60fea7440945a4517ac40bb30ee"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-adversarial-missing.pdf",
+      "sha256": "d85ab36bdfca12ad9abc5a88c001b7e9794f8d5a718812cbb444db591dd73ae5"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-adversarial-term-conflict.pdf",
+      "sha256": "12b7a7fb0ef53143bf542ac568d245666f6acca347751d7f34a6889141afc884"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-digital-04.pdf",
+      "sha256": "c1f2b5d0bfdfb2577e37775655d302136aac82579e736a4a727666d9a8fd95cb"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-digital-05.pdf",
+      "sha256": "60ba3565333b863cda6579d580df4f12ddc6f845a040551f0704586c4315144d"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-digital-06.pdf",
+      "sha256": "1bdeb0c6561c3bc4b8f0ba2644bd24d6e1646230247c1a3fd63f4c65aaa41a74"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-digital-07.pdf",
+      "sha256": "5e63c4a8ded8006790a8962a2a273b2aed86c81a58684cf1f3c1479f72e528ed"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-digital-08.pdf",
+      "sha256": "98fae02d2cb582e3be206275e12ced5c466877f27f4e6a4a8c2891a7efa09349"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-digital-09.pdf",
+      "sha256": "e955c1cc1cea5c6cc52ef38257174b6a6987ef727be49948c6cd2ce5a9d38a0e"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-digital-10.pdf",
+      "sha256": "793fbd053f4406be2617f6919cf13445f5c11ab8489b26b3fc9910a2517f276d"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-digital-11.pdf",
+      "sha256": "6b5778bee4093d74cbb249bbd8bb3d47ee8a5285ec7de069b26084e386bf9556"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-digital-12.pdf",
+      "sha256": "4d8a56e2d6eaeacd5720e96402b35df104630f02b143ab162dd2a94a0b13a819"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-digital-13.pdf",
+      "sha256": "db06b86df0c4e9f08cf47b7fd4731781014a229b46392b1fa029027e7d00b5f9"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-digital-14.pdf",
+      "sha256": "6a73d75202fd86959200e3c8546fc1ae174c6df10f90f39891f4ae5cbfbb4d70"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-digital-15.pdf",
+      "sha256": "86c48b30a3326830c3bef815cc00b6931c28ed41182e19a27613059e0a15d40a"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-digital-16.pdf",
+      "sha256": "5d1c4fccddac22abdce8e677d88d2bcd7b5bb729188141e55baac28fb0d373d1"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-digital-17.pdf",
+      "sha256": "a595cbd8c4105f7348e100a8578637043f0155e018e9267577c527c1752ac233"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-digital-18.pdf",
+      "sha256": "4f86619b12c16dc88097a8381cfcf62973940a1f6d8ffc228e2887facfa8545a"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-digital-19.pdf",
+      "sha256": "3c5c39dd72144ac470678cc8123009587bf049ee065e3ad876dd63e0c30bb4e4"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-digital-20.pdf",
+      "sha256": "bd6897011743a06b5b43c1f3dd6dd9493573b8aeac99df8461c8a78408718b9c"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-digital-cdd-35h.pdf",
+      "sha256": "5b4fd463bc96874262109d279a1189a3b765ea17cb7214913bdfbbc39bec3a27"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-digital-cdi-24h.pdf",
+      "sha256": "8d2817226d909ff5100fdda76ea0cb71f1710b89b48a30ac81122acd0b034291"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-digital-cdi-39h.pdf",
+      "sha256": "d233cc55333029ab0306bc4e613b7a2d5b989c8089730252c3b74ff6216a3fb7"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-clear-03.pdf",
+      "sha256": "e8f3869b78b0dcfd8d4d7a2de47613f156eb8c8683887f1290296a83de5161f7"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-clear-04.pdf",
+      "sha256": "b7e83850e87bc86144b5f663602113e0dd18abebd971d33d7633e0fe4bdc461c"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-clear-05.pdf",
+      "sha256": "5627d8f58556d420905f322c7534799d73fa70deb4de0220474759325fe57ca7"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-clear-06.pdf",
+      "sha256": "be2ad574a890fb148174b8fda3b9ce3fb8ac74f9de87aa9a30e2afea648f74f6"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-clear-07.pdf",
+      "sha256": "a5f8f037e18c2595df4b403e42cdf46e6ec8b7d4bfcf5a381337d5b0e5e27085"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-clear-08.pdf",
+      "sha256": "21a1780196f1b78fdaab389be65fa8146c4563de97d8080e7fed417d550b3adc"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-clear-09.pdf",
+      "sha256": "67ad3aca4f4becfdb437c965431054995b60c24be672494a72af5cb5c741327c"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-clear-10.pdf",
+      "sha256": "4673c6983bb2581a275584259f2a6bcd63fae29227f93d41e5f02ffc0a815543"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-clear-11.pdf",
+      "sha256": "f565fb7452181eeea8956d670f9da59947cb5a9e7016157da1fcef62a3ffc67a"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-clear-12.pdf",
+      "sha256": "81047daa9293f2f111dfecbd02f12b5eab93c8222af98fef836ccf7bf5acd951"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-clear-13.pdf",
+      "sha256": "863de722f20f9044c9f9fcacf8a316fb4bec874739d39ed4eaab2c4f24b78f22"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-clear-14.pdf",
+      "sha256": "6510042ae504784805b00b079da821a5406e0359d4f734b01b950bfee39b81e1"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-clear-15.pdf",
+      "sha256": "b35c527da9c495503ebe7ae6744d0c18a833858acaa91cfea8379c995c5bd93f"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-clear-cdd.pdf",
+      "sha256": "0ba96525c6bc010500e312aa258afa6725f0e0d7336cd39b0bdaf1bee875578e"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-clear-cdi.pdf",
+      "sha256": "d34d31125e770d03b468d11bcfe8fb70434bc85bb82808a5e34da082104be985"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-degraded-03.pdf",
+      "sha256": "e5cca88cd37b0b73812d089c055857be88056d1d2ca0d13ff4f8bdce22c79c84"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-degraded-04.pdf",
+      "sha256": "e3e7c5fe8d727a18a8c46d60ab37ba5559a2a19a659f19808866811a4fc9131d"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-degraded-05.pdf",
+      "sha256": "22d8cd2e0885c45a7acabd24cbd8f0d12ab65361f89f6bca90081df9df97bd20"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-degraded-06.pdf",
+      "sha256": "8a7725fddb7d51ba072e82384e6b9280cbe24c6afe9f68c1de6f2f291434d344"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-degraded-07.pdf",
+      "sha256": "9047f4b3340366698d2f7773e653e49ae0be1aee956fdaf91d9f272c9b9ce6fa"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-degraded-08.pdf",
+      "sha256": "e96c494def4ec381e93fcc226449caa203446a5bbcd915bf90e317feddcbed15"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-degraded-09.pdf",
+      "sha256": "50095910c4cfc2920f7d76f12713842e9873aeeababba92d8d7ad7e37ff1f3a1"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-degraded-10.pdf",
+      "sha256": "6c72b2f27b5c44d63e8335572113f18485207fca210a62b9d279c90570daf3f4"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-degraded-11.pdf",
+      "sha256": "f9d3705eff21fd1b9bb02dd2016d93948d89998df3f3b022f1d7d2235e05777c"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-degraded-12.pdf",
+      "sha256": "412722ff7996a8f8ca9fd10f091dfce2640e8f1c41bbc1fe2d4300338e796f9e"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-degraded-13.pdf",
+      "sha256": "4a981e47ad05e5f163fab6465a05efd1ecddef7978efd593214d0f23bbee099f"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-degraded-14.pdf",
+      "sha256": "8a751e3eed669002f28aea2116f81b2963edbac18af1ad591c1b2ae69bef30ab"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-degraded-15.pdf",
+      "sha256": "d8a75e7a507c46deaddbcd04b1f6b15649bf9440f9a4a48e3db951e5fe756d5b"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-degraded-contradictory.pdf",
+      "sha256": "c235f4367cbc1586dabfeff83a3461b676ed0a93ff8b07801546804245dbcb5a"
+    },
+    {
+      "path": "apps/backoffice/test/fixtures/personnel-contract-evaluation/v2/wg2-scan-degraded-partial.pdf",
+      "sha256": "1680e08a171fc0bc62d7de41efebac30e87800ca4dc05d2e658d416559ecd2a4"
+    },
+    {
+      "path": "apps/backoffice/test/formalites-cdi-connected-read.test.tsx",
+      "sha256": "25c1faf6f85a0fb511d2888b1439cfd4365f25001959e4a434c28b5c89b9b425"
+    },
+    {
+      "path": "apps/backoffice/test/formalites-cdi-prototype.test.tsx",
+      "sha256": "71ced71746bee04c95458a1bfb3c2ca054930da775478f8e87f44bccbda2729b"
+    },
+    {
+      "path": "apps/backoffice/test/general-information-model.test.ts",
+      "sha256": "adf919ebc4dc9f0a0c61ffa3a6fc8851cb7593e9bfa7c41b2530c4f1d43f529e"
+    },
+    {
+      "path": "apps/backoffice/test/google-connector-security.test.ts",
+      "sha256": "d965d748794e19412f77bd8edf7eccd76140be5ff3edb816e7ce620dc72fb13a"
+    },
+    {
+      "path": "apps/backoffice/test/hours-services-view-model.test.ts",
+      "sha256": "f1eebae9c3e9bda57ef00c5a5c26245af7f553fed2ca4dd46b88a3cd093d2d17"
+    },
+    {
+      "path": "apps/backoffice/test/integrations-model.test.ts",
+      "sha256": "c1cf0bbcd092e45929917d22db55c8507b94ecbc97c5ed223c53135131f339ce"
+    },
+    {
+      "path": "apps/backoffice/test/inventory-model.test.ts",
+      "sha256": "b20cf5a61f1e5248e4e1ccd3510e3cf6020c91c71101b12c3fd7a55ed963200a"
+    },
+    {
+      "path": "apps/backoffice/test/personnel-contract-evaluation-corpus-v2.test.ts",
+      "sha256": "e985fadafe56ebf6fe76d7e2f56fbb772373dd8c27cbbb68cc09ff9a34f367e2"
+    },
+    {
+      "path": "apps/backoffice/test/personnel-contract-evaluation-corpus.test.ts",
+      "sha256": "62682fdf720b457f6b18d31ad7de5bb13345c77e16bb3d2c1782e28660e100a0"
+    },
+    {
+      "path": "apps/backoffice/test/personnel-contract-extraction-runtime.test.ts",
+      "sha256": "fa3e29435eac5cb44ea97c2a53d7fb248cd10fdbc462e46a9172d401a2689dcc"
+    },
+    {
+      "path": "apps/backoffice/test/personnel-contract-extraction-service.test.ts",
+      "sha256": "40cab2b2de57a54793362bdabfe80e316686a16eda95e08b51594a601a96a811"
+    },
+    {
+      "path": "apps/backoffice/test/personnel-contract-openai-adapter.test.ts",
+      "sha256": "eb5babbeefcc6951137102ce6fb656217889a5f1611969b330e2a3d059df2b00"
+    },
+    {
+      "path": "apps/backoffice/test/personnel-contract-openai-prompt-v2.test.ts",
+      "sha256": "3403f001a6ed986eaee7d09147da87b81171f89d78183bee49ddd9b6307973a6"
+    },
+    {
+      "path": "apps/backoffice/test/personnel-contract-openai-prompt-v3.test.ts",
+      "sha256": "fa218332dbb6a8544b7ab8324d9630447d2c2a0ee7d2ef8995842bbcfa2b8064"
+    },
+    {
+      "path": "apps/backoffice/test/personnel-contract-openai-prompt-v4.test.ts",
+      "sha256": "975fc5bf0db4cb1a92b9cce11a8ef2b6f2c71838e75fb1d37a8053e92f624537"
+    },
+    {
+      "path": "apps/backoffice/test/personnel-contract-openai-smoke.test.ts",
+      "sha256": "b331517657088602a797c0d8abddf4d305213ada7a70f25df76a4f1701866a16"
+    },
+    {
+      "path": "apps/backoffice/test/personnel-contract-review-store.test.ts",
+      "sha256": "9e56d4da34ab48c26587f71dd936d63f101b1e18d247cfb31d0d1cd3ca4c61ed"
+    },
+    {
+      "path": "apps/backoffice/test/personnel-contract-stored-synthetic-document.test.ts",
+      "sha256": "3f66d22ec2d66cab9971a7f1596a24e492a01cc73bca7d85722a3833652fcebc"
+    },
+    {
+      "path": "apps/backoffice/test/personnel-contract-synthetic-upload.test.ts",
+      "sha256": "b013fca7c7d4ae54818343a3c4bbfdd656cd7994d5a8957906e75cf5ba177009"
+    },
+    {
+      "path": "apps/backoffice/test/personnel-permissions.test.ts",
+      "sha256": "0127728f1c19da3b36344fa3f3e329dbab9dd7bce23e16c124245334741761b9"
+    },
+    {
+      "path": "apps/backoffice/test/personnel-register-pdf.test.ts",
+      "sha256": "7bf42deedddc624d9a7b48a85133ad97cdcb7a211f4a08df2cbe22222952a584"
+    },
+    {
+      "path": "apps/backoffice/test/personnel-register-runtime.test.ts",
+      "sha256": "809b5502996461b343f62d96eebfbbe5e4957b8c6aaff9cf2ed1b38a492a97f8"
+    },
+    {
+      "path": "apps/backoffice/test/prototype-backoffice-notice.test.tsx",
+      "sha256": "d69e4e424d85d3abc163c825ad825623e37d29c633c23915b6d236229bcf0752"
+    },
+    {
+      "path": "apps/backoffice/test/public-information-section.test.tsx",
+      "sha256": "bc06dedecdeb0d597e458f8ac197231cce67fb44d6d596085b3160adb1c57e17"
+    },
+    {
+      "path": "apps/backoffice/test/reservation-action-error.test.ts",
+      "sha256": "e791e014e7303e92baadb2f26c4212aa98257ce6631a455620de45cb29d2bd56"
+    },
+    {
+      "path": "apps/backoffice/test/reservation-detail-model.test.ts",
+      "sha256": "d87cca01d09434c44123452c37edb057ecc2074e937c42803143fd2cb9fbdb54"
+    },
+    {
+      "path": "apps/backoffice/test/reservations-list-model.test.ts",
+      "sha256": "e5db05c61e79cfde3176bd49eb426493fa1beaea4b0a2e2e8814cc9b7f5e92d9"
+    },
+    {
+      "path": "apps/backoffice/test/restaurant-knowledge-loader.test.ts",
+      "sha256": "1918630900b3cd00c63cbe5854459914c0ed374a8fa49721218b063ede4de6b1"
+    },
+    {
+      "path": "apps/backoffice/test/restaurant-knowledge-permissions.test.ts",
+      "sha256": "448dff89e48468d52c07b6aa14cf6adb040446b87ee3289c08922b97979c184e"
+    },
+    {
+      "path": "apps/backoffice/test/reviews-model.test.ts",
+      "sha256": "1b233090e8e5b0b33056fda169751ef5b388d869bdcd02557c46cb666e7b2c92"
+    },
+    {
+      "path": "apps/backoffice/test/salaries-model.test.ts",
+      "sha256": "6d27b06eed4a17bcd37926a1e57a2c8c1d27dc7f2e13c44e9eb86c1720901791"
+    },
+    {
+      "path": "apps/backoffice/test/stock-movements-model.test.ts",
+      "sha256": "4cb093cb33d91761504fe3ce636e7ff53ce49164edb488d8212ef11fb5661d40"
+    },
+    {
+      "path": "apps/backoffice/test/stock-prototype-table-footer.test.tsx",
+      "sha256": "73becf0526159a6e6791a9e1c1b07a016ec4f9ac936f6499575b7ab3fa0d7533"
+    },
+    {
+      "path": "apps/backoffice/test/suppliers-model.test.ts",
+      "sha256": "762d5e1f1f2140304360540921225bb240bf4e234bac95ed8f0d01e719788df0"
+    },
+    {
+      "path": "apps/backoffice/test/tables-model.test.ts",
+      "sha256": "5ebd5b526eaaac3cde554cb9059a007911462d22fe1e97dab4b96af3b496c17b"
+    },
+    {
+      "path": "apps/backoffice/test/team-culture-action.test.ts",
+      "sha256": "7fad055f1e6b3926f6768b4c87e320d5bf4b86ba12b015220f9d42422fcce857"
+    },
+    {
+      "path": "apps/backoffice/test/team-culture-fields.test.tsx",
+      "sha256": "b2516cc6e67cb515b0b8752c22b14c4da08c7e6c1bdcff28c63786a7e486401b"
+    },
+    {
+      "path": "apps/backoffice/test/team-culture-form.test.tsx",
+      "sha256": "cd56ace734eb33ca3c4020867639f9f4fd589b9a209343c4c8b2685525623ab4"
+    },
+    {
+      "path": "apps/backoffice/test/team-culture-model.test.ts",
+      "sha256": "36c2a25ae1a0b10f62b6eb684ac88d25f66804491ed837d4cd96a6cb84fb278a"
+    },
+    {
+      "path": "apps/backoffice/test/today-view-model.test.ts",
+      "sha256": "164fb26c7fd7f2f0610ecabbf4a921b053eaa1cc31e033fba36f8aa713e4781b"
+    },
+    {
+      "path": "apps/backoffice/test/user-access-model.test.ts",
+      "sha256": "bc9e8540608d76f81b607e19eb4b4ad74a6db9b586cf28a1ee0a16ccd8b7f03b"
+    },
+    {
+      "path": "apps/backoffice/test/validated-knowledge-action.test.ts",
+      "sha256": "6b596ea3ea3f6ce118506b21784e47273440577ff008a54ef6218509ae5c208e"
+    },
+    {
+      "path": "apps/backoffice/test/validated-knowledge-model.test.ts",
+      "sha256": "0ede511b4271717f41012ae03620098994a8e83a1c16da4ed44cf5686ad2b481"
+    },
+    {
+      "path": "apps/backoffice/test/validated-knowledge-section.test.tsx",
+      "sha256": "bb5fdd46b3b4d2143f210cf6af68423cc99aa521be668a65b3eca11e88ced1bb"
+    },
+    {
+      "path": "packages/tenant/AGENTS.md",
+      "sha256": "56901da6379759a67ef6a8f706389f750f89a4064a60e8042721eefb2095b008"
+    },
+    {
+      "path": "packages/tenant/README.md",
+      "sha256": "5df2df87816a029ea6e853e400b399a4081556e460b0cf019d43e9f28778bcf2"
+    },
+    {
+      "path": "packages/tenant/package.json",
+      "sha256": "aa663297447a7e6c7f88bea918826058a12a76e4a63dbab1ffdcc041dddec21c"
+    },
+    {
+      "path": "packages/tenant/src/foundation.ts",
+      "sha256": "f7024a7fa5e42d04b18fa76d94f7f6af0fee0d4cb28242db68af1828e29ca8ef"
+    },
+    {
+      "path": "packages/tenant/src/index.ts",
+      "sha256": "5ad7c716281c9e499767bb0d897f18a598a09a65475a968b8db53cd183b39851"
+    },
+    {
+      "path": "packages/tenant/test/foundation.test.ts",
+      "sha256": "bf81a1ce2ba4c525cc349c0dbd2906eb2ee0a818c17f04bad61d4f8920f8c1c4"
+    },
+    {
+      "path": "packages/tenant/test/tenant.test.ts",
+      "sha256": "de9ad0b29d7acd7197ca686d19aa469cfaf7d4a4194113291470d2d52e079310"
+    },
+    {
+      "path": "packages/tenant/tsconfig.json",
+      "sha256": "a593119c3ad401910e2c70ea0dd5ba2ce90b3ee59cb49b2d8bc51b446328cc8f"
+    }
+  ],
+  "permissionsBytes": "aW1wb3J0ICdzZXJ2ZXItb25seSc7CgppbXBvcnQgeyBUZW5hbnRFcnJvciwgdHlwZSBUZW5hbnRDb250ZXh0LCB0eXBlIFRlbmFudFJvbGUgfSBmcm9tICdAeXV0YS90ZW5hbnQnOwoKZXhwb3J0IHR5cGUgUmVwdXRhdGlvblBlcm1pc3Npb24gPQogIHwgJ3JlcHV0YXRpb24ucmVhZCcKICB8ICdyZXB1dGF0aW9uLmZlZWRiYWNrLm1hbmFnZScKICB8ICdyZXB1dGF0aW9uLnJlcGx5LmNyZWF0ZScKICB8ICdyZXB1dGF0aW9uLnJlcGx5LnB1Ymxpc2gnCiAgfCAncmVwdXRhdGlvbi5pbmNpZGVudC5jcmVhdGUnCiAgfCAncmVwdXRhdGlvbi5pbmNpZGVudC5tYW5hZ2UnCiAgfCAncmVwdXRhdGlvbi5hbmFseXRpY3MucmVhZCcKICB8ICdyZXB1dGF0aW9uLm5vdGUuY3JlYXRlJwogIHwgJ3JlcHV0YXRpb24uc2V0dGluZ3MubWFuYWdlJwogIHwgJ3JlcHV0YXRpb24uY29ubmVjdG9yLm1hbmFnZSc7CgpleHBvcnQgdHlwZSBCb29raW5nUGVybWlzc2lvbiA9CiAgfCAnYm9va2luZy5yZWFkJwogIHwgJ2Jvb2tpbmcub3BlcmF0ZScKICB8ICdib29raW5nLnNldHRpbmdzLm1hbmFnZSc7CgpleHBvcnQgdHlwZSBFc3RhYmxpc2htZW50UGVybWlzc2lvbiA9CiAgfCAnZXN0YWJsaXNobWVudC5wcm9maWxlLnJlYWQnCiAgfCAnZXN0YWJsaXNobWVudC5wcm9maWxlLm1hbmFnZSc7CgpleHBvcnQgdHlwZSBSZXN0YXVyYW50S25vd2xlZGdlUGVybWlzc2lvbiA9CiAgfCAncmVzdGF1cmFudC1rbm93bGVkZ2UucmVhZCcKICB8ICdyZXN0YXVyYW50LWtub3dsZWRnZS5tYW5hZ2UnOwoKZXhwb3J0IHR5cGUgUGVyc29ubmVsUGVybWlzc2lvbiA9CiAgfCAncGVyc29ubmVsLmVtcGxveWVlLnJlYWQnCiAgfCAncGVyc29ubmVsLmVtcGxveWVlLm1hbmFnZScKICB8ICdwZXJzb25uZWwuZG9jdW1lbnQucmVhZCcKICB8ICdwZXJzb25uZWwuZG9jdW1lbnQubWFuYWdlJwogIHwgJ3BlcnNvbm5lbC5kb2N1bWVudC5leHRyYWN0JwogIHwgJ3BlcnNvbm5lbC5yZWdpc3Rlci5yZWFkJwogIHwgJ3BlcnNvbm5lbC5yZWdpc3Rlci5leHBvcnQnOwoKY29uc3QgcGVybWlzc2lvblJvbGVzOiBSZWNvcmQ8UmVwdXRhdGlvblBlcm1pc3Npb24sIHJlYWRvbmx5IFRlbmFudFJvbGVbXT4gPSB7CiAgJ3JlcHV0YXRpb24ucmVhZCc6IFsnT1dORVInLCAnTUFOQUdFUicsICdTVEFGRiddLAogICdyZXB1dGF0aW9uLmZlZWRiYWNrLm1hbmFnZSc6IFsnT1dORVInLCAnTUFOQUdFUiddLAogICdyZXB1dGF0aW9uLnJlcGx5LmNyZWF0ZSc6IFsnT1dORVInLCAnTUFOQUdFUicsICdTVEFGRiddLAogICdyZXB1dGF0aW9uLnJlcGx5LnB1Ymxpc2gnOiBbJ09XTkVSJywgJ01BTkFHRVInXSwKICAncmVwdXRhdGlvbi5pbmNpZGVudC5jcmVhdGUnOiBbJ09XTkVSJywgJ01BTkFHRVInLCAnU1RBRkYnXSwKICAncmVwdXRhdGlvbi5pbmNpZGVudC5tYW5hZ2UnOiBbJ09XTkVSJywgJ01BTkFHRVInXSwKICAncmVwdXRhdGlvbi5hbmFseXRpY3MucmVhZCc6IFsnT1dORVInLCAnTUFOQUdFUiddLAogICdyZXB1dGF0aW9uLm5vdGUuY3JlYXRlJzogWydPV05FUicsICdNQU5BR0VSJywgJ1NUQUZGJ10sCiAgJ3JlcHV0YXRpb24uc2V0dGluZ3MubWFuYWdlJzogWydPV05FUiddLAogICdyZXB1dGF0aW9uLmNvbm5lY3Rvci5tYW5hZ2UnOiBbJ09XTkVSJ10sCn07Cgpjb25zdCBib29raW5nUGVybWlzc2lvblJvbGVzOiBSZWNvcmQ8Qm9va2luZ1Blcm1pc3Npb24sIHJlYWRvbmx5IFRlbmFudFJvbGVbXT4gPQogIHsKICAgICdib29raW5nLnJlYWQnOiBbJ09XTkVSJywgJ01BTkFHRVInLCAnU1RBRkYnXSwKICAgICdib29raW5nLm9wZXJhdGUnOiBbJ09XTkVSJywgJ01BTkFHRVInLCAnU1RBRkYnXSwKICAgICdib29raW5nLnNldHRpbmdzLm1hbmFnZSc6IFsnT1dORVInLCAnTUFOQUdFUiddLAogIH07Cgpjb25zdCBlc3RhYmxpc2htZW50UGVybWlzc2lvblJvbGVzOiBSZWNvcmQ8CiAgRXN0YWJsaXNobWVudFBlcm1pc3Npb24sCiAgcmVhZG9ubHkgVGVuYW50Um9sZVtdCj4gPSB7CiAgJ2VzdGFibGlzaG1lbnQucHJvZmlsZS5yZWFkJzogWydPV05FUicsICdNQU5BR0VSJywgJ1NUQUZGJ10sCiAgJ2VzdGFibGlzaG1lbnQucHJvZmlsZS5tYW5hZ2UnOiBbJ09XTkVSJywgJ01BTkFHRVInXSwKfTsKCmNvbnN0IHJlc3RhdXJhbnRLbm93bGVkZ2VQZXJtaXNzaW9uUm9sZXM6IFJlY29yZDwKICBSZXN0YXVyYW50S25vd2xlZGdlUGVybWlzc2lvbiwKICByZWFkb25seSBUZW5hbnRSb2xlW10KPiA9IHsKICAncmVzdGF1cmFudC1rbm93bGVkZ2UucmVhZCc6IFsnT1dORVInLCAnTUFOQUdFUiddLAogICdyZXN0YXVyYW50LWtub3dsZWRnZS5tYW5hZ2UnOiBbJ09XTkVSJywgJ01BTkFHRVInXSwKfTsKCmNvbnN0IHBlcnNvbm5lbFBlcm1pc3Npb25Sb2xlczogUmVjb3JkPAogIFBlcnNvbm5lbFBlcm1pc3Npb24sCiAgcmVhZG9ubHkgVGVuYW50Um9sZVtdCj4gPSB7CiAgJ3BlcnNvbm5lbC5lbXBsb3llZS5yZWFkJzogWydPV05FUiddLAogICdwZXJzb25uZWwuZW1wbG95ZWUubWFuYWdlJzogWydPV05FUiddLAogICdwZXJzb25uZWwuZG9jdW1lbnQucmVhZCc6IFsnT1dORVInXSwKICAncGVyc29ubmVsLmRvY3VtZW50Lm1hbmFnZSc6IFsnT1dORVInXSwKICAncGVyc29ubmVsLmRvY3VtZW50LmV4dHJhY3QnOiBbJ09XTkVSJ10sCiAgJ3BlcnNvbm5lbC5yZWdpc3Rlci5yZWFkJzogWydPV05FUiddLAogICdwZXJzb25uZWwucmVnaXN0ZXIuZXhwb3J0JzogWydPV05FUiddLAp9OwoKZXhwb3J0IGZ1bmN0aW9uIHJlcXVpcmVSZXB1dGF0aW9uUGVybWlzc2lvbigKICBjb250ZXh0OiBUZW5hbnRDb250ZXh0LAogIHBlcm1pc3Npb246IFJlcHV0YXRpb25QZXJtaXNzaW9uLAopOiB2b2lkIHsKICBpZiAoCiAgICBjb250ZXh0LmFjdG9yLnR5cGUgIT09ICd1c2VyJyB8fAogICAgIXBlcm1pc3Npb25Sb2xlc1twZXJtaXNzaW9uXS5pbmNsdWRlcyhjb250ZXh0LmFjdG9yLnJvbGUpCiAgKSB7CiAgICB0aHJvdyBuZXcgVGVuYW50RXJyb3IoCiAgICAgICdQZXJtaXNzaW9uIGRlbmllZC4nLAogICAgICAnQ1JPU1NfVEVOQU5UX0FDQ0VTU19ERU5JRUQnLAogICAgICA0MDMsCiAgICApOwogIH0KfQoKZXhwb3J0IGZ1bmN0aW9uIHJlcXVpcmVCb29raW5nUGVybWlzc2lvbigKICBjb250ZXh0OiBUZW5hbnRDb250ZXh0LAogIHBlcm1pc3Npb246IEJvb2tpbmdQZXJtaXNzaW9uLAopOiB2b2lkIHsKICBpZiAoIWhhc0Jvb2tpbmdQZXJtaXNzaW9uKGNvbnRleHQsIHBlcm1pc3Npb24pKSB7CiAgICB0aHJvdyBuZXcgVGVuYW50RXJyb3IoCiAgICAgICdQZXJtaXNzaW9uIGRlbmllZC4nLAogICAgICAnQ1JPU1NfVEVOQU5UX0FDQ0VTU19ERU5JRUQnLAogICAgICA0MDMsCiAgICApOwogIH0KfQoKZXhwb3J0IGZ1bmN0aW9uIGhhc0Jvb2tpbmdQZXJtaXNzaW9uKAogIGNvbnRleHQ6IFRlbmFudENvbnRleHQsCiAgcGVybWlzc2lvbjogQm9va2luZ1Blcm1pc3Npb24sCik6IGJvb2xlYW4gewogIHJldHVybiAoCiAgICBjb250ZXh0LmFjdG9yLnR5cGUgPT09ICd1c2VyJyAmJgogICAgYm9va2luZ1Blcm1pc3Npb25Sb2xlc1twZXJtaXNzaW9uXS5pbmNsdWRlcyhjb250ZXh0LmFjdG9yLnJvbGUpCiAgKTsKfQoKZXhwb3J0IGZ1bmN0aW9uIGhhc0VzdGFibGlzaG1lbnRQZXJtaXNzaW9uKAogIGNvbnRleHQ6IFRlbmFudENvbnRleHQsCiAgcGVybWlzc2lvbjogRXN0YWJsaXNobWVudFBlcm1pc3Npb24sCik6IGJvb2xlYW4gewogIHJldHVybiAoCiAgICBjb250ZXh0LmFjdG9yLnR5cGUgPT09ICd1c2VyJyAmJgogICAgZXN0YWJsaXNobWVudFBlcm1pc3Npb25Sb2xlc1twZXJtaXNzaW9uXS5pbmNsdWRlcyhjb250ZXh0LmFjdG9yLnJvbGUpCiAgKTsKfQoKZXhwb3J0IGZ1bmN0aW9uIHJlcXVpcmVFc3RhYmxpc2htZW50UGVybWlzc2lvbigKICBjb250ZXh0OiBUZW5hbnRDb250ZXh0LAogIHBlcm1pc3Npb246IEVzdGFibGlzaG1lbnRQZXJtaXNzaW9uLAopOiB2b2lkIHsKICBpZiAoIWhhc0VzdGFibGlzaG1lbnRQZXJtaXNzaW9uKGNvbnRleHQsIHBlcm1pc3Npb24pKSB7CiAgICB0aHJvdyBuZXcgVGVuYW50RXJyb3IoCiAgICAgICdQZXJtaXNzaW9uIGRlbmllZC4nLAogICAgICAnQ1JPU1NfVEVOQU5UX0FDQ0VTU19ERU5JRUQnLAogICAgICA0MDMsCiAgICApOwogIH0KfQoKZXhwb3J0IGZ1bmN0aW9uIGhhc1Jlc3RhdXJhbnRLbm93bGVkZ2VQZXJtaXNzaW9uKAogIGNvbnRleHQ6IFRlbmFudENvbnRleHQsCiAgcGVybWlzc2lvbjogUmVzdGF1cmFudEtub3dsZWRnZVBlcm1pc3Npb24sCik6IGJvb2xlYW4gewogIHJldHVybiAoCiAgICBjb250ZXh0LmFjdG9yLnR5cGUgPT09ICd1c2VyJyAmJgogICAgcmVzdGF1cmFudEtub3dsZWRnZVBlcm1pc3Npb25Sb2xlc1twZXJtaXNzaW9uXS5pbmNsdWRlcyhjb250ZXh0LmFjdG9yLnJvbGUpCiAgKTsKfQoKZXhwb3J0IGZ1bmN0aW9uIHJlcXVpcmVSZXN0YXVyYW50S25vd2xlZGdlUGVybWlzc2lvbigKICBjb250ZXh0OiBUZW5hbnRDb250ZXh0LAogIHBlcm1pc3Npb246IFJlc3RhdXJhbnRLbm93bGVkZ2VQZXJtaXNzaW9uLAopOiB2b2lkIHsKICBpZiAoIWhhc1Jlc3RhdXJhbnRLbm93bGVkZ2VQZXJtaXNzaW9uKGNvbnRleHQsIHBlcm1pc3Npb24pKSB7CiAgICB0aHJvdyBuZXcgVGVuYW50RXJyb3IoCiAgICAgICdQZXJtaXNzaW9uIGRlbmllZC4nLAogICAgICAnQ1JPU1NfVEVOQU5UX0FDQ0VTU19ERU5JRUQnLAogICAgICA0MDMsCiAgICApOwogIH0KfQoKZXhwb3J0IGZ1bmN0aW9uIGhhc1BlcnNvbm5lbFBlcm1pc3Npb24oCiAgY29udGV4dDogVGVuYW50Q29udGV4dCwKICBwZXJtaXNzaW9uOiBQZXJzb25uZWxQZXJtaXNzaW9uLAopOiBib29sZWFuIHsKICByZXR1cm4gKAogICAgY29udGV4dC5hY3Rvci50eXBlID09PSAndXNlcicgJiYKICAgIHBlcnNvbm5lbFBlcm1pc3Npb25Sb2xlc1twZXJtaXNzaW9uXS5pbmNsdWRlcyhjb250ZXh0LmFjdG9yLnJvbGUpCiAgKTsKfQoKZXhwb3J0IGZ1bmN0aW9uIHJlcXVpcmVQZXJzb25uZWxQZXJtaXNzaW9uKAogIGNvbnRleHQ6IFRlbmFudENvbnRleHQsCiAgcGVybWlzc2lvbjogUGVyc29ubmVsUGVybWlzc2lvbiwKKTogdm9pZCB7CiAgaWYgKCFoYXNQZXJzb25uZWxQZXJtaXNzaW9uKGNvbnRleHQsIHBlcm1pc3Npb24pKSB7CiAgICB0aHJvdyBuZXcgVGVuYW50RXJyb3IoCiAgICAgICdQZXJtaXNzaW9uIGRlbmllZC4nLAogICAgICAnQ1JPU1NfVEVOQU5UX0FDQ0VTU19ERU5JRUQnLAogICAgICA0MDMsCiAgICApOwogIH0KfQo=",
+  "tasksSha256": "51fc898a0f961f769f17cf30235868aa060a49e4915123949a02a8f197afbdb0"
+}

@@ -1,0 +1,4527 @@
+{
+  "change": "release-a-customer-exposure-foundation",
+  "executionPurpose": "browser-qa-generation3",
+  "startedAt": "2026-10-01T13:15:15.721Z",
+  "browser": {
+    "channel": "chrome",
+    "headless": true
+  },
+  "originPaths": {
+    "A": "http://localhost:3101",
+    "internal": "http://localhost:3102"
+  },
+  "scenarios": [
+    {
+      "name": "OWNER normal authentication preserves allowed deep link",
+      "result": "PASS",
+      "facts": {
+        "authenticatedNormally": true,
+        "permittedReturnToPreserved": true,
+        "tenantContextUsable": true
+      }
+    },
+    {
+      "name": "OWNER desktop A navigation",
+      "result": "PASS",
+      "facts": {
+        "hrefs": [
+          "/aujourdhui",
+          "/etablissement/informations-generales",
+          "/visibilite-reputation/avis",
+          "/parametres/integrations",
+          "/parametres/utilisateurs-acces"
+        ],
+        "keyboardOpenAndEscape": false
+      }
+    },
+    {
+      "name": "OWNER desktop today",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "1"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "8"
+          }
+        ],
+        "previewIds": [
+          "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+          "506d210a-a484-444f-b58d-fe98b8ed0c33",
+          "3cc9c8b9-0b79-4a77-8141-9a26d5496e43"
+        ],
+        "expectedAttention": 8,
+        "expectedNew": 1,
+        "expectedPreviewCount": 3,
+        "exactPreviewIdsMatched": true
+      }
+    },
+    {
+      "name": "OWNER desktop reviews",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "12"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "1"
+          },
+          {
+            "label": "À traiter",
+            "value": "8"
+          }
+        ],
+        "queue": false,
+        "sourceSelectorAbsent": true
+      }
+    },
+    {
+      "name": "OWNER desktop profile",
+      "result": "PASS",
+      "facts": {
+        "basicProfileVisible": true,
+        "knowledgeSubsectionsAbsent": true,
+        "readonly": false
+      }
+    },
+    {
+      "name": "OWNER desktop integrations",
+      "result": "PASS",
+      "facts": {
+        "providerConfigurationUnavailable": true,
+        "connectActionAbsent": true
+      }
+    },
+    {
+      "name": "OWNER desktop users",
+      "result": "PASS",
+      "facts": {}
+    },
+    {
+      "name": "OWNER mobile A navigation",
+      "result": "PASS",
+      "facts": {
+        "hrefs": [
+          "/visibilite-reputation/avis",
+          "/aujourdhui",
+          "/etablissement/informations-generales",
+          "/parametres/integrations",
+          "/parametres/utilisateurs-acces"
+        ],
+        "keyboardOpenAndEscape": true
+      }
+    },
+    {
+      "name": "OWNER mobile today",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "1"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "8"
+          }
+        ],
+        "previewIds": [
+          "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+          "506d210a-a484-444f-b58d-fe98b8ed0c33",
+          "3cc9c8b9-0b79-4a77-8141-9a26d5496e43"
+        ],
+        "expectedAttention": 8,
+        "expectedNew": 1,
+        "expectedPreviewCount": 3,
+        "exactPreviewIdsMatched": true
+      }
+    },
+    {
+      "name": "OWNER mobile reviews",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "12"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "1"
+          },
+          {
+            "label": "À traiter",
+            "value": "8"
+          }
+        ],
+        "queue": false,
+        "sourceSelectorAbsent": true
+      }
+    },
+    {
+      "name": "OWNER mobile profile",
+      "result": "PASS",
+      "facts": {
+        "basicProfileVisible": true,
+        "knowledgeSubsectionsAbsent": true,
+        "readonly": false
+      }
+    },
+    {
+      "name": "OWNER mobile integrations",
+      "result": "PASS",
+      "facts": {
+        "providerConfigurationUnavailable": true,
+        "connectActionAbsent": true
+      }
+    },
+    {
+      "name": "OWNER mobile users",
+      "result": "PASS",
+      "facts": {}
+    },
+    {
+      "name": "OWNER scoped attention queue",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "8"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "1"
+          },
+          {
+            "label": "À traiter",
+            "value": "8"
+          }
+        ],
+        "queue": true,
+        "sourceSelectorAbsent": true
+      }
+    },
+    {
+      "name": "OWNER browser source forging",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "12"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "1"
+          },
+          {
+            "label": "À traiter",
+            "value": "8"
+          }
+        ],
+        "queue": false,
+        "sourceSelectorAbsent": true
+      }
+    },
+    {
+      "name": "OWNER selected DIRECT unavailable",
+      "result": "PASS",
+      "facts": {
+        "selectedUnavailable": true,
+        "detailAbsent": true
+      }
+    },
+    {
+      "name": "OWNER selected foreign unavailable",
+      "result": "PASS",
+      "facts": {
+        "selectedUnavailable": true,
+        "detailAbsent": true
+      }
+    },
+    {
+      "name": "MANAGER normal authentication preserves allowed deep link",
+      "result": "PASS",
+      "facts": {
+        "authenticatedNormally": true,
+        "permittedReturnToPreserved": true,
+        "tenantContextUsable": true
+      }
+    },
+    {
+      "name": "MANAGER desktop A navigation",
+      "result": "PASS",
+      "facts": {
+        "hrefs": [
+          "/aujourdhui",
+          "/etablissement/informations-generales",
+          "/visibilite-reputation/avis",
+          "/parametres/utilisateurs-acces"
+        ],
+        "keyboardOpenAndEscape": false
+      }
+    },
+    {
+      "name": "MANAGER desktop today",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "1"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "8"
+          }
+        ],
+        "previewIds": [
+          "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+          "506d210a-a484-444f-b58d-fe98b8ed0c33",
+          "3cc9c8b9-0b79-4a77-8141-9a26d5496e43"
+        ],
+        "expectedAttention": 8,
+        "expectedNew": 1,
+        "expectedPreviewCount": 3,
+        "exactPreviewIdsMatched": true
+      }
+    },
+    {
+      "name": "MANAGER desktop reviews",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "12"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "1"
+          },
+          {
+            "label": "À traiter",
+            "value": "8"
+          }
+        ],
+        "queue": false,
+        "sourceSelectorAbsent": true
+      }
+    },
+    {
+      "name": "MANAGER desktop profile",
+      "result": "PASS",
+      "facts": {
+        "basicProfileVisible": true,
+        "knowledgeSubsectionsAbsent": true,
+        "readonly": false
+      }
+    },
+    {
+      "name": "MANAGER desktop integrations",
+      "result": "PASS",
+      "facts": {
+        "permissionRecovery": true
+      }
+    },
+    {
+      "name": "MANAGER desktop users",
+      "result": "PASS",
+      "facts": {}
+    },
+    {
+      "name": "MANAGER mobile A navigation",
+      "result": "PASS",
+      "facts": {
+        "hrefs": [
+          "/visibilite-reputation/avis",
+          "/aujourdhui",
+          "/etablissement/informations-generales",
+          "/parametres/utilisateurs-acces"
+        ],
+        "keyboardOpenAndEscape": true
+      }
+    },
+    {
+      "name": "MANAGER mobile today",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "1"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "8"
+          }
+        ],
+        "previewIds": [
+          "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+          "506d210a-a484-444f-b58d-fe98b8ed0c33",
+          "3cc9c8b9-0b79-4a77-8141-9a26d5496e43"
+        ],
+        "expectedAttention": 8,
+        "expectedNew": 1,
+        "expectedPreviewCount": 3,
+        "exactPreviewIdsMatched": true
+      }
+    },
+    {
+      "name": "MANAGER mobile reviews",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "12"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "1"
+          },
+          {
+            "label": "À traiter",
+            "value": "8"
+          }
+        ],
+        "queue": false,
+        "sourceSelectorAbsent": true
+      }
+    },
+    {
+      "name": "MANAGER mobile profile",
+      "result": "PASS",
+      "facts": {
+        "basicProfileVisible": true,
+        "knowledgeSubsectionsAbsent": true,
+        "readonly": false
+      }
+    },
+    {
+      "name": "MANAGER mobile integrations",
+      "result": "PASS",
+      "facts": {
+        "permissionRecovery": true
+      }
+    },
+    {
+      "name": "MANAGER mobile users",
+      "result": "PASS",
+      "facts": {}
+    },
+    {
+      "name": "MANAGER scoped attention queue",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "8"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "1"
+          },
+          {
+            "label": "À traiter",
+            "value": "8"
+          }
+        ],
+        "queue": true,
+        "sourceSelectorAbsent": true
+      }
+    },
+    {
+      "name": "MANAGER browser source forging",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "12"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "1"
+          },
+          {
+            "label": "À traiter",
+            "value": "8"
+          }
+        ],
+        "queue": false,
+        "sourceSelectorAbsent": true
+      }
+    },
+    {
+      "name": "MANAGER selected DIRECT unavailable",
+      "result": "PASS",
+      "facts": {
+        "selectedUnavailable": true,
+        "detailAbsent": true
+      }
+    },
+    {
+      "name": "MANAGER selected foreign unavailable",
+      "result": "PASS",
+      "facts": {
+        "selectedUnavailable": true,
+        "detailAbsent": true
+      }
+    },
+    {
+      "name": "STAFF normal authentication preserves allowed deep link",
+      "result": "PASS",
+      "facts": {
+        "authenticatedNormally": true,
+        "permittedReturnToPreserved": true,
+        "tenantContextUsable": true
+      }
+    },
+    {
+      "name": "STAFF desktop A navigation",
+      "result": "PASS",
+      "facts": {
+        "hrefs": [
+          "/aujourdhui",
+          "/etablissement/informations-generales",
+          "/visibilite-reputation/avis"
+        ],
+        "keyboardOpenAndEscape": false
+      }
+    },
+    {
+      "name": "STAFF desktop today",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "0"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "4"
+          }
+        ],
+        "previewIds": [
+          "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+          "3cc9c8b9-0b79-4a77-8141-9a26d5496e43",
+          "809ce7ea-7f95-40dd-956a-e0941d75f81d"
+        ],
+        "expectedAttention": 4,
+        "expectedNew": 0,
+        "expectedPreviewCount": 3,
+        "exactPreviewIdsMatched": true
+      }
+    },
+    {
+      "name": "STAFF desktop reviews",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "4"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "0"
+          },
+          {
+            "label": "À traiter",
+            "value": "4"
+          }
+        ],
+        "queue": false,
+        "sourceSelectorAbsent": true
+      }
+    },
+    {
+      "name": "STAFF desktop profile",
+      "result": "PASS",
+      "facts": {
+        "basicProfileVisible": true,
+        "knowledgeSubsectionsAbsent": true,
+        "readonly": true
+      }
+    },
+    {
+      "name": "STAFF desktop integrations",
+      "result": "PASS",
+      "facts": {
+        "permissionRecovery": true
+      }
+    },
+    {
+      "name": "STAFF desktop users",
+      "result": "PASS",
+      "facts": {
+        "permissionRecovery": true
+      }
+    },
+    {
+      "name": "STAFF mobile A navigation",
+      "result": "PASS",
+      "facts": {
+        "hrefs": [
+          "/visibilite-reputation/avis",
+          "/aujourdhui",
+          "/etablissement/informations-generales"
+        ],
+        "keyboardOpenAndEscape": true
+      }
+    },
+    {
+      "name": "STAFF mobile today",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "0"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "4"
+          }
+        ],
+        "previewIds": [
+          "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+          "3cc9c8b9-0b79-4a77-8141-9a26d5496e43",
+          "809ce7ea-7f95-40dd-956a-e0941d75f81d"
+        ],
+        "expectedAttention": 4,
+        "expectedNew": 0,
+        "expectedPreviewCount": 3,
+        "exactPreviewIdsMatched": true
+      }
+    },
+    {
+      "name": "STAFF mobile reviews",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "4"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "0"
+          },
+          {
+            "label": "À traiter",
+            "value": "4"
+          }
+        ],
+        "queue": false,
+        "sourceSelectorAbsent": true
+      }
+    },
+    {
+      "name": "STAFF mobile profile",
+      "result": "PASS",
+      "facts": {
+        "basicProfileVisible": true,
+        "knowledgeSubsectionsAbsent": true,
+        "readonly": true
+      }
+    },
+    {
+      "name": "STAFF mobile integrations",
+      "result": "PASS",
+      "facts": {
+        "permissionRecovery": true
+      }
+    },
+    {
+      "name": "STAFF mobile users",
+      "result": "PASS",
+      "facts": {
+        "permissionRecovery": true
+      }
+    },
+    {
+      "name": "STAFF scoped attention queue",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "4"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "0"
+          },
+          {
+            "label": "À traiter",
+            "value": "4"
+          }
+        ],
+        "queue": true,
+        "sourceSelectorAbsent": true
+      }
+    },
+    {
+      "name": "STAFF browser source forging",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "4"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "0"
+          },
+          {
+            "label": "À traiter",
+            "value": "4"
+          }
+        ],
+        "queue": false,
+        "sourceSelectorAbsent": true
+      }
+    },
+    {
+      "name": "STAFF selected DIRECT unavailable",
+      "result": "PASS",
+      "facts": {
+        "selectedUnavailable": true,
+        "detailAbsent": true
+      }
+    },
+    {
+      "name": "STAFF selected foreign unavailable",
+      "result": "PASS",
+      "facts": {
+        "selectedUnavailable": true,
+        "detailAbsent": true
+      }
+    },
+    {
+      "name": "STAFF selected unassigned unavailable",
+      "result": "PASS",
+      "facts": {
+        "selectedUnavailable": true,
+        "detailAbsent": true
+      }
+    },
+    {
+      "name": "OWNER actual context switch preserves allowed route and scope",
+      "result": "PASS",
+      "facts": {
+        "switchedNormally": true,
+        "allowedRoutePreserved": true,
+        "otherEstablishmentSelectedTargetUnavailable": true,
+        "originalScopeRecovered": true
+      }
+    },
+    {
+      "name": "Normal authentication clears deferred returnTo to safe A recovery",
+      "result": "PASS",
+      "facts": {
+        "authenticatedNormally": true,
+        "deferredReturnToCleared": true,
+        "recoveryPath": "/aujourdhui"
+      }
+    },
+    {
+      "name": "OWNER Today width 1536",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "1"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "8"
+          }
+        ],
+        "previewIds": [
+          "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+          "506d210a-a484-444f-b58d-fe98b8ed0c33",
+          "3cc9c8b9-0b79-4a77-8141-9a26d5496e43"
+        ],
+        "expectedAttention": 8,
+        "expectedNew": 1,
+        "expectedPreviewCount": 3,
+        "exactPreviewIdsMatched": true
+      }
+    },
+    {
+      "name": "OWNER Today width 1024",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "1"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "8"
+          }
+        ],
+        "previewIds": [
+          "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+          "506d210a-a484-444f-b58d-fe98b8ed0c33",
+          "3cc9c8b9-0b79-4a77-8141-9a26d5496e43"
+        ],
+        "expectedAttention": 8,
+        "expectedNew": 1,
+        "expectedPreviewCount": 3,
+        "exactPreviewIdsMatched": true
+      }
+    },
+    {
+      "name": "OWNER Today width 768",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "1"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "8"
+          }
+        ],
+        "previewIds": [
+          "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+          "506d210a-a484-444f-b58d-fe98b8ed0c33",
+          "3cc9c8b9-0b79-4a77-8141-9a26d5496e43"
+        ],
+        "expectedAttention": 8,
+        "expectedNew": 1,
+        "expectedPreviewCount": 3,
+        "exactPreviewIdsMatched": true
+      }
+    },
+    {
+      "name": "OWNER Today width 390",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "1"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "8"
+          }
+        ],
+        "previewIds": [
+          "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+          "506d210a-a484-444f-b58d-fe98b8ed0c33",
+          "3cc9c8b9-0b79-4a77-8141-9a26d5496e43"
+        ],
+        "expectedAttention": 8,
+        "expectedNew": 1,
+        "expectedPreviewCount": 3,
+        "exactPreviewIdsMatched": true
+      }
+    },
+    {
+      "name": "OWNER empty search and recovery",
+      "result": "PASS",
+      "facts": {
+        "emptyVisible": true,
+        "clearFilterRecovered": true
+      }
+    },
+    {
+      "name": "OWNER real basic profile save",
+      "result": "PASS",
+      "facts": {
+        "pending": {
+          "ariaBusy": "true",
+          "disabled": true,
+          "focus": {
+            "active": true,
+            "outline": "none",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(45, 126, 101) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+          },
+          "controlGeometry": {
+            "width": 169,
+            "height": 40,
+            "textOutsideButton": false
+          }
+        },
+        "successVisible": true,
+        "transportDelayApplied": true,
+        "persistedAfterReload": true
+      }
+    },
+    {
+      "name": "OWNER real manual draft save",
+      "result": "PASS",
+      "facts": {
+        "pending": {
+          "ariaBusy": "true",
+          "disabled": true,
+          "focus": {
+            "active": true,
+            "outline": "none",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(45, 126, 101) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+          },
+          "controlGeometry": {
+            "width": 214,
+            "height": 40,
+            "textOutsideButton": false
+          }
+        },
+        "successVisible": true,
+        "transportDelayApplied": true,
+        "reviewId": "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+        "persistedAfterReload": true,
+        "publicationDisabled": true
+      }
+    },
+    {
+      "name": "OWNER real internal note save",
+      "result": "PASS",
+      "facts": {
+        "pending": {
+          "ariaBusy": "true",
+          "disabled": true,
+          "focus": {
+            "active": true,
+            "outline": "none",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(45, 126, 101) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+          },
+          "controlGeometry": {
+            "width": 111,
+            "height": 36,
+            "textOutsideButton": false
+          }
+        },
+        "successVisible": true,
+        "transportDelayApplied": true,
+        "persistedAfterReload": true
+      }
+    },
+    {
+      "name": "MANAGER real basic profile save",
+      "result": "PASS",
+      "facts": {
+        "pending": {
+          "ariaBusy": "true",
+          "disabled": true,
+          "focus": {
+            "active": true,
+            "outline": "none",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(45, 126, 101) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+          },
+          "controlGeometry": {
+            "width": 169,
+            "height": 40,
+            "textOutsideButton": false
+          }
+        },
+        "successVisible": true,
+        "transportDelayApplied": true,
+        "persistedAfterReload": true
+      }
+    },
+    {
+      "name": "MANAGER real manual draft save",
+      "result": "PASS",
+      "facts": {
+        "pending": {
+          "ariaBusy": "true",
+          "disabled": true,
+          "focus": {
+            "active": true,
+            "outline": "none",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(45, 126, 101) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+          },
+          "controlGeometry": {
+            "width": 214,
+            "height": 40,
+            "textOutsideButton": false
+          }
+        },
+        "successVisible": true,
+        "transportDelayApplied": true,
+        "reviewId": "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+        "persistedAfterReload": true,
+        "publicationDisabled": true
+      }
+    },
+    {
+      "name": "MANAGER real internal note save",
+      "result": "PASS",
+      "facts": {
+        "pending": {
+          "ariaBusy": "true",
+          "disabled": true,
+          "focus": {
+            "active": true,
+            "outline": "none",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(45, 126, 101) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+          },
+          "controlGeometry": {
+            "width": 111,
+            "height": 36,
+            "textOutsideButton": false
+          }
+        },
+        "successVisible": true,
+        "transportDelayApplied": true,
+        "persistedAfterReload": true
+      }
+    },
+    {
+      "name": "STAFF real manual draft save",
+      "result": "PASS",
+      "facts": {
+        "pending": {
+          "ariaBusy": "true",
+          "disabled": true,
+          "focus": {
+            "active": true,
+            "outline": "none",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(45, 126, 101) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+          },
+          "controlGeometry": {
+            "width": 152,
+            "height": 40,
+            "textOutsideButton": false
+          }
+        },
+        "successVisible": true,
+        "transportDelayApplied": true,
+        "reviewId": "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+        "persistedAfterReload": true,
+        "publicationDisabled": true
+      }
+    },
+    {
+      "name": "STAFF real internal note save",
+      "result": "PASS",
+      "facts": {
+        "pending": {
+          "ariaBusy": "true",
+          "disabled": true,
+          "focus": {
+            "active": true,
+            "outline": "none",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(45, 126, 101) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+          },
+          "controlGeometry": {
+            "width": 111,
+            "height": 36,
+            "textOutsideButton": false
+          }
+        },
+        "successVisible": true,
+        "transportDelayApplied": true,
+        "persistedAfterReload": true
+      }
+    },
+    {
+      "name": "OWNER actual rejected draft and recovery",
+      "result": "PASS",
+      "facts": {
+        "actualActionError": true,
+        "controlsRecovered": true,
+        "rejectedDraftAbsentAfterReload": true
+      }
+    },
+    {
+      "name": "OWNER deferred direct route and safe recovery",
+      "result": "PASS",
+      "facts": {
+        "browserQueryDidNotOpenInternal": true,
+        "permittedRecovery": true
+      }
+    },
+    {
+      "name": "Internal existing Knowledge and Booking composition",
+      "result": "PASS",
+      "facts": {
+        "knowledgeVisible": true,
+        "bookingVisible": true,
+        "sourceSelectorVisible": true
+      }
+    },
+    {
+      "name": "Actual Next knowledge action replay denied in A",
+      "result": "PASS",
+      "facts": {
+        "capturedFromRealInternalForm": true,
+        "actionMetadata": {
+          "actionIdSha256": "e77c15de13cc1a9b1ec7de09fa9663f8c4e921c45b80abfcaaa3ea5668a233d9",
+          "workerManifestMatch": true,
+          "workerRoutePaths": [
+            "/etablissement/informations-generales"
+          ]
+        },
+        "replayFacts": {
+          "httpStatus": 303,
+          "contentType": "text/x-component",
+          "bodyIsEmptyJson": false,
+          "bodyContainsTypedUnavailable": false,
+          "headerNotFound": false,
+          "errorNotFound": false,
+          "actionRedirectToUnavailable": true,
+          "ordinaryRedirectToUnavailable": false,
+          "unavailableResponse": false,
+          "denied": true
+        },
+        "persistedBeforeAfterEqual": true,
+        "callbackReturned": true
+      }
+    },
+    {
+      "name": "Actual Next booking action replay denied in A",
+      "result": "PASS",
+      "facts": {
+        "capturedFromRealInternalForm": true,
+        "actionMetadata": {
+          "actionIdSha256": "db6744f51b10304f5557e9a32952aa517f69a573d2acc7184b2ecda726599041",
+          "workerManifestMatch": true,
+          "workerRoutePaths": [
+            "/reservations/parametres"
+          ]
+        },
+        "replayFacts": {
+          "httpStatus": 404,
+          "contentType": "text/plain",
+          "bodyIsEmptyJson": false,
+          "bodyContainsTypedUnavailable": false,
+          "headerNotFound": true,
+          "errorNotFound": true,
+          "actionRedirectToUnavailable": false,
+          "ordinaryRedirectToUnavailable": false,
+          "unavailableResponse": false,
+          "denied": true
+        },
+        "persistedBeforeAfterEqual": true,
+        "callbackReturned": true
+      }
+    },
+    {
+      "name": "Setup fixture bound-empty transition",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "bound-empty",
+        "verifiedOwnedDatabase": true,
+        "fixtureTransitionCallbackCompleted": true,
+        "providerOperationAttempted": false
+      }
+    },
+    {
+      "name": "Setup bound-empty OWNER desktop today",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "bound-empty",
+        "setupTitle": "Établissement Google associé",
+        "importOutcome": "UNKNOWN",
+        "provenance": "Synthetic local connector and persisted-row state; no provider import was performed.",
+        "importOutcomeConfirmed": false,
+        "ownerSetupLinkVisible": false,
+        "operatorOwnerHandoffVisible": false,
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "0"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "0"
+          }
+        ],
+        "googlePreviewCount": 0,
+        "persistedEmptyStateVisible": true
+      }
+    },
+    {
+      "name": "Setup bound-empty OWNER desktop reviews",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "bound-empty",
+        "setupTitle": "Établissement Google associé",
+        "importOutcome": "UNKNOWN",
+        "provenance": "Synthetic local connector and persisted-row state; no provider import was performed.",
+        "importOutcomeConfirmed": false,
+        "ownerSetupLinkVisible": false,
+        "operatorOwnerHandoffVisible": false,
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "0"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "0"
+          },
+          {
+            "label": "À traiter",
+            "value": "0"
+          }
+        ],
+        "persistedEmptyStateVisible": true,
+        "sourceSelectorAbsent": true,
+        "reviewDetailAbsent": true
+      }
+    },
+    {
+      "name": "Setup bound-empty OWNER desktop integrations",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "bound-empty",
+        "connectorBadge": "Connecté",
+        "selectedResourceVisible": true,
+        "providerConfigurationUnavailable": true,
+        "supportRecoveryVisible": true,
+        "providerConnectActionAbsent": true,
+        "providerSelectionFormAbsent": true,
+        "importAndPublicationUnavailable": true,
+        "importOutcome": "UNKNOWN",
+        "providerOperationAttempted": false
+      }
+    },
+    {
+      "name": "Setup bound-empty OWNER mobile today",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "bound-empty",
+        "setupTitle": "Établissement Google associé",
+        "importOutcome": "UNKNOWN",
+        "provenance": "Synthetic local connector and persisted-row state; no provider import was performed.",
+        "importOutcomeConfirmed": false,
+        "ownerSetupLinkVisible": false,
+        "operatorOwnerHandoffVisible": false,
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "0"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "0"
+          }
+        ],
+        "googlePreviewCount": 0,
+        "persistedEmptyStateVisible": true
+      }
+    },
+    {
+      "name": "Setup bound-empty OWNER mobile reviews",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "bound-empty",
+        "setupTitle": "Établissement Google associé",
+        "importOutcome": "UNKNOWN",
+        "provenance": "Synthetic local connector and persisted-row state; no provider import was performed.",
+        "importOutcomeConfirmed": false,
+        "ownerSetupLinkVisible": false,
+        "operatorOwnerHandoffVisible": false,
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "0"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "0"
+          },
+          {
+            "label": "À traiter",
+            "value": "0"
+          }
+        ],
+        "persistedEmptyStateVisible": true,
+        "sourceSelectorAbsent": true,
+        "reviewDetailAbsent": true
+      }
+    },
+    {
+      "name": "Setup bound-empty OWNER mobile integrations",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "bound-empty",
+        "connectorBadge": "Connecté",
+        "selectedResourceVisible": true,
+        "providerConfigurationUnavailable": true,
+        "supportRecoveryVisible": true,
+        "providerConnectActionAbsent": true,
+        "providerSelectionFormAbsent": true,
+        "importAndPublicationUnavailable": true,
+        "importOutcome": "UNKNOWN",
+        "providerOperationAttempted": false
+      }
+    },
+    {
+      "name": "Setup bound-empty MANAGER desktop today",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "bound-empty",
+        "setupTitle": "Établissement Google associé",
+        "importOutcome": "UNKNOWN",
+        "provenance": "Synthetic local connector and persisted-row state; no provider import was performed.",
+        "importOutcomeConfirmed": false,
+        "ownerSetupLinkVisible": false,
+        "operatorOwnerHandoffVisible": false,
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "0"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "0"
+          }
+        ],
+        "googlePreviewCount": 0,
+        "persistedEmptyStateVisible": true
+      }
+    },
+    {
+      "name": "Setup bound-empty MANAGER desktop reviews",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "bound-empty",
+        "setupTitle": "Établissement Google associé",
+        "importOutcome": "UNKNOWN",
+        "provenance": "Synthetic local connector and persisted-row state; no provider import was performed.",
+        "importOutcomeConfirmed": false,
+        "ownerSetupLinkVisible": false,
+        "operatorOwnerHandoffVisible": false,
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "0"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "0"
+          },
+          {
+            "label": "À traiter",
+            "value": "0"
+          }
+        ],
+        "persistedEmptyStateVisible": true,
+        "sourceSelectorAbsent": true,
+        "reviewDetailAbsent": true
+      }
+    },
+    {
+      "name": "Setup bound-empty MANAGER mobile today",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "bound-empty",
+        "setupTitle": "Établissement Google associé",
+        "importOutcome": "UNKNOWN",
+        "provenance": "Synthetic local connector and persisted-row state; no provider import was performed.",
+        "importOutcomeConfirmed": false,
+        "ownerSetupLinkVisible": false,
+        "operatorOwnerHandoffVisible": false,
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "0"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "0"
+          }
+        ],
+        "googlePreviewCount": 0,
+        "persistedEmptyStateVisible": true
+      }
+    },
+    {
+      "name": "Setup bound-empty MANAGER mobile reviews",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "bound-empty",
+        "setupTitle": "Établissement Google associé",
+        "importOutcome": "UNKNOWN",
+        "provenance": "Synthetic local connector and persisted-row state; no provider import was performed.",
+        "importOutcomeConfirmed": false,
+        "ownerSetupLinkVisible": false,
+        "operatorOwnerHandoffVisible": false,
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "0"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "0"
+          },
+          {
+            "label": "À traiter",
+            "value": "0"
+          }
+        ],
+        "persistedEmptyStateVisible": true,
+        "sourceSelectorAbsent": true,
+        "reviewDetailAbsent": true
+      }
+    },
+    {
+      "name": "Setup bound-empty STAFF desktop today",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "bound-empty",
+        "setupTitle": "Établissement Google associé",
+        "importOutcome": "UNKNOWN",
+        "provenance": "Synthetic local connector and persisted-row state; no provider import was performed.",
+        "importOutcomeConfirmed": false,
+        "ownerSetupLinkVisible": false,
+        "operatorOwnerHandoffVisible": false,
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "0"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "0"
+          }
+        ],
+        "googlePreviewCount": 0,
+        "persistedEmptyStateVisible": true
+      }
+    },
+    {
+      "name": "Setup bound-empty STAFF desktop reviews",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "bound-empty",
+        "setupTitle": "Établissement Google associé",
+        "importOutcome": "UNKNOWN",
+        "provenance": "Synthetic local connector and persisted-row state; no provider import was performed.",
+        "importOutcomeConfirmed": false,
+        "ownerSetupLinkVisible": false,
+        "operatorOwnerHandoffVisible": false,
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "0"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "0"
+          },
+          {
+            "label": "À traiter",
+            "value": "0"
+          }
+        ],
+        "persistedEmptyStateVisible": true,
+        "sourceSelectorAbsent": true,
+        "reviewDetailAbsent": true
+      }
+    },
+    {
+      "name": "Setup bound-empty STAFF mobile today",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "bound-empty",
+        "setupTitle": "Établissement Google associé",
+        "importOutcome": "UNKNOWN",
+        "provenance": "Synthetic local connector and persisted-row state; no provider import was performed.",
+        "importOutcomeConfirmed": false,
+        "ownerSetupLinkVisible": false,
+        "operatorOwnerHandoffVisible": false,
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "0"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "0"
+          }
+        ],
+        "googlePreviewCount": 0,
+        "persistedEmptyStateVisible": true
+      }
+    },
+    {
+      "name": "Setup bound-empty STAFF mobile reviews",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "bound-empty",
+        "setupTitle": "Établissement Google associé",
+        "importOutcome": "UNKNOWN",
+        "provenance": "Synthetic local connector and persisted-row state; no provider import was performed.",
+        "importOutcomeConfirmed": false,
+        "ownerSetupLinkVisible": false,
+        "operatorOwnerHandoffVisible": false,
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "0"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "0"
+          },
+          {
+            "label": "À traiter",
+            "value": "0"
+          }
+        ],
+        "persistedEmptyStateVisible": true,
+        "sourceSelectorAbsent": true,
+        "reviewDetailAbsent": true
+      }
+    },
+    {
+      "name": "Setup fixture missing-binding transition",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "missing-binding",
+        "verifiedOwnedDatabase": true,
+        "fixtureTransitionCallbackCompleted": true,
+        "providerOperationAttempted": false
+      }
+    },
+    {
+      "name": "Setup missing-binding OWNER desktop today",
+      "result": "FAIL",
+      "reason": "OWNER setup guidance did not reach actual Integrations."
+    },
+    {
+      "name": "Setup missing-binding OWNER desktop reviews",
+      "result": "FAIL",
+      "reason": "OWNER setup guidance did not reach actual Integrations."
+    },
+    {
+      "name": "Setup missing-binding OWNER desktop integrations",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "missing-binding",
+        "connectorBadge": "À finaliser",
+        "selectedResourceVisible": false,
+        "providerConfigurationUnavailable": true,
+        "supportRecoveryVisible": true,
+        "providerConnectActionAbsent": true,
+        "providerSelectionFormAbsent": true,
+        "importAndPublicationUnavailable": true,
+        "importOutcome": "UNKNOWN",
+        "providerOperationAttempted": false
+      }
+    },
+    {
+      "name": "Setup missing-binding OWNER mobile today",
+      "result": "FAIL",
+      "reason": "OWNER setup guidance did not reach actual Integrations."
+    },
+    {
+      "name": "Setup missing-binding OWNER mobile reviews",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "missing-binding",
+        "setupTitle": "Connexion Google à finaliser",
+        "importOutcome": "UNKNOWN",
+        "provenance": "Synthetic local connector and persisted-row state; no provider import was performed.",
+        "importOutcomeConfirmed": false,
+        "ownerSetupLinkVisible": true,
+        "operatorOwnerHandoffVisible": false,
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "0"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "0"
+          },
+          {
+            "label": "À traiter",
+            "value": "0"
+          }
+        ],
+        "persistedEmptyStateVisible": true,
+        "sourceSelectorAbsent": true,
+        "reviewDetailAbsent": true,
+        "ownerSettingsNavigationConfirmed": true
+      }
+    },
+    {
+      "name": "Setup missing-binding OWNER mobile integrations",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "missing-binding",
+        "connectorBadge": "À finaliser",
+        "selectedResourceVisible": false,
+        "providerConfigurationUnavailable": true,
+        "supportRecoveryVisible": true,
+        "providerConnectActionAbsent": true,
+        "providerSelectionFormAbsent": true,
+        "importAndPublicationUnavailable": true,
+        "importOutcome": "UNKNOWN",
+        "providerOperationAttempted": false
+      }
+    },
+    {
+      "name": "Setup missing-binding MANAGER desktop today",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "missing-binding",
+        "setupTitle": "Connexion Google à finaliser",
+        "importOutcome": "UNKNOWN",
+        "provenance": "Synthetic local connector and persisted-row state; no provider import was performed.",
+        "importOutcomeConfirmed": false,
+        "ownerSetupLinkVisible": false,
+        "operatorOwnerHandoffVisible": true,
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "0"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "0"
+          }
+        ],
+        "googlePreviewCount": 0,
+        "persistedEmptyStateVisible": true
+      }
+    },
+    {
+      "name": "Setup missing-binding MANAGER desktop reviews",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "missing-binding",
+        "setupTitle": "Connexion Google à finaliser",
+        "importOutcome": "UNKNOWN",
+        "provenance": "Synthetic local connector and persisted-row state; no provider import was performed.",
+        "importOutcomeConfirmed": false,
+        "ownerSetupLinkVisible": false,
+        "operatorOwnerHandoffVisible": true,
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "0"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "0"
+          },
+          {
+            "label": "À traiter",
+            "value": "0"
+          }
+        ],
+        "persistedEmptyStateVisible": true,
+        "sourceSelectorAbsent": true,
+        "reviewDetailAbsent": true
+      }
+    },
+    {
+      "name": "Setup missing-binding MANAGER mobile today",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "missing-binding",
+        "setupTitle": "Connexion Google à finaliser",
+        "importOutcome": "UNKNOWN",
+        "provenance": "Synthetic local connector and persisted-row state; no provider import was performed.",
+        "importOutcomeConfirmed": false,
+        "ownerSetupLinkVisible": false,
+        "operatorOwnerHandoffVisible": true,
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "0"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "0"
+          }
+        ],
+        "googlePreviewCount": 0,
+        "persistedEmptyStateVisible": true
+      }
+    },
+    {
+      "name": "Setup missing-binding MANAGER mobile reviews",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "missing-binding",
+        "setupTitle": "Connexion Google à finaliser",
+        "importOutcome": "UNKNOWN",
+        "provenance": "Synthetic local connector and persisted-row state; no provider import was performed.",
+        "importOutcomeConfirmed": false,
+        "ownerSetupLinkVisible": false,
+        "operatorOwnerHandoffVisible": true,
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "0"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "0"
+          },
+          {
+            "label": "À traiter",
+            "value": "0"
+          }
+        ],
+        "persistedEmptyStateVisible": true,
+        "sourceSelectorAbsent": true,
+        "reviewDetailAbsent": true
+      }
+    },
+    {
+      "name": "Setup missing-binding STAFF desktop today",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "missing-binding",
+        "setupTitle": "Connexion Google à finaliser",
+        "importOutcome": "UNKNOWN",
+        "provenance": "Synthetic local connector and persisted-row state; no provider import was performed.",
+        "importOutcomeConfirmed": false,
+        "ownerSetupLinkVisible": false,
+        "operatorOwnerHandoffVisible": true,
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "0"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "0"
+          }
+        ],
+        "googlePreviewCount": 0,
+        "persistedEmptyStateVisible": true
+      }
+    },
+    {
+      "name": "Setup missing-binding STAFF desktop reviews",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "missing-binding",
+        "setupTitle": "Connexion Google à finaliser",
+        "importOutcome": "UNKNOWN",
+        "provenance": "Synthetic local connector and persisted-row state; no provider import was performed.",
+        "importOutcomeConfirmed": false,
+        "ownerSetupLinkVisible": false,
+        "operatorOwnerHandoffVisible": true,
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "0"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "0"
+          },
+          {
+            "label": "À traiter",
+            "value": "0"
+          }
+        ],
+        "persistedEmptyStateVisible": true,
+        "sourceSelectorAbsent": true,
+        "reviewDetailAbsent": true
+      }
+    },
+    {
+      "name": "Setup missing-binding STAFF mobile today",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "missing-binding",
+        "setupTitle": "Connexion Google à finaliser",
+        "importOutcome": "UNKNOWN",
+        "provenance": "Synthetic local connector and persisted-row state; no provider import was performed.",
+        "importOutcomeConfirmed": false,
+        "ownerSetupLinkVisible": false,
+        "operatorOwnerHandoffVisible": true,
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "0"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "0"
+          }
+        ],
+        "googlePreviewCount": 0,
+        "persistedEmptyStateVisible": true
+      }
+    },
+    {
+      "name": "Setup missing-binding STAFF mobile reviews",
+      "result": "PASS",
+      "facts": {
+        "actualSetupState": "missing-binding",
+        "setupTitle": "Connexion Google à finaliser",
+        "importOutcome": "UNKNOWN",
+        "provenance": "Synthetic local connector and persisted-row state; no provider import was performed.",
+        "importOutcomeConfirmed": false,
+        "ownerSetupLinkVisible": false,
+        "operatorOwnerHandoffVisible": true,
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "0"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "0"
+          },
+          {
+            "label": "À traiter",
+            "value": "0"
+          }
+        ],
+        "persistedEmptyStateVisible": true,
+        "sourceSelectorAbsent": true,
+        "reviewDetailAbsent": true
+      }
+    },
+    {
+      "name": "Exact synthetic setup fixture restoration",
+      "result": "PASS",
+      "facts": {
+        "fixtureRestoreCallbackCompleted": true,
+        "restoredBeforeAfterEqual": true
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/01-owner-desktop-today.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual route",
+      "scenario": "owner-desktop-today",
+      "sha256": "1c2b48ec7e455e22417bd98b296062298c42eeb3888e3350534e0007b0c45829"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/02-owner-desktop-reviews.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual route",
+      "scenario": "owner-desktop-reviews",
+      "sha256": "56d493f17becd61369a0ef3593beeefb32311694ec81b03bbfe6ca8e4959b2aa"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/03-owner-desktop-profile.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual route",
+      "scenario": "owner-desktop-profile",
+      "sha256": "2bedea282673157098046176ea20e96a12d30c5475cca05a1f08ed527250a484"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/04-owner-desktop-integrations.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual route",
+      "scenario": "owner-desktop-integrations",
+      "sha256": "85bce50d7c7ff1ca12d73ee2d840f5a7661d46293317b5256bec43b4a682c2c9"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/05-owner-desktop-users.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual route",
+      "scenario": "owner-desktop-users",
+      "sha256": "bb08b28e6b68e896c6afd004393e8fe7ab18480c0b71171565edf5bffc2b04bf"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/06-owner-mobile-menu.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "mobile menu open",
+      "scenario": "owner-mobile-menu",
+      "sha256": "8665b8108825518d2790377f6c6b7c5ebdee8c4966b94ffeea02b3383121236a"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/07-owner-mobile-today.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual route",
+      "scenario": "owner-mobile-today",
+      "sha256": "98e873b7529f308d366d757696b10e76163cb1083803cb40717eedca72a00131"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/08-owner-mobile-reviews.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual route",
+      "scenario": "owner-mobile-reviews",
+      "sha256": "d255d34463d7e87941f51e25766e9c542ed5047b4194da45ecd8bc8a55eef6d2"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/09-owner-mobile-profile.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual route",
+      "scenario": "owner-mobile-profile",
+      "sha256": "2967d2d1148a8fcb75a002cd825ff6ab1e3acfc6fbb3f0122d95a59cff2353c8"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/10-owner-mobile-integrations.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual route",
+      "scenario": "owner-mobile-integrations",
+      "sha256": "6f9e8109b5fad4605b28fdc3030fb3cfdcf5d6576ea6ce2cf20819fd55d24de4"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/11-owner-mobile-users.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual route",
+      "scenario": "owner-mobile-users",
+      "sha256": "6551763b9ca350451109e47677354b811bed3af33ee3a6bcead994d1409d6e19"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/12-owner-selected-direct-unavailable.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual source or tenant unavailable recovery",
+      "scenario": "owner-selected-direct-unavailable",
+      "sha256": "c2ea6271ed4ee66c02871db28f917f3286ec5febf9229e6494dd19fa2e1a27c2"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/13-owner-selected-foreign-unavailable.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual source or tenant unavailable recovery",
+      "scenario": "owner-selected-foreign-unavailable",
+      "sha256": "c2ea6271ed4ee66c02871db28f917f3286ec5febf9229e6494dd19fa2e1a27c2"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/14-manager-desktop-profile.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "MANAGER",
+      "state": "actual route",
+      "scenario": "manager-desktop-profile",
+      "sha256": "de7511d209f10a9059975d7f6281de54d1d28b2876381e32b4b9d6fa340ed54c"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/15-manager-desktop-integrations.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "MANAGER",
+      "state": "permission recovery",
+      "scenario": "manager-desktop-integrations",
+      "sha256": "5ba77f3df58e9a0ed028cbc8e9e8537949c77f565c944294786fddc5910fe13c"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/16-manager-mobile-menu.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "MANAGER",
+      "state": "mobile menu open",
+      "scenario": "manager-mobile-menu",
+      "sha256": "5030d9f2185ca8610f0e3da82ff2b225eaa470ea11eefc7de5ffe9b5129940c2"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/17-manager-mobile-profile.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "MANAGER",
+      "state": "actual route",
+      "scenario": "manager-mobile-profile",
+      "sha256": "43f303f294d662219da6f71375b75e4acd272192c68acde8ef9d7ecb105662b1"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/18-manager-mobile-integrations.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "MANAGER",
+      "state": "permission recovery",
+      "scenario": "manager-mobile-integrations",
+      "sha256": "393829356aa2333aa8b1db97f1901051261681da32db7935a7bb6b310235ccba"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/19-staff-desktop-profile.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "STAFF",
+      "state": "actual route",
+      "scenario": "staff-desktop-profile",
+      "sha256": "95804940abfd34af1b35e5194719c5cfa7997e7b74d4a189286c83cea4ffa1d8"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/20-staff-desktop-integrations.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "STAFF",
+      "state": "permission recovery",
+      "scenario": "staff-desktop-integrations",
+      "sha256": "4f7cd3515fd7cf2fdec161a08adf353a80de2fd180daef6218045996e3f448c9"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/21-staff-mobile-menu.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "STAFF",
+      "state": "mobile menu open",
+      "scenario": "staff-mobile-menu",
+      "sha256": "e6b7a5f49f031ff646453c33f9e1f6605f20d9a39fc7e182b5a69602ef24ed44"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/22-staff-mobile-profile.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "STAFF",
+      "state": "actual route",
+      "scenario": "staff-mobile-profile",
+      "sha256": "751aa0e52b9712f68207eb573498b76da297752966e388534b1de78165e122d5"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/23-staff-mobile-integrations.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "STAFF",
+      "state": "permission recovery",
+      "scenario": "staff-mobile-integrations",
+      "sha256": "1a1cb655e2f982d1ec5eaa5bac733066a8b82509a6ee85205e75d594330debe4"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/24-owner-context-switch-recovered.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "real context switch restored allowed route and original scoped inbox",
+      "scenario": "owner-context-switch-recovered",
+      "sha256": "8871601479e502d01f96f048d194a1884c818744bc4b9b9e0528cbeba252a6a0"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/25-owner-today-1536.png",
+      "viewport": {
+        "width": 1536,
+        "height": 864
+      },
+      "role": "OWNER",
+      "state": "actual A Today breakpoint",
+      "scenario": "owner-today-1536",
+      "sha256": "ddb809cea5f11d8af79c60f3d2c45cfe944c59f110874ab2871d58e6dddd6ff0"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/26-owner-today-1024.png",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual A Today breakpoint",
+      "scenario": "owner-today-1024",
+      "sha256": "ad2195548bdf3cdb8c9d73724b34eedcef0bf2e9e42caa9d8b15f718e45c7b22"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/27-owner-today-768.png",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "role": "OWNER",
+      "state": "actual A Today breakpoint",
+      "scenario": "owner-today-768",
+      "sha256": "d3234a944b642c34283c2d8839e21bd864d4c1159046a1e1d1956a33da095928"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/28-owner-today-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual A Today breakpoint",
+      "scenario": "owner-today-390",
+      "sha256": "98e873b7529f308d366d757696b10e76163cb1083803cb40717eedca72a00131"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/29-owner-reviews-empty-filter.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "real filtered empty state",
+      "scenario": "owner-reviews-empty-filter",
+      "sha256": "ef3b42c95a03e1e7da9cac22805f31aab210afabdd87f6fc94d992b3f9136685"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/30-owner-profile-pending.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual form pending while one local POST is held before server admission",
+      "scenario": "owner-profile-pending",
+      "sha256": "2e130ed68a2b3126cb850cc35558b260984bcb5174a08a5de1c9d79fce4d9370"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/31-owner-profile-saved.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "real Server Action success",
+      "scenario": "owner-profile-saved",
+      "sha256": "ebe646e7ba99d96afbfbd9dcb610109c510a1f8bd875b3e08fbf0088196e355b"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/32-owner-draft-keyboard-focus.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "keyboard focus before Enter submits the real form",
+      "scenario": "owner-draft-keyboard-focus",
+      "sha256": "375fe081d12362c7f276f82b506f892de42908ec6db68e67815784a1a103cdd8"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/33-owner-draft-pending.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual form pending while one local POST is held before server admission",
+      "scenario": "owner-draft-pending",
+      "sha256": "1194ae91d984b1ad6b84ebab2da700f9242c378c895c682a623b36e3f61356bb"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/34-owner-draft-saved.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "real Server Action success",
+      "scenario": "owner-draft-saved",
+      "sha256": "ba127142c01996b33de209000dc2d37841374625a94dbaafb4e5cb5402a68158"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/35-owner-note-pending.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual form pending while one local POST is held before server admission",
+      "scenario": "owner-note-pending",
+      "sha256": "16932208df21deac67e7c2c41a5723bab05e2e83fc54608a3ba222eeb70363c5"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/36-owner-note-saved.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "real Server Action success",
+      "scenario": "owner-note-saved",
+      "sha256": "dad186cd4a50bda01b9e9a9fb3d0d7a447bf8d943f2dd304266bb3f7a3995d0d"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/37-manager-profile-pending.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "MANAGER",
+      "state": "actual form pending while one local POST is held before server admission",
+      "scenario": "manager-profile-pending",
+      "sha256": "3e0194131231b931c8c57bc0c0e01ddf0380d9201003b897967e65487cac9bb7"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/38-manager-profile-saved.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "MANAGER",
+      "state": "real Server Action success",
+      "scenario": "manager-profile-saved",
+      "sha256": "cef8b5921719de79144e3810af210f42455809692d95b788504437efac84309c"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/39-manager-draft-pending.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "MANAGER",
+      "state": "actual form pending while one local POST is held before server admission",
+      "scenario": "manager-draft-pending",
+      "sha256": "09903e40b618690bb01a0250c276cefb764f8190aa2b8371f782496db8ec3c3d"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/40-manager-draft-saved.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "MANAGER",
+      "state": "real Server Action success",
+      "scenario": "manager-draft-saved",
+      "sha256": "869f071acec69183aad969f5e90785f314f78b9b1339156a20d23f9e2965fcf6"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/41-manager-note-pending.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "MANAGER",
+      "state": "actual form pending while one local POST is held before server admission",
+      "scenario": "manager-note-pending",
+      "sha256": "80c2b5151166fd606edbe3623308024b89ef57066aa9beac811cfaebfd9646dd"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/42-manager-note-saved.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "MANAGER",
+      "state": "real Server Action success",
+      "scenario": "manager-note-saved",
+      "sha256": "6d9f0f8463ee8fed2d05c4bde9deb2aa47a09ced8d5a93b7327baa66f989ddf6"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/43-staff-draft-pending.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "STAFF",
+      "state": "actual form pending while one local POST is held before server admission",
+      "scenario": "staff-draft-pending",
+      "sha256": "86000ead098c3e15821378033524961e069915ee835a16559da444c2842d22b6"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/44-staff-draft-saved.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "STAFF",
+      "state": "real Server Action success",
+      "scenario": "staff-draft-saved",
+      "sha256": "afee6669c0fb0bbeb15b3a96d0585dce29b687a77fa0cc11283e383d58dfc866"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/45-staff-note-pending.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "STAFF",
+      "state": "actual form pending while one local POST is held before server admission",
+      "scenario": "staff-note-pending",
+      "sha256": "eddd41fe4aab16b97c3e8b734eebe2d90706c191a379a3f00b7377c62a42bbc7"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/46-staff-note-saved.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "STAFF",
+      "state": "real Server Action success",
+      "scenario": "staff-note-saved",
+      "sha256": "bd9401099449985a55307e117c957de24e027869ff2fb811344fe274572d923b"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/47-owner-draft-source-error.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual Server Action source denial",
+      "scenario": "owner-draft-source-error",
+      "sha256": "644b303d11ab8b48d64e166baf98e0e1e75de3c90ec69ba4816cd6c698ed9e47"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/48-owner-deferred-route-recovery.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual deferred route denial",
+      "scenario": "owner-deferred-route-recovery",
+      "sha256": "2c5777a2e3c2bc9aa502684ebc92362cfc6671d1ce3bfcf306625f3dfa63594c"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/49-internal-knowledge.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "internal Knowledge regression",
+      "scenario": "internal-knowledge",
+      "sha256": "6ea09d53445e2803aec7153e76c6250f6916e77de44cbb4c7ce85ce8eeaea57b"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/50-internal-today-booking.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "internal Booking projection regression",
+      "scenario": "internal-today-booking",
+      "sha256": "73c45da330d9110d966280318fbd6ccefeada36cf077237211392cbef89213dd"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/51-internal-reviews-mixed-source.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "internal source selector regression",
+      "scenario": "internal-reviews-mixed-source",
+      "sha256": "03edf47fa426a93c143f6ca6b07c13ccba97cdc85e142761f3aec694dd71abb1"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/52-setup-bound-empty-owner-desktop-today.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual A bound-empty today; no provider import",
+      "scenario": "setup-bound-empty-owner-desktop-today",
+      "sha256": "dc4c7a983e780e2bbb0952f1aa62a0436b0224a21858f9e3468f3e02f9f968fc"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/53-setup-bound-empty-owner-desktop-reviews.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual A bound-empty reviews; no provider import",
+      "scenario": "setup-bound-empty-owner-desktop-reviews",
+      "sha256": "de9b0a38ce539ab44a0e3181087619c90b1af8e6fc654db94daf9d98caa1eba6"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/54-setup-bound-empty-owner-desktop-integrations.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual A bound-empty Integrations; unavailable provider configuration",
+      "scenario": "setup-bound-empty-owner-desktop-integrations",
+      "sha256": "85bce50d7c7ff1ca12d73ee2d840f5a7661d46293317b5256bec43b4a682c2c9"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/55-setup-bound-empty-owner-mobile-today.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual A bound-empty today; no provider import",
+      "scenario": "setup-bound-empty-owner-mobile-today",
+      "sha256": "1ed48bde31b62209e01a124664ebe3971a9f6e5893c460424b569c6f51459392"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/56-setup-bound-empty-owner-mobile-reviews.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual A bound-empty reviews; no provider import",
+      "scenario": "setup-bound-empty-owner-mobile-reviews",
+      "sha256": "370cb4e982a5c1f625db9bfb538ab50d1576807bf3799e0e1408bcee7e74b909"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/57-setup-bound-empty-owner-mobile-integrations.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual A bound-empty Integrations; unavailable provider configuration",
+      "scenario": "setup-bound-empty-owner-mobile-integrations",
+      "sha256": "6f9e8109b5fad4605b28fdc3030fb3cfdcf5d6576ea6ce2cf20819fd55d24de4"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/58-setup-bound-empty-manager-desktop-today.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "MANAGER",
+      "state": "actual A bound-empty today; no provider import",
+      "scenario": "setup-bound-empty-manager-desktop-today",
+      "sha256": "8cf7ab4ad901e1870c738a1d765e0eab436e72e8fd9d9a7f69afd257d1c69493"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/59-setup-bound-empty-manager-desktop-reviews.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "MANAGER",
+      "state": "actual A bound-empty reviews; no provider import",
+      "scenario": "setup-bound-empty-manager-desktop-reviews",
+      "sha256": "2dfbd02353b25b5fc7bb262d71bbfea327a95408471ef6b45d7df268e322b662"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/60-setup-bound-empty-manager-mobile-today.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "MANAGER",
+      "state": "actual A bound-empty today; no provider import",
+      "scenario": "setup-bound-empty-manager-mobile-today",
+      "sha256": "2ac0738ad385f2a54889e747d876ce506e64cf23fa3a402717bace7f31321372"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/61-setup-bound-empty-manager-mobile-reviews.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "MANAGER",
+      "state": "actual A bound-empty reviews; no provider import",
+      "scenario": "setup-bound-empty-manager-mobile-reviews",
+      "sha256": "9be4db15b19927b22631f65ffdb151efbd9c7971e193f88d79623f0d0b4e01f1"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/62-setup-bound-empty-staff-desktop-today.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "STAFF",
+      "state": "actual A bound-empty today; no provider import",
+      "scenario": "setup-bound-empty-staff-desktop-today",
+      "sha256": "34739b7fc7d75577b732431eede7d90375b765745bdef2cf5da354b6c8c24267"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/63-setup-bound-empty-staff-desktop-reviews.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "STAFF",
+      "state": "actual A bound-empty reviews; no provider import",
+      "scenario": "setup-bound-empty-staff-desktop-reviews",
+      "sha256": "0dc0dc0ba6b53442be8f5fcae5861c194efd6431432417ccefc0a94d7af856ce"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/64-setup-bound-empty-staff-mobile-today.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "STAFF",
+      "state": "actual A bound-empty today; no provider import",
+      "scenario": "setup-bound-empty-staff-mobile-today",
+      "sha256": "3b9282b29e321e44d74928677d3e20b73ee39bfe7dd60f1e6fd29d24f5822671"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/65-setup-bound-empty-staff-mobile-reviews.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "STAFF",
+      "state": "actual A bound-empty reviews; no provider import",
+      "scenario": "setup-bound-empty-staff-mobile-reviews",
+      "sha256": "6193c636543c929880ef9571fa12fc8788bed54af0fa16a3c6e572560e2ffab4"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/66-setup-missing-binding-owner-desktop-today.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual A missing-binding today; no provider import",
+      "scenario": "setup-missing-binding-owner-desktop-today",
+      "sha256": "42a9582bbd3a4855923953e77c8ae83c415ee6e55de2b8d5f52ce3ae112d5cde"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/67-setup-missing-binding-owner-desktop-reviews.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual A missing-binding reviews; no provider import",
+      "scenario": "setup-missing-binding-owner-desktop-reviews",
+      "sha256": "327ffcab33954bf00652e5f2b4becd94997378d6bcfe009a2e1fadc54f840425"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/68-setup-missing-binding-owner-desktop-integrations.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual A missing-binding Integrations; unavailable provider configuration",
+      "scenario": "setup-missing-binding-owner-desktop-integrations",
+      "sha256": "445cf658e2933de1f375460c9b69f3da6069274b74ce406aede20e982951ccf9"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/69-setup-missing-binding-owner-mobile-today.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual A missing-binding today; no provider import",
+      "scenario": "setup-missing-binding-owner-mobile-today",
+      "sha256": "26b56246b6f484191d280e98b75fe0f47c9cda5dc1cc376db15b5c875a3f69b2"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/70-setup-missing-binding-owner-mobile-reviews.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual A missing-binding reviews; no provider import",
+      "scenario": "setup-missing-binding-owner-mobile-reviews",
+      "sha256": "089fef51912190d3624f0fe8dd0689e38202ebf976beaff940637f65d52f96a4"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/71-setup-missing-binding-owner-mobile-integrations.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual A missing-binding Integrations; unavailable provider configuration",
+      "scenario": "setup-missing-binding-owner-mobile-integrations",
+      "sha256": "cf64794e22f1cf463d840704a4f11114e43277df62e20304975b3f88c499ed0f"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/72-setup-missing-binding-manager-desktop-today.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "MANAGER",
+      "state": "actual A missing-binding today; no provider import",
+      "scenario": "setup-missing-binding-manager-desktop-today",
+      "sha256": "fc52ae3f386e270063becb3a99131fa17a06d7a757bb4bb74bbea00fdcbb31fe"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/73-setup-missing-binding-manager-desktop-reviews.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "MANAGER",
+      "state": "actual A missing-binding reviews; no provider import",
+      "scenario": "setup-missing-binding-manager-desktop-reviews",
+      "sha256": "3ceca635cc2b8d209745aab48624b11acbf28fa6a9277b48b050e0d3f3cc9191"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/74-setup-missing-binding-manager-mobile-today.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "MANAGER",
+      "state": "actual A missing-binding today; no provider import",
+      "scenario": "setup-missing-binding-manager-mobile-today",
+      "sha256": "dac6dba6477665bc897d9cd132f6507f282a8c17829d80b9a09b68ef283c9785"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/75-setup-missing-binding-manager-mobile-reviews.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "MANAGER",
+      "state": "actual A missing-binding reviews; no provider import",
+      "scenario": "setup-missing-binding-manager-mobile-reviews",
+      "sha256": "408c50fa44850bea30d920deb9bc6704c6d37c4319e0d476e84d4ec519e1832f"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/76-setup-missing-binding-staff-desktop-today.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "STAFF",
+      "state": "actual A missing-binding today; no provider import",
+      "scenario": "setup-missing-binding-staff-desktop-today",
+      "sha256": "a566cf4e25053908603634c385e2748c23b707fbae699865445775457db73f76"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/77-setup-missing-binding-staff-desktop-reviews.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "STAFF",
+      "state": "actual A missing-binding reviews; no provider import",
+      "scenario": "setup-missing-binding-staff-desktop-reviews",
+      "sha256": "64a62c2856aaf1469c6db7c2cfda057f65ee4c480240a3ac4e77d266879f9950"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/78-setup-missing-binding-staff-mobile-today.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "STAFF",
+      "state": "actual A missing-binding today; no provider import",
+      "scenario": "setup-missing-binding-staff-mobile-today",
+      "sha256": "825c057d037e39cea2acf47c1054a6e91240b063a93339d5eebee1ccdc06be41"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/79-setup-missing-binding-staff-mobile-reviews.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "STAFF",
+      "state": "actual A missing-binding reviews; no provider import",
+      "scenario": "setup-missing-binding-staff-mobile-reviews",
+      "sha256": "5ce042280ccb716e0a18666f2953197414a412a0699053e0fffbbb25375b07eb"
+    }
+  ],
+  "accessibility": [
+    {
+      "role": "OWNER",
+      "route": "today",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "rulesPassed": 22,
+      "violations": [],
+      "incompleteRuleIds": []
+    },
+    {
+      "role": "OWNER",
+      "route": "reviews",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "rulesPassed": 24,
+      "violations": [],
+      "incompleteRuleIds": [
+        "aria-prohibited-attr"
+      ]
+    },
+    {
+      "role": "OWNER",
+      "route": "profile",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "rulesPassed": 27,
+      "violations": [],
+      "incompleteRuleIds": [
+        "color-contrast"
+      ]
+    },
+    {
+      "role": "OWNER",
+      "route": "integrations",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "rulesPassed": 23,
+      "violations": [],
+      "incompleteRuleIds": []
+    },
+    {
+      "role": "OWNER",
+      "route": "users",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "rulesPassed": 26,
+      "violations": [],
+      "incompleteRuleIds": []
+    },
+    {
+      "role": "OWNER",
+      "route": "today",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "rulesPassed": 22,
+      "violations": [],
+      "incompleteRuleIds": []
+    },
+    {
+      "role": "OWNER",
+      "route": "reviews",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "rulesPassed": 23,
+      "violations": [],
+      "incompleteRuleIds": [
+        "aria-prohibited-attr"
+      ]
+    },
+    {
+      "role": "OWNER",
+      "route": "profile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "rulesPassed": 27,
+      "violations": [],
+      "incompleteRuleIds": [
+        "color-contrast"
+      ]
+    },
+    {
+      "role": "OWNER",
+      "route": "integrations",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "rulesPassed": 23,
+      "violations": [],
+      "incompleteRuleIds": []
+    },
+    {
+      "role": "OWNER",
+      "route": "users",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "rulesPassed": 26,
+      "violations": [],
+      "incompleteRuleIds": []
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-bound-empty-today",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "rulesPassed": 22,
+      "violations": [],
+      "incompleteRuleIds": []
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-bound-empty-reviews",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "rulesPassed": 24,
+      "violations": [],
+      "incompleteRuleIds": []
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-bound-empty-integrations",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "rulesPassed": 23,
+      "violations": [],
+      "incompleteRuleIds": []
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-bound-empty-today",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "rulesPassed": 22,
+      "violations": [],
+      "incompleteRuleIds": []
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-bound-empty-reviews",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "rulesPassed": 23,
+      "violations": [],
+      "incompleteRuleIds": []
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-bound-empty-integrations",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "rulesPassed": 23,
+      "violations": [],
+      "incompleteRuleIds": []
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-missing-binding-today",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "rulesPassed": 23,
+      "violations": [],
+      "incompleteRuleIds": []
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-missing-binding-reviews",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "rulesPassed": 25,
+      "violations": [],
+      "incompleteRuleIds": []
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-missing-binding-integrations",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "rulesPassed": 22,
+      "violations": [],
+      "incompleteRuleIds": []
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-missing-binding-today",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "rulesPassed": 23,
+      "violations": [],
+      "incompleteRuleIds": []
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-missing-binding-reviews",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "rulesPassed": 25,
+      "violations": [],
+      "incompleteRuleIds": []
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-missing-binding-integrations",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "rulesPassed": 23,
+      "violations": [],
+      "incompleteRuleIds": []
+    }
+  ],
+  "geometry": [
+    {
+      "role": "OWNER",
+      "route": "today",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "reviews",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": 555,
+      "cardWidth": 557,
+      "nestedToolbarControls": [
+        {
+          "name": "Statut",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Note",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Tri",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Rechercher un avis",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Chercher",
+          "width": 77,
+          "insideCard": true
+        }
+      ]
+    },
+    {
+      "role": "OWNER",
+      "route": "profile",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "integrations",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "users",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "today",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "reviews",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": 348,
+      "cardWidth": 350,
+      "nestedToolbarControls": [
+        {
+          "name": "Statut",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Note",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Tri",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Rechercher un avis",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Chercher",
+          "width": 77,
+          "insideCard": true
+        }
+      ]
+    },
+    {
+      "role": "OWNER",
+      "route": "profile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "integrations",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "users",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "today",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "reviews",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": 555,
+      "cardWidth": 557,
+      "nestedToolbarControls": [
+        {
+          "name": "Statut",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Note",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Tri",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Rechercher un avis",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Chercher",
+          "width": 77,
+          "insideCard": true
+        }
+      ]
+    },
+    {
+      "role": "MANAGER",
+      "route": "profile",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "integrations",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "users",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "today",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "reviews",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": 348,
+      "cardWidth": 350,
+      "nestedToolbarControls": [
+        {
+          "name": "Statut",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Note",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Tri",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Rechercher un avis",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Chercher",
+          "width": 77,
+          "insideCard": true
+        }
+      ]
+    },
+    {
+      "role": "MANAGER",
+      "route": "profile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "integrations",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "users",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "STAFF",
+      "route": "today",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "STAFF",
+      "route": "reviews",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": 555,
+      "cardWidth": 557,
+      "nestedToolbarControls": [
+        {
+          "name": "Statut",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Note",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Tri",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Rechercher un avis",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Chercher",
+          "width": 77,
+          "insideCard": true
+        }
+      ]
+    },
+    {
+      "role": "STAFF",
+      "route": "profile",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "STAFF",
+      "route": "integrations",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "STAFF",
+      "route": "users",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "STAFF",
+      "route": "today",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "STAFF",
+      "route": "reviews",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": 348,
+      "cardWidth": 350,
+      "nestedToolbarControls": [
+        {
+          "name": "Statut",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Note",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Tri",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Rechercher un avis",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Chercher",
+          "width": 77,
+          "insideCard": true
+        }
+      ]
+    },
+    {
+      "role": "STAFF",
+      "route": "profile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "STAFF",
+      "route": "integrations",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "STAFF",
+      "route": "users",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "today",
+      "viewport": {
+        "width": 1536,
+        "height": 864
+      },
+      "viewportWidth": 1536,
+      "documentWidth": 1536,
+      "mainClientWidth": 1280,
+      "mainScrollWidth": 1280,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "today",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "viewportWidth": 1024,
+      "documentWidth": 1024,
+      "mainClientWidth": 768,
+      "mainScrollWidth": 768,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "today",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "viewportWidth": 768,
+      "documentWidth": 768,
+      "mainClientWidth": 512,
+      "mainScrollWidth": 512,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "today",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-bound-empty-today",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-bound-empty-reviews",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": 555,
+      "cardWidth": 557,
+      "nestedToolbarControls": [
+        {
+          "name": "Statut",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Note",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Tri",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Rechercher un avis",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Chercher",
+          "width": 77,
+          "insideCard": true
+        }
+      ]
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-bound-empty-integrations",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-bound-empty-today",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-bound-empty-reviews",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": 348,
+      "cardWidth": 350,
+      "nestedToolbarControls": [
+        {
+          "name": "Statut",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Note",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Tri",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Rechercher un avis",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Chercher",
+          "width": 77,
+          "insideCard": true
+        }
+      ]
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-bound-empty-integrations",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "setup-bound-empty-today",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "setup-bound-empty-reviews",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": 555,
+      "cardWidth": 557,
+      "nestedToolbarControls": [
+        {
+          "name": "Statut",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Note",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Tri",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Rechercher un avis",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Chercher",
+          "width": 77,
+          "insideCard": true
+        }
+      ]
+    },
+    {
+      "role": "MANAGER",
+      "route": "setup-bound-empty-today",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "setup-bound-empty-reviews",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": 348,
+      "cardWidth": 350,
+      "nestedToolbarControls": [
+        {
+          "name": "Statut",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Note",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Tri",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Rechercher un avis",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Chercher",
+          "width": 77,
+          "insideCard": true
+        }
+      ]
+    },
+    {
+      "role": "STAFF",
+      "route": "setup-bound-empty-today",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "STAFF",
+      "route": "setup-bound-empty-reviews",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": 555,
+      "cardWidth": 557,
+      "nestedToolbarControls": [
+        {
+          "name": "Statut",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Note",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Tri",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Rechercher un avis",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Chercher",
+          "width": 77,
+          "insideCard": true
+        }
+      ]
+    },
+    {
+      "role": "STAFF",
+      "route": "setup-bound-empty-today",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "STAFF",
+      "route": "setup-bound-empty-reviews",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": 348,
+      "cardWidth": 350,
+      "nestedToolbarControls": [
+        {
+          "name": "Statut",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Note",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Tri",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Rechercher un avis",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Chercher",
+          "width": 77,
+          "insideCard": true
+        }
+      ]
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-missing-binding-today",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-missing-binding-reviews",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": 555,
+      "cardWidth": 557,
+      "nestedToolbarControls": [
+        {
+          "name": "Statut",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Note",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Tri",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Rechercher un avis",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Chercher",
+          "width": 77,
+          "insideCard": true
+        }
+      ]
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-missing-binding-integrations",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-missing-binding-today",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-missing-binding-reviews",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": 348,
+      "cardWidth": 350,
+      "nestedToolbarControls": [
+        {
+          "name": "Statut",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Note",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Tri",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Rechercher un avis",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Chercher",
+          "width": 77,
+          "insideCard": true
+        }
+      ]
+    },
+    {
+      "role": "OWNER",
+      "route": "setup-missing-binding-integrations",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "setup-missing-binding-today",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "setup-missing-binding-reviews",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": 555,
+      "cardWidth": 557,
+      "nestedToolbarControls": [
+        {
+          "name": "Statut",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Note",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Tri",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Rechercher un avis",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Chercher",
+          "width": 77,
+          "insideCard": true
+        }
+      ]
+    },
+    {
+      "role": "MANAGER",
+      "route": "setup-missing-binding-today",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "setup-missing-binding-reviews",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": 348,
+      "cardWidth": 350,
+      "nestedToolbarControls": [
+        {
+          "name": "Statut",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Note",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Tri",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Rechercher un avis",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Chercher",
+          "width": 77,
+          "insideCard": true
+        }
+      ]
+    },
+    {
+      "role": "STAFF",
+      "route": "setup-missing-binding-today",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "STAFF",
+      "route": "setup-missing-binding-reviews",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": 555,
+      "cardWidth": 557,
+      "nestedToolbarControls": [
+        {
+          "name": "Statut",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Note",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Tri",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Rechercher un avis",
+          "width": 257,
+          "insideCard": true
+        },
+        {
+          "name": "Chercher",
+          "width": 77,
+          "insideCard": true
+        }
+      ]
+    },
+    {
+      "role": "STAFF",
+      "route": "setup-missing-binding-today",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": null,
+      "cardWidth": null,
+      "nestedToolbarControls": []
+    },
+    {
+      "role": "STAFF",
+      "route": "setup-missing-binding-reviews",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": [],
+      "toolbarWidth": 348,
+      "cardWidth": 350,
+      "nestedToolbarControls": [
+        {
+          "name": "Statut",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Note",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Tri",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Rechercher un avis",
+          "width": 316,
+          "insideCard": true
+        },
+        {
+          "name": "Chercher",
+          "width": 77,
+          "insideCard": true
+        }
+      ]
+    }
+  ],
+  "diagnostics": [
+    {
+      "profile": "release-a",
+      "role": "OWNER",
+      "consoleErrors": [],
+      "consoleWarnings": [],
+      "pageErrors": 0,
+      "hydrationErrors": 0,
+      "externalRequestsBlocked": 0
+    },
+    {
+      "profile": "release-a",
+      "role": "MANAGER",
+      "consoleErrors": [],
+      "consoleWarnings": [],
+      "pageErrors": 0,
+      "hydrationErrors": 0,
+      "externalRequestsBlocked": 0
+    },
+    {
+      "profile": "release-a",
+      "role": "STAFF",
+      "consoleErrors": [],
+      "consoleWarnings": [],
+      "pageErrors": 0,
+      "hydrationErrors": 0,
+      "externalRequestsBlocked": 0
+    },
+    {
+      "profile": "release-a",
+      "role": "OWNER",
+      "consoleErrors": [],
+      "consoleWarnings": [],
+      "pageErrors": 0,
+      "hydrationErrors": 0,
+      "externalRequestsBlocked": 0
+    },
+    {
+      "profile": "internal",
+      "role": "OWNER",
+      "consoleErrors": [
+        {
+          "category": "network",
+          "route": "/etablissement/informations-generales"
+        },
+        {
+          "category": "network",
+          "route": "/reservations/parametres"
+        }
+      ],
+      "consoleWarnings": [],
+      "pageErrors": 0,
+      "hydrationErrors": 0,
+      "externalRequestsBlocked": 0,
+      "expectedDeferredCaptureAborts": 2
+    }
+  ],
+  "limitations": [
+    "Synthetic local fixtures; no live provider connection, import or publication.",
+    "Captured internal action POSTs are aborted before admission; A replays use real valid A sessions.",
+    "A single local action POST is held in browser routing for deterministic pending observation, then forwarded unchanged.",
+    "Automated facts do not establish visual review, formal QA PASS, Gate 3 approval or readiness.",
+    "The historical Users & Access Browser QA FAIL remains preserved; these are current-candidate observations only.",
+    "A filtered empty inbox and root-verified bound-empty/missing-binding fixtures are exercised; exact fixture restoration is separately required."
+  ],
+  "finishedAt": "2026-10-01T13:17:49.158Z",
+  "scenarioFailures": 3,
+  "scenariosNotRun": 0,
+  "diagnosticsRequireReview": true,
+  "diagnosticsExpectation": "Internal captured deferred action POSTs were intentionally aborted; classify those expected network diagnostics separately from runtime errors.",
+  "resultPath": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/browser-results-generation3.json"
+}

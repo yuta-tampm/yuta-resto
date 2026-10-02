@@ -1,6 +1,43 @@
 import 'server-only';
 
 import { TenantError, type TenantContext, type TenantRole } from '@yuta/tenant';
+import { requireEstablishment } from '@yuta/tenant';
+
+export type FormalitesPermission = 'formalites.read' | 'formalites.manage';
+
+const formalitesPermissionRoles: Record<
+  FormalitesPermission,
+  readonly TenantRole[]
+> = {
+  'formalites.read': ['OWNER'],
+  'formalites.manage': ['OWNER'],
+};
+
+export function hasFormalitesPermission(
+  context: TenantContext,
+  permission: FormalitesPermission,
+): boolean {
+  return (
+    Boolean(context.establishmentId) &&
+    context.actor.type === 'user' &&
+    Object.hasOwn(formalitesPermissionRoles, permission) &&
+    formalitesPermissionRoles[permission].includes(context.actor.role)
+  );
+}
+
+export function requireFormalitesPermission(
+  context: TenantContext,
+  permission: FormalitesPermission,
+): void {
+  requireEstablishment(context);
+  if (!hasFormalitesPermission(context, permission)) {
+    throw new TenantError(
+      'Permission denied.',
+      'CROSS_TENANT_ACCESS_DENIED',
+      403,
+    );
+  }
+}
 
 export type ReputationPermission =
   | 'reputation.read'
@@ -12,6 +49,7 @@ export type ReputationPermission =
   | 'reputation.analytics.read'
   | 'reputation.note.create'
   | 'reputation.settings.manage'
+  | 'reputation.google.retrieve'
   | 'reputation.connector.manage';
 
 export type BookingPermission =
@@ -19,7 +57,29 @@ export type BookingPermission =
   | 'booking.operate'
   | 'booking.settings.manage';
 
-const permissionRoles: Record<ReputationPermission, readonly TenantRole[]> = {
+export type EstablishmentPermission =
+  | 'establishment.profile.read'
+  | 'establishment.profile.manage';
+
+export type RestaurantKnowledgePermission =
+  | 'restaurant-knowledge.read'
+  | 'restaurant-knowledge.manage';
+
+export type PersonnelPermission =
+  | 'personnel.employee.read'
+  | 'personnel.employee.manage'
+  | 'personnel.document.read'
+  | 'personnel.document.manage'
+  | 'personnel.document.extract'
+  | 'personnel.register.read'
+  | 'personnel.register.export';
+
+export type UserManagementPermission = 'users.access.manage';
+
+const reputationPermissionRoles: Record<
+  ReputationPermission,
+  readonly TenantRole[]
+> = {
   'reputation.read': ['OWNER', 'MANAGER', 'STAFF'],
   'reputation.feedback.manage': ['OWNER', 'MANAGER'],
   'reputation.reply.create': ['OWNER', 'MANAGER', 'STAFF'],
@@ -29,6 +89,7 @@ const permissionRoles: Record<ReputationPermission, readonly TenantRole[]> = {
   'reputation.analytics.read': ['OWNER', 'MANAGER'],
   'reputation.note.create': ['OWNER', 'MANAGER', 'STAFF'],
   'reputation.settings.manage': ['OWNER'],
+  'reputation.google.retrieve': ['OWNER', 'MANAGER'],
   'reputation.connector.manage': ['OWNER'],
 };
 
@@ -39,34 +100,145 @@ const bookingPermissionRoles: Record<BookingPermission, readonly TenantRole[]> =
     'booking.settings.manage': ['OWNER', 'MANAGER'],
   };
 
+const establishmentPermissionRoles: Record<
+  EstablishmentPermission,
+  readonly TenantRole[]
+> = {
+  'establishment.profile.read': ['OWNER', 'MANAGER', 'STAFF'],
+  'establishment.profile.manage': ['OWNER', 'MANAGER'],
+};
+
+const restaurantKnowledgePermissionRoles: Record<
+  RestaurantKnowledgePermission,
+  readonly TenantRole[]
+> = {
+  'restaurant-knowledge.read': ['OWNER', 'MANAGER'],
+  'restaurant-knowledge.manage': ['OWNER', 'MANAGER'],
+};
+
+const personnelPermissionRoles: Record<
+  PersonnelPermission,
+  readonly TenantRole[]
+> = {
+  'personnel.employee.read': ['OWNER'],
+  'personnel.employee.manage': ['OWNER'],
+  'personnel.document.read': ['OWNER'],
+  'personnel.document.manage': ['OWNER'],
+  'personnel.document.extract': ['OWNER'],
+  'personnel.register.read': ['OWNER'],
+  'personnel.register.export': ['OWNER'],
+};
+
+const userManagementPermissionRoles: Record<
+  UserManagementPermission,
+  readonly TenantRole[]
+> = {
+  'users.access.manage': ['OWNER', 'MANAGER'],
+};
+
+export function hasReputationPermission(
+  context: TenantContext,
+  permission: ReputationPermission,
+): boolean {
+  return hasRolePermission(reputationPermissionRoles, context, permission);
+}
+
 export function requireReputationPermission(
   context: TenantContext,
   permission: ReputationPermission,
 ): void {
-  if (
-    context.actor.type !== 'user' ||
-    !permissionRoles[permission].includes(context.actor.role)
-  ) {
-    throw new TenantError(
-      'Permission denied.',
-      'CROSS_TENANT_ACCESS_DENIED',
-      403,
-    );
-  }
+  if (!hasReputationPermission(context, permission)) denyPermission();
+}
+
+export function hasBookingPermission(
+  context: TenantContext,
+  permission: BookingPermission,
+): boolean {
+  return hasRolePermission(bookingPermissionRoles, context, permission);
 }
 
 export function requireBookingPermission(
   context: TenantContext,
   permission: BookingPermission,
 ): void {
-  if (
-    context.actor.type !== 'user' ||
-    !bookingPermissionRoles[permission].includes(context.actor.role)
-  ) {
-    throw new TenantError(
-      'Permission denied.',
-      'CROSS_TENANT_ACCESS_DENIED',
-      403,
-    );
-  }
+  if (!hasBookingPermission(context, permission)) denyPermission();
+}
+
+export function hasEstablishmentPermission(
+  context: TenantContext,
+  permission: EstablishmentPermission,
+): boolean {
+  return hasRolePermission(establishmentPermissionRoles, context, permission);
+}
+
+export function requireEstablishmentPermission(
+  context: TenantContext,
+  permission: EstablishmentPermission,
+): void {
+  if (!hasEstablishmentPermission(context, permission)) denyPermission();
+}
+
+export function hasRestaurantKnowledgePermission(
+  context: TenantContext,
+  permission: RestaurantKnowledgePermission,
+): boolean {
+  return hasRolePermission(
+    restaurantKnowledgePermissionRoles,
+    context,
+    permission,
+  );
+}
+
+export function requireRestaurantKnowledgePermission(
+  context: TenantContext,
+  permission: RestaurantKnowledgePermission,
+): void {
+  if (!hasRestaurantKnowledgePermission(context, permission)) denyPermission();
+}
+
+export function hasPersonnelPermission(
+  context: TenantContext,
+  permission: PersonnelPermission,
+): boolean {
+  return hasRolePermission(personnelPermissionRoles, context, permission);
+}
+
+export function requirePersonnelPermission(
+  context: TenantContext,
+  permission: PersonnelPermission,
+): void {
+  if (!hasPersonnelPermission(context, permission)) denyPermission();
+}
+
+export function hasUserManagementPermission(
+  context: TenantContext,
+  permission: UserManagementPermission,
+): boolean {
+  return hasRolePermission(userManagementPermissionRoles, context, permission);
+}
+
+export function requireUserManagementPermission(
+  context: TenantContext,
+  permission: UserManagementPermission,
+): void {
+  if (!hasUserManagementPermission(context, permission)) denyPermission();
+}
+
+function hasRolePermission<Permission extends string>(
+  roles: Record<Permission, readonly TenantRole[]>,
+  context: TenantContext,
+  permission: Permission,
+): boolean {
+  return (
+    context.actor.type === 'user' &&
+    roles[permission].includes(context.actor.role)
+  );
+}
+
+function denyPermission(): never {
+  throw new TenantError(
+    'Permission denied.',
+    'CROSS_TENANT_ACCESS_DENIED',
+    403,
+  );
 }

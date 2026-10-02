@@ -342,6 +342,7 @@ function toRule(rule: typeof comboRules.$inferSelect) {
     priority: rule.priority,
     maxApplications: rule.maxApplications,
     isActive: rule.isActive,
+    isSuggestionEnabled: rule.isSuggestionEnabled,
   };
 }
 

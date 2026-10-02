@@ -7,7 +7,18 @@ import {
 
 describe('local order instruction snapshots', () => {
   it('persists stable labels for known quick instructions', () => {
-    expect(buildInstructionSnapshots(['SANS_SAUCE'])).toEqual([
+    expect(
+      buildInstructionSnapshots(
+        [
+          {
+            code: 'SANS_SAUCE',
+            label: 'Sans sauce',
+            conflictsWith: ['SAUCE_A_PART'],
+          },
+        ],
+        ['SANS_SAUCE'],
+      ),
+    ).toEqual([
       {
         instructionId: 'qi_sans_sauce',
         code: 'SANS_SAUCE',
@@ -18,21 +29,40 @@ describe('local order instruction snapshots', () => {
 
   it('rejects conflicting quick instructions', () => {
     expect(() =>
-      buildInstructionSnapshots(['SANS_SAUCE', 'SAUCE_A_PART']),
+      buildInstructionSnapshots(
+        [
+          {
+            code: 'SANS_SAUCE',
+            label: 'Sans sauce',
+            conflictsWith: ['SAUCE_A_PART'],
+          },
+          {
+            code: 'SAUCE_A_PART',
+            label: 'Sauce à part',
+            conflictsWith: ['SANS_SAUCE'],
+          },
+        ],
+        ['SANS_SAUCE', 'SAUCE_A_PART'],
+      ),
     ).toThrowError(HttpError);
   });
 
-  it('requires exactly two Mochi flavours per item quantity', () => {
+  it('uses catalog variant policy without matching an item name', () => {
+    const options = [
+      { code: 'MANGUE', label: 'Mangue' },
+      { code: 'MATCHA', label: 'Matcha' },
+    ];
     expect(
-      buildVariantSnapshots('Mochi glace (2 pcs)', 2, [
-        { code: 'MANGUE', quantity: 2 },
-        { code: 'MATCHA', quantity: 2 },
+      buildVariantSnapshots(options, 2, 1, [
+        { code: 'MANGUE', quantity: 1 },
+        { code: 'MATCHA', quantity: 1 },
       ]),
     ).toHaveLength(2);
     expect(() =>
-      buildVariantSnapshots('Mochi glace (2 pcs)', 2, [
-        { code: 'MANGUE', quantity: 3 },
-      ]),
+      buildVariantSnapshots(options, 2, 1, [{ code: 'MANGUE', quantity: 3 }]),
     ).toThrowError(HttpError);
+    expect(() => buildVariantSnapshots(options, 2, 1, [])).toThrowError(
+      HttpError,
+    );
   });
 });

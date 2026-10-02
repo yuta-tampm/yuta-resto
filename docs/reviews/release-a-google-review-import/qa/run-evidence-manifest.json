@@ -1,0 +1,93 @@
+{
+  "runs": [
+    {
+      "key": "core",
+      "path": "docs/reviews/release-a-google-review-import/qa/core-results.json",
+      "sha256": "85ae96cd30c56a532f09caa4e92051f7b79c6ff8fcada32bbb6e05de90709b85",
+      "scriptedStatus": "INCOMPLETE",
+      "pass": 51,
+      "notObserved": 1
+    },
+    {
+      "key": "stale",
+      "path": "docs/reviews/release-a-google-review-import/qa/stale-results.json",
+      "sha256": "f557277fd7e3b6bb4e4fe8808e69c6167711c75c27f854fc33315dd114303025",
+      "scriptedStatus": "PASS",
+      "pass": 4,
+      "notObserved": 0
+    },
+    {
+      "key": "targets",
+      "path": "docs/reviews/release-a-google-review-import/qa/targets-results.json",
+      "sha256": "7a81091097617454f279bcbbb1ef625aa80a7a3995b94a4b0e4e20c82701d471",
+      "scriptedStatus": "PASS",
+      "pass": 15,
+      "notObserved": 0
+    },
+    {
+      "key": "unbound",
+      "path": "docs/reviews/release-a-google-review-import/qa/unbound-results.json",
+      "sha256": "20e32039e696690e15c63ba1f3eabcca21f3cabd2c9ca45cb456f56ecdd22c7e",
+      "scriptedStatus": "PASS",
+      "pass": 4,
+      "notObserved": 0
+    },
+    {
+      "key": "first",
+      "path": "docs/reviews/release-a-google-review-import/qa/first-results.json",
+      "sha256": "ac5ee9007f10691d02290553e99fc2eba455189a00976982dda62b7120a70410",
+      "scriptedStatus": "PASS",
+      "pass": 10,
+      "notObserved": 0
+    },
+    {
+      "key": "maintenance",
+      "path": "docs/reviews/release-a-google-review-import/qa/maintenance-results.json",
+      "sha256": "60770264aa781f4575ae1aaa0df9050eb22cea2163af3b9d2dbe2e3b401e1973",
+      "scriptedStatus": "PASS",
+      "pass": 8,
+      "notObserved": 0
+    },
+    {
+      "key": "not-found",
+      "path": "docs/reviews/release-a-google-review-import/qa/not-found-results.json",
+      "sha256": "3ce3a8dba08a7c9200a26cecd6a780ec8c1079151f0b66dbb2fefebe26dcf95f",
+      "scriptedStatus": "PASS",
+      "pass": 6,
+      "notObserved": 0
+    },
+    {
+      "key": "recovery",
+      "path": "docs/reviews/release-a-google-review-import/qa/recovery-results.json",
+      "sha256": "193bb381a1945383017d1dfca0af612d4ae9d3fdad7fd1aaa44ce45630c82b49",
+      "scriptedStatus": "PASS",
+      "pass": 6,
+      "notObserved": 0
+    },
+    {
+      "key": "responsive",
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-results.json",
+      "sha256": "6a04688e411b37b9c2cbb174f9e540c9f426fc2eabb5502e91717d6d538488a4",
+      "scriptedStatus": "PASS",
+      "pass": 148,
+      "notObserved": 0
+    }
+  ],
+  "historicalRuns": [
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-before-oauth-fix-results.json",
+      "sha256": "e13c5843a472f33ec8ea4642c8d0df94255df36040a29d2a5e1e94229ba189e0",
+      "scriptedStatus": "FAIL",
+      "pass": 108,
+      "fail": 1,
+      "consoleErrors": 6,
+      "disposition": "PRESERVED_EXCLUDED_FROM_CURRENT_252_PASS"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/oauth-prefetch-before-fix-diagnostic.json",
+      "sha256": "89b068f8a4b853ceb61a1cb0594c100ffad89725548a6823f09cab58dba3efef",
+      "diagnosticCaptureStatus": "CAPTURED_ATTRIBUTION_REQUIRED",
+      "disposition": "ACTUAL_NO_CLICK_CORS_OAUTH_ATTRIBUTION_ONLY_NOT_QA_PASS"
+    }
+  ]
+}

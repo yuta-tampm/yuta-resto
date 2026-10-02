@@ -672,33 +672,32 @@ export function createAuthRepository(repositoryDb: CloudDatabaseClient) {
     token: string;
     password: string;
   }): Promise<void> {
-    const [resetToken] = await repositoryDb
-      .select()
-      .from(passwordResetTokens)
-      .where(
-        and(
-          eq(passwordResetTokens.tokenHash, hashSessionToken(input.token)),
-          isNull(passwordResetTokens.consumedAt),
-          gt(passwordResetTokens.expiresAt, new Date()),
-        ),
-      )
-      .limit(1);
-    if (!resetToken) {
-      throw new AuthError('Invalid reset token.', 'RESET_TOKEN_INVALID');
-    }
+    const tokenHash = hashSessionToken(input.token);
+    const passwordHash = await hashPassword(input.password);
 
     await repositoryDb.transaction(async (transaction) => {
+      const [resetToken] = await transaction
+        .update(passwordResetTokens)
+        .set({ consumedAt: new Date() })
+        .where(
+          and(
+            eq(passwordResetTokens.tokenHash, tokenHash),
+            isNull(passwordResetTokens.consumedAt),
+            gt(passwordResetTokens.expiresAt, new Date()),
+          ),
+        )
+        .returning({ userId: passwordResetTokens.userId });
+      if (!resetToken) {
+        throw new AuthError('Invalid reset token.', 'RESET_TOKEN_INVALID');
+      }
+
       await transaction
         .update(users)
         .set({
-          passwordHash: await hashPassword(input.password),
+          passwordHash,
           authVersion: sql`${users.authVersion} + 1`,
         })
         .where(eq(users.id, resetToken.userId));
-      await transaction
-        .update(passwordResetTokens)
-        .set({ consumedAt: new Date() })
-        .where(eq(passwordResetTokens.id, resetToken.id));
       await transaction
         .update(authSessions)
         .set({ revokedAt: new Date() })

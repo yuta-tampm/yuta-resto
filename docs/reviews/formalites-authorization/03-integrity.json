@@ -1,0 +1,99 @@
+{
+  "change": "formalites-authorization",
+  "schema": "yuta-spec-driven",
+  "created": "2026-09-03T23:07:48.7849242+02:00",
+  "head": "07d9d6d88e07f6a819c7894ef2e35f79d1eb32fa",
+  "aggregateSource": "docs/reviews/formalites-authorization/03-implementation.diff",
+  "files": [
+    {
+      "path": "apps/backoffice/src/server/auth/formalites.ts",
+      "sha256": "60b1c5369ef3b28af7377c6e8920707e8643f13269a82d192125c009b9333626",
+      "bytes": 630
+    },
+    {
+      "path": "apps/backoffice/src/server/auth/permissions.ts",
+      "sha256": "e3a21cf5b8456a859762d8603500669ead764e3bd43a8ba06a2ad17620014353",
+      "bytes": 6208
+    },
+    {
+      "path": "apps/backoffice/test/formalites-authorization-context.test.ts",
+      "sha256": "af3a2bd48565cec5afb559602626b16c563f21ca3ec660b7943e4e49327f4537",
+      "bytes": 11905
+    },
+    {
+      "path": "apps/backoffice/test/formalites-permissions.test.ts",
+      "sha256": "9e9888461c4154df90802f3d9021956dba3731cd34a9d27aa110d08ba9bc42e6",
+      "bytes": 4258
+    },
+    {
+      "path": "docs/reviews/formalites-authorization/01-analysis-review.md",
+      "sha256": "b6fc2871222a750ebaa2ffba99a717203fbf41f15bfdc7ff33634bc1a100bb57",
+      "bytes": 22172
+    },
+    {
+      "path": "docs/reviews/formalites-authorization/02-specs-review.md",
+      "sha256": "7deebcd29f6b3d0e9a1f005c45f7966cd1f593dd77532ac75474a34baca78286",
+      "bytes": 16935
+    },
+    {
+      "path": "docs/reviews/formalites-authorization/02b-design-review.md",
+      "sha256": "3a621ae86e916c072cd31373931a51b29d5dbdc9d6374bf2193e9cbef8321fa8",
+      "bytes": 26693
+    },
+    {
+      "path": "docs/reviews/formalites-authorization/03-command-results.md",
+      "sha256": "4859c3c85f9a3b47caadad55cedcdc8683b21c646d929e439420d165959d9318",
+      "bytes": 15468
+    },
+    {
+      "path": "docs/reviews/formalites-authorization/03-implementation.diff",
+      "sha256": "214702ed3c8a8b7a93fd17366b9491923295409d8ca2817c6233101c88e2e5bd",
+      "bytes": 19479
+    },
+    {
+      "path": "docs/reviews/formalites-authorization/03-verify-evidence.md",
+      "sha256": "87bdc43572c7429b9a696619389cd254b7b548a770bd4b49bef0a3dfeeba5c93",
+      "bytes": 19127
+    },
+    {
+      "path": "docs/reviews/formalites-authorization/phase-1-baseline.json",
+      "sha256": "8bebe87ce43d365177e330eb2ac3a38f86a5b53dfa11bd777011d3e7c5017168",
+      "bytes": 109463
+    },
+    {
+      "path": "docs/reviews/formalites-authorization/phase-1-review.md",
+      "sha256": "9892aa686e12b910072af0fffbe6116137979af185c5a7e927c9aef990dd95ab",
+      "bytes": 16956
+    },
+    {
+      "path": "docs/reviews/formalites-authorization/qa/QA_REPORT.md",
+      "sha256": "90419ff3a4baea4f630abfa95f140cfc05d8cc742934b00cfdc9e6853690276a",
+      "bytes": 12461
+    },
+    {
+      "path": "openspec/changes/formalites-authorization/analysis.md",
+      "sha256": "c3d1babc03b1bb3088fe2178065e4fa6b2975c329050c3de847f59ca359794c4",
+      "bytes": 11701
+    },
+    {
+      "path": "openspec/changes/formalites-authorization/design.md",
+      "sha256": "4f8b77b216fb820bd637a6661d164bcf998fde5c26a76e4d236d1652ab1b194d",
+      "bytes": 17994
+    },
+    {
+      "path": "openspec/changes/formalites-authorization/proposal.md",
+      "sha256": "2da37c1b35c5450318ed051e1dec4b23941102e324dc4d453d8a932794b04613",
+      "bytes": 3647
+    },
+    {
+      "path": "openspec/changes/formalites-authorization/specs/authorization/formalites/spec.md",
+      "sha256": "601dd1417ac25527f201fdb3b95488b98474f6514ecfb0c428f68584d118ba46",
+      "bytes": 10794
+    },
+    {
+      "path": "openspec/changes/formalites-authorization/tasks.md",
+      "sha256": "3d22add75fccb9ab2d48ff808afd1a0e23d81b7119f9bc54cfb14c4dd4595dc4",
+      "bytes": 17054
+    }
+  ]
+}

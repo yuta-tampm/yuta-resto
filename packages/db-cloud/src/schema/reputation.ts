@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm';
 import {
   boolean,
   check,
+  foreignKey,
   index,
   integer,
   jsonb,
@@ -94,6 +95,9 @@ export const feedbackItems = pgTable(
       .references(() => establishments.id),
     source: feedbackSourceEnum('source').notNull(),
     type: feedbackTypeEnum('type').notNull(),
+    googleImporterOwned: boolean('google_importer_owned')
+      .default(false)
+      .notNull(),
     externalId: varchar('external_id', { length: 255 }),
     externalUrl: text('external_url'),
     authorName: varchar('author_name', { length: 255 }),
@@ -119,6 +123,20 @@ export const feedbackItems = pgTable(
     updatedAt: updatedAt(),
   },
   (table) => [
+    check(
+      'feedback_items_google_importer_boundary_check',
+      sql`not ${table.googleImporterOwned} or (${table.source} = 'GOOGLE' and ${table.type} = 'PUBLIC_REVIEW'
+        and ${table.externalId} is null and ${table.externalUrl} is null
+        and ${table.authorName} is null and ${table.authorAvatarUrl} is null
+        and ${table.rating} is null and ${table.title} is null and ${table.content} is null
+        and ${table.language} is null and ${table.sentiment} is null and ${table.urgency} is null
+        and ${table.publishedAt} is null and ${table.lastSyncedAt} is null and ${table.providerMetadata} is null)`,
+    ),
+    uniqueIndex('feedback_items_scope_id_unique_idx').on(
+      table.organizationId,
+      table.establishmentId,
+      table.id,
+    ),
     check(
       'feedback_items_rating_check',
       sql`${table.rating} is null or (${table.rating} >= 1 and ${table.rating} <= 5)`,
@@ -265,6 +283,7 @@ export const reputationConnectors = pgTable(
       .notNull()
       .references(() => establishments.id),
     provider: connectorProviderEnum('provider').notNull(),
+    bindingGeneration: integer('binding_generation').default(0).notNull(),
     externalAccountId: varchar('external_account_id', {
       length: 255,
     }).notNull(),
@@ -288,12 +307,178 @@ export const reputationConnectors = pgTable(
     updatedAt: updatedAt(),
   },
   (table) => [
+    check(
+      'reputation_connectors_generation_check',
+      sql`${table.bindingGeneration} >= 0`,
+    ),
+    uniqueIndex('reputation_connectors_scope_id_unique_idx').on(
+      table.organizationId,
+      table.establishmentId,
+      table.id,
+    ),
     uniqueIndex('reputation_connectors_location_provider_unique_idx').on(
       table.organizationId,
       table.establishmentId,
       table.provider,
     ),
     index('reputation_connectors_status_idx').on(table.status),
+  ],
+);
+
+export const googleReviewCache = pgTable(
+  'google_review_cache',
+  {
+    id: uuid('id').primaryKey(),
+    organizationId: uuid('organization_id').notNull(),
+    establishmentId: uuid('establishment_id').notNull(),
+    feedbackItemId: uuid('feedback_item_id').notNull(),
+    connectorId: uuid('connector_id').notNull(),
+    bindingGeneration: integer('binding_generation').notNull(),
+    externalLocationId: varchar('external_location_id', {
+      length: 255,
+    }).notNull(),
+    reviewName: varchar('review_name', { length: 1024 }).notNull(),
+    authorName: varchar('author_name', { length: 255 }),
+    rating: integer('rating'),
+    content: text('content'),
+    providerCreatedAt: timestamp('provider_created_at', { withTimezone: true }),
+    providerUpdatedAt: timestamp('provider_updated_at', { withTimezone: true }),
+    remoteReplyContent: text('remote_reply_content'),
+    remoteReplyUpdatedAt: timestamp('remote_reply_updated_at', {
+      withTimezone: true,
+    }),
+    remoteReplyStatus: varchar('remote_reply_status', { length: 100 }),
+    needsReview: boolean('needs_review').default(false).notNull(),
+    fetchedAt: timestamp('fetched_at', { withTimezone: true }).notNull(),
+    expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+    referenceExpiresAt: timestamp('reference_expires_at', {
+      withTimezone: true,
+    }).notNull(),
+    contentClearedAt: timestamp('content_cleared_at', { withTimezone: true }),
+  },
+  (table) => [
+    foreignKey({
+      name: 'google_review_cache_work_scope_fk',
+      columns: [
+        table.organizationId,
+        table.establishmentId,
+        table.feedbackItemId,
+      ],
+      foreignColumns: [
+        feedbackItems.organizationId,
+        feedbackItems.establishmentId,
+        feedbackItems.id,
+      ],
+    }).onDelete('cascade'),
+    foreignKey({
+      name: 'google_review_cache_connector_scope_fk',
+      columns: [table.organizationId, table.establishmentId, table.connectorId],
+      foreignColumns: [
+        reputationConnectors.organizationId,
+        reputationConnectors.establishmentId,
+        reputationConnectors.id,
+      ],
+    }).onDelete('cascade'),
+    check(
+      'google_review_cache_deadlines_check',
+      sql`${table.bindingGeneration} >= 0 and ${table.expiresAt} > ${table.fetchedAt} and ${table.expiresAt} <= ${table.fetchedAt} + interval '29 days' and ${table.referenceExpiresAt} >= ${table.expiresAt} and ${table.referenceExpiresAt} <= ${table.fetchedAt} + interval '30 days'`,
+    ),
+    check(
+      'google_review_cache_rating_check',
+      sql`${table.rating} is null or ${table.rating} between 1 and 5`,
+    ),
+    check(
+      'google_review_cache_cleared_content_check',
+      sql`${table.contentClearedAt} is null or (${table.authorName} is null and ${table.rating} is null and ${table.content} is null and ${table.providerCreatedAt} is null and ${table.providerUpdatedAt} is null and ${table.remoteReplyContent} is null and ${table.remoteReplyUpdatedAt} is null and ${table.remoteReplyStatus} is null and not ${table.needsReview})`,
+    ),
+    uniqueIndex('google_review_cache_work_unique_idx').on(
+      table.organizationId,
+      table.establishmentId,
+      table.feedbackItemId,
+    ),
+    uniqueIndex('google_review_cache_provider_identity_unique_idx').on(
+      table.organizationId,
+      table.externalLocationId,
+      table.reviewName,
+    ),
+    index('google_review_cache_content_expiry_idx').on(table.expiresAt),
+    index('google_review_cache_reference_expiry_idx').on(
+      table.referenceExpiresAt,
+    ),
+    index('google_review_cache_connector_idx').on(
+      table.organizationId,
+      table.establishmentId,
+      table.connectorId,
+    ),
+  ],
+);
+
+export const googleReviewRetrievalStates = pgTable(
+  'google_review_retrieval_states',
+  {
+    id: uuid('id').primaryKey(),
+    organizationId: uuid('organization_id').notNull(),
+    establishmentId: uuid('establishment_id').notNull(),
+    connectorId: uuid('connector_id').notNull(),
+    bindingGeneration: integer('binding_generation').notNull(),
+    attemptId: uuid('attempt_id'),
+    sequenceId: uuid('sequence_id'),
+    kind: varchar('kind', { length: 20 }).$type<
+      'RECENT' | 'HISTORY' | 'DETAIL'
+    >(),
+    state: varchar('state', { length: 20 }).$type<
+      'PENDING' | 'FAILED' | 'COMPLETED'
+    >(),
+    startedAt: timestamp('started_at', { withTimezone: true }),
+    finishedAt: timestamp('finished_at', { withTimezone: true }),
+    leaseExpiresAt: timestamp('lease_expires_at', { withTimezone: true }),
+    errorCategory: varchar('error_category', { length: 50 }),
+    lastSuccessfulBatchAt: timestamp('last_successful_batch_at', {
+      withTimezone: true,
+    }),
+    lastSuccessfulRecentAt: timestamp('last_successful_recent_at', {
+      withTimezone: true,
+    }),
+    continuationHandle: uuid('continuation_handle'),
+    nextPageToken: text('next_page_token'),
+    coverageExpiresAt: timestamp('coverage_expires_at', { withTimezone: true }),
+    returnedCount: integer('returned_count'),
+    addedCount: integer('added_count'),
+    changedCount: integer('changed_count'),
+    totalReviewCount: integer('total_review_count'),
+    hasMore: boolean('has_more'),
+    recentEmpty: boolean('recent_empty'),
+  },
+  (table) => [
+    foreignKey({
+      name: 'google_review_retrieval_state_connector_scope_fk',
+      columns: [table.organizationId, table.establishmentId, table.connectorId],
+      foreignColumns: [
+        reputationConnectors.organizationId,
+        reputationConnectors.establishmentId,
+        reputationConnectors.id,
+      ],
+    }).onDelete('cascade'),
+    uniqueIndex('google_review_retrieval_state_connector_unique_idx').on(
+      table.organizationId,
+      table.establishmentId,
+      table.connectorId,
+    ),
+    check(
+      'google_review_retrieval_state_values_check',
+      sql`${table.bindingGeneration} >= 0 and (${table.kind} is null or ${table.kind} in ('RECENT', 'HISTORY', 'DETAIL')) and (${table.state} is null or ${table.state} in ('PENDING', 'FAILED', 'COMPLETED'))`,
+    ),
+    check(
+      'google_review_retrieval_state_counts_check',
+      sql`(${table.returnedCount} is null or ${table.returnedCount} between 0 and 50) and (${table.addedCount} is null or ${table.addedCount} between 0 and 50) and (${table.changedCount} is null or ${table.changedCount} between 0 and 50) and (${table.totalReviewCount} is null or ${table.totalReviewCount} >= 0)`,
+    ),
+    check(
+      'google_review_retrieval_state_continuation_check',
+      sql`(${table.continuationHandle} is null and ${table.nextPageToken} is null) or (${table.continuationHandle} is not null and ${table.nextPageToken} is not null and ${table.coverageExpiresAt} is not null and ${table.sequenceId} is not null)`,
+    ),
+    index('google_review_retrieval_state_coverage_expiry_idx').on(
+      table.coverageExpiresAt,
+    ),
   ],
 );
 

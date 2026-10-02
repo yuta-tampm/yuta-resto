@@ -15,6 +15,7 @@ import {
   updateLocalComboGroupInputSchema,
   updateLocalComboGroupItemInputSchema,
   updateLocalComboRuleInputSchema,
+  updateLocalInstructionSettingsInputSchema,
 } from '@yuta/contracts/local-pos';
 import { readJsonBody, sendJson } from '../http';
 import { requireLocalManagementSession } from './auth';
@@ -28,6 +29,19 @@ export const handleCatalogRoute: RouteHandler = async ({
 }) => {
   if (request.method === 'GET' && url.pathname === localPosRoutes.catalog) {
     sendJson(response, 200, await service.getCatalog());
+    return true;
+  }
+
+  if (
+    request.method === 'PATCH' &&
+    url.pathname === localPosRoutes.instructionSettings
+  ) {
+    await requireLocalManagementSession(request.headers.authorization, service);
+    const input = await readJsonBody(
+      request,
+      updateLocalInstructionSettingsInputSchema,
+    );
+    sendJson(response, 200, await service.updateInstructionSettings(input));
     return true;
   }
 

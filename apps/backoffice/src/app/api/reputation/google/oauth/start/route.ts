@@ -1,21 +1,19 @@
 import { NextResponse } from 'next/server';
-import { requireReputationPermission } from '../../../../../../server/auth/permissions';
-import {
-  getAuthSecret,
-  requireReputationTenant,
-} from '../../../../../../server/auth/session';
-import { createGoogleAuthorizationUrl } from '../../../../../../server/reputation/google-business-profile-client';
+import { requireReputationPermission } from '@/server/auth/permissions';
+import { getAuthSecret, requireReputationTenant } from '@/server/auth/session';
+import { createGoogleAuthorizationUrl } from '@/server/reputation/google-business-profile-client';
 import {
   getGoogleConnectorConfiguration,
   GoogleConnectorConfigurationError,
-} from '../../../../../../server/reputation/google-connector-config';
-import { createGoogleOAuthState } from '../../../../../../server/reputation/google-oauth-state';
+} from '@/server/reputation/google-connector-config';
+import { createGoogleOAuthState } from '@/server/reputation/google-oauth-state';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
   const { session, tenant } = await requireReputationTenant(
-    '/settings/integrations',
+    '/parametres/integrations',
+    { requires: 'reputation.connector.manage' },
   );
   requireReputationPermission(tenant, 'reputation.connector.manage');
   if (!tenant.establishmentId) {
@@ -53,6 +51,6 @@ export async function GET(request: Request) {
 
 function redirectToSettings(request: Request, result: string): NextResponse {
   return NextResponse.redirect(
-    new URL(`/settings/integrations?google=${result}`, request.url),
+    new URL(`/parametres/integrations?google=${result}`, request.url),
   );
 }

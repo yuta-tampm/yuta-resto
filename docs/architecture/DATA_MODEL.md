@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-05
+Last updated: 2026-08-15
 
 Authority: current Drizzle schemas and `docs/architecture/DATABASE_BOUNDARIES.md`
 
@@ -76,6 +76,16 @@ Cloud records use one of these scopes:
 2. **Organization-owned:** contains non-null `organization_id`.
 3. **Restaurant/branch-owned:** contains non-null `organization_id` and
    non-null `establishment_id`.
+4. **GLOBAL YUTA Formalités template resources:** dedicated non-tenant
+   template identity, working draft and immutable version in `packages/db-cloud`;
+   no organization/establishment owner or fabricated tenant fallback.
+
+The [legal-template foundation](../../openspec/specs/formalites/legal-template-foundation/spec.md)
+uses its [dedicated schema](../../packages/db-cloud/src/schema/formalites-legal-templates.ts)
+and authorized repository with existing exact system operations. Frozen template
+versions are not generated contracts or legal-review evidence. This boundary
+does not relax tenant-owned query rules or enable an administration application,
+template publication/qualification or production operation.
 
 Every tenant-owned repository method must receive the required scope
 explicitly. Reads, updates, and deletes must include scope predicates even when
@@ -202,8 +212,21 @@ slug varchar(100)                 globally unique on lower(slug)
 status organization_status       active | disabled
 locale varchar(35)                default fr-FR
 timezone varchar(100)             default Europe/Paris
+description text                  nullable
+address_line_1, address_line_2    nullable
+postal_code, city, country_code   nullable
+phone, email, website             nullable primary contact
+public_phone, public_email        nullable public contact
+logo_url, cover_image_url         nullable HTTP(S) media references
+languages varchar[]               public language identifiers
+service_modes establishment_service_mode[]
+public_* boolean                  optional-field visibility controls
 created_at, updated_at timestamptz
 ```
+
+General restaurant identity and public profile data is owned by
+`establishments`, independently of feature entitlements. `booking_settings`
+does not own address, contact, logo, cover, language, or service-mode data.
 
 ### `tenant_memberships`
 
@@ -327,6 +350,63 @@ scope. Current tables are:
 The public booking application resolves an establishment server-side. Public
 management tokens are stored as hashes, capacity-sensitive creation is
 transactional, and browser-provided scope is never authoritative.
+
+`booking_settings` owns reservation availability and policy only. Public
+booking branding and visible contact/address values are read from the canonical
+establishment profile and filtered by its visibility flags.
+
+### Cloud personnel read foundation
+
+`personnel_employee_dossiers` stores the approved minimum employment facts for
+one establishment. Every row carries `organization_id` and `establishment_id`;
+a composite foreign key prevents pairing an establishment with the wrong
+organization. Repository reads repeat both scope predicates even when the
+employee ID is globally unique.
+
+The table stores names, poste, qualification, employment-term type, optional
+expected end date, an optional controlled fixed-term reason, work-time
+category, optional contractual weekly duration as integer minutes, entry date,
+optional departure date, revision, and server timestamps. Existing reason and
+duration values may remain null and do not affect completeness. CDI rows cannot
+store a fixed-term reason; weekly minutes, when present, are constrained to
+1–2,880. Display name, employment view, completeness, labels, filters, and
+summary counts are derived rather than stored.
+
+The development create/edit slices also own `personnel_employee_audit_events` and
+`personnel_command_receipts`. One transaction creates the dossier, appends the
+allowlisted creation/duplicate-override audit event, and stores the hashed
+idempotency receipt. Approved minimum edits compare and increment the dossier
+revision atomically, then append identity and/or employment field-group events
+without copying full dossier values into audit metadata. Receipts contain no
+employee payload. Departure writes update only the nullable effective date and
+revision; corrections append previous/new dates and a bounded reason to the
+immutable audit event.
+
+Local-development personnel documents use establishment-scoped metadata while
+PDF bytes remain outside PostgreSQL. `personnel_documents` and
+`personnel_document_versions` retain the single current signed-contract slot
+and immutable correction versions. `personnel_contract_amendments` represents
+zero or more distinct signed amendments with effective date, optional bounded
+reference, current version, and revision. Its version table stores sanitized
+file metadata and opaque private-storage keys; its command-receipt table stores
+hashed, 24-hour idempotency evidence without file or employee payload. Every
+table repeats organization, establishment, and employee scope with composite
+foreign keys. Payroll and register data are not active. Formalités legal-template
+resources use the separate global foundation described in section 3.
+
+The employee-detail history reads at most the 50 most recent known events under
+the same organization-and-establishment scope. The repository maps stored
+events to an allowlisted presentation contract: event type, changed field
+labels, actor display name, time, and the approved bounded reason/date values.
+Raw metadata, operation IDs, actor IDs, and tenant identifiers are not returned
+to the browser.
+
+Completeness is not persisted. The read repository derives stable reason codes
+from missing minimum names, poste, and qualification values, uses the same
+predicate for counts and filtering, and returns those codes for the UI to
+explain. Create and edit commands still require every approved minimum field;
+the incomplete read state supports correction of older or externally repaired
+rows without weakening write validation.
 
 ## 6. Local POS schema
 

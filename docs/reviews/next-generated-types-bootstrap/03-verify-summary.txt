@@ -1,0 +1,150 @@
+Change: next-generated-types-bootstrap
+Assessment source: docs/reviews/next-generated-types-bootstrap/03-verify.md
+QA source: docs/reviews/next-generated-types-bootstrap/qa/QA_REPORT.md
+Mode: accepted runtime evidence reused under explicit current-user closure authority; no runtime rerun.
+TECHNICAL IMPLEMENTATION COMPLIANCE: PASS
+VERIFY: PASS
+QA: PASS
+UI_AFFECTING: NO
+BROWSER_QA_REQUIRED: NO
+Browser QA: NOT_APPLICABLE
+Tasks: 26/26 COMPLETE
+
+Accepted E2: docs/reviews/next-generated-types-bootstrap/03-phase3-remediation-evidence.json
+SHA-256: 14b5adc084665e1ff74a31995932c676c3ed545f0b36887ca1efdc3280f2ba6d
+Snapshot: 0314828cb3ef26331f457bd772129f240726ac1b; 2215 exact files.
+Accepted E3: docs/reviews/next-generated-types-bootstrap/03-phase3-completion-evidence.json
+SHA-256: 0393c57f4f6411666527d7652661d918441ce66124c51bb7bbde3123a8865f8c
+Snapshot: 880ed17ddd6adb47b1d585e82233820708202631; 2219 exact files.
+Current before-report candidate: 2221/2221 path/raw SHA MATCH; review-only additions since E3.
+Scope: 14 implementation paths; all approved implementation bytes unchanged.
+
+E3 runs/completion-win-focused.json:
+pnpm install --frozen-lockfile => exit undefined; fresh install PASS
+node --test scripts/next-generated-types-bootstrap.test.mjs => exit undefined; 50/50 PASS, zero fail/skip/cancel
+
+E3 runs/completion-post-dev-checks.json:
+pnpm typegen:next => exit undefined
+pnpm --filter @yuta/backoffice typecheck => exit undefined
+pnpm --filter @yuta/web typecheck => exit undefined
+pnpm --filter @yuta/booking-web typecheck => exit undefined
+pnpm --filter @yuta/feedback-web typecheck => exit undefined
+pnpm --filter @yuta/pos typecheck => exit undefined
+pnpm --filter @yuta/display typecheck => exit undefined
+pnpm -r --if-present typecheck => exit undefined
+
+E2 normalCommands/buildsAndDirectTypechecks (post-remediation builds):
+pnpm --filter @yuta/backoffice build => exit 0, 75066ms
+pnpm --filter @yuta/web build => exit 0, 46647ms
+pnpm --filter @yuta/booking-web build => exit 0, 50784ms
+pnpm --filter @yuta/feedback-web build => exit 0, 35916ms
+pnpm --filter @yuta/pos build => exit 0, 64391ms
+pnpm --filter @yuta/display build => exit 0, 38160ms
+
+E2 normalCommands/posOffline:
+pnpm test:pos:offline => exit 0, 83373ms; POS next-env initially absent
+pnpm test:pos:offline => exit 0, 104476ms; POS next-env already generated
+
+E3 runs/dev-smoke-complete.json:
+pnpm --filter @yuta/backoffice exec next dev --hostname 127.0.0.1 --port 52188 => Ready + dev declarations PASS; process exit 1 after owned taskkill /T /F; port closed
+pnpm --filter @yuta/web exec next dev --hostname 127.0.0.1 --port 50461 => Ready + dev declarations PASS; process exit 1 after owned taskkill /T /F; port closed
+pnpm --filter @yuta/booking-web exec next dev --hostname 127.0.0.1 --port 63558 => Ready + dev declarations PASS; process exit 1 after owned taskkill /T /F; port closed
+pnpm --filter @yuta/feedback-web exec next dev --hostname 127.0.0.1 --port 63565 => Ready + dev declarations PASS; process exit 1 after owned taskkill /T /F; port closed
+pnpm --filter @yuta/pos exec next dev --hostname 127.0.0.1 --port 63574 => Ready + dev declarations PASS; process exit 1 after owned taskkill /T /F; port closed
+pnpm --filter @yuta/display exec next dev --hostname 127.0.0.1 --port 63582 => Ready + dev declarations PASS; process exit 1 after owned taskkill /T /F; port closed
+
+E3 matrixSummary, raw case qualification/process traces referenced per row:
+linux/async: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-async.json
+linux/cli-resolution: /usr/local/bin/node scripts/generate-next-types.mjs => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-completion-evidence.json#runs/completion-linux-cli-resolution.json
+linux/concurrent: pnpm typegen:next && pnpm -r --if-present typecheck -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 0; owner6 generators+recursive PASS; contender exit1, zero generator/unlink/recursive; PASS; source 03-phase3-completion-evidence.json#runs/completion-linux-concurrent.json
+linux/config-1: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-config-1.json
+linux/config-2: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-config-2.json
+linux/config-3: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-config-3.json
+linux/config-4: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-config-4.json
+linux/config-5: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-config-5.json
+linux/config-6: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-config-6.json
+linux/dev-lock: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-dev-lock.json
+linux/early: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-early.json
+linux/empty: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-empty.json
+linux/foreign-lock: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-foreign-lock.json
+linux/hard-link: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-hard-link.json
+linux/linked-file: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-linked-file.json
+linux/linked-parent: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-linked-parent.json
+linux/malformed: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-malformed.json
+linux/mismatched-package: /usr/local/bin/node scripts/generate-next-types.mjs => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-completion-evidence.json#runs/completion-linux-mismatched-package.json
+linux/missing: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-missing.json
+linux/missing-package: /usr/local/bin/node scripts/generate-next-types.mjs => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-completion-evidence.json#runs/completion-linux-missing-package.json
+linux/next-lock: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-next-lock.json
+linux/nonregular: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-nonregular.json
+linux/signal: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-signal.json
+linux/spawn-error: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-spawn-error.json
+linux/success: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 0; 6 validated generators then recursive PASS; PASS; source 03-phase3-completion-evidence.json#runs/completion-linux-success.json
+linux/timeout: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-timeout.json
+linux/tracked-output: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-tracked-output.json
+linux/ts-resolution: /usr/local/bin/node scripts/generate-next-types.mjs => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-completion-evidence.json#runs/completion-linux-ts-resolution.json
+linux/version: /usr/local/bin/node scripts/generate-next-types.mjs => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-completion-evidence.json#runs/completion-linux-version.json
+linux/write-failure: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-write-failure.json
+linux/wrong-reference: sh -c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/linux-wrong-reference.json
+win32/async: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/win-async.json
+win32/cli-resolution: C:\Program Files\nodejs\node.exe scripts/generate-next-types.mjs => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-completion-evidence.json#runs/completion-win-cli-resolution.json
+win32/concurrent: pnpm typegen:next && pnpm -r --if-present typecheck /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 0; owner6 generators+recursive PASS; contender exit1, zero generator/unlink/recursive; PASS; source 03-phase3-completion-evidence.json#runs/completion-win-concurrent.json
+win32/config-1: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/win-config-1.json
+win32/config-2: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/win-config-2.json
+win32/config-3: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/win-config-3.json
+win32/config-4: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/win-config-4.json
+win32/config-5: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/win-config-5.json
+win32/config-6: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/win-config-6.json
+win32/dev-lock: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-completion-evidence.json#runs/completion-win-dev-lock.json
+win32/early: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/win-early.json
+win32/empty: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/win-empty.json
+win32/foreign-lock: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-completion-evidence.json#runs/completion-win-foreign-lock.json
+win32/hard-link: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-completion-evidence.json#runs/completion-win-hard-link.json
+win32/linked-file: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-completion-evidence.json#runs/completion-win-linked-file.json
+win32/linked-parent: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-completion-evidence.json#runs/completion-win-linked-parent.json
+win32/malformed: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/win-malformed.json
+win32/mismatched-package: C:\Program Files\nodejs\node.exe scripts/generate-next-types.mjs => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-completion-evidence.json#runs/completion-win-mismatched-package.json
+win32/missing: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/win-missing.json
+win32/missing-package: C:\Program Files\nodejs\node.exe scripts/generate-next-types.mjs => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-completion-evidence.json#runs/completion-win-missing-package.json
+win32/next-lock: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-completion-evidence.json#runs/completion-win-next-lock.json
+win32/nonregular: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-completion-evidence.json#runs/completion-win-nonregular.json
+win32/signal: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-completion-evidence.json#runs/completion-win-signal.json
+win32/spawn-error: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-completion-evidence.json#runs/completion-win-spawn-error.json
+win32/success: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 0; 6 validated generators then recursive PASS; PASS; source 03-phase3-completion-evidence.json#runs/completion-win-success.json
+win32/timeout: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-completion-evidence.json#runs/completion-win-timeout.json
+win32/tracked-output: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-completion-evidence.json#runs/completion-win-tracked-output.json
+win32/ts-resolution: C:\Program Files\nodejs\node.exe scripts/generate-next-types.mjs => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-completion-evidence.json#runs/completion-win-ts-resolution.json
+win32/version: C:\Program Files\nodejs\node.exe scripts/generate-next-types.mjs => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-completion-evidence.json#runs/completion-win-version.json
+win32/write-failure: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-completion-evidence.json#runs/completion-win-write-failure.json
+win32/wrong-reference: cmd.exe /d /c pnpm typegen:next && pnpm -r --if-present typecheck => exit 1; no later generator/no recursive; fail closed; PASS; source 03-phase3-remediation-evidence.json#caseResults/win-wrong-reference.json
+
+README negative: E3 runs/completion-win-source-integrity.json + completion-source-comparison-expected-reject.json
+git diff --exit-code -- README.md => exit 1 (expected)
+git check-ignore --no-index README.md => exit 1 (not ignored)
+Raw SHA 5404c00ca3032a34137096edd34a6b4997e2c460d02ded3a63b8f224b9a74ef8 -> 8efa353c80116da8acc4107a32465bf171c5b1f54c073ba64d51af98c9481e5c
+Strict candidate comparator => exit 1 before requested node --version, expected rejection.
+Disposal current read-only: directory/registration/bootstrap-lock/Next-lock/process/listener NONE.
+
+E3 runs/completion-checks.json:
+pnpm docs:check => exit undefined
+pnpm architecture:check => exit undefined
+openspec validate next-generated-types-bootstrap --strict => exit undefined
+pnpm format:check => exit undefined; FAIL exactly 62 unchanged pre-existing unrelated files, NOT full-format PASS
+pnpm exec prettier --check package.json .github/workflows/ci.yml README.md docs/DEVELOPMENT_WORKFLOW.md scripts/generate-next-types.mjs scripts/next-generated-types-bootstrap.test.mjs scripts/test-pos-offline.mjs => exit undefined
+
+Current closure checks (exact outputs in 03-phase3-closure-evidence.json):
+pnpm docs:check => exit 0
+pnpm architecture:check => exit 0
+openspec validate next-generated-types-bootstrap --strict => exit 0
+pnpm exec prettier --check package.json .github/workflows/ci.yml README.md docs/DEVELOPMENT_WORKFLOW.md scripts/generate-next-types.mjs scripts/next-generated-types-bootstrap.test.mjs scripts/test-pos-offline.mjs openspec/changes/next-generated-types-bootstrap/tasks.md docs/reviews/next-generated-types-bootstrap/02b-design-review.md docs/reviews/next-generated-types-bootstrap/03-verify.md docs/reviews/next-generated-types-bootstrap/qa/QA_REPORT.md docs/reviews/next-generated-types-bootstrap/03-phase3-closure-evidence.json docs/reviews/next-generated-types-bootstrap/03-implementation-inventory.json => exit 0
+Exact inverse Tasks/02b metadata restoration => baseline byte SHA MATCH; requirements/embedded Design unchanged.
+Formalites 4/4 implementation +18/18 integrity +17/17 supplemental => MATCH.
+Canonical pnpm-lock.yaml unchanged: bebba4709d2f5fc893921c475a6149788f25f5ffcb439e4a62257a73bf78bbdb
+Canonical Git index unchanged: cb06e0450599f335de1d95e90b075824c9043cd15db6cab4a354b4fc77b17d8a
+git ls-files -- six exact next-env paths => no entries.
+git check-ignore -v -- six exact next-env paths => exact .gitignore rules3-8.
+git -C 'D:/working/yuta/.tmp-bootstrap-phase3completion-20260904' apply --cached --reverse --check 'D:/working/yuta/yuta-resto/docs/reviews/next-generated-types-bootstrap/03-implementation.diff' => exit 0 (read-only tracked snapshot index check)
+Working-tree reverse-check probe => exit 1 only because ignored generated files exist; not acceptance and no mutation. No restore/delete workaround.
+Aggregate implementation/change SHA-256: 6f1643414f375b72c5bff659285da448f4679b9d4e1cad2da3f90d09e03685ff
+No source/Design drift; no Product deviation; no blocked required evidence.
+Sync authorization: PENDING
+No sync/archive/deploy/production/Formalites continuation.

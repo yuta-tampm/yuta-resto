@@ -1,0 +1,116 @@
+diff --git a/docs/features/personnel/README.md b/docs/features/personnel/README.md
+--- a/docs/features/personnel/README.md
++++ b/docs/features/personnel/README.md
+@@ -133,6 +133,24 @@
+ - Repository implementation, local QA, and development enablement do not close
+   legal, privacy, security, provider, operational, or production gates.
+ 
++### GLOBAL YUTA Formalités legal-template foundation
++
++A separate [legal-template persistence foundation](../../../openspec/specs/formalites/legal-template-foundation/spec.md)
++is implemented in `packages/db-cloud` for GLOBAL YUTA Formalités resources.
++It owns stable template identities, at most one active mutable working draft
++per identity, and immutable frozen template versions. A frozen template
++version is a review candidate, not a generated employee contract or a
++reviewed, published or qualified template. These resources have no tenant
++owner; administration uses the existing exact system-operation authority,
++not restaurant membership.
++
++This foundation does not add a Platform Admin application, actual CDI/CDD
++content, legal-review evidence storage, publication/qualification/retirement,
++generation, signature or Documents handoff. Existing lifecycle/readiness
++values and production gates remain unchanged. Future legal-template scope
++elsewhere in this Home refers to those excluded content/lifecycle stages,
++not absence of this separate persistence foundation.
++
+ ### GLOBAL YUTA Formalités template governance
+ 
+ The [normative legal-review governance contract](../../../openspec/specs/formalites/template-legal-review-governance/spec.md)
+diff --git a/docs/PRODUCT_KNOWLEDGE.md b/docs/PRODUCT_KNOWLEDGE.md
+--- a/docs/PRODUCT_KNOWLEDGE.md
++++ b/docs/PRODUCT_KNOWLEDGE.md
+@@ -249,6 +249,13 @@
+ templates, legal-evidence persistence, Platform Admin runtime or publication,
+ and does not change lifecycle/readiness or close production/legal/privacy gates.
+ 
++The separate [Formalités legal-template foundation](../openspec/specs/formalites/legal-template-foundation/spec.md)
++now defines the implemented global identity/working-draft/frozen-version
++persistence boundary. Use the Personnel Home for context; it is not the
++employee-connected preparation draft, generated contract, legal-review
++evidence store or publication/qualification workflow. No Platform Admin
++runtime or production enablement follows.
++
+ ### Pointage authority and access foundation
+ 
+ - Precise normative ownership and behavioral boundaries:
+diff --git a/docs/MODULE_REGISTRY.md b/docs/MODULE_REGISTRY.md
+--- a/docs/MODULE_REGISTRY.md
++++ b/docs/MODULE_REGISTRY.md
+@@ -156,6 +156,16 @@
+ remain unchanged. No template, evidence store, runtime or production capability
+ is implied by this normative reference.
+ 
++The separate [Formalités legal-template foundation](../openspec/specs/formalites/legal-template-foundation/spec.md)
++has implemented persistence in `packages/db-cloud` for GLOBAL YUTA template
++identity, working draft and immutable frozen version, with no tenant ownership.
++Source evidence: [schema](../packages/db-cloud/src/schema/formalites-legal-templates.ts)
++and [authorized repository](../packages/db-cloud/src/formalites-legal-template-repository.ts).
++This is not a generated-contract version or the future template
++publication/qualification lifecycle. Existing lifecycle rows and values remain
++unchanged; this bounded foundation adds no Platform Admin runtime, legal
++content/evidence store or production enablement.
++
+ ## Adoption / maintenance rule
+ 
+ 1. Keep this registry as a central index, not a source of business logic.
+diff --git a/docs/CURRENT_STATE.md b/docs/CURRENT_STATE.md
+--- a/docs/CURRENT_STATE.md
++++ b/docs/CURRENT_STATE.md
+@@ -65,6 +65,16 @@
+ | Display                       | Standalone media administration, app-owned metadata/files, and resilient playback are implemented in the repository. Application authentication, media-file reconciliation and retention, backup/restore, target device behavior, and site readiness remain unresolved or unverified.                                                  | [Display Product Knowledge](products/display/README.md).                                                                                                                                                                                                                    |
+ | Platform Admin                | The application is not started or enabled. Only a portable authority foundation for five GLOBAL YUTA Formalités template operations is approved and implemented; no runtime, template lifecycle, tenant access, or production enablement follows.                                                                                      | [Identity / Access](features/identity-access/README.md), [Module Registry](MODULE_REGISTRY.md), [Architecture overview](architecture/OVERVIEW.md), and the [authorization spec](../openspec/specs/authorization/platform-admin-formalites-template-administration/spec.md). |
+ 
++A separate [GLOBAL YUTA Formalités legal-template foundation](../openspec/specs/formalites/legal-template-foundation/spec.md)
++now implements template identity, mutable working draft and immutable frozen
++template-version persistence in `packages/db-cloud`. This is distinct from
++the employee-connected preparation draft and generated-contract versions.
++The future legal-template lifecycle in the summary above remains unimplemented:
++this foundation adds no actual legal content, review evidence storage,
++publication/qualification, retirement or application/runtime enablement.
++Production use remains unauthorized. No lifecycle/readiness value is promoted
++by this bounded repository evidence.
++
+ These summaries are bounded orientation, not a duplicated lifecycle table.
+ Use the Module Registry for the five independent lifecycle dimensions.
+ 
+diff --git a/docs/architecture/DATA_MODEL.md b/docs/architecture/DATA_MODEL.md
+--- a/docs/architecture/DATA_MODEL.md
++++ b/docs/architecture/DATA_MODEL.md
+@@ -76,7 +76,17 @@
+ 2. **Organization-owned:** contains non-null `organization_id`.
+ 3. **Restaurant/branch-owned:** contains non-null `organization_id` and
+    non-null `establishment_id`.
++4. **GLOBAL YUTA Formalités template resources:** dedicated non-tenant
++   template identity, working draft and immutable version in `packages/db-cloud`;
++   no organization/establishment owner or fabricated tenant fallback.
+ 
++The [legal-template foundation](../../openspec/specs/formalites/legal-template-foundation/spec.md)
++uses its [dedicated schema](../../packages/db-cloud/src/schema/formalites-legal-templates.ts)
++and authorized repository with existing exact system operations. Frozen template
++versions are not generated contracts or legal-review evidence. This boundary
++does not relax tenant-owned query rules or enable an administration application,
++template publication/qualification or production operation.
++
+ Every tenant-owned repository method must receive the required scope
+ explicitly. Reads, updates, and deletes must include scope predicates even when
+ the resource ID is globally unique.
+@@ -381,7 +391,8 @@
+ file metadata and opaque private-storage keys; its command-receipt table stores
+ hashed, 24-hour idempotency evidence without file or employee payload. Every
+ table repeats organization, establishment, and employee scope with composite
+-foreign keys. Payroll, register, and Formalités data are not active.
++foreign keys. Payroll and register data are not active. Formalités legal-template
++resources use the separate global foundation described in section 3.
+ 
+ The employee-detail history reads at most the 50 most recent known events under
+ the same organization-and-establishment scope. The repository maps stored

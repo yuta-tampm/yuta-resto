@@ -11,6 +11,7 @@ import type { PosDatabaseExecutor } from '@yuta/db-pos/client';
 import {
   checks,
   localUsers,
+  menuCategories,
   menuItems,
   orderDiscountItems,
   orderDiscounts,
@@ -20,27 +21,22 @@ import {
   printJobs,
   type Order,
   type OrderItem,
+  type PrintSettings,
 } from '@yuta/db-pos/schema';
 import { and, asc, eq, inArray, ne, sql } from 'drizzle-orm';
 import { v7 as uuidv7 } from 'uuid';
 import { HttpError } from '../http';
 import {
+  buildAllergenSnapshots,
   buildInstructionSnapshots,
   buildVariantSnapshots,
 } from './instruction-snapshots';
+import {
+  ensureInstructionSettings,
+  resolveInstructionConfig,
+} from './instruction-settings-service';
 import { toOrderSummary } from './site-agent-service';
-
-const knownAllergenCodes = new Set([
-  'PEANUTS',
-  'GLUTEN',
-  'SOY',
-  'CRUSTACEANS',
-  'EGGS',
-  'MILK',
-  'SESAME',
-  'FISH',
-  'OTHER',
-]);
+import { ensurePrintSettings } from './print-settings-service';
 
 export function createOrderCommandService(db: PosDatabaseExecutor) {
   async function getOrderDetail(orderId: string) {
@@ -51,55 +47,85 @@ export function createOrderCommandService(db: PosDatabaseExecutor) {
   }
 
   async function addOrderItem(orderId: string, input: AddLocalOrderItemInput) {
-    const order = await getRequiredOrder(db, orderId);
-    await assertOrderCanChangeItems(db, order);
-    const menuItem = await db.query.menuItems.findFirst({
-      where: eq(menuItems.id, input.menuItemId),
-    });
-    if (!menuItem) {
-      throw new HttpError(404, 'MENU_ITEM_NOT_FOUND', 'Menu item not found.');
-    }
-    if (!menuItem.isAvailable) {
-      throw new HttpError(
-        422,
-        'MENU_ITEM_UNAVAILABLE',
-        'Menu item is not available.',
+    return db.transaction(async (tx) => {
+      await tx.execute(
+        sql`select ${orders.id} from ${orders} where ${orders.id} = ${orderId} for update`,
       );
-    }
+      const order = await getRequiredOrder(tx, orderId);
+      await assertOrderCanChangeItems(tx, order);
+      const menuItem = await tx.query.menuItems.findFirst({
+        where: eq(menuItems.id, input.menuItemId),
+      });
+      if (!menuItem) {
+        throw new HttpError(404, 'MENU_ITEM_NOT_FOUND', 'Menu item not found.');
+      }
+      if (!menuItem.isAvailable) {
+        throw new HttpError(
+          422,
+          'MENU_ITEM_UNAVAILABLE',
+          'Menu item is not available.',
+        );
+      }
 
-    const existing = await db.query.orderItems.findFirst({
-      where: and(
-        eq(orderItems.orderId, orderId),
-        eq(orderItems.menuItemId, menuItem.id),
-        eq(orderItems.status, 'pending'),
-        sql`${orderItems.note} is null`,
-      ),
+      const requiresSeparatePortion = menuItem.orderingPolicy === 'separate';
+      if (menuItem.requiredVariantQuantity > 0 && !requiresSeparatePortion) {
+        throw new HttpError(
+          422,
+          'VARIANT_ITEM_SEPARATE_PORTION_REQUIRED',
+          'Items with required variants must use separate portions.',
+        );
+      }
+      if (requiresSeparatePortion && input.quantity !== 1) {
+        throw new HttpError(
+          422,
+          'SEPARATE_PORTION_QUANTITY_REQUIRED',
+          'This menu item must be added one portion at a time.',
+        );
+      }
+
+      const selectedVariants = buildVariantSnapshots(
+        menuItem.variantOptions,
+        menuItem.requiredVariantQuantity,
+        input.quantity,
+        input.selectedVariants ?? [],
+      );
+      const existing = requiresSeparatePortion
+        ? undefined
+        : await tx.query.orderItems.findFirst({
+            where: and(
+              eq(orderItems.orderId, orderId),
+              eq(orderItems.menuItemId, menuItem.id),
+              eq(orderItems.status, 'pending'),
+              sql`${orderItems.note} is null`,
+            ),
+          });
+      let item: OrderItem;
+      if (existing && !input.note) {
+        [item] = await tx
+          .update(orderItems)
+          .set({ quantity: existing.quantity + input.quantity })
+          .where(eq(orderItems.id, existing.id))
+          .returning();
+      } else {
+        [item] = await tx
+          .insert(orderItems)
+          .values({
+            id: uuidv7(),
+            orderId,
+            menuItemId: menuItem.id,
+            itemNameSnapshot: menuItem.name,
+            unitPriceCentsSnapshot: menuItem.priceCents,
+            kitchenStationSnapshot: menuItem.kitchenStation,
+            quantity: input.quantity,
+            note: input.note,
+            selectedVariants,
+          })
+          .returning();
+      }
+
+      await recalculateOrder(tx, orderId);
+      return localOrderItemResponseSchema.parse({ item: toOrderItem(item) });
     });
-    let item: OrderItem;
-    if (existing && !input.note) {
-      [item] = await db
-        .update(orderItems)
-        .set({ quantity: existing.quantity + input.quantity })
-        .where(eq(orderItems.id, existing.id))
-        .returning();
-    } else {
-      [item] = await db
-        .insert(orderItems)
-        .values({
-          id: uuidv7(),
-          orderId,
-          menuItemId: menuItem.id,
-          itemNameSnapshot: menuItem.name,
-          unitPriceCentsSnapshot: menuItem.priceCents,
-          kitchenStationSnapshot: menuItem.kitchenStation,
-          quantity: input.quantity,
-          note: input.note,
-        })
-        .returning();
-    }
-
-    await recalculateOrder(db, orderId);
-    return localOrderItemResponseSchema.parse({ item: toOrderItem(item) });
   }
 
   async function updateOrderItem(
@@ -108,6 +134,25 @@ export function createOrderCommandService(db: PosDatabaseExecutor) {
   ) {
     const item = await getRequiredOrderItem(db, orderItemId);
     const order = await getRequiredOrder(db, item.orderId);
+    const menuItem = await db.query.menuItems.findFirst({
+      where: eq(menuItems.id, item.menuItemId),
+    });
+    if (!menuItem) {
+      throw new HttpError(404, 'MENU_ITEM_NOT_FOUND', 'Menu item not found.');
+    }
+    const [category, instructionSettings] = await Promise.all([
+      db.query.menuCategories.findFirst({
+        where: eq(menuCategories.id, menuItem.categoryId),
+      }),
+      ensureInstructionSettings(db),
+    ]);
+    if (!category) {
+      throw new HttpError(
+        404,
+        'MENU_CATEGORY_NOT_FOUND',
+        'Menu category not found.',
+      );
+    }
     await assertOrderCanChangeItems(db, order);
     if (item.status !== 'pending') {
       throw new HttpError(
@@ -118,10 +163,18 @@ export function createOrderCommandService(db: PosDatabaseExecutor) {
     }
 
     const quantity = input.quantity ?? item.quantity;
-    const requestedAllergens = input.allergenCodes ?? item.allergenCodes;
-    if (requestedAllergens.some((code) => !knownAllergenCodes.has(code))) {
-      throw new HttpError(422, 'UNKNOWN_ALLERGEN', 'Unknown allergen.');
+    if (
+      menuItem.orderingPolicy === 'separate' &&
+      input.quantity !== undefined &&
+      quantity !== 1
+    ) {
+      throw new HttpError(
+        422,
+        'SEPARATE_PORTION_QUANTITY_REQUIRED',
+        'This menu item must remain a single portion.',
+      );
     }
+    const requestedAllergens = input.allergenCodes ?? item.allergenCodes;
     const hasAllergy = input.hasAllergy ?? item.hasAllergy;
     const allergySeverity = hasAllergy
       ? (input.allergySeverity ?? item.allergySeverity)
@@ -130,6 +183,12 @@ export function createOrderCommandService(db: PosDatabaseExecutor) {
       ? (input.allergyNote ?? item.allergyNote)
       : null;
     const allergenCodes = hasAllergy ? requestedAllergens : [];
+    const selectedAllergens = hasAllergy
+      ? buildAllergenSnapshots(
+          instructionSettings.allergenOptions,
+          allergenCodes,
+        )
+      : [];
     if (hasAllergy && allergenCodes.length === 0) {
       throw new HttpError(
         422,
@@ -152,12 +211,24 @@ export function createOrderCommandService(db: PosDatabaseExecutor) {
       );
     }
 
+    const instructionConfig = resolveInstructionConfig(
+      instructionSettings,
+      category,
+      menuItem,
+    );
     const quickInstructions = input.selectedInstructionCodes
-      ? buildInstructionSnapshots(input.selectedInstructionCodes)
+      ? buildInstructionSnapshots(
+          [
+            ...instructionConfig.defaultOptions,
+            ...instructionConfig.additionalOptions,
+          ],
+          input.selectedInstructionCodes,
+        )
       : item.quickInstructions;
     const selectedVariants = input.selectedVariants
       ? buildVariantSnapshots(
-          item.itemNameSnapshot,
+          menuItem.variantOptions,
+          menuItem.requiredVariantQuantity,
           quantity,
           input.selectedVariants,
         )
@@ -176,6 +247,7 @@ export function createOrderCommandService(db: PosDatabaseExecutor) {
         selectedVariants,
         hasAllergy,
         allergenCodes,
+        selectedAllergens,
         allergySeverity,
         allergyNote,
         allergyAcknowledgedAt: allergyChanged
@@ -332,6 +404,12 @@ export function createOrderCommandService(db: PosDatabaseExecutor) {
       if (command.action === 'cancel') {
         return cancelOrder(tx, orderId, command.reason);
       }
+      if (command.action === 'mark_station_preparing') {
+        return markKitchenStationPreparing(tx, orderId, command.station);
+      }
+      if (command.action === 'mark_station_sent') {
+        return markKitchenStationSent(tx, orderId, command.station);
+      }
       return sendToKitchen(tx, orderId, command);
     });
   }
@@ -343,6 +421,89 @@ export function createOrderCommandService(db: PosDatabaseExecutor) {
     executeOrderItemCommand,
     executeOrderCommand,
   };
+}
+
+async function markKitchenStationPreparing(
+  db: PosDatabaseExecutor,
+  orderId: string,
+  station: 'kitchen' | 'bar' | 'dessert' | 'counter',
+) {
+  const order = await getRequiredOrder(db, orderId);
+  if (order.status === 'cancelled') {
+    throw new HttpError(
+      409,
+      'ORDER_CANCELLED',
+      'Cancelled orders cannot be changed.',
+    );
+  }
+
+  const preparedItems = await db
+    .update(orderItems)
+    .set({ status: 'preparing', readyAt: null, servedAt: null })
+    .where(
+      and(
+        eq(orderItems.orderId, orderId),
+        kitchenStationCondition(station),
+        eq(orderItems.status, 'sent'),
+      ),
+    )
+    .returning({ id: orderItems.id });
+
+  if (preparedItems.length > 0) {
+    await refreshOrderStatus(db, orderId);
+  }
+  return localOrderDetailResponseSchema.parse(
+    await loadOrderDetail(db, await getRequiredOrder(db, orderId)),
+  );
+}
+
+async function markKitchenStationSent(
+  db: PosDatabaseExecutor,
+  orderId: string,
+  station: 'kitchen' | 'bar' | 'dessert' | 'counter',
+) {
+  const order = await getRequiredOrder(db, orderId);
+  if (order.status === 'cancelled') {
+    throw new HttpError(
+      409,
+      'ORDER_CANCELLED',
+      'Cancelled orders cannot be changed.',
+    );
+  }
+
+  const revertedItems = await db
+    .update(orderItems)
+    .set({ status: 'sent', readyAt: null, servedAt: null })
+    .where(
+      and(
+        eq(orderItems.orderId, orderId),
+        kitchenStationCondition(station),
+        eq(orderItems.status, 'preparing'),
+      ),
+    )
+    .returning({ id: orderItems.id });
+
+  if (revertedItems.length > 0) {
+    await refreshOrderStatus(db, orderId);
+  }
+  return localOrderDetailResponseSchema.parse(
+    await loadOrderDetail(db, await getRequiredOrder(db, orderId)),
+  );
+}
+
+export function kitchenProductionStations(
+  station: 'kitchen' | 'bar' | 'dessert' | 'counter',
+): Array<'kitchen' | 'bar' | 'dessert'> {
+  return station === 'counter' ? ['bar', 'dessert'] : [station];
+}
+
+function kitchenStationCondition(
+  station: 'kitchen' | 'bar' | 'dessert' | 'counter',
+) {
+  return inArray(
+    orderItems.kitchenStationSnapshot,
+    kitchenProductionStations(station),
+  );
 }
 
 async function cancelOrder(
@@ -459,20 +620,55 @@ async function sendToKitchen(
       'Order has no pending items to send.',
     );
   }
-  const incompleteMochi = pendingItems.find(
-    (item) =>
-      item.itemNameSnapshot === 'Mochi glace (2 pcs)' &&
-      item.selectedVariants.reduce(
-        (sum, variant) => sum + variant.quantity,
-        0,
-      ) !==
-        item.quantity * 2,
+  const [settings, itemCategories] = await Promise.all([
+    ensurePrintSettings(db),
+    db
+      .select({
+        menuItemId: menuItems.id,
+        categoryName: menuCategories.name,
+        requiredVariantQuantity: menuItems.requiredVariantQuantity,
+        variantOptions: menuItems.variantOptions,
+      })
+      .from(menuItems)
+      .innerJoin(menuCategories, eq(menuItems.categoryId, menuCategories.id))
+      .where(
+        inArray(
+          menuItems.id,
+          pendingItems.map((item) => item.menuItemId),
+        ),
+      ),
+  ]);
+  const categoryByMenuItemId = new Map(
+    itemCategories.map((item) => [item.menuItemId, item.categoryName]),
   );
-  if (incompleteMochi) {
+  const variantPolicyByMenuItemId = new Map(
+    itemCategories.map((item) => [item.menuItemId, item]),
+  );
+  const incompleteVariantItem = pendingItems.find((item) => {
+    const policy = variantPolicyByMenuItemId.get(item.menuItemId);
+    const requiredPerPortion = policy?.requiredVariantQuantity ?? 0;
+    const allowedCodes = new Set(
+      policy?.variantOptions.map(({ code }) => code) ?? [],
+    );
+    return (
+      item.selectedVariants.some(({ code }) => !allowedCodes.has(code)) ||
+      (requiredPerPortion > 0 &&
+        item.selectedVariants.reduce(
+          (sum, variant) => sum + variant.quantity,
+          0,
+        ) !==
+          item.quantity * requiredPerPortion)
+    );
+  });
+  if (incompleteVariantItem) {
+    const requiredTotal =
+      incompleteVariantItem.quantity *
+      (variantPolicyByMenuItemId.get(incompleteVariantItem.menuItemId)
+        ?.requiredVariantQuantity ?? 0);
     throw new HttpError(
       422,
       'INVALID_VARIANT_QUANTITY',
-      `Select exactly ${incompleteMochi.quantity * 2} Mochi flavours before sending.`,
+      `Select exactly ${requiredTotal} item variants before sending.`,
     );
   }
 
@@ -532,18 +728,34 @@ async function sendToKitchen(
         ? now
         : item.allergyAcknowledgedAt,
   }));
-  const [printJob] = await db
+  const ticketPlans = buildTicketPlans(sentItems, settings);
+  const createdPrintJobs = await db
     .insert(printJobs)
-    .values({
-      id: uuidv7(),
-      orderId,
-      source: 'pos',
-      printerName: 'mock-kitchen',
-      jobType: 'kitchen_ticket',
-      payload: buildKitchenPayload(sentOrder, sentItems),
-      idempotencyKey: command.idempotencyKey,
-    })
+    .values(
+      ticketPlans.map((plan, index) => ({
+        id: uuidv7(),
+        orderId,
+        source: 'pos' as const,
+        printerName:
+          plan.destination === 'kitchen'
+            ? 'tm-m30-cuisine'
+            : 'tm-m30-bar-desserts',
+        jobType: 'kitchen_ticket' as const,
+        payload: buildKitchenPayload(
+          sentOrder,
+          plan.items,
+          plan.destination,
+          plan.copies,
+          settings,
+          categoryByMenuItemId,
+          plan.includeAllItems,
+        ),
+        idempotencyKey: index === 0 ? command.idempotencyKey : null,
+      })),
+    )
     .returning();
+  const printJob = createdPrintJobs[0];
+  if (!printJob) throw new Error('Kitchen send did not create a print job.');
   const detail = await loadOrderDetail(db, sentOrder);
 
   return localKitchenSendResponseSchema.parse({
@@ -765,6 +977,7 @@ function toOrderItem(item: OrderItem) {
     selectedVariants: item.selectedVariants,
     hasAllergy: item.hasAllergy,
     allergenCodes: item.allergenCodes,
+    selectedAllergens: item.selectedAllergens,
     allergySeverity: item.allergySeverity,
     allergyNote: item.allergyNote,
     allergyAcknowledgedAt: item.allergyAcknowledgedAt?.toISOString() ?? null,
@@ -810,7 +1023,53 @@ function toPrintJob(job: typeof printJobs.$inferSelect) {
   };
 }
 
-function buildKitchenPayload(order: Order, items: OrderItem[]) {
+export function buildTicketPlans(items: OrderItem[], settings: PrintSettings) {
+  const kitchenItems = items.filter(
+    (item) => item.kitchenStationSnapshot === 'kitchen',
+  );
+  const plans = [
+    ...(settings.kitchenEnabled && kitchenItems.length > 0
+      ? [
+          {
+            destination: 'kitchen' as const,
+            items: kitchenItems,
+            copies: settings.kitchenCopies,
+            includeAllItems: false,
+          },
+        ]
+      : []),
+    ...(settings.counterEnabled
+      ? [
+          {
+            destination: 'counter' as const,
+            items,
+            copies: settings.counterCopies,
+            includeAllItems: true,
+          },
+        ]
+      : []),
+  ];
+  return plans.length > 0
+    ? plans
+    : [
+        {
+          destination: 'kitchen' as const,
+          items: [],
+          copies: settings.kitchenCopies,
+          includeAllItems: false,
+        },
+      ];
+}
+
+function buildKitchenPayload(
+  order: Order,
+  items: OrderItem[],
+  ticketDestination: 'kitchen' | 'counter',
+  copies: number,
+  settings: PrintSettings,
+  categoryByMenuItemId: Map<string, string>,
+  includeAllItems = false,
+) {
   return {
     orderId: order.id,
     orderNumber: order.orderNumber,
@@ -821,6 +1080,13 @@ function buildKitchenPayload(order: Order, items: OrderItem[]) {
     allergyNote: order.allergyNote,
     allergyAcknowledgedAt: order.allergyAcknowledgedAt?.toISOString() ?? null,
     createdAt: new Date().toISOString(),
+    ticketDestination,
+    includeAllItems,
+    copies,
+    fontSizePreset: settings.fontSizePreset,
+    topPaddingLines: settings.topPaddingLines,
+    leftPaddingChars: settings.leftPaddingChars,
+    bottomPaddingLines: settings.bottomPaddingLines,
     items: items.map((item) => ({
       orderItemId: item.id,
       name: item.itemNameSnapshot,
@@ -830,12 +1096,14 @@ function buildKitchenPayload(order: Order, items: OrderItem[]) {
       selectedVariants: item.selectedVariants,
       hasAllergy: item.hasAllergy,
       allergenCodes: item.allergenCodes,
+      selectedAllergens: item.selectedAllergens,
       allergySeverity: item.allergySeverity,
       allergyNote: item.allergyNote,
       allergyAcknowledgedAt: item.allergyAcknowledgedAt?.toISOString() ?? null,
       allergyKitchenConfirmedAt:
         item.allergyKitchenConfirmedAt?.toISOString() ?? null,
       station: item.kitchenStationSnapshot,
+      categoryName: categoryByMenuItemId.get(item.menuItemId) ?? 'Autres',
     })),
   };
 }

@@ -9,6 +9,7 @@ import {
   comboRuleGroupItems,
   comboRuleGroups,
   comboRules,
+  itemOrderingPolicyEnum,
   localAuthLoginAttempts,
   localAuthSessions,
   localUserRoleEnum,
@@ -21,6 +22,7 @@ import {
   orders,
   payments,
   printJobs,
+  printSettings,
 } from '../src/schema';
 
 const tablesWithBusinessIds: PgTable[] = [
@@ -67,7 +69,35 @@ describe('POS schema boundaries', () => {
     ]);
   });
 
+  it('supports catalog-driven item ordering policies', () => {
+    expect(itemOrderingPolicyEnum.enumValues).toEqual(['merge', 'separate']);
+  });
+
+  it('defaults combo suggestions to enabled independently from activation', () => {
+    const config = getTableConfig(comboRules);
+    const suggestionColumn = config.columns.find(
+      (column) => column.name === 'is_suggestion_enabled',
+    );
+
+    expect(suggestionColumn?.notNull).toBe(true);
+    expect(suggestionColumn?.hasDefault).toBe(true);
+  });
+
   it('uses an RFC UUIDv7 generator for seed-created records', () => {
     expect(uuidVersion(uuidv7())).toBe(7);
+  });
+
+  it('constrains the singleton print settings and copy counts', () => {
+    const config = getTableConfig(printSettings);
+    expect(config.checks.map((check) => check.name).sort()).toEqual([
+      'print_settings_bottom_padding_lines_check',
+      'print_settings_counter_copies_check',
+      'print_settings_destination_enabled_check',
+      'print_settings_font_size_preset_check',
+      'print_settings_kitchen_copies_check',
+      'print_settings_left_padding_chars_check',
+      'print_settings_singleton_check',
+      'print_settings_top_padding_lines_check',
+    ]);
   });
 });

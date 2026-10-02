@@ -1,0 +1,2491 @@
+{
+  "change": "release-a-customer-exposure-foundation",
+  "executionPurpose": "browser-qa-generation2",
+  "startedAt": "2026-10-01T13:03:18.334Z",
+  "browser": {
+    "channel": "chrome",
+    "headless": true
+  },
+  "originPaths": {
+    "A": "http://localhost:3101",
+    "internal": "http://localhost:3102"
+  },
+  "scenarios": [
+    {
+      "name": "OWNER desktop A navigation",
+      "result": "PASS",
+      "facts": {
+        "hrefs": [
+          "/aujourdhui",
+          "/etablissement/informations-generales",
+          "/visibilite-reputation/avis",
+          "/parametres/integrations",
+          "/parametres/utilisateurs-acces"
+        ],
+        "keyboardOpenAndEscape": false
+      }
+    },
+    {
+      "name": "OWNER desktop today",
+      "result": "FAIL",
+      "reason": "Axe observed accessibility violations on the actual route."
+    },
+    {
+      "name": "OWNER desktop reviews",
+      "result": "FAIL",
+      "reason": "Axe observed accessibility violations on the actual route."
+    },
+    {
+      "name": "OWNER desktop profile",
+      "result": "FAIL",
+      "reason": "Axe observed accessibility violations on the actual route."
+    },
+    {
+      "name": "OWNER desktop integrations",
+      "result": "FAIL",
+      "reason": "Axe observed accessibility violations on the actual route."
+    },
+    {
+      "name": "OWNER desktop users",
+      "result": "FAIL",
+      "reason": "Axe observed accessibility violations on the actual route."
+    },
+    {
+      "name": "OWNER mobile A navigation",
+      "result": "PASS",
+      "facts": {
+        "hrefs": [
+          "/visibilite-reputation/avis",
+          "/aujourdhui",
+          "/etablissement/informations-generales",
+          "/parametres/integrations",
+          "/parametres/utilisateurs-acces"
+        ],
+        "keyboardOpenAndEscape": true
+      }
+    },
+    {
+      "name": "OWNER mobile today",
+      "result": "FAIL",
+      "reason": "Axe observed accessibility violations on the actual route."
+    },
+    {
+      "name": "OWNER mobile reviews",
+      "result": "FAIL",
+      "reason": "Axe observed accessibility violations on the actual route."
+    },
+    {
+      "name": "OWNER mobile profile",
+      "result": "FAIL",
+      "reason": "Axe observed accessibility violations on the actual route."
+    },
+    {
+      "name": "OWNER mobile integrations",
+      "result": "FAIL",
+      "reason": "Axe observed accessibility violations on the actual route."
+    },
+    {
+      "name": "OWNER mobile users",
+      "result": "FAIL",
+      "reason": "Axe observed accessibility violations on the actual route."
+    },
+    {
+      "name": "OWNER scoped attention queue",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "8"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "1"
+          },
+          {
+            "label": "À traiter",
+            "value": "8"
+          }
+        ],
+        "queue": true,
+        "sourceSelectorAbsent": true
+      }
+    },
+    {
+      "name": "OWNER browser source forging",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "12"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "1"
+          },
+          {
+            "label": "À traiter",
+            "value": "8"
+          }
+        ],
+        "queue": false,
+        "sourceSelectorAbsent": true
+      }
+    },
+    {
+      "name": "OWNER selected DIRECT unavailable",
+      "result": "PASS",
+      "facts": {
+        "selectedUnavailable": true,
+        "detailAbsent": true
+      }
+    },
+    {
+      "name": "OWNER selected foreign unavailable",
+      "result": "NOT_RUN",
+      "reason": "The parent fixture manifest supplied no exact record ID for this scenario."
+    },
+    {
+      "name": "MANAGER desktop A navigation",
+      "result": "PASS",
+      "facts": {
+        "hrefs": [
+          "/aujourdhui",
+          "/etablissement/informations-generales",
+          "/visibilite-reputation/avis",
+          "/parametres/utilisateurs-acces"
+        ],
+        "keyboardOpenAndEscape": false
+      }
+    },
+    {
+      "name": "MANAGER desktop today",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "1"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "8"
+          }
+        ],
+        "previewIds": [
+          "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+          "506d210a-a484-444f-b58d-fe98b8ed0c33",
+          "3cc9c8b9-0b79-4a77-8141-9a26d5496e43"
+        ],
+        "expectedAttention": 8,
+        "expectedNew": 1,
+        "expectedPreviewCount": 3
+      }
+    },
+    {
+      "name": "MANAGER desktop reviews",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "12"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "1"
+          },
+          {
+            "label": "À traiter",
+            "value": "8"
+          }
+        ],
+        "queue": false,
+        "sourceSelectorAbsent": true
+      }
+    },
+    {
+      "name": "MANAGER desktop profile",
+      "result": "PASS",
+      "facts": {
+        "basicProfileVisible": true,
+        "knowledgeSubsectionsAbsent": true,
+        "readonly": false
+      }
+    },
+    {
+      "name": "MANAGER desktop integrations",
+      "result": "PASS",
+      "facts": {
+        "permissionRecovery": true
+      }
+    },
+    {
+      "name": "MANAGER desktop users",
+      "result": "PASS",
+      "facts": {}
+    },
+    {
+      "name": "MANAGER mobile A navigation",
+      "result": "PASS",
+      "facts": {
+        "hrefs": [
+          "/visibilite-reputation/avis",
+          "/aujourdhui",
+          "/etablissement/informations-generales",
+          "/parametres/utilisateurs-acces"
+        ],
+        "keyboardOpenAndEscape": true
+      }
+    },
+    {
+      "name": "MANAGER mobile today",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "1"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "8"
+          }
+        ],
+        "previewIds": [
+          "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+          "506d210a-a484-444f-b58d-fe98b8ed0c33",
+          "3cc9c8b9-0b79-4a77-8141-9a26d5496e43"
+        ],
+        "expectedAttention": 8,
+        "expectedNew": 1,
+        "expectedPreviewCount": 3
+      }
+    },
+    {
+      "name": "MANAGER mobile reviews",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "12"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "1"
+          },
+          {
+            "label": "À traiter",
+            "value": "8"
+          }
+        ],
+        "queue": false,
+        "sourceSelectorAbsent": true
+      }
+    },
+    {
+      "name": "MANAGER mobile profile",
+      "result": "PASS",
+      "facts": {
+        "basicProfileVisible": true,
+        "knowledgeSubsectionsAbsent": true,
+        "readonly": false
+      }
+    },
+    {
+      "name": "MANAGER mobile integrations",
+      "result": "PASS",
+      "facts": {
+        "permissionRecovery": true
+      }
+    },
+    {
+      "name": "MANAGER mobile users",
+      "result": "PASS",
+      "facts": {}
+    },
+    {
+      "name": "MANAGER scoped attention queue",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "8"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "1"
+          },
+          {
+            "label": "À traiter",
+            "value": "8"
+          }
+        ],
+        "queue": true,
+        "sourceSelectorAbsent": true
+      }
+    },
+    {
+      "name": "MANAGER browser source forging",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "12"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "1"
+          },
+          {
+            "label": "À traiter",
+            "value": "8"
+          }
+        ],
+        "queue": false,
+        "sourceSelectorAbsent": true
+      }
+    },
+    {
+      "name": "MANAGER selected DIRECT unavailable",
+      "result": "PASS",
+      "facts": {
+        "selectedUnavailable": true,
+        "detailAbsent": true
+      }
+    },
+    {
+      "name": "MANAGER selected foreign unavailable",
+      "result": "NOT_RUN",
+      "reason": "The parent fixture manifest supplied no exact record ID for this scenario."
+    },
+    {
+      "name": "STAFF desktop A navigation",
+      "result": "PASS",
+      "facts": {
+        "hrefs": [
+          "/aujourdhui",
+          "/etablissement/informations-generales",
+          "/visibilite-reputation/avis"
+        ],
+        "keyboardOpenAndEscape": false
+      }
+    },
+    {
+      "name": "STAFF desktop today",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "0"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "4"
+          }
+        ],
+        "previewIds": [
+          "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+          "3cc9c8b9-0b79-4a77-8141-9a26d5496e43",
+          "809ce7ea-7f95-40dd-956a-e0941d75f81d"
+        ],
+        "expectedAttention": 4,
+        "expectedNew": 0,
+        "expectedPreviewCount": 3
+      }
+    },
+    {
+      "name": "STAFF desktop reviews",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "4"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "0"
+          },
+          {
+            "label": "À traiter",
+            "value": "4"
+          }
+        ],
+        "queue": false,
+        "sourceSelectorAbsent": true
+      }
+    },
+    {
+      "name": "STAFF desktop profile",
+      "result": "PASS",
+      "facts": {
+        "basicProfileVisible": true,
+        "knowledgeSubsectionsAbsent": true,
+        "readonly": true
+      }
+    },
+    {
+      "name": "STAFF desktop integrations",
+      "result": "PASS",
+      "facts": {
+        "permissionRecovery": true
+      }
+    },
+    {
+      "name": "STAFF desktop users",
+      "result": "PASS",
+      "facts": {
+        "permissionRecovery": true
+      }
+    },
+    {
+      "name": "STAFF mobile A navigation",
+      "result": "PASS",
+      "facts": {
+        "hrefs": [
+          "/visibilite-reputation/avis",
+          "/aujourdhui",
+          "/etablissement/informations-generales"
+        ],
+        "keyboardOpenAndEscape": true
+      }
+    },
+    {
+      "name": "STAFF mobile today",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "0"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "4"
+          }
+        ],
+        "previewIds": [
+          "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+          "3cc9c8b9-0b79-4a77-8141-9a26d5496e43",
+          "809ce7ea-7f95-40dd-956a-e0941d75f81d"
+        ],
+        "expectedAttention": 4,
+        "expectedNew": 0,
+        "expectedPreviewCount": 3
+      }
+    },
+    {
+      "name": "STAFF mobile reviews",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "4"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "0"
+          },
+          {
+            "label": "À traiter",
+            "value": "4"
+          }
+        ],
+        "queue": false,
+        "sourceSelectorAbsent": true
+      }
+    },
+    {
+      "name": "STAFF mobile profile",
+      "result": "PASS",
+      "facts": {
+        "basicProfileVisible": true,
+        "knowledgeSubsectionsAbsent": true,
+        "readonly": true
+      }
+    },
+    {
+      "name": "STAFF mobile integrations",
+      "result": "PASS",
+      "facts": {
+        "permissionRecovery": true
+      }
+    },
+    {
+      "name": "STAFF mobile users",
+      "result": "PASS",
+      "facts": {
+        "permissionRecovery": true
+      }
+    },
+    {
+      "name": "STAFF scoped attention queue",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "4"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "0"
+          },
+          {
+            "label": "À traiter",
+            "value": "4"
+          }
+        ],
+        "queue": true,
+        "sourceSelectorAbsent": true
+      }
+    },
+    {
+      "name": "STAFF browser source forging",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Total",
+            "value": "4"
+          },
+          {
+            "label": "Nouveaux",
+            "value": "0"
+          },
+          {
+            "label": "À traiter",
+            "value": "4"
+          }
+        ],
+        "queue": false,
+        "sourceSelectorAbsent": true
+      }
+    },
+    {
+      "name": "STAFF selected DIRECT unavailable",
+      "result": "PASS",
+      "facts": {
+        "selectedUnavailable": true,
+        "detailAbsent": true
+      }
+    },
+    {
+      "name": "STAFF selected foreign unavailable",
+      "result": "NOT_RUN",
+      "reason": "The parent fixture manifest supplied no exact record ID for this scenario."
+    },
+    {
+      "name": "STAFF selected unassigned unavailable",
+      "result": "PASS",
+      "facts": {
+        "selectedUnavailable": true,
+        "detailAbsent": true
+      }
+    },
+    {
+      "name": "OWNER Today width 1536",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "1"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "8"
+          }
+        ],
+        "previewIds": [
+          "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+          "506d210a-a484-444f-b58d-fe98b8ed0c33",
+          "3cc9c8b9-0b79-4a77-8141-9a26d5496e43"
+        ],
+        "expectedAttention": 8,
+        "expectedNew": 1,
+        "expectedPreviewCount": 3
+      }
+    },
+    {
+      "name": "OWNER Today width 1024",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "1"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "8"
+          }
+        ],
+        "previewIds": [
+          "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+          "506d210a-a484-444f-b58d-fe98b8ed0c33",
+          "3cc9c8b9-0b79-4a77-8141-9a26d5496e43"
+        ],
+        "expectedAttention": 8,
+        "expectedNew": 1,
+        "expectedPreviewCount": 3
+      }
+    },
+    {
+      "name": "OWNER Today width 768",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "1"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "8"
+          }
+        ],
+        "previewIds": [
+          "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+          "506d210a-a484-444f-b58d-fe98b8ed0c33",
+          "3cc9c8b9-0b79-4a77-8141-9a26d5496e43"
+        ],
+        "expectedAttention": 8,
+        "expectedNew": 1,
+        "expectedPreviewCount": 3
+      }
+    },
+    {
+      "name": "OWNER Today width 390",
+      "result": "PASS",
+      "facts": {
+        "metrics": [
+          {
+            "label": "Nouveaux avis Google",
+            "value": "1"
+          },
+          {
+            "label": "Avis à traiter",
+            "value": "8"
+          }
+        ],
+        "previewIds": [
+          "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+          "506d210a-a484-444f-b58d-fe98b8ed0c33",
+          "3cc9c8b9-0b79-4a77-8141-9a26d5496e43"
+        ],
+        "expectedAttention": 8,
+        "expectedNew": 1,
+        "expectedPreviewCount": 3
+      }
+    },
+    {
+      "name": "OWNER empty search and recovery",
+      "result": "PASS",
+      "facts": {
+        "emptyVisible": true,
+        "clearFilterRecovered": true
+      }
+    },
+    {
+      "name": "OWNER real basic profile save",
+      "result": "PASS",
+      "facts": {
+        "pending": {
+          "ariaBusy": "true",
+          "disabled": true,
+          "focus": {
+            "active": true,
+            "outline": "none",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(45, 126, 101) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+          },
+          "controlGeometry": {
+            "width": 169,
+            "height": 40,
+            "textOutsideButton": false
+          }
+        },
+        "successVisible": true,
+        "transportDelayApplied": true,
+        "persistedAfterReload": true
+      }
+    },
+    {
+      "name": "OWNER real manual draft save",
+      "result": "PASS",
+      "facts": {
+        "pending": {
+          "ariaBusy": "true",
+          "disabled": true,
+          "focus": {
+            "active": true,
+            "outline": "none",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(45, 126, 101) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+          },
+          "controlGeometry": {
+            "width": 214,
+            "height": 40,
+            "textOutsideButton": false
+          }
+        },
+        "successVisible": true,
+        "transportDelayApplied": true,
+        "reviewId": "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+        "persistedAfterReload": true,
+        "publicationDisabled": true
+      }
+    },
+    {
+      "name": "OWNER real internal note save",
+      "result": "PASS",
+      "facts": {
+        "pending": {
+          "ariaBusy": "true",
+          "disabled": true,
+          "focus": {
+            "active": true,
+            "outline": "none",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(45, 126, 101) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+          },
+          "controlGeometry": {
+            "width": 111,
+            "height": 36,
+            "textOutsideButton": false
+          }
+        },
+        "successVisible": true,
+        "transportDelayApplied": true,
+        "persistedAfterReload": true
+      }
+    },
+    {
+      "name": "MANAGER real basic profile save",
+      "result": "PASS",
+      "facts": {
+        "pending": {
+          "ariaBusy": "true",
+          "disabled": true,
+          "focus": {
+            "active": true,
+            "outline": "none",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(45, 126, 101) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+          },
+          "controlGeometry": {
+            "width": 169,
+            "height": 40,
+            "textOutsideButton": false
+          }
+        },
+        "successVisible": true,
+        "transportDelayApplied": true,
+        "persistedAfterReload": true
+      }
+    },
+    {
+      "name": "MANAGER real manual draft save",
+      "result": "PASS",
+      "facts": {
+        "pending": {
+          "ariaBusy": "true",
+          "disabled": true,
+          "focus": {
+            "active": true,
+            "outline": "none",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(45, 126, 101) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+          },
+          "controlGeometry": {
+            "width": 214,
+            "height": 40,
+            "textOutsideButton": false
+          }
+        },
+        "successVisible": true,
+        "transportDelayApplied": true,
+        "reviewId": "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+        "persistedAfterReload": true,
+        "publicationDisabled": true
+      }
+    },
+    {
+      "name": "MANAGER real internal note save",
+      "result": "PASS",
+      "facts": {
+        "pending": {
+          "ariaBusy": "true",
+          "disabled": true,
+          "focus": {
+            "active": true,
+            "outline": "none",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(45, 126, 101) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+          },
+          "controlGeometry": {
+            "width": 111,
+            "height": 36,
+            "textOutsideButton": false
+          }
+        },
+        "successVisible": true,
+        "transportDelayApplied": true,
+        "persistedAfterReload": true
+      }
+    },
+    {
+      "name": "STAFF real manual draft save",
+      "result": "PASS",
+      "facts": {
+        "pending": {
+          "ariaBusy": "true",
+          "disabled": true,
+          "focus": {
+            "active": true,
+            "outline": "none",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(45, 126, 101) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+          },
+          "controlGeometry": {
+            "width": 152,
+            "height": 40,
+            "textOutsideButton": false
+          }
+        },
+        "successVisible": true,
+        "transportDelayApplied": true,
+        "reviewId": "bbf7ac25-4748-4911-9638-48f4d9ccc2c0",
+        "persistedAfterReload": true,
+        "publicationDisabled": true
+      }
+    },
+    {
+      "name": "STAFF real internal note save",
+      "result": "PASS",
+      "facts": {
+        "pending": {
+          "ariaBusy": "true",
+          "disabled": true,
+          "focus": {
+            "active": true,
+            "outline": "none",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(45, 126, 101) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+          },
+          "controlGeometry": {
+            "width": 111,
+            "height": 36,
+            "textOutsideButton": false
+          }
+        },
+        "successVisible": true,
+        "transportDelayApplied": true,
+        "persistedAfterReload": true
+      }
+    },
+    {
+      "name": "OWNER actual rejected draft and recovery",
+      "result": "PASS",
+      "facts": {
+        "actualActionError": true,
+        "controlsRecovered": true,
+        "rejectedDraftAbsentAfterReload": true
+      }
+    },
+    {
+      "name": "OWNER deferred direct route and safe recovery",
+      "result": "PASS",
+      "facts": {
+        "browserQueryDidNotOpenInternal": true,
+        "permittedRecovery": true
+      }
+    },
+    {
+      "name": "Internal existing Knowledge and Booking composition",
+      "result": "PASS",
+      "facts": {
+        "knowledgeVisible": true,
+        "bookingVisible": true,
+        "sourceSelectorVisible": true
+      }
+    },
+    {
+      "name": "Actual Next knowledge action replay denied in A",
+      "result": "PASS",
+      "facts": {
+        "capturedFromRealInternalForm": true,
+        "actionMetadata": {
+          "actionIdSha256": "e77c15de13cc1a9b1ec7de09fa9663f8c4e921c45b80abfcaaa3ea5668a233d9",
+          "workerManifestMatch": true,
+          "workerRoutePaths": [
+            "/etablissement/informations-generales"
+          ]
+        },
+        "replayFacts": {
+          "httpStatus": 303,
+          "contentType": "text/x-component",
+          "bodyIsEmptyJson": false,
+          "bodyContainsTypedUnavailable": false,
+          "headerNotFound": false,
+          "errorNotFound": false,
+          "actionRedirectToUnavailable": true,
+          "ordinaryRedirectToUnavailable": false,
+          "unavailableResponse": false,
+          "denied": true
+        },
+        "persistedBeforeAfterEqual": true,
+        "callbackReturned": true
+      }
+    },
+    {
+      "name": "Actual Next booking action replay denied in A",
+      "result": "FAIL",
+      "reason": "The genuine deferred Next action was not denied at the allowed A URL.",
+      "safeFacts": {
+        "capturedFromRealInternalForm": true,
+        "actionMetadata": {
+          "actionIdSha256": "db6744f51b10304f5557e9a32952aa517f69a573d2acc7184b2ecda726599041",
+          "workerManifestMatch": true,
+          "workerRoutePaths": [
+            "/reservations/parametres"
+          ]
+        },
+        "replayFacts": {
+          "httpStatus": 200,
+          "contentType": "application/json; charset=utf-8",
+          "bodyIsEmptyJson": true,
+          "bodyContainsTypedUnavailable": false,
+          "headerNotFound": false,
+          "errorNotFound": false,
+          "actionRedirectToUnavailable": false,
+          "ordinaryRedirectToUnavailable": false,
+          "unavailableResponse": false,
+          "denied": false
+        },
+        "persistedBeforeAfterEqual": true,
+        "callbackReturned": true
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/01-owner-desktop-today.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual route",
+      "scenario": "owner-desktop-today",
+      "sha256": "2fbc192bcc3a276d22c77af81eeae9f215252a2932926d1650bb79a108c68580"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/02-owner-desktop-reviews.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual route",
+      "scenario": "owner-desktop-reviews",
+      "sha256": "e9247e8318b3d0711bcfa23e9195eb9ab38ddd4fe85d830496938a207cfb291d"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/03-owner-desktop-profile.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual route",
+      "scenario": "owner-desktop-profile",
+      "sha256": "e8bfd8546e5934be0f033ca8bea9ffffb478f58b9d18a02d386fd920d92aa5d4"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/04-owner-desktop-integrations.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual route",
+      "scenario": "owner-desktop-integrations",
+      "sha256": "c676db1cff03b88ce9d1bb77b3130a3424679d60711ff8e1c7d381a26e5686db"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/05-owner-desktop-users.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual route",
+      "scenario": "owner-desktop-users",
+      "sha256": "695feab2e4ee7c097e1f5686548b8e4e49bcae386500ea125992c2e4b36b2bde"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/06-owner-mobile-menu.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "mobile menu open",
+      "scenario": "owner-mobile-menu",
+      "sha256": "deaf0459dbcf61541f663d2248ff4c6a6ad961d0949bb417f572aac097f399f6"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/07-owner-mobile-today.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual route",
+      "scenario": "owner-mobile-today",
+      "sha256": "323c5183774ad6067b50d7c42b26290d59e6f4edde84b443061739cf7e4397ab"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/08-owner-mobile-reviews.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual route",
+      "scenario": "owner-mobile-reviews",
+      "sha256": "853cb6b32f01df9dfa947f256024169249f89162141d78b5a6616791948aa16b"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/09-owner-mobile-profile.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual route",
+      "scenario": "owner-mobile-profile",
+      "sha256": "54a6530a83fc9f5a620889db9ff4a181234dca0eb8676b30c6fc02566ab7c2ec"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/10-owner-mobile-integrations.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual route",
+      "scenario": "owner-mobile-integrations",
+      "sha256": "af40a584f44457935945533e639658c261f668aa3e41bcd3cb7200b5812d9447"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/11-owner-mobile-users.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual route",
+      "scenario": "owner-mobile-users",
+      "sha256": "20540185d110cfd99acb97715d58391a53998617df02fc8766890a26a24b42ca"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/12-owner-selected-direct-unavailable.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual source or tenant unavailable recovery",
+      "scenario": "owner-selected-direct-unavailable",
+      "sha256": "fdd2a245c3bd900a83dd4b1029f4a580794a1897363bf477823843904c22f8d0"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/13-manager-desktop-profile.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "MANAGER",
+      "state": "actual route",
+      "scenario": "manager-desktop-profile",
+      "sha256": "3870ff57fbc5f77f92b071c58e928ed753c8abc64adc11747803b4ed49ead7ed"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/14-manager-desktop-integrations.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "MANAGER",
+      "state": "permission recovery",
+      "scenario": "manager-desktop-integrations",
+      "sha256": "0024fca531030eebd9519970354e3485912b339c1bdfae16bfc5871c1f524d17"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/15-manager-mobile-menu.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "MANAGER",
+      "state": "mobile menu open",
+      "scenario": "manager-mobile-menu",
+      "sha256": "4e0c03438207a99de5588ced36ebd2f319f0e58a6e30af730d6f897a1ba2a63f"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/16-manager-mobile-profile.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "MANAGER",
+      "state": "actual route",
+      "scenario": "manager-mobile-profile",
+      "sha256": "021c92a32093dcf46783077c2155def010e201d0b1408c41fe6f5ef7801c5980"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/17-manager-mobile-integrations.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "MANAGER",
+      "state": "permission recovery",
+      "scenario": "manager-mobile-integrations",
+      "sha256": "05f3743bffac8391c22c57e908ee6db0e351a44dc6fed16399808d15d4e311fb"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/18-staff-desktop-profile.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "STAFF",
+      "state": "actual route",
+      "scenario": "staff-desktop-profile",
+      "sha256": "5016497349972c6f56ab1d490c1473ce28477a7c2190a31d10c84bb4413302c3"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/19-staff-desktop-integrations.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "STAFF",
+      "state": "permission recovery",
+      "scenario": "staff-desktop-integrations",
+      "sha256": "a9a1eef6c4b666e5f20829d5416125a14368193e63727b5013f4cf07d0452047"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/20-staff-mobile-menu.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "STAFF",
+      "state": "mobile menu open",
+      "scenario": "staff-mobile-menu",
+      "sha256": "5c0aab017c7f2a4ca80ff78c0362c93a26d37adffef4e62d1cd95fed3ad5b61a"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/21-staff-mobile-profile.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "STAFF",
+      "state": "actual route",
+      "scenario": "staff-mobile-profile",
+      "sha256": "0b6efe0e903ee8de6117e1f565db68351967b349ff4b8b218402e4ebd3d8b267"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/22-staff-mobile-integrations.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "STAFF",
+      "state": "permission recovery",
+      "scenario": "staff-mobile-integrations",
+      "sha256": "850b22a00a7ae369ad7907d476f0f44a5f7c8deceae56a135b62f060c1e4e710"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/23-owner-today-1536.png",
+      "viewport": {
+        "width": 1536,
+        "height": 864
+      },
+      "role": "OWNER",
+      "state": "actual A Today breakpoint",
+      "scenario": "owner-today-1536",
+      "sha256": "7667c1da07c12dd2d72f9f8c484271705c4395ef79379c81c7bee8f4d6e8488c"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/24-owner-today-1024.png",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual A Today breakpoint",
+      "scenario": "owner-today-1024",
+      "sha256": "4819ca7833587a0d8db1e67bbe1420a0d755a0fef01fac54b9453aa8e0a2c007"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/25-owner-today-768.png",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "role": "OWNER",
+      "state": "actual A Today breakpoint",
+      "scenario": "owner-today-768",
+      "sha256": "5a60c606ff155f7188d73be75f1447f6deb26059d89fced60ef6c74294e3bcbd"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/26-owner-today-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "actual A Today breakpoint",
+      "scenario": "owner-today-390",
+      "sha256": "323c5183774ad6067b50d7c42b26290d59e6f4edde84b443061739cf7e4397ab"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/27-owner-reviews-empty-filter.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "real filtered empty state",
+      "scenario": "owner-reviews-empty-filter",
+      "sha256": "23f8254c0be45c11aa04bef3a39e288e8a799e079d0e5d8362309f1333286ac3"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/28-owner-profile-pending.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual form pending while one local POST is held before server admission",
+      "scenario": "owner-profile-pending",
+      "sha256": "0a783b9c169d7c6e3a1550b9c5f73933953f077ceef3ae59c96c472be75571dc"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/29-owner-profile-saved.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "real Server Action success",
+      "scenario": "owner-profile-saved",
+      "sha256": "e0b0084bf62b849b894f65704eeb74e0f276e24294d372a0a4255fb7ea479e32"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/30-owner-draft-keyboard-focus.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "keyboard focus before Enter submits the real form",
+      "scenario": "owner-draft-keyboard-focus",
+      "sha256": "36465d5a46cf4c2bb887853e021dd15a7e88725ff70886332bed43eb291ff05c"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/31-owner-draft-pending.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual form pending while one local POST is held before server admission",
+      "scenario": "owner-draft-pending",
+      "sha256": "d0f2a3ec867b31dfc4a1c9862edd92f53f302684237dca1ddc847a74663dedf3"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/32-owner-draft-saved.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "real Server Action success",
+      "scenario": "owner-draft-saved",
+      "sha256": "5074267786c802d0bef92f037d3b8b1b9ece02032b35152f2f9ddb9b80c2476b"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/33-owner-note-pending.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual form pending while one local POST is held before server admission",
+      "scenario": "owner-note-pending",
+      "sha256": "a3f2721b9048cc940736c606e507b1625495dfa9ce9de31e233cc7c44248b6ab"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/34-owner-note-saved.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "real Server Action success",
+      "scenario": "owner-note-saved",
+      "sha256": "5bdf03eba8d0416c268f98369eb6924cc5bf31eeeb408131b09a5f98622aca4c"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/35-manager-profile-pending.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "MANAGER",
+      "state": "actual form pending while one local POST is held before server admission",
+      "scenario": "manager-profile-pending",
+      "sha256": "95b0a60e8410540754110420c2c64c2d51cab897acfec9327b597f80405291ee"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/36-manager-profile-saved.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "MANAGER",
+      "state": "real Server Action success",
+      "scenario": "manager-profile-saved",
+      "sha256": "e98d8286e0d13ba6800c486c1c6788b16a8fdd79d3d2f07ee54d34631408276c"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/37-manager-draft-pending.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "MANAGER",
+      "state": "actual form pending while one local POST is held before server admission",
+      "scenario": "manager-draft-pending",
+      "sha256": "0a0d7cad03d1c3cb97c3e4f71b082ce9c99df5cddb07200de474e09ecfadbf2b"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/38-manager-draft-saved.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "MANAGER",
+      "state": "real Server Action success",
+      "scenario": "manager-draft-saved",
+      "sha256": "0ac6015b5c16a5fa30de421204d71441d92a328ac82e48f0ff2c473ec21556dd"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/39-manager-note-pending.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "MANAGER",
+      "state": "actual form pending while one local POST is held before server admission",
+      "scenario": "manager-note-pending",
+      "sha256": "cee6398446b3789e1a3cdf7ee8fc876ebd8795d55c94e5994cf2fd8be27e1930"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/40-manager-note-saved.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "MANAGER",
+      "state": "real Server Action success",
+      "scenario": "manager-note-saved",
+      "sha256": "f83e540bad0d8bcfb61e157dac3f5573ae357acb27a19451262cc7e9f4cf7421"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/41-staff-draft-pending.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "STAFF",
+      "state": "actual form pending while one local POST is held before server admission",
+      "scenario": "staff-draft-pending",
+      "sha256": "b7685832eb60e79f441e8c31a53c5923a92bd8e4bd83af469493a969a56771d6"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/42-staff-draft-saved.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "STAFF",
+      "state": "real Server Action success",
+      "scenario": "staff-draft-saved",
+      "sha256": "815a31b92e2345f11e38baf910a4263f08b84d2c738b931ffb1175df0c396746"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/43-staff-note-pending.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "STAFF",
+      "state": "actual form pending while one local POST is held before server admission",
+      "scenario": "staff-note-pending",
+      "sha256": "f378b6c9b6d1a55c88590b87bfcb958e0c66c4d3625ea8cc5dd70902e1c92539"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/44-staff-note-saved.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "STAFF",
+      "state": "real Server Action success",
+      "scenario": "staff-note-saved",
+      "sha256": "b66459b38e40faca5789dd22a6db6d2fd4fefb891f2f5dd377b9d5f27333ee75"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/45-owner-draft-source-error.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual Server Action source denial",
+      "scenario": "owner-draft-source-error",
+      "sha256": "98aa77cb20bd89018be8b7d17ee432005230dae92c3d79e421937c36067eaea1"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/46-owner-deferred-route-recovery.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "actual deferred route denial",
+      "scenario": "owner-deferred-route-recovery",
+      "sha256": "b7b7bba29a667e456440f9682eb96cc404679466183436d09339e1c11dbe6d2d"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/47-internal-knowledge.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "internal Knowledge regression",
+      "scenario": "internal-knowledge",
+      "sha256": "e9f6ba726cca196c54a9d88ba5a0d994f1b06565ffc938f83cbc353662d64172"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/48-internal-today-booking.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "internal Booking projection regression",
+      "scenario": "internal-today-booking",
+      "sha256": "73c45da330d9110d966280318fbd6ccefeada36cf077237211392cbef89213dd"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/49-internal-reviews-mixed-source.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "internal source selector regression",
+      "scenario": "internal-reviews-mixed-source",
+      "sha256": "4b9a45b931f77bdc37b196039e262598b99ca0350ac1462fa91624e28d475490"
+    }
+  ],
+  "accessibility": [
+    {
+      "role": "OWNER",
+      "route": "today",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "rulesPassed": 22,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 11,
+          "targets": [
+            [
+              ".border-r.md\\:flex > .h-16.border-b.gap-3 > .min-w-0 > .text-primary\\/45.text-xs.truncate"
+            ],
+            [
+              "div:nth-child(1) > .mb-1\\.5.text-\\[10px\\].uppercase"
+            ],
+            [
+              ".mt-4:nth-child(2) > .mb-1\\.5.text-\\[10px\\].uppercase"
+            ],
+            [
+              ".mt-4:nth-child(2) > .gap-0\\.5.grid > .text-primary\\/60.hover\\:text-primary.min-h-9 > .flex-1.truncate.min-w-0"
+            ],
+            [
+              ".border-r.md\\:flex > nav > .mt-4:nth-child(3) > .mb-1\\.5.text-\\[10px\\].uppercase"
+            ],
+            [
+              ".mt-4:nth-child(3) > .gap-0\\.5.grid > .text-primary\\/60.hover\\:text-primary[href$=\"avis\"] > .flex-1.truncate.min-w-0"
+            ],
+            [
+              ".border-r.md\\:flex > nav > .mt-4:nth-child(4) > .mb-1\\.5.text-\\[10px\\].uppercase"
+            ],
+            [
+              ".mt-4:nth-child(4) > .gap-0\\.5.grid > .text-primary\\/60.hover\\:text-primary[href$=\"integrations\"] > .flex-1.truncate.min-w-0"
+            ]
+          ]
+        }
+      ],
+      "incompleteRuleIds": []
+    },
+    {
+      "role": "OWNER",
+      "route": "reviews",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "rulesPassed": 24,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 19,
+          "targets": [
+            [
+              ".md\\:grid > aside > .h-16.px-5.border-b > .min-w-0 > .text-primary\\/45.truncate.font-semibold"
+            ],
+            [
+              "div:nth-child(1) > .mb-1\\.5.text-\\[10px\\].tracking-widest"
+            ],
+            [
+              "div:nth-child(1) > .gap-0\\.5.grid > .text-primary\\/60.hover\\:text-primary[href$=\"aujourdhui\"] > .flex-1.truncate.min-w-0"
+            ],
+            [
+              ".mt-4:nth-child(2) > .mb-1\\.5.text-\\[10px\\].tracking-widest"
+            ],
+            [
+              ".mt-4:nth-child(2) > .gap-0\\.5.grid > .text-primary\\/60.hover\\:text-primary > .flex-1.truncate.min-w-0"
+            ],
+            [
+              ".md\\:grid > aside > nav > .mt-4:nth-child(3) > .mb-1\\.5.text-\\[10px\\].tracking-widest"
+            ],
+            [
+              ".md\\:grid > aside > nav > .mt-4:nth-child(4) > .mb-1\\.5.text-\\[10px\\].tracking-widest"
+            ],
+            [
+              ".mt-4:nth-child(4) > .gap-0\\.5.grid > .text-primary\\/60.hover\\:text-primary[href$=\"integrations\"] > .flex-1.truncate.min-w-0"
+            ]
+          ]
+        }
+      ],
+      "incompleteRuleIds": [
+        "aria-prohibited-attr"
+      ]
+    },
+    {
+      "role": "OWNER",
+      "route": "profile",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "rulesPassed": 27,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 12,
+          "targets": [
+            [
+              ".border-r.md\\:flex > .h-16.border-b.gap-3 > .min-w-0 > .text-primary\\/45.truncate"
+            ],
+            [
+              "div:nth-child(1) > .mb-1\\.5.text-\\[10px\\].uppercase"
+            ],
+            [
+              "div:nth-child(1) > .gap-0\\.5.grid > .text-primary\\/60.hover\\:text-primary[href$=\"aujourdhui\"] > .flex-1.truncate.min-w-0"
+            ],
+            [
+              ".mt-4:nth-child(2) > .mb-1\\.5.text-\\[10px\\].uppercase"
+            ],
+            [
+              ".border-r.md\\:flex > nav > .mt-4:nth-child(3) > .mb-1\\.5.text-\\[10px\\].uppercase"
+            ],
+            [
+              ".mt-4:nth-child(3) > .gap-0\\.5.grid > .text-primary\\/60.hover\\:text-primary[href$=\"avis\"] > .flex-1.truncate.min-w-0"
+            ],
+            [
+              ".border-r.md\\:flex > nav > .mt-4:nth-child(4) > .mb-1\\.5.text-\\[10px\\].uppercase"
+            ],
+            [
+              ".mt-4:nth-child(4) > .gap-0\\.5.grid > .text-primary\\/60.hover\\:text-primary[href$=\"integrations\"] > .flex-1.truncate.min-w-0"
+            ]
+          ]
+        }
+      ],
+      "incompleteRuleIds": [
+        "color-contrast"
+      ]
+    },
+    {
+      "role": "OWNER",
+      "route": "integrations",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "rulesPassed": 23,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 15,
+          "targets": [
+            [
+              ".md\\:grid > aside > .h-16.border-b.gap-3 > .min-w-0 > .text-primary\\/45.text-xs.font-semibold"
+            ],
+            [
+              "div:nth-child(1) > .mb-1\\.5.px-2.text-\\[10px\\]"
+            ],
+            [
+              "div:nth-child(1) > .gap-0\\.5.grid > .text-primary\\/60.hover\\:text-primary[href$=\"aujourdhui\"] > .flex-1"
+            ],
+            [
+              ".mt-4:nth-child(2) > .mb-1\\.5.px-2.text-\\[10px\\]"
+            ],
+            [
+              ".mt-4:nth-child(2) > .gap-0\\.5.grid > .text-primary\\/60.hover\\:text-primary.min-h-9 > .flex-1"
+            ],
+            [
+              ".md\\:grid > aside > nav > .mt-4:nth-child(3) > .mb-1\\.5.px-2.text-\\[10px\\]"
+            ],
+            [
+              ".mt-4:nth-child(3) > .gap-0\\.5.grid > .text-primary\\/60.hover\\:text-primary[href$=\"avis\"] > .flex-1"
+            ],
+            [
+              ".md\\:grid > aside > nav > .mt-4:nth-child(4) > .mb-1\\.5.px-2.text-\\[10px\\]"
+            ]
+          ]
+        }
+      ],
+      "incompleteRuleIds": []
+    },
+    {
+      "role": "OWNER",
+      "route": "users",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "rulesPassed": 26,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 13,
+          "targets": [
+            [
+              ".md\\:grid > aside > .h-16.px-5.border-b > .min-w-0 > .text-primary\\/45.truncate.text-xs"
+            ],
+            [
+              "div:nth-child(1) > .mb-1\\.5.text-\\[10px\\].uppercase"
+            ],
+            [
+              "div:nth-child(1) > .gap-0\\.5.grid > .text-primary\\/60.hover\\:text-primary[href$=\"aujourdhui\"] > .flex-1.truncate.min-w-0"
+            ],
+            [
+              ".mt-4:nth-child(2) > .mb-1\\.5.text-\\[10px\\].uppercase"
+            ],
+            [
+              ".mt-4:nth-child(2) > .gap-0\\.5.grid > .text-primary\\/60.hover\\:text-primary.min-h-9 > .flex-1.truncate.min-w-0"
+            ],
+            [
+              ".md\\:grid > aside > nav > .mt-4:nth-child(3) > .mb-1\\.5.text-\\[10px\\].uppercase"
+            ],
+            [
+              ".mt-4:nth-child(3) > .gap-0\\.5.grid > .text-primary\\/60.hover\\:text-primary[href$=\"avis\"] > .flex-1.truncate.min-w-0"
+            ],
+            [
+              ".md\\:grid > aside > nav > .mt-4:nth-child(4) > .mb-1\\.5.text-\\[10px\\].uppercase"
+            ]
+          ]
+        }
+      ],
+      "incompleteRuleIds": []
+    },
+    {
+      "role": "OWNER",
+      "route": "today",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "rulesPassed": 22,
+      "violations": [
+        {
+          "id": "aria-hidden-focus",
+          "impact": "serious",
+          "count": 1,
+          "targets": [
+            [
+              ".fixed"
+            ]
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 2,
+          "targets": [
+            [
+              ".opacity-80"
+            ],
+            [
+              "footer"
+            ]
+          ]
+        }
+      ],
+      "incompleteRuleIds": []
+    },
+    {
+      "role": "OWNER",
+      "route": "reviews",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "rulesPassed": 23,
+      "violations": [
+        {
+          "id": "aria-hidden-focus",
+          "impact": "serious",
+          "count": 1,
+          "targets": [
+            [
+              ".fixed"
+            ]
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 10,
+          "targets": [
+            [
+              ".tracking-normal.text-primary\\/45.uppercase"
+            ],
+            [
+              ".text-primary\\/55.mt-1.font-semibold"
+            ],
+            [
+              ".bg-canvas.p-3.rounded-lg:nth-child(1) > .text-primary\\/55.font-semibold"
+            ],
+            [
+              ".bg-canvas.p-3.rounded-lg:nth-child(1) > .text-primary\\/50.mt-1.font-semibold"
+            ],
+            [
+              ".bg-canvas.p-3.rounded-lg:nth-child(2) > .text-primary\\/55.font-semibold"
+            ],
+            [
+              ".bg-canvas.p-3.rounded-lg:nth-child(2) > .text-primary\\/50.mt-1.font-semibold"
+            ],
+            [
+              ".bg-canvas.p-3.rounded-lg:nth-child(3) > .text-primary\\/55.font-semibold"
+            ],
+            [
+              ".bg-canvas.p-3.rounded-lg:nth-child(3) > .text-primary\\/50.mt-1.font-semibold"
+            ]
+          ]
+        }
+      ],
+      "incompleteRuleIds": [
+        "aria-prohibited-attr"
+      ]
+    },
+    {
+      "role": "OWNER",
+      "route": "profile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "rulesPassed": 27,
+      "violations": [
+        {
+          "id": "aria-hidden-focus",
+          "impact": "serious",
+          "count": 1,
+          "targets": [
+            [
+              ".fixed"
+            ]
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 3,
+          "targets": [
+            [
+              "a[href=\"/\"]"
+            ],
+            [
+              ".mt-1"
+            ],
+            [
+              "footer"
+            ]
+          ]
+        }
+      ],
+      "incompleteRuleIds": [
+        "color-contrast"
+      ]
+    },
+    {
+      "role": "OWNER",
+      "route": "integrations",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "rulesPassed": 23,
+      "violations": [
+        {
+          "id": "aria-hidden-focus",
+          "impact": "serious",
+          "count": 1,
+          "targets": [
+            [
+              ".fixed"
+            ]
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 6,
+          "targets": [
+            [
+              ".mb-2"
+            ],
+            [
+              ".pb-5 > div > .text-primary\\/55.mt-1.text-sm"
+            ],
+            [
+              ".opacity-80"
+            ],
+            [
+              ".shadow-sm.p-0.h-full:nth-child(1) > .py-5.justify-between.gap-3 > .min-w-0 > .text-primary\\/55.font-medium.mt-1"
+            ],
+            [
+              ".shadow-sm.p-0.h-full:nth-child(2) > .py-5.justify-between.gap-3 > .min-w-0 > .text-primary\\/55.font-medium.mt-1"
+            ],
+            [
+              "footer"
+            ]
+          ]
+        }
+      ],
+      "incompleteRuleIds": []
+    },
+    {
+      "role": "OWNER",
+      "route": "users",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "rulesPassed": 26,
+      "violations": [
+        {
+          "id": "aria-hidden-focus",
+          "impact": "serious",
+          "count": 1,
+          "targets": [
+            [
+              ".fixed"
+            ]
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 4,
+          "targets": [
+            [
+              ".mb-2"
+            ],
+            [
+              ".pb-5 > div:nth-child(1) > .text-primary\\/55.mt-1"
+            ],
+            [
+              ".items-stretch > .min-w-0 > .text-primary\\/55.mt-1.font-medium"
+            ],
+            [
+              "footer"
+            ]
+          ]
+        }
+      ],
+      "incompleteRuleIds": []
+    }
+  ],
+  "geometry": [
+    {
+      "role": "OWNER",
+      "route": "today",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "reviews",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "profile",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "integrations",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "users",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "today",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "reviews",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "profile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "integrations",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "users",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "today",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "reviews",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "profile",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "integrations",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "users",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "today",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "reviews",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "profile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "integrations",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "MANAGER",
+      "route": "users",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "STAFF",
+      "route": "today",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "STAFF",
+      "route": "reviews",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "STAFF",
+      "route": "profile",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "STAFF",
+      "route": "integrations",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "STAFF",
+      "route": "users",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewportWidth": 1366,
+      "documentWidth": 1366,
+      "mainClientWidth": 1110,
+      "mainScrollWidth": 1110,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "STAFF",
+      "route": "today",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "STAFF",
+      "route": "reviews",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "STAFF",
+      "route": "profile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "STAFF",
+      "route": "integrations",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "STAFF",
+      "route": "users",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "today",
+      "viewport": {
+        "width": 1536,
+        "height": 864
+      },
+      "viewportWidth": 1536,
+      "documentWidth": 1536,
+      "mainClientWidth": 1280,
+      "mainScrollWidth": 1280,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "today",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "viewportWidth": 1024,
+      "documentWidth": 1024,
+      "mainClientWidth": 768,
+      "mainScrollWidth": 768,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "today",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "viewportWidth": 768,
+      "documentWidth": 768,
+      "mainClientWidth": 512,
+      "mainScrollWidth": 512,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    },
+    {
+      "role": "OWNER",
+      "route": "today",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "mainClientWidth": 390,
+      "mainScrollWidth": 390,
+      "horizontalOverflow": false,
+      "overflowingControls": []
+    }
+  ],
+  "diagnostics": [
+    {
+      "profile": "release-a",
+      "role": "OWNER",
+      "consoleErrors": [],
+      "consoleWarnings": [],
+      "pageErrors": 0,
+      "hydrationErrors": 0,
+      "externalRequestsBlocked": 0
+    },
+    {
+      "profile": "release-a",
+      "role": "MANAGER",
+      "consoleErrors": [],
+      "consoleWarnings": [],
+      "pageErrors": 0,
+      "hydrationErrors": 0,
+      "externalRequestsBlocked": 0
+    },
+    {
+      "profile": "release-a",
+      "role": "STAFF",
+      "consoleErrors": [],
+      "consoleWarnings": [],
+      "pageErrors": 0,
+      "hydrationErrors": 0,
+      "externalRequestsBlocked": 0
+    },
+    {
+      "profile": "internal",
+      "role": "OWNER",
+      "consoleErrors": [
+        {
+          "category": "network",
+          "route": "/etablissement/informations-generales"
+        },
+        {
+          "category": "network",
+          "route": "/reservations/parametres"
+        }
+      ],
+      "consoleWarnings": [],
+      "pageErrors": 0,
+      "hydrationErrors": 0,
+      "externalRequestsBlocked": 0,
+      "expectedDeferredCaptureAborts": 2
+    }
+  ],
+  "limitations": [
+    "Synthetic local fixtures; no live provider connection, import or publication.",
+    "Captured internal action POSTs are aborted before admission; A replays use real valid A sessions.",
+    "A single local action POST is held in browser routing for deterministic pending observation, then forwarded unchanged.",
+    "Automated facts do not establish visual review, formal QA PASS, Gate 3 approval or readiness.",
+    "The historical Users & Access Browser QA FAIL remains preserved; these are current-candidate observations only.",
+    "A filtered empty inbox is exercised; a bound connector with zero persisted rows requires a separately supplied root fixture state."
+  ],
+  "finishedAt": "2026-10-01T13:05:04.252Z",
+  "scenarioFailures": 11,
+  "scenariosNotRun": 3,
+  "diagnosticsRequireReview": true,
+  "diagnosticsExpectation": "Internal captured deferred action POSTs were intentionally aborted; classify those expected network diagnostics separately from runtime errors.",
+  "resultPath": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/browser-results-generation2.json"
+}

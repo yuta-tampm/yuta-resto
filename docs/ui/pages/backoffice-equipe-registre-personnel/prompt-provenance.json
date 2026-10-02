@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "topology": "GENERATED_SNAPSHOTS",
+  "sealed": true,
+  "templateRevision": null,
+  "generation": {
+    "commit": "36c8a515820ff2b68f0f2d7d9da7a96aa80c2a04"
+  },
+  "prompts": [
+    {
+      "filename": "00_REPOSITORY_ANALYSIS.md",
+      "templateSource": null,
+      "templateRevision": null,
+      "templateSha256": null,
+      "snapshotSha256": "1b451a6c567fe08900889520bfa84daeba46d5af12b5990a8f45d816ed544ff5",
+      "localModificationState": "PRE_SEAL",
+      "provenanceStatus": "NEEDS_REVIEW"
+    },
+    {
+      "filename": "01_VISUAL_BASELINE.md",
+      "templateSource": "docs/ui/templates/page/prompts/01_VISUAL_BASELINE.md",
+      "templateRevision": "prompt-template-git-36c8a515820ff2b68f0f2d7d9da7a96aa80c2a04",
+      "templateSha256": "d3075806ae38d0f9f6a945b3b42d1f3b8d7e2bd9eafa712a73587744c9f46119",
+      "snapshotSha256": "d3075806ae38d0f9f6a945b3b42d1f3b8d7e2bd9eafa712a73587744c9f46119",
+      "localModificationState": "NONE",
+      "provenanceStatus": "PROVEN"
+    },
+    {
+      "filename": "02_COMPONENT_REFACTOR.md",
+      "templateSource": "docs/ui/templates/page/prompts/02_COMPONENT_REFACTOR.md",
+      "templateRevision": "prompt-template-git-36c8a515820ff2b68f0f2d7d9da7a96aa80c2a04",
+      "templateSha256": "8b134cd4b462562416fb5c2e57c23eb4675a26eff7ea75fdfae44727b74648ac",
+      "snapshotSha256": "8b134cd4b462562416fb5c2e57c23eb4675a26eff7ea75fdfae44727b74648ac",
+      "localModificationState": "NONE",
+      "provenanceStatus": "PROVEN"
+    },
+    {
+      "filename": "03_INTERACTIONS.md",
+      "templateSource": "docs/ui/templates/page/prompts/03_INTERACTIONS.md",
+      "templateRevision": "prompt-template-git-36c8a515820ff2b68f0f2d7d9da7a96aa80c2a04",
+      "templateSha256": "e27c12d152d9270229eed6951898ab6f5e477d7d12ff9c170f4522ed45f00388",
+      "snapshotSha256": "e27c12d152d9270229eed6951898ab6f5e477d7d12ff9c170f4522ed45f00388",
+      "localModificationState": "NONE",
+      "provenanceStatus": "PROVEN"
+    },
+    {
+      "filename": "04_DATA_INTEGRATION.md",
+      "templateSource": "docs/ui/templates/page/prompts/04_DATA_INTEGRATION.md",
+      "templateRevision": "prompt-template-git-36c8a515820ff2b68f0f2d7d9da7a96aa80c2a04",
+      "templateSha256": "f878f959d3afee428e67620c74f4c75231d2c7816f23cbf7fc6c701067538e79",
+      "snapshotSha256": "f878f959d3afee428e67620c74f4c75231d2c7816f23cbf7fc6c701067538e79",
+      "localModificationState": "NONE",
+      "provenanceStatus": "PROVEN"
+    },
+    {
+      "filename": "05_VISUAL_QA.md",
+      "templateSource": "docs/ui/templates/page/prompts/05_VISUAL_QA.md",
+      "templateRevision": "prompt-template-git-36c8a515820ff2b68f0f2d7d9da7a96aa80c2a04",
+      "templateSha256": "5f31ec1c2a2bcfd3129643931e188365f9608958f1f8bd697ae7854e292eaad0",
+      "snapshotSha256": "5f31ec1c2a2bcfd3129643931e188365f9608958f1f8bd697ae7854e292eaad0",
+      "localModificationState": "NONE",
+      "provenanceStatus": "PROVEN"
+    }
+  ]
+}

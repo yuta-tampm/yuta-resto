@@ -1,0 +1,594 @@
+diff --git a/packages/auth/src/formalites-template-system-authorization.ts b/packages/auth/src/formalites-template-system-authorization.ts
+new file mode 100644
+index 0000000..ec33281
+--- /dev/null
++++ b/packages/auth/src/formalites-template-system-authorization.ts
+@@ -0,0 +1,52 @@
++import type { SystemRole } from '@yuta/contracts/tenant-foundation';
++
++export const FORMALITES_TEMPLATE_SYSTEM_OPERATIONS = [
++  'formalites.template.read',
++  'formalites.template.draft.manage',
++  'formalites.template.review.submit',
++  'formalites.template.publish',
++  'formalites.template.retire',
++] as const;
++
++export type FormalitesTemplateSystemOperation =
++  (typeof FORMALITES_TEMPLATE_SYSTEM_OPERATIONS)[number];
++
++export const GLOBAL_YUTA_FORMALITES_TEMPLATES_SCOPE =
++  'GLOBAL_YUTA_FORMALITES_TEMPLATES' as const;
++
++export type FormalitesTemplateSystemAuthorizationContext = Readonly<{
++  actorUserId: string;
++  systemRole: 'YUTA_ADMIN';
++  operation: FormalitesTemplateSystemOperation;
++  resourceScope: typeof GLOBAL_YUTA_FORMALITES_TEMPLATES_SCOPE;
++}>;
++
++export const FORMALITES_TEMPLATE_SYSTEM_ROLE_GRANTS = {
++  YUTA_ADMIN: FORMALITES_TEMPLATE_SYSTEM_OPERATIONS,
++  YUTA_SUPPORT: [] as const,
++} as const satisfies Readonly<
++  Record<SystemRole, readonly FormalitesTemplateSystemOperation[]>
++>;
++
++export function isFormalitesTemplateSystemOperation(
++  value: unknown,
++): value is FormalitesTemplateSystemOperation {
++  return (
++    typeof value === 'string' &&
++    FORMALITES_TEMPLATE_SYSTEM_OPERATIONS.some(
++      (operation) => operation === value,
++    )
++  );
++}
++
++export function hasFormalitesTemplateSystemOperation(
++  systemRole: SystemRole | null,
++  operation: FormalitesTemplateSystemOperation,
++): systemRole is 'YUTA_ADMIN' {
++  return (
++    systemRole !== null &&
++    FORMALITES_TEMPLATE_SYSTEM_ROLE_GRANTS[systemRole].some(
++      (grantedOperation) => grantedOperation === operation,
++    )
++  );
++}
+diff --git a/packages/auth/src/index.ts b/packages/auth/src/index.ts
+index dc9e4ef..3217067 100644
+--- a/packages/auth/src/index.ts
++++ b/packages/auth/src/index.ts
+@@ -1,4 +1,5 @@
+ export * from './contracts';
++export * from './formalites-template-system-authorization';
+ export * from './password';
+ export * from './post-login';
+ export * from './session';
+diff --git a/packages/auth/src/session.ts b/packages/auth/src/session.ts
+index 1c03dee..8ad154e 100644
+--- a/packages/auth/src/session.ts
++++ b/packages/auth/src/session.ts
+@@ -1,4 +1,10 @@
+ import type { SystemRole, UserStatus } from '@yuta/contracts/tenant-foundation';
++import {
++  GLOBAL_YUTA_FORMALITES_TEMPLATES_SCOPE,
++  hasFormalitesTemplateSystemOperation,
++  isFormalitesTemplateSystemOperation,
++  type FormalitesTemplateSystemAuthorizationContext,
++} from './formalites-template-system-authorization';
+ 
+ export type AuthenticatedIdentity = Readonly<{
+   providerUserId: string;
+@@ -29,7 +35,12 @@ export interface InternalUserLookupPort {
+ }
+ 
+ export interface AuthSecurityLogger {
+-  warn(event: { event: string; userId?: string; reason: string }): void;
++  warn(event: {
++    event: string;
++    userId?: string;
++    reason: string;
++    operation?: string;
++  }): void;
+ }
+ 
+ export class UnauthenticatedError extends Error {
+@@ -58,33 +69,53 @@ export function createAuthService(
+   userLookup: InternalUserLookupPort,
+   logger?: AuthSecurityLogger,
+ ) {
+-  async function getCurrentUser(): Promise<SessionUser | null> {
++  type CurrentUserResolution =
++    | Readonly<{ status: 'unauthenticated' }>
++    | Readonly<{ status: 'user_not_found' }>
++    | Readonly<{ status: 'disabled'; userId: string }>
++    | Readonly<{ status: 'active'; user: SessionUser }>;
++
++  async function resolveCurrentUser(): Promise<CurrentUserResolution> {
+     const identity = await adapter.getIdentity();
+-    if (!identity) return null;
++    if (!identity) return { status: 'unauthenticated' };
+ 
+     const user = await userLookup.findByAuthProviderId(identity.providerUserId);
+-    if (!user) {
++    if (!user) return { status: 'user_not_found' };
++    if (user.status === 'DISABLED') {
++      return { status: 'disabled', userId: user.id };
++    }
++
++    return {
++      status: 'active',
++      user: {
++        id: user.id,
++        email: user.email,
++        displayName: user.displayName,
++        systemRole: user.systemRole,
++      },
++    };
++  }
++
++  async function getCurrentUser(): Promise<SessionUser | null> {
++    const resolution = await resolveCurrentUser();
++    if (resolution.status === 'unauthenticated') return null;
++    if (resolution.status === 'user_not_found') {
+       logger?.warn({
+         event: 'auth.user_resolution_failed',
+         reason: 'not_found',
+       });
+       return null;
+     }
+-    if (user.status === 'DISABLED') {
++    if (resolution.status === 'disabled') {
+       logger?.warn({
+         event: 'auth.disabled_user_denied',
+-        userId: user.id,
++        userId: resolution.userId,
+         reason: 'disabled',
+       });
+       throw new DisabledUserError();
+     }
+ 
+-    return {
+-      id: user.id,
+-      email: user.email,
+-      displayName: user.displayName,
+-      systemRole: user.systemRole,
+-    };
++    return resolution.user;
+   }
+ 
+   async function requireUser(): Promise<SessionUser> {
+@@ -108,7 +139,86 @@ export function createAuthService(
+     return user;
+   }
+ 
+-  return { getCurrentUser, requireUser, requireSystemRole };
++  const safeOperationPattern = /^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$/;
++  const maximumAuditedOperationLength = 100;
++
++  function normalizeAuditedOperation(rawOperation: unknown): string {
++    if (
++      typeof rawOperation === 'string' &&
++      rawOperation.length <= maximumAuditedOperationLength &&
++      safeOperationPattern.test(rawOperation)
++    ) {
++      return rawOperation;
++    }
++    return 'invalid';
++  }
++
++  function logFormalitesTemplateDenial(
++    reason:
++      | 'unauthenticated'
++      | 'user_not_found'
++      | 'disabled'
++      | 'operation_not_allowed'
++      | 'role_not_allowed',
++    rawOperation: unknown,
++    userId?: string,
++  ): void {
++    logger?.warn({
++      event: 'auth.formalites_template_system_operation_denied',
++      ...(userId ? { userId } : {}),
++      reason,
++      operation: normalizeAuditedOperation(rawOperation),
++    });
++  }
++
++  async function requireFormalitesTemplateSystemOperation(
++    rawOperation: unknown,
++  ): Promise<FormalitesTemplateSystemAuthorizationContext> {
++    const resolution = await resolveCurrentUser();
++
++    if (resolution.status === 'unauthenticated') {
++      logFormalitesTemplateDenial('unauthenticated', rawOperation);
++      throw new UnauthenticatedError();
++    }
++    if (resolution.status === 'user_not_found') {
++      logFormalitesTemplateDenial('user_not_found', rawOperation);
++      throw new UnauthenticatedError();
++    }
++    if (resolution.status === 'disabled') {
++      logFormalitesTemplateDenial('disabled', rawOperation, resolution.userId);
++      throw new DisabledUserError();
++    }
++
++    const { user } = resolution;
++    if (!isFormalitesTemplateSystemOperation(rawOperation)) {
++      logFormalitesTemplateDenial(
++        'operation_not_allowed',
++        rawOperation,
++        user.id,
++      );
++      throw new ForbiddenError(
++        'The requested system operation is not allowed.',
++      );
++    }
++    if (!hasFormalitesTemplateSystemOperation(user.systemRole, rawOperation)) {
++      logFormalitesTemplateDenial('role_not_allowed', rawOperation, user.id);
++      throw new ForbiddenError('The required system operation is missing.');
++    }
++
++    return {
++      actorUserId: user.id,
++      systemRole: user.systemRole,
++      operation: rawOperation,
++      resourceScope: GLOBAL_YUTA_FORMALITES_TEMPLATES_SCOPE,
++    };
++  }
++
++  return {
++    getCurrentUser,
++    requireUser,
++    requireSystemRole,
++    requireFormalitesTemplateSystemOperation,
++  };
+ }
+ 
+ export type AuthService = ReturnType<typeof createAuthService>;
+diff --git a/packages/auth/test/formalites-template-system-authorization.test.ts b/packages/auth/test/formalites-template-system-authorization.test.ts
+new file mode 100644
+index 0000000..4a0e125
+--- /dev/null
++++ b/packages/auth/test/formalites-template-system-authorization.test.ts
+@@ -0,0 +1,338 @@
++import { describe, expect, it, vi } from 'vitest';
++import {
++  DisabledUserError,
++  FORMALITES_TEMPLATE_SYSTEM_OPERATIONS,
++  FORMALITES_TEMPLATE_SYSTEM_ROLE_GRANTS,
++  ForbiddenError,
++  GLOBAL_YUTA_FORMALITES_TEMPLATES_SCOPE,
++  UnauthenticatedError,
++  createAuthService,
++  hasFormalitesTemplateSystemOperation,
++  isFormalitesTemplateSystemOperation,
++  type AuthSecurityLogger,
++  type AuthenticatedIdentity,
++  type InternalUserRecord,
++} from '../src';
++
++const identity: AuthenticatedIdentity = {
++  providerUserId: 'provider-user-1',
++  email: 'admin@example.test',
++};
++
++const activeAdmin: InternalUserRecord = {
++  id: '11111111-1111-4111-8111-111111111111',
++  email: identity.email,
++  displayName: 'YUTA Admin',
++  status: 'ACTIVE',
++  systemRole: 'YUTA_ADMIN',
++};
++
++function createLogger() {
++  const warn = vi.fn<AuthSecurityLogger['warn']>();
++  return { logger: { warn }, warn };
++}
++
++function createService(
++  user: InternalUserRecord | null = activeAdmin,
++  logger?: AuthSecurityLogger,
++) {
++  return createAuthService(
++    { getIdentity: async () => identity },
++    { findByAuthProviderId: async () => user },
++    logger,
++  );
++}
++
++describe('Formalités template system authorization policy', () => {
++  it('defines exactly the five approved independent operations', () => {
++    expect(FORMALITES_TEMPLATE_SYSTEM_OPERATIONS).toEqual([
++      'formalites.template.read',
++      'formalites.template.draft.manage',
++      'formalites.template.review.submit',
++      'formalites.template.publish',
++      'formalites.template.retire',
++    ]);
++    expect(new Set(FORMALITES_TEMPLATE_SYSTEM_OPERATIONS).size).toBe(5);
++
++    for (const operation of FORMALITES_TEMPLATE_SYSTEM_OPERATIONS) {
++      expect(isFormalitesTemplateSystemOperation(operation)).toBe(true);
++    }
++    expect(isFormalitesTemplateSystemOperation('formalites.template')).toBe(
++      false,
++    );
++    expect(isFormalitesTemplateSystemOperation('formalites.template.*')).toBe(
++      false,
++    );
++    expect(
++      isFormalitesTemplateSystemOperation('formalites.template.publish.child'),
++    ).toBe(false);
++  });
++
++  it('uses an exhaustive explicit grant map without role inheritance', () => {
++    expect(FORMALITES_TEMPLATE_SYSTEM_ROLE_GRANTS).toEqual({
++      YUTA_ADMIN: FORMALITES_TEMPLATE_SYSTEM_OPERATIONS,
++      YUTA_SUPPORT: [],
++    });
++
++    for (const operation of FORMALITES_TEMPLATE_SYSTEM_OPERATIONS) {
++      expect(
++        hasFormalitesTemplateSystemOperation('YUTA_ADMIN', operation),
++      ).toBe(true);
++      expect(
++        hasFormalitesTemplateSystemOperation('YUTA_SUPPORT', operation),
++      ).toBe(false);
++      expect(hasFormalitesTemplateSystemOperation(null, operation)).toBe(false);
++    }
++  });
++
++  it.each(FORMALITES_TEMPLATE_SYSTEM_OPERATIONS)(
++    'allows YUTA_ADMIN for only the exact requested operation %s',
++    async (operation) => {
++      const { logger, warn } = createLogger();
++      const result = await createService(
++        activeAdmin,
++        logger,
++      ).requireFormalitesTemplateSystemOperation(operation);
++
++      expect(result).toEqual({
++        actorUserId: activeAdmin.id,
++        systemRole: 'YUTA_ADMIN',
++        operation,
++        resourceScope: GLOBAL_YUTA_FORMALITES_TEMPLATES_SCOPE,
++      });
++      expect(Object.keys(result).sort()).toEqual([
++        'actorUserId',
++        'operation',
++        'resourceScope',
++        'systemRole',
++      ]);
++      expect(result).not.toHaveProperty('organizationId');
++      expect(result).not.toHaveProperty('establishmentId');
++      expect(result).not.toHaveProperty('membership');
++      expect(result).not.toHaveProperty('template');
++      expect(warn).not.toHaveBeenCalled();
++    },
++  );
++
++  it.each(FORMALITES_TEMPLATE_SYSTEM_OPERATIONS)(
++    'denies YUTA_SUPPORT for operation %s even with membership-like data',
++    async (operation) => {
++      const { logger, warn } = createLogger();
++      const supportWithMembership = {
++        ...activeAdmin,
++        systemRole: 'YUTA_SUPPORT',
++        membershipRole: 'OWNER',
++        organizationId: 'organization-from-untrusted-context',
++        establishmentId: 'establishment-from-untrusted-context',
++      } as const satisfies InternalUserRecord & {
++        membershipRole: 'OWNER';
++        organizationId: string;
++        establishmentId: string;
++      };
++
++      await expect(
++        createService(
++          supportWithMembership,
++          logger,
++        ).requireFormalitesTemplateSystemOperation(operation),
++      ).rejects.toBeInstanceOf(ForbiddenError);
++      expect(warn).toHaveBeenCalledWith({
++        event: 'auth.formalites_template_system_operation_denied',
++        userId: activeAdmin.id,
++        reason: 'role_not_allowed',
++        operation,
++      });
++    },
++  );
++
++  it('denies a user without a system role and ignores membership-like data', async () => {
++    const { logger, warn } = createLogger();
++    const restaurantOwnerOnly = {
++      ...activeAdmin,
++      systemRole: null,
++      membershipRole: 'OWNER',
++    } as const satisfies InternalUserRecord & { membershipRole: 'OWNER' };
++
++    await expect(
++      createService(
++        restaurantOwnerOnly,
++        logger,
++      ).requireFormalitesTemplateSystemOperation('formalites.template.read'),
++    ).rejects.toBeInstanceOf(ForbiddenError);
++    expect(warn).toHaveBeenCalledWith({
++      event: 'auth.formalites_template_system_operation_denied',
++      userId: activeAdmin.id,
++      reason: 'role_not_allowed',
++      operation: 'formalites.template.read',
++    });
++  });
++
++  it('denies a missing external identity before evaluating the operation', async () => {
++    const { logger, warn } = createLogger();
++    const service = createAuthService(
++      { getIdentity: async () => null },
++      { findByAuthProviderId: async () => activeAdmin },
++      logger,
++    );
++
++    await expect(
++      service.requireFormalitesTemplateSystemOperation(
++        'formalites.template.read',
++      ),
++    ).rejects.toBeInstanceOf(UnauthenticatedError);
++    expect(warn).toHaveBeenCalledWith({
++      event: 'auth.formalites_template_system_operation_denied',
++      reason: 'unauthenticated',
++      operation: 'formalites.template.read',
++    });
++  });
++
++  it('denies an unknown internal user without inventing actor attribution', async () => {
++    const { logger, warn } = createLogger();
++
++    await expect(
++      createService(null, logger).requireFormalitesTemplateSystemOperation(
++        'formalites.template.read',
++      ),
++    ).rejects.toBeInstanceOf(UnauthenticatedError);
++    expect(warn).toHaveBeenCalledWith({
++      event: 'auth.formalites_template_system_operation_denied',
++      reason: 'user_not_found',
++      operation: 'formalites.template.read',
++    });
++  });
++
++  it('denies a disabled YUTA_ADMIN with resolved actor attribution', async () => {
++    const { logger, warn } = createLogger();
++
++    await expect(
++      createService(
++        { ...activeAdmin, status: 'DISABLED' },
++        logger,
++      ).requireFormalitesTemplateSystemOperation('formalites.template.publish'),
++    ).rejects.toBeInstanceOf(DisabledUserError);
++    expect(warn).toHaveBeenCalledWith({
++      event: 'auth.formalites_template_system_operation_denied',
++      userId: activeAdmin.id,
++      reason: 'disabled',
++      operation: 'formalites.template.publish',
++    });
++  });
++
++  it.each([
++    'formalites.template',
++    'formalites.template.publish.child',
++    'formalites.template.delete',
++  ])(
++    'denies the unsupported safe operation %s without prefix matching',
++    async (operation) => {
++      const { logger, warn } = createLogger();
++
++      await expect(
++        createService(
++          activeAdmin,
++          logger,
++        ).requireFormalitesTemplateSystemOperation(operation),
++      ).rejects.toBeInstanceOf(ForbiddenError);
++      expect(warn).toHaveBeenCalledWith({
++        event: 'auth.formalites_template_system_operation_denied',
++        userId: activeAdmin.id,
++        reason: 'operation_not_allowed',
++        operation,
++      });
++    },
++  );
++
++  it.each([
++    undefined,
++    null,
++    42,
++    {},
++    'formalites.template.*',
++    'FORMALITES TEMPLATE PUBLISH',
++    `formalites.template.${'x'.repeat(101)}`,
++  ])(
++    'denies malformed operation input without logging its payload',
++    async (operation) => {
++      const { logger, warn } = createLogger();
++
++      await expect(
++        createService(
++          activeAdmin,
++          logger,
++        ).requireFormalitesTemplateSystemOperation(operation),
++      ).rejects.toBeInstanceOf(ForbiddenError);
++      expect(warn).toHaveBeenCalledWith({
++        event: 'auth.formalites_template_system_operation_denied',
++        userId: activeAdmin.id,
++        reason: 'operation_not_allowed',
++        operation: 'invalid',
++      });
++    },
++  );
++
++  it('preserves existing auth behavior after shared user resolution refactor', async () => {
++    const service = createService();
++
++    await expect(service.getCurrentUser()).resolves.toEqual({
++      id: activeAdmin.id,
++      email: activeAdmin.email,
++      displayName: activeAdmin.displayName,
++      systemRole: activeAdmin.systemRole,
++    });
++    await expect(service.requireUser()).resolves.toMatchObject({
++      id: activeAdmin.id,
++    });
++    await expect(
++      service.requireSystemRole(['YUTA_ADMIN']),
++    ).resolves.toMatchObject({ id: activeAdmin.id, systemRole: 'YUTA_ADMIN' });
++  });
++
++  it('preserves existing not-found and disabled security events', async () => {
++    const notFound = createLogger();
++    await expect(
++      createService(null, notFound.logger).getCurrentUser(),
++    ).resolves.toBeNull();
++    expect(notFound.warn).toHaveBeenCalledWith({
++      event: 'auth.user_resolution_failed',
++      reason: 'not_found',
++    });
++
++    const disabled = createLogger();
++    await expect(
++      createService(
++        { ...activeAdmin, status: 'DISABLED' },
++        disabled.logger,
++      ).getCurrentUser(),
++    ).rejects.toBeInstanceOf(DisabledUserError);
++    expect(disabled.warn).toHaveBeenCalledWith({
++      event: 'auth.disabled_user_denied',
++      userId: activeAdmin.id,
++      reason: 'disabled',
++    });
++  });
++
++  it('has no authorization side effect beyond identity and user resolution', async () => {
++    const getIdentity = vi.fn(async () => identity);
++    const findByAuthProviderId = vi.fn(async () => activeAdmin);
++    const { logger, warn } = createLogger();
++    const service = createAuthService(
++      { getIdentity },
++      { findByAuthProviderId },
++      logger,
++    );
++
++    await expect(
++      service.requireFormalitesTemplateSystemOperation(
++        'formalites.template.retire',
++      ),
++    ).resolves.toMatchObject({
++      operation: 'formalites.template.retire',
++    });
++    expect(getIdentity).toHaveBeenCalledTimes(1);
++    expect(findByAuthProviderId).toHaveBeenCalledExactlyOnceWith(
++      identity.providerUserId,
++    );
++    expect(warn).not.toHaveBeenCalled();
++  });
++});

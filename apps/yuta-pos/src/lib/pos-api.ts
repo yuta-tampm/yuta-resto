@@ -1,5 +1,10 @@
 import type {
   LocalCatalogResponse,
+  LocalKitchenQueueQuery,
+  LocalKitchenQueueResponse,
+  LocalOrdersHomeQuery,
+  LocalOrdersHomeResponse,
+  LocalOrdersHomeRow,
   LocalOrderSummary,
 } from '@yuta/contracts/local-pos';
 import { siteAgentClient } from './site-agent-client';
@@ -9,6 +14,8 @@ type IsoOrderDetail = Awaited<
   ReturnType<typeof siteAgentClient.getOrderDetail>
 >;
 type IsoOrderItem = IsoOrderDetail['items'][number];
+type IsoKitchenQueueItem =
+  LocalKitchenQueueResponse['tickets'][number]['items'][number];
 
 export type PosOrder = Omit<
   IsoOrder,
@@ -54,6 +61,43 @@ export type PosOrderDetail = {
   discounts: IsoOrderDetail['discounts'];
 };
 
+export type PosOrderHomeRow = Omit<
+  LocalOrdersHomeRow,
+  | 'createdAt'
+  | 'updatedAt'
+  | 'sentAt'
+  | 'paidAt'
+  | 'cancelledAt'
+  | 'allergyAcknowledgedAt'
+> & {
+  createdAt: Date;
+  updatedAt: Date;
+  sentAt: Date | null;
+  paidAt: Date | null;
+  cancelledAt: Date | null;
+  allergyAcknowledgedAt: Date | null;
+};
+
+export type PosOrdersHomeResponse = Omit<LocalOrdersHomeResponse, 'orders'> & {
+  orders: PosOrderHomeRow[];
+};
+
+export type PosKitchenQueueItem = PosOrderItem &
+  Pick<
+    IsoKitchenQueueItem,
+    'categoryName' | 'categorySortOrder' | 'itemSortOrder'
+  >;
+
+export type PosKitchenQueueResponse = Omit<
+  LocalKitchenQueueResponse,
+  'tickets'
+> & {
+  tickets: Array<{
+    order: PosOrder;
+    items: PosKitchenQueueItem[];
+  }>;
+};
+
 export const posApi = {
   listLocalUsers: () => siteAgentClient.listLocalUsers(),
   getCatalog: (): Promise<LocalCatalogResponse> => siteAgentClient.getCatalog(),
@@ -67,6 +111,9 @@ export const posApi = {
   cancelOrderSplit: siteAgentClient.cancelOrderSplit,
   payOrder: siteAgentClient.payOrder,
   payCheck: siteAgentClient.payCheck,
+  getReceiptView: siteAgentClient.getReceiptView,
+  executeReceiptCommand: siteAgentClient.executeReceiptCommand,
+  getReceiptJobStatus: siteAgentClient.getReceiptJobStatus,
 
   async getOrderDetail(orderId: string): Promise<PosOrderDetail> {
     const detail = await siteAgentClient.getOrderDetail(orderId);
@@ -77,9 +124,27 @@ export const posApi = {
     };
   },
 
-  async listOrderDetails(limit = 200): Promise<PosOrderDetail[]> {
-    const { orders } = await siteAgentClient.listOrders({ limit });
-    return Promise.all(orders.map(({ id }) => posApi.getOrderDetail(id)));
+  async listOrdersHome(
+    input: Partial<LocalOrdersHomeQuery>,
+  ): Promise<PosOrdersHomeResponse> {
+    const response = await siteAgentClient.listOrdersHome(input);
+    return {
+      ...response,
+      orders: response.orders.map(hydrateOrderHomeRow),
+    };
+  },
+
+  async listKitchenQueue(
+    input: Partial<LocalKitchenQueueQuery>,
+  ): Promise<PosKitchenQueueResponse> {
+    const response = await siteAgentClient.listKitchenQueue(input);
+    return {
+      ...response,
+      tickets: response.tickets.map((ticket) => ({
+        order: hydrateOrder(ticket.order),
+        items: ticket.items.map(hydrateKitchenQueueItem),
+      })),
+    };
   },
 
   async getPaymentViewData(orderId: string) {
@@ -116,6 +181,13 @@ function hydrateOrder(order: IsoOrder): PosOrder {
   };
 }
 
+function hydrateOrderHomeRow(order: LocalOrdersHomeRow): PosOrderHomeRow {
+  return {
+    ...hydrateOrder(order),
+    itemCount: order.itemCount,
+  };
+}
+
 function hydrateOrderItem(item: IsoOrderItem): PosOrderItem {
   return {
     ...item,
@@ -127,6 +199,17 @@ function hydrateOrderItem(item: IsoOrderItem): PosOrderItem {
     cancelledAt: toNullableDate(item.cancelledAt),
     allergyAcknowledgedAt: toNullableDate(item.allergyAcknowledgedAt),
     allergyKitchenConfirmedAt: toNullableDate(item.allergyKitchenConfirmedAt),
+  };
+}
+
+function hydrateKitchenQueueItem(
+  item: IsoKitchenQueueItem,
+): PosKitchenQueueItem {
+  return {
+    ...hydrateOrderItem(item),
+    categoryName: item.categoryName,
+    categorySortOrder: item.categorySortOrder,
+    itemSortOrder: item.itemSortOrder,
   };
 }
 

@@ -6,17 +6,37 @@ import {
   authLoginAttempts,
   authSelectionTickets,
   authSessions,
+  bookingSettings,
   cloudRoleEnum,
   directCustomerFeedback,
   establishments,
+  establishmentServiceModeEnum,
   feedbackInternalNotes,
   feedbackItems,
   feedbackReplies,
   organizations,
   passwordResetTokens,
+  personnelContractAmendmentCommandReceipts,
+  personnelContractAmendments,
+  personnelContractAmendmentVersions,
+  personnelCommandReceipts,
+  personnelDocumentCommandReceipts,
+  personnelDocumentVersions,
+  personnelDocuments,
+  personnelEmployeeAuditEvents,
+  personnelEmployeeDossiers,
+  personnelEmployeeHistoryEvents,
+  personnelEmployeeHistoryGroupChanges,
+  personnelHistoryCutovers,
   reputationAuditEvents,
   reputationConnectors,
   reputationSettings,
+  restaurantKnowledgeCommunicationIdentity,
+  restaurantKnowledgeConceptHistory,
+  restaurantKnowledgeCuisineKnowHow,
+  restaurantKnowledgeCustomerExperience,
+  restaurantKnowledgeTeamCulture,
+  restaurantKnowledgeValidatedItems,
   tenantDomains,
   tenantMemberships,
   users,
@@ -40,6 +60,18 @@ const tablesWithBusinessIds: PgTable[] = [
   reputationConnectors,
   reputationSettings,
   reputationAuditEvents,
+  personnelEmployeeDossiers,
+  personnelEmployeeAuditEvents,
+  personnelCommandReceipts,
+  personnelEmployeeHistoryEvents,
+  personnelEmployeeHistoryGroupChanges,
+  personnelHistoryCutovers,
+  personnelDocuments,
+  personnelDocumentVersions,
+  personnelDocumentCommandReceipts,
+  personnelContractAmendments,
+  personnelContractAmendmentVersions,
+  personnelContractAmendmentCommandReceipts,
 ];
 
 describe('cloud schema boundaries', () => {
@@ -58,6 +90,401 @@ describe('cloud schema boundaries', () => {
 
   it('keeps POS-only roles out of cloud memberships', () => {
     expect(cloudRoleEnum.enumValues).toEqual(['OWNER', 'MANAGER', 'STAFF']);
+  });
+
+  it('keeps personnel dossiers establishment-owned and revision-protected', () => {
+    const columns = getTableConfig(personnelEmployeeDossiers).columns.map(
+      (column) => column.name,
+    );
+    expect(columns).toEqual(
+      expect.arrayContaining([
+        'organization_id',
+        'establishment_id',
+        'entry_date',
+        'revision',
+      ]),
+    );
+    expect(columns).not.toContain('tenant_id');
+    expect(columns).not.toContain('status');
+    expect(columns).not.toContain('display_name');
+  });
+
+  it('keeps reconstructable personnel history scoped and constrained', () => {
+    const eventConfig = getTableConfig(personnelEmployeeHistoryEvents);
+    const groupConfig = getTableConfig(personnelEmployeeHistoryGroupChanges);
+    const cutoverConfig = getTableConfig(personnelHistoryCutovers);
+
+    for (const config of [eventConfig, groupConfig]) {
+      expect(config.columns.map((column) => column.name)).toEqual(
+        expect.arrayContaining([
+          'organization_id',
+          'establishment_id',
+          'employee_id',
+        ]),
+      );
+      expect(config.columns.map((column) => column.name)).not.toContain(
+        'tenant_id',
+      );
+    }
+    expect(groupConfig.columns.map((column) => column.name)).toEqual(
+      expect.arrayContaining([
+        'event_id',
+        'event_kind',
+        'semantic_group',
+        'previous_values',
+        'new_values',
+      ]),
+    );
+    expect(
+      eventConfig.indexes.find(
+        (index) =>
+          index.config.name ===
+          'personnel_employee_history_events_one_cutover_idx',
+      )?.config,
+    ).toMatchObject({ unique: true });
+    expect(eventConfig.checks.map((constraint) => constraint.name)).toEqual(
+      expect.arrayContaining([
+        'personnel_employee_history_events_payload_version_check',
+        'personnel_employee_history_events_kind_metadata_check',
+      ]),
+    );
+    expect(groupConfig.checks.map((constraint) => constraint.name)).toContain(
+      'personnel_employee_history_groups_kind_metadata_check',
+    );
+    expect(
+      groupConfig.foreignKeys
+        .find(
+          (foreignKey) =>
+            foreignKey.getName() ===
+            'personnel_employee_history_groups_event_scope_fk',
+        )
+        ?.reference()
+        .columns.map((column) => column.name),
+    ).toEqual([
+      'organization_id',
+      'establishment_id',
+      'employee_id',
+      'event_kind',
+      'event_id',
+    ]);
+    expect(cutoverConfig.columns.map((column) => column.name)).toEqual([
+      'id',
+      'organization_id',
+      'establishment_id',
+      'cutover_version',
+      'cutover_at',
+      'completed_at',
+    ]);
+    expect(cutoverConfig.checks.map((constraint) => constraint.name)).toEqual(
+      expect.arrayContaining([
+        'personnel_history_cutovers_version_check',
+        'personnel_history_cutovers_timestamps_check',
+      ]),
+    );
+  });
+
+  it('keeps general profile ownership on establishments', () => {
+    const establishmentColumns = getTableConfig(establishments).columns.map(
+      (column) => column.name,
+    );
+    const bookingColumns = getTableConfig(bookingSettings).columns.map(
+      (column) => column.name,
+    );
+    expect(establishmentColumns).toEqual(
+      expect.arrayContaining([
+        'description',
+        'address_line_1',
+        'public_phone',
+        'public_email',
+        'logo_url',
+        'cover_image_url',
+        'languages',
+        'service_modes',
+      ]),
+    );
+    expect(bookingColumns).not.toEqual(
+      expect.arrayContaining([
+        'address',
+        'public_phone',
+        'public_email',
+        'logo_url',
+        'cover_image_url',
+      ]),
+    );
+    expect(establishmentServiceModeEnum.enumValues).toContain('RESERVATION');
+  });
+
+  it('keeps Concept and Histoire in a dedicated establishment-scoped Restaurant Knowledge table', () => {
+    const knowledgeConfig = getTableConfig(restaurantKnowledgeConceptHistory);
+    const knowledgeColumns = knowledgeConfig.columns.map(
+      (column) => column.name,
+    );
+    const establishmentColumns = getTableConfig(establishments).columns.map(
+      (column) => column.name,
+    );
+
+    expect(knowledgeColumns).toEqual([
+      'organization_id',
+      'establishment_id',
+      'concept',
+      'history',
+    ]);
+    expect(
+      knowledgeConfig.columns.find((column) => column.name === 'concept')
+        ?.notNull,
+    ).toBe(false);
+    expect(
+      knowledgeConfig.columns.find((column) => column.name === 'history')
+        ?.notNull,
+    ).toBe(false);
+    expect(knowledgeConfig.primaryKeys).toHaveLength(1);
+    expect(knowledgeConfig.foreignKeys).toHaveLength(1);
+    expect(establishmentColumns).not.toContain('concept');
+    expect(establishmentColumns).not.toContain('history');
+  });
+
+  it('keeps Cuisine and savoir-faire in its dedicated establishment-scoped Restaurant Knowledge table', () => {
+    const knowledgeConfig = getTableConfig(restaurantKnowledgeCuisineKnowHow);
+    const knowledgeColumns = knowledgeConfig.columns.map(
+      (column) => column.name,
+    );
+    const establishmentColumns = getTableConfig(establishments).columns.map(
+      (column) => column.name,
+    );
+
+    expect(knowledgeColumns).toEqual([
+      'organization_id',
+      'establishment_id',
+      'cuisine_description',
+      'know_how_particularities',
+      'homemade',
+    ]);
+    for (const columnName of [
+      'cuisine_description',
+      'know_how_particularities',
+      'homemade',
+    ]) {
+      expect(
+        knowledgeConfig.columns.find((column) => column.name === columnName)
+          ?.notNull,
+      ).toBe(false);
+      expect(establishmentColumns).not.toContain(columnName);
+    }
+    expect(knowledgeConfig.primaryKeys).toHaveLength(1);
+    expect(knowledgeConfig.foreignKeys).toHaveLength(1);
+  });
+
+  it('keeps Customer Experience in its dedicated establishment-scoped Restaurant Knowledge table', () => {
+    const knowledgeConfig = getTableConfig(
+      restaurantKnowledgeCustomerExperience,
+    );
+    const knowledgeColumns = knowledgeConfig.columns.map(
+      (column) => column.name,
+    );
+    const establishmentColumns = getTableConfig(establishments).columns.map(
+      (column) => column.name,
+    );
+
+    expect(knowledgeColumns).toEqual([
+      'organization_id',
+      'establishment_id',
+      'desired_experience',
+      'welcome_and_service',
+      'customer_attention',
+    ]);
+    for (const columnName of [
+      'desired_experience',
+      'welcome_and_service',
+      'customer_attention',
+    ]) {
+      expect(
+        knowledgeConfig.columns.find((column) => column.name === columnName)
+          ?.notNull,
+      ).toBe(false);
+      expect(establishmentColumns).not.toContain(columnName);
+    }
+    expect(knowledgeConfig.primaryKeys).toHaveLength(1);
+    expect(knowledgeConfig.foreignKeys).toHaveLength(1);
+  });
+
+  it('keeps Team Culture in its dedicated establishment-scoped Restaurant Knowledge table', () => {
+    const knowledgeConfig = getTableConfig(restaurantKnowledgeTeamCulture);
+    const knowledgeColumns = knowledgeConfig.columns.map(
+      (column) => column.name,
+    );
+    const establishmentColumns = getTableConfig(establishments).columns.map(
+      (column) => column.name,
+    );
+
+    expect(knowledgeColumns).toEqual([
+      'organization_id',
+      'establishment_id',
+      'values_and_mindset',
+      'working_together',
+      'transmission_and_integration',
+    ]);
+    for (const columnName of [
+      'values_and_mindset',
+      'working_together',
+      'transmission_and_integration',
+    ]) {
+      expect(
+        knowledgeConfig.columns.find((column) => column.name === columnName)
+          ?.notNull,
+      ).toBe(false);
+      expect(establishmentColumns).not.toContain(columnName);
+    }
+    expect(knowledgeConfig.primaryKeys).toHaveLength(1);
+    expect(knowledgeConfig.primaryKeys[0]?.name).toBe(
+      'restaurant_knowledge_team_culture_scope_pk',
+    );
+    expect(knowledgeConfig.foreignKeys).toHaveLength(1);
+    expect(knowledgeConfig.foreignKeys[0]?.onDelete).toBe('restrict');
+    expect(
+      knowledgeConfig.foreignKeys[0]
+        ?.reference()
+        .columns.map((column) => column.name),
+    ).toEqual(['organization_id', 'establishment_id']);
+    expect(
+      knowledgeConfig.foreignKeys[0]
+        ?.reference()
+        .foreignColumns.map((column) => column.name),
+    ).toEqual(['organization_id', 'id']);
+  });
+
+  it('keeps Communication Identity in an exact dedicated establishment-scoped Restaurant Knowledge table', () => {
+    const knowledgeConfig = getTableConfig(
+      restaurantKnowledgeCommunicationIdentity,
+    );
+    const knowledgeColumns = knowledgeConfig.columns.map(
+      (column) => column.name,
+    );
+    const establishmentColumns = getTableConfig(establishments).columns.map(
+      (column) => column.name,
+    );
+
+    expect(knowledgeColumns).toEqual([
+      'organization_id',
+      'establishment_id',
+      'tone_and_communication_style',
+      'customer_addressing',
+      'language_elements_and_things_to_avoid',
+    ]);
+    for (const columnName of [
+      'tone_and_communication_style',
+      'customer_addressing',
+      'language_elements_and_things_to_avoid',
+    ]) {
+      const column = knowledgeConfig.columns.find(
+        (candidate) => candidate.name === columnName,
+      );
+      expect(column?.notNull).toBe(false);
+      expect(column?.getSQLType()).toBe('text');
+      expect(establishmentColumns).not.toContain(columnName);
+    }
+    expect(knowledgeConfig.primaryKeys).toHaveLength(1);
+    expect(knowledgeConfig.primaryKeys[0]?.name).toBe(
+      'restaurant_knowledge_communication_identity_scope_pk',
+    );
+    expect(knowledgeConfig.foreignKeys).toHaveLength(1);
+    expect(knowledgeConfig.foreignKeys[0]?.onDelete).toBe('restrict');
+    expect(knowledgeConfig.foreignKeys[0]?.getName()).toBe(
+      'restaurant_knowledge_communication_identity_establishment_fk',
+    );
+    expect(
+      knowledgeConfig.foreignKeys[0]
+        ?.reference()
+        .columns.map((column) => column.name),
+    ).toEqual(['organization_id', 'establishment_id']);
+    expect(
+      knowledgeConfig.foreignKeys[0]
+        ?.reference()
+        .foreignColumns.map((column) => column.name),
+    ).toEqual(['organization_id', 'id']);
+  });
+
+  it('keeps Validated Knowledge in an exact dedicated item collection table', () => {
+    const config = getTableConfig(restaurantKnowledgeValidatedItems);
+    expect(config.columns.map((column) => column.name)).toEqual([
+      'organization_id',
+      'establishment_id',
+      'id',
+      'statement',
+    ]);
+    for (const name of [
+      'organization_id',
+      'establishment_id',
+      'id',
+      'statement',
+    ]) {
+      expect(
+        config.columns.find((column) => column.name === name)?.notNull,
+      ).toBe(true);
+    }
+    expect(
+      config.columns
+        .find((column) => column.name === 'statement')
+        ?.getSQLType(),
+    ).toBe('text');
+    expect(config.primaryKeys).toHaveLength(1);
+    expect(config.primaryKeys[0]?.name).toBe(
+      'restaurant_knowledge_validated_items_scope_item_pk',
+    );
+    expect(config.primaryKeys[0]?.columns.map((column) => column.name)).toEqual(
+      ['organization_id', 'establishment_id', 'id'],
+    );
+    expect(config.foreignKeys).toHaveLength(1);
+    expect(config.foreignKeys[0]?.onDelete).toBe('restrict');
+    expect(config.foreignKeys[0]?.getName()).toBe(
+      'restaurant_knowledge_validated_items_establishment_scope_fk',
+    );
+    expect(
+      config.foreignKeys[0]?.reference().columns.map((column) => column.name),
+    ).toEqual(['organization_id', 'establishment_id']);
+    expect(
+      config.foreignKeys[0]
+        ?.reference()
+        .foreignColumns.map((column) => column.name),
+    ).toEqual(['organization_id', 'id']);
+    expect(config.uniqueConstraints).toHaveLength(0);
+    expect(config.checks).toHaveLength(0);
+  });
+
+  it('keeps personnel document metadata establishment and employee scoped', () => {
+    for (const table of [
+      personnelDocuments,
+      personnelDocumentVersions,
+      personnelContractAmendments,
+      personnelContractAmendmentVersions,
+    ]) {
+      const columns = getTableConfig(table).columns.map(
+        (column) => column.name,
+      );
+      expect(columns).toEqual(
+        expect.arrayContaining([
+          'organization_id',
+          'establishment_id',
+          'employee_id',
+        ]),
+      );
+      expect(columns).not.toContain('tenant_id');
+      expect(columns).not.toContain('content');
+    }
+  });
+
+  it('keeps contract amendments separate from the single contract category slot', () => {
+    const amendmentColumns = getTableConfig(
+      personnelContractAmendments,
+    ).columns.map((column) => column.name);
+    expect(amendmentColumns).toEqual(
+      expect.arrayContaining([
+        'employee_id',
+        'effective_date',
+        'current_version',
+        'revision',
+      ]),
+    );
+    expect(amendmentColumns).not.toContain('category');
   });
 
   it('uses an RFC UUIDv7 generator for seed-created records', () => {

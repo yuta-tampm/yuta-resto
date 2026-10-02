@@ -1,0 +1,21 @@
+{
+  "status": "READ_ONLY_SCOPED_PROOF",
+  "label": "before",
+  "feedbackId": "01a0f8f9-0b3e-7086-9fdc-66b975ff0941",
+  "organizationId": "01a0f8f7-6ccf-71be-afc6-73ac459c20b5",
+  "establishmentId": "01a0f8f7-6ccf-71be-afc6-7446052fe000",
+  "providerContentUnavailable": true,
+  "cacheMappingCount": 0,
+  "contentDeadline": null,
+  "referenceDeadline": null,
+  "canRecoverReference": false,
+  "parentStatus": "DRAFTED",
+  "assignedToUserId": "01a0f8f7-6ccf-71be-afc6-6821ac4d2292",
+  "replyCount": 1,
+  "noteCount": 1,
+  "latestDraftSha256": "baa2ab17c545072dc6aa52a35fdf43789cd334379f1f6df5e29edf0008b3b13e",
+  "latestNoteSha256": "84e6414f2df3b5b264b104fc242530bdfd162b230638db7d31b0ea76fe12ff68",
+  "localChildrenSha256": "6aaee64656ada1673ce18ca3def26db25ddace4b0e950f14d2b254dcdecbc047",
+  "observedAt": "2026-10-01T20:14:32.867Z",
+  "databaseEffects": false
+}

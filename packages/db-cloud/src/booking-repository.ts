@@ -104,13 +104,20 @@ export async function findPublicBookingConfiguration(
       minimumNoticeMinutes: bookingSettings.minimumNoticeMinutes,
       bookingWindowDays: bookingSettings.bookingWindowDays,
       cancellationDeadlineMinutes: bookingSettings.cancellationDeadlineMinutes,
-      publicPhone: bookingSettings.publicPhone,
-      publicEmail: bookingSettings.publicEmail,
-      address: bookingSettings.address,
+      publicPhone: establishments.publicPhone,
+      publicEmail: establishments.publicEmail,
+      addressLine1: establishments.addressLine1,
+      addressLine2: establishments.addressLine2,
+      postalCode: establishments.postalCode,
+      city: establishments.city,
+      countryCode: establishments.countryCode,
+      publicAddress: establishments.publicAddress,
+      publicPhoneVisible: establishments.publicPhoneVisible,
+      publicEmailVisible: establishments.publicEmailVisible,
       welcomeMessage: bookingSettings.welcomeMessage,
       bookingPolicy: bookingSettings.bookingPolicy,
-      logoUrl: bookingSettings.logoUrl,
-      coverImageUrl: bookingSettings.coverImageUrl,
+      logoUrl: establishments.logoUrl,
+      coverImageUrl: establishments.coverImageUrl,
     })
     .from(bookingSettings)
     .innerJoin(
@@ -142,7 +149,41 @@ export async function findPublicBookingConfiguration(
       ),
     )
     .limit(1);
-  return row ?? null;
+  if (!row) return null;
+  const address = row.publicAddress
+    ? [
+        row.addressLine1,
+        row.addressLine2,
+        [row.postalCode, row.city].filter(Boolean).join(' '),
+        row.countryCode,
+      ]
+        .filter(Boolean)
+        .join(', ') || null
+    : null;
+  return {
+    organizationId: row.organizationId,
+    establishmentId: row.establishmentId,
+    establishmentName: row.establishmentName,
+    slug: row.slug,
+    locale: row.locale,
+    timezone: row.timezone,
+    enabled: row.enabled,
+    confirmationMode: row.confirmationMode,
+    minimumPartySize: row.minimumPartySize,
+    maximumPartySize: row.maximumPartySize,
+    slotIntervalMinutes: row.slotIntervalMinutes,
+    averageDurationMinutes: row.averageDurationMinutes,
+    minimumNoticeMinutes: row.minimumNoticeMinutes,
+    bookingWindowDays: row.bookingWindowDays,
+    cancellationDeadlineMinutes: row.cancellationDeadlineMinutes,
+    publicPhone: row.publicPhoneVisible ? row.publicPhone : null,
+    publicEmail: row.publicEmailVisible ? row.publicEmail : null,
+    address,
+    welcomeMessage: row.welcomeMessage,
+    bookingPolicy: row.bookingPolicy,
+    logoUrl: row.logoUrl,
+    coverImageUrl: row.coverImageUrl,
+  };
 }
 
 async function availabilityRows(
@@ -488,7 +529,14 @@ export async function cancelPublicReservation(
     const [updated] = await tx
       .update(reservations)
       .set({ status: 'CANCELLED', cancelledAt: now })
-      .where(eq(reservations.id, row.id))
+      .where(
+        and(
+          eq(reservations.organizationId, config.organizationId),
+          eq(reservations.establishmentId, config.establishmentId),
+          eq(reservations.id, row.id),
+          eq(reservations.publicTokenHash, hash(publicToken)),
+        ),
+      )
       .returning();
     await tx.insert(reservationStatusHistory).values({
       id: uuidv7(),
@@ -913,6 +961,21 @@ export async function getBookingAdministration(
   db: CloudDatabaseClient,
   context: BookingTenantContext,
 ) {
+  const establishmentRows = await db
+    .select({
+      name: establishments.name,
+      slug: establishments.slug,
+      locale: establishments.locale,
+      timezone: establishments.timezone,
+    })
+    .from(establishments)
+    .where(
+      and(
+        eq(establishments.organizationId, context.organizationId),
+        eq(establishments.id, context.establishmentId),
+      ),
+    )
+    .limit(1);
   const settingsRows = await db
     .select()
     .from(bookingSettings)
@@ -946,7 +1009,12 @@ export async function getBookingAdministration(
       ),
     )
     .orderBy(desc(bookingExceptions.exceptionDate));
-  return { settings: settingsRows[0] ?? null, periods, exceptions };
+  return {
+    establishment: establishmentRows[0] ?? null,
+    settings: settingsRows[0] ?? null,
+    periods,
+    exceptions,
+  };
 }
 
 export async function saveBookingSettings(
@@ -1007,6 +1075,26 @@ export async function createBookingException(
   context: BookingTenantContext,
   input: BookingExceptionInput,
 ) {
+  if (input.servicePeriodId) {
+    const [servicePeriod] = await db
+      .select({ id: bookingServicePeriods.id })
+      .from(bookingServicePeriods)
+      .where(
+        and(
+          eq(bookingServicePeriods.organizationId, context.organizationId),
+          eq(bookingServicePeriods.establishmentId, context.establishmentId),
+          eq(bookingServicePeriods.id, input.servicePeriodId),
+        ),
+      )
+      .limit(1);
+    if (!servicePeriod) {
+      throw new BookingRepositoryError(
+        'Service period not found.',
+        'BOOKING_NOT_FOUND',
+      );
+    }
+  }
+
   const [row] = await db
     .insert(bookingExceptions)
     .values({

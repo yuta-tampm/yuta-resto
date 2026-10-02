@@ -1,0 +1,12 @@
+.connector {
+  position: absolute;
+  top: 1rem;
+  right: 50%;
+  width: 100%;
+  height: 2px;
+  background: var(--color-status-success);
+}
+
+.connectorPending {
+  background: var(--color-border-default);
+}

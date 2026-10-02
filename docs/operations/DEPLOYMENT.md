@@ -6,13 +6,18 @@ Visibility: Engineering
 
 Owner: YUTA engineering and operations
 
-Last updated: 2026-08-05
+Last updated: 2026-10-01
 
 ## Status and authority
 
 This document implements the boundaries defined by
 `docs/architecture/DATABASE_BOUNDARIES.md`. The legacy shared database topology
 is forbidden.
+
+`docs/operations/PRODUCTION_READINESS.md` is the canonical cross-product release
+gate register. A deployment procedure or successful build does not authorize a
+production capability while a blocking readiness gate remains open. This
+document owns deployment mechanics and does not duplicate that evidence register.
 
 ## Runtime families
 
@@ -24,6 +29,7 @@ YuTa has separate cloud and restaurant-local runtime families.
 apps/web
 apps/backoffice
 apps/booking-web
+apps/feedback-web
 optional cloud worker
         |
 packages/db-cloud
@@ -39,17 +45,19 @@ Cloud must contain no POS operational tables.
 
 ### Vercel Git deployment policy
 
-The Vercel projects for `apps/backoffice`, `apps/web`, and `apps/booking-web` keep their GitHub
-repository connection, but automatic deployments from commits are disabled.
+The Vercel projects for `apps/backoffice`, `apps/web`, `apps/booking-web`, and
+`apps/feedback-web` keep their GitHub repository connection, but automatic
+deployments from commits are disabled.
 Each Vercel project must use its application folder as the Root Directory:
 
 ```text
 apps/backoffice
 apps/web
 apps/booking-web
+apps/feedback-web
 ```
 
-Both folders contain a `vercel.json` with
+These folders contain a `vercel.json` with
 `git.deploymentEnabled: false`. Deploy these applications manually when a
 release is ready. Do not remove this setting unless automatic preview and
 production deployments are intentionally re-enabled.
@@ -80,10 +88,43 @@ Root Directory: apps/booking-web
 Domain:         reservation.yutapro.fr
 ```
 
-Set `PUBLIC_BOOKING_BASE_URL=https://reservation.yutapro.fr` and a unique
+Set `CLOUD_DATABASE_URL`, `CLOUD_DATABASE_SSL`,
+`PUBLIC_BOOKING_BASE_URL=https://reservation.yutapro.fr`, and a unique
 `BOOKING_RATE_LIMIT_SECRET` of at least 32 random characters. The booking app
-receives `CLOUD_DATABASE_URL` but no authentication cookie secret and no local
-POS/display database URL. Its `vercel.json` also disables automatic Git
+validates all four values during server startup and production build. It
+receives no authentication cookie secret and no local POS/display database
+URL. Its `vercel.json` also disables automatic Git deployments.
+
+Reservation transactions currently write a provider-neutral notification
+outbox, but this repository has no configured email adapter or worker. Do not
+claim confirmation-email delivery or launch it as an active dependency until
+an approved cloud worker atomically claims the outbox, records `SENT` or
+`FAILED`, and has an operational retry and observability owner.
+
+Before a public-booking production launch, operations must also verify the
+Vercel project, DNS/TLS, production secrets and rotation ownership, cloud
+migration journal, managed-database backup/PITR and restore evidence, external
+health probes, telemetry/alerts, approved privacy/legal copy, and a named
+release owner. The authoritative current dependency and acceptance register is
+`docs/features/public-booking/STATUS.md`; do not duplicate provider choices or
+temporary owner assignments here.
+
+The public feedback application uses a separate project:
+
+```text
+Project name:   yuta-feedback-web
+Root Directory: apps/feedback-web
+Service domain: feedback.yutapro.fr
+Tenant traffic: verified restaurant hostnames from tenant_domains
+```
+
+The service domain exposes the unscoped landing page and health endpoint. A
+production feedback submission is accepted only when its request hostname is
+an active verified tenant domain routed to this project and its path slug
+matches the restaurant's reputation settings. Set a unique
+`PUBLIC_FEEDBACK_IP_HASH_SALT` of at least 32 random characters. The feedback
+app receives `CLOUD_DATABASE_URL`, but no authentication cookie secret and no
+local POS/display database URL. Its `vercel.json` disables automatic Git
 deployments.
 
 ### Restaurant local
@@ -135,14 +176,86 @@ commit them.
 CLOUD_DATABASE_URL=postgres://yuta_cloud:encoded_password@cloud-db:5432/yuta_cloud
 CLOUD_DATABASE_SSL=true
 AUTH_SECRET=...
-GOOGLE_CLIENT_ID=...
-GOOGLE_CLIENT_SECRET=...
-GOOGLE_TOKEN_ENCRYPTION_KEY=...
+GOOGLE_BUSINESS_PROFILE_CLIENT_ID=...
+GOOGLE_BUSINESS_PROFILE_CLIENT_SECRET=...
+GOOGLE_BUSINESS_PROFILE_REDIRECT_URI=https://app.yutapro.fr/api/reputation/google/oauth/callback
+REPUTATION_CREDENTIAL_ENCRYPTION_KEY=...
 PUBLIC_BOOKING_BASE_URL=https://reservation.yutapro.fr
 BOOKING_RATE_LIMIT_SECRET=...
+PUBLIC_FEEDBACK_IP_HASH_SALT=...
 ```
 
 Only cloud server processes receive these values.
+
+### Backoffice instance exposure
+
+For `apps/backoffice`, a separately authorized deployment must explicitly set
+the server-only `BACKOFFICE_EXPOSURE_PROFILE` to `release-a` for the accepted
+customer perimeter or `internal` for the authorized internal instance. These
+are the only valid values. The selection applies to the whole process, is not
+browser/tenant input, and must never use a `NEXT_PUBLIC_*` variable. It changes
+availability independently of existing permissions and entitlements.
+
+Unset development/test selection keeps internal behavior. An invalid value in
+any environment or unset production selection fails closed with safe no-store
+`503` behavior without exposing configuration details. Request-boundary
+validation is lazy: a successful build does not prove runtime selection or
+authorize activation. Profile selection requires no schema/data migration.
+
+[ADR-009](../decisions/ADR-009-release-a-customer-exposure.md) owns the durable
+boundary: A allows the five bounded surfaces and closes other hosted
+routes/APIs/actions, including Booking and profile Knowledge. Internal preserves
+existing module guards and development/readiness restrictions. Changing a live
+instance profile, including rollback, requires deployment authority and exact
+target evidence; do not automatically fall back to internal on failure. The
+exposure-foundation task changes no staging/production configuration or topology.
+
+Before authorized activation, verify the explicit intended profile and allowed
+role/context/source flows on that exact deployed artifact; verify deferred
+direct entries and invoked actions are denied. A local Google queue, bound
+connector or saved draft proves no provider import/publication. Provider/privacy,
+operator preparation and customer-release acceptance remain governed by the
+owning readiness sources.
+
+`BACKOFFICE_PERSONNEL_FORMALITES_READ_PROTOTYPE_ENABLED` is a local-development
+opt-in for the Phase 3 read-only Formalités prototype. It defaults to false and
+must not be added to a production environment. Runtime code also rejects it
+outside `development`, so the full-dossier entry and integrated route remain
+fail-closed in production.
+
+### Google review retrieval admission and cache disposal
+
+Server-only `GOOGLE_REVIEW_RETRIEVAL_ENABLED` defaults to disabled. Only exact
+`true` admits the new OWNER/MANAGER retrieval path; actor, establishment,
+session and connector-generation guards still apply. Existing OAuth/binding
+are separate, and a bound connector or a synthetic receipt does not prove
+actual Google access or a successful real-provider retrieval.
+
+Before enabling retrieval in an actual staging or production environment,
+verify its Google project/API access, OAuth credentials and redirect settings,
+credential encryption, permitted cache quantity/use, identifier and copied-
+content treatment, unattended cleanup, and backup/restoration disposal.
+Verify the exact deployed artifact and obtain separate operational authority.
+These conditions remain unverified by this source delivery; no actual project
+credentials, scheduler, environment activation or backup changes are supplied.
+The flag itself is admission control, never proof that these conditions passed.
+
+Provide a dedicated server-only `REPUTATION_CACHE_MAINTENANCE_SECRET` with at
+least 32 whitespace-free characters for authenticated POST requests to
+`/api/internal/reputation/google-cache-maintenance`. Authenticate before
+database access; exposure availability of this exact machine path does not
+authorize a browser or tenant operation. Each request processes at most 25
+due scopes, up to 500 cache rows plus a separate 500-state-row batch per scope,
+returns only cleanup counts, and makes no provider request. Maintenance must
+continue when new retrieval is disabled. Its bounded route configures no
+unattended caller and proves no disposal schedule.
+
+The [Reputation content/reference separation](../features/reputation/README.md#bounded-release-a-google-review-retrieval)
+denies expired managed content and preserves independent local work. Generic
+managed-cloud backup/PITR facilities alone do not establish disposal of these
+copies or safe restoration: verify expired-copy and mapping handling for the
+actual backup and restoration regime before real use. Publication, AI, broader
+V1/lifecycle status, deployment topology and production readiness are unchanged.
 
 ### POS local server
 
@@ -151,7 +264,10 @@ POS_DATABASE_URL=postgres://yuta_pos:encoded_password@pos-db:5432/yuta_pos
 SITE_AGENT_HOST=0.0.0.0
 SITE_AGENT_PORT=3100
 SITE_AGENT_ALLOWED_ORIGIN=https://pos.restaurant.local
+TZ=Europe/Paris
 SITE_AGENT_URL=http://site-agent:3100
+POS_PRINTER_DEVICE=/dev/rfcomm1
+POS_PRINT_POLL_INTERVAL_MS=1000
 YUTA_INSTALLATION_ID=...
 YUTA_SITE_ID=...
 LOCAL_BACKUP_PATH=/var/backups/yuta-pos
@@ -164,6 +280,21 @@ as a `NEXT_PUBLIC_*` variable.
 `SITE_AGENT_ALLOWED_ORIGIN` must be the exact POS client origin; do not use a
 wildcard origin. Bind `SITE_AGENT_HOST=0.0.0.0` only inside the trusted local
 container or LAN boundary.
+
+The POS service day depends on site-agent wall-clock time. Set the Luna host
+timezone to `Europe/Paris`, pass `TZ=Europe/Paris` to the site-agent process,
+and verify that Node resolves `Europe/Paris` before starting it. Site-agent now
+fails startup when `TZ` is absent/different or when the runtime resolves another
+timezone. This prevents 05:00 service-day and local-report calculations from
+silently following a misconfigured server clock.
+
+`POS_PRINTER_DEVICE` is local device configuration, never browser input. At
+Luna, the Linux host pairs the single EPSON TM-m30 as a trusted Bluetooth
+device and a systemd service keeps RFCOMM channel 1 available as
+`/dev/rfcomm1`. The path must be a character device owned by `root:dialout`.
+Run `site-agent` on the host with `dialout` access, or pass the character device
+and the host `dialout` group into its trusted local container. Do not expose the
+RFCOMM device to the POS browser container.
 
 ### Standalone display
 
@@ -248,6 +379,18 @@ Do not deploy legacy shared migrations or compatibility/backfill migrations.
 Test every baseline against an empty database before production.
 After the baseline, apply feature migrations in journal order. POS local
 authentication starts with `packages/db-pos/drizzle/0001_local_auth.sql`.
+Persisted station copy counts and font presets are added by
+`packages/db-pos/drizzle/0002_print_settings.sql`.
+Ticket top, left, and bottom spacing is added by the journaled `0003` POS
+migration.
+
+Production cloud migration services consume only
+`packages/db-cloud/drizzle/`. Test fixtures and extension migrations under
+`packages/db-cloud/test/fixtures/` must never be selected as a migration folder
+or applied to development, staging, or production databases. In particular,
+Pointage raw-clocking roles, helper functions, triggers and raw tables remain
+synthetic/disposable-only until a separately approved production design adds a
+canonical migration and credential-provisioning contract.
 
 Supply unique four-to-eight-digit `YUTA_POS_SEED_ADMIN_PIN`,
 `YUTA_POS_SEED_STAFF_PIN`, and `YUTA_POS_SEED_KITCHEN_PIN` values to the
@@ -258,8 +401,16 @@ Cloud and POS seed jobs are separate maintenance operations. A cloud seed job
 receives `CLOUD_DATABASE_URL` and `YUTA_CLOUD_SEED_PASSWORD`; a POS seed job
 receives `POS_DATABASE_URL` and the three seed PIN variables. Do not include
 either seed in normal application startup,
-and do not run development fixtures automatically during production
-deployment.
+and do not run a seed automatically during production deployment. The POS seed
+is the approved Luna operating catalog; it is still an explicit maintenance
+operation because rerunning it can overwrite current catalog configuration.
+
+For a specifically approved clean Luna commissioning, stop POS writes, take
+and verify a final POS-only backup, resolve the exact POS database or volume on
+the host, recreate only that POS database, apply every `db-pos` migration, and
+run the explicit POS seed once. Never remove a volume by a broad name or reset
+cloud/display storage. Start `site-agent` and the POS only after the seeded
+catalog and the unavailable zero-price Saturday special have been verified.
 
 The optional `pnpm db:cloud:seed:demo` command is only for local databases or
 explicitly approved demo environments. It requires
@@ -281,11 +432,47 @@ The local POS deployment must:
 - provide guarded backup and restore procedures;
 - never start a POS-to-cloud synchronization worker.
 
+Before enabling local reports on Luna, verify:
+
+```bash
+test "$(timedatectl show --property=Timezone --value)" = "Europe/Paris"
+TZ=Europe/Paris node -e "process.exit(Intl.DateTimeFormat().resolvedOptions().timeZone === 'Europe/Paris' ? 0 : 1)"
+```
+
+The production site-agent environment must contain `TZ=Europe/Paris`. A host
+timezone change or service restart remains an explicit deployment operation;
+merging report code does not perform it.
+
+For the selected Luna printer transport, verify before starting `site-agent`:
+
+```bash
+systemctl is-active yuta-tm-m30.service
+rfcomm
+test -c /dev/rfcomm1
+curl -fsS http://127.0.0.1:3100/api/v1/printer-status
+```
+
+The expected RFCOMM peer is `00:01:90:7B:79:DD` on channel `1`. The systemd
+unit creates a persistent `rfcomm bind` for that peer; it must not keep the TTY
+open with `rfcomm connect`. The binding establishes the Bluetooth connection
+when `site-agent` opens `/dev/rfcomm1`. The worker writes each ESC/POS job with
+one device open and does not run `stty` first, because opening a bound RFCOMM
+TTY twice can leave the second open blocked or make a connected TTY report
+`Device or resource busy`. If the printer is unavailable, the worker marks the
+claimed job failed and an administrator can retry it from
+`/management/printing` after recovery.
+The status endpoint and POS UI inspect only worker configuration, queue state,
+and character-device metadata/access. Their periodic checks must not open,
+read, or write `/dev/rfcomm1`; explicit print jobs are the only code path that
+claims the Bluetooth transport.
+
 `apps/yuta-pos/docker-compose.yml` now builds only the POS client service. It
 requires `SITE_AGENT_URL` and joins the external trusted local network; it has
 no database credential, legacy print worker, or shared-database migration
-service. Deploy `site-agent` and the one-shot `@yuta/db-pos` migration service
-as separate local services.
+service. The container sets `HOSTNAME=0.0.0.0` so the Next.js standalone server
+binds all container interfaces and its loopback health probe remains valid.
+Deploy `site-agent` and the one-shot `@yuta/db-pos` migration service as
+separate local services.
 
 The cloud back-office must not expose local menu/catalog, printer, POS-user, order,
 payment, or operational-report workflows.
@@ -331,6 +518,12 @@ access-control facilities. Do not copy POS operational data into cloud backups.
 ## Health checks
 
 - Cloud health checks validate only cloud runtime dependencies.
+- Booking Web exposes `/api/health` for process liveness and `/api/ready` for
+  cloud-database readiness. The readiness probe performs a tenant-independent
+  database query with a two-second response deadline, returns `503 not_ready`
+  on dependency failure/timeout, disables caching, and does not expose error or
+  credential details. Monitor both endpoints externally; only `/api/ready`
+  qualifies as the readiness gate.
 - `site-agent` health validates the local API, POS DB, and relevant device
   subsystems.
 - POS health must not fail merely because Internet or cloud is unavailable.
@@ -342,6 +535,8 @@ access-control facilities. Do not copy POS operational data into cloud backups.
 Before a production release:
 
 - Confirm the process receives only its permitted database URL.
+- For Backoffice, verify the explicit authorized exposure profile and its
+  allowed/denied entry and data scope on the exact target artifact.
 - Run the correct one-shot migration service.
 - Verify the active schema originated from its own `0000_initial`.
 - Confirm browser bundles contain no database URL.

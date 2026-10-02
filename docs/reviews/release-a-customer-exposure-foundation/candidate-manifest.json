@@ -1,0 +1,1355 @@
+{
+  "baseline": "2dd5a02ba076a65928e2a80afe0b36d0d10284fd",
+  "branch": "codex/release-a-customer-exposure-foundation",
+  "scope": "Exact current task delivery; QA FAIL and bounded Human supplemental budget pending. This inventory is not an approval.",
+  "frozenPrerequisiteHashesMatched": 21,
+  "excludedSelfAndFinalPacket": true,
+  "stagedPaths": [],
+  "files": [
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/_components/today-dashboard.tsx",
+      "size": 3080,
+      "sha256": "65977ccfe7c2df30debfa28e6a488fbaf9573ba7c7d306c56a173feeb8e833ea"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/_components/today-reviews-panel.tsx",
+      "size": 3497,
+      "sha256": "f1f04a5b4747675d7a1be6a23a7a3573eb0f1ea30c54339bc4c30dba49b1c03d"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/_components/today-summary-cards.tsx",
+      "size": 5327,
+      "sha256": "a6cae360c687be97fb77d1ed2efeca93fdb8435c6e992d80ddab86be74c9eabb"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/loading.tsx",
+      "size": 2106,
+      "sha256": "efe6a82406ebef806936944fb6d9dcd2d136889360252f1ad84b2c984fd79b22"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/page.tsx",
+      "size": 1225,
+      "sha256": "ddcd24c1533907de4ae593f08570befe98f6ebd62f5550c178ce8301b7af1f40"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/today-data.ts",
+      "size": 9286,
+      "sha256": "483da3f2c47067c50c5017a50bbea257a5e43ddec8ac436adb0bf40021009a34"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/registre-personnel/actions.ts",
+      "size": 8576,
+      "sha256": "b4acb5f90d710a46737dd377b3f5c4c93d14de3da9e9a09a466da5e5c51ee480"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/actions.ts",
+      "size": 61854,
+      "sha256": "362cf9ce9f0535a554b27cad1e25ed9dc9e138279c33e25114cdfc6df3987807"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/actions.ts",
+      "size": 17906,
+      "sha256": "e5c14a4dcf25169c972d8cb074ba1dd83ee7a5b924021e62c575984e8c48503c"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/page.tsx",
+      "size": 5351,
+      "sha256": "9c6f2807f248d90dd02a1a666c35ed5ee60a6ed6ea96ef9d6477b69160762eda"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/restaurant-knowledge-loader.ts",
+      "size": 3464,
+      "sha256": "41d768c77824c6b1914051b19e62097cd83966815d36dbb05fe2d81818795f9b"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/layout.tsx",
+      "size": 1664,
+      "sha256": "809d50352d7064fac4aa42c28197a7ea4b98b2d21ea1d52af7316d83a795dd74"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/_components/google-connector-panel.tsx",
+      "size": 2315,
+      "sha256": "8d2c61182c3a3388c6a4d933910b159bbb9d31629aca51dd66acb4a9ba0c5e16"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/_components/integration-status-alerts.tsx",
+      "size": 1833,
+      "sha256": "c20c5b317944f238d415837ced381deaedde687b9b1045fff255dc9be8151081"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/integrations-model.ts",
+      "size": 4863,
+      "sha256": "59784efc30b823384fef12b65ece83d84f5abc04d76c97dc4bcb466de445f565"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/page.tsx",
+      "size": 2958,
+      "sha256": "5815aeed6b4f3309d03e07c40032a8c7fa9ae8259bd645c1d2935ab3f2143143"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-detail.tsx",
+      "size": 3491,
+      "sha256": "12f0f4660170571c938c9cc267132f8e8e90d6415fff4e4d301aaee7bc87ac99"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-reply-form.tsx",
+      "size": 2757,
+      "sha256": "47a97ce3269e2355fd45ec7cce4b9c007088e63872ecd0c10a611f2219a31926"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-list-panel.tsx",
+      "size": 8820,
+      "sha256": "683e0535e27ab7aeb00c7221612a902faa203e09934664a50e8f05ae720a3213"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-loader.tsx",
+      "size": 7955,
+      "sha256": "7eebe9f824e7b6557804f4faf471b2f9efd702af88b418b5d25b5afaeefd6838"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-page.tsx",
+      "size": 6541,
+      "sha256": "033f6e46c6448705c54e7cf7fda7c1294e5d68993feab521d024f539987e2ff2"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/actions.ts",
+      "size": 4854,
+      "sha256": "7e09be772e9a21658e3b377eb244f2ae932bdd0fc8f837ec56d3c9ba25c9d4b9"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/reviews-model.ts",
+      "size": 4251,
+      "sha256": "b872bd35f5d194590c69040417a7602f64d342291d014ab33629e86391322e06"
+    },
+    {
+      "path": "apps/backoffice/src/app/globals.css",
+      "size": 463,
+      "sha256": "11754e779cf09f689e3ef0c7e1615c3f91bae30a81e7af064641bc2ed8bb2fde"
+    },
+    {
+      "path": "apps/backoffice/src/app/pointage/[establishmentSlug]/page.tsx",
+      "size": 515,
+      "sha256": "ed9c383a6f07d8c06012ab98baf4194db8638f93c21ca6e7f6730b8ea56f7e2b"
+    },
+    {
+      "path": "apps/backoffice/src/components/backoffice/backoffice-frame.tsx",
+      "size": 12122,
+      "sha256": "5316b6eddfa929dda50ab15a13555813ae152eea34d1583d463cbea2ffbbf1c2"
+    },
+    {
+      "path": "apps/backoffice/src/components/backoffice/backoffice-navigation.ts",
+      "size": 6752,
+      "sha256": "fbbc20864f9c47e79735113a56c915665a0bba9db9cc68183732f89204091cdd"
+    },
+    {
+      "path": "apps/backoffice/src/lib/backoffice-exposure.ts",
+      "size": 2249,
+      "sha256": "a31b791402463ac5a4729e15e756da859509d6b56a94e57ae0d2eb987c4b24e6"
+    },
+    {
+      "path": "apps/backoffice/src/proxy.ts",
+      "size": 3489,
+      "sha256": "dc4856a38870c25ca1fb04c58f82a2308143f1b5cd02eb01eda8324f9dca3d86"
+    },
+    {
+      "path": "apps/backoffice/src/server/auth/session.ts",
+      "size": 5749,
+      "sha256": "58e625381ada996abf432c9110c66a8d1020e6139eb379159bdbde0e8c21355e"
+    },
+    {
+      "path": "apps/backoffice/src/server/backoffice-exposure-config.ts",
+      "size": 910,
+      "sha256": "5ae209154797e0fdad5e436600b5485aa72087116d29a8fceba0fb353650d731"
+    },
+    {
+      "path": "apps/backoffice/src/server/backoffice-exposure.ts",
+      "size": 1264,
+      "sha256": "7ea15bdf2a44b2fccda4c2cd0a3125e63002e77fec0731c8b800970620944d35"
+    },
+    {
+      "path": "apps/backoffice/src/server/pointage/raw-clocking-http.ts",
+      "size": 5878,
+      "sha256": "87827cbc953c8d568e43acc938ac544e8cca0a07fed23ab253d4ef75294b143d"
+    },
+    {
+      "path": "apps/backoffice/src/server/reputation/release-a-setup.ts",
+      "size": 1935,
+      "sha256": "0266365222161012f09d84fdb87631b060b0f6d7451bfc9cb4393d8bbc8cc7b6"
+    },
+    {
+      "path": "apps/backoffice/test/backoffice-exposure-actions.test.ts",
+      "size": 21168,
+      "sha256": "c30dc7805d082f010532bf3f9c6e2904d1d00610ca7d2aa630e5637ab0b80afc"
+    },
+    {
+      "path": "apps/backoffice/test/backoffice-exposure.test.ts",
+      "size": 8378,
+      "sha256": "8cb826050f02240f714504a86ddd1fde7d01f3909de98bb177302e7951bd5ee2"
+    },
+    {
+      "path": "apps/backoffice/test/formalites-persistent-draft-component.test.tsx",
+      "size": 15985,
+      "sha256": "1630549d98ccaa64c419120ed24e262c2f4e27f02c4c3fc0b5164830b575fa51"
+    },
+    {
+      "path": "apps/backoffice/test/pointage-raw-clocking-inventory.test.ts",
+      "size": 19301,
+      "sha256": "e52e23b7896b74eeeb0e84e993803223715d2d6b030760f97dceb56829748aa0"
+    },
+    {
+      "path": "apps/backoffice/test/pointage-release-a-denial.test.ts",
+      "size": 2145,
+      "sha256": "6e2985a04fb99344d3b5e5e5a34e1aa4d52b4178148946b0a285348a46bd510c"
+    },
+    {
+      "path": "apps/backoffice/test/release-a-integration-copy.test.tsx",
+      "size": 1979,
+      "sha256": "ba53c32112f663ac7f4499bcc5a795aa64ee5133c9e542ce969544b684090246"
+    },
+    {
+      "path": "apps/backoffice/test/release-a-profile-auth.test.tsx",
+      "size": 20072,
+      "sha256": "78389bdead456edaf290dc2382f155bcd410d89e7570e496f9fcddb888028d76"
+    },
+    {
+      "path": "apps/backoffice/test/release-a-reputation-actions.test.ts",
+      "size": 5023,
+      "sha256": "72e656481d96fb8c3446e9a92863743450aa88db8a61763bbd76ef5f9ea271a0"
+    },
+    {
+      "path": "apps/backoffice/test/release-a-reputation-loaders.test.tsx",
+      "size": 10961,
+      "sha256": "6bd4d4f30a3db5ae75074b8a5c0e5f0f2375a5ff66e2415bc6febb7346d5e17f"
+    },
+    {
+      "path": "apps/backoffice/test/restaurant-knowledge-loader.test.ts",
+      "size": 11878,
+      "sha256": "88b3486a9741bdfa1217d4243a6092bfbff6f5b426599a195581b8816b624472"
+    },
+    {
+      "path": "apps/backoffice/test/review-reply-form.test.tsx",
+      "size": 4971,
+      "sha256": "389439efbd0d1e3b8283bed3f7fb31f6e963ccf0c014ddb8156ce8b07d6540dc"
+    },
+    {
+      "path": "docs/CURRENT_STATE.md",
+      "size": 53036,
+      "sha256": "40c472d8f5a98c4d225d9a3e90d7112c9dd0668173c8f8c91f907faafdb25f8a"
+    },
+    {
+      "path": "docs/README.md",
+      "size": 13785,
+      "sha256": "5a6ffc713022179dc4fd57edd920cb3147b8bcb15a82b76b6d22e67f21f7d0c7"
+    },
+    {
+      "path": "docs/decisions/ADR-009-release-a-customer-exposure.md",
+      "size": 6006,
+      "sha256": "e8ab1be4f677e6eeaf649c9349c131c10a53c230eec968d30e05254054a1991e"
+    },
+    {
+      "path": "docs/features/establishment/general-information/README.md",
+      "size": 33527,
+      "sha256": "518abd83927e7ec7dd61bde5675268646ca92de96ee5c14f7e794a50cbefc01d"
+    },
+    {
+      "path": "docs/features/identity-access/README.md",
+      "size": 30297,
+      "sha256": "5d519e120cead785ea27f89d2990c5db5ae50398127eba3db730c6aa9265772e"
+    },
+    {
+      "path": "docs/features/reputation/README.md",
+      "size": 107353,
+      "sha256": "2e2d14e33698bb667d1ea6f140930c1a593d65ee927ce7c4470b7187cd6f303c"
+    },
+    {
+      "path": "docs/features/today/README.md",
+      "size": 59356,
+      "sha256": "666315bc75371625bee357f94fc9a4fc5eb35af30e57b735615c79f88d4f8cd3"
+    },
+    {
+      "path": "docs/operations/DEPLOYMENT.md",
+      "size": 20567,
+      "sha256": "c438d49bdbfcda5a48987aa172df94328f9f1011594ea7e40485cae52fdca7b0"
+    },
+    {
+      "path": "docs/operations/LOCAL_DEVELOPMENT.md",
+      "size": 22054,
+      "sha256": "eb28b14272eaca96e13f542f88a73d4a79fd710b6195de72e0129928ec0ebd0c"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/01-analysis-review.md",
+      "size": 61609,
+      "sha256": "826d2d07d901a6b3fc4878f9bfa945af1cdd6d2ac860d79705b13b1f6f40d0ad"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/02-specs-review.md",
+      "size": 236239,
+      "sha256": "8b2792e0bde5d9b5ec61c4e756ead0427a9b34324215f072e38dea55b69c6ff8"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/02b-design-review.md",
+      "size": 31970,
+      "sha256": "7cfae86e02d32f8eff63c1a957c82e29dfab3753053fd1609b11ec7db45f92a5"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/VERIFY.md",
+      "size": 18671,
+      "sha256": "d25bf6e8ad63bb822d8bb00a27cc04505ac155bea55a652a4402341eb330734b"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/implementation-files.json",
+      "size": 14668,
+      "sha256": "8c55eb3d9370915db9053b8650453c89bc0ab612f4c5c8fd6e25b7fe229f613b"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/implementation.diff",
+      "size": 267778,
+      "sha256": "ba52727e59948295e33a9f001e060d54f75c55fc538be69bb82981902808790f"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/01-owner-desktop-today.png",
+      "size": 95479,
+      "sha256": "288ab4a5f096f1d6ba3d9f3a669768b6a53820d1ecedeed515331274ecaa369f"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/02-owner-desktop-reviews.png",
+      "size": 132185,
+      "sha256": "332ef40d97045f6391d5f7d852d6eb229d4dfa8d9562a4cb5effa9aa13d3f114"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/03-owner-desktop-profile.png",
+      "size": 123552,
+      "sha256": "48fa0f35a164301793cbfa427264cecb6cd08dcc54a6167ee40561f56f3eb806"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/04-owner-desktop-integrations.png",
+      "size": 107961,
+      "sha256": "c676db1cff03b88ce9d1bb77b3130a3424679d60711ff8e1c7d381a26e5686db"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/05-owner-desktop-users.png",
+      "size": 104384,
+      "sha256": "695feab2e4ee7c097e1f5686548b8e4e49bcae386500ea125992c2e4b36b2bde"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/06-owner-mobile-menu.png",
+      "size": 31976,
+      "sha256": "6fb06d0d4bfb173d458ef64fd12cee9ca435e3987f5d4d09e46a7ff18b6ba64c"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/07-owner-mobile-today.png",
+      "size": 54638,
+      "sha256": "1b5eea4165f543a7c2012714407a0bb2c68bdff1700af45a1fad510a64441dd4"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/08-owner-mobile-reviews.png",
+      "size": 55017,
+      "sha256": "0ea52d21044c57172455d18c89b1a584d6b7722126a8d0daed49dfb246097f0a"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/09-owner-mobile-profile.png",
+      "size": 45392,
+      "sha256": "54a6530a83fc9f5a620889db9ff4a181234dca0eb8676b30c6fc02566ab7c2ec"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/10-owner-mobile-integrations.png",
+      "size": 66191,
+      "sha256": "af40a584f44457935945533e639658c261f668aa3e41bcd3cb7200b5812d9447"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/11-owner-mobile-users.png",
+      "size": 55166,
+      "sha256": "20540185d110cfd99acb97715d58391a53998617df02fc8766890a26a24b42ca"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/12-owner-selected-direct-unavailable.png",
+      "size": 120238,
+      "sha256": "643e6635a8f7f3986c3b642e114725315597e16fb3f66b64c34e17551031312d"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/13-manager-desktop-profile.png",
+      "size": 120820,
+      "sha256": "1ffe50e1746f7715096fd93e1c6802566f29531e45d2533c2e48e15ae0b47a9e"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/14-manager-desktop-integrations.png",
+      "size": 93217,
+      "sha256": "16fcf897afec18f2e3d10dbc200cc64ca9c70e136ccf88e335c52101202c0b51"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/15-manager-mobile-menu.png",
+      "size": 31028,
+      "sha256": "eb1ad9605ab6275b0391ac2dd6d71ee83ae8c6eb87ef9dcf5c1d1fa1d5b236ad"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/16-manager-mobile-profile.png",
+      "size": 45582,
+      "sha256": "021c92a32093dcf46783077c2155def010e201d0b1408c41fe6f5ef7801c5980"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/17-manager-mobile-integrations.png",
+      "size": 51574,
+      "sha256": "9af4a64d3d18ff8344b96d47f1a3ca7aed977f3db270a4d71446b5d80d4ab073"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/18-staff-desktop-profile.png",
+      "size": 120096,
+      "sha256": "f0e03e5225d289061f3d24c7b6e8bcfc4a532c7b0e0d6a4e8274de2bb1b330b9"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/19-staff-desktop-integrations.png",
+      "size": 89166,
+      "sha256": "4bafa0ad05f95ff4d0f627ebe275b26bcba4c3f140e00a37fa72293621847981"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/20-staff-mobile-menu.png",
+      "size": 31412,
+      "sha256": "3ea8a78ad1710382e974bd7efc1e8084493d12dd4a21c8d1bf1761f2c1b9b5c7"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/21-staff-mobile-profile.png",
+      "size": 44147,
+      "sha256": "0b6efe0e903ee8de6117e1f565db68351967b349ff4b8b218402e4ebd3d8b267"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/22-staff-mobile-integrations.png",
+      "size": 51151,
+      "sha256": "9920eb52ae9481204103531782e87f90f4d7f9c39b56fad6ab22cdbb68c8e136"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/23-owner-today-1536.png",
+      "size": 106716,
+      "sha256": "ed0311438def9108365337ccc06d70290abfb96e55340673ac2fe711e20ed5c7"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/24-owner-today-1024.png",
+      "size": 96268,
+      "sha256": "1d53b2ec430932d0199a62f8d843ff3426b3b92c12259c0e53ba9f5c4a038a8a"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/25-owner-today-768.png",
+      "size": 112974,
+      "sha256": "08c1ff1d2c008b6b2d9a12071cdb94c6193bc191f40ef7adb5c6b3370846fbc9"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/26-owner-today-390.png",
+      "size": 54638,
+      "sha256": "1b5eea4165f543a7c2012714407a0bb2c68bdff1700af45a1fad510a64441dd4"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/27-owner-reviews-empty-filter.png",
+      "size": 98430,
+      "sha256": "23f8254c0be45c11aa04bef3a39e288e8a799e079d0e5d8362309f1333286ac3"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/28-owner-profile-pending.png",
+      "size": 146431,
+      "sha256": "4b1ba8b774b8fbf936c2f421de3d4263267804cdf4276d72c854607fc9b20fb8"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/29-owner-profile-saved.png",
+      "size": 145895,
+      "sha256": "b0ee89d1eeaff63043aa27ee9323e772fce4118f0353b92331347cced01d3b8d"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/30-owner-draft-keyboard-focus.png",
+      "size": 150683,
+      "sha256": "d17f10443e81cc17b8403fe138d7f9d3714625d4da49751aef195129ee2aac20"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/31-owner-draft-pending.png",
+      "size": 151447,
+      "sha256": "4709698b7205f9ade092e588ca9d6b08d5fa5952f3832819d5c871581b27df0b"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/32-owner-draft-saved.png",
+      "size": 150571,
+      "sha256": "8f45916572584cacb8de2fd2c22b32037fa1aaf465c125c3971df59c4376e291"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/33-owner-note-pending.png",
+      "size": 149000,
+      "sha256": "e126e32c9834391f2e204ed5dbbb328c6a1bfc87970969a3804807a0f0d4c4e8"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/34-owner-note-saved.png",
+      "size": 149855,
+      "sha256": "f28fd8accfd8b59641e13d5c37a1cab59fe670b68483b7e24e0d354b382686ee"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/35-manager-profile-pending.png",
+      "size": 139149,
+      "sha256": "a3320ac309d06a8e8b305ab99476f59c16cea1121e2ab9e680ce97281d2b57c8"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/36-manager-profile-saved.png",
+      "size": 138615,
+      "sha256": "a1a02c08a1b13cd77d85b8847f0397770e0f30e453fe7f0c3acc4dadb52552e8"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/37-manager-draft-pending.png",
+      "size": 165966,
+      "sha256": "f635e9eb9b9729990fa80fb09aa6640b612b3926b0238d18c541b759d382ee9a"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/38-manager-draft-saved.png",
+      "size": 165548,
+      "sha256": "0d5e01b2944cda3d5c69dd6d6430fe16adafded7ada4d93dcd11112159a2aa9a"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/39-manager-note-pending.png",
+      "size": 149446,
+      "sha256": "af111362ae200c7ef764d6792b133596f2a7903eaec0192b404addc1c2a5fd70"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/40-manager-note-saved.png",
+      "size": 150488,
+      "sha256": "813ca8a1d4422e57095f5891beb5ce5e2ee0bc6596422f2587e4f5979952f65a"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/41-staff-draft-pending.png",
+      "size": 58687,
+      "sha256": "a8367f3b6080a4aad984cd58ea1719b2605efe1e9ccdd45ff24c65d5cf833ca7"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/42-staff-draft-saved.png",
+      "size": 58587,
+      "sha256": "3254af3092ad91168575acb0666c9c9c0ae0b43c02d1f6ba15a92e653001303e"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/43-staff-note-pending.png",
+      "size": 52632,
+      "sha256": "0807e64a460ad42b3b3ca9bc6887c4c460fd55c7fcc8bceb487dc660e5aa7b7a"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/44-staff-note-saved.png",
+      "size": 59379,
+      "sha256": "2f2ea4b5d8a884754c8f0ff3e06c0a08969c1dde9f3299f1da4c70eb97f847fd"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/45-owner-deferred-route-recovery.png",
+      "size": 97064,
+      "sha256": "b7b7bba29a667e456440f9682eb96cc404679466183436d09339e1c11dbe6d2d"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/46-internal-knowledge.png",
+      "size": 147371,
+      "sha256": "e75ed6f3bf32a5b4820024350e11baf5ae8d6f45dae2cf79a37a69e13d7f981f"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/QA_REPORT.md",
+      "size": 39725,
+      "sha256": "d52ff5b3d679a40567b47eda6e93d6b0420e4c681286e1c8222ee64a2dadea11"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/browser-results-generation1.json",
+      "size": 64443,
+      "sha256": "f6ffcca0b97054d0fce75e9a4368bb68e50f4b1df2b45f36d83480c0c7c32fe3"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/browser-results-generation1.json.raw",
+      "size": 65551,
+      "sha256": "616828cd09b5848f69292d27231a4f1687a27c93af293d2426c8897232d7a7bd"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/browser-results.json",
+      "size": 64443,
+      "sha256": "f6ffcca0b97054d0fce75e9a4368bb68e50f4b1df2b45f36d83480c0c7c32fe3"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/browser-results.json.raw",
+      "size": 65551,
+      "sha256": "616828cd09b5848f69292d27231a4f1687a27c93af293d2426c8897232d7a7bd"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/01-owner-desktop-today.png",
+      "size": 95196,
+      "sha256": "2fbc192bcc3a276d22c77af81eeae9f215252a2932926d1650bb79a108c68580"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/02-owner-desktop-reviews.png",
+      "size": 131930,
+      "sha256": "e9247e8318b3d0711bcfa23e9195eb9ab38ddd4fe85d830496938a207cfb291d"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/03-owner-desktop-profile.png",
+      "size": 122897,
+      "sha256": "e8bfd8546e5934be0f033ca8bea9ffffb478f58b9d18a02d386fd920d92aa5d4"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/04-owner-desktop-integrations.png",
+      "size": 107961,
+      "sha256": "c676db1cff03b88ce9d1bb77b3130a3424679d60711ff8e1c7d381a26e5686db"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/05-owner-desktop-users.png",
+      "size": 104384,
+      "sha256": "695feab2e4ee7c097e1f5686548b8e4e49bcae386500ea125992c2e4b36b2bde"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/06-owner-mobile-menu.png",
+      "size": 36194,
+      "sha256": "deaf0459dbcf61541f663d2248ff4c6a6ad961d0949bb417f572aac097f399f6"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/07-owner-mobile-today.png",
+      "size": 54312,
+      "sha256": "323c5183774ad6067b50d7c42b26290d59e6f4edde84b443061739cf7e4397ab"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/08-owner-mobile-reviews.png",
+      "size": 54735,
+      "sha256": "853cb6b32f01df9dfa947f256024169249f89162141d78b5a6616791948aa16b"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/09-owner-mobile-profile.png",
+      "size": 45392,
+      "sha256": "54a6530a83fc9f5a620889db9ff4a181234dca0eb8676b30c6fc02566ab7c2ec"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/10-owner-mobile-integrations.png",
+      "size": 66191,
+      "sha256": "af40a584f44457935945533e639658c261f668aa3e41bcd3cb7200b5812d9447"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/11-owner-mobile-users.png",
+      "size": 55166,
+      "sha256": "20540185d110cfd99acb97715d58391a53998617df02fc8766890a26a24b42ca"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/12-owner-selected-direct-unavailable.png",
+      "size": 120040,
+      "sha256": "fdd2a245c3bd900a83dd4b1029f4a580794a1897363bf477823843904c22f8d0"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/13-manager-desktop-profile.png",
+      "size": 120164,
+      "sha256": "3870ff57fbc5f77f92b071c58e928ed753c8abc64adc11747803b4ed49ead7ed"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/14-manager-desktop-integrations.png",
+      "size": 92847,
+      "sha256": "0024fca531030eebd9519970354e3485912b339c1bdfae16bfc5871c1f524d17"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/15-manager-mobile-menu.png",
+      "size": 33882,
+      "sha256": "4e0c03438207a99de5588ced36ebd2f319f0e58a6e30af730d6f897a1ba2a63f"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/16-manager-mobile-profile.png",
+      "size": 45582,
+      "sha256": "021c92a32093dcf46783077c2155def010e201d0b1408c41fe6f5ef7801c5980"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/17-manager-mobile-integrations.png",
+      "size": 51229,
+      "sha256": "05f3743bffac8391c22c57e908ee6db0e351a44dc6fed16399808d15d4e311fb"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/18-staff-desktop-profile.png",
+      "size": 118971,
+      "sha256": "5016497349972c6f56ab1d490c1473ce28477a7c2190a31d10c84bb4413302c3"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/19-staff-desktop-integrations.png",
+      "size": 89580,
+      "sha256": "a9a1eef6c4b666e5f20829d5416125a14368193e63727b5013f4cf07d0452047"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/20-staff-mobile-menu.png",
+      "size": 31555,
+      "sha256": "5c0aab017c7f2a4ca80ff78c0362c93a26d37adffef4e62d1cd95fed3ad5b61a"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/21-staff-mobile-profile.png",
+      "size": 44147,
+      "sha256": "0b6efe0e903ee8de6117e1f565db68351967b349ff4b8b218402e4ebd3d8b267"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/22-staff-mobile-integrations.png",
+      "size": 51490,
+      "sha256": "850b22a00a7ae369ad7907d476f0f44a5f7c8deceae56a135b62f060c1e4e710"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/23-owner-today-1536.png",
+      "size": 106399,
+      "sha256": "7667c1da07c12dd2d72f9f8c484271705c4395ef79379c81c7bee8f4d6e8488c"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/24-owner-today-1024.png",
+      "size": 96039,
+      "sha256": "4819ca7833587a0d8db1e67bbe1420a0d755a0fef01fac54b9453aa8e0a2c007"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/25-owner-today-768.png",
+      "size": 112726,
+      "sha256": "5a60c606ff155f7188d73be75f1447f6deb26059d89fced60ef6c74294e3bcbd"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/26-owner-today-390.png",
+      "size": 54312,
+      "sha256": "323c5183774ad6067b50d7c42b26290d59e6f4edde84b443061739cf7e4397ab"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/27-owner-reviews-empty-filter.png",
+      "size": 98430,
+      "sha256": "23f8254c0be45c11aa04bef3a39e288e8a799e079d0e5d8362309f1333286ac3"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/28-owner-profile-pending.png",
+      "size": 142225,
+      "sha256": "0a783b9c169d7c6e3a1550b9c5f73933953f077ceef3ae59c96c472be75571dc"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/29-owner-profile-saved.png",
+      "size": 141693,
+      "sha256": "e0b0084bf62b849b894f65704eeb74e0f276e24294d372a0a4255fb7ea479e32"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/30-owner-draft-keyboard-focus.png",
+      "size": 169210,
+      "sha256": "36465d5a46cf4c2bb887853e021dd15a7e88725ff70886332bed43eb291ff05c"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/31-owner-draft-pending.png",
+      "size": 169912,
+      "sha256": "d0f2a3ec867b31dfc4a1c9862edd92f53f302684237dca1ddc847a74663dedf3"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/32-owner-draft-saved.png",
+      "size": 168324,
+      "sha256": "5074267786c802d0bef92f037d3b8b1b9ece02032b35152f2f9ddb9b80c2476b"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/33-owner-note-pending.png",
+      "size": 160157,
+      "sha256": "a3f2721b9048cc940736c606e507b1625495dfa9ce9de31e233cc7c44248b6ab"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/34-owner-note-saved.png",
+      "size": 158139,
+      "sha256": "5bdf03eba8d0416c268f98369eb6924cc5bf31eeeb408131b09a5f98622aca4c"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/35-manager-profile-pending.png",
+      "size": 140528,
+      "sha256": "95b0a60e8410540754110420c2c64c2d51cab897acfec9327b597f80405291ee"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/36-manager-profile-saved.png",
+      "size": 139993,
+      "sha256": "e98d8286e0d13ba6800c486c1c6788b16a8fdd79d3d2f07ee54d34631408276c"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/37-manager-draft-pending.png",
+      "size": 167766,
+      "sha256": "0a0d7cad03d1c3cb97c3e4f71b082ce9c99df5cddb07200de474e09ecfadbf2b"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/38-manager-draft-saved.png",
+      "size": 166653,
+      "sha256": "0ac6015b5c16a5fa30de421204d71441d92a328ac82e48f0ff2c473ec21556dd"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/39-manager-note-pending.png",
+      "size": 158070,
+      "sha256": "cee6398446b3789e1a3cdf7ee8fc876ebd8795d55c94e5994cf2fd8be27e1930"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/40-manager-note-saved.png",
+      "size": 159432,
+      "sha256": "f83e540bad0d8bcfb61e157dac3f5573ae357acb27a19451262cc7e9f4cf7421"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/41-staff-draft-pending.png",
+      "size": 63474,
+      "sha256": "b7685832eb60e79f441e8c31a53c5923a92bd8e4bd83af469493a969a56771d6"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/42-staff-draft-saved.png",
+      "size": 63461,
+      "sha256": "815a31b92e2345f11e38baf910a4263f08b84d2c738b931ffb1175df0c396746"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/43-staff-note-pending.png",
+      "size": 59961,
+      "sha256": "f378b6c9b6d1a55c88590b87bfcb958e0c66c4d3625ea8cc5dd70902e1c92539"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/44-staff-note-saved.png",
+      "size": 66311,
+      "sha256": "b66459b38e40faca5789dd22a6db6d2fd4fefb891f2f5dd377b9d5f27333ee75"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/45-owner-draft-source-error.png",
+      "size": 172691,
+      "sha256": "98aa77cb20bd89018be8b7d17ee432005230dae92c3d79e421937c36067eaea1"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/46-owner-deferred-route-recovery.png",
+      "size": 97064,
+      "sha256": "b7b7bba29a667e456440f9682eb96cc404679466183436d09339e1c11dbe6d2d"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/47-internal-knowledge.png",
+      "size": 147302,
+      "sha256": "e9f6ba726cca196c54a9d88ba5a0d994f1b06565ffc938f83cbc353662d64172"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/48-internal-today-booking.png",
+      "size": 130845,
+      "sha256": "73c45da330d9110d966280318fbd6ccefeada36cf077237211392cbef89213dd"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/49-internal-reviews-mixed-source.png",
+      "size": 160918,
+      "sha256": "4b9a45b931f77bdc37b196039e262598b99ca0350ac1462fa91624e28d475490"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/browser-results-generation2.json",
+      "size": 68985,
+      "sha256": "db94f3289b2d9b9f4860387f0523a763dcea40a216fa7f8546820bdf5d603588"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/browser-results-generation2.json.raw",
+      "size": 70141,
+      "sha256": "0a374820d76c31d337ac1cf18d6ef736c698df2cbaecd85b991072af71ef4035"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/01-owner-desktop-today.png",
+      "size": 94602,
+      "sha256": "1c2b48ec7e455e22417bd98b296062298c42eeb3888e3350534e0007b0c45829"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/02-owner-desktop-reviews.png",
+      "size": 132348,
+      "sha256": "56d493f17becd61369a0ef3593beeefb32311694ec81b03bbfe6ca8e4959b2aa"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/03-owner-desktop-profile.png",
+      "size": 122922,
+      "sha256": "2bedea282673157098046176ea20e96a12d30c5475cca05a1f08ed527250a484"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/04-owner-desktop-integrations.png",
+      "size": 107302,
+      "sha256": "85bce50d7c7ff1ca12d73ee2d840f5a7661d46293317b5256bec43b4a682c2c9"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/05-owner-desktop-users.png",
+      "size": 104477,
+      "sha256": "bb08b28e6b68e896c6afd004393e8fe7ab18480c0b71171565edf5bffc2b04bf"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/06-owner-mobile-menu.png",
+      "size": 40193,
+      "sha256": "8665b8108825518d2790377f6c6b7c5ebdee8c4966b94ffeea02b3383121236a"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/07-owner-mobile-today.png",
+      "size": 53416,
+      "sha256": "98e873b7529f308d366d757696b10e76163cb1083803cb40717eedca72a00131"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/08-owner-mobile-reviews.png",
+      "size": 53916,
+      "sha256": "d255d34463d7e87941f51e25766e9c542ed5047b4194da45ecd8bc8a55eef6d2"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/09-owner-mobile-profile.png",
+      "size": 45443,
+      "sha256": "2967d2d1148a8fcb75a002cd825ff6ab1e3acfc6fbb3f0122d95a59cff2353c8"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/10-owner-mobile-integrations.png",
+      "size": 65592,
+      "sha256": "6f9e8109b5fad4605b28fdc3030fb3cfdcf5d6576ea6ce2cf20819fd55d24de4"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/11-owner-mobile-users.png",
+      "size": 55323,
+      "sha256": "6551763b9ca350451109e47677354b811bed3af33ee3a6bcead994d1409d6e19"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/12-owner-selected-direct-unavailable.png",
+      "size": 120880,
+      "sha256": "c2ea6271ed4ee66c02871db28f917f3286ec5febf9229e6494dd19fa2e1a27c2"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/13-owner-selected-foreign-unavailable.png",
+      "size": 120880,
+      "sha256": "c2ea6271ed4ee66c02871db28f917f3286ec5febf9229e6494dd19fa2e1a27c2"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/14-manager-desktop-profile.png",
+      "size": 120182,
+      "sha256": "de7511d209f10a9059975d7f6281de54d1d28b2876381e32b4b9d6fa340ed54c"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/15-manager-desktop-integrations.png",
+      "size": 91785,
+      "sha256": "5ba77f3df58e9a0ed028cbc8e9e8537949c77f565c944294786fddc5910fe13c"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/16-manager-mobile-menu.png",
+      "size": 32512,
+      "sha256": "5030d9f2185ca8610f0e3da82ff2b225eaa470ea11eefc7de5ffe9b5129940c2"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/17-manager-mobile-profile.png",
+      "size": 45633,
+      "sha256": "43f303f294d662219da6f71375b75e4acd272192c68acde8ef9d7ecb105662b1"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/18-manager-mobile-integrations.png",
+      "size": 50945,
+      "sha256": "393829356aa2333aa8b1db97f1901051261681da32db7935a7bb6b310235ccba"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/19-staff-desktop-profile.png",
+      "size": 119179,
+      "sha256": "95804940abfd34af1b35e5194719c5cfa7997e7b74d4a189286c83cea4ffa1d8"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/20-staff-desktop-integrations.png",
+      "size": 88580,
+      "sha256": "4f7cd3515fd7cf2fdec161a08adf353a80de2fd180daef6218045996e3f448c9"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/21-staff-mobile-menu.png",
+      "size": 31990,
+      "sha256": "e6b7a5f49f031ff646453c33f9e1f6605f20d9a39fc7e182b5a69602ef24ed44"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/22-staff-mobile-profile.png",
+      "size": 44130,
+      "sha256": "751aa0e52b9712f68207eb573498b76da297752966e388534b1de78165e122d5"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/23-staff-mobile-integrations.png",
+      "size": 51209,
+      "sha256": "1a1cb655e2f982d1ec5eaa5bac733066a8b82509a6ee85205e75d594330debe4"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/24-owner-context-switch-recovered.png",
+      "size": 132657,
+      "sha256": "8871601479e502d01f96f048d194a1884c818744bc4b9b9e0528cbeba252a6a0"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/25-owner-today-1536.png",
+      "size": 105930,
+      "sha256": "ddb809cea5f11d8af79c60f3d2c45cfe944c59f110874ab2871d58e6dddd6ff0"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/26-owner-today-1024.png",
+      "size": 95706,
+      "sha256": "ad2195548bdf3cdb8c9d73724b34eedcef0bf2e9e42caa9d8b15f718e45c7b22"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/27-owner-today-768.png",
+      "size": 112672,
+      "sha256": "d3234a944b642c34283c2d8839e21bd864d4c1159046a1e1d1956a33da095928"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/28-owner-today-390.png",
+      "size": 53416,
+      "sha256": "98e873b7529f308d366d757696b10e76163cb1083803cb40717eedca72a00131"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/29-owner-reviews-empty-filter.png",
+      "size": 100984,
+      "sha256": "ef3b42c95a03e1e7da9cac22805f31aab210afabdd87f6fc94d992b3f9136685"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/30-owner-profile-pending.png",
+      "size": 142550,
+      "sha256": "2e130ed68a2b3126cb850cc35558b260984bcb5174a08a5de1c9d79fce4d9370"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/31-owner-profile-saved.png",
+      "size": 142008,
+      "sha256": "ebe646e7ba99d96afbfbd9dcb610109c510a1f8bd875b3e08fbf0088196e355b"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/32-owner-draft-keyboard-focus.png",
+      "size": 169972,
+      "sha256": "375fe081d12362c7f276f82b506f892de42908ec6db68e67815784a1a103cdd8"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/33-owner-draft-pending.png",
+      "size": 170299,
+      "sha256": "1194ae91d984b1ad6b84ebab2da700f9242c378c895c682a623b36e3f61356bb"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/34-owner-draft-saved.png",
+      "size": 168552,
+      "sha256": "ba127142c01996b33de209000dc2d37841374625a94dbaafb4e5cb5402a68158"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/35-owner-note-pending.png",
+      "size": 168999,
+      "sha256": "16932208df21deac67e7c2c41a5723bab05e2e83fc54608a3ba222eeb70363c5"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/36-owner-note-saved.png",
+      "size": 169688,
+      "sha256": "dad186cd4a50bda01b9e9a9fb3d0d7a447bf8d943f2dd304266bb3f7a3995d0d"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/37-manager-profile-pending.png",
+      "size": 140764,
+      "sha256": "3e0194131231b931c8c57bc0c0e01ddf0380d9201003b897967e65487cac9bb7"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/38-manager-profile-saved.png",
+      "size": 140220,
+      "sha256": "cef8b5921719de79144e3810af210f42455809692d95b788504437efac84309c"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/39-manager-draft-pending.png",
+      "size": 171853,
+      "sha256": "09903e40b618690bb01a0250c276cefb764f8190aa2b8371f782496db8ec3c3d"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/40-manager-draft-saved.png",
+      "size": 171660,
+      "sha256": "869f071acec69183aad969f5e90785f314f78b9b1339156a20d23f9e2965fcf6"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/41-manager-note-pending.png",
+      "size": 164859,
+      "sha256": "80c2b5151166fd606edbe3623308024b89ef57066aa9beac811cfaebfd9646dd"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/42-manager-note-saved.png",
+      "size": 166315,
+      "sha256": "6d9f0f8463ee8fed2d05c4bde9deb2aa47a09ced8d5a93b7327baa66f989ddf6"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/43-staff-draft-pending.png",
+      "size": 64484,
+      "sha256": "86000ead098c3e15821378033524961e069915ee835a16559da444c2842d22b6"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/44-staff-draft-saved.png",
+      "size": 62005,
+      "sha256": "afee6669c0fb0bbeb15b3a96d0585dce29b687a77fa0cc11283e383d58dfc866"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/45-staff-note-pending.png",
+      "size": 63097,
+      "sha256": "eddd41fe4aab16b97c3e8b734eebe2d90706c191a379a3f00b7377c62a42bbc7"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/46-staff-note-saved.png",
+      "size": 64311,
+      "sha256": "bd9401099449985a55307e117c957de24e027869ff2fb811344fe274572d923b"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/47-owner-draft-source-error.png",
+      "size": 175937,
+      "sha256": "644b303d11ab8b48d64e166baf98e0e1e75de3c90ec69ba4816cd6c698ed9e47"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/48-owner-deferred-route-recovery.png",
+      "size": 95953,
+      "sha256": "2c5777a2e3c2bc9aa502684ebc92362cfc6671d1ce3bfcf306625f3dfa63594c"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/49-internal-knowledge.png",
+      "size": 147368,
+      "sha256": "6ea09d53445e2803aec7153e76c6250f6916e77de44cbb4c7ce85ce8eeaea57b"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/50-internal-today-booking.png",
+      "size": 130845,
+      "sha256": "73c45da330d9110d966280318fbd6ccefeada36cf077237211392cbef89213dd"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/51-internal-reviews-mixed-source.png",
+      "size": 161706,
+      "sha256": "03edf47fa426a93c143f6ca6b07c13ccba97cdc85e142761f3aec694dd71abb1"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/52-setup-bound-empty-owner-desktop-today.png",
+      "size": 86221,
+      "sha256": "dc4c7a983e780e2bbb0952f1aa62a0436b0224a21858f9e3468f3e02f9f968fc"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/53-setup-bound-empty-owner-desktop-reviews.png",
+      "size": 101155,
+      "sha256": "de9b0a38ce539ab44a0e3181087619c90b1af8e6fc654db94daf9d98caa1eba6"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/54-setup-bound-empty-owner-desktop-integrations.png",
+      "size": 107302,
+      "sha256": "85bce50d7c7ff1ca12d73ee2d840f5a7661d46293317b5256bec43b4a682c2c9"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/55-setup-bound-empty-owner-mobile-today.png",
+      "size": 52714,
+      "sha256": "1ed48bde31b62209e01a124664ebe3971a9f6e5893c460424b569c6f51459392"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/56-setup-bound-empty-owner-mobile-reviews.png",
+      "size": 54166,
+      "sha256": "370cb4e982a5c1f625db9bfb538ab50d1576807bf3799e0e1408bcee7e74b909"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/57-setup-bound-empty-owner-mobile-integrations.png",
+      "size": 65592,
+      "sha256": "6f9e8109b5fad4605b28fdc3030fb3cfdcf5d6576ea6ce2cf20819fd55d24de4"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/58-setup-bound-empty-manager-desktop-today.png",
+      "size": 83223,
+      "sha256": "8cf7ab4ad901e1870c738a1d765e0eab436e72e8fd9d9a7f69afd257d1c69493"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/59-setup-bound-empty-manager-desktop-reviews.png",
+      "size": 98559,
+      "sha256": "2dfbd02353b25b5fc7bb262d71bbfea327a95408471ef6b45d7df268e322b662"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/60-setup-bound-empty-manager-mobile-today.png",
+      "size": 52794,
+      "sha256": "2ac0738ad385f2a54889e747d876ce506e64cf23fa3a402717bace7f31321372"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/61-setup-bound-empty-manager-mobile-reviews.png",
+      "size": 54356,
+      "sha256": "9be4db15b19927b22631f65ffdb151efbd9c7971e193f88d79623f0d0b4e01f1"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/62-setup-bound-empty-staff-desktop-today.png",
+      "size": 79918,
+      "sha256": "34739b7fc7d75577b732431eede7d90375b765745bdef2cf5da354b6c8c24267"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/63-setup-bound-empty-staff-desktop-reviews.png",
+      "size": 94913,
+      "sha256": "0dc0dc0ba6b53442be8f5fcae5861c194efd6431432417ccefc0a94d7af856ce"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/64-setup-bound-empty-staff-mobile-today.png",
+      "size": 52992,
+      "sha256": "3b9282b29e321e44d74928677d3e20b73ee39bfe7dd60f1e6fd29d24f5822671"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/65-setup-bound-empty-staff-mobile-reviews.png",
+      "size": 54290,
+      "sha256": "6193c636543c929880ef9571fa12fc8788bed54af0fa16a3c6e572560e2ffab4"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/66-setup-missing-binding-owner-desktop-today.png",
+      "size": 87372,
+      "sha256": "42a9582bbd3a4855923953e77c8ae83c415ee6e55de2b8d5f52ce3ae112d5cde"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/67-setup-missing-binding-owner-desktop-reviews.png",
+      "size": 98842,
+      "sha256": "327ffcab33954bf00652e5f2b4becd94997378d6bcfe009a2e1fadc54f840425"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/68-setup-missing-binding-owner-desktop-integrations.png",
+      "size": 107608,
+      "sha256": "445cf658e2933de1f375460c9b69f3da6069274b74ce406aede20e982951ccf9"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/69-setup-missing-binding-owner-mobile-today.png",
+      "size": 51693,
+      "sha256": "26b56246b6f484191d280e98b75fe0f47c9cda5dc1cc376db15b5c875a3f69b2"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/70-setup-missing-binding-owner-mobile-reviews.png",
+      "size": 55492,
+      "sha256": "089fef51912190d3624f0fe8dd0689e38202ebf976beaff940637f65d52f96a4"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/71-setup-missing-binding-owner-mobile-integrations.png",
+      "size": 67569,
+      "sha256": "cf64794e22f1cf463d840704a4f11114e43277df62e20304975b3f88c499ed0f"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/72-setup-missing-binding-manager-desktop-today.png",
+      "size": 82117,
+      "sha256": "fc52ae3f386e270063becb3a99131fa17a06d7a757bb4bb74bbea00fdcbb31fe"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/73-setup-missing-binding-manager-desktop-reviews.png",
+      "size": 97547,
+      "sha256": "3ceca635cc2b8d209745aab48624b11acbf28fa6a9277b48b050e0d3f3cc9191"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/74-setup-missing-binding-manager-mobile-today.png",
+      "size": 51822,
+      "sha256": "dac6dba6477665bc897d9cd132f6507f282a8c17829d80b9a09b68ef283c9785"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/75-setup-missing-binding-manager-mobile-reviews.png",
+      "size": 54844,
+      "sha256": "408c50fa44850bea30d920deb9bc6704c6d37c4319e0d476e84d4ec519e1832f"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/76-setup-missing-binding-staff-desktop-today.png",
+      "size": 78826,
+      "sha256": "a566cf4e25053908603634c385e2748c23b707fbae699865445775457db73f76"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/77-setup-missing-binding-staff-desktop-reviews.png",
+      "size": 93819,
+      "sha256": "64a62c2856aaf1469c6db7c2cfda057f65ee4c480240a3ac4e77d266879f9950"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/78-setup-missing-binding-staff-mobile-today.png",
+      "size": 52036,
+      "sha256": "825c057d037e39cea2acf47c1054a6e91240b063a93339d5eebee1ccdc06be41"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/79-setup-missing-binding-staff-mobile-reviews.png",
+      "size": 54777,
+      "sha256": "5ce042280ccb716e0a18666f2953197414a412a0699053e0fffbbb25375b07eb"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/browser-results-generation3.json",
+      "size": 125648,
+      "sha256": "3d76981de5a053e53ef226caa4af266a8e1827e0bf0dd90365d508456f0a65c0"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/browser-results-generation3.json.raw",
+      "size": 125760,
+      "sha256": "011c5e29318f5f37391f139c1c1a71c70404a201c446acaebce13b6288b7b398"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/observation-representations.json",
+      "size": 2673,
+      "sha256": "09ada1f81ea5b0eac3acd87e44457c9435a038079d7106b73c153242f2a49188"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/screenshot-manifest.md",
+      "size": 73825,
+      "sha256": "1dc27d27dd12abd6a2e0d078a08466b63927707ad5bfa204a8d6165d663e1a98"
+    },
+    {
+      "path": "docs/ui/pages/today/ACCEPTANCE_CHECKLIST.md",
+      "size": 4602,
+      "sha256": "95025e7f1dd91142699a96396b9d7f3ee0de633aba1a8fe885e2e926a4ab2238"
+    },
+    {
+      "path": "docs/ui/pages/today/DATA_AND_INTERACTION_SPEC.md",
+      "size": 7262,
+      "sha256": "c00948f53a6593f97765f12beedcd2b5bb6b67b70e56bf42e873f1bd1a6d5049"
+    },
+    {
+      "path": "docs/ui/pages/today/PRODUCT_SCOPE.md",
+      "size": 4061,
+      "sha256": "0b8b9408ab4438a44e0dd2fd29499a4a95665acc3e68612cd5392603d5afa6c7"
+    },
+    {
+      "path": "docs/ui/pages/today/README.md",
+      "size": 4254,
+      "sha256": "967b7058f9df1aa5da8ecba5e4358898672def1b48fd5e1140f681b57bd300d9"
+    },
+    {
+      "path": "docs/ui/pages/today/UI_SPEC.md",
+      "size": 5927,
+      "sha256": "c837208a83df9fa245c8e72cd4ae92e271e580d4f96c4ee7564dda16469a0bee"
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/.openspec.yaml",
+      "size": 45,
+      "sha256": "edbcd0b0cb2d4619b326f4293e56c1d31f5ce6be37dda83923ff58267b46f1ab"
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/analysis.md",
+      "size": 20201,
+      "sha256": "8876b435196b052652467bbe8d51404d55fd9a0c5b39f4ff335939e0dc219403"
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/design.md",
+      "size": 22836,
+      "sha256": "c1eadd9d79dca73d8a6d365c53b7fe29665e4042ee0144f9725cda20fd5ee8c4"
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/proposal.md",
+      "size": 4894,
+      "sha256": "bd29ab84194077951f25e1e672bccc805229bf4f2379d14b3572b0ace57f3541"
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/authorization/formalites/spec.md",
+      "size": 4980,
+      "sha256": "5a914d88ce8ea35fa8356af1725b8e76ba389683f063c0216aca2bd712ad8412"
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/authorization/pointage/spec.md",
+      "size": 11176,
+      "sha256": "301a901252af8e80116dbc2805d33e7ea71964692154bdb53fa81bd8582dad67"
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/backoffice/release-a-customer-exposure/spec.md",
+      "size": 15193,
+      "sha256": "deefad70fd9b787c63f60d8569f617027510b5f3a415e03185b667124ebb8f9c"
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/formalites/persistent-draft-foundation/spec.md",
+      "size": 47354,
+      "sha256": "3e087148d39ab4b15f80f6133c1f60fbd83d7e4a6703d30874dc2bbe2563c97e"
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/pointage/raw-clocking/spec.md",
+      "size": 19877,
+      "sha256": "a012b2650f87b8159d8a184ec1b639089a6a68e7460b65dbb32a7f445c71600b"
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/reputation/review-social-links-configuration/spec.md",
+      "size": 22967,
+      "sha256": "8c585770d2b83cdf9450f4acc9c167474661dadc6ed48da96eb8331f52159d8f"
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/communication-identity/spec.md",
+      "size": 19982,
+      "sha256": "d2d90b1908da0385c1bf020c873e0711f97dd7904abc5037fe82a334e49da50c"
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/concept-history/spec.md",
+      "size": 13702,
+      "sha256": "4f08f3518efb351edca4c9dc5ac0db919315f9c93c15fc787bd170113a028aab"
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/cuisine-know-how/spec.md",
+      "size": 14361,
+      "sha256": "588c90bf5f6eaa3b61d38c21ecf00f1f2e8601710942ede0c419aa1655d24645"
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/customer-experience/spec.md",
+      "size": 16364,
+      "sha256": "68f358ac24a13ca649ffc10fce8678c2bc620ba8c4fe06cefedecdd3fcbd9f23"
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/team-culture/spec.md",
+      "size": 18516,
+      "sha256": "38727fcc87e815bf9247146860d0ac9b8777c9bffc6e567f206827f218921da3"
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/validated-knowledge/spec.md",
+      "size": 20169,
+      "sha256": "7b69f767f367145a7f2e41692437f572600371b977ebd890c4793bba98275e40"
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/tasks.md",
+      "size": 32117,
+      "sha256": "9e32cbccf68958d205fa9eb77a6985e61012eb47fb974b7557b9936d2d690d03"
+    },
+    {
+      "path": "packages/db-cloud/src/reputation-repository.ts",
+      "size": 30730,
+      "sha256": "5a859833faa0848d6547d1ce51fce52e097453ae62e09115ff2f54f191ef000a"
+    },
+    {
+      "path": "packages/db-cloud/test/reputation-release-a-exposure.integration.test.ts",
+      "size": 21003,
+      "sha256": "1d78c15ea5a1c0ee070929935cdbf819474cab57b0c60e9a4da3d2ce09f943d3"
+    }
+  ]
+}

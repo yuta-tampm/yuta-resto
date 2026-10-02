@@ -1,0 +1,233 @@
+{
+  "change": "next-generated-types-bootstrap",
+  "phase": 2,
+  "scope": "tasks 2.1-2.4 only",
+  "precheck": {
+    "chunk_id": "0bab5d",
+    "wall_time_seconds": 2.3663691,
+    "exit_code": 0,
+    "original_token_count": 1317,
+    "output": "CURRENT: 2201 candidate files + 2 closeout evidence files; implementation 5/5; Formalites 4/4 + 18/18 + 17/17 MATCH; original index MATCH\r\n M .agents/skills/yuta-finish-change/SKILL.md\n M .agents/skills/yuta-run-change/SKILL.md\n M .github/workflows/ci.yml\n M README.md\n M apps/backoffice/next-env.d.ts\n M apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/employee-edit-dialog.tsx\n M apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/salaries-page.tsx\n M apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-edit-flow.test.ts\n M apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-edit-flow.ts\n M apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-history-refresh.test.ts\n M apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-history-refresh.ts\n M apps/backoffice/src/app/(authenticated)/equipe/salaries/actions.ts\n M apps/backoffice/src/server/auth/permissions.ts\n M docs/AUTHORITY_MODEL.md\n M docs/DEVELOPMENT_WORKFLOW.md\n M docs/MODULE_REGISTRY.md\n D docs/OPENSPEC_BASELINE_AUDIT.md\n M docs/OPENSPEC_YUTA_ACTIVATION_POLICY_REVIEW.md\n D docs/OPENSPEC_YUTA_ACTIVATION_REPORT.md\n M docs/OPENSPEC_YUTA_NORMATIVITY_POLICY_REVIEW.md\n D docs/OPENSPEC_YUTA_SCHEMA_HARDENING_IMPLEMENTATION_REPORT.md\n D docs/OPENSPEC_YUTA_SCHEMA_HARDENING_REVIEW.md\n D docs/OPENSPEC_YUTA_SCHEMA_REVIEW.md\n D docs/OPENSPEC_YUTA_SCHEMA_SMOKE_TEST_REPORT.md\n M docs/PRODUCT_KNOWLEDGE.md\n M docs/README.md\n M docs/YUTA_AUTOMATED_CHANGE_WORKFLOW.md\n D docs/YUTA_AUTOMATED_CHANGE_WORKFLOW_SETUP_REPORT.md\n M docs/YUTA_KNOWLEDGE_CONSOLIDATION_PROTOCOL.md\n M docs/YUTA_QA_PROTOCOL.md\n D docs/YUTA_WORKFLOW_V3_UPDATE_REPORT.md\n M docs/archive/README.md\n D docs/chatGPT/YUTA_CONTROL_TOWER_HANDOFF_TEMPLATE.md\n M docs/chatGPT/YUTA_CONTROL_TOWER_HANDOFF_TEMPLATE_V3.md\n D docs/chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT.md\n M docs/chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT_V3.md\n D docs/chatGPT/YUTA_PAGE_CHAT_OPERATING_PROMPT.md\n M docs/chatGPT/YUTA_PAGE_CHAT_OPERATING_PROMPT_V3.md\n D docs/chatGPT/YuTa_Workflow_v2.pdf\n D docs/chatGPT/YuTa_Workflow_v3.pdf\n M docs/features/personnel/README.md\n M docs/reviews/README.md\n D docs/tasks/YUTA_AUTOMATED_OPEN_SPEC_REVIEW_WORKFLOW_SETUP_TASK.md\n D docs/tasks/YUTA_STEP_7_0B_OPENSPEC_1_11_DELTA_REAUDIT_TASK.md\n D docs/tasks/YUTA_STEP_7_0_OPENSPEC_LOCAL_BASELINE_AUDIT_TASK.md\n D docs/tasks/YUTA_STEP_7_1_FORK_AND_DESIGN_YUTA_SCHEMA_TASK.md\n D docs/tasks/YUTA_STEP_7_2_ISOLATED_OPENSPEC_SCHEMA_SMOKE_TEST_TASK.md\n D docs/tasks/YUTA_STEP_7_3A_OPENSPEC_SCHEMA_HARDENING_ANALYSIS_TASK.md\n D docs/tasks/YUTA_STEP_7_3B_MINIMAL_SCHEMA_HARDENING_TASK.md\n D docs/tasks/YUTA_STEP_7_4_OPENSPEC_ACTIVATION_POLICY_REVIEW_TASK.md\n D docs/tasks/YUTA_STEP_7_5_ACTIVATE_YUTA_SPEC_DRIVEN_TASK.md\n D docs/tasks/YUTA_STEP_7_6A_OPENSPEC_NORMATIVITY_POLICY_REVIEW_TASK.md\n D docs/tasks/YUTA_STEP_7_6B_ENABLE_NORMATIVE_SPECS_TASK.md\n D docs/tasks/YUTA_WORKFLOW_V3_AUTOMATION_UPDATE_TASK.md\n M docs/ui/pages/backoffice-equipe-salaries/README.md\n M package.json\n M packages/contracts/src/personnel/index.ts\n M packages/contracts/test/personnel.test.ts\n M packages/db-cloud/drizzle/meta/_journal.json\n M packages/db-cloud/src/index.ts\n M packages/db-cloud/src/personnel-repository.ts\n M packages/db-cloud/src/schema/personnel.ts\n M packages/db-cloud/test/personnel-repository.integration.test.ts\n M packages/db-cloud/test/schema.test.ts\n?? apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/employee-history-metadata-fields.tsx\n?? apps/backoffice/src/app/(authenticated)/equipe/salaries/_components/employee-history.tsx\n?? apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-history-action-errors.ts\n?? apps/backoffice/src/app/(authenticated)/equipe/salaries/_lib/employee-history-presentation.ts\n?? apps/backoffice/src/server/auth/formalites.ts\n?? apps/backoffice/test/formalites-authorization-context.test.ts\n?? apps/backoffice/test/formalites-permissions.test.ts\n?? apps/backoffice/test/personnel-history-action.test.ts\n?? apps/backoffice/test/personnel-reconstructable-history-ui.test.tsx\n?? docs/YUTA_WORKFLOW_V3.md\n?? docs/YUTA_WORKFLOW_V3_APPLY_VERIFY_QA_CLARIFICATION_REVIEW.md\n?? docs/YUTA_WORKFLOW_V3_DOCUMENTATION_AUDIT.md\n?? docs/YUTA_WORKFLOW_V3_HISTORY_CLEANUP_REVIEW.md\n?? docs/YUTA_WORKFLOW_V3_LEGACY_CLEANUP_REVIEW.md\n?? docs/YUTA_WORKFLOW_V3_PDF_B_REVIEW.md\n?? docs/archive/yuta-workflow/\n?? docs/reference/\n?? docs/reviews/formalites-authorization/\n?? docs/reviews/next-generated-types-bootstrap/\n?? docs/reviews/personnel-reconstructable-value-history/\n?? openspec/changes/archive/2026-09-03-personnel-reconstructable-value-history/\n?? openspec/changes/formalites-authorization/\n?? openspec/changes/next-generated-types-bootstrap/\n?? openspec/specs/personnel/\n?? packages/db-cloud/drizzle/0017_whole_warbound.sql\n?? packages/db-cloud/drizzle/meta/0017_snapshot.json\n?? packages/db-cloud/src/personnel-history-cutover.ts\n?? packages/db-cloud/src/personnel-history-domain.ts\n?? packages/db-cloud/test/personnel-history-cutover.integration.test.ts\n?? packages/db-cloud/test/personnel-history-cutover.test.ts\n?? packages/db-cloud/test/personnel-history-domain.test.ts\n?? scripts/next-generated-types-bootstrap.test.mjs\n"
+  },
+  "baseline": {
+    "head": "07d9d6d88e07f6a819c7894ef2e35f79d1eb32fa",
+    "trackedCount": 2120,
+    "ignoredTracked": [],
+    "staged": [],
+    "scopedDiff": [],
+    "localGenerated": [
+      {
+        "sha256": "4e4da12aa061aac172fb1bcb48e9b6e4b293080d2f494327925fdba8f39632ac",
+        "path": "D:\\working\\yuta\\yuta-resto\\apps\\backoffice\\next-env.d.ts"
+      },
+      {
+        "sha256": "7b550dda9686c16f36a17bf9051d5dbf31e98555b30d114ac49fc49a1e712651",
+        "path": "D:\\working\\yuta\\yuta-resto\\apps\\booking-web\\next-env.d.ts"
+      },
+      {
+        "sha256": "7b550dda9686c16f36a17bf9051d5dbf31e98555b30d114ac49fc49a1e712651",
+        "path": "D:\\working\\yuta\\yuta-resto\\apps\\feedback-web\\next-env.d.ts"
+      },
+      {
+        "sha256": "4e4da12aa061aac172fb1bcb48e9b6e4b293080d2f494327925fdba8f39632ac",
+        "path": "D:\\working\\yuta\\yuta-resto\\apps\\web\\next-env.d.ts"
+      },
+      {
+        "sha256": "83a6738771334a63124c8acf38250eccd39fd0aba62846bb0815d952a7936205",
+        "path": "D:\\working\\yuta\\yuta-resto\\apps\\yuta-display\\next-env.d.ts"
+      },
+      {
+        "sha256": "4e4da12aa061aac172fb1bcb48e9b6e4b293080d2f494327925fdba8f39632ac",
+        "path": "D:\\working\\yuta\\yuta-resto\\apps\\yuta-pos\\next-env.d.ts"
+      }
+    ],
+    "at": "2026-09-04T10:25:53.0552346+02:00"
+  },
+  "acceptedRevalidation": {
+    "snapshot": "9b87c571f7b9ae2cc52cdfee25c16121514bc79d",
+    "evidenceHash": "d9e06d91a8175e7ae70d64486bd8cb829f4f241cdcb63b4ed7f298772e521aa3",
+    "reviewBeforeApprovalHash": "1a04d58b7e592f88915841d33686b3eaf070bad59a04afd04019f9bbd129d349"
+  },
+  "untrack": {
+    "cmd": "git rm --cached -- apps/backoffice/next-env.d.ts apps/web/next-env.d.ts apps/booking-web/next-env.d.ts apps/feedback-web/next-env.d.ts apps/yuta-pos/next-env.d.ts apps/yuta-display/next-env.d.ts",
+    "chunk_id": "d0948c",
+    "wall_time_seconds": 0.2464164,
+    "exit_code": 0,
+    "original_token_count": 52,
+    "output": "rm 'apps/backoffice/next-env.d.ts'\nrm 'apps/booking-web/next-env.d.ts'\nrm 'apps/feedback-web/next-env.d.ts'\nrm 'apps/web/next-env.d.ts'\nrm 'apps/yuta-display/next-env.d.ts'\nrm 'apps/yuta-pos/next-env.d.ts'\n"
+  },
+  "gitAssertions": {
+    "cmd": "$ErrorActionPreference='Stop'\n$paths=@('apps/backoffice/next-env.d.ts','apps/web/next-env.d.ts','apps/booking-web/next-env.d.ts','apps/feedback-web/next-env.d.ts','apps/yuta-pos/next-env.d.ts','apps/yuta-display/next-env.d.ts')\n$rows=@(foreach($path in $paths){\n $tracked=@(git ls-files -- $path)\n $ignore=git check-ignore -v -- $path\n if($tracked.Count -or $LASTEXITCODE -ne 0 -or $ignore -notmatch ([regex]::Escape('/'+$path)+'\\s')){throw \"Tracking/ignore assertion failed: $path\"}\n [pscustomobject]@{path=$path;lsFiles=$tracked;checkIgnore=$ignore;localExists=(Test-Path -LiteralPath $path);sha256=(Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLower()}\n})\n$removed=@(git diff --cached --diff-filter=D --name-only)\nif(@(Compare-Object $removed $paths).Count -or @(git diff --cached --diff-filter=ACMRTUXB --name-only).Count){throw 'Unexpected index diff'}\n$ignored=@(git ls-files -ci --exclude-standard)\nif($ignored.Count){throw 'Other tracked source ignored'}\n[pscustomobject]@{rows=$rows;staged=@(git diff --cached --name-status);trackedCount=@(git ls-files).Count;otherIgnored=$ignored;status=@(git status --short -- .gitignore scripts/test-pos-offline.mjs @paths)} | ConvertTo-Json -Depth 4",
+    "chunk_id": "899a49",
+    "wall_time_seconds": 1.5229325,
+    "exit_code": 0,
+    "original_token_count": 597,
+    "output": "{\r\n  \"rows\": [\r\n    {\r\n      \"path\": \"apps/backoffice/next-env.d.ts\",\r\n      \"lsFiles\": [],\r\n      \"checkIgnore\": \".gitignore:3:/apps/backoffice/next-env.d.ts\\tapps/backoffice/next-env.d.ts\",\r\n      \"localExists\": true,\r\n      \"sha256\": \"4e4da12aa061aac172fb1bcb48e9b6e4b293080d2f494327925fdba8f39632ac\"\r\n    },\r\n    {\r\n      \"path\": \"apps/web/next-env.d.ts\",\r\n      \"lsFiles\": [],\r\n      \"checkIgnore\": \".gitignore:4:/apps/web/next-env.d.ts\\tapps/web/next-env.d.ts\",\r\n      \"localExists\": true,\r\n      \"sha256\": \"4e4da12aa061aac172fb1bcb48e9b6e4b293080d2f494327925fdba8f39632ac\"\r\n    },\r\n    {\r\n      \"path\": \"apps/booking-web/next-env.d.ts\",\r\n      \"lsFiles\": [],\r\n      \"checkIgnore\": \".gitignore:5:/apps/booking-web/next-env.d.ts\\tapps/booking-web/next-env.d.ts\",\r\n      \"localExists\": true,\r\n      \"sha256\": \"7b550dda9686c16f36a17bf9051d5dbf31e98555b30d114ac49fc49a1e712651\"\r\n    },\r\n    {\r\n      \"path\": \"apps/feedback-web/next-env.d.ts\",\r\n      \"lsFiles\": [],\r\n      \"checkIgnore\": \".gitignore:6:/apps/feedback-web/next-env.d.ts\\tapps/feedback-web/next-env.d.ts\",\r\n      \"localExists\": true,\r\n      \"sha256\": \"7b550dda9686c16f36a17bf9051d5dbf31e98555b30d114ac49fc49a1e712651\"\r\n    },\r\n    {\r\n      \"path\": \"apps/yuta-pos/next-env.d.ts\",\r\n      \"lsFiles\": [],\r\n      \"checkIgnore\": \".gitignore:7:/apps/yuta-pos/next-env.d.ts\\tapps/yuta-pos/next-env.d.ts\",\r\n      \"localExists\": true,\r\n      \"sha256\": \"4e4da12aa061aac172fb1bcb48e9b6e4b293080d2f494327925fdba8f39632ac\"\r\n    },\r\n    {\r\n      \"path\": \"apps/yuta-display/next-env.d.ts\",\r\n      \"lsFiles\": [],\r\n      \"checkIgnore\": \".gitignore:8:/apps/yuta-display/next-env.d.ts\\tapps/yuta-display/next-env.d.ts\",\r\n      \"localExists\": true,\r\n      \"sha256\": \"83a6738771334a63124c8acf38250eccd39fd0aba62846bb0815d952a7936205\"\r\n    }\r\n  ],\r\n  \"staged\": [\r\n    \"D\\tapps/backoffice/next-env.d.ts\",\r\n    \"D\\tapps/booking-web/next-env.d.ts\",\r\n    \"D\\tapps/feedback-web/next-env.d.ts\",\r\n    \"D\\tapps/web/next-env.d.ts\",\r\n    \"D\\tapps/yuta-display/next-env.d.ts\",\r\n    \"D\\tapps/yuta-pos/next-env.d.ts\"\r\n  ],\r\n  \"trackedCount\": 2114,\r\n  \"otherIgnored\": [],\r\n  \"status\": [\r\n    \" M .gitignore\",\r\n    \"D  apps/backoffice/next-env.d.ts\",\r\n    \"D  apps/booking-web/next-env.d.ts\",\r\n    \"D  apps/feedback-web/next-env.d.ts\",\r\n    \"D  apps/web/next-env.d.ts\",\r\n    \"D  apps/yuta-display/next-env.d.ts\",\r\n    \"D  apps/yuta-pos/next-env.d.ts\"\r\n  ]\r\n}\r\n"
+  },
+  "protection": {
+    "command": "$ErrorActionPreference='Stop'\n$e=Get-Content docs/reviews/next-generated-types-bootstrap/phase-1-revalidation.json -Raw | ConvertFrom-Json\n$m=Get-Content docs/reviews/formalites-authorization/03-integrity.json -Raw | ConvertFrom-Json\nforeach($f in $m.files){if((Get-FileHash -LiteralPath $f.path -Algorithm SHA256).Hash.ToLower() -ne $f.sha256){throw \"Formalites mismatch: $($f.path)\"}}\nforeach($r in $e.protectionAfter.protectedHashes | Where-Object {$_.path -like '*formalites-authorization*' -or $_.path -like 'apps/backoffice/*formalites*' -or $_.path -eq 'apps/backoffice/src/server/auth/permissions.ts'}){if((Get-FileHash -LiteralPath $r.path -Algorithm SHA256).Hash.ToLower() -ne $r.sha256){throw \"Protected mismatch: $($r.path)\"}}\n$supp=@(git ls-files --cached --others --exclude-standard -- docs/reviews/formalites-authorization openspec/changes/formalites-authorization | Sort-Object -Unique)\nif(@(Compare-Object $supp $e.protectionAfter.supplemental).Count){throw 'Formalites path mismatch'}\nif($m.files.Count -ne 18 -or $supp.Count -ne 17){throw 'Formalites count mismatch'}\n'Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH'\n",
+    "checkpoints": [
+      {
+        "after": "approval/progress metadata",
+        "chunk_id": "6f19f1",
+        "wall_time_seconds": 0.3490483,
+        "exit_code": 0,
+        "original_token_count": 20,
+        "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+      },
+      {
+        "after": "cached-removal",
+        "chunk_id": "b0932c",
+        "wall_time_seconds": 0.4036127,
+        "exit_code": 0,
+        "original_token_count": 20,
+        "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+      },
+      {
+        "after": "six ignore rules",
+        "chunk_id": "143a34",
+        "wall_time_seconds": 0.3201538,
+        "exit_code": 0,
+        "original_token_count": 20,
+        "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+      },
+      {
+        "after": "POS housekeeping deletion",
+        "chunk_id": "3f27e4",
+        "wall_time_seconds": 0.3379308,
+        "exit_code": 0,
+        "original_token_count": 20,
+        "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+      },
+      {
+        "after": "focused assertions",
+        "chunk_id": "b92bab",
+        "wall_time_seconds": 0.3177969,
+        "exit_code": 0,
+        "original_token_count": 20,
+        "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+      },
+      {
+        "after": "comment placement",
+        "chunk_id": "393b4c",
+        "wall_time_seconds": 0.3142656,
+        "exit_code": 0,
+        "original_token_count": 20,
+        "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+      },
+      {
+        "after": "task 2.2/2.3 progress",
+        "chunk_id": "6267df",
+        "wall_time_seconds": 0.8114914,
+        "exit_code": 0,
+        "original_token_count": 20,
+        "output": "Formalites 4/4 implementation + 18/18 integrity + 17/17 supplemental: MATCH\r\n"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "cmd": "node --test scripts/next-generated-types-bootstrap.test.mjs",
+      "chunk_id": "d9a4fd",
+      "wall_time_seconds": 2.042566,
+      "exit_code": 0,
+      "original_token_count": 307,
+      "output": "✔ root bootstrap targets exactly the six Next apps in approved order (1.8919ms)\n✔ existing root aliases keep their bounded meanings (0.1456ms)\n✔ CI gates recursive typecheck in its own job with no failure bypass (0.2513ms)\n✔ both development guides document the same explicit prerequisite (0.5994ms)\n✔ Next declarations have only the six exact root-anchored ignore rules (1.5388ms)\n✔ POS offline acceptance no longer captures or restores generated declarations (0.5985ms)\n✔ conjunction reaches recursive check only after six successful children (424.5512ms)\n✔ child failure at @yuta/backoffice stops later children and recursive check (86.2104ms)\n✔ child failure at @yuta/web stops later children and recursive check (147.2879ms)\n✔ child failure at @yuta/booking-web stops later children and recursive check (206.1834ms)\n✔ child failure at @yuta/feedback-web stops later children and recursive check (245.7103ms)\n✔ child failure at @yuta/pos stops later children and recursive check (278.6352ms)\n✔ child failure at @yuta/display stops later children and recursive check (351.4457ms)\nℹ tests 13\nℹ suites 0\nℹ pass 13\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 1831.6222\n"
+    },
+    {
+      "cmd": "node --check scripts/test-pos-offline.mjs",
+      "chunk_id": "e9e2c4",
+      "wall_time_seconds": 0.2087706,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "cmd": "pnpm exec prettier --check scripts/test-pos-offline.mjs scripts/next-generated-types-bootstrap.test.mjs",
+      "chunk_id": "7083ee",
+      "wall_time_seconds": 1.2628822,
+      "exit_code": 0,
+      "original_token_count": 17,
+      "output": "Checking formatting...\nAll matched files use Prettier code style!\n"
+    },
+    {
+      "cmd": "pnpm docs:check",
+      "chunk_id": "92fcfe",
+      "wall_time_seconds": 1.0787152,
+      "exit_code": 0,
+      "original_token_count": 29,
+      "output": "$ node ./scripts/check-documentation-consistency.mjs\nDocumentation consistency check passed (36 current documents).\n"
+    },
+    {
+      "cmd": "pnpm architecture:check",
+      "chunk_id": "a8411a",
+      "wall_time_seconds": 1.6690293,
+      "exit_code": 0,
+      "original_token_count": 40,
+      "output": "$ node ./scripts/check-import-boundaries.mjs\nArchitecture check passed: runtime imports, database URLs, client boundaries, and migration baselines are valid.\n"
+    },
+    {
+      "cmd": "openspec validate next-generated-types-bootstrap --strict",
+      "chunk_id": "305c2a",
+      "wall_time_seconds": 1.2504339,
+      "exit_code": 0,
+      "original_token_count": 13,
+      "output": "Change 'next-generated-types-bootstrap' is valid\n"
+    }
+  ],
+  "posUnrelatedTextPreservation": {
+    "cmd": "$checkSource = @'\nconst fs=require(\"node:fs\");const assert=require(\"node:assert/strict\");\nconst old=fs.readFileSync(\"D:/working/yuta/.tmp-bootstrap-revalidation-20260904/scripts/test-pos-offline.mjs\",\"utf8\").replaceAll(\"\\r\\n\",\"\\n\");\nconst current=fs.readFileSync(\"scripts/test-pos-offline.mjs\",\"utf8\").replaceAll(\"\\r\\n\",\"\\n\");\nconst replacements=[\n[\"import { existsSync, readFileSync, writeFileSync } from 'node:fs';\",\"import { existsSync } from 'node:fs';\"],\n[\"const posNextEnvPath = join(\\n  repositoryRoot,\\n  'apps',\\n  'yuta-pos',\\n  'next-env.d.ts',\\n);\\n\",\"\"],\n[\"let originalPosNextEnv;\\n\",\"\"],\n[\"  if (originalPosNextEnv !== undefined) {\\n    writeFileSync(posNextEnvPath, originalPosNextEnv);\\n  }\\n\\n\",\"\"],\n[\"  if (existsSync(posNextEnvPath)) {\\n    originalPosNextEnv = readFileSync(posNextEnvPath);\\n  }\\n\",\"\"]\n];\nlet expected=old;for(const [from,to] of replacements){assert.equal(expected.split(from).length-1,1);expected=expected.replace(from,to);}\nassert.equal(current,expected);console.log(\"POS whole-source comparison PASS: only 5 approved removals/replacements; all other text unchanged (LF-normalized).\");\n'@\nnode -e $checkSource",
+    "chunk_id": "f5920c",
+    "wall_time_seconds": 0.3021845,
+    "exit_code": 0,
+    "original_token_count": 29,
+    "output": "POS whole-source comparison PASS: only 5 approved removals/replacements; all other text unchanged (LF-normalized).\n"
+  },
+  "supplementalRecursiveTypecheck": {
+    "cmd": "pnpm -r --if-present typecheck",
+    "cwd": "D:/working/yuta/yuta-resto",
+    "exit_code": 0,
+    "output": "Scope: 15 of 16 workspace projects\npackages/core typecheck$ tsc --noEmit\npackages/db-pos typecheck$ tsc --noEmit\npackages/contracts typecheck$ tsc --noEmit\npackages/tenant typecheck$ tsc --noEmit\npackages/tenant typecheck: Done\npackages/core typecheck: Done\npackages/contracts typecheck: Done\npackages/db-pos typecheck: Done\napps/site-agent typecheck$ tsc --noEmit\napps/yuta-display typecheck$ tsc --noEmit\napps/yuta-pos typecheck$ tsc --noEmit\npackages/auth typecheck$ tsc --noEmit\npackages/auth typecheck: Done\npackages/booking typecheck$ tsc --noEmit\npackages/booking typecheck: Done\napps/yuta-pos typecheck: Done\napps/yuta-display typecheck: Done\napps/site-agent typecheck: Done\npackages/db-cloud typecheck$ tsc --noEmit\npackages/db-cloud typecheck: Done\napps/booking-web typecheck$ tsc --noEmit\napps/backoffice typecheck$ tsc --noEmit\napps/web typecheck$ tsc --noEmit\napps/feedback-web typecheck$ tsc --noEmit\napps/feedback-web typecheck: Done\napps/web typecheck: Done\napps/booking-web typecheck: Done\napps/backoffice typecheck: Done\n",
+    "coverage": "Current checkout only. Not Phase 3 clean/bootstrap/runtime acceptance."
+  },
+  "diffCommands": [
+    {
+      "cmd": "git -c core.autocrlf=false diff -- .gitignore scripts/test-pos-offline.mjs",
+      "chunk_id": "e94acc",
+      "wall_time_seconds": 0.193755,
+      "exit_code": 0,
+      "original_token_count": 525,
+      "output": "diff --git a/.gitignore b/.gitignore\nindex af38dcc..b84eae6 100644\n--- a/.gitignore\n+++ b/.gitignore\n@@ -1,5 +1,11 @@\n node_modules\n .next\n+/apps/backoffice/next-env.d.ts\n+/apps/web/next-env.d.ts\n+/apps/booking-web/next-env.d.ts\n+/apps/feedback-web/next-env.d.ts\n+/apps/yuta-pos/next-env.d.ts\n+/apps/yuta-display/next-env.d.ts\n .turbo\n dist\n coverage\ndiff --git a/scripts/test-pos-offline.mjs b/scripts/test-pos-offline.mjs\nindex ed5c0b4..75bf892 100644\n--- a/scripts/test-pos-offline.mjs\n+++ b/scripts/test-pos-offline.mjs\n@@ -1,6 +1,6 @@\n import { spawn } from 'node:child_process';\n import { randomInt, randomUUID } from 'node:crypto';\n-import { existsSync, readFileSync, writeFileSync } from 'node:fs';\n+import { existsSync } from 'node:fs';\n import { createServer } from 'node:net';\n import { join, resolve } from 'node:path';\n import { fileURLToPath } from 'node:url';\n@@ -10,15 +10,8 @@ const containerName = `yuta-pos-offline-acceptance-${randomUUID().slice(0, 8)}`;\n const pnpmEntrypoint = process.env.npm_execpath;\n const siteAgentPort = readPort('YUTA_OFFLINE_SITE_AGENT_PORT', 3004);\n const posPort = readPort('YUTA_OFFLINE_POS_PORT', 3003);\n-const posNextEnvPath = join(\n-  repositoryRoot,\n-  'apps',\n-  'yuta-pos',\n-  'next-env.d.ts',\n-);\n const childProcesses = [];\n let containerStarted = false;\n-let originalPosNextEnv;\n \n function readPort(name, fallback) {\n   const value = Number(process.env[name] ?? fallback);\n@@ -177,10 +170,6 @@ async function stopChild(child) {\n async function cleanup() {\n   await Promise.allSettled(childProcesses.reverse().map(stopChild));\n \n-  if (originalPosNextEnv !== undefined) {\n-    writeFileSync(posNextEnvPath, originalPosNextEnv);\n-  }\n-\n   if (containerStarted) {\n     await runCommand('docker', ['rm', '--force', containerName], {\n       quiet: true,\n@@ -319,9 +308,6 @@ async function main() {\n   );\n \n   console.log('Building the POS production bundle...');\n-  if (existsSync(posNextEnvPath)) {\n-    originalPosNextEnv = readFileSync(posNextEnvPath);\n-  }\n   await runPnpm(['--filter', '@yuta/pos', 'build'], {\n     env: runtimeEnv,\n   });\n"
+    },
+    {
+      "cmd": "git -c core.autocrlf=false diff --cached -- apps/backoffice/next-env.d.ts apps/web/next-env.d.ts apps/booking-web/next-env.d.ts apps/feedback-web/next-env.d.ts apps/yuta-pos/next-env.d.ts apps/yuta-display/next-env.d.ts",
+      "chunk_id": "d46427",
+      "wall_time_seconds": 0.3526908,
+      "exit_code": 0,
+      "original_token_count": 662,
+      "output": "diff --git a/apps/backoffice/next-env.d.ts b/apps/backoffice/next-env.d.ts\ndeleted file mode 100644\nindex c4b7818..0000000\n--- a/apps/backoffice/next-env.d.ts\n+++ /dev/null\n@@ -1,6 +0,0 @@\n-/// <reference types=\"next\" />\n-/// <reference types=\"next/image-types/global\" />\n-import \"./.next/dev/types/routes.d.ts\";\n-\n-// NOTE: This file should not be edited\n-// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.\ndiff --git a/apps/booking-web/next-env.d.ts b/apps/booking-web/next-env.d.ts\ndeleted file mode 100644\nindex 9edff1c..0000000\n--- a/apps/booking-web/next-env.d.ts\n+++ /dev/null\n@@ -1,6 +0,0 @@\n-/// <reference types=\"next\" />\n-/// <reference types=\"next/image-types/global\" />\n-import \"./.next/types/routes.d.ts\";\n-\n-// NOTE: This file should not be edited\n-// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.\ndiff --git a/apps/feedback-web/next-env.d.ts b/apps/feedback-web/next-env.d.ts\ndeleted file mode 100644\nindex 9edff1c..0000000\n--- a/apps/feedback-web/next-env.d.ts\n+++ /dev/null\n@@ -1,6 +0,0 @@\n-/// <reference types=\"next\" />\n-/// <reference types=\"next/image-types/global\" />\n-import \"./.next/types/routes.d.ts\";\n-\n-// NOTE: This file should not be edited\n-// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.\ndiff --git a/apps/web/next-env.d.ts b/apps/web/next-env.d.ts\ndeleted file mode 100644\nindex 9edff1c..0000000\n--- a/apps/web/next-env.d.ts\n+++ /dev/null\n@@ -1,6 +0,0 @@\n-/// <reference types=\"next\" />\n-/// <reference types=\"next/image-types/global\" />\n-import \"./.next/types/routes.d.ts\";\n-\n-// NOTE: This file should not be edited\n-// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.\ndiff --git a/apps/yuta-display/next-env.d.ts b/apps/yuta-display/next-env.d.ts\ndeleted file mode 100644\nindex c4b7818..0000000\n--- a/apps/yuta-display/next-env.d.ts\n+++ /dev/null\n@@ -1,6 +0,0 @@\n-/// <reference types=\"next\" />\n-/// <reference types=\"next/image-types/global\" />\n-import \"./.next/dev/types/routes.d.ts\";\n-\n-// NOTE: This file should not be edited\n-// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.\ndiff --git a/apps/yuta-pos/next-env.d.ts b/apps/yuta-pos/next-env.d.ts\ndeleted file mode 100644\nindex 9edff1c..0000000\n--- a/apps/yuta-pos/next-env.d.ts\n+++ /dev/null\n@@ -1,6 +0,0 @@\n-/// <reference types=\"next\" />\n-/// <reference types=\"next/image-types/global\" />\n-import \"./.next/types/routes.d.ts\";\n-\n-// NOTE: This file should not be edited\n-// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.\n"
+    },
+    {
+      "cmd": "git -c core.autocrlf=false diff --no-index -- D:/working/yuta/.tmp-bootstrap-revalidation-20260904/scripts/next-generated-types-bootstrap.test.mjs scripts/next-generated-types-bootstrap.test.mjs",
+      "chunk_id": "1390e1",
+      "wall_time_seconds": 0.1882912,
+      "exit_code": 1,
+      "original_token_count": 341,
+      "output": "diff --git a/D:/working/yuta/.tmp-bootstrap-revalidation-20260904/scripts/next-generated-types-bootstrap.test.mjs b/scripts/next-generated-types-bootstrap.test.mjs\nindex f47666e..3198dd9 100644\n--- a/D:/working/yuta/.tmp-bootstrap-revalidation-20260904/scripts/next-generated-types-bootstrap.test.mjs\n+++ b/scripts/next-generated-types-bootstrap.test.mjs\n@@ -76,6 +76,24 @@ test('both development guides document the same explicit prerequisite', () => {\n   }\n });\n \n+test('Next declarations have only the six exact root-anchored ignore rules', () => {\n+  const rules = read('.gitignore').split(/\\r?\\n/);\n+  assert.deepEqual(\n+    rules.filter((rule) => rule.includes('.d.ts')),\n+    apps.map(([path]) => `/${path}/next-env.d.ts`),\n+  );\n+});\n+\n+test('POS offline acceptance no longer captures or restores generated declarations', () => {\n+  const source = read('scripts/test-pos-offline.mjs');\n+  assert.match(source, /import \\{ existsSync \\} from 'node:fs';/);\n+  assert.match(source, /!existsSync\\(tsxCli\\) \\|\\| !existsSync\\(nextCli\\)/);\n+  assert.doesNotMatch(\n+    source,\n+    /next-env\\.d\\.ts|posNextEnv|originalPosNextEnv|readFileSync|writeFileSync/,\n+  );\n+});\n+\n // Exercise the actual conjunction structure with harmless child processes.\n // This is not a substitute for the later six real Next failure-injection cases.\n function probe(failedIndex) {\n"
+    }
+  ],
+  "diffSerialization": "Concatenate command outputs in listed order; replace only old snapshot a/ prefix for the harness with repository-relative a/scripts path. Save UTF-8 diff. Tracking removals are index-versus-HEAD; local pre-existing Backoffice next-env drift was not rewritten or attributed as a content edit.",
+  "scopedSourceComparison": {
+    "chunk_id": "5951ef",
+    "wall_time_seconds": 0.9338691,
+    "exit_code": 0,
+    "original_token_count": 44,
+    "output": "[\r\n  \".gitignore\",\r\n  \"openspec/changes/next-generated-types-bootstrap/tasks.md\",\r\n  \"scripts/next-generated-types-bootstrap.test.mjs\",\r\n  \"scripts/test-pos-offline.mjs\"\r\n]\r\n"
+  },
+  "notes": [
+    "Initial over-large baseline listing was output-truncated; parsing failed before any mutation. Replaced with bounded index/staged/ignore inventory; required baseline then passed.",
+    "No full POS offline acceptance, builds/dev regeneration, failure injection or Phase 3 QA.",
+    "No cleanup, production, sync/archive or Formalites mutation.",
+    "Concurrent workflow docs remain non-attributable and byte unchanged."
+  ]
+}

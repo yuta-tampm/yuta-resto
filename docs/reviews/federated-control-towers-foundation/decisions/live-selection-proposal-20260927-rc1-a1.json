@@ -1,0 +1,30 @@
+{
+  "PROPOSAL_VERSION": 1,
+  "STATUS": "PRE_HUMAN_REVIEW_NON_AUTHORIZING",
+  "CHANGE": "federated-control-towers-foundation",
+  "EXECUTION_CONTEXT_ID": "FEDERATED-CONTROL-TOWERS-FOUNDATION",
+  "CAUSAL_LINEAGE_ID": "BRIDGE-FEDERATED-CONTROL-TOWERS-ARCH",
+  "INTENDED_ACTION": "FIRST_ACTIVATION",
+  "EXPECTED_SOURCE_RECORD_HASH": "10cb5e17f99591cdfe8f4e14457c17acb962ddad030eec36a53db1b2120d16cf",
+  "EXPECTED_SOURCE_STATE": "INACTIVE",
+  "EXPECTED_SOURCE_EPOCH": 0,
+  "TARGET_ACTIVATION_EPOCH": 1,
+  "TARGET_RUN_ID": "FED-LIVE-20260927-RC1-A1",
+  "TARGET_ROUND_ID": 1,
+  "TARGET_COMMAND_ID": "FED-LIVE-20260927-RC1-A1:1",
+  "TARGET_TOWER": {
+    "CONTROL_TOWER_ROLE": "GLOBAL_CONTROL_TOWER",
+    "CONTROL_TOWER_SCOPE": "FOUNDATION",
+    "OWNING_PAGE_CHAT_ID": "NONE",
+    "CONTROL_TOWER_INSTANCE": "6ab40aa1-ea94-83eb-85be-dafbbef3ddef",
+    "PROJECT_ID": "g-p-6a4d778944108191894f8e3657742da4",
+    "CONVERSATION_ID": "6ab40aa1-ea94-83eb-85be-dafbbef3ddef",
+    "CONVERSATION_TITLE": "YUTA — Control Tower",
+    "CONVERSATION_URL": "https://chatgpt.com/g/g-p-6a4d778944108191894f8e3657742da4-yuta-sarl/c/6ab40aa1-ea94-83eb-85be-dafbbef3ddef"
+  },
+  "ALLOWED_LIVE_TRANSACTION": "One read-only built-in-browser handshake, command, result and Control Tower evaluation plus one concurrent same-context lock-exclusion proof after a separate exact Human Gate",
+  "HUMAN_SELECTION_AUTHORITY": "NOT_GRANTED",
+  "EXECUTABLE_AUTHORITY": false,
+  "RC1_STATUS": "NOT_RUN",
+  "RC2_STATUS": "NOT_RUN"
+}

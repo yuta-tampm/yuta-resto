@@ -1,19 +1,16 @@
 import { upsertGoogleReputationConnectorCredentials } from '@yuta/db-cloud';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { cloudDatabase as db } from '../../../../../../server/cloud-database';
-import { requireReputationPermission } from '../../../../../../server/auth/permissions';
-import {
-  getAuthSecret,
-  requireReputationTenant,
-} from '../../../../../../server/auth/session';
-import { encryptCredential } from '../../../../../../server/reputation/credential-crypto';
+import { cloudDatabase as db } from '@/server/cloud-database';
+import { requireReputationPermission } from '@/server/auth/permissions';
+import { getAuthSecret, requireReputationTenant } from '@/server/auth/session';
+import { encryptCredential } from '@/server/reputation/credential-crypto';
 import {
   exchangeGoogleAuthorizationCode,
   GOOGLE_BUSINESS_PROFILE_SCOPE,
-} from '../../../../../../server/reputation/google-business-profile-client';
-import { getGoogleConnectorConfiguration } from '../../../../../../server/reputation/google-connector-config';
-import { verifyGoogleOAuthState } from '../../../../../../server/reputation/google-oauth-state';
+} from '@/server/reputation/google-business-profile-client';
+import { getGoogleConnectorConfiguration } from '@/server/reputation/google-connector-config';
+import { verifyGoogleOAuthState } from '@/server/reputation/google-oauth-state';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,7 +19,7 @@ const authorizationCodeSchema = z.string().trim().min(1).max(4_096);
 export async function GET(request: NextRequest) {
   const redirect = (result: string) => {
     const response = NextResponse.redirect(
-      new URL(`/settings/integrations?google=${result}`, request.url),
+      new URL(`/parametres/integrations?google=${result}`, request.url),
     );
     response.cookies.set('yuta_google_oauth_state', '', {
       httpOnly: true,
@@ -35,7 +32,8 @@ export async function GET(request: NextRequest) {
   };
 
   const { session, tenant } = await requireReputationTenant(
-    '/settings/integrations',
+    '/parametres/integrations',
+    { requires: 'reputation.connector.manage' },
   );
   requireReputationPermission(tenant, 'reputation.connector.manage');
   const state = verifyGoogleOAuthState(

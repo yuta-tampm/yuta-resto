@@ -6,7 +6,7 @@ Visibility: Local operator
 
 Owner: YUTA restaurant operations
 
-Last updated: 2026-08-05
+Last updated: 2026-08-23
 
 This guide describes how to use the current YuTa POS MVP for internal restaurant operations.
 
@@ -48,8 +48,10 @@ pnpm dev:site-agent
 pnpm dev:pos
 ```
 
-Kitchen and receipt commands create durable print jobs in `site-agent`.
-Physical printer transport remains a documented MVP limit.
+Kitchen production commands create durable print jobs in `site-agent`.
+Physical internal-ticket printing uses the restaurant Linux server and one
+Bluetooth EPSON TM-m30. A paid order or paid split check can also enqueue one
+explicit non-fiscal customer receipt from the order-detail menu.
 
 The QA checklist lives in:
 
@@ -92,6 +94,22 @@ Serveur indisponible browser cannot reach the local POS server
 `Mode local` is an informational warning, not a reason to stop local cash or
 kitchen operations. Follow the payment-terminal procedure before accepting a
 card or restaurant-ticket payment during an Internet outage.
+
+### Horaires de l'écran
+
+Select `Horaires écran` in the service strip to configure this POS display.
+Automatic standby defaults to enabled from 09:00 to 23:00. Choose the daily
+opening and closing times, then select `Enregistrer`. The schedule is stored
+only in the current browser and uses the device's local time; configure each
+POS screen separately. A range such as 18:00–02:00 crosses midnight. A browser
+that already saved a preference keeps that preference.
+
+Outside the configured range, an open POS shows a dark standby screen and stops
+its automatic status and page refreshes. Select `Réveiller 15 min` for temporary
+access, or `Modifier les horaires` to change the range. If the app remains open,
+it returns to normal automatically at opening time. This standby does not stop
+the local server, database, or printer worker. Disable the switch to keep the
+screen active at all times.
 
 ## POS Home / Orders
 
@@ -194,6 +212,27 @@ Use it during service to add menu items to the current order.
 3. Tap an item card.
 4. The item appears in `Commande actuelle`.
 
+If the item requires a flavor, filling, or other configured option, tapping the
+card opens `Choisir les options` before the item is added. Use the minus and
+plus controls until the counter reaches the required total, then select
+`Ajouter à la commande`. The same option can be selected more than once, for
+example two Mangue pieces for `Mochi glacé (2 pcs)`. `Annuler` creates no item.
+Items without required options still add immediately with one tap.
+
+Required options are separate from allergies. Do not enable or open allergy
+controls merely to choose a flavor. Use `Notes / allergie` only for actual
+preparation instructions or customer allergy information.
+
+When the current order is one eligible item away from a configured positive
+combo, the screen may show `Suggestion combo` below search. Use its `Ajouter`
+action to add the existing catalog item through the normal item workflow; this
+does not create a duplicate product or a separate combo item. Typing in search
+hides the shelf. Changing category dismisses the current shelf so staff can
+focus on the selected catalog. Adding an unrelated item does not immediately
+revive that dismissed combo state. Adding another item relevant to the combo,
+such as a second Gua Bao, creates a new state and may show the suggestion again
+in any category.
+
 Item name, price, and kitchen station are snapshotted when the item is added. Later menu changes do not rewrite old orders.
 
 Quantity controls follow the kitchen and payment lifecycle:
@@ -209,8 +248,12 @@ recorded partial payment     all item changes are locked
 active split checks          all item changes are locked
 ```
 
-Repeated taps on the same menu item merge into its existing pending row. They
-never change the quantity of an item already sent to the kitchen. If an unpaid
+Repeated taps on the same menu item normally merge into its existing pending
+row. An item configured as `Une ligne par portion` is the exception: every tap
+creates a separate quantity-one row so each plate keeps its own choices in the
+order and on the kitchen ticket. The plus control is unavailable on that row;
+tap the menu product again to add another plate. Repeated taps never change the
+quantity of an item already sent to the kitchen. If an unpaid
 split is cancelled and the order returns to single-payment mode, item editing
 is available again as long as no payment has been recorded. Quantity changes
 keep the row in its original display position; order items are displayed by
@@ -225,6 +268,18 @@ Choices behave as toggles, and selecting an incompatible choice automatically
 removes the previous one. A free-text note of up to 300 characters remains
 available. Quick choices are stored as structured code and label snapshots.
 
+The available quick choices and allergen names are local settings. An
+administrator or manager can open `Gestion locale > Menu et categories`, then
+`Options notes / allergies`, to add, rename, or remove definitions. Quick
+instruction lines use `CODE = Libelle | CONFLICT_1, CONFLICT_2`; allergen lines
+use `CODE = Libelle`. Codes are stable uppercase identifiers. Remove an
+instruction from every category and item before deleting its definition.
+
+Each category selects its common choices and the choices shown under `Autres`.
+An item inherits its category by default, but can use a custom list when its
+preparation differs. For Luna, `Cocktails & mocktails` includes `Sans alcool`.
+These settings stay in the local POS database and are not copied to the cloud.
+
 `Sans cacahuetes` is only a preparation request and never enables the allergy
 workflow by itself. If the client reports an allergy, enable `Allergie pour cet
 article`, select at least one allergen, and select `Intolerance`, `Allergie`, or
@@ -238,12 +293,25 @@ kitchen ticket. Instructions can be changed only while the item is pending;
 they are locked after the item is sent to the kitchen. Never promise that
 cross-contamination is impossible without confirmation from the kitchen.
 
-For `Mochi glace (2 pcs)`, choose quantities of `Mangue`, `Matcha`, and `Cacao`.
-The total must equal two pieces per ordered portion before kitchen send.
+For each item with catalog options, select the configured number of options per
+portion before kitchen send. Luna configures `Mochi glacé (2 pcs)` as one row
+per portion with `Mangue`, `Matcha`, and `Cacao`, and requires two choices for
+that plate. When a pending selection is incomplete, the order screen displays
+a French recovery alert and disables `Envoyer en cuisine`. Open
+`Notes / allergie` under the highlighted item, complete the required choices,
+and save; the send action becomes available without losing the order.
+
+Admins and managers configure this behavior in `/management/catalog` using
+`Politique d’ajout`, `Choix requis par portion`, and `Options disponibles`.
+Option lines use `CODE = Libellé`; codes must be unique uppercase identifiers.
+Luna configures `Menu Petit Enfant` as one row per portion and requires one
+choice between `2 nems porc` and `2 nems vegan`.
 
 ### Send To Kitchen
 
-Use `Envoyer`.
+On desktop, use `Envoyer en cuisine` at the bottom of `Commande actuelle`,
+beside the order-detail action. On smaller screens, open the `Commande actuelle`
+drawer and use the same action in its footer, above `Fermer`.
 
 This does three things:
 
@@ -277,40 +345,72 @@ Open:
 http://localhost:3003/kitchen
 ```
 
-Kitchen staff can filter by station:
+Kitchen staff can filter by production screen:
 
 ```txt
 Cuisine
-Bar
-Dessert
+Bar / Desserts
 ```
 
-Station tabs show the unfinished item count for that station across
-`A preparer` and `En preparation`. Items already in `Pret` are not included in
-the station badge count. When staff switch station, the POS keeps the current
-status if that station has matching items; otherwise it opens the first
-unfinished queue for that station, starting with `A preparer`.
+Screen tabs show the order-ticket count for that screen across the active and
+ready queues. Queue badges also count order tickets, not item rows or product
+quantity. The shared `Bar / Desserts` button shows one number for Bar and a
+second number for Desserts. An order with both contributes to both station
+numbers but only once to the selected combined queue count. When staff switch screen, the POS preserves the selected
+`A preparer` or `Pret` queue.
 
 The kitchen screen is a production queue, not a full order-history screen.
-By default it opens `A preparer` and only loads the selected station/status
-queue.
+By default it opens the combined `A preparer` queue for the selected screen.
 It shows active kitchen work only: items in `sent`, `preparing`, or `ready`.
 It is limited to the current service day, from 05:00 to 05:00 local time. This keeps the queue from showing old unfinished history while allowing late-night orders to stay visible after midnight.
-When the kitchen screen is open, it refreshes automatically every 10 seconds while the browser tab is visible. This keeps cancelled orders and status changes reasonably fresh without a permanent realtime connection.
+When the kitchen screen is visible, local order and item changes trigger an
+automatic refresh through the local event stream. If the connection is
+interrupted, it reconnects automatically and a 60-second refresh remains as a
+safety net. Hidden tabs disconnect and reload current state when visible again.
+Outside the configured screen hours, the event stream and safety refresh stay
+suspended until the screen wakes.
+
+Select `Son` once on the Kitchen header to authorize browser audio. The green
+state means sound is active; select it again to mute. The adjacent volume
+control is saved in the current browser and defaults to 50%. The amplified,
+repeated three-pulse alert announces a new batch for the current Cuisine or Bar / Desserts screen. Preparation,
+completion, allergy confirmation, reconnect, and periodic refreshes do not
+play a sound. The browser may require reactivation after a restart or a new
+session.
 Order-level notes are shown on the kitchen screen inside the matching order group, so staff can see general instructions attached during order creation. Item preparation notes and red allergy alerts appear directly below the affected article. Structured quick instructions appear as separate labels and Mochi flavours appear as quantities. Allergy warnings stay expanded above ordinary notes. Kitchen staff must use `Confirmer l'allergie` before an allergic item can become `Pret`; this kitchen confirmation is stored separately from the POS send acknowledgement.
 
 Kitchen staff can switch between:
 
 ```txt
-A preparer       sent items
-En preparation   preparing items
-Pret             ready items; paid orders can still be reopened for kitchen corrections
+A preparer       sent, preparing, and mixed-completion tickets
+Pret             fully-ready tickets; paid orders can still be reopened for kitchen corrections
 ```
 
 The `Tous` view is intentionally not available in the MVP kitchen queue. Use
 the POS home/orders list for full command lookup.
 
 Items appear grouped by order/table.
+
+Within unfinished Cuisine rows, items in the current catalog category
+`Entrées` appear before the other courses and use a light warning background.
+On the combined screen, Bar items appear before Desserts and use a light info
+background. Completed rows still move below unfinished rows and keep their
+crossed-out ready presentation. Category classification uses the current local
+catalog, so a later catalog reassignment also changes Kitchen presentation.
+
+Within `A preparer`, tickets stay ordered by their original kitchen-send time,
+oldest first. Starting preparation or completing only some rows does not move a
+ticket ahead of or behind another active ticket. It leaves this queue only when
+all active production rows are ready.
+
+When a ticket still contains `sent` items, its header shows one flame action.
+`Tout préparer` moves every `sent` item in that order and selected screen to
+`preparing` in one atomic operation. On `Bar / Desserts`, this includes both
+stations but never changes Cuisine. Once no sent row remains and the ticket still contains preparing rows,
+the same header position shows an undo icon. `Annuler la préparation` atomically
+returns only those preparing rows to `sent`; ready rows and the other screen are
+unchanged. Unfinished item rows keep only the direct `Pret` action; ready rows
+retain one correction back to preparation.
 
 Kitchen item statuses:
 
@@ -323,11 +423,9 @@ Pret         -> ready
 Use:
 
 ```txt
-Preparer    sent -> preparing
+Tout preparer (ticket)   all sent items in this order/screen -> preparing
 Pret        sent/preparing -> ready
-Retour      preparing -> sent, for a mistaken Preparer tap
 Reouvrir    ready -> preparing, for a mistaken Pret tap
-Envoye      ready -> sent, when the item should return fully to the queue
 ```
 
 Paid orders can still move through the kitchen workflow. Cancelled orders are read-only on the kitchen screen.
@@ -354,7 +452,10 @@ Activite aujourd hui
 
 Use this page to reopen old or active orders.
 
-`Payees aujourd hui` uses the payment date. `Activite aujourd hui` shows orders created today or paid today.
+The command list uses the same service day as the kitchen screen: 05:00 local
+time until 04:59 the next morning. `Ouvertes` shows only unfinished orders
+created during that service day. `Payees aujourd hui` uses the payment time;
+`Activite aujourd hui` shows orders created or paid during the service day.
 
 ## Payment
 
@@ -421,17 +522,38 @@ The selected POS employee is stored as paidBy
 The order stays open until the remaining amount reaches 0
 ```
 
-Payment submission and its final customer receipt job are committed in one
-database transaction. Retrying the same browser submission cannot create a
-second payment. The same protection applies to a kitchen send and its kitchen
-ticket job.
+Payment submission is committed in one database transaction. Retrying the same
+browser submission cannot create a second payment. Payment does not
+automatically create a customer receipt print job. The same retry protection applies to a kitchen send
+and its internal kitchen ticket job.
 
 When the full order is completely paid:
 
 ```txt
 The order is marked paid
-A customer_receipt print job is created
+No automatic customer receipt print job is created
 ```
+
+### Print A Paid Non-Fiscal Receipt
+
+From the order-detail page, open the three-line menu and select
+`Imprimer le reçu`.
+
+- A fully paid single order offers `Commande complète`.
+- A split order lists its non-void checks; only fully paid checks can print.
+- Select `Imprimer` to add one non-fiscal `REÇU DE PAIEMENT` copy to the local queue.
+- `En attente d'impression` means the durable job was accepted; it does not
+  mean paper was produced.
+- If the printer is unavailable, the job remains queued and the warning stays
+  visible.
+- A failed job offers `Réessayer l'impression`; a printed job offers
+  `Réimprimer`. Both preserve the saved receipt snapshot.
+
+The receipt contains only authoritative local order/check, item allocation,
+discount, total, payment, and timestamp data. If configured, it also contains
+the local restaurant display name captured when the first receipt job is
+created. Renaming the restaurant does not change a failed-job retry or a
+printed-job reprint. It is not a fiscal/VAT invoice.
 
 ### Split Equally
 
@@ -463,7 +585,9 @@ Choose 3 -> Client 1, Client 2, Client 3
 Choose 4 -> Client 1, Client 2, Client 3, Client 4
 ```
 
-Assign item quantities to each client, then create checks. Each check can be paid fully or in partial payments. A `customer_receipt` print job is created when the check is completely paid.
+Assign item quantities to each client, then create checks. Each check can be
+paid fully or in partial payments. Completing a check does not automatically
+create a customer receipt print job.
 
 The selected POS employee is stored as `paidBy` for each payment.
 
@@ -542,6 +666,11 @@ entry. An unavailable item remains in local history but is not offered for new
 orders. Administrators and managers may perform these changes. Categories and
 items are never physically deleted by this workflow.
 
+After a clean Luna seed, `Plat spécial du samedi` is unavailable and has a
+zero price. Before Saturday service, an administrator or manager must edit its
+description and real selling price, then mark it available. After service,
+mark it unavailable again; never sell the zero-price placeholder.
+
 On the order item screen, the search field filters the items in the selected
 category immediately as staff type. It does not require submitting the search
 or reloading the page. Changing category loads that category's available items.
@@ -560,6 +689,11 @@ local POS database. Open `Gestion locale > Combos` or go directly to
 required.
 
 Combos are payment discounts, not kitchen production rules.
+
+Each rule exposes `Suggestion à la commande`. Disable it when a valid combo has
+too many candidates to be useful during order entry. This preference does not
+deactivate the rule and does not change its payment/check discount. Inactive
+rules are never suggested even when the preference is enabled.
 
 Combo behavior:
 
@@ -580,6 +714,9 @@ Menu Gourmand  = selected plat price + 8 EUR
 Combo Ete      = selected plat price + 2.50 EUR
 ```
 
+At Luna, `Assortiment – Mix LUNA (11 pcs)` is sold at its standalone price and
+is not eligible as the entry in Menu Express or Menu Gourmand.
+
 The `Groupe base` field must match the combo group that contains the priced
 main dish, usually `Plat`.
 
@@ -589,6 +726,9 @@ rule is inactive. Before activation, `site-agent` verifies that the rule has
 at least one group, every required group has an eligible item, and a
 `Plat + supplement` rule names an existing base group.
 
+To change an active formula, deactivate it, edit the groups or eligible items,
+then activate it again. Existing paid-order discount snapshots are preserved.
+
 Rules are never physically deleted because paid orders may reference their
 discount history. Deactivate a retired rule instead. Groups and eligible-item
 mappings may be removed while their rule is inactive.
@@ -596,10 +736,27 @@ mappings may be removed while their rule is inactive.
 Combos are applied during payment optimization. Editing an inactive rule does
 not rewrite discounts already persisted on paid orders.
 
+## Local Establishment Name
+
+Open `Gestion locale > Établissement` with an active administrator or manager
+session. Enter the restaurant display name used on future non-fiscal customer
+receipts, then select `Enregistrer`.
+
+The name must contain 1 to 80 characters, is trimmed on save, cannot contain a
+line break, and cannot be cleared once configured. It stays in the local POS
+database and is not a cloud establishment identity, legal company name, fiscal
+identity, address, or contact record. A rename affects only receipt jobs
+created afterward; queued retries and reprints retain their original snapshot.
+
+If another manager saves first, the page reports a conflict and reloads the
+latest saved value while preserving the current draft. Review it before saving
+again.
+
 ## Local Operational Reports
 
-Operational reports are generated locally from `db-pos`. They are not cloud
-reports. The local reporting UI should show:
+Open `Gestion locale > Rapports locaux`. An active local administrator or
+manager session is required. Operational reports are generated by site-agent
+from `db-pos`; they are not cloud reports. The page shows:
 
 ```txt
 Paid revenue today
@@ -609,6 +766,19 @@ Today order list
 ```
 
 Each order can be opened in POS from the report page.
+
+The displayed service runs from 05:00 inclusive to the next 05:00 exclusive in
+`Europe/Paris`. `Revenu payé` sums captured payment principal during that
+window, including partial and split payments, without tips, cash tendered,
+change, pending/failed payments, or refunded rows. `Commandes payées` counts a
+fully paid parent order once. `Commandes ouvertes` counts non-final orders
+created during the service. The activity list is paginated and contains orders
+created or fully paid during the service, including same-day cancellations.
+
+Use `Actualiser` for a fresh point-in-time read. There is no polling, offline
+snapshot, date range, export, fiscal report, or accounting reconciliation. If
+site-agent, PostgreSQL, or the required timezone configuration is unavailable,
+the page shows an error and keeps all financial values hidden.
 
 ## Local Print Queue
 
@@ -629,8 +799,8 @@ failed
 Print job types:
 
 ```txt
-kitchen_ticket     created when staff sends items to kitchen
-customer_receipt   created after full payment or paid split check
+kitchen_ticket     created when staff sends items to production
+customer_receipt   explicitly queued for a paid order or paid split check
 ```
 
 Manual actions:
@@ -640,21 +810,82 @@ Démarrer     pending -> printing
 Imprimé      printing -> printed
 Échec        pending/printing -> failed
 Réessayer    failed -> pending
+Réimprimer   printed -> pending
 ```
 
-The failure reason remains visible until the job is retried. The screen also
+The failure reason remains visible until the job is retried. A completed row
+offers `Réimprimer`, which requeues the same saved ticket snapshot. The screen also
 shows the printer-name snapshot, source, linked order, creation time, and a
 safe summary of the ticket payload. Raw print payloads are not exposed to the
 browser.
 
+The queue shows 10 tickets per page, newest first. Use `Précédent` and `Suivant`
+to browse older tickets; the status counters continue to represent the complete
+local queue. The visible page and printer status refresh automatically every
+five seconds while the page is visible, and refresh immediately when returning
+to its tab, provided the configured screen hours are active. Operators do not
+need to reload the whole page to see pending, printing, printed, or failed
+transitions.
+
+The `État de l’imprimante` card shows the RFCOMM channel, local worker, pending,
+printing and failed queue counts, and the latest successful print. `Prête à
+envoyer` means Linux can access the configured character device; it does not
+confirm paper, cover, or cutter state. Use `Impression test` for that physical
+check. The compact printer badge in the global status strip updates every 15
+seconds while the POS tab is visible and the configured screen hours are active.
+
+The top of the same page contains the persisted ticket settings:
+
+```txt
+Cuisine printing: On or Off
+BAR printing: On or Off
+Cuisine copies: 1 to 3
+Full BAR ticket copies: 1 to 3
+Text size: Compact, Standard, or Large
+Top spacing: 0 to 8 lines
+Left spacing: 0 to 8 characters
+Bottom spacing: 0 to 8 lines
+```
+
+`Standard` is the recommended production layout: item names are uppercase,
+bold, and twice the normal character height while retaining the full line
+width. `Large` doubles both height and width and therefore wraps long names
+earlier. Extra blank lines between items are omitted to reduce paper use;
+options and notes remain indented below their item.
+The service type (`SUR PLACE`, `A EMPORTER`, or `LIVRAISON`) is centered in
+bold, double-height text immediately above the item sections.
+
+At least one of Cuisine or BAR must remain on. Settings apply to newly created
+jobs. Each job keeps its destination, copy count, font preset, and spacing
+snapshot, so retrying an older failed job does not silently change its routing
+or layout. Paper width remains fixed at 80 mm. The physical device path is
+trusted site-agent configuration and cannot be edited in the browser.
+
+Select `Impression test` after saving settings to enqueue one test job. It
+prints samples only for the enabled destinations, in Cuisine then BAR order
+when both are active. They use the saved layout settings, and the printer
+performs a full cut after each ticket. The sample includes accented words,
+apostrophes, dashes, options, and allergy emphasis. It does not create or
+modify a customer order.
+
 ## Physical Printer Adapter
 
-The current MVP persists and manages print jobs but does not send ESC/POS data
-to a physical printer. There is no active mock worker and no printer secret in
-the browser bundle. A future `site-agent` hardware adapter will claim pending
-jobs and use the same state machine. Do not add `printers` or
-`printer_routes` tables until the real USB, system-spooler, or network
-transport is selected.
+When `POS_PRINTER_DEVICE` is configured, `site-agent` claims pending
+`kitchen_ticket` jobs, renders an ASCII-safe ESC/POS ticket, writes it through
+the bound Linux RFCOMM character device, and marks the job `printed` or
+`failed`. A kitchen send creates an enabled `CUISINE` ticket when the sent batch
+contains kitchen items, plus an enabled independent `BAR` ticket containing the
+complete sent batch. Disabled destinations create no physical ticket. The
+single TM-m30 prints and fully cuts active tickets sequentially; station `none`
+is excluded. Cuisine is grouped in the fixed order Entrées, Suppléments,
+Plats. BAR is grouped Boissons, Entrées, Suppléments, Plats, then Desserts,
+regardless of item insertion order. Every ticket and configured copy is written
+separately. The adapter throttles long bodies in small chunks and closes the
+body writer, waits one second, opens a fresh writer for only the feed/full-cut
+trailer, then waits another 800 ms before the next ticket to stabilize the
+Bluetooth cutter.
+Raw payloads and the device path never reach the browser. The current Luna host
+exposes the paired TM-m30 as `/dev/rfcomm1` through a systemd binding.
 
 ## Important Behavior Notes
 
@@ -724,10 +955,51 @@ Known MVP constraints:
 ```txt
 No table map
 No staff login flow
-No physical ESC/POS printer integration
+No fiscal or automatic customer receipt printing
 No real fiscal receipt
 Split by items client count is selected directly on the split-by-items screen
 No partial kitchen status inside a single item row quantity
 ```
 
 These are intentional MVP limits, not bugs.
+
+### Preview a customer receipt without a printer
+
+For a paid order, generate the production ESC/POS receipt bytes plus a readable
+text copy without creating a print job or changing local POS data:
+
+```bash
+pnpm receipt:preview --order <paid-order-id>
+```
+
+For a paid split check, add `--check <paid-check-id>`. Artifacts are written
+under `apps/yuta-pos/.tmp/prints/`. The database work runs in a read-only
+transaction and uses existing print settings, or in-memory defaults when no
+settings row exists.
+
+To exercise payment, receipt command, durable queue, worker claiming, and the
+production renderer without printer hardware, run:
+
+```bash
+pnpm test:receipt-preview
+```
+
+This second command creates and removes a disposable PostgreSQL container. It
+does not connect to the operational POS database.
+
+### Preview internal Cuisine and BAR tickets without a printer
+
+Generate synthetic Cuisine and BAR tickets with the production ESC/POS
+renderer without creating a print job or changing local POS data:
+
+```bash
+pnpm internal-ticket:preview
+```
+
+The command writes binary ESC/POS, separate readable text files, one combined
+`internal-tickets.txt`, and a browser preview under
+`apps/yuta-pos/.tmp/prints/internal-ticket-preview/`. Open `index.html` to
+compare the two 80 mm tickets or the combined text file for a plain-text review.
+Use `--preset compact`, `--preset standard`, or `--preset large` to inspect
+another font preset, and `--output <directory>` to choose another artifact
+directory.
