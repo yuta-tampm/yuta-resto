@@ -215,7 +215,28 @@ export async function getGoogleBusinessReview(
   accessToken: string,
   binding: GoogleReviewBinding,
   reviewName: string,
+  signal?: AbortSignal,
 ): Promise<GoogleReviewImportRecord> {
+  const parent = reviewParent(binding);
+  const url = createGoogleReviewResourceUrl(binding, reviewName);
+  const review = projectProviderReview(
+    await googleApiRequest(url, accessToken, providerReviewSchema, signal),
+    parent,
+  );
+  if (review.reviewName !== reviewName) {
+    throw new GoogleBusinessProfileApiError(
+      'Google review resource is invalid.',
+      502,
+      'INVALID_RESPONSE',
+    );
+  }
+  return review;
+}
+
+export function createGoogleReviewResourceUrl(
+  binding: GoogleReviewBinding,
+  reviewName: string,
+): URL {
   const parent = reviewParent(binding);
   const reviewId = reviewName.startsWith(`${parent}/reviews/`)
     ? reviewName.slice(`${parent}/reviews/`.length)
@@ -230,21 +251,9 @@ export async function getGoogleBusinessReview(
       'INVALID_RESPONSE',
     );
   }
-  const url = new URL(
+  return new URL(
     `https://mybusiness.googleapis.com/v4/${reviewName.split('/').map(encodeURIComponent).join('/')}`,
   );
-  const review = projectProviderReview(
-    await googleApiRequest(url, accessToken, providerReviewSchema),
-    parent,
-  );
-  if (review.reviewName !== reviewName) {
-    throw new GoogleBusinessProfileApiError(
-      'Google review resource is invalid.',
-      502,
-      'INVALID_RESPONSE',
-    );
-  }
-  return review;
 }
 
 export function createGoogleAuthorizationUrl(
@@ -353,6 +362,7 @@ async function requestTokens(
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams(body),
     cache: 'no-store',
+    signal: AbortSignal.timeout(10_000),
   });
   if (!response.ok) {
     throw new GoogleBusinessProfileApiError(
@@ -381,10 +391,12 @@ async function googleApiRequest<T>(
   url: URL,
   accessToken: string,
   schema: z.ZodType<T, z.ZodTypeDef, unknown>,
+  signal?: AbortSignal,
 ): Promise<T> {
   const response = await fetch(url, {
     headers: { authorization: `Bearer ${accessToken}` },
     cache: 'no-store',
+    ...(signal ? { signal } : {}),
   });
   if (!response.ok) {
     throw new GoogleBusinessProfileApiError(

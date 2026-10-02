@@ -155,6 +155,13 @@
       "when": 1790882459549,
       "tag": "0021_release_a_google_review_import",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1790978776930,
+      "tag": "0022_release_a_google_reply_publication",
+      "breakpoints": true
     }
   ]
 }

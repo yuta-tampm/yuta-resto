@@ -1,4 +1,5 @@
 import { z } from 'zod';
+export * from './google-reply-publication';
 import {
   establishmentIdSchema,
   identifierSchema,

@@ -162,7 +162,7 @@ A Today/Avis attention uses local `NEW`, `TO_PROCESS`, `DRAFTED`, `FOLLOW_UP`:
 counts are not capped by preview/pagination and STAFF remains assigned-only.
 Google fixtures and local `PUBLISHED` rows are not actual-provider retrieval or
 remote-publication evidence. The bounded retrieval source path below is
-separate from exposure selection; no publication path is added. Exposure
+separate from exposure selection and the publication path below. Exposure
 verification uses a separately verified, task-owned disposable cloud target and
 process-only credentials/provider overrides; do not repoint guarded tests to
 the persistent development databases. No provider call or customer activation
@@ -194,6 +194,43 @@ history. Cleanup remains independent of the retrieval flag.
 owns the 29-day content and at-most-30-day reference deadlines. Read denial and
 the bounded purge mechanism do not prove timely physical disposal: this source
 delivery installs no scheduler and verifies no backup/restoration handling.
+
+## Google reply publication
+
+`GOOGLE_REVIEW_PUBLICATION_ENABLED` defaults to `false`; only the exact value
+`true` admits separate OWNER/MANAGER preview, confirm and reconciliation actions.
+It is independent of `GOOGLE_REVIEW_RETRIEVAL_ENABLED`. Configuration does not
+grant permission or real reply consent. Save remains a local draft operation.
+Use explicit `BACKOFFICE_EXPOSURE_PROFILE=release-a` for an A local handoff;
+unset development exposure otherwise selects the internal menu.
+
+Apply reviewed cloud migrations before starting the updated Backoffice. The
+additive publication migration supplies draft revision and scoped durable
+attempts. Disable publication to roll back runtime admission; preserve drafts
+and attempt evidence rather than dropping the additive tables. Never repoint
+guarded integration tests to a persistent development database.
+
+From Avis, save the draft, choose **Vérifier puis publier**, inspect exact text,
+establishment and any existing Google reply, then explicitly confirm. Preview
+expires after five minutes. Google limits replies to 4096 UTF-8 bytes; a valid
+4000-character draft can exceed that limit. Changed drafts, login sessions,
+bindings or detected remote replies require another preview. A pending,
+unconfirmed or uncertain result offers explicit **Vérifier le résultat Google**;
+retry is separate, uses the same unresolved saved version and needs fresh consent.
+There is no automatic retry, bulk publication or scheduler.
+
+Existing authenticated cache maintenance also clears expired publication-preview
+fingerprints, up to a separate bounded 500-row preview batch per due scope. It
+keeps attempts, drafts, notes and independent work and makes no provider request.
+The existing machine-route secret and authorization rules above still apply;
+cleanup is independent of both admission flags. Source presence proves no
+unattended scheduling or backup/restoration disposal.
+
+See the [publication behavior](../features/reputation/README.md#bounded-release-a-google-reply-publication).
+Mocked provider and guarded disposable database tests never qualify a real
+Google publication. A live trial needs the business owner's exact approved
+target/text and the current project's provider/use prerequisites; local
+activation does not activate staging/production.
 
 ## Schema workflow
 

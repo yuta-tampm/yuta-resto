@@ -23,6 +23,7 @@ import {
 } from 'drizzle-orm';
 import { v7 as uuidv7 } from 'uuid';
 import type { CloudDatabaseClient } from './client';
+import type { GoogleReviewDatabase } from './google-review-retrieval-repository';
 import {
   directCustomerFeedback,
   establishments,
@@ -30,6 +31,7 @@ import {
   feedbackItems,
   feedbackReplies,
   googleReviewCache,
+  googleReplyPublications,
   reputationAuditEvents,
   reputationConnectors,
   reputationSettings,
@@ -697,7 +699,7 @@ export async function findGoogleReputationConnector(
 }
 
 export async function findGoogleReputationConnectorCredentials(
-  repositoryDb: DbClient,
+  repositoryDb: GoogleReviewDatabase,
   context: TenantContext,
 ) {
   const establishmentId = requireAdminEstablishment(context);
@@ -782,7 +784,7 @@ export async function upsertGoogleReputationConnectorCredentials(
 }
 
 export async function updateGoogleReputationConnectorAccessToken(
-  repositoryDb: DbClient,
+  repositoryDb: GoogleReviewDatabase,
   context: TenantContext,
   input: {
     encryptedAccessToken: string;
@@ -1018,6 +1020,7 @@ export async function saveFeedbackReplyDraft(
           eq(feedbackReplies.organizationId, context.organizationId),
           eq(feedbackReplies.feedbackItemId, feedback.id),
           inArray(feedbackReplies.status, ['DRAFT', 'READY', 'FAILED']),
+          sql`not exists (select 1 from ${googleReplyPublications} where ${googleReplyPublications.organizationId} = ${context.organizationId} and ${googleReplyPublications.establishmentId} = ${establishmentId} and ${googleReplyPublications.feedbackItemId} = ${feedback.id} and ${googleReplyPublications.replyId} = ${feedbackReplies.id} and ${googleReplyPublications.confirmedAt} is not null)`,
         ),
       )
       .orderBy(desc(feedbackReplies.createdAt))
@@ -1027,6 +1030,7 @@ export async function saveFeedbackReplyDraft(
           .update(feedbackReplies)
           .set({
             content: input.content,
+            revision: sql`${feedbackReplies.revision} + 1`,
             status: 'DRAFT',
             editedByUserId: input.actorUserId,
             failedAt: null,
