@@ -1,0 +1,3543 @@
+diff --git a/apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/_components/review-social-links-settings.tsx b/apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/_components/review-social-links-settings.tsx
+new file mode 100644
+index 0000000..b6bd32d
+--- /dev/null
++++ b/apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/_components/review-social-links-settings.tsx
+@@ -0,0 +1,368 @@
++'use client';
++
++import type {
++  ReputationReviewSocialLinkField,
++  ReputationReviewSocialLinksOutcome,
++  ReputationReviewSocialLinksSaveInput,
++} from '@yuta/contracts/reputation';
++import {
++  Alert,
++  AlertDescription,
++  Button,
++  Card,
++  FormField,
++  Input,
++  Label,
++  Skeleton,
++} from '@yuta/ui';
++import { Link2, RefreshCw, Save } from 'lucide-react';
++import { useRouter } from 'next/navigation';
++import {
++  useEffect,
++  useRef,
++  useState,
++  useTransition,
++  type FormEvent,
++} from 'react';
++import {
++  applyReviewSocialLinksOutcome,
++  canSubmitReviewSocialLinks,
++  createReviewSocialLinksSubmissionGate,
++  createReviewSocialLinksViewState,
++  prepareReviewSocialLinksSave,
++  reloadReviewSocialLinksConflict,
++  updateReviewSocialLinksDraft,
++  validateReviewSocialLinksDraft,
++  type ReviewSocialLinksInitialOutcome,
++} from '../_lib/review-social-links-state';
++
++type SaveAction = (
++  input: ReputationReviewSocialLinksSaveInput,
++) => Promise<ReputationReviewSocialLinksOutcome>;
++
++const fieldDefinitions: ReadonlyArray<{
++  field: ReputationReviewSocialLinkField;
++  label: string;
++  placeholder: string;
++}> = [
++  {
++    field: 'googleReviewUrl',
++    label: 'Lien Google',
++    placeholder: 'https://g.page/votre-restaurant/review',
++  },
++  {
++    field: 'facebookReviewUrl',
++    label: 'Lien Facebook',
++    placeholder: 'https://www.facebook.com/votre-restaurant',
++  },
++  {
++    field: 'instagramUrl',
++    label: 'Lien Instagram',
++    placeholder: 'https://www.instagram.com/votre-restaurant',
++  },
++];
++
++export function ReviewSocialLinksSettings({
++  initialOutcome,
++  saveAction,
++}: {
++  initialOutcome: ReviewSocialLinksInitialOutcome;
++  saveAction: SaveAction;
++}) {
++  const router = useRouter();
++  const [view, setView] = useState(() =>
++    createReviewSocialLinksViewState(initialOutcome),
++  );
++  const [isPending, startTransition] = useTransition();
++  const submissionGate = useRef(createReviewSocialLinksSubmissionGate());
++  const googleRef = useRef<HTMLInputElement>(null);
++  const facebookRef = useRef<HTMLInputElement>(null);
++  const instagramRef = useRef<HTMLInputElement>(null);
++  const inputRefs = {
++    googleReviewUrl: googleRef,
++    facebookReviewUrl: facebookRef,
++    instagramUrl: instagramRef,
++  };
++
++  useEffect(() => {
++    setView(createReviewSocialLinksViewState(initialOutcome));
++  }, [initialOutcome]);
++
++  const hasModel = Boolean(view.baseline);
++  const fieldsDisabled =
++    !hasModel || isPending || view.status === 'configuration_unavailable';
++  const saveEnabled = canSubmitReviewSocialLinks(view) && !isPending;
++
++  const submit = () => {
++    if (isPending || !submissionGate.current.tryStart()) return;
++    const prepared = prepareReviewSocialLinksSave(view);
++    setView(prepared.state);
++    if (prepared.kind !== 'ready') {
++      submissionGate.current.finish();
++      if (prepared.focusField) {
++        inputRefs[prepared.focusField].current?.focus();
++      }
++      return;
++    }
++
++    startTransition(async () => {
++      try {
++        const outcome = await saveAction(prepared.input);
++        setView((current) => applyReviewSocialLinksOutcome(current, outcome));
++      } catch {
++        setView((current) =>
++          applyReviewSocialLinksOutcome(current, { kind: 'server_error' }),
++        );
++      } finally {
++        submissionGate.current.finish();
++      }
++    });
++  };
++
++  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
++    event.preventDefault();
++    submit();
++  };
++
++  const reloadConflict = () => {
++    setView((current) => reloadReviewSocialLinksConflict(current));
++    router.refresh();
++  };
++
++  return (
++    <section aria-labelledby="review-social-links-heading">
++      <Card>
++        <div className="mb-4 flex items-start gap-3">
++          <div className="rounded-lg bg-surface-selected p-2 text-brand-700">
++            <Link2 className="h-5 w-5" aria-hidden />
++          </div>
++          <div className="min-w-0">
++            <h2
++              id="review-social-links-heading"
++              className="font-bold text-primary"
++            >
++              Liens d’avis et réseaux sociaux
++            </h2>
++            <p className="mt-1 text-sm text-muted">
++              Renseignez les destinations publiques utilisées pour recueillir
++              des avis et présenter vos réseaux sociaux.
++            </p>
++          </div>
++        </div>
++
++        <SettingsFeedback
++          status={view.status}
++          hasModel={hasModel}
++          onRetry={hasModel ? submit : () => router.refresh()}
++          onReloadConflict={reloadConflict}
++        />
++
++        <form
++          className="mt-4 grid gap-4 lg:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_auto] xl:items-end"
++          aria-busy={isPending}
++          noValidate
++          onSubmit={onSubmit}
++        >
++          {fieldDefinitions.map(({ field, label, placeholder }, index) => {
++            const inputId = `review-social-links-${field}`;
++            const errorId = `${inputId}-error`;
++            const error = view.fieldErrors[field];
++            return (
++              <FormField
++                key={field}
++                className={
++                  index === 0 ? 'lg:col-span-2 xl:col-span-1' : undefined
++                }
++                label={<Label htmlFor={inputId}>{label}</Label>}
++                error={error ? <span id={errorId}>{error}</span> : undefined}
++              >
++                <Input
++                  ref={inputRefs[field]}
++                  id={inputId}
++                  name={field}
++                  type="url"
++                  inputMode="url"
++                  autoComplete="url"
++                  maxLength={2048}
++                  value={view.draft[field]}
++                  placeholder={placeholder}
++                  disabled={fieldsDisabled}
++                  aria-invalid={Boolean(error)}
++                  aria-describedby={error ? errorId : undefined}
++                  onBlur={() =>
++                    setView((current) =>
++                      validateReviewSocialLinksDraft(current),
++                    )
++                  }
++                  onChange={(event) =>
++                    setView((current) =>
++                      updateReviewSocialLinksDraft(
++                        current,
++                        field,
++                        event.target.value,
++                      ),
++                    )
++                  }
++                />
++              </FormField>
++            );
++          })}
++
++          <div className="flex justify-end lg:col-span-2 xl:col-span-1">
++            <Button
++              type="submit"
++              className="w-full sm:w-auto"
++              disabled={!saveEnabled}
++              loading={isPending}
++            >
++              <Save className="h-4 w-4" aria-hidden />
++              {isPending ? 'Enregistrement…' : 'Enregistrer'}
++            </Button>
++          </div>
++        </form>
++      </Card>
++    </section>
++  );
++}
++
++export function ReviewSocialLinksSettingsLoading() {
++  return (
++    <section
++      aria-labelledby="review-social-links-loading-heading"
++      aria-busy="true"
++    >
++      <Card>
++        <h2
++          id="review-social-links-loading-heading"
++          className="font-bold text-primary"
++        >
++          Liens d’avis et réseaux sociaux
++        </h2>
++        <span className="sr-only" role="status">
++          Chargement de la configuration…
++        </span>
++        <div className="mt-4 grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
++          <Skeleton className="h-16 lg:col-span-2 xl:col-span-1" />
++          <Skeleton className="h-16" />
++          <Skeleton className="h-16" />
++          <Skeleton className="h-10 self-end" />
++        </div>
++      </Card>
++    </section>
++  );
++}
++
++function SettingsFeedback({
++  status,
++  hasModel,
++  onRetry,
++  onReloadConflict,
++}: {
++  status:
++    | 'idle'
++    | 'dirty'
++    | 'invalid'
++    | 'saving'
++    | 'saved'
++    | 'no_change'
++    | 'server_error'
++    | 'conflict'
++    | 'configuration_unavailable';
++  hasModel: boolean;
++  onRetry(): void;
++  onReloadConflict(): void;
++}) {
++  if (status === 'dirty') {
++    return (
++      <p className="text-sm font-medium text-muted" role="status">
++        Modifications non enregistrées
++      </p>
++    );
++  }
++  if (status === 'saving') {
++    return (
++      <p className="text-sm font-medium text-muted" role="status">
++        Enregistrement en cours…
++      </p>
++    );
++  }
++  if (status === 'saved') {
++    return (
++      <Alert tone="success">
++        <AlertDescription>Liens enregistrés.</AlertDescription>
++      </Alert>
++    );
++  }
++  if (status === 'no_change') {
++    return (
++      <Alert>
++        <AlertDescription>Aucune modification à enregistrer.</AlertDescription>
++      </Alert>
++    );
++  }
++  if (status === 'server_error') {
++    return (
++      <Alert tone="danger" role="alert">
++        <AlertDescription>
++          La configuration n’a pas pu être enregistrée ou chargée. Vos saisies
++          sont conservées.
++        </AlertDescription>
++        <Button
++          type="button"
++          variant="secondary"
++          size="sm"
++          className="mt-3"
++          onClick={onRetry}
++        >
++          <RefreshCw className="h-4 w-4" aria-hidden />
++          Réessayer
++        </Button>
++      </Alert>
++    );
++  }
++  if (status === 'conflict') {
++    return (
++      <Alert tone="warning" role="alert">
++        <AlertDescription>
++          Ces liens ont été modifiés ailleurs. Rechargez les valeurs actuelles
++          avant de poursuivre.
++        </AlertDescription>
++        <Button
++          type="button"
++          variant="secondary"
++          size="sm"
++          className="mt-3"
++          onClick={onReloadConflict}
++        >
++          <RefreshCw className="h-4 w-4" aria-hidden />
++          Recharger les valeurs
++        </Button>
++      </Alert>
++    );
++  }
++  if (status === 'configuration_unavailable') {
++    return (
++      <Alert tone="warning" role="alert">
++        <AlertDescription>Configuration indisponible</AlertDescription>
++        <Button
++          type="button"
++          variant="secondary"
++          size="sm"
++          className="mt-3"
++          onClick={onRetry}
++        >
++          <RefreshCw className="h-4 w-4" aria-hidden />
++          Réessayer
++        </Button>
++      </Alert>
++    );
++  }
++  if (status === 'invalid' && !hasModel) {
++    return (
++      <Alert tone="danger" role="alert">
++        <AlertDescription>Informations à vérifier.</AlertDescription>
++      </Alert>
++    );
++  }
++  return null;
++}
+diff --git a/apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/_lib/review-social-links-state.ts b/apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/_lib/review-social-links-state.ts
+new file mode 100644
+index 0000000..bb15238
+--- /dev/null
++++ b/apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/_lib/review-social-links-state.ts
+@@ -0,0 +1,345 @@
++import {
++  reputationReviewSocialLinkFieldValues,
++  reputationReviewSocialLinkIssueCodeSchema,
++  reputationReviewSocialLinksValuesSchema,
++  type ReputationReviewSocialLinkField,
++  type ReputationReviewSocialLinkIssueCode,
++  type ReputationReviewSocialLinksOutcome,
++  type ReputationReviewSocialLinksReadModel,
++  type ReputationReviewSocialLinksSaveInput,
++  type ReputationReviewSocialLinksValues,
++} from '@yuta/contracts/reputation';
++
++export type ReviewSocialLinksInitialOutcome =
++  | {
++      kind: 'success';
++      model: ReputationReviewSocialLinksReadModel;
++    }
++  | Extract<
++      ReputationReviewSocialLinksOutcome,
++      { kind: 'configuration_unavailable' }
++    >
++  | Extract<ReputationReviewSocialLinksOutcome, { kind: 'server_error' }>;
++
++export type ReviewSocialLinksDraft = Record<
++  ReputationReviewSocialLinkField,
++  string
++>;
++
++export type ReviewSocialLinksViewStatus =
++  | 'idle'
++  | 'dirty'
++  | 'invalid'
++  | 'saving'
++  | 'saved'
++  | 'no_change'
++  | 'server_error'
++  | 'conflict'
++  | 'configuration_unavailable';
++
++export type ReviewSocialLinksViewState = {
++  baseline: ReputationReviewSocialLinksReadModel | null;
++  conflictModel: ReputationReviewSocialLinksReadModel | null;
++  draft: ReviewSocialLinksDraft;
++  fieldErrors: Partial<Record<ReputationReviewSocialLinkField, string>>;
++  status: ReviewSocialLinksViewStatus;
++};
++
++export type ReviewSocialLinksSavePreparation =
++  | {
++      kind: 'ready';
++      state: ReviewSocialLinksViewState;
++      input: ReputationReviewSocialLinksSaveInput;
++    }
++  | {
++      kind: 'blocked';
++      state: ReviewSocialLinksViewState;
++      focusField: ReputationReviewSocialLinkField | null;
++    };
++
++export type ReviewSocialLinksSubmissionGate = {
++  tryStart(): boolean;
++  finish(): void;
++};
++
++const blankDraft: ReviewSocialLinksDraft = {
++  googleReviewUrl: '',
++  facebookReviewUrl: '',
++  instagramUrl: '',
++};
++
++const issueMessages: Record<ReputationReviewSocialLinkIssueCode, string> = {
++  INVALID_TYPE: "L'adresse doit être saisie sous forme de texte.",
++  TOO_LONG: "L'adresse ne peut pas dépasser 2 048 caractères.",
++  MALFORMED_URL: 'Saisissez une adresse web complète et valide.',
++  HTTPS_REQUIRED: "L'adresse doit commencer par https://.",
++  CREDENTIALS_FORBIDDEN:
++    "L'adresse ne peut pas contenir d'identifiant ou de mot de passe.",
++  HOST_NOT_ALLOWED: "Cette destination n'est pas autorisée pour ce service.",
++  PATH_NOT_ALLOWED: 'Cette destination ne correspond pas au format attendu.',
++};
++
++export function createReviewSocialLinksSubmissionGate(): ReviewSocialLinksSubmissionGate {
++  let inFlight = false;
++  return {
++    tryStart() {
++      if (inFlight) return false;
++      inFlight = true;
++      return true;
++    },
++    finish() {
++      inFlight = false;
++    },
++  };
++}
++
++export function createReviewSocialLinksViewState(
++  initialOutcome: ReviewSocialLinksInitialOutcome,
++): ReviewSocialLinksViewState {
++  if (initialOutcome.kind === 'success') {
++    return {
++      baseline: initialOutcome.model,
++      conflictModel: null,
++      draft: draftFromValues(initialOutcome.model.values),
++      fieldErrors: {},
++      status: 'idle',
++    };
++  }
++
++  return {
++    baseline: null,
++    conflictModel: null,
++    draft: { ...blankDraft },
++    fieldErrors: {},
++    status:
++      initialOutcome.kind === 'configuration_unavailable'
++        ? 'configuration_unavailable'
++        : 'server_error',
++  };
++}
++
++export function updateReviewSocialLinksDraft(
++  state: ReviewSocialLinksViewState,
++  field: ReputationReviewSocialLinkField,
++  value: string,
++): ReviewSocialLinksViewState {
++  const draft = { ...state.draft, [field]: value };
++  const fieldErrors = { ...state.fieldErrors };
++  delete fieldErrors[field];
++
++  return {
++    ...state,
++    draft,
++    fieldErrors,
++    status:
++      state.status === 'conflict'
++        ? 'conflict'
++        : firstErrorField(fieldErrors)
++          ? 'invalid'
++          : isNormalizedDraftDirty(draft, state.baseline?.values ?? null)
++            ? 'dirty'
++            : 'idle',
++  };
++}
++
++export function validateReviewSocialLinksDraft(
++  state: ReviewSocialLinksViewState,
++): ReviewSocialLinksViewState {
++  if (
++    !state.baseline ||
++    state.status === 'saving' ||
++    state.status === 'conflict' ||
++    state.status === 'configuration_unavailable'
++  ) {
++    return state;
++  }
++
++  const parsed = reputationReviewSocialLinksValuesSchema.safeParse(state.draft);
++  if (!parsed.success) {
++    return {
++      ...state,
++      fieldErrors: fieldErrorsFromIssues(parsed.error.issues),
++      status: 'invalid',
++    };
++  }
++
++  return {
++    ...state,
++    fieldErrors: {},
++    status: valuesEqual(parsed.data, state.baseline.values) ? 'idle' : 'dirty',
++  };
++}
++
++export function canSubmitReviewSocialLinks(
++  state: ReviewSocialLinksViewState,
++): boolean {
++  if (
++    !state.baseline ||
++    state.status === 'saving' ||
++    state.status === 'conflict' ||
++    state.status === 'configuration_unavailable'
++  ) {
++    return false;
++  }
++
++  const parsed = reputationReviewSocialLinksValuesSchema.safeParse(state.draft);
++  return parsed.success && !valuesEqual(parsed.data, state.baseline.values);
++}
++
++export function prepareReviewSocialLinksSave(
++  state: ReviewSocialLinksViewState,
++): ReviewSocialLinksSavePreparation {
++  if (
++    !state.baseline ||
++    state.status === 'saving' ||
++    state.status === 'conflict' ||
++    state.status === 'configuration_unavailable'
++  ) {
++    return { kind: 'blocked', state, focusField: null };
++  }
++
++  const parsed = reputationReviewSocialLinksValuesSchema.safeParse(state.draft);
++  if (!parsed.success) {
++    const fieldErrors = fieldErrorsFromIssues(parsed.error.issues);
++    return {
++      kind: 'blocked',
++      state: { ...state, fieldErrors, status: 'invalid' },
++      focusField: firstErrorField(fieldErrors),
++    };
++  }
++
++  if (valuesEqual(parsed.data, state.baseline.values)) {
++    return {
++      kind: 'blocked',
++      state: { ...state, fieldErrors: {}, status: 'no_change' },
++      focusField: null,
++    };
++  }
++
++  return {
++    kind: 'ready',
++    state: { ...state, fieldErrors: {}, status: 'saving' },
++    input: {
++      expectedValues: state.baseline.values,
++      proposedValues: parsed.data,
++      expectedStateToken: state.baseline.stateToken,
++    },
++  };
++}
++
++export function applyReviewSocialLinksOutcome(
++  state: ReviewSocialLinksViewState,
++  outcome: ReputationReviewSocialLinksOutcome,
++): ReviewSocialLinksViewState {
++  if (outcome.kind === 'success' || outcome.kind === 'no_change') {
++    return {
++      baseline: outcome.model,
++      conflictModel: null,
++      draft: draftFromValues(outcome.model.values),
++      fieldErrors: {},
++      status: outcome.kind === 'success' ? 'saved' : 'no_change',
++    };
++  }
++
++  if (outcome.kind === 'validation_error') {
++    const fieldErrors = Object.fromEntries(
++      outcome.issues.map((issue) => [issue.field, issueMessages[issue.code]]),
++    ) as Partial<Record<ReputationReviewSocialLinkField, string>>;
++    return { ...state, fieldErrors, status: 'invalid' };
++  }
++
++  if (outcome.kind === 'conflict') {
++    return {
++      ...state,
++      conflictModel: outcome.model,
++      fieldErrors: {},
++      status: 'conflict',
++    };
++  }
++
++  if (outcome.kind === 'configuration_unavailable') {
++    return {
++      ...state,
++      baseline: null,
++      conflictModel: null,
++      fieldErrors: {},
++      status: 'configuration_unavailable',
++    };
++  }
++
++  return { ...state, fieldErrors: {}, status: 'server_error' };
++}
++
++export function reloadReviewSocialLinksConflict(
++  state: ReviewSocialLinksViewState,
++): ReviewSocialLinksViewState {
++  if (!state.conflictModel) return state;
++  return {
++    baseline: state.conflictModel,
++    conflictModel: null,
++    draft: draftFromValues(state.conflictModel.values),
++    fieldErrors: {},
++    status: 'idle',
++  };
++}
++
++function fieldErrorsFromIssues(
++  issues: ReadonlyArray<{ path: PropertyKey[]; message: string }>,
++): Partial<Record<ReputationReviewSocialLinkField, string>> {
++  const errors: Partial<Record<ReputationReviewSocialLinkField, string>> = {};
++  for (const issue of issues) {
++    const field = issue.path.find((part) =>
++      reputationReviewSocialLinkFieldValues.includes(
++        part as ReputationReviewSocialLinkField,
++      ),
++    ) as ReputationReviewSocialLinkField | undefined;
++    const code = reputationReviewSocialLinkIssueCodeSchema.safeParse(
++      issue.message,
++    );
++    if (field && code.success && !errors[field]) {
++      errors[field] = issueMessages[code.data];
++    }
++  }
++  return errors;
++}
++
++function firstErrorField(
++  errors: Partial<Record<ReputationReviewSocialLinkField, string>>,
++): ReputationReviewSocialLinkField | null {
++  return (
++    reputationReviewSocialLinkFieldValues.find((field) => errors[field]) ?? null
++  );
++}
++
++function draftFromValues(
++  values: ReputationReviewSocialLinksValues,
++): ReviewSocialLinksDraft {
++  return {
++    googleReviewUrl: values.googleReviewUrl ?? '',
++    facebookReviewUrl: values.facebookReviewUrl ?? '',
++    instagramUrl: values.instagramUrl ?? '',
++  };
++}
++
++function isNormalizedDraftDirty(
++  draft: ReviewSocialLinksDraft,
++  baseline: ReputationReviewSocialLinksValues | null,
++): boolean {
++  if (!baseline) return false;
++  const parsed = reputationReviewSocialLinksValuesSchema.safeParse(draft);
++  if (!parsed.success) {
++    return reputationReviewSocialLinkFieldValues.some(
++      (field) => draft[field] !== (baseline[field] ?? ''),
++    );
++  }
++  return !valuesEqual(parsed.data, baseline);
++}
++
++function valuesEqual(
++  left: ReputationReviewSocialLinksValues,
++  right: ReputationReviewSocialLinksValues,
++): boolean {
++  return reputationReviewSocialLinkFieldValues.every(
++    (field) => left[field] === right[field],
++  );
++}
+diff --git a/apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/actions.ts b/apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/actions.ts
+new file mode 100644
+index 0000000..1735dd0
+--- /dev/null
++++ b/apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/actions.ts
+@@ -0,0 +1,26 @@
++'use server';
++
++import type {
++  ReputationReviewSocialLinksOutcome,
++  ReputationReviewSocialLinksSaveInput,
++} from '@yuta/contracts/reputation';
++import { saveReputationReviewSocialLinks } from '@yuta/db-cloud';
++import { revalidatePath } from 'next/cache';
++import { requireReputationPermission } from '../../../../server/auth/permissions';
++import { requireReputationTenant } from '../../../../server/auth/session';
++import { cloudDatabase as db } from '../../../../server/cloud-database';
++
++const SATISFACTION_PATH = '/visibilite-reputation/satisfaction';
++
++export async function saveReviewSocialLinksAction(
++  rawInput: ReputationReviewSocialLinksSaveInput | unknown,
++): Promise<ReputationReviewSocialLinksOutcome> {
++  const { tenant } = await requireReputationTenant(SATISFACTION_PATH);
++  requireReputationPermission(tenant, 'reputation.settings.manage');
++
++  const outcome = await saveReputationReviewSocialLinks(db, tenant, rawInput);
++  if (outcome.kind === 'success') {
++    revalidatePath(SATISFACTION_PATH);
++  }
++  return outcome;
++}
+diff --git a/apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/page.tsx b/apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/page.tsx
+index d2e2ca1..c7a06b2 100644
+--- a/apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/page.tsx
++++ b/apps/backoffice/src/app/(authenticated)/visibilite-reputation/satisfaction/page.tsx
+@@ -1,7 +1,19 @@
++import { readReputationReviewSocialLinks } from '@yuta/db-cloud';
++import { Suspense } from 'react';
++import { requireReputationPermission } from '../../../../server/auth/permissions';
++import { requireReputationTenant } from '../../../../server/auth/session';
++import { cloudDatabase as db } from '../../../../server/cloud-database';
+ import { loadReviewsPage } from '../avis/_components/reviews-loader';
++import { saveReviewSocialLinksAction } from './actions';
++import {
++  ReviewSocialLinksSettings,
++  ReviewSocialLinksSettingsLoading,
++} from './_components/review-social-links-settings';
+ 
+ export const dynamic = 'force-dynamic';
+ 
++const SATISFACTION_PATH = '/visibilite-reputation/satisfaction';
++
+ type ReviewSearchParams = Record<string, string | string[] | undefined>;
+ 
+ export default async function Page({
+@@ -9,5 +21,32 @@ export default async function Page({
+ }: {
+   searchParams: Promise<ReviewSearchParams>;
+ }) {
+-  return loadReviewsPage(await searchParams, 'direct');
++  const reviewsPage = await loadReviewsPage(await searchParams, 'direct');
++
++  return (
++    <div className="flex w-full flex-col gap-5">
++      {reviewsPage}
++      <Suspense fallback={<ReviewSocialLinksSettingsLoading />}>
++        <ReviewSocialLinksSettingsSection />
++      </Suspense>
++    </div>
++  );
++}
++
++export async function ReviewSocialLinksSettingsSection() {
++  const { tenant } = await requireReputationTenant(SATISFACTION_PATH);
++
++  if (tenant.actor.type !== 'user' || tenant.actor.role !== 'OWNER') {
++    return null;
++  }
++
++  requireReputationPermission(tenant, 'reputation.settings.manage');
++  const initialOutcome = await readReputationReviewSocialLinks(db, tenant);
++
++  return (
++    <ReviewSocialLinksSettings
++      initialOutcome={initialOutcome}
++      saveAction={saveReviewSocialLinksAction}
++    />
++  );
+ }
+diff --git a/apps/backoffice/test/reputation-review-social-links-actions.test.ts b/apps/backoffice/test/reputation-review-social-links-actions.test.ts
+new file mode 100644
+index 0000000..5632955
+--- /dev/null
++++ b/apps/backoffice/test/reputation-review-social-links-actions.test.ts
+@@ -0,0 +1,166 @@
++import type { TenantContext, TenantRole } from '@yuta/tenant';
++import { randomUUID } from 'node:crypto';
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++
++const mocks = vi.hoisted(() => ({
++  tenant: null as TenantContext | null,
++  session: { userId: '00000000-0000-4000-8000-000000000001' },
++  requireReputationTenant: vi.fn(),
++  requireReputationPermission: vi.fn(),
++  saveReputationReviewSocialLinks: vi.fn(),
++  revalidatePath: vi.fn(),
++}));
++
++vi.mock('server-only', () => ({}));
++vi.mock('@yuta/db-cloud', () => ({
++  saveReputationReviewSocialLinks: mocks.saveReputationReviewSocialLinks,
++}));
++vi.mock('next/cache', () => ({ revalidatePath: mocks.revalidatePath }));
++vi.mock('../src/server/cloud-database', () => ({
++  cloudDatabase: { kind: 'test-cloud-database' },
++}));
++vi.mock('../src/server/auth/session', () => ({
++  requireReputationTenant: mocks.requireReputationTenant,
++}));
++vi.mock('../src/server/auth/permissions', () => ({
++  requireReputationPermission: mocks.requireReputationPermission,
++}));
++
++import { saveReviewSocialLinksAction } from '../src/app/(authenticated)/visibilite-reputation/satisfaction/actions';
++
++const values = {
++  googleReviewUrl: 'https://g.page/yuta/review',
++  facebookReviewUrl: 'https://www.facebook.com/yuta',
++  instagramUrl: 'https://www.instagram.com/yuta',
++};
++const input = {
++  expectedValues: { ...values },
++  proposedValues: { ...values, instagramUrl: null },
++  expectedStateToken: 'a'.repeat(64),
++};
++
++describe('Reputation review social links server action', () => {
++  beforeEach(() => {
++    mocks.tenant = context('OWNER');
++    mocks.requireReputationTenant.mockReset();
++    mocks.requireReputationTenant.mockImplementation(async () => ({
++      session: mocks.session,
++      tenant: mocks.tenant,
++    }));
++    mocks.requireReputationPermission.mockReset();
++    mocks.requireReputationPermission.mockImplementation(
++      (tenant: TenantContext) => {
++        if (tenant.actor.type !== 'user' || tenant.actor.role !== 'OWNER') {
++          throw new Error('Permission denied.');
++        }
++      },
++    );
++    mocks.saveReputationReviewSocialLinks.mockReset();
++    mocks.saveReputationReviewSocialLinks.mockResolvedValue({
++      kind: 'success',
++      model: { values: input.proposedValues, stateToken: 'b'.repeat(64) },
++    });
++    mocks.revalidatePath.mockReset();
++  });
++
++  it('authorizes trusted OWNER before passing the whole mutation to the repository', async () => {
++    await expect(saveReviewSocialLinksAction(input)).resolves.toEqual({
++      kind: 'success',
++      model: { values: input.proposedValues, stateToken: 'b'.repeat(64) },
++    });
++
++    expect(mocks.requireReputationTenant).toHaveBeenCalledWith(
++      '/visibilite-reputation/satisfaction',
++    );
++    expect(mocks.requireReputationPermission).toHaveBeenCalledWith(
++      mocks.tenant,
++      'reputation.settings.manage',
++    );
++    expect(
++      mocks.requireReputationPermission.mock.invocationCallOrder[0],
++    ).toBeLessThan(
++      mocks.saveReputationReviewSocialLinks.mock.invocationCallOrder[0] ?? 0,
++    );
++    expect(mocks.saveReputationReviewSocialLinks).toHaveBeenCalledWith(
++      { kind: 'test-cloud-database' },
++      mocks.tenant,
++      input,
++    );
++    expect(mocks.revalidatePath).toHaveBeenCalledWith(
++      '/visibilite-reputation/satisfaction',
++    );
++  });
++
++  it.each(['MANAGER', 'STAFF'] as const)(
++    'denies %s before repository parsing or persistence',
++    async (role) => {
++      mocks.tenant = context(role);
++      await expect(saveReviewSocialLinksAction(input)).rejects.toThrow(
++        'Permission denied.',
++      );
++      expect(mocks.saveReputationReviewSocialLinks).not.toHaveBeenCalled();
++      expect(mocks.revalidatePath).not.toHaveBeenCalled();
++    },
++  );
++
++  it('does not inspect browser authority claims before trusted authorization', async () => {
++    mocks.tenant = context('STAFF');
++    const rawInput = {
++      ...input,
++      organization: randomUUID(),
++      establishment: randomUUID(),
++      role: 'OWNER',
++      permission: 'reputation.settings.manage',
++    };
++
++    await expect(saveReviewSocialLinksAction(rawInput)).rejects.toThrow(
++      'Permission denied.',
++    );
++    expect(mocks.saveReputationReviewSocialLinks).not.toHaveBeenCalled();
++  });
++
++  it.each([
++    [
++      'no_change',
++      { kind: 'no_change', model: { values, stateToken: 'c'.repeat(64) } },
++    ],
++    [
++      'validation_error',
++      {
++        kind: 'validation_error',
++        issues: [{ field: 'googleReviewUrl', code: 'HOST_NOT_ALLOWED' }],
++      },
++    ],
++    [
++      'conflict',
++      { kind: 'conflict', model: { values, stateToken: 'd'.repeat(64) } },
++    ],
++    ['configuration_unavailable', { kind: 'configuration_unavailable' }],
++    ['server_error', { kind: 'server_error' }],
++  ] as const)(
++    'returns safe %s without route revalidation',
++    async (_kind, outcome) => {
++      mocks.saveReputationReviewSocialLinks.mockResolvedValue(outcome);
++      await expect(saveReviewSocialLinksAction(input)).resolves.toEqual(
++        outcome,
++      );
++      expect(mocks.revalidatePath).not.toHaveBeenCalled();
++    },
++  );
++});
++
++function context(role: TenantRole): TenantContext {
++  return {
++    organizationId: randomUUID(),
++    establishmentId: randomUUID(),
++    actor: {
++      type: 'user',
++      userId: randomUUID(),
++      membershipId: randomUUID(),
++      role,
++    },
++    locale: 'fr-FR',
++    timezone: 'Europe/Paris',
++    entitlements: new Set(['reputation.enabled']),
++  };
++}
+diff --git a/apps/backoffice/test/reputation-review-social-links-component.test.tsx b/apps/backoffice/test/reputation-review-social-links-component.test.tsx
+new file mode 100644
+index 0000000..a7d8d77
+--- /dev/null
++++ b/apps/backoffice/test/reputation-review-social-links-component.test.tsx
+@@ -0,0 +1,423 @@
++import type {
++  ReputationReviewSocialLinksOutcome,
++  ReputationReviewSocialLinksReadModel,
++} from '@yuta/contracts/reputation';
++import type { TenantContext, TenantRole } from '@yuta/tenant';
++import { randomUUID } from 'node:crypto';
++import { readFileSync } from 'node:fs';
++import { renderToStaticMarkup } from 'react-dom/server';
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++
++const mocks = vi.hoisted(() => ({
++  tenant: null as TenantContext | null,
++  requireReputationTenant: vi.fn(),
++  requireReputationPermission: vi.fn(),
++  readReputationReviewSocialLinks: vi.fn(),
++  saveReviewSocialLinksAction: vi.fn(),
++  refresh: vi.fn(),
++}));
++
++vi.mock('server-only', () => ({}));
++vi.mock('next/navigation', () => ({
++  useRouter: () => ({ refresh: mocks.refresh }),
++}));
++vi.mock('@yuta/db-cloud', () => ({
++  readReputationReviewSocialLinks: mocks.readReputationReviewSocialLinks,
++}));
++vi.mock('../src/server/cloud-database', () => ({
++  cloudDatabase: { kind: 'test-cloud-database' },
++}));
++vi.mock('../src/server/auth/session', () => ({
++  requireReputationTenant: mocks.requireReputationTenant,
++}));
++vi.mock('../src/server/auth/permissions', () => ({
++  requireReputationPermission: mocks.requireReputationPermission,
++}));
++vi.mock(
++  '../src/app/(authenticated)/visibilite-reputation/satisfaction/actions',
++  () => ({
++    saveReviewSocialLinksAction: mocks.saveReviewSocialLinksAction,
++  }),
++);
++
++import { ReviewSocialLinksSettingsSection } from '../src/app/(authenticated)/visibilite-reputation/satisfaction/page';
++import {
++  ReviewSocialLinksSettings,
++  ReviewSocialLinksSettingsLoading,
++} from '../src/app/(authenticated)/visibilite-reputation/satisfaction/_components/review-social-links-settings';
++import {
++  applyReviewSocialLinksOutcome,
++  canSubmitReviewSocialLinks,
++  createReviewSocialLinksSubmissionGate,
++  createReviewSocialLinksViewState,
++  prepareReviewSocialLinksSave,
++  reloadReviewSocialLinksConflict,
++  updateReviewSocialLinksDraft,
++  validateReviewSocialLinksDraft,
++} from '../src/app/(authenticated)/visibilite-reputation/satisfaction/_lib/review-social-links-state';
++
++const model: ReputationReviewSocialLinksReadModel = {
++  values: {
++    googleReviewUrl: 'https://g.page/yuta/review',
++    facebookReviewUrl: 'https://www.facebook.com/yuta',
++    instagramUrl: 'https://www.instagram.com/yuta',
++  },
++  stateToken: 'a'.repeat(64),
++};
++const success = { kind: 'success' as const, model };
++
++describe('Reputation review social links settings model', () => {
++  it('normalizes empty, add, replace, clear and mixed edits into one atomic input', () => {
++    const emptyModel = {
++      ...model,
++      values: {
++        googleReviewUrl: null,
++        facebookReviewUrl: null,
++        instagramUrl: null,
++      },
++    };
++    let state = createReviewSocialLinksViewState({
++      kind: 'success',
++      model: emptyModel,
++    });
++    state = updateReviewSocialLinksDraft(
++      state,
++      'googleReviewUrl',
++      ' https://g.page/new/review ',
++    );
++    state = updateReviewSocialLinksDraft(
++      state,
++      'facebookReviewUrl',
++      'https://m.facebook.com/yuta',
++    );
++    let prepared = prepareReviewSocialLinksSave(state);
++    expect(prepared.kind).toBe('ready');
++    if (prepared.kind !== 'ready') return;
++    expect(prepared.state.status).toBe('saving');
++    expect(prepared.input.proposedValues).toEqual({
++      googleReviewUrl: 'https://g.page/new/review',
++      facebookReviewUrl: 'https://m.facebook.com/yuta',
++      instagramUrl: null,
++    });
++
++    state = createReviewSocialLinksViewState(success);
++    state = updateReviewSocialLinksDraft(
++      state,
++      'googleReviewUrl',
++      'https://www.google.com/maps/place/yuta',
++    );
++    state = updateReviewSocialLinksDraft(state, 'facebookReviewUrl', '');
++    state = updateReviewSocialLinksDraft(
++      state,
++      'instagramUrl',
++      'https://instagram.com/yuta-new',
++    );
++    prepared = prepareReviewSocialLinksSave(state);
++    expect(prepared.kind).toBe('ready');
++    if (prepared.kind !== 'ready') return;
++    expect(prepared.input).toEqual({
++      expectedValues: model.values,
++      proposedValues: {
++        googleReviewUrl: 'https://www.google.com/maps/place/yuta',
++        facebookReviewUrl: null,
++        instagramUrl: 'https://instagram.com/yuta-new',
++      },
++      expectedStateToken: model.stateToken,
++    });
++  });
++
++  it('keeps invalid draft, maps the field error and prevents submit', () => {
++    let state = createReviewSocialLinksViewState(success);
++    state = updateReviewSocialLinksDraft(
++      state,
++      'googleReviewUrl',
++      'https://example.invalid/review',
++    );
++    expect(canSubmitReviewSocialLinks(state)).toBe(false);
++    const prepared = prepareReviewSocialLinksSave(state);
++    expect(prepared.kind).toBe('blocked');
++    expect(prepared.state.status).toBe('invalid');
++    expect(prepared.state.draft.googleReviewUrl).toBe(
++      'https://example.invalid/review',
++    );
++    expect(prepared.state.fieldErrors.googleReviewUrl).toContain('destination');
++  });
++
++  it('makes an invalid Google draft reachable on blur and enables Save after correction', () => {
++    let state = createReviewSocialLinksViewState(success);
++    state = updateReviewSocialLinksDraft(
++      state,
++      'googleReviewUrl',
++      'https://example.invalid/review',
++    );
++    state = validateReviewSocialLinksDraft(state);
++
++    expect(state.status).toBe('invalid');
++    expect(state.fieldErrors.googleReviewUrl).toContain('destination');
++    expect(canSubmitReviewSocialLinks(state)).toBe(false);
++    expect(state.draft.googleReviewUrl).toBe('https://example.invalid/review');
++
++    state = updateReviewSocialLinksDraft(
++      state,
++      'googleReviewUrl',
++      'https://www.google.com/maps/place/yuta-corrected',
++    );
++
++    expect(state.fieldErrors.googleReviewUrl).toBeUndefined();
++    expect(state.status).toBe('dirty');
++    expect(canSubmitReviewSocialLinks(state)).toBe(true);
++  });
++
++  it.each([
++    ['facebookReviewUrl', 'https://example.invalid/facebook'],
++    ['instagramUrl', 'https://example.invalid/instagram'],
++  ] as const)(
++    'maps blur validation to the invalid %s field',
++    (field, value) => {
++      const state = validateReviewSocialLinksDraft(
++        updateReviewSocialLinksDraft(
++          createReviewSocialLinksViewState(success),
++          field,
++          value,
++        ),
++      );
++
++      expect(state.status).toBe('invalid');
++      expect(state.fieldErrors[field]).toContain('destination');
++      expect(canSubmitReviewSocialLinks(state)).toBe(false);
++    },
++  );
++
++  it('keeps the shared-schema submit fallback and does not define a private provider validator', () => {
++    const invalid = updateReviewSocialLinksDraft(
++      createReviewSocialLinksViewState(success),
++      'instagramUrl',
++      'not-a-url',
++    );
++    const prepared = prepareReviewSocialLinksSave(invalid);
++    expect(prepared.kind).toBe('blocked');
++    expect(prepared.state.fieldErrors.instagramUrl).toBeDefined();
++
++    const stateSource = readFileSync(
++      'src/app/(authenticated)/visibilite-reputation/satisfaction/_lib/review-social-links-state.ts',
++      'utf8',
++    );
++    expect(stateSource).toContain(
++      'reputationReviewSocialLinksValuesSchema.safeParse',
++    );
++    expect(stateSource).not.toMatch(
++      /google\.com|google\.fr|g\.page|facebook\.com|instagram\.com|fb\.me/,
++    );
++  });
++
++  it('blocks normalized no-op submissions and reports the no-change state', () => {
++    const state = createReviewSocialLinksViewState(success);
++    expect(canSubmitReviewSocialLinks(state)).toBe(false);
++    const prepared = prepareReviewSocialLinksSave(state);
++    expect(prepared.kind).toBe('blocked');
++    expect(prepared.state.status).toBe('no_change');
++  });
++
++  it('prevents a second submission until the active attempt finishes', () => {
++    const gate = createReviewSocialLinksSubmissionGate();
++    expect(gate.tryStart()).toBe(true);
++    expect(gate.tryStart()).toBe(false);
++    gate.finish();
++    expect(gate.tryStart()).toBe(true);
++  });
++
++  it('replaces baseline after success/no-change and preserves draft on retryable error', () => {
++    const dirty = updateReviewSocialLinksDraft(
++      createReviewSocialLinksViewState(success),
++      'instagramUrl',
++      '',
++    );
++    const serverError = applyReviewSocialLinksOutcome(dirty, {
++      kind: 'server_error',
++    });
++    expect(serverError.draft.instagramUrl).toBe('');
++    expect(serverError.status).toBe('server_error');
++
++    const committedModel = {
++      values: { ...model.values, instagramUrl: null },
++      stateToken: 'b'.repeat(64),
++    };
++    const committed = applyReviewSocialLinksOutcome(serverError, {
++      kind: 'success',
++      model: committedModel,
++    });
++    expect(committed.baseline).toEqual(committedModel);
++    expect(committed.draft.instagramUrl).toBe('');
++    expect(committed.status).toBe('saved');
++
++    expect(
++      applyReviewSocialLinksOutcome(committed, {
++        kind: 'no_change',
++        model: committedModel,
++      }).status,
++    ).toBe('no_change');
++  });
++
++  it('keeps a conflicting draft until explicit authoritative reload', () => {
++    const dirty = updateReviewSocialLinksDraft(
++      createReviewSocialLinksViewState(success),
++      'facebookReviewUrl',
++      'https://facebook.com/local-draft',
++    );
++    const authoritative = {
++      values: {
++        ...model.values,
++        facebookReviewUrl: 'https://facebook.com/authoritative',
++      },
++      stateToken: 'c'.repeat(64),
++    };
++    const conflict = applyReviewSocialLinksOutcome(dirty, {
++      kind: 'conflict',
++      model: authoritative,
++    });
++    expect(conflict.draft.facebookReviewUrl).toContain('local-draft');
++    expect(canSubmitReviewSocialLinks(conflict)).toBe(false);
++
++    const reloaded = reloadReviewSocialLinksConflict(conflict);
++    expect(reloaded.draft.facebookReviewUrl).toContain('authoritative');
++    expect(reloaded.baseline).toEqual(authoritative);
++  });
++
++  it.each([
++    { kind: 'configuration_unavailable' } as const,
++    { kind: 'server_error' } as const,
++  ])('keeps $kind fail closed without a writable baseline', (outcome) => {
++    const state = createReviewSocialLinksViewState(outcome);
++    expect(state.baseline).toBeNull();
++    expect(canSubmitReviewSocialLinks(state)).toBe(false);
++    expect(prepareReviewSocialLinksSave(state).kind).toBe('blocked');
++  });
++});
++
++describe('Reputation review social links settings component', () => {
++  it('renders one labelled form without exposing token or internal identifiers', () => {
++    const markup = renderSettings(success);
++    expect(markup.match(/<form/g)).toHaveLength(1);
++    expect(markup).toContain('Liens d’avis et réseaux sociaux');
++    expect(markup).toContain('Lien Google');
++    expect(markup).toContain('Lien Facebook');
++    expect(markup).toContain('Lien Instagram');
++    expect(markup).toContain('Enregistrer');
++    expect(markup).not.toContain(model.stateToken);
++    expect(markup).not.toMatch(
++      /settingsId|auditId|actorId|organizationId|establishmentId/i,
++    );
++  });
++
++  it('renders unavailable and loading states with no enabled Save path', () => {
++    const unavailable = renderSettings({
++      kind: 'configuration_unavailable',
++    });
++    expect(unavailable).toContain('Configuration indisponible');
++    expect(unavailable).toContain('disabled=""');
++    expect(unavailable).not.toContain(model.stateToken);
++
++    const loading = renderToStaticMarkup(<ReviewSocialLinksSettingsLoading />);
++    expect(loading).toContain('aria-busy="true"');
++    expect(loading).toContain('Chargement de la configuration');
++  });
++
++  it('uses one stable DOM order after the existing inbox without CSS order utilities', () => {
++    const source = readFileSync(
++      'src/app/(authenticated)/visibilite-reputation/satisfaction/page.tsx',
++      'utf8',
++    );
++    expect(source.indexOf('{reviewsPage}')).toBeGreaterThan(-1);
++    expect(source.indexOf('{reviewsPage}')).toBeLessThan(
++      source.indexOf('<Suspense'),
++    );
++
++    const componentSource = readFileSync(
++      'src/app/(authenticated)/visibilite-reputation/satisfaction/_components/review-social-links-settings.tsx',
++      'utf8',
++    );
++    expect(componentSource).not.toMatch(/\border-(first|last|none|[0-9]+)/);
++    expect(componentSource.match(/<form/g)).toHaveLength(1);
++    expect(componentSource).not.toMatch(
++      /autosave|localStorage|sessionStorage/i,
++    );
++    expect(componentSource).toContain('submissionGate.current.tryStart()');
++    expect(componentSource).toContain('.current?.focus()');
++    expect(componentSource).toContain(
++      'validateReviewSocialLinksDraft(current)',
++    );
++    expect(componentSource).toContain(
++      'aria-describedby={error ? errorId : undefined}',
++    );
++  });
++});
++
++describe('Reputation review social links OWNER projection', () => {
++  beforeEach(() => {
++    mocks.tenant = context('OWNER');
++    mocks.requireReputationTenant.mockReset();
++    mocks.requireReputationTenant.mockImplementation(async () => ({
++      session: { userId: randomUUID() },
++      tenant: mocks.tenant,
++    }));
++    mocks.requireReputationPermission.mockReset();
++    mocks.readReputationReviewSocialLinks.mockReset();
++    mocks.readReputationReviewSocialLinks.mockResolvedValue(success);
++  });
++
++  it('loads the model only for trusted OWNER after settings permission', async () => {
++    const section = await ReviewSocialLinksSettingsSection();
++    const markup = renderToStaticMarkup(section);
++    expect(markup).toContain('Liens d’avis et réseaux sociaux');
++    expect(mocks.requireReputationPermission).toHaveBeenCalledWith(
++      mocks.tenant,
++      'reputation.settings.manage',
++    );
++    expect(mocks.readReputationReviewSocialLinks).toHaveBeenCalledWith(
++      { kind: 'test-cloud-database' },
++      mocks.tenant,
++    );
++  });
++
++  it.each(['MANAGER', 'STAFF'] as const)(
++    'keeps the inbox but returns no settings section/model for %s',
++    async (role) => {
++      mocks.tenant = context(role);
++      await expect(ReviewSocialLinksSettingsSection()).resolves.toBeNull();
++      expect(mocks.requireReputationPermission).not.toHaveBeenCalled();
++      expect(mocks.readReputationReviewSocialLinks).not.toHaveBeenCalled();
++    },
++  );
++});
++
++function renderSettings(
++  initialOutcome:
++    | { kind: 'success'; model: ReputationReviewSocialLinksReadModel }
++    | { kind: 'configuration_unavailable' }
++    | { kind: 'server_error' },
++): string {
++  return renderToStaticMarkup(
++    <ReviewSocialLinksSettings
++      initialOutcome={initialOutcome}
++      saveAction={vi.fn<
++        (input: unknown) => Promise<ReputationReviewSocialLinksOutcome>
++      >()}
++    />,
++  );
++}
++
++function context(role: TenantRole): TenantContext {
++  return {
++    organizationId: randomUUID(),
++    establishmentId: randomUUID(),
++    actor: {
++      type: 'user',
++      userId: randomUUID(),
++      membershipId: randomUUID(),
++      role,
++    },
++    locale: 'fr-FR',
++    timezone: 'Europe/Paris',
++    entitlements: new Set(['reputation.enabled']),
++  };
++}
+diff --git a/apps/feedback-web/src/app/[tenantSlug]/_components/feedback-form.tsx b/apps/feedback-web/src/app/[tenantSlug]/_components/feedback-form.tsx
+index 033a4a1..79d512d 100644
+--- a/apps/feedback-web/src/app/[tenantSlug]/_components/feedback-form.tsx
++++ b/apps/feedback-web/src/app/[tenantSlug]/_components/feedback-form.tsx
+@@ -587,7 +587,7 @@ function InlineError({ message }: { message: string }) {
+   );
+ }
+ 
+-function FeedbackSuccess({
++export function FeedbackSuccess({
+   establishmentName,
+   externalLinks,
+   onReset,
+@@ -638,7 +638,7 @@ function FeedbackSuccess({
+               </p>
+               {links.map((link) => (
+                 <Button key={link.href} variant="secondary" asChild>
+-                  <a href={link.href} target="_blank" rel="noreferrer">
++                  <a href={link.href} target="_blank" rel="noopener noreferrer">
+                     {link.label}
+                     <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                   </a>
+diff --git a/packages/contracts/src/reputation/index.ts b/packages/contracts/src/reputation/index.ts
+index 6296419fd696b849ebb37a43221b73a20c96ca01..6f816adaff6f0bd2457a44ee60c7d0c5f3a2a90c 100644
+--- a/packages/contracts/src/reputation/index.ts
++++ b/packages/contracts/src/reputation/index.ts
+@@ -215,3 +215,245 @@ export const createIncidentSchema = z.object({
+   internalNotes: z.string().trim().max(4_000).nullable().optional(),
+   dueAt: z.string().datetime().nullable().optional(),
+ });
++
++export const reputationReviewSocialLinkProviderValues = [
++  'GOOGLE',
++  'FACEBOOK',
++  'INSTAGRAM',
++] as const;
++export const reputationReviewSocialLinkProviderSchema = z.enum(
++  reputationReviewSocialLinkProviderValues,
++);
++export type ReputationReviewSocialLinkProvider = z.infer<
++  typeof reputationReviewSocialLinkProviderSchema
++>;
++
++export const reputationReviewSocialLinkFieldValues = [
++  'googleReviewUrl',
++  'facebookReviewUrl',
++  'instagramUrl',
++] as const;
++export const reputationReviewSocialLinkFieldSchema = z.enum(
++  reputationReviewSocialLinkFieldValues,
++);
++export type ReputationReviewSocialLinkField = z.infer<
++  typeof reputationReviewSocialLinkFieldSchema
++>;
++
++export const reputationReviewSocialLinkIssueCodeValues = [
++  'INVALID_TYPE',
++  'TOO_LONG',
++  'MALFORMED_URL',
++  'HTTPS_REQUIRED',
++  'CREDENTIALS_FORBIDDEN',
++  'HOST_NOT_ALLOWED',
++  'PATH_NOT_ALLOWED',
++] as const;
++export const reputationReviewSocialLinkIssueCodeSchema = z.enum(
++  reputationReviewSocialLinkIssueCodeValues,
++);
++export type ReputationReviewSocialLinkIssueCode = z.infer<
++  typeof reputationReviewSocialLinkIssueCodeSchema
++>;
++
++type ReputationReviewSocialLinkPolicy = Readonly<{
++  hosts: Readonly<Record<string, string | null>>;
++}>;
++
++const reputationReviewSocialLinkPolicies: Readonly<
++  Record<ReputationReviewSocialLinkProvider, ReputationReviewSocialLinkPolicy>
++> = {
++  GOOGLE: {
++    hosts: {
++      'g.page': null,
++      'maps.app.goo.gl': null,
++      'google.com': '/maps/',
++      'www.google.com': '/maps/',
++      'google.fr': '/maps/',
++      'www.google.fr': '/maps/',
++      'search.google.com': '/local/writereview',
++    },
++  },
++  FACEBOOK: {
++    hosts: {
++      'facebook.com': null,
++      'www.facebook.com': null,
++      'm.facebook.com': null,
++      'fb.me': null,
++    },
++  },
++  INSTAGRAM: {
++    hosts: {
++      'instagram.com': null,
++      'www.instagram.com': null,
++    },
++  },
++};
++
++export type ReputationReviewSocialLinkValidationResult =
++  | Readonly<{ success: true; value: string | null }>
++  | Readonly<{
++      success: false;
++      issueCode: ReputationReviewSocialLinkIssueCode;
++    }>;
++
++export const validateReputationReviewSocialLink = (
++  provider: ReputationReviewSocialLinkProvider,
++  input: unknown,
++): ReputationReviewSocialLinkValidationResult => {
++  if (input === null) {
++    return { success: true, value: null };
++  }
++  if (typeof input !== 'string') {
++    return { success: false, issueCode: 'INVALID_TYPE' };
++  }
++
++  const value = input.trim();
++  if (value.length === 0) {
++    return { success: true, value: null };
++  }
++  if (value.length > 2_048) {
++    return { success: false, issueCode: 'TOO_LONG' };
++  }
++
++  let parsedUrl: URL;
++  try {
++    parsedUrl = new URL(value);
++  } catch {
++    return { success: false, issueCode: 'MALFORMED_URL' };
++  }
++
++  if (parsedUrl.protocol !== 'https:') {
++    return { success: false, issueCode: 'HTTPS_REQUIRED' };
++  }
++  if (parsedUrl.username !== '' || parsedUrl.password !== '') {
++    return { success: false, issueCode: 'CREDENTIALS_FORBIDDEN' };
++  }
++
++  const hosts = reputationReviewSocialLinkPolicies[provider].hosts;
++  if (!Object.prototype.hasOwnProperty.call(hosts, parsedUrl.hostname)) {
++    return { success: false, issueCode: 'HOST_NOT_ALLOWED' };
++  }
++  const pathPrefix = hosts[parsedUrl.hostname];
++  if (pathPrefix !== null && !parsedUrl.pathname.startsWith(pathPrefix)) {
++    return { success: false, issueCode: 'PATH_NOT_ALLOWED' };
++  }
++
++  return { success: true, value };
++};
++
++const createReputationReviewSocialLinkSchema = (
++  provider: ReputationReviewSocialLinkProvider,
++) =>
++  z.union([z.string(), z.null()]).transform((input, context) => {
++    const result = validateReputationReviewSocialLink(provider, input);
++    if (!result.success) {
++      context.addIssue({
++        code: z.ZodIssueCode.custom,
++        message: result.issueCode,
++      });
++      return z.NEVER;
++    }
++    return result.value;
++  });
++
++export const reputationGoogleReviewUrlSchema =
++  createReputationReviewSocialLinkSchema('GOOGLE');
++export const reputationFacebookReviewUrlSchema =
++  createReputationReviewSocialLinkSchema('FACEBOOK');
++export const reputationInstagramUrlSchema =
++  createReputationReviewSocialLinkSchema('INSTAGRAM');
++
++export const reputationReviewSocialLinksValuesSchema = z
++  .object({
++    googleReviewUrl: reputationGoogleReviewUrlSchema,
++    facebookReviewUrl: reputationFacebookReviewUrlSchema,
++    instagramUrl: reputationInstagramUrlSchema,
++  })
++  .strict();
++export type ReputationReviewSocialLinksValues = z.infer<
++  typeof reputationReviewSocialLinksValuesSchema
++>;
++
++export const reputationReviewSocialLinksStateTokenSchema = z
++  .string()
++  .regex(/^[a-f0-9]{64}$/);
++
++export const reputationReviewSocialLinksReadModelSchema = z
++  .object({
++    values: reputationReviewSocialLinksValuesSchema,
++    stateToken: reputationReviewSocialLinksStateTokenSchema,
++  })
++  .strict();
++export type ReputationReviewSocialLinksReadModel = z.infer<
++  typeof reputationReviewSocialLinksReadModelSchema
++>;
++
++export const reputationReviewSocialLinksSaveInputSchema = z
++  .object({
++    expectedValues: reputationReviewSocialLinksValuesSchema,
++    proposedValues: reputationReviewSocialLinksValuesSchema,
++    expectedStateToken: reputationReviewSocialLinksStateTokenSchema,
++  })
++  .strict();
++export type ReputationReviewSocialLinksSaveInput = z.infer<
++  typeof reputationReviewSocialLinksSaveInputSchema
++>;
++
++const reputationReviewSocialLinksModelOutcomeSchema = (
++  kind: 'success' | 'no_change' | 'conflict',
++) =>
++  z
++    .object({
++      kind: z.literal(kind),
++      model: reputationReviewSocialLinksReadModelSchema,
++    })
++    .strict();
++
++export const reputationReviewSocialLinksValidationIssueSchema = z
++  .object({
++    field: reputationReviewSocialLinkFieldSchema,
++    code: reputationReviewSocialLinkIssueCodeSchema,
++  })
++  .strict();
++
++export const reputationReviewSocialLinksOutcomeSchema = z.discriminatedUnion(
++  'kind',
++  [
++    reputationReviewSocialLinksModelOutcomeSchema('success'),
++    reputationReviewSocialLinksModelOutcomeSchema('no_change'),
++    z
++      .object({
++        kind: z.literal('validation_error'),
++        issues: z
++          .array(reputationReviewSocialLinksValidationIssueSchema)
++          .min(1)
++          .max(reputationReviewSocialLinkFieldValues.length),
++      })
++      .strict(),
++    reputationReviewSocialLinksModelOutcomeSchema('conflict'),
++    z.object({ kind: z.literal('configuration_unavailable') }).strict(),
++    z.object({ kind: z.literal('server_error') }).strict(),
++  ],
++);
++export type ReputationReviewSocialLinksOutcome = z.infer<
++  typeof reputationReviewSocialLinksOutcomeSchema
++>;
++
++export const projectPublicReputationReviewSocialLinks = (
++  values: Readonly<Record<ReputationReviewSocialLinkField, unknown>>,
++): ReputationReviewSocialLinksValues => {
++  const project = (
++    provider: ReputationReviewSocialLinkProvider,
++    value: unknown,
++  ): string | null => {
++    const result = validateReputationReviewSocialLink(provider, value);
++    return result.success ? result.value : null;
++  };
++
++  return {
++    googleReviewUrl: project('GOOGLE', values.googleReviewUrl),
++    facebookReviewUrl: project('FACEBOOK', values.facebookReviewUrl),
++    instagramUrl: project('INSTAGRAM', values.instagramUrl),
++  };
++};
+diff --git a/packages/contracts/test/reputation.test.ts b/packages/contracts/test/reputation.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..713bb7d04625881cc7b0c5ab7cc0c1655ebe9fce
+--- /dev/null
++++ b/packages/contracts/test/reputation.test.ts
+@@ -0,0 +1,329 @@
++import { describe, expect, it } from 'vitest';
++import {
++  projectPublicReputationReviewSocialLinks,
++  reputationFacebookReviewUrlSchema,
++  reputationGoogleReviewUrlSchema,
++  reputationInstagramUrlSchema,
++  reputationReviewSocialLinksOutcomeSchema,
++  reputationReviewSocialLinksReadModelSchema,
++  reputationReviewSocialLinksSaveInputSchema,
++  reputationReviewSocialLinksValuesSchema,
++  validateReputationReviewSocialLink,
++} from '../src/reputation';
++
++const nullValues = {
++  googleReviewUrl: null,
++  facebookReviewUrl: null,
++  instagramUrl: null,
++};
++const stateToken = 'a'.repeat(64);
++
++describe('Reputation review and social-link URL policy', () => {
++  it.each([
++    ['https://g.page/yuta/review'],
++    ['https://maps.app.goo.gl/AbCdEf'],
++    ['https://google.com/maps/place/Yuta'],
++    ['https://www.google.com/maps/place/Yuta'],
++    ['https://google.fr/maps/place/Yuta'],
++    ['https://www.google.fr/maps/place/Yuta'],
++    ['https://search.google.com/local/writereview?placeid=abc'],
++  ])('accepts an approved Google destination: %s', (value) => {
++    expect(reputationGoogleReviewUrlSchema.parse(value)).toBe(value);
++  });
++
++  it.each([
++    ['https://google.com/', 'PATH_NOT_ALLOWED'],
++    ['https://www.google.com/search?q=yuta', 'PATH_NOT_ALLOWED'],
++    ['https://google.fr/map/place/Yuta', 'PATH_NOT_ALLOWED'],
++    ['https://www.google.fr/MAPS/place/Yuta', 'PATH_NOT_ALLOWED'],
++    ['https://search.google.com/', 'PATH_NOT_ALLOWED'],
++    ['https://mail.google.com/maps/place/Yuta', 'HOST_NOT_ALLOWED'],
++    ['https://accounts.google.com/maps/place/Yuta', 'HOST_NOT_ALLOWED'],
++    ['https://docs.google.com/maps/place/Yuta', 'HOST_NOT_ALLOWED'],
++    ['https://maps.google.com/maps/place/Yuta', 'HOST_NOT_ALLOWED'],
++    ['https://evil.google.com/maps/place/Yuta', 'HOST_NOT_ALLOWED'],
++    ['https://google.com.example.invalid/maps/place/Yuta', 'HOST_NOT_ALLOWED'],
++    ['https://bit.ly/yuta-google', 'HOST_NOT_ALLOWED'],
++  ])('rejects an unapproved Google destination: %s', (value, issueCode) => {
++    expect(validateReputationReviewSocialLink('GOOGLE', value)).toEqual({
++      success: false,
++      issueCode,
++    });
++  });
++
++  it.each([
++    ['https://facebook.com/yuta'],
++    ['https://www.facebook.com/yuta'],
++    ['https://m.facebook.com/yuta'],
++    ['https://fb.me/yuta'],
++  ])('accepts an approved Facebook destination: %s', (value) => {
++    expect(reputationFacebookReviewUrlSchema.parse(value)).toBe(value);
++  });
++
++  it.each([
++    ['https://business.facebook.com/yuta'],
++    ['https://evil.facebook.com/yuta'],
++    ['https://facebook.com.example.invalid/yuta'],
++    ['https://bit.ly/yuta-facebook'],
++  ])('rejects an unapproved Facebook destination: %s', (value) => {
++    expect(reputationFacebookReviewUrlSchema.safeParse(value).success).toBe(
++      false,
++    );
++  });
++
++  it.each([['https://instagram.com/yuta'], ['https://www.instagram.com/yuta']])(
++    'accepts an approved Instagram destination: %s',
++    (value) => {
++      expect(reputationInstagramUrlSchema.parse(value)).toBe(value);
++    },
++  );
++
++  it.each([
++    ['https://m.instagram.com/yuta'],
++    ['https://business.instagram.com/yuta'],
++    ['https://instagram.com.example.invalid/yuta'],
++    ['https://tinyurl.com/yuta-instagram'],
++  ])('rejects an unapproved Instagram destination: %s', (value) => {
++    expect(reputationInstagramUrlSchema.safeParse(value).success).toBe(false);
++  });
++
++  it.each([
++    ['GOOGLE', 'http://google.com/maps/place/Yuta', 'HTTPS_REQUIRED'],
++    ['FACEBOOK', 'http://facebook.com/yuta', 'HTTPS_REQUIRED'],
++    ['INSTAGRAM', 'http://instagram.com/yuta', 'HTTPS_REQUIRED'],
++    [
++      'GOOGLE',
++      'https://user:secret@google.com/maps/place/Yuta',
++      'CREDENTIALS_FORBIDDEN',
++    ],
++    ['FACEBOOK', 'https://user@facebook.com/yuta', 'CREDENTIALS_FORBIDDEN'],
++    ['INSTAGRAM', 'not a URL', 'MALFORMED_URL'],
++  ] as const)(
++    'rejects unsafe common input for %s: %s',
++    (provider, value, issueCode) => {
++      expect(validateReputationReviewSocialLink(provider, value)).toEqual({
++        success: false,
++        issueCode,
++      });
++    },
++  );
++
++  it('trims outer whitespace, maps blank to null, and accepts explicit null', () => {
++    expect(
++      reputationGoogleReviewUrlSchema.parse(
++        '  https://google.com/maps/place/Yuta?x=1#reviews  ',
++      ),
++    ).toBe('https://google.com/maps/place/Yuta?x=1#reviews');
++    expect(reputationFacebookReviewUrlSchema.parse('   ')).toBeNull();
++    expect(reputationInstagramUrlSchema.parse(null)).toBeNull();
++  });
++
++  it('enforces the 2048 application-string-unit boundary after trim', () => {
++    const prefix = 'https://facebook.com/yuta#';
++    const exact = `${prefix}${'x'.repeat(2_048 - prefix.length)}`;
++    const tooLong = `${exact}x`;
++
++    expect(exact.length).toBe(2_048);
++    expect(reputationFacebookReviewUrlSchema.parse(exact)).toBe(exact);
++    expect(validateReputationReviewSocialLink('FACEBOOK', tooLong)).toEqual({
++      success: false,
++      issueCode: 'TOO_LONG',
++    });
++    expect(reputationFacebookReviewUrlSchema.parse(` ${exact} `)).toBe(exact);
++  });
++
++  it('returns the trimmed original without rewriting path, query, or fragment', () => {
++    const original =
++      'https://WWW.FACEBOOK.COM/Yuta/%7Eteam?b=2&a=1#Review%20Us';
++
++    expect(reputationFacebookReviewUrlSchema.parse(` ${original} `)).toBe(
++      original,
++    );
++  });
++
++  it('rejects non-string non-null values', () => {
++    expect(validateReputationReviewSocialLink('GOOGLE', undefined)).toEqual({
++      success: false,
++      issueCode: 'INVALID_TYPE',
++    });
++    expect(reputationGoogleReviewUrlSchema.safeParse(42).success).toBe(false);
++  });
++});
++
++describe('Reputation review and social-link transport contracts', () => {
++  it('normalizes exactly three nullable values', () => {
++    expect(
++      reputationReviewSocialLinksValuesSchema.parse({
++        googleReviewUrl: ' ',
++        facebookReviewUrl: ' https://facebook.com/yuta ',
++        instagramUrl: null,
++      }),
++    ).toEqual({
++      googleReviewUrl: null,
++      facebookReviewUrl: 'https://facebook.com/yuta',
++      instagramUrl: null,
++    });
++  });
++
++  it('accepts a strict read model and lowercase 64-hex state token', () => {
++    const model = { values: nullValues, stateToken };
++
++    expect(reputationReviewSocialLinksReadModelSchema.parse(model)).toEqual(
++      model,
++    );
++    expect(
++      reputationReviewSocialLinksReadModelSchema.safeParse({
++        ...model,
++        stateToken: 'A'.repeat(64),
++      }).success,
++    ).toBe(false);
++    expect(
++      reputationReviewSocialLinksReadModelSchema.safeParse({
++        ...model,
++        stateToken: 'a'.repeat(63),
++      }).success,
++    ).toBe(false);
++    expect(
++      reputationReviewSocialLinksReadModelSchema.safeParse({
++        ...model,
++        organizationId: 'internal-org-id',
++      }).success,
++    ).toBe(false);
++  });
++
++  it('accepts only expected values, proposed values, and expected state token', () => {
++    const input = {
++      expectedValues: nullValues,
++      proposedValues: {
++        ...nullValues,
++        googleReviewUrl: 'https://g.page/yuta/review',
++      },
++      expectedStateToken: stateToken,
++    };
++
++    expect(reputationReviewSocialLinksSaveInputSchema.parse(input)).toEqual(
++      input,
++    );
++    for (const [key, value] of [
++      ['organizationId', 'org-1'],
++      ['establishmentId', 'est-1'],
++      ['role', 'OWNER'],
++      ['permission', 'reputation.settings.manage'],
++      ['settingsId', 'settings-1'],
++      ['provider', 'GOOGLE'],
++      ['status', 'ACTIVE'],
++    ] as const) {
++      expect(
++        reputationReviewSocialLinksSaveInputSchema.safeParse({
++          ...input,
++          [key]: value,
++        }).success,
++      ).toBe(false);
++    }
++    expect(
++      reputationReviewSocialLinksSaveInputSchema.safeParse({
++        ...input,
++        proposedValues: {
++          ...input.proposedValues,
++          actorUserId: 'user-1',
++        },
++      }).success,
++    ).toBe(false);
++  });
++
++  it.each(['success', 'no_change', 'conflict'] as const)(
++    'accepts a safe %s outcome with an authoritative model',
++    (kind) => {
++      expect(
++        reputationReviewSocialLinksOutcomeSchema.parse({
++          kind,
++          model: { values: nullValues, stateToken },
++        }),
++      ).toMatchObject({ kind });
++    },
++  );
++
++  it('accepts bounded validation, unavailable, and server outcomes', () => {
++    expect(
++      reputationReviewSocialLinksOutcomeSchema.parse({
++        kind: 'validation_error',
++        issues: [{ field: 'googleReviewUrl', code: 'HOST_NOT_ALLOWED' }],
++      }),
++    ).toMatchObject({ kind: 'validation_error' });
++    expect(
++      reputationReviewSocialLinksOutcomeSchema.parse({
++        kind: 'configuration_unavailable',
++      }),
++    ).toEqual({ kind: 'configuration_unavailable' });
++    expect(
++      reputationReviewSocialLinksOutcomeSchema.parse({
++        kind: 'server_error',
++      }),
++    ).toEqual({ kind: 'server_error' });
++  });
++
++  it('rejects raw values and internal metadata from safe outcomes', () => {
++    expect(
++      reputationReviewSocialLinksOutcomeSchema.safeParse({
++        kind: 'validation_error',
++        issues: [
++          {
++            field: 'googleReviewUrl',
++            code: 'HOST_NOT_ALLOWED',
++            rejectedValue: 'https://user:secret@example.invalid',
++          },
++        ],
++      }).success,
++    ).toBe(false);
++    expect(
++      reputationReviewSocialLinksOutcomeSchema.safeParse({
++        kind: 'server_error',
++        stack: 'database internals',
++      }).success,
++    ).toBe(false);
++  });
++});
++
++describe('Reputation public safe projection', () => {
++  it('uses the same policy and maps each invalid legacy value to null', () => {
++    expect(
++      projectPublicReputationReviewSocialLinks({
++        googleReviewUrl: 'https://maps.google.com/maps/place/Yuta',
++        facebookReviewUrl: ' https://www.facebook.com/yuta?ref=page#reviews ',
++        instagramUrl: 'https://m.instagram.com/yuta',
++      }),
++    ).toEqual({
++      googleReviewUrl: null,
++      facebookReviewUrl: 'https://www.facebook.com/yuta?ref=page#reviews',
++      instagramUrl: null,
++    });
++  });
++
++  it('matches private schema results without rewriting accepted URLs', () => {
++    const values = {
++      googleReviewUrl:
++        ' https://search.google.com/local/writereview?placeid=A%2FB#start ',
++      facebookReviewUrl: 'https://fb.me/Yuta?utm_source=manual#review',
++      instagramUrl: null,
++    };
++    const privateResult = reputationReviewSocialLinksValuesSchema.parse(values);
++
++    expect(projectPublicReputationReviewSocialLinks(values)).toEqual(
++      privateResult,
++    );
++  });
++
++  it('fails closed for malformed legacy types independently by provider', () => {
++    expect(
++      projectPublicReputationReviewSocialLinks({
++        googleReviewUrl: 42,
++        facebookReviewUrl: undefined,
++        instagramUrl: 'https://instagram.com/yuta',
++      }),
++    ).toEqual({
++      googleReviewUrl: null,
++      facebookReviewUrl: null,
++      instagramUrl: 'https://instagram.com/yuta',
++    });
++  });
++});
+diff --git a/packages/db-cloud/src/index.ts b/packages/db-cloud/src/index.ts
+index 7a1583ecfa4588cef11587b863f28220f8d48135..f013870f5ec9a47cffeaf16be5c41b10a72c6e89 100644
+--- a/packages/db-cloud/src/index.ts
++++ b/packages/db-cloud/src/index.ts
+@@ -19,6 +19,7 @@ export * from './personnel-register-repository';
+ export * from './personnel-action-overview-repository';
+ export * from './personnel-document-repository';
+ export * from './personnel-contract-amendment-repository';
++export * from './reputation-review-social-links';
+ export * from './reputation-repository';
+ export * from './restaurant-knowledge-repository';
+ export * from './schema';
+diff --git a/packages/db-cloud/src/reputation-repository.ts b/packages/db-cloud/src/reputation-repository.ts
+index 9bb00db57a66dffdb5b506c319cc087b843a99fc..9c1dca0e84b04185ef887535ef3795275ac5186b 100644
+--- a/packages/db-cloud/src/reputation-repository.ts
++++ b/packages/db-cloud/src/reputation-repository.ts
+@@ -3,6 +3,7 @@ import type {
+   FeedbackStatus,
+   PublicFeedbackSubmission,
+ } from '@yuta/contracts/reputation';
++import { projectPublicReputationReviewSocialLinks } from '@yuta/contracts/reputation';
+ import type { AssignableReputationUser } from '@yuta/contracts/cloud-admin';
+ import type { PublicTenantContext, TenantContext } from '@yuta/tenant';
+ import {
+@@ -153,15 +154,19 @@ export async function findPublicFeedbackConfiguration(
+     .limit(1);
+   if (!establishment) return null;
+ 
++  const safeLinks = projectPublicReputationReviewSocialLinks({
++    googleReviewUrl: result.googleReviewUrl,
++    facebookReviewUrl: result.facebookReviewUrl,
++    instagramUrl: result.instagramUrl,
++  });
++
+   return {
+     organizationId: result.organizationId,
+     establishmentId: result.establishmentId,
+     establishmentName: establishment.name,
+     slug: result.publicFeedbackSlug,
+     enabled: result.publicFeedbackEnabled,
+-    googleReviewUrl: result.googleReviewUrl,
+-    facebookReviewUrl: result.facebookReviewUrl,
+-    instagramUrl: result.instagramUrl,
++    ...safeLinks,
+   };
+ }
+ 
+diff --git a/packages/db-cloud/src/reputation-review-social-links.ts b/packages/db-cloud/src/reputation-review-social-links.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..fe9641c8d044a01167cb7d1a16f565e08743a56e
+--- /dev/null
++++ b/packages/db-cloud/src/reputation-review-social-links.ts
+@@ -0,0 +1,641 @@
++import {
++  reputationReviewSocialLinkFieldValues,
++  reputationReviewSocialLinkIssueCodeSchema,
++  reputationReviewSocialLinkProviderSchema,
++  reputationReviewSocialLinksSaveInputSchema,
++  reputationReviewSocialLinksValuesSchema,
++  validateReputationReviewSocialLink,
++  type ReputationReviewSocialLinkField,
++  type ReputationReviewSocialLinkIssueCode,
++  type ReputationReviewSocialLinkProvider,
++  type ReputationReviewSocialLinksOutcome,
++  type ReputationReviewSocialLinksReadModel,
++  type ReputationReviewSocialLinksSaveInput,
++  type ReputationReviewSocialLinksValues,
++} from '@yuta/contracts/reputation';
++import { requireEstablishment, type TenantContext } from '@yuta/tenant';
++import { and, desc, eq } from 'drizzle-orm';
++import { createHash } from 'node:crypto';
++import { v7 as uuidv7 } from 'uuid';
++import { z } from 'zod';
++import type { CloudDatabaseClient } from './client';
++import { reputationAuditEvents, reputationSettings } from './schema';
++
++export const REPUTATION_REVIEW_SOCIAL_LINKS_AUDIT_ACTION =
++  'settings.review-social-links.updated.v1';
++
++type ScopedTenantContext = TenantContext & { establishmentId: string };
++type ReputationTransaction = Parameters<
++  Parameters<CloudDatabaseClient['transaction']>[0]
++>[0];
++type ModelOutcome = {
++  kind: 'success' | 'no_change' | 'conflict';
++  model: ReputationReviewSocialLinksReadModel;
++};
++type CapabilityErrorOutcome =
++  | { kind: 'configuration_unavailable' }
++  | { kind: 'server_error' };
++type ReadOutcome =
++  | { kind: 'success'; model: ReputationReviewSocialLinksReadModel }
++  | CapabilityErrorOutcome;
++type QualifiedEventRow = {
++  id: string;
++  organizationId: string;
++  entityType: 'FEEDBACK' | 'REPLY' | 'CONNECTOR' | 'SETTINGS';
++  entityId: string;
++  action: string;
++  actorUserId: string | null;
++  metadata: Record<string, unknown> | null;
++  createdAt: Date;
++};
++type ScopedSettingsState = {
++  id: string;
++  values: ReputationReviewSocialLinksValues;
++};
++type AuditChange = {
++  provider: ReputationReviewSocialLinkProvider;
++  previousUrl: string | null;
++  newUrl: string | null;
++};
++type ParsedQualifiedEvent = QualifiedEventRow & {
++  changes: readonly AuditChange[];
++};
++type StateEvidence = {
++  currentToken: string;
++  latestEvent: ParsedQualifiedEvent | null;
++  predecessorValues: ReputationReviewSocialLinksValues | null;
++  predecessorToken: string | null;
++};
++
++const providerOrder = new Map<ReputationReviewSocialLinkProvider, number>([
++  ['GOOGLE', 0],
++  ['FACEBOOK', 1],
++  ['INSTAGRAM', 2],
++]);
++
++const providerFields: Readonly<
++  Record<ReputationReviewSocialLinkProvider, ReputationReviewSocialLinkField>
++> = {
++  GOOGLE: 'googleReviewUrl',
++  FACEBOOK: 'facebookReviewUrl',
++  INSTAGRAM: 'instagramUrl',
++};
++
++const fieldProviders: Readonly<
++  Record<ReputationReviewSocialLinkField, ReputationReviewSocialLinkProvider>
++> = {
++  googleReviewUrl: 'GOOGLE',
++  facebookReviewUrl: 'FACEBOOK',
++  instagramUrl: 'INSTAGRAM',
++};
++
++const auditChangeSchema = z
++  .object({
++    provider: reputationReviewSocialLinkProviderSchema,
++    previousUrl: z.string().nullable(),
++    newUrl: z.string().nullable(),
++  })
++  .strict();
++
++const auditMetadataSchema = z
++  .object({
++    establishmentId: z.string().uuid(),
++    changes: z.array(auditChangeSchema).min(1).max(3),
++  })
++  .strict();
++
++export class ReputationReviewSocialLinksRepositoryError extends Error {
++  constructor(
++    message: string,
++    readonly code: 'ACTOR_REQUIRED' | 'INTEGRITY_ERROR',
++  ) {
++    super(message);
++    this.name = 'ReputationReviewSocialLinksRepositoryError';
++  }
++}
++
++export async function readReputationReviewSocialLinks(
++  db: CloudDatabaseClient,
++  context: TenantContext,
++): Promise<ReadOutcome> {
++  const scopedContext = requireScopedContext(context);
++
++  try {
++    return await db.transaction(
++      async (transaction) => {
++        const settings = await findScopedSettings(transaction, scopedContext);
++        if (!settings) return configurationUnavailableOutcome();
++
++        const evidence = await readStateEvidence(
++          transaction,
++          scopedContext,
++          settings,
++        );
++        if (!evidence) return serverErrorOutcome();
++
++        return successOutcome(settings.values, evidence.currentToken);
++      },
++      { isolationLevel: 'repeatable read' },
++    );
++  } catch {
++    return serverErrorOutcome();
++  }
++}
++
++export async function saveReputationReviewSocialLinks(
++  db: CloudDatabaseClient,
++  context: TenantContext,
++  rawInput: ReputationReviewSocialLinksSaveInput | unknown,
++): Promise<ReputationReviewSocialLinksOutcome> {
++  const scopedContext = requireScopedContext(context);
++  const actorUserId = requireUserActor(scopedContext);
++  const parsedInput =
++    reputationReviewSocialLinksSaveInputSchema.safeParse(rawInput);
++  if (!parsedInput.success) return validationOutcome(parsedInput.error);
++
++  try {
++    return await db.transaction(async (transaction) => {
++      const settings = await lockScopedSettings(transaction, scopedContext);
++      if (!settings) return configurationUnavailableOutcome();
++
++      const evidence = await readStateEvidence(
++        transaction,
++        scopedContext,
++        settings,
++      );
++      if (!evidence) return serverErrorOutcome();
++
++      const input = parsedInput.data;
++      const currentMatchesExpected =
++        valuesEqual(settings.values, input.expectedValues) &&
++        evidence.currentToken === input.expectedStateToken;
++      const currentMatchesProposed = valuesEqual(
++        settings.values,
++        input.proposedValues,
++      );
++
++      if (currentMatchesExpected && currentMatchesProposed) {
++        return noChangeOutcome(settings.values, evidence.currentToken);
++      }
++
++      if (!currentMatchesExpected) {
++        if (!currentMatchesProposed) {
++          return conflictOutcome(settings.values, evidence.currentToken);
++        }
++
++        if (isProvenReplay(input, actorUserId, evidence)) {
++          return successOutcome(settings.values, evidence.currentToken);
++        }
++        return noChangeOutcome(settings.values, evidence.currentToken);
++      }
++
++      const changes = deriveChanges(settings.values, input.proposedValues);
++      if (changes.length === 0) {
++        return noChangeOutcome(settings.values, evidence.currentToken);
++      }
++
++      const recordedAt = nextRecordedAt(evidence.latestEvent?.createdAt);
++      const eventId = uuidv7();
++      const [updated] = await transaction
++        .update(reputationSettings)
++        .set({
++          googleReviewUrl: input.proposedValues.googleReviewUrl,
++          facebookReviewUrl: input.proposedValues.facebookReviewUrl,
++          instagramUrl: input.proposedValues.instagramUrl,
++          updatedAt: recordedAt,
++        })
++        .where(
++          and(
++            eq(reputationSettings.id, settings.id),
++            eq(reputationSettings.organizationId, scopedContext.organizationId),
++            eq(
++              reputationSettings.establishmentId,
++              scopedContext.establishmentId,
++            ),
++          ),
++        )
++        .returning({ id: reputationSettings.id });
++      if (!updated) {
++        throw new ReputationReviewSocialLinksRepositoryError(
++          'The scoped Reputation settings row changed unexpectedly.',
++          'INTEGRITY_ERROR',
++        );
++      }
++
++      await transaction.insert(reputationAuditEvents).values({
++        id: eventId,
++        organizationId: scopedContext.organizationId,
++        entityType: 'SETTINGS',
++        entityId: settings.id,
++        action: REPUTATION_REVIEW_SOCIAL_LINKS_AUDIT_ACTION,
++        actorUserId,
++        metadata: {
++          establishmentId: scopedContext.establishmentId,
++          changes,
++        },
++        createdAt: recordedAt,
++      });
++
++      return successOutcome(
++        input.proposedValues,
++        createStateToken(settings.id, eventId, input.proposedValues),
++      );
++    });
++  } catch {
++    return serverErrorOutcome();
++  }
++}
++
++function requireScopedContext(context: TenantContext): ScopedTenantContext {
++  requireEstablishment(context);
++  return context;
++}
++
++function requireUserActor(context: ScopedTenantContext): string {
++  if (context.actor.type !== 'user') {
++    throw new ReputationReviewSocialLinksRepositoryError(
++      'An authenticated user actor is required.',
++      'ACTOR_REQUIRED',
++    );
++  }
++  return context.actor.userId;
++}
++
++async function findScopedSettings(
++  db: CloudDatabaseClient | ReputationTransaction,
++  context: ScopedTenantContext,
++): Promise<ScopedSettingsState | null> {
++  const [row] = await db
++    .select({
++      id: reputationSettings.id,
++      googleReviewUrl: reputationSettings.googleReviewUrl,
++      facebookReviewUrl: reputationSettings.facebookReviewUrl,
++      instagramUrl: reputationSettings.instagramUrl,
++    })
++    .from(reputationSettings)
++    .where(
++      and(
++        eq(reputationSettings.organizationId, context.organizationId),
++        eq(reputationSettings.establishmentId, context.establishmentId),
++      ),
++    )
++    .limit(1);
++  if (!row) return null;
++
++  const parsedValues = reputationReviewSocialLinksValuesSchema.safeParse({
++    googleReviewUrl: row.googleReviewUrl,
++    facebookReviewUrl: row.facebookReviewUrl,
++    instagramUrl: row.instagramUrl,
++  });
++  if (!parsedValues.success) {
++    throw new ReputationReviewSocialLinksRepositoryError(
++      'The stored Reputation link state is invalid.',
++      'INTEGRITY_ERROR',
++    );
++  }
++  return { id: row.id, values: parsedValues.data };
++}
++
++async function lockScopedSettings(
++  transaction: ReputationTransaction,
++  context: ScopedTenantContext,
++): Promise<ScopedSettingsState | null> {
++  const [row] = await transaction
++    .select({
++      id: reputationSettings.id,
++      googleReviewUrl: reputationSettings.googleReviewUrl,
++      facebookReviewUrl: reputationSettings.facebookReviewUrl,
++      instagramUrl: reputationSettings.instagramUrl,
++    })
++    .from(reputationSettings)
++    .where(
++      and(
++        eq(reputationSettings.organizationId, context.organizationId),
++        eq(reputationSettings.establishmentId, context.establishmentId),
++      ),
++    )
++    .limit(1)
++    .for('update');
++  if (!row) return null;
++
++  const parsedValues = reputationReviewSocialLinksValuesSchema.safeParse({
++    googleReviewUrl: row.googleReviewUrl,
++    facebookReviewUrl: row.facebookReviewUrl,
++    instagramUrl: row.instagramUrl,
++  });
++  if (!parsedValues.success) {
++    throw new ReputationReviewSocialLinksRepositoryError(
++      'The stored Reputation link state is invalid.',
++      'INTEGRITY_ERROR',
++    );
++  }
++  return { id: row.id, values: parsedValues.data };
++}
++
++async function readStateEvidence(
++  db: CloudDatabaseClient | ReputationTransaction,
++  context: ScopedTenantContext,
++  settings: ScopedSettingsState,
++): Promise<StateEvidence | null> {
++  const rows = await db
++    .select({
++      id: reputationAuditEvents.id,
++      organizationId: reputationAuditEvents.organizationId,
++      entityType: reputationAuditEvents.entityType,
++      entityId: reputationAuditEvents.entityId,
++      action: reputationAuditEvents.action,
++      actorUserId: reputationAuditEvents.actorUserId,
++      metadata: reputationAuditEvents.metadata,
++      createdAt: reputationAuditEvents.createdAt,
++    })
++    .from(reputationAuditEvents)
++    .where(
++      and(
++        eq(reputationAuditEvents.organizationId, context.organizationId),
++        eq(reputationAuditEvents.entityType, 'SETTINGS'),
++        eq(reputationAuditEvents.entityId, settings.id),
++        eq(
++          reputationAuditEvents.action,
++          REPUTATION_REVIEW_SOCIAL_LINKS_AUDIT_ACTION,
++        ),
++      ),
++    )
++    .orderBy(
++      desc(reputationAuditEvents.createdAt),
++      desc(reputationAuditEvents.id),
++    )
++    .limit(2);
++
++  if (rows.length === 0) {
++    return {
++      currentToken: createStateToken(settings.id, null, settings.values),
++      latestEvent: null,
++      predecessorValues: null,
++      predecessorToken: null,
++    };
++  }
++
++  const latestEvent = parseQualifiedEvent(rows[0], context, settings.id);
++  const previousEvent = rows[1]
++    ? parseQualifiedEvent(rows[1], context, settings.id)
++    : null;
++  if (!latestEvent || (rows[1] && !previousEvent)) return null;
++  if (
++    previousEvent &&
++    latestEvent.createdAt.getTime() <= previousEvent.createdAt.getTime()
++  ) {
++    return null;
++  }
++
++  const predecessorValues = reverseChanges(
++    settings.values,
++    latestEvent.changes,
++  );
++  if (!predecessorValues) return null;
++  if (previousEvent && !eventEndsAtValues(previousEvent, predecessorValues)) {
++    return null;
++  }
++
++  return {
++    currentToken: createStateToken(
++      settings.id,
++      latestEvent.id,
++      settings.values,
++    ),
++    latestEvent,
++    predecessorValues,
++    predecessorToken: createStateToken(
++      settings.id,
++      previousEvent?.id ?? null,
++      predecessorValues,
++    ),
++  };
++}
++
++function parseQualifiedEvent(
++  row: QualifiedEventRow,
++  context: ScopedTenantContext,
++  settingsId: string,
++): ParsedQualifiedEvent | null {
++  if (
++    row.organizationId !== context.organizationId ||
++    row.entityType !== 'SETTINGS' ||
++    row.entityId !== settingsId ||
++    row.action !== REPUTATION_REVIEW_SOCIAL_LINKS_AUDIT_ACTION
++  ) {
++    return null;
++  }
++
++  const parsedMetadata = auditMetadataSchema.safeParse(row.metadata);
++  if (
++    !parsedMetadata.success ||
++    parsedMetadata.data.establishmentId !== context.establishmentId
++  ) {
++    return null;
++  }
++
++  let previousOrder = -1;
++  const seen = new Set<ReputationReviewSocialLinkProvider>();
++  for (const change of parsedMetadata.data.changes) {
++    const order = providerOrder.get(change.provider);
++    if (
++      order === undefined ||
++      order <= previousOrder ||
++      seen.has(change.provider)
++    ) {
++      return null;
++    }
++    previousOrder = order;
++    seen.add(change.provider);
++
++    for (const value of [change.previousUrl, change.newUrl]) {
++      const validated = validateReputationReviewSocialLink(
++        change.provider,
++        value,
++      );
++      if (!validated.success || validated.value !== value) return null;
++    }
++    if (change.previousUrl === change.newUrl) return null;
++  }
++
++  return { ...row, changes: parsedMetadata.data.changes };
++}
++
++function reverseChanges(
++  currentValues: ReputationReviewSocialLinksValues,
++  changes: readonly AuditChange[],
++): ReputationReviewSocialLinksValues | null {
++  const predecessor = { ...currentValues };
++  for (const change of changes) {
++    const field = providerFields[change.provider];
++    if (currentValues[field] !== change.newUrl) return null;
++    predecessor[field] = change.previousUrl;
++  }
++  return predecessor;
++}
++
++function eventEndsAtValues(
++  event: ParsedQualifiedEvent,
++  values: ReputationReviewSocialLinksValues,
++): boolean {
++  return event.changes.every(
++    (change) => values[providerFields[change.provider]] === change.newUrl,
++  );
++}
++
++function deriveChanges(
++  previousValues: ReputationReviewSocialLinksValues,
++  newValues: ReputationReviewSocialLinksValues,
++): AuditChange[] {
++  const changes: AuditChange[] = [];
++  for (const field of reputationReviewSocialLinkFieldValues) {
++    if (previousValues[field] === newValues[field]) continue;
++    const provider = fieldProviders[field];
++    changes.push({
++      provider,
++      previousUrl: previousValues[field],
++      newUrl: newValues[field],
++    });
++  }
++  return changes;
++}
++
++function isProvenReplay(
++  input: ReputationReviewSocialLinksSaveInput,
++  actorUserId: string,
++  evidence: StateEvidence,
++): boolean {
++  if (
++    !evidence.latestEvent ||
++    evidence.latestEvent.actorUserId !== actorUserId ||
++    !evidence.predecessorValues ||
++    !evidence.predecessorToken ||
++    input.expectedStateToken !== evidence.predecessorToken ||
++    !valuesEqual(input.expectedValues, evidence.predecessorValues)
++  ) {
++    return false;
++  }
++
++  return changesEqual(
++    evidence.latestEvent.changes,
++    deriveChanges(input.expectedValues, input.proposedValues),
++  );
++}
++
++function changesEqual(
++  left: readonly AuditChange[],
++  right: readonly AuditChange[],
++): boolean {
++  return (
++    left.length === right.length &&
++    left.every(
++      (change, index) =>
++        change.provider === right[index]?.provider &&
++        change.previousUrl === right[index]?.previousUrl &&
++        change.newUrl === right[index]?.newUrl,
++    )
++  );
++}
++
++function valuesEqual(
++  left: ReputationReviewSocialLinksValues,
++  right: ReputationReviewSocialLinksValues,
++): boolean {
++  return reputationReviewSocialLinkFieldValues.every(
++    (field) => left[field] === right[field],
++  );
++}
++
++function createStateToken(
++  settingsId: string,
++  latestEventId: string | null,
++  values: ReputationReviewSocialLinksValues,
++): string {
++  return createHash('sha256')
++    .update(
++      JSON.stringify([
++        'review-social-links-state',
++        1,
++        settingsId,
++        latestEventId,
++        values.googleReviewUrl,
++        values.facebookReviewUrl,
++        values.instagramUrl,
++      ]),
++      'utf8',
++    )
++    .digest('hex');
++}
++
++function nextRecordedAt(latestRecordedAt: Date | undefined): Date {
++  return new Date(
++    Math.max(Date.now(), (latestRecordedAt?.getTime() ?? -1) + 1),
++  );
++}
++
++function validationOutcome(
++  error: z.ZodError,
++): ReputationReviewSocialLinksOutcome {
++  const issues = new Map<
++    string,
++    {
++      field: ReputationReviewSocialLinkField;
++      code: ReputationReviewSocialLinkIssueCode;
++    }
++  >();
++
++  for (const issue of error.issues) {
++    const field = issue.path.find((segment) =>
++      reputationReviewSocialLinkFieldValues.includes(
++        segment as ReputationReviewSocialLinkField,
++      ),
++    ) as ReputationReviewSocialLinkField | undefined;
++    const parsedCode = reputationReviewSocialLinkIssueCodeSchema.safeParse(
++      issue.message,
++    );
++    if (!field || !parsedCode.success) continue;
++    issues.set(`${field}:${parsedCode.data}`, {
++      field,
++      code: parsedCode.data,
++    });
++  }
++
++  if (issues.size === 0) return serverErrorOutcome();
++  return { kind: 'validation_error', issues: [...issues.values()].slice(0, 3) };
++}
++
++function readModel(
++  values: ReputationReviewSocialLinksValues,
++  stateToken: string,
++): ReputationReviewSocialLinksReadModel {
++  return { values, stateToken };
++}
++
++function successOutcome(
++  values: ReputationReviewSocialLinksValues,
++  stateToken: string,
++): ModelOutcome & { kind: 'success' } {
++  return { kind: 'success', model: readModel(values, stateToken) };
++}
++
++function noChangeOutcome(
++  values: ReputationReviewSocialLinksValues,
++  stateToken: string,
++): ModelOutcome & { kind: 'no_change' } {
++  return { kind: 'no_change', model: readModel(values, stateToken) };
++}
++
++function conflictOutcome(
++  values: ReputationReviewSocialLinksValues,
++  stateToken: string,
++): ModelOutcome & { kind: 'conflict' } {
++  return { kind: 'conflict', model: readModel(values, stateToken) };
++}
++
++function configurationUnavailableOutcome(): CapabilityErrorOutcome {
++  return { kind: 'configuration_unavailable' };
++}
++
++function serverErrorOutcome(): CapabilityErrorOutcome {
++  return { kind: 'server_error' };
++}
+diff --git a/packages/db-cloud/test/reputation-review-social-links-inventory.test.ts b/packages/db-cloud/test/reputation-review-social-links-inventory.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..4e0fec1dcd0f95e3100731f6fd48639ea2a235d6
+--- /dev/null
++++ b/packages/db-cloud/test/reputation-review-social-links-inventory.test.ts
+@@ -0,0 +1,104 @@
++import { readFileSync, readdirSync, statSync } from 'node:fs';
++import { join, relative } from 'node:path';
++import { fileURLToPath } from 'node:url';
++import { describe, expect, it } from 'vitest';
++
++const packageRoot = fileURLToPath(new URL('..', import.meta.url));
++const sourceRoot = join(packageRoot, 'src');
++const repositoryRoot = fileURLToPath(new URL('../../..', import.meta.url));
++
++const sourceFiles = listTypeScriptFiles(sourceRoot);
++const sourceByRelativePath = new Map(
++  sourceFiles.map((path) => [
++    relative(packageRoot, path).replaceAll('\\', '/'),
++    read(path),
++  ]),
++);
++
++describe('Reputation review social-links static inventory', () => {
++  it('keeps the new operation as the only runtime writer for the three link columns', () => {
++    const runtimeWriters = [...sourceByRelativePath]
++      .filter(([, content]) => content.includes('.update(reputationSettings)'))
++      .map(([path]) => path)
++      .sort();
++
++    expect(runtimeWriters).toEqual([
++      'src/reputation-review-social-links.ts',
++      'src/seed.ts',
++    ]);
++    const runtimeInserters = [...sourceByRelativePath]
++      .filter(([, content]) => content.includes('.insert(reputationSettings)'))
++      .map(([path]) => path)
++      .sort();
++    expect(runtimeInserters).toEqual(['src/seed.ts']);
++    const seed = sourceByRelativePath.get('src/seed.ts') ?? '';
++    expect(seed).not.toMatch(/googleReviewUrl|facebookReviewUrl|instagramUrl/u);
++  });
++
++  it('has no supported runtime update, delete, truncate, or purge for Reputation audit events', () => {
++    const runtimeSource = [...sourceByRelativePath.values()].join('\n');
++
++    expect(runtimeSource).not.toMatch(/\.update\(reputationAuditEvents\)/u);
++    expect(runtimeSource).not.toMatch(/\.delete\(reputationAuditEvents\)/u);
++    expect(runtimeSource).not.toMatch(
++      /(?:truncate|purge)[\s\S]{0,80}reputation_audit_events/iu,
++    );
++  });
++
++  it('keeps GBP connector operations independent from googleReviewUrl', () => {
++    const repository =
++      sourceByRelativePath.get('src/reputation-repository.ts') ?? '';
++    const connectorSection = repository.slice(
++      repository.indexOf('export async function findGoogleReputationConnector'),
++      repository.indexOf('export async function updateFeedback'),
++    );
++
++    expect(connectorSection).not.toContain('googleReviewUrl');
++    expect(connectorSection).not.toContain('facebookReviewUrl');
++    expect(connectorSection).not.toContain('instagramUrl');
++  });
++
++  it('uses the contracts policy for public projection without a second provider allowlist', () => {
++    const repository =
++      sourceByRelativePath.get('src/reputation-repository.ts') ?? '';
++    const operation =
++      sourceByRelativePath.get('src/reputation-review-social-links.ts') ?? '';
++    const contract = read(
++      join(repositoryRoot, 'packages/contracts/src/reputation/index.ts'),
++    );
++
++    expect(repository).toContain('projectPublicReputationReviewSocialLinks');
++    expect(operation).toContain('validateReputationReviewSocialLink');
++    expect(contract.match(/reputationReviewSocialLinkPolicies/gu)).toHaveLength(
++      2,
++    );
++    for (const host of ['g.page', 'facebook.com', 'instagram.com']) {
++      expect(repository).not.toContain(`'${host}'`);
++      expect(operation).not.toContain(`'${host}'`);
++    }
++  });
++
++  it('does not encode this capability in schema or migrations', () => {
++    const schema = read(join(sourceRoot, 'schema/reputation.ts'));
++    const migrations = readdirSync(join(packageRoot, 'drizzle'))
++      .filter((name) => name.endsWith('.sql'))
++      .map((name) => read(join(packageRoot, 'drizzle', name)))
++      .join('\n');
++
++    expect(schema).not.toContain('settings.review-social-links.updated.v1');
++    expect(migrations).not.toContain('settings.review-social-links.updated.v1');
++  });
++});
++
++function listTypeScriptFiles(directory: string): string[] {
++  return readdirSync(directory)
++    .map((name) => join(directory, name))
++    .flatMap((path) =>
++      statSync(path).isDirectory() ? listTypeScriptFiles(path) : [path],
++    )
++    .filter((path) => path.endsWith('.ts'));
++}
++
++function read(path: string): string {
++  return readFileSync(path, 'utf8');
++}
+diff --git a/packages/db-cloud/test/reputation-review-social-links.integration.test.ts b/packages/db-cloud/test/reputation-review-social-links.integration.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..7f3dce0cf08ee81a469d494e724e23a9267a8b46
+--- /dev/null
++++ b/packages/db-cloud/test/reputation-review-social-links.integration.test.ts
+@@ -0,0 +1,710 @@
++import { config } from 'dotenv';
++import type {
++  ReputationReviewSocialLinksOutcome,
++  ReputationReviewSocialLinksReadModel,
++  ReputationReviewSocialLinksValues,
++} from '@yuta/contracts/reputation';
++import type { PublicTenantContext, TenantContext } from '@yuta/tenant';
++import { and, eq, sql } from 'drizzle-orm';
++import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
++import { v7 as uuidv7 } from 'uuid';
++import {
++  createCloudDatabaseClient,
++  type CloudDatabaseClient,
++} from '../src/client';
++import { findPublicFeedbackConfiguration } from '../src/reputation-repository';
++import {
++  readReputationReviewSocialLinks,
++  REPUTATION_REVIEW_SOCIAL_LINKS_AUDIT_ACTION,
++  saveReputationReviewSocialLinks,
++} from '../src/reputation-review-social-links';
++import {
++  establishments,
++  organizations,
++  reputationAuditEvents,
++  reputationSettings,
++  users,
++} from '../src/schema';
++
++config({ path: '.env.test' });
++config({ path: '.env.local' });
++
++const integrationTest =
++  process.env.CLOUD_DATABASE_URL &&
++  process.env.YUTA_ALLOW_DATABASE_INTEGRATION_TESTS === 'true'
++    ? describe
++    : describe.skip;
++
++integrationTest('Reputation review social links integration', () => {
++  let db: CloudDatabaseClient;
++  const organizationId = uuidv7();
++  const establishmentId = uuidv7();
++  const otherEstablishmentId = uuidv7();
++  const actorOneId = uuidv7();
++  const actorTwoId = uuidv7();
++  let settingsId = uuidv7();
++
++  const values = (
++    overrides: Partial<ReputationReviewSocialLinksValues> = {},
++  ): ReputationReviewSocialLinksValues => ({
++    googleReviewUrl: null,
++    facebookReviewUrl: null,
++    instagramUrl: null,
++    ...overrides,
++  });
++
++  const contextFor = (
++    userId: string,
++    scopedEstablishmentId = establishmentId,
++  ): TenantContext => ({
++    organizationId,
++    establishmentId: scopedEstablishmentId,
++    actor: {
++      type: 'user',
++      userId,
++      role: 'OWNER',
++      membershipId: uuidv7(),
++    },
++    locale: 'fr-FR',
++    timezone: 'Europe/Paris',
++    entitlements: new Set(['reputation.enabled']),
++  });
++
++  beforeAll(async () => {
++    db = createCloudDatabaseClient(process.env);
++    await db.insert(organizations).values({
++      id: organizationId,
++      name: 'Review links test organization',
++      slug: `review-links-${organizationId}`,
++    });
++    await db.insert(establishments).values([
++      {
++        id: establishmentId,
++        organizationId,
++        name: 'Review links test establishment',
++        slug: `review-links-main-${establishmentId}`,
++      },
++      {
++        id: otherEstablishmentId,
++        organizationId,
++        name: 'Other review links test establishment',
++        slug: `review-links-other-${otherEstablishmentId}`,
++      },
++    ]);
++    await db.insert(users).values([
++      {
++        id: actorOneId,
++        authProviderId: `test:${actorOneId}`,
++        displayName: 'Review Links Owner One',
++        email: `review-links-one-${actorOneId}@example.test`,
++      },
++      {
++        id: actorTwoId,
++        authProviderId: `test:${actorTwoId}`,
++        displayName: 'Review Links Owner Two',
++        email: `review-links-two-${actorTwoId}@example.test`,
++      },
++    ]);
++  });
++
++  beforeEach(async () => {
++    await db
++      .delete(reputationAuditEvents)
++      .where(eq(reputationAuditEvents.organizationId, organizationId));
++    await db
++      .delete(reputationSettings)
++      .where(eq(reputationSettings.organizationId, organizationId));
++    settingsId = uuidv7();
++    await db.insert(reputationSettings).values({
++      id: settingsId,
++      organizationId,
++      establishmentId,
++      brandVoice: 'Warm and concise',
++      replySignature: 'L’équipe YUTA',
++      defaultReplyLanguage: 'fr',
++      allowEmployeePublish: false,
++      requireManagerApproval: true,
++      googleReviewUrl: null,
++      facebookReviewUrl: null,
++      instagramUrl: null,
++      publicFeedbackEnabled: true,
++      publicFeedbackSlug: `review-links-${settingsId}`,
++      notifyOnNewReview: true,
++      notifyOnNegativeReview: true,
++      negativeRatingThreshold: 2,
++    });
++  });
++
++  afterAll(async () => {
++    await db
++      .delete(reputationAuditEvents)
++      .where(eq(reputationAuditEvents.organizationId, organizationId));
++    await db
++      .delete(reputationSettings)
++      .where(eq(reputationSettings.organizationId, organizationId));
++    await db.delete(users).where(eq(users.id, actorOneId));
++    await db.delete(users).where(eq(users.id, actorTwoId));
++    await db
++      .delete(establishments)
++      .where(eq(establishments.organizationId, organizationId));
++    await db.delete(organizations).where(eq(organizations.id, organizationId));
++    await db.$client.end({ timeout: 5 });
++  });
++
++  it('reads a scoped baseline and fails closed for missing or cross-scope rows', async () => {
++    const baseline = expectSuccess(
++      await readReputationReviewSocialLinks(db, contextFor(actorOneId)),
++    );
++    expect(baseline.values).toEqual(values());
++    expect(baseline.stateToken).toMatch(/^[a-f0-9]{64}$/);
++
++    await expect(
++      readReputationReviewSocialLinks(
++        db,
++        contextFor(actorOneId, otherEstablishmentId),
++      ),
++    ).resolves.toEqual({ kind: 'configuration_unavailable' });
++
++    await db
++      .delete(reputationSettings)
++      .where(eq(reputationSettings.id, settingsId));
++    await expect(
++      readReputationReviewSocialLinks(db, contextFor(actorOneId)),
++    ).resolves.toEqual({ kind: 'configuration_unavailable' });
++    await expect(
++      saveReputationReviewSocialLinks(db, contextFor(actorOneId), {
++        expectedValues: baseline.values,
++        proposedValues: values({
++          googleReviewUrl: 'https://g.page/yuta/review',
++        }),
++        expectedStateToken: baseline.stateToken,
++      }),
++    ).resolves.toEqual({ kind: 'configuration_unavailable' });
++    expect(
++      await db
++        .select({ id: reputationSettings.id })
++        .from(reputationSettings)
++        .where(eq(reputationSettings.organizationId, organizationId)),
++    ).toHaveLength(0);
++    expect(await readQualifiedAudits()).toHaveLength(0);
++  });
++
++  it('projects unsafe legacy public links to null without modifying stored values', async () => {
++    const legacyValues = {
++      googleReviewUrl: 'https://mail.google.com/maps/yuta',
++      facebookReviewUrl: 'https://www.facebook.com/yuta',
++      instagramUrl: 'https://m.instagram.com/yuta',
++    };
++    await db
++      .update(reputationSettings)
++      .set(legacyValues)
++      .where(eq(reputationSettings.id, settingsId));
++    const row = await readSettingsRow();
++    const publicContext: PublicTenantContext = {
++      organizationId,
++      establishmentId,
++      hostname: 'reviews.example.test',
++      locale: 'fr-FR',
++      timezone: 'Europe/Paris',
++      entitlements: new Set(['reputation.enabled']),
++    };
++
++    await expect(
++      findPublicFeedbackConfiguration(
++        db,
++        publicContext,
++        row.publicFeedbackSlug,
++      ),
++    ).resolves.toMatchObject({
++      googleReviewUrl: null,
++      facebookReviewUrl: legacyValues.facebookReviewUrl,
++      instagramUrl: null,
++    });
++    expect(await readSettingsRow()).toMatchObject(legacyValues);
++  });
++
++  it('commits a multi-provider mutation with one ordered audit and preserves unrelated settings', async () => {
++    const initialRow = await readSettingsRow();
++    const baseline = expectSuccess(
++      await readReputationReviewSocialLinks(db, contextFor(actorOneId)),
++    );
++    const proposed = values({
++      googleReviewUrl: 'https://www.google.com/maps/place/Yuta',
++      facebookReviewUrl: 'https://m.facebook.com/yuta',
++      instagramUrl: 'https://www.instagram.com/yuta',
++    });
++
++    const outcome = await saveReputationReviewSocialLinks(
++      db,
++      contextFor(actorOneId),
++      {
++        expectedValues: baseline.values,
++        proposedValues: proposed,
++        expectedStateToken: baseline.stateToken,
++      },
++    );
++    expect(outcome).toMatchObject({
++      kind: 'success',
++      model: { values: proposed },
++    });
++
++    const currentRow = await readSettingsRow();
++    expect(currentRow).toMatchObject({
++      ...initialRow,
++      ...proposed,
++      updatedAt: expect.any(Date),
++    });
++    expect(currentRow.updatedAt.getTime()).toBeGreaterThanOrEqual(
++      initialRow.updatedAt.getTime(),
++    );
++
++    const audits = await readQualifiedAudits();
++    expect(audits).toHaveLength(1);
++    expect(audits[0]).toMatchObject({
++      entityType: 'SETTINGS',
++      entityId: settingsId,
++      actorUserId: actorOneId,
++      metadata: {
++        establishmentId,
++        changes: [
++          {
++            provider: 'GOOGLE',
++            previousUrl: null,
++            newUrl: proposed.googleReviewUrl,
++          },
++          {
++            provider: 'FACEBOOK',
++            previousUrl: null,
++            newUrl: proposed.facebookReviewUrl,
++          },
++          {
++            provider: 'INSTAGRAM',
++            previousUrl: null,
++            newUrl: proposed.instagramUrl,
++          },
++        ],
++      },
++    });
++  });
++
++  it('returns validation error and no-op without writing or auditing', async () => {
++    const baseline = expectSuccess(
++      await readReputationReviewSocialLinks(db, contextFor(actorOneId)),
++    );
++    const invalid = await saveReputationReviewSocialLinks(
++      db,
++      contextFor(actorOneId),
++      {
++        expectedValues: baseline.values,
++        proposedValues: values({
++          googleReviewUrl: 'https://mail.google.com/maps/x',
++        }),
++        expectedStateToken: baseline.stateToken,
++      },
++    );
++    expect(invalid).toEqual({
++      kind: 'validation_error',
++      issues: [{ field: 'googleReviewUrl', code: 'HOST_NOT_ALLOWED' }],
++    });
++    expect(await readQualifiedAudits()).toHaveLength(0);
++
++    const noChange = await saveReputationReviewSocialLinks(
++      db,
++      contextFor(actorOneId),
++      {
++        expectedValues: baseline.values,
++        proposedValues: baseline.values,
++        expectedStateToken: baseline.stateToken,
++      },
++    );
++    expect(noChange).toMatchObject({ kind: 'no_change', model: baseline });
++    expect(await readQualifiedAudits()).toHaveLength(0);
++  });
++
++  it('recovers an exact same-actor replay and classifies another actor as no-change', async () => {
++    const baseline = expectSuccess(
++      await readReputationReviewSocialLinks(db, contextFor(actorOneId)),
++    );
++    const proposed = values({ facebookReviewUrl: 'https://fb.me/yuta' });
++    const input = {
++      expectedValues: baseline.values,
++      proposedValues: proposed,
++      expectedStateToken: baseline.stateToken,
++    };
++
++    await expect(
++      saveReputationReviewSocialLinks(db, contextFor(actorOneId), input),
++    ).resolves.toMatchObject({ kind: 'success' });
++    const replay = await saveReputationReviewSocialLinks(
++      db,
++      contextFor(actorOneId),
++      input,
++    );
++    expect(replay).toMatchObject({
++      kind: 'success',
++      model: { values: proposed },
++    });
++    expect(await readQualifiedAudits()).toHaveLength(1);
++
++    const otherActor = await saveReputationReviewSocialLinks(
++      db,
++      contextFor(actorTwoId),
++      input,
++    );
++    expect(otherActor).toMatchObject({ kind: 'no_change' });
++    expect(await readQualifiedAudits()).toHaveLength(1);
++  });
++
++  it('rejects stale and ABA mutations while preserving current state', async () => {
++    const initial = expectSuccess(
++      await readReputationReviewSocialLinks(db, contextFor(actorOneId)),
++    );
++    const stateB = values({ googleReviewUrl: 'https://g.page/yuta/review' });
++    const resultB = expectModelOutcome(
++      await saveReputationReviewSocialLinks(db, contextFor(actorOneId), {
++        expectedValues: initial.values,
++        proposedValues: stateB,
++        expectedStateToken: initial.stateToken,
++      }),
++      'success',
++    );
++
++    const stale = await saveReputationReviewSocialLinks(
++      db,
++      contextFor(actorTwoId),
++      {
++        expectedValues: initial.values,
++        proposedValues: values({ instagramUrl: 'https://instagram.com/yuta' }),
++        expectedStateToken: initial.stateToken,
++      },
++    );
++    expect(stale).toMatchObject({
++      kind: 'conflict',
++      model: { values: stateB },
++    });
++
++    const returnedToA = expectModelOutcome(
++      await saveReputationReviewSocialLinks(db, contextFor(actorOneId), {
++        expectedValues: resultB.values,
++        proposedValues: initial.values,
++        expectedStateToken: resultB.stateToken,
++      }),
++      'success',
++    );
++    expect(returnedToA.stateToken).not.toBe(initial.stateToken);
++
++    const aba = await saveReputationReviewSocialLinks(
++      db,
++      contextFor(actorTwoId),
++      {
++        expectedValues: initial.values,
++        proposedValues: values({
++          facebookReviewUrl: 'https://facebook.com/yuta',
++        }),
++        expectedStateToken: initial.stateToken,
++      },
++    );
++    expect(aba).toMatchObject({ kind: 'conflict', model: returnedToA });
++    const audits = await readQualifiedAudits();
++    expect(audits).toHaveLength(2);
++    const recordedTimes = audits
++      .map((audit) => audit.createdAt.getTime())
++      .sort((left, right) => left - right);
++    expect(recordedTimes[1]).toBeGreaterThan(recordedTimes[0] ?? 0);
++  });
++
++  it('serializes concurrent writers so only one mutation commits', async () => {
++    const baseline = expectSuccess(
++      await readReputationReviewSocialLinks(db, contextFor(actorOneId)),
++    );
++    const input = (proposedValues: ReputationReviewSocialLinksValues) => ({
++      expectedValues: baseline.values,
++      proposedValues,
++      expectedStateToken: baseline.stateToken,
++    });
++
++    const outcomes = await Promise.all([
++      saveReputationReviewSocialLinks(
++        db,
++        contextFor(actorOneId),
++        input(values({ facebookReviewUrl: 'https://facebook.com/yuta' })),
++      ),
++      saveReputationReviewSocialLinks(
++        db,
++        contextFor(actorTwoId),
++        input(values({ instagramUrl: 'https://instagram.com/yuta' })),
++      ),
++    ]);
++
++    expect(outcomes.map((outcome) => outcome.kind).sort()).toEqual([
++      'conflict',
++      'success',
++    ]);
++    expect(await readQualifiedAudits()).toHaveLength(1);
++  });
++
++  it('fails closed for malformed and ambiguous qualified history', async () => {
++    await db.insert(reputationAuditEvents).values({
++      id: uuidv7(),
++      organizationId,
++      entityType: 'SETTINGS',
++      entityId: settingsId,
++      action: REPUTATION_REVIEW_SOCIAL_LINKS_AUDIT_ACTION,
++      actorUserId: actorOneId,
++      metadata: {
++        establishmentId,
++        changes: [
++          {
++            provider: 'GOOGLE',
++            previousUrl: null,
++            newUrl: 'https://mail.google.com/maps/yuta',
++          },
++        ],
++      },
++    });
++    await expect(
++      readReputationReviewSocialLinks(db, contextFor(actorOneId)),
++    ).resolves.toEqual({ kind: 'server_error' });
++
++    await db
++      .delete(reputationAuditEvents)
++      .where(eq(reputationAuditEvents.organizationId, organizationId));
++    const sameInstant = new Date('2026-09-05T12:00:00.000Z');
++    await db.insert(reputationAuditEvents).values([
++      {
++        id: uuidv7(),
++        organizationId,
++        entityType: 'SETTINGS',
++        entityId: settingsId,
++        action: REPUTATION_REVIEW_SOCIAL_LINKS_AUDIT_ACTION,
++        actorUserId: actorOneId,
++        metadata: {
++          establishmentId,
++          changes: [
++            {
++              provider: 'GOOGLE',
++              previousUrl: null,
++              newUrl: 'https://g.page/a',
++            },
++          ],
++        },
++        createdAt: sameInstant,
++      },
++      {
++        id: uuidv7(),
++        organizationId,
++        entityType: 'SETTINGS',
++        entityId: settingsId,
++        action: REPUTATION_REVIEW_SOCIAL_LINKS_AUDIT_ACTION,
++        actorUserId: actorOneId,
++        metadata: {
++          establishmentId,
++          changes: [
++            {
++              provider: 'GOOGLE',
++              previousUrl: 'https://g.page/a',
++              newUrl: null,
++            },
++          ],
++        },
++        createdAt: sameInstant,
++      },
++    ]);
++    await expect(
++      readReputationReviewSocialLinks(db, contextFor(actorOneId)),
++    ).resolves.toEqual({ kind: 'server_error' });
++  });
++
++  it('keeps state evidence valid after actor FK nullification and permits a later mutation', async () => {
++    const transientActorId = uuidv7();
++    await db.insert(users).values({
++      id: transientActorId,
++      authProviderId: `test:${transientActorId}`,
++      displayName: 'Transient Review Links Owner',
++      email: `transient-${transientActorId}@example.test`,
++    });
++    const baseline = expectSuccess(
++      await readReputationReviewSocialLinks(db, contextFor(transientActorId)),
++    );
++    const firstInput = {
++      expectedValues: baseline.values,
++      proposedValues: values({ googleReviewUrl: 'https://g.page/yuta/review' }),
++      expectedStateToken: baseline.stateToken,
++    };
++    const committed = expectModelOutcome(
++      await saveReputationReviewSocialLinks(
++        db,
++        contextFor(transientActorId),
++        firstInput,
++      ),
++      'success',
++    );
++    await db.delete(users).where(eq(users.id, transientActorId));
++
++    const [auditAfterDeletion] = await readQualifiedAudits();
++    expect(auditAfterDeletion?.actorUserId).toBeNull();
++    const afterDeletion = expectSuccess(
++      await readReputationReviewSocialLinks(db, contextFor(actorOneId)),
++    );
++    expect(afterDeletion.stateToken).toBe(committed.stateToken);
++    await expect(
++      saveReputationReviewSocialLinks(
++        db,
++        contextFor(transientActorId),
++        firstInput,
++      ),
++    ).resolves.toMatchObject({ kind: 'no_change' });
++
++    await expect(
++      saveReputationReviewSocialLinks(db, contextFor(actorOneId), {
++        expectedValues: committed.values,
++        proposedValues: {
++          ...committed.values,
++          facebookReviewUrl: 'https://facebook.com/yuta',
++        },
++        expectedStateToken: committed.stateToken,
++      }),
++    ).resolves.toMatchObject({ kind: 'success' });
++    expect(await readQualifiedAudits()).toHaveLength(2);
++  });
++
++  it('rolls back both sides when settings update or audit insertion fails', async () => {
++    const baseline = expectSuccess(
++      await readReputationReviewSocialLinks(db, contextFor(actorOneId)),
++    );
++    const input = {
++      expectedValues: baseline.values,
++      proposedValues: values({ googleReviewUrl: 'https://g.page/yuta/review' }),
++      expectedStateToken: baseline.stateToken,
++    };
++
++    await installSettingsFailureTrigger();
++    try {
++      await expect(
++        saveReputationReviewSocialLinks(db, contextFor(actorOneId), input),
++      ).resolves.toEqual({ kind: 'server_error' });
++    } finally {
++      await removeSettingsFailureTrigger();
++    }
++    expect((await readSettingsRow()).googleReviewUrl).toBeNull();
++    expect(await readQualifiedAudits()).toHaveLength(0);
++
++    await installAuditFailureTrigger();
++    try {
++      await expect(
++        saveReputationReviewSocialLinks(db, contextFor(actorOneId), input),
++      ).resolves.toEqual({ kind: 'server_error' });
++    } finally {
++      await removeAuditFailureTrigger();
++    }
++    expect((await readSettingsRow()).googleReviewUrl).toBeNull();
++    expect(await readQualifiedAudits()).toHaveLength(0);
++  });
++
++  async function readSettingsRow() {
++    const [row] = await db
++      .select()
++      .from(reputationSettings)
++      .where(
++        and(
++          eq(reputationSettings.organizationId, organizationId),
++          eq(reputationSettings.establishmentId, establishmentId),
++        ),
++      )
++      .limit(1);
++    if (!row) throw new Error('Expected test settings row.');
++    return row;
++  }
++
++  async function readQualifiedAudits() {
++    return db
++      .select()
++      .from(reputationAuditEvents)
++      .where(
++        and(
++          eq(reputationAuditEvents.organizationId, organizationId),
++          eq(reputationAuditEvents.entityType, 'SETTINGS'),
++          eq(reputationAuditEvents.entityId, settingsId),
++          eq(
++            reputationAuditEvents.action,
++            REPUTATION_REVIEW_SOCIAL_LINKS_AUDIT_ACTION,
++          ),
++        ),
++      );
++  }
++
++  async function installSettingsFailureTrigger() {
++    await db.execute(
++      sql.raw(`
++      create or replace function yuta_test_fail_review_links_settings()
++      returns trigger language plpgsql as $$
++      begin
++        raise exception 'synthetic settings failure';
++      end;
++      $$;
++      create trigger yuta_test_fail_review_links_settings_trigger
++      before update of google_review_url, facebook_review_url, instagram_url
++      on reputation_settings
++      for each row execute function yuta_test_fail_review_links_settings();
++    `),
++    );
++  }
++
++  async function removeSettingsFailureTrigger() {
++    await db.execute(
++      sql.raw(`
++      drop trigger if exists yuta_test_fail_review_links_settings_trigger
++      on reputation_settings;
++      drop function if exists yuta_test_fail_review_links_settings();
++    `),
++    );
++  }
++
++  async function installAuditFailureTrigger() {
++    await db.execute(
++      sql.raw(`
++      create or replace function yuta_test_fail_review_links_audit()
++      returns trigger language plpgsql as $$
++      begin
++        if new.action = '${REPUTATION_REVIEW_SOCIAL_LINKS_AUDIT_ACTION}' then
++          raise exception 'synthetic audit failure';
++        end if;
++        return new;
++      end;
++      $$;
++      create trigger yuta_test_fail_review_links_audit_trigger
++      before insert on reputation_audit_events
++      for each row execute function yuta_test_fail_review_links_audit();
++    `),
++    );
++  }
++
++  async function removeAuditFailureTrigger() {
++    await db.execute(
++      sql.raw(`
++      drop trigger if exists yuta_test_fail_review_links_audit_trigger
++      on reputation_audit_events;
++      drop function if exists yuta_test_fail_review_links_audit();
++    `),
++    );
++  }
++});
++
++function expectSuccess(
++  outcome: Awaited<ReturnType<typeof readReputationReviewSocialLinks>>,
++): ReputationReviewSocialLinksReadModel {
++  if (outcome.kind !== 'success') {
++    throw new Error(`Expected success, received ${outcome.kind}.`);
++  }
++  return outcome.model;
++}
++
++function expectModelOutcome(
++  outcome: ReputationReviewSocialLinksOutcome,
++  kind: 'success' | 'no_change' | 'conflict',
++): ReputationReviewSocialLinksReadModel {
++  if (outcome.kind !== kind || !('model' in outcome)) {
++    throw new Error(`Expected ${kind}, received ${outcome.kind}.`);
++  }
++  return outcome.model;
++}

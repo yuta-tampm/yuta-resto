@@ -1,0 +1,607 @@
+{
+  "recordedAt": "2026-10-01T14:50:43.810Z",
+  "authority": "Current user explicitly approved prerequisite LF restoration and continuing final review (steps 1 and 2).",
+  "baseline": "2dd5a02ba076a65928e2a80afe0b36d0d10284fd",
+  "head": "57d7b726774b8ddbae2a09aa580c74d9c1764c95",
+  "scope": "Only verified task files whose approved/committed original bytes are restored. Original packet bytes restored after retaining the temporary invalidation event in Tasks. Independent revalidation pending; no gate approval manufactured.",
+  "restoredFiles": [
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/_components/today-dashboard.tsx",
+      "beforeSha256": "f38539ebdce87a0befbe186102e1dd3e74c10365a4306766e3854eaf2b3a7afc",
+      "restoredSha256": "65977ccfe7c2df30debfa28e6a488fbaf9573ba7c7d306c56a173feeb8e833ea",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/_components/today-reviews-panel.tsx",
+      "beforeSha256": "dbb3d6faba81cf4fb50530828199b10abe94ba605a1926d92bbe0622ea0eefba",
+      "restoredSha256": "f1f04a5b4747675d7a1be6a23a7a3573eb0f1ea30c54339bc4c30dba49b1c03d",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/_components/today-summary-cards.tsx",
+      "beforeSha256": "6000bd273015b3d2b25608d6de218b40f5dfcaa75ee9cb406fbb851cb3d4d586",
+      "restoredSha256": "a6cae360c687be97fb77d1ed2efeca93fdb8435c6e992d80ddab86be74c9eabb",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/loading.tsx",
+      "beforeSha256": "0d0de2e1e3649dde2715eeac6d73593953bc9c4b2291c71b6791a849d0fb72eb",
+      "restoredSha256": "efe6a82406ebef806936944fb6d9dcd2d136889360252f1ad84b2c984fd79b22",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/page.tsx",
+      "beforeSha256": "e192bab12e5fa80a9ac467f28f82701f751834bd8a0cb98f9479a6f450bc2f4d",
+      "restoredSha256": "ddcd24c1533907de4ae593f08570befe98f6ebd62f5550c178ce8301b7af1f40",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/today-data.ts",
+      "beforeSha256": "71cd6a40676b42d74425ce2564ef3b2253db7c4dd86cee3dd303755e54d0a805",
+      "restoredSha256": "483da3f2c47067c50c5017a50bbea257a5e43ddec8ac436adb0bf40021009a34",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/registre-personnel/actions.ts",
+      "beforeSha256": "a852a836a562cada2793f21095256f33fdf20775faeafc3bb8f69cc2e01c1492",
+      "restoredSha256": "b4acb5f90d710a46737dd377b3f5c4c93d14de3da9e9a09a466da5e5c51ee480",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/actions.ts",
+      "beforeSha256": "de2834ae36b7708d8dc33e4be50a000278eae6dd1273d690273d058a738f43c7",
+      "restoredSha256": "362cf9ce9f0535a554b27cad1e25ed9dc9e138279c33e25114cdfc6df3987807",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/actions.ts",
+      "beforeSha256": "3d834902025b1bad0c5966ae61e2719bed413115533eae84607438c206fff5d3",
+      "restoredSha256": "e5c14a4dcf25169c972d8cb074ba1dd83ee7a5b924021e62c575984e8c48503c",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/page.tsx",
+      "beforeSha256": "b7a2a7f88c66081a00568f547d1267882b65e336493ba1186da3eb2b777a05f1",
+      "restoredSha256": "9c6f2807f248d90dd02a1a666c35ed5ee60a6ed6ea96ef9d6477b69160762eda",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/restaurant-knowledge-loader.ts",
+      "beforeSha256": "e5a5a79ccb921cae86e1cddc4f15ab6ea96dc3b37ac0f3ec5d9c19b28bcded9e",
+      "restoredSha256": "41d768c77824c6b1914051b19e62097cd83966815d36dbb05fe2d81818795f9b",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/layout.tsx",
+      "beforeSha256": "2f0f8523319cd203d4b48c9e836eadbca87d375feb6811953a80f86d708d2dd9",
+      "restoredSha256": "809d50352d7064fac4aa42c28197a7ea4b98b2d21ea1d52af7316d83a795dd74",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/_components/google-connector-panel.tsx",
+      "beforeSha256": "cc2a1caec1aa5954013b8535d0a9ab89b133ec50a5c03d237ec2bedaf1a72bbe",
+      "restoredSha256": "8d2c61182c3a3388c6a4d933910b159bbb9d31629aca51dd66acb4a9ba0c5e16",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/_components/integration-status-alerts.tsx",
+      "beforeSha256": "65f2ec80ed8d9d866e35299bbb74210a485f65ea08c155b1f355e16e9300c682",
+      "restoredSha256": "c20c5b317944f238d415837ced381deaedde687b9b1045fff255dc9be8151081",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/integrations-model.ts",
+      "beforeSha256": "24090803196f0461026738df50f56c67b7a9497ddb5414cd9af5eaa4de11e702",
+      "restoredSha256": "59784efc30b823384fef12b65ece83d84f5abc04d76c97dc4bcb466de445f565",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/page.tsx",
+      "beforeSha256": "88176ea86b35d60d82cf50ac74d998af35e7ee877f804408d29039369684bb33",
+      "restoredSha256": "5815aeed6b4f3309d03e07c40032a8c7fa9ae8259bd645c1d2935ab3f2143143",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-detail.tsx",
+      "beforeSha256": "aa1de98313dbdeb0ab9c601cb8694f48abc7318850445bb706e38a0c658498d8",
+      "restoredSha256": "12f0f4660170571c938c9cc267132f8e8e90d6415fff4e4d301aaee7bc87ac99",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-reply-form.tsx",
+      "beforeSha256": "3e7f0baefbf544b73dab5495c2bcdc539182548e9ee8548f873f85877654ee93",
+      "restoredSha256": "47a97ce3269e2355fd45ec7cce4b9c007088e63872ecd0c10a611f2219a31926",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-list-panel.tsx",
+      "beforeSha256": "9b29e3af7ee29ffa60fcabf4b712e1330d1445bbf6a5554295d087c37666cfd5",
+      "restoredSha256": "683e0535e27ab7aeb00c7221612a902faa203e09934664a50e8f05ae720a3213",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-loader.tsx",
+      "beforeSha256": "62f61a7437ef9f3e7ec23c718e6898ff6e45e9527748cac4b33e4cebff2899b7",
+      "restoredSha256": "7eebe9f824e7b6557804f4faf471b2f9efd702af88b418b5d25b5afaeefd6838",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-page.tsx",
+      "beforeSha256": "d454c67344a99ef68f7a5e3cb8f0b0e33cd399af612d39959cca3a2f41a32547",
+      "restoredSha256": "033f6e46c6448705c54e7cf7fda7c1294e5d68993feab521d024f539987e2ff2",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/actions.ts",
+      "beforeSha256": "50fbec61cb16dfcfd3f8828c4131f76090e592e6b1f559889f22fd10c46c4685",
+      "restoredSha256": "7e09be772e9a21658e3b377eb244f2ae932bdd0fc8f837ec56d3c9ba25c9d4b9",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/reviews-model.ts",
+      "beforeSha256": "16e658d3c7a8c4bb07b0edd72752fde5902aa8bef300fecb4b9ef1f26b165f79",
+      "restoredSha256": "b872bd35f5d194590c69040417a7602f64d342291d014ab33629e86391322e06",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/globals.css",
+      "beforeSha256": "db908cbefc5b856024c2ada99860de9e1f84a9c5e310e097dcb740d4d4fb5a9c",
+      "restoredSha256": "11754e779cf09f689e3ef0c7e1615c3f91bae30a81e7af064641bc2ed8bb2fde",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/app/pointage/[establishmentSlug]/page.tsx",
+      "beforeSha256": "d0b2e6093d0d0f49af5e18e2fb0b99eca3ec13927b952d1f8327ac2f987ce5f0",
+      "restoredSha256": "ed9c383a6f07d8c06012ab98baf4194db8638f93c21ca6e7f6730b8ea56f7e2b",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/components/backoffice/backoffice-frame.tsx",
+      "beforeSha256": "d693e4d6117f5c14abd37677677971eba48b5a0677f49ab07037c33ef66d7e44",
+      "restoredSha256": "5316b6eddfa929dda50ab15a13555813ae152eea34d1583d463cbea2ffbbf1c2",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/components/backoffice/backoffice-navigation.ts",
+      "beforeSha256": "1534221c92ea35cd1439f420943ffbc29e36b9b14ecd9e8293c29856964731b9",
+      "restoredSha256": "fbbc20864f9c47e79735113a56c915665a0bba9db9cc68183732f89204091cdd",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/lib/backoffice-exposure.ts",
+      "beforeSha256": "b1946e09c9d61ed7aa9564deb2853c38938458ddaa4e2f72648aef3f0596fa3d",
+      "restoredSha256": "a31b791402463ac5a4729e15e756da859509d6b56a94e57ae0d2eb987c4b24e6",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/proxy.ts",
+      "beforeSha256": "ea4fc8984d5828de3c62a820712d954915006d65eacae4c3dccc79ebc36a96a6",
+      "restoredSha256": "dc4856a38870c25ca1fb04c58f82a2308143f1b5cd02eb01eda8324f9dca3d86",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/server/auth/session.ts",
+      "beforeSha256": "f5f497667c7d14459fb6d05a686034b71f217a8e4b5e3be67524b397afdaa167",
+      "restoredSha256": "58e625381ada996abf432c9110c66a8d1020e6139eb379159bdbde0e8c21355e",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/server/backoffice-exposure-config.ts",
+      "beforeSha256": "805ace566927d819022f7508a569c26ed684e1d3d637fac510df3a67257d22c7",
+      "restoredSha256": "5ae209154797e0fdad5e436600b5485aa72087116d29a8fceba0fb353650d731",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/server/backoffice-exposure.ts",
+      "beforeSha256": "8d3ec3232ff73c3ad509da8119442116658d6dc2100bdf9121f9e4029cf45d46",
+      "restoredSha256": "7ea15bdf2a44b2fccda4c2cd0a3125e63002e77fec0731c8b800970620944d35",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/server/pointage/raw-clocking-http.ts",
+      "beforeSha256": "15029c07faac7dcdbdc996051635fa9719303557f60c3a2a2a2dd2451f4e284c",
+      "restoredSha256": "87827cbc953c8d568e43acc938ac544e8cca0a07fed23ab253d4ef75294b143d",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/src/server/reputation/release-a-setup.ts",
+      "beforeSha256": "ed9216dbd09e8d4190c29917d4287c02d8edcd13b142e80692d3df89ee986fa3",
+      "restoredSha256": "0266365222161012f09d84fdb87631b060b0f6d7451bfc9cb4393d8bbc8cc7b6",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/test/backoffice-exposure-actions.test.ts",
+      "beforeSha256": "f0c465afaf6a0a9071a26338d847da680c2d177e440ba7e265592aecb534410f",
+      "restoredSha256": "c30dc7805d082f010532bf3f9c6e2904d1d00610ca7d2aa630e5637ab0b80afc",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/test/backoffice-exposure.test.ts",
+      "beforeSha256": "0ba0ce582bb33203379e68434706007340e2ce5d1964de8b09ee770806d3ca26",
+      "restoredSha256": "8cb826050f02240f714504a86ddd1fde7d01f3909de98bb177302e7951bd5ee2",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/test/formalites-persistent-draft-component.test.tsx",
+      "beforeSha256": "77d3a4f38f6bc9457b94a196c39fe81dc5bb3222a80379eab3d8fae4236348cd",
+      "restoredSha256": "1630549d98ccaa64c419120ed24e262c2f4e27f02c4c3fc0b5164830b575fa51",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/test/pointage-raw-clocking-inventory.test.ts",
+      "beforeSha256": "ee3078c14d97fbcca27983710731bf0250422326404060372eda2509ef006f9a",
+      "restoredSha256": "e52e23b7896b74eeeb0e84e993803223715d2d6b030760f97dceb56829748aa0",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/test/pointage-release-a-denial.test.ts",
+      "beforeSha256": "9925778789c167b6ab79f551c104c321231a2971ce886c543ed758151847034e",
+      "restoredSha256": "6e2985a04fb99344d3b5e5e5a34e1aa4d52b4178148946b0a285348a46bd510c",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/test/release-a-integration-copy.test.tsx",
+      "beforeSha256": "980c20197b17d355a2668e666cd9cdde45cd5b22ee3d069aa553b30560b10892",
+      "restoredSha256": "ba53c32112f663ac7f4499bcc5a795aa64ee5133c9e542ce969544b684090246",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/test/release-a-profile-auth.test.tsx",
+      "beforeSha256": "1db7935334bcfbb7c476766fcb35eb14573b7281543c5a0e44d9ff707d1ce2d5",
+      "restoredSha256": "78389bdead456edaf290dc2382f155bcd410d89e7570e496f9fcddb888028d76",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/test/release-a-reputation-actions.test.ts",
+      "beforeSha256": "e0950fde3b9a0d8b58ef5453ac9059385244b588f02854ba14c66e0cc083ee78",
+      "restoredSha256": "72e656481d96fb8c3446e9a92863743450aa88db8a61763bbd76ef5f9ea271a0",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/test/release-a-reputation-loaders.test.tsx",
+      "beforeSha256": "ac0862e61b0dca23d7bb1c49b6d24b8b67805f78c81ca75a8ca80e8f9d8d9628",
+      "restoredSha256": "6bd4d4f30a3db5ae75074b8a5c0e5f0f2375a5ff66e2415bc6febb7346d5e17f",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/test/restaurant-knowledge-loader.test.ts",
+      "beforeSha256": "4f5feca58e925a43f71b89bebb99c257c3105b3c4e31c100b6b99fbf2d162f7b",
+      "restoredSha256": "88b3486a9741bdfa1217d4243a6092bfbff6f5b426599a195581b8816b624472",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "apps/backoffice/test/review-reply-form.test.tsx",
+      "beforeSha256": "af99086cbf0a5afc029edaf7bb2d2cfe3752df6447fb517567857ddb6317fb98",
+      "restoredSha256": "389439efbd0d1e3b8283bed3f7fb31f6e963ccf0c014ddb8156ce8b07d6540dc",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/CURRENT_STATE.md",
+      "beforeSha256": "4c3c218c17a9a2f6f93bb5b629799abe988245be89c11bde825b563450621141",
+      "restoredSha256": "40c472d8f5a98c4d225d9a3e90d7112c9dd0668173c8f8c91f907faafdb25f8a",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/README.md",
+      "beforeSha256": "22026acfc62a59e128e05116793b6a7a974981b7a8eefb5d883a4a6888b4823e",
+      "restoredSha256": "5a6ffc713022179dc4fd57edd920cb3147b8bcb15a82b76b6d22e67f21f7d0c7",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/decisions/ADR-009-release-a-customer-exposure.md",
+      "beforeSha256": "376b4d5b795e04dde125cf9a2517993a971b5c3aa051e6da72b5360cce7f9b1c",
+      "restoredSha256": "e8ab1be4f677e6eeaf649c9349c131c10a53c230eec968d30e05254054a1991e",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/features/establishment/general-information/README.md",
+      "beforeSha256": "4a718f1eaa4810a60a1362dcd95e094bad1c9362bf09966767faef9441f85dcf",
+      "restoredSha256": "518abd83927e7ec7dd61bde5675268646ca92de96ee5c14f7e794a50cbefc01d",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/features/identity-access/README.md",
+      "beforeSha256": "b5a63fc44604cb6e3bb3a64de5d5b04c203f75df681800e9580c009b5a1d6902",
+      "restoredSha256": "5d519e120cead785ea27f89d2990c5db5ae50398127eba3db730c6aa9265772e",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/features/reputation/README.md",
+      "beforeSha256": "4a930de2f625d253f8f658e2a06ed3b9c035b97dd9bac7b18d7bde9a8090078e",
+      "restoredSha256": "2e2d14e33698bb667d1ea6f140930c1a593d65ee927ce7c4470b7187cd6f303c",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/features/today/README.md",
+      "beforeSha256": "23b820ef89f0302b0cda525a771e9f3f4d796ec0683620cc0a4ccba34664f10a",
+      "restoredSha256": "666315bc75371625bee357f94fc9a4fc5eb35af30e57b735615c79f88d4f8cd3",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/operations/DEPLOYMENT.md",
+      "beforeSha256": "0bb191ea4350cefae9b259e418c5cf6a9824e0cd5afb5a43d42e274b68d6f374",
+      "restoredSha256": "c438d49bdbfcda5a48987aa172df94328f9f1011594ea7e40485cae52fdca7b0",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/operations/LOCAL_DEVELOPMENT.md",
+      "beforeSha256": "5301e946bbe5e527da54c6166e540a2641e8ceadb2155769b8f569923ff10fc4",
+      "restoredSha256": "eb28b14272eaca96e13f542f88a73d4a79fd710b6195de72e0129928ec0ebd0c",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/01-analysis-review.md",
+      "beforeSha256": "64ffd1d8bfe4e1e87b6d2424ed6284ce1acefdf98b4dbe5c98ace4aa5e4d16bb",
+      "restoredSha256": "826d2d07d901a6b3fc4878f9bfa945af1cdd6d2ac860d79705b13b1f6f40d0ad",
+      "restoresOriginalPacket": true
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/02-specs-review.md",
+      "beforeSha256": "b2a38451e73442acfb777eee3b0ee230f108546325b9a085eb8a8fc468135bda",
+      "restoredSha256": "8b2792e0bde5d9b5ec61c4e756ead0427a9b34324215f072e38dea55b69c6ff8",
+      "restoresOriginalPacket": true
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/02b-design-review.md",
+      "beforeSha256": "26c13d093f4c07d070c83b8119e9bc3c26e5fc1812314b7a631515871e74447a",
+      "restoredSha256": "7cfae86e02d32f8eff63c1a957c82e29dfab3753053fd1609b11ec7db45f92a5",
+      "restoresOriginalPacket": true
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/candidate-manifest.json",
+      "beforeSha256": "a3c7a9a4c29c1f9f3e730bab57f4f5fb9bc543205ac8f261014773e030629ac6",
+      "restoredSha256": "d5855bf31e2c38b417d282b992e5fcf088f13b8a263213cf55f977af6955e59f",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/implementation-files.json",
+      "beforeSha256": "80cbb02ba3ab0241fa8808b9d9a910c29ff85e823ed61fbe9c7f119d721878e7",
+      "restoredSha256": "8c55eb3d9370915db9053b8650453c89bc0ab612f4c5c8fd6e25b7fe229f613b",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/implementation.diff",
+      "beforeSha256": "ff6e9f909f0b44621f9d97219306369d19157925e72a2ff6f378df5a45c143bf",
+      "restoredSha256": "ba52727e59948295e33a9f001e060d54f75c55fc538be69bb82981902808790f",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/browser-results-generation1.json",
+      "beforeSha256": "0f268daf7de334e0dac05f4ca448736f5e80f1b5d9e0be21bb85722c83cfedd7",
+      "restoredSha256": "f6ffcca0b97054d0fce75e9a4368bb68e50f4b1df2b45f36d83480c0c7c32fe3",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/browser-results-generation1.json.raw",
+      "beforeSha256": "ef74fc3633e00c3f02545fe39f46be27a4a786d2b793ac4479340e68a4e0209e",
+      "restoredSha256": "616828cd09b5848f69292d27231a4f1687a27c93af293d2426c8897232d7a7bd",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/browser-results.json",
+      "beforeSha256": "0f268daf7de334e0dac05f4ca448736f5e80f1b5d9e0be21bb85722c83cfedd7",
+      "restoredSha256": "f6ffcca0b97054d0fce75e9a4368bb68e50f4b1df2b45f36d83480c0c7c32fe3",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/browser-results.json.raw",
+      "beforeSha256": "ef74fc3633e00c3f02545fe39f46be27a4a786d2b793ac4479340e68a4e0209e",
+      "restoredSha256": "616828cd09b5848f69292d27231a4f1687a27c93af293d2426c8897232d7a7bd",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/browser-results-generation2.json",
+      "beforeSha256": "5d7454952f7a7da97fdea2b3c71744fc7a0598a72b659b54b9fd5736d0e4a4f1",
+      "restoredSha256": "db94f3289b2d9b9f4860387f0523a763dcea40a216fa7f8546820bdf5d603588",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/browser-results-generation2.json.raw",
+      "beforeSha256": "52f4782ef1438d8f3dbec67885e17b74a4173aa2cb73734956027c92ac35e96d",
+      "restoredSha256": "0a374820d76c31d337ac1cf18d6ef736c698df2cbaecd85b991072af71ef4035",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/browser-results-generation3.json",
+      "beforeSha256": "dd5e420af7fb74464aaee55ad56e6d432e7b7dee3a4a613495cb29c9064d5270",
+      "restoredSha256": "3d76981de5a053e53ef226caa4af266a8e1827e0bf0dd90365d508456f0a65c0",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/browser-results-generation3.json.raw",
+      "beforeSha256": "c9c65d0397488475b3c2d99b5d86548d0e224528796f2c0bf4b16dbfbbf7326b",
+      "restoredSha256": "011c5e29318f5f37391f139c1c1a71c70404a201c446acaebce13b6288b7b398",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/ui/pages/today/ACCEPTANCE_CHECKLIST.md",
+      "beforeSha256": "b7c3404070119ba25db54349b524110676f8186ace4a16d96055ffdf71368d1e",
+      "restoredSha256": "95025e7f1dd91142699a96396b9d7f3ee0de633aba1a8fe885e2e926a4ab2238",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/ui/pages/today/DATA_AND_INTERACTION_SPEC.md",
+      "beforeSha256": "5a2661abaf4199d70e0ff0adb069c821bb6efd6df4767bfa5d0fc881b652de23",
+      "restoredSha256": "c00948f53a6593f97765f12beedcd2b5bb6b67b70e56bf42e873f1bd1a6d5049",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/ui/pages/today/PRODUCT_SCOPE.md",
+      "beforeSha256": "81596009acbd15fda33bf548cbc77375f2d12cd3e302ad56c9b1e8fd923b3d66",
+      "restoredSha256": "0b8b9408ab4438a44e0dd2fd29499a4a95665acc3e68612cd5392603d5afa6c7",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/ui/pages/today/README.md",
+      "beforeSha256": "464fc42e2f2783dc28a938664505d471c8caf599ebbd981d16b9e091996e0b85",
+      "restoredSha256": "967b7058f9df1aa5da8ecba5e4358898672def1b48fd5e1140f681b57bd300d9",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "docs/ui/pages/today/UI_SPEC.md",
+      "beforeSha256": "cbab3ada3ba35cb52637f17be69402d2de981dce8cf3aaf8d6995c0218fae973",
+      "restoredSha256": "c837208a83df9fa245c8e72cd4ae92e271e580d4f96c4ee7564dda16469a0bee",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/.openspec.yaml",
+      "beforeSha256": "473dcff46d3dd148eb4ff4ad5b408332da1cacdb0f1cd744bc12778e202c0450",
+      "restoredSha256": "edbcd0b0cb2d4619b326f4293e56c1d31f5ce6be37dda83923ff58267b46f1ab",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/analysis.md",
+      "beforeSha256": "c505e70fb2b0da065199e1c6ceb2e62fa6595f41f5e5e4bd5a75e496e6bf0679",
+      "restoredSha256": "8876b435196b052652467bbe8d51404d55fd9a0c5b39f4ff335939e0dc219403",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/design.md",
+      "beforeSha256": "0eae1dd2e03199bc88c5971bd55e363cc89df6ef41169d5d061b8b67f6303e2a",
+      "restoredSha256": "c1eadd9d79dca73d8a6d365c53b7fe29665e4042ee0144f9725cda20fd5ee8c4",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/proposal.md",
+      "beforeSha256": "4f31897163a4a75648cf35c9b46e79d69a20944e42698e61566114af21010485",
+      "restoredSha256": "bd29ab84194077951f25e1e672bccc805229bf4f2379d14b3572b0ace57f3541",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/authorization/formalites/spec.md",
+      "beforeSha256": "a2ee54ef08d130eb444381ede18d71e599f34cf083408e9f44c802a68aaa0ebb",
+      "restoredSha256": "5a914d88ce8ea35fa8356af1725b8e76ba389683f063c0216aca2bd712ad8412",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/authorization/pointage/spec.md",
+      "beforeSha256": "c10dbcb4af075388fe8cee10863a88505d22ecf8b786c3471c4bac060121ba1e",
+      "restoredSha256": "301a901252af8e80116dbc2805d33e7ea71964692154bdb53fa81bd8582dad67",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/backoffice/release-a-customer-exposure/spec.md",
+      "beforeSha256": "8d01b45e54300097be82811574e87a2c2d018977d569b6e8a85b5776d73d8fc1",
+      "restoredSha256": "deefad70fd9b787c63f60d8569f617027510b5f3a415e03185b667124ebb8f9c",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/formalites/persistent-draft-foundation/spec.md",
+      "beforeSha256": "b6c6e843af7d8b0f18875b5a05ec4d74c344a05ca9f0761a45693d80e778ec12",
+      "restoredSha256": "3e087148d39ab4b15f80f6133c1f60fbd83d7e4a6703d30874dc2bbe2563c97e",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/pointage/raw-clocking/spec.md",
+      "beforeSha256": "eaf7f8adfdeb1e0cce03171c1452b2d15a426fd7e28c68d6ba1dcdbecf4d579a",
+      "restoredSha256": "a012b2650f87b8159d8a184ec1b639089a6a68e7460b65dbb32a7f445c71600b",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/reputation/review-social-links-configuration/spec.md",
+      "beforeSha256": "09d676e493894029654f7bf5f8526a3d8cbf5fabb6571d3998f63b6a2ce8175c",
+      "restoredSha256": "8c585770d2b83cdf9450f4acc9c167474661dadc6ed48da96eb8331f52159d8f",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/communication-identity/spec.md",
+      "beforeSha256": "859350f097a7da992ee50d461aacfdf61bc0f041ad77c7be0512f48a87ae8efc",
+      "restoredSha256": "d2d90b1908da0385c1bf020c873e0711f97dd7904abc5037fe82a334e49da50c",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/concept-history/spec.md",
+      "beforeSha256": "e27ab2ba687ee92292d322dcc8885bda41ab01091e10670ca274894ad51295de",
+      "restoredSha256": "4f08f3518efb351edca4c9dc5ac0db919315f9c93c15fc787bd170113a028aab",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/cuisine-know-how/spec.md",
+      "beforeSha256": "d8159954b33f4d7ff5ce6f3cc56e1b972d32c2f992b1d8f855a5a533d9f532e4",
+      "restoredSha256": "588c90bf5f6eaa3b61d38c21ecf00f1f2e8601710942ede0c419aa1655d24645",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/customer-experience/spec.md",
+      "beforeSha256": "cb0404fff10669ae74d244e137ad2c8a9e7f2d093f0e4a33899ff0684edf4777",
+      "restoredSha256": "68f358ac24a13ca649ffc10fce8678c2bc620ba8c4fe06cefedecdd3fcbd9f23",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/team-culture/spec.md",
+      "beforeSha256": "8c733580061dec31cdc72d00f7521f029ad966164a48f8219185570e94ae0e65",
+      "restoredSha256": "38727fcc87e815bf9247146860d0ac9b8777c9bffc6e567f206827f218921da3",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "openspec/changes/release-a-customer-exposure-foundation/specs/restaurant-knowledge/validated-knowledge/spec.md",
+      "beforeSha256": "d9c8952632be764e613a4ab91e4c92d5ca05967582902e5779415a29081c2d54",
+      "restoredSha256": "7b69f767f367145a7f2e41692437f572600371b977ebd890c4793bba98275e40",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "packages/db-cloud/src/reputation-repository.ts",
+      "beforeSha256": "7e2de5b19b87cb5d6d56c8dc79d04336e12470d28268adceabc9b397f940bddb",
+      "restoredSha256": "5a859833faa0848d6547d1ce51fce52e097453ae62e09115ff2f54f191ef000a",
+      "restoresOriginalPacket": false
+    },
+    {
+      "path": "packages/db-cloud/test/reputation-release-a-exposure.integration.test.ts",
+      "beforeSha256": "8ca22585a9877aef8573e4ae3da6d640075dfca7937d1fbe20aec5c7a8fe6461",
+      "restoredSha256": "1d78c15ea5a1c0ee070929935cdbf819474cab57b0c60e9a4da3d2ce09f943d3",
+      "restoresOriginalPacket": false
+    }
+  ],
+  "originalRawArchives": [
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/browser-results-generation1.json.raw",
+      "beforeSha256": "ef74fc3633e00c3f02545fe39f46be27a4a786d2b793ac4479340e68a4e0209e",
+      "restoredSha256": "616828cd09b5848f69292d27231a4f1687a27c93af293d2426c8897232d7a7bd",
+      "committedOriginalSha256": "616828cd09b5848f69292d27231a4f1687a27c93af293d2426c8897232d7a7bd"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/browser-results.json.raw",
+      "beforeSha256": "ef74fc3633e00c3f02545fe39f46be27a4a786d2b793ac4479340e68a4e0209e",
+      "restoredSha256": "616828cd09b5848f69292d27231a4f1687a27c93af293d2426c8897232d7a7bd",
+      "committedOriginalSha256": "616828cd09b5848f69292d27231a4f1687a27c93af293d2426c8897232d7a7bd"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation2/browser-results-generation2.json.raw",
+      "beforeSha256": "52f4782ef1438d8f3dbec67885e17b74a4173aa2cb73734956027c92ac35e96d",
+      "restoredSha256": "0a374820d76c31d337ac1cf18d6ef736c698df2cbaecd85b991072af71ef4035",
+      "committedOriginalSha256": "0a374820d76c31d337ac1cf18d6ef736c698df2cbaecd85b991072af71ef4035"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/generation3/browser-results-generation3.json.raw",
+      "beforeSha256": "c9c65d0397488475b3c2d99b5d86548d0e224528796f2c0bf4b16dbfbbf7326b",
+      "restoredSha256": "011c5e29318f5f37391f139c1c1a71c70404a201c446acaebce13b6288b7b398",
+      "committedOriginalSha256": "011c5e29318f5f37391f139c1c1a71c70404a201c446acaebce13b6288b7b398"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/browser-results-supplement1.json.raw",
+      "beforeSha256": "b9ed12095917c79f3add4801a1da68435960b106f0ffdda07919689b4e70f682",
+      "restoredSha256": "b9ed12095917c79f3add4801a1da68435960b106f0ffdda07919689b4e70f682",
+      "committedOriginalSha256": "b9ed12095917c79f3add4801a1da68435960b106f0ffdda07919689b4e70f682"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/preflight.json.raw",
+      "beforeSha256": "1bb8fd80824105f25e7d9985db6a7c7e2c32e9ff78114d987162c67834fba137",
+      "restoredSha256": "1bb8fd80824105f25e7d9985db6a7c7e2c32e9ff78114d987162c67834fba137",
+      "committedOriginalSha256": "1bb8fd80824105f25e7d9985db6a7c7e2c32e9ff78114d987162c67834fba137"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/restoration.json.raw",
+      "beforeSha256": "828b29ed705d7492039fa1c41b241394abbc18cd013fb6588fcc82fe2820c508",
+      "restoredSha256": "828b29ed705d7492039fa1c41b241394abbc18cd013fb6588fcc82fe2820c508",
+      "committedOriginalSha256": "828b29ed705d7492039fa1c41b241394abbc18cd013fb6588fcc82fe2820c508"
+    },
+    {
+      "path": "docs/reviews/release-a-customer-exposure-foundation/qa/supplement1/screenshot-manifest.json.raw",
+      "beforeSha256": "43504642d9889835d913775a804efe4f917cde50704216af258f5bc7294d900b",
+      "restoredSha256": "43504642d9889835d913775a804efe4f917cde50704216af258f5bc7294d900b",
+      "committedOriginalSha256": "43504642d9889835d913775a804efe4f917cde50704216af258f5bc7294d900b"
+    }
+  ],
+  "persistentGitOrFormatterSettingsChanged": false,
+  "unrelatedPathsChanged": false
+}

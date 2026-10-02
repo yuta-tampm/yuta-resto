@@ -6,19 +6,34 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-05
+Last updated: 2026-10-02
 
-## Authority order
+## Finding the right authority
 
-1. `CURRENT_STATE.md`
-2. `architecture/`
-3. the relevant document under `features/` or `products/`
-4. `operations/`
-5. accepted records under `decisions/`
-6. code and tests as implementation evidence
+YUTA does not use one universal source order for every question. Start with
+[`AUTHORITY_MODEL.md`](AUTHORITY_MODEL.md) to classify the question and select
+the appropriate authority.
 
-Completed plans, audits, migration checkpoints, and implementation reports are
-not current architecture authority. Git history preserves that record.
+- Use [`PRODUCT_KNOWLEDGE.md`](PRODUCT_KNOWLEDGE.md) to locate current product
+  and module knowledge.
+- Use [`MODULE_REGISTRY.md`](MODULE_REGISTRY.md) to locate bounded capabilities,
+  ownership, lifecycle evidence, and review markers.
+- Use [`LIFECYCLE_STATUS_MODEL.md`](LIFECYCLE_STATUS_MODEL.md) to interpret
+  lifecycle values without promoting one dimension from another.
+- Treat `CURRENT_STATE.md` as a broad summary and routing source, not the
+  highest authority for every question.
+- Keep accepted decisions authoritative for their durable boundaries and use
+  the specific verification source required by the Authority Model.
+
+For bounded discovery, follow `PRODUCT_KNOWLEDGE.md` -> `MODULE_REGISTRY.md` ->
+the owning feature/product home -> relevant decisions, normative specs and UI
+knowledge -> code, schemas and tests. Product Intent and Implemented State remain
+separate. The [scope-bound Page Chat transition](AUTHORITY_MODEL.md#scope-bound-legacy-page-chat-transition)
+does not retire an unmigrated Page Chat; [Workflow v3](YUTA_WORKFLOW_V3.md#legacy-page-knowledge-migration--separate-governance-maintenance)
+defines fresh-agent PASS and exact recorded Human-exception cutovers.
+
+Completed plans, audits, migration checkpoints, implementation reports, and
+task history are not current product or architecture authority.
 
 ## Documentation visibility
 
@@ -35,8 +50,24 @@ sensitive details never belong in the repository.
 
 ### Project state
 
+- [`AUTHORITY_MODEL.md`](AUTHORITY_MODEL.md)
+- [`LIFECYCLE_STATUS_MODEL.md`](LIFECYCLE_STATUS_MODEL.md)
+- [`PRODUCT_KNOWLEDGE.md`](PRODUCT_KNOWLEDGE.md)
+- [`MODULE_REGISTRY.md`](MODULE_REGISTRY.md)
 - [`CURRENT_STATE.md`](CURRENT_STATE.md)
 - [`REPOSITORY_MAP.md`](REPOSITORY_MAP.md)
+
+### Release planning
+
+- [`PRODUCT_RELEASE_ROADMAP.md`](PRODUCT_RELEASE_ROADMAP.md) — single Engineering
+  release-planning home; bounded Foundation/A decisions RR-01–RR-03 accepted
+  by the Human. Remaining scope, runtime delivery and readiness stay separate.
+- [`release-roadmap-foundation` discovery handoff](reviews/release-roadmap-foundation/discovery-handoff.md)
+  — evidence, attributable Human decisions and bounded next request;
+  implementation remains separately scoped.
+- [ADR-009: Backoffice instance exposure](decisions/ADR-009-release-a-customer-exposure.md)
+  — server-selected customer A/internal boundary; no release activation or
+  customer-readiness approval.
 
 ### Architecture
 
@@ -49,6 +80,26 @@ sensitive details never belong in the repository.
 
 ### Cloud features
 
+- [`features/product-release/README.md`](features/product-release/README.md)
+- [`features/identity-access/README.md`](features/identity-access/README.md)
+- [`features/establishment/README.md`](features/establishment/README.md)
+- [`features/establishment/general-information/README.md`](features/establishment/general-information/README.md)
+- [`features/establishment/hours-services/README.md`](features/establishment/hours-services/README.md)
+- [`features/establishment/rooms-tables/README.md`](features/establishment/rooms-tables/README.md)
+- [`features/content-creation/README.md`](features/content-creation/README.md)
+- [`features/visual-creation/README.md`](features/visual-creation/README.md)
+- [`features/internal-resources/README.md`](features/internal-resources/README.md)
+- [`features/compliance/README.md`](features/compliance/README.md)
+- [`features/menu-catalog/README.md`](features/menu-catalog/README.md)
+- [`features/personnel/README.md`](features/personnel/README.md)
+- [`features/planning/README.md`](features/planning/README.md)
+- [`features/daily-tasks/README.md`](features/daily-tasks/README.md)
+- [`features/inventory/README.md`](features/inventory/README.md)
+- [`features/suppliers/README.md`](features/suppliers/README.md)
+- [`features/stock-movements/README.md`](features/stock-movements/README.md)
+- [`features/technical-sheets/README.md`](features/technical-sheets/README.md)
+- [`features/pointage/README.md`](features/pointage/README.md)
+- [`features/today/README.md`](features/today/README.md)
 - [`features/public-website/README.md`](features/public-website/README.md)
 - [`features/public-booking/README.md`](features/public-booking/README.md)
 - [`features/public-booking/PRODUCT_SPEC.md`](features/public-booking/PRODUCT_SPEC.md)
@@ -58,19 +109,74 @@ sensitive details never belong in the repository.
 
 ### Local products
 
+- [`products/display/README.md`](products/display/README.md)
 - [`products/pos/README.md`](products/pos/README.md)
+- [`products/pos/site-agent/README.md`](products/pos/site-agent/README.md)
 - [`products/pos/USER_GUIDE.md`](products/pos/USER_GUIDE.md)
 - [`products/pos/OFFLINE_STRATEGY.md`](products/pos/OFFLINE_STRATEGY.md)
 - [`products/pos/QA_CHECKLIST.md`](products/pos/QA_CHECKLIST.md)
 - [`products/pos/PRODUCT_SPEC.md`](products/pos/PRODUCT_SPEC.md)
 
-The standalone display product is governed by `apps/yuta-display/AGENTS.md` and
-the shared operations documents until a dedicated product document is needed.
+Display Product Knowledge starts at `products/display/README.md`; runtime-local
+instructions remain in `apps/yuta-display/AGENTS.md`, with deployment authority
+in the shared operations documents.
+
+### External design intelligence
+
+- [`ui/EXTERNAL_DESIGN_INTELLIGENCE.md`](ui/EXTERNAL_DESIGN_INTELLIGENCE.md)
+
+### UI implementation
+
+- [`ui/README.md`](ui/README.md)
+- [`ui/DESIGN_TO_CODE_WORKFLOW.md`](ui/DESIGN_TO_CODE_WORKFLOW.md)
+- [`ui/DELIVERY_WORKFLOW_MODES.md`](ui/DELIVERY_WORKFLOW_MODES.md)
+- [`ui/YUTA_FRONTEND_RULES.md`](ui/YUTA_FRONTEND_RULES.md)
+- [`ui/BACKOFFICE_FRONTEND_RULES.md`](ui/BACKOFFICE_FRONTEND_RULES.md)
+- [`ui/POS_FRONTEND_RULES.md`](ui/POS_FRONTEND_RULES.md)
+- [`ui/PAGE_PACK_PROTOCOL.md`](ui/PAGE_PACK_PROTOCOL.md)
+- [`ui/UI_PACK_TOOLING_SPEC.md`](ui/UI_PACK_TOOLING_SPEC.md)
+- [`ui/UI_WORKFLOW_DELIVERY_CHECKLIST.md`](ui/UI_WORKFLOW_DELIVERY_CHECKLIST.md)
+- [`ui/pages/hours-services/README.md`](ui/pages/hours-services/README.md)
+- [`ui/pages/establishment-general-information/README.md`](ui/pages/establishment-general-information/README.md)
+- [`ui/pages/today/README.md`](ui/pages/today/README.md)
+- [`ui/pages/backoffice-equipe-salaries/README.md`](ui/pages/backoffice-equipe-salaries/README.md)
+- [`ui/pages/backoffice-equipe-formalites-personnel/README.md`](ui/pages/backoffice-equipe-formalites-personnel/README.md)
+- [`ui/pages/backoffice-equipe-registre-personnel/README.md`](ui/pages/backoffice-equipe-registre-personnel/README.md)
+- [`ui/pages/pos-order-detail/README.md`](ui/pages/pos-order-detail/README.md)
 
 ### Operations and process
 
+#### YUTA Workflow v3
+
+Start with [`YUTA_WORKFLOW_V3.md`](YUTA_WORKFLOW_V3.md), the **Canonical
+human-readable YUTA Workflow v3 operating guide**. It explains the complete
+operating model and routes to the detailed sources below; those sources retain
+their specialized authority and executable responsibilities.
+
+| Source                                                                                                                                                    | Role                                                                     |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| [`YUTA_WORKFLOW_V3.md`](YUTA_WORKFLOW_V3.md)                                                                                                              | Primary human-readable operating guide                                   |
+| [`YUTA_AUTOMATED_CHANGE_WORKFLOW.md`](YUTA_AUTOMATED_CHANGE_WORKFLOW.md)                                                                                  | Detailed automation/workflow protocol                                    |
+| [`chatGPT/YUTA_PAGE_CHAT_OPERATING_PROMPT_V3.md`](chatGPT/YUTA_PAGE_CHAT_OPERATING_PROMPT_V3.md)                                                          | Complete copy-paste startup prompt for a Page Chat / Local Control Tower |
+| [`chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT_V3.md`](chatGPT/YUTA_CONTROL_TOWER_OPERATING_PROMPT_V3.md)                                                  | Complete copy-paste startup prompt for a Global Control Tower            |
+| [`chatGPT/YUTA_CONTROL_TOWER_HANDOFF_TEMPLATE_V3.md`](chatGPT/YUTA_CONTROL_TOWER_HANDOFF_TEMPLATE_V3.md)                                                  | Manual Local/Global context handoff templates                            |
+| [`.agents/skills/yuta-control-tower-bridge/SKILL.md`](../.agents/skills/yuta-control-tower-bridge/SKILL.md)                                               | Codex browser target, protocol and result-delivery rules                 |
+| [`YUTA_QA_PROTOCOL.md`](YUTA_QA_PROTOCOL.md)                                                                                                              | Detailed QA protocol                                                     |
+| [`YUTA_KNOWLEDGE_CONSOLIDATION_PROTOCOL.md`](YUTA_KNOWLEDGE_CONSOLIDATION_PROTOCOL.md)                                                                    | Detailed post-archive knowledge protocol                                 |
+| [`.agents/skills/yuta-run-change/SKILL.md`](../.agents/skills/yuta-run-change/SKILL.md)                                                                   | Executable change start/run/resume behavior through the next human gate  |
+| [`.agents/skills/yuta-finish-change/SKILL.md`](../.agents/skills/yuta-finish-change/SKILL.md)                                                             | Executable finalization and archived Knowledge Review resume behavior    |
+| [`openspec/config.yaml`](../openspec/config.yaml) and [`openspec/schemas/yuta-spec-driven/schema.yaml`](../openspec/schemas/yuta-spec-driven/schema.yaml) | OpenSpec artifact and dependency mechanics                               |
+| [`chatGPT/YuTa_Workflow_v3.pdf`](archive/yuta-workflow/reference/YuTa_Workflow_v3.pdf)                                                                    | Static snapshot only; non-canonical—use the human-readable guide         |
+
+Historical setup, approval evidence, and completed tasks are indexed in
+[`archive/yuta-workflow/README.md`](archive/yuta-workflow/README.md).
+They are provenance, not current workflow instructions.
+
 - [`operations/LOCAL_DEVELOPMENT.md`](operations/LOCAL_DEVELOPMENT.md)
 - [`operations/DEPLOYMENT.md`](operations/DEPLOYMENT.md)
+- [`operations/PRODUCTION_READINESS.md`](operations/PRODUCTION_READINESS.md)
+- [`operations/OPENAI_PROVIDER_ELIGIBILITY.md`](operations/OPENAI_PROVIDER_ELIGIBILITY.md)
+- [`operations/EXTERNAL_DELIVERABLES.md`](operations/EXTERNAL_DELIVERABLES.md)
 - [`DEVELOPMENT_WORKFLOW.md`](DEVELOPMENT_WORKFLOW.md)
 - [`DOCUMENTATION_POLICY.md`](DOCUMENTATION_POLICY.md)
 - [`tasks/TASK_TEMPLATE.md`](tasks/TASK_TEMPLATE.md)
@@ -78,6 +184,14 @@ the shared operations documents until a dedicated product document is needed.
 - [`decisions/ADR-001-runtime-families-and-product-visibility.md`](decisions/ADR-001-runtime-families-and-product-visibility.md)
 - [`decisions/ADR-002-independent-public-booking-application.md`](decisions/ADR-002-independent-public-booking-application.md)
 - [`decisions/ADR-003-database-ownership-boundaries.md`](decisions/ADR-003-database-ownership-boundaries.md)
+- [`decisions/ADR-004-independent-public-feedback-application.md`](decisions/ADR-004-independent-public-feedback-application.md)
+- [`decisions/ADR-005-today-operational-steering.md`](decisions/ADR-005-today-operational-steering.md)
+- [`decisions/ADR-006-cloud-establishment-profile-context.md`](decisions/ADR-006-cloud-establishment-profile-context.md)
+- [`decisions/ADR-007-composed-general-information-and-restaurant-knowledge.md`](decisions/ADR-007-composed-general-information-and-restaurant-knowledge.md)
+- [`decisions/ADR-008-task-collaboration-and-delegated-review.md`](decisions/ADR-008-task-collaboration-and-delegated-review.md)
+- [`decisions/ADR-009-release-a-customer-exposure.md`](decisions/ADR-009-release-a-customer-exposure.md)
+- [`decisions/ADR-010-claude-code-implementation-delegation.md`](decisions/ADR-010-claude-code-implementation-delegation.md)
+  — Bounded Claude Code implementation under Codex coordination.
 
 Completed task specifications are removed after durable behavior is reflected
 in current feature documentation and remaining work is captured in `STATUS.md`.

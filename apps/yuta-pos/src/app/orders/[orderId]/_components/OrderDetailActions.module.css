@@ -1,0 +1,12 @@
+.orderActionButton {
+  min-height: 4rem;
+  justify-content: center;
+  line-height: 1.15;
+  white-space: normal;
+}
+
+@media (min-width: 48rem) {
+  .orderActionButton {
+    min-height: 3rem;
+  }
+}

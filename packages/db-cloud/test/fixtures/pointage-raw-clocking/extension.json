@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "entry": {
+    "idx": 21,
+    "version": "7",
+    "when": 1788864899846,
+    "tag": "0021_abandoned_black_queen",
+    "breakpoints": true
+  },
+  "sqlSha256": "7794a5c02f2fa809a9985848bc455dbd3a5762415b5d96c216fb49ff4fd01ed9",
+  "snapshotSha256": "a6ccaa77bf4445c0336366708763ade2410ecca6faceca52db26242886fbc4bb"
+}

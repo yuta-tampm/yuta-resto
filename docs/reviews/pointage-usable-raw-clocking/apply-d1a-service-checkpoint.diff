@@ -1,0 +1,1430 @@
+diff --git a/apps/backoffice/src/server/pointage/service.ts b/apps/backoffice/src/server/pointage/service.ts
+index 2c92144..33c0f42 100644
+--- a/apps/backoffice/src/server/pointage/service.ts
++++ b/apps/backoffice/src/server/pointage/service.ts
+@@ -83,7 +83,7 @@ export type OneTimePointageCredentialPresentation = Readonly<{
+   credentialVersion: number;
+ }>;
+ 
+-type ValidationRepository = Pick<
++export type PointageValidationRepository = Pick<
+   PointageRepository,
+   | 'resolveActiveEntryScope'
+   | 'findCredentialCandidate'
+@@ -138,7 +138,8 @@ function credentialMaterial(
+ 
+ export function createPointageServerFoundation(
+   input: Readonly<{
+-    repository: PointageRepository;
++    repository: PointageValidationRepository &
++      Partial<Pick<PointageRepository, 'issueCredential' | 'resetCredential'>>;
+     encodedAuthSecret: string;
+     clientAddressProvider: TrustedPointageClientAddressProvider;
+     now?: () => Date;
+@@ -512,6 +513,9 @@ export function createPointageServerFoundation(
+         inputCommand.manager,
+         'pointage.credential.issue',
+       );
++      if (!input.repository.issueCredential) {
++        throw new Error('Pointage credential administration is unavailable.');
++      }
+       const persisted = await input.repository.issueCredential({
+         scope: inputCommand.manager,
+         personnelDossierId: inputCommand.personnelDossierId,
+@@ -570,6 +574,9 @@ export function createPointageServerFoundation(
+         inputCommand.manager,
+         'pointage.credential.reset',
+       );
++      if (!input.repository.resetCredential) {
++        throw new Error('Pointage credential administration is unavailable.');
++      }
+       const persisted = await input.repository.resetCredential({
+         scope: inputCommand.manager,
+         personnelDossierId: inputCommand.personnelDossierId,
+diff --git a/apps/backoffice/src/server/pointage/raw-clocking-test-boundary.ts b/apps/backoffice/src/server/pointage/raw-clocking-test-boundary.ts
+new file mode 100644
+index 0000000..0903f41
+--- /dev/null
++++ b/apps/backoffice/src/server/pointage/raw-clocking-test-boundary.ts
+@@ -0,0 +1,129 @@
++import 'server-only';
++import { z } from 'zod';
++import type { CloudDatabaseClient } from '@yuta/db-cloud';
++
++const nameRule = /^yuta_pointage_raw_clocking_test(?:_[a-z0-9]+)?$/;
++const loopback = new Set(['localhost', '127.0.0.1', '[::1]']);
++const identitySchema = z
++  .array(
++    z.object({
++      database: z.string(),
++      session: z.string(),
++      current: z.string(),
++    }),
++  )
++  .length(1);
++
++export function refusePointageRuntime(): never {
++  throw new Error('Pointage runtime is unavailable.');
++}
++
++export function requirePointageRuntimeTarget(
++  environment: NodeJS.ProcessEnv,
++  listeningHost: string,
++) {
++  const text = environment.CLOUD_DATABASE_URL;
++  if (
++    !text ||
++    /[\s\\]/u.test(text) ||
++    !['development', 'test'].includes(environment.NODE_ENV ?? '') ||
++    environment.VERCEL !== undefined ||
++    environment.YUTA_POINTAGE_SYNTHETIC_TEST_MODE !== 'true' ||
++    environment.POINTAGE_TEST_ORIGIN !== 'http://127.0.0.1:3001' ||
++    !loopback.has(listeningHost)
++  )
++    refusePointageRuntime();
++  try {
++    const target = new URL(text);
++    const authority = /^postgres(?:ql)?:\/\/([^/?#]+)\//u.exec(text)?.[1];
++    const host = authority?.slice(authority.lastIndexOf('@') + 1);
++    const name = target.pathname.slice(1);
++    if (
++      !['postgres:', 'postgresql:'].includes(target.protocol) ||
++      !loopback.has(target.hostname) ||
++      host !== target.host ||
++      !target.username ||
++      !target.password ||
++      target.search ||
++      target.hash ||
++      nameRule.exec(name)?.[0] !== name
++    )
++      refusePointageRuntime();
++    return Object.freeze({
++      hostname: target.hostname,
++      port: Number(target.port || 5432),
++      name,
++    });
++  } catch {
++    return refusePointageRuntime();
++  }
++}
++
++type Target = ReturnType<typeof requirePointageRuntimeTarget>;
++export type PointageRuntimeRole =
++  | 'yuta_pointage_foundation_runtime'
++  | 'yuta_pointage_raw_writer';
++
++// Inspect the actual injected driver's source, not a separately asserted URL.
++// No client/credentials are constructed from CLOUD_DATABASE_URL here.
++export function requirePointageClientSource(
++  client: CloudDatabaseClient | undefined,
++  target: Target,
++  role: PointageRuntimeRole,
++): asserts client is CloudDatabaseClient {
++  const options = client?.$client?.options;
++  if (
++    !options ||
++    options.host.length !== 1 ||
++    options.port.length !== 1 ||
++    options.host[0] !== target.hostname ||
++    options.port[0] !== target.port ||
++    options.database !== target.name ||
++    options.user !== role ||
++    options.path ||
++    options.max !== 1
++  )
++    refusePointageRuntime();
++}
++
++export async function requirePointageClientIdentity(
++  client: CloudDatabaseClient,
++  target: Target,
++  role: PointageRuntimeRole,
++): Promise<string> {
++  try {
++    const [identity] = identitySchema.parse(
++      await client.$client`
++      select current_database() as database, session_user as session, current_user as current
++    `,
++    );
++    if (
++      !identity ||
++      identity.database !== target.name ||
++      nameRule.exec(identity.database)?.[0] !== identity.database ||
++      identity.session !== role ||
++      identity.current !== role
++    )
++      refusePointageRuntime();
++    return identity.database;
++  } catch {
++    return refusePointageRuntime();
++  }
++}
++
++export async function requirePointageActualTarget(
++  client: CloudDatabaseClient,
++  target: Target,
++) {
++  try {
++    const rows = z
++      .array(z.object({ database: z.string() }))
++      .length(1)
++      .parse(await client.$client`select current_database() as database`);
++    const actual = rows[0]!.database;
++    if (actual !== target.name || nameRule.exec(actual)?.[0] !== actual)
++      refusePointageRuntime();
++  } catch {
++    refusePointageRuntime();
++  }
++}
+diff --git a/apps/backoffice/src/server/pointage/raw-clocking-runtime.ts b/apps/backoffice/src/server/pointage/raw-clocking-runtime.ts
+new file mode 100644
+index 0000000..59870c6
+--- /dev/null
++++ b/apps/backoffice/src/server/pointage/raw-clocking-runtime.ts
+@@ -0,0 +1,131 @@
++import 'server-only';
++import {
++  assertPointageFoundationDatabaseBoundary,
++  assertPointageRawDatabaseBoundary,
++  createPointageRepository,
++  createPointageRawClockingRepository,
++  type CloudDatabaseClient,
++} from '@yuta/db-cloud';
++import {
++  createPointageServerFoundation,
++  type PointageValidationRepository,
++  type TrustedPointageClientAddressProvider,
++} from './service';
++import { createPointageRawClockingService } from './raw-clocking-service';
++import {
++  requirePointageRuntimeTarget,
++  requirePointageClientSource,
++  requirePointageClientIdentity,
++  requirePointageActualTarget,
++  refusePointageRuntime,
++} from './raw-clocking-test-boundary';
++
++// Construction is explicitly injected and test-only. No singleton, environment
++// client, production provider or manager repository escapes this factory.
++export async function createPointageRawClockingRuntime(
++  input: Readonly<{
++    environment: NodeJS.ProcessEnv;
++    listeningHost: string;
++    foundationClient?: CloudDatabaseClient;
++    rawClient?: CloudDatabaseClient;
++    encodedAuthSecret: string;
++    stateGuardKey: Uint8Array;
++    createSyntheticClientAddressProvider: () => TrustedPointageClientAddressProvider;
++  }>,
++) {
++  try {
++    const target = requirePointageRuntimeTarget(
++      input.environment,
++      input.listeningHost,
++    );
++    const foundationClient = input.foundationClient;
++    const rawClient = input.rawClient;
++    requirePointageClientSource(
++      foundationClient,
++      target,
++      'yuta_pointage_foundation_runtime',
++    );
++    requirePointageClientSource(rawClient, target, 'yuta_pointage_raw_writer');
++    if (
++      foundationClient === rawClient ||
++      foundationClient.$client === rawClient.$client
++    )
++      refusePointageRuntime();
++    const guardKey = Uint8Array.from(input.stateGuardKey);
++    if (guardKey.length !== 32) refusePointageRuntime();
++
++    async function requireReady() {
++      const currentTarget = requirePointageRuntimeTarget(
++        input.environment,
++        input.listeningHost,
++      );
++      if (
++        currentTarget.hostname !== target.hostname ||
++        currentTarget.port !== target.port ||
++        currentTarget.name !== target.name
++      )
++        refusePointageRuntime();
++      requirePointageClientSource(
++        foundationClient,
++        target,
++        'yuta_pointage_foundation_runtime',
++      );
++      requirePointageClientSource(
++        rawClient,
++        target,
++        'yuta_pointage_raw_writer',
++      );
++      await requirePointageActualTarget(foundationClient, target);
++      const foundationDatabase = await requirePointageClientIdentity(
++        foundationClient,
++        target,
++        'yuta_pointage_foundation_runtime',
++      );
++      const rawDatabase = await requirePointageClientIdentity(
++        rawClient,
++        target,
++        'yuta_pointage_raw_writer',
++      );
++      if (foundationDatabase !== rawDatabase) refusePointageRuntime();
++      await assertPointageFoundationDatabaseBoundary(foundationClient);
++      await assertPointageRawDatabaseBoundary(rawClient);
++    }
++    await requireReady();
++    const provider = input.createSyntheticClientAddressProvider();
++    const address = await provider?.getTrustedClientAddress();
++    if (
++      !address ||
++      address.provenance !== 'SERVER_VERIFIED' ||
++      !address.address
++    )
++      refusePointageRuntime();
++
++    const repository = createPointageRepository(foundationClient);
++    const validation: PointageValidationRepository = Object.freeze({
++      resolveActiveEntryScope: repository.resolveActiveEntryScope,
++      findCredentialCandidate: repository.findCredentialCandidate,
++      findPersonnelEmploymentPeriod: repository.findPersonnelEmploymentPeriod,
++      isRateLimitBlocked: repository.isRateLimitBlocked,
++      recordRateLimitFailure: repository.recordRateLimitFailure,
++      resetCandidateRateLimit: repository.resetCandidateRateLimit,
++      appendAudit: repository.appendAudit,
++    });
++    const foundation = createPointageServerFoundation({
++      repository: validation,
++      encodedAuthSecret: input.encodedAuthSecret,
++      clientAddressProvider: provider,
++    });
++    return createPointageRawClockingService({
++      foundation: Object.freeze({
++        validateCredential: foundation.validateCredential,
++        authorizeEmployeeOperation: foundation.authorizeEmployeeOperation,
++      }),
++      repository: createPointageRawClockingRepository(rawClient),
++      stateGuardKey: guardKey,
++      requireReady,
++      resolveEntryScope: validation.resolveActiveEntryScope,
++    });
++  } catch {
++    return refusePointageRuntime();
++  }
++}
+diff --git a/apps/backoffice/test/pointage-raw-clocking-runtime.test.ts b/apps/backoffice/test/pointage-raw-clocking-runtime.test.ts
+new file mode 100644
+index 0000000..e34f0eb
+--- /dev/null
++++ b/apps/backoffice/test/pointage-raw-clocking-runtime.test.ts
+@@ -0,0 +1,340 @@
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++vi.mock('server-only', () => ({}));
++const calls = vi.hoisted(() => ({
++  foundationProof: vi.fn(),
++  rawProof: vi.fn(),
++  repository: vi.fn(),
++  rawRepository: vi.fn(),
++  foundation: vi.fn(),
++  service: vi.fn(),
++}));
++vi.mock('@yuta/db-cloud', () => ({
++  assertPointageFoundationDatabaseBoundary: calls.foundationProof,
++  assertPointageRawDatabaseBoundary: calls.rawProof,
++  createPointageRepository: calls.repository,
++  createPointageRawClockingRepository: calls.rawRepository,
++}));
++vi.mock('../src/server/pointage/service', () => ({
++  createPointageServerFoundation: calls.foundation,
++}));
++vi.mock('../src/server/pointage/raw-clocking-service', () => ({
++  createPointageRawClockingService: calls.service,
++}));
++import type { CloudDatabaseClient } from '@yuta/db-cloud';
++import { createPointageRawClockingRuntime } from '../src/server/pointage/raw-clocking-runtime';
++
++const name = 'yuta_pointage_raw_clocking_test_s9';
++const foundationRole = 'yuta_pointage_foundation_runtime';
++const rawRole = 'yuta_pointage_raw_writer';
++const methods = [
++  'resolveActiveEntryScope',
++  'findCredentialCandidate',
++  'findPersonnelEmploymentPeriod',
++  'isRateLimitBlocked',
++  'recordRateLimitFailure',
++  'resetCandidateRateLimit',
++  'appendAudit',
++];
++const environment = {
++  NODE_ENV: 'test' as 'test' | 'development' | 'production',
++  YUTA_POINTAGE_SYNTHETIC_TEST_MODE: 'true',
++  POINTAGE_TEST_ORIGIN: 'http://127.0.0.1:3001',
++  CLOUD_DATABASE_URL: `postgres://test:synthetic@127.0.0.1:56541/${name}`,
++};
++function client(role: string) {
++  const query = Object.assign(
++    vi.fn(async () => [{ database: name, session: role, current: role }]),
++    {
++      options: {
++        host: ['127.0.0.1'],
++        port: [56541],
++        database: name,
++        user: role,
++        max: 1,
++        path: undefined as string | undefined,
++      },
++    },
++  );
++  return { $client: query };
++}
++function setup() {
++  const foundation = client(foundationRole),
++    raw = client(rawRole);
++  const provider = vi.fn(() => ({
++    getTrustedClientAddress: vi.fn(async () => ({
++      address: '127.0.0.1',
++      provenance: 'SERVER_VERIFIED' as const,
++    })),
++  }));
++  return {
++    foundation,
++    raw,
++    provider,
++    input: {
++      environment: { ...environment },
++      listeningHost: '127.0.0.1',
++      foundationClient: foundation as unknown as CloudDatabaseClient,
++      rawClient: raw as unknown as CloudDatabaseClient,
++      encodedAuthSecret: 'synthetic-not-used-by-mocked-constructor',
++      stateGuardKey: new Uint8Array(32),
++      createSyntheticClientAddressProvider: provider,
++    },
++  };
++}
++beforeEach(() => {
++  vi.resetAllMocks();
++  calls.foundationProof.mockResolvedValue(undefined);
++  calls.rawProof.mockResolvedValue(undefined);
++  calls.repository.mockReturnValue(
++    Object.fromEntries(
++      [...methods, 'issueCredential', 'resetCredential'].map((key) => [
++        key,
++        vi.fn(),
++      ]),
++    ),
++  );
++  calls.foundation.mockReturnValue({
++    validateCredential: vi.fn(),
++    authorizeEmployeeOperation: vi.fn(),
++    issueCredential: vi.fn(),
++    resetCredential: vi.fn(),
++  });
++  calls.rawRepository.mockReturnValue({ marker: 'raw' });
++  calls.service.mockReturnValue(Object.freeze({ marker: 'service' }));
++});
++
++describe('D1a/S9 dual-client admission ordering', () => {
++  it('proves both actual clients before provider/hash/lookup and exposes only employee validation', async () => {
++    const s = setup();
++    expect(await createPointageRawClockingRuntime(s.input)).toEqual({
++      marker: 'service',
++    });
++    expect(s.foundation.$client).toHaveBeenCalledTimes(2);
++    expect(s.raw.$client).toHaveBeenCalledTimes(1);
++    const order = [
++      s.foundation.$client.mock.invocationCallOrder[1],
++      s.raw.$client.mock.invocationCallOrder[0],
++      calls.foundationProof.mock.invocationCallOrder[0],
++      calls.rawProof.mock.invocationCallOrder[0],
++      s.provider.mock.invocationCallOrder[0],
++      calls.foundation.mock.invocationCallOrder[0],
++    ];
++    expect(order).toEqual([...order].sort((a, b) => a! - b!));
++    expect(calls.repository).toHaveBeenCalledWith(s.foundation);
++    expect(calls.rawRepository).toHaveBeenCalledWith(s.raw);
++    expect(Object.keys(calls.foundation.mock.calls[0]![0].repository)).toEqual(
++      methods,
++    );
++    expect(Object.keys(calls.service.mock.calls[0]![0].foundation)).toEqual([
++      'validateCredential',
++      'authorizeEmployeeOperation',
++    ]);
++  });
++
++  const cases: Array<[string, (s: ReturnType<typeof setup>) => void]> = [
++    [
++      'missing foundation',
++      (s) => {
++        s.input.foundationClient = undefined as unknown as CloudDatabaseClient;
++      },
++    ],
++    [
++      'missing raw',
++      (s) => {
++        s.input.rawClient = undefined as unknown as CloudDatabaseClient;
++      },
++    ],
++    [
++      'swapped',
++      (s) => {
++        [s.input.foundationClient, s.input.rawClient] = [
++          s.input.rawClient,
++          s.input.foundationClient,
++        ];
++      },
++    ],
++    [
++      'other raw database',
++      (s) => {
++        s.raw.$client.options.database = name + '_other';
++      },
++    ],
++    [
++      'C17 source',
++      (s) => {
++        s.foundation.$client.options.database =
++          'yuta_pointage_foundation_test_s9';
++      },
++    ],
++    [
++      'other host',
++      (s) => {
++        s.raw.$client.options.host = ['localhost'];
++      },
++    ],
++    [
++      'other port',
++      (s) => {
++        s.raw.$client.options.port = [56542];
++      },
++    ],
++    [
++      'multiple hosts',
++      (s) => {
++        s.raw.$client.options.host.push('127.0.0.1');
++      },
++    ],
++    [
++      'socket',
++      (s) => {
++        s.raw.$client.options.path = '/tmp/postgres';
++      },
++    ],
++    [
++      'admin foundation',
++      (s) => {
++        s.foundation.$client.options.user = 'postgres';
++      },
++    ],
++    [
++      'admin raw',
++      (s) => {
++        s.raw.$client.options.user = 'postgres';
++      },
++    ],
++    [
++      'unsafe environment',
++      (s) => {
++        s.input.environment.NODE_ENV = 'production';
++      },
++    ],
++    [
++      'unsafe bind',
++      (s) => {
++        s.input.listeningHost = '0.0.0.0';
++      },
++    ],
++    [
++      'unsafe target',
++      (s) => {
++        s.input.environment.CLOUD_DATABASE_URL =
++          environment.CLOUD_DATABASE_URL.replace(name, 'yuta_cloud');
++      },
++    ],
++    [
++      'probe failure',
++      (s) => {
++        s.foundation.$client.mockRejectedValue(
++          new Error('private connection detail'),
++        );
++      },
++    ],
++    [
++      'wrong actual database',
++      (s) => {
++        s.raw.$client.mockResolvedValue([
++          { database: name + '_other', session: rawRole, current: rawRole },
++        ]);
++      },
++    ],
++    [
++      'C17 actual database',
++      (s) => {
++        s.raw.$client.mockResolvedValue([
++          {
++            database: 'yuta_pointage_foundation_test_s9',
++            session: rawRole,
++            current: rawRole,
++          },
++        ]);
++      },
++    ],
++    [
++      'SET ROLE raw identity',
++      (s) => {
++        s.raw.$client.mockResolvedValue([
++          { database: name, session: 'postgres', current: rawRole },
++        ]);
++      },
++    ],
++    [
++      'foundation identity mismatch',
++      (s) => {
++        s.foundation.$client.mockResolvedValue([
++          { database: name, session: foundationRole, current: 'postgres' },
++        ]);
++      },
++    ],
++  ];
++  it.each(cases)(
++    '%s refuses before provider or credential construction',
++    async (_, mutate) => {
++      const s = setup();
++      mutate(s);
++      await expect(createPointageRawClockingRuntime(s.input)).rejects.toThrow(
++        'Pointage runtime is unavailable.',
++      );
++      expect(s.provider).not.toHaveBeenCalled();
++      expect(calls.repository).not.toHaveBeenCalled();
++      expect(calls.foundation).not.toHaveBeenCalled();
++    },
++  );
++  it.each(['foundation', 'raw'])(
++    '%s effective-proof failure cannot fall back',
++    async (role) => {
++      const s = setup();
++      (role === 'foundation'
++        ? calls.foundationProof
++        : calls.rawProof
++      ).mockRejectedValue(new Error('private ACL detail'));
++      await expect(createPointageRawClockingRuntime(s.input)).rejects.toThrow(
++        'Pointage runtime is unavailable.',
++      );
++      expect(s.provider).not.toHaveBeenCalled();
++      expect(calls.foundation).not.toHaveBeenCalled();
++    },
++  );
++  it('missing/untrusted provider refuses before credential key construction', async () => {
++    const s = setup();
++    s.provider.mockReturnValue({
++      getTrustedClientAddress: vi.fn(async () => null),
++    } as unknown as ReturnType<typeof s.provider>);
++    await expect(createPointageRawClockingRuntime(s.input)).rejects.toThrow(
++      'Pointage runtime is unavailable.',
++    );
++    expect(calls.foundation).not.toHaveBeenCalled();
++  });
++  it.each([
++    'yuta_cloud',
++    'yuta_resto',
++    'yuta_pointage_foundation_test',
++    name + '\n',
++    name + ' ',
++    'prefix_' + name,
++    name.toUpperCase(),
++    name + '_suffix',
++    'yuta_pointage_raw_clocking_test_',
++    'yuta_pointage_raw_clocking_test%5fs9',
++  ])(
++    'rejects unsafe target name %j without database or provider work',
++    async (bad) => {
++      const s = setup();
++      s.input.environment.CLOUD_DATABASE_URL =
++        environment.CLOUD_DATABASE_URL.replace(name, bad);
++      await expect(createPointageRawClockingRuntime(s.input)).rejects.toThrow(
++        'Pointage runtime is unavailable.',
++      );
++      expect(s.foundation.$client).not.toHaveBeenCalled();
++      expect(s.provider).not.toHaveBeenCalled();
++    },
++  );
++  it('missing provider factory is unavailable without credential construction', async () => {
++    const s = setup();
++    s.input.createSyntheticClientAddressProvider =
++      undefined as unknown as typeof s.provider;
++    await expect(createPointageRawClockingRuntime(s.input)).rejects.toThrow(
++      'Pointage runtime is unavailable.',
++    );
++    expect(calls.foundation).not.toHaveBeenCalled();
++  });
++});
+diff --git a/apps/backoffice/test/pointage-raw-clocking-service.test.ts b/apps/backoffice/test/pointage-raw-clocking-service.test.ts
+index d4cc119..d60947b 100644
+--- a/apps/backoffice/test/pointage-raw-clocking-service.test.ts
++++ b/apps/backoffice/test/pointage-raw-clocking-service.test.ts
+@@ -21,11 +21,419 @@ import {
+   createPointageRepository,
+   createPointageRawClockingRepository,
+   assertPointageRawDatabaseBoundary,
++  assertPointageFoundationDatabaseBoundary,
+ } from '@yuta/db-cloud';
+ import {
+   openPointageTestClient,
+   pointageDisposableWriterUrl,
++  pointageDisposableFoundationUrl,
+ } from '../../../packages/db-cloud/test/helpers/pointage-raw-clocking-test-database';
++import { createPointageRawClockingRuntime } from '../src/server/pointage/raw-clocking-runtime';
++
++sqlD1aProof();
++
++function sqlD1aProof() {
++  const suite =
++    process.env.YUTA_POINTAGE_SYNTHETIC_TEST_MODE === 'true'
++      ? describe
++      : describe.skip;
++  suite('D1a actual same-database validation-only runtime', () => {
++    type Client = Awaited<ReturnType<typeof openPointageTestClient>>;
++    let admin: Client, foundation: Client, raw: Client;
++    const scope = {
++      organizationId: randomUUID(),
++      establishmentId: randomUUID(),
++      personnelDossierId: randomUUID(),
++    };
++    const slug = 'synthetic-d1a-' + scope.establishmentId;
++    const userId = randomUUID(),
++      secret = randomBytes(32);
++    let pin: string;
++    const role = 'yuta_pointage_foundation_runtime';
++    const provider = vi.fn(() => ({
++      getTrustedClientAddress: async () => ({
++        address: '127.0.0.1',
++        provenance: 'SERVER_VERIFIED' as const,
++      }),
++    }));
++    const compose = () =>
++      createPointageRawClockingRuntime({
++        environment: process.env,
++        listeningHost: '127.0.0.1',
++        foundationClient: foundation.db,
++        rawClient: raw.db,
++        encodedAuthSecret: secret.toString('base64url'),
++        stateGuardKey: derivePointageStateGuardKey(secret),
++        createSyntheticClientAddressProvider: provider,
++      });
++    beforeAll(async () => {
++      admin = await openPointageTestClient(
++        process.env,
++        process.env.CLOUD_DATABASE_URL!,
++      );
++      foundation = await openPointageTestClient(
++        process.env,
++        pointageDisposableFoundationUrl(process.env.CLOUD_DATABASE_URL!),
++      );
++      raw = await openPointageTestClient(
++        process.env,
++        pointageDisposableWriterUrl(process.env.CLOUD_DATABASE_URL!),
++      );
++      await assertPointageFoundationDatabaseBoundary(foundation.db);
++      await assertPointageRawDatabaseBoundary(raw.db);
++      const db = admin.connection;
++      await db.begin(async (tx) => {
++        await tx`insert into public.organizations(id,name,slug) values(${scope.organizationId},'Synthetic D1a',${'synthetic-' + scope.organizationId})`;
++        await tx`insert into public.establishments(id,organization_id,name,slug,timezone) values(${scope.establishmentId},${scope.organizationId},'Synthetic D1a',${slug},'UTC')`;
++        await tx`insert into public.personnel_employee_dossiers(id,organization_id,establishment_id,given_names,family_name,position,qualification,employment_term_type,work_time_category,entry_date) values(${scope.personnelDossierId},${scope.organizationId},${scope.establishmentId},'Synthetic','D1a','Test','Test','indefinite','full_time','2020-01-01')`;
++        await tx`insert into public.users(id,auth_provider_id,email) values(${userId},${'synthetic-' + userId},${userId + '@example.test'})`;
++      });
++      const setupFoundation = createPointageServerFoundation({
++        repository: createPointageRepository(admin.db),
++        encodedAuthSecret: secret.toString('base64url'),
++        clientAddressProvider: provider(),
++      });
++      pin = (
++        await setupFoundation.issueCredential({
++          manager: {
++            actorType: 'POINTAGE_MANAGER',
++            organizationId: scope.organizationId,
++            establishmentId: scope.establishmentId,
++            userId,
++            membershipId: randomUUID(),
++            role: 'OWNER',
++            operation: 'pointage.credential.issue',
++          },
++          personnelDossierId: scope.personnelDossierId,
++        })
++      ).credential;
++      provider.mockClear();
++    });
++    afterAll(async () => {
++      pin = '';
++      secret.fill(0);
++      await Promise.all([
++        admin?.connection.end(),
++        foundation?.connection.end(),
++        raw?.connection.end(),
++      ]);
++    });
++    it('uses all seven methods with exact column grants and preserves candidate/client thresholds', async () => {
++      const repository = createPointageRepository(foundation.db);
++      expect(await repository.resolveActiveEntryScope(slug)).toMatchObject({
++        organizationId: scope.organizationId,
++        establishmentId: scope.establishmentId,
++      });
++      expect(
++        await repository.findPersonnelEmploymentPeriod(
++          scope,
++          scope.personnelDossierId,
++        ),
++      ).toMatchObject({ entryDate: '2020-01-01' });
++      const now = new Date();
++      for (const [keyKind, failureLimit, keyDigest] of [
++        ['candidate', 5, 'c'.repeat(64)],
++        ['client', 30, 'd'.repeat(64)],
++      ] as const) {
++        expect(
++          await repository.isRateLimitBlocked(scope, keyKind, keyDigest, now),
++        ).toBe(false);
++        for (let index = 1; index <= failureLimit; index++) {
++          const failure = await repository.recordRateLimitFailure({
++            scope,
++            keyKind,
++            keyDigest,
++            now,
++            failureLimit,
++            windowMs: 900_000,
++            blockMs: 900_000,
++          });
++          expect(failure).toEqual({
++            failureCount: index,
++            blocked: index === failureLimit,
++          });
++        }
++        expect(
++          await repository.isRateLimitBlocked(scope, keyKind, keyDigest, now),
++        ).toBe(true);
++        await repository.resetCandidateRateLimit(scope, keyDigest, now);
++        expect(
++          await repository.isRateLimitBlocked(scope, keyKind, keyDigest, now),
++        ).toBe(keyKind === 'client');
++      }
++      await repository.appendAudit({
++        ...scope,
++        eventType: 'pointage.authorization.denied',
++        outcome: 'denied',
++        reasonCode: 'operation_not_granted',
++        requestedOperation: 'pointage.employee.state.read',
++        occurredAt: now,
++      });
++      // Successful actual identify exercises current credential lookup/verifier,
++      // distributed limiter reset, minimized audit and raw transaction authority.
++      const runtime = await compose();
++      const identified = await runtime.identify({
++        establishmentSlug: slug,
++        credential: pin,
++      });
++      expect(identified.ok).toBe(true);
++      if (!identified.ok) throw new Error('Synthetic D1a identify failed.');
++      expect(identified.value.state.displayName).toBe('Synthetic D1a');
++      const command = {
++        establishmentSlug: slug,
++        continuation: identified.value.continuation,
++        requestId: randomUUID(),
++        kind: 'CLOCK_IN' as const,
++        observedStateGuard: identified.value.state.stateGuard,
++      };
++      const receipt = await runtime.mutate(command);
++      expect(receipt.ok).toBe(true);
++      expect(await runtime.mutate(command)).toEqual(receipt);
++    });
++    it('denies alternate SQL and administration with the real foundation identity', async () => {
++      for (const statement of [
++        'select * from public.pointage_raw_events',
++        'select * from public.pointage_raw_command_receipts',
++        'select * from public.pointage_continuations',
++        'select * from public.pointage_security_audit_events',
++        'select issued_at from public.pointage_employee_credentials',
++        'update public.pointage_employee_credentials set superseded_at=now()',
++        'update public.personnel_employee_dossiers set entry_date=entry_date',
++        'update public.establishments set timezone=timezone',
++        'update public.organizations set status=status',
++        'delete from public.pointage_credential_rate_limits',
++        'truncate public.pointage_credential_rate_limits',
++        'select public.pointage_raw_lock_dossier(null,null,null)',
++        'create temporary table d1a_forbidden(id int)',
++        'create table public.d1a_forbidden(id int)',
++        'create schema d1a_forbidden',
++        'alter table public.pointage_credential_rate_limits disable trigger all',
++        'drop table public.pointage_credential_rate_limits',
++        'create role d1a_forbidden',
++      ])
++        await expect(
++          foundation.connection.unsafe(statement),
++        ).rejects.toMatchObject({ code: '42501' });
++      const repository = createPointageRepository(foundation.db);
++      const command = {
++        scope,
++        personnelDossierId: scope.personnelDossierId,
++        managerUserId: userId,
++        now: new Date(),
++        createMaterial: vi.fn(),
++      };
++      await expect(repository.issueCredential(command)).rejects.toThrow();
++      await expect(repository.resetCredential(command)).rejects.toThrow();
++      expect(command.createMaterial).not.toHaveBeenCalled();
++      await expect(
++        assertPointageRawDatabaseBoundary(foundation.db),
++      ).rejects.toThrow();
++      await expect(
++        assertPointageFoundationDatabaseBoundary(raw.db),
++      ).rejects.toThrow();
++    });
++    const grants = [
++      ['select on public.pointage_raw_events', role],
++      ['select on public.pointage_raw_command_receipts', role],
++      ['select on public.pointage_continuations', role],
++      ['insert on public.pointage_raw_events', role],
++      ['insert on public.pointage_raw_command_receipts', role],
++      ['insert on public.pointage_continuations', role],
++      ['update (ended_at) on public.pointage_continuations', role],
++      ['insert on public.pointage_employee_credentials', role],
++      ['update (superseded_at) on public.pointage_employee_credentials', role],
++      ['update (entry_date) on public.personnel_employee_dossiers', role],
++      ['update (status) on public.organizations', role],
++      ['update (timezone) on public.establishments', role],
++      ['select on public.pointage_security_audit_events', role],
++      [
++        'execute on function public.pointage_raw_lock_dossier(uuid,uuid,uuid)',
++        role,
++      ],
++      ['select on public.pointage_raw_events', 'public'],
++      ['create on schema public', role],
++      [
++        'select on public.pointage_credential_rate_limits',
++        'yuta_pointage_raw_writer',
++      ],
++      [
++        'insert on public.pointage_security_audit_events',
++        'yuta_pointage_raw_writer',
++      ],
++    ];
++    it.each(grants)(
++      'rejects effective excess %s to %s before provider',
++      async (grant, grantee) => {
++        await admin.connection.unsafe(`grant ${grant} to ${grantee}`);
++        provider.mockClear();
++        try {
++          await expect(compose()).rejects.toThrow(
++            'Pointage runtime is unavailable.',
++          );
++          expect(provider).not.toHaveBeenCalled();
++        } finally {
++          await admin.connection.unsafe(`revoke ${grant} from ${grantee}`);
++        }
++        await assertPointageFoundationDatabaseBoundary(foundation.db);
++        await assertPointageRawDatabaseBoundary(raw.db);
++      },
++    );
++    it.each([
++      ['superuser', 'nosuperuser'],
++      ['createdb', 'nocreatedb'],
++      ['createrole', 'nocreaterole'],
++      ['replication', 'noreplication'],
++      ['bypassrls', 'nobypassrls'],
++      ['inherit', 'noinherit'],
++      ['nologin', 'login'],
++    ])(
++      'rejects unexpected foundation attribute %s before provider',
++      async (attribute, restore) => {
++        await admin.connection.unsafe(`alter role ${role} ${attribute}`);
++        provider.mockClear();
++        try {
++          await expect(compose()).rejects.toThrow(
++            'Pointage runtime is unavailable.',
++          );
++          expect(provider).not.toHaveBeenCalled();
++        } finally {
++          await admin.connection.unsafe(`alter role ${role} ${restore}`);
++        }
++        await assertPointageFoundationDatabaseBoundary(foundation.db);
++      },
++    );
++    it('rejects membership, default ACL, grant option, ownership and PUBLIC TEMP', async () => {
++      const [{ name }] = await admin.connection<
++        { name: string }[]
++      >`select current_database() as name`;
++      const mutations = [
++        [
++          `grant yuta_pointage_raw_writer to ${role}`,
++          `revoke yuta_pointage_raw_writer from ${role}`,
++        ],
++        [
++          `alter default privileges grant select on tables to ${role}`,
++          `alter default privileges revoke select on tables from ${role}`,
++        ],
++        [
++          `alter default privileges grant select on tables to public`,
++          `alter default privileges revoke select on tables from public`,
++        ],
++        [
++          `grant select (id) on public.organizations to ${role} with grant option`,
++          `revoke grant option for select (id) on public.organizations from ${role}`,
++        ],
++        [
++          `grant temporary on database "${name}" to public`,
++          `revoke temporary on database "${name}" from public`,
++        ],
++        [
++          `alter database "${name}" owner to ${role}`,
++          `alter database "${name}" owner to pointage_bootstrap_20260908a`,
++        ],
++      ];
++      for (const [mutate, restore] of mutations) {
++        await admin.connection.unsafe(mutate!);
++        provider.mockClear();
++        try {
++          await expect(compose()).rejects.toThrow(
++            'Pointage runtime is unavailable.',
++          );
++          expect(provider).not.toHaveBeenCalled();
++        } finally {
++          await admin.connection.unsafe(restore!);
++        }
++        await assertPointageFoundationDatabaseBoundary(foundation.db);
++        await assertPointageRawDatabaseBoundary(raw.db);
++      }
++    });
++    it('rejects actual administrative clients and preserves the writer effective TEMP baseline', async () => {
++      const db = admin.connection;
++      const [rights] = await db`select
++        has_database_privilege('yuta_pointage_raw_writer',current_database(),'TEMP') as writer_temp,
++        has_database_privilege('yuta_pointage_foundation_runtime',current_database(),'TEMP') as foundation_temp`;
++      expect(rights).toEqual({ writer_temp: true, foundation_temp: false });
++      for (const [foundationClient, rawClient] of [
++        [admin.db, raw.db],
++        [foundation.db, admin.db],
++        [raw.db, foundation.db],
++      ]) {
++        provider.mockClear();
++        await expect(
++          createPointageRawClockingRuntime({
++            environment: process.env,
++            listeningHost: '127.0.0.1',
++            foundationClient,
++            rawClient,
++            encodedAuthSecret: secret.toString('base64url'),
++            stateGuardKey: derivePointageStateGuardKey(secret),
++            createSyntheticClientAddressProvider: provider,
++          }),
++        ).rejects.toThrow('Pointage runtime is unavailable.');
++        expect(provider).not.toHaveBeenCalled();
++      }
++    });
++    it('uses actual 5/30 authentication limits and never logs credential or employee state', async () => {
++      const runtime = await compose();
++      const spies = [
++        vi.spyOn(console, 'log'),
++        vi.spyOn(console, 'warn'),
++        vi.spyOn(console, 'error'),
++      ];
++      try {
++        for (let i = 0; i < 5; i++)
++          expect(
++            await runtime.identify({
++              establishmentSlug: slug,
++              credential: 'synthetic-invalid-repeat',
++            }),
++          ).toEqual({ ok: false, code: 'POINTAGE_ACCESS_DENIED' });
++        expect(
++          await runtime.identify({
++            establishmentSlug: slug,
++            credential: 'synthetic-invalid-repeat',
++          }),
++        ).toEqual({ ok: false, code: 'POINTAGE_TRY_LATER' });
++        for (let i = 0; i < 25; i++)
++          expect(
++            await runtime.identify({
++              establishmentSlug: slug,
++              credential: 'synthetic-invalid-' + i,
++            }),
++          ).toEqual({ ok: false, code: 'POINTAGE_ACCESS_DENIED' });
++        expect(
++          await runtime.identify({ establishmentSlug: slug, credential: pin }),
++        ).toEqual({ ok: false, code: 'POINTAGE_TRY_LATER' });
++        for (const spy of spies) expect(spy).not.toHaveBeenCalled();
++      } finally {
++        for (const spy of spies) spy.mockRestore();
++      }
++      const rows =
++        await admin.connection`select * from public.pointage_security_audit_events where organization_id=${scope.organizationId} and establishment_id=${scope.establishmentId}`;
++      expect(rows.length).toBeGreaterThan(30);
++      const serialized = JSON.stringify(rows);
++      expect(serialized.includes(pin)).toBe(false);
++      expect(serialized.includes(secret.toString('base64url'))).toBe(false);
++      expect(serialized.includes('Synthetic D1a')).toBe(false);
++      expect(Object.keys(rows[0]!).sort()).toEqual(
++        [
++          'id',
++          'organization_id',
++          'establishment_id',
++          'event_type',
++          'outcome',
++          'reason_code',
++          'manager_user_id',
++          'personnel_dossier_id',
++          'credential_id',
++          'credential_version',
++          'requested_operation',
++          'occurred_at',
++        ].sort(),
++      );
++    }, 30_000);
++  });
++}
+ 
+ type Continuation = NonNullable<
+   Awaited<ReturnType<PointageRawDossierOperations['insertContinuation']>>
+diff --git a/packages/db-cloud/src/pointage-raw-clocking-repository.ts b/packages/db-cloud/src/pointage-raw-clocking-repository.ts
+index 996355a..a2a3cf7 100644
+--- a/packages/db-cloud/src/pointage-raw-clocking-repository.ts
++++ b/packages/db-cloud/src/pointage-raw-clocking-repository.ts
+@@ -264,6 +264,211 @@ export async function assertPointageRawDatabaseBoundary(
+   if (!sequences?.safe) fail();
+ }
+ 
++// D1a is validation-only. These are column privileges, never table grants.
++// Kept separate from the unchanged raw writer/helper F8 admission above.
++export const POINTAGE_FOUNDATION_RUNTIME_COLUMNS: Readonly<
++  Record<
++    string,
++    Readonly<Record<'SELECT' | 'INSERT' | 'UPDATE', readonly string[]>>
++  >
++> = Object.freeze({
++  organizations: { SELECT: ['id', 'status'], INSERT: [], UPDATE: [] },
++  establishments: {
++    SELECT: ['id', 'organization_id', 'locale', 'timezone', 'slug', 'status'],
++    INSERT: [],
++    UPDATE: [],
++  },
++  personnel_employee_dossiers: {
++    SELECT: [
++      'id',
++      'organization_id',
++      'establishment_id',
++      'entry_date',
++      'departure_date',
++    ],
++    INSERT: [],
++    UPDATE: [],
++  },
++  pointage_employee_credentials: {
++    SELECT: [
++      'id',
++      'organization_id',
++      'establishment_id',
++      'personnel_dossier_id',
++      'credential_version',
++      'credential_format_version',
++      'algorithm_version',
++      'key_version',
++      'lookup_digest',
++      'salt',
++      'verifier',
++      'superseded_at',
++    ],
++    INSERT: [],
++    UPDATE: [],
++  },
++  pointage_credential_rate_limits: {
++    SELECT: [
++      'organization_id',
++      'establishment_id',
++      'key_kind',
++      'key_digest',
++      'window_started_at',
++      'failure_count',
++      'blocked_until',
++    ],
++    INSERT: [
++      'organization_id',
++      'establishment_id',
++      'key_kind',
++      'key_digest',
++      'window_started_at',
++      'failure_count',
++      'blocked_until',
++      'updated_at',
++    ],
++    UPDATE: [
++      'window_started_at',
++      'failure_count',
++      'blocked_until',
++      'updated_at',
++    ],
++  },
++  pointage_security_audit_events: {
++    SELECT: [],
++    INSERT: [
++      'id',
++      'organization_id',
++      'establishment_id',
++      'event_type',
++      'outcome',
++      'reason_code',
++      'manager_user_id',
++      'personnel_dossier_id',
++      'credential_id',
++      'credential_version',
++      'requested_operation',
++      'occurred_at',
++    ],
++    UPDATE: [],
++  },
++});
++
++for (const grants of Object.values(POINTAGE_FOUNDATION_RUNTIME_COLUMNS)) {
++  for (const columns of Object.values(grants)) Object.freeze(columns);
++  Object.freeze(grants);
++}
++
++export async function assertPointageFoundationDatabaseBoundary(
++  connection: Pick<RawTransaction, 'execute'>,
++): Promise<void> {
++  const role = 'yuta_pointage_foundation_runtime';
++  const fail = () => {
++    throw new PointageRawScopeUnavailableError();
++  };
++  const [identity] = await connection.execute<{
++    session: string;
++    current: string;
++  }>(sql`select session_user as session, current_user as current`);
++  if (identity?.session !== role || identity.current !== role) fail();
++  const [attributes] = await connection.execute<{ safe: boolean }>(sql`
++    select count(*)=1 and bool_and(
++      r.rolcanlogin and not r.rolsuper and not r.rolcreatedb and not r.rolcreaterole
++      and not r.rolreplication and not r.rolbypassrls and not r.rolinherit
++      and r.rolconfig is null
++      and not exists (select 1 from pg_catalog.pg_auth_members m where m.member=r.oid or m.roleid=r.oid)
++      and not exists (select 1 from pg_catalog.pg_roles other where other.oid<>r.oid
++        and (pg_catalog.pg_has_role(r.oid,other.oid,'MEMBER')
++          or pg_catalog.pg_has_role(r.oid,other.oid,'USAGE')
++          or pg_catalog.pg_has_role(r.oid,other.oid,'SET')))
++      and not exists (select 1 from pg_catalog.pg_database d where d.datdba=r.oid)
++      and not exists (select 1 from pg_catalog.pg_namespace n where n.nspowner=r.oid)
++      and not exists (select 1 from pg_catalog.pg_class c where c.relowner=r.oid)
++      and not exists (select 1 from pg_catalog.pg_proc p where p.proowner=r.oid)
++      and not exists (select 1 from pg_catalog.pg_shdepend d where d.refclassid='pg_catalog.pg_authid'::pg_catalog.regclass
++        and d.refobjid=r.oid and d.deptype='o')
++      and pg_catalog.has_database_privilege(r.oid,current_database(),'CONNECT')
++      and not pg_catalog.has_database_privilege(r.oid,current_database(),
++        'CREATE,TEMP,CONNECT WITH GRANT OPTION,CREATE WITH GRANT OPTION,TEMP WITH GRANT OPTION')
++      and not exists (select 1 from pg_catalog.pg_namespace n
++        where n.nspname not like 'pg_%' and n.nspname<>'information_schema'
++          and (pg_catalog.has_schema_privilege(r.oid,n.oid,'CREATE,USAGE WITH GRANT OPTION,CREATE WITH GRANT OPTION')
++            or (n.nspname<>'public' and pg_catalog.has_schema_privilege(r.oid,n.oid,'USAGE'))))
++      and pg_catalog.has_schema_privilege(r.oid,'public','USAGE')
++      and not exists (select 1 from pg_catalog.pg_default_acl d
++        cross join lateral pg_catalog.aclexplode(d.defaclacl) a where a.grantee in (0,r.oid))
++      and not exists (select 1 from pg_catalog.pg_parameter_acl p
++        cross join lateral pg_catalog.aclexplode(p.paracl) a where a.grantee in (0,r.oid))
++      and not exists (select 1 from pg_catalog.pg_proc p
++        join pg_catalog.pg_namespace n on n.oid=p.pronamespace
++        where n.nspname not like 'pg_%' and n.nspname<>'information_schema'
++          and pg_catalog.has_function_privilege(r.oid,p.oid,'EXECUTE'))
++    ) as safe from pg_catalog.pg_roles r where r.rolname=${role}
++  `);
++  if (!attributes?.safe) fail();
++  const [tables] = await connection.execute<{ safe: boolean }>(sql`
++    select not exists (
++      select 1 from pg_catalog.pg_class c
++      join pg_catalog.pg_namespace n on n.oid=c.relnamespace
++      cross join pg_catalog.pg_roles r
++      where r.rolname=${role} and n.nspname not like 'pg_%' and n.nspname<>'information_schema'
++        and ((c.relkind in ('r','p','v','m','f') and pg_catalog.has_table_privilege(r.oid,c.oid,
++          'SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER,MAINTAIN,SELECT WITH GRANT OPTION,INSERT WITH GRANT OPTION,UPDATE WITH GRANT OPTION'))
++          or (c.relkind='S' and pg_catalog.has_sequence_privilege(r.oid,c.oid,'USAGE,SELECT,UPDATE')))
++    ) as safe
++  `);
++  if (!tables?.safe) fail();
++  const columns = await connection.execute<{
++    schema: string;
++    table: string;
++    column: string;
++    select: boolean;
++    insert: boolean;
++    update: boolean;
++    forbidden: boolean;
++  }>(sql`
++    select n.nspname as schema,c.relname as table,a.attname as column,
++      pg_catalog.has_column_privilege(r.oid,c.oid,a.attnum,'SELECT') as select,
++      pg_catalog.has_column_privilege(r.oid,c.oid,a.attnum,'INSERT') as insert,
++      pg_catalog.has_column_privilege(r.oid,c.oid,a.attnum,'UPDATE') as update,
++      pg_catalog.has_column_privilege(r.oid,c.oid,a.attnum,
++        'REFERENCES,SELECT WITH GRANT OPTION,INSERT WITH GRANT OPTION,UPDATE WITH GRANT OPTION,REFERENCES WITH GRANT OPTION') as forbidden
++    from pg_catalog.pg_class c join pg_catalog.pg_namespace n on n.oid=c.relnamespace
++    join pg_catalog.pg_attribute a on a.attrelid=c.oid and a.attnum>0 and not a.attisdropped
++    cross join pg_catalog.pg_roles r
++    where r.rolname=${role} and c.relkind in ('r','p','v','m','f')
++      and n.nspname not like 'pg_%' and n.nspname<>'information_schema'
++  `);
++  for (const column of columns) {
++    const expected =
++      column.schema === 'public'
++        ? POINTAGE_FOUNDATION_RUNTIME_COLUMNS[column.table]
++        : undefined;
++    if (
++      column.forbidden ||
++      column.select !== (expected?.SELECT.includes(column.column) === true) ||
++      column.insert !== (expected?.INSERT.includes(column.column) === true) ||
++      column.update !== (expected?.UPDATE.includes(column.column) === true)
++    )
++      fail();
++  }
++  for (const [table, grants] of Object.entries(
++    POINTAGE_FOUNDATION_RUNTIME_COLUMNS,
++  )) {
++    for (const column of new Set(Object.values(grants).flat())) {
++      if (
++        !columns.some(
++          (row) =>
++            row.schema === 'public' &&
++            row.table === table &&
++            row.column === column,
++        )
++      )
++        fail();
++    }
++  }
++}
++
+ function continuationPredicate(scope: PointageRawDossierScope, id: string) {
+   return and(
+     eq(pointageContinuations.organizationId, scope.organizationId),
+diff --git a/packages/db-cloud/test/helpers/pointage-raw-clocking-test-database.ts b/packages/db-cloud/test/helpers/pointage-raw-clocking-test-database.ts
+index e430fa1..308150f 100644
+--- a/packages/db-cloud/test/helpers/pointage-raw-clocking-test-database.ts
++++ b/packages/db-cloud/test/helpers/pointage-raw-clocking-test-database.ts
+@@ -4,6 +4,10 @@ import postgres from 'postgres';
+ import { z } from 'zod';
+ import { drizzle } from 'drizzle-orm/postgres-js';
+ import * as schema from '../../src/schema';
++import {
++  POINTAGE_FOUNDATION_RUNTIME_COLUMNS,
++  assertPointageRawDatabaseBoundary,
++} from '../../src/pointage-raw-clocking-repository';
+ 
+ const databaseRule = /^yuta_pointage_raw_clocking_test(?:_[a-z0-9]+)?$/;
+ const loopback = new Set(['localhost', '127.0.0.1', '[::1]']);
+@@ -123,7 +127,7 @@ export function pointageDisposableWriterUrl(bootstrapUrl: string): string {
+ // identity plus private tmpfs and exact loopback port prove this is an isolated
+ // test cluster, not a database with a conveniently matching name on a shared
+ // server. Existing roles are refused rather than silently repaired.
+-export async function provisionPointageTestRoles(
++async function requireIsolatedPointageTestCluster(
+   environment: NodeJS.ProcessEnv,
+   bootstrapUrl: string,
+   expectedContainerId: string,
+@@ -201,6 +205,18 @@ export async function provisionPointageTestRoles(
+   }
+   if (!isolated)
+     throw new Error('Pointage disposable cluster identity refused.');
++}
++
++export async function provisionPointageTestRoles(
++  environment: NodeJS.ProcessEnv,
++  bootstrapUrl: string,
++  expectedContainerId: string,
++): Promise<void> {
++  await requireIsolatedPointageTestCluster(
++    environment,
++    bootstrapUrl,
++    expectedContainerId,
++  );
+   const writerUrl = new URL(pointageDisposableWriterUrl(bootstrapUrl));
+   if (!/^[a-f0-9]{64}$/u.test(writerUrl.password))
+     throw new Error('Pointage disposable writer material refused.');
+@@ -246,3 +262,85 @@ export async function provisionPointageTestRoles(
+     await db.end();
+   }
+ }
++
++export function pointageDisposableFoundationUrl(bootstrapUrl: string): string {
++  const target = new URL(bootstrapUrl);
++  if (target.username !== 'pointage_bootstrap_20260908a')
++    throw new Error('Unexpected Pointage bootstrap identity.');
++  target.password = createHmac('sha256', target.password)
++    .update('pointage-disposable-foundation-d1a')
++    .digest('hex');
++  target.username = 'yuta_pointage_foundation_runtime';
++  return target.toString();
++}
++
++// D1a only: provision after verified isolated-cluster/actual-target admission.
++// Never invoked by application composition and never rewrites migration 0021.
++export async function provisionPointageFoundationTestRole(
++  environment: NodeJS.ProcessEnv,
++  bootstrapUrl: string,
++  expectedContainerId: string,
++): Promise<void> {
++  await requireIsolatedPointageTestCluster(
++    environment,
++    bootstrapUrl,
++    expectedContainerId,
++  );
++  const raw = await openPointageTestClient(
++    environment,
++    pointageDisposableWriterUrl(bootstrapUrl),
++  );
++  try {
++    await assertPointageRawDatabaseBoundary(raw.db);
++  } finally {
++    await raw.connection.end();
++  }
++  const { name } = requirePointageTestConfiguration(environment, bootstrapUrl);
++  const password = new URL(pointageDisposableFoundationUrl(bootstrapUrl))
++    .password;
++  if (!/^[a-f0-9]{64}$/u.test(password))
++    throw new Error('Pointage disposable foundation material refused.');
++  const db = await openPointageTestDatabase(environment, bootstrapUrl);
++  try {
++    await db.begin(async (tx) => {
++      const [state] = await tx`
++        select current_user=session_user and current_user='pointage_bootstrap_20260908a' as bootstrap,
++          not exists (select 1 from pg_roles where rolname='yuta_pointage_foundation_runtime') as absent,
++          has_database_privilege('yuta_pointage_raw_writer',current_database(),'TEMP') as writer_temp
++      `;
++      if (!state?.bootstrap || !state.absent)
++        throw new Error('Pointage disposable foundation state refused.');
++      await tx.unsafe(
++        `create role yuta_pointage_foundation_runtime login nosuperuser nocreatedb nocreaterole noreplication nobypassrls noinherit password '${password}'`,
++      );
++      // PostgreSQL has no per-role DENY overriding PUBLIC TEMP. Restrict the
++      // verified disposable target, never a shared cluster or application ACL.
++      await tx.unsafe(`revoke temporary on database "${name}" from public`);
++      // Preserve, never expand, the writer's pre-existing effective TEMP right
++      // used by the approved D4b poisoned-caller regression. PostgreSQL cannot
++      // deny PUBLIC's grant to the foundation role individually.
++      if (state.writer_temp === true)
++        await tx.unsafe(
++          `grant temporary on database "${name}" to yuta_pointage_raw_writer`,
++        );
++      await tx.unsafe(
++        `grant connect on database "${name}" to yuta_pointage_foundation_runtime`,
++      );
++      await tx`grant usage on schema public to yuta_pointage_foundation_runtime`;
++      for (const [table, grants] of Object.entries(
++        POINTAGE_FOUNDATION_RUNTIME_COLUMNS,
++      )) {
++        for (const [privilege, columns] of Object.entries(grants)) {
++          if (columns.length)
++            await tx.unsafe(
++              `grant ${privilege} (${columns.join(', ')}) on public.${table} to yuta_pointage_foundation_runtime`,
++            );
++        }
++      }
++    });
++  } catch {
++    throw new Error('Pointage disposable foundation provisioning refused.');
++  } finally {
++    await db.end();
++  }
++}

@@ -187,7 +187,15 @@ async function loadRules(
     db.select().from(comboRuleGroupItems),
   ]);
   return ruleRows.map((rule) => ({
-    ...rule,
+    id: rule.id,
+    name: rule.name,
+    pricingMode: rule.pricingMode,
+    comboPriceCents: rule.comboPriceCents,
+    priceDeltaCents: rule.priceDeltaCents,
+    basePricingGroupName: rule.basePricingGroupName,
+    priority: rule.priority,
+    maxApplications: rule.maxApplications,
+    isActive: rule.isActive,
     groups: groupRows
       .filter((group) => group.comboRuleId === rule.id)
       .map((group) => ({

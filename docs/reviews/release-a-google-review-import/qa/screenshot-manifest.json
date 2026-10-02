@@ -1,0 +1,1843 @@
+{
+  "screenshots": [
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-owner-desktop-today.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Today stored-work summary",
+      "scenario": "owner-desktop-role-state",
+      "sha256": "5af4d0568c66b0abb269edb893557986d32b9f16883d93851a141d58cb6ca9c8",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-06-18-109Z/owner-desktop-today.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-owner-desktop-history-end.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Explicit history page and bounded end notice",
+      "scenario": "owner-desktop-explicit-history",
+      "sha256": "9a3a2f58d721a9d0ae19b2420b3652029e8867fc1d8ee27ba3c53c4966e38e3d",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-06-18-109Z/owner-desktop-history-end.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-owner-desktop-error.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Sanitized error failure and retained writing",
+      "scenario": "owner-desktop-provider-failures",
+      "sha256": "11acb1b68543737c08dcd0d2ece9bc802a1bfb45821aa049ad365f00724b3255",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-06-18-109Z/owner-desktop-error.png",
+      "alsoObservedIn": [
+        {
+          "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-06-18-109Z/owner-desktop-malformed.png",
+          "role": "OWNER",
+          "state": "Sanitized malformed failure and retained writing"
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-owner-desktop-empty-recent.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Truthful empty recent page while saved work remains",
+      "scenario": "owner-desktop-provider-failures",
+      "sha256": "7d257ab176b6064a26c1138ba5ec14cd602ecf1d7d5e6b81bcfd4c53a1efec00",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-06-18-109Z/owner-desktop-empty-recent.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-owner-desktop-pending.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Focused note text and selection retained during retrieval; status region evidenced separately",
+      "scenario": "owner-desktop-role-state",
+      "sha256": "b0f884ed4bf8cf3539f618d901a24ba60a0a3340026826c35571a626a1964a76",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-06-18-109Z/owner-desktop-pending.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-manager-desktop-pending.png",
+      "role": "MANAGER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Focused note text and selection retained during retrieval; status region evidenced separately",
+      "scenario": "manager-desktop-role-state",
+      "sha256": "5ca7995dd9581cd26349b35584033a8aeaa82dc240f5b378ae5dec286eb6420a",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-06-18-109Z/manager-desktop-pending.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-staff-desktop-today.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Today stored-work summary",
+      "scenario": "staff-desktop-role-state",
+      "sha256": "6611e447c4ac4774228dc5aa8f6e08005e820118f61b447625d0acce21119f74",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-06-18-109Z/staff-desktop-today.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-staff-desktop-assigned.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Assigned work with no provider controls",
+      "scenario": "staff-desktop-role-state",
+      "sha256": "21697515112eda88c53ab43963ada10ef9dfc10fd6798731a5029ad92909c643",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-06-18-109Z/staff-desktop-assigned.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-owner-mobile-pending.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Focused note text and selection retained during retrieval; status region evidenced separately",
+      "scenario": "owner-mobile-role-state",
+      "sha256": "5c6dbbcb1e92ed9585016d49f985444e938c2adf1feb55de4fe269bea2f19789",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-06-18-109Z/owner-mobile-pending.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-manager-mobile-today.png",
+      "role": "MANAGER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Today stored-work summary",
+      "scenario": "manager-mobile-role-state",
+      "sha256": "4af8eb40221e402c0129bbf27687c12dd3a1aae3c82b22c943fc9cc07b5195e3",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-06-18-109Z/manager-mobile-today.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-manager-mobile-pending.png",
+      "role": "MANAGER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Focused note text and selection retained during retrieval; status region evidenced separately",
+      "scenario": "manager-mobile-role-state",
+      "sha256": "b6a246e6ece8c06d8a6d884cb4bf4d8dcb392b8e7d597ee3f09d304f173f2d38",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-06-18-109Z/manager-mobile-pending.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-staff-mobile-today.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Today stored-work summary",
+      "scenario": "staff-mobile-role-state",
+      "sha256": "2c0277ff1b1aec6bc2aaf76ccd3808cedac97533eedcfb27c2bf0c61b6bbf267",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-06-18-109Z/staff-mobile-today.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-owner-desktop-internal-disabled.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Internal profile explicitly disabled retrieval admission",
+      "scenario": "owner-desktop-internal-disabled-admission",
+      "sha256": "723ec510886ce261a693fd747671b679432815a750f5f5633beb234bc0f5adf5",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-06-18-109Z/owner-desktop-internal-disabled.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/core-owner-mobile-internal-disabled.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Internal profile explicitly disabled retrieval admission",
+      "scenario": "owner-mobile-internal-disabled-admission",
+      "sha256": "4a58b2bbf3c157ae2d32123eed516e841acc1c2d277e39b05f92031c678b04f7",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-06-18-109Z/owner-mobile-internal-disabled.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/stale-owner-desktop-recent-pending.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Mounted stale visit pending while writing",
+      "scenario": "owner-desktop-mounted-visit",
+      "sha256": "7b594aac8cdf5a7e4296a47bf8e56eff71ff443f49fe02015d8a0f4b3e4dc8d2",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-12-50-033Z/owner-desktop-recent-pending.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/targets-owner-desktop-status-pending-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Retrieval status region while manual request is pending",
+      "scenario": "owner-desktop-targeted-captures",
+      "sha256": "d36c1df2dabea27e31eccf02b2080f85497d75fd79a4e6d1283d2c5bddcc1ed5",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/owner-desktop-status-pending-target.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/targets-owner-desktop-status-completed-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Completed retrieval result; active input retained separately",
+      "scenario": "owner-desktop-targeted-captures",
+      "sha256": "5a09fb4a46fb3f87c899ed54b904153e1859a7f64e025c9116e3225d59f7b642",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/owner-desktop-status-completed-target.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/targets-owner-desktop-remote-reply-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Temporary remote reply and separate manual draft",
+      "scenario": "owner-desktop-targeted-captures",
+      "sha256": "be9615476a86067cc7ce91f7f3d958e86b55cc63038749f0e75fce20d1e715a3",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/owner-desktop-remote-reply-target.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/targets-owner-desktop-unavailable-detail-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Unavailable detail handoff and saved local work",
+      "scenario": "owner-desktop-targeted-captures",
+      "sha256": "6faf9555e177cbf7809892d6fa36076f5859104403f30418f9f2eb6de8a1e45e",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/owner-desktop-unavailable-detail-target.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/targets-owner-mobile-status-pending-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Retrieval status region while manual request is pending",
+      "scenario": "owner-mobile-targeted-captures",
+      "sha256": "95e5493d4fc974bf0b5a1eff4fa1c0b6c1133c9182e8ae2ad8db208e3402d043",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/owner-mobile-status-pending-target.png",
+      "alsoObservedIn": [
+        {
+          "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/manager-mobile-status-pending-target.png",
+          "role": "MANAGER",
+          "state": "Retrieval status region while manual request is pending"
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/targets-owner-mobile-status-completed-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Completed retrieval result; active input retained separately",
+      "scenario": "owner-mobile-targeted-captures",
+      "sha256": "545195a21381187c384dce5d67a878430df84387c3e3bf848bd0a596d629ca75",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/owner-mobile-status-completed-target.png",
+      "alsoObservedIn": [
+        {
+          "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/manager-mobile-status-completed-target.png",
+          "role": "MANAGER",
+          "state": "Completed retrieval result; active input retained separately"
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/targets-owner-mobile-remote-reply-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Temporary remote reply and separate manual draft",
+      "scenario": "owner-mobile-targeted-captures",
+      "sha256": "d9fe6d78e17e8978b1c159fc55bc9806755d759c162a929e0d1b58b941dd61bd",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/owner-mobile-remote-reply-target.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/targets-owner-mobile-unavailable-detail-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Unavailable detail handoff and saved local work",
+      "scenario": "owner-mobile-targeted-captures",
+      "sha256": "b38b7005be4573fecee432e8d29393ca3153e3c9e3c26b6c77fdf64568de5df2",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/owner-mobile-unavailable-detail-target.png",
+      "alsoObservedIn": [
+        {
+          "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/manager-mobile-unavailable-detail-target.png",
+          "role": "MANAGER",
+          "state": "Unavailable detail handoff and saved local work"
+        },
+        {
+          "originalPath": ".tmp-google-review-import-test/extra-browser-qa-404-2026-10-01T20-14-37-743Z/owner-mobile-no-reference-handoff.png",
+          "role": "OWNER",
+          "state": "No-reference handoff without provider request"
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/targets-staff-mobile-assigned-detail-target.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Assigned saved draft without provider controls",
+      "scenario": "staff-mobile-targeted-captures",
+      "sha256": "1e24a0ebdcdc3f6156234fd2d00bfee396ecf4a8e45736306bf1d6ecde58c8c7",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/staff-mobile-assigned-detail-target.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/targets-staff-mobile-unavailable-detail-target.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Unavailable detail handoff and saved local work",
+      "scenario": "staff-mobile-targeted-captures",
+      "sha256": "516462c78889646d52d89892eb887fe8e80307ae14fc436cf81173cb41f6956c",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/staff-mobile-unavailable-detail-target.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/unbound-extra-owner-desktop-unbound.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "EXTRA OWNER",
+      "state": "Unbound with no successful retrieval claim",
+      "sha256": "f78c80a991488b77dcd215861ba3bfe8a23969def4e7e6ad470c51c223a87ee0",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/extra-browser-qa-unbound-2026-10-01T20-13-16-819Z/extra-owner-desktop-unbound.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/unbound-extra-owner-mobile-unbound.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "EXTRA OWNER",
+      "state": "Unbound with no successful retrieval claim",
+      "sha256": "aa37028c62f47412726b662ba32c40fd6e2bbc2f2a2b35f2a82fec0ec2fadc9d",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/extra-browser-qa-unbound-2026-10-01T20-13-16-819Z/extra-owner-mobile-unbound.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/first-extra-owner-desktop-bound-continue.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "EXTRA OWNER",
+      "state": "Already-bound OWNER explicit continuation before any review retrieval",
+      "sha256": "e930e95503945ef6b48e330a1e208090e07d10eb9e8b25f5c0f3293b1623a77b",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/extra-browser-qa-first-empty-2026-10-01T20-13-38-767Z/extra-owner-desktop-bound-continue.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/first-extra-owner-desktop-first-empty.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "EXTRA OWNER",
+      "state": "First bound empty-success receipt",
+      "sha256": "6e867c1ab0a882f6a48268479fdf59ade2d551158c85574be4b85df07f529c9d",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/extra-browser-qa-first-empty-2026-10-01T20-13-38-767Z/extra-owner-desktop-first-empty.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/first-extra-owner-mobile-bound-continue.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "EXTRA OWNER",
+      "state": "Already-bound OWNER explicit continuation before any review retrieval",
+      "sha256": "3d64a783a70733a3ac5bb0167fc5a98ad2b13c75fd43a3bbedd899d4bbfb47e4",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/extra-browser-qa-first-empty-2026-10-01T20-13-38-767Z/extra-owner-mobile-bound-continue.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/first-extra-owner-mobile-first-empty.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "EXTRA OWNER",
+      "state": "Persisted first empty-success receipt, fresh revisit",
+      "sha256": "54a10d296c39a001de3cd9a13ff56c6135e75aa1a20a499cc64c8eb684c6f7e3",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/extra-browser-qa-first-empty-2026-10-01T20-13-38-767Z/extra-owner-mobile-first-empty.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/first-extra-owner-desktop-first-content.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "EXTRA OWNER",
+      "state": "Later explicit first content after empty success",
+      "sha256": "dacd0aca21bc266c55c628aac138cc2590711d5752d560a738eb0c3e7a7bcec8",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/extra-browser-qa-first-empty-2026-10-01T20-13-38-767Z/extra-owner-desktop-first-content.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/first-extra-owner-mobile-first-content.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "EXTRA OWNER",
+      "state": "Later explicit first content after empty success",
+      "sha256": "738437634ded3ddcf3d8e007b831d67c8331cb9ae4527996d6f882c0f9005ebd",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/extra-browser-qa-first-empty-2026-10-01T20-13-38-767Z/extra-owner-mobile-first-content.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/maintenance-owner-desktop-maintenance-retained-work.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "Authenticated maintenance cleared temporary content while disabled retrieval and local work remain",
+      "sha256": "3a7015eade817f79eb484b1cdbd341d206e67c6f3b36f1adb8c56ca98b200e4c",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/extra-browser-qa-maintenance-2026-10-01T20-14-22-664Z/owner-desktop-maintenance-retained-work.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/maintenance-owner-mobile-maintenance-retained-work.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "Authenticated maintenance cleared temporary content while disabled retrieval and local work remain",
+      "sha256": "b95384981394c0da0311a76ea91c6b5c38246cd0a61a0d0d9727729035fc4154",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/extra-browser-qa-maintenance-2026-10-01T20-14-22-664Z/owner-mobile-maintenance-retained-work.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/not-found-owner-desktop-live-reference-404.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "Actual sanitized provider404 with retained work and valid retry reference",
+      "sha256": "94bc8fd041e35db7227c15ff36bce1e31d29d17e4f55718820b294058d940f6b",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/extra-browser-qa-404-2026-10-01T20-14-37-743Z/owner-desktop-live-reference-404.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/not-found-owner-desktop-unavailable-new-draft.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "New freeform draft persisted while Google content remains unavailable",
+      "sha256": "f823b1beddc451d6cea59dd35995d7fe19bb235cf82352aa36e76747e6fdb75e",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/extra-browser-qa-404-2026-10-01T20-14-37-743Z/owner-desktop-unavailable-new-draft.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/not-found-owner-desktop-unavailable-new-note.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "New freeform note persisted with no recovery reference",
+      "sha256": "7226c1be623b05da9730e1cc40ce37a531897701ea0107228da6efb91eaa0e96",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/extra-browser-qa-404-2026-10-01T20-14-37-743Z/owner-desktop-unavailable-new-note.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/not-found-owner-desktop-no-reference-handoff.png",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "role": "OWNER",
+      "state": "No-reference handoff without provider request",
+      "sha256": "c8c34d89e5cc313217d07badff4625a34cf7c55e954d8874a33f8fafcf023bc0",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/extra-browser-qa-404-2026-10-01T20-14-37-743Z/owner-desktop-no-reference-handoff.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/not-found-owner-mobile-live-reference-404.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "Actual sanitized provider404 with retained work and valid retry reference",
+      "sha256": "e7ca16ada085e7b84bf5e3928171b2038e98c2f69c29cddd0d1b165d93152996",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/extra-browser-qa-404-2026-10-01T20-14-37-743Z/owner-mobile-live-reference-404.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/not-found-owner-mobile-unavailable-new-draft.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "New freeform draft persisted while Google content remains unavailable",
+      "sha256": "ef613122b40e893e03d1b38e076175d6ccbe2c6fd7ce66505a49faaa826d0fa2",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/extra-browser-qa-404-2026-10-01T20-14-37-743Z/owner-mobile-unavailable-new-draft.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/not-found-owner-mobile-unavailable-new-note.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "role": "OWNER",
+      "state": "New freeform note persisted with no recovery reference",
+      "sha256": "cd976b3599f27d39bc1040dfe8fb10aa78054b0d7d0f50f4677be3d826d53bc2",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/extra-browser-qa-404-2026-10-01T20-14-37-743Z/owner-mobile-unavailable-new-note.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/recovery-owner-desktop-provider-edit-detail-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Completed edited Google detail flagged for review; local handling state retained",
+      "scenario": "owner-desktop-recovery-targets",
+      "sha256": "c98f45ecb49041d7749ff47fb71e887d942bbab148acc333a5d1d8dc556021ae",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-19-00-514Z/owner-desktop-provider-edit-detail-target.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/recovery-owner-desktop-successful-detail-pending-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Conditional detail recovery pending with a live temporary reference",
+      "scenario": "owner-desktop-recovery-targets",
+      "sha256": "ff9665fd5e42685949832d42fbb623c8cbd39081c0624ed42fbf5daf763d5920",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-19-00-514Z/owner-desktop-successful-detail-pending-target.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/recovery-owner-desktop-recovered-content-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Recovered Google content separate from retained YUTA work",
+      "scenario": "owner-desktop-recovery-targets",
+      "sha256": "2c0c5fda7ddc1019c93919431a8e3072f78b9418eac9bb5dec35ee1f2eba4a8b",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-19-00-514Z/owner-desktop-recovered-content-target.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/recovery-owner-mobile-provider-edit-detail-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Completed edited Google detail flagged for review; local handling state retained",
+      "scenario": "owner-mobile-recovery-targets",
+      "sha256": "ea5130c7570b0e1ce3de82b62304584bb95153bcc266e080a1a3c11b8da094ff",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-19-00-514Z/owner-mobile-provider-edit-detail-target.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/recovery-owner-mobile-recovered-content-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Recovered Google content separate from retained YUTA work",
+      "scenario": "owner-mobile-recovery-targets",
+      "sha256": "e3d5147ce9871f73bb67ab0bb6d43a5d9684d6058d0b35d8ebda032abb763106",
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-19-00-514Z/owner-mobile-recovered-content-target.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-today-reviews.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Today scoped stored-work preview; no provider retrieval",
+      "scenario": "owner-w1440-today-integrations",
+      "sha256": "32d6f810218cd79b9e2208ae7a9e301f79ea169f5ab1108e433973cdabac4e5e",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1440-today-reviews.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-integrations.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Bound OWNER confirmation is separate from retrieval; continuation not clicked",
+      "scenario": "owner-w1440-today-integrations",
+      "sha256": "831027b128751fb9bb764b6b0484fd96071eb485f30b3ad20c6d211aa33d08a3",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1440-integrations.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-integrations-keyboard-focus.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Keyboard Tab focus; visible indication requires pixel review",
+      "scenario": "owner-w1440-today-integrations",
+      "sha256": "78d5acb3ccff95f1dc4aab89c74af1723c3666f89d9feb18339bffb8d4c098cf",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1440-integrations-keyboard-focus.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-avis-list-detail.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Available Google list and selected local detail before manual refresh",
+      "scenario": "owner-w1440-available-list-detail",
+      "sha256": "7961547f7484ad1b93db2009d5c3cf0417e8fed6bcf5cbebf59e5dc4a1035619",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1440-avis-list-detail.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-retrieval-pending.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Actual manual request pending; saved and unsaved local work remains usable",
+      "scenario": "owner-w1440-manual-delay",
+      "sha256": "26b6435b130fb7e7c776752c02c6e93c1f21b3a08a1a4fd6e5e3d56d1b967b1e",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1440-retrieval-pending.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-pending-editor.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Unsaved note and keyboard focus retained during pending retrieval",
+      "scenario": "owner-w1440-manual-delay",
+      "sha256": "ed6c0dd4b63e0e1733e1cdd33d8690eebdb9319dc25896c926ed35f402cdcf78",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1440-pending-editor.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-retrieval-success.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Completed one-page retrieval; held list and selected local UUID remain unchanged",
+      "scenario": "owner-w1440-manual-delay",
+      "sha256": "ccff7668d3c3907ab9e3e54580517147e0aeba7a17b143e4b3667e6ac874b78d",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1440-retrieval-success.png",
+      "alsoObservedIn": [
+        {
+          "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1440-retrieval-retry.png",
+          "role": "OWNER",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "state": "Actual explicit retry completed; inspect remains a separate action",
+          "scenario": "owner-w1440-manual-normal",
+          "sha256": "ccff7668d3c3907ab9e3e54580517147e0aeba7a17b143e4b3667e6ac874b78d",
+          "fullViewport": true,
+          "meaningfulTargetVisible": true,
+          "visualReview": "REQUIRED",
+          "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1440-retrieval-retry.png"
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-retrieval-error.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Sanitized failed refresh; explicit retry remains available and local writing retained",
+      "scenario": "owner-w1440-manual-error",
+      "sha256": "de48d59eee07140ca3e80983c074056d7999b0b2996d99ffedfe0be7efaa5246",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1440-retrieval-error.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-manual-draft.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Unsaved manual draft survives explicit inspection; no Save or publication attempted",
+      "scenario": "owner-w1440-manual-normal",
+      "sha256": "8c94f58ecf1ccf6cb032026757a08549551ebcf44443c339ede677c041270806",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1440-manual-draft.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-remote-reply.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Temporary remote reply is separate from the manual editor; publication unavailable",
+      "scenario": "owner-w1440-remote-reply",
+      "sha256": "16bd1e021a0a95971242a47d3dd7ecb7fa8a3a82e4d3b303082edeec2c8a3270",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1440-remote-reply.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-no-reference-handoff.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Unavailable managed Google copy with no-reference handoff; current saved local work retained",
+      "scenario": "owner-w1440-no-reference-saved-work",
+      "sha256": "8a4bc53d72575752bb72c949a5c6847da747596b42377e17ddb955465adba7a0",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1440-no-reference-handoff.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-no-reference-saved-draft.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Actual current persisted draft on unavailable work; no Save in this run",
+      "scenario": "owner-w1440-no-reference-saved-work",
+      "sha256": "1ba0e53a4ddb507f1b3b123b25dc9b5eb274608f11e1a8ebf095fab44eb56ef2",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1440-no-reference-saved-draft.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1440-today-reviews.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "STAFF assigned-work Today preview; no establishment retrieval receipt",
+      "scenario": "staff-w1440-assigned-and-denied",
+      "sha256": "9cfb94cbd1a3cedb4ee94b2ccd178306833a5670d71282da958a0551f877f597",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w1440-today-reviews.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1440-assigned-editor.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Assigned local draft and notes; provider controls absent",
+      "scenario": "staff-w1440-assigned-and-denied",
+      "sha256": "10072dbfb0dde8a47039c8fd39c785b7a02eb237a487da6d43deb4ce9b68b4b6",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w1440-assigned-editor.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1440-assigned-keyboard-focus.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Keyboard Tab focus; visible indication requires pixel review",
+      "scenario": "staff-w1440-assigned-and-denied",
+      "sha256": "8ae836d4c3c25aff0eadadbd64e997dc11e33758d710dbe7dfa46b94fff32910",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w1440-assigned-keyboard-focus.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1440-denied-foreign.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Safe unavailable selection for denied foreign scope; no edit or provider control",
+      "scenario": "staff-w1440-assigned-and-denied",
+      "sha256": "b65698adf00f67a890d717656979f9912d1ae57ea1e1441c33e464cb6d5e578b",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w1440-denied-foreign.png",
+      "alsoObservedIn": [
+        {
+          "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w1440-denied-direct.png",
+          "role": "STAFF",
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "state": "Safe unavailable selection for denied direct scope; no edit or provider control",
+          "scenario": "staff-w1440-assigned-and-denied",
+          "sha256": "b65698adf00f67a890d717656979f9912d1ae57ea1e1441c33e464cb6d5e578b",
+          "fullViewport": true,
+          "meaningfulTargetVisible": true,
+          "visualReview": "REQUIRED",
+          "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w1440-denied-direct.png"
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1440-unavailable.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Assigned unavailable managed content, truthful handoff and actual current saved work",
+      "scenario": "staff-w1440-assigned-and-denied",
+      "sha256": "7cae89a87a8de9e0fc370b54055aacaa426c207cbaecf30cbc939ba85f1b5a91",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w1440-unavailable.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1440-internal-disabled.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "state": "Internal normal profile: retrieval explicitly disabled, current local work accessible",
+      "scenario": "owner-w1440-internal-disabled",
+      "sha256": "b885e66675f68aba1b135440c11c239f2b58ce639d7bfbdb973b6b52d2e77b44",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1440-internal-disabled.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-today-reviews.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Today scoped stored-work preview; no provider retrieval",
+      "scenario": "owner-w1024-today-integrations",
+      "sha256": "b661e48e39c8774d4f73dd3dba9d54b4f28c86b920c3c8dc6f27b2a1132591b7",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1024-today-reviews.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-integrations.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Bound OWNER confirmation is separate from retrieval; continuation not clicked",
+      "scenario": "owner-w1024-today-integrations",
+      "sha256": "e721a3f314f9291401fdf52356113578a2ff76b16e9e944b9d83e2c1c5f8dc03",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1024-integrations.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-integrations-keyboard-focus.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Keyboard Tab focus; visible indication requires pixel review",
+      "scenario": "owner-w1024-today-integrations",
+      "sha256": "7ff3a8f3094de2b7d811e9a90af71cb415a8915fd1b6ef1bcde354de97488bf7",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1024-integrations-keyboard-focus.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-avis-list-detail.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Available Google list and selected local detail before manual refresh",
+      "scenario": "owner-w1024-available-list-detail",
+      "sha256": "cfa0d4a2f6cfeaa31c7e497ed2b059a2cbaa5b6fee63cf22a0b8ac0e6323ca32",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1024-avis-list-detail.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-retrieval-pending.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Actual manual request pending; saved and unsaved local work remains usable",
+      "scenario": "owner-w1024-manual-delay",
+      "sha256": "5f8ffd641ca00e5ca4f506773a33f718db4e43fb093403959f20b64975e032e5",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1024-retrieval-pending.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-pending-editor.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Unsaved note and keyboard focus retained during pending retrieval",
+      "scenario": "owner-w1024-manual-delay",
+      "sha256": "62b671a18d86449a1a8c7b48a89bc282092ca7a88fd9c95f4d48fdc7b163d27e",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1024-pending-editor.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-retrieval-success.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Completed one-page retrieval; held list and selected local UUID remain unchanged",
+      "scenario": "owner-w1024-manual-delay",
+      "sha256": "5d1017524edd6f9f1dcdf2f29611c79ccd881db47c26d4e7e76a772e1bc0e814",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1024-retrieval-success.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-retrieval-error.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Sanitized failed refresh; explicit retry remains available and local writing retained",
+      "scenario": "owner-w1024-manual-error",
+      "sha256": "f1c2f244ab7712e0aba471a4e90c9282ee46f3db8444773e089295bf7ff86f4a",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1024-retrieval-error.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-retrieval-retry.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Actual explicit retry completed; inspect remains a separate action",
+      "scenario": "owner-w1024-manual-normal",
+      "sha256": "b7ec05a958699210f037d947ec882e08eefe10edb99bd83b0fee2b8127d96efb",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1024-retrieval-retry.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-manual-draft.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Unsaved manual draft survives explicit inspection; no Save or publication attempted",
+      "scenario": "owner-w1024-manual-normal",
+      "sha256": "a33b443d687bb73868aad353accc8cefe4f472270d5ee73952336657823726c8",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1024-manual-draft.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-remote-reply.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Temporary remote reply is separate from the manual editor; publication unavailable",
+      "scenario": "owner-w1024-remote-reply",
+      "sha256": "20102c1ec4f45010c185e59b60e7adf58cbef69499d9b4d51d522d97a4639053",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1024-remote-reply.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-no-reference-handoff.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Unavailable managed Google copy with no-reference handoff; current saved local work retained",
+      "scenario": "owner-w1024-no-reference-saved-work",
+      "sha256": "8db65107dd63429d64f5c75c8c041e7191de3b19532b07bbb603b32cd1735282",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1024-no-reference-handoff.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-no-reference-saved-draft.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Actual current persisted draft on unavailable work; no Save in this run",
+      "scenario": "owner-w1024-no-reference-saved-work",
+      "sha256": "6a39c2313ccd999a8948d86d3b503e69e0eb76b790d14db32cc65e97523abe87",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1024-no-reference-saved-draft.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1024-today-reviews.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "STAFF assigned-work Today preview; no establishment retrieval receipt",
+      "scenario": "staff-w1024-assigned-and-denied",
+      "sha256": "ca6bea4b203d383cf6221221d7addff7627c79544b28bae484aa485c0361d3a7",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w1024-today-reviews.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1024-assigned-editor.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Assigned local draft and notes; provider controls absent",
+      "scenario": "staff-w1024-assigned-and-denied",
+      "sha256": "b3367d988ab3787f0f6522dcc7d2f1e37ef84c5f1d38d982576f82fa5a844292",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w1024-assigned-editor.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1024-assigned-keyboard-focus.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Keyboard Tab focus; visible indication requires pixel review",
+      "scenario": "staff-w1024-assigned-and-denied",
+      "sha256": "4713cd4b75a7255d0eddde9055535439855c9cf28c80295de30bc24d63dd6219",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w1024-assigned-keyboard-focus.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1024-denied-foreign.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Safe unavailable selection for denied foreign scope; no edit or provider control",
+      "scenario": "staff-w1024-assigned-and-denied",
+      "sha256": "8544a3e16e053f0949fd38d2fe2cc2aa11b289f1c903e1f8ebec691f4e039d05",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w1024-denied-foreign.png",
+      "alsoObservedIn": [
+        {
+          "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w1024-denied-direct.png",
+          "role": "STAFF",
+          "viewport": {
+            "width": 1024,
+            "height": 768
+          },
+          "state": "Safe unavailable selection for denied direct scope; no edit or provider control",
+          "scenario": "staff-w1024-assigned-and-denied",
+          "sha256": "8544a3e16e053f0949fd38d2fe2cc2aa11b289f1c903e1f8ebec691f4e039d05",
+          "fullViewport": true,
+          "meaningfulTargetVisible": true,
+          "visualReview": "REQUIRED",
+          "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w1024-denied-direct.png"
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w1024-unavailable.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Assigned unavailable managed content, truthful handoff and actual current saved work",
+      "scenario": "staff-w1024-assigned-and-denied",
+      "sha256": "13434fb68149348d73108c412e1908547e132393d41b3a1ed19f4ef8dfc83387",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w1024-unavailable.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w1024-internal-disabled.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "state": "Internal normal profile: retrieval explicitly disabled, current local work accessible",
+      "scenario": "owner-w1024-internal-disabled",
+      "sha256": "24cf0feb1f0f03acaf2503272ad3436b0a9b1a0250d9bf6abb39608f186922d4",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w1024-internal-disabled.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-today-reviews.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Today scoped stored-work preview; no provider retrieval",
+      "scenario": "owner-w768-today-integrations",
+      "sha256": "a2687dcbf36dadf8f65cb9c0542844f5ffd258bc7068ba516f5a8acb8e5a8813",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w768-today-reviews.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-integrations.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Bound OWNER confirmation is separate from retrieval; continuation not clicked",
+      "scenario": "owner-w768-today-integrations",
+      "sha256": "2f983f53ced16b556a5aad3579ab08162ce9a4ffa896c9bab14e4e50949da578",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w768-integrations.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-integrations-keyboard-focus.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Keyboard Tab focus; visible indication requires pixel review",
+      "scenario": "owner-w768-today-integrations",
+      "sha256": "3414906abf72dec6b4f1d818a89aae1ddf65e28f90d10ed5cafa849f8aba348f",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w768-integrations-keyboard-focus.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-avis-list-detail.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Available Google list and selected local detail before manual refresh",
+      "scenario": "owner-w768-available-list-detail",
+      "sha256": "f1b08c4f33cb9a9bc299e25e6fd50485917d5a17295150f5931eeeaa12e37119",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w768-avis-list-detail.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-retrieval-pending.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Actual manual request pending; saved and unsaved local work remains usable",
+      "scenario": "owner-w768-manual-delay",
+      "sha256": "8ebec6c89d9865af8909fe7191dc6990153d942ce332e9d95230a41148c2de84",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w768-retrieval-pending.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-pending-editor.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Unsaved note and keyboard focus retained during pending retrieval",
+      "scenario": "owner-w768-manual-delay",
+      "sha256": "a00b514231d048ad5886613b76118c6c5650089b685f1138b26936bf7e02b4e9",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w768-pending-editor.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-retrieval-success.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Completed one-page retrieval; held list and selected local UUID remain unchanged",
+      "scenario": "owner-w768-manual-delay",
+      "sha256": "07f06d742341f39086535e6ad196c590b3640a6da1b052fb29192cbc1552cd96",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w768-retrieval-success.png",
+      "alsoObservedIn": [
+        {
+          "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w768-retrieval-retry.png",
+          "role": "OWNER",
+          "viewport": {
+            "width": 768,
+            "height": 1024
+          },
+          "state": "Actual explicit retry completed; inspect remains a separate action",
+          "scenario": "owner-w768-manual-normal",
+          "sha256": "07f06d742341f39086535e6ad196c590b3640a6da1b052fb29192cbc1552cd96",
+          "fullViewport": true,
+          "meaningfulTargetVisible": true,
+          "visualReview": "REQUIRED",
+          "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w768-retrieval-retry.png"
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-retrieval-error.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Sanitized failed refresh; explicit retry remains available and local writing retained",
+      "scenario": "owner-w768-manual-error",
+      "sha256": "89642dac9384c6d9cfcc2542e603fb65c81bc4917b56bfada81156de2d468b4d",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w768-retrieval-error.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-manual-draft.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Unsaved manual draft survives explicit inspection; no Save or publication attempted",
+      "scenario": "owner-w768-manual-normal",
+      "sha256": "6f23b464cea7c1222b09326936d14ab239f454e77c2a4cf2c0a5b5c4ddd88092",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w768-manual-draft.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-remote-reply.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Temporary remote reply is separate from the manual editor; publication unavailable",
+      "scenario": "owner-w768-remote-reply",
+      "sha256": "151de12c3aafcfdcd7410a7688aa618b1681297c7ca031adf95fea84ae68222c",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w768-remote-reply.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-no-reference-handoff.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Unavailable managed Google copy with no-reference handoff; current saved local work retained",
+      "scenario": "owner-w768-no-reference-saved-work",
+      "sha256": "e4484d4367f1b8a628d6f227980acaf724b6c8e1cc8ae959062505eb20c90165",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w768-no-reference-handoff.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-no-reference-saved-draft.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Actual current persisted draft on unavailable work; no Save in this run",
+      "scenario": "owner-w768-no-reference-saved-work",
+      "sha256": "a540e0d0a89bada950d9da813df663dc53cbdf7ef14042d5eaae68d41b6b6a9a",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w768-no-reference-saved-draft.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w768-today-reviews.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "STAFF assigned-work Today preview; no establishment retrieval receipt",
+      "scenario": "staff-w768-assigned-and-denied",
+      "sha256": "77792a03d2cc6b196220a1db8501f8a6f638bcf3a67a1a5f1443fcc831017891",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w768-today-reviews.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w768-assigned-editor.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Assigned local draft and notes; provider controls absent",
+      "scenario": "staff-w768-assigned-and-denied",
+      "sha256": "801f4905767fdb9fbc3a7c14f9ac62cc2d42694cf8f510e0fae9cb70fcefb74b",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w768-assigned-editor.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w768-assigned-keyboard-focus.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Keyboard Tab focus; visible indication requires pixel review",
+      "scenario": "staff-w768-assigned-and-denied",
+      "sha256": "a203ad8f90db9bf98a0f11076af61ea99806a96963d8b244887b9ab78ff94348",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w768-assigned-keyboard-focus.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w768-denied-foreign.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Safe unavailable selection for denied foreign scope; no edit or provider control",
+      "scenario": "staff-w768-assigned-and-denied",
+      "sha256": "00a6cbfd57d4df4992dd12ee0487e72f989dc4f7f2e6fe53e76c499346651982",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w768-denied-foreign.png",
+      "alsoObservedIn": [
+        {
+          "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w768-denied-direct.png",
+          "role": "STAFF",
+          "viewport": {
+            "width": 768,
+            "height": 1024
+          },
+          "state": "Safe unavailable selection for denied direct scope; no edit or provider control",
+          "scenario": "staff-w768-assigned-and-denied",
+          "sha256": "00a6cbfd57d4df4992dd12ee0487e72f989dc4f7f2e6fe53e76c499346651982",
+          "fullViewport": true,
+          "meaningfulTargetVisible": true,
+          "visualReview": "REQUIRED",
+          "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w768-denied-direct.png"
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w768-unavailable.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Assigned unavailable managed content, truthful handoff and actual current saved work",
+      "scenario": "staff-w768-assigned-and-denied",
+      "sha256": "e3b54802632b8d54bfcc6640e3e94bda1769bff439be076896c77ddc6f052790",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w768-unavailable.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w768-internal-disabled.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "state": "Internal normal profile: retrieval explicitly disabled, current local work accessible",
+      "scenario": "owner-w768-internal-disabled",
+      "sha256": "0a175e2ba0425343973aecaa2677a4645b000abcbfae7926312c4be741111aa1",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w768-internal-disabled.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-today-reviews.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Today scoped stored-work preview; no provider retrieval",
+      "scenario": "owner-w390-today-integrations",
+      "sha256": "593d6fac2129bfcee92eac03dc348874e4cd815e25c1b6e571ca372f57397b02",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w390-today-reviews.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-integrations.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Bound OWNER confirmation is separate from retrieval; continuation not clicked",
+      "scenario": "owner-w390-today-integrations",
+      "sha256": "073bd3b0e3b651cddf2d7a5f15bc22ca7e8882b7fa8ed17fd56e66d7da149ff1",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w390-integrations.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-integrations-keyboard-focus.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Keyboard Tab focus; visible indication requires pixel review",
+      "scenario": "owner-w390-today-integrations",
+      "sha256": "f5305513222beadbfbe691582251d86d2e91cc52d2832be8433a899231836b60",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w390-integrations-keyboard-focus.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-avis-list-detail.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Available Google list and selected local detail before manual refresh",
+      "scenario": "owner-w390-available-list-detail",
+      "sha256": "02311c17970494a88939c430fcf37372f7827e1f697c4c04b97381864b723498",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w390-avis-list-detail.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-retrieval-pending.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Actual manual request pending; saved and unsaved local work remains usable",
+      "scenario": "owner-w390-manual-delay",
+      "sha256": "924bbec83e804593494a535ff89392e75975d685367fbfa74b3ad638b2fe6ace",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w390-retrieval-pending.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-pending-editor.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Unsaved note and keyboard focus retained during pending retrieval",
+      "scenario": "owner-w390-manual-delay",
+      "sha256": "0cb8b8dcb14e8796a25963ba09edce63fd86daed60e168f9d9a157cfc7e1814f",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w390-pending-editor.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-retrieval-success.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Completed one-page retrieval; held list and selected local UUID remain unchanged",
+      "scenario": "owner-w390-manual-delay",
+      "sha256": "bc9c6361522f2eadd6ffa1c35ec69de147d868522ba00f9424945f8f88c1541d",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w390-retrieval-success.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-retrieval-error.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Sanitized failed refresh; explicit retry remains available and local writing retained",
+      "scenario": "owner-w390-manual-error",
+      "sha256": "651ac6391928bb8edf4d5537b0fcc17f1c1d847fe02c4315a33c0f909460c4c3",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w390-retrieval-error.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-retrieval-retry.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Actual explicit retry completed; inspect remains a separate action",
+      "scenario": "owner-w390-manual-normal",
+      "sha256": "284f513f095addb4b6377c04a8b192e3f950d8ab9fdd941db0f56a3c910664ce",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w390-retrieval-retry.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-manual-draft.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Unsaved manual draft survives explicit inspection; no Save or publication attempted",
+      "scenario": "owner-w390-manual-normal",
+      "sha256": "442bbcd78dc07a887da46221db99178046dbe85b84b06ff96dad49c07a74b936",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w390-manual-draft.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-remote-reply.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Temporary remote reply is separate from the manual editor; publication unavailable",
+      "scenario": "owner-w390-remote-reply",
+      "sha256": "f3a0cea993fb38d07418f025091656b6e1d7244ee232a5c15acb0fe1941a56fd",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w390-remote-reply.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-no-reference-handoff.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Unavailable managed Google copy with no-reference handoff; current saved local work retained",
+      "scenario": "owner-w390-no-reference-saved-work",
+      "sha256": "a2364774850ad239acebf5bc789c12bb1c335d8b7c6633eaddbb54beed4bc120",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w390-no-reference-handoff.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-no-reference-saved-draft.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Actual current persisted draft on unavailable work; no Save in this run",
+      "scenario": "owner-w390-no-reference-saved-work",
+      "sha256": "7a24d7251f48333fb22a4838d099cbb29c2aaef902c4b1e69df724b73e1bb223",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w390-no-reference-saved-draft.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w390-today-reviews.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "STAFF assigned-work Today preview; no establishment retrieval receipt",
+      "scenario": "staff-w390-assigned-and-denied",
+      "sha256": "b42d2db3b2a79875a489cb4fc0d060d82c8cd6ba779e5aa92f3440ab4440434e",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w390-today-reviews.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w390-assigned-editor.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Assigned local draft and notes; provider controls absent",
+      "scenario": "staff-w390-assigned-and-denied",
+      "sha256": "95a838c8614695b5b97605c558c4c6cb16d854a54614866caab98b0170d14106",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w390-assigned-editor.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w390-assigned-keyboard-focus.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Keyboard Tab focus; visible indication requires pixel review",
+      "scenario": "staff-w390-assigned-and-denied",
+      "sha256": "187b6d48fe38b0c91a71e10be511828c2e1370e02a928207d50dd16bec700bac",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w390-assigned-keyboard-focus.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w390-denied-foreign.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Safe unavailable selection for denied foreign scope; no edit or provider control",
+      "scenario": "staff-w390-assigned-and-denied",
+      "sha256": "a023605e5fdb5dd9bbacb0c037eb6c0db00746bd60544227b53600dae33ace21",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w390-denied-foreign.png",
+      "alsoObservedIn": [
+        {
+          "path": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w390-denied-direct.png",
+          "role": "STAFF",
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "state": "Safe unavailable selection for denied direct scope; no edit or provider control",
+          "scenario": "staff-w390-assigned-and-denied",
+          "sha256": "a023605e5fdb5dd9bbacb0c037eb6c0db00746bd60544227b53600dae33ace21",
+          "fullViewport": true,
+          "meaningfulTargetVisible": true,
+          "visualReview": "REQUIRED",
+          "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w390-denied-direct.png"
+        }
+      ]
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-staff-w390-unavailable.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Assigned unavailable managed content, truthful handoff and actual current saved work",
+      "scenario": "staff-w390-assigned-and-denied",
+      "sha256": "b0447443f246f0eaa30e58fbb83fbcb898500385df6cd0f8d57c34dda2446bb1",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/staff-w390-unavailable.png"
+    },
+    {
+      "path": "docs/reviews/release-a-google-review-import/qa/responsive-owner-w390-internal-disabled.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Internal normal profile: retrieval explicitly disabled, current local work accessible",
+      "scenario": "owner-w390-internal-disabled",
+      "sha256": "7a72acc5c1671ee3c76b55bb6c3330610f0dfc128d3cdc1ad4c0cc1980708100",
+      "fullViewport": true,
+      "meaningfulTargetVisible": true,
+      "visualReview": "REQUIRED",
+      "originalPath": ".tmp-google-review-import-test/responsive-browser-qa-2026-10-01T21-01-36-101Z/owner-w390-internal-disabled.png"
+    }
+  ]
+}

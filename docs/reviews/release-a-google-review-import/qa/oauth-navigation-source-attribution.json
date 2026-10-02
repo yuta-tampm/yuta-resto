@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "reason": "OAuth initiator now uses native document navigation; prevent speculative authorization and CORS errors",
+  "sourcePathSetUnchanged": true,
+  "priorManifestPath": "docs/reviews/release-a-google-review-import/qa/source-candidate-manifest.before-oauth-navigation.json",
+  "priorManifestSha256": "7792ee8d7e68e08d4934aca32df691cb3773570a5f1d9f6e9c12d4db7b59ffa7",
+  "currentManifestPath": "docs/reviews/release-a-google-review-import/qa/source-candidate-manifest.json",
+  "currentManifestSha256": "708102a4e03e5f4b71c76dcbd04a0d445f4bf384a2f78e87cc1b2eb42381e88c",
+  "differences": [
+    {
+      "group": "files",
+      "relative": "src/app/(authenticated)/parametres/integrations/page.tsx",
+      "beforeSha256": "5db38465ebfe3a5c150a1278dbc62e7a758f92242ebf5344bbb33d702095cb57",
+      "afterSha256": "9142daf9a07cf7cfa4ccccafc34e0f6dafab943c7448b7602fb57f767ac9510e"
+    }
+  ],
+  "unchangedAppFiles": 363,
+  "unchangedSharedFiles": 132,
+  "originalEightRuns": "Preserved historical source-bound assertions; retrieval/auth/data/editors/Today/continuation source unchanged. They are not relabelled as executions of the new build.",
+  "currentRun": "Fresh actual responsive/OAuth regression on rebuilt candidate supplies changed Integration path and current four-width visual/console evidence.",
+  "recordedAt": "2026-10-01T21:02:11.892Z"
+}

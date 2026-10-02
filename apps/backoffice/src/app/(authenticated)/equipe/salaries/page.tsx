@@ -1,0 +1,84 @@
+import { personnelEmployeeListQuerySchema } from '@yuta/contracts/personnel';
+import {
+  listPersonnelActionOverview,
+  listPersonnelEmployees,
+} from '@yuta/db-cloud';
+import { requireEstablishment } from '@yuta/tenant';
+import { hasPersonnelPermission } from '@/server/auth/permissions';
+import { requireAuthenticatedTenant } from '@/server/auth/session';
+import { cloudDatabase } from '@/server/cloud-database';
+import { getDateInTimezone } from '@/lib/local-time';
+import { firstSearchParam as first } from '@/lib/search-params';
+import { PersonnelForbidden } from './_components/personnel-forbidden';
+import { SalariesPage } from './_components/salaries-page';
+import { isContractExtractionPrototypeEnabled } from './_lib/contract-extraction-prototype-runtime';
+import { isPersonnelActionOverviewEnabled } from './_lib/personnel-action-overview-runtime';
+
+type PageSearchParams = Promise<Record<string, string | string[] | undefined>>;
+
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: PageSearchParams;
+}) {
+  const { tenant } = await requireAuthenticatedTenant('/equipe/salaries');
+  requireEstablishment(tenant);
+
+  if (!hasPersonnelPermission(tenant, 'personnel.employee.read')) {
+    return <PersonnelForbidden />;
+  }
+
+  const values = await searchParams;
+  const parsedQuery = personnelEmployeeListQuerySchema.safeParse({
+    view: first(values.view),
+    search: first(values.search),
+    completeness: first(values.completeness),
+    sort: first(values.sort),
+    cursor: first(values.cursor),
+    limit: first(values.limit),
+  });
+  const query = parsedQuery.success
+    ? parsedQuery.data
+    : personnelEmployeeListQuerySchema.parse({});
+  const businessDate = getDateInTimezone(tenant.timezone);
+  const data = await listPersonnelEmployees(
+    cloudDatabase,
+    tenant,
+    query,
+    businessDate,
+  );
+  const actionOverviewState =
+    isPersonnelActionOverviewEnabled() &&
+    hasPersonnelPermission(tenant, 'personnel.document.read')
+      ? await listPersonnelActionOverview(
+          cloudDatabase,
+          tenant,
+          {},
+          businessDate,
+        )
+          .then((overview) => ({ status: 'success' as const, overview }))
+          .catch((error: unknown) => {
+            console.error(
+              'Failed to load the initial personnel action overview.',
+              error,
+            );
+            return {
+              status: 'error' as const,
+              message: 'La liste des actions est indisponible. Réessayez.',
+            };
+          })
+      : null;
+  return (
+    <SalariesPage
+      data={data}
+      query={query}
+      locale={tenant.locale}
+      businessDate={businessDate}
+      actionOverviewState={actionOverviewState}
+      contractExtractionPrototypeEnabled={
+        isContractExtractionPrototypeEnabled() &&
+        hasPersonnelPermission(tenant, 'personnel.document.extract')
+      }
+    />
+  );
+}

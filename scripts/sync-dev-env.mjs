@@ -69,28 +69,37 @@ function syncEnvFile(relativePath, input) {
   console.log(`Updated ${relativePath}`);
 }
 
+// `.env.example` placeholders are publicly known; never keep them as values.
+// Values are read raw here, so ignore surrounding whitespace and quotes when
+// recognising a placeholder that dotenv would unquote at runtime.
+function reusableValue(value, minimumLength) {
+  const unquoted = value?.trim().replace(/^(['"])(.*)\1$/u, '$2');
+  return value &&
+    value.length >= minimumLength &&
+    !unquoted.startsWith('replace-with-')
+    ? value
+    : undefined;
+}
+
 const backofficeEnv = readEnv('apps/backoffice/.env.local');
 const existingAuthSecret = backofficeEnv.values.get('AUTH_SECRET');
 const authSecret =
-  existingAuthSecret && existingAuthSecret.length >= 32
-    ? existingAuthSecret
-    : randomBytes(32).toString('hex');
+  reusableValue(existingAuthSecret, 32) ?? randomBytes(32).toString('hex');
 
-const webEnv = readEnv('apps/web/.env.local');
-const existingFeedbackSalt = webEnv.values.get('PUBLIC_FEEDBACK_IP_HASH_SALT');
+const feedbackWebEnv = readEnv('apps/feedback-web/.env.local');
+const existingFeedbackSalt = feedbackWebEnv.values.get(
+  'PUBLIC_FEEDBACK_IP_HASH_SALT',
+);
 const feedbackSalt =
-  existingFeedbackSalt && existingFeedbackSalt.length >= 32
-    ? existingFeedbackSalt
-    : randomBytes(32).toString('hex');
+  reusableValue(existingFeedbackSalt, 32) ?? randomBytes(32).toString('hex');
 
 const cloudDatabaseEnv = readEnv('packages/db-cloud/.env.local');
 const existingSeedPassword = cloudDatabaseEnv.values.get(
   'YUTA_CLOUD_SEED_PASSWORD',
 );
 const seedPassword =
-  existingSeedPassword && existingSeedPassword.length >= 12
-    ? existingSeedPassword
-    : randomBytes(18).toString('base64url');
+  reusableValue(existingSeedPassword, 12) ??
+  randomBytes(18).toString('base64url');
 
 const posDatabaseEnv = readEnv('packages/db-pos/.env.local');
 
@@ -113,13 +122,26 @@ syncEnvFile('apps/backoffice/.env.local', {
 });
 
 syncEnvFile('apps/web/.env.local', {
-  remove: ['DATABASE_URL', 'NEXT_PUBLIC_ADMIN_URL'],
+  remove: [
+    'DATABASE_URL',
+    'NEXT_PUBLIC_ADMIN_URL',
+    'PUBLIC_FEEDBACK_IP_HASH_SALT',
+  ],
+  values: {
+    CLOUD_DATABASE_URL:
+      'postgres://yuta_cloud:yuta_cloud@localhost:55431/yuta_cloud',
+    CLOUD_DATABASE_SSL: 'false',
+    NEXT_PUBLIC_BACKOFFICE_URL: 'http://localhost:3001',
+  },
+});
+
+syncEnvFile('apps/feedback-web/.env.local', {
+  remove: ['DATABASE_URL', 'POS_DATABASE_URL', 'DISPLAY_DATABASE_URL'],
   values: {
     CLOUD_DATABASE_URL:
       'postgres://yuta_cloud:yuta_cloud@localhost:55431/yuta_cloud',
     CLOUD_DATABASE_SSL: 'false',
     PUBLIC_FEEDBACK_IP_HASH_SALT: feedbackSalt,
-    NEXT_PUBLIC_BACKOFFICE_URL: 'http://localhost:3001',
   },
 });
 

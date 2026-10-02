@@ -1,0 +1,1 @@
+ALTER TABLE "combo_rules" ADD COLUMN "is_suggestion_enabled" boolean DEFAULT true NOT NULL;

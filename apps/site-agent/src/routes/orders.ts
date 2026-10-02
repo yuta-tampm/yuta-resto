@@ -2,6 +2,7 @@ import {
   addLocalOrderItemInputSchema,
   createLocalOrderInputSchema,
   localOrderCommandSchema,
+  localOrdersHomeQuerySchema,
   localOrdersQuerySchema,
   localPosRoutes,
 } from '@yuta/contracts/local-pos';
@@ -15,6 +16,20 @@ export const handleOrdersRoute: RouteHandler = async ({
   url,
   service,
 }) => {
+  if (url.pathname === localPosRoutes.ordersHome) {
+    if (request.method !== 'GET') {
+      return false;
+    }
+    const query = localOrdersHomeQuerySchema.parse({
+      view: url.searchParams.get('view') ?? undefined,
+      q: url.searchParams.get('q') ?? undefined,
+      page: url.searchParams.get('page') ?? undefined,
+      limit: url.searchParams.get('limit') ?? undefined,
+    });
+    sendJson(response, 200, await service.listOrdersHome(query));
+    return true;
+  }
+
   if (url.pathname !== localPosRoutes.orders) {
     const detailMatch = /^\/api\/v1\/orders\/([^/]+)$/.exec(url.pathname);
     const itemsMatch = /^\/api\/v1\/orders\/([^/]+)\/items$/.exec(url.pathname);

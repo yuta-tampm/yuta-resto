@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "id": "example-task",
+  "task": "REPLACE_WITH_TASK_GOAL_FROM_THE_ACTUAL_TASK_CONTEXT",
+  "change": "REPLACE_WITH_CHANGE_NAME_OR_NONE",
+  "phase": "REPLACE_WITH_ASSIGNED_PHASE",
+  "goal": "REPLACE_WITH_BOUNDED_IMPLEMENTATION_GOAL",
+  "approvedReferences": [
+    {
+      "path": "openspec/changes/REPLACE_WITH_CHANGE_NAME/tasks.md",
+      "sha256": "REPLACE_WITH_SHA256_OF_THE_APPROVED_BYTES"
+    }
+  ],
+  "technicalContract": "REPLACE_WITH_PHASE_TECHNICAL_IMPLEMENTATION_CONTRACT",
+  "scope": "REPLACE_WITH_BOUNDED_OUTCOME",
+  "exclusions": [
+    "No stage, commit, push, PR, merge or deployment",
+    "No private environment files, credentials or database access"
+  ],
+  "writeAllowlist": [
+    "apps/backoffice/src/app/(authenticated)/REPLACE_WITH_ROUTE/page.tsx",
+    "apps/backoffice/src/app/(authenticated)/REPLACE_WITH_ROUTE/page.test.tsx"
+  ],
+  "protectedPaths": ["REPLACE_WITH_EXACT_PROTECTED_PATH"],
+  "collaborationMode": "CODEX_ONLY",
+  "modeSelectionSource": "REPLACE_WITH_ACTUAL_CURRENT_USER_MODE_SELECTION",
+  "commitAfterTask": "NOT_SELECTED",
+  "commitSelectionSource": "REPLACE_WITH_ACTUAL_COMMIT_SELECTION_SOURCE_OR_NONE",
+  "actors": {
+    "orchestrator": "Codex",
+    "implementationAuthor": "Claude Code",
+    "integrationReviewer": "Codex",
+    "independentReviewer": "REPLACE_WITH_UNINVOLVED_REVIEWER_OR_NOT_ASSIGNED",
+    "commitExecutor": "NONE"
+  },
+  "checkout": {
+    "branch": "codex/REPLACE_WITH_TASK_BRANCH",
+    "baseCommit": "REPLACE_WITH_FULL_40_HEX_BASE_COMMIT"
+  },
+  "requiredReading": [
+    "AGENTS.md",
+    "docs/README.md",
+    "docs/CURRENT_STATE.md",
+    "REPLACE_WITH_OWNING_CURRENT_DOCUMENT"
+  ],
+  "requiredChecks": ["pnpm docs:check", "pnpm architecture:check"],
+  "preparation": {
+    "installDependencies": true,
+    "effects": "REPLACE_WITH_RECORDED_EFFECTS: pnpm install --frozen-lockfile writes ignored node_modules in the owned checkout only"
+  },
+  "authorizedCommands": [
+    {
+      "command": "pnpm docs:check",
+      "effects": "Reads repository documentation; no writes"
+    },
+    {
+      "command": "pnpm architecture:check",
+      "effects": "Reads repository sources; no writes"
+    }
+  ],
+  "qa": {
+    "app": "NONE",
+    "env": "NONE",
+    "ports": [],
+    "database": "NONE",
+    "testDataRights": "NONE"
+  },
+  "sharedResources": [],
+  "returnRequirements": [
+    "Exact candidate branch, base commit and changed paths",
+    "Complete tracked diff and every new file's content and SHA-256",
+    "Commands actually run with exit codes and results, including skipped or blocked commands",
+    "Requirement-to-source mapping, deviations and unverified limitations"
+  ],
+  "limits": {
+    "timeoutMinutes": 60,
+    "maxTurns": 200
+  }
+}

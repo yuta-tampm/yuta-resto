@@ -1,9 +1,32 @@
-import type { LocalUser } from '@yuta/contracts/local-pos';
+import type {
+  AllergenSnapshot,
+  AllergySeverity,
+  LocalUser,
+} from '@yuta/contracts/local-pos';
 import { cookies } from 'next/headers';
 import { posApi } from '../lib/pos-api';
 
 export const selectedStaffCookieName = 'yuta_pos_staff_id';
 export const staffSelectableRoles = ['admin', 'manager', 'staff'] as const;
+
+export function allergySummaryFromSnapshots(
+  allergens: AllergenSnapshot[],
+  severity: AllergySeverity | null,
+  detail: string | null,
+): string {
+  const severityLabels: Record<AllergySeverity, string> = {
+    intolerance: 'Intolérance',
+    allergy: 'Allergie',
+    severe_no_traces: 'Allergie sévère – traces interdites',
+  };
+  return [
+    severity ? severityLabels[severity] : 'Allergie',
+    allergens.map(({ labelSnapshot }) => labelSnapshot).join(', '),
+    detail,
+  ]
+    .filter((value) => Boolean(value?.trim()))
+    .join(' — ');
+}
 
 export function isSelectableStaffUser(
   user: LocalUser | undefined,

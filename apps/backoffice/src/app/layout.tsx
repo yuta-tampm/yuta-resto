@@ -1,3 +1,4 @@
+import { yutaLogoAsset } from '@yuta/ui';
 import type { Metadata, Viewport } from 'next';
 import { Geist } from 'next/font/google';
 import './globals.css';
@@ -20,11 +21,11 @@ export const metadata: Metadata = {
     template: '%s | Espace restaurateur YUTA',
   },
   description:
-    'Back office YuTa pour piloter les operations restaurant, le POS, les reservations, les menus, les stocks et les clients.',
+    'Espace restaurateur YUTA : back-office sécurisé pour gérer votre établissement.',
   manifest: '/site.webmanifest',
   icons: {
     icon: [
-      { url: '/images/logo.svg', type: 'image/svg+xml' },
+      { url: yutaLogoAsset.src, type: 'image/svg+xml' },
       { url: '/favicon.ico', sizes: 'any' },
       { url: '/images/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
     ],
@@ -42,7 +43,7 @@ export const metadata: Metadata = {
     siteName: 'Espace restaurateur YUTA',
     title: 'Espace restaurateur YUTA',
     description:
-      'Back office restaurant YuTa pour suivre les operations quotidiennes.',
+      'Back-office restaurant YUTA pour suivre les opérations quotidiennes.',
     images: [
       {
         url: '/images/logo-slogan.png',
@@ -54,7 +55,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Espace restaurateur YUTA',
     description:
-      'Back office restaurant YuTa pour suivre les operations quotidiennes.',
+      'Back-office restaurant YUTA pour suivre les opérations quotidiennes.',
     images: ['/images/logo-slogan.png'],
   },
   robots: {

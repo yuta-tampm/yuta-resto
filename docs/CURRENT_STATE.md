@@ -4,60 +4,258 @@ Status: Current
 
 Visibility: Engineering
 
-Owner: YUTA engineering
+Owner: YUTA product and engineering
 
-Last updated: 2026-08-05
+Last updated: 2026-10-01
 
-## Product scope
+## Purpose and how to read this document
 
-YUTA intentionally maintains deliberately separated cloud and local runtime
-families in one monorepo.
+This document is the concise, repository-wide summary and routing layer for
+YUTA's current products and runtimes. It gives cross-product orientation; it
+does not replace scoped Product Knowledge, lifecycle records, architecture
+decisions, UI evidence, or production-readiness evidence.
 
-- Cloud: public website, restaurant back-office, public booking, identity,
-  tenancy, reputation, and cloud-owned configuration.
-- Restaurant local: POS client, site-agent API/device boundary, and POS database.
-- Standalone local: digital signage display and its app-owned database.
+Use the sources according to the question:
 
-POS operational data must never be stored in or synchronized to the cloud
-database. Display data remains separate from both cloud and POS data.
+- product context and intent: [`PRODUCT_KNOWLEDGE.md`](PRODUCT_KNOWLEDGE.md)
+  and the owning Product Knowledge Home;
+- lifecycle assignments: [`MODULE_REGISTRY.md`](MODULE_REGISTRY.md) and the
+  vocabulary in [`LIFECYCLE_STATUS_MODEL.md`](LIFECYCLE_STATUS_MODEL.md);
+- authority and conflict resolution:
+  [`AUTHORITY_MODEL.md`](AUTHORITY_MODEL.md);
+- production gates:
+  [`operations/PRODUCTION_READINESS.md`](operations/PRODUCTION_READINESS.md);
+  and
+- UI delivery evidence: the [`ui/pages` index](ui/pages/README.md) and the
+  relevant page pack.
 
-## Implemented
+Current tracked code and tests describe repository implementation. They do not
+prove which version is deployed or enabled in production. Claims about a live
+runtime require dated deployment and runtime evidence.
 
-- pnpm monorepo, shared contracts/core/UI packages, and import-boundary checks.
-- Separate `db-cloud` and `db-pos` packages; the legacy shared `@yuta/db` has
-  been removed from tracked source.
-- Organization/establishment tenancy, memberships, entitlements, server-side
-  sessions, tenant switching, and user/membership administration.
-- Public website and tenant-scoped reputation feedback foundations.
-- Public booking Phase 0/1 foundations: independent booking app, booking domain,
-  cloud persistence, availability/capacity rules, public creation and management,
-  and back-office reservation workflows.
-- Local POS ordering, kitchen, payment, printing, administration, and reporting
-  workflows described in the POS product documentation.
-- Standalone digital-signage administration and resilient display playback.
+## Runtime families
 
-## Active and partial work
+| Runtime family                      | Current repository boundary                                                                                                                                                  | Durable routing                                                                                                                                                                                                                                                                 |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Cloud and public                    | Public Website, independent Booking and Direct Feedback applications, cloud server foundations, and shared cloud persistence.                                                | [Architecture overview](architecture/OVERVIEW.md), [ADR-001](decisions/ADR-001-runtime-families-and-product-visibility.md), and [ADR-003](decisions/ADR-003-database-ownership-boundaries.md).                                                                                  |
+| Backoffice                          | Authenticated restaurant administration over trusted organization and active-establishment context.                                                                          | [Product Knowledge](PRODUCT_KNOWLEDGE.md), [Identity / Access](features/identity-access/README.md), and the [Module Registry](MODULE_REGISTRY.md).                                                                                                                              |
+| Restaurant-local POS and Site Agent | POS is the operator client; Site Agent owns local APIs, `packages/db-pos`, transactions, realtime, printing, and device boundaries.                                          | [POS Product Knowledge](products/pos/README.md), [Site Agent Product Knowledge](products/pos/site-agent/README.md), and ADR-003.                                                                                                                                                |
+| Standalone Display                  | Display owns its application, app-local database access, media files, administration, and playback; it shares no cloud or POS persistence.                                   | [Display Product Knowledge](products/display/README.md) and ADR-003.                                                                                                                                                                                                            |
+| Reserved Platform Admin             | `apps/platform-admin` remains reserved with no tracked application. A portable, non-runtime auth foundation now covers five GLOBAL YUTA Formalités template operations only. | [Architecture overview](architecture/OVERVIEW.md), [Identity / Access](features/identity-access/README.md), the [authorization spec](../openspec/specs/authorization/platform-admin-formalites-template-administration/spec.md), and the [Module Registry](MODULE_REGISTRY.md). |
 
-- Public booking Phase 0/1 is implemented but still requires release-level
-  reconciliation and validation. Its feature `STATUS.md` is authoritative for
-  remaining work.
-- Reputation still requires completion of review synchronization, controlled
-  reply publication/reconciliation, AI-assisted analysis/drafting, and broader
-  connector coverage.
-- Production publisher/legal configuration and external provider approvals
-  remain operational dependencies.
+Local POS and Display products are first-class maintained components, not
+legacy. Their local operational capabilities are not public YUTA service
+claims.
 
-## Planned
+## Backoffice instance exposure
 
-- Internal platform administration under the reserved `apps/platform-admin`
-  name after an approved specification exists.
-- Additional restaurant modules only after product scope and data ownership are
-  explicitly defined.
+[ADR-009](decisions/ADR-009-release-a-customer-exposure.md) records the accepted
+server-selected `internal` / `release-a` instance boundary. The A foundation
+exposes Today, scoped Google Avis, the basic Establishment Profile, OWNER Google
+Integrations and permitted Users & Access. Existing grants remain authoritative;
+other hosted product routes/APIs/actions and profile Knowledge are unavailable.
+Internal retains the broader modules and their existing limitations. Independent
+public applications and local products keep their current ownership.
 
-## Documentation status
+A Today reads only permitted Google records: new means local `NEW`; attention
+means `NEW`, `TO_PROCESS`, `DRAFTED` or `FOLLOW_UP`. Counters, preview and linked
+queue share source/status/actor scope, with uncapped counters and assigned-only
+STAFF access. A local `PUBLISHED` reply is not remote response evidence. A loads
+no Booking, DIRECT or AI projection; connector setup and stored rows establish
+neither successful retrieval nor publication. A separate default-disabled
+Google retrieval source path now supports eligible Avis visits, explicit
+history/detail recovery and bounded machine-authenticated cache maintenance.
+Temporary provider content/reference deadlines preserve independent local
+work; Today never triggers retrieval. Actual provider/use, unattended disposal
+and backup/restoration prerequisites remain unverified. No publication path or
+broader V1/lifecycle/environment/readiness promotion follows.
 
-The database reset plan has been replaced by current architecture documents.
-Historical implementation plans and pre-reset audits are preserved by Git
-history, not the active documentation tree.
+`BACKOFFICE_EXPOSURE_PROFILE` is a server-only deployment prerequisite:
+explicit `internal` or `release-a`, unset development/test defaults to internal,
+invalid values or unset production fail closed with safe `503` behavior. See
+[Deployment](operations/DEPLOYMENT.md#backoffice-instance-exposure) and
+[Local Development](operations/LOCAL_DEVELOPMENT.md#backoffice-instance-exposure).
+The current task builds/tests the foundation; it does not activate a deployed
+profile, promote lifecycle/readiness or complete all Release A capabilities.
 
-The UI export catalog is maintained only in `packages/ui/src/index.ts`.
+## Current product snapshot
+
+The broader Backoffice compositions below describe `internal`; the bounded A
+exceptions are stated above. Independent public application behavior remains
+separate from Backoffice instance selection.
+
+| Product or module             | Bounded current state                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Read next                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Public Website                | Marketing, legal, SEO, and integration-information pages are implemented in the repository. Its bounded Product Decision remains unresolved, and repository presence is not evidence of production publication, hosting, domain, or legal readiness.                                                                                                                                                                                                                                                                                                | [Public Website](features/public-website/README.md) and [Module Registry](MODULE_REGISTRY.md).                                                                                                                                                                                                                                                                                                                                                                            |
+| Identity / Access             | Password authentication, scoped sessions, tenant selection, trusted organization/establishment context, and membership administration foundations are implemented. The tenancy boundary is approved; Authentication and Access workflow Product Decisions remain unresolved.                                                                                                                                                                                                                                                                        | [Identity / Access Product Knowledge](features/identity-access/README.md) and the authentication/tenancy architecture.                                                                                                                                                                                                                                                                                                                                                    |
+| Public Booking / Reservations | The independent public booking flow and establishment-scoped Backoffice reservation operations are implemented in the repository with bounded limitations. Notification delivery, target-environment acceptance, provider configuration, and launch gates remain open.                                                                                                                                                                                                                                                                              | [Public Booking README](features/public-booking/README.md), [Booking Status](features/public-booking/STATUS.md), and [ADR-002](decisions/ADR-002-independent-public-booking-application.md).                                                                                                                                                                                                                                                                              |
+| Reputation / Direct Feedback  | Direct public feedback, scoped inboxes/mutations and the Google connector foundation are implemented. A separate default-disabled A Google retrieval/cache-maintenance source path exists; actual provider/use and disposal prerequisites remain unverified. Broader Google V1 remains unresolved; publication, scheduled synchronization, AI and analytics remain absent. Facebook/Instagram high-level inclusion is confirmed, while their current V1 and exact behavior remain unresolved.                                                       | [Reputation README](features/reputation/README.md), [Reputation Status](features/reputation/STATUS.md), and [ADR-004](decisions/ADR-004-independent-public-feedback-application.md).                                                                                                                                                                                                                                                                                      |
+| Establishment                 | The general-information page composes the implemented bounded cloud Establishment Profile with six implemented Restaurant Knowledge capabilities: five descriptive slices and the manual `Connaissances validées` collection. They retain separate owners and permissions. Restaurant Knowledge remains `PARTIAL`, `NOT_ENABLED`, and `NOT_ASSESSED` for production readiness; no public/AI/downstream consumer contract is approved. Booking-owned schedules, restaurant-local POS data and Rooms/Tables remain outside this bounded scope.        | [Establishment Product Knowledge](features/establishment/README.md), [General Information / Restaurant Knowledge](features/establishment/general-information/README.md), [ADR-006](decisions/ADR-006-cloud-establishment-profile-context.md), and [ADR-007](decisions/ADR-007-composed-general-information-and-restaurant-knowledge.md).                                                                                                                                  |
+| Carte & menus                 | Three bounded Product directions are reconciled: restaurant menu-information management without order/payment/transaction ownership, a broadly suitable but proportionate model, and support for `menu` as a multi-dish combo. `/etablissement/carte-menus` is the tested canonical route but renders only the authenticated shared planned placeholder. No cloud Carte data model, operation policy, page pack, QA, environment enablement or production authorization exists; local POS catalogue/combo truth remains separate.                   | [Carte & menus Product Knowledge](features/menu-catalog/README.md), [POS Product Knowledge](products/pos/README.md), and the [Module Registry](MODULE_REGISTRY.md).                                                                                                                                                                                                                                                                                                       |
+| Création de contenus          | Twenty reconciled Human-current directions preserve four MEDIUM confidences. Exact executable V1, ownership, model and permissions remain unresolved. `/marketing/contenus` is an authenticated planned placeholder; no Content persistence, source projection, AI or publishing service exists. Three long-term directions, four proposals and 24 open CDC packets preserve all 27 questions. Human-exception cutover: Content repository-canonical; Page Chat LEGACY_EVIDENCE_ONLY. Strict BLOCKED_BY_ENVIRONMENT; formal PASS NO. Visual legacy. | [Création de contenus Product Knowledge](features/content-creation/README.md) and [Module Registry](MODULE_REGISTRY.md).                                                                                                                                                                                                                                                                                                                                                  |
+| Today                         | The current dashboard implements trusted establishment context, local date, Reservations, enabled service periods and exceptions, and entitled Reputation attention. Its approved broader information families are future intent: Tâches, handover, Pointage, Stock, Suppliers, internal knowledge, and Compliance are not integrated.                                                                                                                                                                                                              | [Today Product Knowledge](features/today/README.md) and [ADR-005](decisions/ADR-005-today-operational-steering.md).                                                                                                                                                                                                                                                                                                                                                       |
+| Personnel                     | The bounded OWNER-only establishment employee dossier is implemented. Personnel Documents and Register are development-only slices. External OCR/AI evidence is local or synthetic only. Detailed fields, Documents, Register, Formalités, and AI boundaries live in the Personnel Home and page packs.                                                                                                                                                                                                                                             | [Personnel Product Knowledge](features/personnel/README.md) and the [UI page-pack index](ui/pages/README.md).                                                                                                                                                                                                                                                                                                                                                             |
+| Pointage                      | The cloud/online authority foundation and bounded employee raw-clocking slice are approved and implemented: dedicated credential/continuation authority, `/pointage/[establishmentSlug]`, `CLOCK_IN`/`CLOCK_OUT`, immutable canonical raw evidence, derived state/session, shared-device behavior and a minimal server-only manager read. Browser QA passed with three bounded residual lifecycle-evidence limitations. Canonical production migrations exclude raw-clocking persistence; real attendance and production enablement remain blocked. | [Pointage Product Knowledge](features/pointage/README.md), [Pointage authority spec](../openspec/specs/pointage/authority-foundation/spec.md), [Pointage authorization spec](../openspec/specs/authorization/pointage/spec.md), [raw-clocking spec](../openspec/specs/pointage/raw-clocking/spec.md), [employee page pack](ui/pages/backoffice-pointage-employee/README.md), [Authentication](architecture/AUTHENTICATION.md), and [Module Registry](MODULE_REGISTRY.md). |
+| Formalités development slices | The generic fictional walkthrough remains in-memory. The employee-connected development route now persists one bounded CDI preparation draft with explicit save/reopen/reconciliation/abandonment, independent Formalités and Personnel authorization, and no Personnel write-back.                                                                                                                                                                                                                                                                 | [Personnel Product Knowledge](features/personnel/README.md), the [normative persistent-draft spec](../openspec/specs/formalites/persistent-draft-foundation/spec.md), and the [Formalités page pack](ui/pages/backoffice-equipe-formalites-personnel/README.md).                                                                                                                                                                                                          |
+| Formalités beyond the draft   | The high-level `Embauche -> Vie du contrat -> Départ -> Archives` direction is confirmed, while exact current V1 scope beyond the persistent draft is unresolved. Generated unsigned-version semantics have approved F5-07 direction but are not implemented. Legal workflows, template review/qualification, files, signature, handoff, integrations, retention, and production remain separately gated.                                                                                                                                           | [Personnel Product Knowledge](features/personnel/README.md), [Module Registry](MODULE_REGISTRY.md), and [Production Readiness](operations/PRODUCTION_READINESS.md).                                                                                                                                                                                                                                                                                                       |
+| POS / Site Agent              | Restaurant-local ordering, catalog, payments, kitchen, printing, management, reports, and local-user foundations are implemented behind Site Agent and `packages/db-pos`. This does not prove a particular host, migration state, timezone, printer, device, or restaurant release is ready.                                                                                                                                                                                                                                                        | [POS Product Knowledge](products/pos/README.md), [Site Agent Product Knowledge](products/pos/site-agent/README.md), and the [UI page-pack index](ui/pages/README.md).                                                                                                                                                                                                                                                                                                     |
+| Display                       | Standalone media administration, app-owned metadata/files, and resilient playback are implemented in the repository. Application authentication, media-file reconciliation and retention, backup/restore, target device behavior, and site readiness remain unresolved or unverified.                                                                                                                                                                                                                                                               | [Display Product Knowledge](products/display/README.md).                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| Platform Admin                | The application is not started or enabled. Only a portable authority foundation for five GLOBAL YUTA Formalités template operations is approved and implemented; no runtime, template lifecycle, tenant access, or production enablement follows.                                                                                                                                                                                                                                                                                                   | [Identity / Access](features/identity-access/README.md), [Module Registry](MODULE_REGISTRY.md), [Architecture overview](architecture/OVERVIEW.md), and the [authorization spec](../openspec/specs/authorization/platform-admin-formalites-template-administration/spec.md).                                                                                                                                                                                               |
+
+A separate [GLOBAL YUTA Formalités legal-template foundation](../openspec/specs/formalites/legal-template-foundation/spec.md)
+now implements template identity, mutable working draft and immutable frozen
+template-version persistence in `packages/db-cloud`. This is distinct from
+the employee-connected preparation draft and generated-contract versions.
+The future legal-template lifecycle in the summary above remains unimplemented:
+this foundation adds no actual legal content, review evidence storage,
+publication/qualification, retirement or application/runtime enablement.
+Production use remains unauthorized. No lifecycle/readiness value is promoted
+to production-ready or enabled by this bounded repository evidence.
+
+These summaries are bounded orientation, not a duplicated lifecycle table.
+Use the Module Registry for the five independent lifecycle dimensions.
+
+## Satisfaction supplemental reconciliation
+
+The [Satisfaction supplement](features/reputation/README.md#14-satisfaction-supplemental-experience-client-reconciliation)
+is consolidated in the existing Reputation home. Current `Satisfaction client`
+naming and route, original Satisfaction PASS/cutover, and shared Avis Page Chat
+role remain unchanged. The Human-exception supplemental authority update is
+complete: repository-canonical supplemental delta and `Expérience client v`
+`LEGACY_EVIDENCE_ONLY`, with historical access retained. Human-accepted delta
+sufficiency is PASS with zero material gaps; strict execution remains
+`BLOCKED_BY_ENVIRONMENT`, formal delta fresh-agent PASS is NO and no rerun is
+required. The home records the independent assessment/context axes.
+Supplemental direction remains separate from current inbox and settings
+implementation. `SAT-01` through `SAT-09` remain unchanged
+and open; new `SAT-10` keeps improvement-action ownership, lifecycle, effect
+observation and Today/task relationships unresolved. The contact Product/UI
+conflict is additional to the two existing trusted-boundary conflicts. Hardening
+Apply remains unauthorized; no lifecycle, environment or readiness is promoted.
+
+## Horaires & services reconciliation
+
+The [bounded Horaires & services home](features/establishment/hours-services/README.md)
+preserves four Human directions and all 17 unapproved proposals. The current
+route implements Booking-owned weekly periods/exceptions; distinct public
+opening hours, operational-service identity and channel propagation remain
+unresolved/unimplemented. Twenty `HS` packets remain open. C1 was resolved as a
+stale page-pack edit-location sentence; no genuine C1 conflict remains.
+The [Human-exception authority cutover](features/establishment/hours-services/README.md#human-exception-authority-cutover)
+is complete: repository knowledge is canonical for this exact scope, and its
+Page Chat is `LEGACY EVIDENCE ONLY`. The Human accepted repository sufficiency
+as `PASS` with zero material gaps and genuine conflicts. Strict fresh-agent
+execution remains `BLOCKED_BY_ENVIRONMENT`; formal fresh-agent PASS is not
+recorded and no further rerun is required. Booking, Establishment Profile,
+Restaurant Knowledge, Today and other migrated authority, implementation,
+authorization, environment and readiness remain unchanged. No provider,
+legal/security qualification or production claim is created.
+
+## Backoffice maturity at a glance
+
+Navigation visibility does not prove product approval, implementation,
+persistence, environment enablement, or readiness.
+
+- **Integrated or data-backed repository slices:** trusted authentication and
+  tenancy foundations, membership administration, Reservations, Reputation,
+  the bounded Establishment profile, the current Today dashboard, the bounded
+  Personnel dossier, Personnel Documents, and Register. Their Product Decision,
+  environment, and readiness scopes differ; use the Module Registry and owning
+  Product Knowledge.
+- **Fixture-backed prototypes:** Rooms/Tables, Stock Inventory, Stock
+  Movements, Suppliers, Compliance, and Creative Studio expose demonstration
+  UI/local presentation state rather than a persisted capability. Inventaire
+  has ten reconciled high-level directions, Mouvements de stock has eight, and
+  Fournisseurs has 22 plus a bounded list-preparation V1 direction. Each exact
+  executable model remains unresolved; the other unmapped surfaces remain
+  `NEEDS REVIEW` below.
+- **Development-only slices:** Personnel Documents and Register use real
+  bounded repository persistence but fail closed outside their approved
+  development scope. Formalités keeps its generic fictional in-memory
+  walkthrough separate from the employee-connected persistent CDI draft, which
+  is also development-only and production-disabled.
+- **Planned placeholders:** Planning, Tâches du jour, Fiches techniques, and the
+  additional planned surfaces below are not implemented merely because a route
+  or navigation item exists. Their Product Decision states differ; use their
+  owning Product Knowledge homes. Pointage raw clocking is a separate bounded
+  implemented slice; this does not implement Planning, Today aggregation,
+  corrections, payroll or another planned surface.
+
+## Readiness and external dependencies
+
+Repository implementation, local QA, synthetic evidence, a configured local
+service, or a passing page pack does not establish production readiness.
+Detailed company, legal/privacy, security, infrastructure, vendor, Personnel,
+AI, Booking, Reputation, and local-release gates live only in
+[`operations/PRODUCTION_READINESS.md`](operations/PRODUCTION_READINESS.md).
+
+- Global cloud and Backoffice production gates remain open.
+- Public Booking and Public Feedback/Reputation remain blocked by their
+  capability-specific registers and the global cloud gates.
+- Personnel production use remains blocked by legal/privacy, templates,
+  retention, storage/scanning, signature, audit, security, and operations
+  evidence. Real personnel files must not be sent to an external AI/OCR
+  provider until all applicable Personnel and AI gates are approved.
+- POS/Site Agent readiness is release-, restaurant-, host-, migration-,
+  timezone-, printer-, and device-specific. Evidence from one scope cannot
+  authorize another.
+- Display repository behavior does not prove database, upload storage,
+  network, application, playback, or device readiness at a named site.
+
+The repository records that the product owner authorized and confirmed a
+private OpenAI Sales-form submission on 2026-08-18, but it does not record an
+OpenAI response. That submission authorizes no account, key, SDK, API request,
+spend, synthetic benchmark, or production processing. Preserve this bounded
+statement unless newer dated, authorized repository evidence exists; provider
+details belong in
+[`OPENAI_PROVIDER_ELIGIBILITY.md`](operations/OPENAI_PROVIDER_ELIGIBILITY.md).
+
+## Unresolved / NEEDS REVIEW areas
+
+No Product Decision is inferred for the surfaces below.
+
+| Area                                                                                     | Preserved current boundary                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Rooms / Tables                                                                           | Four high-level Human directions are reconciled for plan input with tables or empty, practical usefulness, efficient assignment and restaurateur preferences. Exact V1 and physical/assignment ownership remain unresolved. Twenty-five proposal families remain unapproved and 25 grouped ST decisions remain open. `/etablissement/salles-tables` is only an authenticated fixture viewer with room/table selection and small model/navigation tests; no cloud import, persistence, assignment, geometry, Salle operation permission, page pack, Browser QA or production authorization is established. The Human-exception authority cutover is complete: repository knowledge is canonical for this exact scope and Salle Page Chat is LEGACY_EVIDENCE_ONLY. Repository sufficiency is Human-accepted PASS with zero material gaps/conflicts; strict execution remains BLOCKED_BY_ENVIRONMENT, formal fresh-agent PASS is NO and no further rerun is required. Memory-index access and prohibited content not used as evidence are recorded in the home; Product, implementation, authorization, qualification and readiness remain unchanged. See [Salle & tables Product Knowledge](features/establishment/rooms-tables/README.md).                                                                                                                                                                                                 |
+| Veille & conformité                                                                      | Twenty bounded Human-current directions are reconciled for a digital administrative/compliance dossier and targeted restaurant regulatory monitoring. Six long-term directions remain long term, six proposal families remain unapproved, seven domain families remain illustrative, eight external references remain legacy-only, and 23 grouped `VC` decisions remain open. `/conformite/veille` is an authenticated fixture-backed prototype with local presentation state, fictional data, disabled operations, generic tenant context, and small model/navigation tests; no compliance contract, schema, persistence, operation permission, file/source/provider integration, page pack, Browser QA, dated environment evidence, readiness assessment, or production authorization exists. Repository-only fresh-agent acceptance passed with zero material gaps and zero genuine conflicts. Following Human-authorized cutover, repository knowledge is canonical for this exact migrated scope, and the Veille & conformité Page Chat is legacy evidence only. See [Veille & conformité Product Knowledge](features/compliance/README.md).                                                                                                                                                                                                                                                                                         |
+| Créations visuelles / Creative Studio                                                    | Bounded reconciliation is recorded in the [Visual home](features/visual-creation/README.md) and [Module Registry](MODULE_REGISTRY.md). The `Créations visuelles` navigation label points to `/marketing/studio-creatif`, an authenticated fixture prototype with local presentation state; functional Visual capability is `NOT_STARTED`. Seven HIGH-confidence Human directions are reconciled; exact executable V1 and ownership remain unresolved. Fourteen proposals, 25 raw questions in 21 decision packets plus one evidence packet, fifteen capabilities and thirteen concepts remain recoverable. Physical Page Chat history exhaustiveness is UNVERIFIED. Human-exception cutover is complete: Visual repository-canonical; Page Chat LEGACY_EVIDENCE_ONLY. Human-accepted repository sufficiency PASS; zero material gaps/current Visual conflicts. Strict fresh-agent BLOCKED_BY_ENVIRONMENT; automatic prohibited-context exposure and intentional memory-index query YES, results excluded from evidence; formal PASS NO; no further rerun required. Content stays separately repository-canonical and its Page Chat legacy evidence only. No source projection, write-back, provider/rights qualification, environment enablement or production authorization is created.                                                                                                                                                  |
+| Ressources internes                                                                      | Eight bounded Human-current items are reconciled: four conceptual content families, two qualitative experience directions, externally hosted restaurant-created video without a selected provider, and the fixed high-level perimeter provenance. Thirteen detailed proposal families remain unapproved, and 20 `RI` decision packets keep exact V1, ownership, executable shape, authorization, tenancy, storage, provider, cross-module, external-review, UI, environment, and release questions open. `/etablissement/ressources-internes` remains only an authenticated shared placeholder with tested navigation; no capability behavior, contract, schema, repository, file store, permission, page pack, provider integration, or Browser QA exists. Repository-only fresh-agent acceptance passed with zero material gaps and zero genuine conflicts. Following Human-authorized cutover, repository knowledge is canonical for this exact migrated scope, and the Ressources internes Page Chat is legacy evidence only. See [Ressources internes Product Knowledge](features/internal-resources/README.md).                                                                                                                                                                                                                                                                                                                     |
+| Marketing / Subscription                                                                 | Planned placeholder surfaces remain unresolved. Do not remove or promote them until dedicated Product Knowledge/Registry mappings exist. Carte & menus now has a dedicated bounded Product Knowledge/Registry mapping and remains a planned placeholder implementation. Création de contenus also has a bounded discovery home and remains an authenticated placeholder; exact executable V1 is unresolved, its Page Chat is LEGACY_EVIDENCE_ONLY after the bounded Human-exception cutover, and other Marketing/Subscription scopes remain unmapped. Visual is separately repository-canonical after its bounded Human-exception cutover; its Page Chat is LEGACY_EVIDENCE_ONLY. At those Content/Visual cutovers, Satisfaction supplemental consolidation had not been performed; its current reconciliation is recorded above.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| Planning                                                                                 | Bounded high-level manager Planning direction is reconciled and confirmed, while exact V1, domain model, Personnel/Absence projections, permissions, legal behavior, lifecycle, and production model remain unresolved. `/equipe/planning` is only an authenticated placeholder; no Planning integration, operation catalog, persistence, environment enablement, or production authorization exists. See [Planning Product Knowledge](features/planning/README.md).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| Tâches du jour                                                                           | Six bounded current directions and the long-term assisted fiche de poste direction are reconciled. `/equipe/taches-quotidiennes` remains only an authenticated shared placeholder: no task contract, schema, persistence, operation, task-specific authorization, page pack, QA, environment enablement, or production authorization exists. ADR-005 makes Tâches du jour the future task-record source for Today aggregation; Today does not own or currently integrate tasks. Fifteen grouped decisions remain open. See [Tâches du jour Product Knowledge](features/daily-tasks/README.md).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| Inventaire, Fournisseurs, Mouvements de stock, other Stock scopes, and Fiches techniques | Inventaire has ten reconciled high-level directions. Fournisseurs has 22 reconciled directions for supplier information, purchase preparation, supplier-side pricing, and bounded list preparation; online ordering remains long-term. Mouvements de stock has eight directions for stock change sources and operational analysis. Fiches techniques has 17 approved directions for reference recipes, portions/scaling, Human-validated assisted entry, Inventaire price context, theoretical costing, duplication, simple conversions, intermediate preparations, price transparency, Excel export, and an exception-oriented list. Exact domain models, persistence, authorization, cross-scope contracts, regulated meaning, and readiness remain unresolved. `/stock/inventaire`, `/stock/fournisseurs`, and `/stock/mouvements` are independent fixture-backed prototypes; `/stock/fiches-techniques` is only an authenticated planned placeholder. See [Inventaire](features/inventory/README.md), [Fournisseurs](features/suppliers/README.md), [Mouvements de stock](features/stock-movements/README.md), and [Fiches techniques](features/technical-sheets/README.md) Product Knowledge. All four scopes passed repository-only fresh-agent acceptance and completed their Human-authorized authority cutovers. Their repositories are canonical and their Page Chats are legacy evidence only for their exact migrated scopes. |
+| Personnel Documents and future Formalités stages                                         | Personnel Documents still lacks a dedicated approved Registry row. The bounded persistent Formalités draft owns its tenant state, while the separate GLOBAL YUTA template foundation owns only global template identity/draft/frozen-version persistence. Generated files, qualification, signature, Documents handoff, final retention, external submissions, and production operation remain separately gated.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+
+### Preserved historical note — NEEDS REVIEW
+
+The Wave G Phase 8 fragment `no-external-call disclosure` remains without a
+verified destination. Repository search and Git history locate the exact
+fragment only in `CURRENT_STATE.md`; they do not establish its intended source
+or context. Preserve this note until provenance is positively identified from
+a current source or Git history and the information is verified at a durable
+destination. Do not rely on Git-only recovery.
+
+## Source map
+
+| Question or scope                    | Authoritative next source                                                                                                                                                                     |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Authority and conflicts              | [`AUTHORITY_MODEL.md`](AUTHORITY_MODEL.md)                                                                                                                                                    |
+| Lifecycle vocabulary and assignments | [`LIFECYCLE_STATUS_MODEL.md`](LIFECYCLE_STATUS_MODEL.md) and [`MODULE_REGISTRY.md`](MODULE_REGISTRY.md)                                                                                       |
+| Product Knowledge routing            | [`PRODUCT_KNOWLEDGE.md`](PRODUCT_KNOWLEDGE.md)                                                                                                                                                |
+| Personnel                            | [Personnel Product Knowledge](features/personnel/README.md)                                                                                                                                   |
+| Inventaire                           | [Inventaire Product Knowledge](features/inventory/README.md)                                                                                                                                  |
+| Mouvements de stock                  | [Mouvements de stock Product Knowledge](features/stock-movements/README.md)                                                                                                                   |
+| Fiches techniques                    | [Fiches techniques Product Knowledge](features/technical-sheets/README.md)                                                                                                                    |
+| Today                                | [Today Product Knowledge](features/today/README.md)                                                                                                                                           |
+| Establishment                        | [Establishment Product Knowledge](features/establishment/README.md)                                                                                                                           |
+| Carte & menus                        | [Carte & menus Product Knowledge](features/menu-catalog/README.md)                                                                                                                            |
+| Identity / Access                    | [Identity / Access Product Knowledge](features/identity-access/README.md)                                                                                                                     |
+| Site Agent                           | [Site Agent Product Knowledge](products/pos/site-agent/README.md)                                                                                                                             |
+| Display                              | [Display Product Knowledge](products/display/README.md)                                                                                                                                       |
+| Public Booking / Reservations        | [Public Booking README](features/public-booking/README.md) and [Status](features/public-booking/STATUS.md)                                                                                    |
+| Reputation / Direct Feedback         | [Reputation README](features/reputation/README.md) and [Status](features/reputation/STATUS.md)                                                                                                |
+| POS                                  | [POS Product Knowledge](products/pos/README.md), [Site Agent Product Knowledge](products/pos/site-agent/README.md), and the [UI page-pack index](ui/pages/README.md)                          |
+| UI delivery and chronology evidence  | [`ui/pages/README.md`](ui/pages/README.md) and the owning page pack                                                                                                                           |
+| Production and external dependencies | [`operations/PRODUCTION_READINESS.md`](operations/PRODUCTION_READINESS.md), then the capability-specific status or operations source                                                          |
+| Runtime and database ownership       | [Architecture overview](architecture/OVERVIEW.md), [ADR-001](decisions/ADR-001-runtime-families-and-product-visibility.md), and [ADR-003](decisions/ADR-003-database-ownership-boundaries.md) |
+| Deployment and live-runtime evidence | [`operations/DEPLOYMENT.md`](operations/DEPLOYMENT.md) plus dated evidence for the exact environment, version, site, and device                                                               |

@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering and operations
 
-Last updated: 2026-08-05
+Last updated: 2026-08-08
 
 ## Decision status
 
@@ -27,6 +27,13 @@ The implementation uses the isolated local POS database architecture.
 
 Browser-only operation after the local server or LAN fails is not an MVP
 requirement.
+
+Browser-local screen standby is an energy-saving UI behavior, not a new offline
+mode. While an open POS is outside its optional per-browser activity schedule,
+the UI suppresses automatic health, Kitchen SSE/fallback, print-management, and
+receipt-job refreshes. `site-agent`, PostgreSQL, the durable print queue, and
+the local print worker continue operating. The schedule is not persisted in
+POS operational data and creates no cloud synchronization path.
 
 ## Data-residency rule
 
@@ -75,8 +82,10 @@ The current POS is an installable level-one PWA, not a browser-offline POS.
 - The service worker caches the manifest, icons, and immutable Next.js assets.
 - Page navigation and operational actions require the local Next.js server.
 - POS UI code accesses operational data only through `site-agent`.
-- Print-job persistence and state transitions are owned by `site-agent`;
-  physical printer transport remains pending.
+- Print-job persistence, state transitions, ESC/POS rendering, and physical
+  device writes are owned by `site-agent`. The current local transport is one
+  EPSON TM-m30 exposed by the Linux host as a trusted Bluetooth RFCOMM character
+  device.
 - Backup, guarded restore, and health checks exist.
 - `apps/site-agent` and `packages/db-pos` own the local database boundary.
 
@@ -93,7 +102,13 @@ Send to kitchen
 Capture payment
   append the payment
   + update check/order state
-  + create the final local receipt job when applicable
+
+Payment capture does not create a customer receipt job. A separate deliberate
+command may enqueue one paid non-fiscal customer receipt from an authoritative
+order/check snapshot. Internal production and customer-receipt jobs remain
+local and durable; neither depends on cloud availability. The source receipt
+payload may snapshot the configured local establishment display name; retries
+and reprints reuse it without a cloud lookup.
 ```
 
 Requirements:
@@ -113,8 +128,10 @@ The POS database represents one restaurant/site and is not cloud multi-tenant.
 Operational tables do not depend on `@yuta/tenant`, `organization_id`, or
 `establishment_id`.
 
-A single installation record may contain an installation ID, site ID, display
-name, and local license state.
+The dedicated singleton local establishment profile contains only the optional
+receipt display name, a revision, and update time. It is stored in `db-pos`, is
+accessed only through `site-agent`, and is not a cloud identity or license
+record.
 
 Use application-generated UUIDv7 identifiers for new business records.
 Authentication credentials, PIN verifiers, reset tokens, and other secrets use
@@ -142,6 +159,11 @@ The local health surface must distinguish:
 - Internet unavailable while local service remains operational.
 
 Internet availability must not determine the POS service health result.
+
+Printer visibility is derived locally from worker configuration, a read-only
+stat/access check of the configured character device, and persisted queue
+state. Status polling must never open, read, or write the RFCOMM channel; only
+an explicit print or test-print job may claim the physical transport.
 
 ## Security
 

@@ -1,0 +1,13 @@
+# Browser QA Screenshot Manifest
+
+Change: `review-reply-form-pending-state`. Captured on 2026-09-25 from the real authenticated local Backoffice route with an OWNER seed account, LUNA establishment, and an existing Google demo review. Hashes are lowercase SHA-256 of the exact PNG bytes.
+
+| Repository-relative path                                                              | Viewport   | Role / state                 | Scenario                                                              | SHA-256                                                            |
+| ------------------------------------------------------------------------------------- | ---------- | ---------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `docs/reviews/review-reply-form-pending-state/qa/desktop-idle-1366x768.png`           | `1366x768` | OWNER / idle                 | Initial label, enabled save and textarea, disabled publish            | `846e0fc648235e9295ebf8f98582703e7e5b300d3246305b805dfa5c9cf0eb53` |
+| `docs/reviews/review-reply-form-pending-state/qa/desktop-keyboard-focus-1366x768.png` | `1366x768` | OWNER / save focused         | Tab order and visible focus                                           | `b066264f802e3d435c11440d87d1dd4676cd142785324567daf71b1caafbd877` |
+| `docs/reviews/review-reply-form-pending-state/qa/desktop-pending-1366x768.png`        | `1366x768` | OWNER / genuine save pending | Pending label, disabled and busy submit, usable textarea              | `d9d8aedb3c3b034bc753dd0d8a0fb3b6c57d04fb0f8d36efeab31784a6a0edee` |
+| `docs/reviews/review-reply-form-pending-state/qa/desktop-saved-1366x768.png`          | `1366x768` | OWNER / completed            | Existing success message and restored idle state                      | `d62642b0eac90255bed953bb05de8246787701cf3693d2427b7b6add6204d422` |
+| `docs/reviews/review-reply-form-pending-state/qa/mobile-idle-390x844.png`             | `390x844`  | OWNER / idle                 | Responsive idle controls and no horizontal overflow                   | `ff9977b72447b36bcc5d147cff45f3af727287ae0c18d6d18fa3015c63c9e760` |
+| `docs/reviews/review-reply-form-pending-state/qa/mobile-pending-390x844.png`          | `390x844`  | OWNER / genuine save pending | Wrapped pending label, button spacing, disabled and busy submit       | `21cb3bf241d6ea253033dbb95a20a77ce1c8cc1f818121247e9796a414871fd7` |
+| `docs/reviews/review-reply-form-pending-state/qa/mobile-saved-390x844.png`            | `390x844`  | OWNER / completed            | Existing success message, restored idle state and responsive controls | `633e2340e7ce7b280742f90e282a391a4b569411ea72109ee3950efa2436ca26` |

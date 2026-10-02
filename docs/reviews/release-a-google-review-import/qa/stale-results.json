@@ -1,0 +1,98 @@
+{
+  "checks": [
+    {
+      "scenario": "owner-desktop-mounted-visit",
+      "name": "TODAY_AND_PREFETCH_NO_PROVIDER_FETCH",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-desktop-mounted-visit",
+      "name": "STALE_VISIT_ONCE_NO_AUTO_HISTORY_OR_CONCURRENT_FETCH",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 1,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-desktop-mounted-visit",
+      "name": "ARRIVING_PROVIDER_PRESERVES_TEXT_LOCAL_UUID_FOCUS_AND_LIST",
+      "status": "PASS"
+    },
+    {
+      "scenario": "owner-desktop-mounted-visit",
+      "name": "EXPLICIT_INSPECTION_SHOWS_NEW_ITEMS_PRESERVES_ACTIVE_WORK",
+      "status": "PASS"
+    }
+  ],
+  "screenshots": [
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-12-50-033Z/owner-desktop-today.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Today stored-work summary",
+      "scenario": "owner-desktop-mounted-visit",
+      "sha256": "2ea22aeec7972064eb2b80418d5c8ef398b639abc70af4a479611e582421757d",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-12-50-033Z/owner-desktop-recent-pending.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Mounted stale visit pending while writing",
+      "scenario": "owner-desktop-mounted-visit",
+      "sha256": "7b594aac8cdf5a7e4296a47bf8e56eff71ff443f49fe02015d8a0f4b3e4dc8d2",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-12-50-033Z/owner-desktop-avis-after-inspect.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Recent result explicitly inspected",
+      "scenario": "owner-desktop-mounted-visit",
+      "sha256": "c6713c58fac5e79eaf29ac3881bf0f35f4ef0d7ae91bde5622bfa8b9ce44b27b",
+      "visualReview": "REQUIRED"
+    }
+  ],
+  "limitations": [
+    "First retrieval from never/unbound, provider 404 with a still-live reference, independent binding/revocation races and physically scheduled cleanup require separate fixtures or technical integration evidence; this driver does not manufacture them.",
+    "The script checks live-status semantics, keyboard focus and horizontal overflow. Actual screen-reader output and visual screenshot review remain required human/agent review, not scripted PASS.",
+    "A run changes only its own synthetic provider state file and normal app-authenticated local work/retrieval state. It never resets SQL, starts apps, persists sessions or touches real Google.",
+    "A smoke-only or role-only subset is not full lifecycle coverage. Formal QA requires the lifecycle and desktop/mobile role/disabled runs plus screenshot review. The roles subset expects recent content already fresh from the lifecycle run."
+  ],
+  "browserErrors": 0,
+  "blockedBrowserRequests": 0,
+  "candidateManifestSha256": "7792ee8d7e68e08d4934aca32df691cb3773570a5f1d9f6e9c12d4db7b59ffa7",
+  "providerFixtureSha256": "9c611fbcae5d21cc6290dc969b5330adbc4469468ce48ba891882a78bccdf8ed",
+  "driverSha256": "907d89537eb96b42da49d74e79d44cd2c0a3c05e90d7b53e339dc332bc2d5dcd",
+  "dataProvenance": "SYNTHETIC_FIXTURE_NOT_GOOGLE_ACCESS_OR_RETRIEVAL_EVIDENCE",
+  "startedAt": "2026-10-01T20:12:50.034Z",
+  "run": {
+    "run": "stale",
+    "expectedVisit": "stale"
+  },
+  "scriptedStatus": "PASS",
+  "qaStatus": "REVIEW_REQUIRED",
+  "completedAt": "2026-10-01T20:13:00.090Z"
+}

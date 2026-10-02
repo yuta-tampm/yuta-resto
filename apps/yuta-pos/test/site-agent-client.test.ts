@@ -47,6 +47,7 @@ const orderItemSnapshot = {
   selectedVariants: [],
   hasAllergy: false,
   allergenCodes: [],
+  selectedAllergens: [],
   allergySeverity: null,
   allergyNote: null,
   allergyAcknowledgedAt: null,
@@ -62,6 +63,28 @@ const orderItemSnapshot = {
 };
 
 describe('yuta-pos site-agent client', () => {
+  it('opens the notification-only Kitchen event stream without caching', async () => {
+    const response = new Response('retry: 3000\n\n', {
+      headers: { 'Content-Type': 'text/event-stream' },
+    });
+    const fetchImplementation = vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(response);
+    const client = createSiteAgentClient({
+      baseUrl: 'http://site-agent.test/',
+      fetchImplementation,
+    });
+
+    await expect(client.openKitchenEventStream()).resolves.toBe(response);
+    expect(fetchImplementation).toHaveBeenCalledWith(
+      'http://site-agent.test/api/v1/kitchen/events',
+      expect.objectContaining({
+        cache: 'no-store',
+        headers: { Accept: 'text/event-stream' },
+      }),
+    );
+  });
+
   it('loads and validates site-agent health', async () => {
     const fetchImplementation = vi.fn<typeof fetch>().mockResolvedValue(
       Response.json({
@@ -200,6 +223,8 @@ describe('yuta-pos site-agent client', () => {
       name: 'Lunch',
       sortOrder: 10,
       isActive: true,
+      defaultInstructionCodes: [],
+      additionalInstructionCodes: [],
       items: [],
     };
     const item = {
@@ -209,6 +234,12 @@ describe('yuta-pos site-agent client', () => {
       description: null,
       priceCents: 1290,
       kitchenStation: 'kitchen' as const,
+      orderingPolicy: 'merge' as const,
+      variantOptions: [],
+      requiredVariantQuantity: 0,
+      defaultInstructionCodes: null,
+      additionalInstructionCodes: null,
+      instructionConfig: { defaultOptions: [], additionalOptions: [] },
       isAvailable: true,
       sortOrder: 10,
     };
@@ -226,6 +257,8 @@ describe('yuta-pos site-agent client', () => {
     await client.createCatalogCategory(sessionToken, {
       name: category.name,
       sortOrder: category.sortOrder,
+      defaultInstructionCodes: [],
+      additionalInstructionCodes: [],
     });
     await client.updateCatalogCategory(sessionToken, category.id, {
       isActive: false,
@@ -236,6 +269,11 @@ describe('yuta-pos site-agent client', () => {
       description: null,
       priceCents: item.priceCents,
       kitchenStation: item.kitchenStation,
+      orderingPolicy: item.orderingPolicy,
+      variantOptions: item.variantOptions,
+      requiredVariantQuantity: item.requiredVariantQuantity,
+      defaultInstructionCodes: null,
+      additionalInstructionCodes: null,
       isAvailable: true,
       sortOrder: item.sortOrder,
     });
@@ -267,6 +305,7 @@ describe('yuta-pos site-agent client', () => {
       priority: 10,
       maxApplications: null,
       isActive: false,
+      isSuggestionEnabled: true,
       groups: [],
     };
     const group = {
@@ -305,6 +344,7 @@ describe('yuta-pos site-agent client', () => {
       priority: 10,
       maxApplications: null,
       isActive: false,
+      isSuggestionEnabled: true,
     });
     await client.updateComboRule(sessionToken, rule.id, { isActive: true });
     await client.createComboGroup(sessionToken, {
@@ -345,7 +385,7 @@ describe('yuta-pos site-agent client', () => {
       type: 'kitchen_ticket' as const,
       source: 'pos' as const,
       status: 'pending' as const,
-      printerName: 'mock-kitchen',
+      printerName: 'tm-m30-internal',
       summary: {
         orderNumber: 'POS-TEST',
         tableLabel: 'Terrasse 5',
@@ -357,7 +397,19 @@ describe('yuta-pos site-agent client', () => {
     };
     const fetchImplementation = vi
       .fn<typeof fetch>()
-      .mockResolvedValueOnce(Response.json({ printJobs: [printJob] }))
+      .mockResolvedValueOnce(
+        Response.json({
+          printJobs: [printJob],
+          summary: { pending: 1, printing: 0, printed: 0, failed: 0 },
+          pagination: {
+            page: 1,
+            pageSize: 25,
+            totalItems: 1,
+            totalPages: 1,
+          },
+        }),
+      )
+      .mockResolvedValueOnce(Response.json({ ...printJob, type: 'test' }))
       .mockResolvedValueOnce(
         Response.json({ ...printJob, status: 'printing' }),
       );
@@ -367,12 +419,14 @@ describe('yuta-pos site-agent client', () => {
     });
 
     await client.listPrintJobs(sessionToken, { status: 'pending', limit: 25 });
+    await client.createTestPrintJob(sessionToken);
     await client.executePrintJobCommand(sessionToken, printJob.id, {
       action: 'mark_printing',
     });
 
     expect(fetchImplementation.mock.calls.map(([url]) => url)).toEqual([
-      'http://site-agent.test/api/v1/print-jobs?limit=25&status=pending',
+      'http://site-agent.test/api/v1/print-jobs?page=1&limit=25&status=pending',
+      'http://site-agent.test/api/v1/print-jobs/test',
       `http://site-agent.test/api/v1/print-jobs/${printJob.id}/commands`,
     ]);
     for (const [, init] of fetchImplementation.mock.calls) {
@@ -382,8 +436,148 @@ describe('yuta-pos site-agent client', () => {
     }
     expect(fetchImplementation.mock.calls[1]?.[1]).toMatchObject({
       method: 'POST',
+    });
+    expect(fetchImplementation.mock.calls[2]?.[1]).toMatchObject({
+      method: 'POST',
       body: JSON.stringify({ action: 'mark_printing' }),
     });
+  });
+
+  it('reads and updates validated print settings with management auth', async () => {
+    const settings = {
+      kitchenEnabled: true,
+      counterEnabled: true,
+      kitchenCopies: 1,
+      counterCopies: 1,
+      fontSizePreset: 'standard' as const,
+      topPaddingLines: 1,
+      leftPaddingChars: 2,
+      bottomPaddingLines: 3,
+    };
+    const updated = { ...settings, kitchenCopies: 2 };
+    const fetchImplementation = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(Response.json(settings))
+      .mockResolvedValueOnce(Response.json(updated));
+    const client = createSiteAgentClient({
+      baseUrl: 'http://site-agent.test',
+      fetchImplementation,
+    });
+
+    await client.getPrintSettings(sessionToken);
+    await client.updatePrintSettings(sessionToken, updated);
+
+    expect(fetchImplementation.mock.calls.map(([url]) => url)).toEqual([
+      'http://site-agent.test/api/v1/print-settings',
+      'http://site-agent.test/api/v1/print-settings',
+    ]);
+    expect(fetchImplementation.mock.calls[1]?.[1]).toMatchObject({
+      method: 'PATCH',
+      body: JSON.stringify(updated),
+    });
+  });
+
+  it('reads and updates the local establishment profile with management auth', async () => {
+    const current = { displayName: null, revision: 0, updatedAt: null };
+    const updated = {
+      displayName: 'Le Jardin Démo',
+      revision: 1,
+      updatedAt: checkedAt,
+    };
+    const fetchImplementation = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(Response.json(current))
+      .mockResolvedValueOnce(Response.json(updated));
+    const client = createSiteAgentClient({
+      baseUrl: 'http://site-agent.test',
+      fetchImplementation,
+    });
+
+    await client.getEstablishmentProfile(sessionToken);
+    await client.updateEstablishmentProfile(sessionToken, {
+      displayName: '  Le Jardin Démo  ',
+      revision: 0,
+    });
+
+    expect(fetchImplementation.mock.calls.map(([url]) => url)).toEqual([
+      'http://site-agent.test/api/v1/establishment-profile',
+      'http://site-agent.test/api/v1/establishment-profile',
+    ]);
+    expect(fetchImplementation.mock.calls[1]?.[1]).toMatchObject({
+      method: 'PATCH',
+      body: JSON.stringify({ displayName: 'Le Jardin Démo', revision: 0 }),
+      headers: expect.objectContaining({
+        Authorization: `Bearer ${sessionToken}`,
+      }),
+    });
+  });
+
+  it('loads the validated Management report with bearer authorization', async () => {
+    const report = {
+      serviceDay: {
+        start: '2026-08-20T03:00:00.000Z',
+        end: '2026-08-21T03:00:00.000Z',
+      },
+      generatedAt: checkedAt,
+      summary: {
+        paidRevenueCents: 12_450,
+        paidOrderCount: 4,
+        openOrderCount: 2,
+      },
+      orders: [],
+      pagination: {
+        page: 2,
+        pageSize: 50,
+        totalItems: 51,
+        totalPages: 2,
+      },
+    };
+    const fetchImplementation = vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(Response.json(report));
+    const client = createSiteAgentClient({
+      baseUrl: 'http://site-agent.test',
+      fetchImplementation,
+    });
+
+    await expect(
+      client.getManagementReport(sessionToken, { page: 2, limit: 50 }),
+    ).resolves.toEqual(report);
+    expect(fetchImplementation).toHaveBeenCalledWith(
+      'http://site-agent.test/api/v1/management/reports?page=2&limit=50',
+      expect.objectContaining({
+        cache: 'no-store',
+        headers: expect.objectContaining({
+          Authorization: `Bearer ${sessionToken}`,
+        }),
+      }),
+    );
+  });
+
+  it('reads validated printer status without exposing device configuration', async () => {
+    const status = {
+      status: 'ready' as const,
+      worker: 'running' as const,
+      device: 'ready' as const,
+      queue: { pending: 0, printing: 0, failed: 1 },
+      lastPrintedAt: checkedAt,
+      lastFailureAt: null,
+      checkedAt,
+    };
+    const fetchImplementation = vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(Response.json(status));
+    const client = createSiteAgentClient({
+      baseUrl: 'http://site-agent.test',
+      fetchImplementation,
+    });
+
+    await client.getPrinterStatus();
+
+    expect(fetchImplementation).toHaveBeenCalledWith(
+      'http://site-agent.test/api/v1/printer-status',
+      expect.objectContaining({ cache: 'no-store' }),
+    );
   });
 
   it('sends validated create-order input to the versioned API', async () => {
@@ -422,7 +616,16 @@ describe('yuta-pos site-agent client', () => {
   it('uses the versioned order-entry endpoints', async () => {
     const fetchImplementation = vi
       .fn<typeof fetch>()
-      .mockResolvedValueOnce(Response.json({ categories: [], comboRules: [] }))
+      .mockResolvedValueOnce(
+        Response.json({
+          categories: [],
+          comboRules: [],
+          instructionSettings: {
+            quickInstructionOptions: [],
+            allergenOptions: [],
+          },
+        }),
+      )
       .mockResolvedValueOnce(Response.json({ orders: [orderSnapshot] }))
       .mockResolvedValueOnce(
         Response.json({
@@ -471,6 +674,103 @@ describe('yuta-pos site-agent client', () => {
     expect(fetchImplementation.mock.calls[4]?.[1]).toMatchObject({
       method: 'PATCH',
     });
+  });
+
+  it('loads the bounded Home summary from one versioned endpoint', async () => {
+    const fetchImplementation = vi.fn<typeof fetch>().mockResolvedValue(
+      Response.json({
+        serviceDay: {
+          start: '2026-07-27T03:00:00.000Z',
+          end: '2026-07-28T03:00:00.000Z',
+        },
+        view: 'paid_today',
+        query: 'Terrasse',
+        orders: [
+          {
+            ...orderSnapshot,
+            status: 'paid',
+            paidAt: checkedAt,
+            itemCount: 2,
+          },
+        ],
+        counts: {
+          open: 1,
+          paidToday: 1,
+          allToday: 2,
+        },
+        pagination: {
+          page: 2,
+          pageSize: 50,
+          totalItems: 51,
+          totalPages: 2,
+        },
+      }),
+    );
+    const client = createSiteAgentClient({
+      baseUrl: 'http://site-agent.test',
+      fetchImplementation,
+    });
+
+    const result = await client.listOrdersHome({
+      view: 'paid_today',
+      q: 'Terrasse',
+      page: 2,
+      limit: 50,
+    });
+
+    expect(result.orders[0]?.itemCount).toBe(2);
+    expect(fetchImplementation).toHaveBeenCalledWith(
+      'http://site-agent.test/api/v1/orders/home?view=paid_today&page=2&limit=50&q=Terrasse',
+      expect.objectContaining({ cache: 'no-store' }),
+    );
+  });
+
+  it('loads the bounded Kitchen queue from one versioned endpoint', async () => {
+    const fetchImplementation = vi.fn<typeof fetch>().mockResolvedValue(
+      Response.json({
+        serviceDay: {
+          start: '2026-07-27T03:00:00.000Z',
+          end: '2026-07-28T03:00:00.000Z',
+        },
+        screen: 'counter',
+        queue: 'active',
+        tickets: [
+          {
+            order: { ...orderSnapshot, status: 'sent' },
+            items: [
+              {
+                ...orderItemSnapshot,
+                status: 'sent',
+                kitchenStationSnapshot: 'bar',
+                categoryName: 'Boissons',
+                categorySortOrder: 1,
+                itemSortOrder: 2,
+              },
+            ],
+          },
+        ],
+        counts: {
+          stations: { kitchen: 0, bar: 1, dessert: 0 },
+          queues: { active: 1, ready: 0 },
+        },
+      }),
+    );
+    const client = createSiteAgentClient({
+      baseUrl: 'http://site-agent.test',
+      fetchImplementation,
+    });
+
+    const result = await client.listKitchenQueue({
+      screen: 'counter',
+      queue: 'active',
+      limit: 100,
+    });
+
+    expect(result.tickets[0]?.items[0]?.categoryName).toBe('Boissons');
+    expect(fetchImplementation).toHaveBeenCalledWith(
+      'http://site-agent.test/api/v1/kitchen?screen=counter&queue=active&limit=100',
+      expect.objectContaining({ cache: 'no-store' }),
+    );
   });
 
   it('uses the versioned financial endpoints', async () => {
@@ -550,6 +850,94 @@ describe('yuta-pos site-agent client', () => {
       `http://site-agent.test/api/v1/orders/${orderId}/payments`,
       `http://site-agent.test/api/v1/orders/${orderId}/checks/${orderItemId}/payments`,
     ]);
+  });
+
+  it('uses receipt endpoints without management authorization', async () => {
+    const operationId = '019c9b83-7c2d-70e5-8000-000000000006';
+    const printJob = {
+      id: orderItemId,
+      orderId,
+      checkId: null,
+      paymentId: null,
+      type: 'customer_receipt' as const,
+      source: 'pos' as const,
+      status: 'pending' as const,
+      printerName: 'tm-m30-receipt',
+      summary: {
+        orderNumber: 'POS-TEST',
+        tableLabel: 'Terrasse 5',
+        itemCount: 1,
+      },
+      errorMessage: null,
+      createdAt: checkedAt,
+      printedAt: null,
+    };
+    const printer = {
+      status: 'not_configured' as const,
+      worker: 'disabled' as const,
+      device: 'not_configured' as const,
+      queue: { pending: 1, printing: 0, failed: 0 },
+      lastPrintedAt: null,
+      lastFailureAt: null,
+      checkedAt,
+    };
+    const target = {
+      kind: 'order' as const,
+      id: orderId,
+      label: 'Commande complète',
+      amountCents: 1000,
+      availability: 'available' as const,
+      splitMode: 'single' as const,
+      latestJob: printJob,
+    };
+    const fetchImplementation = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(
+        Response.json({
+          orderId,
+          paymentMode: 'single',
+          targets: [{ ...target, latestJob: null }],
+          printer,
+        }),
+      )
+      .mockResolvedValueOnce(
+        Response.json({
+          target,
+          printJob,
+          replayed: false,
+          printer,
+        }),
+      )
+      .mockResolvedValueOnce(Response.json({ printJob, printer }));
+    const client = createSiteAgentClient({
+      baseUrl: 'http://site-agent.test',
+      fetchImplementation,
+    });
+
+    await client.getReceiptView(orderId);
+    await client.executeReceiptCommand(orderId, {
+      operationId,
+      target: { kind: 'order' },
+      intent: 'print',
+    });
+    await client.getReceiptJobStatus(orderId, printJob.id);
+
+    expect(fetchImplementation.mock.calls.map(([url]) => url)).toEqual([
+      `http://site-agent.test/api/v1/orders/${orderId}/receipts`,
+      `http://site-agent.test/api/v1/orders/${orderId}/receipts`,
+      `http://site-agent.test/api/v1/orders/${orderId}/receipts/${printJob.id}`,
+    ]);
+    expect(fetchImplementation.mock.calls[1]?.[1]).toMatchObject({
+      method: 'POST',
+      body: JSON.stringify({
+        operationId,
+        target: { kind: 'order' },
+        intent: 'print',
+      }),
+    });
+    expect(fetchImplementation.mock.calls[1]?.[1]?.headers).not.toMatchObject({
+      Authorization: expect.any(String),
+    });
   });
 
   it('preserves structured site-agent errors', async () => {

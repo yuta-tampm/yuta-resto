@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering and restaurant operations
 
-Last updated: 2026-08-05
+Last updated: 2026-08-23
 
 `apps/yuta-pos` is the internal restaurant POS application for YuTa.
 
@@ -19,8 +19,20 @@ The target runtime boundary is:
 apps/yuta-pos -> apps/site-agent -> packages/db-pos -> local PostgreSQL
 ```
 
+The canonical Site Agent Product Knowledge home is
+[`site-agent/README.md`](site-agent/README.md).
+
 The legacy shared database package has been removed. The POS must not reuse or
 modify the standalone database inside `apps/yuta-display`.
+
+## Governed UI backlog
+
+The canonical prioritized POS UI backlog is maintained in
+`docs/ui/pages/README.md` under `Local POS UI delivery backlog`. Kitchen and
+establishment delivery are complete. Local reports have an approved Phase 4
+read-only vertical slice; payment, the standalone split-items route decision,
+and management login follow. Do not repeat a broad route audit unless repository
+routes or product scope have changed.
 
 ## Scope
 
@@ -35,9 +47,9 @@ Combo discounts at payment time
 Full and partial payment
 Split by items
 Split equally
-Mock print jobs
+Durable internal print jobs
 Kitchen ticket print job for each sent item batch
-Customer receipt print job when an order or check is fully paid
+One physical TM-m30 Bluetooth printer for kitchen, bar, and dessert tickets
 Order cancellation before payment
 ```
 
@@ -49,7 +61,6 @@ Certified cash-register behavior
 Table maps
 Advanced reservations
 Staff scheduling
-Physical ESC/POS printer integration
 ```
 
 ## UI Language
@@ -96,6 +107,16 @@ database, an unavailable POS server, and (when `POS_INTERNET_CHECK_URL` is
 configured) an Internet outage while local operation remains available. The
 Docker healthcheck uses the same endpoint but depends only on application and
 database readiness, not on Internet access.
+
+The same strip exposes `Horaires écran`. Each POS browser can optionally store
+one daily activity range in local storage. Outside that range, while the POS is
+open, the browser shows a fully black standby screen and suspends automatic
+health, Kitchen, print-management, and receipt-job refreshes. An overnight
+range such as 18:00–02:00 is supported. The operator can wake the screen for 15
+minutes or edit the schedule; normal activity resumes automatically at the
+configured opening time. The setting defaults to enabled from 09:00 to 23:00,
+uses the device's local clock, and does not stop `site-agent`, PostgreSQL, or the
+print worker. A browser that already saved a preference keeps that preference.
 
 The accepted offline architecture and phased implementation roadmap live in
 `docs/products/pos/OFFLINE_STRATEGY.md`. Phases 1 and 2 (restaurant edge operation and
@@ -175,7 +196,10 @@ The initial implemented API is:
 ```text
 GET  /health
 GET  /api/v1/local-users
+GET  /api/v1/establishment-profile
+PATCH /api/v1/establishment-profile
 GET  /api/v1/catalog
+PATCH /api/v1/catalog/instruction-settings
 POST /api/v1/catalog/combo-rules
 PATCH /api/v1/catalog/combo-rules/:ruleId
 POST /api/v1/catalog/combo-groups
@@ -186,6 +210,8 @@ PATCH /api/v1/catalog/combo-group-items/:groupItemId
 DELETE /api/v1/catalog/combo-group-items/:groupItemId
 GET  /api/v1/orders
 POST /api/v1/orders
+GET  /api/v1/orders/home
+GET  /api/v1/kitchen
 GET  /api/v1/orders/:orderId
 POST /api/v1/orders/:orderId/items
 POST /api/v1/orders/:orderId/commands
@@ -199,6 +225,9 @@ POST /api/v1/orders/:orderId/payments
 POST /api/v1/orders/:orderId/checks/:checkId/payments
 GET  /api/v1/print-jobs
 POST /api/v1/print-jobs/:printJobId/commands
+GET  /api/v1/print-settings
+PATCH /api/v1/print-settings
+GET  /api/v1/printer-status
 ```
 
 Request and response schemas live under `@yuta/contracts/local-pos`. Contracts
@@ -206,20 +235,40 @@ also define the existing order-item, kitchen, split-payment, payment-capture,
 and print-job commands so those workflows can move without inventing a second
 transport model.
 
+The POS Home uses `GET /api/v1/orders/home` as a read-only operational summary.
+The site-agent owns the 05:00 local service-day predicates, table/order-number
+search, sorting, tab counts, 50-row pagination, item row counts, and allergy
+aggregation. One Home render therefore performs one local HTTP request and a
+bounded set of database reads rather than fetching every order detail. Stored
+totals and statuses remain authoritative; this endpoint cannot transition or
+recalculate an order.
+
 Order-item editing, cancellation/restore, kitchen status changes, allergy
 confirmation, order cancellation, and send-to-kitchen are now implemented in
 `site-agent`. Kitchen sends lock the order, require a UUIDv7 idempotency key,
 acknowledge pending allergy warnings, snapshot the ticket payload, and create
 the kitchen print job in one transaction.
 
-Payment capture, split checks, combo allocation, receipt creation, and
-print-job maintenance are now implemented in `site-agent`. Financial mutations
-lock the order and run in one transaction. Full-order and check payments
-validate UUIDv7 replay input; a fully paid target creates its receipt snapshot
-and print job in the same transaction. Payment summaries expose the persisted
-combo discount and item-allocation snapshots for both full orders and
-item-based split checks, so the POS can render the applied offer details
-without recalculating pricing in the client.
+Payment capture, split checks, combo allocation, and print-job maintenance are
+implemented in `site-agent`. Financial mutations lock the order and run in one
+transaction. Full-order and check payments validate UUIDv7 replay input and
+deliberately create no automatic customer-receipt snapshot or print job.
+Payment summaries expose the persisted combo discount and
+item-allocation snapshots for both full orders and item-based split checks, so
+the POS can render the applied offer details without recalculating pricing in
+the client.
+
+An explicit paid non-fiscal customer-receipt flow is implemented on the order-
+detail route, with the action inside that page's section of the three-line menu.
+Site-agent validates the paid full order or paid split check, saves an immutable
+authoritative snapshot in a durable idempotent print job, and the local worker
+renders one non-fiscal `REÇU DE PAIEMENT` copy. When a local establishment
+display name is configured, the first receipt job snapshots and prints it;
+renaming the profile never rewrites retries or reprints. Legacy and
+unconfigured payloads omit the name. Queue acceptance, printer availability, job
+failure, and physical output remain distinct. Fiscal/VAT claims, automatic
+payment-triggered printing, cloud merchant lookup, and browser device ownership
+remain excluded; the governed scope is in `docs/ui/pages/pos-order-detail/`.
 
 The new financial integration tests have passed against a disposable
 PostgreSQL database. The POS connectivity/health slice now calls
@@ -237,11 +286,11 @@ The offline acceptance run also verifies real local-user, catalog, and combo
 management against a freshly seeded database and creates a UUIDv7 order
 without cloud services.
 
-There is intentionally no `/tables` or physical `/printers` configuration
-resource. The current POS uses free-text table labels and printer-name
-snapshots; physical table maps and printer configuration remain deferred until
-a real hardware transport is selected. The authenticated `/api/v1/print-jobs`
-resource is the implemented local queue boundary.
+There is intentionally no `/tables` or browser-controlled physical
+`/printers` resource. The authenticated print settings resource owns only safe
+ticket presentation settings: Cuisine and counter copy counts plus a compact,
+standard, or large font preset. The trusted `POS_PRINTER_DEVICE` remains
+site-agent environment configuration and never becomes browser input.
 
 POS setup and reporting are local workflows, not cloud back-office workflows:
 
@@ -255,6 +304,13 @@ Daily orders and payments
 
 These workflows must be implemented in a local UI backed by `site-agent`.
 They must be removed from `apps/backoffice`.
+
+`/management/reports` is a protected local admin/manager read. It shows paid
+payment principal, final paid-order count, service-day open-order count, and a
+bounded order activity list. The service window is 05:00 inclusive to the next
+05:00 exclusive under the required `Europe/Paris` site-agent runtime. It adds
+no report table, cloud synchronization, fiscal/accounting claim, export, or
+mutation.
 
 Combo rules support two pricing modes:
 
@@ -275,6 +331,18 @@ group name, usually `Plat`.
 
 The POS is used during service, often on a tablet. Favor speed, clarity, and large touch targets.
 
+Catalog items with required variants open a focused option dialog before they
+are added. Confirmation sends the item and option quantities together; cancel
+creates nothing. Site-agent validates and snapshots the current option labels
+inside the add transaction. Allergy capture remains separate. Plain items keep
+the direct one-tap path.
+
+The application shell uses the full available viewport width across service,
+order, kitchen, payment, and local-management routes. Do not constrain a
+route-level canvas, header, health strip, or main content area with a centered
+desktop `max-width`. Focused forms, login cards, dialogs, success states, and
+similar task-specific content may retain an intentional readable width.
+
 Route convention:
 
 ```txt
@@ -292,13 +360,16 @@ Make Send to kitchen and Payment easy to reach
 Show kitchen items grouped by table label/order
 Keep the kitchen screen as a station/status work queue, not a full command list
 Limit the kitchen screen to the current service day, using a 05:00 local cutoff
+Limit all command-list views to that same 05:00 local service-day cutoff
 Keep payment totals clear
 ```
 
 Order cancellation is allowed only before payment. Cancelling an order marks active articles as cancelled, voids unpaid split checks, and marks the order cancelled. Paid orders or partially paid orders are not cancellable in the MVP because refund handling is out of scope.
 
 Order item quantity changes are allowed only for `pending` rows before payment
-starts. Repeated additions merge into the matching pending row; additions after
+starts. Repeated additions normally merge into the matching pending row;
+items configured with `orderingPolicy = separate` always create a new
+quantity-one row so each plate keeps its own option selection. Additions after
 a kitchen send create a separate pending row so kitchen tickets remain
 batch-accurate. Sent or later kitchen states are immutable from the quantity
 controls. Any recorded payment or active split locks all item mutations. A
@@ -308,7 +379,15 @@ Preparation preferences use `order_items.quick_instructions` for structured
 code/label snapshots and `order_items.note` for optional free text. Product or
 category configuration determines the visible choices; conflicting codes are
 also rejected by the service. `order_items.selected_variants` stores structured
-quantity snapshots for Mochi flavours.
+quantity snapshots for catalog-configured options on each order-item row.
+
+The quick-instruction and allergen catalogs are owned by the local POS database
+through `pos_instruction_settings`. Categories select their common and
+additional quick-instruction codes; items either inherit those lists or replace
+them. This configuration is exposed only by `site-agent` and is intentionally
+absent from `@yuta/core` and all cloud persistence. Labels selected on an order
+item are snapshotted so later local configuration changes do not rewrite
+historical tickets.
 
 Allergies are stored per item with `has_allergy`, `allergen_codes`,
 `allergy_severity`, and `allergy_note`. `allergy_acknowledged_at/by` records the
@@ -317,13 +396,34 @@ KDS confirmation; an allergic item cannot become `ready` until it is set. A
 later allergic item requires both confirmations again. Legacy order-level
 allergy fields remain readable for compatibility with existing local data.
 
-The kitchen screen uses lightweight 10-second client polling with `router.refresh()` while the browser tab is visible. This avoids WebSocket/SSE infrastructure for the MVP while still reflecting cancellations and kitchen status changes quickly enough during service.
+The kitchen screen uses a notification-only SSE stream through the same-origin
+POS route `/api/kitchen-events`. `site-agent` publishes only a revision,
+timestamp, affected screen, and `ticket_created`/`state_changed` reason after a
+relevant local mutation succeeds; the browser then reloads the authoritative
+read model with `router.refresh()`.
+Events are debounced, overlapping refreshes are coalesced, hidden tabs close
+the stream, and reconnect/focus/online recovery refreshes current state. A
+60-second visible-tab poll remains as a safety net if notifications are lost.
+The stream and fallback operate only while the browser-local screen schedule
+permits automatic refresh.
 
-Kitchen station tabs show unfinished items per station across `sent` and
-`preparing`; items in `ready` are intentionally excluded from station badge
-counts. Switching station keeps the selected status only when that station has
-matching items; otherwise the tab routes to the first unfinished queue for that
-station, preferring `sent`, then `preparing`.
+Kitchen includes a compact `Son` control in the filter header. Browser audio is
+enabled only after the operator activates it. A short local chime plays for a
+new non-replayed kitchen-send batch affecting the selected production screen;
+ordinary status, payment, catalog, reconnect, and fallback-refresh events stay
+silent. Chimes are limited to one every 2.5 seconds during bursts.
+
+Each refresh still uses the bounded `GET /api/v1/kitchen` read model. `site-agent`
+applies the 05:00 service day, selected screen, production statuses, ticket
+queue, ordering, and limit before returning grouped tickets and authoritative
+counts. The response includes only current category presentation metadata;
+Kitchen does not fetch every order detail or the full catalog.
+
+Kitchen exposes two production screens: Cuisine and a combined Bar / Desserts
+screen. Screen and queue badges count unique order tickets, not item rows. The
+combined counter screen retains the persisted Bar and Dessert stations but
+shows their rows together and handles its ticket-level prepare/undo action in
+one local transaction. Switching screen preserves the active or ready queue.
 
 Do not:
 
@@ -372,19 +472,51 @@ docs/products/pos/OFFLINE_STRATEGY.md
 The MVP print flow is site-agent-owned:
 
 ```txt
-POS send to kitchen or payment
-Create print_jobs row with status pending
+POS send to kitchen
+Create enabled Cuisine/BAR jobs for the new sent batch
 Local printer adapter claims the pending job
-Adapter sends the snapshot to the configured device
+Adapter renders one station ticket and sends ESC/POS to the configured device
 Adapter marks the job printed or failed
 ```
 
 Kitchen ticket jobs are batch-based. If an order is sent to kitchen, then more items are added and sent later, the second ticket contains only the newly sent items.
 
-`site-agent` owns print-job creation and queue maintenance. The legacy
-continuous `@yuta/core` print worker has been removed from the POS Compose
-topology. Physical printer transport remains pending a hardware and connection
-decision.
+`site-agent` owns print-job creation, queue maintenance, ESC/POS rendering, and
+the physical device write. The selected local transport is one Linux-hosted
+EPSON TM-m30 Bluetooth RFCOMM character device, configured with
+`POS_PRINTER_DEVICE` (currently `/dev/rfcomm1` at Luna). Each kitchen send
+creates an enabled Cuisine job for `kitchen` items when present and an enabled
+BAR job containing the complete sent batch for service-wide visibility. At
+least one destination remains enabled. The single TM-m30 prints and fully cuts
+those tickets sequentially. Jobs snapshot their routing, configured copy count,
+font preset, and ticket spacing so retries remain stable after settings change.
+The renderer groups Cuisine output into `ENTREES`, `SUPPLEMENTS`, then `PLATS`,
+and BAR output into `BOISSONS`, `ENTREES`, `SUPPLEMENTS`, `PLATS`, then
+`DESSERTS`. Each station ticket ends with the Epson full-cut command so Cuisine
+and BAR receive separate paper tickets. The physical writer throttles each
+ticket body in 128-byte chunks and closes that RFCOMM writer phase. It then
+waits one second, opens a fresh writer phase, and sends only the feed/full-cut
+trailer before waiting 800 ms for the next ticket. This prevents a longer
+production ticket from overrunning the Bluetooth buffer or leaving its cutter
+bytes behind a busy body stream.
+Production item names are always bold and uppercase. The standard preset uses
+double-height text without doubling its width, while the large preset doubles
+both dimensions. Items follow one another without an extra blank line; section
+bars, indented options, notes, and allergy emphasis preserve scanability while
+reducing paper.
+The order type is removed from the compact metadata block and rendered as a
+centered, bold, double-height line immediately before the item sections.
+Items with station `none` do not print.
+The manual print test renders the currently enabled Cuisine and/or full BAR
+samples, with a cut after each. Payment capture does not create a customer
+receipt job.
+Printed jobs can be explicitly requeued from local print management; the
+original payload snapshot is reused so the reprint matches the first ticket.
+While local print management is visible and the browser-local screen schedule
+permits automatic refresh, it refreshes its server data every five seconds and
+immediately on tab visibility/focus changes. Printer-worker status updates
+therefore appear without a full browser reload, while hidden or standby tabs do
+not poll.
 
 `@yuta/core` is now database-independent. Its legacy repositories,
 transactions, print worker, environment loading, and filesystem code have been
@@ -396,13 +528,20 @@ persistence plus print-job state transitions.
 The POS database is single-site and is not cloud multi-tenant. POS tables do
 not use `organization_id`, `establishment_id`, or `@yuta/tenant`.
 
-A single local installation record may identify the restaurant/site for
-licensing, backup metadata, and operator display. Local staff authentication
-uses local users, roles, and PIN sessions managed by `site-agent`; it does not
-reuse cloud memberships or cloud authentication sessions.
+The dedicated singleton `pos_establishment_profiles` resource stores the
+optional local receipt display name, its compare-and-set revision, and update
+time. Active local admins and managers may read or update it through
+`site-agent`; the browser receives no database access. The name is trimmed,
+contains 1 to 80 characters, cannot be cleared, and has no cloud identity,
+licensing, legal, fiscal, address, or contact meaning. Local staff
+authentication uses local users, roles, and PIN sessions managed by
+`site-agent`; it does not reuse cloud memberships or cloud authentication
+sessions.
 
-The current `@yuta/db-pos` development seed creates local admin, staff, and
-kitchen identities plus catalog/combo fixtures. Migration `0001_local_auth`
+The current `@yuta/db-pos` seed creates local admin, staff, and kitchen
+identities plus the approved Luna catalog and formulas. It creates 52 available
+products and an unavailable zero-price `Plat spécial du samedi` row that a
+manager configures before each Saturday service. Migration `0001_local_auth`
 adds hashed PIN credentials, authentication attempts, and revocable local
 sessions. `site-agent` validates PINs, limits repeated failures, stores only a
 session-token hash, and authorizes the local management shell independently of
@@ -418,6 +557,11 @@ can manage every role; managers can manage only `staff` and `kitchen`.
 Role, active-state, and PIN changes increment `authVersion`, invalidating the
 affected user's existing sessions.
 
+`/management/establishment` provides the local establishment-name form. Saves
+use the current integer revision and fail on stale writes; the UI reloads the
+latest baseline while preserving the operator's draft. A rename applies only
+to future receipt snapshots.
+
 The unauthenticated local-user list remains available because the login and
 order-entry screens must present selectable local identities before a
 management session exists. All local-user mutations require a bearer
@@ -427,7 +571,13 @@ until the operator-login cutover is designed.
 `/management/catalog` provides authenticated local management for categories
 and menu items. Admins and managers can create or edit categories and items,
 change prices and kitchen stations, reorder entries, hide a category, or mark
-an item unavailable. The workflow performs no physical deletes. Existing POS
+an item unavailable. The same page manages the local quick-instruction and
+allergen definitions, category assignments, and optional item overrides. Each
+item also owns an ordering policy (`merge` or
+`separate`), stable `CODE = Libellé` option definitions, and the number of
+options required per portion. This allows another individually plated product
+to reuse the Mochi behavior without a code change. The workflow performs no
+physical deletes. Existing POS
 order entry already filters inactive categories and unavailable items, so
 catalog changes take effect on the next server render without cloud access.
 
@@ -444,5 +594,26 @@ safe print-job summaries and applies the persisted state machine:
 `pending/printing -> failed -> pending` through retry. Queue reads and manual
 commands require a local admin or manager session. Raw payloads remain inside
 `site-agent`; the browser receives only order/table/item-count summaries.
-Physical ESC/POS transport and printer-routing configuration remain outside
-the current MVP.
+The queue is ordered newest first and paginated server-side at 10 tickets per
+page. Total status counters are calculated across the complete local queue,
+not only the visible page.
+The same screen independently enables Cuisine or BAR internal tickets, while
+preventing both destinations from being disabled. It also manages their copy
+counts, the compact, standard, or large ESC/POS font preset, zero-to-eight line
+top/bottom spacing, and zero-to-eight character left spacing. Physical device
+paths remain outside browser control.
+The screen also presents a safe operational status derived by `site-agent` from
+the configured worker, a read-only character-device stat/access check, and
+local queue state. It refreshes every five seconds only while visible. The
+global POS status strip includes the same summarized printer state through the
+POS health endpoint and refreshes every 15 seconds only while visible. Neither
+poll opens, reads, or writes the RFCOMM channel; a successful test print remains
+the physical paper, cover, and cutter check.
+An authenticated `Impression test` action creates a one-copy local test job
+using the saved font and spacing. Its fixture covers accents, typographic
+apostrophes, dash variants, ligatures, indentation, allergy emphasis, and the
+paper cutter. ESC/POS rendering transliterates those punctuation variants to
+printable ASCII instead of replacing them with question marks.
+Printer payload validation accepts the canonical item-allergy severities
+`intolerance`, `allergy`, and `severe_no_traces`, while retaining read support
+for legacy `mild` and `severe` queued jobs.

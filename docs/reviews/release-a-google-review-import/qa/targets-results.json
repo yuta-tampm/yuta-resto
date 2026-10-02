@@ -1,0 +1,353 @@
+{
+  "checks": [
+    {
+      "scenario": "owner-desktop-targeted-captures",
+      "name": "TARGETED_AVAILABLE_VISIT_NO_PROVIDER_FETCH",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-desktop-targeted-captures",
+      "name": "TARGETED_PENDING_COMPLETED_WRITING_CONTINUITY",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 1,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-desktop-targeted-captures",
+      "name": "TARGETED_NO_REFERENCE_NO_PROVIDER_FETCH",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-desktop-targeted-captures",
+      "name": "OWNER_DESKTOP_TARGETED_LAYOUT",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "keyboardFocusObserved": true
+    },
+    {
+      "scenario": "owner-mobile-targeted-captures",
+      "name": "TARGETED_AVAILABLE_VISIT_NO_PROVIDER_FETCH",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-mobile-targeted-captures",
+      "name": "TARGETED_PENDING_COMPLETED_WRITING_CONTINUITY",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 1,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-mobile-targeted-captures",
+      "name": "TARGETED_NO_REFERENCE_NO_PROVIDER_FETCH",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "owner-mobile-targeted-captures",
+      "name": "OWNER_MOBILE_TARGETED_LAYOUT",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "keyboardFocusObserved": true
+    },
+    {
+      "scenario": "manager-mobile-targeted-captures",
+      "name": "TARGETED_AVAILABLE_VISIT_NO_PROVIDER_FETCH",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "manager-mobile-targeted-captures",
+      "name": "TARGETED_PENDING_COMPLETED_WRITING_CONTINUITY",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 1,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "manager-mobile-targeted-captures",
+      "name": "TARGETED_NO_REFERENCE_NO_PROVIDER_FETCH",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "manager-mobile-targeted-captures",
+      "name": "MANAGER_MOBILE_TARGETED_LAYOUT",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "keyboardFocusObserved": true
+    },
+    {
+      "scenario": "staff-mobile-targeted-captures",
+      "name": "TARGETED_AVAILABLE_VISIT_NO_PROVIDER_FETCH",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "staff-mobile-targeted-captures",
+      "name": "TARGETED_NO_REFERENCE_NO_PROVIDER_FETCH",
+      "status": "PASS",
+      "providerCalls": {
+        "recent": 0,
+        "history": 0,
+        "detail": 0,
+        "accounts": 0,
+        "locations": 0,
+        "blocked": 0
+      }
+    },
+    {
+      "scenario": "staff-mobile-targeted-captures",
+      "name": "STAFF_MOBILE_TARGETED_LAYOUT",
+      "status": "PASS",
+      "horizontalOverflow": false,
+      "keyboardFocusObserved": true
+    }
+  ],
+  "screenshots": [
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/owner-desktop-status-pending-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Retrieval status region while manual request is pending",
+      "scenario": "owner-desktop-targeted-captures",
+      "sha256": "d36c1df2dabea27e31eccf02b2080f85497d75fd79a4e6d1283d2c5bddcc1ed5",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/owner-desktop-status-completed-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Completed retrieval result; active input retained separately",
+      "scenario": "owner-desktop-targeted-captures",
+      "sha256": "5a09fb4a46fb3f87c899ed54b904153e1859a7f64e025c9116e3225d59f7b642",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/owner-desktop-remote-reply-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Temporary remote reply and separate manual draft",
+      "scenario": "owner-desktop-targeted-captures",
+      "sha256": "be9615476a86067cc7ce91f7f3d958e86b55cc63038749f0e75fce20d1e715a3",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/owner-desktop-unavailable-detail-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "state": "Unavailable detail handoff and saved local work",
+      "scenario": "owner-desktop-targeted-captures",
+      "sha256": "6faf9555e177cbf7809892d6fa36076f5859104403f30418f9f2eb6de8a1e45e",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/owner-mobile-status-pending-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Retrieval status region while manual request is pending",
+      "scenario": "owner-mobile-targeted-captures",
+      "sha256": "95e5493d4fc974bf0b5a1eff4fa1c0b6c1133c9182e8ae2ad8db208e3402d043",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/owner-mobile-status-completed-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Completed retrieval result; active input retained separately",
+      "scenario": "owner-mobile-targeted-captures",
+      "sha256": "545195a21381187c384dce5d67a878430df84387c3e3bf848bd0a596d629ca75",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/owner-mobile-remote-reply-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Temporary remote reply and separate manual draft",
+      "scenario": "owner-mobile-targeted-captures",
+      "sha256": "d9fe6d78e17e8978b1c159fc55bc9806755d759c162a929e0d1b58b941dd61bd",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/owner-mobile-unavailable-detail-target.png",
+      "role": "OWNER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Unavailable detail handoff and saved local work",
+      "scenario": "owner-mobile-targeted-captures",
+      "sha256": "b38b7005be4573fecee432e8d29393ca3153e3c9e3c26b6c77fdf64568de5df2",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/manager-mobile-status-pending-target.png",
+      "role": "MANAGER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Retrieval status region while manual request is pending",
+      "scenario": "manager-mobile-targeted-captures",
+      "sha256": "95e5493d4fc974bf0b5a1eff4fa1c0b6c1133c9182e8ae2ad8db208e3402d043",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/manager-mobile-status-completed-target.png",
+      "role": "MANAGER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Completed retrieval result; active input retained separately",
+      "scenario": "manager-mobile-targeted-captures",
+      "sha256": "545195a21381187c384dce5d67a878430df84387c3e3bf848bd0a596d629ca75",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/manager-mobile-unavailable-detail-target.png",
+      "role": "MANAGER",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Unavailable detail handoff and saved local work",
+      "scenario": "manager-mobile-targeted-captures",
+      "sha256": "b38b7005be4573fecee432e8d29393ca3153e3c9e3c26b6c77fdf64568de5df2",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/staff-mobile-assigned-detail-target.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Assigned saved draft without provider controls",
+      "scenario": "staff-mobile-targeted-captures",
+      "sha256": "1e24a0ebdcdc3f6156234fd2d00bfee396ecf4a8e45736306bf1d6ecde58c8c7",
+      "visualReview": "REQUIRED"
+    },
+    {
+      "path": ".tmp-google-review-import-test/browser-qa-2026-10-01T20-15-28-683Z/staff-mobile-unavailable-detail-target.png",
+      "role": "STAFF",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": "Unavailable detail handoff and saved local work",
+      "scenario": "staff-mobile-targeted-captures",
+      "sha256": "516462c78889646d52d89892eb887fe8e80307ae14fc436cf81173cb41f6956c",
+      "visualReview": "REQUIRED"
+    }
+  ],
+  "limitations": [
+    "First retrieval from never/unbound, provider 404 with a still-live reference, independent binding/revocation races and physically scheduled cleanup require separate fixtures or technical integration evidence; this driver does not manufacture them.",
+    "The script checks live-status semantics, keyboard focus and horizontal overflow. Actual screen-reader output and visual screenshot review remain required human/agent review, not scripted PASS.",
+    "A run changes only its own synthetic provider state file and normal app-authenticated local work/retrieval state. It never resets SQL, starts apps, persists sessions or touches real Google.",
+    "A smoke-only or role-only subset is not full lifecycle coverage. Formal QA requires the lifecycle and desktop/mobile role/disabled runs plus screenshot review. The roles subset expects recent content already fresh from the lifecycle run."
+  ],
+  "browserErrors": 0,
+  "blockedBrowserRequests": 0,
+  "candidateManifestSha256": "7792ee8d7e68e08d4934aca32df691cb3773570a5f1d9f6e9c12d4db7b59ffa7",
+  "providerFixtureSha256": "9c611fbcae5d21cc6290dc969b5330adbc4469468ce48ba891882a78bccdf8ed",
+  "driverSha256": "3795858675550d07f93dfbe7da137659aeb48bb75aae5c739cdedfe1ef329565",
+  "dataProvenance": "SYNTHETIC_FIXTURE_NOT_GOOGLE_ACCESS_OR_RETRIEVAL_EVIDENCE",
+  "startedAt": "2026-10-01T20:15:28.684Z",
+  "run": {
+    "run": "captures",
+    "expectedVisit": "stale"
+  },
+  "scriptedStatus": "PASS",
+  "qaStatus": "REVIEW_REQUIRED",
+  "completedAt": "2026-10-01T20:15:58.207Z"
+}

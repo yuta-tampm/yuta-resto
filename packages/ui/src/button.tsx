@@ -51,6 +51,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       variant,
       size,
       children,
+      'aria-busy': ariaBusy,
       ...props
     },
     ref,
@@ -67,6 +68,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         data-loading={loading ? '' : undefined}
         disabled={disabled || loading}
+        aria-busy={loading ? true : ariaBusy}
         {...props}
       >
         {children}

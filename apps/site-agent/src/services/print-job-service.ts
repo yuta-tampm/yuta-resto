@@ -7,12 +7,114 @@ import {
 } from '@yuta/contracts/local-pos';
 import type { PosDatabaseExecutor } from '@yuta/db-pos/client';
 import { printJobs } from '@yuta/db-pos/schema';
-import { asc, desc, eq } from 'drizzle-orm';
+import { asc, desc, eq, sql } from 'drizzle-orm';
+import { v7 as uuidv7 } from 'uuid';
 import { HttpError } from '../http';
+import { ensurePrintSettings } from './print-settings-service';
 
 export function createPrintJobService(db: PosDatabaseExecutor) {
+  async function createTestPrintJob() {
+    const settings = await ensurePrintSettings(db);
+    const now = new Date();
+    const [created] = await db
+      .insert(printJobs)
+      .values({
+        id: uuidv7(),
+        source: 'manual',
+        printerName: 'tm-m30-test',
+        jobType: 'test',
+        payload: {
+          orderNumber: 'TEST',
+          tableLabel: 'Test imprimante',
+          orderType: 'dine_in',
+          orderNote: 'Police - marges - coupe',
+          createdAt: now.toISOString(),
+          includeAllItems: true,
+          ticketDestinations: [
+            ...(settings.kitchenEnabled ? (['kitchen'] as const) : []),
+            ...(settings.counterEnabled ? (['counter'] as const) : []),
+          ],
+          copies: 1,
+          fontSizePreset: settings.fontSizePreset,
+          topPaddingLines: settings.topPaddingLines,
+          leftPaddingChars: settings.leftPaddingChars,
+          bottomPaddingLines: settings.bottomPaddingLines,
+          items: [
+            {
+              name: 'Test – tiret - apostrophe ’ droite',
+              quantity: 1,
+              note: 'Crème brûlée – l’été',
+              quickInstructions: [
+                { labelSnapshot: "Sans oignon – à l'ancienne" },
+              ],
+              selectedVariants: [{ labelSnapshot: 'Bœuf × 2', quantity: 2 }],
+              hasAllergy: true,
+              allergenCodes: ['arachides'],
+              allergySeverity: 'severe_no_traces',
+              allergyNote: 'test uniquement',
+              station: 'kitchen',
+              categoryName: 'Entrées',
+            },
+            {
+              name: 'Thé glacé maison',
+              quantity: 1,
+              note: 'Citron & citronnelle',
+              quickInstructions: [],
+              selectedVariants: [],
+              hasAllergy: false,
+              allergenCodes: [],
+              allergySeverity: null,
+              allergyNote: null,
+              station: 'bar',
+              categoryName: 'Boissons',
+            },
+            {
+              name: 'Mochi glacé',
+              quantity: 1,
+              note: null,
+              quickInstructions: [],
+              selectedVariants: [{ labelSnapshot: 'Mangue', quantity: 2 }],
+              hasAllergy: false,
+              allergenCodes: [],
+              allergySeverity: null,
+              allergyNote: null,
+              station: 'dessert',
+              categoryName: 'Desserts',
+            },
+          ],
+        },
+      })
+      .returning();
+    if (!created) throw new Error('Test print job was not created.');
+    return localPrintJobSchema.parse(toLocalPrintJob(created));
+  }
+
   async function listPrintJobs(input: PrintJobsQuery) {
     const query = printJobsQuerySchema.parse(input);
+    const statusRows = await db
+      .select({
+        status: printJobs.status,
+        count: sql<number>`count(*)::int`,
+      })
+      .from(printJobs)
+      .groupBy(printJobs.status);
+    const countByStatus = new Map(
+      statusRows.map((row) => [row.status, Number(row.count)]),
+    );
+    const summary = {
+      pending: countByStatus.get('pending') ?? 0,
+      printing: countByStatus.get('printing') ?? 0,
+      printed: countByStatus.get('printed') ?? 0,
+      failed: countByStatus.get('failed') ?? 0,
+    };
+    const totalItems = query.status
+      ? summary[query.status]
+      : Object.values(summary).reduce((total, count) => total + count, 0);
+    const { page, totalPages, offset } = resolvePrintJobPagination({
+      requestedPage: query.page,
+      pageSize: query.limit,
+      totalItems,
+    });
     const rows = query.status
       ? await db
           .select()
@@ -20,13 +122,22 @@ export function createPrintJobService(db: PosDatabaseExecutor) {
           .where(eq(printJobs.status, query.status))
           .orderBy(desc(printJobs.createdAt), asc(printJobs.id))
           .limit(query.limit)
+          .offset(offset)
       : await db
           .select()
           .from(printJobs)
           .orderBy(desc(printJobs.createdAt), asc(printJobs.id))
-          .limit(query.limit);
+          .limit(query.limit)
+          .offset(offset);
     return localPrintJobsResponseSchema.parse({
-      printJobs: rows.map(toPrintJob),
+      printJobs: rows.map(toLocalPrintJob),
+      summary,
+      pagination: {
+        page,
+        pageSize: query.limit,
+        totalItems,
+        totalPages,
+      },
     });
   }
 
@@ -74,6 +185,13 @@ export function createPrintJobService(db: PosDatabaseExecutor) {
         'Only failed jobs can be retried.',
       );
     }
+    if (command.action === 'reprint' && job.status !== 'printed') {
+      throw new HttpError(
+        409,
+        'INVALID_PRINT_STATUS',
+        'Only printed jobs can be reprinted.',
+      );
+    }
 
     const values =
       command.action === 'mark_printing'
@@ -99,13 +217,13 @@ export function createPrintJobService(db: PosDatabaseExecutor) {
       .set(values)
       .where(eq(printJobs.id, printJobId))
       .returning();
-    return localPrintJobSchema.parse(toPrintJob(updated));
+    return localPrintJobSchema.parse(toLocalPrintJob(updated));
   }
 
-  return { listPrintJobs, executePrintJobCommand };
+  return { createTestPrintJob, listPrintJobs, executePrintJobCommand };
 }
 
-function toPrintJob(job: typeof printJobs.$inferSelect) {
+export function toLocalPrintJob(job: typeof printJobs.$inferSelect) {
   return {
     id: job.id,
     orderId: job.orderId,
@@ -119,6 +237,20 @@ function toPrintJob(job: typeof printJobs.$inferSelect) {
     errorMessage: job.errorMessage,
     createdAt: job.createdAt.toISOString(),
     printedAt: job.printedAt?.toISOString() ?? null,
+  };
+}
+
+export function resolvePrintJobPagination(input: {
+  requestedPage: number;
+  pageSize: number;
+  totalItems: number;
+}) {
+  const totalPages = Math.max(1, Math.ceil(input.totalItems / input.pageSize));
+  const page = Math.min(input.requestedPage, totalPages);
+  return {
+    page,
+    totalPages,
+    offset: (page - 1) * input.pageSize,
   };
 }
 

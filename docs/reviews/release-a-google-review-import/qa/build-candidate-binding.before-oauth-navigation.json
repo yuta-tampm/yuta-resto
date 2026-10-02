@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "sourceManifestSha256": "7792ee8d7e68e08d4934aca32df691cb3773570a5f1d9f6e9c12d4db7b59ffa7",
+  "buildIdSha256": "77e6b6fd1283e4edfe4ebdfacabd7234b06652c94e41ec93e1cb8abe9bdbdf41",
+  "completedAt": "2026-10-01T19:53:28.527Z",
+  "buildProfile": "release-a",
+  "compiler": "default"
+}

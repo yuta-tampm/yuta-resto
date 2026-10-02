@@ -1,0 +1,78 @@
+*** Begin Patch
+*** Update File: docs/features/identity-access/README.md
+@@
+-## 4. Current bounded scope
++### Formalités authorization prerequisite
++
++Formalités owns the semantic meaning of independent `formalites.read` and
++`formalites.manage` operations. Shared Authorization / Identity / Access owns
++their server-side representation, grant mapping, and enforcement in Backoffice.
++Both currently grant only `OWNER`; `MANAGER` and `STAFF` have neither grant.
++The current session, matching active membership, trusted organization, and
++required active establishment checks apply; system roles and browser claims
++cannot bypass them. Personnel permissions do not authorize Formalités state.
++
++The repository contains the dedicated guards and small server-only composition
++helper, with no durable draft consumer wired to them. Existing Formalités
++prototypes retain their Personnel source-read authorization, development gates,
++navigation, and UI. No draft persistence, provider behavior, production
++enablement, or broader lifecycle approval follows from this prerequisite.
++Precise behavior is defined by the approved
++[Formalités authorization specification](../../../openspec/specs/authorization/formalites/spec.md).
++
++## 4. Current bounded scope
+@@
+-9. OpenSpec is not currently normative for Identity / Access.
++9. Approved normative authorization specs govern their bounded behavior;
++   this home remains broader Product Knowledge and does not promote lifecycle.
+@@
+-There is no normative Identity / Access specification under `openspec/specs/`
+-today. This home retains broader Product Knowledge plus security and trust
+-context. After YUTA explicitly approves OpenSpec specifications as normative,
+-approved specs may become the primary authority for specific behavioral
+-requirements inside accepted boundaries. Accepted durable security, tenancy,
+-runtime, and data decisions remain the highest authority for those boundaries.
+-No OpenSpec artifact is created or modified by this step.
++The approved [Formalités authorization specification](../../../openspec/specs/authorization/formalites/spec.md)
++is normative for its bounded READ/MANAGE prerequisite. The existing
++[Restaurant Knowledge authorization specification](../../../openspec/specs/authorization/restaurant-knowledge/spec.md)
++remains unchanged. This home retains broader Product Knowledge and security
++context; accepted durable security, tenancy, runtime, and data decisions still
++control those boundaries. These specs do not approve every Identity / Access
++workflow or establish deployment, environment enablement, or production readiness.
+*** Update File: docs/features/personnel/README.md
+@@
+-approved or implemented.
++approved or implemented.
++
++Formalités-owned state has a separate authorization prerequisite:
++`formalites.read` and `formalites.manage`, both OWNER-only, independent of
++Personnel permissions. Its [normative authorization specification](../../../openspec/specs/authorization/formalites/spec.md)
++does not expand Personnel authority or its six-field projection. The existing
++Formalités prototypes still use Personnel source-read checks; no durable draft
++consumer is wired to the new guards and no draft persistence is enabled.
+*** Update File: docs/PRODUCT_KNOWLEDGE.md
+@@
+ - Canonical Identity / Access Product Knowledge home:
+   `docs/features/identity-access/README.md`
++- Bounded Formalités READ/MANAGE authorization prerequisite:
++  [normative specification](../openspec/specs/authorization/formalites/spec.md);
++  no durable draft consumer or production enablement.
+@@
+-normative main-spec count      9
++normative main-spec count      10
+*** Update File: docs/MODULE_REGISTRY.md
+@@
+-## Adoption / maintenance rule
++The [Formalités authorization prerequisite](../openspec/specs/authorization/formalites/spec.md)
++defines independent OWNER-only READ/MANAGE operations. Formalités owns their
++semantics; Shared Authorization represents and enforces them through the
++existing Backoffice trusted scope. Implementation evidence:
++[`formalites.ts`](../apps/backoffice/src/server/auth/formalites.ts) and
++[`permissions.ts`](../apps/backoffice/src/server/auth/permissions.ts).
++This prerequisite is not wired into the existing prototypes and implements no
++durable draft. It does not change any lifecycle value or durable-data ownership
++review marker in the rows above.
++
++## Adoption / maintenance rule
+*** End Patch

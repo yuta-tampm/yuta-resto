@@ -1,0 +1,86 @@
+diff --git a/docs/features/personnel/README.md b/docs/features/personnel/README.md
+--- a/docs/features/personnel/README.md
++++ b/docs/features/personnel/README.md
+@@ -133,6 +133,47 @@
+ - Repository implementation, local QA, and development enablement do not close
+   legal, privacy, security, provider, operational, or production gates.
+ 
++### GLOBAL YUTA Formalités template governance
++
++The [normative legal-review governance contract](../../../openspec/specs/formalites/template-legal-review-governance/spec.md)
++defines the documentary prerequisites for future qualification and publication
++of GLOBAL YUTA Formalités templates. Formalités remains their semantic owner;
++Platform Admin remains the future internal administration runtime/access
++boundary. These resources are not organization- or establishment-owned, and
++restaurant memberships provide no global administration authority.
++
++External/manual review requires an identifiable reviewer with evidenced
++authority and competence for the exact review scope, but no YUTA account.
++The three review outcomes are `APPROVED`, `CHANGES_REQUIRED`, and `REJECTED`.
++Qualification binds to the exact immutable version/checksum and reviewed
++applicability envelope, including conditions and effective dates; it also
++requires complete accepted review evidence, a current approved review,
++successful authorized publication and a non-retired version. Authorization
++allow or review completion alone does not establish qualification.
++
++The external reviewer must differ from the internal publisher; the recorder
++may be that publisher. An authorized `YUTA_ADMIN` may record/link received
++external evidence within the future publication action, but does not author
++or alter the legal opinion. This creates no standalone evidence CRUD, reviewer
++identity in YUTA, or sixth system operation. The existing five-operation
++authorization foundation and tenant isolation remain unchanged.
++
++Content or applicability changes require a new version and new review.
++Supersession preserves historical attribution, while retirement blocks future
++use without rewriting historical evidence or previously generated artifacts.
++Authorization audit,
++legal-review evidence and publication/retirement audit retain distinct meanings.
++Qualification is not a legal-compliance or final-contract guarantee; the
++normative contract controls the exact bounded wording. Privacy and retention
++decisions remain prerequisites before corresponding evidence processing or
++persistence; deferred retention duration is not permission to collect or store.
++
++This is a governance contract, not a template implementation, actual legal
++review, publication service, evidence store or Platform Admin application.
++Generation, PDF, signature, Documents handoff and provider integration remain
++excluded. Existing lifecycle/readiness values and production/legal/privacy
++gates are unchanged; no production enablement follows.
++
+ ## 7. Data and ownership
+ 
+ | Scope                                  | Runtime owner                | Data owner / persistence boundary                                                                                   |
+diff --git a/docs/PRODUCT_KNOWLEDGE.md b/docs/PRODUCT_KNOWLEDGE.md
+--- a/docs/PRODUCT_KNOWLEDGE.md
++++ b/docs/PRODUCT_KNOWLEDGE.md
+@@ -242,6 +242,13 @@
+ Documents handoff, final retention policy, and production operation remain
+ unimplemented or separately gated.
+ 
++The [Formalités template legal-review governance specification](../openspec/specs/formalites/template-legal-review-governance/spec.md)
++now defines the bounded documentary contract for external review and exact
++version/applicability qualification prerequisites. Use the Personnel Product
++Knowledge home for context. This normative contract does not implement
++templates, legal-evidence persistence, Platform Admin runtime or publication,
++and does not change lifecycle/readiness or close production/legal/privacy gates.
++
+ ### Pointage authority and access foundation
+ 
+ - Precise normative ownership and behavioral boundaries:
+diff --git a/docs/MODULE_REGISTRY.md b/docs/MODULE_REGISTRY.md
+--- a/docs/MODULE_REGISTRY.md
++++ b/docs/MODULE_REGISTRY.md
+@@ -148,6 +148,14 @@
+ does not authorize generated documents, signature, production enablement, or
+ the deferred final retention policy.
+ 
++The [Formalités template legal-review governance specification](../openspec/specs/formalites/template-legal-review-governance/spec.md)
++defines a documentary prerequisite for GLOBAL YUTA Formalités templates, not
++an implemented template lifecycle. Formalités remains semantic owner; Platform
++Admin remains the future internal administration boundary. The existing
++five-operation authorization contract, all lifecycle rows and readiness gates
++remain unchanged. No template, evidence store, runtime or production capability
++is implied by this normative reference.
++
+ ## Adoption / maintenance rule
+ 
+ 1. Keep this registry as a central index, not a source of business logic.

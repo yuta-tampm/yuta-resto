@@ -9,8 +9,8 @@ export default function NotFound() {
         La page que vous cherchez n&apos;existe pas ou a été déplacée.
       </p>
       <Link
-        href="/today"
-        className="rounded-lg bg-action-primary px-4 py-2 text-sm font-medium text-white hover:bg-action-primary-hover"
+        href="/aujourdhui"
+        className="rounded-lg bg-action-primary px-4 py-2 text-sm font-medium text-inverse hover:bg-action-primary-hover"
       >
         Retour au tableau de bord
       </Link>

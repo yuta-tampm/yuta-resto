@@ -11,10 +11,17 @@ import { menuCategories, menuItems } from '@yuta/db-pos/schema';
 import { and, asc, eq, ne, sql } from 'drizzle-orm';
 import { v7 as uuidv7 } from 'uuid';
 import { HttpError } from '../http';
+import {
+  assertInstructionAssignments,
+  ensureInstructionSettings,
+  resolveInstructionConfig,
+} from './instruction-settings-service';
 
 export function createCatalogManagementService(db: PosDatabaseClient) {
   async function createCatalogCategory(input: CreateLocalCatalogCategoryInput) {
     await assertCategoryNameAvailable(input.name);
+    const settings = await ensureInstructionSettings(db);
+    assertInstructionAssignments(settings, input);
     const [created] = await db
       .insert(menuCategories)
       .values({ id: uuidv7(), ...input })
@@ -28,10 +35,17 @@ export function createCatalogManagementService(db: PosDatabaseClient) {
     categoryId: string,
     input: UpdateLocalCatalogCategoryInput,
   ) {
-    await requireCategory(categoryId);
+    const current = await requireCategory(categoryId);
     if (input.name !== undefined) {
       await assertCategoryNameAvailable(input.name, categoryId);
     }
+    const settings = await ensureInstructionSettings(db);
+    assertInstructionAssignments(settings, {
+      defaultInstructionCodes:
+        input.defaultInstructionCodes ?? current.defaultInstructionCodes,
+      additionalInstructionCodes:
+        input.additionalInstructionCodes ?? current.additionalInstructionCodes,
+    });
     const [updated] = await db
       .update(menuCategories)
       .set(input)
@@ -45,19 +59,29 @@ export function createCatalogManagementService(db: PosDatabaseClient) {
     return localCatalogCategoryResponseSchema.parse({
       category: {
         ...toCategory(updated),
-        items: items.map(toItem),
+        items: items.map((item) =>
+          toItem(item, resolveInstructionConfig(settings, updated, item)),
+        ),
       },
     });
   }
 
   async function createCatalogItem(input: CreateLocalCatalogItemInput) {
-    await requireCategory(input.categoryId);
+    const category = await requireCategory(input.categoryId);
     await assertItemNameAvailable(input.categoryId, input.name);
+    assertOrderingConfiguration(input);
+    const settings = await ensureInstructionSettings(db);
+    assertInstructionAssignments(settings, input);
     const [created] = await db
       .insert(menuItems)
       .values({ id: uuidv7(), ...input })
       .returning();
-    return localCatalogItemResponseSchema.parse({ item: toItem(created) });
+    return localCatalogItemResponseSchema.parse({
+      item: toItem(
+        created,
+        resolveInstructionConfig(settings, category, created),
+      ),
+    });
   }
 
   async function updateCatalogItem(
@@ -70,9 +94,7 @@ export function createCatalogManagementService(db: PosDatabaseClient) {
     if (!current) throw catalogItemNotFoundError();
 
     const categoryId = input.categoryId ?? current.categoryId;
-    if (input.categoryId !== undefined) {
-      await requireCategory(input.categoryId);
-    }
+    const category = await requireCategory(categoryId);
     if (input.name !== undefined || input.categoryId !== undefined) {
       await assertItemNameAvailable(
         categoryId,
@@ -80,12 +102,29 @@ export function createCatalogManagementService(db: PosDatabaseClient) {
         itemId,
       );
     }
+    assertOrderingConfiguration({ ...current, ...input });
+    const settings = await ensureInstructionSettings(db);
+    assertInstructionAssignments(settings, {
+      defaultInstructionCodes:
+        input.defaultInstructionCodes === undefined
+          ? current.defaultInstructionCodes
+          : input.defaultInstructionCodes,
+      additionalInstructionCodes:
+        input.additionalInstructionCodes === undefined
+          ? current.additionalInstructionCodes
+          : input.additionalInstructionCodes,
+    });
     const [updated] = await db
       .update(menuItems)
       .set(input)
       .where(eq(menuItems.id, itemId))
       .returning();
-    return localCatalogItemResponseSchema.parse({ item: toItem(updated) });
+    return localCatalogItemResponseSchema.parse({
+      item: toItem(
+        updated,
+        resolveInstructionConfig(settings, category, updated),
+      ),
+    });
   }
 
   async function requireCategory(categoryId: string) {
@@ -167,10 +206,26 @@ function toCategory(category: typeof menuCategories.$inferSelect) {
     name: category.name,
     sortOrder: category.sortOrder,
     isActive: category.isActive,
+    defaultInstructionCodes: category.defaultInstructionCodes,
+    additionalInstructionCodes: category.additionalInstructionCodes,
   };
 }
 
-function toItem(item: typeof menuItems.$inferSelect) {
+function toItem(
+  item: typeof menuItems.$inferSelect,
+  instructionConfig: {
+    defaultOptions: Array<{
+      code: string;
+      label: string;
+      conflictsWith: string[];
+    }>;
+    additionalOptions: Array<{
+      code: string;
+      label: string;
+      conflictsWith: string[];
+    }>;
+  },
+) {
   return {
     id: item.id,
     categoryId: item.categoryId,
@@ -178,7 +233,52 @@ function toItem(item: typeof menuItems.$inferSelect) {
     description: item.description,
     priceCents: item.priceCents,
     kitchenStation: item.kitchenStation,
+    orderingPolicy: item.orderingPolicy,
+    variantOptions: item.variantOptions,
+    requiredVariantQuantity: item.requiredVariantQuantity,
+    defaultInstructionCodes: item.defaultInstructionCodes,
+    additionalInstructionCodes: item.additionalInstructionCodes,
+    instructionConfig,
     isAvailable: item.isAvailable,
     sortOrder: item.sortOrder,
   };
+}
+
+function assertOrderingConfiguration(input: {
+  orderingPolicy: 'merge' | 'separate';
+  variantOptions: Array<{ code: string; label: string }>;
+  requiredVariantQuantity: number;
+}): void {
+  const codes = input.variantOptions.map(({ code }) => code);
+  if (new Set(codes).size !== codes.length) {
+    throw new HttpError(
+      422,
+      'DUPLICATE_VARIANT_CODE',
+      'Variant option codes must be unique.',
+    );
+  }
+  if (input.requiredVariantQuantity > 0 && input.variantOptions.length === 0) {
+    throw new HttpError(
+      422,
+      'VARIANT_OPTIONS_REQUIRED',
+      'Required variant quantity needs at least one variant option.',
+    );
+  }
+  if (input.requiredVariantQuantity === 0 && input.variantOptions.length > 0) {
+    throw new HttpError(
+      422,
+      'VARIANT_QUANTITY_REQUIRED',
+      'Variant options need a required quantity per portion.',
+    );
+  }
+  if (
+    input.requiredVariantQuantity > 0 &&
+    input.orderingPolicy !== 'separate'
+  ) {
+    throw new HttpError(
+      422,
+      'VARIANT_ITEM_SEPARATE_PORTION_REQUIRED',
+      'Items with required variants must use separate portions.',
+    );
+  }
 }

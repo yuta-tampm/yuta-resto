@@ -1,0 +1,374 @@
+{
+  "baseline": "2dd5a02ba076a65928e2a80afe0b36d0d10284fd",
+  "branch": "codex/release-a-customer-exposure-foundation",
+  "stagedPaths": [],
+  "files": [
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/_components/today-dashboard.tsx",
+      "attribution": "tracked-unstaged",
+      "size": 3080,
+      "sha256": "65977ccfe7c2df30debfa28e6a488fbaf9573ba7c7d306c56a173feeb8e833ea"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/_components/today-reviews-panel.tsx",
+      "attribution": "tracked-unstaged",
+      "size": 3497,
+      "sha256": "f1f04a5b4747675d7a1be6a23a7a3573eb0f1ea30c54339bc4c30dba49b1c03d"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/_components/today-summary-cards.tsx",
+      "attribution": "tracked-unstaged",
+      "size": 5327,
+      "sha256": "a6cae360c687be97fb77d1ed2efeca93fdb8435c6e992d80ddab86be74c9eabb"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/loading.tsx",
+      "attribution": "tracked-unstaged",
+      "size": 2106,
+      "sha256": "efe6a82406ebef806936944fb6d9dcd2d136889360252f1ad84b2c984fd79b22"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/page.tsx",
+      "attribution": "tracked-unstaged",
+      "size": 1225,
+      "sha256": "ddcd24c1533907de4ae593f08570befe98f6ebd62f5550c178ce8301b7af1f40"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/aujourdhui/today-data.ts",
+      "attribution": "tracked-unstaged",
+      "size": 9286,
+      "sha256": "483da3f2c47067c50c5017a50bbea257a5e43ddec8ac436adb0bf40021009a34"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/registre-personnel/actions.ts",
+      "attribution": "tracked-unstaged",
+      "size": 8576,
+      "sha256": "b4acb5f90d710a46737dd377b3f5c4c93d14de3da9e9a09a466da5e5c51ee480"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/equipe/salaries/actions.ts",
+      "attribution": "tracked-unstaged",
+      "size": 61854,
+      "sha256": "362cf9ce9f0535a554b27cad1e25ed9dc9e138279c33e25114cdfc6df3987807"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/actions.ts",
+      "attribution": "tracked-unstaged",
+      "size": 17906,
+      "sha256": "e5c14a4dcf25169c972d8cb074ba1dd83ee7a5b924021e62c575984e8c48503c"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/page.tsx",
+      "attribution": "tracked-unstaged",
+      "size": 5351,
+      "sha256": "9c6f2807f248d90dd02a1a666c35ed5ee60a6ed6ea96ef9d6477b69160762eda"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/etablissement/informations-generales/restaurant-knowledge-loader.ts",
+      "attribution": "tracked-unstaged",
+      "size": 3464,
+      "sha256": "41d768c77824c6b1914051b19e62097cd83966815d36dbb05fe2d81818795f9b"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/layout.tsx",
+      "attribution": "tracked-unstaged",
+      "size": 1664,
+      "sha256": "809d50352d7064fac4aa42c28197a7ea4b98b2d21ea1d52af7316d83a795dd74"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/_components/google-connector-panel.tsx",
+      "attribution": "tracked-unstaged",
+      "size": 2315,
+      "sha256": "8d2c61182c3a3388c6a4d933910b159bbb9d31629aca51dd66acb4a9ba0c5e16"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/_components/integration-status-alerts.tsx",
+      "attribution": "tracked-unstaged",
+      "size": 1833,
+      "sha256": "c20c5b317944f238d415837ced381deaedde687b9b1045fff255dc9be8151081"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/integrations-model.ts",
+      "attribution": "tracked-unstaged",
+      "size": 4863,
+      "sha256": "59784efc30b823384fef12b65ece83d84f5abc04d76c97dc4bcb466de445f565"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/parametres/integrations/page.tsx",
+      "attribution": "tracked-unstaged",
+      "size": 2958,
+      "sha256": "5815aeed6b4f3309d03e07c40032a8c7fa9ae8259bd645c1d2935ab3f2143143"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-detail.tsx",
+      "attribution": "tracked-unstaged",
+      "size": 3491,
+      "sha256": "12f0f4660170571c938c9cc267132f8e8e90d6415fff4e4d301aaee7bc87ac99"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-reply-form.tsx",
+      "attribution": "tracked-unstaged",
+      "size": 2757,
+      "sha256": "47a97ce3269e2355fd45ec7cce4b9c007088e63872ecd0c10a611f2219a31926"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-list-panel.tsx",
+      "attribution": "tracked-unstaged",
+      "size": 8820,
+      "sha256": "683e0535e27ab7aeb00c7221612a902faa203e09934664a50e8f05ae720a3213"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-loader.tsx",
+      "attribution": "tracked-unstaged",
+      "size": 7955,
+      "sha256": "7eebe9f824e7b6557804f4faf471b2f9efd702af88b418b5d25b5afaeefd6838"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-page.tsx",
+      "attribution": "tracked-unstaged",
+      "size": 6541,
+      "sha256": "033f6e46c6448705c54e7cf7fda7c1294e5d68993feab521d024f539987e2ff2"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/actions.ts",
+      "attribution": "tracked-unstaged",
+      "size": 4854,
+      "sha256": "7e09be772e9a21658e3b377eb244f2ae932bdd0fc8f837ec56d3c9ba25c9d4b9"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/reviews-model.ts",
+      "attribution": "tracked-unstaged",
+      "size": 4251,
+      "sha256": "b872bd35f5d194590c69040417a7602f64d342291d014ab33629e86391322e06"
+    },
+    {
+      "path": "apps/backoffice/src/app/globals.css",
+      "attribution": "tracked-unstaged",
+      "size": 463,
+      "sha256": "11754e779cf09f689e3ef0c7e1615c3f91bae30a81e7af064641bc2ed8bb2fde"
+    },
+    {
+      "path": "apps/backoffice/src/app/pointage/[establishmentSlug]/page.tsx",
+      "attribution": "tracked-unstaged",
+      "size": 515,
+      "sha256": "ed9c383a6f07d8c06012ab98baf4194db8638f93c21ca6e7f6730b8ea56f7e2b"
+    },
+    {
+      "path": "apps/backoffice/src/components/backoffice/backoffice-frame.tsx",
+      "attribution": "tracked-unstaged",
+      "size": 12122,
+      "sha256": "5316b6eddfa929dda50ab15a13555813ae152eea34d1583d463cbea2ffbbf1c2"
+    },
+    {
+      "path": "apps/backoffice/src/components/backoffice/backoffice-navigation.ts",
+      "attribution": "tracked-unstaged",
+      "size": 6752,
+      "sha256": "fbbc20864f9c47e79735113a56c915665a0bba9db9cc68183732f89204091cdd"
+    },
+    {
+      "path": "apps/backoffice/src/lib/backoffice-exposure.ts",
+      "attribution": "untracked-addition",
+      "size": 2249,
+      "sha256": "a31b791402463ac5a4729e15e756da859509d6b56a94e57ae0d2eb987c4b24e6"
+    },
+    {
+      "path": "apps/backoffice/src/proxy.ts",
+      "attribution": "tracked-unstaged",
+      "size": 3489,
+      "sha256": "dc4856a38870c25ca1fb04c58f82a2308143f1b5cd02eb01eda8324f9dca3d86"
+    },
+    {
+      "path": "apps/backoffice/src/server/auth/session.ts",
+      "attribution": "tracked-unstaged",
+      "size": 5749,
+      "sha256": "58e625381ada996abf432c9110c66a8d1020e6139eb379159bdbde0e8c21355e"
+    },
+    {
+      "path": "apps/backoffice/src/server/backoffice-exposure-config.ts",
+      "attribution": "untracked-addition",
+      "size": 910,
+      "sha256": "5ae209154797e0fdad5e436600b5485aa72087116d29a8fceba0fb353650d731"
+    },
+    {
+      "path": "apps/backoffice/src/server/backoffice-exposure.ts",
+      "attribution": "untracked-addition",
+      "size": 1264,
+      "sha256": "7ea15bdf2a44b2fccda4c2cd0a3125e63002e77fec0731c8b800970620944d35"
+    },
+    {
+      "path": "apps/backoffice/src/server/pointage/raw-clocking-http.ts",
+      "attribution": "tracked-unstaged",
+      "size": 5878,
+      "sha256": "87827cbc953c8d568e43acc938ac544e8cca0a07fed23ab253d4ef75294b143d"
+    },
+    {
+      "path": "apps/backoffice/src/server/reputation/release-a-setup.ts",
+      "attribution": "untracked-addition",
+      "size": 1935,
+      "sha256": "0266365222161012f09d84fdb87631b060b0f6d7451bfc9cb4393d8bbc8cc7b6"
+    },
+    {
+      "path": "apps/backoffice/test/backoffice-exposure-actions.test.ts",
+      "attribution": "untracked-addition",
+      "size": 21168,
+      "sha256": "c30dc7805d082f010532bf3f9c6e2904d1d00610ca7d2aa630e5637ab0b80afc"
+    },
+    {
+      "path": "apps/backoffice/test/backoffice-exposure.test.ts",
+      "attribution": "untracked-addition",
+      "size": 8378,
+      "sha256": "8cb826050f02240f714504a86ddd1fde7d01f3909de98bb177302e7951bd5ee2"
+    },
+    {
+      "path": "apps/backoffice/test/formalites-persistent-draft-component.test.tsx",
+      "attribution": "tracked-unstaged",
+      "size": 15985,
+      "sha256": "1630549d98ccaa64c419120ed24e262c2f4e27f02c4c3fc0b5164830b575fa51"
+    },
+    {
+      "path": "apps/backoffice/test/pointage-raw-clocking-inventory.test.ts",
+      "attribution": "tracked-unstaged",
+      "size": 19301,
+      "sha256": "e52e23b7896b74eeeb0e84e993803223715d2d6b030760f97dceb56829748aa0"
+    },
+    {
+      "path": "apps/backoffice/test/pointage-release-a-denial.test.ts",
+      "attribution": "untracked-addition",
+      "size": 2145,
+      "sha256": "6e2985a04fb99344d3b5e5e5a34e1aa4d52b4178148946b0a285348a46bd510c"
+    },
+    {
+      "path": "apps/backoffice/test/release-a-integration-copy.test.tsx",
+      "attribution": "untracked-addition",
+      "size": 1979,
+      "sha256": "ba53c32112f663ac7f4499bcc5a795aa64ee5133c9e542ce969544b684090246"
+    },
+    {
+      "path": "apps/backoffice/test/release-a-profile-auth.test.tsx",
+      "attribution": "untracked-addition",
+      "size": 20072,
+      "sha256": "78389bdead456edaf290dc2382f155bcd410d89e7570e496f9fcddb888028d76"
+    },
+    {
+      "path": "apps/backoffice/test/release-a-reputation-actions.test.ts",
+      "attribution": "untracked-addition",
+      "size": 5023,
+      "sha256": "72e656481d96fb8c3446e9a92863743450aa88db8a61763bbd76ef5f9ea271a0"
+    },
+    {
+      "path": "apps/backoffice/test/release-a-reputation-loaders.test.tsx",
+      "attribution": "untracked-addition",
+      "size": 10961,
+      "sha256": "6bd4d4f30a3db5ae75074b8a5c0e5f0f2375a5ff66e2415bc6febb7346d5e17f"
+    },
+    {
+      "path": "apps/backoffice/test/restaurant-knowledge-loader.test.ts",
+      "attribution": "tracked-unstaged",
+      "size": 11878,
+      "sha256": "88b3486a9741bdfa1217d4243a6092bfbff6f5b426599a195581b8816b624472"
+    },
+    {
+      "path": "apps/backoffice/test/review-reply-form.test.tsx",
+      "attribution": "tracked-unstaged",
+      "size": 4971,
+      "sha256": "389439efbd0d1e3b8283bed3f7fb31f6e963ccf0c014ddb8156ce8b07d6540dc"
+    },
+    {
+      "path": "docs/CURRENT_STATE.md",
+      "attribution": "tracked-unstaged",
+      "size": 53036,
+      "sha256": "40c472d8f5a98c4d225d9a3e90d7112c9dd0668173c8f8c91f907faafdb25f8a"
+    },
+    {
+      "path": "docs/README.md",
+      "attribution": "tracked-unstaged",
+      "size": 13785,
+      "sha256": "5a6ffc713022179dc4fd57edd920cb3147b8bcb15a82b76b6d22e67f21f7d0c7"
+    },
+    {
+      "path": "docs/decisions/ADR-009-release-a-customer-exposure.md",
+      "attribution": "untracked-addition",
+      "size": 6006,
+      "sha256": "e8ab1be4f677e6eeaf649c9349c131c10a53c230eec968d30e05254054a1991e"
+    },
+    {
+      "path": "docs/features/establishment/general-information/README.md",
+      "attribution": "tracked-unstaged",
+      "size": 33527,
+      "sha256": "518abd83927e7ec7dd61bde5675268646ca92de96ee5c14f7e794a50cbefc01d"
+    },
+    {
+      "path": "docs/features/identity-access/README.md",
+      "attribution": "tracked-unstaged",
+      "size": 30297,
+      "sha256": "5d519e120cead785ea27f89d2990c5db5ae50398127eba3db730c6aa9265772e"
+    },
+    {
+      "path": "docs/features/reputation/README.md",
+      "attribution": "tracked-unstaged",
+      "size": 107353,
+      "sha256": "2e2d14e33698bb667d1ea6f140930c1a593d65ee927ce7c4470b7187cd6f303c"
+    },
+    {
+      "path": "docs/features/today/README.md",
+      "attribution": "tracked-unstaged",
+      "size": 59356,
+      "sha256": "666315bc75371625bee357f94fc9a4fc5eb35af30e57b735615c79f88d4f8cd3"
+    },
+    {
+      "path": "docs/operations/DEPLOYMENT.md",
+      "attribution": "tracked-unstaged",
+      "size": 20567,
+      "sha256": "c438d49bdbfcda5a48987aa172df94328f9f1011594ea7e40485cae52fdca7b0"
+    },
+    {
+      "path": "docs/operations/LOCAL_DEVELOPMENT.md",
+      "attribution": "tracked-unstaged",
+      "size": 22054,
+      "sha256": "eb28b14272eaca96e13f542f88a73d4a79fd710b6195de72e0129928ec0ebd0c"
+    },
+    {
+      "path": "docs/ui/pages/today/ACCEPTANCE_CHECKLIST.md",
+      "attribution": "tracked-unstaged",
+      "size": 4602,
+      "sha256": "95025e7f1dd91142699a96396b9d7f3ee0de633aba1a8fe885e2e926a4ab2238"
+    },
+    {
+      "path": "docs/ui/pages/today/DATA_AND_INTERACTION_SPEC.md",
+      "attribution": "tracked-unstaged",
+      "size": 7262,
+      "sha256": "c00948f53a6593f97765f12beedcd2b5bb6b67b70e56bf42e873f1bd1a6d5049"
+    },
+    {
+      "path": "docs/ui/pages/today/PRODUCT_SCOPE.md",
+      "attribution": "tracked-unstaged",
+      "size": 4061,
+      "sha256": "0b8b9408ab4438a44e0dd2fd29499a4a95665acc3e68612cd5392603d5afa6c7"
+    },
+    {
+      "path": "docs/ui/pages/today/README.md",
+      "attribution": "tracked-unstaged",
+      "size": 4254,
+      "sha256": "967b7058f9df1aa5da8ecba5e4358898672def1b48fd5e1140f681b57bd300d9"
+    },
+    {
+      "path": "docs/ui/pages/today/UI_SPEC.md",
+      "attribution": "tracked-unstaged",
+      "size": 5927,
+      "sha256": "c837208a83df9fa245c8e72cd4ae92e271e580d4f96c4ee7564dda16469a0bee"
+    },
+    {
+      "path": "packages/db-cloud/src/reputation-repository.ts",
+      "attribution": "tracked-unstaged",
+      "size": 30730,
+      "sha256": "5a859833faa0848d6547d1ce51fce52e097453ae62e09115ff2f54f191ef000a"
+    },
+    {
+      "path": "packages/db-cloud/test/reputation-release-a-exposure.integration.test.ts",
+      "attribution": "untracked-addition",
+      "size": 21003,
+      "sha256": "1d78c15ea5a1c0ee070929935cdbf819474cab57b0c60e9a4da3d2ce09f943d3"
+    }
+  ],
+  "diffSha256": "ba52727e59948295e33a9f001e060d54f75c55fc538be69bb82981902808790f"
+}

@@ -8,18 +8,59 @@ import {
   getSelectedStaffUser,
 } from '../_pos-helpers';
 import { posApi } from '../../lib/pos-api';
+import { SiteAgentClientError } from '../../lib/site-agent-client';
 
 const createOrderFormSchema = z.object({
-  tableLabel: z.string().trim().min(1).max(255),
-  orderType: z.enum(['dine_in', 'takeaway', 'delivery']),
-  staffUserId: z.string().uuid().optional(),
-  note: z.string().trim().max(2000).optional(),
+  tableLabel: z
+    .string()
+    .trim()
+    .min(1, 'Indiquez une table ou un repere.')
+    .max(255, 'La table ou le repere ne peut pas depasser 255 caracteres.'),
+  orderType: z.enum(['dine_in', 'takeaway', 'delivery'], {
+    message: 'Choisissez un type de commande.',
+  }),
+  staffUserId: z.string().uuid('Choisissez un employe valide.').optional(),
+  note: z
+    .string()
+    .trim()
+    .max(2000, 'La note ne peut pas depasser 2 000 caracteres.')
+    .optional(),
 });
+
+export type CreateOrderActionState = {
+  revision: number;
+  status: 'idle' | 'validation_error' | 'staff_unavailable' | 'service_error';
+  message: string | null;
+  fieldErrors: Partial<
+    Record<'staffUserId' | 'tableLabel' | 'orderType' | 'note', string>
+  >;
+  values: {
+    staffUserId: string;
+    tableLabel: string;
+    orderType: string;
+    note: string;
+  };
+};
 
 const addOrderItemFormSchema = z.object({
   orderId: z.string().uuid(),
   menuItemId: z.string().uuid(),
 });
+
+const addConfiguredOrderItemFormSchema = addOrderItemFormSchema.extend({
+  selectedVariants: z.array(
+    z.object({
+      code: z.string().trim().min(1),
+      quantity: z.number().int().nonnegative(),
+    }),
+  ),
+});
+
+export type AddConfiguredOrderItemActionState = {
+  revision: number;
+  status: 'idle' | 'success' | 'validation_error' | 'service_error';
+  message: string | null;
+};
 
 const orderIdFormSchema = z.object({
   orderId: z.string().uuid(),
@@ -28,6 +69,11 @@ const orderIdFormSchema = z.object({
 const sendToKitchenFormSchema = orderIdFormSchema.extend({
   idempotencyKey: z.string().uuid(),
 });
+
+export type SendOrderToKitchenActionState = {
+  revision: number;
+  status: 'idle' | 'success';
+};
 
 const orderItemIdFormSchema = z.object({
   orderItemId: z.string().uuid(),
@@ -65,24 +111,96 @@ const restoreOrderItemFormSchema = z.object({
   orderItemId: z.string().uuid(),
 });
 
-export async function createOrderAction(formData: FormData): Promise<void> {
-  const values = createOrderFormSchema.parse({
-    tableLabel: formData.get('tableLabel'),
-    orderType: formData.get('orderType'),
-    staffUserId: formData.get('staffUserId') || undefined,
-    note: formData.get('note') || undefined,
-  });
-  const staffUser = values.staffUserId
-    ? await getSelectableStaffUserById(values.staffUserId)
-    : await getSelectedStaffUser();
-  const { order } = await posApi.createOrder({
-    tableLabel: values.tableLabel,
-    orderType: values.orderType,
-    staffUserId: staffUser.id,
-    note: values.note,
+export async function createOrderAction(
+  previousState: CreateOrderActionState,
+  formData: FormData,
+): Promise<CreateOrderActionState> {
+  const submittedValues = {
+    staffUserId: formString(formData, 'staffUserId'),
+    tableLabel: formString(formData, 'tableLabel'),
+    orderType: formString(formData, 'orderType'),
+    note: formString(formData, 'note'),
+  };
+  const parsed = createOrderFormSchema.safeParse({
+    ...submittedValues,
+    staffUserId: submittedValues.staffUserId || undefined,
+    note: submittedValues.note || undefined,
   });
 
-  redirect(`/orders/${order.id}/items`);
+  if (!parsed.success) {
+    const flattenedErrors = parsed.error.flatten().fieldErrors;
+    return {
+      revision: previousState.revision + 1,
+      status: 'validation_error',
+      message: 'Verifiez les champs signales avant de continuer.',
+      fieldErrors: {
+        staffUserId: flattenedErrors.staffUserId?.[0],
+        tableLabel: flattenedErrors.tableLabel?.[0],
+        orderType: flattenedErrors.orderType?.[0],
+        note: flattenedErrors.note?.[0],
+      },
+      values: submittedValues,
+    };
+  }
+
+  let orderId: string;
+  try {
+    const staffUser = parsed.data.staffUserId
+      ? await getSelectableStaffUserById(parsed.data.staffUserId)
+      : await getSelectedStaffUser();
+    const { order } = await posApi.createOrder({
+      tableLabel: parsed.data.tableLabel,
+      orderType: parsed.data.orderType,
+      staffUserId: staffUser.id,
+      note: parsed.data.note,
+    });
+    orderId = order.id;
+  } catch (error: unknown) {
+    if (isStaffUnavailableError(error)) {
+      return {
+        revision: previousState.revision + 1,
+        status: 'staff_unavailable',
+        message:
+          "Cet employe n'est plus disponible. Actualisez la liste puis choisissez un employe actif.",
+        fieldErrors: {
+          staffUserId: "L'employe selectionne n'est plus disponible.",
+        },
+        values: submittedValues,
+      };
+    }
+
+    console.error('POS order creation failed.', error);
+    return {
+      revision: previousState.revision + 1,
+      status: 'service_error',
+      message:
+        'Creation non confirmee. Verifiez le service local et la liste des commandes avant de soumettre de nouveau.',
+      fieldErrors: {},
+      values: submittedValues,
+    };
+  }
+
+  redirect(`/orders/${orderId}/items`);
+}
+
+function formString(formData: FormData, key: string): string {
+  const value = formData.get(key);
+  return typeof value === 'string' ? value : '';
+}
+
+function isStaffUnavailableError(error: unknown): boolean {
+  if (
+    error instanceof SiteAgentClientError &&
+    error.code === 'STAFF_USER_UNAVAILABLE'
+  ) {
+    return true;
+  }
+  return (
+    error instanceof Error &&
+    (error.message === 'Selected staff user is not available.' ||
+      error.message ===
+        'No active staff user found. Seed the local POS database first.')
+  );
 }
 
 export async function addOrderItemAction(formData: FormData): Promise<void> {
@@ -99,26 +217,123 @@ export async function addOrderItemAction(formData: FormData): Promise<void> {
   revalidatePath(`/orders/${values.orderId}/items`);
 }
 
-export async function sendOrderToKitchenAction(
+export async function addConfiguredOrderItemAction(
+  previousState: AddConfiguredOrderItemActionState,
   formData: FormData,
-): Promise<void> {
+): Promise<AddConfiguredOrderItemActionState> {
+  let selectedVariants: unknown[];
+  try {
+    selectedVariants = parseJsonArray(formData.get('selectedVariants'));
+  } catch {
+    return {
+      revision: previousState.revision + 1,
+      status: 'validation_error',
+      message: 'Les options sélectionnées ne sont pas valides.',
+    };
+  }
+  const parsed = addConfiguredOrderItemFormSchema.safeParse({
+    orderId: formData.get('orderId'),
+    menuItemId: formData.get('menuItemId'),
+    selectedVariants,
+  });
+  if (!parsed.success) {
+    return {
+      revision: previousState.revision + 1,
+      status: 'validation_error',
+      message: 'Les options sélectionnées ne sont pas valides.',
+    };
+  }
+
+  try {
+    await posApi.addOrderItem(parsed.data.orderId, {
+      menuItemId: parsed.data.menuItemId,
+      quantity: 1,
+      selectedVariants: parsed.data.selectedVariants,
+    });
+  } catch (error) {
+    if (error instanceof SiteAgentClientError) {
+      const messages: Record<string, string> = {
+        INVALID_VARIANT_QUANTITY:
+          'Choisissez exactement le nombre d’options demandé.',
+        UNKNOWN_VARIANT:
+          'Une option a changé dans le catalogue. Fermez puis rouvrez la sélection.',
+        MENU_ITEM_UNAVAILABLE: "Cet article n'est plus disponible.",
+        INVALID_ORDER_STATUS: 'Cette commande ne peut plus être modifiée.',
+      };
+      return {
+        revision: previousState.revision + 1,
+        status: 'service_error',
+        message:
+          messages[error.code] ??
+          "L'ajout n'a pas été confirmé. Vérifiez le service local puis réessayez.",
+      };
+    }
+    console.error('Configured order item add failed.', error);
+    return {
+      revision: previousState.revision + 1,
+      status: 'service_error',
+      message:
+        "L'ajout n'a pas été confirmé. Vérifiez le service local puis réessayez.",
+    };
+  }
+
+  revalidatePath(`/orders/${parsed.data.orderId}`);
+  revalidatePath(`/orders/${parsed.data.orderId}/items`);
+  return {
+    revision: previousState.revision + 1,
+    status: 'success',
+    message: null,
+  };
+}
+
+export async function sendOrderToKitchenAction(
+  previousState: SendOrderToKitchenActionState,
+  formData: FormData,
+): Promise<SendOrderToKitchenActionState> {
   const values = sendToKitchenFormSchema.parse({
     orderId: formData.get('orderId'),
     idempotencyKey: formData.get('idempotencyKey'),
   });
 
-  const staffUser = await getSelectedStaffUser();
-
-  await posApi.executeOrderCommand(values.orderId, {
-    action: 'send_to_kitchen',
-    idempotencyKey: values.idempotencyKey,
-    allergyAcknowledged: formData.get('allergyAcknowledged') === 'true',
-    staffUserId: staffUser.id,
-  });
+  try {
+    const staffUser = await getSelectedStaffUser();
+    await posApi.executeOrderCommand(values.orderId, {
+      action: 'send_to_kitchen',
+      idempotencyKey: values.idempotencyKey,
+      allergyAcknowledged: formData.get('allergyAcknowledged') === 'true',
+      staffUserId: staffUser.id,
+    });
+  } catch (error) {
+    if (error instanceof SiteAgentClientError) {
+      redirect(
+        `/orders/${values.orderId}/items?sendError=${encodeURIComponent(
+          kitchenSendErrorCode(error.code),
+        )}`,
+      );
+    }
+    throw error;
+  }
 
   revalidatePath(`/orders/${values.orderId}`);
+  revalidatePath(`/orders/${values.orderId}/items`);
   revalidatePath('/kitchen');
   revalidatePath('/pos/prints');
+
+  return {
+    revision: previousState.revision + 1,
+    status: 'success',
+  };
+}
+
+function kitchenSendErrorCode(code: string): string {
+  const supportedCodes = new Set([
+    'INVALID_VARIANT_QUANTITY',
+    'ALLERGY_ACKNOWLEDGEMENT_REQUIRED',
+    'EMPTY_KITCHEN_SEND',
+    'INVALID_ORDER_STATUS',
+    'IDEMPOTENCY_CONFLICT',
+  ]);
+  return supportedCodes.has(code) ? code : 'KITCHEN_SEND_FAILED';
 }
 
 export async function updateOrderItemInstructionsAction(

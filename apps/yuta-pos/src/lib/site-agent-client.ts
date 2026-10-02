@@ -20,18 +20,30 @@ import {
   localComboGroupResponseSchema,
   localComboRuleResponseSchema,
   localKitchenSendResponseSchema,
+  localKitchenQueueQuerySchema,
+  localKitchenQueueResponseSchema,
+  localManagementReportsQuerySchema,
+  localManagementReportsResponseSchema,
   localChecksResponseSchema,
   localOrderCommandSchema,
   localOrderDetailResponseSchema,
   localOrderItemCommandSchema,
   localOrderItemResponseSchema,
   localOrderResponseSchema,
+  localOrdersHomeQuerySchema,
+  localOrdersHomeResponseSchema,
   localOrdersQuerySchema,
   localOrdersResponseSchema,
   localPaymentCaptureResponseSchema,
   localPaymentSummaryResponseSchema,
   localPrintJobsResponseSchema,
   localPrintJobSchema,
+  localPrinterStatusSchema,
+  localReceiptCommandResponseSchema,
+  localReceiptJobStatusResponseSchema,
+  localReceiptViewResponseSchema,
+  localPrintSettingsSchema,
+  localEstablishmentProfileSchema,
   localPosRoutes,
   localUserResponseSchema,
   localUsersResponseSchema,
@@ -39,6 +51,7 @@ import {
   payLocalOrderInputSchema,
   printJobCommandSchema,
   printJobsQuerySchema,
+  receiptJobCommandInputSchema,
   siteAgentHealthResponseSchema,
   splitLocalOrderEquallyInputSchema,
   updateLocalCatalogCategoryInputSchema,
@@ -49,6 +62,10 @@ import {
   resetLocalUserPinInputSchema,
   updateLocalUserInputSchema,
   updateLocalOrderItemInputSchema,
+  updateLocalPrintSettingsInputSchema,
+  updateLocalEstablishmentProfileInputSchema,
+  updateLocalInstructionSettingsInputSchema,
+  localInstructionSettingsSchema,
   type AddLocalOrderItemInput,
   type CreateLocalCatalogCategoryInput,
   type CreateLocalCatalogItemInput,
@@ -61,11 +78,15 @@ import {
   type LocalAuthLoginInput,
   type LocalOrderCommand,
   type LocalOrderItemCommand,
+  type LocalKitchenQueueQuery,
+  type LocalManagementReportsQuery,
+  type LocalOrdersHomeQuery,
   type LocalOrdersQuery,
   type PayLocalCheckInput,
   type PayLocalOrderInput,
   type PrintJobCommand,
   type PrintJobsQuery,
+  type ReceiptJobCommandInput,
   type ResetLocalUserPinInput,
   type UpdateLocalCatalogCategoryInput,
   type UpdateLocalCatalogItemInput,
@@ -74,6 +95,9 @@ import {
   type UpdateLocalComboRuleInput,
   type UpdateLocalUserInput,
   type UpdateLocalOrderItemInput,
+  type UpdateLocalPrintSettingsInput,
+  type UpdateLocalEstablishmentProfileInput,
+  type UpdateLocalInstructionSettingsInput,
 } from '@yuta/contracts/local-pos';
 import { z } from 'zod';
 
@@ -149,6 +173,34 @@ export function createSiteAgentClient(input?: {
     }
 
     return schema.parse(payload);
+  }
+
+  async function requestEventStream(signal?: AbortSignal) {
+    const response = await fetchImplementation(
+      `${baseUrl}${localPosRoutes.kitchenEvents}`,
+      {
+        cache: 'no-store',
+        headers: { Accept: 'text/event-stream' },
+        signal,
+      },
+    );
+    if (response.ok) return response;
+
+    const payload: unknown = await response.json().catch(() => null);
+    const error = siteAgentErrorResponseSchema.safeParse(payload);
+    if (error.success) {
+      throw new SiteAgentClientError(
+        response.status,
+        error.data.error.code,
+        error.data.error.message,
+        error.data.error.requestId,
+      );
+    }
+    throw new SiteAgentClientError(
+      response.status,
+      'INVALID_ERROR_RESPONSE',
+      'The site agent returned an invalid error response.',
+    );
   }
 
   return {
@@ -236,6 +288,21 @@ export function createSiteAgentClient(input?: {
     },
     async getCatalog() {
       return request(localPosRoutes.catalog, localCatalogResponseSchema);
+    },
+    async updateInstructionSettings(
+      token: string,
+      input: UpdateLocalInstructionSettingsInput,
+    ) {
+      const body = updateLocalInstructionSettingsInputSchema.parse(input);
+      return request(
+        localPosRoutes.instructionSettings,
+        localInstructionSettingsSchema,
+        {
+          method: 'PATCH',
+          headers: managementJsonHeaders(token),
+          body: JSON.stringify(body),
+        },
+      );
     },
     async createCatalogCategory(
       token: string,
@@ -413,12 +480,77 @@ export function createSiteAgentClient(input?: {
     },
     async listPrintJobs(token: string, input: Partial<PrintJobsQuery> = {}) {
       const query = printJobsQuerySchema.parse(input);
-      const search = new URLSearchParams({ limit: String(query.limit) });
+      const search = new URLSearchParams({
+        page: String(query.page),
+        limit: String(query.limit),
+      });
       if (query.status) search.set('status', query.status);
       return request(
         `${localPosRoutes.printJobs}?${search.toString()}`,
         localPrintJobsResponseSchema,
         { headers: { Authorization: `Bearer ${token}` } },
+      );
+    },
+    async getPrintSettings(token: string) {
+      return request(localPosRoutes.printSettings, localPrintSettingsSchema, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    },
+    async getEstablishmentProfile(token: string) {
+      return request(
+        localPosRoutes.establishmentProfile,
+        localEstablishmentProfileSchema,
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+    },
+    async getManagementReport(
+      token: string,
+      input: Partial<LocalManagementReportsQuery> = {},
+    ) {
+      const query = localManagementReportsQuerySchema.parse(input);
+      const search = new URLSearchParams({
+        page: String(query.page),
+        limit: String(query.limit),
+      });
+      return request(
+        `${localPosRoutes.managementReports}?${search.toString()}`,
+        localManagementReportsResponseSchema,
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+    },
+    async getPrinterStatus() {
+      return request(localPosRoutes.printerStatus, localPrinterStatusSchema);
+    },
+    async createTestPrintJob(token: string) {
+      return request(localPosRoutes.printTest, localPrintJobSchema, {
+        method: 'POST',
+        headers: managementJsonHeaders(token),
+      });
+    },
+    async updatePrintSettings(
+      token: string,
+      input: UpdateLocalPrintSettingsInput,
+    ) {
+      const body = updateLocalPrintSettingsInputSchema.parse(input);
+      return request(localPosRoutes.printSettings, localPrintSettingsSchema, {
+        method: 'PATCH',
+        headers: managementJsonHeaders(token),
+        body: JSON.stringify(body),
+      });
+    },
+    async updateEstablishmentProfile(
+      token: string,
+      input: UpdateLocalEstablishmentProfileInput,
+    ) {
+      const body = updateLocalEstablishmentProfileInputSchema.parse(input);
+      return request(
+        localPosRoutes.establishmentProfile,
+        localEstablishmentProfileSchema,
+        {
+          method: 'PATCH',
+          headers: managementJsonHeaders(token),
+          body: JSON.stringify(body),
+        },
       );
     },
     async executePrintJobCommand(
@@ -447,6 +579,36 @@ export function createSiteAgentClient(input?: {
         `${localPosRoutes.orders}?${search.toString()}`,
         localOrdersResponseSchema,
       );
+    },
+    async listOrdersHome(input: Partial<LocalOrdersHomeQuery> = {}) {
+      const query = localOrdersHomeQuerySchema.parse(input);
+      const search = new URLSearchParams({
+        view: query.view,
+        page: String(query.page),
+        limit: String(query.limit),
+      });
+      if (query.q) {
+        search.set('q', query.q);
+      }
+      return request(
+        `${localPosRoutes.ordersHome}?${search.toString()}`,
+        localOrdersHomeResponseSchema,
+      );
+    },
+    async listKitchenQueue(input: Partial<LocalKitchenQueueQuery> = {}) {
+      const query = localKitchenQueueQuerySchema.parse(input);
+      const search = new URLSearchParams({
+        screen: query.screen,
+        queue: query.queue,
+        limit: String(query.limit),
+      });
+      return request(
+        `${localPosRoutes.kitchenQueue}?${search.toString()}`,
+        localKitchenQueueResponseSchema,
+      );
+    },
+    async openKitchenEventStream(signal?: AbortSignal) {
+      return requestEventStream(signal);
     },
     async createOrder(input: CreateLocalOrderInput) {
       const body = createLocalOrderInputSchema.parse(input);
@@ -522,6 +684,33 @@ export function createSiteAgentClient(input?: {
       return request(
         `${localPosRoutes.orders}/${encodeURIComponent(orderId)}/payment-summary`,
         localPaymentSummaryResponseSchema,
+      );
+    },
+    async getReceiptView(orderId: string) {
+      return request(
+        `${localPosRoutes.orders}/${encodeURIComponent(orderId)}/receipts`,
+        localReceiptViewResponseSchema,
+      );
+    },
+    async executeReceiptCommand(
+      orderId: string,
+      input: ReceiptJobCommandInput,
+    ) {
+      const body = receiptJobCommandInputSchema.parse(input);
+      return request(
+        `${localPosRoutes.orders}/${encodeURIComponent(orderId)}/receipts`,
+        localReceiptCommandResponseSchema,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        },
+      );
+    },
+    async getReceiptJobStatus(orderId: string, jobId: string) {
+      return request(
+        `${localPosRoutes.orders}/${encodeURIComponent(orderId)}/receipts/${encodeURIComponent(jobId)}`,
+        localReceiptJobStatusResponseSchema,
       );
     },
     async splitOrderEqually(orderId: string, parts: number) {

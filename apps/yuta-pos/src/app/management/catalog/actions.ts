@@ -5,18 +5,17 @@ import {
   createLocalCatalogItemInputSchema,
   updateLocalCatalogCategoryInputSchema,
   updateLocalCatalogItemInputSchema,
+  updateLocalInstructionSettingsInputSchema,
 } from '@yuta/contracts/local-pos';
 import { revalidatePath } from 'next/cache';
-import {
-  siteAgentClient,
-  SiteAgentClientError,
-} from '../../../lib/site-agent-client';
+import { siteAgentClient } from '../../../lib/site-agent-client';
 import { requireLocalManagementCredentials } from '../../../server/local-management-session';
+import {
+  toCatalogActionError,
+  type CatalogActionState,
+} from './catalog-action-state';
 
-export type CatalogActionState = {
-  error: string | null;
-  success: string | null;
-};
+export type { CatalogActionState } from './catalog-action-state';
 
 export async function createCatalogCategoryAction(
   _previousState: CatalogActionState,
@@ -25,6 +24,12 @@ export async function createCatalogCategoryAction(
   const input = createLocalCatalogCategoryInputSchema.safeParse({
     name: formData.get('name'),
     sortOrder: Number(formData.get('sortOrder')),
+    defaultInstructionCodes: parseCodeList(
+      formData.get('defaultInstructionCodes'),
+    ),
+    additionalInstructionCodes: parseCodeList(
+      formData.get('additionalInstructionCodes'),
+    ),
   });
   if (!input.success) return validationError();
 
@@ -34,7 +39,7 @@ export async function createCatalogCategoryAction(
     revalidateCatalog();
     return { error: null, success: 'Catégorie créée.' };
   } catch (error: unknown) {
-    return toActionError(error);
+    return toCatalogActionError(error);
   }
 }
 
@@ -46,6 +51,12 @@ export async function updateCatalogCategoryAction(
   const input = updateLocalCatalogCategoryInputSchema.safeParse({
     name: formData.get('name'),
     sortOrder: Number(formData.get('sortOrder')),
+    defaultInstructionCodes: parseCodeList(
+      formData.get('defaultInstructionCodes'),
+    ),
+    additionalInstructionCodes: parseCodeList(
+      formData.get('additionalInstructionCodes'),
+    ),
   });
   if (!input.success) return validationError();
 
@@ -55,7 +66,29 @@ export async function updateCatalogCategoryAction(
     revalidateCatalog();
     return { error: null, success: 'Catégorie mise à jour.' };
   } catch (error: unknown) {
-    return toActionError(error);
+    return toCatalogActionError(error);
+  }
+}
+
+export async function updateInstructionSettingsAction(
+  _previousState: CatalogActionState,
+  formData: FormData,
+): Promise<CatalogActionState> {
+  const input = updateLocalInstructionSettingsInputSchema.safeParse({
+    quickInstructionOptions: parseQuickInstructionOptions(
+      formData.get('quickInstructionOptions'),
+    ),
+    allergenOptions: parseNamedOptions(formData.get('allergenOptions')),
+  });
+  if (!input.success) return validationError();
+
+  try {
+    const { token } = await requireLocalManagementCredentials();
+    await siteAgentClient.updateInstructionSettings(token, input.data);
+    revalidateCatalog();
+    return { error: null, success: 'Options mises à jour.' };
+  } catch (error: unknown) {
+    return toCatalogActionError(error);
   }
 }
 
@@ -75,7 +108,7 @@ export async function setCatalogCategoryActiveAction(
       success: isActive ? 'Catégorie activée.' : 'Catégorie masquée.',
     };
   } catch (error: unknown) {
-    return toActionError(error);
+    return toCatalogActionError(error);
   }
 }
 
@@ -94,7 +127,7 @@ export async function createCatalogItemAction(
     revalidateCatalog();
     return { error: null, success: 'Article créé.' };
   } catch (error: unknown) {
-    return toActionError(error);
+    return toCatalogActionError(error);
   }
 }
 
@@ -114,7 +147,7 @@ export async function updateCatalogItemAction(
     revalidateCatalog();
     return { error: null, success: 'Article mis à jour.' };
   } catch (error: unknown) {
-    return toActionError(error);
+    return toCatalogActionError(error);
   }
 }
 
@@ -132,20 +165,90 @@ export async function setCatalogItemAvailableAction(
       success: isAvailable ? 'Article disponible.' : 'Article indisponible.',
     };
   } catch (error: unknown) {
-    return toActionError(error);
+    return toCatalogActionError(error);
   }
 }
 
 function readCatalogItemForm(formData: FormData) {
+  const customInstructions = formData.get('instructionSource') === 'custom';
   return {
     categoryId: formData.get('categoryId'),
     name: formData.get('name'),
     description: optionalText(formData.get('description')),
     priceCents: parsePriceCents(formData.get('price')),
     kitchenStation: formData.get('kitchenStation'),
+    orderingPolicy: formData.get('orderingPolicy'),
+    variantOptions: parseVariantOptions(formData.get('variantOptions')),
+    requiredVariantQuantity: Number(formData.get('requiredVariantQuantity')),
+    defaultInstructionCodes: customInstructions
+      ? parseCodeList(formData.get('defaultInstructionCodes'))
+      : null,
+    additionalInstructionCodes: customInstructions
+      ? parseCodeList(formData.get('additionalInstructionCodes'))
+      : null,
     isAvailable: formData.get('isAvailable') !== 'false',
     sortOrder: Number(formData.get('sortOrder')),
   };
+}
+
+function parseCodeList(value: FormDataEntryValue | null): string[] {
+  if (typeof value !== 'string' || !value.trim()) return [];
+  return value
+    .split(/[\s,]+/)
+    .map((code) => code.trim().toUpperCase())
+    .filter(Boolean);
+}
+
+function parseNamedOptions(value: FormDataEntryValue | null) {
+  if (typeof value !== 'string' || !value.trim()) return [];
+  return value
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const separatorIndex = line.indexOf('=');
+      if (separatorIndex < 1) return { code: '', label: '' };
+      return {
+        code: line.slice(0, separatorIndex).trim().toUpperCase(),
+        label: line.slice(separatorIndex + 1).trim(),
+      };
+    });
+}
+
+function parseQuickInstructionOptions(value: FormDataEntryValue | null) {
+  if (typeof value !== 'string' || !value.trim()) return [];
+  return value
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const [definition = '', conflictList = ''] = line.split('|', 2);
+      const separatorIndex = definition.indexOf('=');
+      if (separatorIndex < 1) {
+        return { code: '', label: '', conflictsWith: [] };
+      }
+      return {
+        code: definition.slice(0, separatorIndex).trim().toUpperCase(),
+        label: definition.slice(separatorIndex + 1).trim(),
+        conflictsWith: parseCodeList(conflictList),
+      };
+    });
+}
+
+function parseVariantOptions(value: FormDataEntryValue | null) {
+  if (typeof value !== 'string' || !value.trim()) return [];
+  return value
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const separatorIndex = line.indexOf('=');
+      if (separatorIndex < 1) return { code: '', label: '' };
+      return {
+        code: line.slice(0, separatorIndex).trim().toUpperCase(),
+        label: line.slice(separatorIndex + 1).trim(),
+      };
+    });
 }
 
 function parsePriceCents(value: FormDataEntryValue | null): number {
@@ -168,21 +271,4 @@ function validationError(): CatalogActionState {
     error: 'Vérifiez les informations saisies.',
     success: null,
   };
-}
-
-function toActionError(error: unknown): CatalogActionState {
-  if (error instanceof SiteAgentClientError) {
-    const messages: Record<string, string> = {
-      CATALOG_CATEGORY_NAME_CONFLICT: 'Cette catégorie existe déjà.',
-      CATALOG_ITEM_NAME_CONFLICT:
-        'Un article avec ce nom existe déjà dans cette catégorie.',
-      CATALOG_CATEGORY_NOT_FOUND: "La catégorie n'existe plus.",
-      CATALOG_ITEM_NOT_FOUND: "L'article n'existe plus.",
-    };
-    return {
-      error: messages[error.code] ?? "L'opération n'a pas pu être effectuée.",
-      success: null,
-    };
-  }
-  return { error: 'Site-agent indisponible.', success: null };
 }
