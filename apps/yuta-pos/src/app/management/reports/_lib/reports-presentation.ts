@@ -2,8 +2,7 @@ import type {
   LocalManagementReportOrder,
   LocalManagementReportsResponse,
 } from '@yuta/contracts/local-pos';
-
-const reportTimeZone = 'Europe/Paris';
+import { posTimeZone as reportTimeZone } from '../../../../lib/pos-time-zone';
 
 const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
   day: 'numeric',

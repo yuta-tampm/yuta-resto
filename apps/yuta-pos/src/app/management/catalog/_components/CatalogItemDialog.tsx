@@ -18,7 +18,7 @@ import {
   Textarea,
 } from '@yuta/ui';
 import { PackagePlus, Pencil } from 'lucide-react';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import {
   createCatalogItemAction,
   setCatalogItemAvailableAction,
@@ -140,6 +140,7 @@ function CatalogItemFields({
   item?: Item;
   defaultCategoryId?: string;
 }) {
+  const fieldId = useId();
   const [categoryId, setCategoryId] = useState(
     item?.categoryId ?? defaultCategoryId ?? categories[0]?.id ?? '',
   );
@@ -158,10 +159,12 @@ function CatalogItemFields({
     <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
       <fieldset className="grid min-w-0 gap-4 rounded-lg border border-border-default p-4">
         <legend className="px-1 font-black">1. Général / identité</legend>
-        <FormField label="Catégorie">
+        <FormField
+          label={<label htmlFor={`${fieldId}-categorie`}>Catégorie</label>}
+        >
           <input type="hidden" name="categoryId" value={categoryId} />
           <Select value={categoryId} onValueChange={setCategoryId}>
-            <SelectTrigger>
+            <SelectTrigger id={`${fieldId}-categorie`}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -173,16 +176,21 @@ function CatalogItemFields({
             </SelectContent>
           </Select>
         </FormField>
-        <FormField label="Nom">
+        <FormField label={<label htmlFor={`${fieldId}-nom`}>Nom</label>}>
           <Input
+            id={`${fieldId}-nom`}
             name="name"
             defaultValue={item?.name}
             maxLength={255}
             required
           />
         </FormField>
-        <FormField label="Description" hint="Facultative.">
+        <FormField
+          label={<label htmlFor={`${fieldId}-description`}>Description</label>}
+          hint="Facultative."
+        >
           <Textarea
+            id={`${fieldId}-description`}
             name="description"
             defaultValue={item?.description ?? ''}
             maxLength={2000}
@@ -190,8 +198,11 @@ function CatalogItemFields({
           />
         </FormField>
         <div className="grid gap-4 sm:grid-cols-2">
-          <FormField label="Prix TTC (€)">
+          <FormField
+            label={<label htmlFor={`${fieldId}-prix-ttc`}>Prix TTC (€)</label>}
+          >
             <Input
+              id={`${fieldId}-prix-ttc`}
               name="price"
               type="number"
               inputMode="decimal"
@@ -204,8 +215,9 @@ function CatalogItemFields({
               required
             />
           </FormField>
-          <FormField label="Ordre">
+          <FormField label={<label htmlFor={`${fieldId}-ordre`}>Ordre</label>}>
             <Input
+              id={`${fieldId}-ordre`}
               name="sortOrder"
               type="number"
               min={-100000}
@@ -215,7 +227,11 @@ function CatalogItemFields({
             />
           </FormField>
         </div>
-        <FormField label="Disponibilité">
+        <FormField
+          label={
+            <label htmlFor={`${fieldId}-disponibilite`}>Disponibilité</label>
+          }
+        >
           <input
             type="hidden"
             name="isAvailable"
@@ -225,7 +241,7 @@ function CatalogItemFields({
             value={isAvailable ? 'available' : 'unavailable'}
             onValueChange={(value) => setIsAvailable(value === 'available')}
           >
-            <SelectTrigger>
+            <SelectTrigger id={`${fieldId}-disponibilite`}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -239,7 +255,11 @@ function CatalogItemFields({
       <fieldset className="grid min-w-0 gap-4 rounded-lg border border-border-default p-4">
         <legend className="px-1 font-black">2. Notes & codes</legend>
         <FormField
-          label="Suggestions de notes"
+          label={
+            <label htmlFor={`${fieldId}-suggestions-de-notes`}>
+              Suggestions de notes
+            </label>
+          }
           hint="Héritez de la catégorie ou définissez des choix propres à cet article."
         >
           <input
@@ -253,7 +273,7 @@ function CatalogItemFields({
               setInstructionSource(value as 'category' | 'custom')
             }
           >
-            <SelectTrigger>
+            <SelectTrigger id={`${fieldId}-suggestions-de-notes`}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -267,20 +287,30 @@ function CatalogItemFields({
         {instructionSource === 'custom' && (
           <div className="grid gap-4">
             <FormField
-              label="Suggestions principales"
+              label={
+                <label htmlFor={`${fieldId}-suggestions-principales`}>
+                  Suggestions principales
+                </label>
+              }
               hint="Une ligne par code."
             >
               <Textarea
+                id={`${fieldId}-suggestions-principales`}
                 name="defaultInstructionCodes"
                 defaultValue={item?.defaultInstructionCodes?.join('\n')}
                 rows={5}
               />
             </FormField>
             <FormField
-              label="Suggestions supplémentaires"
+              label={
+                <label htmlFor={`${fieldId}-suggestions-supplementaires`}>
+                  Suggestions supplémentaires
+                </label>
+              }
               hint="Affichées sous Autres."
             >
               <Textarea
+                id={`${fieldId}-suggestions-supplementaires`}
                 name="additionalInstructionCodes"
                 defaultValue={item?.additionalInstructionCodes?.join('\n')}
                 rows={5}
@@ -292,13 +322,19 @@ function CatalogItemFields({
 
       <fieldset className="grid min-w-0 gap-4 rounded-lg border border-border-default p-4">
         <legend className="px-1 font-black">3. Préparation & commande</legend>
-        <FormField label="Poste de préparation">
+        <FormField
+          label={
+            <label htmlFor={`${fieldId}-poste-de-preparation`}>
+              Poste de préparation
+            </label>
+          }
+        >
           <input type="hidden" name="kitchenStation" value={station} />
           <Select
             value={station}
             onValueChange={(value) => setStation(value as Station)}
           >
-            <SelectTrigger>
+            <SelectTrigger id={`${fieldId}-poste-de-preparation`}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -311,7 +347,11 @@ function CatalogItemFields({
           </Select>
         </FormField>
         <FormField
-          label="Politique d’ajout"
+          label={
+            <label htmlFor={`${fieldId}-politique-d-ajout`}>
+              Politique d’ajout
+            </label>
+          }
           hint="Séparez les portions lorsque chaque assiette doit conserver ses propres choix."
         >
           <input type="hidden" name="orderingPolicy" value={orderingPolicy} />
@@ -321,7 +361,7 @@ function CatalogItemFields({
               setOrderingPolicy(value as OrderingPolicy)
             }
           >
-            <SelectTrigger>
+            <SelectTrigger id={`${fieldId}-politique-d-ajout`}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -331,10 +371,15 @@ function CatalogItemFields({
           </Select>
         </FormField>
         <FormField
-          label="Choix requis par portion"
+          label={
+            <label htmlFor={`${fieldId}-choix-requis-par-portion`}>
+              Choix requis par portion
+            </label>
+          }
           hint="0 si aucun choix n’est obligatoire."
         >
           <Input
+            id={`${fieldId}-choix-requis-par-portion`}
             name="requiredVariantQuantity"
             type="number"
             min={0}
@@ -348,7 +393,11 @@ function CatalogItemFields({
       <fieldset className="grid min-w-0 gap-4 rounded-lg border border-border-default p-4">
         <legend className="px-1 font-black">4. Variantes / options</legend>
         <FormField
-          label="Options disponibles"
+          label={
+            <label htmlFor={`${fieldId}-options-disponibles`}>
+              Options disponibles
+            </label>
+          }
           hint="Une ligne par option : CODE = Libellé. Exemple : MANGUE = Mangue."
         >
           {(!item || item.variantOptions.length === 0) && (
@@ -360,6 +409,7 @@ function CatalogItemFields({
             </div>
           )}
           <Textarea
+            id={`${fieldId}-options-disponibles`}
             name="variantOptions"
             defaultValue={item?.variantOptions
               .map(({ code, label }) => `${code} = ${label}`)

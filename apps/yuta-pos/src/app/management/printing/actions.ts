@@ -26,8 +26,8 @@ export async function runPrintJobCommandAction(
   const parsedCommand = printJobCommandSchema.safeParse(command);
   if (!parsedCommand.success) return validationError();
 
+  const { token } = await requireLocalManagementCredentials();
   try {
-    const { token } = await requireLocalManagementCredentials();
     await siteAgentClient.executePrintJobCommand(
       token,
       printJobId,
@@ -51,8 +51,8 @@ export async function failPrintJobAction(
   });
   if (!command.success) return validationError();
 
+  const { token } = await requireLocalManagementCredentials();
   try {
-    const { token } = await requireLocalManagementCredentials();
     await siteAgentClient.executePrintJobCommand(
       token,
       printJobId,
@@ -81,8 +81,8 @@ export async function savePrintSettingsAction(
   });
   if (!input.success) return validationError();
 
+  const { token } = await requireLocalManagementCredentials();
   try {
-    const { token } = await requireLocalManagementCredentials();
     await siteAgentClient.updatePrintSettings(token, input.data);
     revalidatePath('/management/printing');
     return { error: null, success: 'Paramètres d’impression enregistrés.' };
@@ -94,8 +94,8 @@ export async function savePrintSettingsAction(
 export async function createTestPrintJobAction(
   _previousState: PrintingActionState,
 ): Promise<PrintingActionState> {
+  const { token } = await requireLocalManagementCredentials();
   try {
-    const { token } = await requireLocalManagementCredentials();
     await siteAgentClient.createTestPrintJob(token);
     revalidatePath('/management/printing');
     return {
@@ -138,7 +138,10 @@ function toActionError(error: unknown): PrintingActionState {
         recovery: 'refresh',
       };
     }
-    return { error: error.message, success: null };
+    return {
+      error: 'L’opération d’impression n’a pas pu être effectuée.',
+      success: null,
+    };
   }
   return {
     error: 'Impossible de mettre à jour la file d’impression.',

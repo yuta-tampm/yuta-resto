@@ -26,11 +26,14 @@ active; this is attribution, not an authenticated kitchen role boundary.
 
 - `packages/db-pos/src/schema/orders.ts` owns order/item persistence and
   historical snapshots.
-- `apps/site-agent/src/services/site-agent-service.ts` owns the bounded order
-  list; `order-command-service.ts` owns detail reads and item/order commands.
-- `packages/contracts/src/local-pos/index.ts` defines strict Zod schemas for
-  order summaries/details and item commands.
-- `apps/yuta-pos/src/lib/site-agent-client.ts` validates every response and
+- `apps/site-agent/src/services/site-agent-service.ts` composes the bounded
+  order list from `order-list-service.ts` and the kitchen queue from
+  `kitchen-queue-service.ts`; `order-command-service.ts` owns detail reads and
+  item/order commands.
+- `packages/contracts/src/local-pos/orders.ts` defines strict Zod schemas for
+  order summaries/details and item commands, re-exported by
+  `@yuta/contracts/local-pos`.
+- `apps/yuta-pos/src/lib/site-agent-client/` validates every response and
   sends no database URL to the browser.
 - `apps/yuta-pos/src/lib/pos-api.ts` hydrates ISO timestamps into server-side
   `Date` values and composes the current list-plus-detail Kitchen read.

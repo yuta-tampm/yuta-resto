@@ -25,6 +25,7 @@ import { useActionState, useEffect, useState } from 'react';
 import { saveEstablishmentProfileAction } from '../actions';
 import { initialEstablishmentProfileActionState } from '../_lib/establishment-profile-action-state';
 import { getEstablishmentProfileFormState } from '../_lib/establishment-profile-form';
+import { posTimeZone } from '../../../../lib/pos-time-zone';
 
 export function EstablishmentProfileForm({
   profile,
@@ -192,6 +193,7 @@ export function EstablishmentProfileForm({
               {new Intl.DateTimeFormat('fr-FR', {
                 dateStyle: 'medium',
                 timeStyle: 'short',
+                timeZone: posTimeZone,
               }).format(new Date(effectiveProfile.updatedAt))}
             </p>
           ) : null}

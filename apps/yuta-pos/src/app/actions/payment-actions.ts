@@ -1,5 +1,6 @@
 'use server';
 
+import { splitCheckItemSchema } from '@yuta/contracts/local-pos';
 import { parseEuroAmountToCents } from '@yuta/core';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
@@ -52,6 +53,28 @@ const payCheckFormSchema = z.object({
 const createChecksByItemsFormSchema = z.object({
   orderId: z.string().uuid(),
 });
+
+const maxItemSplitClientCount = 12;
+const itemSplitEntryKeyPattern = /^client(\d+):(.+)$/;
+
+const itemSplitClientCountSchema = z.coerce
+  .number()
+  .int()
+  .min(2)
+  .max(maxItemSplitClientCount)
+  .optional();
+
+const itemSplitSelectionSchema = z.object({
+  clientCount: itemSplitClientCountSchema,
+  entries: z.array(
+    z.object({
+      clientIndex: z.coerce.number().int().min(1).max(maxItemSplitClientCount),
+      item: splitCheckItemSchema,
+    }),
+  ),
+});
+
+type ItemSplitError = 'empty' | 'quantity' | 'invalid' | 'failed';
 
 export async function payFullOrderAction(formData: FormData): Promise<void> {
   const orderId = readOrderIdOrThrow(formData);
@@ -162,57 +185,43 @@ export async function createChecksByItemsAction(
   const values = createChecksByItemsFormSchema.parse({
     orderId: formData.get('orderId'),
   });
+  const shouldReturnToPayment = formData.get('returnTo') === 'payment';
+  const rawSelection = readItemSplitSelection(formData);
+  const selection = itemSplitSelectionSchema.safeParse(rawSelection);
+  if (!selection.success) {
+    redirectToItemSplitError(
+      values.orderId,
+      shouldReturnToPayment,
+      itemSplitClientCountSchema.safeParse(rawSelection.clientCount).data ?? 2,
+      'invalid',
+    );
+  }
+
   const itemsByClient = new Map<
     number,
     Array<{ orderItemId: string; quantity: number }>
   >();
-  const requestedClientCount = Number(formData.get('clientCount'));
-
-  for (const [key, value] of formData.entries()) {
-    const match = /^client(\d+):(.+)$/.exec(key);
-    if (!match) {
-      continue;
-    }
-
-    const clientIndex = Number(match[1]);
-    const quantity = Number(value);
-    if (
-      !Number.isInteger(clientIndex) ||
-      clientIndex < 1 ||
-      !Number.isInteger(quantity) ||
-      quantity <= 0
-    ) {
-      continue;
-    }
-
-    const items = itemsByClient.get(clientIndex) ?? [];
-    items.push({
-      orderItemId: match[2],
-      quantity,
-    });
-    itemsByClient.set(clientIndex, items);
+  for (const entry of selection.data.entries) {
+    const items = itemsByClient.get(entry.clientIndex) ?? [];
+    items.push(entry.item);
+    itemsByClient.set(entry.clientIndex, items);
   }
 
-  const checkInputs = Array.from(itemsByClient.entries())
+  const filteredChecks = Array.from(itemsByClient.entries())
     .toSorted(([leftIndex], [rightIndex]) => leftIndex - rightIndex)
     .map(([clientIndex, items]) => ({
       checkLabel: `Client ${clientIndex}`,
       items,
     }));
-  const filteredChecks = checkInputs.filter((check) => check.items.length > 0);
-  const clientCount = Number.isInteger(requestedClientCount)
-    ? requestedClientCount
-    : Math.max(2, ...Array.from(itemsByClient.keys()));
-  const shouldReturnToPayment = formData.get('returnTo') === 'payment';
-  const itemSplitUrl = shouldReturnToPayment
-    ? `/orders/${values.orderId}/payment`
-    : `/orders/${values.orderId}/payment/items?clients=${clientCount}`;
+  const clientCount =
+    selection.data.clientCount ?? Math.max(2, ...itemsByClient.keys());
 
   if (filteredChecks.length === 0) {
-    redirect(
-      shouldReturnToPayment
-        ? `${itemSplitUrl}?itemSplitError=empty`
-        : `${itemSplitUrl}&error=empty`,
+    redirectToItemSplitError(
+      values.orderId,
+      shouldReturnToPayment,
+      clientCount,
+      'empty',
     );
   }
 
@@ -243,17 +252,31 @@ export async function createChecksByItemsAction(
       availableQuantity === undefined ||
       assignedQuantity > availableQuantity
     ) {
-      redirect(
-        shouldReturnToPayment
-          ? `${itemSplitUrl}?itemSplitError=quantity`
-          : `${itemSplitUrl}&error=quantity`,
+      redirectToItemSplitError(
+        values.orderId,
+        shouldReturnToPayment,
+        clientCount,
+        'quantity',
       );
     }
   }
 
-  await posApi.createChecksByItems(values.orderId, {
-    checks: filteredChecks,
-  });
+  try {
+    await posApi.createChecksByItems(values.orderId, {
+      checks: filteredChecks,
+    });
+  } catch (error) {
+    if (error instanceof SiteAgentClientError) {
+      redirectToItemSplitError(
+        values.orderId,
+        shouldReturnToPayment,
+        clientCount,
+        error.code === 'INVALID_SPLIT' ? 'quantity' : 'failed',
+      );
+    }
+
+    throw error;
+  }
 
   revalidatePath(`/orders/${values.orderId}`);
   revalidatePath(`/orders/${values.orderId}/payment`);
@@ -261,6 +284,55 @@ export async function createChecksByItemsAction(
     shouldReturnToPayment
       ? `/orders/${values.orderId}/payment?paymentDialog=item-split`
       : `/orders/${values.orderId}/payment`,
+  );
+}
+
+function readItemSplitSelection(formData: FormData) {
+  const rawClientCount = formData.get('clientCount');
+  const entries: Array<{
+    clientIndex: string;
+    item: { orderItemId: string; quantity: number };
+  }> = [];
+
+  for (const [key, value] of formData.entries()) {
+    const match = itemSplitEntryKeyPattern.exec(key);
+    // Split forms post every client/item pair; zero or an emptied input means
+    // "not assigned".
+    if (
+      !match ||
+      (typeof value === 'string' &&
+        (value.trim() === '' || Number(value.trim()) === 0))
+    ) {
+      continue;
+    }
+    entries.push({
+      clientIndex: match[1],
+      item: {
+        orderItemId: match[2],
+        quantity: typeof value === 'string' ? Number(value) : Number.NaN,
+      },
+    });
+  }
+
+  return {
+    clientCount:
+      rawClientCount === null || rawClientCount === ''
+        ? undefined
+        : rawClientCount,
+    entries,
+  };
+}
+
+function redirectToItemSplitError(
+  orderId: string,
+  returnToPayment: boolean,
+  clientCount: number,
+  error: ItemSplitError,
+): never {
+  redirect(
+    returnToPayment
+      ? `/orders/${orderId}/payment?itemSplitError=${error}`
+      : `/orders/${orderId}/payment/items?clients=${clientCount}&error=${error}`,
   );
 }
 

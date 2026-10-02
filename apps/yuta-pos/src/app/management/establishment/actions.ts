@@ -27,8 +27,8 @@ export async function saveEstablishmentProfileAction(
     };
   }
 
+  const { token } = await requireLocalManagementCredentials();
   try {
-    const { token } = await requireLocalManagementCredentials();
     const profile = await siteAgentClient.updateEstablishmentProfile(
       token,
       input.data,

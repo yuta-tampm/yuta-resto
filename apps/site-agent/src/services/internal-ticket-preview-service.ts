@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import type { PrintJob } from '@yuta/db-pos/schema';
-import { renderInternalKitchenTickets } from './local-printer-worker';
+import { renderInternalKitchenTickets } from './print-ticket-renderers';
 import { receiptBufferToText } from './receipt-preview-service';
 
 type PreviewSegment = {

@@ -87,18 +87,19 @@ N/A       not applicable for this run
 
 ## Command List Service Day
 
-| Case                        | Expected Result                                                    | Result | Notes |
-| --------------------------- | ------------------------------------------------------------------ | -----: | ----- |
-| Open list after 05:00       | Unfinished orders created before 05:00 are hidden                  |        |       |
-| Open list before 05:00      | Orders created after 05:00 on the previous calendar day remain     |        |       |
-| Paid-today list             | Only orders paid during the current 05:00 service day appear       |        |       |
-| Activity-today list         | Orders created or paid during the current 05:00 service day appear |        |       |
-| Order exactly at next 05:00 | Order belongs to the next service day and not the previous one     |        |       |
-| Home request count          | One `/api/v1/orders/home` request loads rows and all tab counts    |        |       |
-| Home search                 | Table/order-number query is applied server-side and preserves view |        |       |
-| Home pagination             | Results use 50 rows; Previous/Next preserve `view` and `q`         |        |       |
-| Out-of-range page           | Site-agent clamps to the last available page                       |        |       |
-| More than 200 orders        | Relevant service-day rows remain discoverable beyond old list cap  |        |       |
+| Case                        | Expected Result                                                       | Result | Notes |
+| --------------------------- | --------------------------------------------------------------------- | -----: | ----- |
+| Open list after 05:00       | Unfinished orders created before 05:00 are hidden                     |        |       |
+| Open list before 05:00      | Orders created after 05:00 on the previous calendar day remain        |        |       |
+| Paid-today list             | Only orders paid during the current 05:00 service day appear          |        |       |
+| Activity-today list         | Orders created or paid during the current 05:00 service day appear    |        |       |
+| Order exactly at next 05:00 | Order belongs to the next service day and not the previous one        |        |       |
+| Home request count          | One `/api/v1/orders/home` request loads rows and all tab counts       |        |       |
+| Home search                 | Table/order-number query is applied server-side and preserves view    |        |       |
+| Home pagination             | Results use 50 rows; Previous/Next preserve `view` and `q`            |        |       |
+| Out-of-range page           | Site-agent clamps to the last available page                          |        |       |
+| More than 200 orders        | Relevant service-day rows remain discoverable beyond old list cap     |        |       |
+| Order times                 | Command list and order detail times show Europe/Paris wall-clock time |        |       |
 
 ## Order Item Entry
 
@@ -145,16 +146,19 @@ N/A       not applicable for this run
 
 ## Quantity, Cancel, Restore
 
-| Case                             | Expected Result                                               | Result | Notes |
-| -------------------------------- | ------------------------------------------------------------- | -----: | ----- |
-| Increase pending item quantity   | Quantity and total increase                                   |        |       |
-| Decrease pending item quantity   | Quantity and total decrease                                   |        |       |
-| Decrease quantity at `1`         | Button is disabled or quantity remains `1`                    |        |       |
-| Cancel pending item              | Item becomes `Annule`; total excludes it                      |        |       |
-| Restore pending-cancelled item   | Item returns to `A envoyer`; total includes it again          |        |       |
-| Send item to kitchen then cancel | Item becomes `Annule`; kitchen queue excludes it              |        |       |
-| Restore sent-cancelled item      | Item returns to `Cuisine` / `sent`; kitchen queue includes it |        |       |
-| Sent item quantity controls      | Quantity controls are disabled for sent item                  |        |       |
+| Case                             | Expected Result                                                        | Result | Notes |
+| -------------------------------- | ---------------------------------------------------------------------- | -----: | ----- |
+| Increase pending item quantity   | Quantity and total increase                                            |        |       |
+| Decrease pending item quantity   | Quantity and total decrease                                            |        |       |
+| Decrease quantity at `1`         | Button is disabled or quantity remains `1`                             |        |       |
+| Cancel pending item              | Item becomes `Annule`; total excludes it                               |        |       |
+| Restore pending-cancelled item   | Item returns to `A envoyer`; total includes it again                   |        |       |
+| Send item to kitchen then cancel | Item becomes `Annule`; kitchen queue excludes it                       |        |       |
+| Restore sent-cancelled item      | Item returns to `Cuisine` / `sent`; kitchen queue includes it          |        |       |
+| Sent item quantity controls      | Quantity controls are disabled for sent item                           |        |       |
+| Cancel order asks first          | `Annuler la commande` opens a confirmation dialog; nothing changes yet |        |       |
+| Cancel dialog `Retour`           | Dialog closes and the order is unchanged                               |        |       |
+| Cancel dialog confirm            | `Confirmer l’annulation` cancels the order and its active items        |        |       |
 
 ## Kitchen Flow
 
@@ -212,6 +216,7 @@ N/A       not applicable for this run
 | Paid order in kitchen `Pret`                | Ready item can still be reopened for kitchen correction                                                                                                        |        |       |
 | Cancelled order in kitchen                  | Item is read-only and does not show rollback buttons                                                                                                           |        |       |
 | Order status refreshes from item statuses   | Order status reflects sent/preparing/ready state                                                                                                               |        |       |
+| Kitchen footer                              | Shows only the last-update time (Europe/Paris); connection state appears only in the health strip                                                              |        |       |
 
 ## Full Payment
 
@@ -236,6 +241,7 @@ N/A       not applicable for this run
 | ------------------------------- | -------------------------------------------------------------- | -----: | ----- |
 | Create equal split with 2 parts | Two checks are created                                         |        |       |
 | Create equal split with 3 parts | Three checks are created and cents are distributed             |        |       |
+| Preview 10,00 € in 3 parts      | Preview shows `1 × 3,34 €` and `2 × 3,33 €`, matching checks   |        |       |
 | Pay one check                   | Check becomes paid; order remains open if other checks unpaid  |        |       |
 | Pay partial check amount        | Payment saves; check remains open                              |        |       |
 | Pay all checks                  | Order becomes paid                                             |        |       |
@@ -260,6 +266,9 @@ N/A       not applicable for this run
 | Replace unpaid split mode                                          | Old unpaid checks become `void` in the database and new checks are created                                          |        |       |
 | Replace split after payment                                        | Action is rejected after any split check has been paid                                                              |        |       |
 | Cancel unpaid item split                                           | Split checks become `void` and `Payer tout` is available again                                                      |        |       |
+| Empty or zero quantity field                                       | Treated as not assigned; other clients’ tickets are still created                                                   |        |       |
+| Site-agent rejects the split                                       | Returns to the split UI with an error message instead of an error page                                              |        |       |
+| Split controls accessibility                                       | `+`, `−` and add-client buttons have French accessible names, visible focus and 44px targets                        |        |       |
 
 ## Print Jobs
 
@@ -318,6 +327,9 @@ N/A       not applicable for this run
 | Concurrent full payments are serialized   | Only one competing full payment succeeds for an order                                                        |        |       |
 | Cancellation versus payment is serialized | The order ends cancelled without payment or paid with one payment                                            |        |       |
 | Site-agent heartbeat is healthy           | Site-agent health reports the local database available                                                       |        |       |
+| Printing form labels                      | Print settings and failure-reason fields announce their visible labels                                       |        |       |
+| Unmapped printing error                   | Shows `L’opération d’impression n’a pas pu être effectuée.`, never an English site-agent message             |        |       |
+| Printing times                            | Printer status and job times show Europe/Paris wall-clock time                                               |        |       |
 
 ## Browser-local Screen Standby
 
@@ -351,18 +363,21 @@ N/A       not applicable for this run
 
 ## Local POS Staff Management
 
-| Case                  | Expected Result                                                    | Result | Notes |
-| --------------------- | ------------------------------------------------------------------ | -----: | ----- |
-| Open local staff UI   | Staff management page loads                                        |        |       |
-| Create staff user     | User appears in staff list                                         |        |       |
-| Edit staff user       | Name/email/role changes are saved                                  |        |       |
-| Deactivate staff user | User becomes inactive and is hidden from POS selector              |        |       |
-| Reactivate staff user | User becomes active and appears when role is selectable            |        |       |
-| Kitchen role user     | User can be managed but is not shown in POS order creator selector |        |       |
-| Manager role boundary | Manager can manage only Service and Cuisine users                  |        |       |
-| Duplicate local email | Normalized duplicate email is rejected without losing form values  |        |       |
-| Last active admin     | Concurrent demotion/deactivation leaves one active administrator   |        |       |
-| Reset local PIN       | PIN is hashed and existing sessions are invalidated                |        |       |
+| Case                          | Expected Result                                                                          | Result | Notes |
+| ----------------------------- | ---------------------------------------------------------------------------------------- | -----: | ----- |
+| Open local staff UI           | Staff management page loads                                                              |        |       |
+| Create staff user             | User appears in staff list                                                               |        |       |
+| Edit staff user               | Name/email/role changes are saved                                                        |        |       |
+| Deactivate staff user         | User becomes inactive and is hidden from POS selector                                    |        |       |
+| Reactivate staff user         | User becomes active and appears when role is selectable                                  |        |       |
+| Kitchen role user             | User can be managed but is not shown in POS order creator selector                       |        |       |
+| Manager role boundary         | Manager can manage only Service and Cuisine users                                        |        |       |
+| Duplicate local email         | Normalized duplicate email is rejected without losing form values                        |        |       |
+| Last active admin             | Concurrent demotion/deactivation leaves one active administrator                         |        |       |
+| Reset local PIN               | PIN is hashed and existing sessions are invalidated                                      |        |       |
+| Management login wrong PIN    | Shows `Utilisateur ou PIN incorrect.`                                                    |        |       |
+| Management login service down | With site-agent stopped, shows `Le service local est indisponible. Réessayez plus tard.` |        |       |
+| Management login other error  | Shows `Connexion impossible pour le moment. Réessayez.`, not a PIN error                 |        |       |
 
 ## Local Establishment Management
 
@@ -374,26 +389,29 @@ N/A       not applicable for this run
 | Empty or multiline name      | Save is rejected and no profile change persists                                 |        |       |
 | Stale concurrent save        | Compare-and-set rejects it; latest baseline reloads while the draft is retained |        |       |
 | Unauthorized request         | Missing or invalid local management session is rejected                         |        |       |
+| Expired session on save      | Saving with an expired management session returns to `/management/login`        |        |       |
 | Local-only boundary          | No cloud organization/establishment record, key, or database access is used     |        |       |
 
 ## Local Menu Management
 
-| Case                   | Expected Result                                                    | Result | Notes |
-| ---------------------- | ------------------------------------------------------------------ | -----: | ----- |
-| Open local menu UI     | Menu management page loads                                         |        |       |
-| Create category        | Category appears in POS category tabs                              |        |       |
-| Create menu item       | Item appears in POS item grid when available                       |        |       |
-| Edit menu item price   | New orders use new price; old order item snapshots stay unchanged  |        |       |
-| Change kitchen station | New order items use updated station snapshot                       |        |       |
-| Deactivate item        | Item disappears from POS item grid                                 |        |       |
-| Reactivate item        | Item appears again in POS item grid                                |        |       |
-| Add quick instruction  | New definition can be assigned to a category or item               |        |       |
-| Add local allergen     | New allergen appears in the item allergy selector                  |        |       |
-| Category inheritance   | Item without an override receives the category instruction lists   |        |       |
-| Item override          | Custom item lists replace the inherited category lists             |        |       |
-| Delete assigned option | Save is blocked until the option is removed from all assignments   |        |       |
-| Rename selected option | Existing order keeps its snapshotted label; new order uses new one |        |       |
-| Cocktail instructions  | `Sans alcool` is offered for `Cocktails & mocktails`               |        |       |
+| Case                   | Expected Result                                                             | Result | Notes |
+| ---------------------- | --------------------------------------------------------------------------- | -----: | ----- |
+| Open local menu UI     | Menu management page loads                                                  |        |       |
+| Create category        | Category appears in POS category tabs                                       |        |       |
+| Create menu item       | Item appears in POS item grid when available                                |        |       |
+| Edit menu item price   | New orders use new price; old order item snapshots stay unchanged           |        |       |
+| Change kitchen station | New order items use updated station snapshot                                |        |       |
+| Deactivate item        | Item disappears from POS item grid                                          |        |       |
+| Reactivate item        | Item appears again in POS item grid                                         |        |       |
+| Add quick instruction  | New definition can be assigned to a category or item                        |        |       |
+| Add local allergen     | New allergen appears in the item allergy selector                           |        |       |
+| Category inheritance   | Item without an override receives the category instruction lists            |        |       |
+| Item override          | Custom item lists replace the inherited category lists                      |        |       |
+| Delete assigned option | Save is blocked until the option is removed from all assignments            |        |       |
+| Rename selected option | Existing order keeps its snapshotted label; new order uses new one          |        |       |
+| Cocktail instructions  | `Sans alcool` is offered for `Cocktails & mocktails`                        |        |       |
+| Menu form labels       | Every catalog field announces its visible label to assistive technology     |        |       |
+| Expired menu session   | Saving a menu change with an expired session returns to `/management/login` |        |       |
 
 ## Local Combo Management
 

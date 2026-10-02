@@ -185,6 +185,8 @@ Paid and cancelled orders cannot add more items.
 ### Cancel Order
 
 Use `Annuler la commande` on the order detail page to cancel an unpaid order.
+The POS asks for confirmation first: `Confirmer l’annulation` cancels the
+order, `Retour` closes the dialog without changing anything.
 
 Cancelling an order:
 
@@ -560,8 +562,11 @@ printed-job reprint. It is not a fiscal/VAT invoice.
 Use equal split when the table wants to divide the total into N parts.
 
 1. Enter the number of parts.
-2. Create the split.
-3. Pay each check fully or in partial payments.
+2. Check the preview. It shows the exact check amounts that will be created;
+   when the total does not divide evenly, the first checks carry one extra
+   cent each (for example 10,00 € in 3 parts: `1 × 3,34 €`, `2 × 3,33 €`).
+3. Create the split.
+4. Pay each check fully or in partial payments.
 
 The order is marked paid only when all checks are paid.
 

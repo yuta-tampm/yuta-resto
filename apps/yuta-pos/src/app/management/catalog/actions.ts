@@ -33,8 +33,8 @@ export async function createCatalogCategoryAction(
   });
   if (!input.success) return validationError();
 
+  const { token } = await requireLocalManagementCredentials();
   try {
-    const { token } = await requireLocalManagementCredentials();
     await siteAgentClient.createCatalogCategory(token, input.data);
     revalidateCatalog();
     return { error: null, success: 'Catégorie créée.' };
@@ -60,8 +60,8 @@ export async function updateCatalogCategoryAction(
   });
   if (!input.success) return validationError();
 
+  const { token } = await requireLocalManagementCredentials();
   try {
-    const { token } = await requireLocalManagementCredentials();
     await siteAgentClient.updateCatalogCategory(token, categoryId, input.data);
     revalidateCatalog();
     return { error: null, success: 'Catégorie mise à jour.' };
@@ -82,8 +82,8 @@ export async function updateInstructionSettingsAction(
   });
   if (!input.success) return validationError();
 
+  const { token } = await requireLocalManagementCredentials();
   try {
-    const { token } = await requireLocalManagementCredentials();
     await siteAgentClient.updateInstructionSettings(token, input.data);
     revalidateCatalog();
     return { error: null, success: 'Options mises à jour.' };
@@ -97,8 +97,8 @@ export async function setCatalogCategoryActiveAction(
   isActive: boolean,
   _previousState: CatalogActionState,
 ): Promise<CatalogActionState> {
+  const { token } = await requireLocalManagementCredentials();
   try {
-    const { token } = await requireLocalManagementCredentials();
     await siteAgentClient.updateCatalogCategory(token, categoryId, {
       isActive,
     });
@@ -121,8 +121,8 @@ export async function createCatalogItemAction(
   );
   if (!input.success) return validationError();
 
+  const { token } = await requireLocalManagementCredentials();
   try {
-    const { token } = await requireLocalManagementCredentials();
     await siteAgentClient.createCatalogItem(token, input.data);
     revalidateCatalog();
     return { error: null, success: 'Article créé.' };
@@ -141,8 +141,8 @@ export async function updateCatalogItemAction(
   );
   if (!input.success) return validationError();
 
+  const { token } = await requireLocalManagementCredentials();
   try {
-    const { token } = await requireLocalManagementCredentials();
     await siteAgentClient.updateCatalogItem(token, itemId, input.data);
     revalidateCatalog();
     return { error: null, success: 'Article mis à jour.' };
@@ -156,8 +156,8 @@ export async function setCatalogItemAvailableAction(
   isAvailable: boolean,
   _previousState: CatalogActionState,
 ): Promise<CatalogActionState> {
+  const { token } = await requireLocalManagementCredentials();
   try {
-    const { token } = await requireLocalManagementCredentials();
     await siteAgentClient.updateCatalogItem(token, itemId, { isAvailable });
     revalidateCatalog();
     return {

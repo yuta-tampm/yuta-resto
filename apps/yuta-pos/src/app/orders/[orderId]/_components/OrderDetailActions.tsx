@@ -1,8 +1,7 @@
 import { Button, cn } from '@yuta/ui';
-import { Check, CreditCard, Lock, Plus, Trash2 } from 'lucide-react';
+import { Check, CreditCard, Lock, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { v7 as uuidv7 } from 'uuid';
-import { cancelOrderAction } from '../../../actions';
 import { allergySummaryFromSnapshots } from '../../../_pos-helpers';
 import { SendToKitchenButton } from '../../_components/SendToKitchenButton';
 import type { OrderDetail } from '../_lib/order-detail-presentation';
@@ -165,29 +164,5 @@ export function OrderItemEntryButton({
         Ajouter
       </Link>
     </Button>
-  );
-}
-
-export function OrderCancelForm({
-  orderId,
-  disabled,
-}: {
-  orderId: string;
-  disabled: boolean;
-}) {
-  return (
-    <form action={cancelOrderAction}>
-      <input type="hidden" name="orderId" value={orderId} />
-      <Button
-        type="submit"
-        variant="danger"
-        className="min-h-12 w-full justify-center border border-status-danger bg-white text-action-danger hover:bg-surface-muted"
-        disabled={disabled}
-      >
-        <Trash2 className="h-4 w-4" />
-        Annuler la commande
-        {disabled && <Lock className="ml-auto h-4 w-4" />}
-      </Button>
-    </form>
   );
 }

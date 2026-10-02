@@ -40,8 +40,10 @@ payments, local users, and durable print jobs.
 - `Payer` -> payment unless paid/cancelled.
 - `Envoyer en cuisine` submits the existing server action; allergies may open
   the existing confirmation dialog.
-- `Annuler la commande` posts the existing fixed-reason cancel command when
-  unpaid/no paid payment; no confirmation or editable reason exists.
+- `Annuler la commande` opens a confirmation dialog (`Annuler la commande ?`,
+  `Retour` / `Confirmer l’annulation`). Confirming posts the existing
+  fixed-reason cancel command when unpaid/no paid payment; no editable reason
+  exists. The dialog was approved by the product owner on 2026-10-02.
 - No search, filter, overflow, customer, print, refund, or history interaction.
 
 ## Approved draft interaction refinement
@@ -104,7 +106,7 @@ approved performance/data proposal.
 
 ## Decisions that must not be guessed
 
-Cancellation confirmation/reason/recovery; creator identity; real station/
+Cancellation reason/recovery; creator identity; real station/
 printer assignment; authoritative audit events; narrow action consolidation;
 loader mutation/removal; request consolidation; new realtime/offline behavior.
 

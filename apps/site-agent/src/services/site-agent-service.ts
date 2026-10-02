@@ -1,23 +1,10 @@
 import {
   localCatalogResponseSchema,
-  localKitchenQueueQuerySchema,
-  localKitchenQueueResponseSchema,
   localOrderResponseSchema,
-  localOrdersHomeQuerySchema,
-  localOrdersHomeResponseSchema,
-  localOrdersQuerySchema,
-  localOrdersResponseSchema,
   localUsersResponseSchema,
   siteAgentHealthResponseSchema,
   type CreateLocalOrderInput,
-  type LocalOrdersHomeQuery,
-  type LocalOrdersHomeView,
-  type LocalKitchenQueueQuery,
-  type LocalKitchenScreen,
-  type LocalOrderSummary,
-  type LocalOrdersQuery,
 } from '@yuta/contracts/local-pos';
-import { getServiceDayWindow } from '@yuta/core';
 import type { PosDatabaseClient } from '@yuta/db-pos/client';
 import {
   comboRuleGroupItems,
@@ -29,19 +16,7 @@ import {
   orderItems,
   orders,
 } from '@yuta/db-pos/schema';
-import {
-  and,
-  asc,
-  count,
-  desc,
-  eq,
-  getTableColumns,
-  gte,
-  inArray,
-  lt,
-  or,
-  sql,
-} from 'drizzle-orm';
+import { and, asc, eq, sql } from 'drizzle-orm';
 import { v7 as uuidv7 } from 'uuid';
 import { HttpError } from '../http';
 import { createCatalogManagementService } from './catalog-management-service';
@@ -50,9 +25,12 @@ import { createCustomerReceiptService } from './customer-receipt-service';
 import { createEstablishmentProfileService } from './establishment-profile-service';
 import { createOrderCommandService } from './order-command-service';
 import { createFinancialService } from './financial-service';
+import { createKitchenQueueService } from './kitchen-queue-service';
 import { createLocalAuthService } from './local-auth-service';
 import { createLocalUserManagementService } from './local-user-management-service';
 import { createManagementReportsService } from './management-reports-service';
+import { createOrderListService } from './order-list-service';
+import { toOrderSummary } from './order-summary';
 import { createPrintJobService } from './print-job-service';
 import { createPrintSettingsService } from './print-settings-service';
 import { createPrinterStatusService } from './printer-status-service';
@@ -66,6 +44,13 @@ import {
   kitchenEventScreenForStation,
   kitchenEventScreensForStations,
 } from './kitchen-event-hub';
+
+export { summarizeKitchenCounts } from './kitchen-queue-service';
+export {
+  escapeLikePattern,
+  resolveOrdersHomePagination,
+} from './order-list-service';
+export { toOrderSummary } from './order-summary';
 
 export function createSiteAgentService(
   db: PosDatabaseClient,
@@ -89,6 +74,8 @@ export function createSiteAgentService(
     getPrinterStatus: printerStatus.getPrinterStatus,
   });
   const kitchenEvents = createKitchenEventHub();
+  const { listOrders, listOrdersHome } = createOrderListService(db);
+  const { listKitchenQueue } = createKitchenQueueService(db);
   async function getHealth() {
     try {
       await db.execute(sql`select 1`);
@@ -233,270 +220,6 @@ export function createSiteAgentService(
     });
   }
 
-  async function listOrders(input: LocalOrdersQuery) {
-    const query = localOrdersQuerySchema.parse(input);
-    const rows = query.status
-      ? await db
-          .select()
-          .from(orders)
-          .where(eq(orders.status, query.status))
-          .orderBy(desc(orders.createdAt))
-          .limit(query.limit)
-      : await db
-          .select()
-          .from(orders)
-          .orderBy(desc(orders.createdAt))
-          .limit(query.limit);
-
-    return localOrdersResponseSchema.parse({
-      orders: rows.map(toOrderSummary),
-    });
-  }
-
-  async function listOrdersHome(input: LocalOrdersHomeQuery) {
-    const query = localOrdersHomeQuerySchema.parse(input);
-    const serviceDay = getServiceDayWindow(new Date());
-    const createdDuringService = and(
-      gte(orders.createdAt, serviceDay.start),
-      lt(orders.createdAt, serviceDay.end),
-    )!;
-    const paidDuringService = and(
-      gte(orders.paidAt, serviceDay.start),
-      lt(orders.paidAt, serviceDay.end),
-    )!;
-    const openCondition = and(
-      createdDuringService,
-      inArray(orders.status, ['draft', 'sent', 'preparing', 'ready', 'served']),
-    )!;
-    const paidTodayCondition = and(
-      eq(orders.status, 'paid'),
-      paidDuringService,
-    )!;
-    const allTodayCondition = or(createdDuringService, paidDuringService)!;
-    const viewConditions: Record<LocalOrdersHomeView, typeof openCondition> = {
-      open: openCondition,
-      paid_today: paidTodayCondition,
-      all_today: allTodayCondition,
-    };
-    const searchPattern = `%${escapeLikePattern(query.q)}%`;
-    const searchCondition = query.q
-      ? or(
-          sql<boolean>`${orders.tableLabel} ilike ${searchPattern} escape '\\'`,
-          sql<boolean>`${orders.orderNumber} ilike ${searchPattern} escape '\\'`,
-        )!
-      : undefined;
-    const selectedCondition = searchCondition
-      ? and(viewConditions[query.view], searchCondition)!
-      : viewConditions[query.view];
-
-    const [[counts], [total]] = await Promise.all([
-      db
-        .select({
-          open: sql<number>`count(*) filter (where ${openCondition})::int`,
-          paidToday: sql<number>`count(*) filter (where ${paidTodayCondition})::int`,
-          allToday: sql<number>`count(*) filter (where ${allTodayCondition})::int`,
-        })
-        .from(orders),
-      db.select({ value: count() }).from(orders).where(selectedCondition),
-    ]);
-    const totalItems = Number(total?.value ?? 0);
-    const pagination = resolveOrdersHomePagination({
-      requestedPage: query.page,
-      pageSize: query.limit,
-      totalItems,
-    });
-    const itemSummary = db
-      .select({
-        orderId: orderItems.orderId,
-        itemCount: count(orderItems.id).as('item_count'),
-        itemHasAllergy: sql<boolean>`bool_or(${orderItems.hasAllergy})`.as(
-          'item_has_allergy',
-        ),
-      })
-      .from(orderItems)
-      .groupBy(orderItems.orderId)
-      .as('item_summary');
-    const baseQuery = db
-      .select({
-        ...getTableColumns(orders),
-        itemCount: sql<number>`coalesce(${itemSummary.itemCount}, 0)::int`,
-        itemHasAllergy: sql<boolean>`coalesce(${itemSummary.itemHasAllergy}, false)`,
-      })
-      .from(orders)
-      .leftJoin(itemSummary, eq(itemSummary.orderId, orders.id))
-      .where(selectedCondition);
-    const rows =
-      query.view === 'paid_today'
-        ? await baseQuery
-            .orderBy(
-              desc(orders.paidAt),
-              desc(orders.createdAt),
-              asc(orders.id),
-            )
-            .limit(query.limit)
-            .offset(pagination.offset)
-        : await baseQuery
-            .orderBy(desc(orders.createdAt), asc(orders.id))
-            .limit(query.limit)
-            .offset(pagination.offset);
-
-    return localOrdersHomeResponseSchema.parse({
-      serviceDay: {
-        start: serviceDay.start.toISOString(),
-        end: serviceDay.end.toISOString(),
-      },
-      view: query.view,
-      query: query.q,
-      orders: rows.map(({ itemCount, itemHasAllergy, ...order }) => ({
-        ...toOrderSummary({
-          ...order,
-          hasAllergy: order.hasAllergy || itemHasAllergy,
-        }),
-        itemCount: Number(itemCount),
-      })),
-      counts: {
-        open: Number(counts?.open ?? 0),
-        paidToday: Number(counts?.paidToday ?? 0),
-        allToday: Number(counts?.allToday ?? 0),
-      },
-      pagination: {
-        page: pagination.page,
-        pageSize: query.limit,
-        totalItems,
-        totalPages: pagination.totalPages,
-      },
-    });
-  }
-
-  async function listKitchenQueue(input: LocalKitchenQueueQuery) {
-    const query = localKitchenQueueQuerySchema.parse(input);
-    const serviceDay = getServiceDayWindow(new Date());
-    const serviceCondition = and(
-      gte(orders.createdAt, serviceDay.start),
-      lt(orders.createdAt, serviceDay.end),
-    )!;
-    const productionStatusCondition = inArray(orderItems.status, [
-      'sent',
-      'preparing',
-      'ready',
-    ]);
-    const selectedStationCondition = kitchenScreenCondition(query.screen);
-    const unfinishedGroup = sql<boolean>`bool_or(${orderItems.status} in ('sent', 'preparing'))`;
-    const groupSortDate =
-      query.queue === 'ready'
-        ? sql<Date>`min(coalesce(${orderItems.readyAt}, ${orderItems.createdAt}))`
-        : sql<Date>`min(coalesce(${orderItems.sentAt}, ${orderItems.createdAt}))`;
-
-    const [candidateOrders, countRows] = await Promise.all([
-      db
-        .select({ id: orders.id, sortAt: groupSortDate.as('sort_at') })
-        .from(orders)
-        .innerJoin(orderItems, eq(orderItems.orderId, orders.id))
-        .where(
-          and(
-            serviceCondition,
-            productionStatusCondition,
-            selectedStationCondition,
-          ),
-        )
-        .groupBy(orders.id)
-        .having(
-          query.queue === 'ready'
-            ? sql<boolean>`not (${unfinishedGroup})`
-            : unfinishedGroup,
-        )
-        .orderBy(
-          query.queue === 'ready' ? desc(groupSortDate) : asc(groupSortDate),
-          asc(orders.id),
-        )
-        .limit(query.limit),
-      db
-        .select({
-          orderId: orderItems.orderId,
-          station: orderItems.kitchenStationSnapshot,
-          hasUnfinished: unfinishedGroup.as('has_unfinished'),
-        })
-        .from(orderItems)
-        .innerJoin(orders, eq(orders.id, orderItems.orderId))
-        .where(
-          and(
-            serviceCondition,
-            productionStatusCondition,
-            inArray(orderItems.kitchenStationSnapshot, [
-              'kitchen',
-              'bar',
-              'dessert',
-            ]),
-          ),
-        )
-        .groupBy(orderItems.orderId, orderItems.kitchenStationSnapshot),
-    ]);
-
-    const orderIds = candidateOrders.map(({ id }) => id);
-    const detailRows =
-      orderIds.length === 0
-        ? []
-        : await db
-            .select({
-              order: getTableColumns(orders),
-              item: getTableColumns(orderItems),
-              categoryName: menuCategories.name,
-              categorySortOrder: menuCategories.sortOrder,
-              itemSortOrder: menuItems.sortOrder,
-            })
-            .from(orderItems)
-            .innerJoin(orders, eq(orders.id, orderItems.orderId))
-            .innerJoin(menuItems, eq(menuItems.id, orderItems.menuItemId))
-            .innerJoin(
-              menuCategories,
-              eq(menuCategories.id, menuItems.categoryId),
-            )
-            .where(
-              and(
-                inArray(orderItems.orderId, orderIds),
-                productionStatusCondition,
-                selectedStationCondition,
-              ),
-            )
-            .orderBy(asc(orderItems.createdAt), asc(orderItems.id));
-
-    const ticketsByOrder = new Map<
-      string,
-      {
-        order: LocalOrderSummary;
-        items: Array<ReturnType<typeof toKitchenOrderItem>>;
-      }
-    >();
-    for (const row of detailRows) {
-      const item = toKitchenOrderItem(row.item, row);
-      const ticket = ticketsByOrder.get(row.order.id);
-      if (ticket) {
-        ticket.items.push(item);
-      } else {
-        ticketsByOrder.set(row.order.id, {
-          order: toOrderSummary(row.order),
-          items: [item],
-        });
-      }
-    }
-
-    const counts = summarizeKitchenCounts(countRows, query.screen);
-
-    return localKitchenQueueResponseSchema.parse({
-      serviceDay: {
-        start: serviceDay.start.toISOString(),
-        end: serviceDay.end.toISOString(),
-      },
-      screen: query.screen,
-      queue: query.queue,
-      tickets: orderIds.flatMap((orderId) => {
-        const ticket = ticketsByOrder.get(orderId);
-        return ticket ? [ticket] : [];
-      }),
-      counts,
-    });
-  }
-
   async function createOrder(input: CreateLocalOrderInput) {
     const staffUser = await db.query.localUsers.findFirst({
       where: eq(localUsers.id, input.staffUserId),
@@ -621,141 +344,7 @@ export function createSiteAgentService(
   };
 }
 
-export function resolveOrdersHomePagination(input: {
-  requestedPage: number;
-  pageSize: number;
-  totalItems: number;
-}) {
-  const totalPages = Math.max(1, Math.ceil(input.totalItems / input.pageSize));
-  const page = Math.min(input.requestedPage, totalPages);
-  return {
-    page,
-    totalPages,
-    offset: (page - 1) * input.pageSize,
-  };
-}
-
-export function escapeLikePattern(value: string): string {
-  return value
-    .replaceAll('\\', '\\\\')
-    .replaceAll('%', '\\%')
-    .replaceAll('_', '\\_');
-}
-
 export type SiteAgentService = ReturnType<typeof createSiteAgentService>;
-
-export function toOrderSummary(
-  order: typeof orders.$inferSelect,
-): LocalOrderSummary {
-  return {
-    id: order.id,
-    orderNumber: order.orderNumber,
-    tableLabel: order.tableLabel,
-    orderType: order.orderType,
-    status: order.status,
-    subtotalCents: order.subtotalCents,
-    discountCents: order.discountCents,
-    totalCents: order.totalCents,
-    paymentMode: order.paymentMode,
-    note: order.note,
-    hasAllergy: order.hasAllergy,
-    allergyNote: order.allergyNote,
-    allergyAcknowledgedAt: order.allergyAcknowledgedAt?.toISOString() ?? null,
-    createdBy: order.createdBy,
-    sentAt: order.sentAt?.toISOString() ?? null,
-    paidAt: order.paidAt?.toISOString() ?? null,
-    cancelledAt: order.cancelledAt?.toISOString() ?? null,
-    cancelledReason: order.cancelledReason,
-    createdAt: order.createdAt.toISOString(),
-    updatedAt: order.updatedAt.toISOString(),
-  };
-}
-
-function kitchenScreenCondition(screen: LocalKitchenScreen) {
-  return screen === 'kitchen'
-    ? eq(orderItems.kitchenStationSnapshot, 'kitchen')
-    : inArray(orderItems.kitchenStationSnapshot, ['bar', 'dessert']);
-}
-
-function isStationOnScreen(
-  station: 'kitchen' | 'bar' | 'dessert',
-  screen: LocalKitchenScreen,
-): boolean {
-  return screen === 'kitchen' ? station === 'kitchen' : station !== 'kitchen';
-}
-
-export function summarizeKitchenCounts(
-  rows: Array<{
-    orderId: string;
-    station: 'kitchen' | 'bar' | 'dessert' | 'none';
-    hasUnfinished: boolean;
-  }>,
-  screen: LocalKitchenScreen,
-) {
-  const stations = { kitchen: 0, bar: 0, dessert: 0 };
-  const selectedOrderState = new Map<string, boolean>();
-  for (const row of rows) {
-    if (
-      row.station !== 'kitchen' &&
-      row.station !== 'bar' &&
-      row.station !== 'dessert'
-    ) {
-      continue;
-    }
-    stations[row.station] += 1;
-    if (!isStationOnScreen(row.station, screen)) continue;
-    selectedOrderState.set(
-      row.orderId,
-      (selectedOrderState.get(row.orderId) ?? false) || row.hasUnfinished,
-    );
-  }
-  const queues = { active: 0, ready: 0 };
-  for (const hasUnfinished of selectedOrderState.values()) {
-    queues[hasUnfinished ? 'active' : 'ready'] += 1;
-  }
-  return { stations, queues };
-}
-
-function toKitchenOrderItem(
-  item: typeof orderItems.$inferSelect,
-  presentation: {
-    categoryName: string;
-    categorySortOrder: number;
-    itemSortOrder: number;
-  },
-) {
-  return {
-    id: item.id,
-    orderId: item.orderId,
-    menuItemId: item.menuItemId,
-    itemNameSnapshot: item.itemNameSnapshot,
-    unitPriceCentsSnapshot: item.unitPriceCentsSnapshot,
-    kitchenStationSnapshot: item.kitchenStationSnapshot,
-    quantity: item.quantity,
-    note: item.note,
-    quickInstructions: item.quickInstructions,
-    selectedVariants: item.selectedVariants,
-    hasAllergy: item.hasAllergy,
-    allergenCodes: item.allergenCodes,
-    selectedAllergens: item.selectedAllergens,
-    allergySeverity: item.allergySeverity,
-    allergyNote: item.allergyNote,
-    allergyAcknowledgedAt: item.allergyAcknowledgedAt?.toISOString() ?? null,
-    allergyKitchenConfirmedAt:
-      item.allergyKitchenConfirmedAt?.toISOString() ?? null,
-    status: item.status,
-    sentAt: item.sentAt?.toISOString() ?? null,
-    readyAt: item.readyAt?.toISOString() ?? null,
-    servedAt: item.servedAt?.toISOString() ?? null,
-    cancelledAt: item.cancelledAt?.toISOString() ?? null,
-    cancelledReason: item.cancelledReason,
-    createdAt: item.createdAt.toISOString(),
-    updatedAt: item.updatedAt.toISOString(),
-    categoryName: presentation.categoryName,
-    categorySortOrder: presentation.categorySortOrder,
-    itemSortOrder: presentation.itemSortOrder,
-  };
-}
 
 function createOrderNumber(id: string, date = new Date()): string {
   const datePart = [

@@ -1,6 +1,6 @@
 'use client';
 
-import { formatEuros } from '@yuta/core';
+import { formatEuros, splitCents } from '@yuta/core';
 import { Button, cn } from '@yuta/ui';
 import { useState } from 'react';
 
@@ -22,8 +22,7 @@ export function EqualSplitDialogContent({
   disabled = false,
 }: EqualSplitDialogContentProps) {
   const [parts, setParts] = useState(initialParts ?? 2);
-  const amountPerPartCents = Math.ceil(totalCents / parts);
-  const remainingCents = amountPerPartCents * parts - totalCents;
+  const shareGroups = groupShares(splitCents(totalCents, parts));
 
   return (
     <form action={action} className="grid gap-3">
@@ -50,17 +49,22 @@ export function EqualSplitDialogContent({
         <p className="text-xs font-black uppercase text-primary/45">
           Montant par part
         </p>
-        <p className="mt-1 text-2xl font-black">
-          {formatEuros(amountPerPartCents)}
-        </p>
-        <p className="mt-1 text-xs font-semibold text-primary/55">
-          Aperçu pour {parts} part(s).
-        </p>
-        {remainingCents > 0 && (
-          <p className="mt-1 text-xs font-semibold text-primary/45">
-            Ajustement d'arrondi: {formatEuros(remainingCents)}
+        {shareGroups.length === 1 ? (
+          <p className="mt-1 text-2xl font-black">
+            {formatEuros(shareGroups[0].amountCents)}
           </p>
+        ) : (
+          <ul className="mt-1 grid gap-0.5 text-xl font-black">
+            {shareGroups.map((group) => (
+              <li key={group.amountCents}>
+                {group.count} × {formatEuros(group.amountCents)}
+              </li>
+            ))}
+          </ul>
         )}
+        <p className="mt-1 text-xs font-semibold text-primary/55">
+          Aperçu pour {parts} parts · total {formatEuros(totalCents)}
+        </p>
       </div>
       <Button
         type="submit"
@@ -72,4 +76,16 @@ export function EqualSplitDialogContent({
       </Button>
     </form>
   );
+}
+
+function groupShares(
+  shares: number[],
+): Array<{ amountCents: number; count: number }> {
+  const groups: Array<{ amountCents: number; count: number }> = [];
+  for (const amountCents of shares) {
+    const group = groups.find((entry) => entry.amountCents === amountCents);
+    if (group) group.count += 1;
+    else groups.push({ amountCents, count: 1 });
+  }
+  return groups;
 }

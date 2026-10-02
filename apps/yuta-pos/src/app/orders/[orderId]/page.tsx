@@ -4,8 +4,8 @@ import { posApi } from '../../../lib/pos-api';
 import { OrderArticlesPanel } from './_components/OrderArticlesPanel';
 import { OrderReceiptMenuAction } from './_components/OrderReceiptMenuAction';
 import actionStyles from './_components/OrderDetailActions.module.css';
+import { OrderCancelForm } from './_components/OrderCancelForm';
 import {
-  OrderCancelForm,
   OrderItemEntryButton,
   OrderPaymentButton,
   OrderSendButton,
