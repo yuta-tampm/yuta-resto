@@ -33,7 +33,7 @@ import {
 } from './backoffice-navigation';
 import { TenantSwitcher } from './tenant-switcher';
 import { LogoutSubmitButton } from './logout-submit-button';
-import type { BackofficeExposureProfile } from '../../lib/backoffice-exposure';
+import type { BackofficeExposureProfile } from '@/lib/backoffice-exposure';
 
 export function BackofficeFrame({
   children,

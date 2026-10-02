@@ -1,12 +1,11 @@
 import { findPersonnelEmployee } from '@yuta/db-cloud';
-import { Alert, AlertDescription, AlertTitle, Card } from '@yuta/ui';
 import { requireEstablishment } from '@yuta/tenant';
-import { ShieldX } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { z } from 'zod';
 import { hasPersonnelPermission } from '@/server/auth/permissions';
 import { requireAuthenticatedTenant } from '@/server/auth/session';
 import { cloudDatabase } from '@/server/cloud-database';
+import { PersonnelForbidden } from '../_components/personnel-forbidden';
 import { EmployeeFullDossierPage } from '../_components/salaries-page';
 import { isFormalitesReadPrototypeEnabled } from '../../formalites-personnel/_lib/formalites-read-prototype-runtime';
 import { isContractExtractionPrototypeEnabled } from '../_lib/contract-extraction-prototype-runtime';
@@ -47,19 +46,5 @@ export default async function Page({ params }: PageProps) {
       }
       formalitesReadPrototypeEnabled={isFormalitesReadPrototypeEnabled()}
     />
-  );
-}
-
-function PersonnelForbidden() {
-  return (
-    <Card className="mx-auto max-w-2xl">
-      <Alert tone="danger" icon={<ShieldX className="h-5 w-5" aria-hidden />}>
-        <AlertTitle>Accès réservé</AlertTitle>
-        <AlertDescription>
-          Seul le propriétaire de l’établissement peut consulter les dossiers
-          salariés. Aucune information personnelle n’a été chargée.
-        </AlertDescription>
-      </Alert>
-    </Card>
   );
 }

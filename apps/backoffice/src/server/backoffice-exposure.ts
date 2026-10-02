@@ -8,7 +8,7 @@ import {
   isBackofficePathAvailable,
   type BackofficeExposureCapability,
   type ReputationExposureScope,
-} from '../lib/backoffice-exposure';
+} from '@/lib/backoffice-exposure';
 import { getBackofficeExposureProfile } from './backoffice-exposure-config';
 
 export { getBackofficeExposureProfile } from './backoffice-exposure-config';

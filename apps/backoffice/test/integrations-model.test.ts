@@ -1,7 +1,6 @@
 import type { GoogleBusinessLocation } from '../src/server/reputation/google-business-profile-client';
 import { describe, expect, it } from 'vitest';
 import {
-  filterIntegrationSearchParam,
   formatGoogleLocationAddress,
   getGoogleConnectorPresentation,
   resolveSelectedGoogleAccount,
@@ -90,11 +89,5 @@ describe('integrations model', () => {
         }),
       ),
     ).toEqual({ connected: true, label: 'Connecté' });
-  });
-
-  it('takes the first value from repeated search parameters', () => {
-    expect(filterIntegrationSearchParam(['first', 'second'])).toBe('first');
-    expect(filterIntegrationSearchParam('single')).toBe('single');
-    expect(filterIntegrationSearchParam(undefined)).toBeUndefined();
   });
 });

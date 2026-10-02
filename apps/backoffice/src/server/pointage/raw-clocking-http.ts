@@ -14,7 +14,7 @@ import {
 } from '@yuta/contracts';
 import { getPointageRawClockingConsumer } from './raw-clocking-bootstrap';
 import type { PointageRawFailureCode } from './raw-clocking-service';
-import { isBackofficeCapabilityAvailable } from '../../lib/backoffice-exposure';
+import { isBackofficeCapabilityAvailable } from '@/lib/backoffice-exposure';
 import { getBackofficeExposureProfile } from '../backoffice-exposure-config';
 
 type Operation =

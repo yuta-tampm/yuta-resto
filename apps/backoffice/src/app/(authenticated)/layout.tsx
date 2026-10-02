@@ -1,17 +1,17 @@
-import { BackofficeFrame } from '../../components/backoffice/backoffice-frame';
+import { BackofficeFrame } from '@/components/backoffice/backoffice-frame';
 import {
   hasBookingPermission,
   hasPersonnelPermission,
   hasReputationPermission,
   hasUserManagementPermission,
-} from '../../server/auth/permissions';
+} from '@/server/auth/permissions';
 import {
   authRepository,
   requireAuthenticatedTenant,
-} from '../../server/auth/session';
+} from '@/server/auth/session';
 import type { ReactNode } from 'react';
 import { redirect } from 'next/navigation';
-import { getBackofficeExposureProfile } from '../../server/backoffice-exposure';
+import { getBackofficeExposureProfile } from '@/server/backoffice-exposure';
 
 export const dynamic = 'force-dynamic';
 

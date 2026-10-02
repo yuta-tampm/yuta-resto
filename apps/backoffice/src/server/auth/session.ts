@@ -17,7 +17,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import { cloudDatabase } from '../cloud-database';
-import { safeBackofficeReturnTo } from '../../lib/backoffice-exposure';
+import { safeBackofficeReturnTo } from '@/lib/backoffice-exposure';
 import {
   getBackofficeExposureProfile,
   requireBackofficePageAvailable,

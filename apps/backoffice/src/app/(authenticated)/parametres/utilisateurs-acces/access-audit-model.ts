@@ -1,5 +1,6 @@
 import { accessAuditActions, type AccessAuditAction } from '@yuta/db-cloud';
 import { z } from 'zod';
+import { firstSearchParam as first } from '@/lib/search-params';
 
 export type AccessAuditSearchParams = {
   auditUser?: string | string[];
@@ -59,8 +60,4 @@ export function buildAccessAuditHref(
   if (cursor) params.set('auditCursor', cursor);
   const search = params.toString();
   return `/parametres/utilisateurs-acces${search ? `?${search}` : ''}#historique-acces`;
-}
-
-function first(value: string | string[] | undefined): string | undefined {
-  return Array.isArray(value) ? value[0] : value;
 }
