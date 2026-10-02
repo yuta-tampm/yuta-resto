@@ -1,4 +1,3 @@
-import type { FeedbackScopeOptions } from '@yuta/db-cloud';
 import type { TenantContext } from '@yuta/tenant';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -60,15 +59,13 @@ vi.mock('../src/server/auth/session', () => ({
 vi.mock('../src/server/auth/permissions', () => ({
   requireReputationPermission: mocks.requireReputationPermission,
 }));
-vi.mock('../src/server/backoffice-exposure', () => ({
-  getReputationFeedbackScope: (): FeedbackScopeOptions | undefined =>
-    mocks.releaseA
-      ? {
-          requiredSource: 'GOOGLE',
-          scopedCounters: true,
-          attentionStatuses: ['NEW', 'TO_PROCESS', 'DRAFTED', 'FOLLOW_UP'],
-        }
-      : undefined,
+// Select the profile only; the Reputation scope comes from the real policy.
+vi.mock('../src/server/backoffice-exposure-config', async (importOriginal) => ({
+  ...(await importOriginal<
+    typeof import('../src/server/backoffice-exposure-config')
+  >()),
+  getBackofficeExposureProfile: () =>
+    mocks.releaseA ? ('release-a' as const) : ('internal' as const),
 }));
 
 import { ReputationRepositoryError } from '@yuta/db-cloud';

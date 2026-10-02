@@ -20,8 +20,8 @@ import { cloudDatabase } from '../cloud-database';
 import { safeBackofficeReturnTo } from '../../lib/backoffice-exposure';
 import {
   getBackofficeExposureProfile,
-  isReleaseAExposure,
   requireBackofficePageAvailable,
+  usesRestrictedDenialRecovery,
 } from '../backoffice-exposure';
 import {
   requireBookingPermission,
@@ -144,15 +144,15 @@ type TenantAccess = {
   availablePath?: string;
   /** Throws a `TenantError` when the trusted tenant lacks a requirement. */
   authorize: (tenant: TenantContext) => void;
-  /** In Release A, turn an authorization denial into restricted recovery. */
-  restrictInReleaseA?: boolean;
+  /** Use the profile's restricted recovery for an authorization denial. */
+  restrictedRecovery?: boolean;
 };
 
 async function requireTenantAccess({
   returnTo,
   availablePath,
   authorize,
-  restrictInReleaseA = false,
+  restrictedRecovery = false,
 }: TenantAccess): Promise<{
   session: AuthenticatedSession;
   tenant: TenantContext;
@@ -163,8 +163,8 @@ async function requireTenantAccess({
     authorize(context.tenant);
   } catch (error: unknown) {
     if (
-      restrictInReleaseA &&
-      isReleaseAExposure() &&
+      restrictedRecovery &&
+      usesRestrictedDenialRecovery() &&
       error instanceof TenantError
     ) {
       redirect('/aujourdhui?exposure=restricted');
@@ -188,7 +188,7 @@ export function requireReputationTenant(
 ) {
   return requireTenantAccess({
     returnTo,
-    restrictInReleaseA: true,
+    restrictedRecovery: true,
     authorize(tenant) {
       requireEntitlement(tenant, 'reputation.enabled');
       requireReputationPermission(tenant, 'reputation.read');
@@ -201,7 +201,7 @@ export function requireReputationTenant(
 export function requireUserManagementTenant() {
   return requireTenantAccess({
     returnTo: '/parametres/utilisateurs-acces',
-    restrictInReleaseA: true,
+    restrictedRecovery: true,
     authorize(tenant) {
       requireUserManagementPermission(tenant, 'users.access.manage');
     },

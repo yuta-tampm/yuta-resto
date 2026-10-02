@@ -2,7 +2,10 @@ import { getEstablishmentProfile } from '@yuta/db-cloud';
 import { requireEstablishment } from '@yuta/tenant';
 import { notFound } from 'next/navigation';
 import { Card, ErrorState } from '@yuta/ui';
-import { isReleaseAExposure } from '@/server/backoffice-exposure';
+import {
+  isBackofficeExposureCapabilityAvailable,
+  isReleaseAExposure,
+} from '@/server/backoffice-exposure';
 import { BackofficePage } from '@/components/backoffice/backoffice-page';
 import {
   hasEstablishmentPermission,
@@ -33,6 +36,9 @@ export default async function GeneralInformationPage() {
   requireEstablishment(tenant);
   requireEstablishmentPermission(tenant, 'establishment.profile.read');
   const releaseA = isReleaseAExposure();
+  const knowledgeAvailable = isBackofficeExposureCapabilityAvailable(
+    'restaurant-knowledge',
+  );
   const [
     profile,
     conceptHistorySection,
@@ -43,12 +49,22 @@ export default async function GeneralInformationPage() {
     validatedKnowledgeSection,
   ] = await Promise.all([
     getEstablishmentProfile(cloudDatabase, tenant),
-    releaseA ? null : loadConceptHistorySection(cloudDatabase, tenant),
-    releaseA ? null : loadCuisineKnowHowSection(cloudDatabase, tenant),
-    releaseA ? null : loadCustomerExperienceSection(cloudDatabase, tenant),
-    releaseA ? null : loadTeamCultureSection(cloudDatabase, tenant),
-    releaseA ? null : loadCommunicationIdentitySection(cloudDatabase, tenant),
-    releaseA ? null : loadValidatedKnowledgeSection(cloudDatabase, tenant),
+    knowledgeAvailable
+      ? loadConceptHistorySection(cloudDatabase, tenant)
+      : null,
+    knowledgeAvailable
+      ? loadCuisineKnowHowSection(cloudDatabase, tenant)
+      : null,
+    knowledgeAvailable
+      ? loadCustomerExperienceSection(cloudDatabase, tenant)
+      : null,
+    knowledgeAvailable ? loadTeamCultureSection(cloudDatabase, tenant) : null,
+    knowledgeAvailable
+      ? loadCommunicationIdentitySection(cloudDatabase, tenant)
+      : null,
+    knowledgeAvailable
+      ? loadValidatedKnowledgeSection(cloudDatabase, tenant)
+      : null,
   ]);
   if (!profile) {
     if (!releaseA) notFound();
