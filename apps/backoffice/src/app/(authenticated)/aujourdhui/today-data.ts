@@ -16,10 +16,11 @@ import {
 import { requireAuthenticatedTenant } from '@/server/auth/session';
 import { cloudDatabase } from '@/server/cloud-database';
 import {
+  getReputationExposureScope,
   getReputationFeedbackScope,
+  isBackofficeExposureCapabilityAvailable,
   isReleaseAExposure,
 } from '@/server/backoffice-exposure';
-import { releaseAAttentionStatuses } from '@/lib/backoffice-exposure';
 import {
   loadReleaseASetupSummary,
   type ReleaseASetupSummary,
@@ -107,6 +108,7 @@ export async function loadTodayDashboard(): Promise<TodayDashboardData> {
   }
   requireEstablishment(tenant);
   const releaseA = isReleaseAExposure();
+  const reputationScope = getReputationExposureScope();
 
   const now = new Date();
   const { localDate, localTime, dayOfWeek } = getLocalDateTimeParts(
@@ -114,7 +116,8 @@ export async function loadTodayDashboard(): Promise<TodayDashboardData> {
     now,
   );
   const bookingEnabled =
-    !releaseA && tenant.entitlements.has('booking.enabled');
+    isBackofficeExposureCapabilityAvailable('booking') &&
+    tenant.entitlements.has('booking.enabled');
   const reputationEnabled = tenant.entitlements.has('reputation.enabled');
   const canManageBookingSettings = hasBookingPermission(
     tenant,
@@ -212,28 +215,30 @@ export async function loadTodayDashboard(): Promise<TodayDashboardData> {
             cloudDatabase,
             tenant,
             feedbackListQuerySchema.parse({
-              ...(releaseA ? { source: 'GOOGLE' } : {}),
-              sort: releaseA ? 'newest' : 'unanswered',
+              ...(reputationScope
+                ? { source: reputationScope.requiredSource }
+                : {}),
+              sort: reputationScope ? 'newest' : 'unanswered',
               page: 1,
               pageSize: releaseA ? 3 : 6,
             }),
-            releaseA
+            reputationScope
               ? {
                   ...getReputationFeedbackScope(),
-                  statuses: releaseAAttentionStatuses,
+                  statuses: reputationScope.attentionStatuses,
                 }
               : undefined,
           );
           const items = result.items
             .filter(
               (item) =>
-                releaseA ||
+                reputationScope !== null ||
                 (item.replyStatus !== 'PUBLISHED' &&
                   !['RESOLVED', 'ARCHIVED', 'SPAM'].includes(item.status)),
             )
             .slice(0, 3)
             .map((item) => projectTodayReviewPreview(item, now, tenant.locale));
-          const attentionCount = releaseA
+          const attentionCount = reputationScope
             ? (result.attentionCount ?? result.pagination.totalItems)
             : result.counters.unanswered;
           if (attentionCount === 0) {

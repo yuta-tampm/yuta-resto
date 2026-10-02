@@ -7,6 +7,74 @@ export const releaseAAttentionStatuses = [
   'FOLLOW_UP',
 ] as const;
 
+/**
+ * Optional capabilities whose availability depends on the instance profile.
+ * An unavailable capability is not read, serialized or invoked. When it is
+ * available, its own session, permission, entitlement and record guards still
+ * apply: availability never grants access.
+ */
+export type BackofficeExposureCapability =
+  | 'booking'
+  | 'pointage'
+  | 'reputation-analysis'
+  | 'reputation-incidents'
+  | 'restaurant-knowledge';
+
+export type ReputationExposureScope = Readonly<{
+  requiredSource: 'GOOGLE';
+  attentionStatuses: typeof releaseAAttentionStatuses;
+}>;
+
+export type BackofficeExposurePolicy = Readonly<{
+  capabilities: ReadonlySet<BackofficeExposureCapability>;
+  /**
+   * Reputation work visible to the instance, or `null` for no restriction. A
+   * scoped instance also makes no remote-reply claims (`unanswered`).
+   */
+  reputationScope: ReputationExposureScope | null;
+  /** Turn an authorization denial into the permitted restricted recovery. */
+  restrictedRecovery: boolean;
+}>;
+
+// Single source for what each profile exposes. Path admission stays in the
+// path sets below; release-specific presentation stays with its components.
+const backofficeExposurePolicies: Readonly<
+  Record<BackofficeExposureProfile, BackofficeExposurePolicy>
+> = {
+  internal: {
+    capabilities: new Set<BackofficeExposureCapability>([
+      'booking',
+      'pointage',
+      'reputation-analysis',
+      'reputation-incidents',
+      'restaurant-knowledge',
+    ]),
+    reputationScope: null,
+    restrictedRecovery: false,
+  },
+  'release-a': {
+    capabilities: new Set<BackofficeExposureCapability>(),
+    reputationScope: {
+      requiredSource: 'GOOGLE',
+      attentionStatuses: releaseAAttentionStatuses,
+    },
+    restrictedRecovery: true,
+  },
+};
+
+export function getBackofficeExposurePolicy(
+  profile: BackofficeExposureProfile,
+): BackofficeExposurePolicy {
+  return backofficeExposurePolicies[profile];
+}
+
+export function isBackofficeCapabilityAvailable(
+  profile: BackofficeExposureProfile,
+  capability: BackofficeExposureCapability,
+): boolean {
+  return backofficeExposurePolicies[profile].capabilities.has(capability);
+}
+
 const releaseAProductPaths = new Set([
   '/',
   '/aujourdhui',

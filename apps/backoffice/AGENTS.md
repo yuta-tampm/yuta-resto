@@ -17,6 +17,12 @@ subordinate to current repository architecture, behavior, and authorization.
 - Do not put platform-wide YUTA administration or local POS operations here.
 - Prefer Server Components and reuse `@yuta/ui`; implement loading, empty,
   error, forbidden, validation, and persisted-success states as applicable.
+- Decide capability availability, Reputation data scope (including ordering
+  and counters derived from gated data) and denial recovery through the
+  exposure policy table in `src/lib/backoffice-exposure.ts`, read via
+  `src/server/backoffice-exposure.ts`. Use `isReleaseAExposure()` only for the
+  release's presentation shape: copy, layout, preview size, setup summary,
+  model discriminant and recovery pages.
 - Import from `src` with the `@/` alias (for example `@/server/auth/session`)
   instead of relative paths that climb three or more directory levels; keep
   short relative imports for nearby files. Tests mirror this alias through

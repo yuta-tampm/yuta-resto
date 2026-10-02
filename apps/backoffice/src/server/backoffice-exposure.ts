@@ -3,13 +3,20 @@ import 'server-only';
 import type { FeedbackScopeOptions } from '@yuta/db-cloud';
 import { redirect } from 'next/navigation';
 import {
+  getBackofficeExposurePolicy,
+  isBackofficeCapabilityAvailable,
   isBackofficePathAvailable,
-  releaseAAttentionStatuses,
+  type BackofficeExposureCapability,
+  type ReputationExposureScope,
 } from '../lib/backoffice-exposure';
 import { getBackofficeExposureProfile } from './backoffice-exposure-config';
 
 export { getBackofficeExposureProfile } from './backoffice-exposure-config';
 
+/**
+ * Release A presentation variant (copy, layout, preview size). Availability,
+ * data scope and denial recovery must use the policy helpers below instead.
+ */
 export function isReleaseAExposure(): boolean {
   return getBackofficeExposureProfile() === 'release-a';
 }
@@ -20,22 +27,41 @@ export function requireBackofficePageAvailable(pathname: string): void {
   }
 }
 
+export function isBackofficeExposureCapabilityAvailable(
+  capability: BackofficeExposureCapability,
+): boolean {
+  return isBackofficeCapabilityAvailable(
+    getBackofficeExposureProfile(),
+    capability,
+  );
+}
+
 export function requireBackofficeCapabilityAvailable(
-  capability: 'restaurant-knowledge' | 'pointage',
+  capability: BackofficeExposureCapability,
 ): void {
-  if (isReleaseAExposure()) {
-    // Explicit invoked capability, independent of the incoming action URL.
+  // Explicit invoked capability, independent of the incoming action URL.
+  if (!isBackofficeExposureCapabilityAvailable(capability)) {
     redirect('/aujourdhui?exposure=unavailable');
   }
-  void capability;
+}
+
+export function usesRestrictedDenialRecovery(): boolean {
+  return getBackofficeExposurePolicy(getBackofficeExposureProfile())
+    .restrictedRecovery;
+}
+
+export function getReputationExposureScope(): ReputationExposureScope | null {
+  return getBackofficeExposurePolicy(getBackofficeExposureProfile())
+    .reputationScope;
 }
 
 export function getReputationFeedbackScope(): FeedbackScopeOptions | undefined {
-  return isReleaseAExposure()
+  const scope = getReputationExposureScope();
+  return scope
     ? {
-        requiredSource: 'GOOGLE',
+        requiredSource: scope.requiredSource,
         scopedCounters: true,
-        attentionStatuses: releaseAAttentionStatuses,
+        attentionStatuses: scope.attentionStatuses,
       }
     : undefined;
 }
