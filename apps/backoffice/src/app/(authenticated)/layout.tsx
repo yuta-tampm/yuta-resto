@@ -1,5 +1,11 @@
 import { BackofficeFrame } from '../../components/backoffice/backoffice-frame';
 import {
+  hasBookingPermission,
+  hasPersonnelPermission,
+  hasReputationPermission,
+  hasUserManagementPermission,
+} from '../../server/auth/permissions';
+import {
   authRepository,
   requireAuthenticatedTenant,
 } from '../../server/auth/session';
@@ -22,7 +28,10 @@ export default async function AuthenticatedLayout({
   return (
     <BackofficeFrame
       exposureProfile={getBackofficeExposureProfile()}
-      canManageGoogleConnector={tenant.actor.role === 'OWNER'}
+      canManageGoogleConnector={hasReputationPermission(
+        tenant,
+        'reputation.connector.manage',
+      )}
       currentUser={{
         name: session.userName,
         email: session.userEmail,
@@ -31,17 +40,18 @@ export default async function AuthenticatedLayout({
         tenants: availableTenants,
         currentMembershipId: tenant.actor.membershipId,
       }}
-      canManageUsers={
-        tenant.actor.type === 'user' &&
-        (tenant.actor.role === 'OWNER' || tenant.actor.role === 'MANAGER')
-      }
-      canReadPersonnel={
-        tenant.actor.type === 'user' && tenant.actor.role === 'OWNER'
-      }
-      canManageBookingSettings={
-        tenant.actor.type === 'user' &&
-        (tenant.actor.role === 'OWNER' || tenant.actor.role === 'MANAGER')
-      }
+      canManageUsers={hasUserManagementPermission(
+        tenant,
+        'users.access.manage',
+      )}
+      canReadPersonnel={hasPersonnelPermission(
+        tenant,
+        'personnel.employee.read',
+      )}
+      canManageBookingSettings={hasBookingPermission(
+        tenant,
+        'booking.settings.manage',
+      )}
       bookingEnabled={tenant.entitlements.has('booking.enabled')}
       reputationEnabled={tenant.entitlements.has('reputation.enabled')}
     >

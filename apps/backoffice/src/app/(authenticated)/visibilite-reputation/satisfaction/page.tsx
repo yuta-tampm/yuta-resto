@@ -1,6 +1,6 @@
 import { readReputationReviewSocialLinks } from '@yuta/db-cloud';
 import { Suspense } from 'react';
-import { requireReputationPermission } from '@/server/auth/permissions';
+import { hasReputationPermission } from '@/server/auth/permissions';
 import { requireReputationTenant } from '@/server/auth/session';
 import { cloudDatabase as db } from '@/server/cloud-database';
 import { loadReviewsPage } from '../avis/_components/reviews-loader';
@@ -36,11 +36,10 @@ export default async function Page({
 export async function ReviewSocialLinksSettingsSection() {
   const { tenant } = await requireReputationTenant(SATISFACTION_PATH);
 
-  if (tenant.actor.type !== 'user' || tenant.actor.role !== 'OWNER') {
+  if (!hasReputationPermission(tenant, 'reputation.settings.manage')) {
     return null;
   }
 
-  requireReputationPermission(tenant, 'reputation.settings.manage');
   const initialOutcome = await readReputationReviewSocialLinks(db, tenant);
 
   return (

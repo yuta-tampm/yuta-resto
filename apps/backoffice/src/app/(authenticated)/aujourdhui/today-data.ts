@@ -8,8 +8,11 @@ import {
 } from '@yuta/db-cloud';
 import { requireEstablishment } from '@yuta/tenant';
 import { redirect } from 'next/navigation';
-import { requireBookingPermission } from '@/server/auth/permissions';
-import { requireReputationPermission } from '@/server/auth/permissions';
+import {
+  hasBookingPermission,
+  requireBookingPermission,
+  requireReputationPermission,
+} from '@/server/auth/permissions';
 import { requireAuthenticatedTenant } from '@/server/auth/session';
 import { cloudDatabase } from '@/server/cloud-database';
 import {
@@ -113,9 +116,10 @@ export async function loadTodayDashboard(): Promise<TodayDashboardData> {
   const bookingEnabled =
     !releaseA && tenant.entitlements.has('booking.enabled');
   const reputationEnabled = tenant.entitlements.has('reputation.enabled');
-  const canManageBookingSettings =
-    tenant.actor.type === 'user' &&
-    (tenant.actor.role === 'OWNER' || tenant.actor.role === 'MANAGER');
+  const canManageBookingSettings = hasBookingPermission(
+    tenant,
+    'booking.settings.manage',
+  );
 
   if (bookingEnabled) {
     requireBookingPermission(tenant, 'booking.read');

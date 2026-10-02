@@ -6,6 +6,7 @@ import {
   listAssignableReputationUsers,
   listFeedback,
 } from '@yuta/db-cloud';
+import { hasReputationPermission } from '@/server/auth/permissions';
 import { requireReputationTenant } from '@/server/auth/session';
 import { cloudDatabase as db } from '@/server/cloud-database';
 import {
@@ -165,15 +166,18 @@ export async function loadReviewsPage(
         ? { total: result.counters.total, new: result.counters.new }
         : result.counters,
       permissions: {
-        canManageFeedback:
-          tenant.actor.type === 'user' &&
-          ['OWNER', 'MANAGER'].includes(tenant.actor.role),
-        canCreateReply:
-          tenant.actor.type === 'user' &&
-          ['OWNER', 'MANAGER', 'STAFF'].includes(tenant.actor.role),
-        canCreateNote:
-          tenant.actor.type === 'user' &&
-          ['OWNER', 'MANAGER', 'STAFF'].includes(tenant.actor.role),
+        canManageFeedback: hasReputationPermission(
+          tenant,
+          'reputation.feedback.manage',
+        ),
+        canCreateReply: hasReputationPermission(
+          tenant,
+          'reputation.reply.create',
+        ),
+        canCreateNote: hasReputationPermission(
+          tenant,
+          'reputation.note.create',
+        ),
         canRetrieveGoogle,
       },
     };

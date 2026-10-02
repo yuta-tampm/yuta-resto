@@ -11,7 +11,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const mocks = vi.hoisted(() => ({
   tenant: null as TenantContext | null,
   requireReputationTenant: vi.fn(),
-  requireReputationPermission: vi.fn(),
   readReputationReviewSocialLinks: vi.fn(),
   saveReviewSocialLinksAction: vi.fn(),
   refresh: vi.fn(),
@@ -29,9 +28,6 @@ vi.mock('../src/server/cloud-database', () => ({
 }));
 vi.mock('../src/server/auth/session', () => ({
   requireReputationTenant: mocks.requireReputationTenant,
-}));
-vi.mock('../src/server/auth/permissions', () => ({
-  requireReputationPermission: mocks.requireReputationPermission,
 }));
 vi.mock(
   '../src/app/(authenticated)/visibilite-reputation/satisfaction/actions',
@@ -360,19 +356,14 @@ describe('Reputation review social links OWNER projection', () => {
       session: { userId: randomUUID() },
       tenant: mocks.tenant,
     }));
-    mocks.requireReputationPermission.mockReset();
     mocks.readReputationReviewSocialLinks.mockReset();
     mocks.readReputationReviewSocialLinks.mockResolvedValue(success);
   });
 
-  it('loads the model only for trusted OWNER after settings permission', async () => {
+  it('loads the model only for a trusted actor with the settings permission', async () => {
     const section = await ReviewSocialLinksSettingsSection();
     const markup = renderToStaticMarkup(section);
     expect(markup).toContain('Liens d’avis et réseaux sociaux');
-    expect(mocks.requireReputationPermission).toHaveBeenCalledWith(
-      mocks.tenant,
-      'reputation.settings.manage',
-    );
     expect(mocks.readReputationReviewSocialLinks).toHaveBeenCalledWith(
       { kind: 'test-cloud-database' },
       mocks.tenant,
@@ -384,7 +375,6 @@ describe('Reputation review social links OWNER projection', () => {
     async (role) => {
       mocks.tenant = context(role);
       await expect(ReviewSocialLinksSettingsSection()).resolves.toBeNull();
-      expect(mocks.requireReputationPermission).not.toHaveBeenCalled();
       expect(mocks.readReputationReviewSocialLinks).not.toHaveBeenCalled();
     },
   );

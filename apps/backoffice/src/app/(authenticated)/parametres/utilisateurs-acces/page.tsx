@@ -1,5 +1,6 @@
 import { createTenantUserRepository } from '@yuta/db-cloud';
 import { Suspense } from 'react';
+import { hasAccessAuditPermission } from '@/server/auth/access-audit-permissions';
 import { requireUserManagementTenant } from '@/server/auth/session';
 import { cloudDatabase } from '@/server/cloud-database';
 import { AccessAuditHistory } from './_components/access-audit-history';
@@ -49,7 +50,7 @@ export default async function SettingsUsersPage({
       currentEstablishmentId={tenant.establishmentId}
       actorRole={tenant.actor.role}
       auditHistory={
-        tenant.actor.role === 'OWNER' ? (
+        hasAccessAuditPermission(tenant) ? (
           <Suspense fallback={<AccessAuditLoading />}>
             <AccessAuditHistory
               tenant={tenant}

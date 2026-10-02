@@ -9,7 +9,6 @@ import {
 import {
   requireEntitlement,
   requireEstablishment,
-  requireRole,
   resolveAuthenticatedTenant,
   TenantError,
   type TenantContext,
@@ -28,6 +27,7 @@ import {
   requireBookingPermission,
   requirePersonnelPermission,
   requireReputationPermission,
+  requireUserManagementPermission,
   type ReputationPermission,
 } from './permissions';
 
@@ -138,22 +138,35 @@ function redirectToScopeRecovery(returnTo: string): never {
   );
 }
 
-export async function requireReputationTenant(
-  returnTo = '/visibilite-reputation/avis',
-  options: { requires?: ReputationPermission } = {},
-): Promise<{
+type TenantAccess = {
+  returnTo: string;
+  /** Page that must be available in the current exposure profile first. */
+  availablePath?: string;
+  /** Throws a `TenantError` when the trusted tenant lacks a requirement. */
+  authorize: (tenant: TenantContext) => void;
+  /** In Release A, turn an authorization denial into restricted recovery. */
+  restrictInReleaseA?: boolean;
+};
+
+async function requireTenantAccess({
+  returnTo,
+  availablePath,
+  authorize,
+  restrictInReleaseA = false,
+}: TenantAccess): Promise<{
   session: AuthenticatedSession;
   tenant: TenantContext;
 }> {
+  if (availablePath) requireBackofficePageAvailable(availablePath);
   const context = await requireAuthenticatedTenant(returnTo);
   try {
-    requireEntitlement(context.tenant, 'reputation.enabled');
-    requireReputationPermission(context.tenant, 'reputation.read');
-    if (options.requires) {
-      requireReputationPermission(context.tenant, options.requires);
-    }
+    authorize(context.tenant);
   } catch (error: unknown) {
-    if (isReleaseAExposure() && error instanceof TenantError) {
+    if (
+      restrictInReleaseA &&
+      isReleaseAExposure() &&
+      error instanceof TenantError
+    ) {
       redirect('/aujourdhui?exposure=restricted');
     }
     throw error;
@@ -161,43 +174,65 @@ export async function requireReputationTenant(
   return context;
 }
 
-export async function requireUserManagementTenant(): Promise<{
+function withEstablishment(context: {
   session: AuthenticatedSession;
   tenant: TenantContext;
-}> {
-  const context = await requireAuthenticatedTenant(
-    '/parametres/utilisateurs-acces',
-  );
-  try {
-    requireRole(context.tenant, ['OWNER', 'MANAGER']);
-  } catch (error: unknown) {
-    if (isReleaseAExposure() && error instanceof TenantError) {
-      redirect('/aujourdhui?exposure=restricted');
-    }
-    throw error;
-  }
-  return context;
+}) {
+  requireEstablishment(context.tenant);
+  return { session: context.session, tenant: context.tenant };
+}
+
+export function requireReputationTenant(
+  returnTo = '/visibilite-reputation/avis',
+  options: { requires?: ReputationPermission } = {},
+) {
+  return requireTenantAccess({
+    returnTo,
+    restrictInReleaseA: true,
+    authorize(tenant) {
+      requireEntitlement(tenant, 'reputation.enabled');
+      requireReputationPermission(tenant, 'reputation.read');
+      if (options.requires)
+        requireReputationPermission(tenant, options.requires);
+    },
+  });
+}
+
+export function requireUserManagementTenant() {
+  return requireTenantAccess({
+    returnTo: '/parametres/utilisateurs-acces',
+    restrictInReleaseA: true,
+    authorize(tenant) {
+      requireUserManagementPermission(tenant, 'users.access.manage');
+    },
+  });
 }
 
 export async function requireBookingTenant(returnTo = '/reservations') {
-  requireBackofficePageAvailable('/reservations');
-  const context = await requireAuthenticatedTenant(returnTo);
-  requireEstablishment(context.tenant);
-  requireEntitlement(context.tenant, 'booking.enabled');
-  requireBookingPermission(context.tenant, 'booking.read');
-  return context as typeof context & {
-    tenant: typeof context.tenant & { establishmentId: string };
-  };
+  return withEstablishment(
+    await requireTenantAccess({
+      returnTo,
+      availablePath: '/reservations',
+      authorize(tenant) {
+        requireEstablishment(tenant);
+        requireEntitlement(tenant, 'booking.enabled');
+        requireBookingPermission(tenant, 'booking.read');
+      },
+    }),
+  );
 }
 
 export async function requirePersonnelTenant(returnTo = '/equipe/salaries') {
-  requireBackofficePageAvailable('/equipe/salaries');
-  const context = await requireAuthenticatedTenant(returnTo);
-  requireEstablishment(context.tenant);
-  requirePersonnelPermission(context.tenant, 'personnel.employee.read');
-  return context as typeof context & {
-    tenant: typeof context.tenant & { establishmentId: string };
-  };
+  return withEstablishment(
+    await requireTenantAccess({
+      returnTo,
+      availablePath: '/equipe/salaries',
+      authorize(tenant) {
+        requireEstablishment(tenant);
+        requirePersonnelPermission(tenant, 'personnel.employee.read');
+      },
+    }),
+  );
 }
 
 export function safeReturnTo(value: string | null | undefined): string {

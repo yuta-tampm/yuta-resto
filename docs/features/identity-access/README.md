@@ -61,8 +61,14 @@ The current cloud membership roles are:
 
 A role is not a permission. Each owning capability maps operations to allowed
 roles and may also require an entitlement. For example, Booking, Reputation,
-Establishment, and Personnel apply different permission mappings. Navigation
-or route visibility is presentation, not authorization. Organization,
+Establishment, Personnel, and user management apply different permission
+mappings. The Backoffice defines these capability mappings in
+`apps/backoffice/src/server/auth/permissions.ts`, and its guards and
+presentation flags for those capabilities derive from them instead of
+comparing roles inline. Access-audit history and Pointage have their own
+authority modules, and the user-management role hierarchy (assignable roles
+and MANAGER establishment scoping) remains role-based by design. Navigation or
+route visibility is presentation, not authorization. Organization,
 establishment, membership, role, permission, and entitlement values supplied
 by the browser are untrusted and cannot establish access.
 

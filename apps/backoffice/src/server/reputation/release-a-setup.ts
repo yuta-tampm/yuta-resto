@@ -2,6 +2,7 @@ import 'server-only';
 
 import { findGoogleReputationConnector } from '@yuta/db-cloud';
 import type { TenantContext } from '@yuta/tenant';
+import { hasReputationPermission } from '../auth/permissions';
 import { cloudDatabase } from '../cloud-database';
 import { isGoogleReviewRetrievalEnabled } from './google-review-retrieval-config';
 
@@ -14,8 +15,10 @@ export type ReleaseASetupSummary = {
 export async function loadReleaseASetupSummary(
   tenant: TenantContext,
 ): Promise<ReleaseASetupSummary> {
-  const canManage =
-    tenant.actor.type === 'user' && tenant.actor.role === 'OWNER';
+  const canManage = hasReputationPermission(
+    tenant,
+    'reputation.connector.manage',
+  );
   try {
     const connector = await findGoogleReputationConnector(
       cloudDatabase,
@@ -26,11 +29,13 @@ export async function loadReleaseASetupSummary(
       Boolean(connector.externalAccountId) &&
       Boolean(connector.externalLocationId);
     if (bound) {
-      const staff =
-        tenant.actor.type === 'user' && tenant.actor.role === 'STAFF';
+      const cannotRetrieve = !hasReputationPermission(
+        tenant,
+        'reputation.google.retrieve',
+      );
       return {
         title: 'Établissement Google associé',
-        description: staff
+        description: cannotRetrieve
           ? 'Vos avis attribués et votre travail dans YUTA restent accessibles. Pour récupérer du contenu Google, contactez un propriétaire ou un responsable.'
           : isGoogleReviewRetrievalEnabled()
             ? 'Une visite dans Avis peut récupérer les avis Google si nécessaire. Votre travail dans YUTA reste accessible ; l’association seule ne confirme aucun résultat de récupération.'

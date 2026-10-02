@@ -74,6 +74,8 @@ export type PersonnelPermission =
   | 'personnel.register.read'
   | 'personnel.register.export';
 
+export type UserManagementPermission = 'users.access.manage';
+
 const permissionRoles: Record<ReputationPermission, readonly TenantRole[]> = {
   'reputation.read': ['OWNER', 'MANAGER', 'STAFF'],
   'reputation.feedback.manage': ['OWNER', 'MANAGER'],
@@ -124,14 +126,28 @@ const personnelPermissionRoles: Record<
   'personnel.register.export': ['OWNER'],
 };
 
+const userManagementPermissionRoles: Record<
+  UserManagementPermission,
+  readonly TenantRole[]
+> = {
+  'users.access.manage': ['OWNER', 'MANAGER'],
+};
+
+export function hasReputationPermission(
+  context: TenantContext,
+  permission: ReputationPermission,
+): boolean {
+  return (
+    context.actor.type === 'user' &&
+    permissionRoles[permission].includes(context.actor.role)
+  );
+}
+
 export function requireReputationPermission(
   context: TenantContext,
   permission: ReputationPermission,
 ): void {
-  if (
-    context.actor.type !== 'user' ||
-    !permissionRoles[permission].includes(context.actor.role)
-  ) {
+  if (!hasReputationPermission(context, permission)) {
     throw new TenantError(
       'Permission denied.',
       'CROSS_TENANT_ACCESS_DENIED',
@@ -224,6 +240,29 @@ export function requirePersonnelPermission(
   permission: PersonnelPermission,
 ): void {
   if (!hasPersonnelPermission(context, permission)) {
+    throw new TenantError(
+      'Permission denied.',
+      'CROSS_TENANT_ACCESS_DENIED',
+      403,
+    );
+  }
+}
+
+export function hasUserManagementPermission(
+  context: TenantContext,
+  permission: UserManagementPermission,
+): boolean {
+  return (
+    context.actor.type === 'user' &&
+    userManagementPermissionRoles[permission].includes(context.actor.role)
+  );
+}
+
+export function requireUserManagementPermission(
+  context: TenantContext,
+  permission: UserManagementPermission,
+): void {
+  if (!hasUserManagementPermission(context, permission)) {
     throw new TenantError(
       'Permission denied.',
       'CROSS_TENANT_ACCESS_DENIED',

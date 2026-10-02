@@ -43,7 +43,8 @@ vi.mock('../src/server/auth/session', () => ({
   }),
   requireReputationTenant: async () => ({ tenant: mocks.tenant }),
 }));
-vi.mock('../src/server/auth/permissions', () => ({
+vi.mock('../src/server/auth/permissions', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../src/server/auth/permissions')>()),
   requireBookingPermission: mocks.requireBookingPermission,
   requireReputationPermission: mocks.requireReputationPermission,
 }));
@@ -255,6 +256,33 @@ describe('Release A Avis reads', () => {
     expect(mocks.listFeedback.mock.calls[0]?.[3]).not.toHaveProperty('workIds');
     expect(mocks.retrieveGoogleReviews).not.toHaveBeenCalled();
   });
+  it.each([
+    ['OWNER', true, true, true],
+    ['MANAGER', true, true, true],
+    ['STAFF', false, true, true],
+  ] as const)(
+    'maps %s to reputation permissions: manage=%s reply=%s note=%s',
+    async (role, canManage, canReply, canNote) => {
+      mocks.tenant = {
+        ...mocks.tenant!,
+        actor: {
+          type: 'user',
+          userId: googleId,
+          membershipId: directId,
+          role,
+        },
+      };
+      const page = await loadReviewsPage({}, 'all');
+      expect(
+        (page.props as { data: ReviewsPageData }).data.permissions,
+      ).toMatchObject({
+        canManageFeedback: canManage,
+        canCreateReply: canReply,
+        canCreateNote: canNote,
+      });
+    },
+  );
+
   it('reads a minimized receipt without retrieving from loaders or Today', async () => {
     const page = await loadReviewsPage({}, 'all');
     expect(
