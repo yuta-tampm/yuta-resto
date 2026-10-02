@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
   formatMinutes,
-  formatTimeRange,
   getNextDatedItem,
   getPublicScheduleRows,
   orderedWeekDays,
 } from '../src/app/(authenticated)/etablissement/booking-schedule-view-model';
+import { formatTimeRange } from '../src/lib/local-time';
 
 describe('hours and services view model', () => {
   it('orders the week from Monday through Sunday', () => {

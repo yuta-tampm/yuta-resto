@@ -7,8 +7,8 @@ import { requireEstablishment } from '@yuta/tenant';
 import { hasPersonnelPermission } from '@/server/auth/permissions';
 import { requireAuthenticatedTenant } from '@/server/auth/session';
 import { cloudDatabase } from '@/server/cloud-database';
+import { getDateInTimezone } from '@/lib/local-time';
 import { firstSearchParam as first } from '@/lib/search-params';
-import { getBusinessDate } from './salaries-model';
 import { PersonnelForbidden } from './_components/personnel-forbidden';
 import { SalariesPage } from './_components/salaries-page';
 import { isContractExtractionPrototypeEnabled } from './_lib/contract-extraction-prototype-runtime';
@@ -40,7 +40,7 @@ export default async function Page({
   const query = parsedQuery.success
     ? parsedQuery.data
     : personnelEmployeeListQuerySchema.parse({});
-  const businessDate = getBusinessDate(tenant.timezone);
+  const businessDate = getDateInTimezone(tenant.timezone);
   const data = await listPersonnelEmployees(
     cloudDatabase,
     tenant,

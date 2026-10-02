@@ -2,13 +2,13 @@ import type { PersonnelEmployeeSummary } from '@yuta/contracts/personnel';
 import { describe, expect, it } from 'vitest';
 import {
   formatEmployeeDate,
-  getBusinessDate,
   getContractSummary,
   getEmployeeInitials,
   getEmployeeName,
   getEmploymentStatusPresentation,
   getWorkTimeLabel,
 } from './salaries-model';
+import { getDateInTimezone } from '@/lib/local-time';
 
 const employee: PersonnelEmployeeSummary = {
   id: '01923e4c-8c5a-7a6b-8c9d-001122334455',
@@ -41,7 +41,7 @@ describe('salaries view model', () => {
 
   it('derives the establishment business date from its timezone', () => {
     expect(
-      getBusinessDate('Europe/Paris', new Date('2026-08-12T22:30:00Z')),
+      getDateInTimezone('Europe/Paris', new Date('2026-08-12T22:30:00Z')),
     ).toBe('2026-08-13');
   });
 

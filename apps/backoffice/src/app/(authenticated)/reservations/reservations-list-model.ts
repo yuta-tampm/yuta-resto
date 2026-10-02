@@ -1,3 +1,5 @@
+import { getDateInTimezone } from '@/lib/local-time';
+
 export type ReservationListView = 'day' | 'week';
 
 export type ReservationListItem = {
@@ -10,17 +12,6 @@ export type ReservationListItem = {
   partySize: number;
   status: string;
 };
-
-export function getDateInTimezone(timezone: string, date = new Date()): string {
-  const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: timezone,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).formatToParts(date);
-  const values = new Map(parts.map((part) => [part.type, part.value]));
-  return `${values.get('year')}-${values.get('month')}-${values.get('day')}`;
-}
 
 export function resolveReservationListDate(
   value: string | undefined,

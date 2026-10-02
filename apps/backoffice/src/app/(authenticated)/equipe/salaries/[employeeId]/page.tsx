@@ -5,11 +5,11 @@ import { z } from 'zod';
 import { hasPersonnelPermission } from '@/server/auth/permissions';
 import { requireAuthenticatedTenant } from '@/server/auth/session';
 import { cloudDatabase } from '@/server/cloud-database';
+import { getDateInTimezone } from '@/lib/local-time';
 import { PersonnelForbidden } from '../_components/personnel-forbidden';
 import { EmployeeFullDossierPage } from '../_components/salaries-page';
 import { isFormalitesReadPrototypeEnabled } from '../../formalites-personnel/_lib/formalites-read-prototype-runtime';
 import { isContractExtractionPrototypeEnabled } from '../_lib/contract-extraction-prototype-runtime';
-import { getBusinessDate } from '../salaries-model';
 
 type PageProps = { params: Promise<{ employeeId: string }> };
 
@@ -26,7 +26,7 @@ export default async function Page({ params }: PageProps) {
   }
   if (!employeeIdSchema.safeParse(employeeId).success) notFound();
 
-  const businessDate = getBusinessDate(tenant.timezone);
+  const businessDate = getDateInTimezone(tenant.timezone);
   const employee = await findPersonnelEmployee(
     cloudDatabase,
     tenant,

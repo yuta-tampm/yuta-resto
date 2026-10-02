@@ -1,4 +1,5 @@
 import type { GoogleReviewContentAvailability } from '@yuta/contracts/reputation';
+import { getDateInTimezone } from '@/lib/local-time';
 
 export type TodayReviewPreview = {
   id: string;
@@ -74,23 +75,16 @@ export function getLocalDateTimeParts(
   timezone: string,
   date = new Date(),
 ): { localDate: string; localTime: string; dayOfWeek: number } {
-  const dateParts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: timezone,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).formatToParts(date);
   const timeParts = new Intl.DateTimeFormat('en-GB', {
     timeZone: timezone,
     hour: '2-digit',
     minute: '2-digit',
     hourCycle: 'h23',
   }).formatToParts(date);
-  const values = (parts: Intl.DateTimeFormatPart[]) =>
-    new Map(parts.map((part) => [part.type, part.value]));
-  const localDateValues = values(dateParts);
-  const localTimeValues = values(timeParts);
-  const localDate = `${localDateValues.get('year')}-${localDateValues.get('month')}-${localDateValues.get('day')}`;
+  const localTimeValues = new Map(
+    timeParts.map((part) => [part.type, part.value]),
+  );
+  const localDate = getDateInTimezone(timezone, date);
   const localTime = `${localTimeValues.get('hour')}:${localTimeValues.get('minute')}`;
   const dayOfWeek = new Date(`${localDate}T12:00:00Z`).getUTCDay();
   return { localDate, localTime, dayOfWeek };
@@ -178,10 +172,6 @@ export function serviceStateLabel(state: TodayServiceState): string {
   if (state === 'current') return 'En cours';
   if (state === 'completed') return 'Terminé';
   return 'À venir';
-}
-
-export function formatTimeRange(startTime: string, endTime: string): string {
-  return `${startTime.slice(0, 5)}–${endTime.slice(0, 5)}`;
 }
 
 export function formatRelativeTime(

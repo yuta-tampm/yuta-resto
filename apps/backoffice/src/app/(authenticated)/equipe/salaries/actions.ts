@@ -49,17 +49,24 @@ import {
   type PersonnelDocumentExtractionSource,
 } from '@yuta/db-cloud';
 import { revalidatePath } from 'next/cache';
-import { createHash } from 'node:crypto';
 import { z } from 'zod';
 import { requirePersonnelPermission } from '@/server/auth/permissions';
 import { requirePersonnelTenant } from '@/server/auth/session';
 import { requireBackofficePageAvailable } from '@/server/backoffice-exposure';
 import { cloudDatabase } from '@/server/cloud-database';
+import { getDateInTimezone } from '@/lib/local-time';
 import {
   getPersonnelDocumentRuntime,
   PersonnelDocumentScannerError,
 } from '@/server/personnel-documents/runtime';
-import { getBusinessDate } from './salaries-model';
+import {
+  checkSignedPdfFile,
+  discardSignedPdf,
+  quarantineSignedPdf,
+  removeSignedPdf,
+  scanAndPromoteSignedPdf,
+  signedPdfChecksum,
+} from '@/server/personnel-documents/signed-pdf';
 import {
   ContractExtractionServiceError,
   DevelopmentExtractionRateLimiter,
@@ -219,7 +226,7 @@ export async function loadPersonnelActionOverviewAction(
       cloudDatabase,
       tenant,
       query,
-      getBusinessDate(tenant.timezone),
+      getDateInTimezone(tenant.timezone),
     );
     return { status: 'success', overview };
   } catch (error: unknown) {
@@ -250,7 +257,7 @@ export async function resolvePersonnelActionTargetAction(
       tenant,
       employeeId,
       kind,
-      getBusinessDate(tenant.timezone),
+      getDateInTimezone(tenant.timezone),
     );
     return result.status === 'ready'
       ? result
@@ -373,7 +380,7 @@ export async function startContractExtractionAction(
           cloudDatabase,
           tenant,
           authorizedRequest.employeeId,
-          getBusinessDate(tenant.timezone),
+          getDateInTimezone(tenant.timezone),
         );
         const document = useStoredSource
           ? await resolvePersonnelDocumentExtractionSource(
@@ -607,7 +614,7 @@ export async function applyContractExtractionAction(
         cloudDatabase,
         tenant,
         input.request.employeeId,
-        getBusinessDate(tenant.timezone),
+        getDateInTimezone(tenant.timezone),
       ),
       listPersonnelDocuments(
         cloudDatabase,
@@ -753,7 +760,7 @@ export async function applyContractExtractionAction(
         entryDate: employee.entryDate,
         confirmFixedTermReasonClear: false,
       },
-      getBusinessDate(tenant.timezone),
+      getDateInTimezone(tenant.timezone),
       new Date(),
       {
         requestId: input.request.requestId,
@@ -868,28 +875,22 @@ export async function saveEmployeeDocumentAction(
   const idempotencyKey = String(formData.get('idempotencyKey') ?? '');
   let storageKey: string | null = null;
   try {
-    const file = formData.get('file');
-    if (!(file instanceof File) || file.size === 0) {
+    const upload = await checkSignedPdfFile(formData.get('file'));
+    if (upload.status === 'missing') {
       return documentError('Sélectionnez un fichier PDF.');
     }
-    if (file.size > 10 * 1024 * 1024) {
+    if (upload.status === 'too_large') {
       await recordRejectedSafe(employeeId, idempotencyKey, 'invalid_file');
       return documentError('Le fichier ne doit pas dépasser 10 Mo.');
     }
-    const content = new Uint8Array(await file.arrayBuffer());
-    if (
-      file.type !== 'application/pdf' ||
-      new TextDecoder('ascii').decode(content.slice(0, 5)) !== '%PDF-'
-    ) {
+    if (upload.status === 'invalid') {
       await recordRejectedSafe(employeeId, idempotencyKey, 'invalid_file');
       return documentError('Seuls les fichiers PDF valides sont acceptés.');
     }
+    const { file, content } = upload;
 
-    const runtime = await getPersonnelDocumentRuntime();
-    storageKey = await runtime.storage.putQuarantinedObject(content);
-    const quarantined = await runtime.storage.readQuarantinedObject(storageKey);
-    await runtime.scanner.inspectQuarantinedObject(quarantined);
-    await runtime.storage.promoteVerifiedObject(storageKey);
+    storageKey = await quarantineSignedPdf(content);
+    await scanAndPromoteSignedPdf(storageKey);
 
     const rawRevision = String(formData.get('expectedRevision') ?? '').trim();
     const result = await savePersonnelDocumentMetadata(cloudDatabase, tenant, {
@@ -900,11 +901,11 @@ export async function saveEmployeeDocumentAction(
       filename: sanitizeDocumentFilename(file.name),
       mediaType: 'application/pdf',
       byteSize: file.size,
-      checksum: createHash('sha256').update(content).digest('hex'),
+      checksum: signedPdfChecksum(content),
       storageKey,
     });
     if (result.idempotentReplay) {
-      await runtime.storage.removeObject(storageKey);
+      await removeSignedPdf(storageKey);
     }
     revalidatePath('/equipe/salaries');
     return {
@@ -915,14 +916,10 @@ export async function saveEmployeeDocumentAction(
       document: result.document,
     };
   } catch (error: unknown) {
-    if (storageKey) {
-      try {
-        const runtime = await getPersonnelDocumentRuntime();
-        await runtime.storage.removeObject(storageKey);
-      } catch {
-        console.error('Failed to clean up a personnel document object.');
-      }
-    }
+    await discardSignedPdf(
+      storageKey,
+      'Failed to clean up a personnel document object.',
+    );
     if (
       error instanceof PersonnelDocumentRepositoryError &&
       error.code === 'CONFLICT'
@@ -1019,8 +1016,8 @@ export async function saveEmployeeAmendmentAction(
             effectiveDate: formData.get('effectiveDate'),
             reference: nullableText(formData.get('reference')),
           });
-    const file = formData.get('file');
-    if (!(file instanceof File) || file.size === 0) {
+    const upload = await checkSignedPdfFile(formData.get('file'));
+    if (upload.status === 'missing') {
       return amendmentError(
         'Sélectionnez un fichier PDF.',
         {
@@ -1029,7 +1026,7 @@ export async function saveEmployeeAmendmentAction(
         values,
       );
     }
-    if (file.size > 10 * 1024 * 1024) {
+    if (upload.status === 'too_large') {
       await recordRejectedSafe('invalid_file');
       return amendmentError(
         'Le fichier ne doit pas dépasser 10 Mo.',
@@ -1039,11 +1036,7 @@ export async function saveEmployeeAmendmentAction(
         values,
       );
     }
-    const content = new Uint8Array(await file.arrayBuffer());
-    if (
-      file.type !== 'application/pdf' ||
-      new TextDecoder('ascii').decode(content.slice(0, 5)) !== '%PDF-'
-    ) {
+    if (upload.status === 'invalid') {
       await recordRejectedSafe('invalid_file');
       return amendmentError(
         'Seuls les fichiers PDF valides sont acceptés.',
@@ -1053,18 +1046,16 @@ export async function saveEmployeeAmendmentAction(
         values,
       );
     }
-    const runtime = await getPersonnelDocumentRuntime();
-    storageKey = await runtime.storage.putQuarantinedObject(content);
-    const quarantined = await runtime.storage.readQuarantinedObject(storageKey);
-    await runtime.scanner.inspectQuarantinedObject(quarantined);
-    await runtime.storage.promoteVerifiedObject(storageKey);
+    const { file, content } = upload;
+    storageKey = await quarantineSignedPdf(content);
+    await scanAndPromoteSignedPdf(storageKey);
     const fileMetadata = {
       idempotencyKey,
       employeeId,
       filename: sanitizeDocumentFilename(file.name, 'avenant-signe'),
       mediaType: 'application/pdf' as const,
       byteSize: file.size,
-      checksum: createHash('sha256').update(content).digest('hex'),
+      checksum: signedPdfChecksum(content),
       storageKey,
     };
     const result =
@@ -1096,7 +1087,7 @@ export async function saveEmployeeAmendmentAction(
             },
           );
     if (result.idempotentReplay) {
-      await runtime.storage.removeObject(storageKey);
+      await removeSignedPdf(storageKey);
     }
     revalidatePath('/equipe/salaries');
     return {
@@ -1111,14 +1102,10 @@ export async function saveEmployeeAmendmentAction(
       values: { effectiveDate: '', reference: '' },
     };
   } catch (error: unknown) {
-    if (storageKey) {
-      try {
-        const runtime = await getPersonnelDocumentRuntime();
-        await runtime.storage.removeObject(storageKey);
-      } catch {
-        console.error('Failed to clean up a personnel amendment object.');
-      }
-    }
+    await discardSignedPdf(
+      storageKey,
+      'Failed to clean up a personnel amendment object.',
+    );
     if (
       error instanceof PersonnelContractAmendmentRepositoryError &&
       error.code === 'CONFLICT'
@@ -1415,7 +1402,7 @@ export async function createEmployeeAction(
       cloudDatabase,
       tenant,
       input,
-      getBusinessDate(tenant.timezone),
+      getDateInTimezone(tenant.timezone),
     );
     revalidatePath('/equipe/salaries');
     return {
@@ -1480,7 +1467,7 @@ export async function updateEmployeeAction(
 ): Promise<UpdateEmployeeActionState> {
   const { tenant } = await requirePersonnelTenant('/equipe/salaries');
   requirePersonnelPermission(tenant, 'personnel.employee.manage');
-  const businessDate = getBusinessDate(tenant.timezone);
+  const businessDate = getDateInTimezone(tenant.timezone);
   let submittedHistoryMetadata: unknown;
 
   try {
@@ -1653,7 +1640,7 @@ export async function setEmployeeDepartureAction(
       cloudDatabase,
       tenant,
       input,
-      getBusinessDate(tenant.timezone),
+      getDateInTimezone(tenant.timezone),
     );
     revalidatePath('/equipe/salaries');
     return {

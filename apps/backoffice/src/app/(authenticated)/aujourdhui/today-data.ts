@@ -25,8 +25,8 @@ import {
   loadReleaseASetupSummary,
   type ReleaseASetupSummary,
 } from '@/server/reputation/release-a-setup';
+import { formatTimeRange } from '@/lib/local-time';
 import {
-  formatTimeRange,
   getLocalDateTimeParts,
   getServiceState,
   isActiveTodayReservation,

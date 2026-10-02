@@ -7,6 +7,7 @@ import {
   BACKOFFICE_SESSION_COOKIE,
   BACKOFFICE_SELECTION_COOKIE,
   authRepository,
+  backofficeAuthCookieOptions,
   createLoginRateLimitKey,
   hashClientAddress,
   safeReturnTo,
@@ -53,25 +54,19 @@ export async function loginAction(
     const cookieStore = await cookies();
     if (result.type === 'SELECTION_REQUIRED') {
       cookieStore.delete(BACKOFFICE_SESSION_COOKIE);
-      cookieStore.set(BACKOFFICE_SELECTION_COOKIE, result.selectionToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        path: '/',
-        expires: result.expiresAt,
-        priority: 'high',
-      });
+      cookieStore.set(
+        BACKOFFICE_SELECTION_COOKIE,
+        result.selectionToken,
+        backofficeAuthCookieOptions(result.expiresAt),
+      );
       destination = `/selection-etablissement?returnTo=${encodeURIComponent(destination)}`;
     } else {
       cookieStore.delete(BACKOFFICE_SELECTION_COOKIE);
-      cookieStore.set(BACKOFFICE_SESSION_COOKIE, result.token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        path: '/',
-        expires: result.session.expiresAt,
-        priority: 'high',
-      });
+      cookieStore.set(
+        BACKOFFICE_SESSION_COOKIE,
+        result.token,
+        backofficeAuthCookieOptions(result.session.expiresAt),
+      );
     }
   } catch (error: unknown) {
     if (error instanceof AuthError) {

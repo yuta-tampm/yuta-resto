@@ -34,6 +34,17 @@ import {
 export const BACKOFFICE_SESSION_COOKIE = 'yuta_backoffice_session';
 export const BACKOFFICE_SELECTION_COOKIE = 'yuta_backoffice_selection';
 
+export function backofficeAuthCookieOptions(expires: Date) {
+  return {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    expires,
+    priority: 'high',
+  } as const;
+}
+
 const authRepository = createAuthRepository(cloudDatabase);
 
 // `.env.example` placeholders start with this prefix and are publicly known.

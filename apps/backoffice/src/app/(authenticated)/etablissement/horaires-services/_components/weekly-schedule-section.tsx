@@ -10,9 +10,9 @@ import {
   AddServiceForm,
   DeleteServicePeriodButton,
 } from '../../_components/booking-service-period-forms';
+import { formatTimeRange } from '@/lib/local-time';
 import {
   formatMinutes,
-  formatTimeRange,
   orderedWeekDays,
 } from '../../booking-schedule-view-model';
 

@@ -5,12 +5,11 @@ import { BackofficePage } from '@/components/backoffice/backoffice-page';
 import { requireBookingPermission } from '@/server/auth/permissions';
 import { requireBookingTenant } from '@/server/auth/session';
 import { cloudDatabase } from '@/server/cloud-database';
+import { formatTimeRange, getDateInTimezone } from '@/lib/local-time';
 import { ExceptionsPanel } from '../_components/booking-exceptions-panel';
 import {
   exceptionKindLabels,
-  formatTimeRange,
   getPublicScheduleRows,
-  getDateInTimezone,
   getDayOfWeekInTimezone,
   getNextDatedItem,
 } from '../booking-schedule-view-model';
