@@ -1,0 +1,94 @@
+{
+  "role": "Capability evidence, not independent gate approval",
+  "runnerSha256": "382665e0b3baae1bcdf9ba08bcfb54d069a7d96a9822a3a4cb2baa27a334d176",
+  "worker": {
+    "path": "exports/live-runner-probe/repository/exports/claude-tasks/actual-claude-probe/evidence/runs/004-worker/receipt.json",
+    "sha256": "8afcdd5a214d37459a7fe255b40696def879e191640e121d1a3a2c3959385d2f",
+    "session": "3e4e421f-2182-4ec9-8638-501c66292828",
+    "outcome": "SUCCEEDED",
+    "actualCommands": [
+      {
+        "at": "2026-10-02T16:52:53.225Z",
+        "tool": "Bash",
+        "target": "node scripts/check-proof.mjs",
+        "decision": "allow",
+        "reason": "Exact authorized command."
+      }
+    ],
+    "sourceWrite": [
+      {
+        "at": "2026-10-02T16:52:53.038Z",
+        "tool": "Write",
+        "target": "notes/(qa)/[id]/worker proof.txt",
+        "decision": "allow",
+        "reason": "Exact write allowlist path."
+      }
+    ],
+    "violations": [],
+    "sourceDrift": []
+  },
+  "permission": {
+    "path": "exports/final-permission-probes2/probe-summary.json",
+    "sha256": "da8fcf45df629db5f88ac43aa958c1fc8b9aa26426bc19f0c2163277359cace7",
+    "verdict": {
+      "readonlyToolPool": true,
+      "publicPositiveRead": true,
+      "environmentReads": [
+        {
+          "name": ".env.local",
+          "attempted": true,
+          "denied": true
+        },
+        {
+          "name": ".env.staging",
+          "attempted": true,
+          "denied": true
+        },
+        {
+          "name": ".env.backup",
+          "attempted": true,
+          "denied": true
+        }
+      ],
+      "bashOnlyPool": true,
+      "bashAttempted": true,
+      "bashDeniedResult": true,
+      "exactGuardDenyObserved": true,
+      "originalSourceUnchanged": true,
+      "runnerSnapshotUnchanged": true,
+      "guardUnchanged": true,
+      "fixtureUnchanged": true
+    },
+    "reviewerSession": "5df90266-5965-47a3-b3eb-dc6bf6713c68",
+    "bashSession": "eb991836-9b64-492d-8fd5-732576b152e6"
+  },
+  "capture": {
+    "rootVerification": "exports/qa-root-verification.json",
+    "sha256": "12634e56893881a710abf5d890dbe9497e3d7e79f46419a2421dea55b06244aa",
+    "executorBinding": "exports/qa-capability/attempt-2/evidence/executor-binding.json",
+    "executorBindingSha256": "dce449dea744a478073df21d525454aec67e6a7f3cb9d723a9c999feb0184216",
+    "executorSession": "7e2244fc-11ce-41fe-8f4f-c84702f1092a",
+    "browserSession": "69ce3766-4098-458d-a407-5cceced0b5a8",
+    "pngs": [
+      {
+        "path": "docs/reviews/claude-task-execution-tooling/qa/contact-desktop-1366x768.png",
+        "width": 1366,
+        "height": 768,
+        "sha256": "3f4b68f1c0f33d16386499975be3c60003800c4bf63764c479560a498afe958a",
+        "bytes": 77950,
+        "independentlyViewedBy": "Codex via view_image",
+        "visibleContent": "Real contact page, expected heading, desktop navigation/mobile collapsed menu, viewport captures; mobile page extends vertically beyond viewport"
+      },
+      {
+        "path": "docs/reviews/claude-task-execution-tooling/qa/contact-mobile-390x844.png",
+        "width": 390,
+        "height": 844,
+        "sha256": "ab188c5ed7e9f97ed5bfcb121fc1b2ebfd78aab8be652bc1443495f561d1d6b3",
+        "bytes": 58738,
+        "independentlyViewedBy": "Codex via view_image",
+        "visibleContent": "Real contact page, expected heading, desktop navigation/mobile collapsed menu, viewport captures; mobile page extends vertically beyond viewport"
+      }
+    ]
+  },
+  "auth": "CLI switched to authenticated Max subscription only after explicit current-user authorization; no API/model/provider/billing overrides"
+}

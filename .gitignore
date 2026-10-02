@@ -21,6 +21,9 @@ pnpm-debug.log*
 .env.*.local
 .env.production
 vendor
+
+# Personal Claude Code settings; shared project settings are tracked.
+/.claude/settings.local.json
 apps/yuta-pos/.tmp/prints/*
 !apps/yuta-pos/.tmp/prints/.gitkeep
 apps/yuta-pos/.tmp/*.log
