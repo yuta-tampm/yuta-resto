@@ -77,9 +77,14 @@ describe('Pointage raw clocking F2 schema', () => {
         import.meta.url,
       ),
     );
-    expect(createHash('sha256').update(extensionSnapshot).digest('hex')).toBe(
-      extension.snapshotSha256,
+    expect(extension.snapshotSha256).toBe(
+      'a6ccaa77bf4445c0336366708763ade2410ecca6faceca52db26242886fbc4bb',
     );
+    // The preservation gate records both exact Git-object and checkout bytes.
+    expect([
+      extension.snapshotSha256,
+      '71052147af479bfb5f480f0981859a7af7235ff21a0be69a427a6faaeb06f4bf',
+    ]).toContain(createHash('sha256').update(extensionSnapshot).digest('hex'));
   });
 
   it('F5: continuation is scoped technical metadata with full credential-version binding', () => {
