@@ -93,7 +93,9 @@ normalized email and client address. Five failed attempts in 15 minutes block
 additional attempts for that key. Raw client addresses are not stored.
 
 `AUTH_SECRET` must contain at least 32 characters in every environment; there
-is no development fallback. `pnpm dev:env:sync` generates a random local value.
+is no development fallback, and the publicly known `.env.example` placeholder
+(any value starting with `replace-with-`) is rejected. `pnpm dev:env:sync`
+generates a random local value.
 It is used to derive privacy-preserving hashes for rate limiting and
 client-address metadata.
 

@@ -36,11 +36,20 @@ export const BACKOFFICE_SELECTION_COOKIE = 'yuta_backoffice_selection';
 
 const authRepository = createAuthRepository(cloudDatabase);
 
+// `.env.example` placeholders start with this prefix and are publicly known.
+const placeholderSecretPrefix = 'replace-with-';
+
 export function getAuthSecret(): string {
   const secret = process.env.AUTH_SECRET;
-  if (secret && secret.length >= 32) return secret;
+  if (
+    secret &&
+    secret.length >= 32 &&
+    !secret.startsWith(placeholderSecretPrefix)
+  ) {
+    return secret;
+  }
   throw new Error(
-    'AUTH_SECRET must contain at least 32 characters. For local development, run `pnpm dev:env:sync` to generate one.',
+    'AUTH_SECRET must contain at least 32 characters and must not be the .env.example placeholder. For local development, run `pnpm dev:env:sync` to generate one.',
   );
 }
 

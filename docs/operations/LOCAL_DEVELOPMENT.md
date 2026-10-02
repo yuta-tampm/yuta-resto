@@ -76,7 +76,9 @@ pnpm dev:env:sync
 
 The command updates only development files, removes obsolete generic
 `DATABASE_URL` and `DISABLE_AUTH` keys, and refuses to run when
-`NODE_ENV=production`. It never edits `.env.production`.
+`NODE_ENV=production`. It never edits `.env.production`. It keeps an existing
+generated secret but replaces a copied `.env.example` placeholder (any value
+starting with `replace-with-`) with a new random value.
 
 It configures `apps/feedback-web/.env.local` with the cloud development URL and
 a retained or newly generated feedback IP-hash salt. Run the public feedback

@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('server-only', () => ({}));
@@ -36,6 +37,23 @@ describe('getAuthSecret', () => {
       expect(() => getAuthSecret()).toThrow(
         /AUTH_SECRET must contain at least 32 characters/,
       );
+    },
+  );
+
+  it.each(['development', 'test', 'production'])(
+    'rejects the publicly known .env.example placeholder in %s',
+    (nodeEnvironment) => {
+      const example = readFileSync(
+        new URL('../.env.example', import.meta.url),
+        'utf8',
+      );
+      const placeholder = /^AUTH_SECRET=(.+)$/mu.exec(example)?.[1]?.trim();
+      expect(placeholder).toMatch(/^replace-with-/u);
+      expect(placeholder!.length).toBeGreaterThanOrEqual(32);
+
+      vi.stubEnv('NODE_ENV', nodeEnvironment);
+      vi.stubEnv('AUTH_SECRET', placeholder!);
+      expect(() => getAuthSecret()).toThrow(/\.env\.example placeholder/u);
     },
   );
 
