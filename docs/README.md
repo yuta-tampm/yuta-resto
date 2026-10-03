@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 ## Finding the right authority
 
@@ -72,6 +72,9 @@ sensitive details never belong in the repository.
 ### Architecture
 
 - [`architecture/OVERVIEW.md`](architecture/OVERVIEW.md)
+- [`architecture/AI_AND_STORAGE.md`](architecture/AI_AND_STORAGE.md) — agreed AI/Storage
+  direction, deferred decisions and fresh-chat continuation; Slice 1 planning complete,
+  runtime implementation and Storage still pending.
 - [`architecture/DATABASE_BOUNDARIES.md`](architecture/DATABASE_BOUNDARIES.md)
 - [`architecture/TENANCY.md`](architecture/TENANCY.md)
 - [`architecture/AUTHENTICATION.md`](architecture/AUTHENTICATION.md)

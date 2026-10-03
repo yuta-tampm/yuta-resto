@@ -8,6 +8,7 @@ import { ShieldX } from 'lucide-react';
 import { randomUUID } from 'node:crypto';
 import { hasPersonnelPermission } from '@/server/auth/permissions';
 import { requireAuthenticatedTenant } from '@/server/auth/session';
+import { getDateInTimezone } from '@/lib/local-time';
 import { cloudDatabase } from '@/server/cloud-database';
 import { PersonnelRegisterPage } from './_components/personnel-register-page';
 import { isPersonnelRegisterEnabled } from './_lib/personnel-register-runtime';
@@ -29,6 +30,7 @@ export default async function Page() {
       data={data}
       candidates={candidates.items}
       locale={tenant.locale}
+      businessDate={getDateInTimezone(tenant.timezone)}
     />
   );
 }

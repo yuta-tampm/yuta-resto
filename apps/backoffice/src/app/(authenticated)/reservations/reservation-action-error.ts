@@ -30,6 +30,18 @@ export function reservationActionError(
     };
   }
 
+  if (hasErrorCode(error, 'INVALID_PARTY_SIZE')) {
+    return reservationFieldFailure(
+      'partySize',
+      'Ce nombre de couverts n’est pas accepté pour cet établissement.',
+    );
+  }
+  if (hasErrorCode(error, 'OUTSIDE_BOOKING_WINDOW')) {
+    return reservationFieldFailure(
+      'date',
+      'Cette date est en dehors de la période de réservation ouverte.',
+    );
+  }
   if (hasErrorCode(error, 'SLOT_UNAVAILABLE')) {
     return reservationActionFailure(
       'Ce créneau n’est plus disponible. Choisissez une autre heure.',
@@ -56,6 +68,17 @@ export function reservationActionError(
   return reservationActionFailure(
     'Une erreur est survenue. Vérifiez les données puis réessayez.',
   );
+}
+
+function reservationFieldFailure(
+  field: 'partySize' | 'date',
+  message: string,
+): ReservationActionState {
+  return {
+    status: 'error',
+    message: 'Certains champs doivent être corrigés.',
+    fieldErrors: { [field]: message },
+  };
 }
 
 function hasErrorCode(error: unknown, code: string): boolean {

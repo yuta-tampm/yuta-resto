@@ -8,7 +8,6 @@ import {
   formalitesPersonnelReconcileDraftInputSchema,
   formalitesPersonnelSaveDraftInputSchema,
   type FormalitesPersonnelDraftMutationOutcome,
-  type FormalitesPersonnelDraftReadModel,
 } from '@yuta/contracts';
 import {
   abandonFormalitesPersonnelDraft,
@@ -17,24 +16,34 @@ import {
   reconcileFormalitesPersonnelDraft,
   saveFormalitesPersonnelDraft,
 } from '@yuta/db-cloud';
+import { TenantError } from '@yuta/tenant';
 import { z } from 'zod';
 import { requireFormalitesTenant } from '@/server/auth/formalites';
-import { requirePersonnelPermission } from '@/server/auth/permissions';
+import {
+  requirePersonnelPermission,
+  type FormalitesPermission,
+} from '@/server/auth/permissions';
 import { cloudDatabase } from '@/server/cloud-database';
+import type {
+  CdiDraftWorkspaceForbiddenResult,
+  FormalitesPersonnelDraftMutationActionResult,
+  LoadFormalitesPersonnelDraftActionResult,
+} from '../_lib/cdi-draft-workspace-action-result';
+
+export type {
+  FormalitesPersonnelDraftMutationActionResult,
+  LoadFormalitesPersonnelDraftActionResult,
+} from '../_lib/cdi-draft-workspace-action-result';
 
 const returnTo = '/equipe/formalites-personnel';
 const employeeIdSchema = z.string().uuid();
 
-export type LoadFormalitesPersonnelDraftActionResult =
-  | { kind: 'success'; model: FormalitesPersonnelDraftReadModel }
-  | { kind: 'not_found' }
-  | { kind: 'server_error' };
-
 export async function loadFormalitesPersonnelDraftAction(
   rawEmployeeId: unknown,
 ): Promise<LoadFormalitesPersonnelDraftActionResult> {
-  const { tenant } = await requireFormalitesTenant('formalites.read', returnTo);
-  requirePersonnelPermission(tenant, 'personnel.employee.read');
+  const access = await authorizeDraftAccess('formalites.read');
+  if (access.kind === 'forbidden') return access;
+  const { tenant } = access;
   const parsedEmployeeId = employeeIdSchema.safeParse(rawEmployeeId);
   if (!parsedEmployeeId.success) return { kind: 'not_found' };
 
@@ -58,8 +67,10 @@ export async function loadFormalitesPersonnelDraftAction(
 
 export async function createFormalitesPersonnelDraftAction(
   rawInput: unknown,
-): Promise<FormalitesPersonnelDraftMutationOutcome> {
-  const { tenant } = await requireMutationTenant(true);
+): Promise<FormalitesPersonnelDraftMutationActionResult> {
+  const access = await authorizeDraftAccess('formalites.manage');
+  if (access.kind === 'forbidden') return access;
+  const { tenant } = access;
   const parsed = formalitesPersonnelCreateDraftInputSchema.safeParse(rawInput);
   if (!parsed.success) return validationOutcome(parsed.error);
   return runMutation(() =>
@@ -69,8 +80,10 @@ export async function createFormalitesPersonnelDraftAction(
 
 export async function saveFormalitesPersonnelDraftAction(
   rawInput: unknown,
-): Promise<FormalitesPersonnelDraftMutationOutcome> {
-  const { tenant } = await requireMutationTenant(true);
+): Promise<FormalitesPersonnelDraftMutationActionResult> {
+  const access = await authorizeDraftAccess('formalites.manage');
+  if (access.kind === 'forbidden') return access;
+  const { tenant } = access;
   const parsed = formalitesPersonnelSaveDraftInputSchema.safeParse(rawInput);
   if (!parsed.success) return validationOutcome(parsed.error);
   return runMutation(() =>
@@ -80,8 +93,10 @@ export async function saveFormalitesPersonnelDraftAction(
 
 export async function reconcileFormalitesPersonnelDraftAction(
   rawInput: unknown,
-): Promise<FormalitesPersonnelDraftMutationOutcome> {
-  const { tenant } = await requireMutationTenant(true);
+): Promise<FormalitesPersonnelDraftMutationActionResult> {
+  const access = await authorizeDraftAccess('formalites.manage');
+  if (access.kind === 'forbidden') return access;
+  const { tenant } = access;
   const parsed =
     formalitesPersonnelReconcileDraftInputSchema.safeParse(rawInput);
   if (!parsed.success) return validationOutcome(parsed.error);
@@ -92,8 +107,10 @@ export async function reconcileFormalitesPersonnelDraftAction(
 
 export async function abandonFormalitesPersonnelDraftAction(
   rawInput: unknown,
-): Promise<FormalitesPersonnelDraftMutationOutcome> {
-  const { tenant } = await requireMutationTenant(true);
+): Promise<FormalitesPersonnelDraftMutationActionResult> {
+  const access = await authorizeDraftAccess('formalites.manage');
+  if (access.kind === 'forbidden') return access;
+  const { tenant } = access;
   const parsed = formalitesPersonnelAbandonDraftInputSchema.safeParse(rawInput);
   if (!parsed.success) return validationOutcome(parsed.error);
   return runMutation(() =>
@@ -101,12 +118,39 @@ export async function abandonFormalitesPersonnelDraftAction(
   );
 }
 
-async function requireMutationTenant(requirePersonnelSourceRead: boolean) {
-  const context = await requireFormalitesTenant('formalites.manage', returnTo);
-  if (requirePersonnelSourceRead) {
-    requirePersonnelPermission(context.tenant, 'personnel.employee.read');
+/**
+ * Resolves the trusted session, active membership and establishment, then
+ * requires the Formalités permission and independent Personnel source READ.
+ * Only an actual trusted permission denial (403) becomes a local `forbidden`
+ * result; login and scope-recovery redirects, the missing-establishment error
+ * and unexpected failures propagate unchanged.
+ */
+async function authorizeDraftAccess(
+  permission: FormalitesPermission,
+): Promise<
+  | { kind: 'authorized'; tenant: TrustedFormalitesTenant }
+  | CdiDraftWorkspaceForbiddenResult
+> {
+  try {
+    const { tenant } = await requireFormalitesTenant(permission, returnTo);
+    requirePersonnelPermission(tenant, 'personnel.employee.read');
+    return { kind: 'authorized', tenant };
+  } catch (error: unknown) {
+    if (isPermissionDenial(error)) return { kind: 'forbidden' };
+    throw error;
   }
-  return context;
+}
+
+type TrustedFormalitesTenant = Awaited<
+  ReturnType<typeof requireFormalitesTenant>
+>['tenant'];
+
+function isPermissionDenial(error: unknown): boolean {
+  return (
+    error instanceof TenantError &&
+    error.statusCode === 403 &&
+    error.code === 'CROSS_TENANT_ACCESS_DENIED'
+  );
 }
 
 async function runMutation(

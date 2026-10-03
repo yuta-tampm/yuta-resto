@@ -291,6 +291,60 @@ describe('Personnel employee update interaction boundary', () => {
     expect(mocks.revalidatePath).not.toHaveBeenCalled();
   });
 
+  it('maps nested metadata schema issues to their semantic-group fields', async () => {
+    const result = await updateEmployeeAction(
+      initialUpdateState,
+      employeeUpdateFormData([
+        metadata('identity', 'correction', null, null),
+        metadata('role', 'replacement', null, null),
+        metadata('work_time', 'change', 'not-a-date', null),
+      ]),
+    );
+
+    expect(result).toEqual({
+      status: 'error',
+      message: 'Certains champs doivent être corrigés.',
+      fieldErrors: {
+        'historyMetadata.role.classification':
+          'Choisissez Correction ou Changement.',
+        'historyMetadata.work_time.effectiveDate':
+          'Renseignez une date d’effet valide.',
+      },
+      currentEmployee: null,
+    });
+    expect(mocks.updateEmployee).not.toHaveBeenCalled();
+  });
+
+  it('keeps an unknown semantic group on the generic metadata field', async () => {
+    const result = await updateEmployeeAction(
+      initialUpdateState,
+      employeeUpdateFormData([metadata('salary', 'change', null, null)]),
+    );
+
+    expect(result).toMatchObject({
+      status: 'error',
+      fieldErrors: {
+        historyMetadata: 'Vérifiez la nature des modifications.',
+      },
+    });
+    expect(Object.keys(result.fieldErrors)).toEqual(['historyMetadata']);
+    expect(mocks.updateEmployee).not.toHaveBeenCalled();
+  });
+
+  it('keeps top-level field issues on their root field', async () => {
+    const formData = employeeUpdateFormData([
+      metadata('identity', 'correction', null, null),
+    ]);
+    formData.set('givenNames', '');
+
+    const result = await updateEmployeeAction(initialUpdateState, formData);
+
+    expect(result.fieldErrors).toEqual({
+      givenNames: 'Renseignez les prénoms (120 caractères maximum).',
+    });
+    expect(mocks.updateEmployee).not.toHaveBeenCalled();
+  });
+
   it('keeps a multi-group mutation wholly unsaved when one group is invalid', async () => {
     mocks.updateEmployee.mockRejectedValueOnce(
       new mocks.RepositoryError(

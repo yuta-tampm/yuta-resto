@@ -1,5 +1,5 @@
 import { BookingRepositoryError } from '@yuta/db-cloud';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 import { reservationActionError } from '../src/app/(authenticated)/reservations/reservation-action-error';
 
@@ -29,6 +29,49 @@ describe('reservation action errors', () => {
     expect(state.message).toContain('Choisissez une autre heure');
   });
 
+  it('associates an invalid party size with the party size field', () => {
+    expect(
+      reservationActionError(
+        bookingDomainError('INVALID_PARTY_SIZE'),
+        'unused',
+      ),
+    ).toEqual({
+      status: 'error',
+      message: 'Certains champs doivent être corrigés.',
+      fieldErrors: {
+        partySize:
+          'Ce nombre de couverts n’est pas accepté pour cet établissement.',
+      },
+    });
+  });
+
+  it('associates a date outside the booking window with the date field', () => {
+    expect(
+      reservationActionError(
+        bookingDomainError('OUTSIDE_BOOKING_WINDOW'),
+        'unused',
+      ),
+    ).toEqual({
+      status: 'error',
+      message: 'Certains champs doivent être corrigés.',
+      fieldErrors: {
+        date: 'Cette date est en dehors de la période de réservation ouverte.',
+      },
+    });
+  });
+
+  it('keeps the generic fallback for unknown errors', () => {
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+    expect(reservationActionError(new Error('boom'), 'fallback')).toEqual({
+      status: 'error',
+      message: 'Une erreur est survenue. Vérifiez les données puis réessayez.',
+      fieldErrors: {},
+    });
+    consoleError.mockRestore();
+  });
+
   it('returns a stale-state message for invalid status transitions', () => {
     const state = reservationActionError(
       Object.assign(new Error('Invalid status transition.'), {
@@ -44,3 +87,10 @@ describe('reservation action errors', () => {
     });
   });
 });
+
+function bookingDomainError(code: string): Error {
+  return Object.assign(new Error('Booking domain rule.'), {
+    name: 'BookingDomainError',
+    code,
+  });
+}

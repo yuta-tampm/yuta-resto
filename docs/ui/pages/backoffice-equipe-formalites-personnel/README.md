@@ -60,6 +60,48 @@ remuneration, legal recommendation, or production behavior. The existing gate
 still requires explicit development opt-in and always fails closed in
 production.
 
+If a draft mutation request is rejected before the server confirms an outcome,
+the workspace treats it as an uncertain `server_error`: the loading state ends,
+the recoverable `Enregistrement incertain` feedback is shown, and retrying the
+same intent reuses the same operation key while duplicate submits stay blocked.
+A rejected reload shows the recoverable `Actualisation impossible` feedback and
+ends the loading state. The orchestration lives in
+`_lib/cdi-draft-workspace-operations.ts`.
+
+Only an actual trusted permission denial (`TenantError` 403
+`CROSS_TENANT_ACCESS_DENIED` from the Formalités or Personnel source-read
+check) becomes the local `{ kind: 'forbidden' }` action result, before input
+parsing or any repository call. Login and scope-recovery redirects, the
+missing-establishment error and unexpected failures still propagate. The
+shared mutation schemas are unchanged; the action result unions live in
+`_lib/cdi-draft-workspace-action-result.ts`. A forbidden mutation clears any
+uncertain operation and shows non-recoverable `Action non autorisée` copy; a
+forbidden reload shows non-recoverable `Accès refusé` copy. Neither offers a
+reload, and every mutation control stays disabled for that employee.
+
+An abandonment outcome that keeps the dialog open (validation, conflict,
+uncertain `server_error`, forbidden, reload failure) is shown and focused
+inside the dialog, and the typed reason is kept. Only retrying the unchanged
+intent after an uncertain mutation reuses the same operation key. Confirmed
+outcomes clear it, forbidden disables retry, and successful reload clears it.
+An outcome that closes the dialog, and a successful
+reload, focus the page feedback, which has a visible focus ring. The dialog
+cannot be dismissed while its request is running.
+
+A new server `initialModel` for the same employee is ignored while an
+operation is pending or uncertain or a reload is running, and when it is an
+older revision of the displayed draft, so it cannot drop the operation key,
+unblock a duplicate submit, overwrite local input or replace the request's
+model. An explicit mutation outcome or a deliberate reload stays
+authoritative. A changed employee identity resets the workspace and ignores
+completions of earlier requests.
+
+`_components/cdi-draft-workspace.tsx` owns the workflow state, mutations,
+dirty-navigation protection and focus recovery. The state-specific panels and
+abandonment dialog live in `cdi-draft-workspace-panels.tsx`, shared read-only
+facts and the probation field in `cdi-draft-workspace-fields.tsx`, and French
+feedback copy in `_lib/cdi-draft-workspace-feedback.ts`.
+
 ## Authority
 
 Read root and `apps/backoffice/AGENTS.md`, `docs/CURRENT_STATE.md`,

@@ -49,7 +49,9 @@ slice in local development. Existing employee dossiers are shown only as
 candidates; no dossier is silently inserted. An OWNER reviews the required and
 conditional facts before an atomic first inscription receives an irreversible
 establishment sequence. Corrections retain the first facts and append a
-reasoned prior/new version record.
+reasoned prior/new version record. The correction effective date defaults to
+the establishment's current business date, derived on the server from the
+trusted tenant timezone, not the browser's UTC date.
 
 The route has distinct OWNER-only register read/export permissions, 50-entry
 snapshot-bound cursor pages, minimized read/export audit events, and a
@@ -70,6 +72,13 @@ review flow at 1440 x 1000, 1024 x 768, 768 x 1024, and 390 x 844. All four
 viewports have zero document-level horizontal overflow and no browser warning or
 error. Closing the inscription dialog with Escape now restores focus to the
 button that opened it. No employee was inscribed for visual evidence.
+
+Route-local ownership: `_components/personnel-register-page.tsx` orchestrates
+pagination, export, candidates and dialog focus return;
+`personnel-register-entries.tsx` presents register entries;
+`personnel-register-dialog.tsx` owns the inscription/correction form, operation
+identifier and action state; and `personnel-register-fields.tsx` owns its
+fields, including the business-date correction default.
 
 ## Authority and documents
 

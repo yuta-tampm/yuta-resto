@@ -1,10 +1,10 @@
 import type {
-  FormalitesPersonnelDraftMutationOutcome,
   FormalitesPersonnelDraftReadModel,
   FormalitesPersonnelFact,
   FormalitesPersonnelProbationChoice,
   FormalitesPersonnelReconciliationChoice,
 } from '@yuta/contracts';
+import type { FormalitesPersonnelDraftMutationActionResult } from './cdi-draft-workspace-action-result';
 
 export type WorkspaceMutationKind = 'create' | 'save' | 'reconcile' | 'abandon';
 
@@ -83,13 +83,47 @@ export function prepareWorkspaceOperation(
   };
 }
 
+/**
+ * Only an unconfirmed `server_error` keeps the operation as `uncertain`; every
+ * confirmed outcome, including `forbidden`, clears it.
+ */
 export function settleWorkspaceOperation(
   operation: WorkspaceOperation,
-  outcome: FormalitesPersonnelDraftMutationOutcome,
+  outcome: FormalitesPersonnelDraftMutationActionResult,
 ): WorkspaceOperation | null {
   return outcome.kind === 'server_error'
     ? { ...operation, status: 'uncertain' }
     : null;
+}
+
+export type InitialModelUpdate = 'reset_identity' | 'replace' | 'ignore';
+
+/**
+ * Decides how a new server-rendered `initialModel` applies. A changed employee
+ * resets the workspace. For the same employee, a pending or uncertain
+ * operation or an in-flight reload keeps the local model, inputs and
+ * operation key; the explicit outcome or reload stays authoritative. An older
+ * revision of the displayed draft is ignored.
+ */
+export function decideInitialModelUpdate(input: {
+  previousEmployeeId: string;
+  employeeId: string;
+  busy: boolean;
+  current: FormalitesPersonnelDraftReadModel;
+  next: FormalitesPersonnelDraftReadModel;
+}): InitialModelUpdate {
+  if (input.previousEmployeeId !== input.employeeId) return 'reset_identity';
+  if (input.busy) return 'ignore';
+  const { current, next } = input;
+  if (
+    current.state !== 'eligible_no_draft' &&
+    next.state !== 'eligible_no_draft' &&
+    current.draftId === next.draftId &&
+    next.revision < current.revision
+  ) {
+    return 'ignore';
+  }
+  return 'replace';
 }
 
 export function probationChoiceFromModel(
@@ -98,6 +132,12 @@ export function probationChoiceFromModel(
   return model.state === 'eligible_no_draft'
     ? 'undecided'
     : model.probationChoice;
+}
+
+export function canAbandonDraft(
+  model: FormalitesPersonnelDraftReadModel,
+): boolean {
+  return model.state !== 'eligible_no_draft' && model.state !== 'abandoned';
 }
 
 export function hasWorkspaceUnsavedChanges(input: {

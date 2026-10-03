@@ -1,16 +1,43 @@
 import type { FormalitesPersonnelDraftReadModel } from '@yuta/contracts';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
+import type { ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ refresh: vi.fn() }),
 }));
+// The Radix dialog portal renders nothing on the server; keep the real dialog
+// context but render open content inline so SSR markup can be asserted.
+vi.mock('@yuta/ui', async (importOriginal) => {
+  const { createElement } = await import('react');
+  const ui = await importOriginal<typeof import('@yuta/ui')>();
+  return {
+    ...ui,
+    Dialog: ({ open, children }: { open: boolean; children: ReactNode }) =>
+      open ? createElement(ui.Dialog, { open }, children) : null,
+    DialogContent: ({ children }: { children: ReactNode }) =>
+      createElement('div', { role: 'dialog' }, children),
+  };
+});
+import { CdiDraftWorkspace } from '../src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-workspace';
 import {
-  CdiDraftWorkspace,
+  AbandonDraftDialog,
+  AbandonedDraft,
+  EditableDraft,
+  EligibleNoDraft,
+  IneligibleRecovery,
+  ReconciliationRequired,
+  WorkspaceFeedbackAlert,
+} from '../src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-workspace-panels';
+import {
+  abandonmentReasonRequiredFeedback,
+  incompleteReconciliationFeedback,
   workspaceFeedbackForOutcome,
-} from '../src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-workspace';
+  workspaceReloadedFeedback,
+  workspaceSavedFeedback,
+} from '../src/app/(authenticated)/equipe/formalites-personnel/_lib/cdi-draft-workspace-feedback';
 import {
   getActiveNavigationHref,
   getVisibleNavigationSections,
@@ -117,29 +144,194 @@ describe('Formalités persistent draft workspace rendering', () => {
     );
   });
 
-  it('keeps abandon, dirty-close and focus recovery bounded to this workspace', () => {
-    const source = readFileSync(
-      'src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-workspace.tsx',
-      'utf8',
+  it('presents a forbidden action truthfully without inviting a retry', () => {
+    const feedback = workspaceFeedbackForOutcome({ kind: 'forbidden' });
+    expect(feedback).toEqual({
+      tone: 'danger',
+      title: 'Action non autorisée',
+      description: 'Votre accès actuel ne permet pas de modifier ce brouillon.',
+      recoverable: false,
+    });
+    const markup = renderToStaticMarkup(
+      <WorkspaceFeedbackAlert
+        feedback={feedback}
+        feedbackRef={{ current: null }}
+        pending={false}
+        onReload={vi.fn()}
+      />,
     );
-    expect(source).toContain("window.addEventListener('beforeunload'");
-    expect(source).toContain('window.confirm(');
-    expect(source).toContain('maxLength={250}');
-    expect(source).toContain('required');
-    expect(source).toContain('focusSoon(abandonmentReasonRef)');
-    expect(source).toContain(
-      'focusElementSoon(`reconcile-${missingFact}-keep`)',
+    expect(markup).toContain('Action non autorisée');
+    expect(markup).not.toContain('Recharger la version enregistrée');
+    expect(markup).not.toMatch(/Réessayez/);
+    expect(markup).toContain('tabindex="-1"');
+    expect(markup).toContain('focus:ring-2');
+  });
+
+  it('keeps the reload action on recoverable feedback only', () => {
+    const markup = renderToStaticMarkup(
+      <WorkspaceFeedbackAlert
+        feedback={workspaceFeedbackForOutcome({ kind: 'server_error' })}
+        feedbackRef={{ current: null }}
+        pending={false}
+        onReload={vi.fn()}
+      />,
     );
-    expect(source).not.toMatch(
-      /localStorage|sessionStorage|setInterval|autosave/i,
+    expect(markup).toContain('Recharger la version enregistrée');
+  });
+
+  it('disables every mutation control while locked without a loading state', () => {
+    const noop = vi.fn();
+    const markups = [
+      renderToStaticMarkup(
+        <EligibleNoDraft
+          model={eligibleNoDraftModel()}
+          locale="fr-FR"
+          pending={false}
+          locked
+          onCreate={noop}
+        />,
+      ),
+      renderToStaticMarkup(
+        <EditableDraft
+          model={editableModel()}
+          locale="fr-FR"
+          probationChoice="include"
+          pending={false}
+          locked
+          onProbationChoice={noop}
+          onSave={noop}
+          onAbandon={noop}
+        />,
+      ),
+      renderToStaticMarkup(
+        <ReconciliationRequired
+          model={reconciliationModel()}
+          locale="fr-FR"
+          choices={{}}
+          pending={false}
+          locked
+          onChoice={noop}
+          onReconcile={noop}
+          onAbandon={noop}
+        />,
+      ),
+      renderToStaticMarkup(
+        <IneligibleRecovery
+          model={ineligibleModel()}
+          locale="fr-FR"
+          pending={false}
+          locked
+          onAbandon={noop}
+        />,
+      ),
+      renderToStaticMarkup(
+        <AbandonedDraft
+          model={abandonedModel()}
+          locale="fr-FR"
+          pending={false}
+          locked
+          onCreate={noop}
+        />,
+      ),
+    ];
+    for (const markup of markups) {
+      const buttons = markup.match(/<button\b[^>]*>/g) ?? [];
+      expect(buttons.length).toBeGreaterThan(0);
+      for (const button of buttons) expect(button).toMatch(/\bdisabled=""/);
+      expect(markup).not.toContain('aria-busy="true"');
+    }
+  });
+
+  it('keeps local workspace feedback copy and fresh feedback objects', () => {
+    expect(workspaceSavedFeedback()).toEqual({
+      tone: 'success',
+      title: 'Modifications enregistrées',
+      description:
+        'Le brouillon affiché correspond maintenant à la version enregistrée.',
+      recoverable: false,
+    });
+    expect(workspaceReloadedFeedback()).toEqual({
+      tone: 'info',
+      title: 'Données actualisées',
+      description: 'La dernière version enregistrée est affichée.',
+      recoverable: false,
+    });
+    expect(incompleteReconciliationFeedback()).toEqual({
+      tone: 'danger',
+      title: 'Choix incomplet',
+      description:
+        'Choisissez une action pour chaque information différente avant de continuer.',
+      recoverable: false,
+    });
+    expect(abandonmentReasonRequiredFeedback()).toEqual({
+      tone: 'danger',
+      title: 'Motif requis',
+      description: 'Saisissez un motif entre 1 et 250 caractères.',
+      recoverable: false,
+    });
+    expect(incompleteReconciliationFeedback()).not.toBe(
+      incompleteReconciliationFeedback(),
     );
+  });
+
+  it('renders the abandonment reason as a bounded required field with in-dialog feedback', () => {
+    const renderDialog = (reason: string) =>
+      renderToStaticMarkup(
+        <AbandonDraftDialog
+          open
+          reason={reason}
+          reasonRef={{ current: null }}
+          pending={false}
+          locked={false}
+          abandoning={false}
+          feedback={<p>Retour de l’abandon</p>}
+          onOpenChange={vi.fn()}
+          onCloseAutoFocus={vi.fn()}
+          onReasonChange={vi.fn()}
+          onConfirm={vi.fn()}
+        />,
+      );
+
+    const empty = renderDialog('');
+    const textarea = empty.match(/<textarea\b[^>]*>/)?.[0] ?? '';
+    expect(textarea).toContain('id="formalites-abandon-reason"');
+    expect(textarea).toMatch(/maxlength="250"/i);
+    expect(textarea).toContain('required=""');
+    expect(textarea).toContain('aria-describedby="formalites-abandon-help"');
+    expect(empty).toContain('for="formalites-abandon-reason"');
+    expect(empty).toContain('0/250 caractères');
+    expect(empty).toContain('Retour de l’abandon');
+    expect(confirmButton(empty)).toMatch(/\bdisabled=""/);
+
+    const filled = renderDialog('  Besoin annulé  ');
+    expect(filled).toContain('13/250 caractères');
+    expect(confirmButton(filled)).not.toMatch(/\bdisabled=""/);
+  });
+
+  it('keeps the CDI workspace sources free of browser storage and autosave', () => {
+    for (const file of [
+      'cdi-draft-workspace.tsx',
+      'cdi-draft-workspace-panels.tsx',
+      'cdi-draft-workspace-fields.tsx',
+    ]) {
+      expect(
+        readFileSync(
+          sourceUrl(
+            `src/app/(authenticated)/equipe/formalites-personnel/_components/${file}`,
+          ),
+          'utf8',
+        ),
+      ).not.toMatch(/localStorage|sessionStorage|setInterval|autosave/i);
+    }
   });
 });
 
 describe('Formalités persistent route and protected prototype boundaries', () => {
   it('composes Formalités READ, independent Personnel READ and scoped repository read', () => {
     const source = readFileSync(
-      'src/app/(authenticated)/equipe/formalites-personnel/[employeeId]/page.tsx',
+      sourceUrl(
+        'src/app/(authenticated)/equipe/formalites-personnel/[employeeId]/page.tsx',
+      ),
       'utf8',
     );
     expect(source).toContain(
@@ -384,14 +576,27 @@ function renderWorkspace(model: FormalitesPersonnelDraftReadModel): string {
   );
 }
 
+function confirmButton(markup: string): string {
+  const button = markup.match(
+    /<button\b[^>]*>(?:(?!<button\b).)*?Confirmer l’abandon/s,
+  )?.[0];
+  return button?.match(/^<button\b[^>]*>/)?.[0] ?? '';
+}
+
 function expectForbiddenContentAbsent(markup: string) {
   expect(markup).not.toMatch(
     /Adresse fictive|Rémunération|reviewAcknowledged|operationKey|sourceStateFingerprint|requestFingerprint|organizationId|establishmentId|actorUserId|stack trace|Générer|Signer|PDF/i,
   );
 }
 
+function sourceUrl(path: string): URL {
+  return new URL(`../${path}`, import.meta.url);
+}
+
 function sha256(path: string): string {
-  return createHash('sha256').update(readFileSync(path)).digest('hex');
+  return createHash('sha256')
+    .update(readFileSync(sourceUrl(path)))
+    .digest('hex');
 }
 
 const currentValues = {
@@ -404,7 +609,10 @@ const currentValues = {
   contractWeeklyMinutes: 2_100,
 };
 
-function eligibleNoDraftModel(): FormalitesPersonnelDraftReadModel {
+function eligibleNoDraftModel(): Extract<
+  FormalitesPersonnelDraftReadModel,
+  { state: 'eligible_no_draft' }
+> {
   return {
     state: 'eligible_no_draft',
     formalityType: 'cdi_preparation',

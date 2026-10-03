@@ -25,14 +25,7 @@ import {
   SelectValue,
   cn,
 } from '@yuta/ui';
-import {
-  BookOpen,
-  ChevronLeft,
-  Database,
-  Plus,
-  Search,
-  UsersRound,
-} from 'lucide-react';
+import { BookOpen, Database, Plus, Search, UsersRound } from 'lucide-react';
 import Link from 'next/link';
 import {
   useCallback,
@@ -46,30 +39,18 @@ import { useRouter } from 'next/navigation';
 import { EmployeeCreateDialog } from './employee-create-dialog';
 import { EmployeeDepartureDialog } from './employee-departure-dialog';
 import { EmployeeEditDialog } from './employee-edit-dialog';
-import { type EmployeeHistoryLoadState } from './employee-history';
 import {
   EmployeeActionOverview,
   type PersonnelActionOverviewState,
 } from './employee-action-overview';
-import {
-  loadEmployeeAccessHistoryAction,
-  loadEmployeeUnifiedHistoryAction,
-  recordEmployeeDossierViewAction,
-} from '../actions';
+import { useEmployeeDossierAccess } from '../_lib/employee-dossier-access';
 import {
   getEmployeeEditCommitRefreshPlan,
   restoreEmployeeEditFocus,
 } from '../_lib/employee-history-refresh';
-import { type AccessHistoryLoadState } from './employee-access-history';
 import { type DetailTab, EmployeeDetails } from './employee-details';
 import { EmployeeList } from './employee-list';
-
-async function loadEmployeeHistoryWithAccessTrace(
-  employeeId: string,
-  operationId: string,
-) {
-  return loadEmployeeUnifiedHistoryAction(employeeId, operationId);
-}
+import { useEmployeeHistory } from './use-employee-history';
 
 const viewOptions: ReadonlyArray<{
   value: PersonnelEmployeeView;
@@ -116,29 +97,8 @@ export function SalariesPage({
   );
   const [departureEmployee, setDepartureEmployee] =
     useState<PersonnelEmployeeSummary | null>(null);
-  const [historyState, setHistoryState] = useState<EmployeeHistoryLoadState>({
-    status: 'idle',
-    history: null,
-    message: null,
-  });
-  const [historyOperationId, setHistoryOperationId] = useState('');
-  const [accessHistoryState, setAccessHistoryState] =
-    useState<AccessHistoryLoadState>({
-      status: 'idle',
-      history: null,
-      message: null,
-    });
-  const [accessHistoryOperationId, setAccessHistoryOperationId] = useState('');
-  const [accessHistoryCursor, setAccessHistoryCursor] = useState<
-    string | undefined
-  >(undefined);
-  const [accessHistoryCursorStack, setAccessHistoryCursorStack] = useState<
-    string[]
-  >(['']);
-  const [accessHistoryPageIndex, setAccessHistoryPageIndex] = useState(0);
-  const [dossierAccessError, setDossierAccessError] = useState<string | null>(
-    null,
-  );
+  const { dossierAccessError, recordDossierAccess } =
+    useEmployeeDossierAccess();
 
   useEffect(() => {
     if (
@@ -165,78 +125,8 @@ export function SalariesPage({
     }
   }, [data.items, recentlySavedEmployee]);
 
-  function recordDossierAccess(employeeId: string) {
-    setDossierAccessError(null);
-    void recordEmployeeDossierViewAction(employeeId, crypto.randomUUID())
-      .then((result) => {
-        if (result.status === 'error') {
-          setDossierAccessError(result.message);
-        }
-      })
-      .catch(() => {
-        setDossierAccessError(
-          'La traçabilité du dossier est indisponible. Réessayez.',
-        );
-      });
-  }
-
-  useEffect(() => {
-    if (detailTab !== 'history' || !selectedId || !historyOperationId) return;
-    let active = true;
-    setHistoryState({ status: 'loading', history: null, message: null });
-    void loadEmployeeHistoryWithAccessTrace(selectedId, historyOperationId)
-      .then((result) => {
-        if (!active) return;
-        setHistoryState(
-          result.status === 'success'
-            ? { status: 'success', history: result.history, message: null }
-            : { status: 'error', history: null, message: result.message },
-        );
-      })
-      .catch(() => {
-        if (!active) return;
-        setHistoryState({
-          status: 'error',
-          history: null,
-          message: 'Impossible de charger l’historique. Réessayez.',
-        });
-      });
-    return () => {
-      active = false;
-    };
-  }, [detailTab, historyOperationId, selectedId]);
-
-  useEffect(() => {
-    if (detailTab !== 'access' || !selectedId || !accessHistoryOperationId) {
-      return;
-    }
-    let active = true;
-    setAccessHistoryState({ status: 'loading', history: null, message: null });
-    void loadEmployeeAccessHistoryAction(
-      selectedId,
-      accessHistoryOperationId,
-      accessHistoryCursor,
-    )
-      .then((result) => {
-        if (!active) return;
-        setAccessHistoryState(
-          result.status === 'success'
-            ? { status: 'success', history: result.history, message: null }
-            : { status: 'error', history: null, message: result.message },
-        );
-      })
-      .catch(() => {
-        if (!active) return;
-        setAccessHistoryState({
-          status: 'error',
-          history: null,
-          message: 'Impossible de charger les consultations. Réessayez.',
-        });
-      });
-    return () => {
-      active = false;
-    };
-  }, [accessHistoryCursor, accessHistoryOperationId, detailTab, selectedId]);
+  const history = useEmployeeHistory(selectedId, detailTab);
+  const { refreshHistoryAfterSave } = history;
 
   const displayedEmployees = data.items.map((employee) =>
     recentlySavedEmployee?.id === employee.id &&
@@ -290,15 +180,14 @@ export function SalariesPage({
         () => crypto.randomUUID(),
       );
       setRecentlySavedEmployee(employee);
-      setHistoryState({ status: 'idle', history: null, message: null });
-      setHistoryOperationId(refreshPlan.historyOperationId);
+      refreshHistoryAfterSave(employee.id, refreshPlan.historyOperationId);
       if (refreshPlan.closeEditor) setEditingEmployee(null);
       setEditSuccessMessage(
         message ?? 'Les modifications ont été enregistrées.',
       );
       restoreActionFocus(editActionOriginRef);
     },
-    [detailTab, restoreActionFocus],
+    [detailTab, refreshHistoryAfterSave, restoreActionFocus],
   );
 
   function openActionTarget(
@@ -322,13 +211,6 @@ export function SalariesPage({
     setDetailTab(
       kind === 'missing_signed_base_contract' ? 'documents' : 'overview',
     );
-    setHistoryOperationId('');
-    setHistoryState({ status: 'idle', history: null, message: null });
-    setAccessHistoryOperationId('');
-    setAccessHistoryCursor(undefined);
-    setAccessHistoryCursorStack(['']);
-    setAccessHistoryPageIndex(0);
-    setAccessHistoryState({ status: 'idle', history: null, message: null });
   }
 
   return (
@@ -559,21 +441,6 @@ export function SalariesPage({
                 setSelectedId(id);
                 setDetailTab('overview');
                 recordDossierAccess(id);
-                setHistoryOperationId('');
-                setHistoryState({
-                  status: 'idle',
-                  history: null,
-                  message: null,
-                });
-                setAccessHistoryOperationId('');
-                setAccessHistoryCursor(undefined);
-                setAccessHistoryCursorStack(['']);
-                setAccessHistoryPageIndex(0);
-                setAccessHistoryState({
-                  status: 'idle',
-                  history: null,
-                  message: null,
-                });
               }}
             />
           )}
@@ -599,9 +466,9 @@ export function SalariesPage({
             activeTab={detailTab}
             locale={locale}
             businessDate={businessDate}
-            historyState={historyState}
-            accessHistoryState={accessHistoryState}
-            accessHistoryPageIndex={accessHistoryPageIndex}
+            historyState={history.historyState}
+            accessHistoryState={history.accessHistoryState}
+            accessHistoryPageIndex={history.accessHistoryPageIndex}
             dossierAccessError={dossierAccessError}
             requestDocumentAdd={documentAddRequested}
             focusDeparture={focusDepartureRequested}
@@ -610,15 +477,7 @@ export function SalariesPage({
             }
             onTabChange={(tab) => {
               setDetailTab(tab);
-              if (tab === 'history') {
-                setHistoryOperationId(crypto.randomUUID());
-              }
-              if (tab === 'access') {
-                setAccessHistoryCursor(undefined);
-                setAccessHistoryCursorStack(['']);
-                setAccessHistoryPageIndex(0);
-                setAccessHistoryOperationId(crypto.randomUUID());
-              }
+              history.openTab(tab);
             }}
             onClose={() => {
               setSelectedId(null);
@@ -634,33 +493,10 @@ export function SalariesPage({
               setEditingEmployee(selectedEmployee);
             }}
             onDeparture={() => setDepartureEmployee(selectedEmployee)}
-            onRetryHistory={() => setHistoryOperationId(crypto.randomUUID())}
-            onRetryAccessHistory={() =>
-              setAccessHistoryOperationId(crypto.randomUUID())
-            }
-            onPreviousAccessHistory={() => {
-              const previousIndex = Math.max(0, accessHistoryPageIndex - 1);
-              setAccessHistoryPageIndex(previousIndex);
-              setAccessHistoryCursor(
-                accessHistoryCursorStack[previousIndex] || undefined,
-              );
-              setAccessHistoryOperationId(crypto.randomUUID());
-            }}
-            onNextAccessHistory={() => {
-              const nextCursor =
-                accessHistoryState.status === 'success'
-                  ? accessHistoryState.history.pageInfo.nextCursor
-                  : null;
-              if (!nextCursor) return;
-              const nextIndex = accessHistoryPageIndex + 1;
-              setAccessHistoryCursorStack((current) => [
-                ...current.slice(0, nextIndex),
-                nextCursor,
-              ]);
-              setAccessHistoryPageIndex(nextIndex);
-              setAccessHistoryCursor(nextCursor);
-              setAccessHistoryOperationId(crypto.randomUUID());
-            }}
+            onRetryHistory={history.retryHistory}
+            onRetryAccessHistory={history.retryAccessHistory}
+            onPreviousAccessHistory={history.previousAccessHistory}
+            onNextAccessHistory={history.nextAccessHistory}
             onRetryDossierAccess={() =>
               recordDossierAccess(selectedEmployee.id)
             }
@@ -698,259 +534,6 @@ export function SalariesPage({
           onOpenChange={(open) => {
             if (!open) setDepartureEmployee(null);
           }}
-        />
-      )}
-    </div>
-  );
-}
-
-export function EmployeeFullDossierPage({
-  initialEmployee,
-  locale,
-  businessDate,
-  contractExtractionPrototypeEnabled,
-  formalitesReadPrototypeEnabled,
-}: {
-  initialEmployee: PersonnelEmployeeSummary;
-  locale: string;
-  businessDate: string;
-  contractExtractionPrototypeEnabled: boolean;
-  formalitesReadPrototypeEnabled: boolean;
-}) {
-  const [employee, setEmployee] = useState(initialEmployee);
-  const [activeTab, setActiveTab] = useState<DetailTab>('overview');
-  const [editing, setEditing] = useState(false);
-  const [departureOpen, setDepartureOpen] = useState(false);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const editActionOriginRef = useRef<HTMLElement | null>(null);
-  const [historyState, setHistoryState] = useState<EmployeeHistoryLoadState>({
-    status: 'idle',
-    history: null,
-    message: null,
-  });
-  const [historyOperationId, setHistoryOperationId] = useState('');
-  const [accessHistoryState, setAccessHistoryState] =
-    useState<AccessHistoryLoadState>({
-      status: 'idle',
-      history: null,
-      message: null,
-    });
-  const [accessHistoryOperationId, setAccessHistoryOperationId] = useState('');
-  const [accessHistoryCursor, setAccessHistoryCursor] = useState<
-    string | undefined
-  >(undefined);
-  const [accessHistoryCursorStack, setAccessHistoryCursorStack] = useState<
-    string[]
-  >(['']);
-  const [accessHistoryPageIndex, setAccessHistoryPageIndex] = useState(0);
-  const [dossierAccessError, setDossierAccessError] = useState<string | null>(
-    null,
-  );
-  const accessRecordedEmployeeRef = useRef<string | null>(null);
-
-  const restoreEditFocus = useCallback(() => {
-    const origin = editActionOriginRef.current;
-    editActionOriginRef.current = null;
-    restoreEmployeeEditFocus(origin, (callback) =>
-      requestAnimationFrame(callback),
-    );
-  }, []);
-
-  useEffect(() => {
-    if (
-      initialEmployee.id !== employee.id ||
-      initialEmployee.revision >= employee.revision
-    ) {
-      setEmployee(initialEmployee);
-    }
-  }, [employee.id, employee.revision, initialEmployee]);
-
-  const recordDossierAccess = useCallback(() => {
-    setDossierAccessError(null);
-    void recordEmployeeDossierViewAction(employee.id, crypto.randomUUID())
-      .then((result) => {
-        if (result.status === 'error') {
-          setDossierAccessError(result.message);
-        }
-      })
-      .catch(() => {
-        setDossierAccessError(
-          'La traçabilité du dossier est indisponible. Réessayez.',
-        );
-      });
-  }, [employee.id]);
-
-  useEffect(() => {
-    if (accessRecordedEmployeeRef.current === employee.id) return;
-    accessRecordedEmployeeRef.current = employee.id;
-    recordDossierAccess();
-  }, [employee.id, recordDossierAccess]);
-
-  useEffect(() => {
-    if (activeTab !== 'history' || !historyOperationId) return;
-    let active = true;
-    setHistoryState({ status: 'loading', history: null, message: null });
-    void loadEmployeeHistoryWithAccessTrace(employee.id, historyOperationId)
-      .then((result) => {
-        if (!active) return;
-        setHistoryState(
-          result.status === 'success'
-            ? { status: 'success', history: result.history, message: null }
-            : { status: 'error', history: null, message: result.message },
-        );
-      })
-      .catch(() => {
-        if (!active) return;
-        setHistoryState({
-          status: 'error',
-          history: null,
-          message: 'Impossible de charger l’historique. Réessayez.',
-        });
-      });
-    return () => {
-      active = false;
-    };
-  }, [activeTab, employee.id, historyOperationId]);
-
-  useEffect(() => {
-    if (activeTab !== 'access' || !accessHistoryOperationId) return;
-    let active = true;
-    setAccessHistoryState({ status: 'loading', history: null, message: null });
-    void loadEmployeeAccessHistoryAction(
-      employee.id,
-      accessHistoryOperationId,
-      accessHistoryCursor,
-    )
-      .then((result) => {
-        if (!active) return;
-        setAccessHistoryState(
-          result.status === 'success'
-            ? { status: 'success', history: result.history, message: null }
-            : { status: 'error', history: null, message: result.message },
-        );
-      })
-      .catch(() => {
-        if (!active) return;
-        setAccessHistoryState({
-          status: 'error',
-          history: null,
-          message: 'Impossible de charger les consultations. Réessayez.',
-        });
-      });
-    return () => {
-      active = false;
-    };
-  }, [accessHistoryCursor, accessHistoryOperationId, activeTab, employee.id]);
-
-  return (
-    <div className="grid gap-4">
-      <div>
-        <Button asChild variant="ghost" size="sm">
-          <Link href="/equipe/salaries">
-            <ChevronLeft className="h-4 w-4" aria-hidden />
-            Retour aux salariés
-          </Link>
-        </Button>
-      </div>
-      {successMessage && (
-        <Alert tone="success">
-          <AlertDescription>{successMessage}</AlertDescription>
-        </Alert>
-      )}
-      <EmployeeDetails
-        employee={employee}
-        activeTab={activeTab}
-        locale={locale}
-        businessDate={businessDate}
-        historyState={historyState}
-        accessHistoryState={accessHistoryState}
-        accessHistoryPageIndex={accessHistoryPageIndex}
-        dossierAccessError={dossierAccessError}
-        requestDocumentAdd={false}
-        focusDeparture={false}
-        contractExtractionPrototypeEnabled={contractExtractionPrototypeEnabled}
-        formalitesReadPrototypeEnabled={formalitesReadPrototypeEnabled}
-        mode="page"
-        onTabChange={(tab) => {
-          setActiveTab(tab);
-          if (tab === 'history') {
-            setHistoryOperationId(crypto.randomUUID());
-          }
-          if (tab === 'access') {
-            setAccessHistoryCursor(undefined);
-            setAccessHistoryCursorStack(['']);
-            setAccessHistoryPageIndex(0);
-            setAccessHistoryOperationId(crypto.randomUUID());
-          }
-        }}
-        onEdit={(origin) => {
-          editActionOriginRef.current = origin;
-          setSuccessMessage(null);
-          setEditing(true);
-        }}
-        onDeparture={() => setDepartureOpen(true)}
-        onRetryHistory={() => setHistoryOperationId(crypto.randomUUID())}
-        onRetryAccessHistory={() =>
-          setAccessHistoryOperationId(crypto.randomUUID())
-        }
-        onPreviousAccessHistory={() => {
-          const previousIndex = Math.max(0, accessHistoryPageIndex - 1);
-          setAccessHistoryPageIndex(previousIndex);
-          setAccessHistoryCursor(
-            accessHistoryCursorStack[previousIndex] || undefined,
-          );
-          setAccessHistoryOperationId(crypto.randomUUID());
-        }}
-        onNextAccessHistory={() => {
-          const nextCursor =
-            accessHistoryState.status === 'success'
-              ? accessHistoryState.history.pageInfo.nextCursor
-              : null;
-          if (!nextCursor) return;
-          const nextIndex = accessHistoryPageIndex + 1;
-          setAccessHistoryCursorStack((current) => [
-            ...current.slice(0, nextIndex),
-            nextCursor,
-          ]);
-          setAccessHistoryPageIndex(nextIndex);
-          setAccessHistoryCursor(nextCursor);
-          setAccessHistoryOperationId(crypto.randomUUID());
-        }}
-        onRetryDossierAccess={recordDossierAccess}
-      />
-      {editing && (
-        <EmployeeEditDialog
-          employee={employee}
-          businessDate={businessDate}
-          open
-          onSaved={(savedEmployee, message) => {
-            const refreshPlan = getEmployeeEditCommitRefreshPlan(
-              'full_dossier',
-              activeTab === 'history',
-              () => crypto.randomUUID(),
-            );
-            setEmployee(savedEmployee);
-            setHistoryState({ status: 'idle', history: null, message: null });
-            setHistoryOperationId(refreshPlan.historyOperationId);
-            if (refreshPlan.closeEditor) setEditing(false);
-            setSuccessMessage(
-              message ?? 'Les modifications ont été enregistrées.',
-            );
-            restoreEditFocus();
-          }}
-          onOpenChange={(open) => {
-            setEditing(open);
-            if (!open) restoreEditFocus();
-          }}
-        />
-      )}
-      {departureOpen && (
-        <EmployeeDepartureDialog
-          employee={employee}
-          businessDate={businessDate}
-          locale={locale}
-          open
-          onOpenChange={setDepartureOpen}
         />
       )}
     </div>

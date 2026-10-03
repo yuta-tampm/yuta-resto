@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA product and engineering
 
-Last reviewed: 2026-09-30
+Last reviewed: 2026-10-03
 
 ## Purpose
 
@@ -52,6 +52,12 @@ Do not treat every document under `docs/` as equal authority:
   against specific sources and code for material claims;
 - `docs/tasks/` contains task instructions or work history and is **not** a
   default Product Knowledge source of truth.
+
+For shared AI/file-storage questions, read
+[AI and Storage architecture](architecture/AI_AND_STORAGE.md) for the consolidated
+direction, outstanding provider/data decisions and bounded fresh-chat handoff.
+It separates agreed direction from implementation and operational approval;
+capability-specific Product Knowledge and normative specs retain their own roles.
 
 ### `openspec/specs/`
 

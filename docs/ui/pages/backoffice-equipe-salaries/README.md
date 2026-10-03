@@ -111,7 +111,18 @@ Current sources:
 - full dossier route:
   `apps/backoffice/src/app/(authenticated)/equipe/salaries/[employeeId]/page.tsx`;
 - integrated read composition/model:
-  `apps/backoffice/src/app/(authenticated)/equipe/salaries/`;
+  `apps/backoffice/src/app/(authenticated)/equipe/salaries/`; the list and
+  quick view are orchestrated by `_components/salaries-page.tsx`, the full
+  dossier by `_components/employee-full-dossier-page.tsx`, and both share the
+  audited history/`Consultations` loading, retry and cursor pagination through
+  `_components/use-employee-history.ts`. Its employee-scoped request state,
+  shared load-state type and stale-response cancellation live in
+  `_lib/employee-history-loading.ts`: another employee immediately hides the
+  previous results, discards their operations and cursor, ignores their late
+  completions and, when a history tab is open, starts it on the first page with
+  a fresh operation identifier, without a parent-side reset. Both pages record
+  the dossier-open trace through `_lib/employee-dossier-access.ts`, where only
+  the latest attempt may report its failure;
 - authenticated layout: `apps/backoffice/src/app/(authenticated)/layout.tsx`;
 - shell/navigation:
   `apps/backoffice/src/components/backoffice/backoffice-frame.tsx` and
@@ -1251,6 +1262,30 @@ versions on replacement, deliver content through audited server routes, and
 never expose storage keys or stable provider URLs. A base-contract replacement
 updates the one base slot; an amendment replacement corrects only that
 amendment's scan. It never replaces the base contract or another amendment.
+Once metadata is committed, a failed page revalidation or replay cleanup is
+logged and the save stays successful; the referenced PDF is never discarded.
+An idempotent replay discards only its own unreferenced retry copy. Scanner,
+validation, or repository failures before commit still discard the temporary
+object.
+
+Both upload actions first validate the browser command fields with the
+existing personnel metadata contracts: employee and retry identifiers, the
+optional base-contract revision, and either the amendment create fields
+(effective date, reference) or the replace fields (amendment and revision).
+The amendment mode must be exactly `create` or `replace`. An invalid command
+returns a form error before the PDF is read and causes no storage, scanner,
+metadata, or rejected-upload audit effect. Only the visible effective date and
+reference receive field errors (`Certains champs doivent être corrigés.`); an
+invalid hidden mode, employee, retry, amendment or revision field means the
+form is stale, so both uploads show `Le formulaire n’est plus à jour. Rechargez
+la liste avant de réessayer.` while keeping any accurate visible field errors.
+Only a real file, scanner, or storage failure records a rejected upload in the
+trusted establishment scope. Invalid server-derived file metadata is such a file
+failure: both uploads show `Vérifiez le fichier puis réessayez.`, the amendment
+form also marks its file field, and an `invalid_file` rejection is recorded.
+Personnel history and `Consultations` reads still authorize first and record
+their access trace before the scoped read; a failed trace returns the existing
+retryable error without reading.
 
 The current development-only `À traiter` overview treats an absent base
 contract for every active or upcoming employee as missing signed evidence. It

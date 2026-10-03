@@ -10,17 +10,12 @@ import {
   LoaderCircle,
   RotateCcw,
 } from 'lucide-react';
+import { type EmployeeHistoryLoadingState } from '../_lib/employee-history-loading';
 import { formatEmployeeHistoryDateTime } from '../_lib/employee-history-presentation';
 import { DetailSection } from './employee-presentation';
 
 export type AccessHistoryLoadState =
-  | { status: 'idle' | 'loading'; history: null; message: null }
-  | {
-      status: 'success';
-      history: PersonnelEmployeeAccessHistory;
-      message: null;
-    }
-  | { status: 'error'; history: null; message: string };
+  EmployeeHistoryLoadingState<PersonnelEmployeeAccessHistory>;
 
 export function EmployeeAccessHistory({
   state,
