@@ -16,8 +16,9 @@ authorized Slice 1 implementation planning, then explicitly requested preserving
 the whole agreed AI/Storage knowledge so another Codex chat can discover and
 continue it without this conversation.
 
-Architecture direction is agreed. Slice 1 planning is complete; its implementation
-has not started. Storage implementation is a separate future slice. Agreement on
+Architecture direction is agreed. Slice 1 now has a bounded server implementation
+with offline synthetic verification; its active change retains final review and
+delivery evidence. Storage implementation is a separate future slice. Agreement on
 technical direction grants no real-data, provider, production or deployment
 authorization. The discussion's external critique documents are provenance and
 advice, not vendor/legal evidence or independent approval sources.
@@ -221,7 +222,7 @@ real-data/production activation. These do not block offline Slice 1 planning.
 
 | Stage   | Agreed direction                                                                                           | Execution status                                             |
 | ------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| 1       | Typed capability/configuration/policy and minimum observations for existing synthetic Personnel extraction | Planning complete; implementation not started                |
+| 1       | Typed capability/configuration/policy and minimum observations for existing synthetic Personnel extraction | Server implementation; offline synthetic evidence            |
 | 2       | Broader reproducible evaluation/observations only when justified                                           | Separate future scope; reuse current evidence first          |
 | 3       | Preserve and extract the storage port/quarantine boundary for an actual storage slice                      | Architecture agreed; implementation not started              |
 | 4A / 4B | AI and Storage provider qualification, potentially in parallel                                             | Separate governance/evidence work; no provider selected      |
@@ -253,14 +254,19 @@ Storage, new provider/model/prompt/key/dependency/schema/UI, fallback/shadow,
 live API acceptance, real-data or production operation is part of Slice 1.
 
 Planning delivery commit: `f5aaba21128ca50239c3501f83940215c3069421`.
-Five artifacts and thirteen unchecked implementation tasks are retained in
+Five planning artifacts and the implementation task/evidence record are retained in
 `openspec/changes/ai-synthetic-contract-foundation/`. Exact
 [Gate 1](../reviews/ai-synthetic-contract-foundation/01-analysis-review.md),
 [Gate 2](../reviews/ai-synthetic-contract-foundation/02-specs-review.md) and
 [Sensitive Design](../reviews/ai-synthetic-contract-foundation/02b-design-review.md)
-packets record delegated independent approval of planning only. No Apply,
-implementation VERIFY/QA, Gate 3, sync or archive has occurred for this change.
-Raw OpenSpec planning-complete status does not establish implementation completion.
+packets retain delegated independent approval of planning only. The current user
+separately authorized Slice 1 Apply/tests/documentation/VERIFY/non-browser QA and
+local commit → push → PR → checks → merge on 2026-10-03. Current implementation
+progress and exact review/QA/check outcomes live in the
+[Tasks record](../../openspec/changes/ai-synthetic-contract-foundation/tasks.md);
+planning approval and raw CLI readiness do not establish completion. Sync/archive
+remain separately unauthorized. No real-data/provider/production activation is
+included.
 
 For a fresh chat with this repository:
 
@@ -274,8 +280,10 @@ For a fresh chat with this repository:
    evidence, not permission to reset or overwrite other work.
 4. The same task retains `CODEX_ONLY` and `COMMIT_AFTER_TASK: YES`, selected by
    the actual current user on 2026-10-03. The user's later knowledge-preservation
-   request authorizes this documentation follow-up, not runtime Apply. Continue
-   implementation only on a separately bounded current-user instruction.
+   request authorized documentation only. A subsequent current-user request
+   explicitly authorized Slice 1 Apply and bounded GitHub delivery; consult the
+   current Tasks/review evidence and exact checkout binding before continuing.
+   That authorization still excludes sync/archive, deployment and broader scope.
 5. A different task selects its own collaboration/commit choices under root
    instructions. Storage/qualification/other consumers need their own discovery
    and bounded request; agreement here does not auto-create a change or approve

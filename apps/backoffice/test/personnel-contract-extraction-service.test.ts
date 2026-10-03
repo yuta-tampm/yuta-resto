@@ -8,7 +8,11 @@ import {
   DevelopmentExtractionRateLimiter,
   runSyntheticContractExtraction,
   type ContractExtractionDependencies,
+  type ContractExtractionAdapter,
+  validateContractExtractionResult,
 } from '../src/server/personnel-contract-extraction/service';
+
+import { createAiExecutor } from '../src/server/ai/executor';
 
 const request = {
   requestId: '11111111-1111-4111-8111-111111111111',
@@ -44,8 +48,14 @@ function result(overrides: Record<string, unknown> = {}) {
 }
 
 function dependencies(
-  overrides: Partial<ContractExtractionDependencies> = {},
-): ContractExtractionDependencies {
+  overrides: Partial<ContractExtractionDependencies> & {
+    adapter?: ContractExtractionAdapter;
+    timeoutMilliseconds?: number;
+  } = {},
+) {
+  const adapter = overrides.adapter ?? {
+    extract: vi.fn().mockResolvedValue(result()),
+  };
   return {
     authorizeAndResolve: vi.fn().mockResolvedValue({
       employeeRevision: request.employeeRevision,
@@ -60,7 +70,20 @@ function dependencies(
         scenario: request.scenario,
       }),
     },
-    adapter: { extract: vi.fn().mockResolvedValue(result()) },
+    adapter,
+    executor: createAiExecutor({
+      configuration: {
+        configurationId: 'personnel-synthetic',
+        configurationVersion: 1,
+        environment: 'development',
+        mode: 'deterministic-synthetic',
+        credentialConfigured: false,
+        storedProviderOnce: false,
+      },
+      resolveAdapter: () => adapter,
+      validateResult: validateContractExtractionResult,
+      timeoutMilliseconds: overrides.timeoutMilliseconds,
+    }),
     ...overrides,
   };
 }

@@ -106,8 +106,8 @@ vi.mock(
     getPersonnelDocumentRuntime: infrastructure.documentRuntime,
   }),
 );
-vi.mock('../src/server/personnel-contract-extraction/runtime', () => ({
-  createDevelopmentContractExtractionAdapter: infrastructure.extractionAdapter,
+vi.mock('../src/server/ai/runtime', () => ({
+  createPersonnelExtractionExecutor: infrastructure.extractionAdapter,
 }));
 vi.mock(
   '../src/server/personnel-contract-extraction/synthetic-upload',

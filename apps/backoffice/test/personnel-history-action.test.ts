@@ -46,7 +46,7 @@ vi.mock('../src/server/personnel-documents/runtime', () => ({}));
 vi.mock('../src/server/personnel-contract-extraction/service', () => ({
   DevelopmentExtractionRateLimiter: class {},
 }));
-vi.mock('../src/server/personnel-contract-extraction/runtime', () => ({}));
+vi.mock('../src/server/ai/runtime', () => ({}));
 vi.mock('../src/server/personnel-contract-extraction/review-store', () => ({}));
 vi.mock(
   '../src/server/personnel-contract-extraction/synthetic-upload',

@@ -31,15 +31,12 @@ import {
   runSyntheticContractExtraction,
   SyntheticContractPdfPreparer,
 } from '@/server/personnel-contract-extraction/service';
-import { createDevelopmentContractExtractionAdapter } from '@/server/personnel-contract-extraction/runtime';
-import type { OpenAiExtractionObservation } from '@/server/personnel-contract-extraction/openai-adapter';
+import { createPersonnelExtractionExecutor } from '@/server/ai/runtime';
 import { developmentContractExtractionReviewStore } from '@/server/personnel-contract-extraction/review-store';
 import { createDevelopmentSyntheticPdfLoader } from '@/server/personnel-contract-extraction/synthetic-upload';
 import {
   createStoredSyntheticDocumentLoader,
   identifyApprovedStoredSyntheticFixture,
-  StoredSyntheticFixtureExtractionAdapter,
-  StoredSyntheticProviderQaExtractionAdapter,
   StoredSyntheticProviderQaGate,
 } from '@/server/personnel-contract-extraction/stored-synthetic-document';
 import { isContractExtractionPrototypeEnabled } from './_lib/contract-extraction-prototype-runtime';
@@ -113,12 +110,6 @@ export async function startContractExtractionAction(
       );
     }
     const useStoredSource = requestedSource === 'stored_synthetic_document';
-    const useStoredProviderQa =
-      useStoredSource && storedSyntheticProviderQaGate.isEnabled();
-    let providerObservation: OpenAiExtractionObservation | undefined;
-    const providerQaStartedAt = useStoredProviderQa
-      ? performance.now()
-      : undefined;
     if (useStoredSource && request.scenario !== 'complete') {
       throw new ContractExtractionServiceError(
         'The stored fictional document supports only the complete scenario.',
@@ -212,40 +203,12 @@ export async function startContractExtractionAction(
         ),
       loadPdf,
       preparer: new SyntheticContractPdfPreparer(),
-      adapter: useStoredSource
-        ? useStoredProviderQa
-          ? new StoredSyntheticProviderQaExtractionAdapter(
-              createDevelopmentContractExtractionAdapter({
-                scenario: request.scenario,
-                onCompleted: (observation) => {
-                  providerObservation = observation;
-                },
-              }),
-              storedSyntheticProviderQaGate,
-            )
-          : new StoredSyntheticFixtureExtractionAdapter()
-        : createDevelopmentContractExtractionAdapter({
-            scenario: request.scenario,
-          }),
+      executor: createPersonnelExtractionExecutor({
+        storedProviderQaGate: useStoredSource
+          ? storedSyntheticProviderQaGate
+          : undefined,
+      }),
     });
-    if (useStoredProviderQa && providerQaStartedAt !== undefined) {
-      console.info(
-        'YUTA_OPENAI_STORED_SYNTHETIC_QA',
-        JSON.stringify({
-          fixtureId: 'wg2-digital-cdd-35h',
-          model: providerObservation?.model,
-          promptVersion: providerObservation?.promptVersion,
-          latencyMilliseconds: Math.round(
-            performance.now() - providerQaStartedAt,
-          ),
-          inputTokens: providerObservation?.inputTokens,
-          outputTokens: providerObservation?.outputTokens,
-          totalTokens: providerObservation?.totalTokens,
-          status: result.status,
-          suggestionCount: result.suggestions.length,
-        }),
-      );
-    }
     await recordPersonnelContractExtractionAudit(cloudDatabase, tenant, {
       employeeId: request.employeeId,
       requestId: request.requestId,
