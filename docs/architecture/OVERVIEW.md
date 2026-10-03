@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-08-05
+Last updated: 2026-10-03
 
 YUTA combines cloud SaaS applications with local restaurant products. These
 runtime families share contracts, pure logic, and UI components, but they do
@@ -36,6 +36,15 @@ only a bounded, non-runtime authority foundation for five explicit GLOBAL YUTA
 Formalités template operations. It creates neither a general Platform Admin
 product nor tenant authority, template persistence/lifecycle, or production
 enablement.
+
+## AI and file storage direction
+
+The [AI and Storage architecture](AI_AND_STORAGE.md) is the shared knowledge
+entry point for the agreed capability/policy, canonical-file and provider
+qualification direction. It distinguishes current implementation, the bounded
+synthetic Personnel plan, deferred Storage/provider work and the instructions
+for continuing in a fresh chat. It changes no runtime/database ownership or
+production readiness.
 
 ## Public-product visibility
 
