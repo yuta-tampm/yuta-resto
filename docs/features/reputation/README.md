@@ -141,7 +141,10 @@ authorization checks on the server and create Reputation audit events.
 
 Avis opens an explicitly selected review in a modal sliding in from the right,
 with the existing processing forms and an internally scrolling body. Mobile
-uses the full screen width. Opening and closing preserve list filters, ordering,
+uses the full screen width. Route-owned CSS supplies the entrance/exit motion,
+respects reduced-motion preferences, and retains current content during exit.
+Loading appears while the selected review is being fetched; already available
+detail opens directly without a forced delay. Opening and closing preserve list filters, ordering,
 page and scroll position; closing returns focus to the opening row when it is
 still present. Direct selected-item URLs open the same modal. A plain list visit
 does not open it automatically. Loading never presents the previous item's forms.

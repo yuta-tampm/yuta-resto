@@ -1,0 +1,2450 @@
+{
+  "mode": "qa",
+  "result": "PASS",
+  "route": "/visibilite-reputation/avis",
+  "runtime": "http://localhost:3104",
+  "liveProvider": false,
+  "results": [
+    {
+      "name": "1440: list-only with no inline editor",
+      "result": "PASS"
+    },
+    {
+      "name": "1440: immediate named loading without old-item forms",
+      "result": "PASS"
+    },
+    {
+      "name": "1440: correct requested item, right edge and zero horizontal overflow",
+      "result": "PASS"
+    },
+    {
+      "name": "1440: keyboard containment, internally scrolling editor and accessible fixed close",
+      "result": "PASS"
+    },
+    {
+      "name": "1440: Escape retains page/filter/scroll and restores opening-row focus",
+      "result": "PASS"
+    },
+    {
+      "name": "1440: actual 280ms entrance moves from right to settled panel",
+      "result": "PASS"
+    },
+    {
+      "name": "1440: actual 200ms exit moves right before DOM removal",
+      "result": "PASS"
+    },
+    {
+      "name": "1440: exiting editor remains mounted without loading/unavailable flash and cannot receive pointer input",
+      "result": "PASS"
+    },
+    {
+      "name": "1024: list-only with no inline editor",
+      "result": "PASS"
+    },
+    {
+      "name": "1024: immediate named loading without old-item forms",
+      "result": "PASS"
+    },
+    {
+      "name": "1024: correct requested item, right edge and zero horizontal overflow",
+      "result": "PASS"
+    },
+    {
+      "name": "1024: keyboard containment, internally scrolling editor and accessible fixed close",
+      "result": "PASS"
+    },
+    {
+      "name": "1024: Escape retains page/filter/scroll and restores opening-row focus",
+      "result": "PASS"
+    },
+    {
+      "name": "1024: actual 280ms entrance moves from right to settled panel",
+      "result": "PASS"
+    },
+    {
+      "name": "1024: actual 200ms exit moves right before DOM removal",
+      "result": "PASS"
+    },
+    {
+      "name": "1024: exiting editor remains mounted without loading/unavailable flash and cannot receive pointer input",
+      "result": "PASS"
+    },
+    {
+      "name": "768: list-only with no inline editor",
+      "result": "PASS"
+    },
+    {
+      "name": "768: immediate named loading without old-item forms",
+      "result": "PASS"
+    },
+    {
+      "name": "768: correct requested item, right edge and zero horizontal overflow",
+      "result": "PASS"
+    },
+    {
+      "name": "768: keyboard containment, internally scrolling editor and accessible fixed close",
+      "result": "PASS"
+    },
+    {
+      "name": "768: Escape retains page/filter/scroll and restores opening-row focus",
+      "result": "PASS"
+    },
+    {
+      "name": "768: actual 280ms entrance moves from right to settled panel",
+      "result": "PASS"
+    },
+    {
+      "name": "768: actual 200ms exit moves right before DOM removal",
+      "result": "PASS"
+    },
+    {
+      "name": "768: exiting editor remains mounted without loading/unavailable flash and cannot receive pointer input",
+      "result": "PASS"
+    },
+    {
+      "name": "390: list-only with no inline editor",
+      "result": "PASS"
+    },
+    {
+      "name": "390: immediate named loading without old-item forms",
+      "result": "PASS"
+    },
+    {
+      "name": "390: correct requested item, right edge and zero horizontal overflow",
+      "result": "PASS"
+    },
+    {
+      "name": "390: keyboard containment, internally scrolling editor and accessible fixed close",
+      "result": "PASS"
+    },
+    {
+      "name": "390: Escape retains page/filter/scroll and restores opening-row focus",
+      "result": "PASS"
+    },
+    {
+      "name": "390: actual 280ms entrance moves from right to settled panel",
+      "result": "PASS"
+    },
+    {
+      "name": "390: actual 200ms exit moves right before DOM removal",
+      "result": "PASS"
+    },
+    {
+      "name": "390: exiting editor remains mounted without loading/unavailable flash and cannot receive pointer input",
+      "result": "PASS"
+    },
+    {
+      "name": "390: reduced-motion disables entrance/exit without blocking close",
+      "result": "PASS"
+    },
+    {
+      "name": "Already available first-item detail opens directly without artificial loading delay",
+      "result": "PASS"
+    },
+    {
+      "name": "Closing during delayed selection remains closed after the pending response settles",
+      "result": "PASS"
+    },
+    {
+      "name": "Direct selected URL opens the same modal",
+      "result": "PASS"
+    },
+    {
+      "name": "Note pending/success, same selection and unsaved draft preserved",
+      "result": "PASS"
+    },
+    {
+      "name": "Draft pending/success remains in same modal",
+      "result": "PASS"
+    },
+    {
+      "name": "Status treatment Save remains usable",
+      "result": "PASS"
+    },
+    {
+      "name": "Saved draft/note/status persist across reload; publication stays disabled",
+      "result": "PASS"
+    },
+    {
+      "name": "Named close button dismisses",
+      "result": "PASS"
+    },
+    {
+      "name": "Backdrop dismisses",
+      "result": "PASS"
+    },
+    {
+      "name": "Inaccessible selected ID shows unavailable with no stale forms",
+      "result": "PASS"
+    },
+    {
+      "name": "STAFF assigned review opens, draft enabled and management disabled",
+      "result": "PASS"
+    },
+    {
+      "name": "STAFF unassigned review denied by unchanged server scope",
+      "result": "PASS"
+    },
+    {
+      "name": "1440: internal Satisfaction retains inline detail without modal",
+      "result": "PASS"
+    },
+    {
+      "name": "390: internal Satisfaction retains inline detail without modal",
+      "result": "PASS"
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "list-1440.png",
+      "width": 1440,
+      "height": 900,
+      "role": "OWNER",
+      "state": "Filtered page 2 before opening"
+    },
+    {
+      "file": "panel-1440.png",
+      "width": 1440,
+      "height": 900,
+      "role": "OWNER",
+      "state": "Selected review, header and existing processing forms"
+    },
+    {
+      "file": "editor-1440.png",
+      "width": 1440,
+      "height": 900,
+      "role": "OWNER",
+      "state": "Internally scrolled draft controls and fixed close/header"
+    },
+    {
+      "file": "list-1024.png",
+      "width": 1024,
+      "height": 768,
+      "role": "OWNER",
+      "state": "Filtered page 2 before opening"
+    },
+    {
+      "file": "panel-1024.png",
+      "width": 1024,
+      "height": 768,
+      "role": "OWNER",
+      "state": "Selected review, header and existing processing forms"
+    },
+    {
+      "file": "editor-1024.png",
+      "width": 1024,
+      "height": 768,
+      "role": "OWNER",
+      "state": "Internally scrolled draft controls and fixed close/header"
+    },
+    {
+      "file": "list-768.png",
+      "width": 768,
+      "height": 1024,
+      "role": "OWNER",
+      "state": "Filtered page 2 before opening"
+    },
+    {
+      "file": "panel-768.png",
+      "width": 768,
+      "height": 1024,
+      "role": "OWNER",
+      "state": "Selected review, header and existing processing forms"
+    },
+    {
+      "file": "editor-768.png",
+      "width": 768,
+      "height": 1024,
+      "role": "OWNER",
+      "state": "Internally scrolled draft controls and fixed close/header"
+    },
+    {
+      "file": "list-390.png",
+      "width": 390,
+      "height": 844,
+      "role": "OWNER",
+      "state": "Filtered page 2 before opening"
+    },
+    {
+      "file": "panel-390.png",
+      "width": 390,
+      "height": 844,
+      "role": "OWNER",
+      "state": "Selected review, header and existing processing forms"
+    },
+    {
+      "file": "editor-390.png",
+      "width": 390,
+      "height": 844,
+      "role": "OWNER",
+      "state": "Internally scrolled draft controls and fixed close/header"
+    },
+    {
+      "file": "reduced-motion-390.png",
+      "width": 390,
+      "height": 844,
+      "role": "OWNER",
+      "state": "Reduced-motion preference: same usable modal with animation disabled"
+    }
+  ],
+  "motionTraces": [
+    {
+      "width": 1440,
+      "events": [
+        {
+          "state": "open",
+          "samples": [
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 672,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 672,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 672,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 492.192,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 90.458,
+              "width": 672.0000610351562,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 64.9265,
+              "width": 672.0000610351562,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 46.1464,
+              "width": 672.0000610351562,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 32.5985,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 22.6683,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 15.4317,
+              "width": 671.9999389648438,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 10.3106,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 6.67111,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 4.12006,
+              "width": 672.0000610351562,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 2.37824,
+              "width": 671.9999389648438,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 1.29218,
+              "width": 672.0000610351562,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0.609494,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0.240947,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0.0653204,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0.00689558,
+              "width": 671.9999389648438,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            }
+          ]
+        },
+        {
+          "state": "closed",
+          "samples": [
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 5.30752,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 19.9041,
+              "width": 671.9999389648438,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 41.8573,
+              "width": 672.0000610351562,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 70.9465,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 105.318,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 145.02,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 189.293,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 237.348,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 289.586,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 345.412,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 404.19,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 466.701,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 532.003,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 601.783,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 672,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1024,
+      "events": [
+        {
+          "state": "open",
+          "samples": [
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 672,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 672,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 672,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 490.746,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 32.4948,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 22.593,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 15.468,
+              "width": 672.0000610351562,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 10.3365,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 6.64379,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 4.11693,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 2.39678,
+              "width": 671.9999389648438,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 1.29087,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0.612513,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0.240558,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0.0651644,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0.0070306,
+              "width": 672.0000610351562,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            }
+          ]
+        },
+        {
+          "state": "closed",
+          "samples": [
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 5.28535,
+              "width": 672.0000610351562,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 19.7246,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 41.9936,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 71.1156,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 105.516,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 145.243,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 189.192,
+              "width": 671.9999389648438,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 237.239,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 289.469,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 345.287,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 404.513,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 467.041,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 532.361,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 601.629,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 672,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 768,
+      "events": [
+        {
+          "state": "open",
+          "samples": [
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 672,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 672,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 672,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 491.758,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 249.551,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 177.523,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 127.029,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 90.8301,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 64.8675,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 46.1036,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 32.5674,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 22.6457,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 15.4607,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 10.3313,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 6.64016,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 4.11443,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 2.40547,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 1.28983,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0.611908,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0.240248,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0.0650397,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0.00700345,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            }
+          ]
+        },
+        {
+          "state": "closed",
+          "samples": [
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 0,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 5.20544,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 19.8568,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 42.1763,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 70.8656,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 105.224,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 144.913,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 189.521,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 237.596,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 289.852,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 345.266,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 404.49,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 466.538,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 532.336,
+              "width": 672.0000610351562,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 602.133,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 672,
+              "width": 672,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "events": [
+        {
+          "state": "open",
+          "samples": [
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 390,
+              "width": 390,
+              "pointerEvents": "none",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 390,
+              "width": 390,
+              "pointerEvents": "none",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 390,
+              "width": 390,
+              "pointerEvents": "none",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 390,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 285.962,
+              "width": 390.0000305175781,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 204.878,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 145.499,
+              "width": 389.9999694824219,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 103.761,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 74.0576,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 52.9533,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 37.9144,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 26.8816,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 19.0423,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 13.2454,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 9.02045,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 6.01112,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 3.87759,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 2.4134,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 1.40694,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0.759229,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0.361324,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0.141477,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0.0385703,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0.00424515,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-enter",
+              "duration": "0.28s",
+              "x": 0,
+              "width": 390,
+              "pointerEvents": "auto",
+              "hasDraft": false,
+              "loading": true,
+              "unavailable": false
+            }
+          ]
+        },
+        {
+          "state": "closed",
+          "samples": [
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 0,
+              "width": 390,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 0,
+              "width": 390,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 3.05189,
+              "width": 390,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 11.4998,
+              "width": 390,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 24.3323,
+              "width": 390,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 41.0859,
+              "width": 390,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 61.0189,
+              "width": 390,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 84.0469,
+              "width": 390,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 109.729,
+              "width": 390,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 137.825,
+              "width": 390,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 167.914,
+              "width": 390,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 200.053,
+              "width": 390,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 234.406,
+              "width": 390,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 270.675,
+              "width": 390,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 308.857,
+              "width": 390,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 349.052,
+              "width": 390,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            },
+            {
+              "animation": "review-quick-panel-module__VWmiga__panel-exit",
+              "duration": "0.2s",
+              "x": 390,
+              "width": 390,
+              "pointerEvents": "none",
+              "hasDraft": true,
+              "loading": false,
+              "unavailable": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "outboundRequests": 0,
+  "persistedEvidence": {
+    "draftPresent": true,
+    "notePresent": true,
+    "databaseIdentity": "yuta_avis_quick_panel_test"
+  }
+}

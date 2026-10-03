@@ -1,11 +1,15 @@
 Change: avis-review-quick-panel
 Gate: 3
-Review status: APPROVED
+Review status: INVALIDATED_BY_ARTIFACT_CHANGE
 Created: 2026-10-03
 Schema: yuta-spec-driven
 COLLABORATION_MODE: CODEX_ONLY
 COMMIT_AFTER_TASK: YES
 Sync authorization: PENDING
+
+## Current correction status
+
+Historical approval below applies to the candidate committed as c2981864dbf91a192c89f93e1b75f3a166a59827. The current user subsequently reported absent visible sliding/loading/open-close feedback. Live dev observation confirmed no CSS animation (animation-name none, duration 0s, reduced-motion false). Earlier screenshots/state QA did not measure motion and therefore did not prove the approved sliding requirement. Source/Design/Tasks/current documentation are now being corrected inside the same scope; this packet and its manifest remain historical snapshot evidence, not approval of the changed current candidate. A fresh independent final review is required after corrected motion QA and the affected Human retest. Earlier commands, hashes, PASS findings and the user's CHANGES_REQUESTED are retained without relabelling historical results.
 
 ## Request, authority and bounded delivery
 

@@ -11,9 +11,10 @@ import {
   ErrorState,
   Skeleton,
 } from '@yuta/ui';
-import { useRef, type ComponentProps } from 'react';
+import { useRef, useState, type ComponentProps } from 'react';
 import type { ReviewDetailRecord, ReviewsPageData } from '../reviews-model';
 import { ReviewDetail } from './review-detail';
+import styles from './review-quick-panel.module.css';
 
 export function ReviewQuickPanel({
   open,
@@ -33,14 +34,28 @@ export function ReviewQuickPanel({
   onCloseAutoFocus: ComponentProps<typeof DialogContent>['onCloseAutoFocus'];
 }) {
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const [exitingState, setExitingState] = useState(() => ({
+    review,
+    loading,
+    data,
+  }));
+  const content = open ? { review, loading, data } : exitingState;
 
   return (
-    <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        if (!next) {
+          setExitingState({ review, loading, data });
+          onClose();
+        }
+      }}
+    >
       <DialogContent
         variant="right-panel"
         closeLabel="Fermer le détail de l’avis"
         closeClassName="right-3 top-3 flex h-11 w-11 items-center justify-center"
-        className="flex flex-col overflow-hidden bg-surface p-0 sm:max-w-2xl"
+        className={`${styles.content} flex flex-col overflow-hidden bg-surface p-0 sm:max-w-2xl`}
         onOpenAutoFocus={(event) => {
           event.preventDefault();
           titleRef.current?.focus();
@@ -56,7 +71,7 @@ export function ReviewQuickPanel({
           </DialogDescription>
         </DialogHeader>
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
-          {data.state === 'unavailable' ? (
+          {content.data.state === 'unavailable' ? (
             <ErrorState
               title="Cet avis est momentanément indisponible"
               description="Réessayez dans quelques instants."
@@ -66,7 +81,7 @@ export function ReviewQuickPanel({
                 </Button>
               }
             />
-          ) : loading ? (
+          ) : content.loading ? (
             <div className="grid gap-4 p-4" role="status" aria-live="polite">
               <span className="text-sm text-secondary">
                 Chargement de l’avis…
@@ -74,15 +89,16 @@ export function ReviewQuickPanel({
               <Skeleton className="h-24 w-full" />
               <Skeleton className="h-40 w-full" />
             </div>
-          ) : review ? (
+          ) : content.review ? (
             <ReviewDetail
-              key={review.id}
-              review={review}
-              assignableUsers={data.assignableUsers}
-              permissions={data.permissions}
-              releaseA={data.releaseA}
+              key={content.review.id}
+              review={content.review}
+              assignableUsers={content.data.assignableUsers}
+              permissions={content.data.permissions}
+              releaseA={content.data.releaseA}
               googleRetrievalAvailable={Boolean(
-                data.retrievalSummary?.enabled && data.retrievalSummary.bound,
+                content.data.retrievalSummary?.enabled &&
+                content.data.retrievalSummary.bound,
               )}
               className="rounded-none border-0 shadow-none xl:static"
             />

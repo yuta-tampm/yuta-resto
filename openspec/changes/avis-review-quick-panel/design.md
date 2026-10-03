@@ -8,7 +8,7 @@ Compose the exported right-panel Dialog with the current ReviewDetail. Keep serv
 
 ## Decisions
 
-- Add a route-local ReviewQuickPanel with a fixed header/close, internally scrolling body, French accessible title/description, and initial focus on its title. Use the existing modal's focus containment, Escape/backdrop dismissal and slide motion. A separate drawer primitive would duplicate existing UI ownership.
+- Add a route-local ReviewQuickPanel with a fixed header/close, internally scrolling body, French accessible title/description, and initial focus on its title. Use the existing modal's focus containment and Escape/backdrop dismissal. Explicit route-owned CSS supplies 280ms entrance and 200ms exit keyframes, with reduced-motion opt-out; the shared animation utility classes do not have CSS in the current Tailwind build. Retain the last displayed content only while the closed modal exits, with pointer events disabled, to avoid replacing the editor with unavailable/loading text during dismissal. Opening always uses current matching-selection props, never the exit snapshot. A separate drawer primitive would duplicate existing UI ownership.
 - ReviewsPage owns the explicit panel-selection state and opening-row ref. Set intent immediately on click; until the loaded detail matches, show loading instead of the old item. Synchronize URL selection changes so direct links and filter navigation remain coherent. Default first-item data remains available for existing retrieval semantics without automatically opening the modal.
 - Keep the same keyed ReviewDetail mounted while its selected ID stays unchanged, preserving unsaved form state across local Save/revalidation. Explicit dismissal exits the editor; it does not save unsaved edits. Existing explicit Save actions remain the only persistence mechanism.
 - Preserve pagination for Avis selection. Closing removes only `selected`, preserving the working list, filters and page; navigation keeps `scroll: false`. Return focus to the opening row with `preventScroll`. Keep Satisfaction's inline layout and its current query behavior.
@@ -24,3 +24,7 @@ Compose the exported right-panel Dialog with the current ReviewDetail. Keep serv
 ## Migration Plan
 
 No data migration or environment change. Apply presentation files and current documentation together. Rollback reverts these scoped files. No deployment, normative sync or archive is included.
+
+## Post-review technical correction
+
+The current user's live dev observation found no perceptible opening/closing motion. Live computed style confirmed animation-name none and duration 0s with reduced-motion false. Original screenshots/QA covered positions and states but did not measure motion; the earlier claim of verified sliding is insufficient for this defect. This correction implements the already approved slide requirement without changing Product, shared primitives, dependencies or server/provider boundaries. Loading was observed live on a different selected item; it stays conditional on actual unavailable data rather than adding an artificial pause.

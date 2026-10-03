@@ -34,7 +34,28 @@ TECHNICAL IMPLEMENTATION CONTRACT: Same boundaries/owners; authorities additiona
 
 After these implementation obligations, obtain independent Gate 3 approval for the exact candidate/evidence, then perform the authorized isolated local commit. This delivery procedure is not an implementation checkbox.
 
+## 4. Actual-user motion correction
+
+Same task/mode/commit source: the current user reports no visible slide/loading/open-close feedback after commit c2981864. This is feedback against approved observable behavior, not a new Product requirement. Boundaries remain unchanged. New correction baseline: c2981864dbf91a192c89f93e1b75f3a166a59827; intended paths are clean; the unrelated POS metadata remains excluded.
+
+TECHNICAL IMPLEMENTATION CONTRACT: route-owned CSS motion and modal-content retention during exit, with the same current-selection/state/authority guards. Reuse shared Dialog; no dependency or shared primitive edit. Fresh QA must measure entrance/exit transforms and CSS animations, actual pending feedback under bounded delayed local responses, close/focus/context, reduced-motion behavior and mobile/desktop controls; preserve the earlier failure and original evidence.
+
+- [x] 4.1 Implement and verify actual entrance/exit motion with reduced-motion support, stable closing content and truthful conditional loading.
+- [x] 4.2 Complete correction-scoped technical checks and actual motion/state Browser QA with truthful hashed evidence.
+
+After these implementation obligations and the required affected Human retest, obtain fresh independent Gate 3 review before the authorized local correction commit. Gate/commit procedure is not an implementation checkbox.
+
+Actual HUMAN_PRODUCT_VALIDATION: CHANGES_REQUESTED for the c2981864 candidate; source: current user's live dev feedback. Proven implementation defect YES: absent emitted motion CSS. Product defect NO. Earlier technical/QA PASS and approval apply only to their original bytes and coverage; they do not prove motion. At correction intake DEV_USABLE/MANUAL_TEST_READY/QA/VERIFY were PENDING; the subsequent current observations and verdicts are recorded below. Iteration bucket: motion defect, correction Apply/QA generation 1; read-only diagnosis does not consume a correction execution generation. No failed recovery or scope expansion has occurred.
+
+Correction post-Apply observation: DEV_USABLE applicability YES, result YES on actual existing localhost:3001 dev, normal current-user authenticated session/profile internal. Opening review two exposed the named pending state and computed panel-enter animation 0.28s; closing exposed panel-exit 0.2s, pointer-events none, without unavailable text. Current source identities: review-quick-panel.tsx fa9c1ee99c0e07ec5b59643e03e8792e312aa9eb55ae3e6eb0bf807c39259056; review-quick-panel.module.css 11743c7dfa347f7dcf0fd720b316f0e71b03248a1667de32784c048a51dfbefc. No form/provider write or dev restart was performed.
+
+MANUAL_TEST_READY applicability YES, result YES: existing dev runtime localhost:3001, current user session, /visibilite-reputation/avis; select review two, observe entrance/loading as needed, close with X/Escape; repeat on mobile. Existing data remains unchanged. Reset/retry: close then choose another row; refresh only if there is no unsaved writing. Reduced-motion preference intentionally disables motion. One async retest request was sent on 2026-10-03 under the required workflow rule. Actual HUMAN_PRODUCT_VALIDATION: ACCEPTED; source: current user's reply on 2026-10-03, "Đã thấy trượt vào/ra, tương tác ổn" (translation: sliding in/out is visible and interaction works). Acceptance applies to the affected open/close experience of the two exact source identities above. It is not broader QA, provider, production or Gate 3 approval. Historical CHANGES_REQUESTED remains above.
+
+Correction technical evidence: docs/reviews/avis-review-quick-panel/04-motion-verification-evidence.md. Backoffice production build and full tests passed (1555 tests; 54 guarded skips); docs, architecture, recursive typecheck and strict change validation passed. Full format check still FAILS on 51 pre-existing paths outside the correction; task-scoped formatting passes. Current correction QA: qa/motion/QA_REPORT.md, 47 named scenarios PASS, 13 inspected screenshots and 8 actual animation-frame traces across 1440/1024/768/390. Pending/loading, cached opening, reduced motion, stable exit content, close during pending response, existing Saves and Satisfaction regression passed. Disposable QA servers/container were removed; the current user's dev runtime remains available. All seven implementation tasks are complete; fresh independent Gate 3 remains required before the authorized isolated local commit.
+
 ## POST_APPLY_DEVELOPMENT_FEEDBACK
+
+The original assertions below are historical for the c2981864 candidate. Current correction assertions and actual Human feedback are in section 4 above; do not interpret the old NOT_REQUESTED or PASS values as acceptance of the motion correction.
 
 Adoption: REQUIRED. Event: `docs/reviews/development-usability-and-iteration-control/03-final-review.md`, authorized finish/archive on 2026-09-24; archived change `2026-09-24-development-usability-and-iteration-control`.
 
@@ -48,7 +69,7 @@ HUMAN_PRODUCT_VALIDATION: NOT_REQUESTED; CODEX_ONLY; optional user feedback was 
 
 Language lineage: stage planning review; original Vietnamese Gate 2 candidate CHANGES_REQUESTED because current-user English technical-doc rule overrides CLI context. Translated artifacts without behavior/scope change; affected approvals invalidated and fresh Gate 1/Gate 2 APPROVED. One resolving correction, zero failed recovery attempts; two actual Gate 2 review generations. No further equivalent reconciliation is needed. Implementation/evidence ledger: NONE until an actual blocker is observed.
 
-## Current implementation candidate for development observation
+## Historical implementation candidate for development observation (c2981864)
 
 - apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/\_components/review-detail.tsx: 400ad63dcc3a74d2c646ff55cfc1b9e8de793af83b447261cedc240ae52d8964
 - apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/\_components/review-quick-panel.tsx: a57dd380865834f348411d937449926e30d3c553e6649a6d5058ed04b13f1461

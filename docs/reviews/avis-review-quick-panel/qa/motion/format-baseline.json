@@ -1,0 +1,265 @@
+{
+  "command": "pnpm format:check",
+  "exit": 1,
+  "preservation": "PASS: 67 exact paths",
+  "warningCount": 51,
+  "attribution": "All warning paths have an empty Git diff against the correction base; unrelated baseline formatting remains unchanged.",
+  "base": "c2981864dbf91a192c89f93e1b75f3a166a59827",
+  "paths": [
+    {
+      "path": ".claude/agents/yuta-readonly-reviewer.md",
+      "sha256": "8a67722bc560a4f4cf4e7fa16ac2ddd0b649302bdfd98618addef6665e6a28fa",
+      "baselineBlob": "8dcc9084dd97505b0c4d5f21b0c69ac87b694bbf"
+    },
+    {
+      "path": ".claude/settings.json",
+      "sha256": "ffe8e6d6435c8d84b9c8186597490e3524ed1195c153d205b7564e8974c7bd85",
+      "baselineBlob": "db8c2fe6d60a5f8413eed3ebffc5b28816abc2f2"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "d46fb261093e50a46582f330540a6066028067701ba2d406ff48ff800c191fe5",
+      "baselineBlob": "aa05029ccb5cd29c94b398e834ec716970921da1"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-reply-form.tsx",
+      "sha256": "3e7f0baefbf544b73dab5495c2bcdc539182548e9ee8548f873f85877654ee93",
+      "baselineBlob": "e125549b57590fe1757f7797e25f0ad9b4052011"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-loader.tsx",
+      "sha256": "377fe6291050688c443ebb071e9b0c66685e1cbd3ab9dbaaae35ca938f8752d4",
+      "baselineBlob": "f019bf5b2909ba5dbe92ff4e233aba0207dc699b"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/reviews-model.ts",
+      "sha256": "9e789394e38e1a3a51a254bee72871abec36f8273122d9e04c10d38af5ccbb0f",
+      "baselineBlob": "dd483a75a9e60ac7a9069e3ca16e822576a4a663"
+    },
+    {
+      "path": "apps/backoffice/src/server/reputation/google-business-profile-client.ts",
+      "sha256": "c9667533d93fb5cbdc59c7258d30d5545ca76d7983fd8caf597058d541d86260",
+      "baselineBlob": "a0afee8f692a190139facc99a9cb6d8527195e41"
+    },
+    {
+      "path": "apps/backoffice/src/server/reputation/google-connector-access.ts",
+      "sha256": "3322464ecfed6e271616d79b2842fd672009f71a556d8a69e26e66fb3796b965",
+      "baselineBlob": "d2e940ee49db343ae5b8a7fd2e2fcb16f0f4379b"
+    },
+    {
+      "path": "apps/backoffice/test/review-reply-form.test.tsx",
+      "sha256": "af99086cbf0a5afc029edaf7bb2d2cfe3752df6447fb517567857ddb6317fb98",
+      "baselineBlob": "0425f7e74d2232f2b7ff2d763a212d390bf30c53"
+    },
+    {
+      "path": "apps/booking-web/src/app/[establishmentSlug]/_components/booking-flow.tsx",
+      "sha256": "3227103d0f47ff48c35e3e5475e381860ad9544ad6ec0b01c3c091bb9fde423c",
+      "baselineBlob": "31f60c76470797d5e97e6358b6b6e8a814e3f9e8"
+    },
+    {
+      "path": "apps/feedback-web/src/app/[tenantSlug]/_components/feedback-form.tsx",
+      "sha256": "11f6267379fa8fd73ade98b593ae5705c60404f6786e38ff4e05a9c3c41e4d3c",
+      "baselineBlob": "79d512d69d22a132ed986d98434335012c66e28c"
+    },
+    {
+      "path": "apps/site-agent/src/services/financial-service.ts",
+      "sha256": "8dd1233f19b8408b83ca3895bbdfb2e34d372ebd1da203b3fbbbfaab301434a5",
+      "baselineBlob": "c148c79e8bb5f04d2a243ff49b3dd2d4ce7f367b"
+    },
+    {
+      "path": "apps/site-agent/src/services/internal-ticket-preview-service.ts",
+      "sha256": "d3f457686928703409aaad9f262604910fc97d71abfde4649e472b08466583f3",
+      "baselineBlob": "ec8fda533b79c158a13293a10d260106b189515e"
+    },
+    {
+      "path": "apps/site-agent/src/services/local-printer-worker.ts",
+      "sha256": "715803e51ffcd1dba31c38928d20c45ad394409e4020f83f6ae52bd7f119e816",
+      "baselineBlob": "027929634882462b0ff87114a62a8951a0716844"
+    },
+    {
+      "path": "apps/site-agent/src/services/order-command-service.ts",
+      "sha256": "d432008371c6417d5cb853413ed776ef9e3db07591b9586715c1b095758d230a",
+      "baselineBlob": "79175c5f7517e915d760964f60f5bed9114d22b9"
+    },
+    {
+      "path": "apps/site-agent/src/services/receipt-preview-service.ts",
+      "sha256": "2977df8703aebfd180b37c30794c077b2ba4c3434ca2641777aba46e4e19da8a",
+      "baselineBlob": "b0fc424207ca0e0e3d474e089ef39e8165bd7437"
+    },
+    {
+      "path": "apps/site-agent/src/services/site-agent-service.ts",
+      "sha256": "255f17bd701638506762fa9013a917e5278bcab481c8e4d0ea0c9cdb85ecc427",
+      "baselineBlob": "c779002c1e6228b2ea6badf956c596d0caa67eff"
+    },
+    {
+      "path": "apps/web/src/app/page.tsx",
+      "sha256": "9aafc9cdeb4cc6109cc80d4af278f3e3a83e54ea6a58cec93b41e612744a1eeb",
+      "baselineBlob": "ada1d2577b9541f0212d1768bd6d1d119d0d4750"
+    },
+    {
+      "path": "apps/yuta-pos/src/app/management/users/_components/UserDialogs.tsx",
+      "sha256": "77ee4249f3f2e2095144f64fbfe4da5401b687c00954e1530fb5157abd7f6b52",
+      "baselineBlob": "d15d78c385266bf41c9b2786602d3d93ae2f6fb4"
+    },
+    {
+      "path": "apps/yuta-pos/src/app/orders/[orderId]/payment/page.tsx",
+      "sha256": "6e2851f88839a7bf30bc5207b1940feafe5a5b8cd92e3fb07696d2d72263c50f",
+      "baselineBlob": "33ca2124f3a6f6709c85d50ffddf37a47b7abe9c"
+    },
+    {
+      "path": "apps/yuta-pos/src/app/page.tsx",
+      "sha256": "902fd4eade543ce2115d39563845bc7e16360eb7abe262e6ff247bc160659324",
+      "baselineBlob": "67678d7a7037ec8d0df0deca539f8bd2cc3fb0f5"
+    },
+    {
+      "path": "apps/yuta-pos/src/lib/site-agent-client.ts",
+      "sha256": "08349f02d6595cf4613a7d87ad4904271998acb1acc9cd3f004bb458fd61fb6d",
+      "baselineBlob": "a61648ec8ef9744c085ea6a27ae72f582fd2af05"
+    },
+    {
+      "path": "CLAUDE.md",
+      "sha256": "2ab0eb6d1142b7430757f5d7674250f9e8623dd76273d1742edcee6d59b29a3c",
+      "baselineBlob": "c4737ea8e8884b6fcb8c6fc8fbe22c90d0972d3e"
+    },
+    {
+      "path": "docs/CURRENT_STATE.md",
+      "sha256": "b7716568af61a7e3a85e447d11675de54c7d1fe40f5186029e933e6ea808d0c0",
+      "baselineBlob": "2e9a600d250429b6114843077cd07016fe086cf4"
+    },
+    {
+      "path": "docs/DEVELOPMENT_WORKFLOW.md",
+      "sha256": "bd4228f4d9ff3537f313b528a85291e383e512d429f5fdfd55411b23563cdde3",
+      "baselineBlob": "3cd13d2f6ed0bc8c8b965e15e5941b094e45e429"
+    },
+    {
+      "path": "docs/features/reputation/STATUS.md",
+      "sha256": "6a0f919dfb01c275ac5ca8bab8bb278799e813e5c40a25b52713808eeecb7f03",
+      "baselineBlob": "4a0d8a623c8de55f43a9ded7b7133d774da74bac"
+    },
+    {
+      "path": "docs/operations/LOCAL_DEVELOPMENT.md",
+      "sha256": "0f36c6c868a70de331ae14dee0aa7927524741dd1eea6089f070ac7b3172fe32",
+      "baselineBlob": "3475891a9ebca1a7ee104a227be2650d26994917"
+    },
+    {
+      "path": "docs/reviews/claude-task-execution-tooling/01-analysis-review.md",
+      "sha256": "3affa46559be99a38625e51be3054394266c523b2310b5621664528c3612a84e",
+      "baselineBlob": "b8be97ca45de5c7cff05b84b0d2885b59b8f426d"
+    },
+    {
+      "path": "docs/reviews/claude-task-execution-tooling/02b-design-review.md",
+      "sha256": "356c9cb7d1e8deaf6b9df5429e63b3ede2ea44ff01522a36dce835b83b4c6ed2",
+      "baselineBlob": "80a1ef1c58c845d9d8b226b0c21877006f79c43e"
+    },
+    {
+      "path": "docs/reviews/claude-task-execution-tooling/03-final-review.md",
+      "sha256": "d7c1f6177247d8aaac281305fd3f33f27fb8563efdb821635b21152bab098727",
+      "baselineBlob": "9e08e71869be4d7e6d69ecfd438f14a559e90e61"
+    },
+    {
+      "path": "docs/reviews/claude-task-execution-tooling/03-verification-evidence.md",
+      "sha256": "af027cf6d5c15532e219dc5f27b6cb0a8daee8f0d241f4f4a637b3835e25fbc5",
+      "baselineBlob": "277038e9843ee35ce1304792af2d436fefa20a14"
+    },
+    {
+      "path": "docs/reviews/claude-task-execution-tooling/qa/capability-binding.json",
+      "sha256": "99beca2b47ea3895760527b5777b8eb67288e366e8a00dd12ff7099c7a1494ca",
+      "baselineBlob": "199110a4b63f0d9fb7d2ce4cbbb4ae8a90123f63"
+    },
+    {
+      "path": "docs/reviews/claude-task-execution-tooling/qa/QA_REPORT.md",
+      "sha256": "a9263640a66c2b701d29e25c9cf2f7017cf56e05475dfc0ca7f548f964bc62ee",
+      "baselineBlob": "ee4a3d5212c486062c88585b868e2295efc0ba32"
+    },
+    {
+      "path": "docs/reviews/claude-task-execution-tooling/qa/screenshot-manifest.md",
+      "sha256": "dc644dbe800f4bf8353df0dcfac783d433573517ff205453a51f9fc6d4c0d128",
+      "baselineBlob": "aa6bf77cef593e946534ff036d728d7c6a6f8e47"
+    },
+    {
+      "path": "docs/ui/pages/pos-kitchen/DATA_AND_INTERACTION_SPEC.md",
+      "sha256": "1c1a3f70d4d80402a2d97f4cc98902b05f508be8d96e8de58cfd78dc9c4903a9",
+      "baselineBlob": "a5a969c460e4f29a877534ea597f465c35ffc208"
+    },
+    {
+      "path": "docs/ui/pages/pos-management-users/README.md",
+      "sha256": "33765ac7c80729f67a67424e6c9c2c39ff927902181833eec81d13c3fd6eafab",
+      "baselineBlob": "5a30abcebc0dc40520a04a5ab7d44d6557d8f7db"
+    },
+    {
+      "path": "openspec/changes/archive/2026-10-02-claude-task-execution-tooling/.openspec.yaml",
+      "sha256": "e73ab9dcbc9d5526777de8793e1c9509e3892c4f4011e91cf66fcb55133f6416",
+      "baselineBlob": "0c2b9cbe80a432609bd924f6d8bcf4aab0cae28e"
+    },
+    {
+      "path": "openspec/changes/archive/2026-10-02-claude-task-execution-tooling/analysis.md",
+      "sha256": "36b7deb40eda4c2f861983d10ccc3a08e4c47bbdc39ab3eda2542d3c5e1ddfd4",
+      "baselineBlob": "c061c8559057d3b0ff5737056acd264a5d1d215a"
+    },
+    {
+      "path": "openspec/changes/archive/2026-10-02-claude-task-execution-tooling/design.md",
+      "sha256": "aeb98534e20ae731d3a38870b8fe328ea1ccbbc70abfd978338e0b4ff7d1cc15",
+      "baselineBlob": "004151e98c7770efe46c1b68eef46da6a3dcab45"
+    },
+    {
+      "path": "openspec/changes/archive/2026-10-02-claude-task-execution-tooling/proposal.md",
+      "sha256": "dff27a060818d8f48403029a958385d9905eb1c46fe0ef6a2ced21b262b7eab8",
+      "baselineBlob": "3012aad209718213fe04bb66fe7bb5ad49ae0b4f"
+    },
+    {
+      "path": "openspec/changes/archive/2026-10-02-claude-task-execution-tooling/tasks.md",
+      "sha256": "ebe664b6f945ed7bc41919c0ca88693824579faf88c501b9434a67eb0b47c03e",
+      "baselineBlob": "c39128a382fd767466714df5f9de56882d82db52"
+    },
+    {
+      "path": "package.json",
+      "sha256": "7fbb73b000664f49077326c6588e8572033f81466c8f44be0bb9a164b3a94530",
+      "baselineBlob": "710a5ca4d03778ea7d35978f1623c82efbda7fde"
+    },
+    {
+      "path": "packages/contracts/src/local-pos/index.ts",
+      "sha256": "859b4d6e05c0710cfb6c1af07332557be9378584f4877ba9fa675cbe1bcdcad4",
+      "baselineBlob": "15c45072ddd19b7f2a4ff032e89212c87f980e53"
+    },
+    {
+      "path": "packages/contracts/src/reputation/index.ts",
+      "sha256": "58177d80377f7493b5118dedfed1994cd0e74d013abf5cab5ec68807de8cdf69",
+      "baselineBlob": "5a9ff45149efe222b5a98a30f721a7c7318c77f2"
+    },
+    {
+      "path": "packages/db-cloud/src/google-review-retrieval-repository.ts",
+      "sha256": "e569e290c522d6fd917251343d2acdf675dee08d892b98b93251e1e7bfb60810",
+      "baselineBlob": "a5b702ed8f28f17ad6abfb40eb342efeef961725"
+    },
+    {
+      "path": "packages/db-cloud/src/index.ts",
+      "sha256": "f3b6686910210b6ca36c13067105fc2be2eca5cd932effaf4a0379b9dd91c49a",
+      "baselineBlob": "dcd131e5a9747fc8136a2b4366a74407b6d2a8a7"
+    },
+    {
+      "path": "packages/db-cloud/src/reputation-repository.ts",
+      "sha256": "b038fa170aca05c85d36e3ce3e579d62b692a2ec0654323925d91f0ba19be100",
+      "baselineBlob": "5e7c2c75d69064186c1c507771242797cdc570ad"
+    },
+    {
+      "path": "packages/db-cloud/src/schema/reputation.ts",
+      "sha256": "b5cb0db82b0f130c02854d71f5b9a7b33ed1a78fff8f0f53473a49ec35aebf71",
+      "baselineBlob": "1904c95163ba11dcdd4156c0cd7a9d46de60f565"
+    },
+    {
+      "path": "scripts/claude-task.mjs",
+      "sha256": "9e5efb81fe4d76dde7bb2fab22c4fcb7cfa784c53ed7c4c1a1675b53fe9bc743",
+      "baselineBlob": "7180769cc057a3d3dd6493e0da2ace61a0644b77"
+    },
+    {
+      "path": "scripts/claude-task.test.mjs",
+      "sha256": "1320e691efaf8a685582ba548ecff7db33bc60397853352525991a5ab79f95dc",
+      "baselineBlob": "6bbd245f15101398671cac1cfb969dcf7ca8db56"
+    },
+    {
+      "path": "scripts/claude-task/example-handoff.json",
+      "sha256": "aeed6993c3d0890a30aa620a9e49be47bc2a98dd1d589544039621798075fbc8",
+      "baselineBlob": "99d8aa12b060e9c2c8f201737e908b16cc2690b4"
+    }
+  ]
+}
