@@ -6,7 +6,7 @@ UI_AFFECTING: YES
 
 BROWSER_QA_REQUIRED: YES
 
-QA status: PASS for the bounded Wave 1 changes.
+QA status: PASS for the three bounded maintenance waves. Wave-specific classifications and limitations follow.
 
 ## Wave 1
 
@@ -55,3 +55,25 @@ Recovery/evidence limits: Leaving a dirty CDI workspace displayed the native con
 Validation: 136 Backoffice test files and 1,605 cases pass; one gated file / 54 cases remain skipped. Documentation, architecture, Backoffice production build and final recursive workspace typecheck pass. The initial typecheck found two generic-inference errors in the new history tests; Codex corrected only those two calls, reran six helper cases and typecheck successfully. The original raw diagnostic log was overwritten by the retry; the failure summary is retained in task check evidence. Changed text files pass scoped Prettier. Global format limitations are recorded in task check evidence; no unrelated formatting was changed. No dependency, schema, auth guard, tenant scope or provider change.
 
 Evidence: [wave-2-screenshots.json](wave-2-screenshots.json) and [screenshot-manifest.md](screenshot-manifest.md). Local fictional mutations do not establish production or provider readiness.
+
+## Wave 3
+
+UI_AFFECTING: NO (server command validation, effect ordering and typed reuse; no form/layout/component change). BROWSER_QA_REQUIRED: NO. Non-browser action-boundary QA: PASS. Additional actual history-route smoke: PASS. The task-level YES classification above remains for Waves 1 and 2.
+
+Non-browser evidence exercises the real upload and history actions with mocked repository, storage, scanner and session dependencies:
+
+- Invalid employee/retry/amendment IDs, revisions, dates, references and modes return safe form errors before PDF checks, quarantine, scanning, metadata persistence or rejection audit. The mode is now explicitly create or replace; missing/unknown modes fail instead of silently creating. Normal forms already submit the explicit mode.
+- Create and replace send exactly their own validated fields, preserve empty-reference normalization, revisions and trusted tenant arguments, and ignore stray fields from the other branch.
+- Real file-status failures, derived file-metadata validation, scanner rejection and storage failure retain appropriate rejection audits and cleanup. A retry keeps its command. Successful metadata persistence remains protected from cache-error cleanup; replay copies alone are discarded. No live PDF/scanner/storage/provider transaction was performed.
+- All three history loaders retain trace-before-read order. Denied/unavailable traces prevent reads; temporary read failure can recover; session and MANAGER/STAFF permission rejection propagate before any trace or read. Opaque access cursors are passed unchanged with trusted scope.
+- Root and nested F07 field mapping retains existing French copy, fallback keys and semantic-group ownership.
+
+Execution evidence: actual Claude Code completed the authorized three-file command twice, with 81 passing cases each; its guarded receipt shows unchanged HEAD/index and zero path violations. Codex formatted the new history-test wrapping, then the full Backoffice suite passed 137 files / 1,664 cases, with one gated file / 54 cases skipped. Public contracts passed 118 cases and the Personnel history domain passed 14. Documentation, architecture, six-app Next type generation, recursive workspace typecheck and Backoffice production build all passed. Scoped formatting passes. Global format still fails on 149 Git-unchanged files outside the task.
+
+Additional runtime smoke: normal OWNER session on the same independently verified disposable database opened the actual full dossier route after the refactor. Historique loaded Alex's persisted correction from Alex to Alex QA2 and its synthetic reason; Consultations showed the new authorized history-access records and first-page controls. The default 1280x720 screenshot was visually inspected; no new document overflow was present. This smoke does not exercise the unused audit-only history wrapper or live uploads; their applicable ordering/failure behavior is covered by action tests. No further employee mutation was performed in Wave 3.
+
+Expected broad checks not run: repository-wide test:cloud/build:cloud and test:local, replaced by the relevant Backoffice build/test and shared contract/domain commands; live PDF/scanner/provider and gated integration cases remain unexecuted. No OpenSpec lifecycle, production readiness or deployment claim.
+
+Cleanup: task-owned Next process trees were stopped by their exact recorded PIDs; the independently verified tmpfs PostgreSQL container was stopped and removed by its recorded identity. Existing Cloud/POS/Display containers were preserved. Temporary QA tabs were closed and viewport override reset.
+
+Screenshot evidence: [wave-3-screenshots.json](wave-3-screenshots.json) and [screenshot-manifest.md](screenshot-manifest.md).

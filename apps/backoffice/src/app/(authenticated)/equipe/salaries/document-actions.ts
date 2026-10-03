@@ -30,7 +30,16 @@ import {
   scanAndPromoteSignedPdf,
   signedPdfChecksum,
 } from '@/server/personnel-documents/signed-pdf';
-import { nullableText } from './_lib/form-values';
+import {
+  amendmentFieldError,
+  rootIssueField,
+  zodFieldErrors,
+} from './_lib/personnel-action-errors';
+import {
+  parseAmendmentUploadCommand,
+  parseDocumentUploadCommand,
+  type AmendmentUploadCommand,
+} from './_lib/personnel-upload-command';
 
 export type LoadEmployeeDocumentsActionResult =
   | { status: 'success'; documents: PersonnelDocumentList }
@@ -56,20 +65,6 @@ export type SaveEmployeeAmendmentActionState = {
     reference: string;
   };
 };
-
-const createAmendmentFormSchema = z
-  .object({
-    effectiveDate: z.string().date(),
-    reference: z.string().trim().min(1).max(80).nullable(),
-  })
-  .strict();
-
-const replaceAmendmentFormSchema = z
-  .object({
-    amendmentId: z.string().uuid(),
-    expectedRevision: z.coerce.number().int().positive(),
-  })
-  .strict();
 
 export async function loadEmployeeDocumentsAction(
   employeeId: string,
@@ -100,8 +95,15 @@ export async function saveEmployeeDocumentAction(
 ): Promise<SaveEmployeeDocumentActionState> {
   const { tenant } = await requirePersonnelTenant('/equipe/salaries');
   requirePersonnelPermission(tenant, 'personnel.document.manage');
-  const employeeId = String(formData.get('employeeId') ?? '');
-  const idempotencyKey = String(formData.get('idempotencyKey') ?? '');
+  // An invalid command is not a rejected file: it causes no file read,
+  // storage, scanner, metadata, or rejection-audit side effect.
+  const command = parseDocumentUploadCommand(formData);
+  if (!command.success) {
+    return documentError(
+      'Le formulaire n’est plus à jour. Rechargez la liste avant de réessayer.',
+    );
+  }
+  const { employeeId, idempotencyKey, expectedRevision } = command.data;
   let storageKey: string | null = null;
   try {
     const upload = await checkSignedPdfFile(formData.get('file'));
@@ -109,11 +111,11 @@ export async function saveEmployeeDocumentAction(
       return documentError('Sélectionnez un fichier PDF.');
     }
     if (upload.status === 'too_large') {
-      await recordRejectedSafe(employeeId, idempotencyKey, 'invalid_file');
+      await recordRejectedSafe('invalid_file');
       return documentError('Le fichier ne doit pas dépasser 10 Mo.');
     }
     if (upload.status === 'invalid') {
-      await recordRejectedSafe(employeeId, idempotencyKey, 'invalid_file');
+      await recordRejectedSafe('invalid_file');
       return documentError('Seuls les fichiers PDF valides sont acceptés.');
     }
     const { file, content } = upload;
@@ -121,11 +123,10 @@ export async function saveEmployeeDocumentAction(
     storageKey = await quarantineSignedPdf(content);
     await scanAndPromoteSignedPdf(storageKey);
 
-    const rawRevision = String(formData.get('expectedRevision') ?? '').trim();
     const result = await savePersonnelDocumentMetadata(cloudDatabase, tenant, {
       idempotencyKey,
       employeeId,
-      expectedRevision: rawRevision ? Number(rawRevision) : null,
+      expectedRevision,
       category: 'signed_employment_contract',
       filename: sanitizeDocumentFilename(file.name),
       mediaType: 'application/pdf',
@@ -168,16 +169,18 @@ export async function saveEmployeeDocumentAction(
       };
     }
     if (error instanceof PersonnelDocumentScannerError) {
-      await recordRejectedSafe(employeeId, idempotencyKey, 'scanner_rejected');
+      await recordRejectedSafe('scanner_rejected');
       return documentError(
         'Le fichier n’a pas été accepté par le contrôle de sécurité.',
       );
     }
+    // The command was validated up front, so a schema failure here concerns
+    // the server-derived file metadata.
     if (error instanceof z.ZodError) {
-      await recordRejectedSafe(employeeId, idempotencyKey, 'invalid_file');
+      await recordRejectedSafe('invalid_file');
       return documentError('Vérifiez le fichier puis réessayez.');
     }
-    await recordRejectedSafe(employeeId, idempotencyKey, 'storage_failure');
+    await recordRejectedSafe('storage_failure');
     console.error('Failed to save a personnel document.', error);
     return documentError(
       'Impossible d’enregistrer le document pour le moment. Réessayez.',
@@ -185,16 +188,14 @@ export async function saveEmployeeDocumentAction(
   }
 
   async function recordRejectedSafe(
-    rejectedEmployeeId: string,
-    operationId: string,
     reasonCode: 'invalid_file' | 'scanner_rejected' | 'storage_failure',
   ) {
     try {
       await recordPersonnelDocumentUploadRejected(
         cloudDatabase,
         tenant,
-        rejectedEmployeeId,
-        operationId,
+        employeeId,
+        idempotencyKey,
         reasonCode,
       );
     } catch {
@@ -232,26 +233,23 @@ export async function saveEmployeeAmendmentAction(
 ): Promise<SaveEmployeeAmendmentActionState> {
   const { tenant } = await requirePersonnelTenant('/equipe/salaries');
   requirePersonnelPermission(tenant, 'personnel.document.manage');
-  const employeeId = String(formData.get('employeeId') ?? '');
-  const amendmentId = nullableText(formData.get('amendmentId'));
-  const idempotencyKey = String(formData.get('idempotencyKey') ?? '');
-  const mode = formData.get('mode') === 'replace' ? 'replace' : 'create';
   const values = {
     effectiveDate: String(formData.get('effectiveDate') ?? ''),
     reference: String(formData.get('reference') ?? ''),
   };
+  // An invalid command is not a rejected file: it causes no file read,
+  // storage, scanner, metadata, or rejection-audit side effect.
+  const parsedCommand = parseAmendmentUploadCommand(formData);
+  if (!parsedCommand.success) {
+    return amendmentError(
+      'Certains champs doivent être corrigés.',
+      zodFieldErrors(parsedCommand.error, rootIssueField, amendmentFieldError),
+      values,
+    );
+  }
+  const command = parsedCommand.data;
   let storageKey: string | null = null;
   try {
-    const commandInput =
-      mode === 'replace'
-        ? replaceAmendmentFormSchema.parse({
-            amendmentId,
-            expectedRevision: formData.get('expectedRevision'),
-          })
-        : createAmendmentFormSchema.parse({
-            effectiveDate: formData.get('effectiveDate'),
-            reference: nullableText(formData.get('reference')),
-          });
     const upload = await checkSignedPdfFile(formData.get('file'));
     if (upload.status === 'missing') {
       return amendmentError(
@@ -286,8 +284,8 @@ export async function saveEmployeeAmendmentAction(
     storageKey = await quarantineSignedPdf(content);
     await scanAndPromoteSignedPdf(storageKey);
     const fileMetadata = {
-      idempotencyKey,
-      employeeId,
+      idempotencyKey: command.idempotencyKey,
+      employeeId: command.employeeId,
       filename: sanitizeDocumentFilename(file.name, 'avenant-signe'),
       mediaType: 'application/pdf' as const,
       byteSize: file.size,
@@ -295,18 +293,14 @@ export async function saveEmployeeAmendmentAction(
       storageKey,
     };
     const result =
-      mode === 'replace'
+      command.mode === 'replace'
         ? await replacePersonnelContractAmendmentMetadata(
             cloudDatabase,
             tenant,
             {
               ...fileMetadata,
-              amendmentId:
-                'amendmentId' in commandInput ? commandInput.amendmentId : '',
-              expectedRevision:
-                'expectedRevision' in commandInput
-                  ? commandInput.expectedRevision
-                  : 0,
+              amendmentId: command.amendmentId,
+              expectedRevision: command.expectedRevision,
             },
           )
         : await createPersonnelContractAmendmentMetadata(
@@ -314,12 +308,8 @@ export async function saveEmployeeAmendmentAction(
             tenant,
             {
               ...fileMetadata,
-              effectiveDate:
-                'effectiveDate' in commandInput
-                  ? commandInput.effectiveDate
-                  : '',
-              reference:
-                'reference' in commandInput ? commandInput.reference : null,
+              effectiveDate: command.effectiveDate,
+              reference: command.reference,
             },
           );
     const persistedStorageKey = storageKey;
@@ -335,7 +325,7 @@ export async function saveEmployeeAmendmentAction(
       status: 'success',
       message: result.idempotentReplay
         ? 'Cet avenant avait déjà été enregistré.'
-        : mode === 'replace'
+        : command.mode === 'replace'
           ? 'Le fichier de cet avenant a été vérifié et remplacé.'
           : 'L’avenant signé a été vérifié et enregistré.',
       fieldErrors: {},
@@ -388,21 +378,13 @@ export async function saveEmployeeAmendmentAction(
         values,
       );
     }
+    // The command was validated up front, so a schema failure here concerns
+    // the server-derived file metadata.
     if (error instanceof z.ZodError) {
       await recordRejectedSafe('invalid_file');
-      const fieldErrors: Record<string, string> = {};
-      for (const issue of error.issues) {
-        const field = String(issue.path[0] ?? 'form');
-        fieldErrors[field] ??=
-          field === 'effectiveDate'
-            ? 'Indiquez une date d’effet valide.'
-            : field === 'reference'
-              ? 'La référence doit contenir 80 caractères maximum.'
-              : 'Vérifiez cette valeur.';
-      }
       return amendmentError(
         'Certains champs doivent être corrigés.',
-        fieldErrors,
+        zodFieldErrors(error, rootIssueField, amendmentFieldError),
         values,
       );
     }
@@ -422,15 +404,21 @@ export async function saveEmployeeAmendmentAction(
       await recordPersonnelContractAmendmentUploadRejected(
         cloudDatabase,
         tenant,
-        employeeId,
-        idempotencyKey,
+        command.employeeId,
+        command.idempotencyKey,
         reasonCode,
-        mode === 'replace' ? (amendmentId ?? undefined) : undefined,
+        rejectedAmendmentId(command),
       );
     } catch {
       console.error('Failed to record a rejected amendment upload.');
     }
   }
+}
+
+function rejectedAmendmentId(
+  command: AmendmentUploadCommand,
+): string | undefined {
+  return command.mode === 'replace' ? command.amendmentId : undefined;
 }
 
 function revalidateSalariesAfterCommit() {

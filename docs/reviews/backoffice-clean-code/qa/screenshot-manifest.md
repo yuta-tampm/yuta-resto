@@ -35,3 +35,9 @@
 | wave-2-cdi-editable-1024.jpg | 1024x768 | OWNER: Wave 2 extracted CDI editable panel, stored exclude choice | `b5316075044071a770b3f95acef9bf79b39e8d4868ee2efaf2a77c56b130469b` |
 | wave-2-cdi-editable-768.jpg  | 768x1024 | OWNER: Wave 2 extracted CDI editable panel, stored exclude choice | `fe5fdb8f3d940416000b5577f612bff2090825799bd598e67134bd6803d663e6` |
 | wave-2-cdi-editable-390.jpg  | 390x844  | OWNER: Wave 2 extracted CDI editable panel, stored exclude choice | `1c86233081a8c2f345a2927a3537a5cbd45bb3eae342752d39643dddbe3c93ca` |
+
+## Wave 3 additional runtime smoke
+
+| Path                     | Viewport | Role/state and scenario                                             | SHA-256                                                            |
+| ------------------------ | -------- | ------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| wave-3-history-smoke.jpg | 1280x720 | OWNER actual persisted history after traced-history action refactor | `99a962205e1c05ba55917e8f39a780f31817712ec583edc0fac46c9e66741541` |

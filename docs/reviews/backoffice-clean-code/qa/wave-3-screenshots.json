@@ -1,0 +1,16 @@
+[
+  {
+    "path": "docs/reviews/backoffice-clean-code/qa/wave-3-history-smoke.jpg",
+    "scenario": "OWNER actual persisted history after traced-history action refactor",
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "metrics": {
+      "height": 720,
+      "scrollWidth": 1280,
+      "width": 1280
+    },
+    "sha256": "99a962205e1c05ba55917e8f39a780f31817712ec583edc0fac46c9e66741541"
+  }
+]

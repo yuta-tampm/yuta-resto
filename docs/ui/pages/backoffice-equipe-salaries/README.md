@@ -1262,6 +1262,18 @@ An idempotent replay discards only its own unreferenced retry copy. Scanner,
 validation, or repository failures before commit still discard the temporary
 object.
 
+Both upload actions first validate the browser command fields with the
+existing personnel metadata contracts: employee and retry identifiers, the
+optional base-contract revision, and either the amendment create fields
+(effective date, reference) or the replace fields (amendment and revision).
+The amendment mode must be exactly `create` or `replace`. An invalid command
+returns a form error before the PDF is read and causes no storage, scanner,
+metadata, or rejected-upload audit effect. Only a real file, scanner, or
+storage failure records a rejected upload in the trusted establishment scope.
+Personnel history and `Consultations` reads still authorize first and record
+their access trace before the scoped read; a failed trace returns the existing
+retryable error without reading.
+
 The current development-only `À traiter` overview treats an absent base
 contract for every active or upcoming employee as missing signed evidence. It
 does not change employee-dossier completeness, and no rule makes an amendment

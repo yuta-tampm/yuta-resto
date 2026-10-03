@@ -21,6 +21,7 @@ import {
   setPersonnelEmployeeDeparture,
   updatePersonnelEmployee,
 } from '@yuta/db-cloud';
+import type { TenantContext } from '@yuta/tenant';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { requirePersonnelPermission } from '@/server/auth/permissions';
@@ -29,6 +30,11 @@ import { cloudDatabase } from '@/server/cloud-database';
 import { getDateInTimezone } from '@/lib/local-time';
 import { mapPersonnelHistoryMetadataError } from './_lib/employee-history-action-errors';
 import { nullableText } from './_lib/form-values';
+import {
+  employeeUpdateIssueField,
+  rootIssueField,
+  zodFieldErrors,
+} from './_lib/personnel-action-errors';
 
 export type CreateEmployeeActionState = {
   status: 'idle' | 'error' | 'duplicate' | 'success';
@@ -75,79 +81,67 @@ export async function loadEmployeeAccessHistoryAction(
   operationId: string,
   cursor?: string,
 ): Promise<LoadEmployeeAccessHistoryActionResult> {
-  const { tenant } = await requirePersonnelTenant('/equipe/salaries');
-  requirePersonnelPermission(tenant, 'personnel.employee.read');
-
-  try {
-    const allowed = await recordPersonnelEmployeeAccess(
-      cloudDatabase,
-      tenant,
-      employeeId,
-      'employee.access_history_viewed',
-      operationId,
-    );
-    if (!allowed) {
-      return {
-        status: 'error',
-        message: 'Impossible de charger les consultations. Réessayez.',
-      };
-    }
-    const history = await listPersonnelEmployeeAccessHistory(
-      cloudDatabase,
-      tenant,
-      employeeId,
-      cursor,
-    );
-    return { status: 'success', history };
-  } catch (error: unknown) {
-    console.error('Failed to load personnel employee access history.', error);
-    return {
-      status: 'error',
-      message: 'Impossible de charger les consultations. Réessayez.',
-    };
-  }
+  return loadTracedEmployeeHistory({
+    employeeId,
+    operationId,
+    eventType: 'employee.access_history_viewed',
+    failureMessage: 'Impossible de charger les consultations. Réessayez.',
+    logMessage: 'Failed to load personnel employee access history.',
+    load: (tenant) =>
+      listPersonnelEmployeeAccessHistory(
+        cloudDatabase,
+        tenant,
+        employeeId,
+        cursor,
+      ),
+  });
 }
 
 export async function loadEmployeeHistoryAction(
   employeeId: string,
   operationId: string,
 ): Promise<LoadEmployeeHistoryActionResult> {
-  const { tenant } = await requirePersonnelTenant('/equipe/salaries');
-  requirePersonnelPermission(tenant, 'personnel.employee.read');
-
-  try {
-    const allowed = await recordPersonnelEmployeeAccess(
-      cloudDatabase,
-      tenant,
-      employeeId,
-      'employee.history_viewed',
-      operationId,
-    );
-    if (!allowed) {
-      return {
-        status: 'error',
-        message: 'Impossible de charger l’historique. Réessayez.',
-      };
-    }
-    const history = await listPersonnelEmployeeAuditHistory(
-      cloudDatabase,
-      tenant,
-      employeeId,
-    );
-    return { status: 'success', history };
-  } catch (error: unknown) {
-    console.error('Failed to load personnel employee history.', error);
-    return {
-      status: 'error',
-      message: 'Impossible de charger l’historique. Réessayez.',
-    };
-  }
+  return loadTracedEmployeeHistory({
+    employeeId,
+    operationId,
+    eventType: 'employee.history_viewed',
+    failureMessage: 'Impossible de charger l’historique. Réessayez.',
+    logMessage: 'Failed to load personnel employee history.',
+    load: (tenant) =>
+      listPersonnelEmployeeAuditHistory(cloudDatabase, tenant, employeeId),
+  });
 }
 
 export async function loadEmployeeUnifiedHistoryAction(
   employeeId: string,
   operationId: string,
 ): Promise<LoadEmployeeUnifiedHistoryActionResult> {
+  return loadTracedEmployeeHistory({
+    employeeId,
+    operationId,
+    eventType: 'employee.history_viewed',
+    failureMessage: 'Impossible de charger l’historique. Réessayez.',
+    logMessage: 'Failed to load unified personnel employee history.',
+    load: (tenant) =>
+      listPersonnelEmployeeUnifiedHistory(cloudDatabase, tenant, employeeId),
+  });
+}
+
+/**
+ * Authorization failures propagate unchanged. The access trace must be
+ * recorded before the scoped history read; any later failure is recoverable.
+ */
+async function loadTracedEmployeeHistory<THistory>(input: {
+  employeeId: string;
+  operationId: string;
+  eventType: 'employee.history_viewed' | 'employee.access_history_viewed';
+  failureMessage: string;
+  logMessage: string;
+  load: (tenant: TenantContext) => Promise<THistory>;
+}): Promise<
+  | { status: 'success'; history: THistory }
+  | { status: 'error'; message: string }
+> {
   const { tenant } = await requirePersonnelTenant('/equipe/salaries');
   requirePersonnelPermission(tenant, 'personnel.employee.read');
 
@@ -155,28 +149,18 @@ export async function loadEmployeeUnifiedHistoryAction(
     const allowed = await recordPersonnelEmployeeAccess(
       cloudDatabase,
       tenant,
-      employeeId,
-      'employee.history_viewed',
-      operationId,
+      input.employeeId,
+      input.eventType,
+      input.operationId,
     );
     if (!allowed) {
-      return {
-        status: 'error',
-        message: 'Impossible de charger l’historique. Réessayez.',
-      };
+      return { status: 'error', message: input.failureMessage };
     }
-    const history = await listPersonnelEmployeeUnifiedHistory(
-      cloudDatabase,
-      tenant,
-      employeeId,
-    );
+    const history = await input.load(tenant);
     return { status: 'success', history };
   } catch (error: unknown) {
-    console.error('Failed to load unified personnel employee history.', error);
-    return {
-      status: 'error',
-      message: 'Impossible de charger l’historique. Réessayez.',
-    };
+    console.error(input.logMessage, error);
+    return { status: 'error', message: input.failureMessage };
   }
 }
 
@@ -257,16 +241,11 @@ export async function createEmployeeAction(
     };
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
-      const fieldErrors: Record<string, string> = {};
-      for (const issue of error.issues) {
-        const field = String(issue.path[0] ?? 'form');
-        fieldErrors[field] ??= frenchFieldError(field);
-      }
       return {
         status: 'error',
         message: 'Certains champs doivent être corrigés.',
         employeeId: null,
-        fieldErrors,
+        fieldErrors: zodFieldErrors(error, rootIssueField, frenchFieldError),
         duplicateCandidates: [],
       };
     }
@@ -359,18 +338,14 @@ export async function updateEmployeeAction(
     };
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
-      const fieldErrors: Record<string, string> = {};
-      for (const issue of error.issues) {
-        const field = employeeUpdateIssueField(
-          issue.path,
-          submittedHistoryMetadata,
-        );
-        fieldErrors[field] ??= frenchFieldError(field);
-      }
       return {
         status: 'error',
         message: 'Certains champs doivent être corrigés.',
-        fieldErrors,
+        fieldErrors: zodFieldErrors(
+          error,
+          (path) => employeeUpdateIssueField(path, submittedHistoryMetadata),
+          frenchFieldError,
+        ),
         currentEmployee: null,
       };
     }
@@ -498,15 +473,10 @@ export async function setEmployeeDepartureAction(
     };
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
-      const fieldErrors: Record<string, string> = {};
-      for (const issue of error.issues) {
-        const field = String(issue.path[0] ?? 'form');
-        fieldErrors[field] ??= frenchFieldError(field);
-      }
       return {
         status: 'error',
         message: 'Vérifiez les informations avant de confirmer.',
-        fieldErrors,
+        fieldErrors: zodFieldErrors(error, rootIssueField, frenchFieldError),
         currentEmployee: null,
       };
     }
@@ -581,35 +551,6 @@ function parseHistoryMetadata(value: FormDataEntryValue | null): unknown {
   } catch {
     return raw;
   }
-}
-
-function employeeUpdateIssueField(
-  path: PropertyKey[],
-  submittedHistoryMetadata: unknown,
-): string {
-  const root = String(path[0] ?? 'form');
-  if (root !== 'historyMetadata') return root;
-  const index = path[1];
-  const field = path[2];
-  if (
-    typeof index === 'number' &&
-    Array.isArray(submittedHistoryMetadata) &&
-    typeof field === 'string'
-  ) {
-    const item = submittedHistoryMetadata[index];
-    if (item && typeof item === 'object') {
-      const semanticGroup = (item as Record<string, unknown>).semanticGroup;
-      if (
-        typeof semanticGroup === 'string' &&
-        ['identity', 'role', 'contract_terms', 'work_time', 'entry'].includes(
-          semanticGroup,
-        )
-      ) {
-        return `historyMetadata.${semanticGroup}.${field}`;
-      }
-    }
-  }
-  return 'historyMetadata';
 }
 
 function contractWeeklyMinutes(formData: FormData): number | null {
