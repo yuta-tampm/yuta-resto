@@ -4,6 +4,7 @@ import type {
 } from '@yuta/contracts/personnel';
 import { Alert, AlertDescription, AlertTitle, Button } from '@yuta/ui';
 import { Clock3, Database, LoaderCircle, RotateCcw } from 'lucide-react';
+import { type EmployeeHistoryLoadingState } from '../_lib/employee-history-loading';
 import {
   employeeHistoryClassificationLabels,
   employeeHistoryGroupLabels,
@@ -17,13 +18,7 @@ import {
 import { formatEmployeeDate } from '../salaries-model';
 
 export type EmployeeHistoryLoadState =
-  | { status: 'idle' | 'loading'; history: null; message: null }
-  | {
-      status: 'success';
-      history: PersonnelEmployeeUnifiedHistory;
-      message: null;
-    }
-  | { status: 'error'; history: null; message: string };
+  EmployeeHistoryLoadingState<PersonnelEmployeeUnifiedHistory>;
 
 export function EmployeeHistory({
   state,

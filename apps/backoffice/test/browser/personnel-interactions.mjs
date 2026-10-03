@@ -54,7 +54,7 @@ const server = await createViteServer({
             ?.replaceAll('\\', '/')
             .endsWith('/salaries/_components/use-employee-history.ts')
         )
-          return resolve(fixture, 'next-navigation.ts');
+          return resolve(fixture, 'personnel-interactions.tsx');
       },
     },
   ],
@@ -74,14 +74,22 @@ try {
     channel: process.env.YUTA_TEST_BROWSER_CHANNEL ?? 'chrome',
     headless: true,
   });
-  async function test(name, run, viewport = { width: 1440, height: 1000 }) {
+  async function test(
+    name,
+    run,
+    viewport = { width: 1440, height: 1000 },
+    surface = 'cdi',
+  ) {
     const context = await browser.newContext({ viewport });
     const page = await context.newPage();
     page.setDefaultTimeout(8000);
     const errors = [];
     page.on('pageerror', (error) => errors.push(error.message));
     try {
-      await page.goto(base, { waitUntil: 'domcontentloaded', timeout: 60000 });
+      await page.goto(base + '?surface=' + surface, {
+        waitUntil: 'domcontentloaded',
+        timeout: 60000,
+      });
       await page.waitForFunction(() => Boolean(window.personnelTest));
       await run(page);
       expect(errors).toEqual([]);
@@ -302,6 +310,166 @@ try {
         }),
       ).toBeChecked();
     });
+  }
+  if (process.argv[2] !== 'cdi') {
+    await test(
+      'employee access identity: fresh key and first page, old completion ignored',
+      async (page) => {
+        await page.getByRole('button', { name: 'Access', exact: true }).click();
+        await expect
+          .poll(() =>
+            page.evaluate(() => window.personnelHistoryTest.calls.length),
+          )
+          .toBe(1);
+        await page.evaluate(() => window.personnelHistoryTest.settle(0));
+        await expect(page.getByTestId('access-state')).toContainText(
+          'OLD EMPLOYEE',
+        );
+        await page.getByRole('button', { name: 'Next', exact: true }).click();
+        await expect
+          .poll(() =>
+            page.evaluate(() => window.personnelHistoryTest.calls.length),
+          )
+          .toBe(2);
+        const oldCall = await page.evaluate(
+          () => window.personnelHistoryTest.calls[1],
+        );
+        expect(oldCall.cursor).toBe('cursor-old');
+        await page.evaluate(() => window.personnelHistoryTest.switchEmployee());
+        await expect
+          .poll(() =>
+            page.evaluate(() => window.personnelHistoryTest.calls.length),
+          )
+          .toBe(3);
+        const newCall = await page.evaluate(
+          () => window.personnelHistoryTest.calls[2],
+        );
+        expect(newCall.employeeId).not.toBe(oldCall.employeeId);
+        expect(newCall.operationId).not.toBe(oldCall.operationId);
+        expect(newCall.cursor).toBeUndefined();
+        await expect(page.getByTestId('access-page')).toHaveText('0');
+        await page.evaluate(() => window.personnelHistoryTest.settle(1));
+        await expect(page.getByTestId('access-state')).not.toContainText(
+          'OLD EMPLOYEE',
+        );
+        await page.evaluate(() => window.personnelHistoryTest.settle(2));
+        await expect(page.getByTestId('access-state')).toContainText(
+          'NEW EMPLOYEE',
+        );
+        const oldDataFrames = await page.evaluate(() =>
+          window.personnelHistoryTest.renders.filter(
+            (frame) =>
+              frame.employeeId.endsWith('40b') &&
+              frame.access.includes('OLD EMPLOYEE'),
+          ),
+        );
+        expect(oldDataFrames).toEqual([]);
+        await page.getByRole('button', { name: 'Next', exact: true }).click();
+        await expect
+          .poll(() =>
+            page.evaluate(() => window.personnelHistoryTest.calls.length),
+          )
+          .toBe(4);
+        expect(
+          await page.evaluate(
+            () => window.personnelHistoryTest.calls[3].cursor,
+          ),
+        ).toBe('cursor-new');
+        await page.evaluate(() => window.personnelHistoryTest.settle(3));
+        await page
+          .getByRole('button', { name: 'Previous', exact: true })
+          .click();
+        await expect
+          .poll(() =>
+            page.evaluate(() => window.personnelHistoryTest.calls.length),
+          )
+          .toBe(5);
+        expect(
+          await page.evaluate(
+            () => window.personnelHistoryTest.calls[4].cursor,
+          ),
+        ).toBeUndefined();
+        await expect(page.getByTestId('access-page')).toHaveText('0');
+        await page.evaluate(() => window.personnelHistoryTest.settle(4));
+      },
+      undefined,
+      'history',
+    );
+    await test(
+      'unified history identity: new operation and ignored old pending completion',
+      async (page) => {
+        await page
+          .getByRole('button', { name: 'History', exact: true })
+          .click();
+        await expect
+          .poll(() =>
+            page.evaluate(() => window.personnelHistoryTest.calls.length),
+          )
+          .toBe(1);
+        await page.evaluate(() => window.personnelHistoryTest.switchEmployee());
+        await expect
+          .poll(() =>
+            page.evaluate(() => window.personnelHistoryTest.calls.length),
+          )
+          .toBe(2);
+        const calls = await page.evaluate(
+          () => window.personnelHistoryTest.calls,
+        );
+        expect(calls[1].operationId).not.toBe(calls[0].operationId);
+        expect(calls[1].employeeId).not.toBe(calls[0].employeeId);
+        await page.evaluate(() => window.personnelHistoryTest.settle(0));
+        await expect(page.getByTestId('history-state')).not.toContainText(
+          '"truncated":true',
+        );
+        await page.evaluate(() => window.personnelHistoryTest.settle(1));
+        await expect(page.getByTestId('history-state')).toContainText(
+          '"truncated":false',
+        );
+      },
+      undefined,
+      'history',
+    );
+    for (const outcome of ['error', 'reject']) {
+      await test(
+        `access ${outcome} ends loading and retries with a fresh key`,
+        async (page) => {
+          await page
+            .getByRole('button', { name: 'Access', exact: true })
+            .click();
+          await expect
+            .poll(() =>
+              page.evaluate(() => window.personnelHistoryTest.calls.length),
+            )
+            .toBe(1);
+          await page.evaluate(
+            (outcome) => window.personnelHistoryTest.settle(0, outcome),
+            outcome,
+          );
+          await expect(page.getByTestId('access-state')).toContainText(
+            '"status":"error"',
+          );
+          await page
+            .getByRole('button', { name: 'Retry Access', exact: true })
+            .click();
+          await expect
+            .poll(() =>
+              page.evaluate(() => window.personnelHistoryTest.calls.length),
+            )
+            .toBe(2);
+          const calls = await page.evaluate(
+            () => window.personnelHistoryTest.calls,
+          );
+          expect(calls[1].operationId).not.toBe(calls[0].operationId);
+          expect(calls[1].cursor).toBeUndefined();
+          await page.evaluate(() => window.personnelHistoryTest.settle(1));
+          await expect(page.getByTestId('access-state')).toContainText(
+            '"status":"success"',
+          );
+        },
+        { width: outcome === 'reject' ? 390 : 1440, height: 1000 },
+        'history',
+      );
+    }
   }
 } finally {
   await browser?.close();

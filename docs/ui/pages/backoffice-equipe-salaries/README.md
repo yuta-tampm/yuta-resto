@@ -115,8 +115,14 @@ Current sources:
   quick view are orchestrated by `_components/salaries-page.tsx`, the full
   dossier by `_components/employee-full-dossier-page.tsx`, and both share the
   audited history/`Consultations` loading, retry and cursor pagination through
-  `_components/use-employee-history.ts` and its stale-response cancellation in
-  `_lib/employee-history-loading.ts`;
+  `_components/use-employee-history.ts`. Its employee-scoped request state,
+  shared load-state type and stale-response cancellation live in
+  `_lib/employee-history-loading.ts`: another employee immediately hides the
+  previous results, discards their operations and cursor, ignores their late
+  completions and, when a history tab is open, starts it on the first page with
+  a fresh operation identifier, without a parent-side reset. Both pages record
+  the dossier-open trace through `_lib/employee-dossier-access.ts`, where only
+  the latest attempt may report its failure;
 - authenticated layout: `apps/backoffice/src/app/(authenticated)/layout.tsx`;
 - shell/navigation:
   `apps/backoffice/src/components/backoffice/backoffice-frame.tsx` and

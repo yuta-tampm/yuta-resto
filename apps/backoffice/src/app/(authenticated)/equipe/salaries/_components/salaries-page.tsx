@@ -43,7 +43,7 @@ import {
   EmployeeActionOverview,
   type PersonnelActionOverviewState,
 } from './employee-action-overview';
-import { recordEmployeeDossierViewAction } from '../actions';
+import { useEmployeeDossierAccess } from '../_lib/employee-dossier-access';
 import {
   getEmployeeEditCommitRefreshPlan,
   restoreEmployeeEditFocus,
@@ -97,9 +97,8 @@ export function SalariesPage({
   );
   const [departureEmployee, setDepartureEmployee] =
     useState<PersonnelEmployeeSummary | null>(null);
-  const [dossierAccessError, setDossierAccessError] = useState<string | null>(
-    null,
-  );
+  const { dossierAccessError, recordDossierAccess } =
+    useEmployeeDossierAccess();
 
   useEffect(() => {
     if (
@@ -126,23 +125,8 @@ export function SalariesPage({
     }
   }, [data.items, recentlySavedEmployee]);
 
-  function recordDossierAccess(employeeId: string) {
-    setDossierAccessError(null);
-    void recordEmployeeDossierViewAction(employeeId, crypto.randomUUID())
-      .then((result) => {
-        if (result.status === 'error') {
-          setDossierAccessError(result.message);
-        }
-      })
-      .catch(() => {
-        setDossierAccessError(
-          'La traçabilité du dossier est indisponible. Réessayez.',
-        );
-      });
-  }
-
   const history = useEmployeeHistory(selectedId, detailTab);
-  const { refreshHistoryAfterSave, resetHistory } = history;
+  const { refreshHistoryAfterSave } = history;
 
   const displayedEmployees = data.items.map((employee) =>
     recentlySavedEmployee?.id === employee.id &&
@@ -196,7 +180,7 @@ export function SalariesPage({
         () => crypto.randomUUID(),
       );
       setRecentlySavedEmployee(employee);
-      refreshHistoryAfterSave(refreshPlan.historyOperationId);
+      refreshHistoryAfterSave(employee.id, refreshPlan.historyOperationId);
       if (refreshPlan.closeEditor) setEditingEmployee(null);
       setEditSuccessMessage(
         message ?? 'Les modifications ont été enregistrées.',
@@ -227,7 +211,6 @@ export function SalariesPage({
     setDetailTab(
       kind === 'missing_signed_base_contract' ? 'documents' : 'overview',
     );
-    resetHistory();
   }
 
   return (
@@ -458,7 +441,6 @@ export function SalariesPage({
                 setSelectedId(id);
                 setDetailTab('overview');
                 recordDossierAccess(id);
-                resetHistory();
               }}
             />
           )}

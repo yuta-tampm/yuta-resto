@@ -1,125 +1,161 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import type {
+  PersonnelEmployeeAccessHistory,
+  PersonnelEmployeeUnifiedHistory,
+} from '@yuta/contracts/personnel';
+import { useCallback, useEffect, useReducer } from 'react';
 import {
   loadEmployeeAccessHistoryAction,
   loadEmployeeUnifiedHistoryAction,
 } from '../actions';
 import {
+  createEmployeeHistoryScope,
   employeeAccessHistoryLoadFailureMessage,
   employeeHistoryLoadFailureMessage,
-  firstAccessHistoryCursorState,
-  getNextAccessHistoryCursorState,
-  getPreviousAccessHistoryCursorState,
-  idleEmployeeHistoryState,
+  getVisibleEmployeeHistoryScope,
+  reduceEmployeeHistoryScope,
   startEmployeeHistoryLoad,
+  type EmployeeHistoryScope,
 } from '../_lib/employee-history-loading';
-import { type AccessHistoryLoadState } from './employee-access-history';
 import { type DetailTab } from './employee-details';
-import { type EmployeeHistoryLoadState } from './employee-history';
+
+type EmployeeHistoryState = EmployeeHistoryScope<
+  PersonnelEmployeeUnifiedHistory,
+  PersonnelEmployeeAccessHistory
+>;
+
+function historyTab(tab: DetailTab) {
+  return tab === 'history' || tab === 'access' ? tab : null;
+}
 
 /**
  * Owns the audited history and access-history loads of one displayed dossier.
- * A load starts only for the active tab and a fresh operation identifier;
- * clearing the identifier stops loading without starting a new audit trace.
+ * Operations, cursors and results are scoped to `employeeId`: another
+ * employee immediately hides them, cancels their loads and, when a history
+ * tab is open, starts that tab with a fresh operation identifier. A load
+ * starts only for the active tab and a fresh operation identifier.
  */
 export function useEmployeeHistory(
   employeeId: string | null,
   activeTab: DetailTab,
 ) {
-  const [historyState, setHistoryState] = useState<EmployeeHistoryLoadState>(
-    idleEmployeeHistoryState,
+  const [scope, dispatch] = useReducer(
+    reduceEmployeeHistoryScope<
+      PersonnelEmployeeUnifiedHistory,
+      PersonnelEmployeeAccessHistory
+    >,
+    null,
+    createEmployeeHistoryScope<
+      PersonnelEmployeeUnifiedHistory,
+      PersonnelEmployeeAccessHistory
+    >,
   );
-  const [historyOperationId, setHistoryOperationId] = useState('');
-  const [accessHistoryState, setAccessHistoryState] =
-    useState<AccessHistoryLoadState>(idleEmployeeHistoryState);
-  const [accessHistoryOperationId, setAccessHistoryOperationId] = useState('');
-  const [accessHistoryCursorState, setAccessHistoryCursorState] = useState(
-    firstAccessHistoryCursorState,
+  const visible: EmployeeHistoryState = getVisibleEmployeeHistoryScope(
+    scope,
+    employeeId,
   );
-  const accessHistoryCursor = accessHistoryCursorState.cursor;
+  const historyOperationId =
+    activeTab === 'history' ? visible.history.operationId : '';
+  const accessOperationId =
+    activeTab === 'access' ? visible.access.operationId : '';
+  const accessCursor = visible.access.cursorState.cursor;
 
   useEffect(() => {
-    if (activeTab !== 'history' || !employeeId || !historyOperationId) return;
+    if (scope.employeeId === employeeId) return;
+    dispatch({
+      type: 'select',
+      employeeId,
+      openTab: historyTab(activeTab),
+      operationId: crypto.randomUUID(),
+    });
+  }, [activeTab, employeeId, scope.employeeId]);
+
+  useEffect(() => {
+    if (!employeeId || !historyOperationId) return;
     return startEmployeeHistoryLoad(
       () => loadEmployeeUnifiedHistoryAction(employeeId, historyOperationId),
       employeeHistoryLoadFailureMessage,
-      setHistoryState,
+      (state) =>
+        dispatch({
+          type: 'history_loaded',
+          employeeId,
+          operationId: historyOperationId,
+          state,
+        }),
     );
-  }, [activeTab, employeeId, historyOperationId]);
+  }, [employeeId, historyOperationId]);
 
   useEffect(() => {
-    if (activeTab !== 'access' || !employeeId || !accessHistoryOperationId) {
-      return;
-    }
+    if (!employeeId || !accessOperationId) return;
     return startEmployeeHistoryLoad(
       () =>
         loadEmployeeAccessHistoryAction(
           employeeId,
-          accessHistoryOperationId,
-          accessHistoryCursor,
+          accessOperationId,
+          accessCursor,
         ),
       employeeAccessHistoryLoadFailureMessage,
-      setAccessHistoryState,
+      (state) =>
+        dispatch({
+          type: 'access_loaded',
+          employeeId,
+          operationId: accessOperationId,
+          state,
+        }),
     );
-  }, [accessHistoryCursor, accessHistoryOperationId, activeTab, employeeId]);
-
-  const resetHistory = useCallback(() => {
-    setHistoryOperationId('');
-    setHistoryState(idleEmployeeHistoryState);
-    setAccessHistoryOperationId('');
-    setAccessHistoryCursorState(firstAccessHistoryCursorState);
-    setAccessHistoryState(idleEmployeeHistoryState);
-  }, []);
+  }, [accessCursor, accessOperationId, employeeId]);
 
   const openTab = useCallback((tab: DetailTab) => {
-    if (tab === 'history') {
-      setHistoryOperationId(crypto.randomUUID());
-    }
-    if (tab === 'access') {
-      setAccessHistoryCursorState(firstAccessHistoryCursorState);
-      setAccessHistoryOperationId(crypto.randomUUID());
-    }
+    const openedTab = historyTab(tab);
+    if (!openedTab) return;
+    dispatch({
+      type: 'open',
+      tab: openedTab,
+      operationId: crypto.randomUUID(),
+    });
   }, []);
 
-  const refreshHistoryAfterSave = useCallback((operationId: string) => {
-    setHistoryState(idleEmployeeHistoryState);
-    setHistoryOperationId(operationId);
+  const refreshHistoryAfterSave = useCallback(
+    (savedEmployeeId: string, operationId: string) => {
+      dispatch({
+        type: 'refresh_history',
+        employeeId: savedEmployeeId,
+        operationId,
+      });
+    },
+    [],
+  );
+
+  const retryHistory = useCallback(() => {
+    dispatch({
+      type: 'retry',
+      tab: 'history',
+      operationId: crypto.randomUUID(),
+    });
   }, []);
 
-  function retryHistory() {
-    setHistoryOperationId(crypto.randomUUID());
-  }
+  const retryAccessHistory = useCallback(() => {
+    dispatch({
+      type: 'retry',
+      tab: 'access',
+      operationId: crypto.randomUUID(),
+    });
+  }, []);
 
-  function retryAccessHistory() {
-    setAccessHistoryOperationId(crypto.randomUUID());
-  }
+  const previousAccessHistory = useCallback(() => {
+    dispatch({ type: 'previous_access', operationId: crypto.randomUUID() });
+  }, []);
 
-  function previousAccessHistory() {
-    setAccessHistoryCursorState(
-      getPreviousAccessHistoryCursorState(accessHistoryCursorState),
-    );
-    setAccessHistoryOperationId(crypto.randomUUID());
-  }
-
-  function nextAccessHistory() {
-    const next = getNextAccessHistoryCursorState(
-      accessHistoryCursorState,
-      accessHistoryState.status === 'success'
-        ? accessHistoryState.history.pageInfo.nextCursor
-        : null,
-    );
-    if (!next) return;
-    setAccessHistoryCursorState(next);
-    setAccessHistoryOperationId(crypto.randomUUID());
-  }
+  const nextAccessHistory = useCallback(() => {
+    dispatch({ type: 'next_access', operationId: crypto.randomUUID() });
+  }, []);
 
   return {
-    historyState,
-    accessHistoryState,
-    accessHistoryPageIndex: accessHistoryCursorState.pageIndex,
+    historyState: visible.history.state,
+    accessHistoryState: visible.access.state,
+    accessHistoryPageIndex: visible.access.cursorState.pageIndex,
     openTab,
-    resetHistory,
     refreshHistoryAfterSave,
     retryHistory,
     retryAccessHistory,

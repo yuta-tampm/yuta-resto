@@ -6,7 +6,7 @@ UI_AFFECTING: YES
 
 BROWSER_QA_REQUIRED: YES
 
-QA status: PASS for completed maintenance Waves 1–4. Follow-up Waves 5–6 are pending. Wave-specific classifications and limitations follow.
+QA status: PASS for completed maintenance Waves 1–5. Follow-up Wave 6 is pending. Wave-specific classifications and limitations follow.
 
 ## Wave 1
 
@@ -97,3 +97,19 @@ Action/state/SSR evidence: 60 cases in three focused files pass. Real action tes
 Retained failed attempts: the initial integration typecheck rejected a union in the new browser fixture, corrected to explicit discriminated branches. Browser fixture bootstrap initially lacked Next's build-time environment substitutions, then its cold dependency startup exceeded an eight-second navigation timeout. Both harness issues were corrected; all seven final cases pass. The copy regression was updated after independent review removed its unsupported persistence assertion. These failures did not identify an additional application defect.
 
 Limits: this is automated component interaction coverage, not a new full Next/session/database end-to-end or responsive visual acceptance. The prior actual-page QA did not cover failed abandonment or prop refresh during an in-flight request. Final full-suite/build/recursive typecheck and global formatting are scheduled for Wave 6; unrelated POS/local and live-provider checks remain outside this follow-up.
+
+## Wave 5 — Employee-scoped history follow-up
+
+Author: Claude Code session `d5c4a823-6d0c-4a43-8a91-2d5bbc8be888`; Codex added and executed the browser fixtures. The nine source/test/document write paths match the handoff. A concurrent change to an unrelated OpenSpec review file caused the runner's whole-checkout scope audit to fail; the author transcript contains no write to it and no HEAD/index change. That file and the other unrelated work remain excluded and preserved.
+
+After the first independent candidate review, the unrelated task committed its nine planning/review paths as `f5aaba21`. No Backoffice follow-up path changed in that commit. Integration review is rebound to this new HEAD before the Wave 5 commit; the original review packet and author base are retained. This commit belongs to the other task and is excluded from the three follow-up commits.
+
+Functional Browser QA: PASS, four scenarios against the real `useEmployeeHistory` hook in the same mounted React instance, with synthetic action ports and the isolated loopback fixture from Wave 4. Run `node apps/backoffice/test/browser/personnel-interactions.mjs history` from the repository root.
+
+- Switching employee while access page two is pending creates a fresh operation ID, drops the old cursor and resets the page index. Render snapshots for the new employee contain no previous-employee data. A late old response is ignored; new-employee paging and Previous still work.
+- Switching employee while unified history is pending creates a new operation and ignores the old completion.
+- Returned error and rejected access-history requests end loading and recover through a fresh retry ID. The rejected case runs at 390px; other cases run at 1440px.
+
+The hook owns visible state, operation IDs and cursors in an employee-scoped reducer. Both dossier pages use it without caller resets. A shared dossier-access hook replaces duplicate wrappers and ignores superseded trace-request errors. The two presentation load-state types alias the shared generic type. The existing core focus helper remains in use. Server actions, DTOs, guards, tenant scope and trace-before-read are unchanged; the real-action ordering regressions remain in the focused tests.
+
+Validation: 38 cases in two focused files, Backoffice typecheck, docs, architecture and changed-file formatting pass. No failed application check occurred in this phase. Browser evidence covers the hook's real lifecycle, not a new full-page Next/session/database acceptance. Full suite/build/recursive checks remain scheduled for Wave 6. The now-unused `resetHistory` flag in the post-save plan will be removed in the final bounded cleanup.

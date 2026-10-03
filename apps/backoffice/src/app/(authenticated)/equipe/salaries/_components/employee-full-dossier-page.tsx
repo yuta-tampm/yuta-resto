@@ -9,7 +9,7 @@ import { EmployeeDepartureDialog } from './employee-departure-dialog';
 import { EmployeeEditDialog } from './employee-edit-dialog';
 import { type DetailTab, EmployeeDetails } from './employee-details';
 import { useEmployeeHistory } from './use-employee-history';
-import { recordEmployeeDossierViewAction } from '../actions';
+import { useEmployeeDossierAccess } from '../_lib/employee-dossier-access';
 import {
   getEmployeeEditCommitRefreshPlan,
   restoreEmployeeEditFocus,
@@ -34,9 +34,8 @@ export function EmployeeFullDossierPage({
   const [departureOpen, setDepartureOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const editActionOriginRef = useRef<HTMLElement | null>(null);
-  const [dossierAccessError, setDossierAccessError] = useState<string | null>(
-    null,
-  );
+  const { dossierAccessError, recordDossierAccess } =
+    useEmployeeDossierAccess();
   const accessRecordedEmployeeRef = useRef<string | null>(null);
 
   const restoreEditFocus = useCallback(() => {
@@ -56,25 +55,10 @@ export function EmployeeFullDossierPage({
     }
   }, [employee.id, employee.revision, initialEmployee]);
 
-  const recordDossierAccess = useCallback(() => {
-    setDossierAccessError(null);
-    void recordEmployeeDossierViewAction(employee.id, crypto.randomUUID())
-      .then((result) => {
-        if (result.status === 'error') {
-          setDossierAccessError(result.message);
-        }
-      })
-      .catch(() => {
-        setDossierAccessError(
-          'La traçabilité du dossier est indisponible. Réessayez.',
-        );
-      });
-  }, [employee.id]);
-
   useEffect(() => {
     if (accessRecordedEmployeeRef.current === employee.id) return;
     accessRecordedEmployeeRef.current = employee.id;
-    recordDossierAccess();
+    recordDossierAccess(employee.id);
   }, [employee.id, recordDossierAccess]);
 
   const history = useEmployeeHistory(employee.id, activeTab);
@@ -122,7 +106,7 @@ export function EmployeeFullDossierPage({
         onRetryAccessHistory={history.retryAccessHistory}
         onPreviousAccessHistory={history.previousAccessHistory}
         onNextAccessHistory={history.nextAccessHistory}
-        onRetryDossierAccess={recordDossierAccess}
+        onRetryDossierAccess={() => recordDossierAccess(employee.id)}
       />
       {editing && (
         <EmployeeEditDialog
@@ -136,7 +120,10 @@ export function EmployeeFullDossierPage({
               () => crypto.randomUUID(),
             );
             setEmployee(savedEmployee);
-            history.refreshHistoryAfterSave(refreshPlan.historyOperationId);
+            history.refreshHistoryAfterSave(
+              savedEmployee.id,
+              refreshPlan.historyOperationId,
+            );
             if (refreshPlan.closeEditor) setEditing(false);
             setSuccessMessage(
               message ?? 'Les modifications ont été enregistrées.',
