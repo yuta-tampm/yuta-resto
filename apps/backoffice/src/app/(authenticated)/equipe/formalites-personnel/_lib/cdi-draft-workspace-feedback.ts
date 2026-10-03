@@ -1,4 +1,4 @@
-import type { FormalitesPersonnelDraftMutationOutcome } from '@yuta/contracts';
+import type { FormalitesPersonnelDraftMutationActionResult } from './cdi-draft-workspace-action-result';
 
 export type WorkspaceFeedback = {
   tone: 'success' | 'warning' | 'danger' | 'info';
@@ -47,11 +47,19 @@ export function abandonmentReasonRequiredFeedback(): WorkspaceFeedback {
 
 export function workspaceFeedbackForOutcome(
   outcome: Exclude<
-    FormalitesPersonnelDraftMutationOutcome,
+    FormalitesPersonnelDraftMutationActionResult,
     { kind: 'success' }
   >,
 ): WorkspaceFeedback {
   switch (outcome.kind) {
+    case 'forbidden':
+      return {
+        tone: 'danger',
+        title: 'Action non autorisée',
+        description:
+          'Votre accès actuel ne permet pas de modifier ce brouillon.',
+        recoverable: false,
+      };
     case 'validation_error':
       return {
         tone: 'danger',

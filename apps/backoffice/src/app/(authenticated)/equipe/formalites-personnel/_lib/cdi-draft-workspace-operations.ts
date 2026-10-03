@@ -1,5 +1,8 @@
-import type { FormalitesPersonnelDraftMutationOutcome } from '@yuta/contracts';
-import type { LoadFormalitesPersonnelDraftActionResult } from '../[employeeId]/actions';
+import type {
+  FormalitesPersonnelDraftMutationActionResult,
+  LoadFormalitesPersonnelDraftActionResult,
+} from './cdi-draft-workspace-action-result';
+import type { WorkspaceFeedback } from './cdi-draft-workspace-feedback';
 import {
   createWorkspaceIntent,
   prepareWorkspaceOperation,
@@ -10,7 +13,7 @@ import {
 
 export type WorkspaceMutationRun = {
   operation: WorkspaceOperation | null;
-  outcome: FormalitesPersonnelDraftMutationOutcome;
+  outcome: FormalitesPersonnelDraftMutationActionResult;
 };
 
 /**
@@ -27,7 +30,7 @@ export async function runWorkspaceMutation(input: {
   onPending: (operation: WorkspaceOperation) => void;
   run: (
     operationKey: string,
-  ) => Promise<FormalitesPersonnelDraftMutationOutcome>;
+  ) => Promise<FormalitesPersonnelDraftMutationActionResult>;
 }): Promise<WorkspaceMutationRun | null> {
   const preparation = prepareWorkspaceOperation(
     input.current,
@@ -38,7 +41,7 @@ export async function runWorkspaceMutation(input: {
   if (preparation.kind === 'blocked') return null;
 
   input.onPending(preparation.operation);
-  let outcome: FormalitesPersonnelDraftMutationOutcome;
+  let outcome: FormalitesPersonnelDraftMutationActionResult;
   try {
     outcome = await input.run(preparation.operation.key);
   } catch {
@@ -55,16 +58,31 @@ export function workspaceReloadFailureFeedback(
     LoadFormalitesPersonnelDraftActionResult,
     { kind: 'success' }
   >,
-) {
-  return {
-    tone: 'danger',
-    title: 'Actualisation impossible',
-    description:
-      result.kind === 'not_found'
-        ? 'Ce dossier n’est plus disponible dans cet établissement.'
-        : 'Réessayez dans quelques instants.',
-    recoverable: result.kind === 'server_error',
-  } as const;
+): WorkspaceFeedback {
+  switch (result.kind) {
+    case 'forbidden':
+      return {
+        tone: 'danger',
+        title: 'Accès refusé',
+        description:
+          'Votre accès actuel ne permet plus de consulter ou de modifier ce brouillon.',
+        recoverable: false,
+      };
+    case 'not_found':
+      return {
+        tone: 'danger',
+        title: 'Actualisation impossible',
+        description: 'Ce dossier n’est plus disponible dans cet établissement.',
+        recoverable: false,
+      };
+    case 'server_error':
+      return {
+        tone: 'danger',
+        title: 'Actualisation impossible',
+        description: 'Réessayez dans quelques instants.',
+        recoverable: true,
+      };
+  }
 }
 
 /** Loads the authoritative draft model; a rejection becomes `server_error`. */

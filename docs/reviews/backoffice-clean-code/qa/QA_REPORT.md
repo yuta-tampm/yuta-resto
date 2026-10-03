@@ -6,7 +6,7 @@ UI_AFFECTING: YES
 
 BROWSER_QA_REQUIRED: YES
 
-QA status: PASS for the three bounded maintenance waves. Wave-specific classifications and limitations follow.
+QA status: PASS for completed maintenance Waves 1–4. Follow-up Waves 5–6 are pending. Wave-specific classifications and limitations follow.
 
 ## Wave 1
 
@@ -77,3 +77,23 @@ Expected broad checks not run: repository-wide test:cloud/build:cloud and test:l
 Cleanup: task-owned Next process trees were stopped by their exact recorded PIDs; the independently verified tmpfs PostgreSQL container was stopped and removed by its recorded identity. Existing Cloud/POS/Display containers were preserved. Temporary QA tabs were closed and viewport override reset.
 
 Screenshot evidence: [wave-3-screenshots.json](wave-3-screenshots.json) and [screenshot-manifest.md](screenshot-manifest.md).
+
+## Wave 4 — Formalités recovery follow-up
+
+Scope: same task, checkout and branch; `CODEX_ONLY` with Claude Code implementation and Codex integration. Local commits remain authorized by the original user request and the follow-up instruction to implement sequential phases. No OpenSpec change or lifecycle action.
+
+Author: Claude Code session `51ea4a92-11db-4180-a371-b9480d24844b`. All 11 author write paths were checked against the guarded handoff. The runner reported four concurrently appearing, unrelated OpenSpec/review files; its tool transcript confirms no Claude write to those paths and no HEAD/index change. They are preserved and excluded from this candidate and commit.
+
+Functional Browser QA: PASS, seven executable scenarios using the real `CdiDraftWorkspace`, React DOM, Radix dialog and existing UI components in headless Chrome. The test-only Vite fixture uses synthetic deferred action promises, a mocked router refresh, and an ephemeral loopback port. It disables env-file loading, uses no database/session/provider, and closes its server and browser. From the repository root, run `node apps/backoffice/test/browser/personnel-interactions.mjs cdi`; the runner derives fixture paths from its own URL and also supports invocation by absolute path from another directory.
+
+- Returned `server_error`, rejected Promise and `stale_draft` abandonment outcomes expose their feedback inside the modal, focus it, and keep the recovery button usable. The rejected case was tested at 390px; the other cases at 1440px. Successful reload closes the modal and focuses visible success feedback.
+- A same-employee prop refresh while save is pending cannot unblock duplicate submit or replace the input. A later refresh while uncertain preserves the original command and operation key for retry.
+- Explicit forbidden ends pending, displays non-retry feedback and disables mutation controls; it is not represented as uncertain persistence.
+- An uncertain mutation followed by a forbidden same-key retry does not assert whether the earlier attempt persisted. Independent review requested this copy correction and a qualification of the page-pack key-reuse description; both were corrected before completion.
+- An employee identity change ignores an older mutation completion.
+
+Action/state/SSR evidence: 60 cases in three focused files pass. Real action tests verify trusted MANAGER/STAFF and independent Personnel-read denial return only `forbidden` before parsing or repository effects, while login/scope redirects, missing-establishment errors and unexpected authorization errors keep their previous behavior. Shared transport schemas, guards and repository protections are unchanged. Documentation, architecture, Backoffice typecheck and changed-file formatting pass.
+
+Retained failed attempts: the initial integration typecheck rejected a union in the new browser fixture, corrected to explicit discriminated branches. Browser fixture bootstrap initially lacked Next's build-time environment substitutions, then its cold dependency startup exceeded an eight-second navigation timeout. Both harness issues were corrected; all seven final cases pass. The copy regression was updated after independent review removed its unsupported persistence assertion. These failures did not identify an additional application defect.
+
+Limits: this is automated component interaction coverage, not a new full Next/session/database end-to-end or responsive visual acceptance. The prior actual-page QA did not cover failed abandonment or prop refresh during an in-flight request. Final full-suite/build/recursive typecheck and global formatting are scheduled for Wave 6; unrelated POS/local and live-provider checks remain outside this follow-up.

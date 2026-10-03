@@ -1,0 +1,322 @@
+import { createRequire } from 'node:module';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { resolve } from 'node:path';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { createServer as createSocketServer } from 'node:net';
+const app = fileURLToPath(new URL('../../', import.meta.url));
+const root = resolve(app, '../..');
+const require = createRequire(resolve(app, 'package.json'));
+const nextRequire = createRequire(require.resolve('next/package.json'));
+const { chromium, expect } = nextRequire('@playwright/test');
+const { createViteServer } = await import(
+  pathToFileURL(require.resolve('vitest/node')).href
+);
+const fixture = resolve(app, 'test/browser');
+const output = resolve(
+  root,
+  'exports/backoffice-clean-code-20261003/browser-' +
+    (process.argv[2] ?? 'cdi'),
+);
+mkdirSync(output, { recursive: true });
+const port = await new Promise((accept, reject) => {
+  const socket = createSocketServer();
+  socket.on('error', reject);
+  socket.listen(0, '127.0.0.1', () => {
+    const address = socket.address();
+    if (!address || typeof address !== 'object')
+      return reject(Error('Missing loopback port'));
+    socket.close(() => accept(address.port));
+  });
+});
+const server = await createViteServer({
+  configFile: false,
+  envDir: false,
+  root: app,
+  logLevel: 'warn',
+  define: { 'process.env': '{}' },
+  resolve: {
+    alias: [
+      { find: /^@\//, replacement: app.replaceAll('\\', '/') + '/src/' },
+      {
+        find: /^next\/navigation$/,
+        replacement: resolve(fixture, 'next-navigation.ts'),
+      },
+    ],
+  },
+  plugins: [
+    {
+      name: 'synthetic-history-actions',
+      enforce: 'pre',
+      resolveId(source, importer) {
+        if (
+          source === '../actions' &&
+          importer
+            ?.replaceAll('\\', '/')
+            .endsWith('/salaries/_components/use-employee-history.ts')
+        )
+          return resolve(fixture, 'next-navigation.ts');
+      },
+    },
+  ],
+  server: { host: '127.0.0.1', port, strictPort: true, fs: { allow: [root] } },
+  css: { postcss: { plugins: [] } },
+  oxc: { jsx: { runtime: 'automatic' } },
+});
+let browser;
+const results = [];
+try {
+  await server.listen();
+  const address = server.httpServer.address();
+  if (typeof address !== 'object' || !address)
+    throw Error('Missing fixture port');
+  const base = `http://127.0.0.1:${address.port}/test/browser/index.html`;
+  browser = await chromium.launch({
+    channel: process.env.YUTA_TEST_BROWSER_CHANNEL ?? 'chrome',
+    headless: true,
+  });
+  async function test(name, run, viewport = { width: 1440, height: 1000 }) {
+    const context = await browser.newContext({ viewport });
+    const page = await context.newPage();
+    page.setDefaultTimeout(8000);
+    const errors = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    try {
+      await page.goto(base, { waitUntil: 'domcontentloaded', timeout: 60000 });
+      await page.waitForFunction(() => Boolean(window.personnelTest));
+      await run(page);
+      expect(errors).toEqual([]);
+      results.push({ name, status: 'PASS', viewport });
+    } catch (error) {
+      results.push({
+        name,
+        status: 'FAIL',
+        error: error.message,
+        pageErrors: errors,
+      });
+      await page
+        .screenshot({
+          path: resolve(output, name.replace(/[^a-z0-9]+/gi, '-') + '.png'),
+        })
+        .catch(() => {});
+    } finally {
+      await context.close();
+    }
+    console.log(JSON.stringify(results.at(-1)));
+  }
+  if (process.argv[2] !== 'history') {
+    for (const failure of ['server_error', 'reject', 'stale_draft']) {
+      await test(
+        `abandon ${failure}: visible recovery and reload focus`,
+        async (page) => {
+          await page
+            .getByRole('button', {
+              name: 'Abandonner le brouillon',
+              exact: true,
+            })
+            .click();
+          await page.getByLabel('Motif').fill('Synthetic cancellation reason');
+          await page
+            .getByRole('button', { name: 'Confirmer l’abandon', exact: true })
+            .click();
+          await expect
+            .poll(() => page.evaluate(() => window.personnelTest.calls.length))
+            .toBe(1);
+          await page.evaluate(
+            (kind) => window.personnelTest.settle(kind),
+            failure,
+          );
+          const message =
+            failure === 'stale_draft'
+              ? 'Le brouillon a été modifié ailleurs'
+              : 'Enregistrement incertain';
+          await expect(page.getByText(message, { exact: true })).toBeVisible();
+          await expect
+            .poll(() =>
+              page.evaluate(() =>
+                document.activeElement?.textContent?.includes('Recharger'),
+              ),
+            )
+            .toBe(true);
+          await page
+            .getByRole('button', {
+              name: 'Recharger la version enregistrée',
+              exact: true,
+            })
+            .click();
+          await expect(
+            page.getByText('Données actualisées', { exact: true }),
+          ).toBeVisible();
+          await expect
+            .poll(() =>
+              page.evaluate(() =>
+                document.activeElement?.textContent?.includes(
+                  'Données actualisées',
+                ),
+              ),
+            )
+            .toBe(true);
+        },
+        { width: failure === 'reject' ? 390 : 1440, height: 1000 },
+      );
+    }
+    await test('same employee refresh preserves pending and uncertain save intent', async (page) => {
+      await page
+        .getByRole('radio', {
+          name: 'Prévoir une période d’essai',
+          exact: true,
+        })
+        .check();
+      await page
+        .getByRole('button', { name: 'Enregistrer', exact: true })
+        .click();
+      await expect
+        .poll(() => page.evaluate(() => window.personnelTest.calls.length))
+        .toBe(1);
+      await page.evaluate(() => window.personnelTest.refresh(40, 'exclude'));
+      await expect(
+        page.getByRole('button', { name: 'Enregistrer', exact: true }),
+      ).toBeDisabled();
+      await expect(
+        page.getByRole('radio', {
+          name: 'Prévoir une période d’essai',
+          exact: true,
+        }),
+      ).toBeChecked();
+      await page
+        .getByRole('button', { name: 'Enregistrer', exact: true })
+        .dispatchEvent('click');
+      expect(await page.evaluate(() => window.personnelTest.calls.length)).toBe(
+        1,
+      );
+      await page.evaluate(() => window.personnelTest.settle('reject'));
+      await expect(
+        page.getByText('Enregistrement incertain', { exact: true }),
+      ).toBeVisible();
+      await page.evaluate(() => window.personnelTest.refresh(41, 'exclude'));
+      await page
+        .getByRole('button', { name: 'Enregistrer', exact: true })
+        .click();
+      await expect
+        .poll(() => page.evaluate(() => window.personnelTest.calls.length))
+        .toBe(2);
+      const calls = await page.evaluate(() => window.personnelTest.calls);
+      expect(calls[1].input).toEqual(calls[0].input);
+      await page.evaluate(() => window.personnelTest.settle('success'));
+      await expect(
+        page.getByText('Modifications enregistrées', { exact: true }),
+      ).toBeVisible();
+    });
+    await test('permission denial ends pending without uncertain retry guidance', async (page) => {
+      await page
+        .getByRole('button', { name: 'Enregistrer', exact: true })
+        .click();
+      await expect
+        .poll(() => page.evaluate(() => window.personnelTest.calls.length))
+        .toBe(1);
+      await page.evaluate(() => window.personnelTest.settle('forbidden'));
+      await expect(
+        page.getByRole('button', { name: 'Enregistrer', exact: true }),
+      ).toBeDisabled();
+      await expect(
+        page.getByText('Enregistrement incertain', { exact: true }),
+      ).toHaveCount(0);
+      await expect(
+        page.getByRole('button', {
+          name: 'Recharger la version enregistrée',
+          exact: true,
+        }),
+      ).toHaveCount(0);
+      await expect
+        .poll(() =>
+          page.evaluate(() => {
+            const text =
+              document.activeElement?.textContent?.toLowerCase() ?? '';
+            return (
+              document.activeElement !== document.body &&
+              (text.includes('accès') || text.includes('autorisé'))
+            );
+          }),
+        )
+        .toBe(true);
+    });
+    await test('uncertain retry denied: no unsupported persistence claim', async (page) => {
+      await page
+        .getByRole('button', { name: 'Enregistrer', exact: true })
+        .click();
+      await expect
+        .poll(() => page.evaluate(() => window.personnelTest.calls.length))
+        .toBe(1);
+      await page.evaluate(() => window.personnelTest.settle('reject'));
+      await expect(
+        page.getByText('Enregistrement incertain', { exact: true }),
+      ).toBeVisible();
+      await page
+        .getByRole('button', { name: 'Enregistrer', exact: true })
+        .click();
+      await expect
+        .poll(() => page.evaluate(() => window.personnelTest.calls.length))
+        .toBe(2);
+      const calls = await page.evaluate(() => window.personnelTest.calls);
+      expect(calls[1].input).toEqual(calls[0].input);
+      await page.evaluate(() => window.personnelTest.settle('forbidden'));
+      await expect(
+        page.getByText(
+          'Votre accès actuel ne permet pas de modifier ce brouillon.',
+          { exact: true },
+        ),
+      ).toBeVisible();
+      await expect(
+        page.getByText('Aucune modification n’a été enregistrée.', {
+          exact: true,
+        }),
+      ).toHaveCount(0);
+      await expect(
+        page.getByRole('button', { name: 'Enregistrer', exact: true }),
+      ).toBeDisabled();
+      await expect(
+        page.getByRole('button', {
+          name: 'Recharger la version enregistrée',
+          exact: true,
+        }),
+      ).toHaveCount(0);
+    });
+    await test('employee switch ignores obsolete mutation completion', async (page) => {
+      await page
+        .getByRole('button', { name: 'Enregistrer', exact: true })
+        .click();
+      await expect
+        .poll(() => page.evaluate(() => window.personnelTest.calls.length))
+        .toBe(1);
+      await page.evaluate(() => window.personnelTest.switchEmployee());
+      await expect(
+        page.getByText('Employee Two', { exact: true }),
+      ).toBeVisible();
+      await page.evaluate(() => window.personnelTest.settle('success'));
+      await expect(
+        page.getByText('Modifications enregistrées', { exact: true }),
+      ).toHaveCount(0);
+      await expect(
+        page.getByRole('radio', {
+          name: 'Ne pas prévoir de période d’essai',
+          exact: true,
+        }),
+      ).toBeChecked();
+    });
+  }
+} finally {
+  await browser?.close();
+  await server.close();
+  writeFileSync(
+    resolve(output, 'results.json'),
+    JSON.stringify(
+      {
+        executor:
+          'Codex; real React DOM in headless Chrome, synthetic action ports, no DB/provider/session',
+        results,
+      },
+      null,
+      2,
+    ),
+  );
+}
+if (results.some((result) => result.status !== 'PASS')) process.exitCode = 1;

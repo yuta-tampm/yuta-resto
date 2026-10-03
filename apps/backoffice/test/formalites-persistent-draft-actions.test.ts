@@ -192,17 +192,71 @@ describe('Formalités persistent draft actions trusted authorization', () => {
   });
 
   it.each(['MANAGER', 'STAFF'] as const)(
-    'preserves exact Formalités 403 for authenticated %s',
+    'returns typed forbidden without repository effects for authenticated %s',
     async (role) => {
       infrastructure.membership.mockResolvedValue(membership({ role }));
       await expect(
-        createFormalitesPersonnelDraftAction(createInput()),
-      ).rejects.toMatchObject({
-        code: 'CROSS_TENANT_ACCESS_DENIED',
-        statusCode: 403,
-        message: 'Permission denied.',
-      });
-      expect(infrastructure.createDraft).not.toHaveBeenCalled();
+        loadFormalitesPersonnelDraftAction(employeeId),
+      ).resolves.toEqual({ kind: 'forbidden' });
+      for (const [action, input] of mutationCases()) {
+        await expect(action(input)).resolves.toEqual({ kind: 'forbidden' });
+      }
+      expectNoRepositoryEffects();
+    },
+  );
+
+  it('returns forbidden before parsing invalid input from a denied actor', async () => {
+    infrastructure.membership.mockResolvedValue(membership({ role: 'STAFF' }));
+    await expect(createFormalitesPersonnelDraftAction({})).resolves.toEqual({
+      kind: 'forbidden',
+    });
+    await expect(
+      loadFormalitesPersonnelDraftAction('not-a-uuid'),
+    ).resolves.toEqual({ kind: 'forbidden' });
+    expectNoRepositoryEffects();
+  });
+
+  it('keeps forbidden free of tenant, role and permission details', async () => {
+    infrastructure.membership.mockResolvedValue(
+      membership({ role: 'MANAGER' }),
+    );
+    const result = await saveFormalitesPersonnelDraftAction(saveInput());
+    expect(result).toEqual({ kind: 'forbidden' });
+    expect(JSON.stringify(result)).not.toMatch(
+      /org-a|est-a|MANAGER|formalites|personnel|Permission denied/,
+    );
+    expect(console.error).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    [
+      'missing establishment',
+      new TenantError(
+        'An establishment is required.',
+        'ESTABLISHMENT_REQUIRED',
+        400,
+      ),
+    ],
+    [
+      'another 403 code',
+      new TenantError('Tenant is disabled.', 'TENANT_DISABLED', 403),
+    ],
+    ['an unexpected failure', new Error('Unexpected authorization failure.')],
+  ])(
+    'propagates %s from the permission step without repository effects',
+    async (_label, failure) => {
+      vi.spyOn(permissions, 'requirePersonnelPermission').mockImplementation(
+        () => {
+          throw failure;
+        },
+      );
+      await expect(loadFormalitesPersonnelDraftAction(employeeId)).rejects.toBe(
+        failure,
+      );
+      for (const [action, input] of mutationCases()) {
+        await expect(action(input)).rejects.toBe(failure);
+      }
+      expectNoRepositoryEffects();
     },
   );
 
@@ -222,7 +276,8 @@ describe('Formalités persistent draft actions trusted authorization', () => {
       );
       await expect(
         createFormalitesPersonnelDraftAction(createInput()),
-      ).rejects.toMatchObject({ statusCode: 403 });
+      ).resolves.toEqual({ kind: 'forbidden' });
+      expectNoRepositoryEffects();
     },
   );
 
@@ -238,10 +293,28 @@ describe('Formalités persistent draft actions trusted authorization', () => {
     );
     await expect(
       loadFormalitesPersonnelDraftAction(employeeId),
-    ).rejects.toMatchObject({
-      statusCode: 403,
-    });
-    expect(infrastructure.readDraft).not.toHaveBeenCalled();
+    ).resolves.toEqual({ kind: 'forbidden' });
+    for (const [action, input] of mutationCases()) {
+      await expect(action(input)).resolves.toEqual({ kind: 'forbidden' });
+    }
+    expectNoRepositoryEffects();
+  });
+
+  it('never turns login or scope redirects into a forbidden or successful outcome', async () => {
+    infrastructure.cookieGet.mockReturnValue(undefined);
+    for (const [action, input] of mutationCases()) {
+      await expect(action(input)).rejects.toThrow(login);
+    }
+    infrastructure.cookieGet.mockImplementation((name: string) =>
+      name === 'yuta_backoffice_session'
+        ? { value: 'synthetic-token' }
+        : undefined,
+    );
+    infrastructure.membership.mockResolvedValue(null);
+    for (const [action, input] of mutationCases()) {
+      await expect(action(input)).rejects.toThrow(recovery);
+    }
+    expectNoRepositoryEffects();
   });
 
   it('ignores browser tenant/role claims and rejects unknown command fields', async () => {
@@ -328,6 +401,27 @@ describe('Formalités persistent draft actions validation and safe output', () =
     expect(infrastructure.readDraft).not.toHaveBeenCalled();
   });
 });
+
+function mutationCases() {
+  return [
+    [createFormalitesPersonnelDraftAction, createInput()],
+    [saveFormalitesPersonnelDraftAction, saveInput()],
+    [reconcileFormalitesPersonnelDraftAction, reconcileInput()],
+    [abandonFormalitesPersonnelDraftAction, abandonInput()],
+  ] as const;
+}
+
+function expectNoRepositoryEffects() {
+  for (const repository of [
+    infrastructure.readDraft,
+    infrastructure.createDraft,
+    infrastructure.saveDraft,
+    infrastructure.reconcileDraft,
+    infrastructure.abandonDraft,
+  ]) {
+    expect(repository).not.toHaveBeenCalled();
+  }
+}
 
 function session(): AuthenticatedSession {
   return {

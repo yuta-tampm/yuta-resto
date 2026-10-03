@@ -3,12 +3,18 @@ import type {
   FormalitesPersonnelDraftReadModel,
 } from '@yuta/contracts';
 import { describe, expect, it, vi } from 'vitest';
+import type { FormalitesPersonnelDraftMutationActionResult } from '../src/app/(authenticated)/equipe/formalites-personnel/_lib/cdi-draft-workspace-action-result';
 import {
   reloadWorkspaceModel,
   runWorkspaceMutation,
   workspaceReloadFailureFeedback,
 } from '../src/app/(authenticated)/equipe/formalites-personnel/_lib/cdi-draft-workspace-operations';
-import type { WorkspaceOperation } from '../src/app/(authenticated)/equipe/formalites-personnel/_lib/cdi-draft-workspace-state';
+import {
+  canAbandonDraft,
+  decideInitialModelUpdate,
+  settleWorkspaceOperation,
+  type WorkspaceOperation,
+} from '../src/app/(authenticated)/equipe/formalites-personnel/_lib/cdi-draft-workspace-state';
 
 const intentPayload = {
   employeeId: '019930d3-2f5d-7d5a-9f96-8f2e25e7c40a',
@@ -132,6 +138,165 @@ describe('CDI draft workspace mutation orchestration', () => {
     expect(onPending).not.toHaveBeenCalled();
   });
 });
+
+describe('CDI draft workspace forbidden outcome', () => {
+  it('clears an uncertain operation on a forbidden retry', async () => {
+    const createKey = keySequence();
+    const run = vi
+      .fn<
+        (key: string) => Promise<FormalitesPersonnelDraftMutationActionResult>
+      >()
+      .mockRejectedValueOnce(new Error('Network dropped.'))
+      .mockResolvedValueOnce({ kind: 'forbidden' });
+
+    const first = await runWorkspaceMutation({
+      current: null,
+      kind: 'abandon',
+      intentPayload,
+      createKey,
+      onPending: vi.fn(),
+      run,
+    });
+    expect(first?.operation?.status).toBe('uncertain');
+
+    const denied = await runWorkspaceMutation({
+      current: first!.operation,
+      kind: 'abandon',
+      intentPayload,
+      createKey,
+      onPending: vi.fn(),
+      run,
+    });
+    expect(run.mock.calls.map(([key]) => key)).toEqual(['key-1', 'key-1']);
+    expect(denied).toEqual({ operation: null, outcome: { kind: 'forbidden' } });
+  });
+
+  it('settles forbidden as confirmed and only server_error as uncertain', () => {
+    const operation: WorkspaceOperation = {
+      kind: 'save',
+      key: 'key-1',
+      intent: 'save:{}',
+      status: 'pending',
+    };
+    expect(settleWorkspaceOperation(operation, { kind: 'forbidden' })).toBe(
+      null,
+    );
+    expect(
+      settleWorkspaceOperation(operation, { kind: 'server_error' }),
+    ).toEqual({ ...operation, status: 'uncertain' });
+  });
+
+  it('gives a forbidden reload non-recoverable copy that does not invite a retry', () => {
+    const feedback = workspaceReloadFailureFeedback({ kind: 'forbidden' });
+    expect(feedback).toEqual({
+      tone: 'danger',
+      title: 'Accès refusé',
+      description:
+        'Votre accès actuel ne permet plus de consulter ou de modifier ce brouillon.',
+      recoverable: false,
+    });
+    expect(feedback.description).not.toMatch(/Réessayez|Rechargez/);
+  });
+});
+
+describe('CDI draft workspace initialModel updates', () => {
+  const employeeId = intentPayload.employeeId;
+  const otherEmployeeId = '019930d3-2f5d-7d5a-9f96-8f2e25e7c40b';
+
+  it('resets for a changed employee identity even while busy', () => {
+    expect(
+      decideInitialModelUpdate({
+        previousEmployeeId: employeeId,
+        employeeId: otherEmployeeId,
+        busy: true,
+        current: draftModel(3),
+        next: model,
+      }),
+    ).toBe('reset_identity');
+  });
+
+  it('keeps the local model, inputs and operation while a request is pending or uncertain', () => {
+    expect(
+      decideInitialModelUpdate({
+        previousEmployeeId: employeeId,
+        employeeId,
+        busy: true,
+        current: draftModel(2),
+        next: draftModel(3),
+      }),
+    ).toBe('ignore');
+  });
+
+  it('ignores an older revision of the displayed draft', () => {
+    expect(
+      decideInitialModelUpdate({
+        previousEmployeeId: employeeId,
+        employeeId,
+        busy: false,
+        current: draftModel(3),
+        next: draftModel(2),
+      }),
+    ).toBe('ignore');
+  });
+
+  it('replaces the model when idle with a same or newer server model', () => {
+    for (const next of [draftModel(3), draftModel(4), model]) {
+      expect(
+        decideInitialModelUpdate({
+          previousEmployeeId: employeeId,
+          employeeId,
+          busy: false,
+          current: draftModel(3),
+          next,
+        }),
+      ).toBe('replace');
+    }
+    expect(
+      decideInitialModelUpdate({
+        previousEmployeeId: employeeId,
+        employeeId,
+        busy: false,
+        current: draftModel(3),
+        next: {
+          ...draftModel(1),
+          draftId: '019930d3-41ea-7282-81e4-2bddc527035e',
+        },
+      }),
+    ).toBe('replace');
+  });
+
+  it('only offers abandonment for an active draft', () => {
+    expect(canAbandonDraft(model)).toBe(false);
+    expect(canAbandonDraft(draftModel(1))).toBe(true);
+    expect(
+      canAbandonDraft({
+        ...draftModel(1),
+        state: 'abandoned',
+        status: 'abandoned',
+        abandonmentReason: 'Annulé',
+        abandonedAt: '2026-09-05T02:00:00.000Z',
+      }),
+    ).toBe(false);
+  });
+});
+
+function draftModel(
+  revision: number,
+): Extract<FormalitesPersonnelDraftReadModel, { state: 'editable' }> {
+  if (model.state !== 'eligible_no_draft') throw new Error('Unexpected model.');
+  return {
+    state: 'editable',
+    draftId: intentPayload.draftId,
+    formalityType: 'cdi_preparation',
+    status: 'draft',
+    probationChoice: 'undecided',
+    revision,
+    draftValues: model.currentPersonnelValues,
+    currentPersonnelValues: model.currentPersonnelValues,
+    createdAt: '2026-09-05T00:00:00.000Z',
+    updatedAt: '2026-09-05T01:00:00.000Z',
+  };
+}
 
 describe('CDI draft workspace reload orchestration', () => {
   it('maps a rejected reload to safe, recoverable French feedback', async () => {

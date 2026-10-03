@@ -33,7 +33,7 @@ import {
   ShieldAlert,
   Trash2,
 } from 'lucide-react';
-import type { RefObject } from 'react';
+import type { ReactNode, RefObject } from 'react';
 import type { WorkspaceFeedback } from '../_lib/cdi-draft-workspace-feedback';
 import {
   personnelFactLabels,
@@ -62,7 +62,12 @@ export function WorkspaceFeedbackAlert({
   onReload(): void;
 }) {
   return (
-    <div ref={feedbackRef} tabIndex={-1} aria-live="polite">
+    <div
+      ref={feedbackRef}
+      tabIndex={-1}
+      aria-live="polite"
+      className="rounded-xl focus:outline-none focus:ring-2 focus:ring-focus-ring"
+    >
       <Alert
         tone={feedback.tone}
         icon={<CircleAlert className="h-5 w-5" aria-hidden />}
@@ -93,6 +98,7 @@ export function EligibleNoDraft({
   model,
   locale,
   pending,
+  locked,
   onCreate,
 }: {
   model: Extract<
@@ -101,6 +107,7 @@ export function EligibleNoDraft({
   >;
   locale: string;
   pending: boolean;
+  locked: boolean;
   onCreate(): void;
 }) {
   return (
@@ -121,7 +128,7 @@ export function EligibleNoDraft({
         <Button
           type="button"
           onClick={onCreate}
-          disabled={pending}
+          disabled={pending || locked}
           loading={pending}
         >
           Créer le brouillon
@@ -136,6 +143,7 @@ export function EditableDraft({
   locale,
   probationChoice,
   pending,
+  locked,
   onProbationChoice,
   onSave,
   onAbandon,
@@ -144,6 +152,7 @@ export function EditableDraft({
   locale: string;
   probationChoice: FormalitesPersonnelProbationChoice;
   pending: boolean;
+  locked: boolean;
   onProbationChoice(value: FormalitesPersonnelProbationChoice): void;
   onSave(): void;
   onAbandon(): void;
@@ -164,21 +173,21 @@ export function EditableDraft({
         <ProbationChoiceField
           value={probationChoice}
           onValueChange={onProbationChoice}
-          disabled={pending}
+          disabled={pending || locked}
         />
         <div className="flex flex-col-reverse gap-3 border-t border-border-subtle pt-4 sm:flex-row sm:justify-between">
           <Button
             type="button"
             variant="danger"
             onClick={onAbandon}
-            disabled={pending}
+            disabled={pending || locked}
           >
             Abandonner le brouillon
           </Button>
           <Button
             type="button"
             onClick={onSave}
-            disabled={pending}
+            disabled={pending || locked}
             loading={pending}
           >
             <Save className="h-4 w-4" aria-hidden />
@@ -200,6 +209,7 @@ export function ReconciliationRequired({
   locale,
   choices,
   pending,
+  locked,
   onChoice,
   onReconcile,
   onAbandon,
@@ -211,6 +221,7 @@ export function ReconciliationRequired({
   locale: string;
   choices: ReconciliationChoices;
   pending: boolean;
+  locked: boolean;
   onChoice(
     fact: FormalitesPersonnelFact,
     choice: FormalitesPersonnelReconciliationChoice,
@@ -260,7 +271,7 @@ export function ReconciliationRequired({
               onValueChange={(value) =>
                 onChoice(fact, value as FormalitesPersonnelReconciliationChoice)
               }
-              disabled={pending}
+              disabled={pending || locked}
               aria-label={`Choix pour ${personnelFactLabels[fact]}`}
             >
               {(['keep', 'refresh'] as const).map((choice) => (
@@ -285,14 +296,14 @@ export function ReconciliationRequired({
           type="button"
           variant="danger"
           onClick={onAbandon}
-          disabled={pending}
+          disabled={pending || locked}
         >
           Abandonner le brouillon
         </Button>
         <Button
           type="button"
           onClick={onReconcile}
-          disabled={pending}
+          disabled={pending || locked}
           loading={pending}
         >
           Valider les choix
@@ -306,6 +317,7 @@ export function IneligibleRecovery({
   model,
   locale,
   pending,
+  locked,
   onAbandon,
 }: {
   model: Extract<
@@ -314,6 +326,7 @@ export function IneligibleRecovery({
   >;
   locale: string;
   pending: boolean;
+  locked: boolean;
   onAbandon(): void;
 }) {
   return (
@@ -346,7 +359,7 @@ export function IneligibleRecovery({
           type="button"
           variant="danger"
           onClick={onAbandon}
-          disabled={pending}
+          disabled={pending || locked}
         >
           Abandonner le brouillon
         </Button>
@@ -359,11 +372,13 @@ export function AbandonedDraft({
   model,
   locale,
   pending,
+  locked,
   onCreate,
 }: {
   model: Extract<FormalitesPersonnelDraftReadModel, { state: 'abandoned' }>;
   locale: string;
   pending: boolean;
+  locked: boolean;
   onCreate(): void;
 }) {
   return (
@@ -396,7 +411,7 @@ export function AbandonedDraft({
             <Button
               type="button"
               onClick={onCreate}
-              disabled={pending}
+              disabled={pending || locked}
               loading={pending}
             >
               Créer un nouveau brouillon
@@ -413,8 +428,11 @@ export function AbandonDraftDialog({
   reason,
   reasonRef,
   pending,
+  locked,
   abandoning,
+  feedback,
   onOpenChange,
+  onCloseAutoFocus,
   onReasonChange,
   onConfirm,
 }: {
@@ -422,14 +440,21 @@ export function AbandonDraftDialog({
   reason: string;
   reasonRef: RefObject<HTMLTextAreaElement | null>;
   pending: boolean;
+  locked: boolean;
   abandoning: boolean;
+  /** Outcome of the abandonment shown inside the dialog, if any. */
+  feedback: ReactNode;
   onOpenChange(open: boolean): void;
+  onCloseAutoFocus(event: Event): void;
   onReasonChange(reason: string): void;
   onConfirm(): void;
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent closeLabel="Fermer la confirmation d’abandon">
+      <DialogContent
+        closeLabel="Fermer la confirmation d’abandon"
+        onCloseAutoFocus={onCloseAutoFocus}
+      >
         <DialogHeader>
           <DialogTitle>Abandonner ce brouillon ?</DialogTitle>
           <DialogDescription>
@@ -437,6 +462,7 @@ export function AbandonDraftDialog({
             supprime pas le dossier salarié.
           </DialogDescription>
         </DialogHeader>
+        {feedback && <div className="mt-5">{feedback}</div>}
         <FormField
           className="mt-5"
           label={<Label htmlFor="formalites-abandon-reason">Motif</Label>}
@@ -469,7 +495,7 @@ export function AbandonDraftDialog({
             type="button"
             variant="danger"
             onClick={onConfirm}
-            disabled={pending || reason.trim().length === 0}
+            disabled={pending || locked || reason.trim().length === 0}
             loading={abandoning}
           >
             <Trash2 className="h-4 w-4" aria-hidden />

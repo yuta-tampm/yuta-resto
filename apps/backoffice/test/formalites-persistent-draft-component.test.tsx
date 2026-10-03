@@ -9,6 +9,14 @@ vi.mock('next/navigation', () => ({
 }));
 import { CdiDraftWorkspace } from '../src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-workspace';
 import {
+  AbandonedDraft,
+  EditableDraft,
+  EligibleNoDraft,
+  IneligibleRecovery,
+  ReconciliationRequired,
+  WorkspaceFeedbackAlert,
+} from '../src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-workspace-panels';
+import {
   abandonmentReasonRequiredFeedback,
   incompleteReconciliationFeedback,
   workspaceFeedbackForOutcome,
@@ -119,6 +127,104 @@ describe('Formalités persistent draft workspace rendering', () => {
     expect(JSON.stringify(cases)).not.toMatch(
       /internal detail|operationKey|fingerprint|organizationId|establishmentId|stack/i,
     );
+  });
+
+  it('presents a forbidden action truthfully without inviting a retry', () => {
+    const feedback = workspaceFeedbackForOutcome({ kind: 'forbidden' });
+    expect(feedback).toEqual({
+      tone: 'danger',
+      title: 'Action non autorisée',
+      description: 'Votre accès actuel ne permet pas de modifier ce brouillon.',
+      recoverable: false,
+    });
+    const markup = renderToStaticMarkup(
+      <WorkspaceFeedbackAlert
+        feedback={feedback}
+        feedbackRef={{ current: null }}
+        pending={false}
+        onReload={vi.fn()}
+      />,
+    );
+    expect(markup).toContain('Action non autorisée');
+    expect(markup).not.toContain('Recharger la version enregistrée');
+    expect(markup).not.toMatch(/Réessayez/);
+    expect(markup).toContain('tabindex="-1"');
+    expect(markup).toContain('focus:ring-2');
+  });
+
+  it('keeps the reload action on recoverable feedback only', () => {
+    const markup = renderToStaticMarkup(
+      <WorkspaceFeedbackAlert
+        feedback={workspaceFeedbackForOutcome({ kind: 'server_error' })}
+        feedbackRef={{ current: null }}
+        pending={false}
+        onReload={vi.fn()}
+      />,
+    );
+    expect(markup).toContain('Recharger la version enregistrée');
+  });
+
+  it('disables every mutation control while locked without a loading state', () => {
+    const noop = vi.fn();
+    const markups = [
+      renderToStaticMarkup(
+        <EligibleNoDraft
+          model={eligibleNoDraftModel()}
+          locale="fr-FR"
+          pending={false}
+          locked
+          onCreate={noop}
+        />,
+      ),
+      renderToStaticMarkup(
+        <EditableDraft
+          model={editableModel()}
+          locale="fr-FR"
+          probationChoice="include"
+          pending={false}
+          locked
+          onProbationChoice={noop}
+          onSave={noop}
+          onAbandon={noop}
+        />,
+      ),
+      renderToStaticMarkup(
+        <ReconciliationRequired
+          model={reconciliationModel()}
+          locale="fr-FR"
+          choices={{}}
+          pending={false}
+          locked
+          onChoice={noop}
+          onReconcile={noop}
+          onAbandon={noop}
+        />,
+      ),
+      renderToStaticMarkup(
+        <IneligibleRecovery
+          model={ineligibleModel()}
+          locale="fr-FR"
+          pending={false}
+          locked
+          onAbandon={noop}
+        />,
+      ),
+      renderToStaticMarkup(
+        <AbandonedDraft
+          model={abandonedModel()}
+          locale="fr-FR"
+          pending={false}
+          locked
+          onCreate={noop}
+        />,
+      ),
+    ];
+    for (const markup of markups) {
+      const buttons = markup.match(/<button\b[^>]*>/g) ?? [];
+      expect(buttons.length).toBeGreaterThan(0);
+      for (const button of buttons) expect(button).toMatch(/\bdisabled=""/);
+      expect(markup).not.toContain('aria-busy="true"');
+    }
   });
 
   it('keeps local workspace feedback copy and fresh feedback objects', () => {
@@ -454,7 +560,10 @@ const currentValues = {
   contractWeeklyMinutes: 2_100,
 };
 
-function eligibleNoDraftModel(): FormalitesPersonnelDraftReadModel {
+function eligibleNoDraftModel(): Extract<
+  FormalitesPersonnelDraftReadModel,
+  { state: 'eligible_no_draft' }
+> {
   return {
     state: 'eligible_no_draft',
     formalityType: 'cdi_preparation',
