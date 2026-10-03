@@ -447,33 +447,8 @@ describe('signed amendment upload command boundary', () => {
       { reference: 'R'.repeat(81) },
       { reference: 'La référence doit contenir 80 caractères maximum.' },
     ],
-    [
-      'create',
-      { employeeId: 'not-a-uuid' },
-      { employeeId: 'Vérifiez cette valeur.' },
-    ],
-    [
-      'replace',
-      { amendmentId: null },
-      { amendmentId: 'Vérifiez cette valeur.' },
-    ],
-    [
-      'replace',
-      { expectedRevision: '0' },
-      { expectedRevision: 'Vérifiez cette valeur.' },
-    ],
-    [
-      'replace',
-      { expectedRevision: null },
-      { expectedRevision: 'Vérifiez cette valeur.' },
-    ],
-    [
-      'replace',
-      { idempotencyKey: 'retry' },
-      { idempotencyKey: 'Vérifiez cette valeur.' },
-    ],
   ] as const)(
-    'rejects an invalid %s command %j without side effects',
+    'rejects an invalid visible %s field %j without side effects',
     async (mode, fields, fieldErrors) => {
       const formData = withFields(amendmentFormData(mode), fields);
 
@@ -496,22 +471,60 @@ describe('signed amendment upload command boundary', () => {
     },
   );
 
-  it.each([null, 'delete', 'REPLACE'])(
-    'rejects the unsupported mode %s instead of falling back to create',
-    async (mode) => {
+  it.each([
+    ['create', { employeeId: 'not-a-uuid' }],
+    ['create', { idempotencyKey: null }],
+    ['replace', { amendmentId: null }],
+    ['replace', { amendmentId: 'not-a-uuid' }],
+    ['replace', { expectedRevision: '0' }],
+    ['replace', { expectedRevision: null }],
+    ['replace', { idempotencyKey: 'retry' }],
+    ['create', { mode: null }],
+    ['create', { mode: 'delete' }],
+    ['create', { mode: 'REPLACE' }],
+  ] as const)(
+    'returns stale-form recovery for an invalid hidden %s field %j without side effects',
+    async (mode, fields) => {
+      const formData = withFields(amendmentFormData(mode), fields);
+
       const result = await saveEmployeeAmendmentAction(
         initialAmendmentState,
-        withFields(amendmentFormData('create'), { mode }),
+        formData,
       );
 
-      expect(result).toMatchObject({
+      expect(result).toEqual({
         status: 'error',
-        message: 'Certains champs doivent être corrigés.',
-        fieldErrors: { mode: 'Vérifiez cette valeur.' },
+        message:
+          'Le formulaire n’est plus à jour. Rechargez la liste avant de réessayer.',
+        fieldErrors: {},
+        amendment: null,
+        values: {
+          effectiveDate: String(formData.get('effectiveDate') ?? ''),
+          reference: String(formData.get('reference') ?? ''),
+        },
       });
       expectNoUploadSideEffects();
     },
   );
+
+  it('keeps accurate visible field errors alongside stale-form recovery', async () => {
+    const result = await saveEmployeeAmendmentAction(
+      initialAmendmentState,
+      withFields(amendmentFormData('create'), {
+        employeeId: 'not-a-uuid',
+        effectiveDate: 'not-a-date',
+      }),
+    );
+
+    expect(result).toMatchObject({
+      status: 'error',
+      message:
+        'Le formulaire n’est plus à jour. Rechargez la liste avant de réessayer.',
+      fieldErrors: { effectiveDate: 'Indiquez une date d’effet valide.' },
+    });
+    expect(result.fieldErrors).not.toHaveProperty('employeeId');
+    expectNoUploadSideEffects();
+  });
 
   it('creates with only create command fields, ignoring stray replace fields', async () => {
     await saveEmployeeAmendmentAction(
@@ -644,10 +657,12 @@ describe('signed amendment upload command boundary', () => {
       amendmentFormData('create'),
     );
 
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       status: 'error',
-      message: 'Certains champs doivent être corrigés.',
-      fieldErrors: { filename: 'Vérifiez cette valeur.' },
+      message: 'Vérifiez le fichier puis réessayez.',
+      fieldErrors: { file: 'Choisissez un fichier PDF valide.' },
+      amendment: null,
+      values: { effectiveDate: '2026-09-01', reference: 'AV-1' },
     });
     expect(mocks.discard).toHaveBeenCalledWith(storageKey, expect.any(String));
     expect(mocks.recordAmendmentRejected).toHaveBeenCalledWith(

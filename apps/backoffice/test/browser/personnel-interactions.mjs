@@ -52,7 +52,9 @@ const server = await createViteServer({
           source === '../actions' &&
           importer
             ?.replaceAll('\\', '/')
-            .endsWith('/salaries/_components/use-employee-history.ts')
+            .match(
+              /\/(?:salaries\/_components\/use-employee-history\.ts|registre-personnel\/_components\/personnel-register-(?:page|dialog)\.tsx)$/,
+            )
         )
           return resolve(fixture, 'personnel-interactions.tsx');
       },
@@ -470,6 +472,122 @@ try {
         'history',
       );
     }
+  }
+  if (process.argv[2] !== 'history') {
+    await test('CDI dirty navigation cancellation and beforeunload lifecycle', async (page) => {
+      const cancelledBeforeUnload = () =>
+        page.evaluate(() => {
+          const event = new Event('beforeunload', { cancelable: true });
+          window.dispatchEvent(event);
+          return event.defaultPrevented;
+        });
+      await expect.poll(cancelledBeforeUnload).toBe(false);
+      await page
+        .getByRole('radio', {
+          name: 'Prévoir une période d’essai',
+          exact: true,
+        })
+        .check();
+      await expect.poll(cancelledBeforeUnload).toBe(true);
+      const previousUrl = page.url();
+      const dialogSeen = page.waitForEvent('dialog');
+      page.once('dialog', (dialog) => dialog.dismiss());
+      await page
+        .getByRole('link', { name: 'Revenir au dossier salarié', exact: true })
+        .click();
+      const dialog = await dialogSeen;
+      expect(dialog.type()).toBe('confirm');
+      expect(dialog.message()).toContain(
+        'modifications ne sont pas enregistrées',
+      );
+      expect(page.url()).toBe(previousUrl);
+      await expect(
+        page.getByRole('radio', {
+          name: 'Prévoir une période d’essai',
+          exact: true,
+        }),
+      ).toBeChecked();
+      await page.getByRole('radio', { name: 'À décider', exact: true }).check();
+      await expect.poll(cancelledBeforeUnload).toBe(false);
+      expect(await page.evaluate(() => window.personnelTest.calls)).toEqual([]);
+    });
+    await test('CDI abandon cancellation retains reason then clears on accepted close', async (page) => {
+      const open = () =>
+        page
+          .getByRole('button', { name: 'Abandonner le brouillon', exact: true })
+          .click();
+      await open();
+      const reason = page.getByLabel('Motif');
+      await expect(reason).toBeFocused();
+      await expect(reason).toHaveAttribute('maxlength', '250');
+      await expect(reason).toHaveAttribute('required', '');
+      await reason.fill('Synthetic preserved reason');
+      let prompt = page.waitForEvent('dialog');
+      page.once('dialog', (dialog) => dialog.dismiss());
+      await page.getByRole('button', { name: 'Annuler', exact: true }).click();
+      expect((await prompt).message()).toContain('motif saisi');
+      await expect(reason).toHaveValue('Synthetic preserved reason');
+      await expect(page.getByRole('dialog')).toBeVisible();
+      expect(await page.evaluate(() => window.personnelTest.calls)).toEqual([]);
+      prompt = page.waitForEvent('dialog');
+      page.once('dialog', (dialog) => dialog.accept());
+      await page.getByRole('button', { name: 'Annuler', exact: true }).click();
+      await prompt;
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+      await open();
+      await expect(page.getByLabel('Motif')).toHaveValue('');
+      await expect(page.getByLabel('Motif')).toBeFocused();
+    });
+    await test('CDI incomplete reconciliation focuses the first missing choice', async (page) => {
+      await page.evaluate(() => window.personnelTest.reconcileSource());
+      await page
+        .getByRole('button', { name: 'Valider les choix', exact: true })
+        .click();
+      await expect(
+        page.getByText('Choix incomplet', { exact: true }),
+      ).toBeVisible();
+      await expect(page.locator('#reconcile-position-keep')).toBeFocused();
+      expect(await page.evaluate(() => window.personnelTest.calls)).toEqual([]);
+    });
+    await test(
+      'Register page correction forwards trusted business date to dialog and submitted command',
+      async (page) => {
+        await page
+          .getByRole('button', { name: 'Corriger', exact: true })
+          .click();
+        await expect(page.getByRole('dialog')).toBeVisible();
+        await expect(
+          page.getByLabel('Date d’effet', { exact: true }),
+        ).toHaveValue('2031-01-02');
+        await page
+          .getByLabel('Raison', { exact: true })
+          .fill('Synthetic correction reason');
+        await page
+          .getByRole('button', {
+            name: 'Enregistrer la correction',
+            exact: true,
+          })
+          .click();
+        await expect
+          .poll(() =>
+            page.evaluate(
+              () => window.personnelRegisterTest.submissions.length,
+            ),
+          )
+          .toBe(1);
+        const command = await page.evaluate(
+          () => window.personnelRegisterTest.submissions[0],
+        );
+        expect(command.effectiveDate).toBe('2031-01-02');
+        expect(command.expectedRevision).toBe('2');
+        expect(command.operationId).toMatch(/^[0-9a-f-]{36}$/);
+        await expect(
+          page.getByText('Synthetic action received', { exact: true }),
+        ).toBeVisible();
+      },
+      undefined,
+      'register',
+    );
   }
 } finally {
   await browser?.close();

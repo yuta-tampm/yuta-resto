@@ -1,3 +1,5 @@
+import { PersonnelRegisterPage } from '@/app/(authenticated)/equipe/registre-personnel/_components/personnel-register-page';
+import { personnelRegisterEntrySchema } from '@yuta/contracts/personnel';
 import { useEmployeeHistory } from '@/app/(authenticated)/equipe/salaries/_components/use-employee-history';
 import type { DetailTab } from '@/app/(authenticated)/equipe/salaries/_components/employee-details';
 import { useState } from 'react';
@@ -49,6 +51,7 @@ const controller = {
     _choice: 'undecided' | 'include' | 'exclude',
   ) => {},
   switchEmployee: () => {},
+  reconcileSource: () => {},
   settle(
     kind: 'reject' | 'success' | 'stale_draft' | 'server_error' | 'forbidden',
   ) {
@@ -70,6 +73,17 @@ function Harness() {
   const [model, setModel] = useState(() => editable());
   controller.refresh = (revision, choice) =>
     setModel(editable(revision, choice));
+  controller.reconcileSource = () => {
+    const draft = editable();
+    if (draft.state !== 'editable') throw Error('Invalid fixture model');
+    setModel({
+      ...draft,
+      state: 'reconciliation_required',
+      draftValues: { ...facts, position: 'Ancien poste' },
+      divergentFacts: ['position'],
+      sourceStateFingerprint: 'a'.repeat(64),
+    });
+  };
   controller.switchEmployee = () => {
     setEmployeeId(secondEmployee);
     setModel(editable(5, 'exclude'));
@@ -246,10 +260,89 @@ function HistoryHarness() {
   );
 }
 
+type RegisterActionState =
+  import('@/app/(authenticated)/equipe/registre-personnel/actions').PersonnelRegisterActionState;
+type RegisterLoadResult =
+  import('@/app/(authenticated)/equipe/registre-personnel/actions').LoadPersonnelRegisterPageResult;
+const registerEntry = personnelRegisterEntrySchema.parse({
+  id: '019930d3-41ea-7282-81e4-2bddc527035d',
+  employeeId: firstEmployee,
+  sequence: 1,
+  revision: 2,
+  inscribedAt: '2026-09-01T10:00:00Z',
+  updatedAt: '2026-09-01T10:00:00Z',
+  facts: {
+    givenNames: 'Synthetic',
+    familyName: 'Employee',
+    nationalityCode: 'FR',
+    nationalityLabel: 'Française',
+    birthDate: '1990-01-02',
+    sex: 'F',
+    position: 'Serveuse',
+    qualification: 'Employée',
+    entryDate: '2026-09-01',
+    departureDate: null,
+    employmentTermType: 'indefinite',
+    workTimeCategory: 'full_time',
+    protectedAuthorization: {
+      required: false,
+      authorizationDate: null,
+      requestDate: null,
+    },
+    workAuthorization: { required: false, titleType: null, orderNumber: null },
+    temporaryWorkCompany: null,
+    employerGroup: null,
+    specialContract: 'none',
+  },
+});
+const registerData = {
+  items: [registerEntry],
+  snapshotRevision: 2,
+  readiness: 'ready' as const,
+  pageInfo: { nextCursor: null, hasMore: false },
+};
+const registerController = {
+  submissions: [] as Array<Record<string, FormDataEntryValue>>,
+};
+Object.assign(window, { personnelRegisterTest: registerController });
+export async function loadPersonnelRegisterPageAction(): Promise<RegisterLoadResult> {
+  return { status: 'success', data: registerData };
+}
+export async function correctPersonnelRegisterAction(
+  _state: RegisterActionState,
+  data: FormData,
+): Promise<RegisterActionState> {
+  registerController.submissions.push(Object.fromEntries(data.entries()));
+  return {
+    status: 'error',
+    message: 'Synthetic action received',
+    fieldErrors: {},
+  };
+}
+export async function inscribePersonnelRegisterAction(
+  state: RegisterActionState,
+  data: FormData,
+): Promise<RegisterActionState> {
+  return correctPersonnelRegisterAction(state, data);
+}
+function RegisterHarness() {
+  return (
+    <PersonnelRegisterPage
+      data={registerData}
+      candidates={[]}
+      locale="fr-FR"
+      businessDate="2031-01-02"
+    />
+  );
+}
+
 const container = document.getElementById('root');
 if (!container) throw Error('Missing browser fixture root');
 createRoot(container).render(
-  new URLSearchParams(window.location.search).get('surface') === 'history' ? (
+  new URLSearchParams(window.location.search).get('surface') === 'register' ? (
+    <RegisterHarness />
+  ) : new URLSearchParams(window.location.search).get('surface') ===
+    'history' ? (
     <HistoryHarness />
   ) : (
     <Harness />

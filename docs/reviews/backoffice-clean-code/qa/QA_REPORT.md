@@ -6,7 +6,7 @@ UI_AFFECTING: YES
 
 BROWSER_QA_REQUIRED: YES
 
-QA status: PASS for completed maintenance Waves 1–5. Follow-up Wave 6 is pending. Wave-specific classifications and limitations follow.
+QA status: PASS for task-scoped maintenance Waves 1–6. Global repository formatting remains FAIL on 149 unchanged files outside this task. Wave-specific classifications and limitations follow.
 
 ## Wave 1
 
@@ -113,3 +113,26 @@ Functional Browser QA: PASS, four scenarios against the real `useEmployeeHistory
 The hook owns visible state, operation IDs and cursors in an employee-scoped reducer. Both dossier pages use it without caller resets. A shared dossier-access hook replaces duplicate wrappers and ignores superseded trace-request errors. The two presentation load-state types alias the shared generic type. The existing core focus helper remains in use. Server actions, DTOs, guards, tenant scope and trace-before-read are unchanged; the real-action ordering regressions remain in the focused tests.
 
 Validation: 38 cases in two focused files, Backoffice typecheck, docs, architecture and changed-file formatting pass. No failed application check occurred in this phase. Browser evidence covers the hook's real lifecycle, not a new full-page Next/session/database acceptance. Full suite/build/recursive checks remain scheduled for Wave 6. The now-unused `resetHistory` flag in the post-save plan will be removed in the final bounded cleanup.
+
+## Wave 6 — Upload feedback and final cleanup
+
+Author: Claude Code session `37f8bfb9-a7ea-464d-8294-ba4d7f424855`; its guarded receipt reports ten changed paths, zero violations and unchanged HEAD/index. Codex owns the browser integration and final validation. The independently reviewed two-path amendment removes only the unused post-save `resetHistory` result and test expectation. Operation IDs, employee identity and focus scheduling are preserved.
+
+Invalid hidden amendment command fields now use the signed-contract stale-form feedback. Accurate visible date/reference errors remain available, including when hidden and visible fields both fail. Validation still precedes all file reads, storage, scanner, metadata and rejection-audit effects. Invalid server-derived file metadata uses the shared file message and amendment file-field feedback, retaining the `invalid_file` rejection audit and cleanup. The internal PDF-removal export is gone; its body remains inside the existing guarded discard function. The two pure CDI child files inherit their client boundary from the owning workspace. The reload failure helper already had its explicit feedback return type.
+
+Functional Browser QA: PASS, all fifteen final cases from `node apps/backoffice/test/browser/personnel-interactions.mjs all`. Existing CDI recovery and employee-history cases pass again. Four additional cases exercise the actual workspace or Register controller with real React DOM and Radix components:
+
+- A dirty CDI workspace cancels a dispatched `beforeunload` event; returning to the saved selection removes that guard. Dismissing the real navigation confirmation keeps the URL and local selection. No mutation action is sent.
+- Opening abandonment focuses Motif and exposes its required 250-character bound. Cancelling the native close confirmation preserves the reason and modal; accepting it clears the reason on reopen and restores field focus.
+- Incomplete reconciliation focuses the first missing keep-choice radio and performs no mutation.
+- Clicking Corriger on the actual Register page passes the supplied business date through the dialog to the submitted command. Its deliberately fixed date `2031-01-02` is a fixture prop; trusted server-timezone derivation is separately covered by the real route tests.
+
+The two former interaction/wiring source-string assertions are replaced by dialog SSR and these browser scenarios. Retained protected route/hash, browser-storage/autosave and client UTC-date boundary checks resolve source paths relative to `import.meta.url`. SSR renders only dialog content inline while retaining the real Radix root context; browser coverage exercises the real portal.
+
+Validation: 76 focused cases; 137 Backoffice files / 1,696 cases pass, with one gated file / 54 cases skipped. Auth passes 64 cases and tenant passes 11. Docs, architecture, six-app Next type generation, final recursive workspace typecheck and Backoffice production build pass. Changed-file formatting passes. Global `pnpm format:check` fails on 149 files; every reported path is outside the whole follow-up allowlist and unchanged since the Wave 6 base `da1b8920`. Its failure and exact attribution are retained rather than relabelled as a repository-wide PASS. The format-preservation guard itself passes.
+
+Retained corrections: Claude's first focused run had two SSR failures because its inline-content mocks initially removed Radix context. It preserved the real root and all 76 cases passed. Codex's initial recursive typecheck found the new Register fixture missing `pageInfo.hasMore`; the fixture was corrected and all fifteen browser cases passed again. Original failed logs/streams remain in the ignored task evidence.
+
+Limits: action ports and router refresh are synthetic; no new real Next/session/database end-to-end or styled visual/responsive acceptance is claimed. Browser widths are 1440px, with two rejection cases at 390px. No live PDF/storage/scanner/provider execution, production action or OpenSpec lifecycle action was performed. Broad `test:cloud`, `build:cloud` and `test:local` are replaced by relevant Backoffice/shared-package checks; gated integration cases remain unexecuted. Browser and Vite processes are closed by the runner. The unrelated synthetic-AI planning commit is preserved and excluded from task delivery.
+
+During final checks, another task also started changing the current documentation index, Product knowledge and architecture documentation and adding `AI_AND_STORAGE.md`. Those paths are excluded from this candidate and commit, and their bytes are preserved. They were not written by Claude or Codex for this Backoffice task.

@@ -48,18 +48,14 @@ export async function scanAndPromoteSignedPdf(
   await storage.promoteVerifiedObject(storageKey);
 }
 
-export async function removeSignedPdf(storageKey: string): Promise<void> {
-  const { storage } = await getPersonnelDocumentRuntime();
-  await storage.removeObject(storageKey);
-}
-
 export async function discardSignedPdf(
   storageKey: string | null,
   failureLogMessage: string,
 ): Promise<void> {
   if (!storageKey) return;
   try {
-    await removeSignedPdf(storageKey);
+    const { storage } = await getPersonnelDocumentRuntime();
+    await storage.removeObject(storageKey);
   } catch {
     console.error(failureLogMessage);
   }

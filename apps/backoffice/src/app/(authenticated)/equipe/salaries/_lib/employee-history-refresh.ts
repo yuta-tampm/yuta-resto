@@ -15,7 +15,6 @@ export function getEmployeeEditCommitRefreshPlan(
   return {
     surface,
     closeEditor: true,
-    resetHistory: true,
     historyOperationId: getPostSaveHistoryOperationId(
       historyIsActive,
       createOperationId,

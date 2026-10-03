@@ -1,14 +1,29 @@
 import type { FormalitesPersonnelDraftReadModel } from '@yuta/contracts';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
+import type { ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ refresh: vi.fn() }),
 }));
+// The Radix dialog portal renders nothing on the server; keep the real dialog
+// context but render open content inline so SSR markup can be asserted.
+vi.mock('@yuta/ui', async (importOriginal) => {
+  const { createElement } = await import('react');
+  const ui = await importOriginal<typeof import('@yuta/ui')>();
+  return {
+    ...ui,
+    Dialog: ({ open, children }: { open: boolean; children: ReactNode }) =>
+      open ? createElement(ui.Dialog, { open }, children) : null,
+    DialogContent: ({ children }: { children: ReactNode }) =>
+      createElement('div', { role: 'dialog' }, children),
+  };
+});
 import { CdiDraftWorkspace } from '../src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-workspace';
 import {
+  AbandonDraftDialog,
   AbandonedDraft,
   EditableDraft,
   EligibleNoDraft,
@@ -259,35 +274,54 @@ describe('Formalités persistent draft workspace rendering', () => {
     );
   });
 
-  it('keeps abandon, dirty-close and focus recovery bounded to this workspace', () => {
-    const componentsDirectory =
-      'src/app/(authenticated)/equipe/formalites-personnel/_components';
-    const workspace = readFileSync(
-      `${componentsDirectory}/cdi-draft-workspace.tsx`,
-      'utf8',
-    );
-    const panels = readFileSync(
-      `${componentsDirectory}/cdi-draft-workspace-panels.tsx`,
-      'utf8',
-    );
-    const fields = readFileSync(
-      `${componentsDirectory}/cdi-draft-workspace-fields.tsx`,
-      'utf8',
-    );
-    expect(workspace).toContain("window.addEventListener('beforeunload'");
-    expect(workspace).toContain('window.confirm(');
-    expect(workspace).toContain('focusSoon(abandonmentReasonRef)');
-    expect(workspace).toContain('reasonRef={abandonmentReasonRef}');
-    expect(workspace).toContain(
-      'focusElementSoon(`reconcile-${missingFact}-keep`)',
-    );
-    expect(panels).toContain('ref={reasonRef}');
-    expect(panels).toContain('maxLength={250}');
-    expect(panels).toContain('required');
-    for (const source of [workspace, panels, fields]) {
-      expect(source).not.toMatch(
-        /localStorage|sessionStorage|setInterval|autosave/i,
+  it('renders the abandonment reason as a bounded required field with in-dialog feedback', () => {
+    const renderDialog = (reason: string) =>
+      renderToStaticMarkup(
+        <AbandonDraftDialog
+          open
+          reason={reason}
+          reasonRef={{ current: null }}
+          pending={false}
+          locked={false}
+          abandoning={false}
+          feedback={<p>Retour de l’abandon</p>}
+          onOpenChange={vi.fn()}
+          onCloseAutoFocus={vi.fn()}
+          onReasonChange={vi.fn()}
+          onConfirm={vi.fn()}
+        />,
       );
+
+    const empty = renderDialog('');
+    const textarea = empty.match(/<textarea\b[^>]*>/)?.[0] ?? '';
+    expect(textarea).toContain('id="formalites-abandon-reason"');
+    expect(textarea).toMatch(/maxlength="250"/i);
+    expect(textarea).toContain('required=""');
+    expect(textarea).toContain('aria-describedby="formalites-abandon-help"');
+    expect(empty).toContain('for="formalites-abandon-reason"');
+    expect(empty).toContain('0/250 caractères');
+    expect(empty).toContain('Retour de l’abandon');
+    expect(confirmButton(empty)).toMatch(/\bdisabled=""/);
+
+    const filled = renderDialog('  Besoin annulé  ');
+    expect(filled).toContain('13/250 caractères');
+    expect(confirmButton(filled)).not.toMatch(/\bdisabled=""/);
+  });
+
+  it('keeps the CDI workspace sources free of browser storage and autosave', () => {
+    for (const file of [
+      'cdi-draft-workspace.tsx',
+      'cdi-draft-workspace-panels.tsx',
+      'cdi-draft-workspace-fields.tsx',
+    ]) {
+      expect(
+        readFileSync(
+          sourceUrl(
+            `src/app/(authenticated)/equipe/formalites-personnel/_components/${file}`,
+          ),
+          'utf8',
+        ),
+      ).not.toMatch(/localStorage|sessionStorage|setInterval|autosave/i);
     }
   });
 });
@@ -295,7 +329,9 @@ describe('Formalités persistent draft workspace rendering', () => {
 describe('Formalités persistent route and protected prototype boundaries', () => {
   it('composes Formalités READ, independent Personnel READ and scoped repository read', () => {
     const source = readFileSync(
-      'src/app/(authenticated)/equipe/formalites-personnel/[employeeId]/page.tsx',
+      sourceUrl(
+        'src/app/(authenticated)/equipe/formalites-personnel/[employeeId]/page.tsx',
+      ),
       'utf8',
     );
     expect(source).toContain(
@@ -540,14 +576,27 @@ function renderWorkspace(model: FormalitesPersonnelDraftReadModel): string {
   );
 }
 
+function confirmButton(markup: string): string {
+  const button = markup.match(
+    /<button\b[^>]*>(?:(?!<button\b).)*?Confirmer l’abandon/s,
+  )?.[0];
+  return button?.match(/^<button\b[^>]*>/)?.[0] ?? '';
+}
+
 function expectForbiddenContentAbsent(markup: string) {
   expect(markup).not.toMatch(
     /Adresse fictive|Rémunération|reviewAcknowledged|operationKey|sourceStateFingerprint|requestFingerprint|organizationId|establishmentId|actorUserId|stack trace|Générer|Signer|PDF/i,
   );
 }
 
+function sourceUrl(path: string): URL {
+  return new URL(`../${path}`, import.meta.url);
+}
+
 function sha256(path: string): string {
-  return createHash('sha256').update(readFileSync(path)).digest('hex');
+  return createHash('sha256')
+    .update(readFileSync(sourceUrl(path)))
+    .digest('hex');
 }
 
 const currentValues = {

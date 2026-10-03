@@ -66,6 +66,11 @@ export type SaveEmployeeAmendmentActionState = {
   };
 };
 
+const staleFormMessage =
+  'Le formulaire n’est plus à jour. Rechargez la liste avant de réessayer.';
+const invalidFileMetadataMessage = 'Vérifiez le fichier puis réessayez.';
+const amendmentVisibleFields = new Set(['effectiveDate', 'reference']);
+
 export async function loadEmployeeDocumentsAction(
   employeeId: string,
   operationId: string,
@@ -99,9 +104,7 @@ export async function saveEmployeeDocumentAction(
   // storage, scanner, metadata, or rejection-audit side effect.
   const command = parseDocumentUploadCommand(formData);
   if (!command.success) {
-    return documentError(
-      'Le formulaire n’est plus à jour. Rechargez la liste avant de réessayer.',
-    );
+    return documentError(staleFormMessage);
   }
   const { employeeId, idempotencyKey, expectedRevision } = command.data;
   let storageKey: string | null = null;
@@ -178,7 +181,7 @@ export async function saveEmployeeDocumentAction(
     // the server-derived file metadata.
     if (error instanceof z.ZodError) {
       await recordRejectedSafe('invalid_file');
-      return documentError('Vérifiez le fichier puis réessayez.');
+      return documentError(invalidFileMetadataMessage);
     }
     await recordRejectedSafe('storage_failure');
     console.error('Failed to save a personnel document.', error);
@@ -241,9 +244,26 @@ export async function saveEmployeeAmendmentAction(
   // storage, scanner, metadata, or rejection-audit side effect.
   const parsedCommand = parseAmendmentUploadCommand(formData);
   if (!parsedCommand.success) {
+    const fieldErrors = zodFieldErrors(
+      parsedCommand.error,
+      rootIssueField,
+      amendmentFieldError,
+    );
+    const visibleFieldErrors = Object.fromEntries(
+      Object.entries(fieldErrors).filter(([field]) =>
+        amendmentVisibleFields.has(field),
+      ),
+    );
+    // Hidden mode, ID and revision fields cannot be corrected by the user: a
+    // failure there means the form no longer matches the listed amendments.
+    if (
+      Object.keys(visibleFieldErrors).length < Object.keys(fieldErrors).length
+    ) {
+      return amendmentError(staleFormMessage, visibleFieldErrors, values);
+    }
     return amendmentError(
       'Certains champs doivent être corrigés.',
-      zodFieldErrors(parsedCommand.error, rootIssueField, amendmentFieldError),
+      visibleFieldErrors,
       values,
     );
   }
@@ -383,8 +403,8 @@ export async function saveEmployeeAmendmentAction(
     if (error instanceof z.ZodError) {
       await recordRejectedSafe('invalid_file');
       return amendmentError(
-        'Certains champs doivent être corrigés.',
-        zodFieldErrors(error, rootIssueField, amendmentFieldError),
+        invalidFileMetadataMessage,
+        { file: 'Choisissez un fichier PDF valide.' },
         values,
       );
     }

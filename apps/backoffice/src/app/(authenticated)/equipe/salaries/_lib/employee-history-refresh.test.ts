@@ -30,7 +30,6 @@ describe('employee history refresh', () => {
       ).toEqual({
         surface,
         closeEditor: true,
-        resetHistory: true,
         historyOperationId: 'fresh-id',
       });
     },

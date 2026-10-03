@@ -1274,8 +1274,15 @@ optional base-contract revision, and either the amendment create fields
 (effective date, reference) or the replace fields (amendment and revision).
 The amendment mode must be exactly `create` or `replace`. An invalid command
 returns a form error before the PDF is read and causes no storage, scanner,
-metadata, or rejected-upload audit effect. Only a real file, scanner, or
-storage failure records a rejected upload in the trusted establishment scope.
+metadata, or rejected-upload audit effect. Only the visible effective date and
+reference receive field errors (`Certains champs doivent être corrigés.`); an
+invalid hidden mode, employee, retry, amendment or revision field means the
+form is stale, so both uploads show `Le formulaire n’est plus à jour. Rechargez
+la liste avant de réessayer.` while keeping any accurate visible field errors.
+Only a real file, scanner, or storage failure records a rejected upload in the
+trusted establishment scope. Invalid server-derived file metadata is such a file
+failure: both uploads show `Vérifiez le fichier puis réessayez.`, the amendment
+form also marks its file field, and an `invalid_file` rejection is recorded.
 Personnel history and `Consultations` reads still authorize first and record
 their access trace before the scoped read; a failed trace returns the existing
 retryable error without reading.
