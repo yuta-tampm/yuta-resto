@@ -43,7 +43,7 @@ export function ReviewsListPanel({
   data: ReviewsPageData;
   directOnly: boolean;
   updateQuery: UpdateReviewsQuery;
-  onOpenReview?: (id: string) => void;
+  onOpenReview?: (id: string, trigger: HTMLButtonElement) => void;
 }) {
   const [search, setSearch] = useState(data.query.search);
   const userNames = new Map(
@@ -186,8 +186,9 @@ export function ReviewsListPanel({
             <button
               key={item.id}
               type="button"
-              onClick={() => {
-                onOpenReview?.(item.id);
+              aria-haspopup={directOnly ? undefined : 'dialog'}
+              onClick={(event) => {
+                onOpenReview?.(item.id, event.currentTarget);
                 updateQuery({ selected: item.id }, { keepSelected: true });
               }}
               className={cn(

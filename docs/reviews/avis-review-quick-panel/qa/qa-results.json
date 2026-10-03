@@ -1,0 +1,231 @@
+{
+  "mode": "qa",
+  "result": "PASS",
+  "route": "/visibilite-reputation/avis",
+  "runtime": "http://localhost:3104",
+  "liveProvider": false,
+  "results": [
+    {
+      "name": "1440: list-only with no inline editor",
+      "result": "PASS"
+    },
+    {
+      "name": "1440: immediate named loading without old-item forms",
+      "result": "PASS"
+    },
+    {
+      "name": "1440: correct requested item, right edge and zero horizontal overflow",
+      "result": "PASS"
+    },
+    {
+      "name": "1440: keyboard containment, internally scrolling editor and accessible fixed close",
+      "result": "PASS"
+    },
+    {
+      "name": "1440: Escape retains page/filter/scroll and restores opening-row focus",
+      "result": "PASS"
+    },
+    {
+      "name": "1024: list-only with no inline editor",
+      "result": "PASS"
+    },
+    {
+      "name": "1024: immediate named loading without old-item forms",
+      "result": "PASS"
+    },
+    {
+      "name": "1024: correct requested item, right edge and zero horizontal overflow",
+      "result": "PASS"
+    },
+    {
+      "name": "1024: keyboard containment, internally scrolling editor and accessible fixed close",
+      "result": "PASS"
+    },
+    {
+      "name": "1024: Escape retains page/filter/scroll and restores opening-row focus",
+      "result": "PASS"
+    },
+    {
+      "name": "768: list-only with no inline editor",
+      "result": "PASS"
+    },
+    {
+      "name": "768: immediate named loading without old-item forms",
+      "result": "PASS"
+    },
+    {
+      "name": "768: correct requested item, right edge and zero horizontal overflow",
+      "result": "PASS"
+    },
+    {
+      "name": "768: keyboard containment, internally scrolling editor and accessible fixed close",
+      "result": "PASS"
+    },
+    {
+      "name": "768: Escape retains page/filter/scroll and restores opening-row focus",
+      "result": "PASS"
+    },
+    {
+      "name": "390: list-only with no inline editor",
+      "result": "PASS"
+    },
+    {
+      "name": "390: immediate named loading without old-item forms",
+      "result": "PASS"
+    },
+    {
+      "name": "390: correct requested item, right edge and zero horizontal overflow",
+      "result": "PASS"
+    },
+    {
+      "name": "390: keyboard containment, internally scrolling editor and accessible fixed close",
+      "result": "PASS"
+    },
+    {
+      "name": "390: Escape retains page/filter/scroll and restores opening-row focus",
+      "result": "PASS"
+    },
+    {
+      "name": "Direct selected URL opens the same modal",
+      "result": "PASS"
+    },
+    {
+      "name": "Note pending/success, same selection and unsaved draft preserved",
+      "result": "PASS"
+    },
+    {
+      "name": "Draft pending/success remains in same modal",
+      "result": "PASS"
+    },
+    {
+      "name": "Status treatment Save remains usable",
+      "result": "PASS"
+    },
+    {
+      "name": "Saved draft/note/status persist across reload; publication stays disabled",
+      "result": "PASS"
+    },
+    {
+      "name": "Named close button dismisses",
+      "result": "PASS"
+    },
+    {
+      "name": "Backdrop dismisses",
+      "result": "PASS"
+    },
+    {
+      "name": "Inaccessible selected ID shows unavailable with no stale forms",
+      "result": "PASS"
+    },
+    {
+      "name": "STAFF assigned review opens, draft enabled and management disabled",
+      "result": "PASS"
+    },
+    {
+      "name": "STAFF unassigned review denied by unchanged server scope",
+      "result": "PASS"
+    },
+    {
+      "name": "1440: internal Satisfaction retains inline detail without modal",
+      "result": "PASS"
+    },
+    {
+      "name": "390: internal Satisfaction retains inline detail without modal",
+      "result": "PASS"
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "list-1440.png",
+      "width": 1440,
+      "height": 900,
+      "role": "OWNER",
+      "state": "Filtered page 2 before opening"
+    },
+    {
+      "file": "panel-1440.png",
+      "width": 1440,
+      "height": 900,
+      "role": "OWNER",
+      "state": "Selected review, header and existing processing forms"
+    },
+    {
+      "file": "editor-1440.png",
+      "width": 1440,
+      "height": 900,
+      "role": "OWNER",
+      "state": "Internally scrolled draft controls and fixed close/header"
+    },
+    {
+      "file": "list-1024.png",
+      "width": 1024,
+      "height": 768,
+      "role": "OWNER",
+      "state": "Filtered page 2 before opening"
+    },
+    {
+      "file": "panel-1024.png",
+      "width": 1024,
+      "height": 768,
+      "role": "OWNER",
+      "state": "Selected review, header and existing processing forms"
+    },
+    {
+      "file": "editor-1024.png",
+      "width": 1024,
+      "height": 768,
+      "role": "OWNER",
+      "state": "Internally scrolled draft controls and fixed close/header"
+    },
+    {
+      "file": "list-768.png",
+      "width": 768,
+      "height": 1024,
+      "role": "OWNER",
+      "state": "Filtered page 2 before opening"
+    },
+    {
+      "file": "panel-768.png",
+      "width": 768,
+      "height": 1024,
+      "role": "OWNER",
+      "state": "Selected review, header and existing processing forms"
+    },
+    {
+      "file": "editor-768.png",
+      "width": 768,
+      "height": 1024,
+      "role": "OWNER",
+      "state": "Internally scrolled draft controls and fixed close/header"
+    },
+    {
+      "file": "list-390.png",
+      "width": 390,
+      "height": 844,
+      "role": "OWNER",
+      "state": "Filtered page 2 before opening"
+    },
+    {
+      "file": "panel-390.png",
+      "width": 390,
+      "height": 844,
+      "role": "OWNER",
+      "state": "Selected review, header and existing processing forms"
+    },
+    {
+      "file": "editor-390.png",
+      "width": 390,
+      "height": 844,
+      "role": "OWNER",
+      "state": "Internally scrolled draft controls and fixed close/header"
+    }
+  ],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "outboundRequests": 0,
+  "persistedEvidence": {
+    "draftPresent": true,
+    "notePresent": true,
+    "databaseIdentity": "yuta_avis_quick_panel_test"
+  }
+}

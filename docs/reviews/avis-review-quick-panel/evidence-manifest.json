@@ -1,0 +1,143 @@
+{
+  "change": "avis-review-quick-panel",
+  "base": "3e5f5738c17e8f9139bd64dea5a64c94d49ad789",
+  "hashAlgorithm": "SHA-256 of exact worktree bytes",
+  "files": [
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-detail.tsx",
+      "sha256": "400ad63dcc3a74d2c646ff55cfc1b9e8de793af83b447261cedc240ae52d8964"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-quick-panel.tsx",
+      "sha256": "a57dd380865834f348411d937449926e30d3c553e6649a6d5058ed04b13f1461"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-list-panel.tsx",
+      "sha256": "9f52839e8a5f48afb74fa368c450826e537bf841f93aa51d537fdbe36d785384"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-page.tsx",
+      "sha256": "c1d3bfeb984347692d6adcccf78de40c76ba7d7a0dccb9b21c4f4ccc3dc0014e"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_lib/reviews-query.ts",
+      "sha256": "3a85eb01047233e87c2e271c20d2e6a826f85e6066b597a0d90276ab679f80c6"
+    },
+    {
+      "path": "apps/backoffice/test/reviews-query.test.ts",
+      "sha256": "3290ec67a4d29661b437d8415398155bfdcfa87753e90d8882c94839c9ab364d"
+    },
+    {
+      "path": "docs/features/reputation/README.md",
+      "sha256": "391c8f51fc7504296bdd45b967907610c5f3eb1974db88045506baa9ddb61d13"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/01-analysis-review.md",
+      "sha256": "0814c89591e51f7edf2a449d4a6d68cb240991c464cf4d3edc3035b0292a9c64"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/02-specs-review.md",
+      "sha256": "cf7d14129216a563b5e7d67aaabcb1a5eb2c7b53c0bb8aa682aaa6bf8b173acc"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/03-verification-evidence.md",
+      "sha256": "622ceb593976c34692e928cb28b63af7047528588a5690eb60795d98a8bf0e36"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/implementation-stat.txt",
+      "sha256": "e69cbfe996a2b9f893e6c20e5994ff55740deb2d159106f6d113b2e389296c67"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/implementation.diff",
+      "sha256": "3e86f18423d0eed5dcefc1953c8b50b1eb2ca8f706a8318af3ce78f04e8db682"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/QA_REPORT.md",
+      "sha256": "8cc63a7e32fd9d366d738b8cb690cd60ba0b801c062f0c34923b05fd506acc00"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/editor-1024.png",
+      "sha256": "ed6e9288dea25195597dcc8dcc16a8019f8d2cf9cdc87dbcfed6e1f40e9acd2c"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/editor-1440.png",
+      "sha256": "b2c88af10191e2d8328459177b8d822dde613abc128f05529b01f99e20381b89"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/editor-390.png",
+      "sha256": "51359bd3cf4fcd90aba9b148c6a9ac25f4b92a8d623baae7d78b5fe751ccf0a3"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/editor-768.png",
+      "sha256": "2aa952a7e02c0c3e7070ea71e9dae5b39d0967d267a6f96c256a0aa8b778dca0"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/list-1024.png",
+      "sha256": "3a46d0fc9577c4b8b50df0012b89aa79db3199e6194cc68b9030b8bd2ae817cd"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/list-1440.png",
+      "sha256": "a3c0ceadc28dcb8b3d58f226a843bb225ef93797c40eaab35d53652970da0dc1"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/list-390.png",
+      "sha256": "b9f6949be9a9dfc9d42d9caa67895353d529b9cdec483a2456ef07117073ef59"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/list-768.png",
+      "sha256": "47fe0c1fa13c621d76832a376af537ee2f2ec1698bf1fcd9c43d28d78d0708ab"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/panel-1024.png",
+      "sha256": "881abc19f595f5a8ad351455a59d55577c0ddd1b03f1e4a3a773b3dfbc216ed7"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/panel-1440.png",
+      "sha256": "69d14fe4f5b7adb55846ec9272b7e421338c783bbc4a20ab8f1e531a09d57cd7"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/panel-390.png",
+      "sha256": "8206cbce39b8931b89ba308aba7891aee4a7e5b8d2a069139970f2312d5bad36"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/panel-768.png",
+      "sha256": "92911aef7f6f8f0aac49b1f63748b1993f1c7bbf965ea8269a469ead099b9149"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/qa-results.json",
+      "sha256": "04a8b8ebe7c0c5909ab960f7b4ddd039af217e86e2bdb6fa7f5de993106f1111"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/screenshot-manifest.md",
+      "sha256": "4931f6825fde9abfeee26d9996315cb89331d63b4f4b6b9dfa8743914068af8a"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/verify-block.txt",
+      "sha256": "41814580111742d58f25d84cf0a05cc51fb1b57a5d82824e93f8ee73b5ab1972"
+    },
+    {
+      "path": "openspec/changes/avis-review-quick-panel/.openspec.yaml",
+      "sha256": "eb984f1a844433fcf686b11b57962c6db65a3260148771b10c6a5388a1c446b8"
+    },
+    {
+      "path": "openspec/changes/avis-review-quick-panel/analysis.md",
+      "sha256": "8c1143c0c07fd9e9af68baa44ec60554c6f4e81b48ed8a47cf2409b329e2e332"
+    },
+    {
+      "path": "openspec/changes/avis-review-quick-panel/design.md",
+      "sha256": "e2377f810db19997066252fe45329b73349fdcdff932d858d7489fb6d68ca78b"
+    },
+    {
+      "path": "openspec/changes/avis-review-quick-panel/proposal.md",
+      "sha256": "3a6af2fb08ab7cc6c6ae98fa74bebdd3b39041f89c29845949123d2fadce8c62"
+    },
+    {
+      "path": "openspec/changes/avis-review-quick-panel/specs/reputation/review-quick-panel/spec.md",
+      "sha256": "1738b33a7cd08c9a09d76a1c08a12b097be77ded8d2d907ecfd46d0d0ef21bc1"
+    },
+    {
+      "path": "openspec/changes/avis-review-quick-panel/tasks.md",
+      "sha256": "1ca96607faf56080ebdb15eb6ba88eb55aabb11dccacfb274f83f91b8f64a631"
+    }
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "change": "avis-review-quick-panel",
+  "generation": "motion correction Gate 3",
+  "base": "c2981864dbf91a192c89f93e1b75f3a166a59827",
+  "exclusions": "Only this manifest and the current final-review packet excluded to avoid self-reference. Original parent evidence/manifest is historical for c2981864, not current candidate approval.",
+  "files": [
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-detail.tsx",
+      "sha256": "400ad63dcc3a74d2c646ff55cfc1b9e8de793af83b447261cedc240ae52d8964"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-quick-panel.module.css",
+      "sha256": "11743c7dfa347f7dcf0fd720b316f0e71b03248a1667de32784c048a51dfbefc"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-quick-panel.tsx",
+      "sha256": "fa9c1ee99c0e07ec5b59643e03e8792e312aa9eb55ae3e6eb0bf807c39259056"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-list-panel.tsx",
+      "sha256": "9f52839e8a5f48afb74fa368c450826e537bf841f93aa51d537fdbe36d785384"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-page.tsx",
+      "sha256": "c1d3bfeb984347692d6adcccf78de40c76ba7d7a0dccb9b21c4f4ccc3dc0014e"
+    },
+    {
+      "path": "apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_lib/reviews-query.ts",
+      "sha256": "3a85eb01047233e87c2e271c20d2e6a826f85e6066b597a0d90276ab679f80c6"
+    },
+    {
+      "path": "apps/backoffice/test/reviews-query.test.ts",
+      "sha256": "3290ec67a4d29661b437d8415398155bfdcfa87753e90d8882c94839c9ab364d"
+    },
+    {
+      "path": "docs/features/reputation/README.md",
+      "sha256": "da099a9d6d9254aee36a5b134d042b3859f409f24d76dc763ead65c964ce6909"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/01-analysis-review.md",
+      "sha256": "0814c89591e51f7edf2a449d4a6d68cb240991c464cf4d3edc3035b0292a9c64"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/02-specs-review.md",
+      "sha256": "cf7d14129216a563b5e7d67aaabcb1a5eb2c7b53c0bb8aa682aaa6bf8b173acc"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/03-final-review.md",
+      "sha256": "46d4cfb74a804eaf8ca6d4423ccfc6b1d66c0e0cc3df9f5a56b865e96423744b"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/04-motion-verification-evidence.md",
+      "sha256": "300a72dcce18ab27a9ade3b95005a24cd2f612452677109bb2a8c9723b0de7d5"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/motion/QA_REPORT.md",
+      "sha256": "af1afd539a4c0ed0dac64eb7a89a1499c9339a0f32155b34d44a1ee66c116d4b"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/motion/editor-1024.png",
+      "sha256": "ed6e9288dea25195597dcc8dcc16a8019f8d2cf9cdc87dbcfed6e1f40e9acd2c"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/motion/editor-1440.png",
+      "sha256": "267a890adab7af95af3dfa07b3c2ffa2990412ac6f095a5215212d0a2f840c14"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/motion/editor-390.png",
+      "sha256": "51359bd3cf4fcd90aba9b148c6a9ac25f4b92a8d623baae7d78b5fe751ccf0a3"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/motion/editor-768.png",
+      "sha256": "7e593fa940a8b9179d3334ceca990f7b5f69e8f9492c4103295a3ca4bb3dd072"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/motion/format-baseline.json",
+      "sha256": "baabd03770c8c7a9233311046f193cf33d38e949e6857b3cade16b41f8e1c121"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/motion/implementation-stat.txt",
+      "sha256": "811018f8e5b1349f1c9cee60a8e254fe5aa0e6a26f19730ae27d42f67487e041"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/motion/implementation.diff",
+      "sha256": "b89fbf3348b9b6188b126723cb9d3ef8dc51583237764e5529926f7997a97fa7"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/motion/list-1024.png",
+      "sha256": "e0e888a97faaadfbcce1e304c15f6afedee293c0405f304236bc2913ef50797e"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/motion/list-1440.png",
+      "sha256": "c53db2f587b1432a21d51a5499beaf53885e30762aa855c46cfefe4f0681bc06"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/motion/list-390.png",
+      "sha256": "4135f42f977d8c125173b46275aec2570113d11239f049cf9b03cc8991a5c717"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/motion/list-768.png",
+      "sha256": "86445eaae6cf29a37c8a48c961a93a98731fa43778299279d45bd90507486c1d"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/motion/motion-summary.json",
+      "sha256": "72cf3528f54bcba44cef34d6352526d585bc1c1419d72aef4940c2625d0cbcca"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/motion/panel-1024.png",
+      "sha256": "81f399684a94e3d046b45ecf3886a8c785eeab6b0c963c262d39de9730959d72"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/motion/panel-1440.png",
+      "sha256": "18ccbb2359eca83776f51ac2b1f1cfb8951fc3437b01732bd14aea7c04cd366f"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/motion/panel-390.png",
+      "sha256": "9f5748b6205e568572e6f2f4bdd3fdf14ead176aa87fdcdafc8d8b65d7ae55ef"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/motion/panel-768.png",
+      "sha256": "666a5f339c0fe5f9a65b44c2b65de0b96c76274c8777b9fc334772afe785a024"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/motion/qa-results.json",
+      "sha256": "c8205b154f1a2ba6d019f3134dd8e39532c64f10b9aa871087c2fa930678785a"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/motion/reduced-motion-390.png",
+      "sha256": "e9373a1127ff7fbff3f8dd391732984ed26fadde354d00e11eeb3550ccfa4597"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/motion/screenshot-manifest.md",
+      "sha256": "a7d9dce851c81c793f2b57e087de61afa0e8009c2bd6a737c8574bf69dd49020"
+    },
+    {
+      "path": "docs/reviews/avis-review-quick-panel/qa/motion/verify-block.txt",
+      "sha256": "204c486329af1dadd2884d2721c93764fefc42316080458b34e9a1a0fc1d3141"
+    },
+    {
+      "path": "openspec/changes/avis-review-quick-panel/.openspec.yaml",
+      "sha256": "eb984f1a844433fcf686b11b57962c6db65a3260148771b10c6a5388a1c446b8"
+    },
+    {
+      "path": "openspec/changes/avis-review-quick-panel/analysis.md",
+      "sha256": "8c1143c0c07fd9e9af68baa44ec60554c6f4e81b48ed8a47cf2409b329e2e332"
+    },
+    {
+      "path": "openspec/changes/avis-review-quick-panel/design.md",
+      "sha256": "08b8eee00e5c46941a2803360746099732029565c4eaeb65b9544182061d6968"
+    },
+    {
+      "path": "openspec/changes/avis-review-quick-panel/proposal.md",
+      "sha256": "3a6af2fb08ab7cc6c6ae98fa74bebdd3b39041f89c29845949123d2fadce8c62"
+    },
+    {
+      "path": "openspec/changes/avis-review-quick-panel/specs/reputation/review-quick-panel/spec.md",
+      "sha256": "1738b33a7cd08c9a09d76a1c08a12b097be77ded8d2d907ecfd46d0d0ef21bc1"
+    },
+    {
+      "path": "openspec/changes/avis-review-quick-panel/tasks.md",
+      "sha256": "49b514f89d22e2064fa14eaba21a7d69e4af0075566212b0b373efdc86a5f24a"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+ .../avis/_components/review-quick-panel.module.css |   34 +++++++++++++++++
+ .../avis/_components/review-quick-panel.tsx        |   40 ++++++++++++++------
+ docs/features/reputation/README.md                 |    5 ++-
+ 3 files changed, 66 insertions(+), 13 deletions(-)

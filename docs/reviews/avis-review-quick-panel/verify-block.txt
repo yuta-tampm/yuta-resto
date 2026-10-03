@@ -1,0 +1,18 @@
+TECHNICAL IMPLEMENTATION COMPLIANCE: PASS
+VERIFY: PASS
+Assessment source: docs/reviews/avis-review-quick-panel/03-verification-evidence.md
+Assessment source SHA-256: 622ceb593976c34692e928cb28b63af7047528588a5690eb60795d98a8bf0e36
+Matrix source: docs/reviews/avis-review-quick-panel/03-verification-evidence.md#technical-compliance-matrix
+Matrix exact UTF-8 section SHA-256: e59124a6c95412acf0af452ca7e7a51c01b83e42583aa71512053533b9b22fbe
+pnpm --filter @yuta/backoffice test test/reviews-query.test.ts test/review-reply-form.test.tsx: exit 0; 2 files, 10 tests PASS
+pnpm --filter @yuta/backoffice build: exit 0; compile, TypeScript, page generation PASS
+pnpm docs:check: exit 0; 36 current documents PASS; repeated after final QA docs
+pnpm architecture:check: exit 0; all boundary checks PASS
+pnpm -r --if-present typecheck: exit 0; all present scripts PASS
+pnpm --filter @yuta/backoffice test: exit 0; 129 files PASS, 1 skipped; 1555 tests PASS, 54 skipped
+pnpm format:check: exit 1; preservation PASS (67 paths), 52 Prettier warnings; one task packet corrected and 51 pre-existing paths preserved
+node node_modules/prettier/bin/prettier.cjs --check <19 exact task code/planning/review/QA paths>: exit 0; PASS after correction
+openspec validate avis-review-quick-panel --strict: exit 0; PASS; repeated after final QA docs
+git diff --check: exit 0; PASS
+Browser QA: PASS; 32 named scenarios, 12 actual screenshots; qa/QA_REPORT.md
+Skipped: unrelated full cloud/local suites and cloud builds; Pointage/OpenAI guarded test lanes; real providers, production and screen-reader speech

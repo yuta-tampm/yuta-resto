@@ -1,0 +1,82 @@
+[
+  {
+    "viewport": 1440,
+    "state": "open",
+    "frames": 35,
+    "animation": "review-quick-panel-module__VWmiga__panel-enter",
+    "duration": "0.28s",
+    "minX": 0,
+    "maxX": 672,
+    "closingContentStable": null
+  },
+  {
+    "viewport": 1440,
+    "state": "closed",
+    "frames": 17,
+    "animation": "review-quick-panel-module__VWmiga__panel-exit",
+    "duration": "0.2s",
+    "minX": 0,
+    "maxX": 672,
+    "closingContentStable": true
+  },
+  {
+    "viewport": 1024,
+    "state": "open",
+    "frames": 35,
+    "animation": "review-quick-panel-module__VWmiga__panel-enter",
+    "duration": "0.28s",
+    "minX": 0,
+    "maxX": 672,
+    "closingContentStable": null
+  },
+  {
+    "viewport": 1024,
+    "state": "closed",
+    "frames": 18,
+    "animation": "review-quick-panel-module__VWmiga__panel-exit",
+    "duration": "0.2s",
+    "minX": 0,
+    "maxX": 672,
+    "closingContentStable": true
+  },
+  {
+    "viewport": 768,
+    "state": "open",
+    "frames": 35,
+    "animation": "review-quick-panel-module__VWmiga__panel-enter",
+    "duration": "0.28s",
+    "minX": 0,
+    "maxX": 672,
+    "closingContentStable": null
+  },
+  {
+    "viewport": 768,
+    "state": "closed",
+    "frames": 17,
+    "animation": "review-quick-panel-module__VWmiga__panel-exit",
+    "duration": "0.2s",
+    "minX": 0,
+    "maxX": 672,
+    "closingContentStable": true
+  },
+  {
+    "viewport": 390,
+    "state": "open",
+    "frames": 35,
+    "animation": "review-quick-panel-module__VWmiga__panel-enter",
+    "duration": "0.28s",
+    "minX": 0,
+    "maxX": 390,
+    "closingContentStable": null
+  },
+  {
+    "viewport": 390,
+    "state": "closed",
+    "frames": 17,
+    "animation": "review-quick-panel-module__VWmiga__panel-exit",
+    "duration": "0.2s",
+    "minX": 0,
+    "maxX": 390,
+    "closingContentStable": true
+  }
+]
