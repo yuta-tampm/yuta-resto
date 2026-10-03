@@ -167,6 +167,7 @@ export const feedbackReplies = pgTable(
       .notNull()
       .references(() => feedbackItems.id, { onDelete: 'cascade' }),
     content: text('content').notNull(),
+    revision: integer('revision').default(1).notNull(),
     status: feedbackReplyStatusEnum('status').default('DRAFT').notNull(),
     externalReplyId: varchar('external_reply_id', { length: 255 }),
     externalReplyStatus: varchar('external_reply_status', { length: 100 }),
@@ -195,6 +196,96 @@ export const feedbackReplies = pgTable(
     index('feedback_replies_organization_id_idx').on(table.organizationId),
     index('feedback_replies_feedback_item_id_idx').on(table.feedbackItemId),
     index('feedback_replies_status_idx').on(table.status),
+    uniqueIndex('feedback_replies_scoped_id_idx').on(
+      table.organizationId,
+      table.feedbackItemId,
+      table.id,
+    ),
+    check('feedback_replies_revision_check', sql`${table.revision} > 0`),
+  ],
+);
+
+export const googleReplyPublications = pgTable(
+  'google_reply_publications',
+  {
+    id: uuid('id').primaryKey(),
+    organizationId: uuid('organization_id').notNull(),
+    establishmentId: uuid('establishment_id').notNull(),
+    feedbackItemId: uuid('feedback_item_id').notNull(),
+    replyId: uuid('reply_id').notNull(),
+    revision: integer('revision').notNull(),
+    connectorId: uuid('connector_id').notNull(),
+    bindingGeneration: integer('binding_generation').notNull(),
+    actorUserId: uuid('actor_user_id').notNull(),
+    actorSessionId: uuid('actor_session_id').notNull(),
+    actorMembershipId: uuid('actor_membership_id').notNull(),
+    actorAuthVersion: integer('actor_auth_version').notNull(),
+    previewExpiresAt: timestamp('preview_expires_at', {
+      withTimezone: true,
+    }).notNull(),
+    remoteFingerprint: varchar('remote_fingerprint', { length: 64 }),
+    state: varchar('state', { length: 20 })
+      .$type<import('@yuta/contracts/reputation').GoogleReplyPublicationState>()
+      .notNull(),
+    retryParentId: uuid('retry_parent_id'),
+    supersededById: uuid('superseded_by_id'),
+    confirmedAt: timestamp('confirmed_at', { withTimezone: true }),
+    dispatchedAt: timestamp('dispatched_at', { withTimezone: true }),
+    leaseExpiresAt: timestamp('lease_expires_at', { withTimezone: true }),
+    observedAt: timestamp('observed_at', { withTimezone: true }),
+    reconciledAt: timestamp('reconciled_at', { withTimezone: true }),
+    errorCategory: varchar('error_category', { length: 50 }),
+    createdAt: createdAt(),
+  },
+  (table) => [
+    foreignKey({
+      name: 'google_reply_publication_feedback_scope_fk',
+      columns: [
+        table.organizationId,
+        table.establishmentId,
+        table.feedbackItemId,
+      ],
+      foreignColumns: [
+        feedbackItems.organizationId,
+        feedbackItems.establishmentId,
+        feedbackItems.id,
+      ],
+    }),
+    foreignKey({
+      name: 'google_reply_publication_draft_scope_fk',
+      columns: [table.organizationId, table.feedbackItemId, table.replyId],
+      foreignColumns: [
+        feedbackReplies.organizationId,
+        feedbackReplies.feedbackItemId,
+        feedbackReplies.id,
+      ],
+    }),
+    foreignKey({
+      name: 'google_reply_publication_connector_scope_fk',
+      columns: [table.organizationId, table.establishmentId, table.connectorId],
+      foreignColumns: [
+        reputationConnectors.organizationId,
+        reputationConnectors.establishmentId,
+        reputationConnectors.id,
+      ],
+    }),
+    check(
+      'google_reply_publication_revision_check',
+      sql`${table.revision}>0 and ${table.bindingGeneration}>=0 and ${table.actorAuthVersion}>=0`,
+    ),
+    check(
+      'google_reply_publication_state_check',
+      sql`${table.state} in ('PREVIEW','DISPATCHING','UNCERTAIN','FAILED','UNCONFIRMED','PENDING','REJECTED','APPROVED')`,
+    ),
+    index('google_reply_publication_review_idx').on(
+      table.organizationId,
+      table.establishmentId,
+      table.feedbackItemId,
+      table.createdAt,
+    ),
+    index('google_reply_publication_preview_expiry_idx').on(
+      table.previewExpiresAt,
+    ),
   ],
 );
 

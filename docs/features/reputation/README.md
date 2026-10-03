@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-09-30
+Last updated: 2026-10-03
 
 This is the canonical Product Knowledge home for the bounded Reputation domain:
 the Backoffice `Avis & commentaires` and `Satisfaction client` surfaces, public
@@ -84,31 +84,31 @@ import, a failed import or remote reply state.
 Each stage has its own state. No aggregate “review management” label promotes
 one stage from another.
 
-| Stage                             | Product status                                                                                       | Current implementation                                                                                                                    |
-| --------------------------------- | ---------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Receive/import interaction        | Direct collection and bounded A Google retrieval are accepted; broader provider scope is unresolved. | Direct submissions persist. A default-disabled Google retrieval source path exists. No Facebook/Instagram connector exists.               |
-| Display in YUTA                   | A centralized view of recent interactions is confirmed.                                              | `/visibilite-reputation/avis` displays persisted Google and direct items; `/visibilite-reputation/satisfaction` forces direct-only scope. |
-| Identify items needing a response | Recent and unanswered visibility is confirmed.                                                       | Server-backed counters, status filters, newest ordering, and `unanswered` sorting exist.                                                  |
-| Generate an AI reply draft        | Human-supported direction; exact AI and grounding contract unresolved.                               | Not implemented. Stored/displayed analysis fields and AI-ready schema do not constitute an AI service.                                    |
-| Manually edit a draft             | Confirmed.                                                                                           | A persisted manual draft form exists only for persisted Google items. It does not generate an AI draft.                                   |
-| Human review/approval             | Required before any external publication. Exact approval state and role remain unresolved.           | No distinct approval workflow is implemented.                                                                                             |
-| Publish to provider               | Provider-specific current scope is unresolved.                                                       | Not implemented. The Google publication button is disabled.                                                                               |
-| Synchronize publication state     | Unresolved.                                                                                          | Not implemented.                                                                                                                          |
-| Provider error/retry              | Bounded A retrieval recovery is accepted; broader provider recovery is unresolved.                   | Connector recovery and explicit OWNER/MANAGER retrieval retry exist; publication retry does not.                                          |
-| Automation/auto-reply             | Not approved.                                                                                        | Not implemented.                                                                                                                          |
-| Analytics/reputation insights     | Proposed or unresolved beyond existing operational counters.                                         | No approved analytics capability is implemented; inbox counters are operational presentation only.                                        |
+| Stage                             | Product status                                                                                                                      | Current implementation                                                                                                                    |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Receive/import interaction        | Direct collection and bounded A Google retrieval are accepted; broader provider scope is unresolved.                                | Direct submissions persist. A default-disabled Google retrieval source path exists. No Facebook/Instagram connector exists.               |
+| Display in YUTA                   | A centralized view of recent interactions is confirmed.                                                                             | `/visibilite-reputation/avis` displays persisted Google and direct items; `/visibilite-reputation/satisfaction` forces direct-only scope. |
+| Identify items needing a response | Recent and unanswered visibility is confirmed.                                                                                      | Server-backed counters, status filters, newest ordering, and `unanswered` sorting exist.                                                  |
+| Generate an AI reply draft        | Human-supported direction; exact AI and grounding contract unresolved.                                                              | Not implemented. Stored/displayed analysis fields and AI-ready schema do not constitute an AI service.                                    |
+| Manually edit a draft             | Confirmed.                                                                                                                          | A persisted manual draft form exists only for persisted Google items. It does not generate an AI draft.                                   |
+| Human review/approval             | Required before external publication. Bounded A Google uses exact saved-version/session confirmation; broader policy is unresolved. | Bounded A Google has a separate expiring confirmation preview; Save remains independent.                                                  |
+| Publish to provider               | Bounded A Google is accepted; other provider publication scope is unresolved.                                                       | Default-disabled bounded A Google publication source exists; actual real-write qualification is pending.                                  |
+| Synchronize publication state     | Unresolved.                                                                                                                         | Not implemented.                                                                                                                          |
+| Provider error/retry              | Bounded A retrieval recovery is accepted; broader provider recovery is unresolved.                                                  | Connector/retrieval recovery exists. A Google uses explicit reconciliation and fresh same-version confirmation for unresolved retries.    |
+| Automation/auto-reply             | Not approved.                                                                                                                       | Not implemented.                                                                                                                          |
+| Analytics/reputation insights     | Proposed or unresolved beyond existing operational counters.                                                                        | No approved analytics capability is implemented; inbox counters are operational presentation only.                                        |
 
 ## 3. Provider and flow matrix
 
 `UNKNOWN` and `UNRESOLVED` indicate that repository evidence cannot safely fill
 the cell.
 
-| Provider/source | Product status                                            | Read/import                                                                                                  | Display                                                               | AI draft        | Manual edit                                        | Human approval                   | Publish                                             | Sync                                                               | Retry                                                           | Automation   | Unresolved boundary                                                          |
-| --------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------- | --------------- | -------------------------------------------------- | -------------------------------- | --------------------------------------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------- | ------------ | ---------------------------------------------------------------------------- |
-| Direct feedback | Approved collection and private Backoffice processing     | Implemented through `apps/feedback-web` submission                                                           | Implemented; direct-only Satisfaction view also exists                | Not implemented | No provider-reply editor                           | No external publication workflow | Not applicable to the current private-feedback flow | Not applicable                                                     | Submission and UI recovery are bounded separately               | Not approved | Whether a future customer-response channel exists                            |
-| Google          | Bounded A accepted; broader Product V1 `UNRESOLVED`       | Default-disabled recent, explicit history and scoped detail retrieval source; binding alone is not retrieval | Implemented for persisted Google rows, including development evidence | Not implemented | Implemented persisted manual draft for Google rows | No distinct approval workflow    | Not implemented; UI control disabled                | No scheduled synchronization; A visit/manual retrieval is separate | Bounded explicit A retrieval recovery; publication retry absent | Not approved | Broader V1, publish, reconciliation and actual provider/use conditions       |
-| Facebook        | High-level inclusion `CONFIRMED`; current V1 `UNRESOLVED` | Not implemented                                                                                              | Not implemented                                                       | Not implemented | Not implemented                                    | Unresolved                       | Not implemented                                     | Not implemented                                                    | Not implemented                                                 | Not approved | Recommendations/reviews, post/reel comments, auth and all provider contracts |
-| Instagram       | High-level inclusion `CONFIRMED`; current V1 `UNRESOLVED` | Not implemented                                                                                              | Not implemented                                                       | Not implemented | Not implemented                                    | Unresolved                       | Not implemented                                     | Not implemented                                                    | Not implemented                                                 | Not approved | Comments, mentions, other interaction types, auth and all provider contracts |
+| Provider/source | Product status                                            | Read/import                                                                                                  | Display                                                               | AI draft        | Manual edit                                        | Human approval                                    | Publish                                                      | Sync                                                               | Retry                                                                                 | Automation   | Unresolved boundary                                                          |
+| --------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------- | --------------- | -------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------- | ------------ | ---------------------------------------------------------------------------- |
+| Direct feedback | Approved collection and private Backoffice processing     | Implemented through `apps/feedback-web` submission                                                           | Implemented; direct-only Satisfaction view also exists                | Not implemented | No provider-reply editor                           | No external publication workflow                  | Not applicable to the current private-feedback flow          | Not applicable                                                     | Submission and UI recovery are bounded separately                                     | Not approved | Whether a future customer-response channel exists                            |
+| Google          | Bounded A accepted; broader Product V1 `UNRESOLVED`       | Default-disabled recent, explicit history and scoped detail retrieval source; binding alone is not retrieval | Implemented for persisted Google rows, including development evidence | Not implemented | Implemented persisted manual draft for Google rows | Explicit exact saved-version/session confirmation | Default-disabled scoped PUT source; real consent/QA separate | No scheduled synchronization; A visit/manual retrieval is separate | Explicit retrieval recovery; unresolved reply reconciliation/fresh same-version retry | Not approved | Broader V1 and actual provider/use/environment qualification                 |
+| Facebook        | High-level inclusion `CONFIRMED`; current V1 `UNRESOLVED` | Not implemented                                                                                              | Not implemented                                                       | Not implemented | Not implemented                                    | Unresolved                                        | Not implemented                                              | Not implemented                                                    | Not implemented                                                                       | Not approved | Recommendations/reviews, post/reel comments, auth and all provider contracts |
+| Instagram       | High-level inclusion `CONFIRMED`; current V1 `UNRESOLVED` | Not implemented                                                                                              | Not implemented                                                       | Not implemented | Not implemented                                    | Unresolved                                        | Not implemented                                              | Not implemented                                                    | Not implemented                                                                       | Not approved | Comments, mentions, other interaction types, auth and all provider contracts |
 
 The OWNER-managed `googleReviewUrl`, `facebookReviewUrl`, and `instagramUrl`
 fields are safe public destinations shown after direct-feedback submission.
@@ -179,8 +179,9 @@ OAuth start/callback, AES-256-GCM credential storage, account and location
 discovery, server-verified selection, token refresh, and recovery UI are
 implemented. Binding and OWNER confirmation to continue to Avis perform no
 review fetch and establish no retrieval receipt. The bounded source path below
-adds review retrieval separately; scheduled synchronization, reply publication
-and remote/local reply reconciliation remain absent. Connector support does
+adds review retrieval separately. The default-disabled publication path below
+adds explicit confirmation and read reconciliation; scheduled synchronization
+remains absent. Connector support does
 not decide broader Google Product V1 scope or production readiness.
 
 ### Bounded Release A Google review retrieval
@@ -231,6 +232,51 @@ restoration disposal. Actual provider/use and staging/production prerequisites
 remain unverified. This path adds no publication, AI, scheduled synchronization
 or broader V1/lifecycle/readiness promotion.
 
+### Bounded Release A Google reply publication
+
+The separate server admission `GOOGLE_REVIEW_PUBLICATION_ENABLED=true` enables
+explicit OWNER/MANAGER preview, confirmation and read reconciliation. It defaults
+off independently of retrieval. Save, load, Today and prefetch never publish.
+STAFF retains assigned drafting/note access and cannot approve or reconcile.
+Only a current server-verified managed Google reference is eligible; legacy or
+expired mappings cannot be used. No browser provider identity selects a target.
+
+The operator previews the exact saved text, active establishment and existing
+remote reply, then explicitly confirms sending/replacing that reply. Confirmation
+expires after five minutes and belongs to its original actor, login session,
+membership, scope, binding generation and saved revision. A new actor/session,
+unsaved edit, changed revision or detected remote change requires a new preview.
+Google's 4096 UTF-8 byte limit is separate from the normal 4000-character Save
+limit; publication never truncates the draft.
+
+A durable scoped claim precedes the external request. Concurrent confirmations
+and replay do not create another dispatch. Claimed text stays immutable; a later
+Save creates an independent draft. Session/membership/entitlement, connector and
+reference locks fence credential access, dispatch and result persistence. Token
+refresh uses the same transaction and an exclusive connector lock. Network work
+is bounded; it cannot provide a transaction or exactly-once guarantee on Google.
+
+PUT acknowledgement is followed by a scoped GET. Exact matching text plus
+`APPROVED` can produce local `PUBLISHED`; `PENDING`, `REJECTED` and absent/future
+states remain distinct. Timeout, lost response or process exit retains durable
+uncertainty. An acknowledged but unobserved reply is also unresolved. These states
+block different-version publication; explicit GET reconciliation and fresh
+same-version confirmation are required for retry. Missing/different text does not
+prove the earlier PUT was absent. Matching text is observed evidence, not proof
+that one unique actor created it. Another remote administrator can still write
+between verification and PUT; no remote conditional-overwrite guarantee exists.
+
+Attempts and audit contain local identities, times and safe categories, without
+provider identifiers, copied provider bodies or tokens. A temporary remote
+fingerprint is cleared after use or at preview expiry by existing bounded
+maintenance. Drafts, notes and independent work remain intact. No scheduler is
+installed. Actual-project eligibility, real-publication consent/qualification,
+timely unattended disposal and backup/restoration evidence remain separate
+operational obligations; this local delivery promotes no broader V1/readiness.
+
+See [local publication configuration](../../operations/LOCAL_DEVELOPMENT.md#google-reply-publication)
+and Google's [reply resource](https://developers.google.com/my-business/reference/rest/v4/accounts.locations.reviews#ReviewReply).
+
 ## 5. Authorization and trusted scope
 
 Backoffice access requires a database-backed server session, active membership,
@@ -253,11 +299,12 @@ authenticated user. Every Backoffice read is scoped by organization and active
 establishment. Public direct-feedback scope comes from verified server-side
 hostname resolution.
 
-The authorization map also defines `reputation.reply.publish` for `OWNER` and
-`MANAGER`, but no provider publication path exists. A permission constant is
-not proof that publication is approved for a provider. The exact Product role
-that performs Human approval, the approval state transition, and provider
-account ownership remain unresolved.
+The bounded A Google publication path enforces `reputation.reply.publish` for
+`OWNER` and `MANAGER`, with exact saved-version confirmation by the original
+actor/session and a captured establishment binding. Its default-disabled source
+implementation does not establish actual provider eligibility or real-write
+qualification. Approval roles, states and account ownership outside this
+bounded A decision remain unresolved.
 
 See [Authentication](../../architecture/AUTHENTICATION.md) for the current
 authorization authority.
@@ -519,7 +566,7 @@ and trusted tenancy foundation without acquiring provider behavior.
 | Follow-up                  | Contact and consent evidence may be persisted.                                                                                                | `UNRESOLVED`; no approved outbound customer-contact channel, SLA, role policy, or delivery evidence exists.                                  |
 | Resolution                 | Status values include processing, resolved, archived, and spam states.                                                                        | Transport/schema and UI support are `IMPLEMENTED`; exact Product semantics, retention effects, and reopen/delete behavior remain unresolved. |
 | Public review solicitation | Safe configured external destinations may appear after success without rating-based branching.                                                | `IMPLEMENTED` under the accepted social-link specification; no provider call or outcome tracking occurs.                                     |
-| External publication       | No path publishes the submitted direct feedback or a reply to Google, Facebook, Instagram, or another public destination.                     | `NOT_IMPLEMENTED` and not approved by this migration.                                                                                        |
+| External publication       | No Satisfaction path publishes submitted direct feedback or its reply to Google, Facebook, Instagram, or another public destination.          | `NOT_IMPLEMENTED` and not approved by this migration.                                                                                        |
 
 ### Capability and data model
 

@@ -5,6 +5,9 @@ import {
   findCapturedGoogleConnectorCredentials,
   GoogleReviewRetrievalRepositoryError,
   type GoogleReviewBinding,
+  type GoogleReviewDatabase,
+  type GoogleReplyPublicationTarget,
+  assertGoogleReplyTargetTime,
   updateCapturedGoogleConnectorAccessToken,
   updateGoogleReputationConnectorAccessToken,
 } from '@yuta/db-cloud';
@@ -18,6 +21,7 @@ import {
   refreshGoogleAccessToken,
 } from './google-business-profile-client';
 import { getGoogleConnectorConfiguration } from './google-connector-config';
+import { isGoogleReplyPublicationEnabled } from './google-reply-publication-config';
 
 export async function getGoogleConnectorAccessToken(
   tenant: TenantContext,
@@ -30,6 +34,27 @@ export async function getGoogleConnectorAccessToken(
     if (!isGoogleReviewRetrievalEnabled()) return null;
   }
   const { cloudDatabase: db } = await import('../cloud-database');
+  return accessGoogleToken(db, tenant, binding);
+}
+
+export async function getGooglePublicationAccessToken(
+  db: GoogleReviewDatabase,
+  tenant: TenantContext,
+  target: GoogleReplyPublicationTarget,
+): Promise<string | null> {
+  requireEntitlement(tenant, 'reputation.enabled');
+  requireReputationPermission(tenant, 'reputation.read');
+  requireReputationPermission(tenant, 'reputation.reply.publish');
+  if (!isGoogleReplyPublicationEnabled()) return null;
+  assertGoogleReplyTargetTime(target, new Date());
+  return accessGoogleToken(db, tenant, target.binding);
+}
+
+async function accessGoogleToken(
+  db: GoogleReviewDatabase,
+  tenant: TenantContext,
+  binding?: GoogleReviewBinding,
+): Promise<string | null> {
   const connector = binding
     ? await findCapturedGoogleConnectorCredentials(db, tenant, binding)
     : await findGoogleReputationConnectorCredentials(db, tenant);

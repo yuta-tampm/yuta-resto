@@ -1,0 +1,88 @@
+## Context
+
+Xem `proposal.md` và `analysis.md` đã duyệt; delta `reputation/google-reply-publication` là hợp đồng hành vi. Backoffice có Save, GET/list và binding generation, nhưng chưa có publisher hay immutable dispatched version. `@yuta/db-cloud` đã có trusted session/membership/entitlement row locks và cache/reference lifetime 29/30 ngày. Google PUT tạo hoặc thay thế reply; response `ReviewReply` không có resource identity hay remote CAS/idempotency guarantee.
+
+COLLABORATION_MODE: CODEX_ONLY; COMMIT_AFTER_TASK: YES, nguồn là lựa chọn explicit của current user. Sensitive Design Gate REQUIRED. External design intelligence OPTIONAL / NOT USED, giữ classification Gate 1. Không thay approved Proposal/Analysis/Specs.
+
+## Goals / Non-Goals
+
+**Goals:** Dùng existing draft/review/connector ownership; phiên bản local bất biến sau claim; một explicit confirmation claim một dispatch; live fences tại credentials, dispatch và result; recovery trung thực và UI French có thể dùng trên đúng local Release A.
+
+**Non-Goals:** Không thêm worker/provider sync, AI, bulk/delete, public Google visibility guarantee, remote transaction/exactly-once, production activation hoặc Product/readiness promotion. User consent cho một live target/text vẫn chưa có; build/mock/disposable QA không cấp consent đó.
+
+## Decisions
+
+### 1. One dedicated scoped publication relation and draft revision
+
+Thêm `revision` integer dương default 1 vào `feedback_replies`, tăng atomically khi normal Save cập nhật draft. Thêm scoped unique index `(organization_id, feedback_item_id, id)` cho FK. Save input/output intent không đổi, vẫn 4000 ký tự và không approve. Một draft đã có claimed publication attempt SHALL không bị sửa lại: Save tạo draft row mới; chưa claim thì Save vẫn cập nhật existing draft và tăng revision. Khóa parent feedback serialize Save với claim. UI nhận local reply UUID/revision, không provider target IDs.
+
+`google_reply_publications` lưu một record cho mỗi preview/confirmed attempt: local UUID; organization/establishment/feedback/reply; reply revision; connector UUID/generation; captured original user/session/membership/authVersion; preview expiry; temporary remote fingerprint; state; confirmation/dispatch/lease/result/reconciliation timestamps; safe error category; optional retry parent and superseding child local IDs. FK scoped tới feedback, reply và connector, positive revision/generation checks, finite state check, expiry index, scoped review/attempt indexes. Captured actor IDs không FK tới expiring auth-session rows; receipt không ngăn normal session cleanup. Không external review/account/location ID, raw remote body, token hoặc copied draft body trong attempt/audit.
+
+States: PREVIEW, DISPATCHING, UNCERTAIN, FAILED, UNCONFIRMED, PENDING, REJECTED, APPROVED. PREVIEW không là approval. FAILED chỉ definite no-write local rejection hoặc definite provider rejection; timeout/network/5xx/malformed write response là UNCERTAIN. UNCONFIRMED là valid acknowledgement nhưng public/remote observation chưa xác nhận. Safe DTO chỉ có scoped local identifiers, exact own draft, expiry, normalized state và remote preview để hiện dialog; browser không cung cấp trusted scope/version/text cho PUT.
+
+Alternative: mutable draft plus in-memory confirmation làm mất version/crash evidence; duplicate draft/provider payload trong attempt làm thêm retention source. Dedicated relation giữ durable fence và dùng existing own draft làm immutable content source.
+
+### 2. Shared live authority locks with operation-specific credential access
+
+Reuse/extract existing Google actor-lock primitive trong db-cloud, giữ retrieval behavior/guards. Publication server guards entitlement + existing read/publish OWNER/MANAGER grants + default-off `GOOGLE_REVIEW_PUBLICATION_ENABLED === 'true'`, độc lập retrieval flag. Missing/invalid flag deny trước dynamic DB credential/provider effects. Entry actions nhận validated session ID từ server session; browser chỉ local opaque IDs.
+
+Mọi publication repository transaction load đúng org/establishment, active membership role/user/authVersion, unrevoked/unexpired original session khi preview/confirm/dispatch, active org/establishment/entitlement, connected captured connector/generation, managed Google feedback và eligible reference. Captured connector dùng FOR UPDATE trước credential access/callback, theo existing retrieval connector-first order; cache rows dùng shared locks; parent feedback/attempt dùng update locks theo cùng order. Hai distinct-review callbacks serialize trên connector trước refresh, không có shared-lock upgrade deadlock. Không adopt legacy Google fixtures. Exact preview authority includes original session ID, không chỉ user identity. Reconciliation dùng current permitted actor/session và audit người đối chiếu; không reuse confirmation authority của original actor.
+
+Một callback transaction được cung cấp captured binding/reference và repository transaction handle cho server orchestration. Trong callback credential getter dùng cùng transaction handle cho captured credential read/refresh write, tránh lấy token của replacement binding hoặc deadlock qua connection thứ hai. Getter có riêng publication permission/admission check; setup/retrieval accessor vẫn giữ hợp đồng hiện tại. Actor shared locks và connector exclusive lock serialize ordinary revocation/rebind với bounded operation; check final clock before dispatch/result để session/reference không bị dùng quá hạn trong callback. Không giữ token trong row/DTO/log. OAuth refresh và Google HTTP có abort deadline (10 giây/request); chỉ số calls bounded (refresh nếu cần + GET + PUT + GET), không pagination/retry trong publication.
+
+Alternative: chỉ kiểm tra session lúc action start không fence revocation trước effects; ungated generic token accessor làm yếu operation authority. Bounded callback giữ linearization boundary rõ ràng; trả giá một transaction sống tối đa bounded network sequence, không hứa cancellation retracts remote write.
+
+### 3. Preview then durable claim, then bounded external operation
+
+Preview load saved draft/revision và verified reference under fences, validate 4096 UTF-8 bytes riêng, GET exact target để lấy current remote reply. Return exact final own text và current remote reply; store SHA-256 remote reply tuple (text/updateTime/state hoặc explicit absent marker) chỉ trong temporary preview field. Preview expiry 5 phút, capped theo session/reference expiry; metadata không renew on view. No raw remote content persisted vào attempt.
+
+Confirm nhận preview UUID, không browser text. Transaction trước network revalidates original actor/session/membership, scope/generation, current reply/revision và preview expiry. Feedback row lock kiểm tra không có other unresolved leaf attempt. Atomic transition PREVIEW → DISPATCHING consume confirmation, ghi confirmedAt/dispatchedAt/lease (2 phút), minimized confirmation/attempt audits. Commit claim **trước** bất kỳ potential PUT; replay/concurrent confirmation không claim lần nữa và trả safe scoped persisted status. Author không dựa trên transaction rollback để chứng minh chưa dispatch.
+
+Sau claim, một fenced callback transaction load đúng captured immutable reply/attempt/binding/reference, lấy token, GET lại remote reply và compare temporary fingerprint. Changed remote cần preview mới; không PUT. Recheck time/fences trước PUT; gửi exact persisted own text. Validate response comment byte limit/type/moderation, safe category only. Sau valid ACK, GET exact target để đối chiếu; chỉ exact matching text + APPROVED mới set local reply PUBLISHED và approved result. PENDING/REJECTED/unknown được lưu normalized trạng thái riêng. Valid ACK nhưng failed/mismatching observation là UNCONFIRMED, không public-success. Ambiguous PUT outcome là UNCERTAIN dù read sau đó chưa thấy text. Handle error trong callback bằng safe outcome persistence, không throw để rollback receipt đã ghi; DB/process failure vẫn còn committed DISPATCHING claim.
+
+Local expired DISPATCHING lease được materialize UNCERTAIN trên subsequent scoped operation và projected uncertain trong read model; không tự reset/retry. Failure trước PUT có thể FAILED với no-write category nhưng không thể báo failed chắc chắn nếu dispatch boundary đã vượt. Response persistence luôn đúng captured scope/generation/version; không ghi success vào replacement binding. Bounded operation giữ existing independent feedback status/assignment/notes, chỉ thay publication-related reply metadata.
+
+Remote giữa GET và PUT vẫn có race không kiểm soát: dialog nói thay thế reply và không hứa conditional overwrite. Xác nhận chỉ phê duyệt exact text/target; detected remote change sẽ chặn.
+
+### 4. Reconciliation and explicit retry preserve uncertain history
+
+Explicit reconcile nhận scoped attempt UUID; current OWNER/MANAGER quyền read/publish + flag; verified current binding phải match captured connector/generation và reference vẫn eligible. GET only, không PUT. Exact own immutable text matching cập nhật observation/moderation và local reply metadata của đúng old version, không ảnh hưởng draft mới; evidence nói observed, không khẳng định unique actor causality. Missing/different/failed read giữ uncertainty nếu prior write ambiguous; ghi reconciliation time/category chỉ khi fence hợp lệ.
+
+Unresolved leaf DISPATCHING/UNCERTAIN/UNCONFIRMED chặn publication khác-version. UNCONFIRMED vẫn là unresolved write dù có ACK; absent/different/failed GET SHALL giữ fence này. Retry riêng chỉ cùng immutable reply/revision sau completed explicit reconciliation; new preview đọc remote một lần nữa và hiển thị rõ retry old text. Nó có original actor/session riêng và retryParentId scoped. Claim retry serialize với parent: parent phải UNCERTAIN hoặc UNCONFIRMED, lease hết hạn, reconciled và chưa superseded; mark parent superseding child local ID rồi claim child trong một transaction. Parent receipt giữ nguyên UNCERTAIN/UNCONFIRMED (đã thử lại), không biến success/failure giả. Active-leaf fence tiếp tục chặn khác version đến khi outcome mới được observed/resolved. Replay old preview/parent không tạo second PUT. Một ambiguous original PUT vẫn có thể đến trễ; retry cùng exact text hạn chế version race, không hứa exactly-once. Failed definite pre-write preview không khóa review mãi.
+
+Publication summaries distinguish current draft from attempt old version; UI có explicit reconcile và separate retry controls, không retry từ page load/Save. Existing local PUBLISHED không là nguồn Google truth; attempt observation hiển thị normalized state + observed time. PENDING là chờ Google duyệt; unknown/future enum là visibility unconfirmed. Không tự close/reassign feedback.
+
+### 5. Temporary metadata disposal extends existing maintenance boundary
+
+Remote fingerprint chỉ còn dùng trong preview 5 phút (hoặc trước dispatch compare); clear sau compare/terminal invalidation và machine maintenance dọn expired preview fields. Extend existing bounded due-scope enumeration để bao gồm expired publication previews, và same scoped purge clears fields trong bounded batches. Không tạo scheduler mới. Existing 29/30-day cache/reference disposal và own draft/note/work giữ nguyên; no renewed provider copies. Rebind/deleted/expired reference deny dispatch/reconcile. Receipt/audit giữ local IDs/normalized categories/times; expired unconfirmed preview metadata không trở thành permanent provider hash archive. UI không xem stale preview như consent hợp lệ.
+
+Alternative: maintenance riêng toàn DB không bounded hoặc lưu hash mãi vi phạm existing privacy/operations boundary. Existing authenticated machine route tiếp tục authorize trước DB import, independent retrieval/publication flag.
+
+### 6. UI uses existing primitives and canonical Avis entry
+
+Giữ route-local components dưới Avis, Server Actions với Zod contracts; `@yuta/ui` Button/Dialog/Badge/Alert/Textarea và semantic tokens. Sau Save successful, local persisted reply version được update/reload để prepare exact server draft; unsaved edits disable preparation/confirmation. Textarea vẫn có existing Save pending behavior. Permitted OWNER/MANAGER thấy prepare action khi flag enabled và verified managed mapping; STAFF không thấy publish/reconcile và forged actions deny server-side.
+
+Dialog hiện restaurant/review local context, exact own final text (wrap/scroll), current remote reply nếu có, public/replacement explanation, expiry và separate confirm/cancel. Pending locks relevant submission, visible progress; cancellation không approve. Expired/error/changed-version/changed-remote giải thích French + fresh preview recovery. Status card phân biệt sending/uncertain/failed/pending/rejected/approved/unconfirmed và old-version receipt khi newer draft exists. Focus restoration, keyboard, aria labels/live feedback, mobile dialog/actions không overflow. Role/profile/load/read không phát publication effect.
+
+## Risks / Trade-offs
+
+- [External write cannot share DB atomicity] → Committed claim before callback; timeout/crash durable uncertainty, GET reconciliation and fresh same-version consent, no automatic retry.
+- [Google delayed write/moderation or another administrator updates reply] → honest observation and replacement copy, remote fingerprint check, no CAS/public visibility promise.
+- [Network while authority/connector locks held] → bounded calls/timeouts, fixed lock ordering; token refresh uses same transaction handle. Disposable integration tests verify revocation/Save/rebind concurrency, no long unbounded provider work.
+- [Provider-derived fingerprint retention] → 5-minute capped TTL, clear after use and existing bounded maintenance; no copied payload in durable receipt/audit; cleanup tests prove own work unchanged.
+- [Local A runtime previously internal] → explicit process `BACKOFFICE_EXPOSURE_PROFILE=release-a` for actual handoff; no env-file or staging/production flag changes.
+- [Live publish not authorized yet] → build + mock/disposable QA and real read flow first; show exact real target/text to current Human as final action. Live publish QA remains pending until consent; no fabricated complete/commit acceptance.
+
+## Migration Plan
+
+Generate additive cloud migration with draft revision/scoped index/new scoped relation, inspect SQL and snapshot/journal; no old migration edits or destructive backfill. No publish based on migrated legacy rows. Run guarded disposable integration on dedicated local test DB, keep persistent dev DB unrelated work/drafts/notes untouched. After Design approval and checks, migrate only existing local cloud dev DB after verifying host/port/database and backup; restart Backoffice local 3101 process with explicit release-a and local-only admissions, keep external publisher requests consent-gated.
+
+Rollback: disable publication flag immediately, stop local runtime, preserve attempt/draft/evidence. Schema is additive and can remain for old code; do not drop receipt/history or rewrite migrations as rollback. Existing retrieval/setup operations retain their guards and limits. Production rollout/scheduler/backups policy qualification remain outside this local acceptance.
+
+## Validation Plan
+
+Contracts tests: original actor/session opaque IDs, exact UTF-8 bytes, finite safe DTO states. Provider mock tests: scoped URL/body, timeout/no-store, malformed/foreign GET, exact/mismatching ACK and moderation unknown. Server mock tests: disabled flag before credentials, original/replacement session, STAFF/cross-scope, stale binding/authority, no effects from Save/load, error/reconcile/retry boundaries.
+
+Guarded disposable DB tests use real session/membership/connector/cache/draft rows: scoped FKs/checks, cross-tenant UUID denies, revision fencing, concurrent same-preview claims one PUT, revocation/rebind serialization, Save during dispatch creates independent version, expired lease → uncertainty, ACK + failed/mismatching observation retains unresolved fence across newer Save, explicit same-version retry leaf/replay, concurrent distinct-review expired-token refresh without deadlock, independent cleanup and expired reference denies. Provider calls in these tests are mocked; no real write.
+
+Required docs/architecture/recursive typecheck, affected tests/build/format checks, reviewed generated SQL. Post-Apply actual dev usability/manual-ready observations on explicit A before formal VERIFY/QA; new change is REQUIRED under archived `development-usability-and-iteration-control` finalization evidence. Browser QA includes intended happy/pending/error/denial/recovery flows, keyboard/focus and responsive desktop/mobile; synthetic screenshots only in committed evidence. Real Google recent/history/detail and token-refresh qualification on current local binding are separate from mocked publication evidence and legacy rows. Successful real publication/reconciliation requires Human-approved exact target/text, preserve all executed/skipped limitations.

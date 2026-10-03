@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Badge, Textarea } from '@yuta/ui';
-import { Bot, FilePenLine, Send } from 'lucide-react';
+import { Bot, FilePenLine } from 'lucide-react';
 import { useActionState, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { saveReplyDraftAction } from '../actions';
@@ -10,14 +10,17 @@ import {
   ReviewActionMessage,
 } from './review-action-feedback';
 import type { ReviewDetailRecord } from '../reviews-model';
+import { ReviewPublication } from './review-publication';
 
 export function ReviewReplyForm({
   review,
   canCreateReply,
+  canPublishGoogle = false,
   releaseA = false,
 }: {
   review: ReviewDetailRecord;
   canCreateReply: boolean;
+  canPublishGoogle?: boolean;
   releaseA?: boolean;
 }) {
   const [state, action] = useActionState(
@@ -52,17 +55,21 @@ export function ReviewReplyForm({
         disabled={!canCreateReply}
       />
       <p className="mt-2 text-xs text-muted">
-        {releaseA
-          ? 'Enregistrer conserve un brouillon dans YUTA, sans approbation ni publication. La publication sur Google n’est pas encore disponible, même avec une connexion configurée.'
-          : 'Le brouillon est enregistré dans YUTA. La publication Google sera activée avec le connecteur.'}
+        {canPublishGoogle
+          ? 'Enregistrer conserve un brouillon dans YUTA. Une confirmation distincte du texte enregistré est nécessaire avant tout envoi à Google.'
+          : 'Enregistrer conserve un brouillon dans YUTA, sans approbation ni publication.'}
       </p>
       <ReviewActionMessage state={state} />
-      <div className="mt-4 grid grid-cols-2 gap-3">
+      <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
         <ReplySubmit disabled={!canCreateReply || reply.trim().length === 0} />
-        <Button type="button" disabled>
-          <Send className="h-4 w-4" />
-          Publier sur Google
-        </Button>
+        {canPublishGoogle && (
+          <ReviewPublication
+            key={`${review.id}:${review.latestReply?.id}:${review.latestReply?.revision}:${review.publicationReceipt?.attemptId}:${review.publicationReceipt?.state}:${review.publicationReceipt?.reconciledAt}`}
+            review={review}
+            enabled={canPublishGoogle}
+            unsaved={reply !== (review.latestReply?.content ?? '')}
+          />
+        )}
       </div>
     </form>
   );

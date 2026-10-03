@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-09-28
+Last updated: 2026-10-03
 
 This file is the operational implementation tracker for
 the reputation feature. Durable behavior belongs in the adjacent `README.md`.
@@ -26,8 +26,26 @@ receipt is separate from OAuth/binding and retained local work. See the
 [durable retrieval boundary](README.md#bounded-release-a-google-review-retrieval).
 
 The broader Google technical track remains incomplete: scheduled
-synchronization, publication and remote/local reconciliation are absent.
-Actual Google project credentials, eligibility, cache/use conditions,
+synchronization remains absent. A separate default-disabled publication
+candidate adds exact saved-version/session confirmation, durable attempts,
+explicit reconciliation and same-version retry. See the
+[publication boundary](README.md#bounded-release-a-google-reply-publication).
+`release-a-google-reply-publication` remains active: source/mock/disposable
+checks are separate from pending complete local acceptance and exact Human
+consent for a real Google target/text. The 2026-10-03 local Release A runtime
+qualified 207 active mapped review reads, explicit history, a repeat recent
+refresh with zero added/changed items and natural expired-token refresh.
+These scoped observations are recorded in the active change's verification
+evidence; broader target-environment checkboxes below remain open.
+The current user explicitly deferred the real reply trial ("Chưa đăng thật").
+The proposed reply remains a local draft; no actual confirmed attempt or
+provider PUT occurred. Required live acceptance and full completion remain open.
+On 2026-10-03, the current user separately authorized delivery and local commit
+of the completed implementation/check/qualification phase, while continuing
+to defer real publication. This phase handoff passed independent local-phase
+completion review; it does not close the active change's live-acceptance or
+full Gate 3 obligations, waive full QA, or authorize sync/archive or deployment.
+Actual hosted Google project credentials, eligibility, cache/use conditions,
 unattended disposal and backup/restoration proof remain operator prerequisites.
 Source presence does not close runtime qualification or promote broader Google
 V1, environment, lifecycle or production readiness. No completion checkbox or
@@ -81,7 +99,8 @@ Google reviews.
 
 Acceptance result: a manager can process feedback, assign it, save a manual
 Google reply draft, add an internal note, reload the page, and see every change
-persisted. Publishing remains disabled and requires its own approved implementation
+persisted. Publishing is disabled by default. Its approved bounded source
+implementation requires separate local admission, exact saved-text confirmation
 and provider/operational prerequisites; connector completion alone does not enable it.
 
 ## Incomplete Google implementation track
@@ -148,12 +167,13 @@ Required external configuration:
 
 ### Google reply publication
 
-- [ ] Validate publish permission and connector state.
-- [ ] Publish an approved reply to Google.
-- [ ] Track publishing, published, and failed states.
-- [ ] Retry recoverable failures.
-- [ ] Reconcile local and remote reply state.
-- [ ] Audit every external publication attempt.
+- [x] Implement fail-closed publish permission, exact session/version and binding fences.
+- [x] Implement explicit preview/confirmation and scoped provider PUT source.
+- [x] Distinguish dispatch, uncertainty, unconfirmed observation and Google moderation.
+- [x] Require reconciliation and fresh same-version consent for unresolved retry.
+- [x] Implement explicit read reconciliation and minimized attempt audit.
+- [ ] Finish the recorded local A acceptance, including Human-approved real target/text.
+- [ ] Qualify environment/provider operations separately before customer activation.
 
 ### Public collection completion
 
