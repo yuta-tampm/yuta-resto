@@ -5,6 +5,7 @@ import {
   findFeedbackDetail,
   listAssignableReputationUsers,
   listFeedback,
+  findGoogleReplyPublicationReceipt,
 } from '@yuta/db-cloud';
 import { hasReputationPermission } from '@/server/auth/permissions';
 import { requireReputationTenant } from '@/server/auth/session';
@@ -22,6 +23,7 @@ import {
   loadGoogleReviewRetrievalSummary,
 } from '@/server/reputation/google-review-retrieval';
 import { ReviewsPage } from './reviews-page';
+import { canPublishGoogleReplies } from '@/server/reputation/google-reply-publication';
 import type {
   ReviewDetailRecord,
   ReviewsPageData,
@@ -148,6 +150,12 @@ export async function loadReviewsPage(
     const userNames = new Map(
       assignableUsers.map((user) => [user.id, user.name]),
     );
+    const canPublishGoogle =
+      mode !== 'direct' && canPublishGoogleReplies(tenant);
+    const publicationReceipt =
+      canPublishGoogle && detail?.source === 'GOOGLE'
+        ? await findGoogleReplyPublicationReceipt(db, tenant, detail.id)
+        : null;
 
     const data: ReviewsPageData = {
       state: 'ready',
@@ -174,10 +182,13 @@ export async function loadReviewsPage(
         canRecoverReference: item.canRecoverReference,
       })),
       detail: detail
-        ? serializeDetail(detail, userNames, {
-            analysis: analysisAvailable,
-            incidents: incidentsAvailable,
-          })
+        ? {
+            ...serializeDetail(detail, userNames, {
+              analysis: analysisAvailable,
+              incidents: incidentsAvailable,
+            }),
+            publicationReceipt,
+          }
         : null,
       selectedUnavailable: releaseA && parsedRequestedId.success && !detail,
       assignableUsers,
@@ -192,6 +203,7 @@ export async function loadReviewsPage(
       pagination: result.pagination,
       counters: exposedCounters(result.counters, counterExposure),
       permissions: {
+        canPublishGoogle,
         canManageFeedback: hasReputationPermission(
           tenant,
           'reputation.feedback.manage',
@@ -269,6 +281,7 @@ function serializeDetail(
           id: latestReply.id,
           content: latestReply.content,
           status: latestReply.status,
+          revision: latestReply.revision,
         }
       : null,
     notes: detail.notes.map((note) => ({

@@ -15,6 +15,10 @@ import {
 import { v7 as uuidv7 } from 'uuid';
 import type { CloudDatabaseClient } from './client';
 import {
+  clearExpiredGoogleReplyPreviews,
+  listDueGoogleReplyPreviewScopes,
+} from './google-reply-publication-lifecycle';
+import {
   authSessions,
   establishments,
   feedbackItems,
@@ -30,7 +34,8 @@ import {
 type Transaction = Parameters<
   Parameters<CloudDatabaseClient['transaction']>[0]
 >[0];
-type RepositoryDatabase = CloudDatabaseClient | Transaction;
+export type GoogleReviewDatabase = CloudDatabaseClient | Transaction;
+type RepositoryDatabase = GoogleReviewDatabase;
 export type GoogleReviewRetrievalKind = 'RECENT' | 'HISTORY' | 'DETAIL';
 export type GoogleReviewRetrievalErrorCategory =
   | 'AUTH_REQUIRED'
@@ -205,7 +210,7 @@ const clearContent = {
 };
 
 // Shared row locks serialize commit with every ordinary revocation/update.
-async function lockActorAuthority(
+export async function lockGoogleReviewActorAuthority(
   transaction: Transaction,
   context: TenantContext,
   sessionId: string,
@@ -276,7 +281,8 @@ async function lockActorAuthority(
   if (
     !authority ||
     (captured &&
-      (captured.userId !== actor.userId ||
+      (captured.sessionId !== sessionId ||
+        captured.userId !== actor.userId ||
         captured.membershipId !== actor.membershipId))
   ) {
     throw new GoogleReviewRetrievalRepositoryError('STALE_AUTHORITY');
@@ -346,7 +352,7 @@ export async function beginGoogleReviewRetrieval(
 ): Promise<GoogleReviewBeginResult> {
   const { establishmentId } = requireRetrievalActor(context);
   return db.transaction(async (transaction) => {
-    const actor = await lockActorAuthority(
+    const actor = await lockGoogleReviewActorAuthority(
       transaction,
       context,
       input.sessionId,
@@ -516,7 +522,7 @@ export async function beginGoogleReviewRetrieval(
 }
 
 export async function findCapturedGoogleConnectorCredentials(
-  db: CloudDatabaseClient,
+  db: GoogleReviewDatabase,
   context: TenantContext,
   binding: GoogleReviewBinding,
 ) {
@@ -534,7 +540,7 @@ export async function findCapturedGoogleConnectorCredentials(
   return credentials ?? null;
 }
 export async function updateCapturedGoogleConnectorAccessToken(
-  db: CloudDatabaseClient,
+  db: GoogleReviewDatabase,
   context: TenantContext,
   binding: GoogleReviewBinding,
   input: {
@@ -568,7 +574,7 @@ async function lockLease(
   ) {
     throw new GoogleReviewRetrievalRepositoryError('STALE_AUTHORITY');
   }
-  await lockActorAuthority(
+  await lockGoogleReviewActorAuthority(
     transaction,
     context,
     lease.actor.sessionId,
@@ -1192,7 +1198,11 @@ export async function listDueGoogleReviewCacheScopes(
     .limit(limit);
   return [
     ...new Map(
-      [...caches, ...states].map((scope) => [
+      [
+        ...caches,
+        ...states,
+        ...(await listDueGoogleReplyPreviewScopes(db, input)),
+      ].map((scope) => [
         `${scope.organizationId}:${scope.establishmentId}`,
         scope,
       ]),
@@ -1314,6 +1324,7 @@ export async function purgeGoogleReviewCache(
             ),
           ),
         );
+    await clearExpiredGoogleReplyPreviews(transaction, scope, input);
     return {
       contentCleared: clearIds.length,
       referencesRemoved: removeIds.length,

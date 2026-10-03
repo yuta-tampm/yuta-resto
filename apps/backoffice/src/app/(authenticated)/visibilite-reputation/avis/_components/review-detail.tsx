@@ -124,6 +124,7 @@ export function ReviewDetail({
         <ReviewReplyForm
           review={review}
           canCreateReply={permissions.canCreateReply}
+          canPublishGoogle={permissions.canPublishGoogle}
           releaseA={releaseA}
         />
       )}

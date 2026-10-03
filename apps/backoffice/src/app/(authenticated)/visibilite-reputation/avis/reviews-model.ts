@@ -6,6 +6,7 @@ import type {
   FeedbackUrgency,
   GoogleReviewContentAvailability,
   GoogleReviewRetrievalSummary,
+  GoogleReplyPublicationReceipt,
 } from '@yuta/contracts/reputation';
 import type { ReleaseASetupSummary } from '@/server/reputation/release-a-setup';
 
@@ -44,7 +45,9 @@ export type ReviewDetailRecord = ReviewListRecord & {
     id: string;
     content: string;
     status: string;
+    revision?: number;
   } | null;
+  publicationReceipt?: GoogleReplyPublicationReceipt | null;
   notes: Array<{
     id: string;
     content: string;
@@ -95,6 +98,7 @@ export type ReviewsPageData = {
     canCreateReply: boolean;
     canCreateNote: boolean;
     canRetrieveGoogle?: boolean;
+    canPublishGoogle?: boolean;
   };
 };
 

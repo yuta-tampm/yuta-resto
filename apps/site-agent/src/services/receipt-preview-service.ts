@@ -1,10 +1,8 @@
 import { createHash } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import {
-  customerReceiptPayloadSchema,
-  renderCustomerReceiptPayload,
-} from './local-printer-worker';
+import { customerReceiptPayloadSchema } from './print-payload-schemas';
+import { renderCustomerReceiptPayload } from './print-ticket-renderers';
 
 export function receiptBufferToText(buffer: Buffer): string {
   const bytes: number[] = [];

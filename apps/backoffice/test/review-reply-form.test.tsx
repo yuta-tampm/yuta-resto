@@ -20,6 +20,14 @@ vi.mock(
 vi.mock('react-dom', () => ({
   useFormStatus: () => ({ pending: mocks.pending }),
 }));
+vi.mock(
+  '../src/app/(authenticated)/visibilite-reputation/avis/publication-actions',
+  () => ({
+    previewGoogleReplyAction: vi.fn(),
+    confirmGoogleReplyAction: vi.fn(),
+    reconcileGoogleReplyAction: vi.fn(),
+  }),
+);
 vi.mock('react', async (importOriginal) => {
   const actual = await importOriginal<typeof import('react')>();
   return {
@@ -129,15 +137,87 @@ describe('ReviewReplyForm pending draft save', () => {
     expect(error).toContain('Échec de l’enregistrement.');
   });
 
-  it('shows manual-only Release A wording and keeps publication disabled', () => {
+  it('shows manual-only wording and hides publication controls without permission/admission', () => {
     const markup = renderToStaticMarkup(
       <ReviewReplyForm review={review} canCreateReply releaseA />,
     );
     expect(markup).toContain('sans approbation ni publication');
-    expect(markup).toContain('même avec une connexion configurée');
+    expect(markup).not.toContain('Vérifier puis publier');
+    expect(markup).not.toContain('Vérifier le résultat Google');
     expect(markup).not.toContain('lucide-bot');
     expect(markup).not.toContain('activée avec le connecteur');
-    const publishTag = markup.match(/<button\b[^>]*type="button"[^>]*>/)?.[0];
-    expect(publishTag).toContain('disabled=""');
+  });
+  it('shows separate permitted confirmation and truthful pending/unknown results without publishing from render', () => {
+    const permitted = {
+      ...review,
+      canRecoverReference: true,
+      latestReply: { ...review.latestReply!, revision: 1 },
+    };
+    const markup = renderToStaticMarkup(
+      <ReviewReplyForm
+        review={permitted}
+        canCreateReply
+        canPublishGoogle
+        releaseA
+      />,
+    );
+    expect(markup).toContain('confirmation distincte du texte enregistré');
+    const button = markup.match(/<button\b[^>]*type="button"[^>]*>/)?.[0];
+    expect(button).not.toContain('disabled=""');
+    for (const state of ['PENDING', 'UNCONFIRMED', 'REJECTED'] as const) {
+      const receipt = {
+        attemptId: 'attempt-1',
+        replyId: 'older-reply',
+        revision: 1,
+        state,
+        errorCategory: null,
+        confirmedAt: '2030-01-01T00:00:00Z',
+        observedAt: null,
+        reconciledAt: null,
+        superseded: false,
+      };
+      const result = renderToStaticMarkup(
+        <ReviewReplyForm
+          review={{ ...permitted, publicationReceipt: receipt }}
+          canCreateReply
+          canPublishGoogle
+          releaseA
+        />,
+      );
+      expect(result).toContain('ancienne version');
+      expect(result).not.toContain('Réponse observée et approuvée par Google');
+    }
+    expect(mocks.saveReplyDraftAction).not.toHaveBeenCalled();
+  });
+  it('explains changed remote replies and offers fresh confirmation without claiming a write', () => {
+    const markup = renderToStaticMarkup(
+      <ReviewReplyForm
+        review={{
+          ...review,
+          canRecoverReference: true,
+          latestReply: { ...review.latestReply!, revision: 1 },
+          publicationReceipt: {
+            attemptId: 'attempt-1',
+            replyId: 'reply-1',
+            revision: 1,
+            state: 'FAILED',
+            errorCategory: 'REMOTE_CHANGED',
+            confirmedAt: '2030-01-01T00:00:00Z',
+            observedAt: null,
+            reconciledAt: null,
+            superseded: false,
+          },
+        }}
+        canCreateReply
+        canPublishGoogle
+        releaseA
+      />,
+    );
+    expect(markup).toContain('La réponse sur Google a changé');
+    expect(markup).toContain('Aucun envoi n’a été effectué');
+    expect(markup).toContain('préparez une nouvelle confirmation');
+    expect(
+      markup.match(/<button\b[^>]*type="button"[^>]*>/)?.[0],
+    ).not.toContain('disabled=""');
   });
 });

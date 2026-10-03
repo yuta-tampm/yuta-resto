@@ -49,9 +49,10 @@ management session, loads real local users from `site-agent`, renders a truthful
 service-unavailable state, and composes `UsersManagement.tsx`.
 `UsersOverview.tsx` owns the responsive table/card composition and
 `UserDialogs.tsx` owns the create, profile/role/status edit, PIN reset, and
-activation dialog boundaries. `actions.ts` validates `FormData`, forwards the
-HttpOnly session token from the Next.js server to `site-agent`, and revalidates
-the route after success.
+activation dialog boundaries; `UserFormFields.tsx` and `UserActionFeedback.tsx`
+hold the shared form fields and action feedback those dialogs use.
+`actions.ts` validates `FormData`, forwards the HttpOnly session token from the
+Next.js server to `site-agent`, and revalidates the route after success.
 
 ## Authority
 
