@@ -14,10 +14,15 @@ import {
 import { MessageCircle, RefreshCw, Settings } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ReviewDetail } from './review-detail';
 import { ReviewsListPanel } from './reviews-list-panel';
 import { GoogleReviewRetrievalPanel } from './google-review-retrieval-panel';
+import { ReviewQuickPanel } from './review-quick-panel';
+import {
+  closeReviewSearchParams,
+  updateReviewsSearchParams,
+} from '../_lib/reviews-query';
 import type {
   ReviewsPageData,
   ReviewsPageMode,
@@ -35,6 +40,12 @@ export function ReviewsPage({
   const pathname = usePathname();
   const currentSearchParams = useSearchParams();
   const directOnly = mode === 'direct';
+  const selectedId = currentSearchParams.get('selected');
+  const [panelReviewId, setPanelReviewId] = useState(selectedId);
+  const openingRow = useRef<HTMLButtonElement | null>(null);
+  useEffect(() => {
+    setPanelReviewId(selectedId);
+  }, [selectedId]);
   const [selectionIntent, setSelectionIntent] = useState(
     data.detail?.id ?? null,
   );
@@ -94,19 +105,23 @@ export function ReviewsPage({
   const updateQuery: UpdateReviewsQuery = (updates, options) => {
     setHeldView(null);
     if (!Object.hasOwn(updates, 'selected')) setSelectionIntent(null);
-    const params = new URLSearchParams(currentSearchParams.toString());
-    params.delete('working');
-    for (const [key, value] of Object.entries(updates)) {
-      if (value === null || value === '' || value === 'ALL') {
-        params.delete(key);
-      } else {
-        params.set(key, String(value));
-      }
-    }
-    if (!options?.keepSelected) params.delete('selected');
-    if (!Object.hasOwn(updates, 'page')) params.delete('page');
+    const params = updateReviewsSearchParams(
+      currentSearchParams.toString(),
+      updates,
+      { ...options, keepPage: !directOnly && options?.keepSelected },
+    );
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
+
+  function closeReviewPanel() {
+    setPanelReviewId(null);
+    setSelectionIntent(null);
+    const params = closeReviewSearchParams(currentSearchParams.toString());
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }
+
+  const panelReview =
+    viewData.detail?.id === panelReviewId ? viewData.detail : null;
 
   return (
     <div className="flex w-full flex-col gap-5">
@@ -192,44 +207,76 @@ export function ReviewsPage({
             </Alert>
           )}
 
-          <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(420px,0.85fr)]">
+          <div
+            className={
+              directOnly
+                ? 'grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(420px,0.85fr)]'
+                : undefined
+            }
+          >
             <ReviewsListPanel
-              data={viewData}
+              data={
+                directOnly ? viewData : { ...viewData, detail: panelReview }
+              }
               directOnly={directOnly}
               updateQuery={updateQuery}
-              onOpenReview={setSelectionIntent}
+              onOpenReview={(id, trigger) => {
+                setSelectionIntent(id);
+                if (!directOnly) {
+                  openingRow.current = trigger;
+                  setPanelReviewId(id);
+                }
+              }}
             />
 
-            {viewData.detail ? (
-              <ReviewDetail
-                key={viewData.detail.id}
-                review={viewData.detail}
-                assignableUsers={data.assignableUsers}
-                permissions={data.permissions}
-                releaseA={data.releaseA}
-                googleRetrievalAvailable={Boolean(
-                  data.retrievalSummary?.enabled && data.retrievalSummary.bound,
-                )}
-              />
-            ) : (
-              <Card padding="none">
-                <EmptyState
-                  icon={<MessageCircle className="mx-auto h-8 w-8" />}
-                  title={
-                    data.selectedUnavailable
-                      ? 'Cet avis n’est pas disponible'
-                      : 'Sélectionnez un avis'
-                  }
-                  description={
-                    data.selectedUnavailable
-                      ? 'Choisissez un avis accessible dans la liste.'
-                      : undefined
-                  }
+            {directOnly &&
+              (viewData.detail ? (
+                <ReviewDetail
+                  key={viewData.detail.id}
+                  review={viewData.detail}
+                  assignableUsers={data.assignableUsers}
+                  permissions={data.permissions}
+                  releaseA={data.releaseA}
+                  googleRetrievalAvailable={Boolean(
+                    data.retrievalSummary?.enabled &&
+                    data.retrievalSummary.bound,
+                  )}
                 />
-              </Card>
-            )}
+              ) : (
+                <Card padding="none">
+                  <EmptyState
+                    icon={<MessageCircle className="mx-auto h-8 w-8" />}
+                    title={
+                      data.selectedUnavailable
+                        ? 'Cet avis n’est pas disponible'
+                        : 'Sélectionnez un avis'
+                    }
+                    description={
+                      data.selectedUnavailable
+                        ? 'Choisissez un avis accessible dans la liste.'
+                        : undefined
+                    }
+                  />
+                </Card>
+              ))}
           </div>
         </>
+      )}
+      {!directOnly && (
+        <ReviewQuickPanel
+          open={panelReviewId !== null}
+          review={panelReview}
+          loading={selectedId !== panelReviewId && !panelReview}
+          data={viewData}
+          onClose={closeReviewPanel}
+          onRetry={() => router.refresh()}
+          onCloseAutoFocus={(event) => {
+            if (openingRow.current?.isConnected) {
+              event.preventDefault();
+              openingRow.current.focus({ preventScroll: true });
+            }
+          }}
+        />
       )}
     </div>
   );

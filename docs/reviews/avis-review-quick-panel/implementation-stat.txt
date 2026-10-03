@@ -1,0 +1,8 @@
+ .../avis/_components/review-detail.tsx             |    9 +
+ .../avis/_components/review-quick-panel.tsx        |   99 +++++++++++++++
+ .../avis/_components/reviews-list-panel.tsx        |    7 +
+ .../avis/_components/reviews-page.tsx              |  131 ++++++++++++++------
+ .../avis/_lib/reviews-query.ts                     |   22 +++
+ apps/backoffice/test/reviews-query.test.ts         |   52 ++++++++
+ docs/features/reputation/README.md                 |   10 ++
+ 7 files changed, 283 insertions(+), 47 deletions(-)

@@ -1,0 +1,448 @@
+diff --git a/apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-detail.tsx b/apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-detail.tsx
+index 22db50fd..7167f7d4 100644
+--- a/apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-detail.tsx
++++ b/apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-detail.tsx
+@@ -1,5 +1,5 @@
+ import type { AssignableReputationUser } from '@yuta/contracts/cloud-admin';
+-import { Avatar, Badge, Button, Card, IconButton } from '@yuta/ui';
++import { Avatar, Badge, Button, Card, IconButton, cn } from '@yuta/ui';
+ import { ExternalLink, UserRound } from 'lucide-react';
+ import { ReviewAnalysisSection } from './review-analysis-section';
+ import { ReviewManagementForm } from './review-management-form';
+@@ -27,15 +27,20 @@ export function ReviewDetail({
+   permissions,
+   releaseA = false,
+   googleRetrievalAvailable = false,
++  className,
+ }: {
+   review: ReviewDetailRecord;
+   assignableUsers: AssignableReputationUser[];
+   permissions: ReviewsPageData['permissions'];
+   releaseA?: boolean;
+   googleRetrievalAvailable?: boolean;
++  className?: string;
+ }) {
+   return (
+-    <Card padding="none" className="overflow-hidden xl:sticky xl:top-0">
++    <Card
++      padding="none"
++      className={cn('overflow-hidden xl:sticky xl:top-0', className)}
++    >
+       <div className="flex items-center justify-between border-b border-border-default p-4">
+         <div className="flex items-center gap-3">
+           <ReviewSourceMark source={review.source} />
+diff --git a/apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-quick-panel.tsx b/apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-quick-panel.tsx
+new file mode 100644
+index 00000000..fe77e4f3
+--- /dev/null
++++ b/apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/review-quick-panel.tsx
+@@ -0,0 +1,99 @@
++'use client';
++
++import {
++  Button,
++  Dialog,
++  DialogContent,
++  DialogDescription,
++  DialogHeader,
++  DialogTitle,
++  EmptyState,
++  ErrorState,
++  Skeleton,
++} from '@yuta/ui';
++import { useRef, type ComponentProps } from 'react';
++import type { ReviewDetailRecord, ReviewsPageData } from '../reviews-model';
++import { ReviewDetail } from './review-detail';
++
++export function ReviewQuickPanel({
++  open,
++  review,
++  loading,
++  data,
++  onClose,
++  onRetry,
++  onCloseAutoFocus,
++}: {
++  open: boolean;
++  review: ReviewDetailRecord | null;
++  loading: boolean;
++  data: ReviewsPageData;
++  onClose: () => void;
++  onRetry: () => void;
++  onCloseAutoFocus: ComponentProps<typeof DialogContent>['onCloseAutoFocus'];
++}) {
++  const titleRef = useRef<HTMLHeadingElement>(null);
++
++  return (
++    <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
++      <DialogContent
++        variant="right-panel"
++        closeLabel="Fermer le détail de l’avis"
++        closeClassName="right-3 top-3 flex h-11 w-11 items-center justify-center"
++        className="flex flex-col overflow-hidden bg-surface p-0 sm:max-w-2xl"
++        onOpenAutoFocus={(event) => {
++          event.preventDefault();
++          titleRef.current?.focus();
++        }}
++        onCloseAutoFocus={onCloseAutoFocus}
++      >
++        <DialogHeader className="shrink-0 border-b border-border-default p-4 pr-16 text-left">
++          <DialogTitle ref={titleRef} tabIndex={-1}>
++            Détail de l’avis
++          </DialogTitle>
++          <DialogDescription>
++            Consultez l’avis et enregistrez votre traitement.
++          </DialogDescription>
++        </DialogHeader>
++        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
++          {data.state === 'unavailable' ? (
++            <ErrorState
++              title="Cet avis est momentanément indisponible"
++              description="Réessayez dans quelques instants."
++              action={
++                <Button variant="secondary" onClick={onRetry}>
++                  Réessayer
++                </Button>
++              }
++            />
++          ) : loading ? (
++            <div className="grid gap-4 p-4" role="status" aria-live="polite">
++              <span className="text-sm text-secondary">
++                Chargement de l’avis…
++              </span>
++              <Skeleton className="h-24 w-full" />
++              <Skeleton className="h-40 w-full" />
++            </div>
++          ) : review ? (
++            <ReviewDetail
++              key={review.id}
++              review={review}
++              assignableUsers={data.assignableUsers}
++              permissions={data.permissions}
++              releaseA={data.releaseA}
++              googleRetrievalAvailable={Boolean(
++                data.retrievalSummary?.enabled && data.retrievalSummary.bound,
++              )}
++              className="rounded-none border-0 shadow-none xl:static"
++            />
++          ) : (
++            <EmptyState
++              title="Cet avis n’est pas disponible"
++              description="Fermez le détail et choisissez un avis accessible dans la liste."
++            />
++          )}
++        </div>
++      </DialogContent>
++    </Dialog>
++  );
++}
+diff --git a/apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-list-panel.tsx b/apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-list-panel.tsx
+index cae99ae5..7798a224 100644
+--- a/apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-list-panel.tsx
++++ b/apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-list-panel.tsx
+@@ -43,7 +43,7 @@ export function ReviewsListPanel({
+   data: ReviewsPageData;
+   directOnly: boolean;
+   updateQuery: UpdateReviewsQuery;
+-  onOpenReview?: (id: string) => void;
++  onOpenReview?: (id: string, trigger: HTMLButtonElement) => void;
+ }) {
+   const [search, setSearch] = useState(data.query.search);
+   const userNames = new Map(
+@@ -186,8 +186,9 @@ export function ReviewsListPanel({
+             <button
+               key={item.id}
+               type="button"
+-              onClick={() => {
+-                onOpenReview?.(item.id);
++              aria-haspopup={directOnly ? undefined : 'dialog'}
++              onClick={(event) => {
++                onOpenReview?.(item.id, event.currentTarget);
+                 updateQuery({ selected: item.id }, { keepSelected: true });
+               }}
+               className={cn(
+diff --git a/apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-page.tsx b/apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-page.tsx
+index 3ce8cfce..715cfdcf 100644
+--- a/apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-page.tsx
++++ b/apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_components/reviews-page.tsx
+@@ -14,10 +14,15 @@ import {
+ import { MessageCircle, RefreshCw, Settings } from 'lucide-react';
+ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+ import Link from 'next/link';
+-import { useState } from 'react';
++import { useEffect, useRef, useState } from 'react';
+ import { ReviewDetail } from './review-detail';
+ import { ReviewsListPanel } from './reviews-list-panel';
+ import { GoogleReviewRetrievalPanel } from './google-review-retrieval-panel';
++import { ReviewQuickPanel } from './review-quick-panel';
++import {
++  closeReviewSearchParams,
++  updateReviewsSearchParams,
++} from '../_lib/reviews-query';
+ import type {
+   ReviewsPageData,
+   ReviewsPageMode,
+@@ -35,6 +40,12 @@ export function ReviewsPage({
+   const pathname = usePathname();
+   const currentSearchParams = useSearchParams();
+   const directOnly = mode === 'direct';
++  const selectedId = currentSearchParams.get('selected');
++  const [panelReviewId, setPanelReviewId] = useState(selectedId);
++  const openingRow = useRef<HTMLButtonElement | null>(null);
++  useEffect(() => {
++    setPanelReviewId(selectedId);
++  }, [selectedId]);
+   const [selectionIntent, setSelectionIntent] = useState(
+     data.detail?.id ?? null,
+   );
+@@ -94,20 +105,24 @@ export function ReviewsPage({
+   const updateQuery: UpdateReviewsQuery = (updates, options) => {
+     setHeldView(null);
+     if (!Object.hasOwn(updates, 'selected')) setSelectionIntent(null);
+-    const params = new URLSearchParams(currentSearchParams.toString());
+-    params.delete('working');
+-    for (const [key, value] of Object.entries(updates)) {
+-      if (value === null || value === '' || value === 'ALL') {
+-        params.delete(key);
+-      } else {
+-        params.set(key, String(value));
+-      }
+-    }
+-    if (!options?.keepSelected) params.delete('selected');
+-    if (!Object.hasOwn(updates, 'page')) params.delete('page');
++    const params = updateReviewsSearchParams(
++      currentSearchParams.toString(),
++      updates,
++      { ...options, keepPage: !directOnly && options?.keepSelected },
++    );
+     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+   };
+ 
++  function closeReviewPanel() {
++    setPanelReviewId(null);
++    setSelectionIntent(null);
++    const params = closeReviewSearchParams(currentSearchParams.toString());
++    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
++  }
++
++  const panelReview =
++    viewData.detail?.id === panelReviewId ? viewData.detail : null;
++
+   return (
+     <div className="flex w-full flex-col gap-5">
+       <PageHeader
+@@ -192,45 +207,77 @@ export function ReviewsPage({
+             </Alert>
+           )}
+ 
+-          <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(420px,0.85fr)]">
++          <div
++            className={
++              directOnly
++                ? 'grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(420px,0.85fr)]'
++                : undefined
++            }
++          >
+             <ReviewsListPanel
+-              data={viewData}
++              data={
++                directOnly ? viewData : { ...viewData, detail: panelReview }
++              }
+               directOnly={directOnly}
+               updateQuery={updateQuery}
+-              onOpenReview={setSelectionIntent}
++              onOpenReview={(id, trigger) => {
++                setSelectionIntent(id);
++                if (!directOnly) {
++                  openingRow.current = trigger;
++                  setPanelReviewId(id);
++                }
++              }}
+             />
+ 
+-            {viewData.detail ? (
+-              <ReviewDetail
+-                key={viewData.detail.id}
+-                review={viewData.detail}
+-                assignableUsers={data.assignableUsers}
+-                permissions={data.permissions}
+-                releaseA={data.releaseA}
+-                googleRetrievalAvailable={Boolean(
+-                  data.retrievalSummary?.enabled && data.retrievalSummary.bound,
+-                )}
+-              />
+-            ) : (
+-              <Card padding="none">
+-                <EmptyState
+-                  icon={<MessageCircle className="mx-auto h-8 w-8" />}
+-                  title={
+-                    data.selectedUnavailable
+-                      ? 'Cet avis n’est pas disponible'
+-                      : 'Sélectionnez un avis'
+-                  }
+-                  description={
+-                    data.selectedUnavailable
+-                      ? 'Choisissez un avis accessible dans la liste.'
+-                      : undefined
+-                  }
++            {directOnly &&
++              (viewData.detail ? (
++                <ReviewDetail
++                  key={viewData.detail.id}
++                  review={viewData.detail}
++                  assignableUsers={data.assignableUsers}
++                  permissions={data.permissions}
++                  releaseA={data.releaseA}
++                  googleRetrievalAvailable={Boolean(
++                    data.retrievalSummary?.enabled &&
++                    data.retrievalSummary.bound,
++                  )}
+                 />
+-              </Card>
+-            )}
++              ) : (
++                <Card padding="none">
++                  <EmptyState
++                    icon={<MessageCircle className="mx-auto h-8 w-8" />}
++                    title={
++                      data.selectedUnavailable
++                        ? 'Cet avis n’est pas disponible'
++                        : 'Sélectionnez un avis'
++                    }
++                    description={
++                      data.selectedUnavailable
++                        ? 'Choisissez un avis accessible dans la liste.'
++                        : undefined
++                    }
++                  />
++                </Card>
++              ))}
+           </div>
+         </>
+       )}
++      {!directOnly && (
++        <ReviewQuickPanel
++          open={panelReviewId !== null}
++          review={panelReview}
++          loading={selectedId !== panelReviewId && !panelReview}
++          data={viewData}
++          onClose={closeReviewPanel}
++          onRetry={() => router.refresh()}
++          onCloseAutoFocus={(event) => {
++            if (openingRow.current?.isConnected) {
++              event.preventDefault();
++              openingRow.current.focus({ preventScroll: true });
++            }
++          }}
++        />
++      )}
+     </div>
+   );
+ }
+diff --git a/apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_lib/reviews-query.ts b/apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_lib/reviews-query.ts
+new file mode 100644
+index 00000000..84272680
+--- /dev/null
++++ b/apps/backoffice/src/app/(authenticated)/visibilite-reputation/avis/_lib/reviews-query.ts
+@@ -0,0 +1,22 @@
++export function updateReviewsSearchParams(
++  current: string,
++  updates: Record<string, string | number | null>,
++  options?: { keepSelected?: boolean; keepPage?: boolean },
++) {
++  const params = new URLSearchParams(current);
++  params.delete('working');
++  for (const [key, value] of Object.entries(updates)) {
++    if (value === null || value === '' || value === 'ALL') params.delete(key);
++    else params.set(key, String(value));
++  }
++  if (!options?.keepSelected) params.delete('selected');
++  if (!Object.hasOwn(updates, 'page') && !options?.keepPage)
++    params.delete('page');
++  return params;
++}
++
++export function closeReviewSearchParams(current: string) {
++  const params = new URLSearchParams(current);
++  params.delete('selected');
++  return params;
++}
+diff --git a/apps/backoffice/test/reviews-query.test.ts b/apps/backoffice/test/reviews-query.test.ts
+new file mode 100644
+index 00000000..6a83e79d
+--- /dev/null
++++ b/apps/backoffice/test/reviews-query.test.ts
+@@ -0,0 +1,52 @@
++import { describe, expect, it } from 'vitest';
++import {
++  closeReviewSearchParams,
++  updateReviewsSearchParams,
++} from '../src/app/(authenticated)/visibilite-reputation/avis/_lib/reviews-query';
++
++describe('Avis navigation context', () => {
++  it('opens and closes an item on a later filtered page without losing context', () => {
++    const current = 'page=2&rating=5&search=service&sort=oldest';
++    const opened = updateReviewsSearchParams(
++      current,
++      { selected: 'review-26' },
++      { keepSelected: true, keepPage: true },
++    );
++    expect(opened.get('selected')).toBe('review-26');
++    expect(closeReviewSearchParams(opened.toString()).toString()).toBe(current);
++  });
++
++  it('closes without unpinning a working list or changing unrelated query context', () => {
++    const closed = closeReviewSearchParams(
++      'page=2&selected=review-26&working=review-26,review-27&queue=attention',
++    );
++    expect(closed.get('selected')).toBeNull();
++    expect(closed.get('working')).toBe('review-26,review-27');
++    expect(closed.get('page')).toBe('2');
++    expect(closed.get('queue')).toBe('attention');
++  });
++
++  it('resets selection, working context and page when filters change', () => {
++    const filtered = updateReviewsSearchParams(
++      'page=2&selected=review-26&working=review-26&status=NEW&sort=oldest',
++      { status: 'ALL', rating: 4 },
++    );
++    expect(filtered.toString()).toBe('sort=oldest&rating=4');
++  });
++
++  it('keeps an explicitly requested page while clearing the previous selection', () => {
++    const paged = updateReviewsSearchParams('page=2&selected=review-26', {
++      page: 3,
++    });
++    expect(paged.toString()).toBe('page=3');
++  });
++
++  it('retains the existing default selection pagination behavior for Satisfaction', () => {
++    const selected = updateReviewsSearchParams(
++      'page=2&search=service',
++      { selected: 'direct-review' },
++      { keepSelected: true },
++    );
++    expect(selected.toString()).toBe('search=service&selected=direct-review');
++  });
++});
+diff --git a/docs/features/reputation/README.md b/docs/features/reputation/README.md
+index 7cb90d7b..22e92486 100644
+--- a/docs/features/reputation/README.md
++++ b/docs/features/reputation/README.md
+@@ -139,6 +139,16 @@ pagination, new/unanswered/negative counters, status changes, assignment,
+ manual Google draft persistence, and internal notes. Material mutations repeat
+ authorization checks on the server and create Reputation audit events.
+ 
++Avis opens an explicitly selected review in a modal sliding in from the right,
++with the existing processing forms and an internally scrolling body. Mobile
++uses the full screen width. Opening and closing preserve list filters, ordering,
++page and scroll position; closing returns focus to the opening row when it is
++still present. Direct selected-item URLs open the same modal. A plain list visit
++does not open it automatically. Loading never presents the previous item's forms.
++Existing explicit Save actions remain required; closing exits the editor without
++saving unsaved edits or publishing. Satisfaction retains its inline list/detail
++presentation.
++
+ The UI can display persisted sentiment, urgency, summary, topics, and suggested
+ action. Their schema and presentation do not prove that current runtime code
+ generates them with AI.

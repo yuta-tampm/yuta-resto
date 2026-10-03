@@ -1,5 +1,5 @@
 import type { AssignableReputationUser } from '@yuta/contracts/cloud-admin';
-import { Avatar, Badge, Button, Card, IconButton } from '@yuta/ui';
+import { Avatar, Badge, Button, Card, IconButton, cn } from '@yuta/ui';
 import { ExternalLink, UserRound } from 'lucide-react';
 import { ReviewAnalysisSection } from './review-analysis-section';
 import { ReviewManagementForm } from './review-management-form';
@@ -27,15 +27,20 @@ export function ReviewDetail({
   permissions,
   releaseA = false,
   googleRetrievalAvailable = false,
+  className,
 }: {
   review: ReviewDetailRecord;
   assignableUsers: AssignableReputationUser[];
   permissions: ReviewsPageData['permissions'];
   releaseA?: boolean;
   googleRetrievalAvailable?: boolean;
+  className?: string;
 }) {
   return (
-    <Card padding="none" className="overflow-hidden xl:sticky xl:top-0">
+    <Card
+      padding="none"
+      className={cn('overflow-hidden xl:sticky xl:top-0', className)}
+    >
       <div className="flex items-center justify-between border-b border-border-default p-4">
         <div className="flex items-center gap-3">
           <ReviewSourceMark source={review.source} />

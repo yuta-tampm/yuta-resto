@@ -139,6 +139,16 @@ pagination, new/unanswered/negative counters, status changes, assignment,
 manual Google draft persistence, and internal notes. Material mutations repeat
 authorization checks on the server and create Reputation audit events.
 
+Avis opens an explicitly selected review in a modal sliding in from the right,
+with the existing processing forms and an internally scrolling body. Mobile
+uses the full screen width. Opening and closing preserve list filters, ordering,
+page and scroll position; closing returns focus to the opening row when it is
+still present. Direct selected-item URLs open the same modal. A plain list visit
+does not open it automatically. Loading never presents the previous item's forms.
+Existing explicit Save actions remain required; closing exits the editor without
+saving unsaved edits or publishing. Satisfaction retains its inline list/detail
+presentation.
+
 The UI can display persisted sentiment, urgency, summary, topics, and suggested
 action. Their schema and presentation do not prove that current runtime code
 generates them with AI.
