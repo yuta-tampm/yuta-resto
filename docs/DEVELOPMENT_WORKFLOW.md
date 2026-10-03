@@ -6,7 +6,7 @@ Visibility: Engineering
 
 Owner: YUTA engineering
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 1. Read root and nearest nested `AGENTS.md`.
 2. Read `docs/README.md`, `docs/CURRENT_STATE.md`, and relevant current docs.
@@ -95,6 +95,94 @@ isolated.
 Agents read a needed skill directly from its exact
 `.agents/skills/<skill-name>/SKILL.md`. Direct reading does not register a
 command, invoke a skill or grant tool rights.
+
+### Guarded task writes and commits
+
+Before a task's first source write, the orchestrator creates a distinct linked
+worktree and task branch, checks its clean exact base, and registers one primary
+writer using `scripts/task-guard.mjs`. Registration reserves a non-reusable task
+ID in the shared Git common directory and one claim in that worktree's Git
+directory. It never edits primary-checkout sources. Dependency installation and
+worktree creation are explicit preparation, before writer dispatch.
+
+Registration JSON uses schema version 1 and records `task`, `writer`,
+`sessionId`, `collaborationMode`, `modeSource`, `commitAfterTask`,
+`commitSource`, `baseCommit`, exact repository-relative `writePaths`, and
+exact authorized `commands`. Use the actual current session and user decision
+sources; placeholders and another task's decisions grant no authority.
+`NOT_SELECTED` permits authorized implementation but blocks staging/commit.
+
+Commands run from the exact task worktree root inside its attributed Codex
+session:
+
+```powershell
+Get-Content -Raw -LiteralPath task-binding.json | pnpm task:guard register
+pnpm task:guard check --writer /root
+pnpm task:guard snapshot --writer /root
+Get-Content -Raw -LiteralPath task-writes.json | pnpm task:guard write --writer /root
+Get-Content -Raw -LiteralPath task-commit.json | pnpm task:guard commit --writer /root
+```
+
+Supply binding, write and commit JSON through stdin or an external evidence
+directory; do not add it as an untracked source in a checkout that must be
+clean for registration. A write request is an array of exact `path` and
+`contentBase64` objects. All targets are validated before the first mutation.
+A commit request contains `message` and `review`. The review receipt has
+`schemaVersion: 1`, `verdict: APPROVED`, an actual separate `reviewer`,
+`source`, external `evidencePath`, `evidenceSha256` and `candidateDigest`
+from snapshot. The orchestrator verifies the real review source; these fields
+attribute evidence rather than authenticate the reviewer.
+
+Each guarded operation acquires an exclusive task lock and rechecks the
+repository, worktree, branch, exact expected HEAD, writer/session attribution,
+allowlist and candidate. Inherited Git redirection/configuration variables,
+linked parents, non-regular targets, hardlinks and out-of-scope staged/untracked
+files are rejected. Snapshot includes HEAD, index tree, raw bytes, Git mode,
+filesystem mode, file type and deletions. Commit requires sourced `YES`,
+unchanged independent review evidence and candidate, stages only reviewed paths,
+and checks staged blobs/modes plus the committed tree. A failed or interrupted
+commit retains `COMMITTING`; re-entry inspects the outcome and never blindly
+repeats commit. Preserve that state/evidence and request bounded recovery when
+the outcome differs or HEAD did not advance. Do not delete another client's
+lock or silently replace a task claim.
+
+When a pending actual user commit choice arrives, pass
+`{"choice":"YES","source":"<actual current-user reply>"}` (or `NO`) to
+`pnpm task:guard select-commit --writer /root`. A selected choice is sticky;
+this command does not silently replace it.
+
+#### Codex hook coverage and activation
+
+`.codex/hooks.json` connects `Bash` and `apply_patch` to this guard. Invalid
+or missing binding returns the supported explicit `PreToolUse` denial. Shell
+calls must match exact declared commands; background/interactive shells and
+direct Git mutations are denied. Declare guarded write/commit CLI commands
+when those author routes are needed. The orchestrator prepares/registers the
+checkout before author dispatch; a hook-protected author cannot bootstrap an
+unregistered checkout by bypassing the guard.
+
+Review and trust the exact project hook through Codex's `/hooks` interface,
+then reload/start the task context in the intended checkout and test a denied
+inert operation. Merely committing a hook does not activate it in an existing
+chat. Codex session IDs are attribution; subagents may share their parent's
+session ID. Give each implementation author its own context/checkout and keep
+reviewers read-only. A `write_stdin` continuation does not receive a new
+pre-tool check, so interactive write channels are not authorized.
+
+[Official hook documentation](https://learn.chatgpt.com/docs/hooks) defines the
+supported paths and trust requirements. Hook launch failure, timeout, disabled
+hooks and specialized tool paths can bypass runtime interception. These guards
+coordinate cooperating clients, not an OS sandbox; authorized commands can have
+their own effects. Repository delivery proves the guarded CLI and hook adapter,
+not universal desktop enforcement. Use the guarded CLI for source writes and
+commits until actual hook activation/denial has been observed. The initial
+implementation of the guard itself uses an attributed clean-base bootstrap;
+subsequent task writes use the guarded entry points.
+
+Independent completion review checks checkout isolation and the exact candidate
+in addition to content and validation evidence. Missing or drifted identity
+blocks approval. [ADR-011](decisions/ADR-011-task-checkout-guards.md) records this
+bounded decision.
 
 ### Claude task runner
 

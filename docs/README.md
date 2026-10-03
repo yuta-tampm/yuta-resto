@@ -195,6 +195,7 @@ They are provenance, not current workflow instructions.
 - [`decisions/ADR-009-release-a-customer-exposure.md`](decisions/ADR-009-release-a-customer-exposure.md)
 - [`decisions/ADR-010-claude-code-implementation-delegation.md`](decisions/ADR-010-claude-code-implementation-delegation.md)
   — Bounded Claude Code implementation under Codex coordination.
+- [ADR-011: Guarded task checkouts](decisions/ADR-011-task-checkout-guards.md) — writer/worktree binding, guarded commit and hook coverage.
 
 Completed task specifications are removed after durable behavior is reflected
 in current feature documentation and remaining work is captured in `STATUS.md`.

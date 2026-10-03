@@ -1,0 +1,19 @@
+{
+  "description": "YUTA task checkout guard. Review/trust this source before use; see Development Workflow for coverage and limits.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|apply_patch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/scripts/task-guard.mjs\" hook",
+            "command_windows": "powershell.exe -NoProfile -Command \"& node ((git rev-parse --show-toplevel) + '/scripts/task-guard.mjs') hook\"",
+            "timeout": 15,
+            "statusMessage": "Checking YUTA task checkout and write scope"
+          }
+        ]
+      }
+    ]
+  }
+}

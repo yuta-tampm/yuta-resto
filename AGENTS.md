@@ -249,6 +249,8 @@ evidence to Codex. Codex keeps integration review and integration, and gate
 approval still needs the mode-defined independent or Human decision. Follow
 `docs/YUTA_AUTOMATED_CHANGE_WORKFLOW.md#claude-code-implementation-delegation`.
 
+Before task source writes, use the isolated checkout binding and guarded write/commit procedure in `docs/DEVELOPMENT_WORKFLOW.md#guarded-task-writes-and-commits`. Recheck task/writer, worktree, branch, exact HEAD and allowlist before effects. Independent review must verify isolation as well as content. Hook configuration alone is not activation evidence; preserve its documented limits.
+
 For meaningful work:
 
 1. Define goal, scope, affected runtime/data boundaries, and risks.

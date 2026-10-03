@@ -868,6 +868,8 @@ delivery, finish applicable finalization and Knowledge Consolidation first;
 a phase-bounded task commits only its completed authorized phase and does not
 finalize the whole change. Preserve any review still pending outside task scope.
 
+Use the [guarded task write/commit procedure](DEVELOPMENT_WORKFLOW.md#guarded-task-writes-and-commits). Independent review includes the isolated checkout identity and full candidate bytes/types/modes. Guarded staging requires the actual sourced commit choice and unchanged independent review receipt.
+
 Before staging, recheck the branch/HEAD, index, working-tree and untracked state
 against the task's captured baseline. Inspect the exact candidate paths and
 hunks, exclude secrets and unrelated work, and ensure the commit preserves
