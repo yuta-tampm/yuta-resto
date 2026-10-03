@@ -68,6 +68,12 @@ A rejected reload shows the recoverable `Actualisation impossible` feedback and
 ends the loading state. The orchestration lives in
 `_lib/cdi-draft-workspace-operations.ts`.
 
+`_components/cdi-draft-workspace.tsx` owns the workflow state, mutations,
+dirty-navigation protection and focus recovery. The state-specific panels and
+abandonment dialog live in `cdi-draft-workspace-panels.tsx`, shared read-only
+facts and the probation field in `cdi-draft-workspace-fields.tsx`, and French
+feedback copy in `_lib/cdi-draft-workspace-feedback.ts`.
+
 ## Authority
 
 Read root and `apps/backoffice/AGENTS.md`, `docs/CURRENT_STATE.md`,

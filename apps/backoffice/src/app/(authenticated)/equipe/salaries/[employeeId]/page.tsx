@@ -7,7 +7,7 @@ import { requireAuthenticatedTenant } from '@/server/auth/session';
 import { cloudDatabase } from '@/server/cloud-database';
 import { getDateInTimezone } from '@/lib/local-time';
 import { PersonnelForbidden } from '../_components/personnel-forbidden';
-import { EmployeeFullDossierPage } from '../_components/salaries-page';
+import { EmployeeFullDossierPage } from '../_components/employee-full-dossier-page';
 import { isFormalitesReadPrototypeEnabled } from '../../formalites-personnel/_lib/formalites-read-prototype-runtime';
 import { isContractExtractionPrototypeEnabled } from '../_lib/contract-extraction-prototype-runtime';
 

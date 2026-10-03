@@ -7,10 +7,14 @@ import { describe, expect, it, vi } from 'vitest';
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ refresh: vi.fn() }),
 }));
+import { CdiDraftWorkspace } from '../src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-workspace';
 import {
-  CdiDraftWorkspace,
+  abandonmentReasonRequiredFeedback,
+  incompleteReconciliationFeedback,
   workspaceFeedbackForOutcome,
-} from '../src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-workspace';
+  workspaceReloadedFeedback,
+  workspaceSavedFeedback,
+} from '../src/app/(authenticated)/equipe/formalites-personnel/_lib/cdi-draft-workspace-feedback';
 import {
   getActiveNavigationHref,
   getVisibleNavigationSections,
@@ -117,22 +121,68 @@ describe('Formalités persistent draft workspace rendering', () => {
     );
   });
 
+  it('keeps local workspace feedback copy and fresh feedback objects', () => {
+    expect(workspaceSavedFeedback()).toEqual({
+      tone: 'success',
+      title: 'Modifications enregistrées',
+      description:
+        'Le brouillon affiché correspond maintenant à la version enregistrée.',
+      recoverable: false,
+    });
+    expect(workspaceReloadedFeedback()).toEqual({
+      tone: 'info',
+      title: 'Données actualisées',
+      description: 'La dernière version enregistrée est affichée.',
+      recoverable: false,
+    });
+    expect(incompleteReconciliationFeedback()).toEqual({
+      tone: 'danger',
+      title: 'Choix incomplet',
+      description:
+        'Choisissez une action pour chaque information différente avant de continuer.',
+      recoverable: false,
+    });
+    expect(abandonmentReasonRequiredFeedback()).toEqual({
+      tone: 'danger',
+      title: 'Motif requis',
+      description: 'Saisissez un motif entre 1 et 250 caractères.',
+      recoverable: false,
+    });
+    expect(incompleteReconciliationFeedback()).not.toBe(
+      incompleteReconciliationFeedback(),
+    );
+  });
+
   it('keeps abandon, dirty-close and focus recovery bounded to this workspace', () => {
-    const source = readFileSync(
-      'src/app/(authenticated)/equipe/formalites-personnel/_components/cdi-draft-workspace.tsx',
+    const componentsDirectory =
+      'src/app/(authenticated)/equipe/formalites-personnel/_components';
+    const workspace = readFileSync(
+      `${componentsDirectory}/cdi-draft-workspace.tsx`,
       'utf8',
     );
-    expect(source).toContain("window.addEventListener('beforeunload'");
-    expect(source).toContain('window.confirm(');
-    expect(source).toContain('maxLength={250}');
-    expect(source).toContain('required');
-    expect(source).toContain('focusSoon(abandonmentReasonRef)');
-    expect(source).toContain(
+    const panels = readFileSync(
+      `${componentsDirectory}/cdi-draft-workspace-panels.tsx`,
+      'utf8',
+    );
+    const fields = readFileSync(
+      `${componentsDirectory}/cdi-draft-workspace-fields.tsx`,
+      'utf8',
+    );
+    expect(workspace).toContain("window.addEventListener('beforeunload'");
+    expect(workspace).toContain('window.confirm(');
+    expect(workspace).toContain('focusSoon(abandonmentReasonRef)');
+    expect(workspace).toContain('reasonRef={abandonmentReasonRef}');
+    expect(workspace).toContain(
       'focusElementSoon(`reconcile-${missingFact}-keep`)',
     );
-    expect(source).not.toMatch(
-      /localStorage|sessionStorage|setInterval|autosave/i,
-    );
+    expect(panels).toContain('ref={reasonRef}');
+    expect(panels).toContain('maxLength={250}');
+    expect(panels).toContain('required');
+    for (const source of [workspace, panels, fields]) {
+      expect(source).not.toMatch(
+        /localStorage|sessionStorage|setInterval|autosave/i,
+      );
+    }
   });
 });
 

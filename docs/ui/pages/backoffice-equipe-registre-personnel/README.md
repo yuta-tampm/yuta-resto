@@ -73,6 +73,13 @@ viewports have zero document-level horizontal overflow and no browser warning or
 error. Closing the inscription dialog with Escape now restores focus to the
 button that opened it. No employee was inscribed for visual evidence.
 
+Route-local ownership: `_components/personnel-register-page.tsx` orchestrates
+pagination, export, candidates and dialog focus return;
+`personnel-register-entries.tsx` presents register entries;
+`personnel-register-dialog.tsx` owns the inscription/correction form, operation
+identifier and action state; and `personnel-register-fields.tsx` owns its
+fields, including the business-date correction default.
+
 ## Authority and documents
 
 Use root/Backoffice instructions, `docs/CURRENT_STATE.md`,

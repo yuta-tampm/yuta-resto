@@ -35,3 +35,23 @@ Regression findings: 135 Backoffice test files pass, 1,598 cases pass; 54 gated 
 Known limitations: Synthetic local evidence does not claim production, real-provider, legal-template or PDF-scanner readiness. Committed-PDF rollback and replay behavior are verified through real actions with mocked repository/storage/cache dependencies; no live signed PDF was used. HMR restart limitation and unchanged STAFF Formalités error presentation are recorded above.
 
 Screenshot evidence: [screenshot-manifest.md](screenshot-manifest.md) and [wave-1-screenshots.json](wave-1-screenshots.json), with exact lowercase SHA-256 hashes. Screenshots are JPEG bytes, consistently named `.jpg`.
+
+## Wave 2
+
+QA status: PASS for responsibility-based UI extraction in the bounded maintenance task. Same normal routes, OWNER session and disposable environment as Wave 1; no bypass or fixture UI.
+
+Scenarios tested:
+
+- Salaries quick view: Camille access-history next/previous pagination, return to page one, then switch to Alex with cursor reset and no stale Camille results. Sixty synthetic access rows were added only to the verified task-owned database for pagination.
+- Alex identity correction saved through the real action while viewing history: given names changed from Alex to Alex QA2, editor closed, focus returned to Modifier, and history displayed the persisted before/after values and synthetic reason. The full dossier route subsequently displayed the stored correction. A separate full-dossier edit/save was not performed.
+- Quick access view and full dossier history inspected at 1440x900, 1024x768, 768x1024 and 390x844. Document width equals viewport width.
+- Register correction: toggling the temporary-company checkbox revealed the extracted fields; all four widths inspected. Escape closed the dialog and restored focus to Corriger. Reopen reset checkbox defaults and retained the trusted effective date 2026-10-03. Actual synthetic position correction saved, closed/refreshed the dialog and row, displayed revision 2, and returned focus to Corriger.
+- Connected CDI: actual preparation changes saved through the existing action, first include and then exclude; Modifications enregistrées displayed and the stored exclude choice survived opening a fresh route tab. The extracted editable panel was inspected at all four widths. The abandon dialog focused Motif, kept empty-reason confirmation disabled, and Annuler closed it without abandoning the draft. Closing returned focus to BODY, matching the unchanged dialog behavior; no focus-restoration improvement is claimed.
+
+Visual/accessibility findings: Sixteen current screenshots inspected, with actual viewport metrics and exact SHA-256. Existing scrolling and controls are retained. At 768px the full-dossier header actions crowd/partly obscure the employee name in the unchanged employee-details component; this existing layout limitation is outside the extraction scope. No new document horizontal overflow was found. French labels, history controls, checkbox defaults, revision refresh and tested focus behavior remain functional. Screen-reader speech was not assessed.
+
+Recovery/evidence limits: Leaving a dirty CDI workspace displayed the native confirmation and blocked the browser automation tool. Human assistance cleared the warning/tab; browser checks then resumed successfully. The native cancel branch was not automatically verified and is not represented as passed Browser QA. Dirty guards and recovery retain source and executable orchestration evidence. Initial CDI screenshots captured a background tab at the wrong viewport; those four files were replaced after verifying the selected fresh tab and actual dimensions. Only the corrected captures are in the manifest.
+
+Validation: 136 Backoffice test files and 1,605 cases pass; one gated file / 54 cases remain skipped. Documentation, architecture, Backoffice production build and final recursive workspace typecheck pass. The initial typecheck found two generic-inference errors in the new history tests; Codex corrected only those two calls, reran six helper cases and typecheck successfully. The original raw diagnostic log was overwritten by the retry; the failure summary is retained in task check evidence. Changed text files pass scoped Prettier. Global format limitations are recorded in task check evidence; no unrelated formatting was changed. No dependency, schema, auth guard, tenant scope or provider change.
+
+Evidence: [wave-2-screenshots.json](wave-2-screenshots.json) and [screenshot-manifest.md](screenshot-manifest.md). Local fictional mutations do not establish production or provider readiness.

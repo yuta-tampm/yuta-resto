@@ -111,7 +111,12 @@ Current sources:
 - full dossier route:
   `apps/backoffice/src/app/(authenticated)/equipe/salaries/[employeeId]/page.tsx`;
 - integrated read composition/model:
-  `apps/backoffice/src/app/(authenticated)/equipe/salaries/`;
+  `apps/backoffice/src/app/(authenticated)/equipe/salaries/`; the list and
+  quick view are orchestrated by `_components/salaries-page.tsx`, the full
+  dossier by `_components/employee-full-dossier-page.tsx`, and both share the
+  audited history/`Consultations` loading, retry and cursor pagination through
+  `_components/use-employee-history.ts` and its stale-response cancellation in
+  `_lib/employee-history-loading.ts`;
 - authenticated layout: `apps/backoffice/src/app/(authenticated)/layout.tsx`;
 - shell/navigation:
   `apps/backoffice/src/components/backoffice/backoffice-frame.tsx` and

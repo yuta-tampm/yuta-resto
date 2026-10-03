@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import type { TenantContext } from '@yuta/tenant';
 import { isValidElement, type ReactElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
@@ -31,6 +32,7 @@ vi.mock(
 );
 
 import Page from '../src/app/(authenticated)/equipe/registre-personnel/page';
+import { CorrectionJustificationFields } from '../src/app/(authenticated)/equipe/registre-personnel/_components/personnel-register-fields';
 
 const registerData = {
   items: [],
@@ -100,11 +102,33 @@ describe('Personnel Register correction business date', () => {
   });
 
   it('uses the supplied business date as the correction default', () => {
-    const source = readFileSync(
-      'src/app/(authenticated)/equipe/registre-personnel/_components/personnel-register-page.tsx',
+    const markup = renderToStaticMarkup(
+      <CorrectionJustificationFields businessDate="2026-10-04" />,
+    );
+    expect(markup).toMatch(
+      /<input[^>]*name="effectiveDate"[^>]*value="2026-10-04"|<input[^>]*value="2026-10-04"[^>]*name="effectiveDate"/,
+    );
+
+    const componentsDirectory =
+      'src/app/(authenticated)/equipe/registre-personnel/_components';
+    const page = readFileSync(
+      `${componentsDirectory}/personnel-register-page.tsx`,
       'utf8',
     );
-    expect(source).toContain('defaultValue={props.businessDate}');
-    expect(source).not.toContain('new Date().toISOString()');
+    const dialog = readFileSync(
+      `${componentsDirectory}/personnel-register-dialog.tsx`,
+      'utf8',
+    );
+    const fields = readFileSync(
+      `${componentsDirectory}/personnel-register-fields.tsx`,
+      'utf8',
+    );
+    expect(page).toContain('businessDate={businessDate}');
+    expect(dialog).toContain(
+      '<CorrectionJustificationFields businessDate={props.businessDate} />',
+    );
+    for (const source of [page, dialog, fields]) {
+      expect(source).not.toContain('new Date().toISOString()');
+    }
   });
 });
