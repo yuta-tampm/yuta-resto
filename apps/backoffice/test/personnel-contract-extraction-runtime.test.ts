@@ -15,6 +15,8 @@ import {
 } from '../src/server/personnel-contract-extraction/service';
 import { OpenAiContractExtractionAdapter } from '../src/server/personnel-contract-extraction/openai-adapter';
 
+import { createPersonnelExtractionExecutor } from '../src/server/ai/runtime';
+
 describe('development personnel contract extraction runtime', () => {
   it('keeps deterministic synthetic extraction as the offline default', () => {
     const adapter = createDevelopmentContractExtractionAdapter({
@@ -142,7 +144,7 @@ describe('development personnel contract extraction runtime', () => {
         { status: 200, headers: { 'content-type': 'application/json' } },
       ),
     );
-    const adapter = createDevelopmentContractExtractionAdapter({
+    const executor = createPersonnelExtractionExecutor({
       environment: {
         NODE_ENV: 'development',
         YUTA_PERSONNEL_CONTRACT_EXTRACTION_MODE: 'openai-synthetic',
@@ -169,7 +171,7 @@ describe('development personnel contract extraction runtime', () => {
         }),
         consumeRateLimit: vi.fn(),
         preparer: new SyntheticContractPdfPreparer(),
-        adapter,
+        executor,
       }),
     ).resolves.toMatchObject({
       requestId: request.requestId,

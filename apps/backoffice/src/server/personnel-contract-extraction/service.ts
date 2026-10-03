@@ -7,6 +7,8 @@ import {
   type PersonnelContractExtractionReviewResult,
 } from '@yuta/contracts/personnel';
 import { PDFDocument, StandardFonts } from 'pdf-lib';
+import type { AiExecutor, PersonnelExtractionInput } from '../ai/contracts';
+import { AiExecutionError } from '../ai/executor';
 
 export type PreparedSyntheticContract = Readonly<{
   source:
@@ -51,8 +53,7 @@ export type ContractExtractionDependencies = Readonly<{
     }>
   >;
   preparer: ContractPdfPreparer;
-  adapter: ContractExtractionAdapter;
-  timeoutMilliseconds?: number;
+  executor: AiExecutor;
   now?: () => Date;
 }>;
 
@@ -122,35 +123,59 @@ export async function runSyntheticContractExtraction(
     );
   }
 
-  const timeoutMilliseconds = dependencies.timeoutMilliseconds ?? 45_000;
-  let rawResult: unknown;
   try {
-    rawResult = await withTimeout(
-      dependencies.adapter.extract(request, prepared),
-      timeoutMilliseconds,
+    return await dependencies.executor.execute(
+      'personnel.contract.extract_fields@1',
+      { request, document: prepared },
+      {
+        purpose: 'synthetic-personnel-contract-evaluation',
+        classification: 'synthetic',
+        modality: 'pdf',
+        provenance: prepared.source,
+        scenario: prepared.scenario,
+        configurationId: dependencies.executor.configuration.configurationId,
+        configurationVersion:
+          dependencies.executor.configuration.configurationVersion,
+      },
     );
   } catch (error: unknown) {
     if (error instanceof ContractExtractionServiceError) throw error;
+    if (error instanceof AiExecutionError) {
+      if (error.code === 'TIMEOUT')
+        throw new ContractExtractionServiceError(
+          'The synthetic extraction request timed out.',
+          'TIMEOUT',
+        );
+      if (error.code === 'INVALID_RESULT')
+        throw new ContractExtractionServiceError(
+          'The extraction result did not match the YUTA contract.',
+          'INVALID_RESULT',
+        );
+    }
     throw new ContractExtractionServiceError(
       'The synthetic extraction service failed.',
       'SERVICE_FAILURE',
     );
   }
+}
 
-  const result =
-    personnelContractExtractionReviewResultSchema.safeParse(rawResult);
-  if (!result.success) {
+export function validateContractExtractionResult(
+  raw: unknown,
+  input: PersonnelExtractionInput,
+): PersonnelContractExtractionReviewResult {
+  const { request, document } = input;
+  const result = personnelContractExtractionReviewResultSchema.safeParse(raw);
+  if (!result.success)
     throw new ContractExtractionServiceError(
       'The extraction result did not match the YUTA contract.',
       'INVALID_RESULT',
     );
-  }
   if (
     result.data.requestId !== request.requestId ||
     result.data.document.id !== request.documentId ||
     result.data.document.version !== request.documentVersion ||
     result.data.employeeRevision !== request.employeeRevision ||
-    result.data.pageCount !== prepared.pageCount
+    result.data.pageCount !== document.pageCount
   ) {
     throw new ContractExtractionServiceError(
       'The extraction result does not match the requested versions.',
@@ -299,30 +324,4 @@ async function createSyntheticContractPdf(): Promise<Uint8Array> {
     page.drawText(text, { x: 48, y: 790, size: 12, font });
   }
   return document.save();
-}
-
-async function withTimeout<T>(
-  promise: Promise<T>,
-  timeoutMilliseconds: number,
-): Promise<T> {
-  let timeout: ReturnType<typeof setTimeout> | undefined;
-  try {
-    return await Promise.race([
-      promise,
-      new Promise<never>((_resolve, reject) => {
-        timeout = setTimeout(
-          () =>
-            reject(
-              new ContractExtractionServiceError(
-                'The synthetic extraction request timed out.',
-                'TIMEOUT',
-              ),
-            ),
-          timeoutMilliseconds,
-        );
-      }),
-    ]);
-  } finally {
-    if (timeout) clearTimeout(timeout);
-  }
 }

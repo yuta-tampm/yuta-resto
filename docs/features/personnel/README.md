@@ -62,6 +62,37 @@ generic fictional prototype and existing grant mapping remain unchanged.
 - Contract-extraction review has bounded local/synthetic evidence. This does
   not authorize external OCR/AI processing of real personnel files.
 
+### Synthetic extraction server boundary
+
+Backoffice server composes the typed capability
+`personnel.contract.extract_fields@1` under `src/server/ai/`. Personnel retains
+trusted authorization, exact employee/document versions, source controls, PDF
+preparation, result validation, audit, transient review and explicit Human apply.
+Domain-created synthetic purpose/classification and source provenance precede
+eligibility; static selection can choose only an eligible versioned deployment.
+Real/unknown classification, unsupported configuration and non-development
+execution fail closed. Upload attestation is a source prerequisite and does not
+prove that the content is fictional.
+
+Deterministic execution remains the default. The existing explicit synthetic
+OpenAI branch retains Luna/v4, while non-complete scenarios remain local. Stored
+fixtures retain exact checksums and the separate provider-once consumption/remap
+controls. One adapter deadline and domain validation precede typed success;
+optional observations contain only capability/deployment/policy identities,
+bounded outcomes, latency and sanitized usage. Late completion and observation
+sink failures cannot create a review or bypass mandatory audit. There is no
+fallback, shadow, new provider, storage implementation or automatic employee /
+Register write. Review still expires after fifteen minutes, and apply rechecks
+current authorization, versions and completed audit proof for only position and
+weekly minutes.
+
+Offline fake-provider/action tests establish this bounded implementation. They
+do not qualify external real-personnel processing or production. The
+[AI/Storage architecture](../../architecture/AI_AND_STORAGE.md) owns the shared
+direction; the [active Slice 1 change](../../../openspec/changes/ai-synthetic-contract-foundation/tasks.md)
+retains its implementation/check/review evidence. Lifecycle and readiness values
+below remain unchanged.
+
 ### Future or proposed scope
 
 - Formalités generated employee versions, replacement, actual legal-template

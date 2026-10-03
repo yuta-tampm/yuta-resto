@@ -11,8 +11,14 @@ import {
   type OpenAiExtractionObservation,
 } from './openai-adapter';
 
-export const DEVELOPMENT_OPENAI_EXTRACTION_MODEL = 'gpt-5.6-luna' as const;
-export const DEVELOPMENT_OPENAI_EXTRACTION_PROMPT_VERSION = 'v4' as const;
+import {
+  DEVELOPMENT_OPENAI_EXTRACTION_MODEL,
+  DEVELOPMENT_OPENAI_EXTRACTION_PROMPT_VERSION,
+} from '../ai/policy';
+export {
+  DEVELOPMENT_OPENAI_EXTRACTION_MODEL,
+  DEVELOPMENT_OPENAI_EXTRACTION_PROMPT_VERSION,
+} from '../ai/policy';
 
 export type ContractExtractionRuntimeEnvironment = Readonly<{
   NODE_ENV?: string;
@@ -42,6 +48,10 @@ export function createDevelopmentContractExtractionAdapter(
     environment.YUTA_PERSONNEL_CONTRACT_EXTRACTION_MODE?.trim() ||
     'deterministic-synthetic';
 
+  if (mode !== 'deterministic-synthetic' && mode !== 'openai-synthetic')
+    throw configurationError(
+      'The personnel contract extraction mode is not approved.',
+    );
   if (
     mode === 'deterministic-synthetic' ||
     (options.scenario !== undefined && options.scenario !== 'complete')

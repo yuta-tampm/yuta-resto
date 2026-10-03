@@ -18,6 +18,18 @@ UI_AFFECTING: NO
 
 BROWSER_QA_REQUIRED: NO
 
+## Apply continuation — 2026-10-03
+
+Nguồn: current-user attached request trong session `01a10296-2afc-73d0-ad20-d9cc62c90b4a`: cho phép Apply đúng Slice 1, sửa lỗi trong scope, tests/docs/VERIFY/QA; sau independent approval local commit → push → PR → kiểm tra → merge. `CODEX_ONLY` và `COMMIT_AFTER_TASK: YES` tiếp tục sticky. Planning-only wording phía trên và approved artifacts là lịch sử, không bị viết lại. Sync/archive, deployment và scope expansion cần chỉ thị riêng.
+
+Isolation: primary `D:/working/yuta/yuta-resto` sạch trên main `f919373508d1db76904934f3e046f2744a513d6e`, remote main khớp; worktree `C:/Users/Tam/.codex/worktrees/ai-slice-one/yuta-resto`, branch `codex/ai-synthetic-contract-slice1`, cùng exact clean base/index. Task binding `ai-slice1-apply-01a10296`, primary writer `/root`, actual session như trên, registered ACTIVE bằng explicit task-guard. Hook activation chưa xác minh; mọi source write/commit dùng guarded CLI. Dependencies: frozen lockfile, Node 24.17.0 / pnpm 11.8.0.
+
+Gate 1/2/Design exact path/hash sets MATCH; bảy source baseline hashes trong bảng phía dưới MATCH trước Apply. Không có requirement/design/source drift, không cần regenerate artifacts hoặc re-review planning. Source write allowlist trong external binding là exact paths, gồm AI modules, extraction service/runtime/actions, targeted tests, Tasks/current docs và implementation evidence; protected raw adapter/source/review implementations giữ nguyên.
+
+UI_UX_PRO_MAX_USAGE: NOT_APPLICABLE
+
+Reason: server-only capability extraction; UI/transport/error presentation giữ nguyên theo approved Analysis/Design. Không external query/install. Classification evidence được independent completion reviewer kiểm tra; không sửa approved Analysis.
+
 ## 1. Foundation / Data
 
 Chỉ AI foundation; không persistent data hoặc migration.
@@ -31,9 +43,9 @@ Chỉ AI foundation; không persistent data hoặc migration.
 - Required checks: targeted offline Vitest policy tests, Backoffice `tsc --noEmit` để thực sự kiểm tra type fixtures, architecture check và scoped format/diff check.
 - Completion evidence: capability input/result inference và rejected invalid input/version; real/unknown/non-development denial; mapping-outside-eligible spy không invoke; no secret/config/browser leakage; exact source diff.
 
-- [ ] 1.1 Tạo one-entry typed capability map, input/result và trusted execution descriptor; kiểm chứng bằng `tsc` fixtures cho literal inference, unsupported capability/version và sai input (`@ts-expect-error`), không dùng public `unknown`/`any`.
-- [ ] 1.2 Khai báo readonly versioned deployment/policy records cho đúng bốn existing execution kinds; kiểm chứng config tests giữ Luna/v4/default/scenario behavior, một owner constants và không có credentials trong descriptor/serialized config.
-- [ ] 1.3 Tạo eligibility và static selection riêng; kiểm chứng supported-context success, empty-set/mapping-outside-set/unknown purpose/classification/modality/config/non-development denial với adapter spy bằng zero.
+- [x] 1.1 Tạo one-entry typed capability map, input/result và trusted execution descriptor; kiểm chứng bằng `tsc` fixtures cho literal inference, unsupported capability/version và sai input (`@ts-expect-error`), không dùng public `unknown`/`any`.
+- [x] 1.2 Khai báo readonly versioned deployment/policy records cho đúng bốn existing execution kinds; kiểm chứng config tests giữ Luna/v4/default/scenario behavior, một owner constants và không có credentials trong descriptor/serialized config.
+- [x] 1.3 Tạo eligibility và static selection riêng; kiểm chứng supported-context success, empty-set/mapping-outside-set/unknown purpose/classification/modality/config/non-development denial với adapter spy bằng zero.
 
 ## 2. Service / Domain
 
@@ -47,11 +59,11 @@ Chỉ AI foundation; không persistent data hoặc migration.
 - Required checks: offline fake-fetch/service/runtime/capability tests, source guard/review-store tests, sensitive cross-scope/action denial tests, Backoffice typecheck, architecture/scoped format checks.
 - Completion evidence: mọi application extraction path dùng typed executor; ordering spies và no-effect denial; old source branches/payload/default/timeout/review/apply/audit giữ behavior; exact allowlisted observations và late-timeout negative cases.
 
-- [ ] 2.1 Tích hợp trusted descriptor và typed executor sau authorization/version/source/preparation; kiểm chứng denial cho wrong organization/establishment, permission/membership, stale versions và unavailable exposure không đọc bytes/prepare/invoke, browser values không thành authority.
-- [ ] 2.2 Compose các existing default/OpenAI/stored-offline/stored-provider-once paths từ server config; kiểm chứng fake-fetch tests cho Luna/v4 và stored checksum/page/scenario/consumption/remap guards, không resolve adapter ngoài eligible set hoặc sau mapping denial.
-- [ ] 2.3 Inject domain-owned result validator và một adapter deadline; kiểm chứng malformed/extra-key/wrong identity/version/page result, timeout và late completion không tạo typed success, review hoặc success observation; giữ rate-limit behavior và existing error mapping.
-- [ ] 2.4 Thêm sanitized optional observation callback, bridge existing provider QA diagnostics tại composition; kiểm chứng canary exclusions, sink exception không đổi result, một terminal event và không nuốt mandatory audit/review errors.
-- [ ] 2.5 Bảo toàn transient scoped review, 15-minute expiry/completed audit proof và Human apply field allowlist; kiểm chứng expired/fabricated/cross-scope/stale review denial, idempotent bounded apply và không automatic employee/Register update bằng existing hoặc targeted tests.
+- [x] 2.1 Tích hợp trusted descriptor và typed executor sau authorization/version/source/preparation; kiểm chứng denial cho wrong organization/establishment, permission/membership, stale versions và unavailable exposure không đọc bytes/prepare/invoke, browser values không thành authority.
+- [x] 2.2 Compose các existing default/OpenAI/stored-offline/stored-provider-once paths từ server config; kiểm chứng fake-fetch tests cho Luna/v4 và stored checksum/page/scenario/consumption/remap guards, không resolve adapter ngoài eligible set hoặc sau mapping denial.
+- [x] 2.3 Inject domain-owned result validator và một adapter deadline; kiểm chứng malformed/extra-key/wrong identity/version/page result, timeout và late completion không tạo typed success, review hoặc success observation; giữ rate-limit behavior và existing error mapping.
+- [x] 2.4 Thêm sanitized optional observation callback, bridge existing provider QA diagnostics tại composition; kiểm chứng canary exclusions, sink exception không đổi result, một terminal event và không nuốt mandatory audit/review errors.
+- [x] 2.5 Bảo toàn transient scoped review, 15-minute expiry/completed audit proof và Human apply field allowlist; kiểm chứng expired/fabricated/cross-scope/stale review denial, idempotent bounded apply và không automatic employee/Register update bằng existing hoặc targeted tests.
 
 ## 3. Integration / Regression
 
@@ -64,11 +76,11 @@ Chỉ AI foundation; không persistent data hoặc migration.
 - Required checks: `pnpm docs:check`, `pnpm architecture:check`, `pnpm -r --if-present typecheck`, scoped Prettier/diff check và `pnpm format:check` với result/attribution trung thực; narrow Backoffice tests/build. Broad cloud/local suites chỉ khi ownership/dependency thực tế bị ảnh hưởng; không chạy live evaluation test.
 - Completion evidence: typed substitution end-to-end fake flow; correct deny ordering và source/review regressions; current docs accurately describe bounded implementation; checks/skips/blockers; development assertions, technical compliance, implementation VERIFY và non-browser QA theo workflow. Approval của planning không thể tạo những evidence đó.
 
-- [ ] 3.1 Chạy offline integration matrix cho default/scenario/upload/stored/provider-once/mock-substitution; kiểm chứng consumer/request/result/review/apply không phụ thuộc deployment được chọn và existing guard regressions pass với fake fetch, không live API.
-- [ ] 3.2 Cập nhật English current Personnel Home/Architecture Overview theo exact as-built diff; kiểm chứng link/doc consistency, source ownership và synthetic-only/no-readiness-promotion wording, không chỉnh registry/readiness status.
-- [ ] 3.3 Chạy required repository checks, targeted Backoffice regression và Backoffice build; kiểm chứng exit/results và ghi rõ mọi skipped/failed/out-of-scope check, không sửa private env/DB/config để vượt blocker chưa được cho phép.
-- [ ] 3.4 Chuẩn bị candidate-bound DEV_USABLE/MANUAL_TEST_READY handoff và applicable technical compliance/VERIFY/non-browser QA; kiểm chứng bằng approved local fictional-data flow, denial matrix và evidence, không gán PASS/YES từ typecheck hoặc task count.
-- [ ] 3.5 Chuẩn bị exact implementation final review khi được cho phép hoàn tất implementation; kiểm chứng tất cả gates/hashes, actual check/QA evidence và completion obligations. Không suy ra sync/archive hoặc deployment authority từ task checklist; current planning task không thực hiện bước này.
+- [x] 3.1 Chạy offline integration matrix cho default/scenario/upload/stored/provider-once/mock-substitution; kiểm chứng consumer/request/result/review/apply không phụ thuộc deployment được chọn và existing guard regressions pass với fake fetch, không live API.
+- [x] 3.2 Cập nhật English current Personnel Home/Architecture Overview theo exact as-built diff; kiểm chứng link/doc consistency, source ownership và synthetic-only/no-readiness-promotion wording, không chỉnh registry/readiness status.
+- [x] 3.3 Chạy required repository checks, targeted Backoffice regression và Backoffice build; kiểm chứng exit/results và ghi rõ mọi skipped/failed/out-of-scope check, không sửa private env/DB/config để vượt blocker chưa được cho phép.
+- [x] 3.4 Chuẩn bị candidate-bound DEV_USABLE/MANUAL_TEST_READY handoff và applicable technical compliance/VERIFY/non-browser QA; kiểm chứng bằng approved local fictional-data flow, denial matrix và evidence, không gán PASS/YES từ typecheck hoặc task count.
+- [x] 3.5 Chuẩn bị exact implementation final review khi được cho phép hoàn tất implementation; kiểm chứng tất cả gates/hashes, actual check/QA evidence và completion obligations. Không suy ra sync/archive hoặc deployment authority từ task checklist; current planning task không thực hiện bước này.
 
 ### Planned targeted commands
 
@@ -106,12 +118,23 @@ Adoption: REQUIRED
 
 Event evidence: [successful Human-authorized finish/archive](../../../docs/reviews/development-usability-and-iteration-control/03-final-review.md), completed 2026-09-24T09:25:12.0063622+02:00, `Finish outcome: COMPLETED`, `Workflow status: DONE`; archived change exists. Change này được tạo sau event, chưa vào Apply.
 
-Current candidate: planning artifacts only; no implementation diff/candidate hoặc runtime observation. Sau Apply cần ghi exact candidate/lineage và reassess applicability theo as-built flow. Không đánh dấu assertions hoàn tất ở planning.
+Historical planning candidate: planning artifacts only; no implementation diff/candidate hoặc runtime observation. Sau Apply cần ghi exact candidate/lineage và reassess applicability theo as-built flow. Không đánh dấu assertions hoàn tất ở planning.
 
 - DEV_USABLE: applicability `YES` dự kiến cho existing local Personnel extraction flow; result `PENDING`; future evidence: internal development instance, trusted OWNER/fictional test target và deterministic/mock extraction qua actual app boundary, denial/review/apply kiểm chứng.
 - MANUAL_TEST_READY: applicability `YES` dự kiến; result `PENDING`; future handoff: approved dev command/route `/equipe/salaries`, fictional sources, non-secret test identity reference, expected review/apply, safe retry/reset hướng dẫn và limitations. Không seed/mutate real data hoặc tự bật provider để tạo evidence.
 - HUMAN_PRODUCT_VALIDATION: NOT_REQUESTED — CODEX_ONLY, task hiện tại planning; không yêu cầu optional manual feedback. Không phải ACCEPTED/PASS hoặc miễn mandatory security/QA evidence. Nếu acceptance sau này cần actual Human observation, phải thu evidence đó riêng.
 - Technical Implementation Compliance, implementation VERIFY và implementation QA: chưa chạy, ngoài authorized planning task. `BROWSER_QA_REQUIRED: NO` không miễn non-browser flow/security checks.
+
+### Apply reassessment — final implementation candidate
+
+Candidate:19source/test/current-doc files, implementation identity dbd246dc4017f0351159bdd68a3cf249f36ca8d683e61f73baae968d7c7af663; exact deterministic scoped diff SHA256 17fb6fd061ecf2bb2df5c5861e3904908996907ced7211fa2ec4856ba0bdf89f. Full task-guard snapshot separately includes Tasks/review bytes and modes. Active raw checkout/branch/binding described in Checkout recovery lineage; no unrelated changes.
+
+Historical first assessment: offline actual-module tests alone were insufficient for these planned operational assertions; independent reviewer /root/development_assertions_review recorded NO applicabilityYES on2026-10-03, requiring actualdevelopment setup/observation rather than mocks. That history is retained, not waived. Current reassessment follows real operational observation at 2026-10-03T16:58:30.878Z, before formal report preparation. No provider/live/realdata authorization is added.
+
+- DEV_USABLE: applicability YES; result YES. Actual Nextdev16.2.9/internal profile at http://127.0.0.1:3009/equipe/salaries, real persisted fictional OWNER/session/employee/documentmetadata in dedicated PostgreSQL17tmpfs. RealHTTP extraction -> typed capability -> domainvalidator -> persisted audit/transientreview; no automatic update. Explicit position selection -> real completedproof/DBupdate/audit; consumedreview and stalerevision rejected, suspendedmembership denied. Evidence dev-flow-generation2.json SHA256 d70e67b535678f2027fa2eb95766fc0d715fbf663bd6b5b0b7de369646c2ce2f, located C:/Users/Tam/.codex/tmp/ai-slice1-01a10296; source unchanged throughout probe. Result is safe local synthetic usability, not browserUX/production/providerquality. Missing-setup NO is resolved by disposable actualboundary evidence, not by changing applicability.
+- MANUAL_TEST_READY: applicability YES; result YES. Humancommand from C:/Users/Tam/.codex/worktrees/ai-slice-one-raw/yuta-resto: node C:/Users/Tam/.codex/tmp/ai-slice1-01a10296/dev-flow-replay.mjs; exact scriptSHA256 6a32ff2394e200b568f60924a38812baba5959f7d6b36bb4d077505ffe5dc013. Preconditions: installed frozen dependencies, local Docker Desktop Linux/existing postgres:17, free ports3009/65439, exact19 source bytes/isolated branch. Entry point real /equipe/salaries plus realHTTPServerActions; allfictional generatedPDF and fresh persisted fixture. Testidentity reference slice1.owner@example.test, OWNER; session/auth/DBsecrets only inmemory, no input/secret copy needed. Expected basicflow: authenticatedroute, extractedreview, no automaticwrite, oneexplicitpositionapply, persisted revision/completed and applied audits, repeat/stale/memberdeny; nonsecret statusesprinted. Reset/retry reruns afterexactownedcleanup, new randomgeneration; neverresetsharedDB orkillportoccupants. Temporaryserver/container stop after flow; no interactivebrowser/visualQA or storedfile/storage support promised. Source/environment drift or unavailableprerequisite is a real blocker; do not claim staleYES for a futurechangedcandidate.
+- HUMAN_PRODUCT_VALIDATION: NOT_REQUESTED — CODEX_ONLY, optionalProductfeedback notrequested; no actualHuman ACCEPTED/PASS/waiver. This handoff is for human-usable nonbrowserdevelopment observation; no inventedHumanapproval.
+- TechnicalCompliance/VERIFY/nonbrowserQA: separately linked ../review evidence through canonical paths below; these assertion results are not inferred from testcounts/compiler/build nor gateapproval. UI_AFFECTING:NO, BROWSER_QA_REQUIRED:NO, UI_UX_PRO_MAX_USAGE:NOT_APPLICABLE.
 
 ## ITERATION_STOP_CONTROL
 
@@ -141,3 +164,21 @@ Chỉ đánh giá artifact delivery, không implementation completion. All 13 im
 - Current task write/commit allowlist: `openspec/changes/ai-synthetic-contract-foundation/**`, `docs/reviews/ai-synthetic-contract-foundation/**`. Trước local commit kiểm tra exact staged bytes/path set, gate integrity và preserve unrelated work; commit SHA chỉ báo trong chat, không sửa artifacts để chèn SHA.
 
 YUTA operational target: `READY_FOR_IMPLEMENTATION_PLANNING` đã được hiện thực hóa bằng đầy đủ planning artifacts; sau final validation báo **planning complete / implementation not started**. Apply vẫn cần bounded current-user authorization riêng; không dùng raw CLI readiness hoặc delegated planning gates để tự triển khai.
+
+## Checkout recovery lineage
+
+WORKTREE-BYTE-CONVERSION: first checkout inherited core.autocrlf=true and converted immutable Git inputs (including PDF and planning files). First targeted run: 194 PASS / 4 FAIL, all stored-checksum related; no fixture/allowlist/hash repair. Read-only comparison confirmed canonical Git/primary fixture SHA256 5b4fd463bc96874262109d279a1189a3b765ea17cb7214913bdfbbc39bec3a27, 3009 bytes; converted checkout 2c034fe8434e31ffe43f77d13ce94621b7a74db3dfa456caf488f0a2220e5870, 3108 bytes. Safe recovery creates a new isolated raw-byte checkout using git -c core.autocrlf=false worktree add at the same exact base; Git global/shared settings, fixtures and reviewed authorities are unchanged. Active delivery checkout is C:/Users/Tam/.codex/worktrees/ai-slice-one-raw/yuta-resto, branch codex/ai-synthetic-contract-slice1-raw, new binding ai-slice1-apply-raw-01a10296. Old binding/worktree retained as superseded evidence; no ID reuse. Register clean base before transferring only allowlisted authored changes through guard. Initial typegen passed in old environment; initial typecheck FAIL exposed a missed dependency type replacement and type-fixture directive placement. Correction is in scope; fresh new-checkout typegen/typecheck required, no old PASS reuse. Counts: one initial evaluator generation per affected claim, one safe environment recovery; no failed recovery attempts.
+
+## Apply evidence — implementation candidate 1
+
+Foundation/Service outcomes verified by targeted 198/198 tests in the active raw-byte worktree, 2026-10-03; first eight tasks complete with runtime/type evidence. Fresh typegen validates all six Next apps. Workspace tsc includes the .types.ts fixtures; no unused expect-error or unsupported capability/input inference remains. Raw adapter, upload/stored controls, review store, transport schemas, prompt/corpus/evaluator and persistence are unchanged. Source configuration constants now have one owner in ai/policy.ts; existing runtime tests use reexports. Current docs follow as-built source ownership only; no registry/readiness change. Full checks/build/development handoff/VERIFY/QA/final independent review remain pending.
+
+## Apply final evidence and iteration attribution
+
+All13 implementation tasks are complete within the authorized Slice1. Candidate19implementation paths are bound above; full exact finalcandidate (including Tasks and implementation evidence) is independently reviewed before guardedcommit. Implementation VERIFY/TIC: [verify](../../../docs/reviews/ai-synthetic-contract-foundation/verify.md); applicable nonbrowserQA: [QA report](../../../docs/reviews/ai-synthetic-contract-foundation/qa/QA_REPORT.md); gatepacket [final review](../../../docs/reviews/ai-synthetic-contract-foundation/03-final-review.md). Planning approval remains historical; sync/archive/deploy are unauthorized.
+
+Actual finalruntime/offline results: targeted202 PASS/10 files; full Backoffice1752PASS/54SKIP,139PASS/1SKIPfiles (before equivalentcallback-only testcorrection, targetedrefreshed); typegen all6 apps thenworkspace tsc15 projects PASS incl negative .types.ts; build PASS with publicCIprocessplaceholders after initial missingCLOUD_DATABASE_URLFAIL. Nextdevprobe generatedtypes changedcontext, so typegen/tsc refreshed again; no source change. Required docs/architecture/format/OpenSpec/currentevidence checks are refreshed for finalcandidate and exact logs retained externally/calling-session. Specialized format-policy gate remains historicalBLOCKED/separatescope NOT_RUN. No liveAPI/smoke/paid/fullcorpus/provider-onceoptin;54 skips remain skips.
+
+Iterationlineage additions: TYPE-BOUNDARY initialold-typecheckFAIL -> dependencytype/directivecorrection -> freshraw tscPASS; later optionalcallback signature added -> directtsc detected numberreturn -> test-only bracescorrection -> finaltsc/targetedPASS. Distinct confirmed evaluator defects, one correction each, no failedrecovery. BUILD-ENV first buildFAIL missing cloudURL -> publicCIprocess-only placeholder recoveryPASS; no private setup, one recovery, twoexecutiongenerations. DEV-PROBE-EXPECTATION first operational probe reached actualextraction/persistedapply then externalchecker expected genericconflict instead of unchanged employee_conflictcode -> correctionexternalonly, secondprobePASS;2executions/1successful correction, nofailedrecovery. InitialNO developmentassertions resolved by actualisolateddevflow, not humanwaiver or budgetsreset. Originalplanning and WORKTREE-BYTE-CONVERSION lineage remain above.
+
+Development assertion review follow-up: /root/development_assertions_review independently confirmed the new actual Next/HTTP/persisted fictional DB evidence supports bounded DEV_USABLE:YES and nonbrowser HTTP handoff MANUAL_TEST_READY:YES; it verified19 implementation hashes and23 migration hashes, without rerunning flow or granting Gate3/commit approval. Probe scope is revision/position, completed/applied audits and membership redirect status; it does not assert every other field, requested audit or redirect Location. Generation2 PASS is retained immutably; cleanup ports3009/65439 separately verified bindable. The earlier NO remains historical.

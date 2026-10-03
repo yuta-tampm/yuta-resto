@@ -73,8 +73,8 @@ sensitive details never belong in the repository.
 
 - [`architecture/OVERVIEW.md`](architecture/OVERVIEW.md)
 - [`architecture/AI_AND_STORAGE.md`](architecture/AI_AND_STORAGE.md) — agreed AI/Storage
-  direction, deferred decisions and fresh-chat continuation; Slice 1 planning complete,
-  runtime implementation and Storage still pending.
+  direction, deferred decisions and fresh-chat continuation; bounded synthetic Slice 1
+  implementation/evidence in its active change, Storage still pending.
 - [`architecture/DATABASE_BOUNDARIES.md`](architecture/DATABASE_BOUNDARIES.md)
 - [`architecture/TENANCY.md`](architecture/TENANCY.md)
 - [`architecture/AUTHENTICATION.md`](architecture/AUTHENTICATION.md)

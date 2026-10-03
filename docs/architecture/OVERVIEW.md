@@ -42,9 +42,19 @@ enablement.
 The [AI and Storage architecture](AI_AND_STORAGE.md) is the shared knowledge
 entry point for the agreed capability/policy, canonical-file and provider
 qualification direction. It distinguishes current implementation, the bounded
-synthetic Personnel plan, deferred Storage/provider work and the instructions
+synthetic Personnel implementation, deferred Storage/provider work and the instructions
 for continuing in a fresh chat. It changes no runtime/database ownership or
 production readiness.
+
+Backoffice's app-local `src/server/ai/` owns a single typed synthetic Personnel
+capability, versioned configuration/policy, eligibility followed by static
+selection, an adapter deadline and minimized terminal observations. Personnel
+owns source authorization/classification, PDF preparation and result semantics;
+server composition injects the existing deterministic/OpenAI/stored adapters
+and domain validator. AI has no tenant repository, persistence, storage or
+canonical domain mutation. Real/unknown data and non-development execution
+remain denied; Luna/v4 and source/review/apply guards remain bounded synthetic
+behavior. No shared AI package or provider qualification follows.
 
 ## Public-product visibility
 

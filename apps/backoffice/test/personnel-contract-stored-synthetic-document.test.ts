@@ -18,6 +18,8 @@ import {
   type PreparedSyntheticContract,
   runSyntheticContractExtraction,
 } from '../src/server/personnel-contract-extraction/service';
+import { createAiExecutor } from '../src/server/ai/executor';
+import { validateContractExtractionResult } from '../src/server/personnel-contract-extraction/service';
 import { SyntheticContractPdfPreparer } from '../src/server/personnel-contract-extraction/service';
 
 const approvedChecksum =
@@ -140,7 +142,18 @@ describe('stored synthetic personnel contract source', () => {
         consumeRateLimit: vi.fn(),
         loadPdf: loader,
         preparer: new SyntheticContractPdfPreparer(),
-        adapter,
+        executor: createAiExecutor({
+          configuration: {
+            configurationId: 'personnel-synthetic',
+            configurationVersion: 1,
+            environment: 'development',
+            mode: 'deterministic-synthetic',
+            credentialConfigured: false,
+            storedProviderOnce: false,
+          },
+          resolveAdapter: () => adapter,
+          validateResult: validateContractExtractionResult,
+        }),
       },
     );
 
