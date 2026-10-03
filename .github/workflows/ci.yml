@@ -3,6 +3,13 @@ name: CI
 on:
   pull_request:
   push:
+    branches:
+      - main
+
+# Superseded PR heads cancel; each main run has a unique group, including queued runs.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
@@ -16,10 +23,17 @@ jobs:
   architecture-and-typecheck:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    outputs:
+      cloudTests: ${{ steps.plan.outputs.cloudTests }}
+      cloudBuilds: ${{ steps.plan.outputs.cloudBuilds }}
+      localTests: ${{ steps.plan.outputs.localTests }}
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
 
       - name: Install pnpm
         uses: pnpm/action-setup@v5
@@ -34,6 +48,13 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Select applicable checks
+        id: plan
+        run: node scripts/validation-plan.mjs --ci
+
+      - name: Verify validation planner behavior
+        run: pnpm test:validation-plan
 
       - name: Check documentation consistency
         run: pnpm docs:check
@@ -44,7 +65,17 @@ jobs:
       - name: Check architecture boundaries
         run: pnpm architecture:check
 
+      - name: Test affected engineering tools
+        env:
+          TOOLING_TESTS: ${{ steps.plan.outputs.toolingTests }}
+        run: node scripts/validation-plan.mjs --run-tooling "$TOOLING_TESTS"
+
+      - name: Test shared UI primitives
+        if: ${{ steps.plan.outputs.uiTests == 'true' }}
+        run: pnpm --filter @yuta/ui test
+
       - name: Validate development database topology
+        if: ${{ steps.plan.outputs.topology == 'true' }}
         run: |
           docker compose --project-name yuta-cloud-dev --file docker-compose.cloud.dev.yml config --quiet
           docker compose --project-name yuta-pos-dev --file docker-compose.local.dev.yml config --quiet
@@ -52,34 +83,71 @@ jobs:
           pnpm db:reset:dev --dry-run
 
       - name: Type-check workspaces
+        if: ${{ steps.plan.outputs.typecheck == 'true' }}
         run: pnpm typegen:next && pnpm -r --if-present typecheck
 
+      - name: Validate check-selection outputs
+        env:
+          TYPECHECK: ${{ steps.plan.outputs.typecheck }}
+          TOPOLOGY: ${{ steps.plan.outputs.topology }}
+          CLOUD_TESTS: ${{ steps.plan.outputs.cloudTests }}
+          CLOUD_BUILDS: ${{ steps.plan.outputs.cloudBuilds }}
+          LOCAL_TESTS: ${{ steps.plan.outputs.localTests }}
+          UI_TESTS: ${{ steps.plan.outputs.uiTests }}
+        run: |
+          for value in "$TYPECHECK" "$TOPOLOGY" "$CLOUD_TESTS" "$CLOUD_BUILDS" "$LOCAL_TESTS" "$UI_TESTS"; do
+            case "$value" in true|false) ;; *) exit 1 ;; esac
+          done
+
   cloud-tests:
+    needs: architecture-and-typecheck
+    if: ${{ always() && !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
     steps:
+      - name: Require successful validation selection
+        env:
+          PREREQUISITE_RESULT: ${{ needs.architecture-and-typecheck.result }}
+          SELECTED: ${{ needs.architecture-and-typecheck.outputs.cloudTests }}
+        run: |
+          test "$PREREQUISITE_RESULT" = success
+          case "$SELECTED" in true|false) ;; *) exit 1 ;; esac
+
+      - name: Report check applicability
+        if: ${{ needs.architecture-and-typecheck.outputs.cloudTests == 'false' }}
+        run: echo 'cloud-tests NOT_APPLICABLE for this verified PR diff; see validation plan.' >> "$GITHUB_STEP_SUMMARY"
+
       - name: Check out repository
+        if: ${{ needs.architecture-and-typecheck.outputs.cloudTests == 'true' }}
         uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
 
       - name: Install pnpm
+        if: ${{ needs.architecture-and-typecheck.outputs.cloudTests == 'true' }}
         uses: pnpm/action-setup@v5
         with:
           version: ${{ env.PNPM_VERSION }}
 
       - name: Set up Node.js
+        if: ${{ needs.architecture-and-typecheck.outputs.cloudTests == 'true' }}
         uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
 
       - name: Install dependencies
+        if: ${{ needs.architecture-and-typecheck.outputs.cloudTests == 'true' }}
         run: pnpm install --frozen-lockfile
 
       - name: Run cloud and shared tests
+        if: ${{ needs.architecture-and-typecheck.outputs.cloudTests == 'true' }}
         run: pnpm test:cloud
 
   cloud-builds:
+    needs: architecture-and-typecheck
+    if: ${{ always() && !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
@@ -93,47 +161,87 @@ jobs:
       PUBLIC_BOOKING_BASE_URL: http://localhost:3005
 
     steps:
+      - name: Require successful validation selection
+        env:
+          PREREQUISITE_RESULT: ${{ needs.architecture-and-typecheck.result }}
+          SELECTED: ${{ needs.architecture-and-typecheck.outputs.cloudBuilds }}
+        run: |
+          test "$PREREQUISITE_RESULT" = success
+          case "$SELECTED" in true|false) ;; *) exit 1 ;; esac
+
+      - name: Report check applicability
+        if: ${{ needs.architecture-and-typecheck.outputs.cloudBuilds == 'false' }}
+        run: echo 'cloud-builds NOT_APPLICABLE for this verified PR diff; see validation plan.' >> "$GITHUB_STEP_SUMMARY"
+
       - name: Check out repository
+        if: ${{ needs.architecture-and-typecheck.outputs.cloudBuilds == 'true' }}
         uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
 
       - name: Install pnpm
+        if: ${{ needs.architecture-and-typecheck.outputs.cloudBuilds == 'true' }}
         uses: pnpm/action-setup@v5
         with:
           version: ${{ env.PNPM_VERSION }}
 
       - name: Set up Node.js
+        if: ${{ needs.architecture-and-typecheck.outputs.cloudBuilds == 'true' }}
         uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
 
       - name: Install dependencies
+        if: ${{ needs.architecture-and-typecheck.outputs.cloudBuilds == 'true' }}
         run: pnpm install --frozen-lockfile
 
       - name: Build cloud applications
+        if: ${{ needs.architecture-and-typecheck.outputs.cloudBuilds == 'true' }}
         run: pnpm build:cloud
 
   local-tests:
+    needs: architecture-and-typecheck
+    if: ${{ always() && !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
     steps:
+      - name: Require successful validation selection
+        env:
+          PREREQUISITE_RESULT: ${{ needs.architecture-and-typecheck.result }}
+          SELECTED: ${{ needs.architecture-and-typecheck.outputs.localTests }}
+        run: |
+          test "$PREREQUISITE_RESULT" = success
+          case "$SELECTED" in true|false) ;; *) exit 1 ;; esac
+
+      - name: Report check applicability
+        if: ${{ needs.architecture-and-typecheck.outputs.localTests == 'false' }}
+        run: echo 'local-tests NOT_APPLICABLE for this verified PR diff; see validation plan.' >> "$GITHUB_STEP_SUMMARY"
+
       - name: Check out repository
+        if: ${{ needs.architecture-and-typecheck.outputs.localTests == 'true' }}
         uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
 
       - name: Install pnpm
+        if: ${{ needs.architecture-and-typecheck.outputs.localTests == 'true' }}
         uses: pnpm/action-setup@v5
         with:
           version: ${{ env.PNPM_VERSION }}
 
       - name: Set up Node.js
+        if: ${{ needs.architecture-and-typecheck.outputs.localTests == 'true' }}
         uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
 
       - name: Install dependencies
+        if: ${{ needs.architecture-and-typecheck.outputs.localTests == 'true' }}
         run: pnpm install --frozen-lockfile
 
       - name: Run local product tests
+        if: ${{ needs.architecture-and-typecheck.outputs.localTests == 'true' }}
         run: pnpm test:local

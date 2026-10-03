@@ -9,6 +9,8 @@
   },
   "scripts": {
     "architecture:check": "node ./scripts/check-import-boundaries.mjs",
+    "validation:plan": "node scripts/validation-plan.mjs",
+    "test:validation-plan": "node --test scripts/validation-plan.test.mjs",
     "docs:check": "node ./scripts/check-documentation-consistency.mjs",
     "dev": "pnpm --filter @yuta/web dev",
     "dev:backoffice": "pnpm --filter @yuta/backoffice dev",

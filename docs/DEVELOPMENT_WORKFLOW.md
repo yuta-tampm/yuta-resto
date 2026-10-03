@@ -19,15 +19,126 @@ Last updated: 2026-10-03
 Baseline checks:
 
 ```bash
-pnpm install
-pnpm dev:env:sync
 pnpm docs:check
 pnpm format:check
 pnpm architecture:check
-pnpm typegen:next && pnpm -r --if-present typecheck
 ```
 
+Dependency installation is checkout preparation, not a repeated check. Use
+`pnpm install --frozen-lockfile` when required. Environment sync is scoped
+setup with writes and shared-data implications; it is not a universal baseline.
+Typed runtime checks follow the applicability rules below.
+
+### Check applicability and repeat decisions
+
+The command lists in the root README and [task template](tasks/TASK_TEMPLATE.md)
+are baseline catalogs. For each task, select applicable checks using this
+section, root/nearest `AGENTS.md`, approved acceptance criteria and actual
+changed paths. A template's bare typecheck entry never bypasses the Next
+generated-type prerequisite. Unknown impact retains the full baseline.
+
+Run `pnpm validation:plan --base <exact-base-sha>` for the local candidate.
+It unions committed/working changes, staged changes and untracked paths;
+renames retain both old and new ownership. `--head <exact-tested-sha>` plans a
+committed candidate and requires that checkout HEAD. `--full` retains all
+grouped obligations. The planner only selects checks; it does not execute them,
+approve completion, prove a gate or waive an owner's narrower checks.
+
+| Check                                              | Question answered                                                      | Applicability                                                                                                                                                       |
+| -------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `docs:check`                                       | Are current documentation links/metadata/boundaries coherent?          | Every task.                                                                                                                                                         |
+| `architecture:check`                               | Are runtime/import/data boundaries preserved?                          | Every task; particularly imports, dependency, env and migration changes.                                                                                            |
+| `format:check`                                     | Are formatting and preserved artifact bytes valid?                     | Every task; keep the existing preservation gate.                                                                                                                    |
+| `typegen:next` + recursive typecheck               | Does the typed workspace compile with valid generated declarations?    | App/package code or config, dependencies, toolchain and unknown impact. Docs-only and proven standalone Node tooling changes may mark it N/A.                       |
+| Affected tooling tests                             | Does changed engineering behavior and its denial path work?            | Tool implementation, inputs/fixtures and CI selection changes; include import consumers.                                                                            |
+| `test:cloud`                                       | Do cloud/shared domain and integration assertions hold?                | Cloud or shared runtime changes; use approved narrower package checks locally when coverage is sufficient.                                                          |
+| `test:local`                                       | Do existing POS/Site Agent/db-pos/offline assertions hold?             | Local or shared runtime changes; this group does not cover all Display obligations.                                                                                 |
+| `pnpm --filter @yuta/ui test`                      | Do shared presentation primitive assertions hold?                      | Shared/UI or full impact; neither grouped family suite currently runs it.                                                                                           |
+| `build:cloud`                                      | Do cloud apps bundle and validate framework/build contracts?           | Cloud/shared/runtime configuration changes. Typecheck or unit tests are not a substitute.                                                                           |
+| Compose configs + `db:reset:dev --dry-run`         | Do development topology/reset selections remain valid without a reset? | Topology/tool/config changes or full baseline. Never authorizes an actual reset.                                                                                    |
+| Owner-specific builds, migrations, security and QA | Does the approved behavior work at its owning boundary?                | As required by scoped instructions/contracts. POS builds and Display build/upload/migration checks remain separately applicable; Browser QA applies to affected UI. |
+
+The planner conservatively maps current cloud/local/shared owners. It treats
+global manifests, dependency/toolchain/configuration changes, its own policy
+and unknown paths as full. Only enumerated standalone tools can avoid runtime
+suites; their existing test dependencies are explicit, and missing selected
+tests force full. New owners or dependency relationships require review of the
+mapping. Never describe a grouped plan as complete owner or runtime validation.
+
+#### Evidence and reruns
+
+Assess both the check and the reason for repeating it. Typecheck, unit tests,
+integration tests, builds and Browser QA answer different questions even when
+they inspect the same files. Repeating an identical command is justified by
+changed inputs, a changed test/build tree, a relevant finding, failed execution,
+missing prerequisites, or untrusted/incomplete evidence.
+
+Record one row per expected check in existing task/review evidence:
+
+```text
+Check/command and flags:
+Purpose and applicable scope:
+Disposition: EXECUTED | REUSED | NOT_APPLICABLE | NOT_RUN | BLOCKED
+Result: actual exit/result, or original result for REUSED
+Candidate: checkout, base/head/tree and relevant path set + raw hashes
+Inputs: dependency/lockfile/toolchain/config, generated output and test fixtures
+Environment: runtime/OS and non-secret relevant settings/data/setup identity
+Evidence: retained log/result source and time
+Reason: first run, changed input, reviewed defect, reuse, skip or blocker
+```
+
+Reuse requires an attributable successful original result with all relevant
+inputs, coverage, environment and required output still equivalent. A hash of
+one edited file or a previous chat's PASS is insufficient. New worktrees,
+fresh installs, missing generated files, different runtime/data or a changed
+merge/base invalidate evidence that depends on them. Never reuse a failed,
+partial, skipped, unavailable or unverifiable execution as PASS. Record
+`REUSED` with its original source, not a fresh execution or a renewed approval.
+Candidate-specific review/gate hashes still require their own current review.
+
+During implementation, run targeted checks after the relevant correction.
+Before local commit, verify the exact reviewed candidate and evidence; do not
+rerun unchanged checks merely because staging/commit begins. Before push/PR,
+classify differences since the validated candidate. PR CI independently checks
+the tested merge tree/environment, so local tests are not automatically a CI
+substitute. A changed integration tree needs affected integration verification.
+A docs-only correction does not invalidate unrelated runtime evidence, but
+documentation/format checks and reviewed candidate hashes must be refreshed.
+
+A CI/planner engineering task can use targeted planner/workflow tests locally
+and record unchanged app suites/builds `NOT_RUN` with exact scope reasons.
+That is bounded engineering evidence, never a claim that its conservative
+full CI selection executed or passed. Required owner/gate checks cannot be
+omitted by this rule; a required environment block needs its normal disposition.
+
+#### CI execution
+
+CI runs on every PR update and main push. Feature branch push no longer creates
+a second workflow alongside the PR. Superseded PR runs may cancel; each main
+run has a unique concurrency group and retains full execution, including
+pending runs. No measured time-saving claim is made until deployed CI runs exist.
+
+Every job checks out the exact `github.sha`. PR planning verifies the synthetic
+merge commit's two parents against the event's exact base/head, then classifies
+base to tested merge tree. Missing objects, invalid identity or unknown paths
+select full. Main pushes run full. The architecture/typecheck job always runs
+the documentation, format, architecture and planner regression guards;
+typecheck, topology, tooling and UI tests follow the plan.
+
+The three existing family job names remain visible. Each waits for a successful
+architecture/planner prerequisite, validates its selection, and explicitly
+fails on a failed/missing prerequisite. A false selection reports
+`NOT_APPLICABLE` before dependency setup; a true selection runs its existing
+suite/build. This avoids interpreting a skipped failed dependency as success.
+No branch protection, deployment or production configuration is changed.
+
 ### Next generated-type prerequisite
+
+When typed runtime validation applies, use the complete prerequisite:
+
+```bash
+pnpm typegen:next && pnpm -r --if-present typecheck
+```
 
 `pnpm typegen:next` is the root bootstrap command for exactly
 `apps/backoffice`, `apps/web`, `apps/booking-web`, `apps/feedback-web`,
