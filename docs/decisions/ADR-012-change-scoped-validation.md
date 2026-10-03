@@ -38,7 +38,10 @@ CI runs PR updates once, cancels only superseded PR runs, and preserves every
 main push with full selection. PR classification binds to the exact merge
 candidate tested by every job. Stable family jobs fail on unsuccessful or
 invalid prerequisites and report inapplicable groups explicitly. Shared/UI
-selections run the existing UI tests separately.
+selections run the existing UI tests separately. Generic full tooling is a
+repository CI baseline; the specialized format-policy suite keeps its own
+approved-source/runtime prerequisites and is explicitly selected on its inputs.
+Its generic-run disposition is NOT_RUN, not success or an owner-gate waiver.
 
 The procedure and check catalog have one current home:
 [Development Workflow](../DEVELOPMENT_WORKFLOW.md#check-applicability-and-repeat-decisions).

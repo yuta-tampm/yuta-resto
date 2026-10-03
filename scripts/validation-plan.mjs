@@ -64,6 +64,37 @@ const tooling = new Map([
   ['scripts/check-ui-pack.mjs', ['scripts/ui-pack-tooling.test.mjs']],
 ]);
 
+// This owner lane binds external generator sources, approval bytes and a renderer image.
+// It is not an environment-independent repository CI suite.
+const formatOwnerTest = 'scripts/format-policy/check.test.mjs';
+const formatOwnerNote =
+  formatOwnerTest +
+  ': NOT_RUN by generic tooling; approved owner validation remains separate.';
+function formatOwnerInput(path) {
+  return (
+    [
+      '.prettierignore',
+      '.prettierrc.json',
+      'pnpm-lock.yaml',
+      'pnpm-workspace.yaml',
+      '.npmrc',
+      'scripts/check-format-preservation.mjs',
+      'apps/backoffice/scripts/generate-personnel-contract-evaluation-corpus.py',
+    ].includes(path) ||
+    path.startsWith('scripts/format-policy/') ||
+    path.startsWith(
+      'apps/backoffice/test/fixtures/personnel-contract-evaluation/',
+    ) ||
+    path.startsWith(
+      'openspec/changes/repository-format-policy-and-baseline-remediation/',
+    ) ||
+    path.startsWith(
+      'docs/reviews/repository-format-policy-and-baseline-remediation/',
+    ) ||
+    /^\.agents\/skills\/openspec-[^/]+\//u.test(path)
+  );
+}
+
 export function fullPlan(reason) {
   return {
     schemaVersion: 1,
@@ -110,6 +141,14 @@ export function classifyPaths(paths) {
     paths: [...new Set(paths)].sort(),
     reasons: [],
   };
+  if (selected.paths.some(formatOwnerInput))
+    return {
+      ...fullPlan(
+        'Dedicated formatting owner inputs changed; its full suite is required',
+      ),
+      toolingTests: ['ALL', formatOwnerTest],
+      paths: selected.paths,
+    };
   const tests = new Set();
   for (const path of selected.paths) {
     const owner = path.split('/').slice(0, 2).join('/');
@@ -222,7 +261,67 @@ export function planGit({
             ),
           ]
         : splitPaths(git(root, [...diff, base, head, '--']));
-    const plan = classifyPaths(paths);
+    let plan = classifyPaths(paths);
+    // Unrelated script/CI selection edits do not change the format owner's inputs.
+    // Compare base, final, index and working inputs so staged dependency edits cannot hide.
+    for (const path of paths.filter((path) =>
+      ['package.json', '.github/workflows/ci.yml'].includes(path),
+    )) {
+      const dependencyInput = (text) => {
+        if (path === '.github/workflows/ci.yml')
+          return JSON.stringify({
+            formatRoutes: [
+              ...text.matchAll(/^\s*(?:- )?run: pnpm format:check\s*$/gm),
+            ].length,
+            toolchain: [
+              ...text.matchAll(/^\s*(NODE_VERSION|PNPM_VERSION):[ \t]*(.+)$/gm),
+            ].map((match) => [match[1], match[2].trim()]),
+          });
+        const manifest = JSON.parse(text);
+        return JSON.stringify({
+          ...Object.fromEntries(
+            [
+              'packageManager',
+              'engines',
+              'dependencies',
+              'devDependencies',
+              'optionalDependencies',
+              'peerDependencies',
+              'pnpm',
+              'overrides',
+              'resolutions',
+            ].map((key) => [key, manifest[key] ?? null]),
+          ),
+          formatRoute: {
+            format: manifest.scripts?.format ?? null,
+            check: manifest.scripts?.['format:check'] ?? null,
+          },
+        });
+      };
+      let ownerImpact = true;
+      try {
+        const before = dependencyInput(git(root, ['show', base + ':' + path]));
+        const inputs =
+          head === undefined
+            ? [
+                git(root, ['show', 'HEAD:' + path]),
+                git(root, ['show', ':' + path]),
+                readFileSync(join(root, path), 'utf8'),
+              ]
+            : [git(root, ['show', head + ':' + path])];
+        ownerImpact = inputs.some((input) => dependencyInput(input) !== before);
+      } catch {
+        /* Unavailable or malformed dependency input requires owner validation. */
+      }
+      if (ownerImpact)
+        plan = {
+          ...fullPlan(
+            'Formatting route or dependency/toolchain inputs changed; owner validation required',
+          ),
+          toolingTests: ['ALL', formatOwnerTest],
+          paths: plan.paths,
+        };
+    }
     // A removed or unavailable tool test cannot become a silent omission.
     if (
       plan.toolingTests.some(
@@ -231,6 +330,10 @@ export function planGit({
     ) {
       return {
         ...fullPlan('Selected tooling test is unavailable'),
+        toolingTests: [
+          'ALL',
+          ...plan.toolingTests.filter((path) => path !== 'ALL'),
+        ],
         paths: plan.paths,
         testedHead: actualHead,
         base,
@@ -271,15 +374,18 @@ export function planCi(root, env = process.env) {
 }
 
 export function toolingTestPaths(root, selection) {
-  if (selection.includes('ALL'))
-    return readdirSync(join(root, 'scripts'), { recursive: true })
-      .filter(
-        (path) =>
-          path.endsWith('.test.mjs') && path !== 'validation-plan.test.mjs',
-      )
-      .map((path) => `scripts/${path.replaceAll('\\', '/')}`)
-      .sort();
-  return [...new Set(selection)].sort();
+  const explicit = selection.filter((path) => path !== 'ALL');
+  const discovered = selection.includes('ALL')
+    ? readdirSync(join(root, 'scripts'), { recursive: true })
+        .filter((path) => path.endsWith('.test.mjs'))
+        .map((path) => 'scripts/' + path.replaceAll('\\', '/'))
+        .filter(
+          (path) =>
+            path !== 'scripts/validation-plan.test.mjs' &&
+            path !== formatOwnerTest,
+        )
+    : [];
+  return [...new Set([...discovered, ...explicit])].sort();
 }
 
 export function main(argv = process.argv.slice(2), env = process.env) {
@@ -307,6 +413,11 @@ export function main(argv = process.argv.slice(2), env = process.env) {
       throw new Error('Invalid tooling test selection');
     }
     const tests = toolingTestPaths(root, selection);
+    if (selection.includes('ALL') && !selection.includes(formatOwnerTest)) {
+      console.log(formatOwnerNote);
+      if (env.GITHUB_STEP_SUMMARY)
+        appendFileSync(env.GITHUB_STEP_SUMMARY, formatOwnerNote + '\n');
+    }
     if (selection.includes('ALL') && !tests.length)
       throw new Error('Full tooling suite is empty');
     if (tests.length)

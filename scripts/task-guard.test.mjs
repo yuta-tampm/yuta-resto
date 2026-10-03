@@ -67,7 +67,7 @@ function fixture(choice = 'YES') {
     commitAfterTask: choice,
     commitSource: 'Fixture user',
     baseCommit: base,
-    writePaths: ['allowed.txt', 'new.txt', 'link/file.txt'],
+    writePaths: ['allowed.txt', 'new.txt', 'link', 'link/file.txt'],
     commands: ['node --test fixture.test.mjs'],
   };
   return {
@@ -169,9 +169,10 @@ test('all paths validated before effects; path escapes, private files and links 
     process.platform === 'win32' ? 'junction' : 'dir',
   );
   assert.throws(
-    () => write(f, [{ path: 'link/file.txt', contentBase64: '' }]),
+    () => write(f, [first, { path: 'link/file.txt', contentBase64: '' }]),
     /Linked path/,
   );
+  assert.equal(readFileSync(join(f.checkout, 'allowed.txt'), 'utf8'), 'base\n');
   assert.equal(existsSync(join(outside, 'file.txt')), false);
   rmSync(join(f.checkout, 'link'));
   linkSync(join(f.checkout, 'allowed.txt'), join(root, f.id + '-hardlink'));

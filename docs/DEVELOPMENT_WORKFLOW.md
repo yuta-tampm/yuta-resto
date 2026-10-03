@@ -125,6 +125,19 @@ select full. Main pushes run full. The architecture/typecheck job always runs
 the documentation, format, architecture and planner regression guards;
 typecheck, topology, tooling and UI tests follow the plan.
 
+The generic full tooling runner discovers repository Node suites while excluding
+the already executed planner suite and the separately owned
+scripts/format-policy/check.test.mjs lane. That lane requires approved raw
+authority bytes, an exact OpenSpec generator source closure and a pinned
+renderer image; generic CI does not provide those prerequisites. It remains
+intact and is reported as NOT_RUN, never successful or waived. Changes to its
+validator, formatting configuration/preservation gate or command routes, dependency/toolchain inputs, authority documents,
+generated OpenSpec skills or Personnel evaluation corpus explicitly select its
+full suite in addition to generic checks. Missing prerequisites or failed
+authority bindings then fail execution; the normal owner gate remains blocked.
+The existing format:check baseline still runs on every candidate. Other owner
+obligations remain separately required by scoped instructions.
+
 The three existing family job names remain visible. Each waits for a successful
 architecture/planner prerequisite, validates its selection, and explicitly
 fails on a failed/missing prerequisite. A false selection reports

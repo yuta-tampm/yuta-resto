@@ -148,7 +148,16 @@ test('tooling dependencies are retained; the full runner avoids repeating planne
   assert.equal(plan.typecheck, false);
   const all = toolingTestPaths(sourceRoot, ['ALL']);
   assert.ok(all.includes('scripts/next-generated-types-bootstrap.test.mjs'));
-  assert.ok(all.includes('scripts/format-policy/check.test.mjs'));
+  assert.ok(!all.includes('scripts/format-policy/check.test.mjs'));
+  const withOwner = toolingTestPaths(sourceRoot, [
+    'ALL',
+    'scripts/format-policy/check.test.mjs',
+  ]);
+  assert.equal(
+    withOwner.filter((path) => path === 'scripts/format-policy/check.test.mjs')
+      .length,
+    1,
+  );
   assert.ok(all.includes('scripts/engineering-skills/acceptance.test.mjs'));
   assert.ok(!all.includes('scripts/validation-plan.test.mjs'));
   for (const key of [
@@ -372,4 +381,148 @@ test('tooling CLI executes only selected tests, discovers nested ALL once, and p
     }).status,
     0,
   );
+});
+
+test('dedicated formatting inputs require their owner suite despite docs or full classification', () => {
+  for (const path of [
+    '.prettierignore',
+    '.prettierrc.json',
+    'pnpm-lock.yaml',
+    'pnpm-workspace.yaml',
+    '.npmrc',
+    'scripts/check-format-preservation.mjs',
+    'scripts/format-policy/check.mjs',
+    'apps/backoffice/scripts/generate-personnel-contract-evaluation-corpus.py',
+    'apps/backoffice/test/fixtures/personnel-contract-evaluation/v1/manifest.json',
+    'openspec/changes/repository-format-policy-and-baseline-remediation/tasks.md',
+    'docs/reviews/repository-format-policy-and-baseline-remediation/02b-design-review.md',
+    '.agents/skills/openspec-apply-change/SKILL.md',
+  ]) {
+    const plan = classifyPaths(['package.json', path]);
+    assert.equal(plan.full, true, path);
+    assert.deepEqual(
+      plan.toolingTests,
+      ['ALL', 'scripts/format-policy/check.test.mjs'],
+      path,
+    );
+  }
+});
+
+test('formatting dependency changes retain owner validation while root script-only edits do not', () => {
+  const { root } = fixture();
+  const manifest = {
+    packageManager: 'pnpm@11.8.0',
+    devDependencies: { prettier: '3.8.4' },
+    scripts: { test: 'old' },
+  };
+  write(root, 'package.json', JSON.stringify(manifest));
+  git(root, ['add', '.']);
+  git(root, ['commit', '--quiet', '-m', 'manifest']);
+  const base = git(root, ['rev-parse', 'HEAD']);
+  write(
+    root,
+    'package.json',
+    JSON.stringify({ ...manifest, scripts: { test: 'new' } }),
+  );
+  assert.ok(
+    !planGit({ root, base }).toolingTests.includes(
+      'scripts/format-policy/check.test.mjs',
+    ),
+  );
+  for (const script of ['format', 'format:check']) {
+    write(
+      root,
+      'package.json',
+      JSON.stringify({
+        ...manifest,
+        scripts: { ...manifest.scripts, [script]: 'changed formatting route' },
+      }),
+    );
+    assert.deepEqual(planGit({ root, base }).toolingTests, [
+      'ALL',
+      'scripts/format-policy/check.test.mjs',
+    ]);
+  }
+  write(
+    root,
+    'package.json',
+    JSON.stringify({ ...manifest, devDependencies: { prettier: 'different' } }),
+  );
+  git(root, ['add', 'package.json']);
+  write(root, 'package.json', JSON.stringify(manifest));
+  const required = planGit({ root, base });
+  assert.deepEqual(required.toolingTests, [
+    'ALL',
+    'scripts/format-policy/check.test.mjs',
+  ]);
+  assert.match(required.reasons.join(' '), /unavailable/u);
+});
+
+test('CI formatting route and toolchain changes require owner checks while selection-only edits do not', () => {
+  const { root } = fixture();
+  const path = '.github/workflows/ci.yml';
+  const workflow =
+    'env:\n  NODE_VERSION: 24.17.0\n  PNPM_VERSION: 11.8.0\njobs:\n  baseline:\n    steps:\n      - run: pnpm format:check\n';
+  write(root, path, workflow);
+  git(root, ['add', '.']);
+  git(root, ['commit', '--quiet', '-m', 'CI route']);
+  const base = git(root, ['rev-parse', 'HEAD']);
+  write(root, path, workflow + '      - run: pnpm test:validation-plan\n');
+  assert.ok(
+    !planGit({ root, base }).toolingTests.includes(
+      'scripts/format-policy/check.test.mjs',
+    ),
+  );
+  for (const changed of [
+    workflow.replace('pnpm format:check', 'echo skipped'),
+    workflow.replace('24.17.0', 'different'),
+    workflow.replace('11.8.0', 'different'),
+  ]) {
+    write(root, path, changed);
+    assert.deepEqual(planGit({ root, base }).toolingTests, [
+      'ALL',
+      'scripts/format-policy/check.test.mjs',
+    ]);
+  }
+});
+
+test('generic tooling reports a separate owner lane and explicit owner failure is enforced', () => {
+  const { root } = fixture();
+  const cli = join(sourceRoot, 'scripts/validation-plan.mjs');
+  write(
+    root,
+    'scripts/portable.test.mjs',
+    "import test from 'node:test'; test('portable baseline', () => {});\n",
+  );
+  write(
+    root,
+    'scripts/format-policy/check.test.mjs',
+    "throw new Error('owner prerequisites unavailable');\n",
+  );
+  const env = { ...process.env };
+  delete env.NODE_TEST_CONTEXT;
+  const summary = join(root, 'summary.txt');
+  const run = (selection) =>
+    spawnSync(
+      process.execPath,
+      [cli, '--run-tooling', JSON.stringify(selection)],
+      {
+        cwd: root,
+        encoding: 'utf8',
+        timeout: 15000,
+        env: { ...env, GITHUB_STEP_SUMMARY: summary },
+      },
+    );
+  const generic = run(['ALL']);
+  assert.equal(generic.status, 0, generic.stderr);
+  assert.match(generic.stdout, /NOT_RUN by generic tooling/u);
+  assert.match(
+    readFileSync(summary, 'utf8'),
+    /approved owner validation remains separate/u,
+  );
+  assert.notEqual(
+    run(['ALL', 'scripts/format-policy/check.test.mjs']).status,
+    0,
+  );
+  assert.notEqual(run(['scripts/format-policy/check.test.mjs']).status, 0);
 });
