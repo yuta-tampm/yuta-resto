@@ -35,6 +35,11 @@ import {
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 import { z } from 'zod';
+import {
+  assertPlainPath,
+  checkoutIdentity,
+  verifyCheckoutBinding,
+} from './task-checkout.mjs';
 
 export const HANDOFF_SCHEMA_VERSION = 1;
 export const COLLABORATION_MODES = [
@@ -499,6 +504,15 @@ const guardSchema = z
   .object({
     schemaVersion: z.literal(HANDOFF_SCHEMA_VERSION),
     task: z.string().min(1),
+    identity: z
+      .object({
+        checkout: z.string(),
+        gitDirectory: z.string(),
+        commonDirectory: z.string(),
+        branch: z.string(),
+        head: z.string(),
+      })
+      .strict(),
     checkout: z.string().min(1),
     writeAllowlist: z.array(z.string().min(1)),
     protectedPaths: z.array(z.string().min(1)),
@@ -642,9 +656,19 @@ export function writeGuard({
   protectedPaths,
 }) {
   const path = join(runDirectory, 'guard.json');
+  const identity = checkoutIdentity(checkout);
+  if (
+    identity.branch !== handoff.checkout.branch ||
+    identity.head !== handoff.checkout.baseCommit
+  )
+    throw new ClaudeTaskError(
+      'CHECKOUT_IDENTITY',
+      'Guard checkout does not match the handoff branch/base.',
+    );
   const guard = {
     schemaVersion: HANDOFF_SCHEMA_VERSION,
     task,
+    identity,
     checkout: realpathSync.native(checkout),
     writeAllowlist: handoff.writeAllowlist,
     protectedPaths,
@@ -707,6 +731,17 @@ export function hookMain(argv, stdinText) {
     }
     const guard = guardSchema.parse(JSON.parse(bytes.toString('utf8')));
     const input = hookInputSchema.parse(JSON.parse(stdinText));
+    if (!READ_ONLY_TOOLS.has(input.tool_name)) {
+      verifyCheckoutBinding(guard.identity);
+      if (input.tool_name === 'Edit' || input.tool_name === 'Write') {
+        const filePath = input.tool_input.file_path;
+        if (typeof filePath === 'string')
+          assertPlainPath(
+            isAbsolute(filePath) ? filePath : resolve(guard.checkout, filePath),
+            { file: true },
+          );
+      }
+    }
     const decision = decideToolUse(guard, input);
     appendFileSync(
       guard.decisionLog,

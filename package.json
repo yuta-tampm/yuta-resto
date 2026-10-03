@@ -75,7 +75,9 @@
     "ui:pack:new": "node ./scripts/create-ui-pack.mjs",
     "ui:pack:check": "node ./scripts/check-ui-pack.mjs",
     "format": "prettier --write .",
-    "format:check": "node scripts/check-format-preservation.mjs && prettier --check ."
+    "format:check": "node scripts/check-format-preservation.mjs && prettier --check .",
+    "task:guard": "node scripts/task-guard.mjs",
+    "test:task-guard": "node --test scripts/task-guard.test.mjs"
   },
   "devDependencies": {
     "prettier": "^3.8.4",

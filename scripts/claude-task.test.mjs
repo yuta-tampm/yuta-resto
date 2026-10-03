@@ -514,14 +514,26 @@ describe('Claude settings and guard hook', () => {
 
   test('hook allows exact commands and paths, denies others and fails closed', () => {
     const checkout = join(fixtureRoot, 'hook-checkout');
-    mkdirSync(join(checkout, 'src', '(group) dir'), { recursive: true });
+    const repository = createRepository();
+    git(
+      repository.root,
+      'worktree',
+      'add',
+      '-b',
+      handoff.checkout.branch,
+      checkout,
+      repository.base,
+    );
     const runDirectory = join(fixtureRoot, 'hook-run');
     mkdirSync(runDirectory);
     const guard = writeGuard({
       runDirectory,
       task: 'hook-task',
       checkout,
-      handoff,
+      handoff: {
+        ...handoff,
+        checkout: { ...handoff.checkout, baseCommit: repository.base },
+      },
       protectedPaths: ['src/protected.txt', 'src/bound.txt'],
     });
     const hookArgs = ['--guard', guard.path, '--sha256', guard.sha256];
@@ -609,6 +621,14 @@ describe('Claude settings and guard hook', () => {
     );
     assert.equal(hookMain([], '{}').exitCode, 2);
 
+    git(checkout, 'switch', '-c', 'codex/wrong-hook-branch');
+    assert.equal(call('Write', { file_path: 'src/allowed.txt' }).exitCode, 2);
+    assert.equal(
+      readFileSync(join(checkout, 'src/allowed.txt'), 'utf8'),
+      'base\n',
+    );
+    git(checkout, 'switch', handoff.checkout.branch);
+
     const logged = readFileSync(guard.guard.decisionLog, 'utf8')
       .trim()
       .split('\n');
@@ -646,7 +666,16 @@ describe('Claude settings and guard hook', () => {
   test('hook and prepare refuse writes through linked directories', () => {
     const checkout = join(fixtureRoot, 'link-checkout');
     const outside = join(fixtureRoot, 'link-outside');
-    mkdirSync(checkout);
+    const repository = createRepository();
+    git(
+      repository.root,
+      'worktree',
+      'add',
+      '-b',
+      handoff.checkout.branch,
+      checkout,
+      repository.base,
+    );
     mkdirSync(outside);
     symlinkSync(
       outside,
@@ -661,7 +690,14 @@ describe('Claude settings and guard hook', () => {
       runDirectory,
       task: 'link-task',
       checkout,
-      handoff: { writeAllowlist: ['linked/file.txt'], authorizedCommands: [] },
+      handoff: {
+        checkout: {
+          branch: handoff.checkout.branch,
+          baseCommit: repository.base,
+        },
+        writeAllowlist: ['linked/file.txt'],
+        authorizedCommands: [],
+      },
       protectedPaths: [],
     });
     const result = hookMain(
@@ -672,10 +708,8 @@ describe('Claude settings and guard hook', () => {
         tool_input: { file_path: join(checkout, 'linked', 'file.txt') },
       }),
     );
-    assert.equal(
-      JSON.parse(result.stdout).hookSpecificOutput.permissionDecision,
-      'deny',
-    );
+    assert.equal(result.exitCode, 2);
+    assert.equal(existsSync(join(outside, 'file.txt')), false);
   });
 
   const projectSettingsPath = join(repositoryRoot, '.claude', 'settings.json');
