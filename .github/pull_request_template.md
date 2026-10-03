@@ -26,9 +26,16 @@
 - [ ] New or changed failure paths are covered.
 
 ```text
-Commands:
-Results:
+Commands and flags:
+Candidate/base/tested tree:
+Check purpose and scope:
+Disposition: EXECUTED | REUSED | NOT_APPLICABLE | NOT_RUN | BLOCKED
+Results and original source for REUSED:
+Relevant inputs/environment and retained evidence:
+Reasons for reruns, reuse, omissions and remaining owner checks:
 ```
+
+Use the canonical [check applicability and repeat decisions](../docs/DEVELOPMENT_WORKFLOW.md#check-applicability-and-repeat-decisions). A CI skip is not owner/gate approval.
 
 ## Documentation
 

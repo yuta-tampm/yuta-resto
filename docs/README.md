@@ -196,6 +196,8 @@ They are provenance, not current workflow instructions.
 - [`decisions/ADR-010-claude-code-implementation-delegation.md`](decisions/ADR-010-claude-code-implementation-delegation.md)
   — Bounded Claude Code implementation under Codex coordination.
 - [ADR-011: Guarded task checkouts](decisions/ADR-011-task-checkout-guards.md) — writer/worktree binding, guarded commit and hook coverage.
+- [`decisions/ADR-012-change-scoped-validation.md`](decisions/ADR-012-change-scoped-validation.md)
+  — Conservative check applicability, CI selection and attributable evidence reuse.
 
 Completed task specifications are removed after durable behavior is reflected
 in current feature documentation and remaining work is captured in `STATUS.md`.

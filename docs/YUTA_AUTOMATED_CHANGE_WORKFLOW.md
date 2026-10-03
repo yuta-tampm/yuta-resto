@@ -700,6 +700,13 @@ Applicable evidence includes requirement/scenario mapping, targeted and broader
 tests, typecheck, build, strict OpenSpec validation, architecture/security,
 migration/schema evidence, scoped diff review, and deviations/blockers.
 
+Check selection and rerun/reuse attribution follow the canonical
+[Development Workflow](DEVELOPMENT_WORKFLOW.md#check-applicability-and-repeat-decisions).
+Record expected checks and skipped/blocked obligations in existing Tasks/review
+evidence. A grouped CI plan never replaces owner-specific contracts or QA;
+reuse never renews approval, fabricates an execution, or waives missing required
+evidence. Refresh affected results and candidate review after input changes.
+
 VERIFY includes a `TECHNICAL COMPLIANCE MATRIX` for every contract item in each
 phase actually used:
 

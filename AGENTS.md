@@ -266,30 +266,29 @@ Avoid opportunistic repository-wide refactors.
 
 ## Validation
 
-Always run:
+Always run the documentation, architecture and formatting baseline:
 
 ```bash
 pnpm docs:check
 pnpm architecture:check
-pnpm -r --if-present typecheck
-```
-
-For formatting-sensitive changes:
-
-```bash
 pnpm format:check
 ```
 
-Run relevant tests and builds:
+Select typed-runtime checks, tooling tests, family suites/builds and owner QA
+through [check applicability and repeat decisions](docs/DEVELOPMENT_WORKFLOW.md#check-applicability-and-repeat-decisions).
+App/package code, dependencies, configuration and unknown impact retain
+`pnpm typegen:next && pnpm -r --if-present typecheck`. Proven docs-only or
+standalone Node tooling changes may record it as not applicable with a reason.
+Scoped application/package instructions and approved gate evidence remain
+mandatory. The planner is only a conservative grouped CI minimum.
 
-```bash
-pnpm test:cloud
-pnpm test:local
-pnpm build:cloud
-```
-
-Use narrower package commands when the task affects only one area. State every
-expected check that was not run.
+Use narrower package commands when coverage is sufficient. Record every
+expected check as executed, reused, not applicable, not run or blocked, with
+command/scope, retained result, relevant input/environment bindings and reason.
+Do not rerun unchanged checks just because commit/push/PR begins; do rerun
+affected checks after changed inputs or integration. Reuse is not a fresh PASS
+or a renewed approval. Never waive a required owner/gate check through the
+planner or an unsupported reuse claim.
 
 ## Documentation and deployment
 
