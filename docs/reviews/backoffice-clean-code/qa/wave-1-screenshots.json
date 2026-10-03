@@ -1,0 +1,142 @@
+[
+  {
+    "path": "docs/reviews/backoffice-clean-code/qa/wave-1-register-1440.jpg",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scenario": "OWNER correction default, bottom fields and controls",
+    "metrics": {
+      "scrollWidth": 1440,
+      "width": 1440
+    },
+    "sha256": "c7865c3ec401e8852affb10e13f058dec864a80e7bd08c22505c5786238859f3"
+  },
+  {
+    "path": "docs/reviews/backoffice-clean-code/qa/wave-1-register-1024.jpg",
+    "viewport": {
+      "width": 1024,
+      "height": 768
+    },
+    "scenario": "OWNER correction default, bottom fields and controls",
+    "metrics": {
+      "scrollWidth": 1024,
+      "width": 1024
+    },
+    "sha256": "7ee72d85f8e3cc3c9911791283b05aba9e27107031cdd2ba237d8987e223403f"
+  },
+  {
+    "path": "docs/reviews/backoffice-clean-code/qa/wave-1-register-768.jpg",
+    "viewport": {
+      "width": 768,
+      "height": 1024
+    },
+    "scenario": "OWNER correction default, bottom fields and controls",
+    "metrics": {
+      "scrollWidth": 768,
+      "width": 768
+    },
+    "sha256": "c6a511b8d718ffcaf053fdfbac3ff3b907d393695a6e080e3402a5c74e6f3fb5"
+  },
+  {
+    "path": "docs/reviews/backoffice-clean-code/qa/wave-1-register-390.jpg",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "scenario": "OWNER correction default, bottom fields and controls",
+    "metrics": {
+      "scrollWidth": 390,
+      "width": 390
+    },
+    "sha256": "7e6adf9bef8fe6f0bb0d2b4de0fb6bfdf89f449d254f7180b61db021c77cb658"
+  },
+  {
+    "path": "docs/reviews/backoffice-clean-code/qa/wave-1-cdi-reject-1440.jpg",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "scenario": "OWNER rejected create remains recoverable and submit re-enabled",
+    "metrics": {
+      "scrollWidth": 1440,
+      "width": 1440
+    },
+    "sha256": "e41081e1baaafc078106bbe757c4d47f12544315513175a29d73f71b5c2c71c9"
+  },
+  {
+    "path": "docs/reviews/backoffice-clean-code/qa/wave-1-cdi-reject-1024.jpg",
+    "viewport": {
+      "width": 1024,
+      "height": 768
+    },
+    "scenario": "OWNER rejected create remains recoverable and submit re-enabled",
+    "metrics": {
+      "scrollWidth": 1024,
+      "width": 1024
+    },
+    "sha256": "a362f165a1d52b1c4f54808063c4027420d6d71661f8d3365f2d8ee666157e6b"
+  },
+  {
+    "path": "docs/reviews/backoffice-clean-code/qa/wave-1-cdi-reject-768.jpg",
+    "viewport": {
+      "width": 768,
+      "height": 1024
+    },
+    "scenario": "OWNER rejected create remains recoverable and submit re-enabled",
+    "metrics": {
+      "scrollWidth": 768,
+      "width": 768
+    },
+    "sha256": "e72c4f3ffc1cff4e3750893f9ab16f3ff9283709480357b958c9633eb81573b6"
+  },
+  {
+    "path": "docs/reviews/backoffice-clean-code/qa/wave-1-cdi-reject-390.jpg",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "scenario": "OWNER rejected create remains recoverable and submit re-enabled",
+    "metrics": {
+      "scrollWidth": 390,
+      "width": 390
+    },
+    "sha256": "c120b1b8eb4cea710ebd8663fdfb11a7e7a5f2e506fdfe246de6165427f0e87e"
+  },
+  {
+    "path": "docs/reviews/backoffice-clean-code/qa/wave-1-cdi-success-390.jpg",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "scenario": "OWNER actual draft create success",
+    "sha256": "d9a263275d9b416ca03007886dcbb752ac24d5bc7863e1d5034b66fd455c3065"
+  },
+  {
+    "path": "docs/reviews/backoffice-clean-code/qa/wave-1-booking-party-390.jpg",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "scenario": "OWNER partySize domain error",
+    "sha256": "7d11722d11093986b725d9e09fc1fda1c343ea4483c7b2d2a3c56383edb80999"
+  },
+  {
+    "path": "docs/reviews/backoffice-clean-code/qa/wave-1-booking-date-390.jpg",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "scenario": "OWNER date domain error",
+    "sha256": "fde5f0a437cb134cd68dc5e2cb4f5d709bd7ac42cc541e4d0ae20a51182a1fa9"
+  },
+  {
+    "path": "docs/reviews/backoffice-clean-code/qa/wave-1-staff-forbidden-390.jpg",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "scenario": "STAFF denied Register without Personnel data",
+    "sha256": "00fb00f0ac565ea56eca80412ed7f52e224b489614909bad4a155b80d2e40520"
+  }
+]

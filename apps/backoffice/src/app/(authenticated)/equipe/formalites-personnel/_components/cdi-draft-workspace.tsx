@@ -41,16 +41,18 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import type { LoadFormalitesPersonnelDraftActionResult } from '../[employeeId]/actions';
 import {
+  reloadWorkspaceModel,
+  runWorkspaceMutation,
+  workspaceReloadFailureFeedback,
+} from '../_lib/cdi-draft-workspace-operations';
+import {
   createOpaqueOperationKey,
-  createWorkspaceIntent,
   hasWorkspaceUnsavedChanges,
   personnelFactLabels,
-  prepareWorkspaceOperation,
   probationChoiceFromModel,
   probationChoiceLabels,
   reconciliationChoiceLabels,
   retainRelevantReconciliationChoices,
-  settleWorkspaceOperation,
   type WorkspaceMutationKind,
   type WorkspaceOperation,
 } from '../_lib/cdi-draft-workspace-state';
@@ -164,25 +166,23 @@ export function CdiDraftWorkspace({
       operationKey: string,
     ) => Promise<FormalitesPersonnelDraftMutationOutcome>,
   ) {
-    const preparation = prepareWorkspaceOperation(
-      operationRef.current,
+    const result = await runWorkspaceMutation({
+      current: operationRef.current,
       kind,
-      createWorkspaceIntent(kind, intentPayload),
-      createOpaqueOperationKey,
-    );
-    if (preparation.kind === 'blocked') return;
+      intentPayload,
+      createKey: createOpaqueOperationKey,
+      onPending: (pendingOperation) => {
+        operationRef.current = pendingOperation;
+        setOperation(pendingOperation);
+        setFeedback(null);
+      },
+      run,
+    });
+    if (!result) return;
 
-    operationRef.current = preparation.operation;
-    setOperation(preparation.operation);
-    setFeedback(null);
-    const outcome = await run(preparation.operation.key);
-    const nextOperation = settleWorkspaceOperation(
-      preparation.operation,
-      outcome,
-    );
-    operationRef.current = nextOperation;
-    setOperation(nextOperation);
-    handleMutationOutcome(outcome);
+    operationRef.current = result.operation;
+    setOperation(result.operation);
+    handleMutationOutcome(result.outcome);
   }
 
   function acceptAuthoritativeModel(
@@ -239,7 +239,7 @@ export function CdiDraftWorkspace({
     setIsReloading(true);
     setFeedback(null);
     try {
-      const result = await loadAction(employeeId);
+      const result = await reloadWorkspaceModel(() => loadAction(employeeId));
       if (result.kind === 'success') {
         acceptAuthoritativeModel(result.model, false);
         operationRef.current = null;
@@ -251,15 +251,7 @@ export function CdiDraftWorkspace({
           recoverable: false,
         });
       } else {
-        setFeedback({
-          tone: 'danger',
-          title: 'Actualisation impossible',
-          description:
-            result.kind === 'not_found'
-              ? 'Ce dossier n’est plus disponible dans cet établissement.'
-              : 'Réessayez dans quelques instants.',
-          recoverable: result.kind === 'server_error',
-        });
+        setFeedback(workspaceReloadFailureFeedback(result));
         focusSoon(feedbackRef);
       }
     } finally {

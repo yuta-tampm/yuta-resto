@@ -27,7 +27,6 @@ import {
   checkSignedPdfFile,
   discardSignedPdf,
   quarantineSignedPdf,
-  removeSignedPdf,
   scanAndPromoteSignedPdf,
   signedPdfChecksum,
 } from '@/server/personnel-documents/signed-pdf';
@@ -134,10 +133,17 @@ export async function saveEmployeeDocumentAction(
       checksum: signedPdfChecksum(content),
       storageKey,
     });
+    // The metadata is committed: the object is either referenced or, for a
+    // replay, an unreferenced retry copy. Never reach the cleanup below.
+    const persistedStorageKey = storageKey;
+    storageKey = null;
     if (result.idempotentReplay) {
-      await removeSignedPdf(storageKey);
+      await discardSignedPdf(
+        persistedStorageKey,
+        'Failed to clean up a replayed personnel document object.',
+      );
     }
-    revalidatePath('/equipe/salaries');
+    revalidateSalariesAfterCommit();
     return {
       status: 'success',
       message: result.idempotentReplay
@@ -316,10 +322,15 @@ export async function saveEmployeeAmendmentAction(
                 'reference' in commandInput ? commandInput.reference : null,
             },
           );
+    const persistedStorageKey = storageKey;
+    storageKey = null;
     if (result.idempotentReplay) {
-      await removeSignedPdf(storageKey);
+      await discardSignedPdf(
+        persistedStorageKey,
+        'Failed to clean up a replayed personnel amendment object.',
+      );
     }
-    revalidatePath('/equipe/salaries');
+    revalidateSalariesAfterCommit();
     return {
       status: 'success',
       message: result.idempotentReplay
@@ -419,6 +430,14 @@ export async function saveEmployeeAmendmentAction(
     } catch {
       console.error('Failed to record a rejected amendment upload.');
     }
+  }
+}
+
+function revalidateSalariesAfterCommit() {
+  try {
+    revalidatePath('/equipe/salaries');
+  } catch (error: unknown) {
+    console.error('Failed to revalidate personnel documents.', error);
   }
 }
 

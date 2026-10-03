@@ -64,10 +64,12 @@ export function PersonnelRegisterPage({
   data,
   candidates,
   locale,
+  businessDate,
 }: {
   data: RegisterPageData;
   candidates: PersonnelRegisterCandidate[];
   locale: string;
+  businessDate: string;
 }) {
   const [displayData, setDisplayData] = useState(data);
   const [currentCursor, setCurrentCursor] = useState<string | null>(null);
@@ -355,6 +357,7 @@ export function PersonnelRegisterPage({
         <RegisterDialog
           mode="correct"
           entry={correction}
+          businessDate={businessDate}
           open
           onOpenChange={closeCorrectionDialog}
         />
@@ -496,6 +499,7 @@ type RegisterDialogProps =
   | {
       mode: 'correct';
       entry: PersonnelRegisterEntry;
+      businessDate: string;
       open: boolean;
       onOpenChange(open: boolean): void;
     };
@@ -707,7 +711,7 @@ function RegisterDialog(props: RegisterDialogProps) {
                   name="effectiveDate"
                   label="Date d’effet"
                   type="date"
-                  defaultValue={new Date().toISOString().slice(0, 10)}
+                  defaultValue={props.businessDate}
                 />
                 <TextField
                   name="reason"

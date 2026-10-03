@@ -49,7 +49,9 @@ slice in local development. Existing employee dossiers are shown only as
 candidates; no dossier is silently inserted. An OWNER reviews the required and
 conditional facts before an atomic first inscription receives an irreversible
 establishment sequence. Corrections retain the first facts and append a
-reasoned prior/new version record.
+reasoned prior/new version record. The correction effective date defaults to
+the establishment's current business date, derived on the server from the
+trusted tenant timezone, not the browser's UTC date.
 
 The route has distinct OWNER-only register read/export permissions, 50-entry
 snapshot-bound cursor pages, minimized read/export audit events, and a

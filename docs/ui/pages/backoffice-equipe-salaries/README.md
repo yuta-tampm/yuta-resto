@@ -1251,6 +1251,11 @@ versions on replacement, deliver content through audited server routes, and
 never expose storage keys or stable provider URLs. A base-contract replacement
 updates the one base slot; an amendment replacement corrects only that
 amendment's scan. It never replaces the base contract or another amendment.
+Once metadata is committed, a failed page revalidation or replay cleanup is
+logged and the save stays successful; the referenced PDF is never discarded.
+An idempotent replay discards only its own unreferenced retry copy. Scanner,
+validation, or repository failures before commit still discard the temporary
+object.
 
 The current development-only `À traiter` overview treats an absent base
 contract for every active or upcoming employee as missing signed evidence. It

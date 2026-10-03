@@ -46,6 +46,10 @@ preference, delivered confirmation email, secure guest modification, reminder
 email, a dedicated service view/filter, general search, and the spaces,
 form-field, and delivered-communication portions of reservation settings.
 
+Backoffice reservation create/edit actions report a party size outside the
+configured range on the party-size field and a date outside the booking window
+on the date field; other booking errors keep their existing messages.
+
 ## Local browser QA evidence — 2026-08-08
 
 - Desktop `luna-poitiers` completed the five-step manual-confirmation flow for

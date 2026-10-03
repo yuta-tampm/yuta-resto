@@ -60,6 +60,14 @@ remuneration, legal recommendation, or production behavior. The existing gate
 still requires explicit development opt-in and always fails closed in
 production.
 
+If a draft mutation request is rejected before the server confirms an outcome,
+the workspace treats it as an uncertain `server_error`: the loading state ends,
+the recoverable `Enregistrement incertain` feedback is shown, and retrying the
+same intent reuses the same operation key while duplicate submits stay blocked.
+A rejected reload shows the recoverable `Actualisation impossible` feedback and
+ends the loading state. The orchestration lives in
+`_lib/cdi-draft-workspace-operations.ts`.
+
 ## Authority
 
 Read root and `apps/backoffice/AGENTS.md`, `docs/CURRENT_STATE.md`,
